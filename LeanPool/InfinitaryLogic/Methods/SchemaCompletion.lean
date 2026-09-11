@@ -5,9 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.SchemaOmegaWitness
-public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
 public import LeanPool.InfinitaryLogic.Methods.MarkerStage
+public import LeanPool.InfinitaryLogic.Methods.EM.Realization
+public import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+import LeanPool.InfinitaryLogic.Methods.SchemaOmegaWitness
+import Mathlib.Order.Lattice.Nat
 /-!
 # Layer 7b, checkpoint 1: the countable schema sentence universe
 

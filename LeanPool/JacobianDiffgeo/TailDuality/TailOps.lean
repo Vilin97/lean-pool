@@ -6,6 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `truncT`/`singleT`/`mulInto`/`nuL`: the truncation and multiplication kit (serre-duality-tails)

@@ -8,6 +8,8 @@ module
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Concrete polynomial representatives

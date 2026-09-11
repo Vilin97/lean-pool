@@ -5,12 +5,11 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Hom
 public import LeanPool.QuasiBorelSpaces.Lift
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sum
-public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-public import LeanPool.QuasiBorelSpaces.Prop
 public import LeanPool.QuasiBorelSpaces.Sigma
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Hom
 
 /-!
 # Binary Coproducts of Quasi-Borel Spaces

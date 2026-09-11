@@ -5,13 +5,10 @@ Authors: Juan Pablo Traverso Gianini
 -/
 module
 
-public import Mathlib.Analysis.Convex.Cone.InnerDual
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import LeanPool.Erdos81PaperIContrib.FgConeClosed
+import LeanPool.Erdos81PaperIContrib.FgConeClosed
+import Mathlib.Analysis.Convex.Cone.InnerDual
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 

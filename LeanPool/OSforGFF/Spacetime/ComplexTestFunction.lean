@@ -5,12 +5,11 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.Topology.Algebra.Module.Multilinear.Basic
-public import Mathlib.Analysis.Complex.OperatorNorm
 
 public import LeanPool.OSforGFF.Spacetime.Basic
+import Mathlib.Analysis.Complex.OperatorNorm
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 ## Complex Test Function Linearity

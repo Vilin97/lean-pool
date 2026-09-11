@@ -8,12 +8,6 @@ module
 public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
 public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
 public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Data.Nat.Nth
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Data.Set.Lattice
-public import Mathlib.Order.Hom.Basic
-public import Mathlib.Order.WellFounded
 public import Mathlib.SetTheory.Cardinal.Aleph
 /-!
 # Morley-Hanf Transfer Hypothesis (Conditional)

@@ -5,10 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.Statement
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.NumberTheory.Padics.PadicVal.Basic
-public import Mathlib.Tactic.Ring
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.MaxPowDiv
+public import Mathlib.Data.Nat.Prime.Defs
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 # Kummer formulas for central binomial coefficients

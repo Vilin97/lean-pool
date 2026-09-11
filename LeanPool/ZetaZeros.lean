@@ -7,6 +7,9 @@ module
 
 public import LeanPool.ZetaZeros.Main
 public import LeanPool.ZetaZeros.Hilbert.InnerReal
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Simple zeros of the Riemann zeta function

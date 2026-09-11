@@ -27,6 +27,10 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers18
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers19
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers20
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers21
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Deduplicated repeated-pair row-mask covers -/
 

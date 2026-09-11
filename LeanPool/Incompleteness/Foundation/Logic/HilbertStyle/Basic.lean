@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Logic.Entailment
 public import LeanPool.Incompleteness.Foundation.Logic.Axioms
+public import Mathlib.Algebra.Order.Ring.Nat
 
 /-! # Basic -/
 

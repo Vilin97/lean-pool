@@ -5,14 +5,12 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Hom
 public import LeanPool.QuasiBorelSpaces.Rose.Encoding
 public import LeanPool.QuasiBorelSpaces.List
-public import LeanPool.QuasiBorelSpaces.Option
-public import LeanPool.QuasiBorelSpaces.Nat
-public import LeanPool.QuasiBorelSpaces.Pi
-public import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
-public import LeanPool.QuasiBorelSpaces.Sigma
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Prop
+import LeanPool.QuasiBorelSpaces.RoseTree.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.Rose

@@ -6,6 +6,9 @@ Authors: Yann Pequignot
 module
 
 public import LeanPool.NashWilliams.Data.Nat.Nth
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-! Strictly monotone enumerations of infinite sets of natural numbers. -/
 

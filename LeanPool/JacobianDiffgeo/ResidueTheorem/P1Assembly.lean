@@ -5,9 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
-public import Mathlib.Analysis.Meromorphic.NormalForm
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
+import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
+import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
+import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # residue-theorem: the `ℙ¹` base case, assembled

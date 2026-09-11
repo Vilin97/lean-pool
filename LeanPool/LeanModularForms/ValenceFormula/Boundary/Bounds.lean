@@ -6,9 +6,8 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PiecewiseCurveAPI
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CurveAvoidance
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Fundamental Domain Boundary – Bounds

@@ -6,10 +6,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
-public import Mathlib.Data.Real.Basic
-public import Mathlib.MeasureTheory.MeasurableSpace.Defs
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Instances
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 
 
 /-!

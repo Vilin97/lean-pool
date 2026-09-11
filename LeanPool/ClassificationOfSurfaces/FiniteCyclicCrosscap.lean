@@ -7,6 +7,11 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicDyck
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicUnorientedRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Gallier--Xu cross-cap rewrite

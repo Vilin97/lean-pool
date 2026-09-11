@@ -6,12 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import Mathlib.Analysis.Analytic.Basic
-public import Mathlib.Analysis.Calculus.FDeriv.Basic
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.LinearAlgebra.Matrix.Notation
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The planar circular restricted three-body Hamiltonian

@@ -6,6 +6,11 @@ Authors: Juan Pablo Traverso Gianini, Aristotle, Vasily Ilin
 module
 
 public import LeanPool.Erdos81PaperIIIContrib.SimpleGraph
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Near-perfect triangle packings from sum-zero triples

@@ -13,6 +13,9 @@ public import LeanPool.Monlib4.Preq.Ites
 public import LeanPool.Monlib4.Preq.RCLikeLe
 public import LeanPool.Monlib4.Preq.Set
 public import LeanPool.Monlib4.Preq.StarAlgEquiv
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Preq

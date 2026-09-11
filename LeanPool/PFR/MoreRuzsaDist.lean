@@ -7,11 +7,15 @@ Authors: PFR contributors
 module
 
 public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
-public import LeanPool.PFR.HundredPercent
-public import LeanPool.PFR.Mathlib.Algebra.BigOperators.Fin
-public import LeanPool.PFR.Mathlib.Data.Fin.Basic
-public import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
-public import LeanPool.PFR.Mathlib.Order.Interval.Finset.Fin
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.HundredPercent
+import LeanPool.PFR.Mathlib.Algebra.BigOperators.Fin
+import LeanPool.PFR.Mathlib.Data.Fin.Basic
+import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
+import LeanPool.PFR.Mathlib.Order.Interval.Finset.Fin
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Constructions.Pi
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # More results about Ruzsa distance

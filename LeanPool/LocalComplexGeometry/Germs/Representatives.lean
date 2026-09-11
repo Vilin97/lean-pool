@@ -6,6 +6,7 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Germs.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Canonical chosen analytic representatives

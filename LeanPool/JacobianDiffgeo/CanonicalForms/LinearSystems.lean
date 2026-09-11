@@ -6,6 +6,14 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.MittagLeffler
+import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Ω(D)`, the `L(D+K)` bridge, holomorphic forms, and ML form data (D11/D12/D13)

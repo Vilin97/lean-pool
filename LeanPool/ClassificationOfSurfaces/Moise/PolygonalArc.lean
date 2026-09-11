@@ -7,9 +7,8 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
-public import Mathlib.Algebra.Order.Floor.Semiring
-public import Mathlib.Combinatorics.SimpleGraph.Paths
 public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 
 /-!
 # Polygonal arcs from broken lines

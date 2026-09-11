@@ -5,8 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Path.HomotopySquare
-public import Mathlib.LinearAlgebra.Basis.Defs
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+public import Mathlib.Topology.Homotopy.Path
+import LeanPool.JacobianDiffgeo.Path.HomotopySquare
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Periods of a holomorphic 1-form along a loop (CC6)

@@ -5,8 +5,11 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
-public import Mathlib.Data.Fin.Tuple.Sort
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+public import Mathlib.LinearAlgebra.Orientation
+import Mathlib.Data.Fin.Tuple.Sort
+import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
 
 /-!
 # Planar packing: at most 5 vectors pairwise more than 60° apart

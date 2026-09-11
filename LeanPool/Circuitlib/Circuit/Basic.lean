@@ -7,7 +7,6 @@ module
 
 public import LeanPool.Circuitlib.Circuit.Category.Basic
 public import LeanPool.Circuitlib.Circuit.Belnap.Gate
-public import Mathlib.CategoryTheory.Monoidal.Category
 
 /-! # Circuits
 

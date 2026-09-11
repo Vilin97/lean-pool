@@ -5,9 +5,12 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.Defs
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Torus Type Definitions and Differential Operators

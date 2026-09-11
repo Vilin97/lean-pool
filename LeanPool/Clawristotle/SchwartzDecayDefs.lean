@@ -5,9 +5,12 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.Theorem42
-public import LeanPool.Clawristotle.TorusInstance
-public import LeanPool.Clawristotle.IteratedDerivHelpers
+public import LeanPool.Clawristotle.Defs
+public import LeanPool.Clawristotle.TorusDefs
+import LeanPool.Clawristotle.IteratedDerivHelpers
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Schwartz Decay Definitions and Integrability Helpers

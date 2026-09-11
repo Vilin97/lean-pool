@@ -10,9 +10,10 @@ Blueprint unit: local-multiplicity (CC4). The multiplicity definition and its ba
 module
 
 public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
-public import Mathlib.Analysis.Analytic.IsolatedZeros
 public import Mathlib.Analysis.Meromorphic.Order
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Local multiplicity of a holomorphic map (CC4)

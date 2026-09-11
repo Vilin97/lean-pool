@@ -5,17 +5,12 @@ Authors: Junqi Liu, Jujian Zhang
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Analysis.SumIntegralComparisons
-public import Mathlib.Data.Rat.Cast.OfScientific
 public import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.Tactic.NormNum.BigOperators
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.SumIntegralComparisons
 
 /-!
 # Chebyshev estimates needed for the ζ(3) irrationality argument

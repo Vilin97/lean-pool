@@ -6,6 +6,10 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Calibrated fiber stacks (residue-theorem, general-`X` reduction support)

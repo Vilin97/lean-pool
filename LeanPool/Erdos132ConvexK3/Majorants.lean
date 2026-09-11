@@ -5,9 +5,15 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Algebra.Ring.Int.Defs
-public import Mathlib.Data.Nat.Cast.Order.Ring
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Int.Notation
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Group.Unbundled.Basic
+import Mathlib.Algebra.Ring.Int.Defs
+import Mathlib.Data.Nat.Cast.Order.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # ErLV maximal-gap arithmetic for the convex three-distance argument

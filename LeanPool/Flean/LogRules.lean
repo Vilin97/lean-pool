@@ -5,11 +5,10 @@ Authors: Joseph McKinsey
 -/
 module
 
-public import Mathlib.Data.Rat.Defs
 public import Mathlib.Data.Rat.Floor
-public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.Data.Int.Log
 public import LeanPool.Flean.FloatCfg
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Logarithmic Properties of Scientific Notation for Floating-Point

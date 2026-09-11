@@ -5,11 +5,14 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
 public import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
 public import LeanPool.PLAcceleratedNesterovLean.MorseBott.BridgeDefs
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.PLImpliesMB
 public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.PLImpliesMB
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Derivative
 
 /-!
 Copyright (c) 2025. All rights reserved.

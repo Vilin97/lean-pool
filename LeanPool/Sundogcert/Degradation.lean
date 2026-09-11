@@ -5,9 +5,8 @@ Authors: Humiliati
 -/
 module
 
-public import LeanPool.Sundogcert.Looseness
 public import Mathlib.LinearAlgebra.Matrix.Block
-public import Mathlib.Data.Fintype.Fin
+public import LeanPool.Sundogcert.Scaling
 
 /-!
   Sundogcert/Degradation.lean — the DEGRADATION CURVE of the column-weight bound vs density.

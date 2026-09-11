@@ -6,7 +6,12 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
-public import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the gated `ofCurve_inj` and final-assembly discharge (§4.4 D4)

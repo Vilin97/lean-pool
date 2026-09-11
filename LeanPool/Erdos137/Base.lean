@@ -6,6 +6,12 @@ Authors: Scott D. Hughes
 module
 
 public import LeanPool.Erdos137.Finiteness
+public import Mathlib.NumberTheory.PrimeCounting
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.Nat.Choose.Factorization
+import Mathlib.NumberTheory.Primorial
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: shared `g`-independent base layer

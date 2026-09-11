@@ -15,6 +15,13 @@ from the companion paper.
 module
 
 public import LeanPool.KaltonRoberts.Defs
+public import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Combinatorics.Hall.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # One-sided recombination

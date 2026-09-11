@@ -6,7 +6,6 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.Geometry.Manifold.Riemannian.Basic
-public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz`

@@ -8,6 +8,12 @@ module
 public import LeanPool.Erdos132ThreeChain.HopfPannwitz
 public import LeanPool.Erdos132ThreeChain.Statement
 public import LeanPool.Erdos132ThreeChain.Witnesses
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Planar Point Sets Whose Non-Diameter Distances Form a Geometric 3-Chain

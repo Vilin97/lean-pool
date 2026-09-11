@@ -8,6 +8,7 @@ module
 public import Mathlib.Algebra.Algebra.TransferInstance
 
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quantum Sets on Finite Products

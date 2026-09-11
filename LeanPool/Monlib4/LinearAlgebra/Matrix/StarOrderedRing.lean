@@ -5,15 +5,12 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.PiStarOrderedRing
-public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
 public import LeanPool.Monlib4.LinearAlgebra.InnerAut
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
-public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-public import LeanPool.Monlib4.Preq.Complex
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
-public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Matrix.Order
+import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
+import LeanPool.Monlib4.LinearAlgebra.MySpec
+import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 # Matrix algebras as star ordered rings

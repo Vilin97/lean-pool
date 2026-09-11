@@ -5,13 +5,14 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Complexity.DualVC
 public import LeanPool.FormalLearningTheory.Complexity.Structures
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
-public import LeanPool.FormalLearningTheory.Complexity.FiniteSupportUC
-public import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
 public import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
-public import LeanPool.FormalLearningTheory.PureMath.BinaryMatrix
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Tail
+import LeanPool.FormalLearningTheory.Complexity.FiniteSupportUC
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Moran-Yehudayoff Compression Theorem

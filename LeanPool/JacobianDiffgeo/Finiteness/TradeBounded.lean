@@ -6,7 +6,13 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Finiteness.Chain
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+public import LeanPool.JacobianDiffgeo.Cech.Refinement
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The norm-bounded trade (`finiteness-and-chi`, gated file 1/3)

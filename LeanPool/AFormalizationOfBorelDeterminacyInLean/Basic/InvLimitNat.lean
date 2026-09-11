@@ -5,9 +5,16 @@ Authors: Sven Manthe
 -/
 module
 
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
-public import Mathlib.CategoryTheory.Filtered.Connected
-public import Mathlib.CategoryTheory.Limits.Constructions.EventuallyConstant
+public import Mathlib.Algebra.Group.End
+public import Mathlib.CategoryTheory.Category.Preorder
+public import Mathlib.CategoryTheory.Limits.IsLimit
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import Mathlib.CategoryTheory.Limits.Constructions.EventuallyConstant
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat

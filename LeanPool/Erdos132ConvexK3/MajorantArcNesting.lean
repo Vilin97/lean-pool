@@ -6,12 +6,9 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132ConvexK3.GlobalReduction
-public import LeanPool.Erdos132ConvexK3.Geometry
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Order.Interval.Finset.Fin
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
+import LeanPool.Erdos132ConvexK3.Geometry
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # ErLV majorant arc nesting

@@ -10,8 +10,7 @@ Blueprint unit: form-trace-tower. `traceZkForm`: the Jacobian-weighted planar tr
 module
 
 public import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The Jacobian-weighted planar trace atom (`form-trace-tower`, file 2/6)

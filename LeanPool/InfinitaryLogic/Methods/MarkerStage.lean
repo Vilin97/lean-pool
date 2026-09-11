@@ -5,13 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.Data.Finset.Sort
-public import Mathlib.SetTheory.Cardinal.Regular
-public import LeanPool.InfinitaryLogic.Combinatorics.FiniteArityErdosRadoInduction
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
-public import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
+public import Mathlib.SetTheory.Cardinal.Aleph
+import LeanPool.InfinitaryLogic.Combinatorics.FiniteArityErdosRadoInduction
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+import Mathlib.Data.Finset.Sort
+import Mathlib.SetTheory.Cardinal.Regular
 /-!
 # The Marker stage: finite-fragment support extraction and Erdős–Rado certification
 

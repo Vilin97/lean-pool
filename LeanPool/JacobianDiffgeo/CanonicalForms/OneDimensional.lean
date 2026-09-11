@@ -6,7 +6,11 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
-public import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # One-dimensionality over `ℳ(X)` (D8) and the canonical divisor `K` (D10)

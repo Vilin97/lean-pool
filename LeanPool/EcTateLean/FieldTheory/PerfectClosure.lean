@@ -5,11 +5,14 @@ Authors: Alex J. Best
 -/
 module
 
-public import Mathlib.Algebra.Ring.Basic
-public import Mathlib.Algebra.CharP.Basic
-public import Mathlib.Tactic.Common
 
-public import Mathlib.FieldTheory.PerfectClosure
+public import Mathlib.Algebra.CharP.Defs
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.EcTateLean.FieldTheory.PerfectClosure

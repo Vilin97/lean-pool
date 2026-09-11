@@ -5,7 +5,10 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.Shannon1948Formalization.Entropy.Final
+public import LeanPool.Shannon1948Formalization.Entropy.Uniform
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Shannon.Entropy.Gibbs

@@ -5,9 +5,9 @@ Authors: Wei Wang
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.PrimitiveCutoffs
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
 
 /-!
 # Radius absolute continuity inputs

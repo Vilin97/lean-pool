@@ -5,9 +5,10 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.VonNeumannModel
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderBound
 public import LeanPool.InfinitaryLogic.ModelTheory.MorleyHanf
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderBound
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.VonNeumannModel
 /-!
 # The beth ladder: sharpness of the Morley–Hanf bound
 

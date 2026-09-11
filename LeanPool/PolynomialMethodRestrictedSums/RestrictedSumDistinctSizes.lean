@@ -5,21 +5,16 @@ Authors: Nick Adfor
 -/
 module
 
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Zify
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Set
-public import Mathlib.Tactic.Common
-public import Aesop
-public import Mathlib.Combinatorics.Nullstellensatz
-public import Mathlib.RingTheory.Int.Basic
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Data.Nat.Choose.Basic
-public import Mathlib.Data.Nat.Prime.Factorial
-public import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
 public import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.MvPolynomial.Degrees
+import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Data.Nat.Prime.Factorial
+import Mathlib.RingTheory.Int.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Restricted sums of sets with distinct sizes

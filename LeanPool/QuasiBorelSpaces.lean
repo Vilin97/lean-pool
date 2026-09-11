@@ -37,6 +37,7 @@ public import LeanPool.QuasiBorelSpaces.Sigma
 public import LeanPool.QuasiBorelSpaces.Subtype
 public import LeanPool.QuasiBorelSpaces.Sum
 public import LeanPool.QuasiBorelSpaces.UnitInterval
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quasi-Borel Spaces

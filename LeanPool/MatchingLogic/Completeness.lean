@@ -19,6 +19,8 @@ Statements pinned before any proof was attempted.
 module
 
 public import LeanPool.MatchingLogic.ProofSystem
+public import LeanPool.MatchingLogic.Localization
+import LeanPool.MatchingLogic.Composite
 
 /-!
 # MatchingLogic.Completeness

@@ -7,7 +7,15 @@ module
 
 public import LeanPool.BrauerGroupNew.BrauerGroup
 public import LeanPool.BrauerGroupNew.SplittingOfCSA
-public import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import LeanPool.BrauerGroupNew.Wedderburn
+import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.RingTheory.DedekindDomain.Basic
+import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # Relative Brauer Group

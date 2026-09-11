@@ -5,9 +5,12 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
-public import LeanPool.Lentil.Rules.Basic
-public import LeanPool.Lentil.Gadgets.TheoremDeriving
+public import LeanPool.Lentil.Tactics.Basic
+import Aesop.Frontend.Tactic
+import Aesop.Main
+import LeanPool.Lentil.Gadgets.TheoremDeriving
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
 
 /-! Theorems about the leads-to operator. -/
 

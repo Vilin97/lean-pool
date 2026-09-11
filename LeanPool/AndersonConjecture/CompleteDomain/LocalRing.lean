@@ -5,17 +5,19 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Analysis.Complex.Cardinality
-public import Mathlib.Data.Finsupp.Encodable
-public import Mathlib.Order.BourbakiWitt
-public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
 public import Mathlib.RingTheory.MvPowerSeries.Rename
-public import Mathlib.RingTheory.PicardGroup
-public import Mathlib.RingTheory.PowerSeries.Ideal
 public import LeanPool.AndersonConjecture.CompleteDomain.Domain
+public import Mathlib.RingTheory.KrullDimension.Basic
+public import Mathlib.RingTheory.MvPowerSeries.Inverse
+public import Mathlib.RingTheory.PowerSeries.Basic
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.Cardinality
+import Mathlib.Data.Finsupp.Encodable
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.PowerSeries.Ideal
 
 /-!
 # The Complete Domain T -- Local Ring Properties

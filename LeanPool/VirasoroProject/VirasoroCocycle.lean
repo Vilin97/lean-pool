@@ -5,14 +5,16 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Algebra.Azumaya.Basic
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Data.Int.Star
-public import Mathlib.GroupTheory.MonoidLocalization.Basic
-public import Mathlib.LinearAlgebra.Dual.Lemmas
 public import LeanPool.VirasoroProject.LieCohomologySmallDegree
 public import LeanPool.VirasoroProject.WittAlgebra
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.LinearAlgebra.Basis.Bilinear
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The Virasoro 2-cocycle of the Witt algebra
 

@@ -7,6 +7,10 @@ module
 
 public import LeanPool.CencovPetz.MarkovMorphism
 public import LeanPool.CencovPetz.UniformSimplex
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

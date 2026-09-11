@@ -5,7 +5,10 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Phase.PowerMap
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+import LeanPool.KasamiCyclicAdditive.Phase.PowerMap
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The phase-to-root-count identity

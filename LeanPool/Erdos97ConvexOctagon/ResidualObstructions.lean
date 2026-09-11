@@ -5,19 +5,21 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra00
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra01
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra02
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra03
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra04
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra05
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra06
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra07
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra08
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra09
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra10
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra11
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra12
+public import LeanPool.Erdos97ConvexOctagon.GeometryReduction
+public import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra00
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra01
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra02
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra03
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra04
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra05
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra06
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra07
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra08
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra09
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra10
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra11
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra12
 
 /-! # Erdős 97 convex-octagon formalization: Residual Obstructions -/
 

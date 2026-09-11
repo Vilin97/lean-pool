@@ -5,7 +5,13 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+public import Mathlib.Tactic.Attr.Core
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-! # NotationClass -/
 

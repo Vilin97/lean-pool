@@ -6,6 +6,13 @@ Authors: FrenzyMath
 module
 
 public import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Close-up: divisibility sub-cases

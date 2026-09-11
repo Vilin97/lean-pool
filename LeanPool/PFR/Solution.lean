@@ -5,13 +5,18 @@ Authors: Terence Tao
 -/
 
 module
-public import Mathlib.Combinatorics.Additive.PluenneckeRuzsa
-public import LeanPool.PFR.ApproxHomPFR
-public import LeanPool.PFR.HomPFR
-public import LeanPool.PFR.Main
-public import LeanPool.PFR.RhoFunctional
-public import LeanPool.PFR.TorsionEndgame
-public import LeanPool.PFR.WeakPFR
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.LinearAlgebra.AffineSpace.AffineSubspace.Defs
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+import LeanPool.PFR.ApproxHomPFR
+import LeanPool.PFR.HomPFR
+import LeanPool.PFR.Main
+import LeanPool.PFR.RhoFunctional
+import LeanPool.PFR.TorsionEndgame
+import LeanPool.PFR.WeakPFR
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Combinatorics.Additive.PluenneckeRuzsa
 
 /-!
 # Marton's conjecture: proofs

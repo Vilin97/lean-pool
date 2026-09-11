@@ -10,6 +10,8 @@ public import LeanPool.JacobianDiffgeo.TailDuality.Pairing
 public import LeanPool.JacobianDiffgeo.TailDuality.Counting
 public import LeanPool.JacobianDiffgeo.TailDuality.Duality
 public import LeanPool.JacobianDiffgeo.TailDuality.ChiLedger
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # serre-duality-tails: Serre duality via Laurent tails (Miranda VI.3) (namespace `RS.TailDuality`)

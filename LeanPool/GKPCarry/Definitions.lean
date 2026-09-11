@@ -5,8 +5,6 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Data.List.Count
 public import Mathlib.Data.Nat.Digits.Defs
 
 /-!

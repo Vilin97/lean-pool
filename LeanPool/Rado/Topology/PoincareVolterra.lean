@@ -5,7 +5,8 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.Rado.Topology.SecondCountable
+public import Mathlib.Topology.Connected.LocallyConnected
+import LeanPool.Rado.Topology.SecondCountable
 
 /-!
 # The Poincaré–Volterra lemma

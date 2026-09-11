@@ -7,20 +7,23 @@ module
 
 public import LeanPool.VirasoroProject.VirasoroAlgebra
 public import LeanPool.VirasoroProject.HeisenbergAlgebra
-public import LeanPool.VirasoroProject.CentralChargeCalc
-public import LeanPool.VirasoroProject.Commutator
 public import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
 public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+public import Mathlib.Order.Filter.Cofinite
+import LeanPool.VirasoroProject.CentralChargeCalc
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.Interval
+import Mathlib.Data.Int.Star
+import Mathlib.GroupTheory.GroupAction.Basic
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The bosonic Sugawara construction
 

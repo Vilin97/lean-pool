@@ -7,6 +7,14 @@ module
 
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeLim
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.PointedTrees
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeExtensions

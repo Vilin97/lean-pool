@@ -5,7 +5,14 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.CoulombPSDHelpers
+public import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.CoulombFlux
+import LeanPool.Clawristotle.CoulombPSDHelpers
+import LeanPool.Clawristotle.NewtonianPotential
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-!
 # PSD Integrability and Fubini Symmetrization for Coulomb

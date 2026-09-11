@@ -5,10 +5,15 @@ Authors: Weiyi Wang
 -/
 module
 
-public import LeanPool.PentagonalNumberTheorem.PowerSeries
-public import Mathlib.Combinatorics.Enumerative.Partition.Glaisher
 public import Mathlib.Data.Int.Interval
-public import Mathlib.Data.Int.Order.Lemmas
+public import Mathlib.Algebra.Ring.NegOnePow
+public import Mathlib.Combinatorics.Enumerative.Partition.Basic
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+import LeanPool.PentagonalNumberTheorem.PowerSeries
+import Mathlib.Combinatorics.Enumerative.Partition.Glaisher
+import Mathlib.Data.Int.Order.Lemmas
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.PentagonalNumberTheorem.Partition

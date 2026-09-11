@@ -5,7 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.ConeGaussianRadial
+public import LeanPool.Odlyzko.CompletedZeta.ConeGaussianIntegral
+import LeanPool.Odlyzko.CompletedZeta.ConeGaussianInterchange
+import LeanPool.Odlyzko.CompletedZeta.UnitDecomposition
 
 /-! TODO: Add doc-string. -/
 

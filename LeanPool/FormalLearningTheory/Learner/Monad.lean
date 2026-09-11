@@ -6,7 +6,7 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Learner.Closure
-public import LeanPool.FormalLearningTheory.PureMath.ReaderMonad
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Measurable Batch Learner Monad

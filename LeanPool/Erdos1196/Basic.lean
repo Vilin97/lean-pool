@@ -5,9 +5,8 @@ Authors: Math Inc
 -/
 module
 
-public import Mathlib.Algebra.Notation.Indicator
-public import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Basic definitions for primitive sets above `x`

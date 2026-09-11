@@ -6,8 +6,8 @@ Authors: Paul Mure, Joonhyup Lee
 module
 
 import all Init.Internal.Order.Basic
-public import Lean.Meta
-public import Lean.Elab
+import Std.Data.DTreeMap.Internal.Balancing
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 

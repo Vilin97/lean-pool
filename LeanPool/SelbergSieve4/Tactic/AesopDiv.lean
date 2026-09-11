@@ -5,14 +5,10 @@ Authors: Arend Mellendijk
 -/
 module
 
-public import Aesop
-public import LeanPool.SelbergSieve4.Tactic.AesopInit
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.NumberTheory.ArithmeticFunction.Defs
-public import Mathlib.NumberTheory.ArithmeticFunction.Misc
-public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+public import Mathlib.Algebra.Squarefree.Basic
+public import Mathlib.NumberTheory.Divisors
+import LeanPool.SelbergSieve4.Tactic.AesopInit
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # LeanPool.SelbergSieve4.Tactic.AesopDiv

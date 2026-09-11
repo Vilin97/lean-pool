@@ -21,6 +21,7 @@ and is not in this file.
 module
 
 public import LeanPool.MatchingLogic.Boxes
+import Mathlib.Data.Set.Basic
 
 /-!
 # MatchingLogic.Localization

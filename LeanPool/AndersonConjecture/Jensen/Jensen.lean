@@ -5,9 +5,19 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
-public import LeanPool.AndersonConjecture.Jensen.Construction.Construction
-public import Mathlib.Algebra.CharP.Algebra
+public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+public import LeanPool.AndersonConjecture.Jensen.Defs
+public import Mathlib.RingTheory.Regular.RegularSequence
+import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+import LeanPool.AndersonConjecture.Jensen.Construction.Construction
+import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
+import Mathlib.Algebra.Algebra.IsSimpleRing
+import Mathlib.Algebra.CharP.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Cardinality
+import Mathlib.Analysis.Complex.Order
+import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Jensen's Theorem on Completions of UFDs

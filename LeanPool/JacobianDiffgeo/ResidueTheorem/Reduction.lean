@@ -5,10 +5,17 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
-public import LeanPool.JacobianDiffgeo.FormTrace
-public import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
+public import LeanPool.JacobianDiffgeo.FormTrace.PairForm
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.FormTrace.ResidueTraceCompat
+import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
+import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
+import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
+import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # residue-theorem: the general-`X` reduction and THE residue theorem

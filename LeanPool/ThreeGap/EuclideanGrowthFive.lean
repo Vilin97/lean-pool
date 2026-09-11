@@ -5,9 +5,10 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.EuclideanAngle
-public import LeanPool.ThreeGap.EuclideanPacking
 public import LeanPool.ThreeGap.EuclideanGrowth
+import LeanPool.ThreeGap.EuclideanAngle
+import LeanPool.ThreeGap.EuclideanPacking
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Euclidean growth inequality `2 qₙ ≤ qₙ₊₅` (`K = 5`) via the planar packing count

@@ -5,23 +5,11 @@ Authors: Dhyan Aranha, contributors
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Zify
-public import Mathlib.Tactic.Lift
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.Measurability
-public import Mathlib.Tactic.Abel
-public import Mathlib.RingTheory.Valuation.Basic
 public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.Monsky.Appendix

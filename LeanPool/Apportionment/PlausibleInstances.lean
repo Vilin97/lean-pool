@@ -5,8 +5,10 @@ Authors: Michał Dobranowski
 -/
 module
 
-public import Plausible.Arbitrary
 public import LeanPool.Apportionment.Basic
+import LeanPool.Apportionment.Utils
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Instances for Plausible

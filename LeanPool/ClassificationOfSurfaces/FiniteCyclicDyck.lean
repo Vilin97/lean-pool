@@ -5,7 +5,12 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoveRealization
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoveRealization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Gallier--Xu Dyck rewrite

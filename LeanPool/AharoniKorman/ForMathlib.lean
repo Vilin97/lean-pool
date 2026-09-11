@@ -6,6 +6,7 @@ Authors: Bhavik Mehta
 module
 
 public import LeanPool.AharoniKorman.ForMathlib.Misc
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Auxiliary order lemmas for the Aharoni-Korman import

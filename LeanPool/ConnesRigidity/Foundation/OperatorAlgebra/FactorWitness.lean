@@ -12,7 +12,8 @@ the spatial-to-tracial argument. Paper: §3. See the upstream PORT_MAP.md.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.Supremum
+public import LeanPool.ConnesRigidity.Core
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.Supremum
 
 /-!
 The factor witness component of the Connes rigidity formalization.

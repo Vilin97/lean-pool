@@ -6,6 +6,10 @@ Authors: Kenny Lau
 module
 
 public import LeanPool.ZetaZeros.Hilbert.L2
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The three nested subspaces

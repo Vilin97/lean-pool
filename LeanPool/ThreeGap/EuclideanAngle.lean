@@ -6,7 +6,6 @@ Authors: Vico Bonfioli
 module
 
 public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 /-!
 # The separation → angle crux for the Euclidean growth inequality

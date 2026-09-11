@@ -5,10 +5,10 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
 public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step2
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step2
 
 /-!
 # Bootstrap via Total Displacement Control

@@ -6,11 +6,8 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.LocalExtr.Basic
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.FDeriv.CompCLM
-public import Mathlib.Topology.Order.Compact
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 /-!
 # Helper lemmas for Hessian coercivity from PŁ

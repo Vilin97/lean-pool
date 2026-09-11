@@ -5,10 +5,13 @@ Authors: Rémy Degenne, Peter Pfaffelhuber
 -/
 module
 
-public import LeanPool.OSforGFF.KolmogorovExtension4.RegularContent
 public import Mathlib.MeasureTheory.Constructions.ProjectiveFamilyContent
-public import Mathlib.MeasureTheory.Measure.RegularityCompacts
 public import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
+public import Mathlib.MeasureTheory.Constructions.ClosedCompactCylinders
+public import Mathlib.MeasureTheory.Measure.Regular
+public import Mathlib.Topology.MetricSpace.Polish
+import LeanPool.OSforGFF.KolmogorovExtension4.RegularContent
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
 
 /-!
 # Kolmogorov Extension

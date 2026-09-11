@@ -6,6 +6,7 @@ Authors: Shuhao Song
 module
 
 public meta import LeanPool.SetTheory.RealizeCore
+public import LeanPool.SetTheory.RealizeCore
 
 /-!
 # Elaboration of serialized ZF expressions

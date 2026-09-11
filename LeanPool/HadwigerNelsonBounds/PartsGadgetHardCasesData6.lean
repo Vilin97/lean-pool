@@ -5,7 +5,13 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetCases
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
+public import Mathlib.Data.Fin.VecNotation
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated hard-case certificates, data group 6. -/
 

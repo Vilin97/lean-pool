@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.Voronoi
+public import LeanPool.HadwigerNelsonBounds.Basic
 
 /-!
 # Separation of equally colored lattice points

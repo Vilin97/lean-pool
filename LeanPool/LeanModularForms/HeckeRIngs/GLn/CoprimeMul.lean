@@ -6,10 +6,15 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.SLnTransvection
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.SLnTransvection
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Coprime Product and Scalar Multiplication in the Hecke Ring

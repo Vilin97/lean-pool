@@ -5,7 +5,8 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Tactic.Simps
+public import Mathlib.Tactic.ToAdditive
 
 /-!
 # LeanPool.Polylean.ConjInvLength.LengthBound

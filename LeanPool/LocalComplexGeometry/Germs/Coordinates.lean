@@ -7,6 +7,7 @@ module
 
 public import LeanPool.LocalComplexGeometry.Germs.Basic
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
 
 /-!
 # Coordinates and pullback for holomorphic germs

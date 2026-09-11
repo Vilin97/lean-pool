@@ -6,6 +6,12 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 module
 
 public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Common-neighbour counterexamples for Saxl graphs

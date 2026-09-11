@@ -7,6 +7,11 @@ module
 
 public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
 public import LeanPool.Erdos97ConvexOctagon.RowMasks
+public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Soundness and completeness of lightweight legal-row search data -/
 

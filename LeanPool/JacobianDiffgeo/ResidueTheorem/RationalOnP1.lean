@@ -5,10 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.CanonicalForms
 public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-public import Mathlib.MeasureTheory.Integral.CircleAverage
+public import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # residue-theorem: the `ℙ¹` base case — atoms (file 1/1, PARTIAL DELIVERY)

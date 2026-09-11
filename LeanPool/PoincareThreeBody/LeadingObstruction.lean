@@ -5,8 +5,9 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.DenseResonantObstruction
 public import LeanPool.PoincareThreeBody.PoincareSet
+import LeanPool.PoincareThreeBody.ActionFactorization
+import LeanPool.PoincareThreeBody.DenseResonantObstruction
 
 /-!
 # The classical obstruction for the leading coefficient

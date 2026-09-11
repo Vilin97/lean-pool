@@ -5,9 +5,21 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import Mathlib.Data.Fintype.Defs
-public import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
-public import LeanPool.Lean4GlCoalgebras.Split.Completeness
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+public import LeanPool.Lean4GlCoalgebras.Split.Proof
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Algebra.Order.Ring.Int
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Tactic.Linarith.Lemmas
+public import Mathlib.Tactic.Ring.Basic
+public import Mathlib.Tactic.Zify
+import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
+import LeanPool.Lean4GlCoalgebras.Split.Completeness
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Finding interpolants
 

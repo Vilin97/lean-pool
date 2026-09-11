@@ -5,7 +5,10 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
+public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
+public import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Order.Lattice.Nat
 /-!
 # Layer 7a: the schema-template Ω-witness bridge
 

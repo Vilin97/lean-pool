@@ -7,7 +7,9 @@ module
 
 public import LeanPool.JacobianDiffgeo.Path.Continuation
 public import LeanPool.JacobianDiffgeo.Forms.MDifferential
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The bridge to honest integrals (CC6)

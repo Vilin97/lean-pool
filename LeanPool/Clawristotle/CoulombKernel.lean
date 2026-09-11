@@ -6,6 +6,8 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.SchwartzDecayDefs
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Coulomb Kernel Definition and Schwartz Helpers

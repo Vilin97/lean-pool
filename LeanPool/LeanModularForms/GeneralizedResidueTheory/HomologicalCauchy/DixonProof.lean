@@ -6,16 +6,19 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
-public import Mathlib.Analysis.Complex.Liouville
 public import Mathlib.Analysis.Calculus.DSlope
-public import Mathlib.Analysis.Complex.RemovableSingularity
-public import Mathlib.Analysis.Normed.Group.ZeroAtInfty
-public import Mathlib.Analysis.Complex.HasPrimitives
-public import Mathlib.MeasureTheory.Measure.OpenPos
-public import Mathlib.Topology.MetricSpace.HausdorffDimension
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-public import Mathlib.Analysis.Normed.Module.Connected
-public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.Complex.Liouville
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Analysis.Normed.Group.ZeroAtInfty
+import Mathlib.Analysis.Normed.Module.Connected
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Topology.MetricSpace.HausdorffDimension
 
 /-!
 # Dixon's Proof of the Homological Cauchy Theorem

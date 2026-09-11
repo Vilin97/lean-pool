@@ -6,6 +6,11 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.QuantumGraph.ToProjections
+public import LeanPool.Monlib4.QuantumGraph.Iso
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.Preq.Finset
+import LeanPool.Monlib4.QuantumGraph.Nontracial
 
 /-!
 

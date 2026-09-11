@@ -5,7 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+public import Mathlib.ModelTheory.Basic
 /-!
 # Relationalization of a language: the graph language and its structures (Craig Layer 3, Unit 1)
 

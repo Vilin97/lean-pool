@@ -5,16 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Module.LinearMap.Basic
-public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-public import Mathlib.LinearAlgebra.Matrix.Trace
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
 public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
-public import LeanPool.Monlib4.Preq.Set
-public import LeanPool.Monlib4.Preq.StarAlgEquiv
+import LeanPool.Monlib4.Preq.StarAlgEquiv
 
 /-!
 # Inner automorphisms of matrix algebras

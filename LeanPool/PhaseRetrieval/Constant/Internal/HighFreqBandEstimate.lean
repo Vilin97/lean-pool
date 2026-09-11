@@ -17,11 +17,14 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
-public import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
-public import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
-public import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
-public import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
-public import Mathlib.Analysis.Real.Pi.Bounds
+import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
+import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
+import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
+import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # HighFreqBandEstimate -/
 

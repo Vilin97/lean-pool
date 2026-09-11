@@ -5,7 +5,15 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
+public import Aesop.BuiltinRules
+public import Mathlib.Logic.ExistsUnique
+import Mathlib.Data.Finset.Attr
+import Mathlib.Logic.IsEmpty.Defs
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.Push
+import Mathlib.Tactic.SetLike
 
 /-! # ExistsUnique -/
 

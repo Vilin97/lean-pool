@@ -6,6 +6,9 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteTensorProduct
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # DyninMityaginSpace Instance for Schwartz Space

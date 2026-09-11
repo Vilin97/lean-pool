@@ -6,6 +6,10 @@ Authors: Fernando Portela, Google DeepMind
 module
 
 public import LeanPool.KrafftSieve.OptimalWeights
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 
 /-!

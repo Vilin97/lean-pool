@@ -5,8 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.SymbolCountability
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Undefinability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.SymbolCountability
 /-!
 # The arbitrary-language graph translation (issue #12, the final transport)
 

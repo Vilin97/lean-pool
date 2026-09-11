@@ -5,9 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
 public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
 public import Mathlib.Analysis.Calculus.BumpFunction.Basic
+import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
 
 /-!
 # The single-chart weak solution (`abel-weak-solutions`, §6.2-6.3)

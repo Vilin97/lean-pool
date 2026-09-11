@@ -5,10 +5,9 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
-public import Mathlib.LinearAlgebra.TensorProduct.RightExactness
 public import LeanPool.BruhatTits.Lattice.Construction
-public import LeanPool.BruhatTits.Utils.LinearAlgebra
+import LeanPool.BruhatTits.Utils.LinearAlgebra
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # Transvection automorphisms and their action on lattices

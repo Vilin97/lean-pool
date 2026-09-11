@@ -5,9 +5,10 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.TestFunction.Amplitude
 public import LeanPool.Odlyzko.TestFunction.Basic
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.Odlyzko.TestFunction.Amplitude
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-! TODO: Add doc-string. -/
 

@@ -5,7 +5,10 @@ Authors: Elan Roth
 -/
 module
 
-public import LeanPool.UlmsTheorem.PGroups.Heights
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # Reduced abelian p-groups: legacy compatibility import

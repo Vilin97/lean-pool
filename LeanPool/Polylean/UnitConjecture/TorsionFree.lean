@@ -6,6 +6,14 @@ Authors: Siddhartha Gadgil, Anand Rao
 module
 
 public import LeanPool.Polylean.UnitConjecture.GardamGroup
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Torsion-freeness of `P`

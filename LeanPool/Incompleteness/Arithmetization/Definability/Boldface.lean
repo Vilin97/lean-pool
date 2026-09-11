@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Incompleteness.Arithmetization.Definability.Hierarchy
 public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Graph
+import Mathlib.Algebra.Order.Sub.Basic
 
 /-! # Boldface -/
 

@@ -7,6 +7,12 @@ module
 
 public import LeanPool.PhaseRetrieval.Constant
 public import LeanPool.PhaseRetrieval.DimdPoly
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-!
 # Stable phase retrieval for Hermite-Fock expansions

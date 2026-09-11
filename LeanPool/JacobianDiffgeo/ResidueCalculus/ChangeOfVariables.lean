@@ -10,7 +10,7 @@ Blueprint unit: residue-calculus. Chart invariance of the residue of a 1-form in
 module
 
 public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-public import Mathlib.Analysis.Calculus.Deriv.Inverse
+import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
 
 /-!
 # Change of variables for residues (residue-calculus)

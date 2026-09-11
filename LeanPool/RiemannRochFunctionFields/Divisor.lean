@@ -5,7 +5,6 @@ Authors: Guanghao Li
 -/
 module
 
-public import Mathlib.Data.Finsupp.Multiset
 public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 /-!

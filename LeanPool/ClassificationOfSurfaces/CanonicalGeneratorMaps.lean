@@ -5,7 +5,14 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.CanonicalCoordinates
+public import LeanPool.ClassificationOfSurfaces.CanonicalWords
+public import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
+import LeanPool.ClassificationOfSurfaces.CanonicalCoordinates
+import LeanPool.ClassificationOfSurfaces.CanonicalPairings
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Generator maps for the canonical Eval representatives

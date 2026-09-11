@@ -6,9 +6,9 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # Pauli propagation: truncation error

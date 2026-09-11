@@ -6,7 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPair
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
 /-!
 # Completing the budgeted labelled pair (issue #15)
 

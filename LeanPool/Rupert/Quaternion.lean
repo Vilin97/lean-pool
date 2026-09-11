@@ -5,7 +5,6 @@ Authors: David Renshaw
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
 public import Mathlib.Algebra.Quaternion
 public import Mathlib.LinearAlgebra.CrossProduct
 public import LeanPool.Rupert.Basic

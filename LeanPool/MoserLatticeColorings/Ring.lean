@@ -6,6 +6,8 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.MoserLatticeColorings.Basic
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Extension to the Moser ring

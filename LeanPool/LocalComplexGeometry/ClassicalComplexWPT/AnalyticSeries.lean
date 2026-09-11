@@ -5,9 +5,8 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
-public import Mathlib.Analysis.Analytic.ChangeOrigin
-public import Mathlib.Analysis.Analytic.Uniqueness
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
+import Mathlib.Analysis.Analytic.Uniqueness
 
 /-!
 # Moving Taylor coefficients

@@ -8,9 +8,17 @@ module
 public import LeanPool.Monlib4.QuantumGraph.Basic
 public import LeanPool.Monlib4.QuantumGraph.Example
 public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
-public import LeanPool.Monlib4.RepTheory.AutMat
-public import Mathlib.LinearAlgebra.TensorProduct.Basis
-public import Mathlib.LinearAlgebra.TensorProduct.Finiteness
+public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.Preq.Finset
+import LeanPool.Monlib4.Preq.Ites
+import LeanPool.Monlib4.RepTheory.AutMat
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.PiMat

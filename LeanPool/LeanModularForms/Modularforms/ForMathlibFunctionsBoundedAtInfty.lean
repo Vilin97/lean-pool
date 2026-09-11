@@ -7,6 +7,7 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+import LeanPool.LeanModularForms.ForMathlib.FunctionsBoundedAtInfty
 
 /-! # ForMathlibFunctionsBoundedAtInfty -/
 

@@ -5,11 +5,16 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.TaggedGlue
 public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
-public import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
 public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
-public import LeanPool.InfinitaryLogic.Descriptive.InvariantMeasurableSpace
+import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+import LeanPool.InfinitaryLogic.Descriptive.InvariantMeasurableSpace
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.TaggedGlue
+import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The sole Löwenheim–Skolem consumer (issue #10, Unit 4 commit 3)
 

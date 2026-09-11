@@ -5,9 +5,16 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonicalRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSphereRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicTerminalNormalization
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
+public import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
+public import LeanPool.ClassificationOfSurfaces.Representatives
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonicalRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicSphereRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicTerminalNormalization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Faithful normal-form classification

@@ -5,8 +5,13 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import LeanPool.Erdos137.Base
-public import LeanPool.Erdos137.TaoPoint
+public import LeanPool.Erdos137.Finiteness
+public import Mathlib.Algebra.Squarefree.Basic
+import LeanPool.Erdos137.TaoPoint
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.Nat.Squarefree
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: term-level rough-part structure in a very bad interval

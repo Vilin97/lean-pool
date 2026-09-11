@@ -5,8 +5,11 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public import Mathlib.Algebra.Ring.Basic
-public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Algebra.Group.Basic
+public import Mathlib.Algebra.Ring.Defs
+public import Mathlib.Data.Quot
+public import Mathlib.Tactic.ToDual
+import Mathlib.Logic.Equiv.Defs
 
 /-!
 # Free modules

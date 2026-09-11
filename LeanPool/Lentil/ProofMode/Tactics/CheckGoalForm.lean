@@ -7,7 +7,8 @@ module
 
 public meta import LeanPool.Lentil.ProofMode.Basic
 
-public import LeanPool.Lentil.ProofMode.Basic
+public meta import Lean.Elab.SyntheticMVars
+import LeanPool.Lentil.ProofMode.Basic
 
 public meta section
 

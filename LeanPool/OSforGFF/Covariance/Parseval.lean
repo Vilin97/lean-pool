@@ -5,8 +5,11 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.General.FourierTransforms
 public import LeanPool.OSforGFF.Covariance.Momentum
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import LeanPool.OSforGFF.General.FourierTransforms
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 
 /-!
 # Parseval Identity for Covariance

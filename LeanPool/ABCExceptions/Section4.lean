@@ -5,10 +5,18 @@ Authors: Bhavik Mehta
 -/
 module
 
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Tactic.NormNum.BigOperators
-public import LeanPool.ABCExceptions.ForMathlib.Misc
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Order.Interval.Finset.Nat
+meta import Lean.Meta.Tactic.NormCast
+import LeanPool.ABCExceptions.ForMathlib.Misc
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.CharP.Defs
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.BigOperators
 
 /-!
 # Section 4

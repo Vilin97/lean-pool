@@ -6,6 +6,12 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.IsoGraph.Canon.Leaves
+public import LeanPool.IsoGraph.Canon.Monotone
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Domination bookkeeping for the optimality proof

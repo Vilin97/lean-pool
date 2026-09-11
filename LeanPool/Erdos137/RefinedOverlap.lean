@@ -6,6 +6,9 @@ Authors: Scott D. Hughes
 module
 
 public import LeanPool.Erdos137.BlockFramework
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: a refined deterministic overlap bound

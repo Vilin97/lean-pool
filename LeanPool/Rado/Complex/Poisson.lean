@@ -5,9 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.Rado.Complex.SubMean
 public import Mathlib.Analysis.Complex.Poisson
-public import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 
 /-!
 # Existence for the Dirichlet problem on a disk

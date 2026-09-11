@@ -5,8 +5,13 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelational
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelational
+import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
+import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
 /-!
 # Lyndon interpolation, ambient relational theorem (issue #14, Unit 5, commit 3)
 

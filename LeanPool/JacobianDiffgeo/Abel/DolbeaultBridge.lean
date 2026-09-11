@@ -5,11 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Abel.Loops
-public import LeanPool.JacobianDiffgeo.TailDuality
-public import LeanPool.JacobianDiffgeo.LaurentTail
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison
-public import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+public import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the Dolbeault-upgrade bridge, RESTATED at the tail level (design §4.3 D3)

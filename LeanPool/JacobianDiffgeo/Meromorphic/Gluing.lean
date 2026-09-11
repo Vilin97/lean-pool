@@ -5,7 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Sheaf gluing for `MeroGermOn` (§6.6): the Čech `H⁰` engine

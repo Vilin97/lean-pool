@@ -6,11 +6,13 @@ Authors: Egor Lyfar
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Basic
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.List.FinRange
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The convex three-largest-distance graph

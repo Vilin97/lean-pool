@@ -6,8 +6,10 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Triangulation
-public import Mathlib.Data.Fintype.Sigma
-public import Mathlib.Data.List.Rotate
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Finite surface cell complexes

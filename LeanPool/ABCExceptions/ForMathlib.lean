@@ -7,6 +7,7 @@ module
 
 public import LeanPool.ABCExceptions.ForMathlib.Misc
 public import LeanPool.ABCExceptions.ForMathlib.RingTheory
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Support lemmas for ABC exceptions

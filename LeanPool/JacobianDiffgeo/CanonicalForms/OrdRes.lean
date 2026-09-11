@@ -6,7 +6,11 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
-public import LeanPool.JacobianDiffgeo.ResidueCalculus
+public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `MFormData.ord`/`resAt` (D4), chart-invariance, and `divisor` (D6) — data layer

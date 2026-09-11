@@ -5,12 +5,7 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Normed.Module.Connected
 public import Mathlib.MeasureTheory.Integral.CircleAverage
-public import Mathlib.Topology.MetricSpace.ProperSpace.Lemmas
-public import Mathlib.Topology.Order.Compact
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
 
 /-!
 # Sub-mean-value functions on `ℂ` and maximum principles

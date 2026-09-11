@@ -5,8 +5,10 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 public import LeanPool.PebblingLean.Basic
+public import Mathlib.Data.Fintype.Prod
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Fintype.BigOperators
 
 /-!
 # Product constructions

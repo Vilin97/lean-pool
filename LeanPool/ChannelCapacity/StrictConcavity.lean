@@ -5,9 +5,9 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.ChannelCapacity.ChainRule
 public import LeanPool.ChannelCapacity.NonDegeneracy
-public import Mathlib.Order.Filter.Extr
+import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+import Mathlib.Probability.Kernel.Composition.MeasureComp
 
 /-!
 # ChannelCapacity.StrictConcavity

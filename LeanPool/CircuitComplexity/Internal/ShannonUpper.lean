@@ -7,12 +7,14 @@ module
 
 public import LeanPool.CircuitComplexity.AON.Defs
 public import Mathlib.Data.Nat.Log
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.Positivity
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-! # Internal: Shannon Upper Bound Construction
 

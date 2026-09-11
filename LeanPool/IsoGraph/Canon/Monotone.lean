@@ -6,6 +6,11 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.IsoGraph.Canon.Progress
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The incumbent never gets worse

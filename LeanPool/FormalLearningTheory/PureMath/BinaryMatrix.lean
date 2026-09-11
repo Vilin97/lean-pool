@@ -6,9 +6,8 @@ Authors: Dhruv Gupta
 module
 
 public import Mathlib.Combinatorics.SetFamily.Shatter
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Fintype.BigOperators
 
 /-!
 # Binary Matrix VC Dimension and Sauer-Shelah

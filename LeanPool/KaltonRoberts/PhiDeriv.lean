@@ -10,6 +10,14 @@ Authors: Ho Boon Suan
 module
 
 public import LeanPool.KaltonRoberts.Defs
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.Convex.Deriv
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Derivative computations for the Phi function

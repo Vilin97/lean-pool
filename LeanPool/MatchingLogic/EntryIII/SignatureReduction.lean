@@ -16,6 +16,7 @@ module
 
 public import LeanPool.MatchingLogic.EntryIII.Countertheory
 public import LeanPool.MatchingLogic.EntryIII.SignatureRestriction
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # MatchingLogic.EntryIII.SignatureReduction

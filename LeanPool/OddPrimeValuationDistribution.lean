@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.OddPrimeValuationDistribution.LowValuations
+import Mathlib.Data.Sym.Sym2.Init
 
 /-!
 # Exact odd-prime distributions of central-binomial valuations

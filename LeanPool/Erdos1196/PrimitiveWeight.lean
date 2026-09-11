@@ -5,7 +5,10 @@ Authors: Math Inc
 -/
 module
 
-public import LeanPool.Erdos1196.Markov
+public import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.Markov
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Rewriting the primitive weight using visit probabilities

@@ -5,8 +5,13 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.Compressible.Disk
-public import LeanPool.WhiteheadTheorem.Compressible.CWComplex
+public import LeanPool.WhiteheadTheorem.CWComplex.Basic
+public import LeanPool.WhiteheadTheorem.Compressible.Defs
+public import LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
+import LeanPool.WhiteheadTheorem.CWComplex.IProd.Iso
+import LeanPool.WhiteheadTheorem.Compressible.CWComplex
+import LeanPool.WhiteheadTheorem.Compressible.Disk
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 This file proves that if `B` and `Y` are CW-complexes

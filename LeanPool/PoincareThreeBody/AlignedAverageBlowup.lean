@@ -6,6 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.DisturbingRegularBound
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Blow-up of the collision-aligned disturbing average

@@ -5,10 +5,12 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Instances
-public import Mathlib.RingTheory.Unramified.Dedekind
-public import Mathlib.RingTheory.Unramified.LocalRing
-public import Mathlib.RingTheory.Etale.StandardEtale
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Unramified.Locus
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Instances
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.RingTheory.Etale.StandardEtale
 
 /-!
 # The affine coordinate ring of an elliptic curve is Dedekind

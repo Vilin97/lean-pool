@@ -33,6 +33,7 @@ public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComput
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
 public import LeanPool.TwoColoringOneRound.LowerBound.Sanity
 public import LeanPool.TwoColoringOneRound.LowerBound.UpperBound
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Lower-bound modules for 2-coloring cycles in one round

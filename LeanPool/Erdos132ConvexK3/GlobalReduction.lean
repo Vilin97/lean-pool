@@ -5,16 +5,16 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ConvexK3.Basic
 public import LeanPool.Erdos132ConvexK3.Majorants
 public import LeanPool.Erdos132ConvexK3.RegressionWitnesses
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Algebra.Group.Fin.Basic
 public import Mathlib.Data.Finset.Max
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Tauto
+import Mathlib.Algebra.Group.Fin.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Global ErLV reduction interface

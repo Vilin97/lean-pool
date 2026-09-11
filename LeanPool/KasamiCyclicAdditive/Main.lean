@@ -5,9 +5,12 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.MCM.HalfSize
-public import LeanPool.KasamiCyclicAdditive.Assembly.Reduction
-public import LeanPool.KasamiCyclicAdditive.Statement.ParameterReduction
+public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Data.Fintype.Card
+import LeanPool.KasamiCyclicAdditive.Assembly.Reduction
+import LeanPool.KasamiCyclicAdditive.MCM.HalfSize
+import LeanPool.KasamiCyclicAdditive.Statement.ParameterReduction
 
 /-!
 # The assembled theorem

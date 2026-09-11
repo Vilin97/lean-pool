@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Complete infinitary types and small models
 

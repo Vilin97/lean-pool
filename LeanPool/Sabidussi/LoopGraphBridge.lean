@@ -7,6 +7,12 @@ module
 
 public import LeanPool.Sabidussi.LoopMultigraph
 public import LeanPool.Sabidussi.CyclicWord
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # From a cyclic word back to a loop-capable endpoint multigraph

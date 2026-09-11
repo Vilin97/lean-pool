@@ -7,6 +7,13 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise621
 public import LeanPool.DomainTheory.Neighborhood.Lemma615
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 6.27 (Scott 1981, PRG-19, §6) — which subsystem relations hold

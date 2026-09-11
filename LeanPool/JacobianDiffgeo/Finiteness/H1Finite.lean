@@ -5,9 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
-public import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
-public import LeanPool.JacobianDiffgeo.Cech.SixTerm
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+public import LeanPool.JacobianDiffgeo.Finiteness.Chain
+import LeanPool.JacobianDiffgeo.Cech.SixTerm
+import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
+import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # `FiniteDimensional ℂ (H1 D)` for all `D` (`finiteness-and-chi`, gated file 2/3)

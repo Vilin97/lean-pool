@@ -5,12 +5,12 @@ Authors: Juan Pablo Traverso Gianini
 -/
 module
 
-public import Mathlib.Analysis.Convex.Cone.Dual
 public import Mathlib.Geometry.Convex.Cone.Simplicial
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.RingTheory.Finiteness.Defs
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 

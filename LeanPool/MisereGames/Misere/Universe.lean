@@ -6,10 +6,8 @@ Authors: Alfie Davies, Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Misere.Closures
-public import LeanPool.MisereGames.Misere.Hereditary.MaintenanceProviso
-public import Mathlib.Data.Set.Finite.Lattice
 public import Mathlib.Order.CompleteLatticeIntervals
-public import Mathlib.Order.Directed
+import Mathlib.Data.Set.Finite.Lattice
 
 /-!
 Misere combinatorial games.

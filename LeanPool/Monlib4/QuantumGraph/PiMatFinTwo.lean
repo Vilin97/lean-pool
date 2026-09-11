@@ -6,7 +6,10 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.QuantumGraph.PiMat
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
+public import LeanPool.Monlib4.RepTheory.AutMat
+import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.Preq.Finset
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.PiMatFinTwo

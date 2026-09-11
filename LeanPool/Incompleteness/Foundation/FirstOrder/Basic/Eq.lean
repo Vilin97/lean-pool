@@ -7,7 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.BinderNotation
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Elementary
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
 
 /-! # Eq -/
 

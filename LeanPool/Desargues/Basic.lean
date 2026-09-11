@@ -5,7 +5,17 @@ Authors: Abdullah Uyu
 -/
 module
 
-public import Mathlib.Data.Set.Card
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Set.Image
+import Mathlib.Tactic.ApplyAt
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Set
+import Mathlib.Tactic.SetLike
 
 /-!
 # Basic projective geometry

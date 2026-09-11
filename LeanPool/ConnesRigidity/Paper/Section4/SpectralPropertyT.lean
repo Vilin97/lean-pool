@@ -11,11 +11,11 @@ paper-specific input is finite spectral detection. Paper: §4.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
 public import LeanPool.ConnesRigidity.Paper.Section4.SplitExtensions
-public import LeanPool.ConnesRigidity.Paper.Section4.FiniteExtensions
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PositiveSpectralMeasure
 public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralCriterion
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PositiveSpectralMeasure
+import LeanPool.ConnesRigidity.Paper.Section4.FiniteExtensions
 
 /-!
 The spectral property t component of the Connes rigidity formalization.

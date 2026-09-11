@@ -7,8 +7,9 @@ module
 
 public import Mathlib.Algebra.Group.Subgroup.Even
 public import Mathlib.FieldTheory.Finite.GaloisField
-public import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
+import Mathlib.Data.Rat.Floor
+import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
 /-!
 # The odd affine Frobenius groups used by the every-base-size construction

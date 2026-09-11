@@ -6,7 +6,7 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.Basic
-public import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Certified numeric facts for the Chudnovsky formula (Phase D1)

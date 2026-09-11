@@ -5,22 +5,16 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.Gamma
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Spacetime.Euclidean
 public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-public import LeanPool.OSforGFF.Schwinger.Defs
-public import LeanPool.OSforGFF.General.FunctionalAnalysis
 public import LeanPool.OSforGFF.Covariance.Momentum
-public import LeanPool.OSforGFF.Covariance.Position
-public import LeanPool.OSforGFF.General.FourierTransforms
-public import LeanPool.OSforGFF.OS.Axioms
-public import LeanPool.OSforGFF.Spacetime.ProdIntegrable
-public import LeanPool.OSforGFF.Spacetime.Decomposition
-public import LeanPool.OSforGFF.Spacetime.Tonelli
-public import LeanPool.OSforGFF.General.LaplaceIntegral
+import LeanPool.OSforGFF.Spacetime.Tonelli
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+import Mathlib.MeasureTheory.Integral.Gamma
 
 /-!
 # OS3 Infrastructure — Schwinger Parametrization and Fubini Theorems

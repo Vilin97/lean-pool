@@ -7,6 +7,10 @@ module
 
 public import Mathlib.Data.FinEnum
 public import LeanPool.PolyaEnumerationTheorem.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Reduction to `Fin`

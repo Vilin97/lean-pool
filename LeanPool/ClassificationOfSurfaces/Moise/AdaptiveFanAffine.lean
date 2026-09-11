@@ -6,7 +6,6 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
 public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
 
 /-!

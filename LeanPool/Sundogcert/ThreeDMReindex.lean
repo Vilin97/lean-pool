@@ -6,7 +6,6 @@ Authors: Humiliati
 module
 
 public import LeanPool.Sundogcert.MatchingNPHard
-public import Mathlib.Data.Fintype.EquivFin
 
 /-!
   Sundogcert/ThreeDMReindex.lean — MILESTONE 5 of the `3SAT ≤ 3DM` marathon: the GENERIC

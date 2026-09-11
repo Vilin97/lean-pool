@@ -5,9 +5,9 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Germs.Coordinates
-public import Mathlib.Analysis.Analytic.Order
-public import Mathlib.Order.Filter.Finite
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.Analysis.Analytic.IsolatedZeros
 
 /-!
 # The local analytic Nullstellensatz in one complex variable

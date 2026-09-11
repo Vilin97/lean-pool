@@ -5,14 +5,9 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import Mathlib.Analysis.Fourier.AddCircle
-public import Mathlib.Analysis.SpecialFunctions.PolarCoord
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
 public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! # Definitions -/
 

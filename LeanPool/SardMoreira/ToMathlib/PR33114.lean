@@ -6,9 +6,9 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-public import Mathlib.Topology.EMetricSpace.Paracompact
-public import Mathlib.Topology.Separation.CompletelyRegular
-public import Mathlib.Analysis.MeanInequalitiesPow
+import Mathlib.Analysis.MeanInequalitiesPow
+import Mathlib.Topology.EMetricSpace.Paracompact
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 # A copy of a metric space with metric given by `d x y = dist x y ^ α`

@@ -6,8 +6,7 @@ Authors: Christopher Boone
 module
 
 public import LeanPool.ZhangYeungInequality.Delta
-public import LeanPool.ZhangYeungInequality.Prelude
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.ConditionalIndependence
+import LeanPool.ZhangYeungInequality.Prelude
 
 /-!
 # The Zhang-Yeung copy lemma

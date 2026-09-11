@@ -27,6 +27,9 @@ public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduc
 public import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
 public import LeanPool.QuadraticIterates.Mathlib.RingTheory.MoebiusFactor
 public import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Galois groups of quadratic polynomial iterates

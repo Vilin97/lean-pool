@@ -13,10 +13,12 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import LeanPool.PhaseRetrieval.Constant.Internal.MainTheorem
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-public import Mathlib.MeasureTheory.Measure.WithDensity
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
+import LeanPool.PhaseRetrieval.Constant.Internal.MainTheorem
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Gamma
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # LocalCore -/
 

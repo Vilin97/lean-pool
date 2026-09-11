@@ -6,8 +6,13 @@ Authors: Tanner Duve, Elan Roth
 module
 
 public import LeanPool.Computability.Encoding
-public import Mathlib.Computability.Reduce
-public import Mathlib.Computability.Halting
+public import LeanPool.Computability.TuringDegree
+public import Mathlib.Computability.RE
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The Jump Operator

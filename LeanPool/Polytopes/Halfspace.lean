@@ -5,10 +5,11 @@ Authors: Jun Kwon
 -/
 module
 
-public import Mathlib.Analysis.Convex.Independent
-public import Mathlib.Analysis.InnerProductSpace.Dual
-public import Mathlib.Analysis.Normed.Module.HahnBanach
-public import LeanPool.Polytopes.Pre
+public import Mathlib.Analysis.InnerProductSpace.Subspace
+public import Mathlib.Analysis.Normed.Group.AddTorsor
+import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+import Mathlib.Analysis.Normed.Module.HahnBanach
 
 /-!
 Halfspaces in inner product spaces and their basic geometric operations.

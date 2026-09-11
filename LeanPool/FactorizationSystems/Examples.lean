@@ -5,14 +5,9 @@ Authors: Ivan Kobe
 -/
 module
 
-public import Mathlib.CategoryTheory.Category.Basic
-public import Mathlib.CategoryTheory.Comma.Over.Basic
-public import Mathlib.CategoryTheory.ConcreteCategory.Basic
-public import Mathlib.CategoryTheory.MorphismProperty.Composition
-public import Mathlib.CategoryTheory.MorphismProperty.Basic
-public import Mathlib.CategoryTheory.Types.Epimorphisms
-public import Mathlib.CategoryTheory.Types.Monomorphisms
 public import LeanPool.FactorizationSystems.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # LeanPool.FactorizationSystems.Examples

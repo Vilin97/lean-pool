@@ -5,10 +5,11 @@ Authors: Wondermonger-daydreaming
 -/
 module
 
-public import LeanPool.SemicircleCheck.FinRotateLemmas
-public import LeanPool.SemicircleCheck.RotationArithmetic
 public import LeanPool.SemicircleCheck.GenusNoncrossing
-public import LeanPool.SemicircleCheck.EvenCard
+public import Mathlib.Combinatorics.Enumerative.Catalan.Basic
+import LeanPool.SemicircleCheck.EvenCard
+import LeanPool.SemicircleCheck.FinRotateLemmas
+import LeanPool.SemicircleCheck.RotationArithmetic
 
 /-!
   THE CATALAN SCALPEL

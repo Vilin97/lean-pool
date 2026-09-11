@@ -6,7 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Cech.Colimit
-public import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Forster 12.4: refinement maps are injective on `H¹` (CC8, D8, proof plan §6.7)

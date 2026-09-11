@@ -7,6 +7,15 @@ module
 
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Player
+public import Mathlib.Order.BourbakiWitt
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies

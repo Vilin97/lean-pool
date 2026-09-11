@@ -7,6 +7,8 @@ module
 
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # `Jac₀`, `Jacobian`, and the challenge instance assembly (CC9, §2–§9)

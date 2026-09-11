@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
 public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
+import Mathlib.Algebra.Order.Ring.Nat
 
 /-!
 # Rewriting Entailment

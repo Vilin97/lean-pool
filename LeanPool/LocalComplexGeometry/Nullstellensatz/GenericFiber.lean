@@ -7,14 +7,9 @@ module
 
 public import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
 public import LeanPool.LocalComplexGeometry.Germs.Ring
-public import Mathlib.Algebra.CharP.Algebra
-public import Mathlib.FieldTheory.Perfect
-public import Mathlib.LinearAlgebra.Dimension.Localization
-public import Mathlib.RingTheory.Algebraic.Integral
-public import Mathlib.RingTheory.Finiteness.Quotient
-public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
-public import Mathlib.RingTheory.Localization.Integral
 public import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import Mathlib.FieldTheory.Separable
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # The generic fibre of a prepared prime quotient

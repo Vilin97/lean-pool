@@ -6,8 +6,11 @@ Authors: Joseph McKinsey
 module
 
 public import LeanPool.Flean.FloatCfg
-public import LeanPool.Flean.LogRules
 public import LeanPool.Flean.IntRounding
+public import Mathlib.Data.Int.Log
+import LeanPool.Flean.LogRules
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Qify
 
 /-!
 # Subnormal Floating-Point Representations

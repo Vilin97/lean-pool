@@ -5,8 +5,10 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
 public import Mathlib.Analysis.InnerProductSpace.Dual
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 Copyright (c) 2025. All rights reserved.

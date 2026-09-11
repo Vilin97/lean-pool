@@ -6,12 +6,9 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Basic
-public import Mathlib.LinearAlgebra.Matrix.Transvection
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.RingTheory.PrincipalIdealDomain
-public import Mathlib.Algebra.EuclideanDomain.Int
-public import Mathlib.LinearAlgebra.Matrix.Basis
-public import Mathlib.LinearAlgebra.Determinant
+import Mathlib.Analysis.Normed.Ring.Lemmas
+import Mathlib.LinearAlgebra.Determinant
+import Mathlib.LinearAlgebra.FreeModule.PID
 
 /-!
 # Diagonal Coset Representatives for GL_n Hecke Ring

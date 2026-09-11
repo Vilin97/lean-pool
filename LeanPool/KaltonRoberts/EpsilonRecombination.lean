@@ -21,9 +21,14 @@ an additive `|J| · M / N` error in the average deficit, which can be made
 -/
 module
 
-public import LeanPool.KaltonRoberts.Defs
 public import LeanPool.KaltonRoberts.Collections
-public import LeanPool.KaltonRoberts.UniformRecombination
+import LeanPool.KaltonRoberts.UniformRecombination
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Epsilon-loss recombination theorems

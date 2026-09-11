@@ -5,8 +5,20 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+public import LeanPool.AndersonConjecture.Jensen.NSubring
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
+import LeanPool.AndersonConjecture.Jensen.Avoidance
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+import Mathlib.Algebra.Polynomial.Cardinal
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.Encodable
+import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Close-up: no common factor

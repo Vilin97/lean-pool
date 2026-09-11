@@ -5,10 +5,7 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
 module
 
-public import Mathlib.Analysis.Calculus.Monotone
 public import Mathlib.Probability.Moments.Basic
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Chernoff Bounds

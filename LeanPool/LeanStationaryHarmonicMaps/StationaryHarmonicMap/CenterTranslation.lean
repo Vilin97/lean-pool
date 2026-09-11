@@ -5,7 +5,10 @@ Authors: Wei Wang
 -/
 module
 
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuclidean
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuclidean
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Center translations

@@ -7,9 +7,8 @@ module
 
 public import Mathlib.Lean.Expr.Basic
 public import Mathlib.ModelTheory.ElementaryMaps
-public import Mathlib.ModelTheory.Semantics
-public import Mathlib.Tactic.FinCases
-public import LeanPool.SetTheory.SimpAttr
+import LeanPool.SetTheory.SimpAttr
+import Mathlib.Tactic.FinCases
 
 /-!
 # Realization machinery for the ZF first-order language

@@ -5,8 +5,11 @@ Authors: Julius Marx
 -/
 module
 
-public meta import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public meta import LeanPool.MRiscX.Elab.HandleExpr
+public meta import Lean.Elab.Term.TermElabM
+public import LeanPool.MRiscX.Elab.HandleExpr
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Elab.Term.TermElabM
+import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 
 /-!
 # EvalLabelInHoare

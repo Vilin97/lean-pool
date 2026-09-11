@@ -7,11 +7,7 @@ module
 
 public import LeanPool.Erdos132ConvexK3.Basic
 public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Analysis.Convex.StrictConvexSpace
-public import Mathlib.Analysis.InnerProductSpace.Convex
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
+import Mathlib.Analysis.InnerProductSpace.Convex
 
 /-!
 # Geometric inputs for the convex three-distance argument

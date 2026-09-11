@@ -5,8 +5,15 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.UniformStepBound
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.StepBounds
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.UniformStepBound
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # On-Curve Principal Value: General Infrastructure

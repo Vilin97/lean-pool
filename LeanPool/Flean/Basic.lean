@@ -5,10 +5,13 @@ Authors: Joseph McKinsey
 -/
 module
 
-public import LeanPool.Flean.FloatCfg
 public import LeanPool.Flean.Subnorm
-public import LeanPool.Flean.FloatRep
 public import LeanPool.Flean.Rounding
+public meta import Lean.Meta.Tactic.NormCast
+public import Mathlib.Algebra.Order.SuccPred
+import LeanPool.Flean.LogRules
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Floating-Point Numbers

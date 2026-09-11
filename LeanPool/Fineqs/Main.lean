@@ -5,21 +5,18 @@ Authors: Stefan Barańczuk, Aristotle
 -/
 module
 
-public import Mathlib.LinearAlgebra.Projectivization.Cardinality
-public import Mathlib.LinearAlgebra.Matrix.Rank
-public import Mathlib.LinearAlgebra.Dimension.RankNullity
-public import Mathlib.Data.Set.Card
-public import Mathlib.FieldTheory.Finite.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.LinearAlgebra.Projectivization.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.GroupTheory.GroupAction.Ring
+import Mathlib.LinearAlgebra.Dimension.Localization
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathlib.LinearAlgebra.Projectivization.Cardinality
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # FinEqs main file
 

@@ -6,9 +6,12 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Basic
-public import Mathlib.Order.BoundedOrder.Basic
-public import Mathlib.Data.Finset.Card
 public import Mathlib.Data.Set.Card
+public import Mathlib.Order.Lattice.Nat
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # VC Dimension and Shattering

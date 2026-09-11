@@ -8,9 +8,15 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -- Import our functional analysis utilities
 module
 
-public import LeanPool.OSforGFF.General.FunctionalAnalysis
 -- Bochner library provides the cylinder σ-algebra MeasurableSpace instance on WeakDual
 public import LeanPool.OSforGFF.Minlos.NuclearSpace
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.OSforGFF.General.FunctionalAnalysis
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Basic Definitions

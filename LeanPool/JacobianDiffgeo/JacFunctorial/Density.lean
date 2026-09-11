@@ -5,8 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Forms
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Density.lean` — the reusable "dense ⟹ everywhere" closing lemma (jacobian-functoriality §5)

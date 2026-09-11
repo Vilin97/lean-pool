@@ -6,9 +6,11 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import LeanPool.BruhatTits.Lattice.Transvect
-public import LeanPool.BruhatTits.Utils.LinearAlgebra
-public import Mathlib.LinearAlgebra.TensorProduct.RightExactness
 public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.Algebra.Module.Torsion.Basic
+import LeanPool.BruhatTits.Utils.LinearAlgebra
+import LeanPool.BruhatTits.Utils.ValuationRings
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # The `R ⧸ ϖ R`-vector space `L ⧸ ϖ L`

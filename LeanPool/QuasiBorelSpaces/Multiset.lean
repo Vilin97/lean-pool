@@ -7,7 +7,8 @@ module
 
 public import LeanPool.QuasiBorelSpaces.List
 public import LeanPool.QuasiBorelSpaces.Quotient
-public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
+import LeanPool.QuasiBorelSpaces.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.Multiset

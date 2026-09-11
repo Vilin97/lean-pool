@@ -7,6 +7,7 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
 
 /-!
 # Polygonal Jordan regions as finite plane complexes

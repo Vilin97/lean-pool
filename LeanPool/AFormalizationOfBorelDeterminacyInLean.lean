@@ -7,6 +7,7 @@ module
 
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # A formalization of Borel determinacy in Lean

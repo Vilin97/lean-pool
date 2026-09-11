@@ -5,13 +5,12 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Complexity.Symmetrization
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
 public import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
-public import Mathlib.Probability.ProbabilityMassFunction.Basic
-public import Mathlib.Probability.ProbabilityMassFunction.Constructions
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Measure.Map
+import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
 /-!
 # Finite-Support VC Approximation via Symmetrization

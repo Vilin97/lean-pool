@@ -6,6 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `periodSubgroup` membership (Forster §21.2)

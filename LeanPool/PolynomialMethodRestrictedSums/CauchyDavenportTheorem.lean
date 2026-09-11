@@ -6,12 +6,19 @@ Authors: Nick Adfor
 module
 
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Combinatorics.Nullstellensatz
-public import Mathlib.Data.Int.Star
-public import Mathlib.Data.Nat.Prime.Factorial
-public import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+meta import Lean.Meta.Tactic.NormCast
+import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Nat.Choose.Sum
+import Mathlib.Data.Nat.Prime.Factorial
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The Cauchy-Davenport theorem

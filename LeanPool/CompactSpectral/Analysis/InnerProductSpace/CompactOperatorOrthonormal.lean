@@ -6,9 +6,9 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Orthonormal
-public import Mathlib.Order.Filter.AtTopBot.Basic
-public import Mathlib.Order.Filter.Cofinite
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
 
 /-!
 # Compact operators on orthonormal sequences

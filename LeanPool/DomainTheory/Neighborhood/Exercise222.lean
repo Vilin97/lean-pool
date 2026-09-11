@@ -5,10 +5,13 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Approximable
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Data.Set.Lattice
 public import Mathlib.Order.Directed
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Set.BooleanAlgebra
+import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # Exercise 2.22 (Scott 1981, PRG-19) — the abstract representation theorem

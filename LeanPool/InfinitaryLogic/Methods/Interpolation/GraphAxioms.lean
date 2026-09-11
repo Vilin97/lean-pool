@@ -6,7 +6,9 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
-public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Graph axioms: totality and functionality (Craig Layer 3, Unit 5a)
 

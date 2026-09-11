@@ -5,11 +5,9 @@ Authors: Seewoo Lee
 -/
 module
 
-public import Mathlib.Algebra.Polynomial.FieldDivision
-public import Mathlib.Algebra.Ring.Regular
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
 public import LeanPool.LeanPolyABC.Lib.Radical
 public import LeanPool.LeanPolyABC.Lib.Wronskian
+import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
 
 /-!
 # LeanPool.LeanPolyABC.Lib.DivRadical

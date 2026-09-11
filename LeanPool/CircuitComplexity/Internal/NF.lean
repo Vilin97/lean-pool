@@ -7,7 +7,8 @@ module
 
 public import LeanPool.CircuitComplexity.NF.Defs
 public import LeanPool.CircuitComplexity.AON.Defs
-public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Pi
+import Mathlib.Data.Fintype.BigOperators
 
 /-! # Internal: Normal Form Proof Machinery
 

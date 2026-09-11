@@ -5,9 +5,18 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.CechCount.Count
-public import LeanPool.JacobianDiffgeo.Abel
-public import LeanPool.JacobianDiffgeo.PeriodLattice
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
+import LeanPool.JacobianDiffgeo.Abel.OfCurveInj
+import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
+import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
+import LeanPool.JacobianDiffgeo.CechCount.Count
+import LeanPool.JacobianDiffgeo.PeriodLattice.FullRank
+import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The final gate, closed: ungated exports (cechcount unit)

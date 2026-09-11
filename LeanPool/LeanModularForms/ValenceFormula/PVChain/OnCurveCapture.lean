@@ -6,7 +6,13 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
-public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # On-Curve Capture Lemmas

@@ -6,8 +6,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.DiskSquare
-public import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
-public import LeanPool.ClassificationOfSurfaces.WeightedCircle
+import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The one-sided-degenerate P2 disk model

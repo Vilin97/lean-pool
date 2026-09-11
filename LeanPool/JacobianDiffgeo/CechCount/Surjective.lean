@@ -6,6 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.CechCount.Mul
+import LeanPool.JacobianDiffgeo.Cech.SixTerm
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Multiplication epimorphisms on Čech `H¹` (cechcount unit, Forster 17.8)

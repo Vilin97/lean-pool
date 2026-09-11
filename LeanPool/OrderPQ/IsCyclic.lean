@@ -6,8 +6,11 @@ Authors: Scott Harper, Peiran Wu
 module
 
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic
-public import LeanPool.OrderPQ.MonoidHom
 public import LeanPool.OrderPQ.TorsionBy
+import LeanPool.OrderPQ.MonoidHom
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.OrderPQ.IsCyclic

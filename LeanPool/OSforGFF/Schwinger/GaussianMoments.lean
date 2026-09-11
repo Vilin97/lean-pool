@@ -5,17 +5,10 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Integral.IntegrableOn
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.Data.Matrix.Basic
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.ENNReal.Holder
-public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 
-public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Schwinger.Defs
 public import LeanPool.OSforGFF.Measure.Construct
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 ## Gaussian Moments and n-Point Integrability

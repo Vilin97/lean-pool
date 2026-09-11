@@ -5,26 +5,9 @@ Authors: Dhyan Aranha, contributors
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Zify
-public import Mathlib.Tactic.Lift
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.Measurability
-public import Mathlib.Tactic.Abel
-public import LeanPool.Monsky.SimplexBasic
-public import LeanPool.Monsky.SegmentTriangle
-public import LeanPool.Monsky.BasicDefinitions
-public import LeanPool.Monsky.RainbowTriangles
 public import LeanPool.Monsky.Square
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monsky.MonskyEven

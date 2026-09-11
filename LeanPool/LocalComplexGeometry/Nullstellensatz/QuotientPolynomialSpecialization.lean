@@ -8,6 +8,8 @@ module
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.IdealRepresentatives
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Specializing polynomial identities modulo an analytic ideal

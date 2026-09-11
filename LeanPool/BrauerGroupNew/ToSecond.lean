@@ -6,9 +6,16 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import LeanPool.BrauerGroupNew.CrossProductAlgebra
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Defs
-public import LeanPool.BrauerGroupNew.Subfield.Splitting
-public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
+public import LeanPool.BrauerGroupNew.RelativeBrauer
+public import Mathlib.Tactic.Continuity
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.SkolemNoether
+import LeanPool.BrauerGroupNew.Subfield.Splitting
+import LeanPool.BrauerGroupNew.Subfield.Subfield
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.ToSecond

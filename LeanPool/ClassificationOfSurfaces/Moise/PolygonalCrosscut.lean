@@ -5,8 +5,9 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
 public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
 
 /-!
 # Polygonal crosscuts

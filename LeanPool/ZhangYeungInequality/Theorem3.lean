@@ -5,9 +5,9 @@ Authors: Christopher Boone
 -/
 module
 
-public import LeanPool.ZhangYeungInequality.CopyLemma
 public import LeanPool.ZhangYeungInequality.Delta
-public import LeanPool.ZhangYeungInequality.Prelude
+import LeanPool.ZhangYeungInequality.CopyLemma
+import LeanPool.ZhangYeungInequality.Prelude
 
 /-!
 # The Zhang-Yeung inequality (Theorem 3)

@@ -6,13 +6,11 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132ConvexK3.GlobalAssembly
-public import LeanPool.Erdos132ConvexK3.WordClosures
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+import LeanPool.Erdos132ConvexK3.Penultimate
+import LeanPool.Erdos132ConvexK3.TailClosure
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Geometric closure of the thirteen global cover words

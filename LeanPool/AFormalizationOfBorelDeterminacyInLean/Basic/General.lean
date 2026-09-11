@@ -5,14 +5,15 @@ Authors: Sven Manthe
 -/
 module
 
-public import Mathlib.SetTheory.Cardinal.Continuum
-public import Mathlib.Order.CompleteSublattice
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Zify
-public import Aesop
-public import Lean.Elab.Tactic.Omega
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+public import Mathlib.SetTheory.Cardinal.Order
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.SetTheory.Ordinal.Basic
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General

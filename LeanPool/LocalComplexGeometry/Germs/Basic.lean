@@ -5,9 +5,13 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Germs
 public import Mathlib.Topology.Germ
-public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Holomorphic function germs at the origin

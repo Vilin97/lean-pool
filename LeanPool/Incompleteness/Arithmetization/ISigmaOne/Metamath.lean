@@ -20,3 +20,4 @@ public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.T
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Coding
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.CodedTheory
+import LeanPool.Incompleteness.Arithmetization.Definability.Init

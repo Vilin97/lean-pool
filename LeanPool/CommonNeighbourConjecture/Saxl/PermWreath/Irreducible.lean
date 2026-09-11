@@ -7,7 +7,6 @@ module
 
 public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
 public import Mathlib.RepresentationTheory.Irreducible
-public import Mathlib.LinearAlgebra.Pi
 
 /-!
 # Irreducibility of permutation-wreath product actions

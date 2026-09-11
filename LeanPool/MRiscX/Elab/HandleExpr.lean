@@ -5,10 +5,10 @@ Authors: Julius Marx
 -/
 module
 
-public meta import LeanPool.MRiscX.AbstractSyntax.Map
-public meta import LeanPool.MRiscX.AbstractSyntax.Instr
 public meta import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public meta import Lean
+public meta import Lean.Meta.Basic
+import Lean.Elab.Tactic.RCases
+import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 
 /-!
 # HandleExpr

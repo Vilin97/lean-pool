@@ -6,8 +6,13 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132ConvexK3.Assembly
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.NormNum
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Non-vacuity witnesses for indexed word realizations

@@ -7,7 +7,14 @@ module
 
 public import LeanPool.Wallace.CoefficientTransfiniteExtension
 public import LeanPool.Wallace.RationalTriangularPreprocess
-public import Mathlib.Algebra.Category.Grp.Injective
+import Mathlib.Algebra.Category.Grp.Injective
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Transfinite extension for the rational direct sum

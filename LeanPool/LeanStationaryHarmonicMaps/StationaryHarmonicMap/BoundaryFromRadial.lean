@@ -5,7 +5,9 @@ Authors: Wei Wang
 -/
 module
 
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusFormulas
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusFormulas
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Boundary identity from radial stationarity

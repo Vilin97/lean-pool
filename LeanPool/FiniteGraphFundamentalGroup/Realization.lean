@@ -5,14 +5,10 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
 module
 
-public import Mathlib.Topology.WithTopology
 
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
-public import Mathlib.Topology.Connected.PathConnected
-public import Mathlib.Topology.Constructions
-public import Mathlib.Topology.Order
 public import LeanPool.FiniteGraphFundamentalGroup.Proof
+import Mathlib.Topology.WithTopology
 
 /-!
 # Geometric realization of a finite quiver

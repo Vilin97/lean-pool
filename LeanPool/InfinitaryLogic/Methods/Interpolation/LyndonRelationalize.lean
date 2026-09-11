@@ -5,10 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
 /-!
 # Signed occurrences through the relationalization layer (issue #14, Unit 6 — the D6 gate)
 

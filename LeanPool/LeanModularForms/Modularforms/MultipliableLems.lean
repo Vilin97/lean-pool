@@ -6,7 +6,12 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.SummableLems
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.SummableLems
+import Mathlib.Analysis.SpecialFunctions.Log.Summable
 
 /-! # MultipliableLems -/
 

@@ -5,13 +5,9 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.AdeleSpace.FilterChain
 public import LeanPool.RiemannRochFunctionFields.Genus.Basic
-public import Mathlib.Algebra.Order.GroupWithZero.Canonical
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.Algebra.Module.Submodule.Lattice
-public import Mathlib.LinearAlgebra.Quotient.Basic
-public import Mathlib.RingTheory.Valuation.ValuationSubring
+import LeanPool.RiemannRochFunctionFields.AdeleSpace.FilterChain
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Adele quotient rank and the index of specialty

@@ -6,6 +6,7 @@ Authors: Qiyuan Zhao
 module
 
 public import LeanPool.Lentil.ProofMode.Basic
+import LeanPool.Lentil.Rules.Basic
 
 @[expose] public section
 

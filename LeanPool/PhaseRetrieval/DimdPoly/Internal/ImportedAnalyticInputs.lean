@@ -7,20 +7,18 @@ module
 
 import Mathlib.Analysis.Normed.Lp.SmoothApprox
 
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
-public import Mathlib.Analysis.Distribution.TemperedDistribution
 public import Mathlib.Analysis.Fourier.FourierTransform
-public import Mathlib.Analysis.Fourier.Inversion
-public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
 public import Mathlib.MeasureTheory.Function.Holder
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Basic
-public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-public import Mathlib.Probability.Distributions.Gaussian.Real
 public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
-public import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
 
 /-! # ImportedAnalyticInputs -/
 

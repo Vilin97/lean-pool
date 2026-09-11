@@ -8,7 +8,7 @@ module
 public meta import LeanPool.Lentil.Expr
 
 public import LeanPool.Lentil.ProofMode.Tactics.Have
-public import LeanPool.Lentil.Expr
+import LeanPool.Lentil.Rules.Basic
 
 @[expose] public section
 

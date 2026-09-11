@@ -8,6 +8,14 @@ module
 public import LeanPool.VirasoroProject.HeisenbergAlgebra
 public import LeanPool.VirasoroProject.IndexTri
 public import LeanPool.VirasoroProject.LieVerma
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Algebra.EuclideanDomain.Field
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.Star
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Verma modules for the Virasoro algebra

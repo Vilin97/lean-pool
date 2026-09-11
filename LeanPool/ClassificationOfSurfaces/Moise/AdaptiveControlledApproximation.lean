@@ -6,9 +6,12 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenCover
-public import LeanPool.ClassificationOfSurfaces.Moise.HalfPlanePolygon
 public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.FacewiseComparison
+import LeanPool.ClassificationOfSurfaces.Moise.FacewiseComparison
+import LeanPool.ClassificationOfSurfaces.Moise.HalfPlanePolygon
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Adaptive meshes for strongly-positive metric controls

@@ -5,9 +5,8 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.ArzelaAscoli
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-public import Mathlib.Topology.MetricSpace.Pseudo.Basic
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.ArzelaAscoli
 
 /-!
 # `L²` compactness criterion: transfer from `BCF` compactness to `L²` (Euclidean)

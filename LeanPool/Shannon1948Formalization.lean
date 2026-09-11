@@ -6,6 +6,7 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.Shannon1948Formalization.Entropy
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Shannon Entropy Characterization

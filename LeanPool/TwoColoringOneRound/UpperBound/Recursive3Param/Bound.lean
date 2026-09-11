@@ -5,8 +5,11 @@ Authors: Jukka Suomela
 -/
 module
 
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
-public import Mathlib.MeasureTheory.Integral.Prod
+public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Final bound for the 3-parameter recursive algorithm

@@ -5,11 +5,9 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Geometry.Manifold.Algebra.Monoid
-public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-public import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
+import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.Localization`

@@ -5,8 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeasureHelpers
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Multi-point Principal Value Infrastructure

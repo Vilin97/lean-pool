@@ -6,6 +6,7 @@ Authors: Vasily Ilin, Brian Nugent
 module
 
 public import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.CohomologyAPI
 
 /-!
 # Generated subsheaves via coproduct images

@@ -5,7 +5,6 @@ Authors: Seewoo Lee
 -/
 module
 
-public import Init.Data.Nat.Lemmas
 
 /-!
 # LeanPool.LeanPolyABC.Lib.Max3

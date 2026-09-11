@@ -5,8 +5,12 @@ Authors: Math Inc
 -/
 module
 
-public import LeanPool.Erdos1196.Markov
-public import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
+public import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.Markov
+import LeanPool.Erdos1196.NormalizationCore
+import LeanPool.Erdos1196.Preliminaries
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Hit mass and final reductions

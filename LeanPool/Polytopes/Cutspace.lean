@@ -6,6 +6,7 @@ Authors: Jun Kwon
 module
 
 public import LeanPool.Polytopes.Polar
+import LeanPool.Polytopes.Pre
 
 /-!
 Cut spaces obtained by intersecting collections of halfspaces.

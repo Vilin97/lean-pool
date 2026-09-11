@@ -5,9 +5,6 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import Mathlib.Analysis.Normed.Module.Convex
-public import Mathlib.Topology.Connected.Clopen
-public import Mathlib.Topology.MetricSpace.Thickening
 public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 
 /-!

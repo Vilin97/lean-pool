@@ -7,9 +7,24 @@ module
 
 public import LeanPool.Wallace.RationalTriangularPreprocess
 public import Mathlib.GroupTheory.DivisibleHull
-public import Mathlib.GroupTheory.OreLocalization.Cardinality
 public import Mathlib.LinearAlgebra.Basis.SMul
-public import Mathlib.LinearAlgebra.Dimension.Free
+public import Mathlib.LinearAlgebra.Dimension.Basic
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Encodable
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.GroupTheory.OreLocalization.Cardinality
+import Mathlib.LinearAlgebra.Basis.VectorSpace
+import Mathlib.LinearAlgebra.Dimension.Free
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Coordinatizing continuum-sized torsion-free Abelian groups

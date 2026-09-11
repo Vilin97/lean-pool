@@ -5,7 +5,15 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Unit Arc Winding Number Helpers

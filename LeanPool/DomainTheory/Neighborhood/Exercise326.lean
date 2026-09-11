@@ -7,6 +7,10 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Product
 public import LeanPool.DomainTheory.Neighborhood.Example23
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Set.Image
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.SetLike
 
 /-!
 # Exercise 3.26 (Scott 1981, PRG-19, §3) — the conditional operator `cond`

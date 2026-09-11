@@ -5,8 +5,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
 public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace

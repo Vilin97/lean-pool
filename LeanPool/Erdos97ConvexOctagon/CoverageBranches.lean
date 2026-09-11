@@ -5,7 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSoundness
+public import LeanPool.Erdos97ConvexOctagon.FiniteModel
+public import LeanPool.Erdos97ConvexOctagon.Relabelling
+public import LeanPool.Erdos97ConvexOctagon.RowMasks
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSoundness
 
 /-!
 # Exhaustive coverage contradiction

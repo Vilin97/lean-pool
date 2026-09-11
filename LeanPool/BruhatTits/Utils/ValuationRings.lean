@@ -5,9 +5,8 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import LeanPool.BruhatTits.Utils.Misc
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
-public import Mathlib.RingTheory.Valuation.ValuationRing
+import LeanPool.BruhatTits.Utils.Misc
 
 /-!
 # LeanPool.BruhatTits.Utils.ValuationRings

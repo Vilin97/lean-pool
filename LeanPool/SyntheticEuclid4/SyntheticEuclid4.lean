@@ -5,8 +5,15 @@ Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
 module
 
-public import LeanPool.SyntheticEuclid4.PermTactics
-public import Mathlib.Tactic.WLOG
+public import LeanPool.SyntheticEuclid4.Axioms
+import LeanPool.SyntheticEuclid4.PermTactics
+import LeanPool.SyntheticEuclid4.Tactics
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Synthetic Geometry, Euclid's Elements Book I using Avigad Axioms

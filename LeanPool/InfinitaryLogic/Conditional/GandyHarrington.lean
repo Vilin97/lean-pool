@@ -5,13 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Conditional.SilverCategoryRoute
 public import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
-public import LeanPool.InfinitaryLogic.Descriptive.PerfectAntichain
-public import Mathlib.MeasureTheory.Constructions.Polish.Basic
-public import Mathlib.Topology.MetricSpace.CantorScheme
-public import Mathlib.Topology.MetricSpace.Perfect
-public import Mathlib.Topology.MetricSpace.Polish
+import LeanPool.InfinitaryLogic.Conditional.SilverCategoryRoute
+import LeanPool.InfinitaryLogic.Descriptive.PerfectAntichain
 /-!
 # Silver's Theorem for Borel Equivalence Relations
 

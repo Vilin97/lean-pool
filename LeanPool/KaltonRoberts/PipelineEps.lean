@@ -15,8 +15,16 @@ then concludes the exact `C₂` bound via `∀ ε > 0, M ≤ C₂ + ε ⟹ M ≤
 -/
 module
 
-public import LeanPool.KaltonRoberts.Pipeline
-public import LeanPool.KaltonRoberts.EpsilonRecombination
+public import LeanPool.KaltonRoberts.Collections
+import LeanPool.KaltonRoberts.Lemmas
+import LeanPool.KaltonRoberts.Numerical
+import LeanPool.KaltonRoberts.Pipeline
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Epsilon pipeline

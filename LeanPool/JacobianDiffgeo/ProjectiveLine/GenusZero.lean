@@ -6,8 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-public import LeanPool.JacobianDiffgeo.Forms
-public import Mathlib.Analysis.Complex.Liouville
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import Mathlib.Analysis.Complex.Liouville
 
 /-!
 # `genus (OnePoint ℂ) = 0` (CC5)

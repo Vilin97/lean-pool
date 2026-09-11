@@ -5,11 +5,17 @@ Authors: Bryan Ehrlich
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.LinearAlgebra.BilinearMap
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Module
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Module
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!

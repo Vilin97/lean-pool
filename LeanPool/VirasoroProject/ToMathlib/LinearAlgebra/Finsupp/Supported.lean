@@ -5,7 +5,9 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.LinearAlgebra.Finsupp.Supported
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.LinearAlgebra.Span.Defs
+import Mathlib.Algebra.Module.Submodule.Basic
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp.Supported

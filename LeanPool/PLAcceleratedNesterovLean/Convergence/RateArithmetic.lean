@@ -5,10 +5,8 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
 public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
 
 /-!
 # Multi-Phase Rate Arithmetic

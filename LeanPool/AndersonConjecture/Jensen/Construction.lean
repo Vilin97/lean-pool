@@ -9,6 +9,11 @@ public import LeanPool.AndersonConjecture.Jensen.Construction.ChainHelpers
 public import LeanPool.AndersonConjecture.Jensen.Construction.Construction
 public import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
 public import LeanPool.AndersonConjecture.Jensen.Construction.Transfinite
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Transfinite Construction of the Final Ring

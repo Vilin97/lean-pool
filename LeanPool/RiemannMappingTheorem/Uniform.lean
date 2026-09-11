@@ -5,8 +5,8 @@ Authors: Vincent Beffara
 -/
 module
 
-public import Mathlib.Topology.UniformSpace.Compact
 public import Mathlib.Topology.UniformSpace.UniformConvergence
+import Mathlib.Topology.UniformSpace.Compact
 
 /-!
 # LeanPool.RiemannMappingTheorem.Uniform

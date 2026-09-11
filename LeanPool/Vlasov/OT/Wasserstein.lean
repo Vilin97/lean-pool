@@ -5,10 +5,9 @@ Authors: Joseph K. Miller
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 public import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
-public import Mathlib.Topology.ContinuousMap.Bounded.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-! # Wasserstein-1 distance via Kantorovich–Rubinstein duality (cost-generic)
 

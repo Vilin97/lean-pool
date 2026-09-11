@@ -6,9 +6,12 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.TailDuality.TailOps
-public import LeanPool.JacobianDiffgeo.CanonicalForms
 public import LeanPool.JacobianDiffgeo.ResidueCalculus.GermFunctionals
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
+public import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # `pairT`/`resMap`: the residue pairing on the germ model (serre-duality-tails)

@@ -6,8 +6,7 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.Definitions
-public import Mathlib.MeasureTheory.Constructions.UnitInterval
-public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 The “three-parameter recursive cutoff” construction (a radius-1 factor-of-i.i.d. triple rule).

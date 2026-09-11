@@ -5,9 +5,14 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
-public import Mathlib.Data.Nat.Factorization.Basic
-public import Mathlib.Data.Nat.GCD.BigOperators
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Prime Decomposition of Hecke Ring Elements

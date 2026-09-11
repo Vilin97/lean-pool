@@ -9,7 +9,7 @@ public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.LinearAlgebra.Matrix.Rank
 public import Mathlib.LinearAlgebra.Matrix.BilinearForm
 public import Mathlib.RingTheory.MvPolynomial.Basic
-public import Mathlib.Data.Sym.Card
+import Mathlib.Data.Sym.Card
 
 /-!
 # The Bannai-Bannai-Stanton bound on distance sets

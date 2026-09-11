@@ -6,13 +6,8 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-public import Mathlib.Analysis.Calculus.LocalExtr.Basic
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Topology.Order.Compact
-public import Mathlib.Analysis.Calculus.Implicit
-public import Mathlib.Analysis.Calculus.ImplicitContDiff
-public import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.Calculus.ImplicitContDiff
+import Mathlib.Analysis.InnerProductSpace.Dual
 
 /-!
 # Implicit Function Theorem Application

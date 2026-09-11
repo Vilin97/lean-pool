@@ -8,6 +8,7 @@ module
 public import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HarnackIneq
 public import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszRepresentations
 public import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszUnique
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Index: positive harmonic functions on the unit disc

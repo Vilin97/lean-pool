@@ -6,10 +6,6 @@ Authors: Math_XMUM
 module
 
 public import Mathlib.Analysis.Convex.StdSimplex
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.Order.Ring.Defs
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Common
 
 /-!
 # Mixed strategies on the standard simplex

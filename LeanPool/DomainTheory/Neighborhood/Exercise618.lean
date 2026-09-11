@@ -8,6 +8,13 @@ module
 public import LeanPool.DomainTheory.Neighborhood.Exercise316
 public import LeanPool.DomainTheory.Neighborhood.Exercise319
 public import LeanPool.DomainTheory.Neighborhood.Exercise617
+import LeanPool.DomainTheory.Neighborhood.Theorem69
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 6.18 (Scott 1981, PRG-19, §6) — `𝒟^∞` as an initial algebra

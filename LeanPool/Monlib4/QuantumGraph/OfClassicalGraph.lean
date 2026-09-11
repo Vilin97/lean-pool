@@ -7,8 +7,9 @@ module
 
 public import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
 public import LeanPool.Monlib4.QuantumGraph.Basic
-public import LeanPool.Monlib4.QuantumGraph.Example
-public import LeanPool.Monlib4.QuantumGraph.Grad
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.Preq.Ites
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.OfClassicalGraph

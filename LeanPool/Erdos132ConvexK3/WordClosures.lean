@@ -5,13 +5,17 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ConvexK3.TerminalCage
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import LeanPool.Erdos132ConvexK3.Basic
+public import Mathlib.Analysis.Real.Sqrt
+import LeanPool.Erdos132ConvexK3.Geometry
+import LeanPool.Erdos132ConvexK3.Lens
+import LeanPool.Erdos132ConvexK3.MetricDichotomy
+import LeanPool.Erdos132ConvexK3.Penultimate
+import LeanPool.Erdos132ConvexK3.ResidualBounds
+import LeanPool.Erdos132ConvexK3.TerminalCage
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Raw geometric exceptional-word closures

@@ -5,10 +5,11 @@ Authors: Jukka Suomela
 -/
 module
 
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Main

@@ -5,9 +5,8 @@ Authors: Vincent Beffara
 -/
 module
 
-public import Mathlib.Analysis.Analytic.IsolatedZeros
-public import Mathlib.Analysis.Complex.RemovableSingularity
 public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import Mathlib.Analysis.Complex.RemovableSingularity
 
 /-!
 # LeanPool.RiemannMappingTheorem.Cindex

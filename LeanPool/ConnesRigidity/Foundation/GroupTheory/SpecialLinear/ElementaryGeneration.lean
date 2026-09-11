@@ -12,8 +12,8 @@ the index model, namespaces, and Mathlib APIs. See the upstream PORT_MAP.md.
 -/
 module
 
-public import Mathlib.FieldTheory.Finite.Basic
 public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
+import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # Elementary generation for Zhou §4

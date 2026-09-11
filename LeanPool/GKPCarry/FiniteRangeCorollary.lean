@@ -5,8 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.CarryArithmetic
-public import LeanPool.GKPCarry.FiniteRange
+public import Mathlib.Data.Nat.Choose.Central
+import LeanPool.GKPCarry.CarryArithmetic
+import LeanPool.GKPCarry.FiniteRange
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Central-binomial consequence of the bounded C3 certificate

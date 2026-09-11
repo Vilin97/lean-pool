@@ -6,7 +6,14 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise124
-public import LeanPool.DomainTheory.Neighborhood.Exercise413
+import LeanPool.DomainTheory.Neighborhood.Exercise413
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Zorn
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 4.15 (Scott 1981, PRG-19, Lecture IV) — a maximal (and a least) fixed

@@ -7,7 +7,6 @@ module
 
 public import LeanPool.QuasiBorelSpaces.Defs
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
-public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.Basic

@@ -7,6 +7,16 @@ module
 
 public import LeanPool.GKPCarry.DensityOne
 public import LeanPool.GKPCarry.FiniteRangeCorollary
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Density-One GKP Divisibility and Its Carry-Language Characterization

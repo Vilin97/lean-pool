@@ -5,7 +5,7 @@ Authors: Palalansoukî
 -/
 module
 
-public import Aesop
+import Aesop.Frontend.Command
 
 @[expose] public section
 

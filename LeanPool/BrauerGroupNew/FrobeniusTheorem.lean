@@ -5,11 +5,19 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
-public import LeanPool.BrauerGroupNew.Subfield.Subfield
 public import Mathlib.Algebra.QuaternionBasis
-public import Mathlib.Analysis.Quaternion
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import LeanPool.BrauerGroupNew.Subfield.Defs
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import LeanPool.BrauerGroupNew.DoubleCentralizer
+import LeanPool.BrauerGroupNew.SkolemNoether
+import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
+import LeanPool.BrauerGroupNew.Subfield.Subfield
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.FieldTheory.PurelyInseparable.Basic
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.FrobeniusTheorem

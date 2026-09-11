@@ -6,9 +6,7 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Forms.Coeffs
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
-public import Mathlib.Analysis.Normed.Operator.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+import LeanPool.JacobianDiffgeo.Surface.Bridges
 
 /-!
 # Analyticity characterization of holomorphic 1-forms (CC1, design §2.2)

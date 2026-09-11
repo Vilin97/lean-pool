@@ -6,12 +6,10 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.InnerProductSpace.Dual
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.InnerProductSpace.Dual
 
 /-!
 # Gradient Alignment Lemma

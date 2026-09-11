@@ -5,8 +5,7 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import Mathlib.Topology.Connected.PathConnected
-public import Mathlib.Topology.Homotopy.Basic
+public import Mathlib.Topology.Path
 
 /-!
 # LeanPool.DirectedTopologyLean4.MonotonePath

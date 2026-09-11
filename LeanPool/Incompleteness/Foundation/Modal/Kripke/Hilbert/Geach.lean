@@ -7,7 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Geach
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Geach -/
 

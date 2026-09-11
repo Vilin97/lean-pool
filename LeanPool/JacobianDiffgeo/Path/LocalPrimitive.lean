@@ -6,9 +6,12 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Forms.Coeffs
-public import LeanPool.JacobianDiffgeo.Forms.Analyticity
-public import LeanPool.JacobianDiffgeo.Path.Planar
-public import Mathlib.Topology.LocallyConstant.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Path.Planar
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Topology.LocallyConstant.Basic
 
 /-!
 # `IsPrimitiveAlongMap`: primitives of a 1-form along a continuous map (CC6)

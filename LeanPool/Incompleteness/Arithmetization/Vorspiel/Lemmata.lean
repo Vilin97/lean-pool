@@ -5,8 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
-public import Mathlib.Algebra.GCDMonoid.Basic
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
+import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Lemmata -/
 

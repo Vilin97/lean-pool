@@ -5,10 +5,10 @@ Authors: Math Inc
 -/
 module
 
-public import LeanPool.Erdos1196.Main
-public import Mathlib.Algebra.GCDMonoid.Nat
-public import Mathlib.Analysis.Asymptotics.Lemmas
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.Main
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # The formal-conjectures statement of Erdős Problem 1196

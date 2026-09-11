@@ -5,7 +5,9 @@ Authors: Jun Kwon
 -/
 module
 
-public import LeanPool.Polytopes.Cutspace
+public import LeanPool.Polytopes.Halfspace
+public import LeanPool.Polytopes.Pre
+import LeanPool.Polytopes.Cutspace
 
 /-!
 Definitions and basic properties of V-polytopes and H-polytopes.

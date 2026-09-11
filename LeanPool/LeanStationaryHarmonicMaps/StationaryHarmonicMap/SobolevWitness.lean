@@ -6,6 +6,7 @@ Authors: Wei Wang
 module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevBridge
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Sobolev witnesses

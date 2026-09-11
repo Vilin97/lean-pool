@@ -6,7 +6,9 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
-public import Mathlib.Algebra.GCDMonoid.IntegrallyClosed
+import LeanPool.Chudnovsky.Ramanujan
+import Mathlib.Algebra.GCDMonoid.IntegrallyClosed
+import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
 
 /-!
 # The modular polynomial `Φ_m ∈ ℤ[X, Y]` and Kronecker's lemma (Phase C, chunks B6–B7)

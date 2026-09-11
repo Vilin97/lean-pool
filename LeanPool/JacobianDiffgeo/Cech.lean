@@ -15,6 +15,8 @@ public import LeanPool.JacobianDiffgeo.Cech.Window
 public import LeanPool.JacobianDiffgeo.Cech.WindowRank
 public import LeanPool.JacobianDiffgeo.Cech.Skyscraper
 public import LeanPool.JacobianDiffgeo.Cech.SixTerm
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # cech-cohomology (CC8): `H¹(D)` as a directed colimit over finite covers (namespace `RS.Cech`)

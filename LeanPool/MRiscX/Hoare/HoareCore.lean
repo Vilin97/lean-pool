@@ -5,13 +5,11 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.AbstractSyntax.MState
 public import LeanPool.MRiscX.Semantics.Run
-public import LeanPool.MRiscX.Hoare.EvalLabelInHoare
-public import LeanPool.MRiscX.Hoare.HoareAssignmentElab
-public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public import Mathlib.Data.Set.Basic
-public import Mathlib.Data.Set.BooleanAlgebra
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Set.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Tactic.Finiteness.Attr
 
 
 /-!

@@ -6,6 +6,7 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import LeanPool.BruhatTits.Graph.GroupAction
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
 
 /-!
 # Proof that the Bruhat-Tits graph is a tree

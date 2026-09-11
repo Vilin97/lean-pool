@@ -5,7 +5,15 @@ Authors: Ricky Cipollini
 -/
 module
 
-public import LeanPool.Erdos865.FoldedAux
+public import LeanPool.Erdos865.Defs
+import LeanPool.Erdos865.FoldedAux
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The folded additive lemma

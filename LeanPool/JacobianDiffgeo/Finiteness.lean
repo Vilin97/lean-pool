@@ -12,6 +12,8 @@ public import LeanPool.JacobianDiffgeo.Finiteness.Chain
 public import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
 public import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
 public import LeanPool.JacobianDiffgeo.Finiteness.Chi
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # finiteness-and-chi: `FiniteDimensional H¹(X, O_D)` via Schwartz/Montel (namespace

@@ -6,7 +6,6 @@ Authors: Monica Omar
 module
 
 public import Mathlib.LinearAlgebra.TensorProduct.Associator
-public import Mathlib.Algebra.Algebra.Bilinear
 
 /-!
 # Strict tensor product (wip)

@@ -5,9 +5,10 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import LeanPool.GrothendieckVanishing.PresheafFilteredColimit
-public import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
 public import LeanPool.GrothendieckVanishing.GeneratedSubsheaf
+public import Mathlib.Topology.NoetherianSpace
+import LeanPool.GrothendieckVanishing.PresheafFilteredColimit
+import Mathlib.Algebra.Category.Grp.AB
 
 /-!
 # Finitely generated vanishing reduction

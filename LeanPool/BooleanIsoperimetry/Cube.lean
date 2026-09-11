@@ -5,9 +5,12 @@ Authors: Alexey Milovanov
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.GeomSum
-public import Mathlib.Data.Nat.Digits.Defs
-public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Fintype.Powerset
+import Mathlib.Algebra.Order.Ring.GeomSum
+import Mathlib.Data.Nat.Digits.Defs
+import Mathlib.Tactic.IntervalCases
 
 /-!
 # Boolean cube basics

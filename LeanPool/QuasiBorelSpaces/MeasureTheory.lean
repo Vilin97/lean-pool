@@ -17,6 +17,7 @@ public import LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Sum
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Measure-theoretic helpers

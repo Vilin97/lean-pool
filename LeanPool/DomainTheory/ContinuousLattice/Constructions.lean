@@ -5,10 +5,8 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.ContinuousLattice.MilnerCorrection
 public import LeanPool.DomainTheory.ContinuousLattice.ScottMaps
 public import LeanPool.DomainTheory.ContinuousLattice.Injective
-public import Mathlib.Order.Preorder.Finite
 
 /-!
 # Continuous lattice constructions (Scott 1972, §2.8–2.12)

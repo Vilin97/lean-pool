@@ -5,8 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Tree
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.SimpleExtension
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Tree
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.SimpleExtension
 
 /-! # Unnecessitation -/
 

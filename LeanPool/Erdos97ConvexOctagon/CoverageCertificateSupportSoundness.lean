@@ -6,8 +6,13 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
-public import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMaskSoundness
 public import LeanPool.Erdos97ConvexOctagon.PairStateExactness
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
+import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMaskSoundness
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Support lemmas for compact coverage certificates -/
 

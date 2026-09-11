@@ -5,14 +5,11 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
-public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
 public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport`

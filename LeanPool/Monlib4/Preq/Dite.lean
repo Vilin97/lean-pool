@@ -5,10 +5,8 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Logic.Basic
-public import Mathlib.Algebra.Group.Defs
 public import Mathlib.Algebra.Star.Basic
-public import Mathlib.LinearAlgebra.TensorProduct.Basic
+public import Mathlib.LinearAlgebra.TensorProduct.Defs
 
 /-!
  # Some stuff on dites

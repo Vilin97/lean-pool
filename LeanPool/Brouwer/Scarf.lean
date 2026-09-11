@@ -5,29 +5,18 @@ Authors: Math_XMUM
 -/
 module
 
-public import Mathlib.Order.Defs.LinearOrder
-public import Mathlib.Order.MinMax
-public import Mathlib.Data.Finset.Lattice.Fold
 public import Mathlib.Data.Finset.Max
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Finset.Image
 public import Mathlib.Data.Fintype.Powerset
 public import Mathlib.Data.Fintype.Prod
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Tauto
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Contrapose
-public import Mathlib.Tactic.Bound
+public import Mathlib.Algebra.Ring.Parity
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Scarf's combinatorial lemma

@@ -7,23 +7,9 @@ module
 
 import Mathlib.Algebra.Order.Interval.Set.Group
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Zify
-public import Mathlib.Tactic.Lift
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.Measurability
-public import Mathlib.Tactic.Abel
 public import LeanPool.Monsky.SimplexBasic
-public import LeanPool.Monsky.Miscellaneous
+import LeanPool.Monsky.Miscellaneous
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.Monsky.SegmentTriangle

@@ -6,8 +6,8 @@ Authors: Monica Omar
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
 public import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
 
 /-!
 

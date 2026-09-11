@@ -5,8 +5,7 @@ Authors: Catskills Research Company
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Finset.Insert
 
 /-!
 # Scott Information Systems

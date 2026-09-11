@@ -5,12 +5,9 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import LeanPool.Erdos137.Finiteness
-public import LeanPool.Erdos137.Base
 public import LeanPool.Erdos137.BlockFramework
-public import LeanPool.Erdos137.JointFiniteness
-public import LeanPool.Erdos137.SmoothRefinement
-public import LeanPool.Erdos137.TaoPoint
+import LeanPool.Erdos137.TaoPoint
+import Mathlib.NumberTheory.Bertrand
 
 /-!
 # Erdős Problem #137: the honest `g = 5` per-`k` bound and the abstract splice machine

@@ -5,7 +5,8 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Equiv
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Algebra.Equiv
 
 /-!
 # LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Equiv

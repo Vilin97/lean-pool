@@ -7,9 +7,7 @@ module
 
 public import Mathlib.Topology.KrullDimension
 public import Mathlib.Topology.Category.TopCat.Basic
-public import Mathlib.Topology.Sets.Opens
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
 /-!
 # Topological Krull Dimension
 

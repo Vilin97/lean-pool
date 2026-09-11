@@ -6,17 +6,7 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.MeasureTheory.Measure.Prod
-public import Mathlib.MeasureTheory.Measure.OpenPos
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+import Mathlib.Tactic.Positivity.Finset
 /-!
 Lemmas from https://github.com/leanprover-community/mathlib4/pull/32986
 -/

@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+import Mathlib.Order.Filter.AtTopBot.Basic
 /-!
 # The local EM truth lemma, layer 1: truth kernel + Skolem-witness transport
 

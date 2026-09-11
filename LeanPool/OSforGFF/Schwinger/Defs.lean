@@ -6,7 +6,9 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 module
 
 public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Generating Functional and Schwinger Functions

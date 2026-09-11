@@ -5,9 +5,10 @@ Authors: Wei Wang
 -/
 module
 
-public import Mathlib.MeasureTheory.Constructions.HaarToSphere
-public import Mathlib.MeasureTheory.VectorMeasure.Decomposition.RadonNikodym
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Basic
+public import Mathlib.MeasureTheory.VectorMeasure.Decomposition.Lebesgue
+import Mathlib.MeasureTheory.Constructions.HaarToSphere
+import Mathlib.MeasureTheory.VectorMeasure.Decomposition.RadonNikodym
 
 /-!
 # Radial Measure

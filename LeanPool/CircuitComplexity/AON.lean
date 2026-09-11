@@ -6,8 +6,6 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.CircuitComplexity.AON.Defs
-public import LeanPool.CircuitComplexity.Internal.AON
-public import LeanPool.CircuitComplexity.Internal.Simulation
 
 /-! # AND/OR/NOT Basis
 

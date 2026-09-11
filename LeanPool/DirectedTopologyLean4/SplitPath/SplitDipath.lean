@@ -6,6 +6,8 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 module
 
 public import LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
+public import LeanPool.DirectedTopologyLean4.Dipath
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath

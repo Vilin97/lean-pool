@@ -6,7 +6,8 @@ Authors: Math Inc
 module
 
 public import LeanPool.Erdos1196.NormalizationCore
-public import LeanPool.Erdos1196.NormalizationSmallPrime
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # First-entry bounds for the normalization constant

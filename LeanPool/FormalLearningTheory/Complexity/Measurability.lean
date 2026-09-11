@@ -5,9 +5,10 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
-public import LeanPool.FormalLearningTheory.Data
 public import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Measurability Infrastructure for Learning Theory

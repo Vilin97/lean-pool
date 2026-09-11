@@ -5,10 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
 public import LeanPool.Incompleteness.Foundation.Vorspiel.Arith
-public import Mathlib.Computability.Halting
-public import Mathlib.Computability.Primrec.List
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
+public import Mathlib.Computability.RE
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
 
 /-! # Representation -/
 

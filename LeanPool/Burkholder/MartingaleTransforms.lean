@@ -6,10 +6,10 @@ Authors: Daniel Smania
 module
 
 public import Mathlib.Probability.Martingale.Basic
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-public import LeanPool.Burkholder.Majorants
+public import LeanPool.Burkholder.Majorants.Definitions
+import LeanPool.Burkholder.Majorants
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Martingale transforms and the Lp Burkholder inequality

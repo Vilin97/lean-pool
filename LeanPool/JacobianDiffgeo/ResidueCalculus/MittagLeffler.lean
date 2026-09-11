@@ -9,9 +9,7 @@ Blueprint unit: residue-calculus. Mittag-Leffler principal-part data (Forster §
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-public import Mathlib.Data.Finsupp.Basic
-public import Mathlib.Analysis.Meromorphic.Basic
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
 
 /-!
 # Mittag-Leffler principal-part distributions (residue-calculus)

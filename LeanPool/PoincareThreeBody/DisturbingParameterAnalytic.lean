@@ -6,7 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.DisturbingFunction
-public import LeanPool.PoincareThreeBody.JointEccentricAnomaly
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.JointEccentricAnomaly
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Analytic eccentricity dependence of the disturbing function

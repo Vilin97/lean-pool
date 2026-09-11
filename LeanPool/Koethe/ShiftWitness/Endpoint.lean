@@ -5,21 +5,12 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Defs
-public import Mathlib.Algebra.Algebra.NonUnitalSubalgebra
-public import Mathlib.Algebra.Algebra.Subalgebra.Unitization
 public import Mathlib.Algebra.Algebra.Unitization
-public import Mathlib.Algebra.Field.Defs
-public import Mathlib.Algebra.Module.Defs
-public import Mathlib.Algebra.Ring.Defs
 public import Mathlib.LinearAlgebra.Matrix.Ideal
 public import Mathlib.LinearAlgebra.Matrix.ToLin
-public import Mathlib.RingTheory.Flat.TorsionFree
-public import Mathlib.RingTheory.Nilpotent.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.TwoSidedIdeal.Kernel
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Algebra.Subalgebra.Unitization
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.SimpleRing.Principal
 /-!
 # A nil ideal with a nonnilpotent two-by-two matrix
 

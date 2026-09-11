@@ -6,6 +6,7 @@ Authors: Lior Pachter
 module
 
 public import LeanPool.PebblingLean.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Transport across graph isomorphisms

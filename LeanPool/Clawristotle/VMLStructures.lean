@@ -6,6 +6,7 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.Defs
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # VML Data Structures

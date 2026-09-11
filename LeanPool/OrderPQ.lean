@@ -13,6 +13,12 @@ public import LeanPool.OrderPQ.MulZMod
 public import LeanPool.OrderPQ.PrimeOrder
 public import LeanPool.OrderPQ.SemidirectProduct
 public import LeanPool.OrderPQ.TorsionBy
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Classification of groups of order p * q

@@ -6,7 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.OddPrimeValuationDistribution.CarryPolynomial
-public import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Algebra.Polynomial.Coeff
 
 /-!
 # Exact central-binomial valuation distributions for odd primes

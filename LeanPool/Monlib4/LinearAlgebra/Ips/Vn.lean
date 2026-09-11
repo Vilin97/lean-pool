@@ -6,11 +6,9 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
 public import Mathlib.Analysis.VonNeumannAlgebra.Basic
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
 public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
 
 /-!
 

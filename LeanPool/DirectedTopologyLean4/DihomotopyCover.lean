@@ -7,6 +7,7 @@ module
 
 public import LeanPool.DirectedTopologyLean4.PathCover
 public import LeanPool.DirectedTopologyLean4.SplitDihomotopy
+public import LeanPool.DirectedTopologyLean4.CoverLemma
 
 /-!
 # LeanPool.DirectedTopologyLean4.DihomotopyCover

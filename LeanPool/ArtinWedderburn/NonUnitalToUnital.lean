@@ -5,7 +5,6 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.Algebra.Ring.Basic
 public import Mathlib.Algebra.Ring.MinimalAxioms
 
 /-!

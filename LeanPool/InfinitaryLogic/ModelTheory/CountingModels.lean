@@ -5,10 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-public import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
 public import LeanPool.InfinitaryLogic.Scott.Height.Defs
-public import LeanPool.InfinitaryLogic.Scott.RefinementCount
+import LeanPool.InfinitaryLogic.Scott.RefinementCount
+import LeanPool.InfinitaryLogic.Util
 /-!
 # Counting Models
 

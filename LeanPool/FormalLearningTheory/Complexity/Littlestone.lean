@@ -6,6 +6,10 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Complexity.VCDimension
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Littlestone Dimension (Online Paradigm)

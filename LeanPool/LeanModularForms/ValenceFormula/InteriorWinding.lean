@@ -5,10 +5,16 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheorem
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheorem
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Interior Winding Number

@@ -5,8 +5,10 @@ Authors: claytomode
 -/
 module
 
-public import LeanPool.JohnsonLindenstraussLean.Rotation
-public import LeanPool.JohnsonLindenstraussLean.Lemma
+public import LeanPool.JohnsonLindenstraussLean.Projection
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.JohnsonLindenstraussLean.Lemma
+import LeanPool.JohnsonLindenstraussLean.Rotation
 
 /-!
 # The end-to-end Gaussian Johnson–Lindenstrauss theorem

@@ -5,12 +5,11 @@ Authors: David Renshaw
 -/
 module
 
-public import LeanPool.Rupert.Basic
-public import LeanPool.Rupert.Convex
-public import LeanPool.Rupert.MatrixSimps
 public import LeanPool.Rupert.Quaternion
-public import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
-public import LeanPool.Rupert.FinCases
+import LeanPool.Rupert.Attr
+import LeanPool.Rupert.Convex
+import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
+import LeanPool.Rupert.MatrixSimps
 
 /-!
 # LeanPool.Rupert.Tetrahedron

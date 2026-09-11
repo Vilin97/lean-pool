@@ -8,8 +8,6 @@ module
 public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-public import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 
 /-!
 # LeanPool.QuasiBorelSpaces.FlatReal

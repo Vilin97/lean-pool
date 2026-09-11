@@ -6,10 +6,11 @@ Authors: Monica Omar
 module
 
 public import Mathlib.Algebra.Order.Star.Basic
-public import Mathlib.Algebra.Group.Subgroup.Basic
-public import Mathlib.Data.Fintype.Pi
 public import Mathlib.Algebra.Star.Pi
-public import Mathlib.Data.Complex.Basic
+import Mathlib.Algebra.Order.AbsoluteValue.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
   # pi.star_ordered_ring

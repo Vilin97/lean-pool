@@ -5,16 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Analysis.Matrix.Order
-public import Mathlib.Analysis.Matrix.PosDef
-public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-public import LeanPool.Monlib4.LinearAlgebra.End
 public import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
-public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-public import LeanPool.Monlib4.Preq.Ites
-public import LeanPool.Monlib4.Preq.RCLikeLe
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 # Positivity of matrices and linear maps

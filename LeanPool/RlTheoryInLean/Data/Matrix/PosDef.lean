@@ -5,16 +5,11 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.InnerProductSpace.Defs
 public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Mathlib.Analysis.Matrix.PosDef
-public import Mathlib.Analysis.Matrix.Spectrum
-public import Mathlib.LinearAlgebra.UnitaryGroup
-public import Mathlib.Algebra.Order.Star.Real
 
-public import LeanPool.RlTheoryInLean.Data.Matrix.Mul
+import LeanPool.RlTheoryInLean.Data.Matrix.Mul
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # LeanPool.RlTheoryInLean.Data.Matrix.PosDef

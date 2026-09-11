@@ -7,7 +7,7 @@ module
 
 public import LeanPool.WhiteheadTheorem.Shapes.Cube
 public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Algebra   -- IsPointedMap
-public import Mathlib.Topology.Homotopy.HomotopyGroup
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs

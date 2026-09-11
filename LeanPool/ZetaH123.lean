@@ -9,6 +9,10 @@ public import LeanPool.ZetaH123.H1
 public import LeanPool.ZetaH123.H2
 public import LeanPool.ZetaH123.H3
 public import LeanPool.ZetaH123.Lem41
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Thakur's hypotheses on power sums of F_q[t]

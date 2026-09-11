@@ -6,7 +6,9 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
-public import Mathlib.Topology.Homeomorph.Lemmas
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Radial extension of circle homeomorphisms

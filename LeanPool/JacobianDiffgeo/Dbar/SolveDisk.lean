@@ -5,10 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Calculus.BumpFunction.Normed
 public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Forster 13.2: Dolbeault's lemma on an open disk (`Jacobian/Dbar/SolveDisk.lean`)

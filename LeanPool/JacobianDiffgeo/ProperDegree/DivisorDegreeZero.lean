@@ -5,8 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
 public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `deg(div φ) = 0` and the unconditional `L(D) = 0` for negative degree (proper-map-degree, file 2

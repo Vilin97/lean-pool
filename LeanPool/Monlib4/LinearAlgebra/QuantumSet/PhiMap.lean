@@ -7,6 +7,9 @@ module
 
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
 public import LeanPool.Monlib4.LinearAlgebra.MyBimodule
+public import Mathlib.Analysis.InnerProductSpace.MulOpposite
+import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Phi Map

@@ -5,8 +5,9 @@ Authors: Bhavik Mehta
 -/
 module
 
-public import Mathlib.Order.Preorder.Chain
-public import Mathlib.Order.WellFoundedSet
+public import Mathlib.Order.Antichain
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Results for mathlib

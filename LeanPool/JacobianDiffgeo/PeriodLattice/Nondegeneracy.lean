@@ -5,11 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
-public import Mathlib.Analysis.Complex.OpenMapping
-public import Mathlib.Topology.Order.Compact
+public import LeanPool.JacobianDiffgeo.Path.Periods
+import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import LeanPool.JacobianDiffgeo.Path.Planar
+import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
+import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
+import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Nondegeneracy via the maximum principle (Forster 21.4(c), §5.1)

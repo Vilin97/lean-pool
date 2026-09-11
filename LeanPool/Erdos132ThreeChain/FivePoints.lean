@@ -5,7 +5,16 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ThreeChain.FourPoints
+public import LeanPool.Erdos132ThreeChain.Plane
+import LeanPool.Erdos132ThreeChain.FourPoints
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The five-point obstruction

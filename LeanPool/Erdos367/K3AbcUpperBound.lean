@@ -5,19 +5,9 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Nat
-public import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Data.Nat.Factorization.Defs
-public import Mathlib.Data.Nat.PrimeFin
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #367 (k = 3 case), conditional on abc

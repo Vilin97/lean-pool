@@ -6,8 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Scott.Sentence
-public import LeanPool.InfinitaryLogic.Scott.RefinementCount
-public import Mathlib.SetTheory.Cardinal.Regular
+import LeanPool.InfinitaryLogic.Scott.RefinementCount
 /-!
 # Scott Rank
 

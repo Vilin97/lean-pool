@@ -7,8 +7,8 @@ module
 
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
-public import LeanPool.LocalComplexGeometry.Germs.Representatives
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # A nonvanishing resultant for the cleared generic minimal polynomial

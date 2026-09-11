@@ -5,10 +5,8 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.InnerProductSpace.LinearMap
-public import Mathlib.Analysis.LocallyConvex.WithSeminorms
-public import Mathlib.Topology.Algebra.Module.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import Mathlib.Analysis.InnerProductSpace.LinearMap
 
 /-!
 # Dynin-Mityagin Space Typeclass

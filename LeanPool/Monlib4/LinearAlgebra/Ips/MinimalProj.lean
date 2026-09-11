@@ -6,15 +6,9 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
-public import LeanPool.Monlib4.RepTheory.AutMat
-public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-public import Mathlib.LinearAlgebra.Matrix.Hermitian
-public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-public import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
-public import Mathlib.Analysis.InnerProductSpace.Orthogonal
+public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
 
 /-!
 

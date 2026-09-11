@@ -5,10 +5,14 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber
 public import Mathlib.Analysis.Meromorphic.Order
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Flatness and Higher-Order Pole Conditions (Definition 3.2)

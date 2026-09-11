@@ -6,7 +6,10 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.DedekindZeta.LocalFactor
-public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! TODO: Add doc-string. -/
 

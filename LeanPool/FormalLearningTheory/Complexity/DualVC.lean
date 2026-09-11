@@ -5,11 +5,11 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
 public import LeanPool.FormalLearningTheory.Complexity.VCDimension
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Fintype.EquivFin
-public import Mathlib.Order.CompleteLattice.Basic
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Dual VC Dimension (Assouad's Lemma)

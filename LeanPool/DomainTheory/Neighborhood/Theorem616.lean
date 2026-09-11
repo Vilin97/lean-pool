@@ -6,9 +6,15 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Theorem69
-public import LeanPool.DomainTheory.Neighborhood.Proposition67
 public import LeanPool.DomainTheory.Neighborhood.Lemma615
-public import LeanPool.DomainTheory.Neighborhood.Exercise408
+import LeanPool.DomainTheory.Neighborhood.Exercise408
+import LeanPool.DomainTheory.Neighborhood.Proposition67
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lecture VI — Theorem 6.16 (Scott 1981, PRG-19): an initial algebra embeds in

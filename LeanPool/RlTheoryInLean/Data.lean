@@ -6,6 +6,8 @@ Authors: Shangtong Zhang
 module
 
 public import LeanPool.RlTheoryInLean.Data.Matrix
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Data

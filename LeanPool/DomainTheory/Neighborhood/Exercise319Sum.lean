@@ -6,6 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise318
+import Mathlib.Order.BooleanAlgebra.Set
 
 /-!
 # Exercise 3.19 (Scott 1981, PRG-19, §3) — the sum functor `f + g`

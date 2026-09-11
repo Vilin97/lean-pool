@@ -6,7 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-! # Formula -/
 

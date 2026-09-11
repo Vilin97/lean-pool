@@ -5,9 +5,14 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
 public import LeanPool.ClassificationOfSurfaces.WeightedCircle
-public import Mathlib.Analysis.Convex.GaugeRescale
+public import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
+import Mathlib.Analysis.Convex.GaugeRescale
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # A square model for polygon cells

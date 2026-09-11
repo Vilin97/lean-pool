@@ -5,10 +5,6 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.LinearAlgebra.TensorProduct.Basic
-public import Mathlib.Algebra.Algebra.Basic
-public import Mathlib.Data.Opposite
-public import Mathlib.Algebra.Star.Basic
 public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
 
 /-!

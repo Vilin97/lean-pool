@@ -5,14 +5,12 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
-public import LeanPool.QuasiBorelSpaces.Prop
-public import LeanPool.QuasiBorelSpaces.Subtype
-public import Mathlib.Data.Sigma.Order
-public import LeanPool.QuasiBorelSpaces.Defs
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma
 public import LeanPool.QuasiBorelSpaces.Prod
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
+import LeanPool.QuasiBorelSpaces.Prop
 
 
 /-!

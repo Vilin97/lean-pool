@@ -17,6 +17,10 @@ public import LeanPool.OSforGFF.General.PositiveDefinite
 public import LeanPool.OSforGFF.General.QuantitativeDecay
 public import LeanPool.OSforGFF.General.SchurProduct
 public import LeanPool.OSforGFF.General.SchwartzTranslationDecay
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # `LeanPool.OSforGFF.General` index

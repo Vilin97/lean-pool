@@ -5,9 +5,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Probability.Kernel.MeasurableLIntegral
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
 public import Mathlib.Probability.Kernel.Defs
+import Mathlib.Probability.Kernel.MeasurableLIntegral
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Measure

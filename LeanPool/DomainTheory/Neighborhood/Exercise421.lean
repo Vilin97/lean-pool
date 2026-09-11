@@ -6,7 +6,11 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise414
-public import Mathlib.Tactic.Ring
+public import Mathlib.Order.BooleanAlgebra.Set
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Algebra.Order.Sub.Unbundled.Basic
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Exercise 4.21 (Scott 1981, PRG-19, Lecture IV) — `≤` as a unique fixed point;

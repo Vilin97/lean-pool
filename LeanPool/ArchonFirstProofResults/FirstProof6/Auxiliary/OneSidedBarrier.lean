@@ -5,7 +5,10 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ResolventBound
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.BarrierPotential
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ResolventBound
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- One-Sided Barrier

@@ -5,10 +5,12 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import Mathlib.Order.BoundedOrder.Basic
-public import Mathlib.Topology.Basic
-public import Mathlib.MeasureTheory.Measure.MeasureSpace
-public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Real.Basic
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Basic Types for Formal Learning Theory

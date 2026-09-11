@@ -5,12 +5,11 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-public import Mathlib.MeasureTheory.Function.LpOrder
 public import Mathlib.MeasureTheory.Function.L2Space
 public import Mathlib.Analysis.InnerProductSpace.l2Space
-public import Mathlib.Analysis.InnerProductSpace.Rayleigh
 public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.Rayleigh
 
 /-!
 # Proof of Jentzsch's Theorem via the Variational Absolute Value Trick

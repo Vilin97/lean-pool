@@ -5,10 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Group.Defs
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 
 /-!
 

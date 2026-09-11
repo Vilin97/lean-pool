@@ -5,20 +5,18 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import Mathlib.Data.Set.Defs
-public import Mathlib.CategoryTheory.Limits.Shapes.IsTerminal
-public import Mathlib.CategoryTheory.Functor.EpiMono
-public import Mathlib.CategoryTheory.Functor.Const
-public import Mathlib.Data.Finset.Powerset
-public import Mathlib.Data.Fintype.Defs
-public import Mathlib.CategoryTheory.Endofunctor.Algebra
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Data.Finset.Basic
 public import Mathlib.Data.Finset.Max
-public import Mathlib.Data.Nat.Basic
-public import Aesop
-public import Mathlib.Tactic.Linarith
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Union
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Syntax of Basic Modal Logic
 

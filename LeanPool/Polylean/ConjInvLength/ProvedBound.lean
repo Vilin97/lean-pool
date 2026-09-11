@@ -6,6 +6,7 @@ Authors: Siddhartha Gadgil, Anand Rao
 module
 
 public import LeanPool.Polylean.ConjInvLength.LengthBound
+import Batteries.Logic
 
 /-!
 # LeanPool.Polylean.ConjInvLength.ProvedBound

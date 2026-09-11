@@ -6,12 +6,7 @@ Authors: Dhruv Gupta
 module
 
 public import Mathlib.MeasureTheory.Constructions.Polish.Basic
-public import Mathlib.MeasureTheory.Measure.Regular
-public import Mathlib.MeasureTheory.Measure.RegularityCompacts
-public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-public import Mathlib.Order.ConditionallyCompleteLattice.Basic
-public import Mathlib.Topology.Sequences
-public import Mathlib.Topology.Metrizable.Basic
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
 
 /-!
 # Choquet Capacity Theory

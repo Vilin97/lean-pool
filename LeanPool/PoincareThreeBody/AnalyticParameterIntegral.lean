@@ -6,8 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import Mathlib.Analysis.Analytic.Basic
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Integrating a uniformly controlled analytic power series

@@ -5,8 +5,8 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.EuclideanGrowthFive
-public import LeanPool.ThreeGap.DeltaCost
+public import LeanPool.ThreeGap.EuclideanGrowth
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Euclidean approximation defect is attained (the nearest lattice point exists)

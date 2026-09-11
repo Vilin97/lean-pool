@@ -6,12 +6,11 @@ Authors: Ricky Cipollini
 module
 
 public import LeanPool.Erdos865.Defs
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombinationPrime
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
+public import Mathlib.Data.ZMod.Defs
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.LinearCombinationPrime
 
 /-!
 # The four sets `T₁,…,T₄` and their pairwise intersections

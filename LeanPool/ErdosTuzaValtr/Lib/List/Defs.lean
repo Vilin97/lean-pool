@@ -5,9 +5,7 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
 public import Mathlib.Data.Finset.Image
-public import Mathlib.Tactic.Cases
 public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
 
 /-!

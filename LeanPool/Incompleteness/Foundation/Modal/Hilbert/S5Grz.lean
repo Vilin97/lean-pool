@@ -7,8 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
 public import LeanPool.Incompleteness.Foundation.Modal.Entailment.S5
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KTc
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Triv
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.KTc
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.Triv
 
 /-! # S5Grz -/
 

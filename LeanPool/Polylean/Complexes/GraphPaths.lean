@@ -5,8 +5,8 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public import Mathlib.Algebra.Group.Basic
 public import Mathlib.Algebra.Group.Defs
+public import Aesop.BuiltinRules
 
 /-!
 # LeanPool.Polylean.Complexes.GraphPaths

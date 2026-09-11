@@ -6,23 +6,10 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.MeasureTheory.Covering.Besicovitch
-public import Mathlib.MeasureTheory.Covering.Differentiation
-public import Mathlib.MeasureTheory.Covering.Vitali
-public import Mathlib.MeasureTheory.Covering.VitaliFamily
-public import Mathlib.MeasureTheory.Measure.Doubling
 public import Mathlib.MeasureTheory.Measure.Hausdorff
-public import Mathlib.MeasureTheory.OuterMeasure.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import LeanPool.SardMoreira.UnifDoublingCover
+import LeanPool.SardMoreira.UnifDoublingCover
+import Mathlib.MeasureTheory.Covering.Vitali
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.SardMoreira.OuterMeasureDeriv

@@ -5,15 +5,8 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Data.Nat.Factorization.Defs
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Conditional upper bound on B₂ via a radical lower bound (Erdős #367)

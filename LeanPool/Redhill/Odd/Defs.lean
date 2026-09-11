@@ -5,12 +5,16 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Nat
-public import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
 public import LeanPool.Redhill.Common.PairwiseCoprime
 public import LeanPool.Redhill.Common.VWPair
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.BigOperators.Ring.Nat
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
+import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.RingTheory.Coprime.Lemmas
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.IntervalCases
 
 /-!
 # Definitions for the odd case

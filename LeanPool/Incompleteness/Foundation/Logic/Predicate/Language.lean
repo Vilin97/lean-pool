@@ -5,7 +5,11 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Logic.Entailment
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Logic.Encodable.Basic
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Ring.Nat
 
 /-!
 # Language of first-order logic

@@ -14,6 +14,7 @@ public import LeanPool.ZhangYeungInequality.Test.Theorem2
 public import LeanPool.ZhangYeungInequality.Test.Theorem3
 public import LeanPool.ZhangYeungInequality.Test.Theorem4
 public import LeanPool.ZhangYeungInequality.Test.Theorem5
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Measure
 
 /-!
 # LeanPool.ZhangYeungInequality.Test

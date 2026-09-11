@@ -6,6 +6,7 @@ Authors: Vincent Trélat
 module
 
 public import Mathlib.SetTheory.ZFC.Basic
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # LeanPool.ZFLean.Basic

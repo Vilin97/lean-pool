@@ -7,13 +7,18 @@ module
 
 public import LeanPool.BrauerGroupNew.CentralSimple
 public import LeanPool.BrauerGroupNew.FieldCat
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
 public import Mathlib.Algebra.BrauerGroup.Defs
-public import Mathlib.Algebra.Central.Matrix
-public import Mathlib.Analysis.Complex.Polynomial.Basic
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-public import Mathlib.RingTheory.SimpleRing.Matrix
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Central.Matrix
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.BrauerGroup

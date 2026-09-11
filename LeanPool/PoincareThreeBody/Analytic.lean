@@ -6,10 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.Core
-public import Mathlib.Analysis.Analytic.Binomial
-public import Mathlib.Analysis.Analytic.Linear
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FunProp
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Analytic.Binomial
 
 /-!
 # Analyticity of the Newtonian potential away from collision

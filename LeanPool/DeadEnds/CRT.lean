@@ -6,6 +6,10 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 module
 
 public import LeanPool.DeadEnds.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Data.Nat.ChineseRemainder
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.DeadEnds.CRT

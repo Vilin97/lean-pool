@@ -5,8 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.Rado.Complex.Dirichlet
 public import LeanPool.Rado.Surface.Charts
+public import LeanPool.Rado.Complex.SubMean
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import LeanPool.Rado.Complex.Dirichlet
+import Mathlib.Analysis.Complex.Harmonic.MeanValue
 
 /-!
 # Harmonic and subharmonic functions on a Riemann surface

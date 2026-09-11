@@ -5,11 +5,16 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.CechCount.Surjective
-public import LeanPool.JacobianDiffgeo.Finiteness
-public import LeanPool.JacobianDiffgeo.RiemannRoch
-public import LeanPool.JacobianDiffgeo.ProperDegree
-public import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.Finiteness.Chi
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.CechCount.Surjective
+import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.ProperDegree.DivisorDegreeZero
+import LeanPool.JacobianDiffgeo.RiemannRoch.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Čech count: `dim H¹(𝒪_X) ≤ genus X` (cechcount unit, Forster 17.9/17.16)

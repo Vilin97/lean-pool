@@ -8,6 +8,9 @@ module
 public meta import LeanPool.Lentil.ProofMode.Basic
 
 public import LeanPool.Lentil.ProofMode.Location
+public import LeanPool.Lentil.ProofMode.Basic
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Core
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
 
 @[expose] public section
 

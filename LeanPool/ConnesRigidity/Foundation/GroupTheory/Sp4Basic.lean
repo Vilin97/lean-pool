@@ -10,9 +10,10 @@ Mathlib supplies the symplectic-matrix carrier and its standard module action.
 -/
 module
 
-public import Mathlib.Algebra.CharP.Pi
 public import Mathlib.Algebra.Field.ZMod
-public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
+public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.ArithmeticSymplectic
+import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
+import Mathlib.Algebra.CharP.Pi
 
 /-!
 # The natural `Sp₄(𝔽₂)` action

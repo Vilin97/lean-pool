@@ -6,7 +6,6 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Lukasiewicz
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Collection
 public import LeanPool.Incompleteness.Foundation.Modal.LogicSymbol
 
 /-! # Formula -/

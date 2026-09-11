@@ -6,6 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: chart-supported `(0,1)`-forms and pairing localization (design §4.1 step 5)

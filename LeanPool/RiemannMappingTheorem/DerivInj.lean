@@ -5,7 +5,9 @@ Authors: Vincent Beffara
 -/
 module
 
-public import LeanPool.RiemannMappingTheorem.Hurwitz
+public import LeanPool.RiemannMappingTheorem.Cindex
+import LeanPool.RiemannMappingTheorem.Hurwitz
+import Mathlib.Analysis.Complex.RemovableSingularity
 
 /-!
 # LeanPool.RiemannMappingTheorem.DerivInj

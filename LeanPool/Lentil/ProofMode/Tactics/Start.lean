@@ -7,10 +7,9 @@ module
 
 public meta import LeanPool.Lentil.ProofMode.Basic
 
-public meta import LeanPool.Lentil.Expr
 
-public import LeanPool.Lentil.ProofMode.Basic
-public import LeanPool.Lentil.Expr
+meta import LeanPool.Lentil.Expr
+import LeanPool.Lentil.ProofMode.Basic
 
 public meta section
 

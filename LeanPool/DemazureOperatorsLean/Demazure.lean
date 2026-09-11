@@ -5,21 +5,17 @@ Authors: Óscar Álvarez Sánchez
 -/
 module
 
-public import Mathlib.Data.Set.Lattice
-public import Mathlib.Data.Set.Function
-public import Mathlib.Analysis.Complex.Polynomial.Basic
-public import Init.System.IO
 
 public import Mathlib.Data.Complex.Basic
 
-public import Mathlib.Algebra.Polynomial.Basic
-public import Mathlib.Algebra.MvPolynomial.Basic
-public import Mathlib.Algebra.MvPolynomial.CommRing
-public import Mathlib.Algebra.MvPolynomial.Rename
-public import Mathlib.Algebra.MvPolynomial.Polynomial
-public import Mathlib.RingTheory.MvPolynomial.Basic
 
-public import Mathlib.Data.Finsupp.Defs
+public import Mathlib.Algebra.MvPolynomial.Equiv
+public import Mathlib.Algebra.Polynomial.Div
+import Mathlib.Algebra.MvPolynomial.Polynomial
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.RingTheory.MvPolynomial.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.DemazureOperatorsLean.Demazure

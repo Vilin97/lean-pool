@@ -9,6 +9,7 @@ public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Choqu
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Meager
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Applications index

@@ -6,8 +6,9 @@ Authors: Monica Omar
 module
 
 public import Mathlib.Algebra.Algebra.Bilinear
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
+import Mathlib.Tactic.NormNum.Ineq
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # lmul and rmul

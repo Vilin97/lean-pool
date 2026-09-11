@@ -5,14 +5,16 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Assembly.GeometricChain
-public import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
-public import LeanPool.KasamiCyclicAdditive.Assembly.CoefficientReduction
-public import LeanPool.KasamiCyclicAdditive.Counting.Average
-public import LeanPool.KasamiCyclicAdditive.Assembly.Normalization
-public import LeanPool.KasamiCyclicAdditive.MCM.PhaseFormula
-public import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
+import LeanPool.KasamiCyclicAdditive.Assembly.CoefficientReduction
+import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
+import LeanPool.KasamiCyclicAdditive.Assembly.GeometricChain
+import LeanPool.KasamiCyclicAdditive.Assembly.Normalization
+import LeanPool.KasamiCyclicAdditive.Counting.Average
+import LeanPool.KasamiCyclicAdditive.MCM.PhaseFormula
 
 /-!
 # Reduction around the assembled Kasami chain

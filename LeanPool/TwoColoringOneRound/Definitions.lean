@@ -5,10 +5,8 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.MeasureTheory.Constructions.Pi
 public import Mathlib.MeasureTheory.Constructions.UnitInterval
-public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
-public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Distributed2Coloring: Definitions

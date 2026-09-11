@@ -6,7 +6,6 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Definition71
-public import LeanPool.DomainTheory.Neighborhood.Approximable
 
 /-!
 # Definition 7.2 (Scott 1981, PRG-19, §7) — computable maps and computable

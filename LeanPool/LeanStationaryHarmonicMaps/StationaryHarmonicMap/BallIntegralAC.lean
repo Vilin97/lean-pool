@@ -5,7 +5,9 @@ Authors: Wei Wang
 -/
 module
 
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedDerivative
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Ball integral absolute continuity

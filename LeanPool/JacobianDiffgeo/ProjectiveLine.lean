@@ -10,6 +10,7 @@ public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
 public import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
 public import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
 public import LeanPool.JacobianDiffgeo.ProjectiveLine.GenusZero
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # projective-line (CC5): the Riemann sphere `ℙ¹ := OnePoint ℂ`

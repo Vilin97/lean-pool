@@ -6,9 +6,8 @@ Authors: Monica Omar
 module
 
 public import Mathlib.Algebra.Star.StarAlgHom
-public import Mathlib.Algebra.Algebra.Equiv
-public import Mathlib.LinearAlgebra.Span.Basic
-public import Mathlib.Algebra.Star.Pi
+public import Mathlib.LinearAlgebra.Span.Defs
+import Mathlib.LinearAlgebra.Span.Basic
 
 /-!
  # Some stuff on star algebra equivalences

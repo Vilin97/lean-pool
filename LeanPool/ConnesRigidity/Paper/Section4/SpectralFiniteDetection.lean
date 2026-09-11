@@ -5,7 +5,9 @@ Authors: Utensil Song
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
+public import LeanPool.ConnesRigidity.Paper.Section4.AChartDetectorMeasure
+public import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
+import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
 
 /-!
 Finite detector sets for the raw Zhou split extensions. Paper: §4.

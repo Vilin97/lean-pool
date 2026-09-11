@@ -12,6 +12,8 @@ public import LeanPool.Erdos1196.PrimitiveWeight
 public import LeanPool.Erdos1196.HitMass
 public import LeanPool.Erdos1196.Main
 public import LeanPool.Erdos1196.FormalConjecturesErdos1196
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Primitive Sets Above x (Erdos Problem 1196)

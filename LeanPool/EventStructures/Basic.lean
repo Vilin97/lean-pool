@@ -5,7 +5,8 @@ Authors: Vikraman Choudhury
 -/
 module
 
-public import Mathlib.Order.Basic
+public import Mathlib.Data.Set.Defs
+public import Mathlib.Order.Defs.PartialOrder
 
 /-!
 # Event structures

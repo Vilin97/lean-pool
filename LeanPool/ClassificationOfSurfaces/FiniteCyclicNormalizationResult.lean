@@ -6,7 +6,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicFaceMerge
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Canonical output of finite-cyclic normalization

@@ -6,6 +6,10 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.RadialHomotopy
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonSlope
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Angle analysis and winding number invariance

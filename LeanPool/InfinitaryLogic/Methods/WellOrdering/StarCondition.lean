@@ -5,10 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapInsertion
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.CofinalFiber
 public import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
 public import Mathlib.Algebra.Order.Ring.Unbundled.Rat
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
 
 /-!
 # The semantic gap condition (*) and the member predicate (issue #12, commit 4a)

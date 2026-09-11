@@ -7,14 +7,14 @@ module
 
 public meta import LeanPool.MRiscX.Tactics.TacticUtil
 
-public import Lean.Elab.Tactic.Basic
-public import LeanPool.MRiscX.Hoare.HoareCore
-public import LeanPool.MRiscX.AbstractSyntax.Instr
-public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 public import LeanPool.MRiscX.Elab.HandleNumOrIdent
 public import LeanPool.MRiscX.Elab.HandleExpr
-public import LeanPool.MRiscX.Tactics.TacticUtil
-public import Mathlib.Data.Set.Basic
+public meta import Lean.Elab.SyntheticMVars
+public meta import Lean.Meta.Tactic.Apply
+public meta import Mathlib.Lean.Expr.Basic
+import LeanPool.MRiscX.AbstractSyntax.Instr
+import Mathlib.Data.Set.Defs
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # SplitLastSeq

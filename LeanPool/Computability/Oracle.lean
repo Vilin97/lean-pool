@@ -6,9 +6,6 @@ Authors: Tanner Duve, Elan Roth
 module
 
 public import Mathlib.Computability.Partrec
-public import Mathlib.Order.Antisymmetrization
-public import Mathlib.Logic.Encodable.Basic
-public import Mathlib.Tactic.Cases
 
 /-!
 # Oracle Computability

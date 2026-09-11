@@ -5,7 +5,10 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Exercise213
+public import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.Exercise122
+import LeanPool.DomainTheory.Neighborhood.Exercise213
+import Mathlib.Topology.Continuous
 
 /-!
 # Exercise 2.15 (Scott 1981, PRG-19, §2) — the one-token system `𝒪` (Sierpiński

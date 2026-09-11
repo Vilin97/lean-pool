@@ -7,7 +7,7 @@ module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
 public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.CongruenceIndex
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.CongruenceIndex
 
 /-!
 # Degree Formulas for GL_n Hecke Ring

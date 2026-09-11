@@ -13,7 +13,6 @@ file. The construction follows the paper's E_ell argument.
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
-public import Mathlib.Algebra.Exact.Basic
 
 /-!
 The nonisomorphism proofs component of the Connes rigidity formalization.

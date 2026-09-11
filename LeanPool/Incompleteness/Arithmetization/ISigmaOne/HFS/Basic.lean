@@ -6,7 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Bit
-public import LeanPool.Incompleteness.Arithmetization.Vorspiel.ExistsUnique
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-!
 

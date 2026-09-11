@@ -5,12 +5,10 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
-public import Mathlib.GroupTheory.GroupAction.Quotient
 
-public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective

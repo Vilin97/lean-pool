@@ -5,8 +5,10 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.LocalEMTupleOrbit
 public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
+public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+import LeanPool.InfinitaryLogic.Methods.LocalEMTupleOrbit
 /-!
 # Smallness of the local EM model (issue #11 unit 4)
 

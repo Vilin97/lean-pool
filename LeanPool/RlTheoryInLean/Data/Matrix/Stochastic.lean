@@ -5,29 +5,12 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.Order.Interval.Finset.Defs
-public import Mathlib.MeasureTheory.MeasurableSpace.Instances
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Topology.Instances.Matrix
-public import Mathlib.Topology.Defs.Basic
-public import Mathlib.Topology.UniformSpace.Matrix
 public import Mathlib.Topology.MetricSpace.Contracting
-public import Mathlib.Data.Matrix.Basic
-public import Mathlib.Logic.Function.Defs
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Topology.MetricSpace.ProperSpace
-public import Mathlib.Topology.MetricSpace.Bounded
-public import Mathlib.Topology.UniformSpace.Cauchy
-public import Mathlib.Topology.Bornology.Basic
-public import Mathlib.Topology.Sequences
-public import Mathlib.Analysis.Normed.Lp.WithLp
 public import Mathlib.Analysis.Normed.Lp.PiLp
-public import Mathlib.Analysis.Convex.StdSimplex
 
 public import Mathlib.NumberTheory.FrobeniusNumber
-public import LeanPool.RlTheoryInLean.Data.Matrix.Mul
+import Mathlib.Analysis.RCLike.Lemmas
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Data.Matrix.Stochastic

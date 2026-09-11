@@ -5,10 +5,18 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.Avoidance
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.HeightBound
-public import Mathlib.Data.Finsupp.Encodable
-public import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+public import LeanPool.AndersonConjecture.Jensen.NSubring
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.Avoidance
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.HeightBound
+import Mathlib.Algebra.Polynomial.Cardinal
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.Encodable
+import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Krull Domain Intersection for Two-Generator Close-Up

@@ -5,12 +5,16 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public meta import LeanPool.Lentil.ProofMode.Basic
 
 public import LeanPool.Lentil.ProofMode.Tactics.Have
 public import LeanPool.Lentil.ProofMode.Tactics.Clear
-public import LeanPool.Lentil.ProofMode.Tactics.Rename
-public import LeanPool.Lentil.ProofMode.Tactics.Revert
+public import LeanPool.Lentil.ProofMode.Tactics.Intro
+import Lean.Elab.Tactic.RCases
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
+import LeanPool.Lentil.ProofMode.Tactics.Revert
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 

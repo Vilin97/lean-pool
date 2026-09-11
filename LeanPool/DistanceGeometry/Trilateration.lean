@@ -5,12 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.DistanceGeometry.Defs
-public import Mathlib.Geometry.Euclidean.Basic
-public import Mathlib.Geometry.Euclidean.PerpBisector
-public import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
-public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
-public import Mathlib.Data.Set.Card
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Geometry.Euclidean.Basic
 
 /-!
 # Trilateration: sphere intersections of codimension-one center families

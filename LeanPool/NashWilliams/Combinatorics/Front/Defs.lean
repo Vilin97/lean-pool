@@ -5,7 +5,16 @@ Authors: Yann Pequignot
 -/
 module
 
-public import LeanPool.NashWilliams.Data.Nat.Nth
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Order.Monotone.Defs
+public import Mathlib.Order.SetNotation
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Set.Insert
+import Mathlib.Tactic.SetLike
+import Mathlib.Tactic.Widget.Calc
 
 /-!
 # Nash-Williams Fronts

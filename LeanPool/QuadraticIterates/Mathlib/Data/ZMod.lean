@@ -5,8 +5,10 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Data.ZMod.Units
+public import Mathlib.Data.ZMod.Defs
+public import Mathlib.RingTheory.Coprime.Basic
+import Mathlib.Data.ZMod.Units
+import Mathlib.Tactic.LinearCombination
 
 /-!
 # `ZMod` lemmas

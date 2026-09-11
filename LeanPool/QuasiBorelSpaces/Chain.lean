@@ -5,8 +5,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Basic
 public import LeanPool.QuasiBorelSpaces.Defs
+import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.Chain

@@ -6,11 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.Delaunay
-public import LeanPool.PoincareThreeBody.Perturbation
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.Core
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Polar canonical coordinates for the rotating Kepler limit

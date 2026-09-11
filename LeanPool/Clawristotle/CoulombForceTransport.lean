@@ -5,8 +5,13 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.CoulombKernel
-public import LeanPool.Clawristotle.VelocityDecayInstance
+public import LeanPool.Clawristotle.SchwartzDecayDefs
+public import LeanPool.Clawristotle.TorusInstance
+import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.IteratedDerivHelpers
+import LeanPool.Clawristotle.VelocityDecayInstance
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Force Transport and IBP Integrability for Coulomb

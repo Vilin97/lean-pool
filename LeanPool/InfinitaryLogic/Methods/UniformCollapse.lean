@@ -6,9 +6,10 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-public import LeanPool.InfinitaryLogic.Methods.LocalEMSmallModel
 public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
 public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+import LeanPool.InfinitaryLogic.Methods.LocalEMSmallModel
+import Mathlib.Data.Rat.Floor
 /-!
 # The uniform collapsing language (issue #11 unit 7b)
 

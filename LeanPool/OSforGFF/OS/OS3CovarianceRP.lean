@@ -5,14 +5,12 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.Spacetime.Basic
 public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-public import LeanPool.OSforGFF.Covariance.Momentum
-public import LeanPool.OSforGFF.OS.OS3MixedRep
-public import LeanPool.OSforGFF.OS.OS3MixedRepInfra
 public import LeanPool.OSforGFF.Covariance.Parseval
-public import LeanPool.OSforGFF.Covariance.Position
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+import LeanPool.OSforGFF.Covariance.Position
+import LeanPool.OSforGFF.OS.OS3MixedRep
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # OS3 — Covariance Reflection Positivity

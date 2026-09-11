@@ -5,8 +5,22 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import LeanPool.Wallace.MathlibFoundations
 public import LeanPool.Wallace.FiniteCombinatorics
+public import Mathlib.Algebra.Group.Finsupp
+public import Mathlib.SetTheory.Cardinal.Continuum
+public import Mathlib.Tactic.Continuity
+import LeanPool.Wallace.MathlibFoundations
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.SetTheory.Cardinal.Finsupp
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Triangular coding and block preprocessing

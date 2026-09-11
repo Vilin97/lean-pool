@@ -6,7 +6,12 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Tactic.NormNum
+public import Mathlib.Data.Set.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 1.15 (Scott 1981, PRG-19, §1) — non-isomorphic "finite-only" domains

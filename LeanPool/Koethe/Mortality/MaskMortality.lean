@@ -5,8 +5,17 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Tactic.Ring
-public import LeanPool.Koethe.Mortality.Mask
+public import LeanPool.Koethe.Mortality.Minors
+public import LeanPool.Koethe.Pencil
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+import LeanPool.Koethe.Mortality.Mask
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Mask mortality for one-row pencils over an algebraically closed field

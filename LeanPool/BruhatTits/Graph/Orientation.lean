@@ -6,7 +6,7 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import LeanPool.BruhatTits.Graph.GroupAction
-public import Mathlib.Algebra.Ring.Int.Parity
+public import LeanPool.BruhatTits.Utils.ValuationRings
 
 /-!
 # Orientation on the Bruhat-Tits tree

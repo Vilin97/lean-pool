@@ -5,8 +5,11 @@ Authors: Wondermonger-daydreaming
 -/
 module
 
-public import Mathlib.GroupTheory.Perm.Fin
 public import Mathlib.Data.Finset.Card
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Algebra.Group.Even
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
   EVEN CARDINALITY FROM A FIXED-POINT-FREE INVOLUTION

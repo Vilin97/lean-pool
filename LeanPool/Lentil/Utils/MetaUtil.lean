@@ -5,7 +5,10 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public meta import Lean
+public meta import Lean.Compiler.NoncomputableAttr
+public meta import Lean.Elab.Command
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Util.Trace
 
 public meta section
 

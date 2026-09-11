@@ -5,7 +5,6 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!

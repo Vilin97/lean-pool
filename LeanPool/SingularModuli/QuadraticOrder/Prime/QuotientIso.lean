@@ -6,6 +6,7 @@ Authors: Caleb L. Geiger
 module
 
 public import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
+public import Mathlib.Data.ZMod.QuotientRing
 
 /-!
 # Prime classification, part 2: the quotient ring isomorphism

@@ -5,11 +5,20 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.ErdosMoser.Basic
-public import Mathlib.Data.Finset.Sort
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Order.Fin.Basic
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Finset.Sort
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # A sharp variance bound for distinct natural numbers

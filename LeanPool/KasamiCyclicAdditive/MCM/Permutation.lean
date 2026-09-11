@@ -5,13 +5,11 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
 public import LeanPool.KasamiCyclicAdditive.MCM.Fourier
-public import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
-public import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
-public import LeanPool.KasamiCyclicAdditive.MCM.CharacterArithmetic
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteCharacterCriterion
+import LeanPool.KasamiCyclicAdditive.MCM.CharacterArithmetic
+import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteCharacterCriterion
+import Mathlib.Data.FunLike.Fintype
 
 /-!
 # The MCM permutation theorem

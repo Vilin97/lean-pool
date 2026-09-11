@@ -6,8 +6,14 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.VMLStructures
-public import LeanPool.Clawristotle.Section3
-public import LeanPool.Clawristotle.Section6
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.Section3
+import LeanPool.Clawristotle.Section3Helpers
+import LeanPool.Clawristotle.Section6
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Poisson-Boltzmann and Electric Field (Section 7)

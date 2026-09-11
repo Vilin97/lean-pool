@@ -5,9 +5,10 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
-public import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+public import Mathlib.NumberTheory.GaussSum
+import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The Dillon--Kashyap phase formula, as a hypothesis

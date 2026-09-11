@@ -6,7 +6,6 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
-public import Mathlib.Topology.Compactness.LocallyFinite
 
 /-!
 # Locally finite triangle complexes

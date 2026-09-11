@@ -5,10 +5,9 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Core
 public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Core
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
 
 /-!
 # Lyapunov Coercivity

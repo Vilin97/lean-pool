@@ -6,6 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
+public import LeanPool.Incompleteness.Foundation.Logic.Semantics
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Semantics of first-order logic

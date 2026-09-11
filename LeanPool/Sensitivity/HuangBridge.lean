@@ -6,8 +6,10 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.Sensitivity.Defs
-public import LeanPool.Sensitivity.Huang
-public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Analysis.Real.Sqrt
+import LeanPool.Sensitivity.Huang
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Bridge to Mathlib's Huang Theorem

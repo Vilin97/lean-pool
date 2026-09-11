@@ -5,13 +5,12 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel
-public import Mathlib.Algebra.Algebra.Hom
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Data.Fintype.BigOperators
 public import Mathlib.RingTheory.SimpleRing.Defs
-public import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+public import Mathlib.RingTheory.TwoSidedIdeal.Kernel
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 
 /-!
 # LeanPool.BrauerGroupNew.TwoSidedIdeal

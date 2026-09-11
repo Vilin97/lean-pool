@@ -7,7 +7,6 @@ module
 
 public import Mathlib.Algebra.DirectSum.Module
 public import Mathlib.LinearAlgebra.FreeModule.Basic
-public import Mathlib.Order.CompletePartialOrder
 
 /-!
 # Sections of short exact sequences

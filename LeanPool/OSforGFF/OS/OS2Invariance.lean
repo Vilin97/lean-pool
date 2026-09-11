@@ -5,10 +5,10 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.Measure.IsGaussian
-public import LeanPool.OSforGFF.Covariance.Position
-public import LeanPool.OSforGFF.Spacetime.Euclidean
 public import LeanPool.OSforGFF.Measure.GaussianFreeField
+import LeanPool.OSforGFF.Measure.IsGaussian
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 /-!
 # OS2 — Euclidean Invariance
 

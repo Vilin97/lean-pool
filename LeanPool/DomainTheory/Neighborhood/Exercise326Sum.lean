@@ -6,7 +6,12 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise326
-public import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+public import LeanPool.DomainTheory.Neighborhood.Exercise318
+import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+import Mathlib.Data.Finset.Attr
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.SetLike
 
 /-!
 # Exercise 3.26, continued (Scott 1981, PRG-19, §3) — the sum-valued conditional

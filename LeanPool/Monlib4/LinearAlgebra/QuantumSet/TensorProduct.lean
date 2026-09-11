@@ -6,7 +6,10 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Tensor Products of Quantum Sets

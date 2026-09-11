@@ -5,9 +5,10 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Order.Filter.Finite
 public import LeanPool.Redhill.Common.PairwiseCoprime
 public import LeanPool.Redhill.General.Defs
+public import Mathlib.Order.Filter.AtTopBot.Defs
+import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # Coprimality proof for the general case

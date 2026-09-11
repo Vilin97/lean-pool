@@ -6,6 +6,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
+public import LeanPool.ClassificationOfSurfaces.Moise.GraphRefinement
 
 /-!
 # Finite PL models for locally finite graph replacements

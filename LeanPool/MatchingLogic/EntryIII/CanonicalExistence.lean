@@ -15,6 +15,7 @@ contain that constant, and no argument-world construction may be smuggled in.
 module
 
 public import LeanPool.MatchingLogic.EntryIII.CanonicalCore
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.CanonicalExistence

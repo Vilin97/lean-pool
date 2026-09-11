@@ -6,7 +6,6 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.Geometry.Manifold.PartitionOfUnity
-public import Mathlib.Topology.Compactness.Compact
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartData`

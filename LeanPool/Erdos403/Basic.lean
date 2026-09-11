@@ -5,11 +5,12 @@ Authors: Trevor Morris
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.Order.Ring.Nat
 public import Mathlib.Data.Finset.Max
 public import Mathlib.Data.Nat.Factorial.Basic
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Erdős Problem #403 — sums of distinct factorials that are powers of 2

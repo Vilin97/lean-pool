@@ -6,9 +6,10 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 module
 
 public import LeanPool.OSforGFF.Measure.Construct
-public import LeanPool.OSforGFF.Covariance.RealForm
-public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Nontriviality of the Gaussian Free Field

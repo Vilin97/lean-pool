@@ -5,17 +5,9 @@ Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
 module
 
-public import Mathlib.Algebra.Lie.Semisimple.Defs
-public import Mathlib.Algebra.Lie.Solvable
-public import Mathlib.Algebra.Lie.Quotient
-public import Mathlib.Algebra.Lie.Nilpotent
-public import Mathlib.LinearAlgebra.Basis.Basic
-public import Mathlib.Data.Set.Card
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.Data.Set.Image
-public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 public import LeanPool.LowDimSolvClassification.GeneralResults
-public import LeanPool.LowDimSolvClassification.Classification2
+import LeanPool.LowDimSolvClassification.Classification2
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # LeanPool.LowDimSolvClassification.LemmasDim3

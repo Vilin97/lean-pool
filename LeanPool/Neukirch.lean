@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Neukirch.ExtensionOfDedekindDomains
 public import LeanPool.Neukirch.HilbertRamificationTheory
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Neukirch's Algebraic Number Theory: Hilbert ramification theory

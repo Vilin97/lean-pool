@@ -5,9 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.CayleyMenger
 public import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
-public import Mathlib.Analysis.Convex.Combination
+public import LeanPool.Erdos97ConvexOctagon.Radius
+import LeanPool.Erdos97ConvexOctagon.CayleyMenger
 
 /-! # The final residual incidence class
 

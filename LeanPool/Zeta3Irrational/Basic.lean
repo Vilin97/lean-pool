@@ -5,16 +5,19 @@ Authors: Junqi Liu, Jujian Zhang
 -/
 module
 
-public import Mathlib.Data.Int.Star
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.DedekindDomain.Dvr
-public import Mathlib.NumberTheory.Chebyshev
-public import LeanPool.Zeta3Irrational.Bound
-public import LeanPool.Zeta3Irrational.Chebyshev
 public import LeanPool.Zeta3Irrational.LegendrePoly
-public import LeanPool.Zeta3Irrational.LinearForm
+public import LeanPool.Zeta3Irrational.D
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
+import LeanPool.Zeta3Irrational.Bound
+import LeanPool.Zeta3Irrational.Chebyshev
+import LeanPool.Zeta3Irrational.LinearForm
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Int.Star
+import Mathlib.MeasureTheory.Function.AEEqOfIntegral
+import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
+import Mathlib.RingTheory.DedekindDomain.Basic
 
 /-!
 # LeanPool.Zeta3Irrational.Basic

@@ -5,7 +5,9 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.MainTheoremInternal
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import Mathlib.Geometry.Manifold.SmoothEmbedding
+import LeanPool.PLAcceleratedNesterovLean.Convergence.MainTheoremInternal
 
 /-!
 # Public main theorem wrappers

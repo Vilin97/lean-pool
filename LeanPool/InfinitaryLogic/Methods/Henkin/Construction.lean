@@ -6,12 +6,10 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
-public import LeanPool.InfinitaryLogic.Lomega1omega.Depth
-public import LeanPool.InfinitaryLogic.Scott.Formula
-public import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
-public import Mathlib.Order.Zorn
 public import Mathlib.Data.Fintype.Quotient
-public import Mathlib.ModelTheory.Encoding
+import LeanPool.InfinitaryLogic.Lomega1omega.Depth
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+import Mathlib.ModelTheory.Encoding
 
 /-!
 # Henkin Construction

@@ -5,11 +5,9 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.LinearAlgebra.Basis.Basic
 public import Mathlib.LinearAlgebra.DFinsupp
-public import Mathlib.Algebra.Module.Torsion.Free
-public import Mathlib.Algebra.Module.Torsion.Field
-public import Mathlib.Algebra.Field.Basic
+public import Mathlib.LinearAlgebra.Basis.Defs
+import Mathlib.LinearAlgebra.Basis.Basic
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr

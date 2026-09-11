@@ -14,8 +14,10 @@ Lemma steps are discharged below without strengthening that premise.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.Truth
 public import LeanPool.MatchingLogic.EntryIII.Countertheory
+public import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
+import LeanPool.MatchingLogic.EntryIII.Truth
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # MatchingLogic.EntryIII.ModelExistence

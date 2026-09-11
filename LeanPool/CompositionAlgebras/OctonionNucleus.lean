@@ -6,6 +6,13 @@ Authors: Bryan Ehrlich
 module
 
 public import LeanPool.CompositionAlgebras.Octonions
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.ZMod.Defs
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 -- Only seven coordinate equations from three associators are needed below.
 

@@ -7,7 +7,17 @@ module
 
 public import Mathlib.GroupTheory.Sylow
 public import LeanPool.OrderPQ.MulZMod
-public import LeanPool.OrderPQ.SemidirectProduct
+public import Mathlib.GroupTheory.SemidirectProduct
+import LeanPool.OrderPQ.IsCyclic
+import LeanPool.OrderPQ.MonoidHom
+import LeanPool.OrderPQ.PrimeOrder
+import LeanPool.OrderPQ.SemidirectProduct
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # LeanPool.OrderPQ.Basic

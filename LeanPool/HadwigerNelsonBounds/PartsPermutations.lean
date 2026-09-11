@@ -11,6 +11,11 @@ public import LeanPool.HadwigerNelsonBounds.PartsPermutationData2
 public import LeanPool.HadwigerNelsonBounds.PartsPermutationData3
 public import LeanPool.HadwigerNelsonBounds.PartsPermutationData4
 public import LeanPool.HadwigerNelsonBounds.PartsPermutationData5
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The six exact automorphisms of the normalized Parts root. -/
 

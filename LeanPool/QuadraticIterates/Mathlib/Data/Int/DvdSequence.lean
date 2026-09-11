@@ -5,9 +5,10 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Algebra.GCDMonoid.Nat
-public import Mathlib.Algebra.Ring.Divisibility.Basic
-public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Algebra.GCDMonoid.Basic
+import Mathlib.Algebra.GCDMonoid.Nat
+import Mathlib.Algebra.Ring.Divisibility.Basic
+import Mathlib.Tactic.LinearCombination
 
 /-!
 # Strong divisibility of sequences from a translation congruence

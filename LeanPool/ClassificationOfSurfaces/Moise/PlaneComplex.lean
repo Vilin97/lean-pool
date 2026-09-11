@@ -5,13 +5,10 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import Mathlib.Analysis.Convex.Topology
-public import Mathlib.Analysis.Convex.Between
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.Normed.Affine.AddTorsor
-public import Mathlib.LinearAlgebra.AffineSpace.Independent
-public import Mathlib.Topology.LocallyFinite
 public import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
+import Mathlib.Analysis.Convex.Between
+import Mathlib.Analysis.Normed.Affine.AddTorsor
 
 /-!
 # Finite simplicial complexes in the plane

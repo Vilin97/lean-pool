@@ -5,18 +5,15 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.LeafInduction
-public import LeanPool.Egrs75.DigitVector
 public import LeanPool.Egrs75.DigitAtToolkit
-public import LeanPool.Egrs75.AddBranch
-public import LeanPool.Egrs75.SubtractBranch
 public import LeanPool.Egrs75.ConditionThreeWindow
-public import LeanPool.Egrs75.MoveDigits
-public import LeanPool.Egrs75.SeedWindow
-public import LeanPool.Egrs75.Reduction
-public import Mathlib.Data.Nat.Digits.Lemmas
+import LeanPool.Egrs75.AddBranch
+import LeanPool.Egrs75.MoveDigits
+import LeanPool.Egrs75.Reduction
+import LeanPool.Egrs75.RoundUp
+import LeanPool.Egrs75.SeedWindow
+import LeanPool.Egrs75.SubtractBranch
+import Mathlib.Data.Nat.Totient
 
 /-!
 EGRS75 two-prime — the μ-MEASURE CLOSURE (2026-06-12).

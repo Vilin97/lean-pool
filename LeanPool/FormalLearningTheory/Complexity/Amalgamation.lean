@@ -6,6 +6,9 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Complexity.Interpolation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Amalgamation Preserves WellBehavedVCMeasTarget

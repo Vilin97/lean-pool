@@ -6,6 +6,11 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
+public import LeanPool.Erdos97ConvexOctagon.FiniteModel
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Types and local audit for repeated-pair row-mask covers -/
 

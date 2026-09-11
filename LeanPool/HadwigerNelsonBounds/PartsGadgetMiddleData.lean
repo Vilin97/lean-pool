@@ -6,6 +6,11 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData0
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Aggregation of the generated `Middle` certificate. -/
 

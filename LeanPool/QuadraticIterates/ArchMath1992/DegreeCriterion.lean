@@ -5,11 +5,15 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Data.FunLike.Fintype
 
-public import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Roots
-public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduct
+public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
+import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Eval
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Roots
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduct
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.FunLike.Fintype
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # The relative degree `[K_{n+1} : K_n]`

@@ -5,7 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
 /-!
 # Back-translation from the graph language (Craig Layer 3, Unit 6)
 

@@ -5,11 +5,19 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
 public import LeanPool.PebblingLean.Hypercube
 public import LeanPool.PebblingLean.Weight
+public import Mathlib.Data.Fintype.Powerset
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Lower-bound infrastructure for hypercubes

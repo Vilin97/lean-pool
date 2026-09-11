@@ -5,13 +5,12 @@ Authors: Wondermonger-daydreaming
 -/
 module
 
-public import Mathlib.Combinatorics.Enumerative.Catalan.Basic
-public import Mathlib.GroupTheory.Perm.Fin
 public import Mathlib.GroupTheory.Perm.Cycle.Type
-public import Mathlib.Data.Fin.Basic
 public import LeanPool.SemicircleCheck.ShiftTwoEquiv
-public import LeanPool.SemicircleCheck.FinRotateLemmas
-public import LeanPool.SemicircleCheck.RotationArithmetic
+public import Mathlib.Logic.Equiv.Fin.Rotate
+import LeanPool.SemicircleCheck.FinRotateLemmas
+import LeanPool.SemicircleCheck.RotationArithmetic
+import Mathlib.GroupTheory.Perm.Fin
 
 /-!
   GENUS ZERO ↔ NONCROSSING

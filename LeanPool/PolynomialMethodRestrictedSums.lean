@@ -11,6 +11,12 @@ public import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedS
 public import LeanPool.PolynomialMethodRestrictedSums.DiasDaSilvaHamidoune
 public import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
 public import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The polynomial method and restricted sums of congruence classes

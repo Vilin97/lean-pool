@@ -6,7 +6,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 module
 
 public import LeanPool.Polylean.UnitConjecture.FreeModule
-public import Mathlib.Algebra.Field.Basic
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Ring.Hom.Defs
+public import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Push
 
 /-!
 # Group Rings

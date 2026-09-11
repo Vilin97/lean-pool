@@ -5,8 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.LatticeSeparation
 public import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
+public import LeanPool.HadwigerNelsonBounds.Voronoi
+import LeanPool.HadwigerNelsonBounds.LatticeSeparation
 
 /-!
 # Isbell's seven-coloring

@@ -6,6 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Cech.Cochains
+import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `H⁰(𝒰,D) ≃ L(D)` (CC8, proof plan §6.1)

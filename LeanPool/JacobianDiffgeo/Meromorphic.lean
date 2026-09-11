@@ -14,6 +14,8 @@ public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
 public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
 public import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
 public import LeanPool.JacobianDiffgeo.Meromorphic.LinSysMulEquiv
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # meromorphic-and-divisors (CC2/CC3): junk-free `ℳ(X)`, divisors, `L(D)` (namespace `RS`)

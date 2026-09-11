@@ -9,6 +9,9 @@ public import LeanPool.FormalLearningTheory.Theorem.Gold
 public import LeanPool.FormalLearningTheory.Theorem.PAC
 public import LeanPool.FormalLearningTheory.Theorem.Online
 public import LeanPool.FormalLearningTheory.Theorem.Separation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.FormalLearningTheory.Theorem

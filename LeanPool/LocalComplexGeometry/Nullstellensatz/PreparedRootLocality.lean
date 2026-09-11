@@ -6,6 +6,8 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Uniform locality of prepared roots

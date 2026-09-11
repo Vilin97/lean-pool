@@ -5,15 +5,9 @@ Authors: Ivan Kobe
 -/
 module
 
-public import LeanPool.FactorizationSystems.Examples
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Cospan
-public import Mathlib.CategoryTheory.Limits.Types.Pullbacks
-public import Mathlib.CategoryTheory.Limits.IsLimit
-public import Mathlib.CategoryTheory.Iso
-public import Mathlib.CategoryTheory.Types.Basic
-public import Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
+public import Mathlib.CategoryTheory.Limits.Types.Limits
+public import Mathlib.Tactic.Attr.Core
+import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 
 /-!
 # LeanPool.FactorizationSystems.Orthogonality

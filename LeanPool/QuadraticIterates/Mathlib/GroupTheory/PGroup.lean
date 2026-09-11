@@ -6,9 +6,10 @@ Authors: Michael Stoll
 module
 
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.FieldTheory.Finiteness
 public import Mathlib.GroupTheory.PGroup
-public import Mathlib.GroupTheory.Perm.DomMulAct
+public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.Module.Submodule.Lattice
+import Mathlib.FieldTheory.Finiteness
 
 /-!
 # Fixed points of 2-groups on 𝔽₂-modules

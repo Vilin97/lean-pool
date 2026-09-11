@@ -5,9 +5,8 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.ContinuousLattice.Constructions
 public import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
-public import Mathlib.Order.GaloisConnection.Basic
+import LeanPool.DomainTheory.ContinuousLattice.Constructions
 
 /-!
 # Inverse limits of continuous lattices (Scott 1972, §4)

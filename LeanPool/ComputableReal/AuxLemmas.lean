@@ -5,7 +5,8 @@ Authors: Alex Meiburg
 -/
 module
 
-public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
 /-!
 # Auxiliary lemmas

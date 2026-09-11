@@ -5,8 +5,10 @@ Authors: Matt Hunzinger
 -/
 module
 
-public import LeanPool.Circuitlib.Circuit.Category.Combinational
-public import Mathlib.Data.Stream.Init
+public import LeanPool.Circuitlib.Circuit.Wires
+public import Mathlib.CategoryTheory.Monoidal.Braided.Basic
+public import Mathlib.Data.Stream.Defs
+import Mathlib.Tactic.Attr.Core
 
 /-! # Sequential circuit category
 

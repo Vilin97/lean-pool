@@ -5,8 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
-public import LeanPool.Lentil.Basic
+public import Lean.Meta.Basic
+import LeanPool.Lentil.Basic
 
 @[expose] public section
 

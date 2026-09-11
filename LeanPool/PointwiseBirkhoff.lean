@@ -6,6 +6,7 @@ Authors: Lua Viana Reis, Oliver Butterley, Pietro Monticone
 module
 
 public import LeanPool.PointwiseBirkhoff.Main
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pointwise Birkhoff Ergodic Theorem

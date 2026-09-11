@@ -16,7 +16,9 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
-public import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # LocalCircleEstimate -/
 

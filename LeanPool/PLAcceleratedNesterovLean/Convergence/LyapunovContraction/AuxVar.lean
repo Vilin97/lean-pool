@@ -5,7 +5,8 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
 
 /-!
 # Auxiliary Variable Recursion for Lyapunov Contraction

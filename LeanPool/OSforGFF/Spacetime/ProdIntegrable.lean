@@ -5,16 +5,10 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-public import Mathlib.MeasureTheory.Integral.IntegrableOn
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Basic
-public import LeanPool.OSforGFF.General.FunctionalAnalysis
 public import LeanPool.OSforGFF.Spacetime.Basic
+import LeanPool.OSforGFF.General.FunctionalAnalysis
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 ## SpaceTime-specialized version

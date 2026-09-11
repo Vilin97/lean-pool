@@ -7,7 +7,7 @@ module
 
 public import Mathlib.NumberTheory.LSeries.RiemannZeta
 public import Mathlib.Analysis.Analytic.Order
-public import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.Meta.Attr
 
 /-! # The vocabulary of the main results
 

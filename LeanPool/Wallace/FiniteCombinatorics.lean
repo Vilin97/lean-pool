@@ -5,9 +5,17 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import Mathlib.Analysis.Normed.Field.Lemmas
-public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.Tactic.DeriveFintype
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Finsupp.Defs
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Order.Lattice.Nat
+import Mathlib.Analysis.Normed.Field.Lemmas
+import Mathlib.NumberTheory.NumberField.Basic
 
 /-!
 # Finite combinatorics used in the Wallace construction

@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalTower
+public import LeanPool.InfinitaryLogic.Methods.SkolemColimit
 /-!
 # The countable local colimit language `L_Γ` (`localColim`) and its cocone
 

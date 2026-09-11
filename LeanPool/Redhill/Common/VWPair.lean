@@ -6,9 +6,13 @@ Authors: Jeremy Tan
 module
 
 public import Mathlib.Data.Nat.ChineseRemainder
-public import Mathlib.Data.Nat.Factors
-public import Mathlib.Data.ZMod.Defs
 public import LeanPool.Redhill.Common.PrimeChain
+public import Mathlib.Algebra.Ring.Parity
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Nat.Factors
+import Mathlib.Data.ZMod.Defs
 
 /-!
 # VW pairs

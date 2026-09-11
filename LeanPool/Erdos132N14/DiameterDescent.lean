@@ -6,6 +6,8 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132N14.PublishedInputs
+public import LeanPool.Erdos132N14.HopfPannwitz
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Pair budget and endpoint deletion at fourteen points

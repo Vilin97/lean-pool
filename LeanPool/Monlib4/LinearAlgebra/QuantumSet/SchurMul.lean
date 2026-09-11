@@ -6,8 +6,11 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-public import Mathlib.RingTheory.Coalgebra.Basic
 public import Mathlib.RingTheory.Coalgebra.Hom
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Schur Product Operator

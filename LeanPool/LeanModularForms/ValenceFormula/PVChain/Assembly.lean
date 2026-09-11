@@ -5,11 +5,17 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Seg5CuspIntegral
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.ArcContribution
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.ResidueSideInfra
-public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.ArcContribution
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.Seg5CuspIntegral
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # PV Chain Assembly

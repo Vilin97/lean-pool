@@ -7,7 +7,6 @@ module
 
 public import LeanPool.WhiteheadTheorem.Shapes.Cube
 public import LeanPool.WhiteheadTheorem.Auxiliary
-public import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap

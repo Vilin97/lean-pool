@@ -5,7 +5,7 @@ Authors: Catskills Research Company
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Finset.Insert
 
 /-!
 # A choice-free `Finset` prelude

@@ -5,8 +5,9 @@ Authors: Ben Cassie
 -/
 module
 
-public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Analysis.Complex.Trigonometric
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.Complex.Trigonometric
 
 /-!
 # Kuramoto order parameter

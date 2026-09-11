@@ -6,6 +6,12 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.Liouville
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The zeros of ℘′ and the factorization of ℘′²

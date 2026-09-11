@@ -8,6 +8,8 @@ module
 public import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
 public import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
 public import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # planar-stokes-atoms: compact-support planar Stokes for `dbar` and the smeared residue

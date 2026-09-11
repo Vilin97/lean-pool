@@ -5,10 +5,10 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
 public import Mathlib.RingTheory.AdicCompletion.Algebra
-public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
-public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 
 /-!
 # Adic Completion of a Noetherian Local Ring is Local

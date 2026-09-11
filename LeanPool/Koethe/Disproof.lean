@@ -5,12 +5,15 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Algebra.GroupWithZero.Basic
-public import Mathlib.Data.SetLike.Basic
-public import Mathlib.RingTheory.Ideal.Defs
-public import Mathlib.RingTheory.TwoSidedIdeal.Basic
-public import Mathlib.RingTheory.TwoSidedIdeal.Lattice
-public import LeanPool.Koethe.Counterexample
+public import Mathlib.LinearAlgebra.Matrix.Ideal
+import LeanPool.Koethe.Counterexample
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Disproof of the Köthe conjecture in Krempa's matrix form

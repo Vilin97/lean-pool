@@ -5,7 +5,15 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.CombinedStep
+public import LeanPool.AndersonConjecture.Jensen.TransfiniteUnion
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.CombinedStep
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Chain Helpers for the Transfinite Construction

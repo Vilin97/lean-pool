@@ -5,9 +5,14 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRootGate
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedCP
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigRelational
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedCP
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRootGate
+import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 /-!
 # Lyndon interpolation, countable relational core (issue #14, Unit 5, commit 2)
 

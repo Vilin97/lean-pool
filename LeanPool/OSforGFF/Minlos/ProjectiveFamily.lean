@@ -7,6 +7,8 @@ module
 
 public import LeanPool.OSforGFF.Minlos.FinDimMarginals
 public import LeanPool.OSforGFF.KolmogorovExtension4.KolmogorovExtension
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Bridge: Bochner Marginals → Projective Measure Family

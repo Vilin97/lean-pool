@@ -5,19 +5,10 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-public import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete

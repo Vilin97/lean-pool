@@ -5,13 +5,12 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-public import Mathlib.Analysis.PSeries
-public import Mathlib.Topology.Algebra.InfiniteSum.Module
-public import Mathlib.Analysis.Distribution.TemperateGrowth
 public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteFunctions
+import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+import Mathlib.Analysis.PSeries
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Schwartz Hermite Expansion (1D)

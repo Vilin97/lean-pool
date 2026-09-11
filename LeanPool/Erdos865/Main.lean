@@ -5,8 +5,13 @@ Authors: Ricky Cipollini
 -/
 module
 
-public import LeanPool.Erdos865.UpperBound
-public import LeanPool.Erdos865.Sharpness
+public import LeanPool.Erdos865.Defs
+import LeanPool.Erdos865.UpperBound
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # A sharp `5/8` bound for Erdős Problem 865

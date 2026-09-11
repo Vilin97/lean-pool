@@ -6,9 +6,10 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Basic
-public import Mathlib.Combinatorics.SimpleGraph.Acyclic
-public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-public import Mathlib.Tactic.Common
+public import Mathlib.Algebra.Group.Action.Pretransitive
+import Mathlib.Data.Nat.Totient
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
 /-!
 # Definition of Graph Action
 

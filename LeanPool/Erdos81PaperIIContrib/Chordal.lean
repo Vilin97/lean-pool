@@ -6,10 +6,8 @@ Authors: Juan Pablo Traverso Gianini
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Clique
-public import Mathlib.Combinatorics.SimpleGraph.Metric
-public import Mathlib.Combinatorics.SimpleGraph.Paths
-public import Mathlib.Data.Set.Finite.Lemmas
-public import Mathlib.Tactic.Push
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+import Mathlib.Combinatorics.SimpleGraph.Metric
 
 /-!
 # Chordal graphs

@@ -6,6 +6,9 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.Basic.IOpen
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.Prime.Lemmas
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Pow2 -/
 

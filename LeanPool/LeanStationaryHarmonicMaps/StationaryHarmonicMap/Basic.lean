@@ -5,9 +5,9 @@ Authors: Wei Wang
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 public import Mathlib.MeasureTheory.VectorMeasure.WithDensity
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 
 /-!
 # Basic definitions for stationary harmonic maps

@@ -6,6 +6,13 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Module
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.Data.Finsupp.SMul
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Hecke Rings: Associativity

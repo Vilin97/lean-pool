@@ -5,7 +5,12 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import LeanPool.GrothendieckVanishing.CohomologyAPI
+public import Mathlib.Algebra.Category.Grp.Colimits
+public import Mathlib.Algebra.Category.Grp.FilteredColimits
+public import Mathlib.Algebra.Category.Grp.Limits
+public import Mathlib.Algebra.Category.Grp.Zero
+public import Mathlib.Topology.Sheaves.Stalks
+import LeanPool.GrothendieckVanishing.CohomologyAPI
 
 /-!
 # Extension-by-zero presheaf and sheaf machinery

@@ -6,10 +6,11 @@ Authors: Jujian Zhang
 module
 
 public import LeanPool.BrauerGroupNew.MoritaEquivalence
-public import Mathlib.Algebra.Category.ModuleCat.Abelian
-public import Mathlib.RingTheory.HopkinsLevitzki
 public import Mathlib.RingTheory.Morita.Basic
-public import Mathlib.RingTheory.SimpleModule.Rank
+import Mathlib.Algebra.Category.ModuleCat.Abelian
+import Mathlib.CategoryTheory.Limits.Shapes.Countable
+import Mathlib.RingTheory.HopkinsLevitzki
+import Mathlib.RingTheory.SimpleModule.Rank
 
 /-!
 # LeanPool.BrauerGroupNew.Morita.ChangeOfRings

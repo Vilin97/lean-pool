@@ -5,8 +5,8 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import Mathlib.CategoryTheory.EqToHom
 public import Mathlib.CategoryTheory.Category.Cat
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # LeanPool.DirectedTopologyLean4.MorphismAux

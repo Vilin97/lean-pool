@@ -5,11 +5,9 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.Calculus.FDeriv.Pow
 
 /-!
 # Local Geometry Step 2: Fiber Integration for Quadratic Growth and Strong Aiming

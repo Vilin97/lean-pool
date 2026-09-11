@@ -7,6 +7,8 @@ module
 
 public import LeanPool.JacobianDiffgeo.Meromorphic.Field
 public import Mathlib.Topology.LocallyFinsupp
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Divisors (CC2) and the divisor map `divisor : ℳ X → Divisor X` (CC3)

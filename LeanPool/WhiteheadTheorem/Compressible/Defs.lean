@@ -7,9 +7,7 @@ module
 
 public import LeanPool.WhiteheadTheorem.Exponential
 public import LeanPool.WhiteheadTheorem.Shapes.Maps
-public import Mathlib.Topology.Category.TopCat.Limits.Basic
 public import Mathlib.Topology.Homotopy.Basic
-public import Mathlib.CategoryTheory.LiftingProperties.Limits
 
 /-!
 # LeanPool.WhiteheadTheorem.Compressible.Defs

@@ -6,6 +6,10 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.CencovPetz.MarkovMorphism
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

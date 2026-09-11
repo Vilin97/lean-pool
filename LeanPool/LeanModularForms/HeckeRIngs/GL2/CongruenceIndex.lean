@@ -6,8 +6,7 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
-public import Mathlib.GroupTheory.Index
-public import Mathlib.Data.ZMod.Units
+import Mathlib.Data.ZMod.Units
 
 /-!
 # Index of Congruence Subgroups

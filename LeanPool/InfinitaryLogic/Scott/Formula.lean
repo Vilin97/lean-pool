@@ -6,9 +6,9 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Scott.BackAndForth
-public import LeanPool.InfinitaryLogic.Util
-public import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 public import Mathlib.SetTheory.Cardinal.Aleph
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+import LeanPool.InfinitaryLogic.Util
 
 /-!
 # Scott Formulas

@@ -5,10 +5,15 @@ Authors: James Huang, Samuël Borza
 -/
 module
 
-public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
-public import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
-public import Mathlib.RingTheory.Polynomial.Vieta
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Analysis.Complex.Order
+import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
+import Mathlib.RingTheory.Polynomial.Vieta
 
 /-!
 # Symmetric polynomials

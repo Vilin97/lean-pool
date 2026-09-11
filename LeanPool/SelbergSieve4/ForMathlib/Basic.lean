@@ -5,25 +5,10 @@ Authors: Arend Mellendijk
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Finprod
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Data.Nat.Prime.Basic
-public import Mathlib.Data.Nat.Squarefree
 public import Mathlib.NumberTheory.ArithmeticFunction.Defs
-public import Mathlib.NumberTheory.ArithmeticFunction.Misc
-public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # LeanPool.SelbergSieve4.ForMathlib.Basic
 -/

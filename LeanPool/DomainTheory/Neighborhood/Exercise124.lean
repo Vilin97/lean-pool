@@ -6,7 +6,8 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Order.Zorn
+public import Mathlib.Order.Preorder.Chain
+import Mathlib.Order.Zorn
 
 /-!
 # Exercise 1.24 (Scott 1981, PRG-19, §1) — every partial element extends to a

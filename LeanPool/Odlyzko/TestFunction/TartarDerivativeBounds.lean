@@ -6,9 +6,11 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartar
-public import LeanPool.Odlyzko.TestFunction.Fourier
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import LeanPool.Odlyzko.TestFunction.Fourier
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Tartar Derivative Bounds

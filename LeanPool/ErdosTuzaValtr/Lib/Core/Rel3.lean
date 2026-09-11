@@ -5,7 +5,6 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Order.Basic
 public import Mathlib.Order.OrderDual
 
 /-!

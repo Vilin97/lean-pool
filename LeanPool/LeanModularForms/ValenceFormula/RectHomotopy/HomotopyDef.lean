@@ -6,7 +6,9 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
-public import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Homotopy infrastructure for FD boundary → polygon deformation

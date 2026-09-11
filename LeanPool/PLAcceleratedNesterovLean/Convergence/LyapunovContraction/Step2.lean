@@ -5,7 +5,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 
 /-!
 # Lyapunov Contraction Step 2: Normal Terms and Perturbation Absorption

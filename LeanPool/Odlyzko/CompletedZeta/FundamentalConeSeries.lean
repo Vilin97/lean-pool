@@ -5,10 +5,10 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.DedekindZeta.Convergence
-public import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
-public import Mathlib.NumberTheory.LSeries.Linearity
-public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.FundamentalCone
+public import LeanPool.Odlyzko.DedekindZeta.Coefficients
+import LeanPool.Odlyzko.DedekindZeta.Convergence
+import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
+import Mathlib.NumberTheory.LSeries.Linearity
 
 /-! TODO: Add doc-string. -/
 

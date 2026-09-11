@@ -32,7 +32,10 @@ Statements pinned before any proof was attempted.
 -/
 module
 
-public import LeanPool.MatchingLogic.Core
+public import Aesop.BuiltinRules
+public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Set.Lattice
 
 /-!
 # MatchingLogic.Sorted

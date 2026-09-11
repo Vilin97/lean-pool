@@ -10,7 +10,11 @@ Authors: ruplet
 -- Please see V0.lean for the manually written foundations.
 module
 
-public import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
+public import LeanPool.FormalizationOfBoundedArithmetic.V0
+import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
+import Mathlib.Tactic.Positivity.Finset
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrAddAssoc

@@ -8,6 +8,7 @@ module
 public import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
 public import LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
 public import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Index file for the SplitPath subdirectory.

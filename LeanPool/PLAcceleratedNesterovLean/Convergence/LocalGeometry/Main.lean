@@ -5,12 +5,16 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.HessianBound
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Bridge
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.Bridge
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 
 /-!

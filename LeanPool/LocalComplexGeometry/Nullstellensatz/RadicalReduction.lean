@@ -7,7 +7,11 @@ module
 
 public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
-public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Reduction of the analytic Nullstellensatz to prime ideals

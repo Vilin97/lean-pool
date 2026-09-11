@@ -7,8 +7,6 @@ module
 
 public import LeanPool.MRiscX.AbstractSyntax.Map
 public import LeanPool.MRiscX.AbstractSyntax.Instr
-public import LeanPool.MRiscX.Parser.AssemblySyntax
-public import Lean
 
 /-!
 # AbstractSyntax

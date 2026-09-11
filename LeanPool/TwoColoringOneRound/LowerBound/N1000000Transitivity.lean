@@ -5,15 +5,12 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 
-public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity

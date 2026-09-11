@@ -6,9 +6,8 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.ComputableReal.IsComputable
-public import Mathlib.Analysis.Complex.Exponential
-public import Mathlib.Analysis.SpecialFunctions.Exp
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Rify
 
 /-!
 # Verified rational bounds for the exponential

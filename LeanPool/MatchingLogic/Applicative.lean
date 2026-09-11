@@ -30,7 +30,8 @@ Statements pinned before any proof was attempted.
 module
 
 public import Mathlib.Data.Fin.VecNotation
-public import LeanPool.MatchingLogic.Composite
+public import LeanPool.MatchingLogic.Localization
+import LeanPool.MatchingLogic.Composite
 
 /-!
 # MatchingLogic.Applicative

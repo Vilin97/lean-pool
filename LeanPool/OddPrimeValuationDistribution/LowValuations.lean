@@ -5,8 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.OddPrimeValuationDistribution.GeneratingFunction
-public import Mathlib.Tactic.Ring
+public import LeanPool.OddPrimeValuationDistribution.ValuationBlocks
+import Mathlib.Algebra.Polynomial.Coeff
+import Mathlib.Data.Sym.Sym2.Init
 
 /-!
 # Closed low-valuation counts for every odd prime

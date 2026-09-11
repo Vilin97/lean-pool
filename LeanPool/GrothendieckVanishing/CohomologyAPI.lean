@@ -5,13 +5,12 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
-public import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Sheaf
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
-public import Mathlib.Topology.Sheaves.Skyscraper
 public import LeanPool.GrothendieckVanishing.ClosedImmersion
+import Mathlib.Algebra.Category.Grp.AB
+import Mathlib.Topology.Sheaves.Skyscraper
 
 /-!
 # Sheaf Cohomology API

@@ -5,8 +5,13 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetVerification
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData
+public import Mathlib.Algebra.Group.End
+import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
+import LeanPool.HadwigerNelsonBounds.PartsGadgetVerification
 
 /-!
 # The forced pair in the second-stage Parts gadget

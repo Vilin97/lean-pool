@@ -6,6 +6,10 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Remaining region computations for the 3-parameter recursive algorithm

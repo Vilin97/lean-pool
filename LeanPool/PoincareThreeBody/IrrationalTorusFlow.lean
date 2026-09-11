@@ -5,10 +5,10 @@ Authors: Gershon Bialer
 -/
 module
 
-public import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
-public import Mathlib.Topology.Instances.Irrational
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
-public import Mathlib.Tactic.FunProp
+public import Mathlib.NumberTheory.Real.Irrational
+import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
+import Mathlib.Topology.Instances.Irrational
 
 /-!
 # Irrational rotating flows on the two-torus

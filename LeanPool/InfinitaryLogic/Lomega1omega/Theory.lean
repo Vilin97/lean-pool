@@ -6,8 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-public import LeanPool.InfinitaryLogic.Util
-public import Mathlib.Data.Set.Basic
+import LeanPool.InfinitaryLogic.Util
 
 /-!
 # Lω₁ω Theories and Semantic Entailment

@@ -5,11 +5,11 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra
-public import LeanPool.Monlib4.Other
-public import LeanPool.Monlib4.Preq
-public import LeanPool.Monlib4.QuantumGraph
-public import LeanPool.Monlib4.RepTheory
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Monlib4 import root

@@ -5,8 +5,8 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
+public import Mathlib.Analysis.Real.Sqrt
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
 
 /-!
 # Lyapunov Contraction Step 3: Algebraic Assembly Lemmas

@@ -6,7 +6,15 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise407
-public import Mathlib.Tactic.Ring
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
+import LeanPool.DomainTheory.Neighborhood.Exercise408
+import LeanPool.DomainTheory.Neighborhood.Exercise411
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Exercise 5.9 (Scott 1981, PRG-19, Lecture V)

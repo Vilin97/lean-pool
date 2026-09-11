@@ -6,6 +6,18 @@ Authors: Keston Aquino-Michaels
 module
 
 public import LeanPool.CriticalPortraits.Core
+public import LeanPool.CriticalPortraits.CycleLemma
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Algebra.Group.PUnit
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The `/d` denominator: `#level-canonical = C(N, d-1)/d` (all d), Mathlib, sorry-free.

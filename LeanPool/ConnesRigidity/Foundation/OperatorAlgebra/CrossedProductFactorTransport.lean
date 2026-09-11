@@ -14,7 +14,7 @@ changed imports and namespace. Paper: §3. See the upstream PORT_MAP.md.
 module
 
 public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductTransport
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
 
 /-!
 # Crossed-product factor transport

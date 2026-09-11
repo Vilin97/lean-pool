@@ -5,8 +5,9 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
-public import Mathlib.Topology.Order.OrderClosed
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Translation
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateH1`

@@ -6,6 +6,7 @@ Authors: YnirPaz
 module
 
 public import LeanPool.PCFTheory.Background.Club
+public import LeanPool.PCFTheory.Background.Ordinal
 
 /-!
 # Club guessing

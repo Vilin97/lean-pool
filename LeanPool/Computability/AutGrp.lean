@@ -6,8 +6,11 @@ Authors: Tanner Duve, Elan Roth
 module
 
 public import LeanPool.Computability.TuringDegree
-public import Mathlib.GroupTheory.Perm.Basic
-public import Mathlib.Order.Hom.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Automorphism Group of the Turing Degrees

@@ -5,11 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.DigitVector
 public import LeanPool.Egrs75.DigitAtToolkit
-public import Mathlib.Data.Nat.Digits.Lemmas
+import LeanPool.Egrs75.RoundUp
+import Mathlib.Data.Finset.Attr
 
 /-!
 The HIGH-case clearing: when the floor `N` lies below `q^j` (the scale of the

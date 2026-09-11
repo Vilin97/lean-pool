@@ -6,6 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+import LeanPool.JacobianDiffgeo.Path.Planar
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # `ofCurve`, well-definedness, `ofCurve_self`, `ofCurve_contMDiff` (CC9, §8)

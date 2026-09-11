@@ -5,7 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Multi-point PV: Dominated Convergence

@@ -6,8 +6,11 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.DelaunayChart
-public import LeanPool.PoincareThreeBody.KeplerHamiltonian
-public import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.PoincareThreeBody.KeplerFlow
+import LeanPool.PoincareThreeBody.IrrationalTorusFlow
+import LeanPool.PoincareThreeBody.KeplerHamiltonian
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # The unperturbed Hamiltonian flow in lifted Delaunay variables

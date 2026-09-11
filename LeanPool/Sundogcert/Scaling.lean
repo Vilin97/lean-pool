@@ -7,7 +7,7 @@ module
 
 public import LeanPool.Sundogcert.Certificate
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
   Sundogcert/Scaling.lean — the [2m, m] projection-code SCALING family.

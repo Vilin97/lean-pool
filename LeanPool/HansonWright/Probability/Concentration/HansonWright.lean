@@ -7,16 +7,14 @@ module
 
 import Mathlib.Probability.Independence.Integration
 
-public import LeanPool.HansonWright.Probability.Concentration.Bernstein
 public import LeanPool.HansonWright.Probability.Process.SubGaussian
-public import LeanPool.HansonWright.Probability.Moments.Exponential
-public import Mathlib.Analysis.CStarAlgebra.Matrix
-public import Mathlib.Analysis.InnerProductSpace.SingularValues
-public import Mathlib.Analysis.InnerProductSpace.Trace
 public import Mathlib.Probability.Distributions.Gaussian.Multivariate
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
-public import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+import LeanPool.HansonWright.Probability.Concentration.Bernstein
+import LeanPool.HansonWright.Probability.Moments.Exponential
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.InnerProductSpace.Trace
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 
 /-!
 # Hanson-Wright Inequality

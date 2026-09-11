@@ -5,11 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.BinaryReduction
 public import LeanPool.GKPCarry.Definitions
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Data.Nat.Digits.Lemmas
-public import Mathlib.Tactic.IntervalCases
+public import LeanPool.GKPCarry.Statement
+import LeanPool.GKPCarry.BinaryReduction
+import LeanPool.GKPCarry.Kummer
+import Mathlib.Data.Nat.Digits.Lemmas
 
 /-!
 # Arithmetic correctness of the ternary doubling transducer

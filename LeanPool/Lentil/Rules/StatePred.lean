@@ -5,8 +5,12 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import LeanPool.Lentil.Rules.WF
-public import LeanPool.Lentil.Tactics.FiniteWindow
+public import LeanPool.Lentil.Tactics.Basic
+import Aesop.Frontend.Tactic
+import Aesop.Main
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Tactics.FiniteWindow
+import LeanPool.Lentil.Util
 
 /-! Theorems specialized for state predicates.
     Their premises are typically pure Lean propositions involving

@@ -5,24 +5,16 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import Mathlib.Algebra.Category.Grp.AB
-public import Mathlib.Algebra.Category.Grp.EpiMono
 public import Mathlib.Algebra.Category.Grp.FilteredColimits
-public import Mathlib.Algebra.Category.Grp.ForgetCorepresentable
-public import Mathlib.Algebra.Category.Grp.Zero
-public import Mathlib.Algebra.Homology.ShortComplex.Exact
-public import Mathlib.CategoryTheory.Abelian.FunctorCategory
-public import Mathlib.CategoryTheory.Adjunction.Additive
-public import Mathlib.CategoryTheory.Limits.Shapes.ZeroMorphisms
 public import Mathlib.CategoryTheory.Sites.Abelian
-public import Mathlib.CategoryTheory.Sites.EpiMono
-public import Mathlib.CategoryTheory.Sites.LocallyBijective
-public import Mathlib.CategoryTheory.Sites.LocallyInjective
-public import Mathlib.CategoryTheory.Preadditive.Injective.Preserves
 public import Mathlib.Topology.Sheaves.Functors
 public import Mathlib.Topology.Sheaves.LocallySurjective
-public import Mathlib.Topology.Sheaves.SheafCondition.UniqueGluing
-public import Mathlib.Topology.Sheaves.Stalks
+public import Mathlib.Algebra.Category.Grp.Abelian
+public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
+import Mathlib.Algebra.Category.Grp.EpiMono
+import Mathlib.Algebra.Category.Grp.Zero
+import Mathlib.CategoryTheory.Limits.Filtered
+import Mathlib.CategoryTheory.Limits.Shapes.Countable
 
 /-!
 # Closed immersions

@@ -8,6 +8,7 @@ module
 public import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
 public import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
 public import LeanPool.ThreeGap.LinftyThreeTorusNine
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Sharp Five-Distance and Sup-Norm Gap Theorems

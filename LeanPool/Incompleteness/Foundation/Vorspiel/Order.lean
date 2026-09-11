@@ -5,7 +5,14 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+public import Aesop.BuiltinRules
+public import Mathlib.Order.Heyting.Basic
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-! # Order -/
 

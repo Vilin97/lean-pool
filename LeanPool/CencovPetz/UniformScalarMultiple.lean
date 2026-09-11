@@ -6,6 +6,11 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.CencovPetz.PermutationInvariantBilinForm
+public import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.LinearAlgebra.BilinearForm.Properties
 
 
 /-!

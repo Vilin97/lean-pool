@@ -5,7 +5,7 @@ Authors: Arend Mellendijk
 -/
 module
 
-public import Aesop
+import Aesop.Frontend.Command
 
 /-!
 # LeanPool.SelbergSieve4.Tactic.AesopInit

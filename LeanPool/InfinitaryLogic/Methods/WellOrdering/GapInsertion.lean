@@ -6,7 +6,6 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
-public import Mathlib.Data.Fin.SuccPred
 
 /-!
 # The four-case gap insertion engine (issue #12, risky engine 2)

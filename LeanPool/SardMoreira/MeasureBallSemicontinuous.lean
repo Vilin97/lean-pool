@@ -7,11 +7,11 @@ module
 
 import Mathlib.Topology.Order.AtTopBotIxx
 
-public import Mathlib.Analysis.Normed.Order.Lattice
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 public import Mathlib.MeasureTheory.Measure.OpenPos
 public import Mathlib.Topology.Order.LowerUpperTopology
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Order.Lattice
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 
 /-!
 # LeanPool.SardMoreira.MeasureBallSemicontinuous

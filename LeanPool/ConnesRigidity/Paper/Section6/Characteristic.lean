@@ -11,7 +11,8 @@ paper's cited public mathematical argument in Section 6.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 The characteristic component of the Connes rigidity formalization.

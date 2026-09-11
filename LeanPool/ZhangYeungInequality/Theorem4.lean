@@ -6,7 +6,7 @@ Authors: Christopher Boone
 module
 
 public import LeanPool.ZhangYeungInequality.EntropyRegion
-public import LeanPool.ZhangYeungInequality.Theorem3
+import LeanPool.ZhangYeungInequality.Theorem3
 
 /-!
 # Theorem 4: Shannon incompleteness at `n = 4`

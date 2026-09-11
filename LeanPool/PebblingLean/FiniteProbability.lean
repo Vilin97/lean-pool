@@ -5,14 +5,17 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Data.Rat.BigOperators
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Rat.Defs
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Elementary finite probability

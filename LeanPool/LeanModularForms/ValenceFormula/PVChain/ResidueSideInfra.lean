@@ -5,10 +5,19 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
 public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Residue-Side Infrastructure for the PV Chain

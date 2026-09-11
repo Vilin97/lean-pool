@@ -7,6 +7,7 @@ module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevWitness
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationarityBridge
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Stationary Sobolev map package

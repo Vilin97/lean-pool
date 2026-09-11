@@ -6,6 +6,7 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Brauer Group New Mathlib LinearAlgebra Matrix GeneralLinearGroup

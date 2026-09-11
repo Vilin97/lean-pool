@@ -6,7 +6,6 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
-public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # The family layer (issues #18, #19A)
 

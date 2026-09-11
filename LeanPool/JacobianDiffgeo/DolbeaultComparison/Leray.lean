@@ -5,9 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Cech.Injectivity
-public import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
-public import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Cech.Injectivity
+import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
+import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Leray's theorem and the cocycle-trade lemma (`Jacobian/DolbeaultComparison/Leray.lean`)

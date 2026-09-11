@@ -6,8 +6,8 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.CircuitComplexity.NF.Defs
-public import LeanPool.CircuitComplexity.Internal.NF
 public import LeanPool.CircuitComplexity.XOR
+import LeanPool.CircuitComplexity.Internal.NF
 
 /-! # Normal Forms: CNF/DNF Lower Bound for XOR
 

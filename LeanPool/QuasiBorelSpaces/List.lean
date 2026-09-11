@@ -5,16 +5,14 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Hom
-public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
 public import LeanPool.QuasiBorelSpaces.List.Encoding
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.List
 public import LeanPool.QuasiBorelSpaces.Option
 public import LeanPool.QuasiBorelSpaces.Nat
-public import LeanPool.QuasiBorelSpaces.Pi
 public import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
-public import LeanPool.QuasiBorelSpaces.SeparatesPoints
-public import LeanPool.QuasiBorelSpaces.Sigma
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Prop
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Lists over Quasi-Borel Spaces

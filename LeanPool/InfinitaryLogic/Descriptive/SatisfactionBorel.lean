@@ -5,7 +5,13 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
+public import LeanPool.InfinitaryLogic.Descriptive.Measurable
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Satisfaction of Lω₁ω Formulas is Borel
 

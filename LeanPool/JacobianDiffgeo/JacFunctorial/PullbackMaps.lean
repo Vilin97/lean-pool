@@ -5,9 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
-public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
 public import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
+import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
+import LeanPool.JacobianDiffgeo.Path.Perturb
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The pullback map on Jacobians (jacobian-functoriality §8, pullback half)

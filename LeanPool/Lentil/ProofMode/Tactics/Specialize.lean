@@ -7,7 +7,13 @@ module
 
 public meta import LeanPool.Lentil.ProofMode.Basic
 
-public import LeanPool.Lentil.ProofMode.Tactics.Rename
+public import LeanPool.Lentil.ProofMode.Basic
+public import LeanPool.Lentil.ProofMode.Location
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Core
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
+meta import LeanPool.Lentil.ProofMode.Location
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
 
 @[expose] public section
 

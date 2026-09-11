@@ -5,12 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.GammaAnalysis
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
-public import Mathlib.Analysis.Calculus.Taylor
-public import Mathlib.Analysis.Normed.Operator.NormedSpace
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.GammaAnalysis
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.ContDiff.RCLike
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # PV Infrastructure: Remainder Analysis

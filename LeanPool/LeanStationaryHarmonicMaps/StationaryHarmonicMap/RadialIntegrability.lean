@@ -7,6 +7,8 @@ module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialCutoffs
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Weak radial integrability

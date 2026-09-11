@@ -13,8 +13,14 @@ row of the expander table. All theorems are fully proved.
 module
 
 public import LeanPool.KaltonRoberts.Defs
-public import LeanPool.KaltonRoberts.PhiDeriv
-public import LeanPool.KaltonRoberts.LogBounds
+public import Mathlib.Analysis.Convex.Function
+import LeanPool.KaltonRoberts.LogBounds
+import LeanPool.KaltonRoberts.PhiDeriv
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Phi function analysis

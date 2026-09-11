@@ -6,17 +6,17 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.GroupTheory.Coset.Card
-public import Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
-public import Mathlib.LinearAlgebra.FreeModule.ModN
-public import Mathlib.LinearAlgebra.FreeModule.PID
 public import Mathlib.MeasureTheory.Constructions.SubmoduleQuotient
 public import LeanPool.PFR.ForMathlib.AffineSpaceDim
 public import LeanPool.PFR.ForMathlib.Entropy.RuzsaSetDist
-public import LeanPool.PFR.ImprovedPFR
-public import LeanPool.PFR.Mathlib.Algebra.Group.Action.Pointwise.Set.Basic
-public import LeanPool.PFR.Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
-public import LeanPool.PFR.Mathlib.LinearAlgebra.Quotient.Basic
+import LeanPool.PFR.Fibring
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.ImprovedPFR
+import LeanPool.PFR.Mathlib.Algebra.Group.Action.Pointwise.Set.Basic
+import LeanPool.PFR.Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
+import LeanPool.PFR.Mathlib.LinearAlgebra.Quotient.Basic
+import Mathlib.LinearAlgebra.FreeModule.ModN
+import Mathlib.LinearAlgebra.FreeModule.PID
 
 /-!
 # Weak PFR over the integers

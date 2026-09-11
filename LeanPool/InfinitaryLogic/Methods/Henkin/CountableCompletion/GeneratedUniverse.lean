@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+import Mathlib.Data.Set.Finite.Range
 /-!
 # The generated enumeration universe `U` (issue #8 tranche 2, commit 1)
 

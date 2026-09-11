@@ -5,7 +5,8 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Lattice

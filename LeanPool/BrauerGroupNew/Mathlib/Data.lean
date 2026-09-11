@@ -6,6 +6,7 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Brauer Group New Mathlib Data

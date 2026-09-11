@@ -5,10 +5,11 @@ Authors: Alexander Loitzl, Martin Dvorak
 -/
 module
 
-public import LeanPool.PumpingCfg.ChomskyNormalForm.Translation
 public import LeanPool.PumpingCfg.Utils
 public import LeanPool.PumpingCfg.ParseTree
-public import Mathlib.Data.Set.Card
+import LeanPool.PumpingCfg.ChomskyNormalForm.Translation
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Data.Nat.SuccPred
 
 /-!
 # Pumping Lemma for Context-Free Grammars

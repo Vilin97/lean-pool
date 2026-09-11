@@ -5,18 +5,9 @@ Authors: Xuanji Li
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Data.Set.Card
 public import Mathlib.GroupTheory.CommutingProbability
-public import Mathlib.GroupTheory.Index
-public import Mathlib.GroupTheory.SpecificGroups.Cyclic
-public import Mathlib.GroupTheory.Subgroup.Centralizer
-public import Mathlib.Logic.Equiv.Set
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Tactic.Linarith.Frontend
 
 /-!
 # The 5/8 theorem

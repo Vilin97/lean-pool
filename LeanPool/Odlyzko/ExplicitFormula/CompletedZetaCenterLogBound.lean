@@ -7,17 +7,14 @@ module
 
 public import LeanPool.Odlyzko.CompletedZeta.VerticalGrowth
 public import LeanPool.Odlyzko.CompletedZeta.VerticalLowerBound
-public import LeanPool.Odlyzko.ECanonicalDecomposition
 public import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaRectangle
-public import LeanPool.Odlyzko.ExplicitFormula.FiniteSetAvoidance
-public import Mathlib.Analysis.Calculus.LogDeriv
-public import Mathlib.Analysis.Complex.AbsMax
-public import Mathlib.Analysis.Complex.BorelCaratheodory
 public import Mathlib.Analysis.Complex.CanonicalDecomposition
-public import Mathlib.Analysis.Complex.HasPrimitives
-public import Mathlib.Analysis.Complex.JensenFormula
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
+import LeanPool.Odlyzko.ExplicitFormula.FiniteSetAvoidance
+import Mathlib.Analysis.Complex.BorelCaratheodory
+import Mathlib.Analysis.Complex.JensenFormula
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Completed Zeta Center Log Bound

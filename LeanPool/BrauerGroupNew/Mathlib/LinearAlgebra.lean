@@ -8,6 +8,7 @@ module
 public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent
 public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix
 public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Brauer Group New Mathlib LinearAlgebra

@@ -5,9 +5,10 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.Order.Monoid.NatCast
-public import Mathlib.Algebra.Ring.Nat
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Monoid.NatCast
+import Mathlib.Algebra.Ring.Nat
 
 /-!
 # Lemmas on when sums of natural numbers are less than their products

@@ -6,6 +6,9 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.WPTBridge.DivisionCore
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
 
 /-!
 # Analytic Weierstrass division

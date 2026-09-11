@@ -5,9 +5,12 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import Mathlib.Data.Fintype.Defs
 public import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolants
 public import LeanPool.Lean4GlCoalgebras.Split.ProofTransformations
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! # Partial Left Interpolation Proofs
 

@@ -20,6 +20,7 @@ to the pinned form; only the proof body was supplied.
 module
 
 public import LeanPool.MatchingLogic.Core
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.Locality

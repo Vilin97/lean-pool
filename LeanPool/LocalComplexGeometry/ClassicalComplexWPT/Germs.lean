@@ -5,8 +5,10 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
 public import Mathlib.Order.Filter.Germ.Basic
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Complex.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Elementary facts about analytic function germs

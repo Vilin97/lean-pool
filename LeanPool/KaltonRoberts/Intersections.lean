@@ -14,9 +14,13 @@ collections, proving the frequency and deficit bounds needed for Corollary 3.1.
 -/
 module
 
-public import LeanPool.KaltonRoberts.Defs
 public import LeanPool.KaltonRoberts.Collections
-public import LeanPool.KaltonRoberts.Lemmas
+import LeanPool.KaltonRoberts.Lemmas
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Product and mixed intersection collections

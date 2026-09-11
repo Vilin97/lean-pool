@@ -5,8 +5,11 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.RingTheory.Localization.Ideal
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
+public import Mathlib.GroupTheory.MonoidLocalization.Away
+public import Mathlib.RingTheory.Localization.Defs
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
+import Mathlib.RingTheory.Localization.Ideal
+import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
 
 /-!
 # Localisation of a UFD at one element

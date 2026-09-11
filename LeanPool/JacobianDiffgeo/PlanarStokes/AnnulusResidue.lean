@@ -5,20 +5,17 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
 public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-public import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.RingTheory.Complex
-public import Mathlib.RingTheory.Norm.Transitivity
-public import Mathlib.Topology.Algebra.Module.Determinant
-public import Mathlib.Analysis.SpecialFunctions.Complex.Log
-public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.MeasureTheory.Measure.Haar.Unique
-public import Mathlib.MeasureTheory.Group.MeasurableEquiv
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.MeasureTheory.Function.Jacobian
+import Mathlib.MeasureTheory.Measure.Haar.Unique
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.Norm.Transitivity
 
 /-!
 # The annulus Stokes identity and the smeared residue theorem

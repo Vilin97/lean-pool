@@ -5,7 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.Gram
+public import LeanPool.Erdos97ConvexOctagon.Basic
+import LeanPool.Erdos97ConvexOctagon.Gram
 
 /-! # Erdős 97 convex-octagon formalization: Pentagon -/
 

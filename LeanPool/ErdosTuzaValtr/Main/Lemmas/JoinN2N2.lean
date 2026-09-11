@@ -5,11 +5,14 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Order.Basic
-public import Mathlib.Tactic.Ring.RingNF
-public import LeanPool.ErdosTuzaValtr.Lib.List.Default
-public import LeanPool.ErdosTuzaValtr.Etv.Defs
 public import LeanPool.ErdosTuzaValtr.Etv.Label
+import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
+import Mathlib.Data.List.Chain
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2

@@ -5,10 +5,8 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import Mathlib.CategoryTheory.Category.Basic
-public import Mathlib.CategoryTheory.Category.Cat
 public import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
+public import LeanPool.DirectedTopologyLean4.DTop
 
 /-!
 # LeanPool.DirectedTopologyLean4.FundamentalCategory

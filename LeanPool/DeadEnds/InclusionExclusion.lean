@@ -5,7 +5,12 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 module
 
-public import LeanPool.DeadEnds.TailEstimates
+public import LeanPool.DeadEnds.Basic
+import LeanPool.DeadEnds.TailEstimates
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-! ## Helper lemmas for inclusion-exclusion -/
 

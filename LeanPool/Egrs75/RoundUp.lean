@@ -6,7 +6,8 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Egrs75.Defs
-public import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Algebra.Order.SuccPred
+import Mathlib.Data.Finset.Attr
 
 /-!
 EGRS75 — the single-base density "Fact" (kernel-clean).

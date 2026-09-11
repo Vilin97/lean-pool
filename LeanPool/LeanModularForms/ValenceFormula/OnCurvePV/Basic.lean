@@ -5,12 +5,19 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.UniformStepBound
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # On-Curve PV: Infrastructure

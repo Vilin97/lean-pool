@@ -6,6 +6,10 @@ Authors: Lior Pachter
 module
 
 public import LeanPool.PebblingLean.UpperBoundParameters
+import LeanPool.PebblingLean.LowerBound
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Paper-facing formulation

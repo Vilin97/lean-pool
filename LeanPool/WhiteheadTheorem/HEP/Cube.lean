@@ -5,9 +5,9 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.CWComplex.Basic
-public import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
 public import LeanPool.WhiteheadTheorem.HEP.Cofibration
+public import LeanPool.WhiteheadTheorem.Shapes.Cube
+import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
 
 /-!
 In this file, the homotopy extension property (HEP) of the pair $(I^n, ∂I^n)$

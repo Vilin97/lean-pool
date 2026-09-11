@@ -10,6 +10,8 @@ public import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
 public import LeanPool.BrauerGroupNew.Subfield.Separable
 public import LeanPool.BrauerGroupNew.Subfield.Splitting
 public import LeanPool.BrauerGroupNew.Subfield.Subfield
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Brauer Group New Subfield

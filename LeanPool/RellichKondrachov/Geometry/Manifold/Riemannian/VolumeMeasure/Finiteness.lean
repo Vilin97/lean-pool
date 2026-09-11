@@ -5,8 +5,8 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness`

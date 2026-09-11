@@ -15,13 +15,11 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
-public import Mathlib.Analysis.InnerProductSpace.Subspace
-public import Mathlib.Analysis.InnerProductSpace.l2Space
-public import Mathlib.MeasureTheory.Integral.Gamma
-public import Mathlib.Analysis.Complex.Isometry
-public import Mathlib.Algebra.Polynomial.Coeff
-public import Mathlib.Order.Filter.AtTopBot.Basic
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.Analysis.Complex.Isometry
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.MeasureTheory.Integral.Gamma
 
 /-! # TrueLevelBasis -/
 

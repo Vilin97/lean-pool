@@ -5,15 +5,11 @@ Authors: Ivan Kobe
 -/
 module
 
-public import Mathlib.CategoryTheory.MorphismProperty.Basic
-public import Mathlib.CategoryTheory.Comma.Arrow
-public import Mathlib.CategoryTheory.Limits.HasLimits
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
-public import Mathlib.CategoryTheory.Limits.Comma
 
 public import LeanPool.FactorizationSystems.Basic
 public import LeanPool.FactorizationSystems.Orthogonality
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # LeanPool.FactorizationSystems.OrthogonalComplements

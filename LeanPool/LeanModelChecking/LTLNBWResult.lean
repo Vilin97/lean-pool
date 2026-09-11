@@ -5,13 +5,17 @@ Authors: György Kurucz
 -/
 module
 
-public import Mathlib.Data.Finite.Prod
-public import Mathlib.Data.Fintype.Powerset
 
 public import LeanPool.LeanModelChecking.LTLNBWStatement
-public import LeanPool.LeanModelChecking.LTLNNF
-public import LeanPool.LeanModelChecking.NNFABW
-public import LeanPool.LeanModelChecking.ABWNBW
+import LeanPool.LeanModelChecking.ABWNBW
+import LeanPool.LeanModelChecking.NNFABW
+import Mathlib.Data.Finite.Prod
+import Mathlib.Data.Fintype.Powerset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Every LTL formula has an equivalent finite-state Büchi automaton

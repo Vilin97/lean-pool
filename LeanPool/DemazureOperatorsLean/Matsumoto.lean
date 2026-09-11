@@ -5,8 +5,8 @@ Authors: Óscar Álvarez Sánchez
 -/
 module
 
-public import LeanPool.DemazureOperatorsLean.StrongExchange
-public import Init.Data.List.Erase
+public import Mathlib.GroupTheory.Coxeter.Inversion
+import LeanPool.DemazureOperatorsLean.StrongExchange
 
 /-!
 # LeanPool.DemazureOperatorsLean.Matsumoto

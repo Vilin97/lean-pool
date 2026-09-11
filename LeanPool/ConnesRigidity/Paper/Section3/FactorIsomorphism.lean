@@ -7,7 +7,7 @@ Authors: Utensil Song
 -/
 module
 
-public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Construction
 
 /-!
 Algebraic part of Zhou §3 for the concrete tensor kernel, including the

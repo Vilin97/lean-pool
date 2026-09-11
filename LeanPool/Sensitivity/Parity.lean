@@ -5,13 +5,15 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.Sensitivity.Defs
 public import LeanPool.Sensitivity.Multilinear
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Data.Fintype.Pi
-public import Mathlib.Data.Fintype.Powerset
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Nat.Choose.Sum
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Parity Function and the Imbalance Lemma

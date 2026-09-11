@@ -5,20 +5,17 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-public import LeanPool.Monlib4.LinearAlgebra.InnerAut
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
-public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
 public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
 public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
 public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-public import LeanPool.Monlib4.Preq.Finset
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+public import Mathlib.LinearAlgebra.Basis.MulOpposite
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.Preq.Finset
 
 /-!
 

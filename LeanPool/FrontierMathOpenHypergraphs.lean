@@ -9,6 +9,9 @@ public import LeanPool.FrontierMathOpenHypergraphs.Basic
 public import LeanPool.FrontierMathOpenHypergraphs.Substitution
 public import LeanPool.FrontierMathOpenHypergraphs.Uniform
 public import LeanPool.FrontierMathOpenHypergraphs.Lubell
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # FrontierMath Ramsey Hypergraphs

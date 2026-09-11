@@ -6,7 +6,10 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 module
 
 public import Mathlib.Data.Fin.Tuple.Basic
-public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.GroupTheory.GroupAction.Defs
+import Mathlib.Algebra.Ring.Nat
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Bases and Saxl adjacency

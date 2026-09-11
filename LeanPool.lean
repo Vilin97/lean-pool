@@ -4623,3 +4623,9 @@ public import LeanPool.ZhangYeungInequality.Theorem2
 public import LeanPool.ZhangYeungInequality.Theorem3
 public import LeanPool.ZhangYeungInequality.Theorem4
 public import LeanPool.ZhangYeungInequality.Theorem5
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.NormNum.RealSqrt

@@ -5,9 +5,9 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Shared definitions for external theorem compatibility

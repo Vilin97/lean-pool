@@ -5,9 +5,16 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
-public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
-public import LeanPool.ErdosTuzaValtr.Config.Default
+public import LeanPool.ErdosTuzaValtr.Config.Lemmas
+public import LeanPool.ErdosTuzaValtr.Config.Mirror
+public import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+public import Mathlib.Algebra.Group.Defs
+import Mathlib.Data.List.Chain
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Etv.Label

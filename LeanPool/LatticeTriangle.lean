@@ -6,6 +6,7 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 module
 
 public import LeanPool.LatticeTriangle.Solution
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-!
 # On the paucity of lattice triangles

@@ -12,7 +12,7 @@ automorphism. Paper: §6.
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismProofs
-public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+import Mathlib.Algebra.Algebra.ZMod
 
 /-!
 The nonisomorphism embedding component of the Connes rigidity formalization.

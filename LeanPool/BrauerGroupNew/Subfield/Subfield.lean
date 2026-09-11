@@ -5,9 +5,14 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.DoubleCentralizer
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
 public import LeanPool.BrauerGroupNew.Subfield.Defs
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import LeanPool.BrauerGroupNew.DoubleCentralizer
+import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.Subfield.Subfield

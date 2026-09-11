@@ -5,10 +5,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Tactic.FunProp
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
 public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 public import LeanPool.QuasiBorelSpaces.List.Encoding
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.List

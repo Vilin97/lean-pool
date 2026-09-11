@@ -11,6 +11,12 @@ public import LeanPool.Erdos367.RFullLowerBound
 public import LeanPool.Erdos367.PellLimsup
 public import LeanPool.Erdos367.Core139
 public import LeanPool.Erdos367.Core4027
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Erdős Problem #367

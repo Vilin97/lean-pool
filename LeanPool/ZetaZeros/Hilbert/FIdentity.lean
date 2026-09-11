@@ -6,6 +6,7 @@ Authors: Kenny Lau
 module
 
 public import LeanPool.ZetaZeros.Hilbert.Defs
+public import LeanPool.ZetaZeros.Defs
 
 /-!
 # The two-variable kernel in terms of even and odd parts

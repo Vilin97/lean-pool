@@ -5,7 +5,8 @@ Authors: Wei Wang
 -/
 module
 
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.API
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Minimal use of the public monotonicity API

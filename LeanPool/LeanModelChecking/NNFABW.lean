@@ -5,11 +5,13 @@ Authors: György Kurucz
 -/
 module
 
-public import Mathlib.Topology.Order.MonotoneConvergence
-public import Mathlib.Topology.Instances.Discrete
 
 public import LeanPool.LeanModelChecking.LTLNNF
 public import LeanPool.LeanModelChecking.ABW
+public import Mathlib.Order.Lattice.Nat
+public import Mathlib.Tactic.Continuity
+import Mathlib.Topology.Instances.Discrete
+import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # From NNF formulas to alternating Büchi automata

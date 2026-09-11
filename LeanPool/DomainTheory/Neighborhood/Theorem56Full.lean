@@ -8,9 +8,12 @@ module
 public import LeanPool.DomainTheory.Neighborhood.Example43
 public import LeanPool.DomainTheory.Neighborhood.Exercise326
 public import LeanPool.DomainTheory.Neighborhood.Exercise511
-public import LeanPool.DomainTheory.Neighborhood.Theorem41
-public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
 public import Mathlib.Computability.PartrecBasis
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Theorem 5.6 (Scott 1981, PRG-19, §5) — the FULL closure: partial recursive ⟹

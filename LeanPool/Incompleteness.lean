@@ -15,6 +15,7 @@ public import LeanPool.Incompleteness.Arith.DC
 public import LeanPool.Incompleteness.DC.Basic
 
 public import LeanPool.Incompleteness.ProvabilityLogic.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-!
 # Gödel's First and Second Incompleteness Theorems

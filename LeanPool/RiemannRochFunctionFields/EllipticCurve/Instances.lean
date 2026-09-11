@@ -6,10 +6,8 @@ Authors: Guanghao Li
 module
 
 public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
-public import Mathlib.FieldTheory.SeparableDegree
-public import Mathlib.FieldTheory.IsAlgClosed.Basic
-public import Mathlib.NumberTheory.FunctionField
 public import LeanPool.RiemannRochFunctionFields.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Instance pack for elliptic function fields

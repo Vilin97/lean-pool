@@ -6,10 +6,12 @@ Authors: Tanner Duve, Elan Roth
 module
 
 public import LeanPool.Computability.Oracle
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.NormNum
-public import Aesop
-public import Mathlib.Computability.Halting
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Turing Reducibility and Turing Degrees

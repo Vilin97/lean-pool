@@ -5,8 +5,10 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Analysis.Matrix.PosDef
-public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Matrix.Spectrum
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Barrier Potential

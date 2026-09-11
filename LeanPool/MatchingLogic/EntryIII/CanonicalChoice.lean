@@ -15,7 +15,8 @@ coordinate has been strengthened according to that function.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.CanonicalChoice

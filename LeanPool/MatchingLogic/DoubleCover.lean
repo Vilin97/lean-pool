@@ -23,7 +23,10 @@ when the arity is `0`, so both copies are populated.
 -/
 module
 
-public import LeanPool.MatchingLogic.Locality
+public import LeanPool.MatchingLogic.Core
+public import Mathlib.Data.Set.Basic
+import LeanPool.MatchingLogic.Locality
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.DoubleCover

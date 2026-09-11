@@ -5,13 +5,8 @@ Authors: Tetsuya Ishiu
 -/
 module
 
-public import Mathlib.Data.Set.Basic
-public import Mathlib.ModelTheory.Basic
-public import Mathlib.ModelTheory.Syntax
 public import Mathlib.ModelTheory.Semantics
-public import Mathlib.Data.Fin.Tuple.Basic
-public import Mathlib.Tactic.Cases
-public import LeanPool.FoZfc.FixedSnoc
+import LeanPool.FoZfc.FixedSnoc
 
 /-!
 # Definitions and theorems about replaceFV and liftAt.

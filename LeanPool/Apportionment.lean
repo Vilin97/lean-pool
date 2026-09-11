@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Apportionment.Basic
 public import LeanPool.Apportionment.PlausibleInstances
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Apportionmentlib

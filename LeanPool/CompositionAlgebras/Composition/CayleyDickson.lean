@@ -5,7 +5,15 @@ Authors: Bryan Ehrlich
 -/
 module
 
-public import LeanPool.CompositionAlgebras.Composition.Doubling
+public import LeanPool.CompositionAlgebras.Composition.Defs
+public import Mathlib.LinearAlgebra.BilinearMap
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!

@@ -5,7 +5,8 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.CircuitComplexity.Internal.AON
+public import LeanPool.CircuitComplexity.AON.Defs
+import LeanPool.CircuitComplexity.Internal.AON
 
 /-! # Internal: Completeness of fan-in-2 AND/OR
 

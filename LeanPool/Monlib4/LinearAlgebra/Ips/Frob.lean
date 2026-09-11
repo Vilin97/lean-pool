@@ -5,11 +5,14 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
-public import LeanPool.Monlib4.LinearAlgebra.DirectSumFromTo
 public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import LeanPool.Monlib4.LinearAlgebra.Nacgor
+import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.Preq.Dite
+import LeanPool.Monlib4.Preq.Ites
 
 /-!
  # Frobenius equations

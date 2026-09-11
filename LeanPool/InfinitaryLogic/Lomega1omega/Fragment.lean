@@ -5,7 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+public import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
 /-!
 # Fragments of `L_{ω₁ω}`
 

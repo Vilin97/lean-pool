@@ -6,7 +6,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.GraphRefinement
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
+import Mathlib.Analysis.Normed.Affine.AddTorsor
 
 /-!
 # Simultaneous polygonalization of finite embedded plane graphs

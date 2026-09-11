@@ -5,7 +5,9 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import LeanPool.Wallace.UniformKronecker
+public import Mathlib.Topology.Instances.AddCircle.Real
+import LeanPool.Wallace.UniformKronecker
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # A character with a prescribed half-turn value

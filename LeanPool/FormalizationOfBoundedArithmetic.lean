@@ -25,6 +25,7 @@ public import LeanPool.FormalizationOfBoundedArithmetic.V0
 public import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddAssoc
 public import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
 public import LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Strengthened V0 Bounded Arithmetic Interfaces

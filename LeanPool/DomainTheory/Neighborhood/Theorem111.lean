@@ -6,7 +6,6 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Order.Monotone.Basic
 
 /-!
 # Theorem 1.11 (Scott 1981, PRG-19, §1) — closure of `|𝒟|` under sequential `⋂`

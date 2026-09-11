@@ -11,6 +11,10 @@ module
 
 public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
 public import Mathlib.Topology.Covering.Basic
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Covering structure off the branch locus

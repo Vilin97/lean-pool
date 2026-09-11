@@ -6,21 +6,7 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.Definitions
-public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-public import Mathlib.Data.Fin.Tuple.Basic
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Constructions.UnitInterval
-public import Mathlib.Order.Interval.Set.Disjoint
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # LeanPool.TwoColoringOneRound.SimpleBounds
 -/

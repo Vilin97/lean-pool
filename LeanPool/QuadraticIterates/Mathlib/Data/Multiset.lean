@@ -5,8 +5,8 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Data.Multiset.Basic
 public import Mathlib.Data.Multiset.MapFold
+import Mathlib.Data.Multiset.Basic
 
 /-!
 # Splitting a multiset along a fixed-point-free involution

@@ -6,14 +6,16 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
-public import Mathlib.Topology.Compactness.Compact
-public import Mathlib.Analysis.Calculus.Deriv.Inverse
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.Calculus.FDeriv.Comp
-public import Mathlib.Analysis.Calculus.FDeriv.Linear
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+import Mathlib.Analysis.Calculus.Deriv.Inverse
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Proposition 2.2: Finite Crossings and Isolated Crossing Intervals

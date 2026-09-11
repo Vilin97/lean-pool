@@ -6,18 +6,14 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.Resonance
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Analysis.Calculus.Deriv.Pow
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.FunProp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Topology.Algebra.Order.Archimedean
-public import Mathlib.Topology.Instances.Irrational
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.NumberTheory.Real.Irrational
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Delaunay frequencies and resonant actions

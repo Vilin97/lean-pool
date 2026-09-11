@@ -5,13 +5,10 @@ Authors: ruplet
 -/
 module
 
-public import Mathlib.ModelTheory.Syntax
-public import Mathlib.ModelTheory.Order
-public import Mathlib.Tactic.FinCases
 
-public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
 public import LeanPool.FormalizationOfBoundedArithmetic.Syntax
 public import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
+import Mathlib.Tactic.FinCases
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Order

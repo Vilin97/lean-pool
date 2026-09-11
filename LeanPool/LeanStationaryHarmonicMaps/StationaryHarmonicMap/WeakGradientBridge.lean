@@ -5,7 +5,8 @@ Authors: Wei Wang
 -/
 module
 
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Weak-gradient bridge

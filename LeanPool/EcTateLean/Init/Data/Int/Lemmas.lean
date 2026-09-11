@@ -5,8 +5,8 @@ Authors: Alex J. Best
 -/
 module
 
-public import Mathlib.Data.Int.Basic
-public import Mathlib.Tactic.Common
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Lemma
 
 /-!
 # LeanPool.EcTateLean.Init.Data.Int.Lemmas

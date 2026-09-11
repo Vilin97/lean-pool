@@ -6,6 +6,7 @@ Authors: Shuhao Song
 module
 
 public import LeanPool.SetTheory.Omega
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Elementary embeddings of models of ZF

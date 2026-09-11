@@ -184,6 +184,7 @@ public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
 public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
 public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
 public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Modular forms and the generalized residue theorem

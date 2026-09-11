@@ -5,12 +5,10 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
-public import Mathlib.Algebra.Module.ZMod
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Data.Fintype.Card
 public import LeanPool.CommonNeighbourConjecture.Saxl.Affine
 public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
 public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Symmetric
+import Mathlib.Data.Rat.Floor
 
 /-!
 # Abstract data for counterexamples at every base size

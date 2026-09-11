@@ -5,9 +5,12 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import Mathlib.LinearAlgebra.Projectivization.Cardinality
-public import Mathlib.RingTheory.DiscreteValuationRing.Basic
-public import LeanPool.BruhatTits.Graph.Tree
+public import LeanPool.BruhatTits.Graph.Graph
+public import LeanPool.BruhatTits.Lattice.Quotient
+public import LeanPool.BruhatTits.Utils.LinearAlgebra
+public import Mathlib.LinearAlgebra.Projectivization.Basic
+import LeanPool.BruhatTits.Utils.ValuationRings
+import Mathlib.LinearAlgebra.Projectivization.Cardinality
 
 /-!
 # Proof that the Bruhat-Tits tree is regular

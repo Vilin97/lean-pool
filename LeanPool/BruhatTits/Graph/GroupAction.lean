@@ -7,6 +7,8 @@ module
 
 public import LeanPool.BruhatTits.Graph.Graph
 public import LeanPool.BruhatTits.Utils.GraphAction
+public import LeanPool.BruhatTits.Cartan.Existence
+import LeanPool.BruhatTits.Utils.ValuationRings
 
 /-!
 # Group actions on the Bruhat-Tits graph

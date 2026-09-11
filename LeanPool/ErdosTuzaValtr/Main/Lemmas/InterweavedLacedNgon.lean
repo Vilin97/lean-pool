@@ -5,10 +5,16 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Order.Basic
-public import LeanPool.ErdosTuzaValtr.Lib.List.Default
-public import LeanPool.ErdosTuzaValtr.Etv.Default
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
+public import LeanPool.ErdosTuzaValtr.Etv.Defs
+public import LeanPool.ErdosTuzaValtr.Etv.Label
+import LeanPool.ErdosTuzaValtr.Etv.Mirror
+import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon

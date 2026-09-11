@@ -5,8 +5,9 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceBoundary
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
+import Mathlib.Combinatorics.SimpleGraph.Init
 
 /-!
 # Standard plane models for locally finite faces

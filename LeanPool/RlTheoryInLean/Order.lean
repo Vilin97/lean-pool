@@ -6,6 +6,8 @@ Authors: Shangtong Zhang
 module
 
 public import LeanPool.RlTheoryInLean.Order.Filter
+import Mathlib.Algebra.Order.AbsoluteValue.Basic
+import Mathlib.Algebra.Order.Field.Basic
 
 /-!
 # Order

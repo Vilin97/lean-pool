@@ -6,7 +6,6 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.BellPair
 public import LeanPool.LeanQuantumAlg.Primitives.WalshHadamard
 public import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
@@ -20,6 +19,9 @@ public import LeanPool.LeanQuantumAlg.Primitives.AmplitudeAmplification
 public import LeanPool.LeanQuantumAlg.Primitives.ParameterShift
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel
 public import LeanPool.LeanQuantumAlg.Primitives.QNN
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # QuantumAlg primitives

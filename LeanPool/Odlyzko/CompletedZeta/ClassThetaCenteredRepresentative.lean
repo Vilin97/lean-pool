@@ -6,6 +6,7 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredContinuation
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

@@ -6,7 +6,8 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import LeanPool.BrauerGroupNew.Subfield.Defs
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
 /-!
 # LeanPool.BrauerGroupNew.Subfield.FiniteDimensional

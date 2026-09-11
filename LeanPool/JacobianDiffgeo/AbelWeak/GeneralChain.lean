@@ -5,9 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
-public import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
-public import LeanPool.JacobianDiffgeo.Path.Chain
+public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
+import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
+import LeanPool.JacobianDiffgeo.Path.Chain
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
 
 /-!
 # The general multi-chart `exists_weakSolutionOfPair`

@@ -5,7 +5,15 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
+public import Aesop.BuiltinRules
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated exact combinatorics for the finite second-stage Parts gadget. -/
 

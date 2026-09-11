@@ -6,7 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonInseparability
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
 /-!
 # The polarity side bound and the one-sided closures (issue #14, Unit 3)
 

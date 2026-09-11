@@ -8,6 +8,8 @@ module
 public import LeanPool.JacobianDiffgeo.FormTrace.PairForm
 public import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
 public import LeanPool.JacobianDiffgeo.FormTrace.ResidueTraceCompat
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # form-trace-tower: pair-form residues and residue-trace compatibility (namespace `RS.FormTrace`)

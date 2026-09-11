@@ -5,7 +5,10 @@ Authors: claytomode
 -/
 module
 
-public import LeanPool.JohnsonLindenstraussLean.NormPreservation
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Inner-product preservation (unquantized Gaussian-projection corollary)

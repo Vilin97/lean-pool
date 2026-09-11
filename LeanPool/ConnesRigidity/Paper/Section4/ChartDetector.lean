@@ -5,9 +5,10 @@ Authors: Utensil Song
 -/
 module
 
-public import Mathlib.LinearAlgebra.CrossProduct
 public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.BooleanPolynomial
 public import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
+import Mathlib.Algebra.Algebra.ZMod
+import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 Algebraic finite-chart detector spine for Zhou's §4. Paper: §4.

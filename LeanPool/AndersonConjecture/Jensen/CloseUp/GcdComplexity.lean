@@ -5,9 +5,15 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
-public import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
-public import Mathlib.RingTheory.Regular.IsSMulRegular
+public import LeanPool.AndersonConjecture.Jensen.NSubring
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # GCD complexity measure

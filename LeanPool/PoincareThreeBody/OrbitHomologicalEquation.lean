@@ -5,9 +5,13 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.Averaging
-public import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
-public import LeanPool.PoincareThreeBody.KeplerHamiltonian
+public import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
+public import LeanPool.PoincareThreeBody.MixedPartials
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.Averaging
+import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
+import LeanPool.PoincareThreeBody.KeplerHamiltonian
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # The first homological equation on a resonant Kepler orbit

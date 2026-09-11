@@ -5,10 +5,17 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Abel.LogPiece
-public import LeanPool.JacobianDiffgeo.Abel.ChartSupported
-public import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
-public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import Mathlib.Analysis.Meromorphic.Order
+import LeanPool.JacobianDiffgeo.Abel.ChartSupported
+import LeanPool.JacobianDiffgeo.Abel.LogPiece
+import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
+import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the per-link construction (design §4.1 steps 5-7, link layer)

@@ -7,16 +7,18 @@ module
 
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
 public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-public import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
-public import LeanPool.Monlib4.LinearAlgebra.MyBimodule
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.PhiMap
 public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
 public import Mathlib.LinearAlgebra.TensorProduct.Opposite
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.Preq.Finset
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Basic

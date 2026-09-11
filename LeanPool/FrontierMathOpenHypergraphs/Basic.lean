@@ -5,10 +5,6 @@ Authors: Dean Cureton
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Finset.Union
-public import Mathlib.Data.Nat.Basic
 public import Mathlib.Order.Lattice.Nat
 
 /-!

@@ -5,14 +5,17 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Dbar.Operator
-public import LeanPool.JacobianDiffgeo.Forms.Analyticity
-public import LeanPool.JacobianDiffgeo.Surface.RealSmooth
-public import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.RingTheory.Complex
-public import Mathlib.RingTheory.Norm.Transitivity
-public import Mathlib.Topology.Algebra.Module.Determinant
+public import LeanPool.JacobianDiffgeo.Dbar.Form01
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import Mathlib.MeasureTheory.Function.Jacobian
+import Mathlib.RingTheory.Complex
+import Mathlib.RingTheory.Norm.Transitivity
 
 /-!
 # abel-theorem: the Serre area-pairing infrastructure (design §4.3, routing decision #2)

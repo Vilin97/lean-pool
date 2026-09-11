@@ -5,9 +5,12 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.CencovPetz.MarkovMorphism
 public import LeanPool.CencovPetz.MonotoneMetric
-public import Mathlib.LinearAlgebra.BilinearForm.Properties
+public import Mathlib.LinearAlgebra.BilinearForm.Hom
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.LinearAlgebra.BilinearForm.Properties
 
 
 /-!

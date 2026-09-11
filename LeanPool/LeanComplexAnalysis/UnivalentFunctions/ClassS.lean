@@ -5,16 +5,11 @@ Authors: seb488, Aristotle
 -/
 module
 
-public import Mathlib.Analysis.Analytic.Basic
-public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Mathlib.Analysis.Calculus.DSlope
-public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Analysis.SpecialFunctions.Complex.Log
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.RemovableSingularity
-public import Mathlib.Tactic.LinearCombination
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Univalent Function Classes: classS and classSigma

@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.Polish
 public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+import LeanPool.InfinitaryLogic.Descriptive.Polish
 /-!
 # Standard Borel Structure on the Model Class
 

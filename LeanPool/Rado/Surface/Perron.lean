@@ -6,7 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.Rado.Surface.Harmonic
-public import Mathlib.Analysis.Complex.Harmonic.Poisson
+public import LeanPool.Rado.Complex.Dirichlet
+import LeanPool.Rado.Complex.Poisson
+import Mathlib.Analysis.Complex.Harmonic.Poisson
 
 /-!
 # Harmonic replacement and Perron's principle

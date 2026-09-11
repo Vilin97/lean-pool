@@ -5,10 +5,6 @@ Authors: Alexander Loitzl
 -/
 module
 
-public import Mathlib.Computability.ContextFreeGrammar
-public import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
-public import LeanPool.PumpingCfg.ChomskyNormalForm.EmptyElimination
-public import LeanPool.PumpingCfg.ChomskyNormalForm.UnitElimination
 public import LeanPool.PumpingCfg.ChomskyNormalForm.TerminalRestriction
 public import LeanPool.PumpingCfg.ChomskyNormalForm.LengthRestriction
 

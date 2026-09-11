@@ -12,6 +12,8 @@ public import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
 public import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
 public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
 public import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # canonical-forms: meromorphic 1-forms and the canonical divisor `K` (namespace `RS`)

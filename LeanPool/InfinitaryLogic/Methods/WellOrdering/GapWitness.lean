@@ -6,8 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Constants
-public import Mathlib.SetTheory.Ordinal.Enum
 public import Mathlib.SetTheory.Cardinal.Aleph
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 
 /-!
 # Base diagram, preservation predicate, and the gap witness (issue #12, commit 2)

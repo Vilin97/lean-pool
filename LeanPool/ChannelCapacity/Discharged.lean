@@ -6,14 +6,11 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.ChannelCapacity.Capacity
-public import LeanPool.ChannelCapacity.NonDegeneracy
-public import LeanPool.ChannelCapacity.ChainRule
-public import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
 
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-public import Mathlib.MeasureTheory.Constructions.Polish.Basic
-public import Mathlib.MeasureTheory.Measure.Prokhorov
-public import Mathlib.Probability.Kernel.WithDensity
+import LeanPool.ChannelCapacity.ChainRule
+import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+import Mathlib.MeasureTheory.Measure.Prokhorov
+import Mathlib.Probability.Kernel.Composition.MeasureComp
 
 /-!
 # ChannelCapacity.Discharged

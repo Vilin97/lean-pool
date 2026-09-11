@@ -5,37 +5,12 @@ Authors: Dean Cureton
 -/
 module
 
-public import Batteries.Tactic.OpenPrivate
-public import Mathlib.Algebra.GCDMonoid.Finset
-public import Mathlib.Algebra.Order.Group.Multiset
-public import Mathlib.Analysis.Convex.Jensen
-public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-public import Mathlib.Data.Fintype.Fin
-public import Mathlib.Data.Nat.Cast.Field
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.Data.Nat.Choose.Basic
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Data.Nat.Log
-public import Mathlib.Data.Finset.Powerset
-public import Mathlib.Data.Multiset.Replicate
 public import Mathlib.NumberTheory.Harmonic.Defs
-public import Mathlib.NumberTheory.Harmonic.Bounds
-public import Mathlib.Order.Filter.AtTopBot.Basic
-public import Mathlib.Order.Filter.AtTopBot.Tendsto
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
-public import Mathlib.Topology.Order.LiminfLimsup
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Order
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import LeanPool.FrontierMathOpenHypergraphs.Basic
 public import LeanPool.FrontierMathOpenHypergraphs.Substitution
-public import LeanPool.FrontierMathOpenHypergraphs.Uniform
 import all LeanPool.FrontierMathOpenHypergraphs.Uniform
+import Batteries.Tactic.OpenPrivate
+import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-!
 # Lubell frames and asymptotic context

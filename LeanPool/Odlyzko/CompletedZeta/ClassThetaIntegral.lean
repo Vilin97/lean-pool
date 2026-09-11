@@ -7,7 +7,9 @@ module
 
 public import LeanPool.Odlyzko.CompletedZeta.ClassRepresentatives
 public import LeanPool.Odlyzko.CompletedZeta.ShapeMellinTranslation
-public import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
+public import LeanPool.Odlyzko.CompletedZeta.Defs
+import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

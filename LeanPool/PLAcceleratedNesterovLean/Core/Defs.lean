@@ -6,19 +6,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import Mathlib.Analysis.Calculus.Gradient.Basic
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Topology.EMetricSpace.Lipschitz
-public import Mathlib.Topology.MetricSpace.Lipschitz
-public import Mathlib.Topology.MetricSpace.Thickening
-public import Mathlib.Topology.Connected.Basic
-public import Mathlib.Topology.Compactness.Compact
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
-public import Mathlib.Geometry.Manifold.ChartedSpace
-public import Mathlib.Geometry.Manifold.ContMDiff.Defs
-public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-public import Mathlib.Geometry.Manifold.SmoothEmbedding
-public import Mathlib.Analysis.Calculus.FDeriv.Comp
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
 # Definitions for Nesterov Acceleration under a Local Polyak-Łojasiewicz Condition

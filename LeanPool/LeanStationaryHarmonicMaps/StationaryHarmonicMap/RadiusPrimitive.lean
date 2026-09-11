@@ -5,9 +5,10 @@ Authors: Wei Wang
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
-public import Mathlib.Topology.Order.IsLocallyClosed
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
+import Mathlib.Topology.Order.IsLocallyClosed
 
 /-!
 # Radius primitive formulas

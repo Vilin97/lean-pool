@@ -16,8 +16,12 @@ Co-authored-by: Aristotle (Harmonic) <aristotle-harmonic@harmonic.fun>
 module
 
 public import LeanPool.KrafftSieve.SelbergWeights
-public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
-public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import LeanPool.KrafftSieve.Basic
+import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 
 /-!

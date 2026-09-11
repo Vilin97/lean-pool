@@ -5,8 +5,9 @@ Authors: Utensil Song
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section6.QuotientModuleTransport
-public import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismEmbedding
+public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
+import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismEmbedding
+import LeanPool.ConnesRigidity.Paper.Section6.QuotientModuleTransport
 
 /-!
 This file exposes the concrete Section 6 module-equivalence conclusion for

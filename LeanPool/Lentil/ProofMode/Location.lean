@@ -5,7 +5,11 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import LeanPool.Lentil.ProofMode.Basic
+public import Aesop.BuiltinRules
+public meta import Lean.Elab.Tactic.Location
+public import Lean.Exception
+public import LeanPool.Lentil.Utils.MetaUtil
+import Lean.Elab.Tactic.Location
 
 public meta section
 

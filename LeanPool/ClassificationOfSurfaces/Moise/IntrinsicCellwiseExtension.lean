@@ -6,8 +6,10 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceFilling
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Cellwise assembly of intrinsic PL face fillings

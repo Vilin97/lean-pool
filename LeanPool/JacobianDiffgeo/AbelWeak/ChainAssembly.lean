@@ -5,9 +5,19 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
-public import LeanPool.JacobianDiffgeo.Path
-public import LeanPool.JacobianDiffgeo.PlanarStokes
+public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import LeanPool.JacobianDiffgeo.Path.Chain
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
+import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Chain assembly (`abel-weak-solutions`, §7)

@@ -5,8 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
-public import Mathlib.Order.Interval.Finset.Fin
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapInsertion
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
+import Mathlib.Order.Interval.Finset.Fin
+import Mathlib.SetTheory.Cardinal.Arithmetic
 
 /-!
 # Marking extension: the range-based constant split (issue #12, commit 4b part 2)

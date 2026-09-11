@@ -5,9 +5,12 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
-public import Mathlib.Order.Interval.Finset.Nat
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
+import Mathlib.Data.Finset.Max
+import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Tactic.TautoSet
 
 /-! # KHIncompleteness -/
 

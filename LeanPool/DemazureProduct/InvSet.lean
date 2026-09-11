@@ -6,8 +6,15 @@ Authors: Nathan Pflueger
 module
 
 public import LeanPool.DemazureProduct.AspPerm
-public import Mathlib.Algebra.BigOperators.Finprod
-public import Mathlib.Order.Interval.Set.Infinite
+import LeanPool.DemazureProduct.Utils
+import Mathlib.Algebra.BigOperators.Finprod
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Interval.Set.Infinite
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Inversion sets

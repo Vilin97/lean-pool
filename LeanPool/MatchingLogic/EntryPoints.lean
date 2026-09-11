@@ -14,8 +14,10 @@ supplied rather than hypothesised. That is what this file records.
 -/
 module
 
-public import LeanPool.MatchingLogic.Soundness
-public import LeanPool.MatchingLogic.Completeness
+public import LeanPool.MatchingLogic.ProofSystem
+import LeanPool.MatchingLogic.Completeness
+import LeanPool.MatchingLogic.Soundness
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # MatchingLogic.EntryPoints

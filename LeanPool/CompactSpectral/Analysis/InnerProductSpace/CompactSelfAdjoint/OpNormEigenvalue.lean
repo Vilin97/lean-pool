@@ -5,10 +5,11 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Rayleigh
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.Normed.Operator.NNNorm
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
+public import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
 
 /-!
 # Compact self-adjoint operators: an eigenvalue at the operator norm

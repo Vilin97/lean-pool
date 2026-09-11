@@ -6,7 +6,12 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 module
 
 public import Mathlib.Combinatorics.Quiver.Covering
-public import LeanPool.FiniteGraphFundamentalGroup.Proof
+public import Mathlib.Algebra.Group.End
+public import Mathlib.CategoryTheory.Groupoid.FreeGroupoid
+import Mathlib.CategoryTheory.Elementwise
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-!
 # The path-lifting graph cover

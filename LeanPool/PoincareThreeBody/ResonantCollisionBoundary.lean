@@ -5,9 +5,9 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
+public import LeanPool.PoincareThreeBody.DisturbingFunction
+import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # The apoapsis collision boundary of an interior resonance

@@ -6,7 +6,6 @@ Authors: Cameron Freer
 module
 
 public import Mathlib.Order.Hom.Basic
-public import Mathlib.Order.Fin.Basic
 
 /-!
 # Highly order-transitive linear orders

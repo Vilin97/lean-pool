@@ -6,6 +6,9 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 module
 
 public import LeanPool.RamanujanTauMissesPrimes.Solution
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # ABC implies that Ramanujan's tau function misses almost all primes

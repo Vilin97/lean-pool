@@ -5,8 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Cech.Colimit
-public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Local Laurent windows and the skyscraper data (CC8, D7, proof plan §6.8)

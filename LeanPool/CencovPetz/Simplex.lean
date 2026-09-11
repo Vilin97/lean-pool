@@ -5,9 +5,12 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import Mathlib.LinearAlgebra.BilinearMap
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.Order
 
 
 /-!

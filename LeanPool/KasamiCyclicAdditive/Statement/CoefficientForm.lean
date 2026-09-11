@@ -5,8 +5,12 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # From slope form to the original coefficient form

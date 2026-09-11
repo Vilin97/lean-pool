@@ -6,8 +6,7 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
-public import Mathlib.Topology.UniformSpace.Cauchy
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
 
 /-!
 # `L²` compactness criterion: Fréchet–Kolmogorov (Euclidean, compact support case)

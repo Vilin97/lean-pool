@@ -5,9 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Theory
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
-public import LeanPool.Incompleteness.ToFoundation.Basic
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.BinderNotation
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # Basic -/
 

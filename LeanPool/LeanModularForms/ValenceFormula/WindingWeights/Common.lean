@@ -5,10 +5,14 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.LogDerivFTC
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-public import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.LogDerivFTC
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Shared Infrastructure for Winding Weight Computations

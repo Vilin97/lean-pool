@@ -5,12 +5,12 @@ Authors: Julius Marx
 -/
 module
 
-public import Batteries.Data.UInt
 
-public import LeanPool.MRiscX.Hoare.HoareCore
-public import Mathlib.Tactic.NthRewrite
-public import Mathlib.Algebra.Order.Sub.Unbundled.Basic
-public import Mathlib.Data.Nat.ModEq
+public import Aesop.BuiltinRules
+public import Mathlib.Order.RelClasses
+import Batteries.Data.UInt
+import Mathlib.Data.Nat.ModEq
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 This file contains a list of theorems required during the implementation of this dsl

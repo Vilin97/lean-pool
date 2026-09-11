@@ -5,10 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
 public import LeanPool.JacobianDiffgeo.Forms.Montel
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-public import Mathlib.Topology.Sequences
+public import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Topology.ContinuousMap.Compact
+import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
+import Mathlib.Analysis.Complex.LocallyUniformLimit
 
 /-!
 # Finite-dimensionality of the space of holomorphic 1-forms (CC1, design §2.6)

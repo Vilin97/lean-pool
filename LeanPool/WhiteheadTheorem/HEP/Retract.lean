@@ -5,11 +5,11 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.HEP.Cube
 public import LeanPool.WhiteheadTheorem.Shapes.Cube
-public import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
-public import Mathlib.Analysis.Convex.Basic
 public import Mathlib.Topology.Homotopy.Contractible
+public import Mathlib.Logic.Equiv.PartialEquiv
+import LeanPool.WhiteheadTheorem.Auxiliary
+import LeanPool.WhiteheadTheorem.HEP.Cube
 
 /-!
 # LeanPool.WhiteheadTheorem.HEP.Retract

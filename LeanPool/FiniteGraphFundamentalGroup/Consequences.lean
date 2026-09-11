@@ -6,8 +6,8 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 module
 
 public import Mathlib.GroupTheory.FreeAbelianGroup
-public import Mathlib.GroupTheory.FreeGroup.Reduce
 public import LeanPool.FiniteGraphFundamentalGroup.Proof
+import Mathlib.GroupTheory.FreeGroup.Reduce
 
 /-!
 # Consequences of the spanning-tree computation

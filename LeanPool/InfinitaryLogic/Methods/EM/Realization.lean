@@ -6,8 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.EM.Template
-public import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
-public import Mathlib.Data.Finset.Sort
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 
 /-!
 # Template-to-`L[[J]]`-theory bridge for Lω₁ω

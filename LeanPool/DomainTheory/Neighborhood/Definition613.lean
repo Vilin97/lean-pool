@@ -6,8 +6,15 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Definition68
-public import LeanPool.DomainTheory.Neighborhood.Proposition611
 public import LeanPool.DomainTheory.Neighborhood.Proposition612
+public import Mathlib.Order.Directed
+public import Mathlib.Order.SetNotation
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lecture VI — Definition 6.13 (Scott 1981, PRG-19): functors *monotone /

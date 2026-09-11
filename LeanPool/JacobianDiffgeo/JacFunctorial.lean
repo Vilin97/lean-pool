@@ -16,6 +16,8 @@ public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
 public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
 public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
 public import LeanPool.JacobianDiffgeo.JacFunctorial.ChallengeLaws
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # `jacobian-functoriality` (unit root)

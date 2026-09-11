@@ -6,7 +6,8 @@ Authors: Xuanji Li
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
-public import Mathlib.NumberTheory.ModularForms.LevelOne.GradedRing
+public import Mathlib.NumberTheory.ModularForms.Discriminant
+import Mathlib.NumberTheory.ModularForms.LevelOne.GradedRing
 
 /-!
 # Basic definitions for the Chudnovsky formula project

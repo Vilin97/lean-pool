@@ -5,11 +5,9 @@ Authors: Christopher Boone
 -/
 module
 
-public import LeanPool.ZhangYeungInequality.CopyLemma
-public import LeanPool.ZhangYeungInequality.Delta
-public import LeanPool.ZhangYeungInequality.EntropyRegion
-public import LeanPool.ZhangYeungInequality.Prelude
-public import LeanPool.ZhangYeungInequality.Theorem3
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
+import LeanPool.ZhangYeungInequality.CopyLemma
+import LeanPool.ZhangYeungInequality.Prelude
 
 /-!
 # Theorem 5, the `n + 2`-variable Zhang-Yeung generalization

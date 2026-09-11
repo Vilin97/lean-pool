@@ -6,9 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Karp.PotentialIso
-public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
-public import LeanPool.InfinitaryLogic.Scott.AtomicDiagram
-public import LeanPool.InfinitaryLogic.Scott.BackAndForth
+import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
 /-!
 # Karp's theorem at a common branching carrier
 

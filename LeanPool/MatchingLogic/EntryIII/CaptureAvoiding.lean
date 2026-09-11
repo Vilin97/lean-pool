@@ -15,10 +15,13 @@ source operation's proof-theoretic and semantic properties.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.Alpha
-public import LeanPool.MatchingLogic.EntryIII.LocalTheory
-public import LeanPool.MatchingLogic.Soundness
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import LeanPool.MatchingLogic.EntryIII.Fresh
+public import LeanPool.MatchingLogic.ProofSystem
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.LocalTheory
+import LeanPool.MatchingLogic.Soundness
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # MatchingLogic.EntryIII.CaptureAvoiding

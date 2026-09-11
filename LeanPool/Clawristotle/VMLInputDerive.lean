@@ -6,12 +6,16 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.VMLStructures
-public import LeanPool.Clawristotle.Section3
-public import LeanPool.Clawristotle.Section4
-public import LeanPool.Clawristotle.Section5
-public import LeanPool.Clawristotle.Section6
-public import LeanPool.Clawristotle.Section7
-public import LeanPool.Clawristotle.Section8
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.Section3Helpers
+import LeanPool.Clawristotle.Section4
+import LeanPool.Clawristotle.Section5
+import LeanPool.Clawristotle.Section6
+import LeanPool.Clawristotle.Section7
+import LeanPool.Clawristotle.Section8
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Deriving VMLInput from Concrete Hypotheses

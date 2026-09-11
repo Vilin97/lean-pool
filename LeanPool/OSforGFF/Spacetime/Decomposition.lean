@@ -5,8 +5,9 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.Spacetime.Basic
 public import LeanPool.OSforGFF.Spacetime.ProdIntegrable
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Spacetime Decomposition

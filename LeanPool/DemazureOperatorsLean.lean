@@ -11,6 +11,9 @@ public import LeanPool.DemazureOperatorsLean.DemazureRelations
 public import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
 public import LeanPool.DemazureOperatorsLean.StrongExchange
 public import LeanPool.DemazureOperatorsLean.Matsumoto
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Demazure Operators and Lean

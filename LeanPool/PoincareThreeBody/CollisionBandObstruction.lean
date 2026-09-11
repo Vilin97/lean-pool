@@ -5,7 +5,12 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.ResonantAverageSeparation
+public import LeanPool.PoincareThreeBody.PoincareSet
+public import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
+import LeanPool.PoincareThreeBody.DenseResonantObstruction
+import LeanPool.PoincareThreeBody.ResonantAverageSeparation
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The leading obstruction on collision-band resonances

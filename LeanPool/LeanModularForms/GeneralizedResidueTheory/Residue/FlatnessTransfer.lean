@@ -5,7 +5,13 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Meromorphic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Generalized Residue Theorem (Theorem 3.3) -- Convex Domain Corollary

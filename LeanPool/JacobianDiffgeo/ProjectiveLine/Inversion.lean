@@ -6,7 +6,6 @@ Authors: Rado Kirov
 module
 
 public import Mathlib.Topology.Compactification.OnePoint.Basic
-public import Mathlib.Analysis.Normed.Field.Lemmas
 public import Mathlib.Analysis.Complex.Basic
 
 /-!

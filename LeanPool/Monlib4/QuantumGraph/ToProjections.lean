@@ -5,10 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.QuantumGraph.Nontracial
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-public import LeanPool.Monlib4.QuantumGraph.Iso
 public import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
+import LeanPool.Monlib4.Preq.Finset
+import LeanPool.Monlib4.QuantumGraph.Nontracial
 
 /-!
 

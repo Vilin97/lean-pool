@@ -5,7 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.SkolemClosure
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # Local (family-restricted) Skolem language `localSkolem`
 

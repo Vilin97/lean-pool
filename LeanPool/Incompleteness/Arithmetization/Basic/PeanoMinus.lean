@@ -5,7 +5,12 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
+public import LeanPool.Incompleteness.Arithmetization.Definability.BoundedBoldface
+public import LeanPool.Incompleteness.Foundation.Vorspiel.ExistsUnique
+public import Mathlib.Algebra.Prime.Defs
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.Order.Sub.Basic
+import Mathlib.Algebra.Prime.Lemmas
 
 /-! # PeanoMinus -/
 

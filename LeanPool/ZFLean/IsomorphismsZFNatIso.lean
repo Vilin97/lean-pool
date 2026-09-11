@@ -6,6 +6,10 @@ Authors: Vincent Trélat
 module
 
 public import LeanPool.ZFLean.Isomorphisms
+import LeanPool.ZFLean.Tactics
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ZFLean.IsomorphismsZFNatIso

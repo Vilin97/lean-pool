@@ -7,10 +7,12 @@ module
 
 public import LeanPool.FriezePatterns.Chapter1
 public import LeanPool.FriezePatterns.Chapter2
-public import Mathlib.Data.Nat.ModEq
-public import Mathlib.Data.Rat.Defs
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.ModEq
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FriezePatterns.Chapter3

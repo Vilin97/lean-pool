@@ -5,8 +5,16 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Abel.WeakToMero
-public import LeanPool.JacobianDiffgeo.Abel.DolbeaultBridge
+public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+public import LeanPool.JacobianDiffgeo.Meromorphic.Field
+import LeanPool.JacobianDiffgeo.Abel.Loops
+import LeanPool.JacobianDiffgeo.Abel.WeakToMero
+import LeanPool.JacobianDiffgeo.AbelWeak.GeneralChain
+import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the sufficiency direction (`docs/design/abel-theorem.md` §4.1 D1, §2.1)

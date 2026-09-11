@@ -6,14 +6,8 @@ Authors: GPT-6 Astra, Tom Adamczewski
 module
 
 public import Mathlib.Algebra.Algebra.Basic
-public import Mathlib.Algebra.Module.LinearMap.End
-public import Mathlib.Algebra.Module.Pi
-public import Mathlib.Algebra.Polynomial.Coeff
-public import Mathlib.Data.Fintype.Defs
-public import Mathlib.Data.Matrix.Diagonal
-public import Mathlib.Data.Nat.Notation
-public import Mathlib.Tactic.Ring
 public import LeanPool.Koethe.Pencil
+import Mathlib.Algebra.Polynomial.Coeff
 
 /-!
 # Backward shifts and exact polynomial mortality

@@ -5,10 +5,13 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.PhiMap
 public import LeanPool.Monlib4.QuantumGraph.Basic
-public import Mathlib.LinearAlgebra.TensorProduct.Opposite
 public import LeanPool.Monlib4.QuantumGraph.Example
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
+import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Degree

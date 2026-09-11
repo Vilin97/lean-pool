@@ -5,9 +5,7 @@ Authors: Catskills Research Company
 -/
 module
 
-public import Mathlib.Data.Nat.Sqrt
-public import Mathlib.Data.Nat.Pairing
-public import Mathlib.Computability.Partrec
+public import Mathlib.Computability.Primrec.Basic
 
 /-!
 # A choice-free recursion theory for Lecture VII (Scott 1981, PRG-19)

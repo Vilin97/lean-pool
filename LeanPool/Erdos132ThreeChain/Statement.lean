@@ -5,8 +5,16 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ThreeChain.Support
-public import LeanPool.Erdos132ThreeChain.HopfPannwitz
+public import LeanPool.Erdos132ThreeChain.Basic
+public import Mathlib.Data.Finset.Card
+import LeanPool.Erdos132ThreeChain.HopfPannwitz
+import LeanPool.Erdos132ThreeChain.Support
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The 3-chain support theorem

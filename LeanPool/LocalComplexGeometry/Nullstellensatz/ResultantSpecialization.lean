@@ -8,6 +8,8 @@ module
 public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
 public import Mathlib.FieldTheory.Separable
 public import Mathlib.RingTheory.Polynomial.Resultant.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Specializing fixed-degree resultants

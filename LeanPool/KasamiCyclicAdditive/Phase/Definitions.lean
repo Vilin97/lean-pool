@@ -6,6 +6,7 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 module
 
 public import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Objects of the phase-to-root-count identity

@@ -6,8 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
 /-!
 # Polarity-refined inseparability and the mixed closures (issue #14, Unit 2 — the stop/go gate)
 

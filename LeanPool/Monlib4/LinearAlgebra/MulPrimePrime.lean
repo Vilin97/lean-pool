@@ -5,11 +5,11 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Bilinear
-public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 public import LeanPool.Monlib4.LinearAlgebra.Nacgor
-public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 
 /-!
 

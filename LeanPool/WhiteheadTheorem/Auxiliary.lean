@@ -5,13 +5,9 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import Mathlib.Algebra.Order.Archimedean.Basic
-public import Mathlib.Data.Fintype.Lattice
-public import Mathlib.Order.ConditionallyCompleteLattice.Finset
 public import Mathlib.Topology.Homotopy.Basic
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
-public import Mathlib.Topology.Category.TopCat.Limits.Basic
 public import Mathlib.CategoryTheory.Limits.Shapes.Products
+public import Mathlib.Topology.Category.TopCat.Basic
 
 /-!
 # LeanPool.WhiteheadTheorem.Auxiliary

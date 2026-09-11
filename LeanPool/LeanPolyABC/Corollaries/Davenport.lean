@@ -5,9 +5,9 @@ Authors: Seewoo Lee
 -/
 module
 
-public import Mathlib.Algebra.CharP.Defs
-public import Mathlib.Algebra.EuclideanDomain.Defs
-public import LeanPool.LeanPolyABC.MasonStothers
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.RingTheory.Coprime.Basic
+import LeanPool.LeanPolyABC.MasonStothers
 
 /-!
 # LeanPool.LeanPolyABC.Corollaries.Davenport

@@ -9,9 +9,8 @@ module
 
 public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
 public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ElementaryGeneration
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PropertyTTransfer
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FinitePropertyT
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FinitePropertyT
+import LeanPool.ConnesRigidity.Porting.CoreTransfer
 
 /-!
 Property-(T) transfer for Zhou §4 on the concrete tensor-kernel groups.

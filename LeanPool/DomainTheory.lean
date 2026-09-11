@@ -153,6 +153,7 @@ public import LeanPool.DomainTheory.Neighborhood.Theorem74
 public import LeanPool.DomainTheory.Neighborhood.Theorem75
 public import LeanPool.DomainTheory.Neighborhood.Theorem76
 public import LeanPool.DomainTheory.Neighborhood.Proposition77
+import Mathlib.Data.Rat.Floor
 
 /-!
 # DomainTheory

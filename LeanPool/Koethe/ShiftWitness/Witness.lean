@@ -5,9 +5,12 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Tactic.Ring
-public import LeanPool.Koethe.ShiftWitness.Eigenvector
-public import LeanPool.Koethe.ShiftWitness.Endpoint
+public import LeanPool.Koethe.ShiftWitness.Band
+public import Mathlib.FieldTheory.RatFunc.Basic
+public import Mathlib.LinearAlgebra.Matrix.Ideal
+public import Mathlib.RingTheory.SimpleRing.Principal
+import LeanPool.Koethe.ShiftWitness.Eigenvector
+import LeanPool.Koethe.ShiftWitness.Endpoint
 
 /-!
 # Downstream witness from a universal mortal sequence

@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Combinatorics.PairErdosRadoGeneral
+import Mathlib.SetTheory.Cardinal.Arithmetic
 /-!
 # End-homogeneous Erdős–Rado: the arity-general EHMR engine (ER hard chunk 2a)
 

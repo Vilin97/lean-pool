@@ -5,7 +5,12 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.FiveDistanceHM
+public import LeanPool.ThreeGap.EuclideanGrowth
+import LeanPool.ThreeGap.EuclideanAngle
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import LeanPool.ThreeGap.FiveDistance
+import LeanPool.ThreeGap.FiveDistanceHM
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The sharp Euclidean growth inequality `2 qₙ ≤ qₙ₊₄` (`K = 4`) via Haynes–Marklof Theorem 8

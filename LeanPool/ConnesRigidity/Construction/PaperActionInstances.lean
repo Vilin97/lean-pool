@@ -9,7 +9,9 @@ Concrete Zhou action instances on the paper kernel. Paper: §§2--4.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Construction.SquareSpan
+public import LeanPool.ConnesRigidity.Construction.PaperActions
+import LeanPool.ConnesRigidity.Construction.SquareSpan
+import Mathlib.Algebra.Algebra.ZMod
 
 /-!
 The paper action instances component of the Connes rigidity formalization.

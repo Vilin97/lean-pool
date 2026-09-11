@@ -6,6 +6,8 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.ChannelCapacity.Basic
+public import Mathlib.MeasureTheory.Measure.DiracProba
+import Mathlib.Probability.Kernel.Composition.MeasureComp
 
 /-!
 # ChannelCapacity.NonDegeneracy

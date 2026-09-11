@@ -8,7 +8,6 @@ module
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-public import Mathlib.Geometry.Manifold.IsManifold.Basic
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian`

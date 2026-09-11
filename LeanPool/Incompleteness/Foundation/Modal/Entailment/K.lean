@@ -6,6 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # K -/
 

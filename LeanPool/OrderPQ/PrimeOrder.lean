@@ -5,7 +5,14 @@ Authors: Scott Harper, Peiran Wu
 -/
 module
 
-public import LeanPool.OrderPQ.IsCyclic
+public import Mathlib.Algebra.Group.Subgroup.ZPowers.Basic
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.GroupTheory.Subgroup.Simple
+public import Mathlib.SetTheory.Cardinal.Finite
+import LeanPool.OrderPQ.IsCyclic
+import LeanPool.OrderPQ.MonoidHom
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.OrderPQ.PrimeOrder

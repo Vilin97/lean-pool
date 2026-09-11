@@ -5,11 +5,11 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Algebra.Module.Submodule.Invariant
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Basic
 public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.CutoffProjector
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Basic
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
+import Mathlib.Analysis.InnerProductSpace.Semisimple
 
 /-!
 # Compact self-adjoint operators: large-eigenspace approximation in operator norm

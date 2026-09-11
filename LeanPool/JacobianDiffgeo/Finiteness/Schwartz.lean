@@ -5,12 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Normed.Operator.Banach
 public import Mathlib.Analysis.Normed.Operator.Compact.Basic
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-public import Mathlib.RingTheory.Finiteness.Finsupp
-public import Mathlib.LinearAlgebra.Isomorphisms
 public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Analysis.Normed.Operator.Banach
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # The Schwartz cospan lemma (`finiteness-and-chi`, Banach half)

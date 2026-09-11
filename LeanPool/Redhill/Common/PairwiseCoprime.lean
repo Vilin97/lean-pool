@@ -6,7 +6,9 @@ Authors: Jeremy Tan
 module
 
 public import Mathlib.Algebra.GCDMonoid.Finset
-public import Mathlib.RingTheory.Coprime.Lemmas
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.RingTheory.Coprime.Basic
+import Mathlib.RingTheory.Coprime.Lemmas
 
 /-!
 # Pairwise coprimality

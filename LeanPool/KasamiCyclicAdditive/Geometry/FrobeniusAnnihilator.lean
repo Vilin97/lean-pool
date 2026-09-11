@@ -5,10 +5,14 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
 public import LeanPool.KasamiCyclicAdditive.Geometry.Descent.Arithmetic
 public import LeanPool.KasamiCyclicAdditive.Geometry.IsogenyFactor
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The Frobenius annihilator on `E(K)`

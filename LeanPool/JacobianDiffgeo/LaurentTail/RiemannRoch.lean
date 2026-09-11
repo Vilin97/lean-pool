@@ -5,8 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
-public import LeanPool.JacobianDiffgeo.Finiteness
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Riemann–Roch bridge (laurent-tails, design §4.4) — DEFERRED, gated on `H1Tail.equiv` only

@@ -5,8 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsRootDecision
 public import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
+public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionCore
+import LeanPool.HadwigerNelsonBounds.PartsRootDecision
 
 /-!
 # The canonical non-monochromatic sqrt-three triangle

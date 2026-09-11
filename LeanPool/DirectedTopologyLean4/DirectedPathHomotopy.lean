@@ -7,7 +7,6 @@ module
 
 public import LeanPool.DirectedTopologyLean4.DirectedHomotopy
 public import LeanPool.DirectedTopologyLean4.TransRefl
-public import Mathlib.Topology.Homotopy.Path
 
 /-!
 # LeanPool.DirectedTopologyLean4.DirectedPathHomotopy

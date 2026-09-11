@@ -8,6 +8,7 @@ module
 public import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
 public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
 public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearTensorProduct
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # `LeanPool.OSforGFF.GaussianField.Nuclear` index

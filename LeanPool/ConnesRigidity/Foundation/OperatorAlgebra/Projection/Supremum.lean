@@ -14,9 +14,9 @@ Paper: §3. See the upstream PORT_MAP.md.
 -/
 module
 
-public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
-public import Mathlib.Analysis.InnerProductSpace.StarOrder
 public import LeanPool.ConnesRigidity.Core
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
+import Mathlib.Analysis.InnerProductSpace.StarOrder
 
 /-!
 # Projection-supremum transport

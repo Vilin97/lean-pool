@@ -5,7 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Conditional.MorleyHanfSchemaDischarge
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import Mathlib.SetTheory.Cardinal.Aleph
+import LeanPool.InfinitaryLogic.Conditional.MorleyHanfSchemaDischarge
 /-!
 # The Morley–Hanf theorem: public facade and corollaries
 

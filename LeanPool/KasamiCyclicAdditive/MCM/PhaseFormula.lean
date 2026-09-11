@@ -5,15 +5,14 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
-public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
 public import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
-public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
 public import LeanPool.KasamiCyclicAdditive.MCM.Fourier
-public import LeanPool.KasamiCyclicAdditive.MCM.Permutation
-public import LeanPool.KasamiCyclicAdditive.MCM.DicksonPhase
-public import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.MCM.DicksonPhase
+import LeanPool.KasamiCyclicAdditive.MCM.Permutation
+import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.NumberTheory.JacobiSum.Basic
 
 /-!
 # The MCM/Dickson phase formula

@@ -6,14 +6,16 @@ Authors: Bhavik Mehta, Arend Mellendijk
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Algebra.Order.Floor.Semifield
-public import Mathlib.Data.Nat.GCD.BigOperators
-public import Mathlib.Data.Nat.Squarefree
-public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.Order.CompletePartialOrder
 
-public import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+public import Mathlib.RingTheory.Radical.Basic
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
+import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Data.Nat.GCD.BigOperators
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # LeanPool.ABCExceptions.Section2

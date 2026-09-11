@@ -5,12 +5,21 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
-public import Mathlib.Algebra.Order.Field.Power
-public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
-public import LeanPool.QuadraticIterates.ArchMath1992.DegreeCriterion
+public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
+import LeanPool.QuadraticIterates.ArchMath1992.DegreeCriterion
+import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Squares
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
+import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Rat.Star
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # The main theorems

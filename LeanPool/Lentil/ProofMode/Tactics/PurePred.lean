@@ -6,8 +6,11 @@ Authors: Qiyuan Zhao
 module
 
 public import LeanPool.Lentil.ProofMode.Basic
-public import LeanPool.Lentil.ProofMode.Tactics.Intro
-public import LeanPool.Lentil.ProofMode.Tactics.Revert
+public meta import LeanPool.Lentil.ProofMode.Basic
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
+import LeanPool.Lentil.ProofMode.Tactics.Intro
+import LeanPool.Lentil.ProofMode.Tactics.Revert
+import LeanPool.Lentil.Rules.Basic
 
 @[expose] public section
 

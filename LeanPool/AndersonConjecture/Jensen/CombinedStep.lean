@@ -5,9 +5,17 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.CloseUp
 public import LeanPool.AndersonConjecture.Jensen.TransfiniteUnion
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+import LeanPool.AndersonConjecture.Jensen.Adjoin.FromPrime
+import LeanPool.AndersonConjecture.Jensen.CloseUp.CloseUp
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Combined Construction Step

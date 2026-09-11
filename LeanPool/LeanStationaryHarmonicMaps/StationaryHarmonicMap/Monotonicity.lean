@@ -6,6 +6,8 @@ Authors: Wei Wang
 module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.CenterTranslation
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuclidean
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Stationary Sobolev map monotonicity

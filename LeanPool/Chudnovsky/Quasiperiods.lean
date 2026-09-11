@@ -5,8 +5,8 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.WeierstrassMore
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.SigmaZeta
 
 /-!
 # Quasiperiods and the Legendre relation

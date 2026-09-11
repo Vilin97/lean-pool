@@ -5,8 +5,16 @@ Authors: Martin Dvorak
 -/
 module
 
-public import Mathlib.Tactic.Linarith
 public import LeanPool.Duality.FarkasSpecial
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Algebra.Order.Sum
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.LinearAlgebra.Matrix.RowCol
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.Duality.LinearProgramming

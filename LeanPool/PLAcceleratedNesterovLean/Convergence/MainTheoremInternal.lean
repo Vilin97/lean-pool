@@ -5,8 +5,13 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.NesterovConvergence
-public import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import Mathlib.Geometry.Manifold.SmoothEmbedding
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.NesterovConvergence
+import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 
 /-!

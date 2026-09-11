@@ -5,8 +5,11 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.Prod
-public import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Lemmas re-exported from Mathlib (formerly PR33029)

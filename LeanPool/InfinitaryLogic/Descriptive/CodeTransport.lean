@@ -6,7 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Transport of codes along equivalences (generic `StructureSpaceOn` API)
 

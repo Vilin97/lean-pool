@@ -6,25 +6,10 @@ Authors: Nick Adfor
 module
 
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Combinatorics.Nullstellensatz
-public import Mathlib.Data.Nat.Choose.Basic
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Polyrith
-public import Mathlib.Tactic.Common
-public import Mathlib.Algebra.MvPolynomial.Basic
-public import Mathlib.Algebra.MvPolynomial.CommRing
 public import Mathlib.Algebra.MvPolynomial.Degrees
-public import Mathlib.Algebra.MvPolynomial.Variables
-public import Mathlib.Algebra.MvPolynomial.Equiv
-public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Data.Finsupp.Multiset
-public import Mathlib.Data.Finsupp.Notation
-public import Mathlib.Data.Multiset.Basic
-public import Mathlib.Tactic.Set
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import Mathlib.Combinatorics.Nullstellensatz
+import Mathlib.Data.Finsupp.Notation
 
 /-!
 # The Alon-Nathanson-Ruzsa polynomial method

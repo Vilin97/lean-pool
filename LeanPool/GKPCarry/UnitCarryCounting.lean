@@ -6,7 +6,19 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.GKPCarry.BadCarryCounting
-public import LeanPool.GKPCarry.PowerResidues
+public import Mathlib.Data.ZMod.Basic
+import LeanPool.GKPCarry.CarryArithmetic
+import LeanPool.GKPCarry.PowerResidues
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Counting deficient-carry ternary units

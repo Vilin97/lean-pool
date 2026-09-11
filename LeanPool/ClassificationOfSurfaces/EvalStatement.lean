@@ -5,8 +5,14 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.NormalForm
-public import LeanPool.ClassificationOfSurfaces.GeometricTriangulationRealization
+public import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
+public import LeanPool.ClassificationOfSurfaces.Representatives
+public import Mathlib.Geometry.Manifold.Instances.Real
+import LeanPool.ClassificationOfSurfaces.GeometricTriangulationRealization
+import LeanPool.ClassificationOfSurfaces.NormalForm
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Lean Eval target theorem

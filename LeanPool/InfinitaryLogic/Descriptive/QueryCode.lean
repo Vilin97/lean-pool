@@ -5,7 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.Polish
+public import LeanPool.InfinitaryLogic.Descriptive.Topology
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The query-code closed embedding (issue #10, Unit 0a)
 

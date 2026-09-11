@@ -6,8 +6,8 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.NumberTheory.ModularForms.SlashActions
+import LeanPool.LeanModularForms.ForMathlib.SlashActions
 
 /-! # ForMathlibSlashActions -/
 

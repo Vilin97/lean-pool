@@ -5,10 +5,12 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Analysis.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Exp
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 public import LeanPool.PebblingLean.FiniteProbability
+import Mathlib.Analysis.Convex.Jensen
+import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite concentration inequalities

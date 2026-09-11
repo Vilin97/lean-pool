@@ -6,6 +6,8 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelDetector
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Kernel-checked shard 7 of 8 for the exhaustive Sp₄(𝔽₂) detector.

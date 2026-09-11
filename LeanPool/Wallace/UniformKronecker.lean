@@ -5,19 +5,10 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import Mathlib.Algebra.Category.Grp.Injective
-public import Mathlib.Algebra.Group.Subgroup.Ker
-public import Mathlib.Algebra.Module.CharacterModule
 public import Mathlib.Analysis.Fourier.AddCircleMulti
-public import Mathlib.Analysis.Normed.Group.AddCircle
-public import Mathlib.Data.Fin.Tuple.Basic
-public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-public import Mathlib.MeasureTheory.Measure.Haar.Basic
-public import Mathlib.Topology.Algebra.Group.ClosedSubgroup
-public import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
-public import Mathlib.Topology.MetricSpace.Closeds
-public import Mathlib.Topology.MetricSpace.UniformConvergence
-public import Mathlib.Topology.Sets.VietorisTopology
+import Mathlib.Algebra.Module.CharacterModule
+import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
+import Mathlib.Topology.MetricSpace.UniformConvergence
 
 /-!
 # Algebraic foundations for the uniform Kronecker lemma

@@ -6,13 +6,7 @@ Authors: Humiliati
 module
 
 public import LeanPool.Sundogcert.SATNPHard
-public import LeanPool.Sundogcert.VarWheel
-public import LeanPool.Sundogcert.ClauseGadget
 public import LeanPool.Sundogcert.MatchingNPHard
-public import Mathlib.Data.Fintype.Sum
-public import Mathlib.Data.Fintype.Prod
-public import Mathlib.Data.Fintype.Pi
-public import Mathlib.Data.Fintype.EquivFin
 
 /-!
   Sundogcert/SATReduction.lean — MILESTONE 4 of the `3SAT ≤ 3DM` marathon: the GLOBAL ASSEMBLY

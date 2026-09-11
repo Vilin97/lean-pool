@@ -6,7 +6,12 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.BoundaryInvariant
+public import Mathlib.Geometry.Manifold.Instances.Real
+import LeanPool.ClassificationOfSurfaces.Moise.BoundaryInvariant
+import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Extraction of Moise charts from the mathlib atlas

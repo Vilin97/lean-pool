@@ -6,9 +6,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.IFT
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.InnerProductSpace.Calculus
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.IFT
 
 /-!
 Copyright (c) 2025. All rights reserved.

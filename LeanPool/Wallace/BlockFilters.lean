@@ -7,6 +7,16 @@ module
 
 public import LeanPool.Wallace.MathlibFoundations
 public import LeanPool.Wallace.TriangularPreprocess
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.Algebra.Ring.Real
 
 /-!
 # Block-density filters for the Wallace construction

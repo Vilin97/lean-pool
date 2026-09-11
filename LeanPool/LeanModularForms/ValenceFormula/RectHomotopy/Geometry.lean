@@ -5,11 +5,8 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
 public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Convex.Basic
-public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Rect Homotopy: Geometry and Definitions

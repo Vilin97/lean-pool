@@ -6,7 +6,6 @@ Authors: YnirPaz
 module
 
 public import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
-public import LeanPool.PCFTheory.Background.Ordinal
 
 /-!
 # Cofinality results for indexed suprema

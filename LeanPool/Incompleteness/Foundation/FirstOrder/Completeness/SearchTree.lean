@@ -7,6 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Coding
 public import LeanPool.Incompleteness.Foundation.Vorspiel.Order
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Semantics
 
 /-! # SearchTree -/
 

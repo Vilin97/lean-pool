@@ -7,7 +7,7 @@ module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalColimit
 public import LeanPool.InfinitaryLogic.Methods.LocalEMSupport
-public import Mathlib.ModelTheory.Encoding
+import Mathlib.ModelTheory.Encoding
 
 /-!
 # The countable local atom/deForm family `ΓEMlocal`

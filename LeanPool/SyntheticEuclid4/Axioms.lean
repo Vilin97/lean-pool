@@ -6,7 +6,9 @@ Authors: André Hernandez-Espiet, Vladimir Sedlacek
 module
 
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 Axioms of synthetic geometry

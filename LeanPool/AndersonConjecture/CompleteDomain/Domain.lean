@@ -5,10 +5,12 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.RingTheory.Ideal.Quotient.Operations
-public import Mathlib.RingTheory.MvPowerSeries.Inverse
 public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.Ideal.Maps
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.RingTheory.Ideal.Quotient.Operations
+import Mathlib.RingTheory.MvPowerSeries.Inverse
 
 /-!
 # The Complete Local Domain T

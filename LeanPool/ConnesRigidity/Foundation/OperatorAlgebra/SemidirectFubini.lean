@@ -13,8 +13,9 @@ imports and namespace. Paper: §3. See the upstream PORT_MAP.md.
 module
 
 public import Mathlib.GroupTheory.SemidirectProduct
-public import Mathlib.Topology.Separation.CompletelyRegular
-public import LeanPool.ConnesRigidity.Porting.CoreTransfer
+public import LeanPool.ConnesRigidity.Core
+import LeanPool.ConnesRigidity.Porting.CoreTransfer
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 The semidirect fubini component of the Connes rigidity formalization.

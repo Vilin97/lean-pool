@@ -5,12 +5,15 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ConvexK3.Lens
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
+public import LeanPool.Erdos132ConvexK3.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Forced penultimate coordinates

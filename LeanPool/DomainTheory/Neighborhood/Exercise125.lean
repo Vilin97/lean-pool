@@ -7,7 +7,6 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
 public import Mathlib.Order.UpperLower.Basic
-public import Mathlib.Order.Bounds.Basic
 
 /-!
 # Exercise 1.25 (Scott 1981, PRG-19, §1) — final segments of an ordinal

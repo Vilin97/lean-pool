@@ -5,12 +5,10 @@ Authors: Abdullah Uyu
 -/
 module
 
-public import Mathlib.LinearAlgebra.Projectivization.Basic
 public import Mathlib.LinearAlgebra.Projectivization.Independence
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 public import LeanPool.Desargues.Basic
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Projectivizations as projective geometries

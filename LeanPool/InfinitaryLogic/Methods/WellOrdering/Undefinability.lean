@@ -5,8 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
+public import Mathlib.SetTheory.Ordinal.Basic
 /-!
 # Undefinability of well-ordering (issue #12, step 6 layer 3)
 

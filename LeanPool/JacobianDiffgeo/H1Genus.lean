@@ -6,6 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.H1Genus.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # cech-h1-genus (#27): `dim H¹(X, 𝒪) = g` (namespace `RS`)

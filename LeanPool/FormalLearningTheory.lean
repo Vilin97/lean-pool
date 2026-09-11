@@ -6,6 +6,9 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Theorem
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Formal Learning Theory Kernel

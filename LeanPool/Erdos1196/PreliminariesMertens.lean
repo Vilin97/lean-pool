@@ -6,9 +6,9 @@ Authors: Math Inc
 module
 
 public import LeanPool.Erdos1196.Basic
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.SumIntegralComparisons
-public import Mathlib.NumberTheory.AbelSummation
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.SumIntegralComparisons
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Arithmetic preliminaries for primitive sets above `x`

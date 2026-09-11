@@ -6,8 +6,8 @@ Authors: Caleb L. Geiger
 module
 
 public import Mathlib.NumberTheory.LegendreSymbol.Basic
-public import Mathlib.RingTheory.Multiplicity
-public import Mathlib.RingTheory.ZMod.UnitsCyclic
+import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Analysis.Normed.Ring.Lemmas
 
 /-!
 # Layer 3: Root Counting for Quadratic Congruences

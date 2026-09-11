@@ -8,6 +8,7 @@ module
 public import LeanPool.SelbergSieve4.Tactic.AesopDiv
 public import LeanPool.SelbergSieve4.Tactic.AesopInit
 public import LeanPool.SelbergSieve4.Tactic.Multiplicativity
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Tactics for the Selberg sieve import

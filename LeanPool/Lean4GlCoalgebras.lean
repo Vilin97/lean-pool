@@ -20,6 +20,10 @@ public import LeanPool.Lean4GlCoalgebras.Split.Completeness
 public import LeanPool.Lean4GlCoalgebras.Split.CutProof
 public import LeanPool.Lean4GlCoalgebras.Split.Game
 public import LeanPool.Lean4GlCoalgebras.Split.Proof
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Craig Interpolation for Gödel-Löb logic via coalgebraic proofs

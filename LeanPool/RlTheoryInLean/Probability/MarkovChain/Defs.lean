@@ -5,16 +5,8 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.Probability.ConditionalProbability
-public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
-public import Mathlib.Probability.Kernel.Defs
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.Order.Interval.Finset.Defs
-public import Mathlib.MeasureTheory.MeasurableSpace.Instances
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Probability.Process.Filtration
-public import Mathlib.Logic.Function.Defs
-public import Mathlib.Probability.ProbabilityMassFunction.Basic
+public import Mathlib.Probability.Kernel.Composition.Comp
 
 /-!
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs

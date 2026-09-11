@@ -10,6 +10,10 @@ public import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
 public import LeanPool.PolyaEnumerationTheorem.ReductionToFin
 public import LeanPool.PolyaEnumerationTheorem.Concrete
 public import LeanPool.PolyaEnumerationTheorem.StirlingFirstKindSum
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pólya's enumeration theorem

@@ -16,15 +16,10 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum.BigOperators
-public import Mathlib.Tactic.NormNum.NatFactorial
-public import Mathlib.Tactic.NormNum.Parity
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # SafeSquare -/
 

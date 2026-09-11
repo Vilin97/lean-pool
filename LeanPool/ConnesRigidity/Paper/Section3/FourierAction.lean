@@ -13,8 +13,8 @@ kernel and local Fourier unitary. Paper: §3. See the upstream PORT_MAP.md.
 module
 
 public import Mathlib.MeasureTheory.Function.Holder
-public import LeanPool.ConnesRigidity.Porting.CoreTransfer
 public import LeanPool.ConnesRigidity.Paper.Section3.Fourier
+import LeanPool.ConnesRigidity.Porting.CoreTransfer
 
 /-!
 The fourier action component of the Connes rigidity formalization.

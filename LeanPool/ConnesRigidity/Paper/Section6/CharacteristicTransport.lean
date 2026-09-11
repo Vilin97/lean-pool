@@ -5,8 +5,9 @@ Authors: Utensil Song
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section6.Characteristic
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificate
+public import LeanPool.ConnesRigidity.Construction.PaperActions
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificate
+import LeanPool.ConnesRigidity.Paper.Section6.Characteristic
 
 /-!
 This file proves the concrete characteristic-kernel transport needed by the

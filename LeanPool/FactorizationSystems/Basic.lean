@@ -5,9 +5,8 @@ Authors: Ivan Kobe
 -/
 module
 
-public import Mathlib.CategoryTheory.Category.Basic
 public import Mathlib.CategoryTheory.Comma.Over.Basic
-public import Mathlib.CategoryTheory.MorphismProperty.Composition
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # LeanPool.FactorizationSystems.Basic

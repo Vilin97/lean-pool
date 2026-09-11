@@ -9,8 +9,12 @@ Blueprint unit: meromorphic-trace. THE argument principle, file 3 of the design'
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
 public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The argument principle (meromorphic-trace, cluster 1)

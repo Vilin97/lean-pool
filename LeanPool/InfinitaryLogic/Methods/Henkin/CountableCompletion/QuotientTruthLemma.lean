@@ -6,9 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTermModel
-public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
-public import LeanPool.InfinitaryLogic.Lomega1omega.Depth
-public import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+import LeanPool.InfinitaryLogic.Lomega1omega.Depth
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # The forward truth lemma for the quotient term model (issue #8, commit 5b)
 

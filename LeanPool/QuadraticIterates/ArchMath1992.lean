@@ -10,6 +10,9 @@ public import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
 public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
 public import LeanPool.QuadraticIterates.ArchMath1992.Main
 public import LeanPool.QuadraticIterates.ArchMath1992.Sequences
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Galois groups over ℚ of some iterated polynomials

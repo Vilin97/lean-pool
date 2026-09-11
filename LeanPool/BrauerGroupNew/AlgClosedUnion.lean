@@ -6,8 +6,8 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
-public import Mathlib.RingTheory.Flat.Basic
-public import Mathlib.RingTheory.TensorProduct.Free
+import Mathlib.RingTheory.Flat.Basic
+import Mathlib.RingTheory.TensorProduct.Free
 
 /-!
 # Tensor products over algebraic closures

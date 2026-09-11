@@ -5,10 +5,9 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.LinearAlgebra.Projection
-public import Mathlib.RepresentationTheory.Maschke
 public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.DeletedModule
+import Mathlib.Data.Rat.Floor
+import Mathlib.RepresentationTheory.Maschke
 
 /-!
 # Irreducibility of the odd deleted modules

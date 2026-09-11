@@ -8,6 +8,7 @@ module
 public import LeanPool.LocalComplexGeometry.Germs.Coordinates
 public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Coordinate pullback of local set germs

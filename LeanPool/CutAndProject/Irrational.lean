@@ -6,14 +6,8 @@ Authors: Dirk Kunert
 module
 
 public import Mathlib.NumberTheory.Real.Irrational
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Order.Interval.Set.Defs
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
-public import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
 
 /-!
 # Aperiodicity of the projected gap sequence for irrational slopes

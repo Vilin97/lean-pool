@@ -6,6 +6,14 @@ Authors: Makoto Yamashita
 module
 
 public import LeanPool.HSDInteriorPointLP.PrimalDualData
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Newton-system layer

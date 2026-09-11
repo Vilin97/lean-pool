@@ -6,7 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132N14.HopfPannwitzGeometry
-public import Mathlib.Data.Finset.Max
+public import LeanPool.Erdos132N14.Basic
 
 /-!
 # The planar diameter bound

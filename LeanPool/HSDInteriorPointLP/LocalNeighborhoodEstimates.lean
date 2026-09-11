@@ -6,6 +6,12 @@ Authors: Makoto Yamashita
 module
 
 public import LeanPool.HSDInteriorPointLP.NewtonSystem
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Fixed local neighborhood estimates

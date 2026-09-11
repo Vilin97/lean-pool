@@ -8,6 +8,11 @@ module
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.PreLift
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Player one proof index

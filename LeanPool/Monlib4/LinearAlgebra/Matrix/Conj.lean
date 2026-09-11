@@ -5,9 +5,8 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Data.Matrix.Basic
 public import Mathlib.LinearAlgebra.Matrix.Hermitian
-public import LeanPool.Monlib4.Preq.Ites
+import LeanPool.Monlib4.Preq.Ites
 
 /-!
  # Conjugate of a matrix

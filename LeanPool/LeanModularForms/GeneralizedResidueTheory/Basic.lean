@@ -5,15 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import Mathlib.Analysis.Asymptotics.Defs
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Analysis.SpecialFunctions.Complex.Log
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-public import Mathlib.MeasureTheory.Integral.CircleIntegral
-public import Mathlib.RingTheory.LaurentSeries
-public import Mathlib.Topology.Homotopy.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Basic Definitions for Complex Analysis with Principal Values

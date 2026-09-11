@@ -5,10 +5,12 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
-public import LeanPool.ClassificationOfSurfaces.Surface
-public import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
+public import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
+public import Mathlib.Geometry.Manifold.Instances.Real
+import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Edge valence of a triangle complex embedded in a surface

@@ -8,10 +8,8 @@ module
 public import LeanPool.BruhatTits.Utils.RingHom
 public import LeanPool.BruhatTits.Utils.Matrix
 public import LeanPool.BruhatTits.Utils.Misc
-public import LeanPool.BruhatTits.Utils.ValuationRings
-public import Mathlib.LinearAlgebra.Matrix.Block
-public import Mathlib.LinearAlgebra.Matrix.IsDiag
-public import Mathlib.LinearAlgebra.Matrix.Transvection
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+import LeanPool.BruhatTits.Utils.ValuationRings
 
 /-!
 

@@ -6,9 +6,6 @@ Authors: Cameron Freer
 module
 
 public import Mathlib.SetTheory.Cardinal.Aleph
-public import Mathlib.SetTheory.Ordinal.Basic
-public import Mathlib.SetTheory.Ordinal.Rank
-public import Mathlib.SetTheory.Ordinal.Family
 
 /-!
 # Small ordinal facts

@@ -5,20 +5,11 @@ Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 -/
 module
 
-public import Mathlib.MeasureTheory.Group.GeometryOfNumbers
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Group.GeometryOfNumbers
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Minkowski's theorem for the standard integer lattice in `ℝⁿ`
 

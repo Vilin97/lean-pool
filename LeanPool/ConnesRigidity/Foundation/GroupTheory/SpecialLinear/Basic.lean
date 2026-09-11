@@ -8,8 +8,8 @@ Authors: Utensil Song
 module
 
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Data.Finsupp.Encodable
 public import LeanPool.ConnesRigidity.Core
+import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # The special-linear carrier in Zhou's construction

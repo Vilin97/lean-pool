@@ -5,8 +5,17 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.CircuitComplexity.Internal.Bridge
-public import LeanPool.CircuitComplexity.Internal.ShannonUpper
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Algebra.GroupWithZero.Nat
+import LeanPool.CircuitComplexity.Internal.Bridge
+import LeanPool.CircuitComplexity.Internal.ShannonUpper
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Shannon Bounds
 

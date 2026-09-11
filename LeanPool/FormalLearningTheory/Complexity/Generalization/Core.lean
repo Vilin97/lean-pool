@@ -5,22 +5,13 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
-public import LeanPool.FormalLearningTheory.Data
-public import LeanPool.FormalLearningTheory.Learner.Core
-public import LeanPool.FormalLearningTheory.Learner.Active
 public import LeanPool.FormalLearningTheory.Criterion.Online
 public import LeanPool.FormalLearningTheory.Criterion.PAC
-public import LeanPool.FormalLearningTheory.Complexity.VCDimension
 public import LeanPool.FormalLearningTheory.Complexity.Structures
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.MeasureTheory.Constructions.Pi
 public import Mathlib.Combinatorics.SetFamily.Shatter
-public import Mathlib.Data.Nat.Choose.Bounds
-public import Mathlib.Probability.Independence.Basic
-public import Mathlib.Probability.ProductMeasure
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # Generalization Error, Sample/Query/Label Complexity, ERM

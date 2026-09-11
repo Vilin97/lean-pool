@@ -5,8 +5,9 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
 
 /-!
 # Classical complex-analytic Weierstrass preparation

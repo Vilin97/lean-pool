@@ -25,6 +25,11 @@ public import LeanPool.VirasoroProject.VirasoroCocycle
 public import LeanPool.VirasoroProject.VirasoroVerma
 public import LeanPool.VirasoroProject.WittAlgebra
 public import LeanPool.VirasoroProject.WittAlgebraCohomology
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Virasoro Project

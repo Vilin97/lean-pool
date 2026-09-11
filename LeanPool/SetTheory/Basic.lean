@@ -5,8 +5,13 @@ Authors: Shuhao Song
 -/
 module
 
-public import LeanPool.SetTheory.Realize
 public import Mathlib.SetTheory.ZFC.VonNeumann
+public import LeanPool.SetTheory.RealizeCore
+public import LeanPool.SetTheory.SimpAttr
+public meta import Mathlib.Tactic.Basic
+import Lean.Elab.Tactic.RCases
+import Mathlib.Tactic.FinCases
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Basic theory of models of ZF set theory

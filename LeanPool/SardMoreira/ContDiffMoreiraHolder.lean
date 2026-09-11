@@ -5,27 +5,16 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
 
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.Asymptotics.Lemmas
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 public import Mathlib.Topology.MetricSpace.Holder
-public import Mathlib.Topology.UnitInterval
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import LeanPool.SardMoreira.ContDiff
-public import LeanPool.SardMoreira.ContinuousMultilinearMap
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.SardMoreira.ContDiff
+import LeanPool.SardMoreira.ContinuousMultilinearMap
+import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.SardMoreira.ContDiffMoreiraHolder

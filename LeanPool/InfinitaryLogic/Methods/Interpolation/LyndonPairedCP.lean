@@ -5,7 +5,13 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedFamily
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonClosures
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 /-!
 # The polarity-refined consistency property and paired model (issue #14, Unit 4b)
 

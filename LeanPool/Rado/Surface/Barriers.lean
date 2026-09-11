@@ -6,7 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.Rado.Surface.Perron
-public import LeanPool.Rado.Complex.PlanarConnected
+import LeanPool.Rado.Complex.PlanarConnected
+import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 
 /-!
 # The two-disk configuration and its barriers

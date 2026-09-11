@@ -5,8 +5,8 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Analysis.Normed.Group.Defs
+import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Analysis.Normed.Group.Basic

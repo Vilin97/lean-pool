@@ -6,10 +6,11 @@ Authors: Dillon Ryan
 module
 
 public import LeanPool.LehmerE10.Defs
-public import Mathlib.NumberTheory.NumberField.InfinitePlace.Embeddings
-public import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
-public import Mathlib.Tactic.ComputeDegree
-public import Mathlib.Tactic.NormNum.Prime
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+import Mathlib.NumberTheory.NumberField.InfinitePlace.Embeddings
+import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # basic facts about Lehmer's polynomial `L`, and Kronecker's theorem.

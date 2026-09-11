@@ -23,7 +23,14 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import LeanPool.PhaseRetrieval.Constant.Internal.LocalHelpers
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.PhaseRetrieval.Constant.Internal.LocalHelpers
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # Local -/
 

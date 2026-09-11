@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Chudnovsky.Basic
 public import Mathlib.NumberTheory.ModularForms.Derivative
+import Mathlib.NumberTheory.ModularForms.LevelOne.DimensionFormula
 
 /-!
 # Ramanujan's derivative identities

@@ -6,6 +6,12 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
+public import Mathlib.Data.Fin.VecNotation
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated `Middle` certificate chunks 0 through 0. -/
 

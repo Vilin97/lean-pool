@@ -7,6 +7,9 @@ module
 
 public import LeanPool.AndersonConjecture.QuasiCompleteRing.Complete
 public import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Anderson's Theorems 3–5 on (Weak) Quasi-Completeness

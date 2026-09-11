@@ -6,6 +6,8 @@ Authors: Wei Wang
 module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryBasics
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Primitive cutoff realization

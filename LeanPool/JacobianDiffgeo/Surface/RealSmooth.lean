@@ -5,9 +5,8 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
-public import Mathlib.Analysis.Analytic.Constructions
 public import Mathlib.Geometry.Manifold.PartitionOfUnity
+import LeanPool.JacobianDiffgeo.Surface.Bridges
 
 /-!
 # CC7: the `𝓘(ℝ, ℂ)` bridge — real smoothness from holomorphy

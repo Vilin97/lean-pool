@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132N14.DiameterDescent
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Conditional fourteen-point theorem for Erdős Problem 132

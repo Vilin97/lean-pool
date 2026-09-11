@@ -7,6 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Semantics
 public import LeanPool.Incompleteness.Foundation.Vorspiel.NotationClass
+import Mathlib.Algebra.Ring.Nat
+import Mathlib.Tactic.Bound.Init
 
 /-! # Operator -/
 

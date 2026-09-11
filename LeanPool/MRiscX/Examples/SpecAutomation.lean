@@ -5,8 +5,10 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.Basic
-public import LeanPool.MRiscX.Tactics.ApplySpec
+import LeanPool.MRiscX.Elab.HoareElaborator
+import LeanPool.MRiscX.Tactics.CodeProofTactics
+import Mathlib.Data.Set.Defs
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # SpecAutomation

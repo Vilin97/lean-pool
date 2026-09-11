@@ -5,9 +5,12 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.Quasiperiods
-public import Mathlib.Analysis.Meromorphic.TrailingCoefficient
-public import Mathlib.NumberTheory.Real.Irrational
+public import LeanPool.Chudnovsky.SigmaZeta
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+import LeanPool.Chudnovsky.Quasiperiods
+import LeanPool.Chudnovsky.WeierstrassMore
+import Mathlib.Analysis.Meromorphic.TrailingCoefficient
+import Mathlib.NumberTheory.Real.Irrational
 
 /-!
 # Division values (Milla, Appendix A)

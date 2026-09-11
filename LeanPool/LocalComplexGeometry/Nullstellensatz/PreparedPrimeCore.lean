@@ -6,16 +6,14 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisionRepresentatives
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialRepresentativeOperations
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeCancellation
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeInduction
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
+public import LeanPool.LocalComplexGeometry.Germs.Representatives
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeCancellation
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The prepared-prime geometric step

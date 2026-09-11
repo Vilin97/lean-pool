@@ -6,7 +6,6 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-public import Mathlib.Data.Fintype.Parity
 
 
 /- This is from the Sphere Pack project, so might not actually be for mathlib.-/

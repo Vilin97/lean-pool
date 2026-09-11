@@ -10,6 +10,7 @@ public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
 public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
 public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
 public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # TensorProduct

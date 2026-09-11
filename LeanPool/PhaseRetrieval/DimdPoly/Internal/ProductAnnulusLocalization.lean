@@ -5,8 +5,15 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.BlockLocalization
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.BlockLocalization
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # ProductAnnulusLocalization -/
 

@@ -5,8 +5,14 @@ Authors: György Kurucz
 -/
 module
 
-public import Mathlib.Data.Set.Basic
-public import Mathlib.Data.List.OfFn
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Data.Set.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Set.Operations
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # Safety-liveness decomposition

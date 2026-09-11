@@ -5,7 +5,10 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.EuclideanFiveDistanceSharp
+public import LeanPool.ThreeGap.EuclideanNN
+import LeanPool.ThreeGap.EuclideanFiveDistanceSharp
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Toward arithmetic sharpness of `g₂ ≤ 5`: five distances are attained (dynamics-free route)

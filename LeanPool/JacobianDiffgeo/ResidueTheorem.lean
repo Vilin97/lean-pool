@@ -11,6 +11,8 @@ public import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
 public import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
 public import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
 public import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # residue-theorem (namespaces `RS`/`RS.P1`) — HEADLINE CLOSED

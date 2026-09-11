@@ -5,9 +5,8 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.ChannelCapacity.Capacity
-public import Mathlib.MeasureTheory.Measure.Dirac
 public import Mathlib.Probability.ProbabilityMassFunction.Constructions
+public import LeanPool.ChannelCapacity.NonDegeneracy
 
 /-!
 # ChannelCapacity.Counterexample

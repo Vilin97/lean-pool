@@ -5,27 +5,22 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Data.Int.Star
-public import Mathlib.FieldTheory.Finite.Basic
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.LaurentSeries
-public import Mathlib.RingTheory.PowerSeries.Substitution
-public import Mathlib.RingTheory.PowerSeries.WellKnown
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Order
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.Tauto
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+public import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.Star
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.PowerSeries.Substitution
+import Mathlib.RingTheory.PowerSeries.WellKnown
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Lemma 4.1 for Thakur's hypotheses on power sums

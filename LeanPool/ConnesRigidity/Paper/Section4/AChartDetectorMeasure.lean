@@ -6,6 +6,9 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section4.ChartDetectorMeasure
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralDetection
+import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
+import LeanPool.ConnesRigidity.Paper.Section4.ChartSpan
 
 /-!
 Concrete §4 A-coordinate detector transport and invariant-measure bound for

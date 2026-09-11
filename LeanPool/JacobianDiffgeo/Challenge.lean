@@ -5,12 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Forms
-public import LeanPool.JacobianDiffgeo.GenusSphereHeadline
-public import LeanPool.JacobianDiffgeo.JacobianConstruction
-public import LeanPool.JacobianDiffgeo.JacFunctorial
-public import LeanPool.JacobianDiffgeo.ProperDegree
-public import LeanPool.JacobianDiffgeo.CechCount
+public import LeanPool.JacobianDiffgeo.CechCount.Final
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
+public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
+import LeanPool.JacobianDiffgeo.JacFunctorial.ChallengeLaws
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Jacobians — the assembled challenge API

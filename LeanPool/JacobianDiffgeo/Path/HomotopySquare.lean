@@ -7,6 +7,9 @@ module
 
 public import LeanPool.JacobianDiffgeo.Path.Continuation
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Path.Planar
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Homotopy invariance: the 2D grid argument (CC6)

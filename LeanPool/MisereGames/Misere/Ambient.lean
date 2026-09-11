@@ -7,6 +7,7 @@ Authors: Alfie Davies, Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Misere.Separation
+import Mathlib.Data.Set.Finite.Range
 
 /-!
 Misere combinatorial games.

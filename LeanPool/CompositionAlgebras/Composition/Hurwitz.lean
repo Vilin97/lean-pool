@@ -6,8 +6,17 @@ Authors: Bryan Ehrlich
 module
 
 public import LeanPool.CompositionAlgebras.Composition.Doubling
-public import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
-public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.LinearAlgebra.Dual.Lemmas
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!

@@ -5,9 +5,9 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Hom
-public import Mathlib.Algebra.RingQuot
 public import Mathlib.RingTheory.Congruence.Basic
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic

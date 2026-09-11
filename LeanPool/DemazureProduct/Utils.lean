@@ -5,11 +5,14 @@ Authors: Nathan Pflueger
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Int.Basic
 public import Mathlib.Data.Int.Interval
-public import Mathlib.Tactic.Linarith
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Auxiliary utilities

@@ -5,10 +5,11 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Representation
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
-public import Mathlib.Data.Fin.Basic
-public import Mathlib.Algebra.Order.Sub.Basic
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
 

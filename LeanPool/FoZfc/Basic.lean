@@ -5,11 +5,7 @@ Authors: Tetsuya Ishiu
 -/
 module
 
-public import Mathlib.Data.Set.Basic
-public import Mathlib.ModelTheory.Basic
-public import Mathlib.ModelTheory.Syntax
 public import Mathlib.ModelTheory.Semantics
-public import Mathlib.Data.Fin.Tuple.Basic
 
 /-!
 # The Basics of First Order Language of ZFC set theory

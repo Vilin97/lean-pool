@@ -5,18 +5,11 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.InnerProductSpace.Defs
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-public import Mathlib.Order.Filter.Basic
-public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Real
-public import Mathlib.Probability.Kernel.Condexp
-public import Mathlib.Analysis.Convex.Integral
 
-public import LeanPool.RlTheoryInLean.Defs
-public import LeanPool.RlTheoryInLean.Order.Filter.Basic
-public import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+import LeanPool.RlTheoryInLean.Order.Filter.Basic
+import Mathlib.Probability.Kernel.Condexp
 
 /-!
 # LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation.Basic

@@ -5,8 +5,7 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KT
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K5
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
 
 /-! # S5 -/
 

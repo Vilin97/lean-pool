@@ -5,9 +5,12 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu, Kazuki Uesugi
 -/
 module
 
-public import LeanPool.HansonWright.Probability.Concentration.Chernoff
-public import LeanPool.HansonWright.Probability.Moments.Cumulant
-public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Probability.Moments.Basic
+import LeanPool.HansonWright.Probability.Concentration.Chernoff
+import LeanPool.HansonWright.Probability.Moments.Cumulant
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Scalar Bernstein Inequality

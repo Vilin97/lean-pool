@@ -7,13 +7,8 @@ module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
-public import Mathlib.NumberTheory.Real.Irrational
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.NormNum.Irrational
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Geometric four-colorings of the Moser lattice

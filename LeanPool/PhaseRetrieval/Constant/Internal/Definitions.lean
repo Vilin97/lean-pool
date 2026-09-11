@@ -20,15 +20,9 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import Mathlib.Analysis.Fourier.AddCircle
-public import Mathlib.Analysis.SpecialFunctions.PolarCoord
-public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.MeasureTheory.Integral.Gamma
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Gamma
 
 /-! # Definitions -/
 

@@ -5,12 +5,20 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.CoulombSpatialTransport
-public import LeanPool.Clawristotle.CoulombFluxBound
-public import LeanPool.Clawristotle.CoulombPSD
-public import LeanPool.Clawristotle.CoulombFluxDiff
-public import LeanPool.Clawristotle.IteratedDerivHelpers
-public import LeanPool.Clawristotle.LogBoundHelpers
+public import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.CoulombFlux
+import LeanPool.Clawristotle.CoulombFluxBound
+import LeanPool.Clawristotle.CoulombFluxConv
+import LeanPool.Clawristotle.CoulombFluxDiff
+import LeanPool.Clawristotle.CoulombForceTransport
+import LeanPool.Clawristotle.CoulombPSD
+import LeanPool.Clawristotle.CoulombPSDHelpers
+import LeanPool.Clawristotle.CoulombSpatialTransport
+import LeanPool.Clawristotle.LogBoundHelpers
+import LeanPool.Clawristotle.Theorem42
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-!
 # Concrete Theorem 4.2 for Coulomb Collisions on T^3

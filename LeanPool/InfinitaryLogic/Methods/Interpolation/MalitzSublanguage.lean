@@ -5,8 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRelational
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRelational
+import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
 /-!
 # Malitz interpolation over an arbitrary relational language (issue #15)
 

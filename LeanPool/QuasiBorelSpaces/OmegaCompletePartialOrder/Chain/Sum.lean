@@ -5,7 +5,6 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Algebra.Order.Group.Nat
 public import Mathlib.Data.Sum.Order
 public import Mathlib.Order.OmegaCompletePartialOrder
 

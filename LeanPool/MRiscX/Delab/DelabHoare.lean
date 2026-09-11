@@ -6,8 +6,11 @@ Authors: Julius Marx
 module
 
 public import LeanPool.MRiscX.Hoare.HoareCore
-public import LeanPool.MRiscX.Parser.HoareSyntax
 public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+public meta import Lean.PrettyPrinter.Delaborator.Builtins
+import LeanPool.MRiscX.Parser.HoareSyntax
+import Mathlib.Data.Quot
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # DelabHoare

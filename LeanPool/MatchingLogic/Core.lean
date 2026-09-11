@@ -32,9 +32,10 @@ Representation rulings (fixed before any proof was written):
 -/
 module
 
-public import Mathlib.Data.Set.Basic
-public import Mathlib.Data.Set.Lattice
-public import Mathlib.Logic.Function.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Set.Lattice
 
 /-!
 # MatchingLogic.Core

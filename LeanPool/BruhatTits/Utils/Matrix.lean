@@ -5,13 +5,10 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import LeanPool.BruhatTits.Utils.RingHom
-public import LeanPool.BruhatTits.Utils.Subring
-public import Mathlib.LinearAlgebra.Matrix.Transvection
-public import Mathlib.RingTheory.Valuation.ValuationRing
 public import Mathlib.LinearAlgebra.Matrix.IsDiag
 public import Mathlib.LinearAlgebra.Matrix.Swap
-public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.RingTheory.Valuation.Basic
+import LeanPool.BruhatTits.Utils.Subring
 
 /-!
 # LeanPool.BruhatTits.Utils.Matrix

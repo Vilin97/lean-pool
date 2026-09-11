@@ -10,6 +10,8 @@ public import LeanPool.FactorizationSystems.Examples
 public import LeanPool.FactorizationSystems.Orthogonality
 public import LeanPool.FactorizationSystems.OrthogonalComplements
 public import LeanPool.FactorizationSystems.Characterization
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # Factorization Systems

@@ -6,7 +6,6 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 module
 
 public import Mathlib.CategoryTheory.Groupoid.FreeGroupoid
-public import Mathlib.CategoryTheory.Endomorphism
 public import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
 
 /-!

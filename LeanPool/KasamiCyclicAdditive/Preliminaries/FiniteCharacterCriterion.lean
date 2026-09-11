@@ -5,9 +5,14 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+public import Mathlib.Algebra.Group.AddChar
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.NumberTheory.MulChar.Basic
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Finite character-sum criteria for bijectivity

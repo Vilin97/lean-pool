@@ -5,11 +5,15 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.ModelTheory.ArbitraryStabilization
-public import LeanPool.InfinitaryLogic.ModelTheory.TypePreservingBF
-public import LeanPool.InfinitaryLogic.Methods.UniformCollapse
-public import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
-public import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+import LeanPool.InfinitaryLogic.Methods.UniformCollapse
+import LeanPool.InfinitaryLogic.ModelTheory.ArbitraryStabilization
+import LeanPool.InfinitaryLogic.ModelTheory.TypePreservingBF
+import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
+import Mathlib.Data.Rat.Floor
 /-!
 # The Scott completion and categoricity (issue #17 chunks 5.2–6)
 

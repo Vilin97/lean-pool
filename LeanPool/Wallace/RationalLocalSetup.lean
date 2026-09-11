@@ -7,8 +7,11 @@ module
 
 public import LeanPool.Wallace.RationalClosure
 public import LeanPool.Wallace.CountableDisjointization
-public import LeanPool.Wallace.FusionSchedule
-public import LeanPool.Wallace.BoundedIndependentMap
+import LeanPool.Wallace.BoundedIndependentMap
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The countable block schedule around one rational vector

@@ -13,6 +13,12 @@ expanders for the four rows needed by the Kalton-Roberts bound.
 module
 
 public import LeanPool.KaltonRoberts.Defs
+public import Mathlib.Data.Fintype.Perm
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Pippenger expander construction proof

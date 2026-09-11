@@ -6,10 +6,6 @@ Authors: Antoine de Saint Germain, Ambrose Tang
 module
 
 public import Mathlib.LinearAlgebra.RootSystem.OfBilinear
-public import Mathlib.Tactic.Ext
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Tauto
 
 /-!
 # Type-BCₙ root systems

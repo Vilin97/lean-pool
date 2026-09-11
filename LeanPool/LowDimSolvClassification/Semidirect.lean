@@ -5,9 +5,8 @@ Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
 module
 
-public import Mathlib.Algebra.Lie.Derivation.Basic
 public import LeanPool.LowDimSolvClassification.GeneralResults
-public import LeanPool.LowDimSolvClassification.Tactics
+import LeanPool.LowDimSolvClassification.Tactics
 
 /-!
 # LeanPool.LowDimSolvClassification.Semidirect

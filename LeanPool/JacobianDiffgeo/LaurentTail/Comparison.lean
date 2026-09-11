@@ -6,6 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+public import LeanPool.JacobianDiffgeo.Cech.Skyscraper
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The comparison `H1Tail D ≃ₗ Cech.H1 D` (laurent-tails, design §4.3/§5)

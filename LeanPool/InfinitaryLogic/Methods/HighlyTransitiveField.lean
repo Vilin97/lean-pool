@@ -6,10 +6,17 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
-public import Mathlib.Algebra.Order.Field.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Fin.Basic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Linear ordered fields are highly order-transitive (issue #11 unit 6a)

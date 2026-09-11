@@ -5,16 +5,10 @@ Authors: Nick Adfor
 -/
 module
 
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Set
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Tauto
-public import Aesop
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Data.Nat.Choose.Basic
 public import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!

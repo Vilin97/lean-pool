@@ -7,10 +7,10 @@ module
 
 public import LeanPool.OSforGFF.Bochner.PositiveDefinite
 public import Mathlib.Analysis.Fourier.FourierTransform
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-public import Mathlib.MeasureTheory.Measure.Prod
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Fourier transform of L¹ positive-definite functions is nonneg

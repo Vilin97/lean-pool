@@ -5,8 +5,14 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import Mathlib.NumberTheory.MulChar.Lemmas
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.NumberTheory.MulChar.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.NumberTheory.MulChar.Lemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Arithmetic for the exceptional MCM character case

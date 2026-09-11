@@ -6,6 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.IntProp.Formula
+import Mathlib.Tactic.Bound.Init
 
 /-! # Substitution -/
 

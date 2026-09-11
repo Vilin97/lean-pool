@@ -8,8 +8,6 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
-public import Mathlib.RingTheory.SimpleModule.Basic
 
 /-!
 Nonisomorphism foundations for Zhou §6. The quotient representations and

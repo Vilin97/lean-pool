@@ -5,12 +5,14 @@ Authors: Sven Manthe
 -/
 module
 
-public import Mathlib.CategoryTheory.Limits.Final
-public import Mathlib.CategoryTheory.Limits.Types.Coproducts
-public import Mathlib.CategoryTheory.ConcreteCategory.Elementwise
-public import Mathlib.CategoryTheory.ConcreteCategory.EpiMono
-public import Mathlib.CategoryTheory.Category.Preorder
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+public import Mathlib.CategoryTheory.Limits.Types.Colimits
+public import Mathlib.Order.BourbakiWitt
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat

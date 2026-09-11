@@ -10,7 +10,9 @@ Blueprint unit: residue-calculus. The circle-integral / residue bridge.
 module
 
 public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # The circle-integral bridge (residue-calculus)

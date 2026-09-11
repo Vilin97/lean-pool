@@ -5,10 +5,9 @@ Authors: David Renshaw
 -/
 module
 
-public import Mathlib.Init
-public import Lean.Meta.Tactic.Simp.SimpTheorems
-public import Lean.Meta.Tactic.Simp.RegisterCommand
-public import Lean.LabelAttribute
+public meta import Lean.Meta.Tactic.Simp.Simproc
+meta import Lean.Meta.Tactic.Simp.Attr
+import Lean.Meta.Tactic.Simp.RegisterCommand
 
 /-!
 # LeanPool.Rupert.Attr

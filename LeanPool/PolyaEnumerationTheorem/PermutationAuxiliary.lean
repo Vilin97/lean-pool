@@ -5,17 +5,13 @@ Authors: Luka Opravš
 -/
 module
 
-public import Mathlib.GroupTheory.Perm.Cycle.Type
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.GroupTheory.Perm.Cycle.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.GroupTheory.Perm.Cycle.Factors
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Auxiliary results on permutations
 -/

@@ -5,9 +5,13 @@ Authors: Axiom Math
 -/
 module
 
-public import LeanPool.ZetaZeros.Zeta.Proportion
-public import LeanPool.ZetaZeros.Zeta.Transfer
-public import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
+public import LeanPool.ZetaZeros.Defs
+import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.Zeta.Proportion
+import LeanPool.ZetaZeros.Zeta.Transfer
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Proportion bounds for zeta zeros

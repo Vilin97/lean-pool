@@ -5,14 +5,26 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.AlgClosedUnion
 public import LeanPool.BrauerGroupNew.ExtendScalar
-public import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
 public import Mathlib.Algebra.BrauerGroup.Defs
-public import Mathlib.Algebra.Central.Matrix
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.RingTheory.SimpleRing.Matrix
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.AlgClosedUnion
+import LeanPool.BrauerGroupNew.CentralSimple
+import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Central.Matrix
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.RingTheory.SimpleRing.Matrix
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Splitting central simple algebras

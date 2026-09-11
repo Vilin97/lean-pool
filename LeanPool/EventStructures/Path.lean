@@ -5,12 +5,11 @@ Authors: Vikraman Choudhury
 -/
 module
 
-public import LeanPool.EventStructures.Basic
 public import LeanPool.EventStructures.Configuration
 public import LeanPool.EventStructures.Trace
 public import Mathlib.CategoryTheory.Category.Basic
-public import Mathlib.Data.Setoid.Basic
 public import Mathlib.Data.Nat.Find
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Paths in the configuration graph

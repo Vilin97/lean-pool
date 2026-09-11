@@ -7,7 +7,9 @@ module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.SearchTree
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.SubLanguage
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Ultraproduct
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Ultraproduct
 
 /-! # Completeness -/
 

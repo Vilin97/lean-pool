@@ -5,7 +5,13 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import LeanPool.Lentil.Rules.Basic
+public import LeanPool.Lentil.Tactics.Basic
+import Aesop.Frontend.Tactic
+import Aesop.Main
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
+import LeanPool.Lentil.Utils.MiscLemmas
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-! Theorems about big operators (e.g., `⋀`, `⋁`). -/
 

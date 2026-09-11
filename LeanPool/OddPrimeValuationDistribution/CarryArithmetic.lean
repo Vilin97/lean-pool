@@ -5,9 +5,12 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.OddPrimeValuationDistribution.Kummer
-public import Mathlib.Data.Nat.Digits.Lemmas
-public import Mathlib.Tactic.Ring
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.MaxPowDiv
+public import Mathlib.Data.Nat.Prime.Defs
+import LeanPool.OddPrimeValuationDistribution.Kummer
+import Mathlib.Data.Nat.Digits.Lemmas
 
 /-!
 # Doubling carries in an arbitrary odd base

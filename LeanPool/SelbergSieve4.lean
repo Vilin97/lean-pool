@@ -6,6 +6,12 @@ Authors: Arend Mellendijk
 module
 
 public import LeanPool.SelbergSieve4.MainResults
+import LeanPool.SelbergSieve4.Tactic.AesopInit
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Selberg Sieve

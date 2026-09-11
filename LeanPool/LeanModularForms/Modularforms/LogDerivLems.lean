@@ -5,13 +5,13 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.Modularforms.Tendstolems
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Analysis.Convex.PathConnected
 public import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
-public import Mathlib.Topology.Separation.CompletelyRegular
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.LogDeriv
+public import Mathlib.Analysis.Complex.Exponential
+import LeanPool.LeanModularForms.Modularforms.Tendstolems
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Complex.LocallyUniformLimit
 
 /-! # LogDerivLems -/
 

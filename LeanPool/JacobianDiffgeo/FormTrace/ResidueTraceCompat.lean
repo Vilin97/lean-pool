@@ -11,11 +11,13 @@ Miranda Lemma 3.2 globalized).
 module
 
 public import LeanPool.JacobianDiffgeo.FormTrace.PairForm
-public import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
 public import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
-public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
 public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
-public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
+import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Residue-trace compatibility (`form-trace-tower`, file 3/6)

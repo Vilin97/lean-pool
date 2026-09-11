@@ -5,8 +5,14 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Example23
 public import LeanPool.DomainTheory.Neighborhood.Theorem41
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Example 4.4 (Scott 1981, PRG-19, §4) — the domain `C` of binary sequences

@@ -6,6 +6,8 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.Shannon1948Formalization.Entropy.Joint
+public import Mathlib.Analysis.Convex.DoublyStochasticMatrix
+import LeanPool.Shannon1948Formalization.Entropy.Gibbs
 
 /-!
 # Shannon.Entropy.Properties

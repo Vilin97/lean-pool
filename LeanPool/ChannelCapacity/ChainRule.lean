@@ -6,11 +6,10 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.ChannelCapacity.Basic
-public import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
 
-public import Mathlib.InformationTheory.KullbackLeibler.ChainRule
-public import Mathlib.Probability.Kernel.CompProdEqIff
-public import Mathlib.Probability.Kernel.Posterior
+import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+import Mathlib.InformationTheory.KullbackLeibler.ChainRule
+import Mathlib.Probability.Kernel.Posterior
 
 /-!
 # ChannelCapacity.ChainRule

@@ -5,10 +5,12 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Data.Sum.Order
-public import Mathlib.Order.OmegaCompletePartialOrder
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sum
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 
 /-!

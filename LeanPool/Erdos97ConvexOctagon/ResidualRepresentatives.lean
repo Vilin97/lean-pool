@@ -5,7 +5,12 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.Radius
+public import LeanPool.Erdos97ConvexOctagon.Incidence
+public import Mathlib.Data.Fin.VecNotation
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Thirteen explicit candidate incidence representatives
 

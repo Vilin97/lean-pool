@@ -5,7 +5,7 @@ Authors: Christopher Boone
 -/
 module
 
-public import LeanPool.ZhangYeungInequality.Delta
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.Test.Delta

@@ -6,7 +6,9 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.ModelTheory.TypeIsolation
-public import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
+public import LeanPool.InfinitaryLogic.ModelTheory.AElementary
+public import Mathlib.ModelTheory.Substructures
+import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
 /-!
 # The controlling fragment and the countable companion (issue #17 chunk 2)
 

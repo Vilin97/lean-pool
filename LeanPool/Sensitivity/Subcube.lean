@@ -5,8 +5,8 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.Sensitivity.Defs
 public import LeanPool.Sensitivity.Multilinear
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # Subcube Restriction

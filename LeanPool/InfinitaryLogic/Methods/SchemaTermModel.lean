@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # Layer 7b checkpoint 5a: the schema term-model substrate
 

@@ -5,9 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
-public import LeanPool.JacobianDiffgeo.Finiteness.Chi
-public import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
+import LeanPool.JacobianDiffgeo.Finiteness.Chi
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # D9: existence of a nonconstant meromorphic function and a nonzero meromorphic 1-form

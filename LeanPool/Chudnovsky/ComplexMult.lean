@@ -5,8 +5,10 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.DivisionValues
-public import LeanPool.Chudnovsky.Fourier
+public import LeanPool.Chudnovsky.Quasiperiods
+import LeanPool.Chudnovsky.DivisionValues
+import LeanPool.Chudnovsky.Fourier
+import LeanPool.Chudnovsky.Liouville
 
 /-!
 # Complex multiplication and the integrality of `E₂*` (Milla, Appendix B)

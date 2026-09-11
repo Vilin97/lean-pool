@@ -5,10 +5,10 @@ Authors: Nikolay Ulyanov
 -/
 module
 
-public import LeanPool.Sabidussi.LoopGraphBridge
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import LeanPool.Sabidussi.LoopMultigraph
+import LeanPool.Sabidussi.LoopGraphBridge
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Ordinary circuits in endpoint multigraphs

@@ -5,8 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
 public import LeanPool.InfinitaryLogic.Scott.Sentence
+import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
 /-!
 # Arbitrary-target stabilization (issue #17 chunk 5.1)
 

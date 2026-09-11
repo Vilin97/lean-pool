@@ -6,10 +6,6 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
-public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
-public import Mathlib.Topology.Algebra.Monoid
-public import Mathlib.Topology.UniformSpace.HeineCantor
 
 /-!
 # `L²` compactness criterion: compact smoothing operator (Euclidean)

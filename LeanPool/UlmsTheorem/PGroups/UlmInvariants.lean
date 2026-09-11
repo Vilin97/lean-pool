@@ -5,9 +5,12 @@ Authors: Elan Roth
 -/
 module
 
-public import Mathlib.LinearAlgebra.Dimension.DivisionRing
 public import Mathlib.Algebra.Field.ZMod
 public import LeanPool.UlmsTheorem.PGroups.Socle
+public import LeanPool.UlmsTheorem.PGroups.Heights
+public import Mathlib.LinearAlgebra.Dimension.Basic
+public import Mathlib.LinearAlgebra.Isomorphisms
+import Mathlib.LinearAlgebra.Dimension.DivisionRing
 
 /-!
 # Ulm invariants

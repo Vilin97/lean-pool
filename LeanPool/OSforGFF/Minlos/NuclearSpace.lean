@@ -5,10 +5,12 @@ Authors: Michael R. Douglas, Sarah Hoback
 -/
 module
 
-public import Mathlib.Analysis.LocallyConvex.WithSeminorms
 public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Nuclear Operators and Nuclear Spaces

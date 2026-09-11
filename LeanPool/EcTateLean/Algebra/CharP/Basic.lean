@@ -5,8 +5,8 @@ Authors: Alex J. Best
 -/
 module
 
-public import LeanPool.EcTateLean.Algebra.Ring.Basic
-public import Mathlib.Algebra.CharP.Lemmas
+public import Mathlib.Algebra.CharP.Defs
+import Mathlib.Algebra.CharP.Lemmas
 
 /-!
 # LeanPool.EcTateLean.Algebra.CharP.Basic

@@ -6,6 +6,12 @@ Authors: Alexey Milovanov
 module
 
 public import LeanPool.BooleanIsoperimetry.KruskalKatona
+import LeanPool.BooleanIsoperimetry.Cascade
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! # Layer-window accounting for the cross-slice Kruskal–Katona bridge.
 

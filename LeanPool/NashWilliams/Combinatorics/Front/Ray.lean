@@ -6,6 +6,7 @@ Authors: Yann Pequignot
 module
 
 public import LeanPool.NashWilliams.Combinatorics.Front.Rank
+public import Mathlib.Order.Lattice.Nat
 
 /-!
 # The ray of a front

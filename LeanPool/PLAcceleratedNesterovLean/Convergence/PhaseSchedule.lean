@@ -5,9 +5,8 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
+public import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Retuning Parameters for Nesterov Algorithm

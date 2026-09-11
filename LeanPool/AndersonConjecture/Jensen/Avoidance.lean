@@ -5,12 +5,13 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
 public import Mathlib.RingTheory.AdicCompletion.Basic
-public import Mathlib.RingTheory.Filtration
-public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
-public import Mathlib.RingTheory.PicardGroup
-public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+import Mathlib.RingTheory.Filtration
+import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 
 /-!
 # Prime Avoidance in Complete Local Rings

@@ -11,3 +11,4 @@ public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.PRF
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Fixpoint
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Vec
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Coding
+import LeanPool.Incompleteness.Arithmetization.Definability.Init

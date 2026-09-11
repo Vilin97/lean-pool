@@ -6,10 +6,7 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.PureMath.KLDivergence
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Algebra.Order.Floor.Defs
+import Mathlib.Algebra.BigOperators.Field
 
 /-!
 # Approximate Minimax for Finite Boolean Games

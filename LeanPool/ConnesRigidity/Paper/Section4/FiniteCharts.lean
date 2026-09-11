@@ -9,9 +9,9 @@ Finite polynomial charts for Zhou's property-(T) detector. Paper: §4.
 -/
 module
 
-public import Mathlib.Algebra.Algebra.ZMod
 public import Mathlib.Algebra.Polynomial.OfFn
 public import LeanPool.ConnesRigidity.Construction
+import Mathlib.Algebra.Algebra.ZMod
 
 /-!
 The finite charts component of the Connes rigidity formalization.

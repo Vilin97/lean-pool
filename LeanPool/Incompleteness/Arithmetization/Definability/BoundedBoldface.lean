@@ -6,7 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.Definability.Boldface
-public import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.Order.Sub.Basic
 
 /-! # BoundedBoldface -/
 

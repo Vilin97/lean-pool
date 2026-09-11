@@ -5,7 +5,9 @@ Authors: György Kurucz
 -/
 module
 
-public import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Data.Set.Operations
+import Mathlib.Data.Set.Basic
 
 /-!
 # Alternating Büchi automata

@@ -6,6 +6,11 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.Monlib
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Monlib4 Operator-Algebra and Quantum-Set Core

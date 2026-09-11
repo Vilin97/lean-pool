@@ -5,10 +5,14 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import Mathlib.Data.Fintype.Defs
 public import Mathlib.Data.Sigma.Lex
 public import LeanPool.Lean4GlCoalgebras.Split.Proof
 public import LeanPool.Lean4GlCoalgebras.Split.CutProof
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Defining GL-ext+pre proof system.
 

@@ -6,7 +6,8 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.ShapeMellinTranslation
-public import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadialIntegral
+public import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadial
+import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadialIntegral
 
 /-! TODO: Add doc-string. -/
 

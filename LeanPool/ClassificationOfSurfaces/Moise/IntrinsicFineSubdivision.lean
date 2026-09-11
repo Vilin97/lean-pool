@@ -7,6 +7,7 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
 public import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
+import Mathlib.Analysis.Normed.Affine.AddTorsor
 
 /-!
 # Fine subdivisions of intrinsic two-complexes

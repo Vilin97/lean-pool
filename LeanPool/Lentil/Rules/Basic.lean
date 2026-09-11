@@ -5,9 +5,13 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import LeanPool.Lentil.Basic
 public import LeanPool.Lentil.Tactics.Basic
-public import LeanPool.Lentil.Gadgets.TheoremLifting
+import Aesop.Frontend.Tactic
+import Aesop.Main
+import LeanPool.Lentil.Gadgets.TheoremLifting
+import LeanPool.Lentil.Util
+import LeanPool.Lentil.Utils.MiscLemmas
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-! Basic theorems about TLA. -/
 

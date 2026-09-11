@@ -5,9 +5,14 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.GroupTheory.GroupAction.Ring
-public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Verma modules over algebras

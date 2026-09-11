@@ -6,8 +6,7 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.DisturbingFunction
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Ring
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Full phase-space Kepler orbits

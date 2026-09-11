@@ -5,18 +5,20 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Data.Int.Star
-public import Mathlib.Data.List.GetD
-public import Mathlib.Data.Nat.Digits.Lemmas
 public import Mathlib.Data.Nat.Prime.Defs
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Order
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Order.Lattice.Nat
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.Data.List.GetD
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # H3 for Thakur's hypotheses on power sums

@@ -5,12 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.Topology.DerivedSet
-public import Mathlib.Topology.MetricSpace.CantorScheme
-public import Mathlib.Topology.MetricSpace.Perfect
-public import Mathlib.Topology.MetricSpace.Polish
-public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 public import Mathlib.SetTheory.Cardinal.Continuum
+public import Mathlib.Topology.MetricSpace.Defs
+public import Mathlib.Topology.UniformSpace.Cauchy
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.GDelta.MetrizableSpace
+import Mathlib.Topology.MetricSpace.Polish
 
 /-!
 # Perfect and Cantor antichains, and thinness

@@ -5,8 +5,8 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 module
 
-public import Mathlib.Data.QPF.Univariate.Basic
 public import Mathlib.Data.Vector3
+public import Mathlib.Data.PFunctor.Univariate.M
 
 /-! # ----------------------------------------------------------------------- -/
 

@@ -6,6 +6,17 @@ Authors: Sven Manthe
 module
 
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.LenTreeHom
+public import Mathlib.CategoryTheory.Limits.FunctorCategory.Basic
+public meta import Mathlib.Tactic.Basic
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree

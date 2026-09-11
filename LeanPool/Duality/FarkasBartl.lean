@@ -8,11 +8,14 @@ module
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 public import Mathlib.Algebra.Order.Module.Defs
-public import Mathlib.Algebra.Module.LinearMap.Basic
-public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
 public import Mathlib.Algebra.Module.Pi
-public import Mathlib.Tactic.Abel
-public import LeanPool.Duality.Common
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Data.Fintype.Basic
+import LeanPool.Duality.Common
+import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+import Mathlib.Tactic.Abel
 
 /-!
 # LeanPool.Duality.FarkasBartl

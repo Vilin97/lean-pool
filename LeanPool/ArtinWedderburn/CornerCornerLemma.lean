@@ -5,11 +5,12 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.Algebra.Ring.Basic
-public import Mathlib.RingTheory.NonUnitalSubring.Defs
-public import Mathlib.Algebra.Ring.Equiv
-public import LeanPool.ArtinWedderburn.CornerRing
 public import LeanPool.ArtinWedderburn.Idempotents
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Iterated corner rings

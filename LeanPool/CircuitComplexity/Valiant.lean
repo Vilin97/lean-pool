@@ -5,7 +5,12 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.CircuitComplexity.Internal.Valiant
+public import LeanPool.CircuitComplexity.Digraph.Defs
+import LeanPool.CircuitComplexity.Internal.Valiant
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-! # Valiant's Depth Reduction Lemma
 

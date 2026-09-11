@@ -5,7 +5,8 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.Layercake
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Integral.Layercake
 
 /-!
 # Tail Layer-Cake Formula

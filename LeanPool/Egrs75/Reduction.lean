@@ -6,6 +6,8 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Egrs75.Defs
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Finset.Attr
 
 /-!
 EGRS75 two-prime infinitude — ASSEMBLY.

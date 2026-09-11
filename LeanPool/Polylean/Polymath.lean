@@ -5,11 +5,8 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public import LeanPool.Polylean.ConjInvLength.Length
-public import LeanPool.Polylean.ConjInvLength.LengthBound
 public import LeanPool.Polylean.ConjInvLength.LengthNode
-public import LeanPool.Polylean.ConjInvLength.MemoLength
-public import LeanPool.Polylean.ConjInvLength.ProvedBound
+public import Mathlib.Algebra.Group.Defs
 
 /-!
 # Demonstration executable for Polylean length computations

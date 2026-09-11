@@ -5,9 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Complex.HasPrimitives
-public import Mathlib.Analysis.SpecialFunctions.Complex.Log
-public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.Complex.HasPrimitives
 
 /-!
 # The planar log-branch atom (`abel-weak-solutions`, D2 / §6.1)

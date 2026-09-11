@@ -6,18 +6,6 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 module
 
 public import Mathlib.NumberTheory.Bernoulli
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.RingTheory.PowerSeries.WellKnown
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
 /-! # Fel's Conjecture for Numerical Semigroups -/
 
 @[expose] public section

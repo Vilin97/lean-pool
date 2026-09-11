@@ -6,6 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.CanonicalForms.OrdRes
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `MForm X`: meromorphic 1-forms as germ classes of chart-coefficient families (D1/D2/D4–D6)

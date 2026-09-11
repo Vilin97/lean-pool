@@ -5,12 +5,13 @@ Authors: Joseph K. Miller
 -/
 module
 
-public import Mathlib.Analysis.Convex.Cone.InnerDual
-public import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
-public import Mathlib.Probability.Kernel.Composition.MeasureComp
-public import Mathlib.Probability.Kernel.Disintegration.StandardBorel
-public import Mathlib.Topology.MetricSpace.Sequences
 public import LeanPool.Vlasov.OT.Wasserstein
+public import Mathlib.Analysis.Convex.Cone.Basic
+import Mathlib.Analysis.Convex.Cone.Dual
+import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+import Mathlib.Probability.Kernel.Composition.MeasureComp
+import Mathlib.Probability.Kernel.Disintegration.StandardBorel
+import Mathlib.Topology.MetricSpace.Sequences
 
 /-!
 # Coupling-based Wasserstein-1 distance

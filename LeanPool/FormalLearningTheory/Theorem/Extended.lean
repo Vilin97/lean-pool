@@ -5,17 +5,12 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Criterion.PAC
-public import LeanPool.FormalLearningTheory.Criterion.Extended
-public import LeanPool.FormalLearningTheory.Complexity.VCDimension
-public import LeanPool.FormalLearningTheory.Complexity.Ordinal
-public import LeanPool.FormalLearningTheory.Theorem.Online
-public import LeanPool.FormalLearningTheory.Theorem.Separation
-public import LeanPool.FormalLearningTheory.Complexity.Structures
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
-public import LeanPool.FormalLearningTheory.Learner.Active
-public import Mathlib.Data.Nat.Pairing
-public import Mathlib.MeasureTheory.Measure.Prod
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Order.Group.Lattice
 
 /-!
 # Extended Theorems

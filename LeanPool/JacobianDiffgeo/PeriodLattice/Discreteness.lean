@@ -5,13 +5,17 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
-public import LeanPool.JacobianDiffgeo.Abel
-public import LeanPool.JacobianDiffgeo.CanonicalForms
-public import LeanPool.JacobianDiffgeo.ResidueTheorem
-public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
+import LeanPool.JacobianDiffgeo.Path.Planar
+import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
+import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
+import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
+import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
+import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Discreteness of the period subgroup (Forster 21.4(a)+(b))

@@ -6,9 +6,10 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 module
 
 public import Mathlib.Data.Complex.Basic
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 Positive Definite Functions

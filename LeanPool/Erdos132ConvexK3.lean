@@ -10,6 +10,12 @@ public import LeanPool.Erdos132ConvexK3.GlobalClosure
 public import LeanPool.Erdos132ConvexK3.RegressionWitnesses
 public import LeanPool.Erdos132ConvexK3.UseSite
 public import LeanPool.Erdos132ConvexK3.Witnesses
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Convex Three-Distance Degree-Six Theorem and Exceptional-Word Closures

@@ -5,8 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Path.Chain
-public import Mathlib.Topology.Order.ProjIcc
+public import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Path.Chain
+import LeanPool.JacobianDiffgeo.Path.Planar
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Existence, `pathIntegral`, path algebra and linearity (CC6)

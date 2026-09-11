@@ -5,7 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Compat: small `MForm` helpers needed by residue-theorem (candidates for canonical-forms)

@@ -12,12 +12,12 @@ the two regular group factors.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
 public import LeanPool.ConnesRigidity.Paper.Section3.GroupVacuum
 public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectGeneratorTransport
 public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FactorWitness
+public import Mathlib.Analysis.CStarAlgebra.ContinuousMap
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
+import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
 
 /-!
 The factor closure component of the Connes rigidity formalization.

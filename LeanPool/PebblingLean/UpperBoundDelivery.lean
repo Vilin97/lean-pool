@@ -5,9 +5,14 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Tactic.Ring
 public import LeanPool.PebblingLean.UpperBound
-public import LeanPool.PebblingLean.HypercubePath
+public import LeanPool.PebblingLean.Delivery
+import LeanPool.PebblingLean.HypercubePath
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Delivery interpretation of annulus contributions

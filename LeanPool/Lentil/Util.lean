@@ -5,10 +5,10 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
-public import LeanPool.Lentil.Utils.MetaUtil
-public import LeanPool.Lentil.Utils.SyntaxUtil
-public import LeanPool.Lentil.Utils.MiscLemmas
+public import Lean.Data.Options
+public meta import Lean.Meta.Tactic.Simp.Simproc
+meta import Lean.Meta.Tactic.Simp.Attr
+import Lean.Meta.Tactic.Simp.RegisterCommand
 
 @[expose] public section
 

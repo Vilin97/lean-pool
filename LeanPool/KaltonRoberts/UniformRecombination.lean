@@ -15,9 +15,13 @@ and produces a target `WeightedCollection` via expander recombination.
 -/
 module
 
-public import LeanPool.KaltonRoberts.Defs
 public import LeanPool.KaltonRoberts.Collections
-public import LeanPool.KaltonRoberts.Recombination
+import LeanPool.KaltonRoberts.Recombination
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite-uniform recombination

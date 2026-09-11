@@ -11,6 +11,11 @@ public import LeanPool.Computability.Encoding
 public import LeanPool.Computability.Jump
 public import LeanPool.Computability.ArithHierarchy
 public import LeanPool.Computability.AutGrp
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Oracle Computability and Turing Degrees

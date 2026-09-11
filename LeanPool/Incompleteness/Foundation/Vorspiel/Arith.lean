@@ -5,12 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
-public import Mathlib.Computability.Halting
 public import Mathlib.Computability.PartrecBasis
-public import Mathlib.Data.Nat.ModEq
-public import Mathlib.Data.List.FinRange
 public import Mathlib.Logic.Godel.GodelBetaFunction
+import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
 
 /-! # Arith -/
 

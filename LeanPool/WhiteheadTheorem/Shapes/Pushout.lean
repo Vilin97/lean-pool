@@ -5,9 +5,8 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import Mathlib.Topology.Homeomorph.Lemmas
 public import Mathlib.Topology.Category.TopCat.Limits.Basic
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
+public import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.Pushout

@@ -6,6 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalSkolem
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+public import LeanPool.InfinitaryLogic.Methods.SkolemClosure
 /-!
 # The countable local Skolem tower `Llocal` / `Γlocal`
 

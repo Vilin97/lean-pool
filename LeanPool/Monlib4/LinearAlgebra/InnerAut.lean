@@ -5,16 +5,14 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.MySpec
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-public import LeanPool.Monlib4.RepTheory.AutMat
-public import Mathlib.Algebra.Star.Pi
-public import Mathlib.Algebra.Star.UnitaryStarAlgAut
-public import Mathlib.Analysis.Matrix.Order
-public import Mathlib.LinearAlgebra.Matrix.Hermitian
-public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Mathlib.Analysis.Matrix.Spectrum
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.MySpec
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.RepTheory.AutMat
+import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Inner Automorphisms

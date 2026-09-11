@@ -6,8 +6,6 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.ContinuousLattice.Specialization
-public import Mathlib.Order.ScottContinuity
-public import Mathlib.Topology.Order.ScottTopology
 
 /-!
 # Scott-continuous maps (Scott 1972, §2.5–2.7)

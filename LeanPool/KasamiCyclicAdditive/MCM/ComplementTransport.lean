@@ -5,9 +5,13 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
-public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import Mathlib.Algebra.CharP.Lemmas
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Frobenius transport between complementary parameters

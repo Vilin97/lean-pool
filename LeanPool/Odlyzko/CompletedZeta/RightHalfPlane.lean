@@ -6,11 +6,16 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.Defs
-public import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
-public import LeanPool.Odlyzko.DedekindZeta.Convergence
 public import LeanPool.Odlyzko.DedekindZeta.PrimePowerExpansion
-public import Mathlib.Analysis.Calculus.LogDeriv
 public import Mathlib.NumberTheory.LSeries.Deriv
+public import LeanPool.Odlyzko.DedekindZeta.Coefficients
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
+import LeanPool.Odlyzko.CompletedZeta.GammaFactor
+import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
+import LeanPool.Odlyzko.DedekindZeta.Convergence
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

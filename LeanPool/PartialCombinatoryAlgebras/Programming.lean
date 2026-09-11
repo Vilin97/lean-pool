@@ -5,8 +5,11 @@ Authors: Andrej Bauer
 -/
 module
 
-public import LeanPool.PartialCombinatoryAlgebras.Basic
 public import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.NthRewrite
+import Mathlib.Tactic.SetLike
+import Mathlib.Tactic.Widget.Calc
 
 /-! ## Programming with PCAs
 

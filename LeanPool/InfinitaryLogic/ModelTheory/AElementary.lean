@@ -6,7 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.Fragment
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # A-elementarity and the fragment Tarski–Vaught criterion (issue #13 unit 4)
 

@@ -5,11 +5,19 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.Analysis.Complex.Polynomial.Basic
-public import Mathlib.Order.Interval.Set.Union
 public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
-public import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
+import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
+import Mathlib.Algebra.Order.Chebyshev
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Order.Interval.Set.Union
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # FiniteBaseCircleEstimate -/
 

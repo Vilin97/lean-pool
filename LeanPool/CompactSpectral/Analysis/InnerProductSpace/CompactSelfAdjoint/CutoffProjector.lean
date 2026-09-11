@@ -6,11 +6,10 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Algebra.Module.Submodule.Invariant
-public import Mathlib.Analysis.InnerProductSpace.Semisimple
-public import Mathlib.Data.Fintype.Lattice
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
+import Mathlib.Analysis.InnerProductSpace.Semisimple
 
 /-!
 # Compact self-adjoint operators: large-eigenspace cutoff projectors

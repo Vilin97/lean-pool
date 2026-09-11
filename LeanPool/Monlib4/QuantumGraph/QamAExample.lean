@@ -5,12 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.QuantumGraph.Nontracial
-public import LeanPool.Monlib4.QuantumGraph.Iso
-public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
 public import LeanPool.Monlib4.QuantumGraph.QamA
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.QamAExample

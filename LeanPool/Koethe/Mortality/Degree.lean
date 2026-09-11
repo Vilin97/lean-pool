@@ -5,9 +5,10 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Tactic.Ring
 public import LeanPool.Koethe.Pencil
-public import LeanPool.Koethe.Mortality.Minors
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import LeanPool.Koethe.Mortality.Minors
 
 /-!
 # The one-row parameter-degree bound

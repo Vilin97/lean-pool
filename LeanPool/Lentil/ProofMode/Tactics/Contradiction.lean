@@ -7,8 +7,11 @@ module
 
 public meta import Batteries.Lean.Expr
 
-public import LeanPool.Lentil.ProofMode.Tactics.Revert
-public import LeanPool.Lentil.ProofMode.Tactics.Specialize
+public meta import LeanPool.Lentil.ProofMode.Basic
+public import LeanPool.Lentil.ProofMode.Basic
+import LeanPool.Lentil.ProofMode.Tactics.Revert
+import LeanPool.Lentil.ProofMode.Tactics.Specialize
+import LeanPool.Lentil.Rules.Basic
 
 @[expose] public section
 

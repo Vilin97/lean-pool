@@ -5,7 +5,15 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.HigherOrderAssembly
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.CrossingAnalysis
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # CPV Existence for Inverse along Piecewise C¹ Immersions

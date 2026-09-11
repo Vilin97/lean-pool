@@ -13,6 +13,8 @@ public import LeanPool.Zeta3Irrational.Integral
 public import LeanPool.Zeta3Irrational.LegendrePoly
 public import LeanPool.Zeta3Irrational.LinearForm
 public import LeanPool.Zeta3Irrational.D
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Irrationality of ζ(3)

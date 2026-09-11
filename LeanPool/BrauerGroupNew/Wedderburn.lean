@@ -5,12 +5,14 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.MatrixCenterEquiv
-public import LeanPool.BrauerGroupNew.TwoSidedIdeal
-public import Mathlib.Algebra.Azumaya.Basic
 public import Mathlib.Algebra.Central.Defs
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
-public import Mathlib.RingTheory.HopkinsLevitzki
+public import Mathlib.RingTheory.Artinian.Defs
+public import Mathlib.RingTheory.SimpleModule.Basic
+import LeanPool.BrauerGroupNew.MatrixCenterEquiv
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
+import Mathlib.RingTheory.HopkinsLevitzki
+import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 
 /-!
 # LeanPool.BrauerGroupNew.Wedderburn

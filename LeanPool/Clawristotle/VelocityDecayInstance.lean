@@ -6,6 +6,8 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.Defs
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Lorentz Force Component Bound

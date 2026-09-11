@@ -5,16 +5,11 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.Probability.ProbabilityMassFunction.Basic
-public import Mathlib.MeasureTheory.MeasurableSpace.Instances
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.MeasureTheory.MeasurableSpace.Defs
-public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
 
-public import LeanPool.RlTheoryInLean.Defs
 public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 public import LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
 public import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
+import Mathlib.Probability.Kernel.Composition.IntegralCompProd
 
 /-!
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite.Defs

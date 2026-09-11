@@ -5,9 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ConvexK3.TailClosure
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Tactic.Linarith
+public import LeanPool.Erdos132ConvexK3.Geometry
+public import LeanPool.Erdos132ConvexK3.UseSite
+import LeanPool.Erdos132ConvexK3.TailClosure
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # Terminal-color closure at the maximal-gap use site

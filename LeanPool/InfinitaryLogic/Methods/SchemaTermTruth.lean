@@ -6,6 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.SchemaTermModel
+public import LeanPool.InfinitaryLogic.Methods.SchemaOmegaWitness
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # Layer 7b, checkpoint 5b-3: the restricted schema truth lemma
 

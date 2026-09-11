@@ -7,6 +7,10 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Vorspiel.RelItr
 public import LeanPool.Incompleteness.Foundation.Vorspiel.BinaryRelations
+public import Mathlib.Tactic.Attr.Core
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-! # Geachean -/
 

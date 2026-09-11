@@ -5,11 +5,11 @@ Authors: Sven Manthe
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.TautoSet
-public import Mathlib.Data.Set.Disjoint
-public import Mathlib.Data.Set.Notation
-public import Mathlib.Order.Filter.Basic
+public import Mathlib.Data.Set.BooleanAlgebra
+public import Mathlib.Order.Filter.Defs
+import Mathlib.Order.Filter.Basic
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.TautoSet
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General

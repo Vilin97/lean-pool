@@ -5,7 +5,13 @@ Authors: Math_XMUM
 -/
 module
 
-public import LeanPool.Brouwer.Brouwer
+public import LeanPool.Brouwer.ScarfPath
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Primitive sets and the slack-vector form of Scarf's lemma

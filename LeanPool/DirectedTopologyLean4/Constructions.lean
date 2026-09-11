@@ -6,7 +6,7 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 module
 
 public import LeanPool.DirectedTopologyLean4.DirectedMap
-public import LeanPool.DirectedTopologyLean4.MonotonePath
+import LeanPool.DirectedTopologyLean4.MonotonePath
 
 /-!
 # LeanPool.DirectedTopologyLean4.Constructions

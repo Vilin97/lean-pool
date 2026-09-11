@@ -6,8 +6,9 @@ Authors: Paul Mure, Joonhyup Lee
 module
 
 public import LeanPool.Lean4Itree.ITree.Basic
-public import LeanPool.Lean4Itree.Paco.PacoDefs
-public import LeanPool.Lean4Itree.Paco.PacoTactics
+import LeanPool.Lean4Itree.Paco.PacoDefs
+import LeanPool.Lean4Itree.Paco.PacoTactics
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Monad structure on interaction trees

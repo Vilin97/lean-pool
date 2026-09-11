@@ -5,10 +5,6 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Opposites
-public import Mathlib.Algebra.Module.LinearMap.Basic
-public import Mathlib.Data.Opposite
-public import Mathlib.Algebra.Algebra.Equiv
 public import Mathlib.Algebra.Algebra.Opposite
 
 /-!

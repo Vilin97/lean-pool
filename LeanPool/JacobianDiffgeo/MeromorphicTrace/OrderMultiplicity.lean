@@ -11,7 +11,10 @@ the design's 6-file plan.
 module
 
 public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Order↔multiplicity bridges (meromorphic-trace, cluster 1)

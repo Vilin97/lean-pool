@@ -5,8 +5,9 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Card
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # Basic definitions for graph pebbling

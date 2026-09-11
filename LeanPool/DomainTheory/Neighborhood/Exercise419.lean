@@ -7,6 +7,12 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Example44
 public import LeanPool.DomainTheory.Neighborhood.Exercise326
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 4.19 (Scott 1981, PRG-19, Lecture IV) — verifying Example 4.4

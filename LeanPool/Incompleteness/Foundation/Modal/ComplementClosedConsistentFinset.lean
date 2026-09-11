@@ -5,9 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import Mathlib.Data.Set.Finite.Powerset
 public import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
 public import LeanPool.Incompleteness.Foundation.Modal.Complement
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+import Mathlib.Data.Finset.Powerset
 
 /-! # ComplementClosedConsistentFinset -/
 

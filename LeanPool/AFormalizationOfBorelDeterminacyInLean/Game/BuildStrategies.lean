@@ -6,6 +6,14 @@ Authors: Sven Manthe
 module
 
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Subset
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies

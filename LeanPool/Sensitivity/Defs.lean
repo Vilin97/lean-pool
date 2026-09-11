@@ -5,8 +5,6 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import Mathlib.Data.Fin.Basic
-public import Mathlib.Data.Finset.Card
 public import Mathlib.Data.Fintype.Pi
 public import Mathlib.Data.Finset.Lattice.Fold
 

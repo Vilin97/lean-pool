@@ -6,6 +6,7 @@ Authors: Rodrigo Gutierrez, Yves Jäckle
 module
 
 public import LeanPool.Turan3.Turans3rdProof
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Turán's theorem (the "Book" weighting proof)

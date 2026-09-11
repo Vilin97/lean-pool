@@ -5,15 +5,20 @@ Authors: Bhavik Mehta
 -/
 module
 
-public import Mathlib.Algebra.Order.Field.Basic
-public import Mathlib.Algebra.Order.Field.Rat
-public import Mathlib.Algebra.Order.Star.Basic
-public import Mathlib.Data.Countable.Basic
 public import Mathlib.Data.Setoid.Partition
-public import Mathlib.Order.Filter.AtTopBot.Basic
-public import Mathlib.Order.Interval.Set.Infinite
 
-public import LeanPool.AharoniKorman.ForMathlib.Misc
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Algebra.Order.Ring.Unbundled.Rat
+public import Mathlib.Data.Nat.Cast.Order.Ring
+public import Mathlib.Order.Filter.AtTopBot.Defs
+public import Mathlib.Order.WellFoundedSet
+import LeanPool.AharoniKorman.ForMathlib.Misc
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Algebra.Order.Ring.Rat
+import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Data.Countable.Basic
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Order.Interval.Set.Infinite
 
 /-!
 # Disproof of the Aharoni–Korman conjecture

@@ -6,6 +6,9 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Main
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Conditional formalization of Zhou's Connes-rigidity counterexample

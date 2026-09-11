@@ -5,23 +5,17 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import Mathlib.Algebra.Group.Prod
 public import Mathlib.Algebra.Group.Fin.Basic
-public import Mathlib.Algebra.Group.Hom.Basic
-public import Mathlib.Data.Int.Basic
-public import Mathlib.Data.Fin.Basic
 public import LeanPool.Polylean.UnitConjecture.MetabelianGroup
 public import LeanPool.Polylean.UnitConjecture.AddFreeGroup
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 ## The construction of the group `P`

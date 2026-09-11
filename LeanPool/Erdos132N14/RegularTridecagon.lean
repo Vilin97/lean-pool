@@ -7,12 +7,8 @@ module
 
 public import LeanPool.Erdos132N14.Basic
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-public import Mathlib.RingTheory.RootsOfUnity.Complex
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Lean.Elab.Tactic.Omega
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+import Mathlib.RingTheory.RootsOfUnity.Complex
 
 /-!
 # The three classified thirteen-point templates

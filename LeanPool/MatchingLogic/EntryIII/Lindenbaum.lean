@@ -15,7 +15,7 @@ of TR Lemma 71.
 module
 
 public import LeanPool.MatchingLogic.EntryIII.LocalTheory
-public import Mathlib.Order.Zorn
+import Mathlib.Order.Zorn
 
 /-!
 # MatchingLogic.EntryIII.Lindenbaum

@@ -5,8 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
-public import Mathlib.Topology.UnitInterval
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `ChartChain`: a Lebesgue-number chart subdivision along a path (CC6)

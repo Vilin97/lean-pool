@@ -6,6 +6,11 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 module
 
 public import LeanPool.PartialRegularity.Extension
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Almost all primes are partially regular

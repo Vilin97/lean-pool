@@ -5,11 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
-public import LeanPool.JacobianDiffgeo.Dbar.Operator
 public import LeanPool.JacobianDiffgeo.Cech.Cochains
-public import LeanPool.JacobianDiffgeo.Cech.Refinement
-public import LeanPool.JacobianDiffgeo.Meromorphic
+import LeanPool.JacobianDiffgeo.Cech.Refinement
+import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Disk acyclicity of `𝒪_D` (`Jacobian/Dbar/DiskAcyclic.lean`)

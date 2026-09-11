@@ -24,6 +24,11 @@ public import LeanPool.Redhill.Odd.Pell
 public import LeanPool.Redhill.Odd.Subsum
 public import LeanPool.Redhill.ToMathlib.NatAbs
 public import LeanPool.Redhill.ToMathlib.NatSumProd
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Improved Lower Bounds for Strong n-Conjectures

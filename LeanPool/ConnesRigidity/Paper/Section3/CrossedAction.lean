@@ -11,9 +11,8 @@ the paper-facing layer. Paper: §3.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
 public import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
-public import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActions
 
 /-!
 The crossed action component of the Connes rigidity formalization.

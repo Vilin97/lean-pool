@@ -6,8 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
-public import LeanPool.JacobianDiffgeo.CanonicalForms
-public import Mathlib.LinearAlgebra.Finsupp.LSum
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # `pair`: the Serre pairing (Miranda's `Res_ω`), purely algebraic (serre-duality-cech, §2 D2)

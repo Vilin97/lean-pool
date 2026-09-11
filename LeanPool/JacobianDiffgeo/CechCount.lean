@@ -9,6 +9,9 @@ public import LeanPool.JacobianDiffgeo.CechCount.Mul
 public import LeanPool.JacobianDiffgeo.CechCount.Surjective
 public import LeanPool.JacobianDiffgeo.CechCount.Count
 public import LeanPool.JacobianDiffgeo.CechCount.Final
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # cechcount: the final gate — `dim H¹(𝒪_X) ≤ genus X` (namespace `RS` / `RS.Cech`)

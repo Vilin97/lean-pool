@@ -5,14 +5,12 @@ Authors: Seewoo Lee
 -/
 module
 
-public import Mathlib.Algebra.CharP.Defs
-public import Mathlib.Algebra.EuclideanDomain.Defs
-public import Mathlib.RingTheory.MvPowerSeries.Basic
-public import Mathlib.Algebra.Polynomial.Expand
-public import Mathlib.Algebra.Polynomial.Coeff
-public import Mathlib.Logic.Lemmas
-public import LeanPool.LeanPolyABC.MasonStothers
 public import Mathlib.RingTheory.Coprime.Basic
+public import LeanPool.LeanPolyABC.Lib.Max3
+public import Mathlib.Algebra.Polynomial.Derivative
+import LeanPool.LeanPolyABC.MasonStothers
+import Mathlib.Algebra.Polynomial.Expand
+import Mathlib.Data.Sym.Sym2.Init
 
 /-!
 # LeanPool.LeanPolyABC.Corollaries.FltCatalan

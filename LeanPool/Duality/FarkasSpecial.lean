@@ -6,7 +6,16 @@ Authors: Martin Dvorak
 module
 
 public import LeanPool.Duality.ExtendedFields
-public import LeanPool.Duality.FarkasBasic
+public import LeanPool.Duality.Common
+public import Mathlib.Algebra.Order.Nonneg.Basic
+public import Mathlib.LinearAlgebra.Matrix.Defs
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import LeanPool.Duality.FarkasBasic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Ineq
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.Duality.FarkasSpecial

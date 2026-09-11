@@ -12,9 +12,15 @@ public import Mathlib.GroupTheory.RegularWreathProduct
 public import Mathlib.RingTheory.SimpleRing.Principal
 
 public import LeanPool.QuadraticIterates.ArchMath1992.Sequences
-public import LeanPool.QuadraticIterates.Mathlib.Data.Nat
 public import LeanPool.QuadraticIterates.Mathlib.FieldTheory.Multiquadratic
-public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
+public import Mathlib.Order.CompletePartialOrder
+import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
+import LeanPool.QuadraticIterates.Mathlib.Data.Nat
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # The iterates of `X² + a`, their splitting fields and Galois groups

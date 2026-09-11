@@ -5,12 +5,12 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.PosDef
 
 public import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness

@@ -5,9 +5,10 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.AnalyticParameterIntegral
 public import Mathlib.Analysis.Analytic.ChangeOrigin
-public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Uniform fiber series from one joint analytic ball

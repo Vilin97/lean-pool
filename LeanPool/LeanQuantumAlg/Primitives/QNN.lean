@@ -6,7 +6,6 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.DynamicalLieAlgebra
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.Overparametrization
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.Trainability
@@ -14,6 +13,9 @@ public import LeanPool.LeanQuantumAlg.Primitives.QNN.LieAlgebraicBP
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.VarianceFormula
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.FullDLABasis
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.PauliPropagation
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quantum neural networks: dynamical Lie algebras and trainability

@@ -8,6 +8,11 @@ module
 public import LeanPool.VirasoroProject.IndexTri
 public import LeanPool.VirasoroProject.LieVerma
 public import LeanPool.VirasoroProject.VirasoroAlgebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Verma modules for the Virasoro algebra

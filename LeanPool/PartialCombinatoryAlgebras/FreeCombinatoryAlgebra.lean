@@ -5,8 +5,9 @@ Authors: Andrej Bauer
 -/
 module
 
-public import LeanPool.PartialCombinatoryAlgebras.Basic
 public import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-! # Free (total) combinatory algebra -/
 

@@ -6,9 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.RotatingEllipse
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Ring
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Periodic Kepler ellipses at rational Delaunay resonances

@@ -6,7 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalEMEquivariance
-public import Mathlib.ModelTheory.Encoding
+import Mathlib.ModelTheory.Encoding
 
 /-!
 # Skeleton compression: finite-support term codes

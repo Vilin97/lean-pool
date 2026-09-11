@@ -5,8 +5,11 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import LeanPool.Erdos137.Finiteness
 public import LeanPool.Erdos137.Base
+import Mathlib.Algebra.BigOperators.Associated
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: the parametric `g`-block framework (unifying `g = 3` and `g = 5`)

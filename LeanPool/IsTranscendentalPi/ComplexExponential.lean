@@ -5,10 +5,13 @@ Authors: James Huang, Samuël Borza
 -/
 module
 
-public import Mathlib.Analysis.Complex.Polynomial.Basic
-public import Mathlib.Algebra.Order.Group.Pointwise.Interval
-public import LeanPool.IsTranscendentalPi.IncrementalDerivatives
 public import LeanPool.IsTranscendentalPi.SymmetricPolynomials
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.IsTranscendentalPi.IncrementalDerivatives
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The complex exponential and subset sums

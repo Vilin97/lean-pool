@@ -6,7 +6,13 @@ Authors: GPT-6 Astra, Tom Adamczewski
 module
 
 public import Mathlib.Algebra.Algebra.NonUnitalSubalgebra
-public import LeanPool.Koethe.Linearization.Pencil
+public import LeanPool.Koethe.Linearization.Basic
+import LeanPool.Koethe.Linearization.Pencil
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Nilness of the positive algebra from nilness of all root-row pencils

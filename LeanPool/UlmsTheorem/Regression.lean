@@ -5,7 +5,13 @@ Authors: Elan Roth
 -/
 module
 
-public import LeanPool.UlmsTheorem.Ulm.Theorem
+public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
+import LeanPool.UlmsTheorem.Ulm.Theorem
+import Mathlib.Algebra.NoZeroSMulDivisors.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.LinearAlgebra.Dimension.Finite
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 DIFFERENTIAL TEST OF `ulm_theorem` AGAINST INDEPENDENTLY-KNOWN GROUND TRUTH.

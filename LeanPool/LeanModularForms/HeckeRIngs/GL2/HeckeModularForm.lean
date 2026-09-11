@@ -6,6 +6,8 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GL2.HeckeAction
+public import Mathlib.NumberTheory.ModularForms.Basic
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativity
 
 /-!
 # Hecke Operators as Endomorphisms of Modular Forms

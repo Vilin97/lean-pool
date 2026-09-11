@@ -6,6 +6,14 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+public import Mathlib.RingTheory.TensorProduct.Maps
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.BrauerGroupNew.Morita.TensorProduct

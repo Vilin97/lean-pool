@@ -16,6 +16,9 @@ public import LeanPool.JacobianDiffgeo.Abel.LinkData
 public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
 public import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
 public import LeanPool.JacobianDiffgeo.Abel.OfCurveInj
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: Abel's theorem (Forster 20.7, dissection-free), `ofCurve_inj`

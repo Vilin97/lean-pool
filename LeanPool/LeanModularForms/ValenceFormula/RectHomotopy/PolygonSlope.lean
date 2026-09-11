@@ -5,7 +5,10 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Polygon slope analysis and derivative bounds

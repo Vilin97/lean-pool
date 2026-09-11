@@ -5,15 +5,8 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Topology.Sets.Opens
-public import Mathlib.Topology.Compactness.Compact
-public import Mathlib.Topology.Separation.Basic
-public import Mathlib.Topology.OpenPartialHomeomorph.Basic
 public import Mathlib.Geometry.Manifold.ChartedSpace
 public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Logic.Equiv.Fin.Basic
-public import Mathlib.Data.Fintype.EquivFin
-public import Mathlib.Order.Directed
 
 /-!
 # Finite covers and their refinement preorder (CC8, D2/D3/D4)

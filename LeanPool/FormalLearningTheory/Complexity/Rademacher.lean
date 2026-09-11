@@ -5,13 +5,9 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Complexity.VCDimension
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Algebra.Order.Chebyshev
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # Rademacher Complexity

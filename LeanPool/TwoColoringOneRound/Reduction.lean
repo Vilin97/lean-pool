@@ -6,12 +6,11 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.Definitions
-public import LeanPool.TwoColoringOneRound.LowerBound.Defs
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
-public import Mathlib.Logic.Equiv.Set
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Reduction: local rules → finite coloring bound

@@ -5,11 +5,11 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Algebra.EuclideanDomain.Int
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.RingTheory.PrincipalIdealDomain
 public import Mathlib.RingTheory.Radical.Basic
 public import LeanPool.Redhill.Common.MaxAbs
+import Mathlib.Algebra.EuclideanDomain.Int
+import Mathlib.RingTheory.PrincipalIdealDomain
 
 /-!
 # Qualities of tuples and sets of tuples

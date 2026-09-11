@@ -5,7 +5,13 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 module
 
-public import LeanPool.DeadEnds.PrimeTail
+public import LeanPool.DeadEnds.Basic
+public import Mathlib.NumberTheory.PrimeCounting
+import LeanPool.DeadEnds.PrimeTail
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Bounding the finite set of primes relevant to square-divisibility violations.

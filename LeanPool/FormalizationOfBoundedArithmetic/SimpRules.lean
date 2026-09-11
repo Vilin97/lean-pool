@@ -5,7 +5,11 @@ Authors: ruplet
 -/
 module
 
-public import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Push
+import LeanPool.FormalizationOfBoundedArithmetic.Register
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Floor
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.SimpRules

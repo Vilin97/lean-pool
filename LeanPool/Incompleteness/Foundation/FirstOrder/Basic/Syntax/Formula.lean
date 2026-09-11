@@ -7,6 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
 public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
+public import Mathlib.Data.Finset.Max
+import Mathlib.Algebra.Order.Ring.Nat
 
 /-!
 # Formulas of first-order logic

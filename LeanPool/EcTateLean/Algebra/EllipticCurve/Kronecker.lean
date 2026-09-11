@@ -5,12 +5,19 @@ Authors: Alex J. Best
 -/
 module
 
-public import Mathlib.Data.Int.Basic
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.Logic.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Data.Nat.Order.Lemmas
-public import Mathlib.Data.Nat.ModEq
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Int.Notation
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.NeZero
+import Mathlib.Algebra.Order.ZeroLEOne
+import Mathlib.Data.Nat.Basic
+import Mathlib.Order.RelClasses
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.Push
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker

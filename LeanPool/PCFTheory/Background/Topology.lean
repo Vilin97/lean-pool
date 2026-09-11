@@ -7,7 +7,6 @@ module
 
 public import Mathlib.SetTheory.Ordinal.Topology
 public import Mathlib.Topology.DerivedSet
-public import LeanPool.PCFTheory.Background.Ordinal
 
 /-!
 # Topological results on ordinals

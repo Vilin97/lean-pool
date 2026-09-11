@@ -6,10 +6,7 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
-public import Mathlib.LinearAlgebra.Isomorphisms
-public import Mathlib.LinearAlgebra.Quotient.Basic
-public import Mathlib.LinearAlgebra.StdBasis
-public import Mathlib.RingTheory.Ideal.Quotient.Operations
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # The finite-free quotient by a prepared polynomial

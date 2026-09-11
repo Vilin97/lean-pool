@@ -5,10 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.Mycielski
-public import LeanPool.InfinitaryLogic.Descriptive.KuratowskiUlam
 public import LeanPool.InfinitaryLogic.Descriptive.GSGraph
-public import LeanPool.InfinitaryLogic.Descriptive.G0Fusion
+import LeanPool.InfinitaryLogic.Descriptive.G0Fusion
+import LeanPool.InfinitaryLogic.Descriptive.KuratowskiUlam
+import LeanPool.InfinitaryLogic.Descriptive.Mycielski
+import Mathlib.Topology.Baire.LocallyCompactRegular
 /-!
 # Silver via the classical category route (Miller): interface layer
 

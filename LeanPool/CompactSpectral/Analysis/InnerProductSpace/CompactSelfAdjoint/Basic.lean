@@ -5,7 +5,10 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Spectrum
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 
 /-!
 # Compact self-adjoint operators: compression / restriction helpers

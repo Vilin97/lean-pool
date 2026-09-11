@@ -6,8 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.WellKnown
-public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Soundness
-public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Basic
+public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Basic
+import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Basic
 
 /-! # Classical -/
 

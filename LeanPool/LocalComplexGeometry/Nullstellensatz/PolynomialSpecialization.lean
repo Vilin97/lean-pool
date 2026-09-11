@@ -5,9 +5,8 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Germs.Representatives
-public import Mathlib.Algebra.Polynomial.Eval.Coeff
-public import Mathlib.Order.Filter.Finite
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Specializing polynomial identities of function germs

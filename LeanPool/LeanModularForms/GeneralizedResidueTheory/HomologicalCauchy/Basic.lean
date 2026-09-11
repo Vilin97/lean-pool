@@ -6,10 +6,14 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import Mathlib.Analysis.Calculus.FDeriv.Mul
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Null-Homologous Curves: Definitions and Convexity Bridge

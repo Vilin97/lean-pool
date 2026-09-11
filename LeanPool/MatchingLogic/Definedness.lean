@@ -35,7 +35,10 @@ Statements pinned before any proof was attempted.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryPoints
+public import LeanPool.MatchingLogic.ProofSystem
+import LeanPool.MatchingLogic.EntryPoints
+import LeanPool.MatchingLogic.Soundness
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.Definedness

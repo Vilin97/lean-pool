@@ -14,6 +14,7 @@ before any proof was attempted.
 module
 
 public import LeanPool.MatchingLogic.Core
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.Semantics

@@ -5,7 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.LogicAction
+public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Complement closure for isomorphism-invariant classes
 

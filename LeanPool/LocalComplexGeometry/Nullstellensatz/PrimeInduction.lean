@@ -5,9 +5,13 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.Coordinates
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
-public import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
+public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+import LeanPool.LocalComplexGeometry.Nullstellensatz.Coordinates
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
+import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
+import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Reduction of the prime theorem to prepared coordinates

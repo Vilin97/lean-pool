@@ -8,6 +8,10 @@ module
 public import LeanPool.DomainTheory.Neighborhood.Approximable
 public import LeanPool.DomainTheory.Neighborhood.Example12
 public import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.SetLike
 
 /-!
 # Example 2.3 (Scott 1981, PRG-19, §2) — the parity map `f : B → T`

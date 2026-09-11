@@ -5,10 +5,14 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.MainTheorem
-public import LeanPool.Chudnovsky.Numerics
-public import LeanPool.Chudnovsky.SingularModuli
-public import LeanPool.Chudnovsky.ComplexMult
+public import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.ComplexMult
+import LeanPool.Chudnovsky.MainTheorem
+import LeanPool.Chudnovsky.Numerics
+import LeanPool.Chudnovsky.SingularModuli
+import LeanPool.Chudnovsky.SingularModuli.CMRelations
+import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # The coefficients at `τ₁₆₃` (Milla, ch. 10)

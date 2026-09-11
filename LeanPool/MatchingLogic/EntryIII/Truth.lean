@@ -16,7 +16,8 @@ module
 
 public import LeanPool.MatchingLogic.EntryIII.Completion
 public import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # MatchingLogic.EntryIII.Truth

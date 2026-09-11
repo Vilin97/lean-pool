@@ -5,11 +5,13 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Analysis.Normed.Order.Lattice
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
+public import Mathlib.Analysis.Normed.Group.Constructions
+public import Mathlib.Analysis.Normed.Group.Real
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Simultaneous Diophantine approximation: the remainder-vector difference inequality

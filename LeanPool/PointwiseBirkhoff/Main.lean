@@ -5,22 +5,13 @@ Authors: Lua Viana Reis, Oliver Butterley, Pietro Monticone
 -/
 module
 
-public import Mathlib.Algebra.Order.Group.PartialSups
-public import Mathlib.Algebra.Order.SuccPred.PartialSups
-public import Mathlib.Dynamics.BirkhoffSum.QuasiMeasurePreserving
 public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 public import Mathlib.MeasureTheory.MeasurableSpace.Invariants
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.Dynamics.BirkhoffSum.Average
+import Mathlib.Algebra.Order.Group.PartialSups
+import Mathlib.Dynamics.BirkhoffSum.QuasiMeasurePreserving
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # LeanPool.PointwiseBirkhoff.Main
 -/

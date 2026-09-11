@@ -23,6 +23,14 @@ public import LeanPool.Polylean.ConjInvLength.MemoLength
 public import LeanPool.Polylean.ConjInvLength.ProvedBound
 public import LeanPool.Polylean.ConjInvLength.WordTree
 public import LeanPool.Polylean.Polymath
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Polylean Unit Conjecture Counterexample

@@ -7,6 +7,10 @@ module
 
 public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly
 public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly.ResidueSide
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # PV Chain: Residue Side and Modular Side

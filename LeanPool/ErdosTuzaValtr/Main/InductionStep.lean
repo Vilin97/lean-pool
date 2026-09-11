@@ -5,12 +5,13 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Data.Nat.Choose.Basic
-public import Mathlib.Data.Finset.Basic
-public import LeanPool.ErdosTuzaValtr.Config.Default
-public import LeanPool.ErdosTuzaValtr.Etv.Default
 public import LeanPool.ErdosTuzaValtr.Main.Defs
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.Default
+public import LeanPool.ErdosTuzaValtr.Etv.AlphaBeta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.InductionStep

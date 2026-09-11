@@ -5,8 +5,14 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.QuantumGraph.Basic
-public import LeanPool.Monlib4.QuantumGraph.Example
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+import LeanPool.Monlib4.LinearAlgebra.MySpec
 
 /-!
  # Isomorphisms between quantum graphs

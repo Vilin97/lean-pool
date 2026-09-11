@@ -5,11 +5,16 @@ Authors: Carles Marín
 -/
 module
 
-public import Mathlib.Data.Rat.Defs
-public import Mathlib.Data.List.Basic
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Ring.Rat
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Certified Runge-Kutta Order Conditions

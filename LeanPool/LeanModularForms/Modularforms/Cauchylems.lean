@@ -6,9 +6,11 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.IccIcoLems
-public import LeanPool.LeanModularForms.Modularforms.RiemannZetalems
 public import LeanPool.LeanModularForms.Modularforms.SummableLems
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
+import LeanPool.LeanModularForms.Modularforms.IccIcoLems
+import LeanPool.LeanModularForms.Modularforms.RiemannZetalems
+import Mathlib.Data.Int.Star
 
 /-! # Cauchylems -/
 

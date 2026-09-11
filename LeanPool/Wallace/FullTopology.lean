@@ -6,6 +6,8 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 module
 
 public import LeanPool.Wallace.NontrivialSequences
+public import Mathlib.Analysis.Normed.Group.Quotient
+import Mathlib.Analysis.Normed.Group.AddCircle
 
 /-!
 # Full topological consequences of the character construction

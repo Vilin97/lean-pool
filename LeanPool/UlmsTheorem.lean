@@ -6,6 +6,9 @@ Authors: Elan Roth
 module
 
 public import LeanPool.UlmsTheorem.Regression
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Ulm's theorem for countable reduced abelian p-groups

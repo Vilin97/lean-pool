@@ -6,9 +6,13 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Analytic.Rank
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-public import Mathlib.Topology.Algebra.Module.Complement
-public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.RingTheory.SimpleModule.Basic
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Linear algebra for the constant-rank theorem

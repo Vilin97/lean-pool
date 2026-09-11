@@ -5,17 +5,13 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.RingTheory.Artinian.Ring
-public import Mathlib.RingTheory.SimpleRing.Basic
-public import Mathlib.Algebra.Ring.Idempotent
-public import Mathlib.Algebra.Group.Basic
-public import Mathlib.RingTheory.Ideal.Span
-public import Mathlib.Algebra.Ring.Defs
-public import Mathlib.RingTheory.SimpleModule.Basic
-public import LeanPool.ArtinWedderburn.PrimeRing
-public import LeanPool.ArtinWedderburn.CornerRing
-public import LeanPool.ArtinWedderburn.Idempotents
 public import LeanPool.ArtinWedderburn.CornerCornerLemma
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Nice ideals and the induction step in Artin–Wedderburn

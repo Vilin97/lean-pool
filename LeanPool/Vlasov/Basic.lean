@@ -7,24 +7,17 @@ module
 
 import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
 
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Add
-public import Mathlib.Analysis.Calculus.Deriv.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Analysis.Calculus.Deriv.Prod
 public import Mathlib.Analysis.Calculus.Gradient.Basic
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-public import Mathlib.Analysis.ODE.Gronwall
-public import Mathlib.MeasureTheory.Function.L2Space
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.MeasureTheory.Measure.Dirac
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.MeasureTheory.Measure.Prokhorov
-public import Mathlib.MeasureTheory.Measure.Tight
 public import LeanPool.Vlasov.Base.Geometry
 public import LeanPool.Vlasov.OT.Wasserstein
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.ODE.Gronwall
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Measure.Prokhorov
 
 /-!
 # Derivation of the Vlasov equation from N-particle Hamiltonian dynamics

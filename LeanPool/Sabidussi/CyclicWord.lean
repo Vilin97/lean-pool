@@ -7,10 +7,17 @@ module
 
 public import LeanPool.Sabidussi.LocalPattern
 public import LeanPool.Sabidussi.OddBalance
-public import LeanPool.Sabidussi.Parity
 public import Mathlib.Data.Finset.Sort
 public import Mathlib.Logic.Equiv.Fin.Rotate
 public import Mathlib.Order.Interval.Finset.Fin
+import LeanPool.Sabidussi.Parity
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The cyclic-word four-colouring lemma

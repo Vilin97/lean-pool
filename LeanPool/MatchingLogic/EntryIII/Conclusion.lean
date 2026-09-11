@@ -14,11 +14,14 @@ countably infinite element-variable type.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.CanonicalConstruction
-public import LeanPool.MatchingLogic.EntryIII.ModelExistence
-public import LeanPool.MatchingLogic.EntryIII.SignatureReduction
-public import LeanPool.MatchingLogic.EntryIII.Renaming
-public import LeanPool.MatchingLogic.EntryPoints
+public import LeanPool.MatchingLogic.EntryIII.Countertheory
+public import Mathlib.Logic.Denumerable
+import LeanPool.MatchingLogic.EntryIII.CanonicalConstruction
+import LeanPool.MatchingLogic.EntryIII.ModelExistence
+import LeanPool.MatchingLogic.EntryIII.Renaming
+import LeanPool.MatchingLogic.EntryIII.SignatureReduction
+import LeanPool.MatchingLogic.EntryPoints
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # MatchingLogic.EntryIII.Conclusion

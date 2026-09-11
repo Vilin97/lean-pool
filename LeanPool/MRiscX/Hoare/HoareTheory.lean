@@ -5,10 +5,10 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.Elab.HoareElaborator
-public import LeanPool.MRiscX.Delab.DelabCode
-public import LeanPool.MRiscX.Semantics.MsTheory
-public import LeanPool.MRiscX.Util.BasicTheorems
+public import LeanPool.MRiscX.Hoare.HoareCore
+public import Mathlib.Data.Nat.Notation
+import Mathlib.Data.Set.Basic
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 This file contains some minor lemmas to ease the prove in the "main" file "HoareRules".

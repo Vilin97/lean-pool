@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132N14.Basic
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Coordinate geometry for the planar diameter bound

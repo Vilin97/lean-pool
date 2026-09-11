@@ -6,13 +6,18 @@ Authors: Yunzhou Xie, contributors
 module
 
 public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Equiv
-public import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.Defs
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span.Basic
 public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Lattice
-public import LeanPool.BrauerGroupNew.Subfield.Splitting
 public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
+public import Mathlib.Algebra.BrauerGroup.Defs
+public import Mathlib.FieldTheory.Galois.Basic
+import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.Defs
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Lattice
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Cross product algebra

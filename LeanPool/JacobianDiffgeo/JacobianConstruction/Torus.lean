@@ -6,12 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.ChartedSpaceKitV
-public import Mathlib.Topology.Algebra.Group.Quotient
-public import Mathlib.Topology.Algebra.ContinuousMonoidHom
 public import Mathlib.Algebra.Module.ZLattice.Basic
 public import Mathlib.Geometry.Manifold.Algebra.LieGroup
-public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-public import Mathlib.Analysis.Analytic.Linear
 
 /-!
 # The abstract torus layer: `V ⧸ L` for `L : AddSubgroup V`

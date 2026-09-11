@@ -6,9 +6,8 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
-public import Mathlib.Analysis.Convex.Cone.Extension
-public import Mathlib.Analysis.Normed.Group.InfiniteSum
-public import Mathlib.Analysis.PSeries
+import Mathlib.Analysis.Convex.Cone.Extension
+import Mathlib.Analysis.PSeries
 
 /-!
 # Nuclear Spaces (Pietsch characterization)

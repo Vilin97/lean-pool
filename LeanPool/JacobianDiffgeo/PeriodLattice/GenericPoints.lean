@@ -5,11 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
-public import LeanPool.JacobianDiffgeo.Path.Perturb
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-public import Mathlib.Data.Fintype.EquivFin
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+import LeanPool.JacobianDiffgeo.Path.Perturb
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Generic points (Forster §21.3)

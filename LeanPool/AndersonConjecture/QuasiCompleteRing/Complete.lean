@@ -6,9 +6,9 @@ Authors: FrenzyMath
 module
 
 public import LeanPool.AndersonConjecture.Basic
-public import Mathlib.RingTheory.Filtration
-public import Mathlib.RingTheory.HopkinsLevitzki
-public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+import Mathlib.RingTheory.Filtration
+import Mathlib.RingTheory.HopkinsLevitzki
+import Mathlib.RingTheory.Ideal.Quotient.Noetherian
 
 /-!
 # Complete Implies Quasi-Complete

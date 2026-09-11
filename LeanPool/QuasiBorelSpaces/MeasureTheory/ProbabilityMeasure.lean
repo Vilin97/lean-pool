@@ -5,18 +5,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Probability.Kernel.Composition.MeasureComp
-public import Mathlib.MeasureTheory.Constructions.UnitInterval
-public import Mathlib.MeasureTheory.MeasurableSpace.Defs
-public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
-public import Mathlib.Probability.CDF
-public import Mathlib.MeasureTheory.Constructions.Polish.Basic
-public import Mathlib.Order.CompleteSublattice
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-public import Mathlib.Analysis.SpecialFunctions.Sigmoid
+import Mathlib.Probability.Kernel.Composition.MeasureComp
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure

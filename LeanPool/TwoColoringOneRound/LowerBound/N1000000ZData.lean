@@ -5,7 +5,6 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Init
 /-! Auto-generated exact LDLᵀ data for the dual blocks `Z_r`. -/
 
 @[expose] public section

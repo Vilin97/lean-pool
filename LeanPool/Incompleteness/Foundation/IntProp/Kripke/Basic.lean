@@ -6,7 +6,10 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Vorspiel.BinaryRelations
-public import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Basic
+public import LeanPool.Incompleteness.Foundation.IntProp.Substitution
+public import LeanPool.Incompleteness.Foundation.Logic.Axioms
+public import LeanPool.Incompleteness.Foundation.Logic.Semantics
+import Mathlib.Tactic.Bound.Init
 
 /-! # Basic -/
 

@@ -6,7 +6,6 @@ Authors: Siddhartha Gadgil, Anand Rao
 module
 
 public import LeanPool.Polylean.ConjInvLength.Length
-public import Std.Data.HashMap
 
 /-!
 # Cached proof nodes for conjugacy-invariant length bounds

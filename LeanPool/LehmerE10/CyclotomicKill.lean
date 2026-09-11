@@ -5,10 +5,13 @@ Authors: Dillon Ryan
 -/
 module
 
-public import LeanPool.LehmerE10.Kronecker
-public import Mathlib.RingTheory.Polynomial.Cyclotomic.Eval
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-public import Mathlib.FieldTheory.Minpoly.Field
+public import LeanPool.LehmerE10.Defs
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+import LeanPool.LehmerE10.Kronecker
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.RingTheory.Polynomial.Cyclotomic.Eval
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # no cyclotomic polynomial divides Lehmer's polynomial, and the

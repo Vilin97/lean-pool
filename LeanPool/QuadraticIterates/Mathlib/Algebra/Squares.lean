@@ -5,11 +5,14 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Data.Int.Star
-public import Mathlib.Data.Rat.Star
-public import Mathlib.NumberTheory.SumTwoSquares
-public import Mathlib.RingTheory.Int.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.ZMod.Defs
+public import Mathlib.RingTheory.Coprime.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Rat.Star
+import Mathlib.NumberTheory.SumTwoSquares
+import Mathlib.RingTheory.Int.Basic
 
 /-!
 # Lemmas about squares

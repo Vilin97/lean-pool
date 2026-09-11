@@ -5,10 +5,13 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
 public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
-public import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
-public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
+import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
+import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Finite projection for analytic hypersurface germs

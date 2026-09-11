@@ -6,8 +6,7 @@ Authors: YnirPaz
 module
 
 public import Mathlib.SetTheory.Ordinal.Arithmetic
-public import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
-public import Mathlib.Order.SuccPred.Limit
+import Mathlib.SetTheory.Ordinal.Family
 
 /-!
 # Background lemmas on ordinals

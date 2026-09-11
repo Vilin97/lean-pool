@@ -5,8 +5,10 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.Coefficients
 public import Mathlib.Analysis.Real.Pi.Chudnovsky
+public import LeanPool.Chudnovsky.Basic
+import LeanPool.Chudnovsky.Coefficients
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Glue: from Milla's `theohud` to Mathlib's `chudnovskySum = π⁻¹`

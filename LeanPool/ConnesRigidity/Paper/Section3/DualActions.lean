@@ -12,7 +12,11 @@ Paper: §§3--4.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 The dual actions component of the Connes rigidity formalization.

@@ -6,8 +6,12 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
-public import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
 public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
+import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Reconstruction and the code-class equality (issue #10, Unit 3b)
 

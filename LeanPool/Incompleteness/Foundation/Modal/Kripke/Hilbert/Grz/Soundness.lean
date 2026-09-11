@@ -5,12 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.ComplementClosedConsistentFinset
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomGrz
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Soundness -/
 

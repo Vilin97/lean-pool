@@ -6,6 +6,12 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 module
 
 public import LeanPool.OSforGFF.OS.OS3MixedRepInfra
+import LeanPool.OSforGFF.General.FourierTransforms
+import LeanPool.OSforGFF.General.LaplaceIntegral
+import LeanPool.OSforGFF.Spacetime.Decomposition
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # OS3 — Mixed Representation via Schwinger Parametrization

@@ -5,11 +5,11 @@ Authors: Jukka Suomela
 -/
 module
 
-public import LeanPool.TwoColoringOneRound.LowerBound.Defs
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuLinear
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuLinear
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound

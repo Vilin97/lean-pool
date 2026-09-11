@@ -7,7 +7,6 @@ module
 
 public import LeanPool.Sundogcert.SATNPHard
 public import LeanPool.Sundogcert.VarWheel
-public import Mathlib.Data.Fin.VecNotation
 
 /-!
   Sundogcert/ClauseGadget.lean — MILESTONE 3 of the `3SAT ≤ 3DM` marathon.

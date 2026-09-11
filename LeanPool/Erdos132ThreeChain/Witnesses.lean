@@ -6,7 +6,13 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132ThreeChain.Basic
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.Data.Finset.Card
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Witnesses for the chain configurations

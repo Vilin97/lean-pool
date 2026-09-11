@@ -5,8 +5,12 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.SimultaneousDirichlet
-public import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
+public import LeanPool.ThreeGap.TorusReduction
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.NumberTheory.Real.Irrational
+import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
+import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The `L∞` three-torus bound `g_∞ ≤ 2^d+1` is **sharp** for `d = 3`: nine distances attained

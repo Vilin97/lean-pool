@@ -5,7 +5,12 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.EuclideanRecords
+public import LeanPool.ThreeGap.ChevallierCount
+public import LeanPool.ThreeGap.EuclideanGrowth
+public import Mathlib.NumberTheory.Real.Irrational
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import LeanPool.ThreeGap.EuclideanRecords
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Euclidean isometry reduction: `gapVal` is the Euclidean nearest-neighbour distance

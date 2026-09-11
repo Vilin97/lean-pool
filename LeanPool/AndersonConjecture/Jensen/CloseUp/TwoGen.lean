@@ -5,8 +5,16 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.KrullDomain
+public import LeanPool.AndersonConjecture.Jensen.NSubring
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.KrullDomain
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Close-up: two-generator ideals

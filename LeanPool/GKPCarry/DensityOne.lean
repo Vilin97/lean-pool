@@ -6,7 +6,15 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.GKPCarry.InfiniteSieve
-public import Mathlib.Data.Nat.Cast.Order.Field
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # A density-one theorem for the GKP power-of-two condition

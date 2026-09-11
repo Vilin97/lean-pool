@@ -5,8 +5,11 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.OS.OS0Analyticity
-public import LeanPool.OSforGFF.Schwinger.GaussianMoments
+public import LeanPool.OSforGFF.Measure.Construct
+import LeanPool.OSforGFF.OS.OS0Analyticity
+import LeanPool.OSforGFF.Schwinger.GaussianMoments
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Gaussianity Verification

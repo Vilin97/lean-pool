@@ -5,12 +5,13 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.Algebra.Ring.Basic
-public import Mathlib.Data.Set.Basic
-public import Mathlib.RingTheory.Ideal.Defs
-public import Mathlib.Tactic.NoncommRing
-public import Mathlib.RingTheory.TwoSidedIdeal.Operations
 public import LeanPool.ArtinWedderburn.IdealProd
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Left and right multiplication sets

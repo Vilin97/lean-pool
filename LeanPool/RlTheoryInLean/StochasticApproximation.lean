@@ -6,6 +6,7 @@ Authors: Shangtong Zhang
 module
 
 public import LeanPool.RlTheoryInLean.StochasticApproximation.DiscreteGronwall
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # StochasticApproximation

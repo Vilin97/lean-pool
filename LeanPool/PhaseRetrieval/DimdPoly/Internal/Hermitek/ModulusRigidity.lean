@@ -13,6 +13,9 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! # ModulusRigidity -/
 

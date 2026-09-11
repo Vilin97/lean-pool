@@ -5,7 +5,8 @@ Authors: Yann Pequignot
 -/
 module
 
-public import Mathlib.Order.WellFoundedSet
+public import Mathlib.Order.WellQuasiOrder
+import Mathlib.Order.WellFoundedSet
 
 /-!
 # Regular sequences in a well quasi-order

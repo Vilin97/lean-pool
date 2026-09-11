@@ -12,10 +12,9 @@ as an implication field.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Core
-public import LeanPool.ConnesRigidity.Porting.CoreTransfer
 public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
 public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
+import LeanPool.ConnesRigidity.Porting.CoreTransfer
 
 /-!
 The property t transfer component of the Connes rigidity formalization.

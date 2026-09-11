@@ -7,10 +7,10 @@ module
 
 public import Mathlib.Analysis.Calculus.DiffContOnCl
 public import Mathlib.Analysis.Calculus.LineDeriv.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import LeanPool.SardMoreira.LebesgueDensity
-public import LeanPool.SardMoreira.ContDiff
-public import LeanPool.SardMoreira.ToMathlib.PR32186
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.SardMoreira.LebesgueDensity
+import LeanPool.SardMoreira.ToMathlib.PR32186
+import Mathlib.Analysis.Normed.Affine.AddTorsor
 
 /-!
 # LeanPool.SardMoreira.LocalEstimates

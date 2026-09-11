@@ -6,7 +6,9 @@ Authors: James Huang, Samuël Borza
 module
 
 public import LeanPool.IsTranscendentalPi.NivenPolynomials
-public import Mathlib.RingTheory.Int.Basic
+import LeanPool.IsTranscendentalPi.ComplexExponential
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.RingTheory.Int.Basic
 
 /-!
 # Analytic estimates

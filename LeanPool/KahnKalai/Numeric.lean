@@ -5,16 +5,10 @@ Authors: Dan Clemens Posch
 -/
 module
 
-public import Mathlib.Algebra.Order.Floor.Semifield
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Data.Nat.Choose.Sum
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Numeric inequalities for Tran–Vu’s covering induction (`L = 1000`).

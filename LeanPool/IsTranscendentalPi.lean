@@ -6,6 +6,7 @@ Authors: James Huang, Samuël Borza
 module
 
 public import LeanPool.IsTranscendentalPi.Main
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The transcendence of π

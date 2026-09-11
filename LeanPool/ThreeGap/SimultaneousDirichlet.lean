@@ -6,10 +6,8 @@ Authors: Vico Bonfioli
 module
 
 public import LeanPool.ThreeGap.TorusReduction
-public import Mathlib.Algebra.Order.Floor.Ring
-public import Mathlib.Data.Fintype.BigOperators
 public import Mathlib.NumberTheory.Real.Irrational
-public import Mathlib.Tactic.Push
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Simultaneous Dirichlet approximation ⟹ `RecordsContinue` (makes `g_∞ ≤ 2^d+1` unconditional)

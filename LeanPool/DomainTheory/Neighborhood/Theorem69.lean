@@ -6,7 +6,13 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Definition68
-public import LeanPool.DomainTheory.Neighborhood.Theorem41
+import LeanPool.DomainTheory.Neighborhood.Theorem41
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lecture VI — Theorem 6.9 (Scott 1981, PRG-19): homomorphisms out of a fixed

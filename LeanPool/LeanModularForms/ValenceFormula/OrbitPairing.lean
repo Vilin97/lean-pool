@@ -6,7 +6,7 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.Definitions
-public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
 
 /-!
 # Orbit Pairing Lemmas for the Valence Formula

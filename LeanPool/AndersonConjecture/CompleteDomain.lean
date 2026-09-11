@@ -8,6 +8,11 @@ module
 public import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
 public import LeanPool.AndersonConjecture.CompleteDomain.Domain
 public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Inv
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Complete Local Domain `T = ℂ[[x,y,z]]/(x²-yz)`

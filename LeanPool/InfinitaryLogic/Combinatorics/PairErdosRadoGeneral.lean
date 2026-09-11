@@ -5,11 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.SetTheory.Cardinal.Aleph
-public import Mathlib.SetTheory.Cardinal.Pigeonhole
-public import Mathlib.SetTheory.Cardinal.Regular
-public import Mathlib.Order.InitialSeg
 public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.SetTheory.Ordinal.Basic
+import Mathlib.SetTheory.Cardinal.Pigeonhole
 
 /-!
 # Pair Erdős–Rado, parameterized by the color bound `κ`

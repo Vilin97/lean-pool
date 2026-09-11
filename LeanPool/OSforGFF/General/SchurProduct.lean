@@ -5,10 +5,8 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Hadamard
-public import Mathlib.LinearAlgebra.Matrix.Kronecker
-public import Mathlib.Analysis.Matrix.Order
 public import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Schur Product Theorem

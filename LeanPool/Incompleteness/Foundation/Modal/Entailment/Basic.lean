@@ -6,8 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Logic.Disjunctive
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 public import LeanPool.Incompleteness.Foundation.Modal.Axioms
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
 
 /-! # Basic -/
 

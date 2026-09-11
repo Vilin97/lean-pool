@@ -5,8 +5,6 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Data.Sigma.Order
-public import Mathlib.Order.OmegaCompletePartialOrder
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sigma
 
 /-!

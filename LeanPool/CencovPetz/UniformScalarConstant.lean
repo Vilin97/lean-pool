@@ -5,8 +5,14 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.CencovPetz.ReplicationInvariance
-public import LeanPool.CencovPetz.UniformScalarMultiple
+public import LeanPool.CencovPetz.PermutationInvariantBilinForm
+import LeanPool.CencovPetz.PermutationInvariance
+import LeanPool.CencovPetz.ReplicationInvariance
+import LeanPool.CencovPetz.UniformScalarMultiple
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

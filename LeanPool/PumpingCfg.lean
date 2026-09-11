@@ -6,6 +6,7 @@ Authors: Alexander Loitzl, Martin Dvorak
 module
 
 public import LeanPool.PumpingCfg.Pumping
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Pumping Lemma for Context-Free Grammars

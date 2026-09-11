@@ -5,10 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Pi
 public import Mathlib.LinearAlgebra.Pi
 -- import Mathlib.LinearAlgebra.ProjectiveSpace.Basic
-public import LeanPool.Monlib4.Preq.Ites
+import Mathlib.Tactic.NormNum.Basic
 
 /-!
 

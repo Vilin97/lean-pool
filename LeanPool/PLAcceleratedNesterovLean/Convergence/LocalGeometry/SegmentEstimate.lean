@@ -5,9 +5,10 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
-public import Mathlib.Analysis.InnerProductSpace.Calculus
-public import Mathlib.Analysis.Calculus.ContDiff.Comp
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Segment Estimate Helpers

@@ -5,9 +5,12 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
 public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Frobenius as a group endomorphism of the Fermat cubic, and its kernel

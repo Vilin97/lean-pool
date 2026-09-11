@@ -18,6 +18,7 @@ public import LeanPool.MatchingLogic.Necessity
 public import LeanPool.MatchingLogic.Sanity
 public import LeanPool.MatchingLogic.SetVariables
 public import LeanPool.MatchingLogic.SortedProof
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Global completeness of one-sorted definedness-free matching logic

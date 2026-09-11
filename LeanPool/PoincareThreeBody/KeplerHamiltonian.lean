@@ -6,9 +6,7 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.KeplerFlow
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Tactic.FinCases
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-!
 # Differential of the rotating Kepler Hamiltonian

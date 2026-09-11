@@ -5,9 +5,10 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import Mathlib.Analysis.SpecificLimits.Basic
 public import LeanPool.Wallace.FiniteCombinatorics
 public import LeanPool.Wallace.UniformKronecker
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # A concrete schedule for the Wallace fusion

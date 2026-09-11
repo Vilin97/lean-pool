@@ -6,7 +6,6 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.GeometryReduction
-public import Mathlib.Logic.Equiv.Fintype
 
 /-! # Erdős 97 convex-octagon formalization: Relabelling -/
 

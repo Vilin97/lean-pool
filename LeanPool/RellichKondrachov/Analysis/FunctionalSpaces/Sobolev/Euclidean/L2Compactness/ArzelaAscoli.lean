@@ -6,10 +6,8 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Compactness
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
 
 /-!
 # `L²` compactness criterion: Arzelà–Ascoli for the smoothing operator (Euclidean)

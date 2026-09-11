@@ -5,8 +5,10 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.CircuitComplexity.EssentialInput
-public import LeanPool.CircuitComplexity.Internal.LowerBound
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-! # Gate Elimination Lower Bound
 

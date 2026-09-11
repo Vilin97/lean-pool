@@ -7,6 +7,9 @@ module
 
 public import LeanPool.RamanujanNagell.Basic
 public import LeanPool.RamanujanNagell.Helpers
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # The Ramanujan-Nagell theorem

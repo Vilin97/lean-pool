@@ -6,6 +6,7 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 module
 
 public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
+import Mathlib.Data.Rat.Floor
 
 /-!
 # The abstract every-base-size construction

@@ -6,6 +6,9 @@ Authors: Yann Pequignot
 module
 
 public import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-! Infinite-pigeonhole helpers for finite codomains. -/
 

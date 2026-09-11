@@ -6,16 +6,8 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.SpectralPositivity.Matrix.NonnegPower
-public import LeanPool.SpectralPositivity.Operator.JentzschProof
-public import Mathlib.Analysis.InnerProductSpace.l2Space
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.LinearAlgebra.Matrix.ToLin
-public import Mathlib.LinearAlgebra.Charpoly.ToMatrix
-public import Mathlib.LinearAlgebra.Eigenspace.Charpoly
-public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-public import Mathlib.Analysis.Convex.StdSimplex
-public import Mathlib.Topology.Order.Compact
-public import Mathlib.Topology.Sequences
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Perron–Frobenius Theorem for Nonneg Matrices

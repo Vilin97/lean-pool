@@ -8,6 +8,7 @@ module
 public import Mathlib.SetTheory.Ordinal.Arithmetic
 public import Mathlib.Algebra.Group.Subgroup.Map
 public import LeanPool.UlmsTheorem.PGroups.Subgroups
+import Mathlib.Algebra.Module.NatInt
 
 /-!
 # Ordinal Ulm subgroups

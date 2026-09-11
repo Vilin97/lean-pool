@@ -6,7 +6,10 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.DelaunayChart
-public import LeanPool.PoincareThreeBody.KeplerHamiltonian
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # Physical realization of the planar Delaunay actions

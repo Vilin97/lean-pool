@@ -5,18 +5,17 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Comp
-public import Mathlib.Analysis.Calculus.Implicit
 public import Mathlib.Topology.MetricSpace.HausdorffDimension
-public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 public import LeanPool.SardMoreira.ContDiffMoreiraHolder
-public import LeanPool.SardMoreira.ImplicitFunction
-public import LeanPool.SardMoreira.LinearAlgebra
-public import LeanPool.SardMoreira.ChartEstimates
-public import LeanPool.SardMoreira.WithRPowDist
-public import LeanPool.SardMoreira.OuterMeasureDeriv
-public import LeanPool.SardMoreira.ToMathlib.PR33029
-public import LeanPool.SardMoreira.ToMathlib.PR32993
+import LeanPool.SardMoreira.ChartEstimates
+import LeanPool.SardMoreira.ContDiff
+import LeanPool.SardMoreira.ImplicitFunction
+import LeanPool.SardMoreira.LebesgueDensity
+import LeanPool.SardMoreira.LinearAlgebra
+import LeanPool.SardMoreira.OuterMeasureDeriv
+import LeanPool.SardMoreira.WithRPowDist
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 # LeanPool.SardMoreira.MainTheorem

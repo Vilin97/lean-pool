@@ -6,10 +6,11 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section4.ChartMeasure
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartSpan
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
 public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralDetection
+public import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralDetection
+import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
+import LeanPool.ConnesRigidity.Paper.Section4.ChartSpan
 
 /-!
 Concrete §4 chart detector transport and the invariant-measure bound for

@@ -5,9 +5,10 @@ Authors: Wei Wang
 -/
 module
 
-public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeights
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIdentity
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Boundary and radius interfaces

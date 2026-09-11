@@ -5,8 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Surface
-public import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Form01 X`: smooth `(0,1)`-forms as chart-coefficient families (`Jacobian/Dbar/Form01.lean`)

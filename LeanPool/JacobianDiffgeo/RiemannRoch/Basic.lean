@@ -5,7 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.TailDuality
+public import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import LeanPool.JacobianDiffgeo.TailDuality.ChiLedger
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # riemann-roch: Riemann–Roch, `l(K) = g`, `deg K = 2g − 2`, the Riemann inequality

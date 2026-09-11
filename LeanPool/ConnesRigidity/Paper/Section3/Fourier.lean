@@ -12,14 +12,13 @@ Paper: §3.
 -/
 module
 
-public import Mathlib.Analysis.Fourier.Notation
-public import Mathlib.MeasureTheory.Function.ContinuousMapDense
 public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Group.Integral
-public import Mathlib.RingTheory.PicardGroup
-public import Mathlib.RingTheory.TotallySplit
-public import Mathlib.Topology.Metrizable.Urysohn
 public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.MeasureTheory.Function.ContinuousMapDense
+import Mathlib.MeasureTheory.Group.Integral
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Metrizable.Urysohn
 
 /-!
 The fourier component of the Connes rigidity formalization.

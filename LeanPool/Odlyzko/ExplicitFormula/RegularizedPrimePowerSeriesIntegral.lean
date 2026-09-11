@@ -7,10 +7,11 @@ module
 
 public import LeanPool.Odlyzko.DedekindZeta.PrimePowerExpansion
 public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouQuadraticDecay
-public import Mathlib.Analysis.Fourier.Inversion
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
+import Mathlib.Analysis.Fourier.Inversion
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Regularized Prime Power Series Integral

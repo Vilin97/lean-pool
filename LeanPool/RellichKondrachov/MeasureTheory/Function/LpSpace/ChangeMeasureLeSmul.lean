@@ -6,8 +6,6 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.Analysis.Normed.Operator.Compact.Basic
-public import Mathlib.MeasureTheory.Measure.AbsolutelyContinuous
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!

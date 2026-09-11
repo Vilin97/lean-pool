@@ -6,6 +6,19 @@ Authors: Lazar Milikic
 module
 
 public import LeanPool.PythagoreanPolynomialParametrization.Basic
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
+import Mathlib.Algebra.EuclideanDomain.Basic
+import Mathlib.Algebra.EuclideanDomain.Int
+import Mathlib.Algebra.MvPolynomial.Monad
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Prime.Int
+import Mathlib.Data.Nat.Totient
+import Mathlib.RingTheory.Binomial
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Explanatory and cited source statements
 

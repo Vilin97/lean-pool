@@ -6,10 +6,9 @@ Authors: Catskills Research Company
 module
 
 public import Mathlib.Logic.Equiv.Nat
-public import Mathlib.Order.Hom.Set
-public import Mathlib.Data.Set.Image
-public import Mathlib.Algebra.Ring.Parity
-public import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Algebra.Order.Monoid.NatCast
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Exercise 5.13 (Scott 1981, PRG-19, Lecture V) — a one-one pairing `num : N × N →

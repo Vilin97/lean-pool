@@ -6,7 +6,13 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.Topology.Order.LowerUpperTopology
-public import Mathlib.Topology.Semicontinuity.Basic
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Order.Filter.Extr
+public import Mathlib.Topology.Semicontinuity.Defs
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # LeanPool.SardMoreira.UpperLowerSemicontinuous

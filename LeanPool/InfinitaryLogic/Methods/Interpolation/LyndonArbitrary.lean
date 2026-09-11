@@ -5,9 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonSublanguage
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelationalize
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigArbitrary
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigArbitrary
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelationalize
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonSublanguage
 /-!
 # Lyndon interpolation, arbitrary language (issue #14, Unit 7)
 

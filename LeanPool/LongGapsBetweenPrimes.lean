@@ -6,6 +6,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.LongGapsBetweenPrimes.Main
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Improved long gaps between consecutive primes

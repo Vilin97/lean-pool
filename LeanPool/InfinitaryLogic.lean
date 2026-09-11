@@ -26,6 +26,7 @@ public import LeanPool.InfinitaryLogic.ModelTheory.ScottCompletion
 public import LeanPool.InfinitaryLogic.Scott.Rank
 public import LeanPool.InfinitaryLogic.Scott.RefinementCount
 public import LeanPool.InfinitaryLogic.Scott.Sentence
+import Mathlib.Data.Sym.Sym2.Init
 
 /-!
 # Infinitary logic and countable model theory

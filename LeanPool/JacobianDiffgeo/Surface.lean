@@ -10,6 +10,7 @@ public import LeanPool.JacobianDiffgeo.Surface.RealSmooth
 public import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
 public import LeanPool.JacobianDiffgeo.Surface.Identity
 public import LeanPool.JacobianDiffgeo.Surface.InverseFunction
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # surfaces-and-charts: foundation unit for Riemann surfaces (namespace `RS`)

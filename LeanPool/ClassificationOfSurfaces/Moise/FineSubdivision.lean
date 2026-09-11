@@ -5,8 +5,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
 
 /-!
 # Fine subdivisions of finite plane complexes

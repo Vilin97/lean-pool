@@ -6,6 +6,8 @@ Authors: The FLT Project, √2
 module
 
 public import LeanPool.Odlyzko.ExplicitFormula.PoitouEstimate
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Poitou's Explicit Odlyzko Bound for Root Discriminants

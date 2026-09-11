@@ -7,7 +7,6 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-public import Mathlib.Data.Fintype.Parity
 
 /-! # ForMathlibUpperHalfPlane -/
 

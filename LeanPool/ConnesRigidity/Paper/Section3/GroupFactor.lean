@@ -12,7 +12,6 @@ module
 
 public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectFubini
 public import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
-public import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
 
 /-!
 The group factor component of the Connes rigidity formalization.

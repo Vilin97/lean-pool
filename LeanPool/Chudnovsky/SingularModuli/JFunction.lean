@@ -5,8 +5,9 @@ Authors: Xuanji Li
 -/
 module
 
-public import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
-public import LeanPool.Chudnovsky.Ramanujan
+public import LeanPool.Chudnovsky.Basic
+import LeanPool.Chudnovsky.Ramanujan
+import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
 
 /-!
 # The `j`-function: definition, invariance, analyticity, q-expansion (Phase C, chunk B1)

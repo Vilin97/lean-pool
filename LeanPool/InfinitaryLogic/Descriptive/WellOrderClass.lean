@@ -5,9 +5,15 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
 public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
+public import Mathlib.SetTheory.Cardinal.Aleph
+import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.FinCases
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The coded class of countable well-orders (issue #33, step 1)
 

@@ -5,8 +5,15 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.SigmaZeta
-public import Mathlib.Analysis.Meromorphic.NormalForm
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Elliptic functions and the Liouville theorems

@@ -5,14 +5,9 @@ Authors: ruplet
 -/
 module
 
-public import Mathlib.ModelTheory.Complexity
-public import Mathlib.ModelTheory.Syntax
 
-public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
 public import LeanPool.FormalizationOfBoundedArithmetic.Order
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
-public import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.Register
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Complexity

@@ -6,7 +6,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
-public import LeanPool.ClassificationOfSurfaces.NormalForm
+public import LeanPool.ClassificationOfSurfaces.Representatives
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Standard combinatorial examples

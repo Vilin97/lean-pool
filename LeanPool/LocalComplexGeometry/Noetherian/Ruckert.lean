@@ -5,10 +5,14 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
-public import LeanPool.LocalComplexGeometry.Germs.Ring
-public import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
-public import Mathlib.RingTheory.Finiteness.Ideal
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
+import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
+import LeanPool.LocalComplexGeometry.Germs.Ring
+import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
+import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.RingTheory.Finiteness.Ideal
 
 /-!
 # Rückert's basis theorem

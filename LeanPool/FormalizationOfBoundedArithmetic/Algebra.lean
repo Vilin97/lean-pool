@@ -5,10 +5,9 @@ Authors: ruplet
 -/
 module
 
-public import Mathlib.Algebra.Regular.Defs
 
-public import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
 public import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Algebra

@@ -5,8 +5,13 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.ModelTheory.PCClass
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The López–Escobar PC-class interface (issue #10, Unit 4 commit 1)
 

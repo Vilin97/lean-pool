@@ -5,20 +5,10 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import Mathlib.NumberTheory.LSeries.PrimesInAP
-public import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
 public import Mathlib.NumberTheory.Zsqrtd.Basic
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Zify
-public import Aesop
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.NumberTheory.LSeries.PrimesInAP
+import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
 
 /-!
 # Erdős Problem #367: Consecutive Powerful Parts

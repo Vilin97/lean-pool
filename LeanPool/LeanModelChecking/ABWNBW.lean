@@ -5,11 +5,13 @@ Authors: György Kurucz
 -/
 module
 
-public import Mathlib.Data.Set.Operations
-public import Mathlib.Order.KonigLemma
 
 public import LeanPool.LeanModelChecking.LTLNBWStatement
 public import LeanPool.LeanModelChecking.ABW
+public import Mathlib.Order.ConditionallyCompleteLattice.Basic
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+import Mathlib.Order.KonigLemma
 
 /-!
 # From alternating to nondeterministic Büchi automata

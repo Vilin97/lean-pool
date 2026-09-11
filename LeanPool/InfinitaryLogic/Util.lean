@@ -5,7 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Fin.Tuple.Basic
 
 /-!
 # Utility Lemmas

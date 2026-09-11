@@ -10,8 +10,8 @@ raw named syntax, even for maximal locally consistent sets.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 public import LeanPool.MatchingLogic.EntryIII.Witnessed
+import LeanPool.MatchingLogic.Soundness
 
 /-!
 # MatchingLogic.EntryIII.WitnessedCollapse

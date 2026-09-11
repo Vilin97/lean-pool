@@ -5,8 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Forms.Finiteness
-public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import LeanPool.JacobianDiffgeo.Forms.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.Forms.Finiteness
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `genus` (CC1, design §2.1) — root-level, exact challenge signature

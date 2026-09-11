@@ -6,20 +6,19 @@ Authors: Palalansoukî
 module
 
 public import Mathlib.Data.Vector.Basic
-public import Mathlib.Data.Fin.Basic
 public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Data.Fintype.Basic
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.Finset.Preimage
-public import Mathlib.Data.Finset.Sort
-public import Mathlib.Order.Filter.Ultrafilter.Defs
-public import Mathlib.Logic.Encodable.Basic
-public import Mathlib.Computability.Primrec.List
-public import Mathlib.Computability.Partrec
-public import Mathlib.Data.List.GetD
 public import Mathlib.Data.Set.Finite.Range
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.TautoSet
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Data.Finset.Union
+public import Mathlib.Data.PFun
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Logic.Equiv.List
+public import Mathlib.Order.Preorder.Chain
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Data.List.GetD
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
 

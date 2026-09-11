@@ -6,10 +6,10 @@ Authors: ruplet
 module
 
 public import Mathlib.ModelTheory.Syntax
-public import Mathlib.ModelTheory.Semantics
-public import Mathlib.Tactic.FinCases
 public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
-public import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.Register
+import Mathlib.Tactic.FinCases
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables

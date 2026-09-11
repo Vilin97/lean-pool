@@ -6,12 +6,9 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
-public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
-public import Mathlib.Analysis.LocallyConvex.WithSeminorms
-public import Mathlib.Analysis.PSeries
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.Order
-public import Mathlib.Topology.Algebra.InfiniteSum.Ring
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
+import Mathlib.Analysis.PSeries
 
 /-!
 # Nuclear Tensor Product via Köthe Sequence Spaces

@@ -5,10 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.SharedDecoder
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Disjoint
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSeparation
-public import LeanPool.InfinitaryLogic.Descriptive.AnalyticTree
+public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
+import LeanPool.InfinitaryLogic.Descriptive.AnalyticTree
+import LeanPool.InfinitaryLogic.Descriptive.Polish
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSeparation
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Disjoint
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.SharedDecoder
 /-!
 # López–Escobar, hard direction (issue #10, Unit 5b)
 

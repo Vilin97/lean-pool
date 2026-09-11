@@ -9,6 +9,7 @@ public import LeanPool.RiemannRochFunctionFields.CoordinateFree.EllipticCurve
 public import LeanPool.RiemannRochFunctionFields.CoordinateFree.RiemannRoch
 public import LeanPool.RiemannRochFunctionFields.EllipticCurve.ConcreteRegression
 public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Regression
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Riemann–Roch for algebraic function fields

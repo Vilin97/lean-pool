@@ -12,6 +12,7 @@ public import LeanPool.RlTheoryInLean.MeasureTheory
 public import LeanPool.RlTheoryInLean.Order
 public import LeanPool.RlTheoryInLean.Probability
 public import LeanPool.RlTheoryInLean.StochasticApproximation
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # RL Theory in Lean

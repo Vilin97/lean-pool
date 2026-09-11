@@ -13,6 +13,7 @@ public import LeanPool.JacobianDiffgeo.Forms.MDifferential
 public import LeanPool.JacobianDiffgeo.Forms.Montel
 public import LeanPool.JacobianDiffgeo.Forms.Finiteness
 public import LeanPool.JacobianDiffgeo.Forms.Genus
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # holomorphic-forms (CC1): holomorphic 1-forms and `genus`

@@ -5,22 +5,14 @@ Authors: Math_XMUM
 -/
 module
 
-public import LeanPool.Brouwer.ScarfPath
-public import Mathlib.Data.PNat.Basic
 public import Mathlib.Order.PiLex
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Order.Filter.AtTopBot.Archimedean
 public import Mathlib.Analysis.Convex.StdSimplex
-public import Mathlib.Analysis.Convex.Topology
-public import Mathlib.Topology.MetricSpace.Bounded
-public import Mathlib.Topology.MetricSpace.Sequences
-public import Mathlib.Topology.MetricSpace.Lipschitz
-public import Mathlib.Topology.Sequences
-public import Mathlib.Topology.Algebra.Order.Field
-public import Mathlib.Analysis.Normed.Group.Constructions
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+public import LeanPool.Brouwer.Scarf
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Brouwer's fixed-point theorem on a simplex

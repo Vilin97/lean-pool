@@ -6,7 +6,8 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Data.Nat.Find
+import Mathlib.Data.Nat.Find
+import Mathlib.Data.Set.Basic
 
 /-!
 # Exercise 1.12 (Scott 1981, PRG-19, §1) — the final-segment system on `ℕ`

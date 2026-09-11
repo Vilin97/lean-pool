@@ -6,7 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
-public import Mathlib.SetTheory.Ordinal.Family
+public import Mathlib.SetTheory.Ordinal.Basic
+import Mathlib.SetTheory.Ordinal.Family
 
 /-!
 # Ordinal-valued depth of `Lω₁ω` formulas

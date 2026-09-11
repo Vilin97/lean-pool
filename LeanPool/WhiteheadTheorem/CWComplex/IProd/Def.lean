@@ -8,13 +8,11 @@ Authors: Jiazhen Xia
 module
 
 public import LeanPool.WhiteheadTheorem.CWComplex.Basic
-public import LeanPool.WhiteheadTheorem.Auxiliary
 public import LeanPool.WhiteheadTheorem.Exponential
 public import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
 public import LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap
-public import LeanPool.WhiteheadTheorem.Shapes.Maps
-public import LeanPool.WhiteheadTheorem.Shapes.Pushout
-public import Mathlib.CategoryTheory.Comma.Arrow
+import LeanPool.WhiteheadTheorem.Shapes.Maps
+import LeanPool.WhiteheadTheorem.Shapes.Pushout
 
 /-!
 For every CW-complex `X`, this file constructs a relative CW-complex `X.IProd`

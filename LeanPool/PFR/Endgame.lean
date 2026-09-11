@@ -6,8 +6,11 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.FirstEstimate
-public import LeanPool.PFR.SecondEstimate
+public import LeanPool.PFR.TauFunctional
+import LeanPool.PFR.FirstEstimate
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FourVariables
+import LeanPool.PFR.SecondEstimate
 
 /-!
 # Endgame

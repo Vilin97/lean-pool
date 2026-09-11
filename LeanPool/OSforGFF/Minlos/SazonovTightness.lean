@@ -8,16 +8,11 @@ module
 public import LeanPool.OSforGFF.Bochner.Sazonov
 public import LeanPool.OSforGFF.Bochner.PositiveDefinite
 public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-public import Mathlib.MeasureTheory.Measure.Tight
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.InnerProductSpace.l2Space
-public import Mathlib.Analysis.InnerProductSpace.Trace
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Function.SpecialFunctions.RCLike
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import Mathlib.Analysis.InnerProductSpace.Trace
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.MeasureTheory.Function.SpecialFunctions.RCLike
 
 /-! # Sazonov Tightness
 

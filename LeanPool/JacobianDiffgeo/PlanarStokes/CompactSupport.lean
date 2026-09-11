@@ -5,7 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Atom 1: compact-support planar Stokes for `dbar`

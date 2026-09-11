@@ -5,12 +5,12 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.RingTheory.DedekindDomain.Dvr
 public import Mathlib.RingTheory.Ideal.AssociatedPrime.Basic
-public import Mathlib.RingTheory.KrullDimension.PID
-public import Mathlib.RingTheory.Localization.Cardinality
+public import Mathlib.RingTheory.Ideal.Height
+import Mathlib.Analysis.Normed.Ring.Lemmas
+import Mathlib.RingTheory.DedekindDomain.Dvr
+import Mathlib.RingTheory.KrullDimension.PID
+import Mathlib.RingTheory.Localization.Cardinality
 
 /-!
 # N-subrings and A-extensions

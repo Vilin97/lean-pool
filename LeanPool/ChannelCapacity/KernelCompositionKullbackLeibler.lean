@@ -6,10 +6,9 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.InformationTheory.KullbackLeibler.Basic
-public import Mathlib.Probability.Kernel.CompProdEqIff
 
-public import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 public import Mathlib.Probability.Kernel.RadonNikodym
+import Mathlib.Probability.Kernel.CompProdEqIff
 
 /-!
 # Kullback-Leibler divergence and kernel composition products

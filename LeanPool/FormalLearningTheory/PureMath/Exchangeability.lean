@@ -6,7 +6,7 @@ Authors: Dhruv Gupta
 module
 
 public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Exchangeability and Double-Sample Infrastructure

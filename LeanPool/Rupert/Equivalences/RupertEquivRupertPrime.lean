@@ -5,7 +5,8 @@ Authors: David Renshaw
 -/
 module
 
-public import LeanPool.Rupert.Equivalences.Util
+public import LeanPool.Rupert.Basic
+import LeanPool.Rupert.Equivalences.Util
 
 /-!
 # LeanPool.Rupert.Equivalences.RupertEquivRupertPrime

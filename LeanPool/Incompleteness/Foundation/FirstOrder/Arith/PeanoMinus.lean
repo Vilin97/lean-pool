@@ -5,10 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
-public import Mathlib.Algebra.Order.Monoid.Canonical.Defs
-public import Mathlib.Algebra.Order.Ring.Defs
-public import Mathlib.Data.Nat.Cast.Order.Basic
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # PeanoMinus -/
 

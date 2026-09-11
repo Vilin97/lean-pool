@@ -5,12 +5,14 @@ Authors: Bhavik Mehta
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.Order.Ring.Nat
 public import Mathlib.Order.Interval.Finset.Nat
-public import Mathlib.Algebra.Order.Interval.Finset.SuccPred
-public import Mathlib.Data.Nat.SuccPred
-public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Order.SuccPred
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Order.Interval.Finset.SuccPred
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Data.Finset.Powerset
+import Mathlib.Data.Nat.SuccPred
 
 /-!
 # LeanPool.ABCExceptions.ForMathlib.Misc

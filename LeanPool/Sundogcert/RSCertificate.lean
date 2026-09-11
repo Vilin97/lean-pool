@@ -5,10 +5,8 @@ Authors: Humiliati
 -/
 module
 
-public import Mathlib.Algebra.Polynomial.Roots
 public import Mathlib.LinearAlgebra.Vandermonde
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Linarith
+import Mathlib.Algebra.Polynomial.Roots
 
 /-!
 # The Reed–Solomon evaluation certificate — the interpolation-dual of the syndrome certificate

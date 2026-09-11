@@ -5,13 +5,18 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Data.Fintype.CardEmbedding
-public import Mathlib.Data.Fintype.Sum
 public import Mathlib.Order.Interval.Finset.Fin
 
-public import LeanPool.TwoColoringOneRound.LowerBound.Defs
-public import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
 public import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Fintype.CardEmbedding
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Small “sanity checks” intended to validate that the Lean definitions in `Defs.lean` match the

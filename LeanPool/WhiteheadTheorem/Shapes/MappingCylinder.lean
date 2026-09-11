@@ -10,9 +10,7 @@ public import LeanPool.WhiteheadTheorem.Exponential
 public import LeanPool.WhiteheadTheorem.Shapes.Maps
 public import LeanPool.WhiteheadTheorem.Shapes.Pushout
 public import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
-public import Mathlib.Topology.Homotopy.Equiv
-public import Mathlib.Topology.Category.TopCat.Limits.Basic
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.MappingCylinder

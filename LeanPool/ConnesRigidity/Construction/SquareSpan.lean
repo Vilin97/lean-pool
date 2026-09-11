@@ -9,9 +9,9 @@ Concrete coefficient proof for the Zhou square-span boundary. Paper: §2.
 -/
 module
 
-public import Mathlib.Algebra.Algebra.ZMod
 public import Mathlib.Algebra.Polynomial.Basis
 public import LeanPool.ConnesRigidity.Construction.PaperActions
+import Mathlib.Algebra.Algebra.ZMod
 
 /-!
 The square span component of the Connes rigidity formalization.

@@ -5,9 +5,11 @@ Authors: Martin Dvorak
 -/
 module
 
-public import Mathlib.Algebra.Order.Monoid.WithTop
-public import Mathlib.Algebra.Order.Field.Basic
-public import LeanPool.Duality.Common
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Order.Monoid.Unbundled.WithTop
+public import Mathlib.Algebra.Order.Ring.Defs
+import LeanPool.Duality.Common
+import Mathlib.Algebra.Order.Field.Basic
 
 /-!
 This entire file is inspired by:

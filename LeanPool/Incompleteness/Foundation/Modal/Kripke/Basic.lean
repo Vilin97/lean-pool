@@ -5,7 +5,6 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.RelItr
 public import LeanPool.Incompleteness.Foundation.Modal.Axioms
 public import LeanPool.Incompleteness.Foundation.Modal.Substitution
 

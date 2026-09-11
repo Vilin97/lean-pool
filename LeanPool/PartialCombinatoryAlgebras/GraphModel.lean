@@ -5,9 +5,9 @@ Authors: Andrej Bauer
 -/
 module
 
-public import Mathlib.Data.SetLike.Basic
-public import LeanPool.PartialCombinatoryAlgebras.Basic
 public import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-! We derive from a given section-retraction `List α → α` the
     combinatory algebra structure on `Set α`.

@@ -5,9 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import Mathlib.Data.Set.Finite.Powerset
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Closure
 public import LeanPool.Incompleteness.Foundation.Modal.Subformulas
+import Mathlib.Data.Set.Finite.Powerset
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Filteration -/
 

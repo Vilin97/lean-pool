@@ -5,9 +5,10 @@ Authors: Ben Cassie
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-public import LeanPool.Kuramoto.GradientFlow
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Trigonometric
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Weighted Kuramoto model

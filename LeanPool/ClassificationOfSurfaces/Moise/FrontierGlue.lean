@@ -6,7 +6,6 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import Mathlib.Topology.MetricSpace.HausdorffDistance
-public import Mathlib.Topology.Order.Compact
 
 /-!
 # Gluing a vanishing approximation across an open frontier

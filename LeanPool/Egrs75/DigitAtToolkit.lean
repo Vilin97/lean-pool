@@ -5,11 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
 public import LeanPool.Egrs75.LeafInduction
-public import Mathlib.Data.Nat.Digits.Lemmas
-public import Mathlib.Data.List.GetD
+import Mathlib.Data.List.GetD
+import Mathlib.Data.Nat.Digits.Lemmas
 
 /-!
 EGRS75 repair step — route "paperfaithful".

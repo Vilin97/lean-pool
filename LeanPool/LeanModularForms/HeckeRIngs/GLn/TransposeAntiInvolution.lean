@@ -7,6 +7,10 @@ module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
 public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Commutativity
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # GL_n Hecke Algebra Commutativity via Transpose

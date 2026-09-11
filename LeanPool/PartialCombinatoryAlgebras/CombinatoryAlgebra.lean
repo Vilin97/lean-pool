@@ -5,10 +5,10 @@ Authors: Andrej Bauer
 -/
 module
 
-public import Mathlib.Tactic.NthRewrite
-public import Mathlib.Data.Part
-public import LeanPool.PartialCombinatoryAlgebras.Basic
 public import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.NthRewrite
+import Mathlib.Tactic.SetLike
 
 /-!
 # Total combinatory algebras

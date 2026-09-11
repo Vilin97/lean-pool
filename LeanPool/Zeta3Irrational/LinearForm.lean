@@ -7,6 +7,9 @@ module
 
 public import LeanPool.Zeta3Irrational.Integral
 public import LeanPool.Zeta3Irrational.D
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Zeta3Irrational.LinearForm

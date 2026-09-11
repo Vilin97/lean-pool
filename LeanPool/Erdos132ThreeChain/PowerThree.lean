@@ -5,11 +5,15 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ThreeChain.Basic
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Data.Int.GCD
-public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Data.Real.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Arithmetic of powers of three

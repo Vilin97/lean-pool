@@ -5,22 +5,15 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Zify
-public import Mathlib.Tactic.Lift
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.Measurability
-public import Mathlib.Tactic.Abel
-public import Init.Data.Nat.Lemmas
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Basic
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 

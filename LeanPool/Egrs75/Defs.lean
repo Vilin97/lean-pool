@@ -6,7 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Egrs75.CentralBinomialDigits
-public import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Data.Finset.Attr
 
 /-!
 EGRS75 two-prime infinitude — strategy + defs scaffold.

@@ -5,12 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
-public import Mathlib.Topology.ContinuousMap.Compact
-public import Mathlib.Topology.MetricSpace.Equicontinuity
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Topology.MetricSpace.Thickening
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
 
 /-!
 # Planar Montel theorem (holomorphic-forms unit)

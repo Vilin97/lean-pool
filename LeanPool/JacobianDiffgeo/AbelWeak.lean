@@ -11,6 +11,9 @@ public import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
 public import LeanPool.JacobianDiffgeo.AbelWeak.ChainAssembly
 public import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
 public import LeanPool.JacobianDiffgeo.AbelWeak.GeneralChain
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-weak-solutions: weak solutions, the planar log-branch, and chain assembly (Forster

@@ -6,7 +6,11 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
+public import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Basic -/
 

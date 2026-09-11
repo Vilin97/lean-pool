@@ -5,7 +5,8 @@ Authors: Catskills Research Company
 -/
 module
 
-public import Mathlib.Data.Set.Basic
+public import Mathlib.Logic.Equiv.Defs
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # Lecture IV (§4) — Definition 4.5 and Theorem 4.6: models of Peano's Axioms

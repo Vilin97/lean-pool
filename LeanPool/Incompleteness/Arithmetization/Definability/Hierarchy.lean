@@ -6,7 +6,9 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Lemmata
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.StrictHierarchy
+public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
 
 /-!
 

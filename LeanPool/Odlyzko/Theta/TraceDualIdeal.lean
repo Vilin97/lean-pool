@@ -5,7 +5,10 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.NumberTheory.NumberField.Discriminant.Different
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Mathlib.RingTheory.FractionalIdeal.Norm
+import Mathlib.NumberTheory.NumberField.Discriminant.Different
 
 /-! TODO: Add doc-string. -/
 

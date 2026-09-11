@@ -7,8 +7,7 @@ module
 
 public import LeanPool.QuasiBorelSpaces.Hom
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
-public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-public import LeanPool.QuasiBorelSpaces.Prod
+import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # Exponentials for ω-quasi-borel spaces

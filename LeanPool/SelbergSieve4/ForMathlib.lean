@@ -7,6 +7,8 @@ module
 
 public import LeanPool.SelbergSieve4.ForMathlib.Basic
 public import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Auxiliary lemmas for Mathlib

@@ -6,7 +6,6 @@ Authors: Matt Hunzinger
 module
 
 public import LeanPool.Circuitlib.Circuit.Wires
-public import Mathlib.Tactic.TypeStar
 public import Mathlib.Order.Monotone.Defs
 
 /-! # Gates

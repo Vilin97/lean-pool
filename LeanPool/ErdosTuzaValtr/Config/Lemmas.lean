@@ -5,10 +5,15 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Defs
-public import Mathlib.Data.List.Sort
-public import Mathlib.Tactic.Linarith
 public import LeanPool.ErdosTuzaValtr.Config.Defs
+import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
+import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+import Mathlib.Data.List.Chain
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Config.Lemmas

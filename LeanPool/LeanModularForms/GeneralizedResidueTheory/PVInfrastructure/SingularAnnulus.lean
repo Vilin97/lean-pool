@@ -5,7 +5,13 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.GammaAnalysis
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.StepBounds
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # PV Infrastructure: Singular Annulus Bounds

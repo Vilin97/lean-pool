@@ -6,7 +6,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
 
 /-!
 # Auxiliary Variable Recursion for Arbitrary States

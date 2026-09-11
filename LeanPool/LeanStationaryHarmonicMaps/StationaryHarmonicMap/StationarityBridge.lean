@@ -7,6 +7,8 @@ module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevBridge
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Stationarity bridge for the monotonicity theorem

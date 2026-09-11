@@ -5,9 +5,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Prop
 public import LeanPool.QuasiBorelSpaces.Sum
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Prop
 
 /-!
 # LeanPool.QuasiBorelSpaces.IsHomDiagonal

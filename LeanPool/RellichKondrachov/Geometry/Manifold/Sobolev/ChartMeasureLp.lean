@@ -6,8 +6,6 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-public import Mathlib.MeasureTheory.Measure.Map
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp`

@@ -5,17 +5,14 @@ Authors: Ben Cassie
 -/
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.ODE.ExistUnique
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-public import Mathlib.Data.Nat.Nth
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import LeanPool.Kuramoto.Weighted
-public import LeanPool.Kuramoto.Contraction
 public import LeanPool.Kuramoto.OrderParameter
-public import LeanPool.Kuramoto.GradientFlow
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.ODE.ExistUnique
+import Mathlib.Data.Nat.Nth
 
 /-!
 # Kuramoto Frontier: ODE Solutions, Lyapunov Stability, and Synchronisation

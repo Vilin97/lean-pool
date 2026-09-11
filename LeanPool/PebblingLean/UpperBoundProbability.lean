@@ -5,10 +5,12 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Data.List.OfFn
 public import LeanPool.PebblingLean.Concentration
 public import LeanPool.PebblingLean.UpperBoundDelivery
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite probability setup for the upper bound

@@ -7,7 +7,6 @@ module
 
 public import Mathlib.Algebra.BigOperators.Finprod
 public import Mathlib.Algebra.Module.LinearMap.Defs
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs

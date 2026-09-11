@@ -5,8 +5,8 @@ Authors: Humiliati
 -/
 module
 
-public import LeanPool.Sundogcert.Certificate
 public import LeanPool.Sundogcert.Looseness
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
   Sundogcert/CertWall.lean — TYPING the imported hardness wall as a CONDITIONAL theorem.

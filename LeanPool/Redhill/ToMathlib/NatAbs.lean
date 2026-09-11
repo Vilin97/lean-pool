@@ -5,7 +5,9 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Data.Int.Order.Basic
+public import Mathlib.Data.Int.Notation
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Int.Order.Basic
 
 /-!
 # Lemmas on `Int.natAbs`

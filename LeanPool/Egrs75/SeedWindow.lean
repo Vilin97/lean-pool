@@ -5,9 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.LogIrrationality
-public import Mathlib.NumberTheory.DiophantineApproximation.Basic
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import LeanPool.Egrs75.LogIrrationality
+import Mathlib.Data.Nat.Totient
+import Mathlib.NumberTheory.DiophantineApproximation.Basic
 
 /-!
 EGRS75 two-prime — THE DIOPHANTINE SEED (paper condition (2)), 2026-06-12.

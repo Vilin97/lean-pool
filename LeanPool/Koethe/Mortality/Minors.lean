@@ -5,17 +5,10 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Algebra.Field.Defs
-public import Mathlib.Algebra.Ring.Defs
-public import Mathlib.Data.Fintype.Defs
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Data.Nat.Notation
-public import Mathlib.LinearAlgebra.Matrix.Defs
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.SchurComplement
-public import Mathlib.RingTheory.Localization.FractionRing
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Tactic.Ring
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.LinearAlgebra.Matrix.SchurComplement
+import Mathlib.RingTheory.Localization.FractionRing
+import Mathlib.RingTheory.SimpleRing.Principal
 /-!
 # Determinantal rank and sandwich compression
 

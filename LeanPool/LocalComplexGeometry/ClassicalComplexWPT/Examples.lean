@@ -5,8 +5,8 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.EdgeCases
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 
 /-!
 # Audited examples for the public statement

@@ -7,8 +7,15 @@ module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
-public import Mathlib.RingTheory.MvPolynomial.Basic
+public import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Polynomial Ring Structure of the p-local Hecke Ring

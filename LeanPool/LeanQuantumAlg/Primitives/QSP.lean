@@ -6,7 +6,6 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.QSP.Chebyshev
 public import LeanPool.LeanQuantumAlg.Primitives.QSP.Fourier
 

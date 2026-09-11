@@ -5,8 +5,12 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Matrix.Mul
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Nonneg Matrix Powers and Positivity

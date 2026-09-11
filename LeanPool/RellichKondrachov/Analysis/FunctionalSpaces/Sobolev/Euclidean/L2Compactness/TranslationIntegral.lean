@@ -6,8 +6,6 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Translation
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `L²` compactness criterion: bounding the translation-integral by a translation modulus

@@ -24,6 +24,7 @@ public import LeanPool.Chudnovsky.Ramanujan
 public import LeanPool.Chudnovsky.SigmaZeta
 public import LeanPool.Chudnovsky.SingularModuli
 public import LeanPool.Chudnovsky.WeierstrassMore
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # A Detailed Proof of the Chudnovsky Formula

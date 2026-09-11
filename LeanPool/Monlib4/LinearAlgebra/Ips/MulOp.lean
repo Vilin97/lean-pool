@@ -5,11 +5,7 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Data.Opposite
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Analysis.InnerProductSpace.MulOpposite
-public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
 

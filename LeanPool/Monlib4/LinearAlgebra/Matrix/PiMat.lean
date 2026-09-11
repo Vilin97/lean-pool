@@ -5,7 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Data.Matrix.Basic
+public import Mathlib.LinearAlgebra.Matrix.Defs
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat

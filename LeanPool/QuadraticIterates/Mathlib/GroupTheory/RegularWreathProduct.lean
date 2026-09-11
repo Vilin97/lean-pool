@@ -5,12 +5,11 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Algebra.Group.TypeTags.Hom
-public import Mathlib.Algebra.Module.ZMod
-public import Mathlib.FieldTheory.Finite.GaloisField
 public import Mathlib.GroupTheory.RegularWreathProduct
-public import Mathlib.LinearAlgebra.Dual.Lemmas
-public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Algebra.Field.ZMod
+import Mathlib.Algebra.Module.ZMod
+import Mathlib.FieldTheory.Finite.GaloisField
+import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-!
 # Homomorphisms from wreath products to abelian groups

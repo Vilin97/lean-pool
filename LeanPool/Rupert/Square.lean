@@ -6,8 +6,8 @@ Authors: David Renshaw
 module
 
 public import LeanPool.Rupert.Basic
-public import LeanPool.Rupert.Convex
-public import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
+import LeanPool.Rupert.Convex
+import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
 
 /-!
 # LeanPool.Rupert.Square

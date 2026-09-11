@@ -5,10 +5,17 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.RingTheory.Radical.NatInt
 public import LeanPool.Redhill.Common.Conjectures
-public import LeanPool.Redhill.General.Coprime
-public import LeanPool.Redhill.General.Subsum
+public import LeanPool.Redhill.General.Defs
+public import Mathlib.Algebra.EuclideanDomain.Int
+public import Mathlib.RingTheory.PrincipalIdealDomain
+import LeanPool.Redhill.General.Coprime
+import LeanPool.Redhill.General.Subsum
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The general case (Theorem 1.14)

@@ -10,7 +10,8 @@ Paper: §4.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section4.SplitExtensions
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PropertyTTransfer
+public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
 
 /-!
 The finite extensions component of the Connes rigidity formalization.

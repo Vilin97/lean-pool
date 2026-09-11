@@ -6,6 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
+import Mathlib.Data.Set.Basic
 
 /-!
 # Exercise 1.23 (Scott 1981, PRG-19, §1) — the greedy total element of a countable

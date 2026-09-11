@@ -11,9 +11,12 @@ plan.
 module
 
 public import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
 public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
 public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Tr_F h`: the surface-level fibre trace (meromorphic-trace, cluster 2)

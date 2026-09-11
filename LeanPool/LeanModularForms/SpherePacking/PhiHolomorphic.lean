@@ -6,6 +6,9 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.Modularforms.EtaCleanup
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Holomorphicity of E₂ and φ₀ on the upper half-plane

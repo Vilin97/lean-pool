@@ -6,7 +6,12 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.TorusIntegration
-public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+public import LeanPool.Clawristotle.Defs
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # FlatTorus3 Instance for T^3

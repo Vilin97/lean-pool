@@ -5,8 +5,10 @@ Authors: Ben Cassie
 -/
 module
 
-public import LeanPool.Kuramoto.Weighted
 public import LeanPool.Kuramoto.Hebbian
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Connections between the models

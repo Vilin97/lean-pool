@@ -11,8 +11,12 @@ and the (statement-bank) multiplicativity of degree under composition.
 module
 
 public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
-public import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
-public import Mathlib.Topology.Homeomorph.Lemmas
+public import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The mapping degree

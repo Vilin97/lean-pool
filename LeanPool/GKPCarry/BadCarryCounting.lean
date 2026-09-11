@@ -6,11 +6,10 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.GKPCarry.BadCarryLanguage
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Data.Fintype.BigOperators
 public import Mathlib.Data.Fintype.Vector
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Nat.SuccPred
 
 /-!
 # Counting deficient-carry ternary words

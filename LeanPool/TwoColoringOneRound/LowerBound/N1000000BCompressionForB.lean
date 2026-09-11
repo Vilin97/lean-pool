@@ -5,26 +5,15 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSi
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB

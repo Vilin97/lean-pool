@@ -5,7 +5,9 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
 
 /-!
 # Germ-level weighted coefficient reconstruction

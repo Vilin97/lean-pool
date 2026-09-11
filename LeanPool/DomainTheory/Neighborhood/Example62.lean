@@ -6,7 +6,11 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.ExampleB
-public import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+public import LeanPool.DomainTheory.Neighborhood.Exercise318
+import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+import Mathlib.Data.List.Monad
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Example 6.2 (Scott 1981, PRG-19, §6) — `B` and `C` as solutions of domain

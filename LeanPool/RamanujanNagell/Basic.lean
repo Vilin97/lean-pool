@@ -6,6 +6,12 @@ Authors: Barinder S. Banwait, Xinze Li
 module
 
 public import LeanPool.RamanujanNagell.Helpers
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.NumberTheory.Multiplicity
+import Mathlib.RingTheory.Int.Basic
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # The Ramanujan-Nagell equation

@@ -5,8 +5,10 @@ Authors: claytomode
 -/
 module
 
-public import LeanPool.JohnsonLindenstraussLean.NormPreservation
-public import LeanPool.JohnsonLindenstraussLean.Projection
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # The Johnson–Lindenstrauss embedding-existence theorem

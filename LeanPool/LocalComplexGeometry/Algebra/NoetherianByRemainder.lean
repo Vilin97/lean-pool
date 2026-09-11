@@ -5,10 +5,11 @@ Authors: BochaoKong
 -/
 module
 
-public import Mathlib.RingTheory.Noetherian.Basic
-public import Mathlib.RingTheory.Finiteness.Defs
-public import Mathlib.RingTheory.Ideal.Operations
-public import Mathlib.LinearAlgebra.Span.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Finite generation from a finite remainder module

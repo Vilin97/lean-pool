@@ -5,8 +5,12 @@ Authors: Dillon Ryan
 -/
 module
 
-public import LeanPool.LehmerE10.Main
-public import LeanPool.LehmerE10.CyclotomicKill
+public import LeanPool.LehmerE10.Defs
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+import LeanPool.LehmerE10.CyclotomicKill
+import LeanPool.LehmerE10.Main
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # the E₁₀ Coxeter element as an ERGODIC toral automorphism.

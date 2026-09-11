@@ -6,7 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Example61
-public import LeanPool.DomainTheory.Neighborhood.Definition72
+public import LeanPool.DomainTheory.Neighborhood.Definition71
 
 /-!
 # Proposition 7.7 (Scott 1981, PRG-19, §7) — `D^§` is effectively given

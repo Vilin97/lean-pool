@@ -6,7 +6,11 @@ Authors: Scott D. Hughes
 module
 
 public import LeanPool.Erdos137.Base
-public import LeanPool.Erdos137.TaoPoint
+public import Mathlib.Data.Nat.Squarefree
+import LeanPool.Erdos137.TaoPoint
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: the deterministic squarefree-capacity reduction

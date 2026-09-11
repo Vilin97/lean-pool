@@ -6,6 +6,7 @@ Authors: Lior Pachter
 module
 
 public import LeanPool.PebblingLean.Hypercube
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Small examples

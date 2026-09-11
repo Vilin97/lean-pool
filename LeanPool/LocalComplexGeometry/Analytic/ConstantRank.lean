@@ -6,7 +6,9 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Analytic.ConstantRankLinear
-public import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Holomorphic constant-rank theorem

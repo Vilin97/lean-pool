@@ -6,10 +6,9 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Core.Components.Gates
-public import LeanPool.LeanQuantumAlg.Util.Complex
 public import LeanPool.LeanQuantumAlg.Util.Polynomial
+import LeanPool.LeanQuantumAlg.Util.Complex
 
 /-!
 # Quantum signal processing (single qubit) — Chebyshev basis

@@ -7,6 +7,13 @@ module
 
 public import LeanPool.IsoGraph.Canon.Branch
 public import LeanPool.IsoGraph.Canon.Orbits
+public import LeanPool.IsoGraph.Canon.Dominate
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The search misses nothing

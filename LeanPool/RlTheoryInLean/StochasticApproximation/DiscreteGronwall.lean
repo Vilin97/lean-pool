@@ -5,7 +5,8 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import LeanPool.RlTheoryInLean.Defs
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.StochasticApproximation.DiscreteGronwall

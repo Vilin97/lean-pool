@@ -8,6 +8,8 @@ module
 public import LeanPool.Clawristotle.Theorem42
 public import LeanPool.Clawristotle.CoulombConcreteTheorem42
 public import LeanPool.Clawristotle.CoulombNonvacuous
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Clawristotle: Vlasov-Maxwell-Landau steady-state classification

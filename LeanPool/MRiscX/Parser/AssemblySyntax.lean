@@ -5,7 +5,7 @@ Authors: Julius Marx
 -/
 module
 
-public import Lean
+public meta import Lean.Parser.Term
 
 /-!
 # AssemblySyntax

@@ -5,12 +5,11 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.Shapes.Jar
 public import LeanPool.WhiteheadTheorem.Shapes.Maps
 public import LeanPool.WhiteheadTheorem.CWComplex.Basic
 public import LeanPool.WhiteheadTheorem.Exponential
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
-public import Mathlib.CategoryTheory.LiftingProperties.Limits
+import LeanPool.WhiteheadTheorem.Shapes.Jar
+import Mathlib.CategoryTheory.LiftingProperties.Limits
 
 /-!
 # LeanPool.WhiteheadTheorem.HEP.Cofibration

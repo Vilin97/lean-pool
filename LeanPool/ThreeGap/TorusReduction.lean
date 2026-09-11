@@ -6,6 +6,10 @@ Authors: Vico Bonfioli
 module
 
 public import LeanPool.ThreeGap.DeltaCost
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The isometry reduction: `gapVal` *is* the torus nearest-neighbour distance

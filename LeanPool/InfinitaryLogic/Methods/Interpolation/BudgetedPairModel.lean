@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairCompletion
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPair
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairCompletion
 /-!
 # The budgeted labelled pair's countermodel (issue #15)
 

@@ -5,12 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.Kummer
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
+public import LeanPool.GKPCarry.Statement
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.MaxPowDiv
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 # Binary reduction of the GKP conjecture

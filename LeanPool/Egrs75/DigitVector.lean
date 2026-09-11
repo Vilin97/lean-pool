@@ -5,12 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
 public import LeanPool.Egrs75.LeafInduction
-public import Mathlib.Data.Nat.Digits.Lemmas
-public import Mathlib.Data.List.Count
-public import Mathlib.Data.List.GetD
+public import Mathlib.Data.Finset.Max
+import Mathlib.Data.List.GetD
+import Mathlib.Data.Nat.Digits.Lemmas
 
 /-!
 EGRS75 two-prime ALIGN leaf — route `digitvector`: the carry-controlled repair step.

@@ -7,6 +7,14 @@ module
 
 public import LeanPool.Wallace.BlockFilters
 public import LeanPool.Wallace.RationalTransfiniteExtension
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Concrete triangular data for the rational direct sum

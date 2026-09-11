@@ -5,8 +5,16 @@ Authors: Alexey Milovanov
 -/
 module
 
-public import Mathlib.Combinatorics.SetFamily.KruskalKatona
-public import LeanPool.BooleanIsoperimetry.Macaulay
+public import LeanPool.BooleanIsoperimetry.Cube
+public import Mathlib.Combinatorics.Colex
+public import Mathlib.Combinatorics.SetFamily.Shadow
+import LeanPool.BooleanIsoperimetry.Macaulay
+import Mathlib.Combinatorics.SetFamily.KruskalKatona
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Kruskal-Katona upper-shadow core

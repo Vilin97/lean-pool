@@ -5,15 +5,11 @@ Authors: Carles Marín
 -/
 module
 
-public import LeanPool.ConnesKreimer.PowerSeriesLogMul
-public import Mathlib.Algebra.FreeMonoid.Basic
-public import Mathlib.Algebra.MonoidAlgebra.Basic
 public import Mathlib.Algebra.RingQuot
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.HopfAlgebra.Convolution
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
+public import Mathlib.RingTheory.PowerSeries.Log
+import LeanPool.ConnesKreimer.PowerSeriesLogMul
+import Mathlib.RingTheory.HopfAlgebra.Convolution
 
 /-! Connes–Kreimer / Foissy (planar, R1) coproduct as a genuine Mathlib `Coalgebra` instance.
     Combinatorial core (List.Perm) proven below verbatim from `Coassoc.lean`; the Mathlib bridge

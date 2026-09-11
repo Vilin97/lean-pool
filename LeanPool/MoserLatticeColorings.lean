@@ -6,6 +6,8 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.MoserLatticeColorings.Ring
+import Mathlib.Tactic.NormNum.Irrational
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Geometric Four-Colorings of the Moser Lattice and Ring

@@ -5,8 +5,9 @@ Authors: Math Inc
 -/
 module
 
-public import LeanPool.Erdos1196.Basic
 public import Mathlib.Algebra.Order.Floor.Div
+public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # First-entry row data

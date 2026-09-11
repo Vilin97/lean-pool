@@ -5,9 +5,9 @@ Authors: Vincent Beffara
 -/
 module
 
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import LeanPool.RiemannMappingTheorem.Uniform
 public import LeanPool.RiemannMappingTheorem.Cindex
+import LeanPool.RiemannMappingTheorem.Uniform
+import Mathlib.Analysis.Complex.LocallyUniformLimit
 
 /-!
 # LeanPool.RiemannMappingTheorem.Hurwitz

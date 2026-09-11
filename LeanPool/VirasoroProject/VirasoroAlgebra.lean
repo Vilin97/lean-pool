@@ -6,8 +6,12 @@ Authors: Kalle Kytölä
 module
 
 public import LeanPool.VirasoroProject.IsCentralExtension
-public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
 public import LeanPool.VirasoroProject.VirasoroCocycle
+import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The Virasoro algebra

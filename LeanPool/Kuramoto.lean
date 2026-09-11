@@ -13,6 +13,8 @@ public import LeanPool.Kuramoto.Hebbian
 public import LeanPool.Kuramoto.Connections
 public import LeanPool.Kuramoto.WitnessGeometry
 public import LeanPool.Kuramoto.Frontier
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Finite-N Kuramoto Synchronization

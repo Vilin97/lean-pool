@@ -5,8 +5,14 @@ Authors: Dillon Ryan
 -/
 module
 
-public import LeanPool.LehmerE10.CyclotomicKill
-public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import LeanPool.LehmerE10.Defs
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Analysis.Complex.Norm
+import LeanPool.LehmerE10.CyclotomicKill
+import LeanPool.LehmerE10.Kronecker
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # no factor of Lehmer's polynomial lives on the unit circle.

@@ -8,6 +8,10 @@ module
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.CrossingAnalysis
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Decomposition
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Winding Number Theory

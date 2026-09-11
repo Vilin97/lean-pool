@@ -6,9 +6,9 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 module
 
 public import Mathlib.Topology.Covering.Basic
-public import Mathlib.Topology.Homotopy.Lifting
 public import LeanPool.FiniteGraphFundamentalGroup.Cover
 public import LeanPool.FiniteGraphFundamentalGroup.Realization
+import Mathlib.Topology.WithTopology
 
 /-!
 # Local charts and topological graph covers

@@ -7,6 +7,8 @@ module
 
 public import LeanPool.SetTheory.Basic
 public import LeanPool.SetTheory.OrderTheory
+import Mathlib.Tactic.FinCases
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Ordinals in models of ZF

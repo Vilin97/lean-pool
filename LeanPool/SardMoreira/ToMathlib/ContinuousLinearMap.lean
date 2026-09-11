@@ -6,28 +6,9 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.Analysis.Normed.Operator.Basic
-public import Mathlib.Analysis.Normed.Operator.Mul
-public import Mathlib.Analysis.Normed.Operator.NNNorm
-public import Mathlib.Analysis.Normed.Operator.NormedSpace
-public import Mathlib.Analysis.Calculus.FDeriv.Basic
-public import Mathlib.Analysis.Asymptotics.Lemmas
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Idempotent
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Quotient
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.RestrictScalars
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.Analysis.Asymptotics.Defs
+import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Auxiliary theorems about `ContinuousLinearMap`
 

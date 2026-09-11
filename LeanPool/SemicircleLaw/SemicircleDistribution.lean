@@ -5,23 +5,12 @@ Authors: FredRaj3
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Function.LocallyIntegrable
-public import Mathlib.MeasureTheory.Function.JacobianOneDim
-public import Mathlib.MeasureTheory.Integral.IntegrableOn
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-public import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-public import Mathlib.MeasureTheory.Measure.Dirac
-public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-public import Mathlib.MeasureTheory.Measure.WithDensity
-public import Mathlib.MeasureTheory.Group.Integral
-public import Mathlib.MeasureTheory.Measure.Haar.Unique
-public import Mathlib.Probability.HasLaw
 public import Mathlib.Probability.Moments.Basic
-public import Mathlib.Probability.Moments.Variance
 public import Mathlib.Combinatorics.Enumerative.Catalan.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 /-!
 # Semicircle Distributions over `ℝ`

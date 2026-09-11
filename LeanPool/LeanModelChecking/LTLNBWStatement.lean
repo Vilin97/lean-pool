@@ -5,8 +5,9 @@ Authors: György Kurucz
 -/
 module
 
-public import Mathlib.Data.Set.Basic
 public import Mathlib.Data.Finite.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # Linear Temporal Logic and Büchi automata

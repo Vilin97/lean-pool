@@ -6,14 +6,15 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Algebra.Group.NatPowAssoc
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-public import Mathlib.NumberTheory.ArithmeticFunction.Defs
-public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.NumberTheory.ModularForms.Basic
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Defs
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import Mathlib.Algebra.Group.NatPowAssoc
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-! # Csqrt -/
 

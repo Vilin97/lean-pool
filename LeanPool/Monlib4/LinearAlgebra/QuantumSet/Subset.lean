@@ -5,9 +5,11 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset

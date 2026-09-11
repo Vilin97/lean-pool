@@ -5,8 +5,10 @@ Authors: Caleb L. Geiger
 -/
 module
 
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
+public import LeanPool.SingularModuli.QuadraticOrder.Basic
+public import Mathlib.NumberTheory.LegendreSymbol.Basic
+import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
+import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
 
 /-!
 # Prime classification, part 5: the split case

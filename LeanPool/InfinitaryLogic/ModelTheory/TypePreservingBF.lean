@@ -7,7 +7,6 @@ module
 
 public import LeanPool.InfinitaryLogic.ModelTheory.CountableCompanion
 public import LeanPool.InfinitaryLogic.Scott.BackAndForth
-public import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
 /-!
 # The type-preserving back-and-forth (issue #17 chunk 3)
 

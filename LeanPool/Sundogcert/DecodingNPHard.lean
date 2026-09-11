@@ -7,10 +7,8 @@ module
 
 public import Mathlib.Data.Matrix.Mul
 public import Mathlib.InformationTheory.Hamming
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-public import LeanPool.Sundogcert.Certificate
+public import Mathlib.Data.ZMod.Defs
+import Mathlib.Data.ZMod.Basic
 
 /-!
   Sundogcert/DecodingNPHard.lean — the DEDUCTIVE CORE of NP-hardness of SYNDROME DECODING

@@ -6,9 +6,6 @@ Authors: Carles Marín
 module
 
 public import Mathlib.RingTheory.PowerSeries.Log
-public import Mathlib.RingTheory.PowerSeries.Derivative
-public import Mathlib.RingTheory.PowerSeries.Exp
-public import Mathlib.RingTheory.PowerSeries.Inverse
 
 /-!
 # Power-series logarithm lemmas

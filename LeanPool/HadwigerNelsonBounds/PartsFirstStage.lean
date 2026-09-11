@@ -5,8 +5,14 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData
 public import LeanPool.HadwigerNelsonBounds.PartsPermutations
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData0
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData1
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData2
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData3
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData4
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData5
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData6
 
 /-!
 # The Parts obstruction to a monochromatic sqrt-three triangle

@@ -5,8 +5,11 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
-public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Orthonormal Bases of Tensor Products

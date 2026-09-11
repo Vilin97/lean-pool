@@ -6,10 +6,8 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.MeasureTheory.Group.Measure
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-public import Mathlib.Topology.Algebra.Group.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Translation`

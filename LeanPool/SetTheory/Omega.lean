@@ -6,6 +6,8 @@ Authors: Shuhao Song
 module
 
 public import LeanPool.SetTheory.Ordinals
+import Mathlib.Tactic.FinCases
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # The first infinite ordinal in models of ZF

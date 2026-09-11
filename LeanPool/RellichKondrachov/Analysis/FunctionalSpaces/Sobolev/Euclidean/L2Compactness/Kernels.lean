@@ -5,9 +5,9 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.Topology.Algebra.Support
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 
 /-!
 # `L²` compactness criterion: existence of small-support probability kernels (Euclidean)

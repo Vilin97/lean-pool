@@ -5,9 +5,11 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.RingTheory.Radical.NatInt
 public import LeanPool.Redhill.Common.Conjectures
+public import Mathlib.Algebra.EuclideanDomain.Int
+public import Mathlib.RingTheory.PrincipalIdealDomain
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # The "warm-up" result (Theorem 2.1)

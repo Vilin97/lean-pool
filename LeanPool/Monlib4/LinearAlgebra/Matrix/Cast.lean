@@ -5,7 +5,7 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Data.Matrix.Basic
+public import Mathlib.Data.Matrix.Mul
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Matrix.Cast

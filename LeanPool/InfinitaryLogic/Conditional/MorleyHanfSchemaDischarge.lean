@@ -6,8 +6,9 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Conditional.MorleyHanfTransfer
-public import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
 public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
+import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
 /-!
 # The Morley–Hanf theorem, discharged
 

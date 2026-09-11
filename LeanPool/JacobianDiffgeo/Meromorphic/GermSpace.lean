@@ -5,8 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
 public import Mathlib.Order.Filter.Germ.Basic
+public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The germ space `MeroGermOn X U` and `ℳ X` (CC3, D1/D6)

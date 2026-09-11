@@ -5,8 +5,8 @@ Authors: Gershon Bialer
 -/
 module
 
-public import Mathlib.Analysis.Analytic.Order
-public import Mathlib.Topology.Algebra.Module.PerfectSpace
+public import Mathlib.Analysis.Analytic.Basic
+import Mathlib.Analysis.Analytic.Order
 
 /-!
 # Density from one-dimensional analytic nonvanishing

@@ -5,9 +5,10 @@ Authors: James Huang, Samuël Borza
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.Calculus.Deriv.Polynomial
-public import Mathlib.Algebra.Polynomial.FieldDivision
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Incremental derivatives

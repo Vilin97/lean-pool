@@ -6,11 +6,19 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibFunctionsBoundedAtInfty
 public import LeanPool.LeanModularForms.Modularforms.MDifferentiableFunProp
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibSlashActions
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibUpperHalfPlane
-public import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
+public import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+import LeanPool.LeanModularForms.ForMathlib.AtImInfty
+import LeanPool.LeanModularForms.ForMathlib.FunctionsBoundedAtInfty
+import LeanPool.LeanModularForms.ForMathlib.SlashActions
+import LeanPool.LeanModularForms.ForMathlib.UpperHalfPlane
+import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
+import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import LeanPool.LeanModularForms.Modularforms.ForMathlibFunctionsBoundedAtInfty
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Data.Int.Star
+import Mathlib.Order.CompletePartialOrder
 
 /-! # JacobiTheta -/
 

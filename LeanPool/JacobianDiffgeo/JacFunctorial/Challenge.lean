@@ -6,6 +6,7 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Challenge-signature pushforward exports (jacobian-functoriality §9, pushforward half)

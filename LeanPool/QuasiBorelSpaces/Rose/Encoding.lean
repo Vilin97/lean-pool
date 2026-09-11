@@ -6,7 +6,6 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import LeanPool.QuasiBorelSpaces.RoseTree.Defs
-public import LeanPool.QuasiBorelSpaces.RoseTree.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.Rose.Encoding

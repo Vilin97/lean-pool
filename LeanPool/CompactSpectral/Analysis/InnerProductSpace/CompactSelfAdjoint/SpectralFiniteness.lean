@@ -5,16 +5,11 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Spectrum
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-public import Mathlib.Algebra.Order.Archimedean.Basic
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Data.Finset.Max
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.Order.Filter.AtTopBot.Basic
-public import Mathlib.Order.Filter.Cofinite
 public import Mathlib.LinearAlgebra.Eigenspace.Basic
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactOperatorOrthonormal
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactOperatorOrthonormal
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 
 /-!
 # Compact self-adjoint operators: spectral finiteness toolkit

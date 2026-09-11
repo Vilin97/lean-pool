@@ -6,10 +6,7 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.Geometry.Manifold.Riemannian.Basic
-public import Mathlib.LinearAlgebra.Dimension.Finrank
 public import Mathlib.MeasureTheory.Measure.Hausdorff
-public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
-public import Mathlib.Topology.Compactness.Compact
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure`

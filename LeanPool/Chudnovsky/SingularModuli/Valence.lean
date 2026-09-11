@@ -6,10 +6,12 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.SingularModuli.JFunction
-public import LeanPool.Chudnovsky.Fourier
-public import LeanPool.Chudnovsky.DivisionValues
-public import Mathlib.Analysis.Complex.OpenMapping
-public import LeanPool.Chudnovsky.Estimates
+public import LeanPool.Chudnovsky.Lattices
+import LeanPool.Chudnovsky.DivisionValues
+import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.Fourier
+import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Valence theory of the `j`-function (Phase C, Track 2, §4.3)

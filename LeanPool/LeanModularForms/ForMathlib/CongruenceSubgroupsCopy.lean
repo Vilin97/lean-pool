@@ -5,7 +5,6 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
 public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
 
 /-!

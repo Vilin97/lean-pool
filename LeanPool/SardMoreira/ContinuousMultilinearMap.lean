@@ -6,20 +6,12 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
-public import Mathlib.Analysis.Normed.Module.Multilinear.Curry
-public import Mathlib.Analysis.Asymptotics.Lemmas
-public import Mathlib.Topology.Algebra.Module.Multilinear.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+public import Mathlib.Analysis.Asymptotics.Defs
+import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Asymptotics.Lemmas
+import Mathlib.Analysis.Normed.Operator.NormedSpace
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.SardMoreira.ContinuousMultilinearMap

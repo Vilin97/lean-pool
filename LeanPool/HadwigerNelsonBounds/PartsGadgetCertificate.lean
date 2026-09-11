@@ -6,6 +6,12 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.HadwigerNelsonBounds.PartsGadgetData
+public import Mathlib.Tactic.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # A sound checker for the second-stage Parts gadget

@@ -5,7 +5,15 @@ Authors: Nathan Pflueger
 -/
 module
 
-public import LeanPool.DemazureProduct.Reduction
+public import LeanPool.DemazureProduct.Submodular
+public import LeanPool.DemazureProduct.Utils
+import LeanPool.DemazureProduct.ReducedProducts
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Transpositions

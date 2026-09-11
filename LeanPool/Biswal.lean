@@ -7,6 +7,9 @@ module
 
 public import LeanPool.Biswal.Theorem1
 public import LeanPool.Biswal.Theorem23
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Chebyshev Quotients and Demazure Multiplicities

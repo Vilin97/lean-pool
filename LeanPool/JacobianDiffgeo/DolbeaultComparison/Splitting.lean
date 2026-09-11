@@ -7,6 +7,10 @@ module
 
 public import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
 public import LeanPool.JacobianDiffgeo.Cech.Refinement
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # PoU splitting of a Čech `0`-cocycle (`Jacobian/DolbeaultComparison/Splitting.lean`)

@@ -15,7 +15,7 @@ needed to start the simultaneous argument-theory extension.
 module
 
 public import LeanPool.MatchingLogic.EntryIII.Witnessed
-public import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.CanonicalCore

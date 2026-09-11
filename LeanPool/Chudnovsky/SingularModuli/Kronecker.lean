@@ -6,6 +6,7 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
+import LeanPool.Chudnovsky.Ramanujan
 
 /-!
 # Kronecker's unit-leading-coefficient lemma for the diagonal modular polynomial (Phase C, B7)

@@ -8,6 +8,7 @@ module
 public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenComplex
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
 
 /-!
 # Finite marked-edge fans on intrinsic two-complexes

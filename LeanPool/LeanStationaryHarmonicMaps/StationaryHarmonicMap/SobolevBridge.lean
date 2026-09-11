@@ -5,8 +5,11 @@ Authors: Wei Wang
 -/
 module
 
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Sobolev bridge for stationary Sobolev map monotonicity

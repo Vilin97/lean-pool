@@ -6,9 +6,8 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.Analysis.Calculus.Implicit
-public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-public import LeanPool.SardMoreira.ContDiffMoreiraHolder
-public import LeanPool.SardMoreira.LinearAlgebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.SardMoreira.ImplicitFunction

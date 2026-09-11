@@ -6,14 +6,12 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 module
 
 public import LeanPool.OSforGFF.General.SchurProduct
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.Normed.Algebra.Exponential
-public import Mathlib.Analysis.Complex.TaylorSeries
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Topology.Basic
-public import Mathlib.Order.Filter.Defs
-public import Mathlib.Order.Filter.Basic
-public import Mathlib.Topology.Constructions
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Topology.Instances.Matrix
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Complex.TaylorSeries
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Entrywise Exponential of PSD Matrices

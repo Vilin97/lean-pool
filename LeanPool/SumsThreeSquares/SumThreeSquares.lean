@@ -5,36 +5,15 @@ Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 -/
 module
 
-public import LeanPool.SumsThreeSquares.MinkowskiConvex
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.NormNum.LegendreSymbol
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
 public import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
-public import Mathlib.NumberTheory.SumTwoSquares
-public import Mathlib.NumberTheory.LSeries.PrimesInAP
-public import Mathlib.NumberTheory.Padics.PadicVal.Basic
-public import Mathlib.LinearAlgebra.Matrix.ToLin
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Determinant
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
-public import Mathlib.MeasureTheory.Group.GeometryOfNumbers
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Data.Nat.Squarefree
-public import Mathlib.RingTheory.Int.Basic
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.SumsThreeSquares.MinkowskiConvex
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.NumberTheory.LSeries.PrimesInAP
+import Mathlib.NumberTheory.SumTwoSquares
+import Mathlib.Tactic.NormNum.LegendreSymbol
 
 /-!
 # Sums of three squares: the case `m ≡ 3 (mod 8)`

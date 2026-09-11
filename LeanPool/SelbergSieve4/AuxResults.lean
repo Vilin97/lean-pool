@@ -5,23 +5,12 @@ Authors: Arend Mellendijk
 -/
 module
 
-public import Mathlib.Analysis.Asymptotics.Lemmas
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SumIntegralComparisons
-public import Mathlib.Algebra.Order.Field.Basic
-public import Mathlib.NumberTheory.ArithmeticFunction.Defs
-public import Mathlib.NumberTheory.ArithmeticFunction.Misc
 public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
-public import LeanPool.SelbergSieve4.ForMathlib
-public import LeanPool.SelbergSieve4.ForArithmeticFunction
-public import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
-public import Mathlib.Analysis.SpecialFunctions.NonIntegrable
-public import Mathlib.Data.Nat.Prime.Basic
-public import LeanPool.SelbergSieve4.Tactic.Multiplicativity
+import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.SumIntegralComparisons
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # LeanPool.SelbergSieve4.AuxResults

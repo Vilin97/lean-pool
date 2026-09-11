@@ -5,7 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Logic.Entailment
+public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
+import Mathlib.Tactic.Bound.Init
 
 /-! # Axioms -/
 

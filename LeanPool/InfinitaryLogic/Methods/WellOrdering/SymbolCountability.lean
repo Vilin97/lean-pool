@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Undefinability
-public import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
 /-!
 # Removing symbol countability (issue #12, the sublanguage wrapper)
 

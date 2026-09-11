@@ -5,8 +5,16 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
 public import LeanPool.JacobianDiffgeo.Dbar.Form01
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
+import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The intrinsic `dbar` operator and `IsDbarOn` (`Jacobian/Dbar/Operator.lean`)

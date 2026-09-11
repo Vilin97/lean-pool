@@ -6,9 +6,13 @@ Authors: Vincent Beffara
 module
 
 public import LeanPool.RiemannMappingTheorem.Spaces
-public import LeanPool.RiemannMappingTheorem.Etape2
 public import LeanPool.RiemannMappingTheorem.HasSqrt
-public import LeanPool.RiemannMappingTheorem.Montel
+import LeanPool.RiemannMappingTheorem.DerivInj
+import LeanPool.RiemannMappingTheorem.Etape2
+import LeanPool.RiemannMappingTheorem.Hurwitz
+import LeanPool.RiemannMappingTheorem.Montel
+import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.RiemannMappingTheorem.Main

@@ -6,6 +6,13 @@ Authors: Keston Aquino-Michaels
 module
 
 public import LeanPool.CriticalPortraits.Forward
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # INJECTIVITY of `T` (Brick 4).

@@ -5,9 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
 public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
 
 /-!
 # Bridges: `ContMDiff` over `𝓘(ℂ)` ↔ chart-local `ContDiff`/`AnalyticAt`

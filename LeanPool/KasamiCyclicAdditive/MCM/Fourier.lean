@@ -5,10 +5,10 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
 public import LeanPool.KasamiCyclicAdditive.MCM.Halfspace
-public import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
+public import Mathlib.NumberTheory.GaussSum
+public import Mathlib.RingTheory.Polynomial.Dickson
+import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
 
 /-!
 # The MCM Fourier/Dickson reduction

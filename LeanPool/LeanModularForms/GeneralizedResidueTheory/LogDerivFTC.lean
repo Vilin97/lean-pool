@@ -5,24 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Complex.AbsMax
-public import Mathlib.Analysis.Complex.Periodic
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-public import Mathlib.Analysis.Calculus.FDeriv.Analytic
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.Asymptotics.Defs
-public import Mathlib.Analysis.Meromorphic.NormalForm
-public import Mathlib.MeasureTheory.Integral.CircleIntegral
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.RingTheory.LaurentSeries
-public import Mathlib.Topology.Homotopy.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # FTC for Log-Derivative Integrals

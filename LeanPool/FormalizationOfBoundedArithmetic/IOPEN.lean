@@ -7,31 +7,16 @@ Authors: ruplet
 -- for a quick demo, jump straight to `theorem add_assoc`
 module
 
-public import Mathlib.Tactic.Core
-public import Mathlib.Logic.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import Mathlib.ModelTheory.Basic
-public import Mathlib.ModelTheory.Syntax
-public import Mathlib.ModelTheory.Complexity
-public import Mathlib.ModelTheory.Semantics
 
-public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 public import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
-public import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-public import LeanPool.FormalizationOfBoundedArithmetic.Semantics
 public import LeanPool.FormalizationOfBoundedArithmetic.Complexity
-public import LeanPool.FormalizationOfBoundedArithmetic.Order
 public import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
-public import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.Semantics
+import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+import Mathlib.Tactic.Positivity.Finset
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.IOPEN

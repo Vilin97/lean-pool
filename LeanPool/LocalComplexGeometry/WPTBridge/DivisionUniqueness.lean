@@ -5,7 +5,10 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.WPTBridge.Division
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
 
 /-!
 # Uniqueness in analytic Weierstrass division

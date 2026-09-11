@@ -5,18 +5,19 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import Mathlib.Analysis.Calculus.Deriv.Star
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.Analysis.Fourier.LpSpace
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-public import Mathlib.MeasureTheory.Measure.Prod
-public import Mathlib.Probability.Distributions.Gaussian.Real
-public import Mathlib.Probability.Moments.ComplexMGF
 public import Mathlib.RingTheory.Polynomial.Hermite.Basic
-public import Mathlib.Topology.Algebra.Module.Cardinality
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+import Mathlib.Analysis.Calculus.Deriv.Star
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Fourier.LpSpace
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Gamma
+import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.RingTheory.Finiteness.Prod
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Topology.Algebra.Module.Cardinality
 
 /-! # ExactModulusRecovery -/
 

@@ -8,6 +8,7 @@ module
 public import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
 public import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
 public import LeanPool.JacobianDiffgeo.SphereTopology.Headline
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # sphere-topology: `SimplyConnectedSpace (OnePoint ℂ)` and `genus X = 0` for simply connected `X`

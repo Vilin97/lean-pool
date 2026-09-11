@@ -5,9 +5,17 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing.CPVHelpers
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing.CPVHelpers
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Higher-Order Cancellation Assembly

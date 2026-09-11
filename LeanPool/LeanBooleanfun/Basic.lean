@@ -6,9 +6,7 @@ Authors: Joris Roos
 module
 
 public import LeanPool.LeanBooleanfun.AuxLemmas
-public import LeanPool.LeanBooleanfun.ToMathlib.Finset
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Algebra.CharP.Pi
 
 /-!
 # Analysis on Boolean functions

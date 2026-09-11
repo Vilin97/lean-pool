@@ -6,9 +6,12 @@ Authors: Nathan Pflueger
 module
 
 public import Mathlib.Data.Finset.Max
-public import Mathlib.Data.Int.Basic
 public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Tactic.Linarith
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Valleys

@@ -9,6 +9,7 @@ public import Mathlib.Data.Sign.Defs
 public import LeanPool.VirasoroProject.LieAlgebraModuleUEA
 public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
 public import LeanPool.VirasoroProject.VermaModule
+public import Mathlib.Order.CompletePartialOrder
 
 /-!
 # Verma modules for Lie algebras with triangular decomposition

@@ -5,22 +5,18 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
 
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
 
-public import LeanPool.Monlib4.LinearAlgebra.InnerAut
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
-public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-public import LeanPool.Monlib4.LinearAlgebra.Nacgor
-public import Mathlib.Analysis.InnerProductSpace.StarOrder
-public import LeanPool.Monlib4.LinearAlgebra.OfNorm
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-public import Mathlib.Analysis.InnerProductSpace.Positive
-public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
+import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
+import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
+import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+import LeanPool.Monlib4.RepTheory.AutMat
+import Mathlib.Analysis.InnerProductSpace.StarOrder
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.PosMapIsReal

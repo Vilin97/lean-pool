@@ -6,17 +6,16 @@ Authors: Michael Stoll
 module
 
 public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.Localization.FractionRing
 public import Mathlib.RingTheory.Localization.Integer
 public import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
-public import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Push
 
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
-public import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
+import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
+import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Integrality of Möbius factors of strong divisibility sequences

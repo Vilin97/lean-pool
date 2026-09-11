@@ -5,15 +5,11 @@ Authors: Math Inc
 -/
 module
 
-public import LeanPool.Erdos1196.Preliminaries
 public import LeanPool.Erdos1196.FirstEntryRowTerm
-public import Mathlib.Algebra.Order.Floor.Div
-public import Mathlib.Analysis.SumIntegralComparisons
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-public import Mathlib.Topology.Instances.Real.Lemmas
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.NumberTheory.Harmonic.Bounds
-public import Mathlib.NumberTheory.TsumDivisorsAntidiagonal
+public import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.Preliminaries
+import Mathlib.NumberTheory.Chebyshev
+import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-!
 # Core definitions for the normalization constant

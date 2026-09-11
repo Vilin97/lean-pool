@@ -8,6 +8,14 @@ module
 public import LeanPool.Polylean.UnitConjecture.TorsionFree
 public import LeanPool.Polylean.UnitConjecture.GroupRing
 public import LeanPool.Polylean.UnitConjecture.GardamTheorem
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Polylean Unit Conjecture infrastructure

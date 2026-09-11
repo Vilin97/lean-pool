@@ -8,6 +8,8 @@ module
 public import LeanPool.Wallace.TorsionFreeCoordinate
 public import LeanPool.Wallace.RationalAssembly
 public import LeanPool.Wallace.PackageTransport
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The main theorem for every torsion-free Abelian group of cardinality continuum

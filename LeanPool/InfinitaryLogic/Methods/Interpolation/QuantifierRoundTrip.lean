@@ -6,8 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
-public import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
 public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # The quantifier round-trip and the arbitrary-syntax C7 consumers (issue #8 tranche 1.5)
 

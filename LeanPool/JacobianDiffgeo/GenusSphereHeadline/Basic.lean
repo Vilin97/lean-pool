@@ -5,9 +5,16 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.RiemannRoch
-public import LeanPool.JacobianDiffgeo.SphereTopology
-public import LeanPool.JacobianDiffgeo.ProperDegree
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
+import LeanPool.JacobianDiffgeo.RiemannRoch.Basic
+import LeanPool.JacobianDiffgeo.SphereTopology.Headline
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # genus-zero-headline (#30): `genus X = 0 ↔ X ≃ₜ S²`

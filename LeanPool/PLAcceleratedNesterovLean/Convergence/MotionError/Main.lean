@@ -5,7 +5,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 
 /-!
 # Motion Error Step 1: Gradient Bound from L-Smoothness

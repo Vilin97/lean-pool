@@ -6,7 +6,13 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
-public import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+public import LeanPool.InfinitaryLogic.Scott.Height.Defs
+import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Isomorphism is Borel under Bounded Scott Height
 

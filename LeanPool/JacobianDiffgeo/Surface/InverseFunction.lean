@@ -5,9 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
-public import Mathlib.Geometry.Manifold.MFDeriv.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
+public import Mathlib.Geometry.Manifold.MFDeriv.Defs
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+import Mathlib.Geometry.Manifold.MFDeriv.Basic
 
 /-!
 # Holomorphic inverse function theorem on surfaces

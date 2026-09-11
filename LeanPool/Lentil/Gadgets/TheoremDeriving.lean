@@ -7,9 +7,9 @@ module
 
 public meta import LeanPool.Lentil.Expr
 
-public import Lean
-public import LeanPool.Lentil.Rules.Basic
-public import LeanPool.Lentil.Expr
+public import LeanPool.Lentil.Utils.MetaUtil
+import Aesop.Frontend.Tactic
+import LeanPool.Lentil.Tactics.Basic
 
 /-! Gadgets for providing different variants of a proven theorem. -/
 

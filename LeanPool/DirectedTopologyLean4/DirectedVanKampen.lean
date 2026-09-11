@@ -5,11 +5,14 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Basic
 public import LeanPool.DirectedTopologyLean4.DihomotopyCover
-public import LeanPool.DirectedTopologyLean4.PushoutAlternative
-public import LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
-public import LeanPool.DirectedTopologyLean4.MorphismAux
+public import LeanPool.DirectedTopologyLean4.DipathSubtype
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs
+import LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
+import LeanPool.DirectedTopologyLean4.FractionEqualities
+import LeanPool.DirectedTopologyLean4.MorphismAux
+import LeanPool.DirectedTopologyLean4.PushoutAlternative
+import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 
 /-!
 # LeanPool.DirectedTopologyLean4.DirectedVanKampen

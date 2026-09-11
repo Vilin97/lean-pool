@@ -7,6 +7,8 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
 public import LeanPool.DomainTheory.Neighborhood.ExampleB
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Exercise 2.21 (Scott 1981, PRG-19) — the system `𝒞`, total finite sequences,

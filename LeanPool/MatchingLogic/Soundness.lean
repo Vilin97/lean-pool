@@ -18,7 +18,8 @@ Statement pinned before any proof was attempted.
 module
 
 public import LeanPool.MatchingLogic.ProofSystem
-public import LeanPool.MatchingLogic.Sanity
+import LeanPool.MatchingLogic.Sanity
+import Mathlib.Data.Set.BooleanAlgebra
 
 /-!
 # MatchingLogic.Soundness

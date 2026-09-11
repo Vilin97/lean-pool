@@ -5,8 +5,10 @@ Authors: Yann Pequignot
 -/
 module
 
-public import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
-public import LeanPool.NashWilliams.Data.Nat.Nth
+public import Mathlib.Data.Finset.Card
+import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
+import LeanPool.NashWilliams.Data.Nat.Nth
+import Mathlib.Order.Lattice.Nat
 
 /-!
 # The infinite Ramsey theorem

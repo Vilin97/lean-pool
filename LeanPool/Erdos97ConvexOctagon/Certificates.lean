@@ -6,8 +6,11 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.FiniteModel
-public import LeanPool.Erdos97ConvexOctagon.Obstructions
-public import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
+public import LeanPool.Erdos97ConvexOctagon.Radius
+public import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
+import LeanPool.Erdos97ConvexOctagon.Obstructions
+import LeanPool.Erdos97ConvexOctagon.Relabelling
+import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
 
 /-! # Erdős 97 convex-octagon formalization: Certificates -/
 

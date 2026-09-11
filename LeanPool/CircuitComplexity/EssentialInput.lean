@@ -5,8 +5,8 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import Mathlib.Data.Fintype.BigOperators
 public import LeanPool.CircuitComplexity.Basic
+public import Mathlib.Data.Fintype.Pi
 
 /-! # Essential Inputs
 

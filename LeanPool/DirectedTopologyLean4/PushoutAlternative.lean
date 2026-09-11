@@ -5,8 +5,7 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import Mathlib.CategoryTheory.Category.Cat
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs
 
 /-!
 # LeanPool.DirectedTopologyLean4.PushoutAlternative

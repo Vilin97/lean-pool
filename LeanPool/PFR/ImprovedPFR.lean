@@ -6,7 +6,19 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.Main
+public import LeanPool.PFR.TauFunctional
+import LeanPool.PFR.Endgame
+import LeanPool.PFR.Fibring
+import LeanPool.PFR.FirstEstimate
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FourVariables
+import LeanPool.PFR.HundredPercent
+import LeanPool.PFR.SecondEstimate
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import Mathlib.Algebra.Module.ZMod
+import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+import Mathlib.MeasureTheory.Measure.Prokhorov
 
 /-!
 # Improved PFR

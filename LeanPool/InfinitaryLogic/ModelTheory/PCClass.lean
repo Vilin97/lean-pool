@@ -6,7 +6,6 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-public import Mathlib.ModelTheory.LanguageMap
 
 /-!
 # The abstract PC-class membership predicate (issue #10, Unit 4)

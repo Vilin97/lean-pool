@@ -6,6 +6,15 @@ Authors: Bryan Ehrlich
 module
 
 public import LeanPool.CompositionAlgebras.Composition.Defs
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Module
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!

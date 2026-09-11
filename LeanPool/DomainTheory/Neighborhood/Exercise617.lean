@@ -6,9 +6,18 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Definition63
-public import LeanPool.DomainTheory.Neighborhood.Theorem69
 public import LeanPool.DomainTheory.Neighborhood.Example62C
-public import LeanPool.DomainTheory.Neighborhood.Exercise516
+public import LeanPool.DomainTheory.Neighborhood.Exercise419
+public import LeanPool.DomainTheory.Neighborhood.Exercise510
+public import Mathlib.Tactic.Attr.Core
+import LeanPool.DomainTheory.Neighborhood.Exercise516
+import LeanPool.DomainTheory.Neighborhood.Theorem69
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 6.17 (Scott 1981, PRG-19, §6) — the algebras for which `C` is initial

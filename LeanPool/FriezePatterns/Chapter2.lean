@@ -5,12 +5,12 @@ Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
 module
 
-public import LeanPool.FriezePatterns.Chapter1
 public import Mathlib.Data.Nat.Fib.Basic
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.NormNum.NatFib
-public import Mathlib.Tactic.NthRewrite
-public import Mathlib.Tactic.Positivity
+public import Mathlib.Data.Nat.Cast.Order.Ring
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FriezePatterns.Chapter2

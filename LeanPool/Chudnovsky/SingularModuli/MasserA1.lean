@@ -5,8 +5,14 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.SingularModuli.Rationality
-public import LeanPool.Chudnovsky.SingularModuli.Kronecker
+public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.Ramanujan
+import LeanPool.Chudnovsky.SingularModuli.CMRelations
+import LeanPool.Chudnovsky.SingularModuli.Kronecker
+import LeanPool.Chudnovsky.SingularModuli.Rationality
+import LeanPool.Chudnovsky.SingularModuli.Valence
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Masser's Theorem A1 at `τ₁₆₃`: rationality of `s₂` (Phase C, statement 3)

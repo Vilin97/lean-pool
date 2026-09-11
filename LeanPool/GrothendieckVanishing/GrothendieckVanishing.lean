@@ -5,7 +5,13 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import LeanPool.GrothendieckVanishing.IrreducibleStep
+public import LeanPool.GrothendieckVanishing.CohomologyAPI
+public import Mathlib.Topology.KrullDimension
+public import Mathlib.Topology.NoetherianSpace
+import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
+import LeanPool.GrothendieckVanishing.IrreducibleStep
+import LeanPool.GrothendieckVanishing.TopologicalKrullDim
+import Mathlib.Data.Rat.Floor
 
 /-!
 # Grothendieck's vanishing theorem

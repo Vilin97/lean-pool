@@ -5,7 +5,9 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.SingularModuli.FormReduction
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
+import LeanPool.Chudnovsky.SingularModuli.FormReduction
 
 /-!
 # The CM relations at `τ₁₆₃`: explicit isogeny matrices (Phase C, Track 3)

@@ -6,6 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.ActionPoisson
+public import LeanPool.PoincareThreeBody.DelaunaySection
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # Pointwise factorization of the leading integral through the Delaunay actions

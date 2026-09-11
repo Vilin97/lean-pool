@@ -5,14 +5,16 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
 public import LeanPool.FormalLearningTheory.Data
-public import LeanPool.FormalLearningTheory.Learner
-public import LeanPool.FormalLearningTheory.Criterion
-public import LeanPool.FormalLearningTheory.Complexity
-public import LeanPool.FormalLearningTheory.Computation
 public import Mathlib.Combinatorics.SetFamily.Shatter
-public import Mathlib.Data.ENat.Lattice
+public import LeanPool.FormalLearningTheory.Complexity.Ordinal
+public import LeanPool.FormalLearningTheory.Complexity.Structures
+public import LeanPool.FormalLearningTheory.Learner.Bayesian
+import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Bridge Types: Connecting to Mathlib and Across Paradigms

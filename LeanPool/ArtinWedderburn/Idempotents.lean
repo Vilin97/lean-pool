@@ -5,15 +5,14 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.RingTheory.Artinian.Ring
-public import Mathlib.Algebra.Field.Defs
-public import Mathlib.RingTheory.SimpleRing.Basic
-public import Mathlib.Algebra.Ring.Idempotent
-public import LeanPool.ArtinWedderburn.PrimeRing
-public import LeanPool.ArtinWedderburn.SetProd
 public import LeanPool.ArtinWedderburn.CornerRing
-public import LeanPool.ArtinWedderburn.MinIdeals
-public import LeanPool.ArtinWedderburn.Auxiliary
+import LeanPool.ArtinWedderburn.MinIdeals
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.RingTheory.Ideal.Maximal
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Orthogonal idempotents and matrix units

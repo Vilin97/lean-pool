@@ -6,7 +6,8 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Germs.Basic
-public import Mathlib.RingTheory.Noetherian.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Local zero-set germs and vanishing ideals

@@ -7,6 +7,9 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Rew
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Formula
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Rewriting Entailment

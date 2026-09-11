@@ -6,8 +6,15 @@ Authors: Michael Stoll
 module
 
 public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Eval
-public import LeanPool.QuadraticIterates.Mathlib.Data.Multiset
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Eval
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.EvenComp
+import LeanPool.QuadraticIterates.Mathlib.Data.Multiset
+import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Rat.Star
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Irreducibility of the iterates over `ℚ`

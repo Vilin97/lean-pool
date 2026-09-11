@@ -5,8 +5,13 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global`

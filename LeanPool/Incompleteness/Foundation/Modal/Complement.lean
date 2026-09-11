@@ -5,7 +5,6 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Formula
 public import LeanPool.Incompleteness.Foundation.Modal.Subformulas
 
 /-! # Complement -/

@@ -5,8 +5,9 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
-public import Mathlib.Data.Fintype.Card
-public import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Algebra.Group.Action.End
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Fintype.Card
 
 /-!
 # Words for a full symmetric top group

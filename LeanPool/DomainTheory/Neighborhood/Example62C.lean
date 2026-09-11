@@ -8,6 +8,12 @@ module
 public import LeanPool.DomainTheory.Neighborhood.Example62
 public import LeanPool.DomainTheory.Neighborhood.Example44
 public import LeanPool.DomainTheory.Neighborhood.Exercise315
+import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Example 6.2 (Scott 1981, PRG-19, §6) — `C ≅ {{Λ}} + C + C`

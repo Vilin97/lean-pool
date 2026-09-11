@@ -5,37 +5,19 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-public import Mathlib.Algebra.Field.Defs
-public import Mathlib.Algebra.Group.Finsupp
-public import Mathlib.Algebra.GroupWithZero.Nat
-public import Mathlib.Algebra.MvPolynomial.Basic
-public import Mathlib.Algebra.MvPolynomial.Eval
-public import Mathlib.Algebra.MvPolynomial.Monad
-public import Mathlib.Algebra.Ring.Defs
-public import Mathlib.Analysis.LocallyConvex.Basic
-public import Mathlib.Data.Finsupp.Defs
-public import Mathlib.Data.Nat.Notation
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
-public import Mathlib.GroupTheory.GroupAction.Ring
-public import Mathlib.LinearAlgebra.DFinsupp
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.Adjoin.FG
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.Ideal.BigOperators
-public import Mathlib.RingTheory.Ideal.Maps
-public import Mathlib.RingTheory.Ideal.Operations
-public import Mathlib.RingTheory.Ideal.Span
-public import Mathlib.RingTheory.Nullstellensatz
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Tactic.ByContra
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.NormNum.Basic
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.SplitIfs
+public import Mathlib.RingTheory.Ideal.Height
+import Mathlib.Algebra.MvPolynomial.Monad
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.Nullstellensatz
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Common zeros on products of projective planes
 

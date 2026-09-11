@@ -5,11 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ProjectiveLine
-public import LeanPool.JacobianDiffgeo.Path
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-public import Mathlib.Analysis.Convex.Contractible
-public import Mathlib.Topology.Connected.LocallyPathConnected
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Topology.Compactification.OnePoint.Basic
+import LeanPool.JacobianDiffgeo.Path.Perturb
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `SimplyConnectedSpace (OnePoint ℂ)` (CC-sphere-topology, design §2)

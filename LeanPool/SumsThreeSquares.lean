@@ -7,6 +7,11 @@ module
 
 public import LeanPool.SumsThreeSquares.MinkowskiConvex
 public import LeanPool.SumsThreeSquares.SumThreeSquares
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.Tactic.NormNum.LegendreSymbol
 
 /-!
 # Sums of Three Squares

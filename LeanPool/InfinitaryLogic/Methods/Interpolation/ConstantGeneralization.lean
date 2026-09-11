@@ -6,9 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
-public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
 public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Constant generalization: the `∀`-twin of `genEx`, and countable-conjunction bounds
 

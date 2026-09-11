@@ -6,7 +6,12 @@ Authors: FrenzyMath
 module
 
 public import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
-public import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Primality in R[x, y^{-1}] and coprime height bound

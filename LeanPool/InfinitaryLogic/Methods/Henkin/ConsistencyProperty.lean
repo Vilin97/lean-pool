@@ -5,7 +5,6 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # Consistency Properties

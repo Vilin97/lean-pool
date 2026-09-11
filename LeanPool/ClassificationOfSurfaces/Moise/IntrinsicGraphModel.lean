@@ -5,9 +5,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
-public import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # A conforming plane model of an intrinsic replacement graph

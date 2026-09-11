@@ -5,8 +5,14 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.EnergyLeafObstruction
-public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import LeanPool.PoincareThreeBody.MixedPartials
+public import LeanPool.PoincareThreeBody.Perturbation
+public import Mathlib.Analysis.Calculus.DSlope
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.Analytic.IsolatedZeros
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Analytic coefficient normalization in the mass parameter

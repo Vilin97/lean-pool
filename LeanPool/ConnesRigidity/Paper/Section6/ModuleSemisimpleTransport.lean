@@ -6,7 +6,7 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimple
-public import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismTransport
+import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismTransport
 
 /-!
 Transport the concrete first-module semisimplicity proof into the paper-facing

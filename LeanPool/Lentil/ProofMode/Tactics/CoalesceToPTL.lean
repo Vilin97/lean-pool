@@ -5,12 +5,15 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public meta import LeanPool.Lentil.ProofMode.Basic
 
-public import Lean.Meta.Tactic.Generalize
-public import Lean.Meta.CollectFVars
-public import Lean.Elab.Tactic.Config
-public import LeanPool.Lentil.ProofMode.Basic
+public import Aesop.BuiltinRules
+public meta import Lean.Elab.ConfigEval.Basic
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Elab.ConfigEval.Commands
+meta import Lean.Elab.ConfigEval.DeriveEvalConfigItem
+meta import Lean.Meta.Tactic.Generalize
+import LeanPool.Lentil.ProofMode.Basic
+meta import LeanPool.Lentil.ProofMode.Basic
 
 public meta section
 

@@ -5,11 +5,10 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
-public import Mathlib.Algebra.Category.Grp.Basic
 public import Mathlib.CategoryTheory.Category.Pointed
 public import Mathlib.CategoryTheory.Comma.Over.Basic
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
+public import Mathlib.Topology.Homotopy.HomotopyGroup
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps

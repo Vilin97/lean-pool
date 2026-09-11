@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Logic.Calculus
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # Calculus -/
 

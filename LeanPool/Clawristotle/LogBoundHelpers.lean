@@ -5,12 +5,11 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.Defs
 public import LeanPool.Clawristotle.TorusDefs
-public import LeanPool.Clawristotle.TorusInstance
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-public import Mathlib.Topology.Order.Compact
+import LeanPool.Clawristotle.TorusInstance
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.Clawristotle.LogBoundHelpers

@@ -12,6 +12,10 @@ public import LeanPool.SingularModuli.QuadraticOrder.Verification
 public import LeanPool.SingularModuli.QuadraticOrder.RootCounting
 public import LeanPool.SingularModuli.QuadraticOrder.Prime
 public import LeanPool.SingularModuli.QuadraticOrder.CanonicalForm
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Quadratic-order prime classification

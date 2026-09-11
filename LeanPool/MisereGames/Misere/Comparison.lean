@@ -7,6 +7,7 @@ module
 
 public import LeanPool.MisereGames.Misere.Ambient
 public import LeanPool.MisereGames.Misere.Universe
+public import LeanPool.MisereGames.Misere.Hereditary.MaintenanceProviso
 
 /-!
 Misere combinatorial games.

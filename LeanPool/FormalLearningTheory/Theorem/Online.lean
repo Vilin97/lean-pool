@@ -6,6 +6,7 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Complexity.GameInfra
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
 
 /-!
 # Online Learning Characterization Theorems

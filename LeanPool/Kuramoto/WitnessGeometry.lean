@@ -5,8 +5,8 @@ Authors: Ben Cassie
 -/
 module
 
-public import Mathlib.Algebra.Order.Archimedean.Real.Basic
-public import Mathlib.Tactic.Linarith
+public import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
 /-!
 # Witness geometry

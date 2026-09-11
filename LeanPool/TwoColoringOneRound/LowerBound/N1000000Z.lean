@@ -7,8 +7,9 @@ module
 
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000ZData
-public import Mathlib.Data.Rat.Star
 public import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Z

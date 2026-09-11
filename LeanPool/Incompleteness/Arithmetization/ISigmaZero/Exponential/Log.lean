@@ -6,6 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Exp
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Log -/
 

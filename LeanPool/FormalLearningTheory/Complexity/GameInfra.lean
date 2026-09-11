@@ -9,10 +9,10 @@ public import LeanPool.FormalLearningTheory.Criterion.Online
 -- Removed: import LeanPool.FormalLearningTheory.Complexity.Littlestone
 -- Γ₁₉: branch-wise isShattered wrong + trees must be complete (balanced).
 -- Corrected: depth-indexed complete trees + path-wise shattering.
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
 -- Path B (Γ₂₁): WithBot (WithTop ℕ) for LittlestoneDim
 -- Required for CompleteLattice instance and ConditionallyCompleteLinearOrderBot ℕ
 public import Mathlib.Order.Lattice.Nat
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Game-Theoretic Infrastructure for Online Learning

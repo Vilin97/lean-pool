@@ -6,11 +6,9 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.InformationTheory.KullbackLeibler.Basic
-public import Mathlib.MeasureTheory.Measure.DiracProba
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.Probability.Kernel.Composition.MeasureComp
-public import Mathlib.Probability.Kernel.Composition.MeasureCompProd
-public import Mathlib.Topology.Instances.ENNReal.Lemmas
+public import Mathlib.Probability.Kernel.Composition.CompNotation
+import Mathlib.Probability.Kernel.Composition.MeasureComp
 
 /-!
 # ChannelCapacity.Basic

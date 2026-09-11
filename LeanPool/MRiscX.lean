@@ -10,6 +10,7 @@ public import LeanPool.MRiscX.Examples.Examples
 public import LeanPool.MRiscX.Examples.OtpProof
 public import LeanPool.MRiscX.Examples.SingleProofsOTP
 public import LeanPool.MRiscX.Examples.SpecAutomation
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # MRiscX

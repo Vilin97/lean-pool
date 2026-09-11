@@ -10,10 +10,18 @@ Authors: Yunzhou Xie, Jujian Zhang, Kevin Buzzard
 -/
 module
 
-public import LeanPool.BrauerGroupNew.Centralizer
-public import LeanPool.BrauerGroupNew.Wedderburn
-public import Mathlib.Algebra.Central.Basic
-public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.Centralizer
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Algebra.Central.Basic
+import Mathlib.Data.Rat.Floor
+import Mathlib.RingTheory.Flat.Basic
+import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
+import Mathlib.Tactic.Continuity.Init
 /-!
 # Characteristic predicate for central simple algebras
 In this file we define the predicate `IsCentralSimple K D` where `K` is a field

@@ -6,7 +6,7 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-public import Mathlib.RingTheory.Coalgebra.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm

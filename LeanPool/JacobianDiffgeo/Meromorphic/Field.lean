@@ -6,6 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Field (ℳ X)` and pointwise inverse (CC3, proof plan §6.2)

@@ -5,13 +5,13 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Nat.Log
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.IntervalCases
 public import LeanPool.CircuitComplexity.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Prod
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Ring.RingNF
 
 /-! # Internal: Circuit Descriptors and Shannon Counting Bound
 

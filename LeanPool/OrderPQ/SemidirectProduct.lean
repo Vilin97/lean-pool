@@ -5,10 +5,7 @@ Authors: Scott Harper, Peiran Wu
 -/
 module
 
-public import Mathlib.SetTheory.Cardinal.Finite
 public import Mathlib.GroupTheory.SemidirectProduct
-public import Mathlib.GroupTheory.GroupAction.ConjAct
-public import Mathlib.Algebra.Group.Subgroup.Pointwise
 public import Mathlib.Tactic.Group
 
 /-!

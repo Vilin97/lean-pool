@@ -5,22 +5,12 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Data.Fintype.CardEmbedding
-public import Mathlib.Data.Fintype.Sum
-public import Mathlib.RingTheory.Polynomial.Pochhammer
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import LeanPool.TwoColoringOneRound.LowerBound.Defs
-public import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
 public import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
+public import Mathlib.Order.Interval.Finset.Fin
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Fintype.CardEmbedding
+import Mathlib.RingTheory.Polynomial.Pochhammer
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Upper bounds (explicit colorings)

@@ -5,7 +5,15 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.CrossingAnalysis
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.CrossingAnalysis
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Winding Number: H-W Decomposition Theorems

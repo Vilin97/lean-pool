@@ -7,9 +7,9 @@ Authors: Jineon Baek
 -- Mirror configuration
 module
 
-public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
-public import LeanPool.ErdosTuzaValtr.Lib.List.Default
 public import LeanPool.ErdosTuzaValtr.Config.Defs
+import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
+import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
 
 /-!
 # LeanPool.ErdosTuzaValtr.Config.Mirror

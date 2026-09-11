@@ -5,8 +5,10 @@ Authors: Dan Clemens Posch
 -/
 module
 
-public import LeanPool.KahnKalai.Covering
-public import Mathlib.Analysis.Complex.ExponentialBounds
+public import LeanPool.KahnKalai.Basic
+import LeanPool.KahnKalai.Covering
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 Tran–Vu Remark 2.5: binomial mixture of level fractions plus a `2^{-X}` Markov

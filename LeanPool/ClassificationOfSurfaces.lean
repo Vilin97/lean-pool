@@ -135,6 +135,9 @@ public import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
 public import LeanPool.ClassificationOfSurfaces.TriangleCell
 public import LeanPool.ClassificationOfSurfaces.Triangulation
 public import LeanPool.ClassificationOfSurfaces.WeightedCircle
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Classification of Compact Surfaces

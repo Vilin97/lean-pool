@@ -5,8 +5,12 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Data.Fintype.Powerset
 public import LeanPool.PebblingLean.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Fintype.Powerset
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Hypercubes

@@ -6,7 +6,6 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 module
 
 import all Mathlib.NumberTheory.LegendreSymbol.Complex
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
 public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
 public import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum

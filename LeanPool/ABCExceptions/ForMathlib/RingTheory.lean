@@ -6,6 +6,7 @@ Authors: Bhavik Mehta, Arend Mellendijk
 module
 
 public import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Ring theory support for ABC exceptions

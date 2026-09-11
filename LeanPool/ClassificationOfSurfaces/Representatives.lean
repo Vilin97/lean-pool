@@ -5,8 +5,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
-public import Mathlib.Geometry.Manifold.Instances.Sphere
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Eval representatives and normal-form indices

@@ -5,10 +5,18 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Algebra.Order.Archimedean.Basic
 public import LeanPool.Redhill.Common.MaxAbs
 public import LeanPool.Redhill.General.Defs
-public import LeanPool.Redhill.ToMathlib.NatAbs
+public import Mathlib.Order.Filter.AtTopBot.Defs
+import LeanPool.Redhill.ToMathlib.NatAbs
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Archimedean.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Subsum condition for the general case

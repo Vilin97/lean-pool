@@ -5,7 +5,10 @@ Authors: Vincent Beffara
 -/
 module
 
-public import LeanPool.RiemannMappingTheorem.Cindex
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # LeanPool.RiemannMappingTheorem.HasSqrt

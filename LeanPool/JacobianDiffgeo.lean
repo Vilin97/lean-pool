@@ -39,6 +39,8 @@ public import LeanPool.JacobianDiffgeo.GenusSphereHeadline
 public import LeanPool.JacobianDiffgeo.PeriodLattice
 public import LeanPool.JacobianDiffgeo.CechCount
 public import LeanPool.JacobianDiffgeo.Challenge
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Jacobian of a Compact Riemann Surface

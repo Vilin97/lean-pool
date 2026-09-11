@@ -5,22 +5,12 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
+import Mathlib.Data.Nat.Bitwise
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 This file rewrites `corrAvgMatrix` into the symmetric orbital basis:

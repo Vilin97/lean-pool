@@ -5,8 +5,12 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.CanonicalPairings
 public import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
+public import LeanPool.ClassificationOfSurfaces.CanonicalWords
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Carrier coordinates for canonical normal-form words

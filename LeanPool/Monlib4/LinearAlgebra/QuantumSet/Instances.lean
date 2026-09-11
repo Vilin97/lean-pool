@@ -5,10 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
 public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
+import LeanPool.Monlib4.Preq.RCLikeLe
+import LeanPool.Monlib4.RepTheory.AutMat
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances

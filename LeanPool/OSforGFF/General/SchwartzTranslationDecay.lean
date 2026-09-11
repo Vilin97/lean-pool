@@ -5,15 +5,12 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.Analysis.Convolution
-public import Mathlib.Topology.ContinuousMap.ZeroAtInfty
-public import Mathlib.Topology.Order.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.MeasureTheory.Group.Integral
-public import Mathlib.Analysis.Normed.Operator.Mul -- For ContinuousLinearMap.mul
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Group.Integral
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-!
 # Schwartz Bilinear Translation Decay

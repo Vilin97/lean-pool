@@ -5,12 +5,12 @@ Authors: Michael Stoll
 -/
 module
 
-import Mathlib.Tactic.Ring
 
-public import Mathlib.Data.ENat.Lattice
-public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
+import Mathlib.Data.ENat.Lattice
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Unique factorization lemmas

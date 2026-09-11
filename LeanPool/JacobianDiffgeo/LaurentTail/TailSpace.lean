@@ -5,8 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Cech
-public import Mathlib.Data.DFinsupp.Module
+public import LeanPool.JacobianDiffgeo.Cech.WindowRank
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Laurent tail spaces `TailAt p D` / `T D` (laurent-tails, design §2 D1/D2/D4, §4.1)

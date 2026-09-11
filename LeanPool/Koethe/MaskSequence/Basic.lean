@@ -6,10 +6,12 @@ Authors: GPT-6 Astra, Tom Adamczewski
 module
 
 public import Mathlib.Logic.Equiv.Fin.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Use
 public import LeanPool.Koethe.Pencil
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Sparse periodic masks

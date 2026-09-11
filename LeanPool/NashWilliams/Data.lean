@@ -7,6 +7,9 @@ module
 
 public import LeanPool.NashWilliams.Data.Fintype
 public import LeanPool.NashWilliams.Data.Nat
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-! Supporting results for finite types and natural numbers. -/
 

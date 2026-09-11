@@ -5,20 +5,19 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Data.Fintype.CardEmbedding
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Logic.Equiv.Fin.Rotate
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
 public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Fintype.Prod
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Fintype.CardEmbedding
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Logic.Equiv.Fin.Rotate
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Warm-up: `n = 9` gives `> 20%`

@@ -5,9 +5,8 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import LeanPool.GrothendieckVanishing.ClosedImmersion
-public import LeanPool.GrothendieckVanishing.CohomologyAPI
 public import LeanPool.GrothendieckVanishing.FlasqueVanishing
+public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
 /-!
 # Closed-immersion cohomology

@@ -6,6 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
+import Mathlib.Data.Set.Basic
 
 /-!
 # Theorem 1.10 (Scott 1981, PRG-19, §1) — the element-token system `{[X]}`

@@ -7,6 +7,11 @@ module
 
 public import LeanPool.JacobianDiffgeo.Cech.Skyscraper
 public import LeanPool.JacobianDiffgeo.Cech.WindowRank
+import LeanPool.JacobianDiffgeo.Cech.Injectivity
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The six-term skyscraper fragment (CC8, D7, proof plan §6.9(c)-(g))

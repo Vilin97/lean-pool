@@ -5,10 +5,16 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import LeanPool.OSforGFF.Minlos.SazonovTightness
 public import LeanPool.OSforGFF.Minlos.NuclearSpace
-public import LeanPool.OSforGFF.Minlos.PietschBridge
-public import Mathlib.Data.Finsupp.Encodable
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import LeanPool.OSforGFF.Minlos.PietschBridge
+import LeanPool.OSforGFF.Minlos.SazonovTightness
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Finsupp.Encodable
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.MeasureTheory.Function.StronglyMeasurable.Inner
 
 /-!
 # Minlos Concentration Bound

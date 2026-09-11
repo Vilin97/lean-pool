@@ -8,9 +8,9 @@ module
 public import Mathlib.Logic.Encodable.Pi
 public import Mathlib.Order.Filter.Cofinite
 public import Mathlib.Order.Filter.Ultrafilter.Defs
-public import Mathlib.Order.Interval.Finset.Nat
 public import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
 public import Mathlib.SetTheory.Cardinal.Continuum
+import Mathlib.Order.Interval.Finset.Nat
 
 /-!
 # ZFC foundations used by the Wallace construction

@@ -6,6 +6,12 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.TorusDefs
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Torus Integration Lemmas

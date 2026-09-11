@@ -5,15 +5,11 @@ Authors: KitaKen1
 -/
 module
 
-public import Mathlib.Algebra.Order.Star.Basic
-public import Mathlib.Analysis.Normed.Order.Lattice
-public import Mathlib.Analysis.Normed.Ring.Basic
-public import Mathlib.Analysis.SpecificLimits.Basic
 public import Mathlib.NumberTheory.Real.GoldenRatio
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Analysis.Normed.Order.Lattice
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem 346, limit-exists interpretation

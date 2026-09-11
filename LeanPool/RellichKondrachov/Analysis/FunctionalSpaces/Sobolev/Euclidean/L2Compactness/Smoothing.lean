@@ -7,7 +7,6 @@ module
 
 public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
 public import Mathlib.Analysis.Convolution
-public import Mathlib.Topology.Algebra.Support
 
 /-!
 # `L²` compactness criterion: smoothing setup (Euclidean)

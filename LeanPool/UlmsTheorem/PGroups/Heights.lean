@@ -6,8 +6,8 @@ Authors: Elan Roth
 module
 
 public import Mathlib.Data.ENat.Lattice
-public import Mathlib.Tactic.Cases
 public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
+import Mathlib.Algebra.Module.NatInt
 
 /-!
 # Reducedness and height theory

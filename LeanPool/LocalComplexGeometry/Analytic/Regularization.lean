@@ -6,10 +6,7 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Germs.Coordinates
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
-public import Mathlib.Analysis.Analytic.Uniqueness
-public import Mathlib.Data.Fin.Tuple.Basic
-public import Mathlib.Topology.Algebra.Module.FiniteDimension
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
 
 /-!
 # Regularizing a nonzero analytic germ

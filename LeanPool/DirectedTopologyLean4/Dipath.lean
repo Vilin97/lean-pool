@@ -6,7 +6,6 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 module
 
 public import LeanPool.DirectedTopologyLean4.DirectedUnitInterval
-public import LeanPool.DirectedTopologyLean4.UnitIntervalAux
 public import LeanPool.DirectedTopologyLean4.Fraction
 
 /-!

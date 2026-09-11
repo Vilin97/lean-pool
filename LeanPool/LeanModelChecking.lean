@@ -7,6 +7,13 @@ module
 
 public import LeanPool.LeanModelChecking.LTLNBWResult
 public import LeanPool.LeanModelChecking.SafetyLivenessDecomposition
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Formalizations of theorems related to model checking

@@ -5,11 +5,9 @@ Authors: David Renshaw
 -/
 module
 
-public meta import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Nat
-public meta import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Fin
 
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import LeanPool.Rupert.Attr
+public import Mathlib.Analysis.Normed.Lp.PiLp
+import LeanPool.Rupert.Attr
 
 /-!
 # LeanPool.Rupert.MatrixSimps

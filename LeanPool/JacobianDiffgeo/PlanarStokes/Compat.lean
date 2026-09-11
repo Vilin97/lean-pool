@@ -5,14 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Congr
-public import Mathlib.Analysis.Calculus.ContDiff.Defs
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
-public import Mathlib.MeasureTheory.Function.LocallyIntegrable
 public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Basic
+import Mathlib.Analysis.Calculus.FDeriv.Mul
+import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
 
 /-!
 # Compat: Leibniz rule, `ContDiffOn` gluing, and the rectangle ↔ iterated-integral bridge

@@ -11,6 +11,7 @@ public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdj
 public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
 public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
 public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralTheorem
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Compact self-adjoint operators on Hilbert spaces

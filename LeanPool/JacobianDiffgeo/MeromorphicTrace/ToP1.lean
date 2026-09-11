@@ -11,7 +11,12 @@ Blueprint unit: meromorphic-trace. The `toP1` bridge: meromorphic function → h
 module
 
 public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `toP1`: the `f`-to-`ℙ¹` bridge (meromorphic-trace, cluster 1)

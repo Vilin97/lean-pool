@@ -5,22 +5,16 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import Mathlib.Topology.Metrizable.Urysohn
 public import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanAffine
-public import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
 public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveControlledApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
 public import LeanPool.ClassificationOfSurfaces.Moise.RelativeSynchronizedArrangement
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanAffine
+import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
+import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Topology.Metrizable.Urysohn
 
 /-!
 # The Radó chart induction

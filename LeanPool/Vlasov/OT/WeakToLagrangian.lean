@@ -5,13 +5,15 @@ Authors: Joseph K. Miller
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
 
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-public import Mathlib.Analysis.Convolution
 public import LeanPool.Vlasov.OT.CharacteristicFlow
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Calculus.BumpFunction.Convolution
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
 
 /-!
 # Weak ⟹ Lagrangian: every weak Vlasov solution is transported by its characteristic flow

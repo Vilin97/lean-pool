@@ -7,6 +7,8 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.LocalResidue
 public import LeanPool.RiemannRochFunctionFields.PlaceEquiv
+public import LeanPool.RiemannRochFunctionFields.FunctionField.Divisor
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Coordinate-free divisors and degree

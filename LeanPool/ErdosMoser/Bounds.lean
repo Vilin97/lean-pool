@@ -5,10 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.ErdosMoser.SubsetSums
 public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
+public import LeanPool.ErdosMoser.Basic
+import LeanPool.ErdosMoser.SubsetSums
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite lower bounds for the largest element

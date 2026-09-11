@@ -9,8 +9,9 @@ public meta import LeanPool.Lentil.ProofMode.Basic
 
 public meta import Batteries.Lean.Expr
 
-public import LeanPool.Lentil.Rules.Basic
 public import LeanPool.Lentil.ProofMode.Basic
+import LeanPool.Lentil.Rules.Basic
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 

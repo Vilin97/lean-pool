@@ -5,7 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.MaxPowDiv
+public import Mathlib.Data.Nat.Prime.Defs
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 # Kummer's digit formula for central binomial coefficients

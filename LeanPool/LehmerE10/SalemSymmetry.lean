@@ -6,7 +6,15 @@ Authors: Dillon Ryan
 module
 
 public import LeanPool.LehmerE10.Defs
-public import LeanPool.LehmerE10.Main
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import LeanPool.LehmerE10.Main
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # unimodularity and the reciprocal (Salem-pair) symmetry.

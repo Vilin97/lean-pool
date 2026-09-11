@@ -5,7 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.Basic
+public import Mathlib.Data.Real.Basic
+import LeanPool.HadwigerNelsonBounds.Basic
 
 /-!
 # Voronoi quadratic-form bounds

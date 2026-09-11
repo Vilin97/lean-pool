@@ -5,8 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 public import Mathlib.Data.Rat.Encodable
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 
 /-!
 # Constant coding for the undefinability of well-ordering (issue #12, commit 1)

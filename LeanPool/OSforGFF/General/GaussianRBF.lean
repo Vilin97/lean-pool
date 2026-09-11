@@ -6,16 +6,13 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 module
 
 public import LeanPool.OSforGFF.General.PositiveDefinite
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Mathlib.Analysis.Matrix.Order
-public import Mathlib.LinearAlgebra.Matrix.Kronecker
-public import Mathlib.Analysis.Complex.Order
-public import Mathlib.Data.Matrix.Basic
-public import Mathlib.Data.Matrix.Mul
-public import LeanPool.OSforGFF.General.HadamardExp
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import LeanPool.OSforGFF.General.HadamardExp
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Gaussian RBF Kernel is Positive Definite

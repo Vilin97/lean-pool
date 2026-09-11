@@ -8,7 +8,10 @@ module
 public import LeanPool.ClassificationOfSurfaces.CanonicalGeneratorMaps
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
-public import LeanPool.ClassificationOfSurfaces.SphereQuotientHomeomorph
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Realization of canonical finite-cyclic presentations

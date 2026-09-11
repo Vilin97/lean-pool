@@ -5,16 +5,18 @@ Authors: jjaassoonn
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.AlgebraicTopology.SimplexCategory.Basic
-public import Mathlib.Analysis.Normed.Field.Lemmas
-public import Mathlib.Data.Rat.Star
-public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.PowerSeries.Inverse
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.Ring
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Field.Lemmas
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Star
+import Mathlib.LinearAlgebra.Matrix.Block
+import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Combinatorial coefficient formulas and nonnegativity (Theorems 2 and 3)

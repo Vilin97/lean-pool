@@ -15,44 +15,13 @@ Co-authored-by: Aristotle (Harmonic) <aristotle-harmonic@harmonic.fun>
 -/
 module
 
-public import Mathlib.Algebra.Group.Pointwise.Finset.Basic
-public import Mathlib.Analysis.Complex.Exponential
-public import Mathlib.Analysis.SpecialFunctions.Complex.Log
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
-public import Mathlib.CategoryTheory.Category.Basic
 public import Mathlib.Data.Finset.Sort
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.Data.Nat.Nth
-public import Mathlib.Data.Nat.Prime.Basic
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Data.ZMod.QuotientRing
-public import Mathlib.NumberTheory.ArithmeticFunction.Defs
-public import Mathlib.NumberTheory.Bertrand
-public import Mathlib.NumberTheory.PrimeCounting
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.Check
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Constructor
-public import Mathlib.Tactic.Eval
-public import Mathlib.Tactic.Ext
-public import Mathlib.Tactic.Generalize
-public import Mathlib.Tactic.HaveI
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.NormNum.LegendreSymbol
-public import Mathlib.Tactic.NormNum.Prime
-public import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.SimpRw
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Tauto
-public import Mathlib.Tactic.Trace
-public import Mathlib.Tactic.TypeStar
-public import Mathlib.Tactic.Use
-public import Mathlib.Tactic.Variable
+public import Mathlib.Data.ZMod.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 
 /-!

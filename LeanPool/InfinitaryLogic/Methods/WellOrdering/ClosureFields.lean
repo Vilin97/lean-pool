@@ -5,7 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.CofinalFiber
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
 /-!
 # The closure fields (issue #12, commit 4b part 3 — Exercise 4.28)
 

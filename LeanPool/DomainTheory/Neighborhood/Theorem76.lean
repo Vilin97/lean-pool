@@ -7,6 +7,11 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Theorem75
 public import LeanPool.DomainTheory.Neighborhood.Theorem41
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Theorem 7.6 (Scott 1981, PRG-19, §7) — `fix : (𝒟 → 𝒟) → 𝒟` is computable

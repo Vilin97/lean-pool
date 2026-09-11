@@ -7,6 +7,8 @@ module
 
 public import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
 public import LeanPool.DirectedTopologyLean4.StretchPath
+public import Mathlib.Topology.Homotopy.Basic
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # LeanPool.DirectedTopologyLean4.DirectedHomotopy

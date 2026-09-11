@@ -5,13 +5,12 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
 module
 
-public import LeanPool.HansonWright.Probability.Concentration.Chernoff
-public import LeanPool.HansonWright.Probability.Moments.Cumulant
-public import LeanPool.HansonWright.MeasureTheory.Integral.LayerCake
-public import LeanPool.HansonWright.Probability.Process.FiniteMaximum
 public import Mathlib.Probability.Moments.SubGaussian
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-public import Mathlib.Topology.Order.OrderClosed
+import LeanPool.HansonWright.MeasureTheory.Integral.LayerCake
+import LeanPool.HansonWright.Probability.Concentration.Chernoff
+import LeanPool.HansonWright.Probability.Moments.Exponential
+import LeanPool.HansonWright.Probability.Process.FiniteMaximum
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 
 /-!
 # Sub-Gaussian Processes

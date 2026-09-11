@@ -6,6 +6,10 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.ExplicitFormula.TartarPoitouTransform
+import LeanPool.Odlyzko.TestFunction.Fourier
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Regularized Tartar

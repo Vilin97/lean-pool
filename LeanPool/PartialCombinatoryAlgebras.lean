@@ -11,6 +11,8 @@ public import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
 public import LeanPool.PartialCombinatoryAlgebras.Programming
 public import LeanPool.PartialCombinatoryAlgebras.FreeCombinatoryAlgebra
 public import LeanPool.PartialCombinatoryAlgebras.GraphModel
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # Partial Combinatory Algebras

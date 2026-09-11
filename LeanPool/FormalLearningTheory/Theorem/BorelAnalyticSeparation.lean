@@ -5,8 +5,11 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Complexity.Measurability
+import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Borel-Analytic Separation: Counterexample Chain

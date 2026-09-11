@@ -6,7 +6,9 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.AngleAnalysis
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CurveAvoidance
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Winding number base lemmas

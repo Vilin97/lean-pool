@@ -6,7 +6,7 @@ Authors: Cameron Freer
 module
 
 public import Mathlib.Logic.Encodable.Basic
-public import Mathlib.Logic.Embedding.Basic
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Index codings

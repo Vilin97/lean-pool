@@ -6,9 +6,9 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
-public import LeanPool.Incompleteness.Foundation.Vorspiel.ExistsUnique
-public import Mathlib.Algebra.Order.Monoid.Canonical.Defs
-public import Mathlib.Data.Nat.Cast.Order.Basic
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # CobhamR0 -/
 

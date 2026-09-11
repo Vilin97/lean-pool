@@ -5,8 +5,13 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.MuFinish
-public import Mathlib.Tactic.NormNum.Prime
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Prime.Defs
+import LeanPool.Egrs75.MuFinish
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 EGRS75 two-prime closure — NO-VACUITY SMOKE PROBE (2026-06-12).

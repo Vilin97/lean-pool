@@ -6,10 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.ContinuousLattice.WayBelow
-public import Mathlib.Topology.Inseparable
-public import Mathlib.Topology.Separation.Basic
 public import Mathlib.Topology.Order.ScottTopology
-public import Mathlib.Order.DirSupClosed
 
 /-!
 # Specialization order and Scott topology (Scott 1972, §2 opening)

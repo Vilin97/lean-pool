@@ -5,8 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.ClosureFields
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.BaseMember
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.BaseMember
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.ClosureFields
 /-!
 # The bundled consistency property and completion endpoint (issue #12, packaging)
 

@@ -5,8 +5,8 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import Mathlib.Topology.Category.TopCat.Limits.Basic
 public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Topology.Category.TopCat.Basic
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.Disk

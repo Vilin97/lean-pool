@@ -7,6 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Typed
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Iteration
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.Order.Sub.Basic
 
 /-!
 

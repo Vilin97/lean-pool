@@ -5,9 +5,12 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.LeadingObstruction
-public import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
-public import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.PoincareThreeBody.DelaunaySection
+import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Constancy of the leading coefficient on Kepler energy leaves

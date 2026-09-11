@@ -5,13 +5,8 @@ Authors: Utensil Song
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalizedHaar
-public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
-public import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralCriterion
 public import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 /-!
 Invariant dual-measure transport for Zhou's finite chart detector. Paper: §4.

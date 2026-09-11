@@ -7,6 +7,8 @@ module
 
 public import LeanPool.LocalComplexGeometry.Germs.Representatives
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Representatives of a finite ideal generating family

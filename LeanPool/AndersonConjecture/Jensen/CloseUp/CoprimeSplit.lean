@@ -5,8 +5,19 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
+import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.KrullDomain
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Close-up: B2 sub-case

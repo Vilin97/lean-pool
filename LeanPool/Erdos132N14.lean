@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132N14.Main
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # A Conditional Fourteen-Point Case of Erdős Problem 132

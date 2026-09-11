@@ -6,11 +6,16 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.IsoGraph.Canon.Algorithm
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Algebra.BigOperators.Intervals
-public import Mathlib.Tactic.Push
-public import LeanPool.IsoGraph.ForMathlib.Array
-public import LeanPool.IsoGraph.ForMathlib.Bits
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Order.Interval.Finset.Nat
+import LeanPool.IsoGraph.ForMathlib.Array
+import LeanPool.IsoGraph.ForMathlib.Bits
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Equivariance of the pieces of the canonical labelling

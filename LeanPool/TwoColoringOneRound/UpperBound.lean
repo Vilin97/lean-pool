@@ -6,6 +6,9 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Upper-bound modules for 2-coloring cycles in one round

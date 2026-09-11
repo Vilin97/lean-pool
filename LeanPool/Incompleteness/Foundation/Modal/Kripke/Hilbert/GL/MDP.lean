@@ -5,7 +5,12 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitation
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Tree
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.GL
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Tree
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitation
+import Mathlib.Data.Finite.Sum
 
 /-! # MDP -/
 

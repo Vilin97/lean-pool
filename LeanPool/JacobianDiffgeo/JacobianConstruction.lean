@@ -12,6 +12,7 @@ public import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.Functorial
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # jacobian-construction (CC9): the `Jacobian` type, its scaffolding, and `ofCurve`

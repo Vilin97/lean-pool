@@ -9,9 +9,10 @@ Blueprint unit: local-multiplicity (CC4). Planar normal form `f = f z₀ + φ ^ 
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
 public import Mathlib.Analysis.Analytic.Order
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Planar normal form (Forster Thm 2.1, planar half)

@@ -5,8 +5,12 @@ Authors: Math Inc
 -/
 module
 
-public import LeanPool.Erdos1196.Normalization
-public import LeanPool.Erdos1196.Preliminaries
+public import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.Normalization
+import LeanPool.Erdos1196.NormalizationSmallPrime
+import LeanPool.Erdos1196.Preliminaries
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Markov-chain lemmas for primitive sets above `x`

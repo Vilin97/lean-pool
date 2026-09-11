@@ -5,15 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.ToLin
-public import Mathlib.LinearAlgebra.TensorProduct.Matrix
-public import Mathlib.LinearAlgebra.Trace
-public import Mathlib.LinearAlgebra.Matrix.Hermitian
 public import Mathlib.Analysis.Matrix.Spectrum
-public import Mathlib.LinearAlgebra.UnitaryGroup
-public import Mathlib.Analysis.RCLike.Basic
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
 public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+import LeanPool.Monlib4.Preq.Ites
 
 /-!
 # Matrix basics

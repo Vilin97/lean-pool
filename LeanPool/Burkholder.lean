@@ -5,12 +5,9 @@ Authors: Daniel Smania
 -/
 module
 
-public import Mathlib.Probability.Martingale.Basic
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 public import LeanPool.Burkholder.Majorants
 public import LeanPool.Burkholder.MartingaleTransforms
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Burkholder Martingale Transform Inequality

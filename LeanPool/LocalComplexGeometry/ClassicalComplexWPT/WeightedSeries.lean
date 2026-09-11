@@ -6,10 +6,7 @@ Authors: BochaoKong
 module
 
 public import Mathlib.Analysis.Normed.Lp.lpSpace
-public import Mathlib.Analysis.Normed.Operator.NormedSpace
-public import Mathlib.Analysis.Normed.Ring.InfiniteSum
-public import Mathlib.Data.Finsupp.Antidiagonal
-public import Mathlib.Data.Finsupp.Weight
+public import Mathlib.Analysis.Normed.Operator.Basic
 
 /-!
 # Weighted `ℓ¹` coefficient infrastructure

@@ -6,6 +6,7 @@ Authors: Vasily Ilin, Brian Nugent
 module
 
 public import LeanPool.GrothendieckVanishing.PresheafFilteredColimitCore
+import Mathlib.Algebra.Category.Grp.AB
 
 /-!
 # Degree-one and higher filtered-colimit comparisons

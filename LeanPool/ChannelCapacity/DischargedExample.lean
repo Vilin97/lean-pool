@@ -8,8 +8,6 @@ module
 public import LeanPool.ChannelCapacity.Discharged
 public import LeanPool.ChannelCapacity.Finite
 
-public import Mathlib.MeasureTheory.Measure.Count
-public import Mathlib.Probability.ProbabilityMassFunction.Basic
 public import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
 /-!

@@ -5,16 +5,14 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Algebra.Ring.IsFormallyReal
-public import Mathlib.Analysis.SpecialFunctions.Log.Summable
-public import Mathlib.Data.Int.CardIntervalMod
-public import Mathlib.Data.Nat.ChineseRemainder
 public import Mathlib.Data.PNat.Prime
-public import Mathlib.Data.Rat.Star
-public import Mathlib.NumberTheory.SumPrimeReciprocals
+public import Mathlib.Analysis.Normed.Group.Real
+public import Mathlib.Data.Nat.Squarefree
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Log.Summable
+import Mathlib.NumberTheory.SumPrimeReciprocals
 
 /-! ## Counting functions for joint conditions -/
 

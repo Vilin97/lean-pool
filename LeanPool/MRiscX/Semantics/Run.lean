@@ -5,7 +5,6 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 public import LeanPool.MRiscX.AbstractSyntax.MState
 
 /-!

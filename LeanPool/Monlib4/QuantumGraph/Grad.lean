@@ -5,8 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.QuantumGraph.Basic
 public import LeanPool.Monlib4.QuantumGraph.Degree
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Grad

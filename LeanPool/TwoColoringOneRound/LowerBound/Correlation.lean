@@ -6,7 +6,19 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.LowerBound.Defs
-public import Mathlib.Data.Finite.Perm
+public import Mathlib.Algebra.Group.Action.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Rat.Defs
+import Mathlib.Algebra.Module.NatInt
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Finite.Prod
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.Correlation

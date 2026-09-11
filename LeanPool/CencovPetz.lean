@@ -29,6 +29,11 @@ public import LeanPool.CencovPetz.Uniform
 public import LeanPool.CencovPetz.UniformScalarConstant
 public import LeanPool.CencovPetz.UniformScalarMultiple
 public import LeanPool.CencovPetz.UniformSimplex
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Finite Čencov-Petz Uniqueness

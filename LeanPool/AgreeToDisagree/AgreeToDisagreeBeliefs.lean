@@ -6,11 +6,7 @@ Authors: AgreeToDisagree contributors
 module
 
 public import LeanPool.AgreeToDisagree.AgreeToDisagree
-public import Mathlib.Analysis.Normed.Group.InfiniteSum
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Push
-public import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Analysis.Normed.Group.InfiniteSum
 
 /-!
 # Approximate agreement under common belief

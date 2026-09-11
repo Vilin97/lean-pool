@@ -6,7 +6,7 @@ Authors: Elan Roth
 module
 
 public import Mathlib.Algebra.Module.ZMod
-public import LeanPool.UlmsTheorem.PGroups.Heights
+public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 
 /-!
 # Socle-level constructions

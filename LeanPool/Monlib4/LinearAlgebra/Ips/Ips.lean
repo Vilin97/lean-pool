@@ -7,8 +7,8 @@ module
 
 public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.InnerProductSpace.Spectrum
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite-dimensional inner product spaces

@@ -18,14 +18,10 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import Mathlib.Analysis.Fourier.AddCircle
-public import Mathlib.Analysis.Complex.UpperHalfPlane.Measure
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.SpecialFunctions.PolarCoord
 public import Mathlib.Data.Nat.Dist
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! # Definitions -/
 

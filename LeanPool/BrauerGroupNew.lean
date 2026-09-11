@@ -36,6 +36,8 @@ public import LeanPool.BrauerGroupNew.FrobeniusTheorem
 public import LeanPool.BrauerGroupNew.BrauerOverR
 public import LeanPool.BrauerGroupNew.Mathlib
 public import LeanPool.BrauerGroupNew.Subfield
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Brauer Group Core

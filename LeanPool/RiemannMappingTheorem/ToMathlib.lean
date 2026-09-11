@@ -5,9 +5,12 @@ Authors: Vincent Beffara
 -/
 module
 
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-public import LeanPool.RiemannMappingTheorem.Cindex
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 /-!
 # LeanPool.RiemannMappingTheorem.ToMathlib

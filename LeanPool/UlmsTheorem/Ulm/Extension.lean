@@ -5,10 +5,11 @@ Authors: Elan Roth
 -/
 module
 
-public import Mathlib.GroupTheory.FiniteAbelian.Basic
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
 public import LeanPool.UlmsTheorem.Ulm.Pure
+public import Mathlib.RingTheory.Finiteness.Defs
+import Mathlib.GroupTheory.FiniteAbelian.Basic
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # Extension lemmas for Ulm's theorem

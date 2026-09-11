@@ -7,11 +7,10 @@ module
 
 public import Mathlib.Data.Complex.Basic
 public import Mathlib.LinearAlgebra.Matrix.Block
-public import Mathlib.LinearAlgebra.Matrix.Hermitian
-public import Mathlib.LinearAlgebra.Matrix.Kronecker
-public import Mathlib.Tactic.Common
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
  # Almost Hermitian Matrices

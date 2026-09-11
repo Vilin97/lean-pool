@@ -5,9 +5,10 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
-public import Mathlib.NumberTheory.ModularForms.Basic
+public import Mathlib.NumberTheory.ModularForms.SlashInvariantForms
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Hecke Operators on Modular Forms

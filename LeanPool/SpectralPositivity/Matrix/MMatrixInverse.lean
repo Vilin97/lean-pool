@@ -5,16 +5,16 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import LeanPool.SpectralPositivity.Matrix.MetzlerExp
 public import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
 public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.Analysis.Normed.Algebra.MatrixExponential
-public import Mathlib.Analysis.Matrix.Spectrum
-public import Mathlib.Analysis.Matrix.PosDef
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.Algebra.Group.Pi.Units
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.SpectralPositivity.Matrix.MetzlerExp
+import Mathlib.Algebra.Group.Pi.Units
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # M-matrix Inverse Positivity (strict + non-strict)

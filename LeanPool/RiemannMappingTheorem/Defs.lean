@@ -5,8 +5,10 @@ Authors: Vincent Beffara
 -/
 module
 
-public import LeanPool.RiemannMappingTheorem.ToMathlib
-public import LeanPool.RiemannMappingTheorem.DerivInj
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.RiemannMappingTheorem.DerivInj
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.RiemannMappingTheorem.Defs

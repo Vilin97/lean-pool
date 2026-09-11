@@ -5,7 +5,6 @@ Authors: Alexander Loitzl
 -/
 module
 
-public import Mathlib.Computability.ContextFreeGrammar
 public import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
 
 /-!

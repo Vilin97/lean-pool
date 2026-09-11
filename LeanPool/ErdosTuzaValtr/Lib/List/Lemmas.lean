@@ -5,12 +5,9 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Data.List.Basic
-public import Mathlib.Data.List.Chain
-public import Mathlib.Data.Finset.Basic
 public import Mathlib.Data.Finset.Card
-public import Mathlib.Order.Basic
 public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
+import Mathlib.Data.List.Chain
 
 /-!
 # LeanPool.ErdosTuzaValtr.Lib.List.Lemmas

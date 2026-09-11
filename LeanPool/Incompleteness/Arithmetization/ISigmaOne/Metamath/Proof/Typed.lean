@@ -7,7 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Typed
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Derivation
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-!
 

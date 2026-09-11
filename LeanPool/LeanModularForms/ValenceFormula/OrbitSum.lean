@@ -5,9 +5,9 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.OrbitPairing
-public import Mathlib.Analysis.Meromorphic.NormalForm
-public import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
+public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 
 /-!
 # Orbit-Sum Form of the Valence Formula

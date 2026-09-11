@@ -7,6 +7,8 @@ module
 
 public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic
 public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Defs
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Brauer Group New Mathlib RingTheory Congruence

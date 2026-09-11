@@ -5,9 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.TailDuality.Pairing
-public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
-public import LeanPool.JacobianDiffgeo.Finiteness
+public import LeanPool.JacobianDiffgeo.Finiteness.Chi
+public import LeanPool.JacobianDiffgeo.TailDuality.TailOps
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # `nuPairDual`/Miranda Lemma 3.4: the counting step (serre-duality-tails)

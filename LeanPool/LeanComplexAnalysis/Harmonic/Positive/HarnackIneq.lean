@@ -5,8 +5,11 @@ Authors: seb488, Aristotle
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
-public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
+import Mathlib.Analysis.Complex.Harmonic.Analytic
+import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 
 /-!
 # Harnack's inequality

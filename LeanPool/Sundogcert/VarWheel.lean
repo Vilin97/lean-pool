@@ -5,11 +5,14 @@ Authors: Humiliati
 -/
 module
 
-public import Mathlib.Data.Fintype.Pi
-public import Mathlib.Data.Fin.Basic
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Algebra.Group.Fin.Basic
 public import Mathlib.Logic.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.Group.Nat.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Fin.VecNotation
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.SetLike
 
 /-!
   Sundogcert/VarWheel.lean — MILESTONE 2 of the `3SAT ≤ 3DM` marathon.

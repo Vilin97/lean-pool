@@ -5,7 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+public import LeanPool.JacobianDiffgeo.Cech.WindowRank
+import LeanPool.JacobianDiffgeo.Cech.SixTerm
+import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The χ ledger (`finiteness-and-chi`, gated file 3/3)

@@ -6,7 +6,11 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Measurable Structure on the Structure Space

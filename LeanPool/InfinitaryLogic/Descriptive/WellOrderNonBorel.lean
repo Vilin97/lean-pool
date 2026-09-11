@@ -5,9 +5,15 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobar
-public import LeanPool.InfinitaryLogic.Descriptive.WellOrderBridge
-public import LeanPool.InfinitaryLogic.OrdinalUtil
+public import LeanPool.InfinitaryLogic.Descriptive.WellOrderClass
+import LeanPool.InfinitaryLogic.Descriptive.WellOrderBridge
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Separation
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
+import LeanPool.InfinitaryLogic.OrdinalUtil
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Non-Borelness of the countable well-order class (issue #33)
 

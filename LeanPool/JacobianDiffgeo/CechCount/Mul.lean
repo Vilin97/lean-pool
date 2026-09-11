@@ -5,7 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Cech
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Multiplication on Čech `H¹` by global meromorphic functions (cechcount unit)

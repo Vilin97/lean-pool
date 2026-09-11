@@ -5,23 +5,9 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-public import Mathlib.MeasureTheory.Measure.Haar.Basic
 public import Mathlib.MeasureTheory.Measure.Hausdorff
-public import Mathlib.MeasureTheory.Measure.Doubling
-public import Mathlib.Topology.EMetricSpace.Paracompact
-public import Mathlib.Topology.MetricSpace.Pseudo.Defs
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
 public import LeanPool.SardMoreira.ToMathlib.PR33114
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.SardMoreira.WithRPowDist

@@ -5,12 +5,10 @@ Authors: Gershon Bialer
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.FunProp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Topology.Separation.Hausdorff
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
 # Resonant covectors in two degrees of freedom

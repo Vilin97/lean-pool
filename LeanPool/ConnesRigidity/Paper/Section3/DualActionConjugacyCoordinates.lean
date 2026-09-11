@@ -9,7 +9,13 @@ Coordinate formulas used by the Zhou fiber-shear conjugacy. Paper: §3.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyFirst
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActions
+import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyAlgebra
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 The dual action conjugacy coordinates component of the Connes rigidity formalization.

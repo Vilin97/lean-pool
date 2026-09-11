@@ -5,9 +5,9 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.Normed.Module.WeakDual
 public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
 public import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.Normed.Module.WeakDual
 
 /-!
 # Weak compactness of Hilbert closed balls

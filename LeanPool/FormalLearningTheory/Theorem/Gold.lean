@@ -7,6 +7,7 @@ module
 
 public import LeanPool.FormalLearningTheory.Criterion.Gold
 public import LeanPool.FormalLearningTheory.Complexity.MindChange
+import Mathlib.SetTheory.Ordinal.Arithmetic
 
 /-!
 # Gold's Theorem and Mind Change Characterization

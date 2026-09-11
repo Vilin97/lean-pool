@@ -5,11 +5,17 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Abel.Loops
-public import LeanPool.JacobianDiffgeo.Dbar
-public import LeanPool.JacobianDiffgeo.Meromorphic
-public import LeanPool.JacobianDiffgeo.ProperDegree
-public import LeanPool.JacobianDiffgeo.SphereTopology
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import Mathlib.Analysis.Complex.Exponential
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
+import LeanPool.JacobianDiffgeo.SphereTopology.Headline
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the CR-converse promotion (`docs/design/abel-theorem.md` §4.2 D2, §2.1 step 7)

@@ -10,6 +10,11 @@ public import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
 public import LeanPool.BooleanIsoperimetry.Harper
 public import LeanPool.BooleanIsoperimetry.MacaulayMin
 public import LeanPool.BooleanIsoperimetry.SetFamilyShadow
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Boolean Isoperimetry and Conway--Guy Coherent Gaps

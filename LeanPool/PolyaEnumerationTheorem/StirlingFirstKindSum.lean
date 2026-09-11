@@ -5,7 +5,12 @@ Authors: Luka Opravš
 -/
 module
 
-public import LeanPool.PolyaEnumerationTheorem.Concrete
+public import LeanPool.PolyaEnumerationTheorem.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Stirling numbers of the first kind

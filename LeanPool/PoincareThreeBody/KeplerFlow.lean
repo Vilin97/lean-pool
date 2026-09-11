@@ -6,8 +6,9 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
-public import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Tactic.FinCases
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The resonant ellipse as a Hamiltonian flow line

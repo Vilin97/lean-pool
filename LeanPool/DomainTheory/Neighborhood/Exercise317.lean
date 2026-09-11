@@ -5,9 +5,17 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Example23
 public import LeanPool.DomainTheory.Neighborhood.Exercise316
 public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Example12
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 3.17 (Scott 1981, PRG-19, §3) — `B` is a retract of `T^∞`

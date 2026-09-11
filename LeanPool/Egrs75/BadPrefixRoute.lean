@@ -5,16 +5,17 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.LeafInduction
 public import LeanPool.Egrs75.DigitVector
 public import LeanPool.Egrs75.DigitAtToolkit
-public import LeanPool.Egrs75.ClearingHigh
-public import LeanPool.Egrs75.Reduction
-public import LeanPool.Egrs75.MuFinish
-public import Mathlib.Algebra.Order.Ring.GeomSum
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import LeanPool.Egrs75.ClearingHigh
+import LeanPool.Egrs75.MuFinish
+import LeanPool.Egrs75.Reduction
+import Mathlib.Algebra.Order.Ring.GeomSum
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.List.GetD
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Data.Nat.Totient
 
 /-!
 EGRS75 two-prime ALIGN leaf — FINISH route (2026-06-08).

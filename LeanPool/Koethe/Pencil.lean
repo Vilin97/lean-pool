@@ -6,15 +6,10 @@ Authors: GPT-6 Astra, Tom Adamczewski
 module
 
 public import Mathlib.Algebra.Algebra.Defs
-public import Mathlib.Algebra.Field.Defs
-public import Mathlib.Algebra.Notation.Pi.Defs
 public import Mathlib.Algebra.Polynomial.Basic
-public import Mathlib.Data.Countable.Basic
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Data.Matrix.Mul
-public import Mathlib.LinearAlgebra.Matrix.Defs
-public import Mathlib.Tactic.TypeStar
+public import Mathlib.Data.Countable.Defs
+import Mathlib.Data.Countable.Basic
 /-!
 # Pencils, periodic masks and mortality
 

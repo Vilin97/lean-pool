@@ -6,13 +6,15 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fidelity
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fourier
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Concentration
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.DiscreteLogConcept
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Advantage
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Expressivity
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quantum kernels

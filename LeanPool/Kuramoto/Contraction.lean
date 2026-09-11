@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 public import LeanPool.Kuramoto.GradientFlow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pairwise contraction

@@ -5,9 +5,9 @@ Authors: Jineon Baek
 -/
 module
 
-public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
-public import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
-public import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # LeanPool.ErdosTuzaValtr.Lib.List.Default

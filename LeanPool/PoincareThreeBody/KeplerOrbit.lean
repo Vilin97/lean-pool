@@ -6,13 +6,12 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.GeneratingFunction
-public import Mathlib.Analysis.Calculus.Deriv.Inverse
-public import Mathlib.Analysis.Calculus.Deriv.MeanValue
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Elliptic Kepler orbits in eccentric anomaly

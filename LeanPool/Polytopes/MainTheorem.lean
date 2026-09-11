@@ -6,6 +6,11 @@ Authors: Jun Kwon
 module
 
 public import LeanPool.Polytopes.Polytope
+public import LeanPool.Polytopes.Polar
+public import Mathlib.Analysis.Convex.Extreme
+import LeanPool.Polytopes.Cutspace
+import Mathlib.Analysis.Convex.Intrinsic
+import Mathlib.Analysis.Convex.KreinMilman
 
 /-!
 Let 𝑋 be a closed convex subset of ℝ^𝑑. Then:

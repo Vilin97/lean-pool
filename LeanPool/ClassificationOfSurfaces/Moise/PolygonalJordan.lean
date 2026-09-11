@@ -6,12 +6,10 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-public import Mathlib.Topology.MetricSpace.Bounded
-public import Mathlib.Analysis.Normed.Module.Connected
-public import Mathlib.Analysis.Convex.Visible
-public import Mathlib.Analysis.Normed.Affine.AddTorsorBases
 public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Topology.MetricSpace.Thickening
+import Mathlib.Analysis.Convex.Visible
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+import Mathlib.Analysis.Normed.Module.Connected
 
 /-!
 # The Jordan curve theorem for polygons

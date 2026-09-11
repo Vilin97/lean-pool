@@ -5,9 +5,12 @@ Authors: Luka Opravš
 -/
 module
 
-public import LeanPool.PolyaEnumerationTheorem.ReductionToFin
-public import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
 public import Mathlib.GroupTheory.SpecificGroups.Dihedral
+public import LeanPool.PolyaEnumerationTheorem.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Numbers of distinct colorings for some concrete examples

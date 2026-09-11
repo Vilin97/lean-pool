@@ -5,10 +5,12 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public meta import LeanPool.Lentil.ProofMode.Basic
 
 public import LeanPool.Lentil.ProofMode.Basic
-public import LeanPool.Lentil.Rules.Basic
+meta import LeanPool.Lentil.ProofMode.Basic
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 

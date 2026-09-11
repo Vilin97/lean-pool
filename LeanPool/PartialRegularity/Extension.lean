@@ -5,24 +5,16 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 module
 
-public import Mathlib.Algebra.Ring.GeomSum
-public import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Log.Monotone
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Data.Set.Card.Arithmetic
 public import Mathlib.NumberTheory.ArithmeticFunction.Misc
 public import Mathlib.NumberTheory.Bernoulli
-public import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
-public import Mathlib.NumberTheory.LSeries.Nonvanishing
-public import Mathlib.NumberTheory.ZetaValues
-public import Mathlib.RingTheory.ZMod.UnitsCyclic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Log.Monotone
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Set.Card.Arithmetic
+import Mathlib.NumberTheory.LSeries.Dirichlet
+import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
 /-! # Irregular primes and Bernoulli numbers (extension)
 
 This file proves a variant of the main result with an explicit constant: the count

@@ -5,8 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
-public import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The unconditional residue theorem (D9 gate now open)

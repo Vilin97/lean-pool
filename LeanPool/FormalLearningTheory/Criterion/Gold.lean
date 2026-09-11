@@ -5,7 +5,6 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
 public import LeanPool.FormalLearningTheory.Data
 public import LeanPool.FormalLearningTheory.Learner.Core
 

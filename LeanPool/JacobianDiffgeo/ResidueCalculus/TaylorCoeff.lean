@@ -9,10 +9,10 @@ Blueprint unit: residue-calculus. Taylor-coefficient extractor via iterated `dsl
 -/
 module
 
-public import Mathlib.Analysis.Analytic.IsolatedZeros
 public import Mathlib.Analysis.Calculus.DSlope
-public import Mathlib.Analysis.Calculus.Deriv.Mul
 public import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.Analytic.IsolatedZeros
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Taylor coefficients via iterated difference quotients (residue-calculus)

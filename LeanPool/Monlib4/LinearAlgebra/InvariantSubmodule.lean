@@ -7,8 +7,9 @@ module
 
 public import Mathlib.Data.Complex.Basic
 public import Mathlib.LinearAlgebra.Projection
-public import Mathlib.LinearAlgebra.TensorProduct.Basic
-public import Mathlib.Topology.Algebra.StarSubalgebra
+public import Mathlib.Algebra.Star.Subalgebra
+import Mathlib.Data.Rat.Floor
+import Mathlib.Tactic.Continuity.Init
 
 /-!
 # Invariant submodules

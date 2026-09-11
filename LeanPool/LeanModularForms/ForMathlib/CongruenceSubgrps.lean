@@ -5,11 +5,8 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import Mathlib.Data.Real.Basic
-public import Mathlib.GroupTheory.Archimedean
-public import Mathlib.LinearAlgebra.Matrix.Integer
-public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
+import Mathlib.GroupTheory.Archimedean
 
 /-!
 # Congruence subgroups

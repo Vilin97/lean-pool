@@ -7,10 +7,6 @@ module
 
 public import Mathlib.NumberTheory.Real.GoldenRatio
 public import LeanPool.Rupert.Basic
-public import LeanPool.Rupert.Convex
-public import LeanPool.Rupert.MatrixSimps
-public import LeanPool.Rupert.Quaternion
-public import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
 
 /-!
 # LeanPool.Rupert.Icosahedron

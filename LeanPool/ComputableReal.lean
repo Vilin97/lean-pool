@@ -10,6 +10,8 @@ public import LeanPool.ComputableReal.ComputableReal
 public import LeanPool.ComputableReal.IsComputable
 public import LeanPool.ComputableReal.IsComputableC
 public import LeanPool.ComputableReal.SpecialFunctions
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Verified interval-Cauchy real arithmetic

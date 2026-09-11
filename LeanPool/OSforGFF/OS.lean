@@ -18,6 +18,8 @@ public import LeanPool.OSforGFF.OS.OS3ReflectionPositivity
 public import LeanPool.OSforGFF.OS.OS4Clustering
 public import LeanPool.OSforGFF.OS.OS4Ergodicity
 public import LeanPool.OSforGFF.OS.OS4MGF
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # `LeanPool.OSforGFF.OS` index

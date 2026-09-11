@@ -14,7 +14,11 @@ an explicit normalization theorem for total capture-avoiding substitution.
 module
 
 public import LeanPool.MatchingLogic.EntryIII.WitnessPush
-public import LeanPool.MatchingLogic.EntryIII.FreshWitnessElim
+public import LeanPool.MatchingLogic.EntryIII.Witnessed
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.FreshWitnessElim
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+import LeanPool.MatchingLogic.Soundness
 
 /-!
 # MatchingLogic.EntryIII.WitnessElim

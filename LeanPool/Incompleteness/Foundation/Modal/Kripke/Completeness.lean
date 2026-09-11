@@ -7,6 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import Mathlib.Tactic.TautoSet
 
 /-! # Completeness -/
 

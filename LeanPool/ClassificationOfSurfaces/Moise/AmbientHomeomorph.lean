@@ -6,7 +6,6 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-public import Mathlib.Topology.Piecewise
 
 /-!
 # Extending a homeomorphism of a closed planar patch

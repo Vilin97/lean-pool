@@ -5,27 +5,10 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import Mathlib.NumberTheory.Primorial
-public import Mathlib.NumberTheory.PrimeCounting
-public import Mathlib.NumberTheory.Bertrand
-public import Mathlib.NumberTheory.Padics.PadicVal.Basic
-public import Mathlib.NumberTheory.SmoothNumbers
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
-public import Mathlib.Algebra.Squarefree.Basic
-public import Mathlib.Data.Nat.Squarefree
-public import Mathlib.Data.Nat.Factorization.Basic
-public import Mathlib.Data.Nat.Factorization.PrimePow
-public import Mathlib.Data.Nat.Prime.Factorial
-public import Mathlib.Data.Nat.Factorial.Basic
-public import Mathlib.Algebra.BigOperators.Associated
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Common
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: powerful products of consecutive integers (conditional finiteness)

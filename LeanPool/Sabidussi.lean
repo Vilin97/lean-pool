@@ -14,6 +14,10 @@ public import LeanPool.Sabidussi.OddBalance
 public import LeanPool.Sabidussi.OrdinaryCircuit
 public import LeanPool.Sabidussi.Parity
 public import LeanPool.Sabidussi.Statement
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Sabidussi's compatibility conjecture for Eulerian multigraphs

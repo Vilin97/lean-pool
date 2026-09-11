@@ -6,7 +6,11 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
-public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Tactic.Continuity
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The logic action of `S∞ = Equiv.Perm ℕ` on the structure space (issue #27, algebraic layer)

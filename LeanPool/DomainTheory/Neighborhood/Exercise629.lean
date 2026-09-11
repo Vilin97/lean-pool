@@ -5,9 +5,9 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Product
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Data.Finset.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # Exercise 6.29 (Scott 1981, PRG-19, §6) — infinitary sum and product

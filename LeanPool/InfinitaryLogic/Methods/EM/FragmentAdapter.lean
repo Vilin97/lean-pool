@@ -6,6 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.EM.Realization
+public import LeanPool.InfinitaryLogic.Methods.EM.Indiscernible
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # EM Realization: the compactness-oracle layer
 

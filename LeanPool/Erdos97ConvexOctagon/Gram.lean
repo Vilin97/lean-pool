@@ -6,8 +6,6 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.Basic
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 
 /-! # Erdős 97 convex-octagon formalization: Gram -/
 

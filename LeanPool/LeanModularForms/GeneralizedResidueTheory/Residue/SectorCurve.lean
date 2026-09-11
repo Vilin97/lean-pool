@@ -6,9 +6,9 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Sector Curve PV Computation (Lemma 3.1)

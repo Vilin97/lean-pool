@@ -5,7 +5,8 @@ Authors: Caleb L. Geiger
 -/
 module
 
-public import LeanPool.SingularModuli.QuadraticOrder.Prime
+public import LeanPool.SingularModuli.QuadraticOrder.Basic
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Layer 2b: Canonical Form for ideals of `QuadraticOrder` — scaffolding

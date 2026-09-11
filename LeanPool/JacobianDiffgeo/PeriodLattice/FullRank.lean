@@ -5,11 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
 public import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
-public import Mathlib.LinearAlgebra.Dual.Lemmas
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Full rank and the `IsZLattice` discharge (Forster 21.4(c) shell, §6.6)

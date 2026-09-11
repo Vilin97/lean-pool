@@ -5,7 +5,7 @@ Authors: Julius Marx
 -/
 module
 
-public import Lean
+public import Lean.Meta.Basic
 
 /-!
 # TacticUtil

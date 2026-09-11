@@ -6,7 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
-public import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Path-integral naturality (jacobian-functoriality §4)

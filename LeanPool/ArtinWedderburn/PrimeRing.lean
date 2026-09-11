@@ -6,9 +6,15 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 module
 
 public import LeanPool.ArtinWedderburn.IdealProd
-public import LeanPool.ArtinWedderburn.SetProd
-public import Mathlib.RingTheory.SimpleRing.Basic
-public import Mathlib.RingTheory.Ideal.Span
+public import Mathlib.RingTheory.SimpleRing.Defs
+import LeanPool.ArtinWedderburn.SetProd
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.RingTheory.SimpleRing.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Prime rings

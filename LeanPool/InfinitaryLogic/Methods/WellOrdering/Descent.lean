@@ -6,7 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
-public import Mathlib.Algebra.Order.Ring.Rat
+import Mathlib.Algebra.Order.Ring.Rat
 
 /-!
 # Generic relation lemmas for the boundedness corollaries (issue #12, step 6 layer 1)

@@ -6,7 +6,7 @@ Authors: Joris Roos
 module
 
 public import LeanPool.LeanBooleanfun.BooleanValued
-public import LeanPool.LeanBooleanfun.ToMathlib.Finset
+import LeanPool.LeanBooleanfun.ToMathlib.Finset
 
 /-!
 # Arrow's theorem

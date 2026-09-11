@@ -6,9 +6,6 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Forms.Basic
-public import Mathlib.Geometry.Manifold.MFDeriv.Atlas
-public import Mathlib.Geometry.Manifold.MFDeriv.Tangent
-public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
 
 /-!
 # The chart-coefficient API for holomorphic 1-forms (CC1)

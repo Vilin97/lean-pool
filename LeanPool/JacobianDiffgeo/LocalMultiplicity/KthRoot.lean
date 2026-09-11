@@ -9,8 +9,9 @@ Blueprint unit: local-multiplicity (CC4). Planar analytic k-th root.
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 
 /-!
 # Local analytic k-th root

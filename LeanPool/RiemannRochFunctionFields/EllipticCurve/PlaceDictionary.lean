@@ -6,8 +6,8 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Infinity
-public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
-public import Mathlib.FieldTheory.IsAlgClosed.Basic
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Place–point dictionary for Weierstrass function fields

@@ -6,6 +6,7 @@ Authors: Shangtong Zhang
 module
 
 public import LeanPool.RlTheoryInLean.Probability.Kernel.Composition.MapComap
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Composition

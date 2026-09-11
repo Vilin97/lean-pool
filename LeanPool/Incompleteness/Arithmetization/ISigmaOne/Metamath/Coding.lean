@@ -6,8 +6,11 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Typed
-public import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
-public import Mathlib.Combinatorics.Colex
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Coding
+public import Mathlib.Computability.Primrec.Basic
+public import Mathlib.Data.Nat.BitIndices
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Coding -/
 

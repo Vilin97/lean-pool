@@ -5,8 +5,10 @@ Authors: Humiliati
 -/
 module
 
-public import LeanPool.Sundogcert.SATReductionIncidence
 public import LeanPool.Sundogcert.ThreeDMReindex
+public import LeanPool.Sundogcert.SATReduction
+import LeanPool.Sundogcert.SATReductionIncidence
+import LeanPool.Sundogcert.VarWheel
 
 /-!
   Sundogcert/SATReductionReverse.lean — MILESTONE 7 of the `3SAT ≤ 3DM` marathon: the REVERSE

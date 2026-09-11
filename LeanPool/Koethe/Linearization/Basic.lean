@@ -5,9 +5,10 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Tactic.NoncommRing
-public import Mathlib.Tactic.Ring
 public import LeanPool.Koethe.Pencil
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Finite homogeneous-linear systems

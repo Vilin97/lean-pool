@@ -6,10 +6,12 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Data.Int.Star
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.UniformConvergence
+public import Mathlib.Analysis.Asymptotics.Defs
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Data.Int.Star
+import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 
 /-! # BigO -/
 

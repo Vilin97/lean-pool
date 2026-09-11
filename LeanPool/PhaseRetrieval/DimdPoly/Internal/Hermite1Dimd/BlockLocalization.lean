@@ -5,15 +5,16 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
-public import Mathlib.Analysis.SpecialFunctions.Exp
-public import Mathlib.SetTheory.Cardinal.NatCard
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Int.Interval
-public import Mathlib.Data.Pi.Interval
-public import Mathlib.Order.Filter.AtTopBot.Finset
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.Definitions
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ImportedAnalyticInputs
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # BlockLocalization -/
 

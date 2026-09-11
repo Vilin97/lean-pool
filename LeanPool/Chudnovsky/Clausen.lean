@@ -5,9 +5,17 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.Basic
-public import Mathlib.Analysis.Analytic.OfScalars
 public import Mathlib.Analysis.SpecialFunctions.OrdinaryHypergeometric
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Clausen's formula and the hypergeometric differential equations

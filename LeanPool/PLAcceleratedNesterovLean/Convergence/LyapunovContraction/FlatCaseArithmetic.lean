@@ -6,8 +6,12 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.FieldSimp
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Flat-Case Lyapunov Contraction: Arithmetic Core

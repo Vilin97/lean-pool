@@ -5,11 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Karp.PotentialIso
-public import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
-public import LeanPool.InfinitaryLogic.Scott.Formula
-public import LeanPool.InfinitaryLogic.Scott.Rank
-public import LeanPool.InfinitaryLogic.Scott.RefinementCount
+public import LeanPool.InfinitaryLogic.Scott.Sentence
+import LeanPool.InfinitaryLogic.Scott.RefinementCount
 /-!
 # Scott Height: Definition and Core Properties
 

@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Descriptive.QueryCode
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 /-!
 # The analytic tree normal form (issue #10, Unit 0b)
 

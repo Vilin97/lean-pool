@@ -5,7 +5,10 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.RingTheory.Radical.NatInt
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.RingTheory.Radical.Basic
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Pell equation for the odd case

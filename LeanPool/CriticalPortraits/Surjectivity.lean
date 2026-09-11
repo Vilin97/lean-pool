@@ -6,6 +6,14 @@ Authors: Keston Aquino-Michaels
 module
 
 public import LeanPool.CriticalPortraits.Injectivity
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Surjectivity of `T` via the balance forest `β` (Part II of the bijection).

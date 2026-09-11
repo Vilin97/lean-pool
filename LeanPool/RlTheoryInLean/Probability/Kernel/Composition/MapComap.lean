@@ -5,21 +5,10 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.Probability.Kernel.Composition.MapComap
-public import Mathlib.Probability.ConditionalProbability
-public import Mathlib.Probability.Kernel.Defs
-public import Mathlib.Probability.Kernel.Basic
-public import Mathlib.Probability.Kernel.Composition.Comp
 public import Mathlib.Probability.Kernel.Composition.Prod
-public import Mathlib.Probability.Kernel.Composition.CompMap
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.Order.Interval.Finset.Defs
-public import Mathlib.MeasureTheory.MeasurableSpace.Instances
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Probability.Process.Filtration
-public import Mathlib.Topology.Bornology.Basic
 
-public import LeanPool.RlTheoryInLean.MeasureTheory.Measure.Prod
+import LeanPool.RlTheoryInLean.MeasureTheory.Measure.Prod
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Probability.Kernel.Composition.MapComap

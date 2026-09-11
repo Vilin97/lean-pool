@@ -6,7 +6,10 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
-public import Mathlib.Analysis.Analytic.IsolatedZeros
+import Mathlib.Analysis.Analytic.IsolatedZeros
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Rechart: `IsWeakSolutionAt` is chart-independent, and general order-additive multiplication

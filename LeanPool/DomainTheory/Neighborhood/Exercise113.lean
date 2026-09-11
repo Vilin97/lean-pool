@@ -7,6 +7,8 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.ExampleB
 public import LeanPool.DomainTheory.Neighborhood.Theorem111
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
 
 /-!
 # Exercise 1.13 (Scott 1981, PRG-19, §1) — the infinite binary system `B`,

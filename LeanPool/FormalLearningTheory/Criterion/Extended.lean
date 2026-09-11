@@ -5,14 +5,11 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
-public import LeanPool.FormalLearningTheory.Data
-public import LeanPool.FormalLearningTheory.Learner.Core
 public import LeanPool.FormalLearningTheory.Learner.Bayesian
-public import LeanPool.FormalLearningTheory.Criterion.PAC
 public import LeanPool.FormalLearningTheory.Criterion.Gold
-public import Mathlib.Analysis.Real.Sqrt
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.FormalLearningTheory.Learner.Active
+public import Mathlib.MeasureTheory.Constructions.Pi
 
 /-!
 # Extended and Cross-Paradigm Criteria

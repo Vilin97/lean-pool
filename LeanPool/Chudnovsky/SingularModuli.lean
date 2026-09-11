@@ -6,6 +6,10 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.SingularModuli.MasserA1
+import LeanPool.Chudnovsky.SingularModuli.Kronecker
+import LeanPool.Chudnovsky.SingularModuli.Rationality
+import LeanPool.Chudnovsky.SingularModuli.Valence
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Singular moduli at `τ₁₆₃`: the cited arithmetic inputs (Phase C)

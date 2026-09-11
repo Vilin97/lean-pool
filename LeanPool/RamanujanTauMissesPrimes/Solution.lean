@@ -5,23 +5,13 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Data.Nat.Factorization.PrimePow
-public import Mathlib.Data.Set.Card.Arithmetic
-public import Mathlib.Algebra.BigOperators.Associated
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.BigOperators.Associated
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Data.Nat.Factorization.PrimePow
+import Mathlib.Data.Set.Card.Arithmetic
+import Mathlib.Tactic.IntervalCases
 /-!
 # LeanPool.RamanujanTauMissesPrimes.Solution
 -/

@@ -6,7 +6,6 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import Mathlib.MeasureTheory.Constructions.Polish.EmbeddingReal
-public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Pack

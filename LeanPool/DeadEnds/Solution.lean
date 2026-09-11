@@ -5,14 +5,9 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 module
 
-public import LeanPool.DeadEnds.Basic
-public import LeanPool.DeadEnds.CRT
-public import LeanPool.DeadEnds.Counting
-public import LeanPool.DeadEnds.CountingBlocks
-public import LeanPool.DeadEnds.PrimeTail
-public import LeanPool.DeadEnds.RelevantPrimes
-public import LeanPool.DeadEnds.TailEstimates
-public import LeanPool.DeadEnds.InclusionExclusion
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.DeadEnds.Solution

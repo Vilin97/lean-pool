@@ -14,6 +14,8 @@ before any proof was attempted.
 module
 
 public import LeanPool.MatchingLogic.Semantics
+public import Mathlib.Logic.Relation
+import Mathlib.Data.Set.Lattice
 
 /-!
 # MatchingLogic.Boxes

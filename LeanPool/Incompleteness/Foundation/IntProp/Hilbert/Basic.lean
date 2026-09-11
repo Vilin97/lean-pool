@@ -5,8 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 public import LeanPool.Incompleteness.Foundation.IntProp.Substitution
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Basic
 
 /-! # Basic -/
 

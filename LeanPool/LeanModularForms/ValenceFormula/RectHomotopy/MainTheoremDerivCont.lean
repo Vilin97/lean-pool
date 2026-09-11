@@ -5,7 +5,10 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Derivative continuity for the homotopy on partition pieces

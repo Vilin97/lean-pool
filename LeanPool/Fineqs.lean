@@ -6,6 +6,11 @@ Authors: Stefan Barańczuk, Aristotle
 module
 
 public import LeanPool.Fineqs.Main
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # FinEqs - reducing equations defining a subset of n-space over a finite field

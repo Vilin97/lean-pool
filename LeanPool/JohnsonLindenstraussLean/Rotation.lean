@@ -5,8 +5,11 @@ Authors: claytomode
 -/
 module
 
-public import LeanPool.JohnsonLindenstraussLean.NormPreservation
 public import LeanPool.JohnsonLindenstraussLean.Projection
+public import LeanPool.JohnsonLindenstraussLean.ChiSquared
+import LeanPool.JohnsonLindenstraussLean.NormPreservation
+import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+import Mathlib.Probability.Distributions.Gaussian.Multivariate
 
 /-!
 # Gaussian rotation invariance: the projection ↔ chi-squared link

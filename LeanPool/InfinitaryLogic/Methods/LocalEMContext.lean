@@ -6,10 +6,11 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
-public import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
 public import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
-public import Mathlib.Order.Filter.AtTopBot.Basic
-public import Mathlib.Order.Filter.Finite
+public import Mathlib.Order.Filter.AtTopBot.Defs
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Order.Filter.Finite
 
 /-!
 # The local EM context, layer 1: deep interpretation and realize bridges

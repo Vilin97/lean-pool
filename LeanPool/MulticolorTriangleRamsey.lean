@@ -5,20 +5,13 @@ Authors: OpenAI
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Analysis.SpecialFunctions.Stirling
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.Combinatorics.Pigeonhole
-public import Mathlib.Combinatorics.SimpleGraph.Clique
 public import Mathlib.Combinatorics.SimpleGraph.Coloring.EdgeLabeling
 public import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Stirling
+import Mathlib.Combinatorics.Pigeonhole
 
 /-!
 # Superexponential lower bounds for multicolor triangle Ramsey numbers

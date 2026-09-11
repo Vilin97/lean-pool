@@ -7,6 +7,7 @@ module
 
 public import LeanPool.RlTheoryInLean.MeasureTheory.Measure.GiryMonad
 public import LeanPool.RlTheoryInLean.MeasureTheory.Measure.Prod
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Measure

@@ -5,11 +5,8 @@ Authors: Gershon Bialer
 -/
 module
 
-public import Mathlib.Analysis.Analytic.IteratedFDeriv
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.FDeriv.Prod
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Tactic.FunProp
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-!
 # Mixed mass and phase derivatives

@@ -5,9 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-public import Mathlib.SetTheory.Cardinal.Ordinal
-public import Mathlib.SetTheory.Cardinal.Aleph
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # Hanf Numbers
 

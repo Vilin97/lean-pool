@@ -5,12 +5,10 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.Data.List.GetD
-public import Mathlib.Topology.MetricSpace.PiNat
 public import Mathlib.Topology.Baire.BaireMeasurable
-public import Mathlib.Topology.Baire.Lemmas
-public import Mathlib.Topology.Baire.LocallyCompactRegular
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+import Mathlib.Data.List.GetD
+import Mathlib.Topology.Baire.LocallyCompactRegular
+import Mathlib.Topology.MetricSpace.PiNat
 
 /-!
 # The graphs `G_S(2^ℕ)` and Miller's independence lemma

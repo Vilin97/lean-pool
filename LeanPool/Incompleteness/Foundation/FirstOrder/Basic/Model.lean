@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Operator
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Elementary
+import Mathlib.Tactic.Bound.Init
 
 /-! # Model -/
 

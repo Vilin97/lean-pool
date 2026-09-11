@@ -5,9 +5,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Data.Option.Basic
 public import Mathlib.Order.BoundedOrder.Basic
-public import Mathlib.Order.Defs.PartialOrder
+public import Aesop.BuiltinRules
 
 /-!
 # LeanPool.QuasiBorelSpaces.Option.Instances

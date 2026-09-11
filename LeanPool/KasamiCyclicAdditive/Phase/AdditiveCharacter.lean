@@ -5,7 +5,7 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
+public import Mathlib.NumberTheory.LegendreSymbol.Complex
 
 /-!
 # Primitive additive-character infrastructure

@@ -6,10 +6,9 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
-public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
-public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
 public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-public import Mathlib.Data.Set.Finite.Lattice
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+import Mathlib.Data.Set.Finite.Lattice
 
 /-!
 # The constant-support calculus for a constant expansion `L[[J]]` (issue #8 kernel step 2)

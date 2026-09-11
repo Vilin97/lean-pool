@@ -5,9 +5,6 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Unprovability
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.MDP
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Completeness
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K4
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K45
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K5
@@ -26,11 +23,17 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot2
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot3
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S5
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Triv
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Ver
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.S5Grz
 public import LeanPool.Incompleteness.Foundation.Modal.Logic.Basic
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KT
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.KHIncompleteness
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomGrz
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomVer
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Completeness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Soundness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitation
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Completeness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Soundness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Ver
 
 /-! # WellKnown -/
 

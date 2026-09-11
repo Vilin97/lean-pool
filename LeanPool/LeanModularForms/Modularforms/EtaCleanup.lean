@@ -7,9 +7,17 @@ module
 
 public import LeanPool.LeanModularForms.Modularforms.E2
 public import LeanPool.LeanModularForms.Modularforms.Csqrt
-public import LeanPool.LeanModularForms.Modularforms.LogDerivLems
-public import LeanPool.LeanModularForms.Modularforms.ExpLems
-public import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
+public import Mathlib.Analysis.Complex.Periodic
+public import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
+import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.LogDerivLems
+import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-! # EtaCleanup -/
 

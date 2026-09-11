@@ -5,7 +5,13 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import LeanPool.OSforGFF.Bochner.Main
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.OSforGFF.Bochner.Main
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Finite-Dimensional Marginals for Minlos' Theorem

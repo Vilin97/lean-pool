@@ -5,10 +5,11 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.BinaryRelations
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K
+import Mathlib.Tactic.TautoSet
 
 /-! # AxiomGrz -/
 

@@ -6,13 +6,10 @@ Authors: Math Inc
 module
 
 public import LeanPool.Erdos1196.Basic
-public import LeanPool.Erdos1196.PreliminariesMertens
-public import LeanPool.Erdos1196.PreliminariesTailAux
-public import Mathlib.Analysis.SpecialFunctions.Log.InvLog
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.SumIntegralComparisons
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-public import Mathlib.NumberTheory.AbelSummation
+import LeanPool.Erdos1196.PreliminariesMertens
+import LeanPool.Erdos1196.PreliminariesTailAux
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Tail estimates for primitive sets above `x`

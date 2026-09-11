@@ -14,7 +14,12 @@ module
 
 public import Mathlib.Data.Fintype.Order
 public import LeanPool.KaltonRoberts.Defs
-public import LeanPool.KaltonRoberts.DualCert
+public import Mathlib.Order.BooleanSubalgebra
+import LeanPool.KaltonRoberts.DualCert
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Key lemmas from the Kalton-Roberts paper

@@ -6,9 +6,6 @@ Authors: GPT-6 Astra, Tom Adamczewski
 module
 
 public import Mathlib.FieldTheory.RatFunc.AsPolynomial
-public import Mathlib.FieldTheory.RatFunc.Basic
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Ring
 public import LeanPool.Koethe.ShiftWitness.Band
 
 /-!

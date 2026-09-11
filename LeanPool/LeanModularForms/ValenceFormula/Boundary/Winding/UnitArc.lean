@@ -5,9 +5,17 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArcHelpers
-public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
-public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArcHelpers
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Unit Arc Winding Number

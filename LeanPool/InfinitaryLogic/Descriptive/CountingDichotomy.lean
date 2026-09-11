@@ -5,8 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
 public import Mathlib.SetTheory.Cardinal.Continuum
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 /-!
 # Conditional Counting Dichotomy for Models
 

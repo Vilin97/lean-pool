@@ -5,8 +5,15 @@ Authors: Alexey Milovanov
 -/
 module
 
-public import Mathlib.Tactic.FinCases
-public import LeanPool.BooleanIsoperimetry.Shadow
+public import LeanPool.BooleanIsoperimetry.Macaulay
+import LeanPool.BooleanIsoperimetry.Shadow
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Harper's vertex-isoperimetric theorem

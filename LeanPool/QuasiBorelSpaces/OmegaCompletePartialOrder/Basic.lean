@@ -5,14 +5,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
-public import Mathlib.Order.OmegaCompletePartialOrder
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Const
-public import Mathlib.MeasureTheory.MeasurableSpace.Defs
-public import Mathlib.Data.ENNReal.Basic
-public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
 
 /-!

@@ -7,8 +7,11 @@ module
 
 public import LeanPool.LocalComplexGeometry.Germs.Basic
 public import Mathlib.RingTheory.Ideal.Quotient.Operations
-public import Mathlib.RingTheory.Noetherian.Basic
-public import Mathlib.RingTheory.PrincipalIdealDomain
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.RingTheory.Noetherian.Defs
+import Mathlib.RingTheory.Noetherian.Basic
+import Mathlib.RingTheory.PrincipalIdealDomain
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Constant germs and the residue field

@@ -5,8 +5,10 @@ Authors: YnirPaz
 -/
 module
 
-public import LeanPool.PCFTheory.Background.Cofinality
 public import LeanPool.PCFTheory.Background.Topology
+public import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
+import LeanPool.PCFTheory.Background.Cofinality
+import LeanPool.PCFTheory.Background.Ordinal
 
 /-!
 # Club and stationary sets

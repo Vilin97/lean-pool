@@ -5,9 +5,10 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import LeanPool.Wallace.BlockFilters
 public import LeanPool.Wallace.FusionSchedule
-public import Mathlib.Analysis.Normed.Group.AddCircle
+public import LeanPool.Wallace.TriangularPreprocess
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Limits along block-density ultrafilters

@@ -7,7 +7,7 @@ module
 
 public import LeanPool.WhiteheadTheorem.HEP.Cofibration
 public import LeanPool.WhiteheadTheorem.HEP.Retract
-public import LeanPool.WhiteheadTheorem.Shapes.Cube
+public import LeanPool.WhiteheadTheorem.Auxiliary
 
 /-!
 This file proves that the pair `(∂𝕀 n, ⊔𝕀 n)` has the homotopy extension property for `n ≥ 1`.

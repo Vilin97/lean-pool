@@ -9,8 +9,8 @@ Algebraic identification of Zhou's actual dual coordinates. Paper: §3.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
 public import LeanPool.ConnesRigidity.Paper.Section3.FactorIsomorphism
+import Mathlib.Algebra.Algebra.ZMod
 
 /-!
 The dual coordinates component of the Connes rigidity formalization.

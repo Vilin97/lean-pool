@@ -7,7 +7,14 @@ module
 
 public import LeanPool.CircuitComplexity.AON.Defs
 public import LeanPool.CircuitComplexity.Internal.CircDesc
-public import LeanPool.CircuitComplexity.Internal.Schnorr
+public import LeanPool.CircuitComplexity.XOR
+public import Mathlib.Algebra.GroupWithZero.Nat
+import LeanPool.CircuitComplexity.Internal.Schnorr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! # Internal: Bridge from CircDesc to Circuit Model
 

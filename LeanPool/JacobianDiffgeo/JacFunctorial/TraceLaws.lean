@@ -7,6 +7,12 @@ module
 
 public import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
 public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+import LeanPool.JacobianDiffgeo.JacFunctorial.Density
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Functoriality laws and the projection formula for `Form1.trace` (jacobian-functoriality §6.5, §9)

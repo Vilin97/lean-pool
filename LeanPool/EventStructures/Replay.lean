@@ -5,11 +5,9 @@ Authors: Vikraman Choudhury
 -/
 module
 
-public import LeanPool.EventStructures.Basic
-public import LeanPool.EventStructures.Configuration
-public import LeanPool.EventStructures.Computation
 public import LeanPool.EventStructures.Log
-public import LeanPool.EventStructures.Trace
+public import Mathlib.Order.SetNotation
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Replay

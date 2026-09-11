@@ -5,11 +5,9 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Slope
 public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-!
 # PV Infrastructure: Gamma Analysis

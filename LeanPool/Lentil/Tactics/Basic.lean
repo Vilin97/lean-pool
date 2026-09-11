@@ -5,9 +5,12 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Aesop
-public import Batteries.Tactic.Basic
 public import LeanPool.Lentil.Basic
+public import Aesop.BuiltinRules
+public import Lean.Elab.Tactic.Basic
+public import Lean.Meta.Tactic.Replace
+public import Std.Do.Triple.SpecLemmas
+import LeanPool.Lentil.Util
 
 @[expose] public section
 

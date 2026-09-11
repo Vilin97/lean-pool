@@ -12,6 +12,12 @@ public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData3
 public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData4
 public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData5
 public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData6
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetCases
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated aggregation and routing for the hard normalized cases. -/
 

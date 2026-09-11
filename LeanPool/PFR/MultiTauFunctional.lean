@@ -6,9 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.MeasureTheory.Measure.FiniteMeasurePi
-public import Mathlib.MeasureTheory.Measure.Prokhorov
 public import LeanPool.PFR.MoreRuzsaDist
+import Mathlib.MeasureTheory.Measure.FiniteMeasurePi
+import Mathlib.MeasureTheory.Measure.Prokhorov
 
 /-!
 # The tau functional for multidistance

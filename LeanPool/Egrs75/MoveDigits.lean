@@ -5,12 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.LeafInduction
 public import LeanPool.Egrs75.DigitVector
 public import LeanPool.Egrs75.DigitAtToolkit
-public import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Data.List.GetD
+import Mathlib.Data.Nat.Digits.Lemmas
 
 /-!
 EGRS75 two-prime — digit toolkit for the single μ-move (2026-06-12).

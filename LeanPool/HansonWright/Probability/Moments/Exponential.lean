@@ -5,11 +5,10 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
 module
 
-public import Mathlib.Analysis.Convex.Integral
-public import Mathlib.Probability.Moments.Basic
 public import Mathlib.Probability.Moments.IntegrableExpMul
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Analysis.Convex.Integral
 
 /-!
 # Exponential-Moment Bounds

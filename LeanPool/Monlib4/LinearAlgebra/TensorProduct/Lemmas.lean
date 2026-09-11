@@ -5,10 +5,8 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.LinearAlgebra.TensorProduct.Map
 public import Mathlib.RingTheory.TensorProduct.Maps
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-public import LeanPool.Monlib4.Preq.StarAlgEquiv
+public import Mathlib.LinearAlgebra.DFinsupp
 
 /-!
 # Tensor-product map lemmas

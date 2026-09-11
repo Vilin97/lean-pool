@@ -5,9 +5,11 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
-public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Irreducible
 public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.GeneralConstruction
-public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Irreducible
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.DeletedModule
+import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Irreducible
+import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Irreducible
+import Mathlib.Data.Rat.Floor
 
 /-!
 # Counterexamples at every base size

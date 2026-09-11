@@ -5,16 +5,9 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
-public import LeanPool.FormalLearningTheory.Complexity.Rademacher
-public import LeanPool.FormalLearningTheory.PureMath.Exchangeability
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Probability.Independence.Basic
-public import Mathlib.Probability.Moments.SubGaussian
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+import LeanPool.FormalLearningTheory.Complexity.Rademacher
+import Mathlib.Probability.Moments.SubGaussian
 
 /-!
 # Symmetrization and Ghost Sample Infrastructure

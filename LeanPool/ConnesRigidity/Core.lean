@@ -18,7 +18,6 @@ public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Mathlib.Analysis.InnerProductSpace.Positive
 public import Mathlib.Analysis.InnerProductSpace.l2Space
 public import Mathlib.Analysis.VonNeumannAlgebra.Basic
-public import Mathlib.Dynamics.Flow
 
 /-!
 The core component of the Connes rigidity formalization.

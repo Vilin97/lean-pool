@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Circuitlib.Circuit.Category.Basic
 public import Mathlib.CategoryTheory.Monoidal.Braided.Basic
+import Mathlib.Tactic.Attr.Core
 
 /-! # Combinational circuit category
 

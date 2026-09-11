@@ -5,10 +5,10 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Tactic.Lemma
-public import Mathlib.Tactic.TypeStar
 public import Mathlib.Data.Nat.Notation
-public import Mathlib.Data.Fin.Basic
+public import Aesop.BuiltinRules
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Push
 
 /-!
 # LeanPool.QuasiBorelSpaces.List.Encoding

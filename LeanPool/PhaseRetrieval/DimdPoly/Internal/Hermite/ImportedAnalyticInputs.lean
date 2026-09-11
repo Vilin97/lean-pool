@@ -12,8 +12,14 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
-public import LeanPool.PhaseRetrieval.Constant.Internal.LocalCircleEstimate
-public import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+import LeanPool.PhaseRetrieval.Constant.Internal.LocalCircleEstimate
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # ImportedAnalyticInputs -/
 

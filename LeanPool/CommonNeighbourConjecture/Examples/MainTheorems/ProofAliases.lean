@@ -5,7 +5,14 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
-public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Internal
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Compatibility import for the main-theorem proof

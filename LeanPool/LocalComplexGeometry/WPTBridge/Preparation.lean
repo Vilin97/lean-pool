@@ -5,8 +5,11 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Analytic.Regularization
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
+public import LeanPool.LocalComplexGeometry.Germs.Coordinates
+import LeanPool.LocalComplexGeometry.Analytic.Regularization
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Regularized Weierstrass preparation for holomorphic germs

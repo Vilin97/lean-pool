@@ -17,6 +17,9 @@ public import LeanPool.ZFLean.Isomorphisms
 public import LeanPool.ZFLean.IsomorphismsFunsToPowRel
 public import LeanPool.ZFLean.IsomorphismsZFNatIso
 public import LeanPool.ZFLean.Sum
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # ZFLean

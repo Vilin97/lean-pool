@@ -5,8 +5,8 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.CoordinateFree.EllipticCurve
-public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Instances
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Concrete regression for the elliptic-curve development

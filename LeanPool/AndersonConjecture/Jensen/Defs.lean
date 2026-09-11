@@ -5,9 +5,9 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
 public import Mathlib.RingTheory.AdicCompletion.Algebra
 public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Trivial Generic Formal Fiber

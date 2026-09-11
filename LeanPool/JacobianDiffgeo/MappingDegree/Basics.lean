@@ -9,10 +9,11 @@ Blueprint unit: mapping-degree. Basics: nonconstancy bridges, fibers, `fiberMult
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Surface
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity
-public import Mathlib.Topology.DiscreteSubset
-public import Mathlib.Algebra.BigOperators.Finprod
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Mapping-degree basics

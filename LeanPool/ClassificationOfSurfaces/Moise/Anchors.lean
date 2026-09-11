@@ -6,8 +6,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
-public import Mathlib.Analysis.Convex.Combination
 public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+import Mathlib.Analysis.Normed.Affine.AddTorsor
 
 /-!
 # Positive anchors for the Moise plane structures

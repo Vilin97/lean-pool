@@ -6,9 +6,10 @@ Authors: Jukka Suomela
 module
 
 public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Mathlib.Data.Rat.Star
 
 public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix

@@ -6,6 +6,8 @@ Authors: Bhavik Mehta
 module
 
 public import LeanPool.AharoniKorman.Counterexample
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Disproof of the Aharoni-Korman Conjecture

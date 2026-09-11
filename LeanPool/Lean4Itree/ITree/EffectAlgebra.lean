@@ -5,7 +5,7 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 module
 
-public import LeanPool.Lean4Itree.ITree.Monad
+public import LeanPool.Lean4Itree.ITree.Basic
 
 /-!
 # Effect algebra for interaction trees

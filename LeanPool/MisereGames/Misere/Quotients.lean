@@ -5,8 +5,9 @@ Authors: Alfie Davies, Tomasz Maciosowski
 -/
 module
 
-public import LeanPool.MisereGames.Misere.Universe
 public import Mathlib.Algebra.Order.Monoid.Defs
+public import LeanPool.MisereGames.Form.Misere.Outcome
+import Mathlib.Tactic.Bound.Init
 
 /-!
 Misere combinatorial games.

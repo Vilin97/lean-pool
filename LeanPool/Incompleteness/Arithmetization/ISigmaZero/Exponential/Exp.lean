@@ -6,7 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.PPow2
-public import Mathlib.Algebra.Order.Ring.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Exp -/
 

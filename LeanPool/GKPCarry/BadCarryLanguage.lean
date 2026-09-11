@@ -5,9 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.CarryArithmetic
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Tactic.IntervalCases
+public import LeanPool.GKPCarry.Definitions
+import Mathlib.Data.List.Monad
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Tactic.IntervalCases
 
 /-!
 # The regular language of deficient ternary carries

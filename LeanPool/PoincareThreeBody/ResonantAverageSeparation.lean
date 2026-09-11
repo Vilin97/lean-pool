@@ -5,8 +5,16 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.SafeAverageAnalytic
 public import LeanPool.PoincareThreeBody.PoincareSet
+public import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
+import LeanPool.PoincareThreeBody.AlignedAverageBlowup
+import LeanPool.PoincareThreeBody.AnalyticDensity
+import LeanPool.PoincareThreeBody.DisturbingAverageAnalytic
+import LeanPool.PoincareThreeBody.SafeAverageAnalytic
+import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Separation of resonant disturbing averages in the collision band

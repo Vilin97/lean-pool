@@ -5,8 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.CayleyMenger
 public import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
+public import LeanPool.Erdos97ConvexOctagon.Radius
+import LeanPool.Erdos97ConvexOctagon.CayleyMenger
 
 /-! # Erdős 97 convex-octagon formalization: Residual Algebra04 -/
 

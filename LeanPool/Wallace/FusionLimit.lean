@@ -5,8 +5,9 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import Mathlib.Analysis.Normed.Group.AddCircle
-public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.Normed.Group.Quotient
+public import Mathlib.Topology.Instances.AddCircle.Real
+import Mathlib.Analysis.Normed.Group.AddCircle
 
 /-!
 # Pointwise limits of character fusions

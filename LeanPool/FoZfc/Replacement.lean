@@ -5,11 +5,6 @@ Authors: Tetsuya Ishiu
 -/
 module
 
-public import Init.Data.Fin.Basic
-public import LeanPool.FoZfc.Basic
-public import LeanPool.FoZfc.Tostring
-public import LeanPool.FoZfc.FixedSnoc
-public import LeanPool.FoZfc.BoundedFormulaOps
 public import LeanPool.FoZfc.Axioms
 
 /-!

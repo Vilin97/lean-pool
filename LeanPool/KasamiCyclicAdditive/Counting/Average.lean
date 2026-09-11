@@ -5,9 +5,9 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-public import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
+public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
 
 /-!
 # The Walsh and average formulas from half-size alone

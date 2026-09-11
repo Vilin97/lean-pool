@@ -5,13 +5,20 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Data.Fintype.CardEmbedding
 
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Fintype.CardEmbedding
+import Mathlib.Data.Nat.Bitwise
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting

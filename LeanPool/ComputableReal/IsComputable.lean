@@ -8,8 +8,13 @@ module
 public import Mathlib.Data.String.Defs
 
 public import LeanPool.ComputableReal.ComputableReal
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Tactic.Peel
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # The `IsComputable` typeclass

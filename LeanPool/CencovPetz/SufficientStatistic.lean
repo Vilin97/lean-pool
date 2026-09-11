@@ -6,6 +6,10 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.CencovPetz.Simplex
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.Order
 
 
 /-!

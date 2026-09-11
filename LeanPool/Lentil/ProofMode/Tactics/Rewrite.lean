@@ -5,11 +5,13 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public meta import LeanPool.Lentil.ProofMode.Basic
 
-public meta import Batteries.Lean.Expr
 
-public import LeanPool.Lentil.ProofMode.Location
+public import LeanPool.Lentil.ProofMode.Basic
+meta import Batteries.Lean.Expr
+meta import LeanPool.Lentil.ProofMode.Basic
+meta import LeanPool.Lentil.ProofMode.Location
+import LeanPool.Lentil.ProofMode.Location
 
 @[expose] public section
 

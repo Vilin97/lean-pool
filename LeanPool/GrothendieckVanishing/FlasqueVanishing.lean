@@ -5,9 +5,9 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 public import LeanPool.GrothendieckVanishing.CohomologyAPI
-public import LeanPool.GrothendieckVanishing.ZeroOutside
+import LeanPool.GrothendieckVanishing.ZeroOutside
+import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
 /-!
 # Flasque sheaf theory and cohomological vanishing

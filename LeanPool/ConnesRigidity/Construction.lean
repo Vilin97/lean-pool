@@ -7,11 +7,11 @@ Authors: Utensil Song
 -/
 module
 
-public import Mathlib.FieldTheory.Finite.Basic
 public import Mathlib.GroupTheory.SemidirectProduct
-public import Mathlib.SetTheory.Cardinal.Free
 public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
 public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.SetTheory.Cardinal.Free
 
 /-!
 Zhou's construction of the two groups in §2. The concrete tensor kernel,

@@ -6,7 +6,6 @@ Authors: Monica Omar
 module
 
 public import Mathlib.Analysis.InnerProductSpace.TensorProduct
-public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 
 /-!
 

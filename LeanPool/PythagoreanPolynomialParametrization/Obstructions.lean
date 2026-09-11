@@ -6,6 +6,17 @@ Authors: Lazar Milikic
 module
 
 public import LeanPool.PythagoreanPolynomialParametrization.Basic
+import Mathlib.Algebra.MvPolynomial.Funext
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Prime.Int
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.MvPolynomial.Basic
+import Mathlib.RingTheory.Polynomial.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Integer-coefficient obstruction
 

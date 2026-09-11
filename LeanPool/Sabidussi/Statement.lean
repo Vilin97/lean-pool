@@ -5,14 +5,8 @@ Authors: Nikolay Ulyanov
 -/
 module
 
-public import Mathlib.Data.Fin.Rev
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Finset.Prod
-public import Mathlib.Data.Fintype.Card
 public import Mathlib.Data.Fintype.Prod
-public import Mathlib.Data.Fintype.Sets
 public import Mathlib.Logic.Equiv.Fin.Rotate
-public import Mathlib.Logic.Relation
 
 /-!
 # Trusted statement layer for Sabidussi compatibility

@@ -5,8 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
-public import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
+import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Planar Cousin: cocycle splittings (`Jacobian/Dbar/PlanarCousin.lean`)

@@ -5,9 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Preservation
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
+import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
 
 /-! # Tree -/
 

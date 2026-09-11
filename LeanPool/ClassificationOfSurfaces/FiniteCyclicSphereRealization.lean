@@ -8,6 +8,10 @@ module
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
 public import LeanPool.ClassificationOfSurfaces.SphereQuotientHomeomorph
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The canonical finite-cyclic sphere realization

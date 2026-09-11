@@ -5,21 +5,16 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Schwinger.Defs
 public import LeanPool.OSforGFF.Measure.Construct
-public import LeanPool.OSforGFF.Measure.IsGaussian
-public import LeanPool.OSforGFF.Measure.GaussianFreeField -- For gaussian_satisfies_OS2
-public import LeanPool.OSforGFF.OS.OS2Invariance -- For CovarianceEuclideanInvariantℂ_μ_GFF
-public import LeanPool.OSforGFF.Covariance.Position  -- For freeCovarianceℂ_bilinear_symm
-public import LeanPool.OSforGFF.Covariance.Momentum
 public import LeanPool.OSforGFF.OS.Axioms
-public import LeanPool.OSforGFF.General.FunctionalAnalysis
-public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-public import LeanPool.OSforGFF.General.QuantitativeDecay
   -- For schwartz_bilinear_translation_decay_polynomial_proof
-public import LeanPool.OSforGFF.Spacetime.TimeTranslation  -- For time translation on distributions
-public import LeanPool.OSforGFF.OS.OS4MGF  -- For shared OS4 infrastructure (no sorries)
+import LeanPool.OSforGFF.General.QuantitativeDecay
+import LeanPool.OSforGFF.Measure.IsGaussian
+import LeanPool.OSforGFF.OS.OS2Invariance
+import LeanPool.OSforGFF.OS.OS4MGF
+import LeanPool.OSforGFF.Schwinger.GaussianMoments
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # OS4 — Polynomial Clustering

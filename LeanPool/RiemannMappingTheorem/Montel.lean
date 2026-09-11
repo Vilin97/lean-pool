@@ -5,11 +5,11 @@ Authors: Vincent Beffara
 -/
 module
 
-public import Mathlib.Analysis.Complex.Liouville
-public import Mathlib.Topology.UniformSpace.Ascoli
 public import LeanPool.RiemannMappingTheorem.Spaces
-public import LeanPool.RiemannMappingTheorem.Defs
-public import LeanPool.RiemannMappingTheorem.Hurwitz
+import Mathlib.Analysis.Complex.Liouville
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Topology.UniformSpace.Ascoli
 
 /-!
 # LeanPool.RiemannMappingTheorem.Montel

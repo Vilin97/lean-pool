@@ -7,6 +7,8 @@ module
 
 public import LeanPool.ArchonFirstProofResults.FirstProof4
 public import LeanPool.ArchonFirstProofResults.FirstProof6
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Archon-FirstProof-Results

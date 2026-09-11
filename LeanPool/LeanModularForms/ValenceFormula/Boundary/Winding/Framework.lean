@@ -5,8 +5,13 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
-public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Single-Crossing Winding Number Framework

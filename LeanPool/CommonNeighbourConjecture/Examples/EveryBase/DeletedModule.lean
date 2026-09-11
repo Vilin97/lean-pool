@@ -5,9 +5,8 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
-public import Mathlib.LinearAlgebra.Dual.Lemmas
-public import Mathlib.LinearAlgebra.StdBasis
 public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.FrobeniusGroup
+import Mathlib.Data.Rat.Floor
 
 /-!
 # The binary deleted permutation module

@@ -5,16 +5,14 @@ Authors: Julius Marx
 -/
 module
 
-public import Lean.Elab.Tactic.Basic
-public import LeanPool.MRiscX.AbstractSyntax.Map
-public import LeanPool.MRiscX.Semantics.MsTheory
-public import LeanPool.MRiscX.Util.BasicTheorems
-public import LeanPool.MRiscX.Hoare.HoareCore
-public import LeanPool.MRiscX.Tactics.SplitLastSeq
-public import LeanPool.MRiscX.Tactics.ApplySpec
-public import LeanPool.MRiscX.Tactics.GeneralCustomTactics
 
-public import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+import LeanPool.MRiscX.Tactics.ApplySpec
+import LeanPool.MRiscX.Tactics.GeneralCustomTactics
+import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+import LeanPool.MRiscX.Tactics.SplitLastSeq
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # CodeProofTactics

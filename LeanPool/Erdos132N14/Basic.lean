@@ -6,7 +6,6 @@ Authors: Egor Lyfar
 module
 
 public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Data.Finset.Card
 
 /-!
 # Finite planar distance configurations

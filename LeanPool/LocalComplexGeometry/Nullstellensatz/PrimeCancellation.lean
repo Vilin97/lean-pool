@@ -6,6 +6,10 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Cancellation on a prime analytic zero set

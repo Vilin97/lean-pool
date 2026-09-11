@@ -5,9 +5,10 @@ Authors: David Renshaw
 -/
 module
 
-public import LeanPool.Rupert.Basic
-public import LeanPool.Rupert.Set
-public import LeanPool.Rupert.Affine
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.Rupert.Equivalences.AffineRupertEquivRupertSet

@@ -6,6 +6,11 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arith.Theory
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus2
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Nat.SuccPred
 
 /-! # D1 -/
 

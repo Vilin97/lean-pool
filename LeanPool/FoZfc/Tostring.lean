@@ -6,7 +6,6 @@ Authors: Tetsuya Ishiu
 module
 
 public import LeanPool.FoZfc.Basic
-public import LeanPool.FoZfc.BoundedFormulaOps
 
 /-!
 # To string for LZFC.Term and LZFC.BoundedFormula

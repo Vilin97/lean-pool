@@ -5,13 +5,13 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.Elab.CodeElaborator
-public import LeanPool.MRiscX.Semantics.Specification
-public import LeanPool.MRiscX.Delab.DelabCode
-public import LeanPool.MRiscX.Elab.HoareElaborator
-public import LeanPool.MRiscX.Hoare.HoareRules
-public import LeanPool.MRiscX.Util.BasicTheorems
-public import LeanPool.MRiscX.Tactics.CodeProofTactics
+public import LeanPool.MRiscX.Hoare.HoareCore
+import LeanPool.MRiscX.Hoare.HoareRules
+import LeanPool.MRiscX.Semantics.MsTheory
+import LeanPool.MRiscX.Semantics.Specification
+import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+import LeanPool.MRiscX.Util.BasicTheorems
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # SingleProofsOTP

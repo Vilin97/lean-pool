@@ -6,7 +6,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
-public import Mathlib.Geometry.Manifold.MFDeriv.Basic
+public import Mathlib.Geometry.Manifold.MFDeriv.Defs
 
 /-!
 # Modified Nesterov Scheme and Supporting Definitions

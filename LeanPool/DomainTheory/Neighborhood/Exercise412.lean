@@ -7,6 +7,10 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Approximable
 public import LeanPool.DomainTheory.Neighborhood.Example12
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Set.Insert
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.SetLike
 
 /-!
 # Exercise 4.12 (Scott 1981, PRG-19, Lecture IV)

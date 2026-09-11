@@ -5,19 +5,14 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 public import Mathlib.Data.Nat.Factorization.Defs
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Zify
-public import Aesop
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The r = 3 case of the "13/9 theorem" (Erdős #367 r-full extension)

@@ -6,6 +6,7 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 module
 
 public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Basic facts: the power map `x ↦ x^D` and the group `μ₃(K)`

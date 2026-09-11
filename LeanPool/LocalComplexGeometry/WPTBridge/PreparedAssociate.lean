@@ -5,8 +5,8 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
 public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # The prepared divisor is associate to the regularized germ

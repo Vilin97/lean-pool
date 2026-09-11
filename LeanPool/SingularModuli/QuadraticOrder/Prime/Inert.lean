@@ -5,7 +5,8 @@ Authors: Caleb L. Geiger
 -/
 module
 
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
+import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
 
 /-!
 # Prime classification, part 3: the inert case

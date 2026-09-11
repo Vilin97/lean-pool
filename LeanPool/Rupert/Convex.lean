@@ -6,7 +6,7 @@ Authors: David Renshaw
 module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # LeanPool.Rupert.Convex

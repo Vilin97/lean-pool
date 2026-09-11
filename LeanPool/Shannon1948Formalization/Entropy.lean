@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Shannon1948Formalization.Entropy.Properties
 public import LeanPool.Shannon1948Formalization.Entropy.Converse
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Shannon.Entropy

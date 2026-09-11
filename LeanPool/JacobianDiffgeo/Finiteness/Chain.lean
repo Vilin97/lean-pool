@@ -5,8 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
-public import LeanPool.JacobianDiffgeo.Cech.Cochains
+public import LeanPool.JacobianDiffgeo.Cech.Covers
+public import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `ShrinkChain`: Forster's four-level shrinking chain (`finiteness-and-chi`)

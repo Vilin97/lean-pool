@@ -6,13 +6,7 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.AdeleSpace.Basic
-public import Mathlib.Algebra.Order.GroupWithZero.Canonical
-public import Mathlib.LinearAlgebra.Isomorphisms
-public import Mathlib.LinearAlgebra.Dimension.Finite
-public import Mathlib.LinearAlgebra.Dimension.RankNullity
-public import Mathlib.LinearAlgebra.Quotient.Basic
-public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
-public import Mathlib.RingTheory.Finiteness.Finsupp
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Exact dimensions of adele divisor quotients

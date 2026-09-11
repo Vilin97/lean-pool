@@ -5,19 +5,11 @@ Authors: seb488, Aristotle
 -/
 module
 
-public import Mathlib.Analysis.Complex.Harmonic.Analytic
-public import Mathlib.Analysis.Normed.Group.FunctionSeries
-public import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Topology.Algebra.Module.PerfectSpace
+import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 /-!
 # Uniqueness of the Herglotz–Riesz measure
 

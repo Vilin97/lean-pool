@@ -7,6 +7,7 @@ module
 
 public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Radial cutoff packages

@@ -5,21 +5,15 @@ Authors: Makoto Yamashita
 -/
 module
 
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Data.Matrix.Basic
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Data.Real.Basic
+public import Mathlib.LinearAlgebra.Matrix.Defs
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Primal-dual LP data and HSDE notation

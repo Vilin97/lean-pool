@@ -6,7 +6,10 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Complexity.Measurability
-public import LeanPool.FormalLearningTheory.PureMath.AnalyticMeasurability
+import LeanPool.FormalLearningTheory.PureMath.AnalyticMeasurability
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Borel-Analytic Bridge for Statistical Learning Theory

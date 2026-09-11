@@ -5,8 +5,13 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.Basic
-public import LeanPool.MRiscX.Tactics.ApplySpec
+public import Aesop.BuiltinRules
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+import LeanPool.MRiscX.Elab.HoareElaborator
+import LeanPool.MRiscX.Tactics.CodeProofTactics
+import LeanPool.MRiscX.Tactics.GeneralCustomTactics
+import Mathlib.Data.Set.Defs
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 New Code Proofs

@@ -5,9 +5,9 @@ Authors: Julius Marx
 -/
 module
 
-public meta import Lean
-public meta import LeanPool.MRiscX.Elab.HandleNumOrIdent
-public meta import LeanPool.MRiscX.Parser.HoareSyntax
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+import Lean.Elab.Term.TermElabM
+import LeanPool.MRiscX.Parser.HoareSyntax
 
 /-!
 # HoareAssignmentElab

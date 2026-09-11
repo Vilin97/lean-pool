@@ -6,11 +6,11 @@ Authors: Lior Pachter
 module
 
 public import LeanPool.PebblingLean.GraphIso
-public import LeanPool.PebblingLean.Hypercube
 public import LeanPool.PebblingLean.Product
 public import LeanPool.PebblingLean.UpperBound
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Data.Fin.Embedding
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Data.Finite.Prod
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Hypercubes as Cartesian products

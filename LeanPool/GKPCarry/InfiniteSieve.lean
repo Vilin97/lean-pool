@@ -5,10 +5,18 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.InfiniteSlices
 public import LeanPool.GKPCarry.UnitCarryCounting
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Data.Fintype.Card
+public import LeanPool.GKPCarry.PowerResidues
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import LeanPool.GKPCarry.GKPCharacterization
+import LeanPool.GKPCarry.InfiniteSlices
+import Mathlib.Analysis.SpecificLimits.Normed
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # An exact all-depth modular sieve for GKP carries

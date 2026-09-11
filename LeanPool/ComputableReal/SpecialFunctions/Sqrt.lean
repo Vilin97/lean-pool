@@ -6,9 +6,11 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.ComputableReal.IsComputable
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.NumberTheory.Real.GoldenRatio
+public import Mathlib.Tactic.Bound
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Int.Log
+import Mathlib.Tactic.Rify
 
 /-!
 # Verified rational bounds for square roots

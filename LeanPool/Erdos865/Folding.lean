@@ -5,7 +5,11 @@ Authors: Ricky Cipollini
 -/
 module
 
-public import LeanPool.Erdos865.FoldedMain
+public import LeanPool.Erdos865.Defs
+import LeanPool.Erdos865.FoldedMain
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The folding lemma (Erdős 865, §3)

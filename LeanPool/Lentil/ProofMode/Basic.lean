@@ -5,7 +5,14 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import LeanPool.Lentil.Rules.BigOp
+public import LeanPool.Lentil.Tactics.Basic
+public import LeanPool.Lentil.Utils.MiscLemmas
+import Aesop.Frontend.Tactic
+import Aesop.Main
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Rules.BigOp
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 

@@ -6,8 +6,6 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.Definitions
-public import Mathlib.Analysis.Complex.Convex
-public import Mathlib.NumberTheory.ModularForms.Identities
 
 /-!
 # Modular Invariance of Vanishing Order

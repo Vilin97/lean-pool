@@ -5,9 +5,11 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import LeanPool.DirectedTopologyLean4.CoverLemma
-public import LeanPool.DirectedTopologyLean4.DipathSubtype
-public import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
+public import LeanPool.DirectedTopologyLean4.DTop
+public import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
+import LeanPool.DirectedTopologyLean4.CoverLemma
+import LeanPool.DirectedTopologyLean4.DipathSubtype
+import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 
 /-!
 # LeanPool.DirectedTopologyLean4.PathCover

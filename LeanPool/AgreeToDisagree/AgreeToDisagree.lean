@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Setoid.Partition
 public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
-public import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
+import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 
 /-!
 # Aumann's agreement theorem

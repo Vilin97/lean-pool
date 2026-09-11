@@ -5,8 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132N14.HopfPannwitz
 public import LeanPool.Erdos132N14.RegularTridecagon
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Published inputs for the conditional fourteen-point theorem

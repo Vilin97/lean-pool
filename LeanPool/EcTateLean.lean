@@ -13,6 +13,12 @@ public import LeanPool.EcTateLean.Algebra.EllipticCurve.Model
 public import LeanPool.EcTateLean.Algebra.Ring.Basic
 public import LeanPool.EcTateLean.FieldTheory.PerfectClosure
 public import LeanPool.EcTateLean.Init.Data.Int.Lemmas
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Weierstrass models and singular points for Tate's algorithm

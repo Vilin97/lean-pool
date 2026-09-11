@@ -5,8 +5,15 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
-public import LeanPool.AndersonConjecture.AdicKerEval
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+import LeanPool.AndersonConjecture.AdicKerEval
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.RingTheory.Filtration
+import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Adic Completion of a Noetherian Local Ring is Noetherian

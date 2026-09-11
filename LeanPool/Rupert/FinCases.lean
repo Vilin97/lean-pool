@@ -6,8 +6,8 @@ Authors: David Renshaw
 module
 
 public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Data.Fintype.Basic
-public import Mathlib.Tactic.FinCases
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Tactic.FinCases
 
 /-!
 # LeanPool.Rupert.FinCases

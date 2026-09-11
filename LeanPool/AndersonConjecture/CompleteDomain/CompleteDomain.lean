@@ -5,10 +5,13 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.RingTheory.KrullDimension.Regular
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.LinearAlgebra.AffineSpace.Combination
 public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+public import Mathlib.RingTheory.Ideal.Height
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Data.EReal.Inv
+import Mathlib.RingTheory.KrullDimension.Regular
+import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
+import Mathlib.RingTheory.SimpleRing.Principal
 
 /-!
 # The Complete Local Domain T = C[[x,y,z]]/(x^2-yz)

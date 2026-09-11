@@ -5,7 +5,17 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.Basic
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
+import Mathlib.Analysis.Complex.SummableUniformlyOn
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The Weierstrass σ- and ζ-functions

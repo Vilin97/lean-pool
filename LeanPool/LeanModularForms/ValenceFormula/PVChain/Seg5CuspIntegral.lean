@@ -5,13 +5,15 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
 public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.LogDerivFTC
-public import LeanPool.LeanModularForms.ForMathlib.QExpansion
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.ForMathlib.QExpansion
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Seg5 Cusp Integral

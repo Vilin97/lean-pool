@@ -5,15 +5,15 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Analysis.Normed.Lp.WithLp
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Data.Finsupp.Pointwise
-public import Mathlib.Data.Int.Star
 public import Mathlib.GroupTheory.Commensurable
 public import Mathlib.GroupTheory.DoubleCoset
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.Tactic.Group
+public import Mathlib.Algebra.Group.Finsupp
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Hecke Rings: Basic Definitions

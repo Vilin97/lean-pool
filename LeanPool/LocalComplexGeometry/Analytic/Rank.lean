@@ -5,12 +5,13 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
 public import LeanPool.LocalComplexGeometry.Germs.Basic
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.Analysis.Calculus.FDeriv.Linear
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Complex rank in finite-dimensional coordinate spaces

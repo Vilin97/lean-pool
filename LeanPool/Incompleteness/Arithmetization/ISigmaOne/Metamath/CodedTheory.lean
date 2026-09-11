@@ -7,7 +7,8 @@ module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Coding
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Typed
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
+import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # CodedTheory -/
 

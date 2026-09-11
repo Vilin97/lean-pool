@@ -6,7 +6,7 @@ Authors: Alexander Loitzl, Martin Dvorak
 module
 
 public import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
-public import LeanPool.PumpingCfg.ToMathlib
+import LeanPool.PumpingCfg.ToMathlib
 
 /-!
 # Parse trees for Chomsky normal form grammars

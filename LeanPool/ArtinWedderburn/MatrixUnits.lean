@@ -5,14 +5,12 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.RingTheory.Artinian.Ring
-public import Mathlib.Algebra.Field.Defs
-public import Mathlib.RingTheory.SimpleRing.Basic
-public import Mathlib.Algebra.Ring.Idempotent
-public import LeanPool.ArtinWedderburn.PrimeRing
-public import LeanPool.ArtinWedderburn.CornerRing
 public import LeanPool.ArtinWedderburn.Idempotents
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Matrix units and the matrix-ring representation

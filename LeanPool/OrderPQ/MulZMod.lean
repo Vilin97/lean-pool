@@ -5,9 +5,19 @@ Authors: Scott Harper, Peiran Wu
 -/
 module
 
-public import LeanPool.OrderPQ.PrimeOrder
 public import Mathlib.Data.ZMod.Aut
-public import Mathlib.RingTheory.ZMod.UnitsCyclic
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Group.TypeTags.Finite
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Data.ZMod.Units
+import Mathlib.RingTheory.IntegralDomain
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # LeanPool.OrderPQ.MulZMod

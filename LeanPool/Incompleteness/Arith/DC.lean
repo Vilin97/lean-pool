@@ -5,9 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arith.First
 public import LeanPool.Incompleteness.Arith.Second
 public import LeanPool.Incompleteness.DC.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # DC -/
 

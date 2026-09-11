@@ -6,10 +6,10 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
-public import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
 public import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
-public import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
+import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
 
 /-!
 # Locally finite graph approximation controls

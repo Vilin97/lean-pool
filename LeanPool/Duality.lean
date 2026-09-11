@@ -12,6 +12,12 @@ public import LeanPool.Duality.FarkasBasic
 public import LeanPool.Duality.FarkasSpecial
 public import LeanPool.Duality.LinearProgramming
 public import LeanPool.Duality.LinearProgrammingB
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Duality theory in linear optimization and its extensions

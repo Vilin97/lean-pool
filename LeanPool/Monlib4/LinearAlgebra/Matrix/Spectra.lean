@@ -5,10 +5,8 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Analysis.Matrix.Spectrum
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
 public import LeanPool.Monlib4.LinearAlgebra.InnerAut
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Matrix Spectra

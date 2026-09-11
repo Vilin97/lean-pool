@@ -8,6 +8,7 @@ module
 import all LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
 
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+import Mathlib.Tactic.Linarith.Frontend
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat

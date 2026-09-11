@@ -5,8 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Path.Chain
-public import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import Mathlib.Topology.Homotopy.Path
+import LeanPool.JacobianDiffgeo.Path.Chain
+import LeanPool.JacobianDiffgeo.Path.Planar
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Topology.Algebra.Module.Cardinality
 
 /-!
 # Perturbing a path off a finite set (CC6)

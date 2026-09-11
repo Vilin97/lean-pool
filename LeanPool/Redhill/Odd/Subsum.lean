@@ -5,11 +5,19 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.Tactic.Zify
 public import LeanPool.Redhill.Common.MaxAbs
 public import LeanPool.Redhill.Odd.Defs
-public import LeanPool.Redhill.ToMathlib.NatAbs
-public import LeanPool.Redhill.ToMathlib.NatSumProd
+import LeanPool.Redhill.ToMathlib.NatAbs
+import LeanPool.Redhill.ToMathlib.NatSumProd
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Zify
 
 /-!
 # Subsum condition for the odd case

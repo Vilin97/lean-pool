@@ -13,6 +13,7 @@ would FAIL if the corresponding clause of Section 2 were mis-encoded.
 module
 
 public import LeanPool.MatchingLogic.Core
+import Mathlib.Data.Set.Basic
 
 /-!
 # MatchingLogic.Sanity

@@ -16,6 +16,9 @@ Co-authored-by: Aristotle (Harmonic) <aristotle-harmonic@harmonic.fun>
 module
 
 public import LeanPool.KrafftSieve.Defs
+import Mathlib.NumberTheory.Bertrand
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.RealSqrt
 
 
 /-!

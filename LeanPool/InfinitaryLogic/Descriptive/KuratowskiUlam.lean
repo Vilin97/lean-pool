@@ -6,8 +6,6 @@ Authors: Cameron Freer
 module
 
 public import Mathlib.Topology.Baire.BaireMeasurable
-public import Mathlib.Topology.Baire.Lemmas
-public import Mathlib.Topology.Bases
 
 /-!
 # Kuratowski–Ulam: meager sections give a meager set

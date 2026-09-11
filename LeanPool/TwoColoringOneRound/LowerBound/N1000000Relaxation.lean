@@ -6,9 +6,9 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation

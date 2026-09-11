@@ -5,7 +5,6 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Symmetric
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!

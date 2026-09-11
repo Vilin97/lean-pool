@@ -5,8 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
-public import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
+import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
+import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The backward headline: `X ≃ₜ S² ⇒ genus X = 0` (CC-sphere-topology, design §4)

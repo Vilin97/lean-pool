@@ -5,12 +5,9 @@ Authors: Joseph McKinsey
 -/
 module
 
-public import Mathlib.Data.Rat.Defs
 public import Mathlib.Data.Rat.Floor
-public import Mathlib.Tactic.Positivity.Core
-public import Mathlib.Tactic.Zify
-public import Mathlib.Tactic.Qify
-public import Mathlib.Algebra.Order.Interval.Set.Group
+import Mathlib.Algebra.Order.Interval.Set.Group
+import Mathlib.Tactic.Qify
 
 /-!
 # Integer Rounding Functions

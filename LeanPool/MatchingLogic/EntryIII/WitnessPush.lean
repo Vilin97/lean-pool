@@ -15,7 +15,9 @@ bound names merely to fit the raw representation.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+public import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.LocalTheory
 
 /-!
 # MatchingLogic.EntryIII.WitnessPush

@@ -12,10 +12,14 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ModulusRigidity
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
-public import Mathlib.Analysis.SpecialFunctions.Pochhammer
-public import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.PolarCoord
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # BasisLocalization -/
 

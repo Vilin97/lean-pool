@@ -6,7 +6,9 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.LowerBound.Defs
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Public interface: the `n = 1_000_000` lower bound

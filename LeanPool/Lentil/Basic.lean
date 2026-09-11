@@ -9,10 +9,11 @@ public meta import LeanPool.Lentil.Util
 
 public meta import LeanPool.Lentil.Utils.SyntaxUtil
 
-public import Lean
 public import Batteries.Util.ExtendedBinder
-public import LeanPool.Lentil.Util
 public import LeanPool.Lentil.Foldable
+public meta import Lean.PrettyPrinter.Delaborator.Basic
+public import Lean.PrettyPrinter.Delaborator.Basic
+public meta import Lean.PrettyPrinter.Parenthesizer
 
 @[expose] public section
 

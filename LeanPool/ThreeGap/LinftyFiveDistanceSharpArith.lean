@@ -5,8 +5,12 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.SimultaneousDirichlet
-public import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
+public import LeanPool.ThreeGap.TorusReduction
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.NumberTheory.Real.Irrational
+import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
+import LeanPool.ThreeGap.SimultaneousDirichlet
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Arithmetic sharpness of the `L∞` five-distance theorem `g_∞ ≤ 5` on `𝕋²` (dynamics-free)

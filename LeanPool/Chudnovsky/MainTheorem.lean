@@ -5,7 +5,10 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.Kummer
+public import LeanPool.Chudnovsky.Basic
+import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.Kummer
+import LeanPool.Chudnovsky.Ramanujan
 
 /-!
 # The Main Theorem (Milla, ch. 9)

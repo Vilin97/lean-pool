@@ -8,9 +8,7 @@ module
 public import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
 public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 public import LeanPool.InfinitaryLogic.Lomega1omega.FirstOrderImage
-public import Mathlib.ModelTheory.Satisfiability
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Data.Fintype.EquivFin
+import Mathlib.ModelTheory.Satisfiability
 
 /-!
 # The HF fragment (issue #18)

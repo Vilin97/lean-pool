@@ -5,13 +5,7 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.Elab.CodeElaborator
-public import LeanPool.MRiscX.Semantics.Specification
-public import LeanPool.MRiscX.Delab.DelabCode
-public import LeanPool.MRiscX.Elab.HoareElaborator
-public import LeanPool.MRiscX.Hoare.HoareRules
-public import LeanPool.MRiscX.Util.BasicTheorems
-public import LeanPool.MRiscX.Tactics.CodeProofTactics
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # Basic

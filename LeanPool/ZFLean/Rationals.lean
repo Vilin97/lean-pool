@@ -6,6 +6,8 @@ Authors: Vincent Trélat
 module
 
 public import LeanPool.ZFLean.Integers
+public import Mathlib.Algebra.Field.Defs
+import Mathlib.Tactic.Ring.RingNF
 
 /-! # ZFC Rational Numbers
 

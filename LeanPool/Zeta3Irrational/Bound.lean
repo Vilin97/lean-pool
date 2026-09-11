@@ -5,8 +5,10 @@ Authors: Junqi Liu, Jujian Zhang
 -/
 module
 
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # LeanPool.Zeta3Irrational.Bound

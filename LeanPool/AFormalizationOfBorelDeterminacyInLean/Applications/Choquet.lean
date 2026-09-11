@@ -5,8 +5,14 @@ Authors: Sven Manthe
 -/
 module
 
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Meager
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Choquet

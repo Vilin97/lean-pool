@@ -5,7 +5,8 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.Topology.NhdsWithin
+public import Mathlib.Topology.Defs.Filter
+import Mathlib.Topology.NhdsWithin
 
 /-!
 # LeanPool.SardMoreira.Topology

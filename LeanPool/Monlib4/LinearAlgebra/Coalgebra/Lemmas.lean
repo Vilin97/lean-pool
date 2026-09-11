@@ -6,9 +6,8 @@ Authors: Monica Omar
 module
 
 public import Mathlib.RingTheory.Coalgebra.Basic
-public import Mathlib.RingTheory.Coalgebra.CoassocSimps
 public import Mathlib.Algebra.Algebra.Bilinear
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas

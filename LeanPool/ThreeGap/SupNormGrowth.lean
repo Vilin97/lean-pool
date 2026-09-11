@@ -6,9 +6,12 @@ Authors: Vico Bonfioli
 module
 
 public import LeanPool.ThreeGap.SimultaneousApprox
-public import LeanPool.ThreeGap.ChevallierGapBound
-public import Mathlib.Data.Fintype.Pigeonhole
-public import Mathlib.Data.Fintype.BigOperators
+import LeanPool.ThreeGap.ChevallierGapBound
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Fintype.Pigeonhole
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The sup-norm growth inequality via the orthant pigeonhole (fully proven)

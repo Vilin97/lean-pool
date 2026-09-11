@@ -5,9 +5,12 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.MCM.Permutation
-public import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Algebra.Ring.Parity
+public import Mathlib.Data.Fintype.Card
+import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.MCM.Permutation
 
 /-!
 # Half-size of the Kasami derivative image

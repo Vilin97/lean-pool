@@ -5,17 +5,13 @@ Authors: Joseph McKinsey
 -/
 module
 
-public import Mathlib.Data.Rat.Defs
 public import Mathlib.Data.Rat.Floor
-public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.Data.Int.Log
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.WLOG
-public import Mathlib.Tactic.Tauto
 public import LeanPool.Flean.FloatCfg
-public import LeanPool.Flean.LogRules
+public import Mathlib.Tactic.Continuity
+import LeanPool.Flean.LogRules
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Floating-Point Representations

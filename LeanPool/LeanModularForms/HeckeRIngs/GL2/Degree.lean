@@ -5,7 +5,16 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
+public import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Degree formulas for GL₂ Hecke operators

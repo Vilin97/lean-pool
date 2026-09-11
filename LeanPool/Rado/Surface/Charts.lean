@@ -5,8 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.Rado.Topology.SecondCountable
-public import LeanPool.Rado.Surface.HolomorphicCompat
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Riemann-surface chart conventions

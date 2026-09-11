@@ -6,8 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Approximable
-public import Mathlib.Data.Set.Image
-public import Mathlib.Data.Set.Insert
+import Mathlib.Data.Set.Image
 
 /-!
 # Exercise 3.18 (Scott 1981, PRG-19, §3) — the sum (coproduct) system

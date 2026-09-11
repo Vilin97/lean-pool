@@ -5,15 +5,25 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Algebra.AlgebraicCard
 public import Mathlib.Algebra.Field.ULift
 public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-public import Mathlib.Tactic.Ring
-public import LeanPool.Koethe.Mortality.MaskMortality
-public import LeanPool.Koethe.MaskSequence.Universal
-public import LeanPool.Koethe.Linearization.Nil
-public import LeanPool.Koethe.ShiftWitness.Witness
+public import LeanPool.Koethe.Pencil
+public import Mathlib.LinearAlgebra.Matrix.Ideal
+import LeanPool.Koethe.Linearization.Nil
+import LeanPool.Koethe.MaskSequence.Universal
+import LeanPool.Koethe.Mortality.MaskMortality
+import LeanPool.Koethe.ShiftWitness.Witness
+import Mathlib.Algebra.AlgebraicCard
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The counterexample: a nil ideal with a non-nilpotent `2 × 2` matrix

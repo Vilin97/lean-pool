@@ -7,6 +7,7 @@ module
 
 public import LeanPool.NashWilliams.Combinatorics.Front.Defs
 public import Mathlib.SetTheory.Ordinal.Rank
+import Mathlib.Order.Lattice.Nat
 
 /-!
 # The tree of a front is well-founded

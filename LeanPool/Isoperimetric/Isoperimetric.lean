@@ -5,8 +5,10 @@ Authors: Jonathan Ho
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
-public import LeanPool.Isoperimetric.BrunnMinkowski
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.Isoperimetric.BrunnMinkowski
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 
 /-!
 # The isoperimetric inequality

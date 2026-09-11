@@ -6,8 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.ModelTheory.AElementary
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
 public import Mathlib.ModelTheory.Substructures
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
 
 /-!
 # Genuine downward Löwenheim–Skolem for fragments (issue #13 unit 5)

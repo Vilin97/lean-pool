@@ -5,8 +5,8 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import Mathlib.Data.DFinsupp.Submonoid
-public import Mathlib.Data.Finsupp.Basic
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid

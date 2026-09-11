@@ -6,7 +6,8 @@ Authors: Jose Fonollosa
 module
 
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.Algebra.Group.Action.Pi
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Elementary abelian 2-groups attain the optimal bound

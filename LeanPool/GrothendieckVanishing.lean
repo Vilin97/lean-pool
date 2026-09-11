@@ -6,6 +6,11 @@ Authors: Vasily Ilin, Brian Nugent
 module
 
 public import LeanPool.GrothendieckVanishing.GrothendieckVanishingOverview
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Floor
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Topology.Sheaves.Init
 
 /-!
 # Grothendieck's Vanishing Theorem

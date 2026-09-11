@@ -5,9 +5,10 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Prop
-public import LeanPool.QuasiBorelSpaces.Sigma
 public import LeanPool.QuasiBorelSpaces.Sum
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.Pi
+import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.SeparatesPoints

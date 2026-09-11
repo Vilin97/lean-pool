@@ -5,7 +5,13 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
+public import Mathlib.Data.Real.Basic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Coercivity Core Bound

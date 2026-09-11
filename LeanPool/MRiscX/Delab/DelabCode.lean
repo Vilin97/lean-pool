@@ -6,9 +6,9 @@ Authors: Julius Marx
 module
 
 public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public import LeanPool.MRiscX.Parser.AssemblySyntax
-public import LeanPool.MRiscX.Elab.CodeElaborator
-public import LeanPool.MRiscX.AbstractSyntax.Instr
+public meta import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+import LeanPool.MRiscX.Parser.AssemblySyntax
 
 /-!
 # DelabCode

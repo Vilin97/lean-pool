@@ -5,18 +5,16 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import Mathlib.Analysis.Convex.DoublyStochasticMatrix
-public import Mathlib.Analysis.SpecialFunctions.Log.Base
-public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Fintype.EquivFin
 public import Mathlib.Logic.Equiv.Fin.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Shannon.Entropy.Core
 

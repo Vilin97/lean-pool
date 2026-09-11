@@ -6,17 +6,8 @@ Authors: Rodrigo Gutierrez, Yves Jäckle
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Clique
-public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
-public import Mathlib.Data.Sym.Card
-public import Mathlib.Data.NNReal.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-public import Mathlib.Tactic.WLOG
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Push
+public import Mathlib.Data.NNReal.Defs
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Turán's theorem (the "Book" weighting proof)

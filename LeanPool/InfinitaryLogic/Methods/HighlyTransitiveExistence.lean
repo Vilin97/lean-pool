@@ -5,11 +5,14 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
 public import Mathlib.RingTheory.HahnSeries.Lex
 public import Mathlib.RingTheory.HahnSeries.Summable
-public import Mathlib.SetTheory.Cardinal.Subfield
 public import Mathlib.Data.Finsupp.Lex
+public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
+public import Mathlib.Algebra.Field.Subfield.Basic
+public import Mathlib.SetTheory.Ordinal.Basic
+import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
+import Mathlib.SetTheory.Cardinal.Subfield
 
 /-!
 # Highly order-transitive orders of every infinite cardinality (issue #11 unit 6b)

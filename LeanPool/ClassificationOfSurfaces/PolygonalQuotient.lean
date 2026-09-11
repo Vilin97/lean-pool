@@ -6,10 +6,9 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import Mathlib.Analysis.Complex.Circle
-public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Data.Setoid.Basic
 public import Mathlib.Topology.Homeomorph.Quotient
 public import Mathlib.Topology.UnitInterval
+import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 
 /-!
 # Polygonal quotient spaces

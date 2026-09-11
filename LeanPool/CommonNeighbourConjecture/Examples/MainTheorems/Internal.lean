@@ -9,7 +9,8 @@ import Mathlib.Algebra.Order.Ring.Pow
 
 public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Main
 public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Definitions
-public import LeanPool.CommonNeighbourConjecture.Saxl.Generalized
+import LeanPool.CommonNeighbourConjecture.Saxl.Generalized
+import Mathlib.Data.Rat.Floor
 
 /-!
 # Internal implementation of the main theorem

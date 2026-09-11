@@ -5,7 +5,6 @@ Authors: ruplet
 -/
 module
 
-public import Mathlib.ModelTheory.Semantics
 public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 
 /-!

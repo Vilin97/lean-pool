@@ -5,8 +5,7 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Logic.Entailment
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Basic
 
 /-!
 # Sequent calculus and variants

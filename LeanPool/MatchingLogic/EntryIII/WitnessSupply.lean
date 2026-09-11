@@ -5,9 +5,9 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.Witnessed
 public import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
-public import Mathlib.Data.Set.Finite.Basic
+import LeanPool.MatchingLogic.EntryIII.Lindenbaum
+import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # MatchingLogic.EntryIII.WitnessSupply

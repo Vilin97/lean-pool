@@ -5,14 +5,15 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
 public import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
-public import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
-public import LeanPool.ClassificationOfSurfaces.Moise.Anchors
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalSchoenflies
-public import Mathlib.Analysis.Complex.Tietze
+public import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalCrosscut
+import LeanPool.ClassificationOfSurfaces.Moise.Anchors
+import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalSchoenflies
+import Mathlib.Analysis.Complex.Tietze
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # PL approximation of homeomorphisms

@@ -6,10 +6,10 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Filteration
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Filteration
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # K -/
 

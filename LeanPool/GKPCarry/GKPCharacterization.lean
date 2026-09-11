@@ -6,6 +6,11 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.GKPCarry.BadCarryLanguage
+public import LeanPool.GKPCarry.Statement
+import LeanPool.GKPCarry.BinaryReduction
+import LeanPool.GKPCarry.CarryArithmetic
+import LeanPool.GKPCarry.Kummer
+import Mathlib.Data.Finset.Attr
 
 /-!
 # A regular-language characterization of the GKP conjecture

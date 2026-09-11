@@ -7,6 +7,9 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.ChartExtraction
 public import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # A fixed polygonal patch inside the Rado chart models

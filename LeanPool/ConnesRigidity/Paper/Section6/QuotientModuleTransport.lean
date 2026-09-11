@@ -7,7 +7,7 @@ module
 
 public import LeanPool.ConnesRigidity.Paper.Section6.CharacteristicTransport
 public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
 
 /-!
 This file proves the concrete quotient and module transport in Zhou's

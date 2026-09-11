@@ -5,7 +5,11 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Circle Parameterizations

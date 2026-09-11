@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Algebra.Lie.Solvable
 public import Mathlib.Algebra.Lie.Quotient
-public import Mathlib.Algebra.Lie.Nilpotent
+import Mathlib.Data.Rat.Floor
 
 /-!
 # LeanPool.LowDimSolvClassification.QuotientSolvable

@@ -5,10 +5,10 @@ Authors: David Renshaw
 -/
 module
 
-public import Mathlib.Algebra.Order.Archimedean.Real.Hom
-public import LeanPool.Rupert.Affine
 public import LeanPool.Rupert.Basic
-public import LeanPool.Rupert.Set
+import LeanPool.Rupert.Affine
+import LeanPool.Rupert.Set
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
 
 /-!
 # LeanPool.Rupert.Equivalences.Util

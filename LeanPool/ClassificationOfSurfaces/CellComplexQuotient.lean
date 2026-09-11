@@ -7,6 +7,10 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.CellComplex
 public import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Polygonal realization of surface cell-complex data

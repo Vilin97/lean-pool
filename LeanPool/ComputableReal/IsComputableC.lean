@@ -5,9 +5,9 @@ Authors: Alex Meiburg
 -/
 module
 
-public import LeanPool.ComputableReal.IsComputable
 public import LeanPool.ComputableReal.SpecialFunctions.Sqrt
 public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Interval approximations for complex numbers

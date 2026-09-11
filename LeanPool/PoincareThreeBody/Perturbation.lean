@@ -5,11 +5,14 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.Analytic
-public import Mathlib.Analysis.Calculus.Deriv.Inv
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.Core
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # First mass perturbation of the planar Hamiltonian

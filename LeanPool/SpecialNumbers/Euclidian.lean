@@ -5,10 +5,8 @@ Authors: Walter Moreira, Joe Stubbs
 -/
 module
 
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Order.Filter.AtTopBot.Basic
-public import Mathlib.Topology.Order.MonotoneConvergence
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Euclid Numbers

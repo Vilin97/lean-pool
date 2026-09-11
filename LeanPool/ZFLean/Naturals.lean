@@ -5,9 +5,16 @@ Authors: Vincent Trélat
 -/
 module
 
-public import LeanPool.ZFLean.Basic
 public import Mathlib.Algebra.Ring.Defs
-public import Mathlib.Tactic.Ring
+public import Mathlib.SetTheory.ZFC.Basic
+public import Mathlib.Tactic.Attr.Core
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+import LeanPool.ZFLean.Basic
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
+import Std.Data.DHashMap.Internal.AssocList.Lemmas
 
 /-! # ZFC Natural numbers
 

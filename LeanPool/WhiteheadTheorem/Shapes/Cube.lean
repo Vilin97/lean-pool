@@ -5,7 +5,6 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.Auxiliary
 public import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
 public import Mathlib.Topology.Homotopy.HomotopyGroup
 

@@ -5,12 +5,14 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInseparability
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInseparability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 /-!
 # The paired inseparable-pair consistency family and its model (issue #8, commit 4c part 2)
 

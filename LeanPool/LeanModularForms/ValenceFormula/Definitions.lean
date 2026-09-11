@@ -5,11 +5,7 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import Mathlib.Analysis.Meromorphic.Order
 public import Mathlib.NumberTheory.Modular
-public import Mathlib.NumberTheory.ModularForms.Basic
-public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
-public import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
 public import Mathlib.NumberTheory.ModularForms.QExpansion
 public import Mathlib.RingTheory.PowerSeries.Order
 

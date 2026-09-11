@@ -5,7 +5,7 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Hierarchy
 
 /-! # StrictHierarchy -/
 

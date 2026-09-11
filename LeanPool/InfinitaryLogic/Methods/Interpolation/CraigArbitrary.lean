@@ -5,9 +5,13 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
 /-!
 # Craig interpolation for `L_ω₁ω` over an arbitrary language (Craig Layer 3, Unit 7a)
 

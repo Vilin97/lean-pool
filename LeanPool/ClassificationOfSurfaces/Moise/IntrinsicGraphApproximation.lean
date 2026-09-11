@@ -7,6 +7,7 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
 public import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
 
 /-!
 # Polygonal approximation of intrinsic finite graphs

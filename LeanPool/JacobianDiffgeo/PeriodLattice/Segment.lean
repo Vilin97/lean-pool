@@ -5,8 +5,8 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
 public import LeanPool.JacobianDiffgeo.Path.Continuation
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The in-chart segment path (shared helper for §6.3/§6.5)

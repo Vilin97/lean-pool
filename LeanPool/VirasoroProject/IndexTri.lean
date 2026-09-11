@@ -5,11 +5,16 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Data.Int.Star
 public import Mathlib.Data.Sign.Defs
 public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Data.Set.BooleanAlgebra
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # An auxiliary tri-partition of indices

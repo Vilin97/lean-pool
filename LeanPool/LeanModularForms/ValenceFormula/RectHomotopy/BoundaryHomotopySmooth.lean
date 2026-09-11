@@ -5,7 +5,10 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Non-differentiability at partition points and derivative continuity

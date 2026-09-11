@@ -5,7 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
+meta import Lean.Parser.Term
+import Lean.Parser.Term
 
 @[expose] public section
 

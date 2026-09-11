@@ -13,6 +13,9 @@ public import LeanPool.OSforGFF.Minlos.NuclearSpace
 public import LeanPool.OSforGFF.Minlos.PietschBridge
 public import LeanPool.OSforGFF.Minlos.ProjectiveFamily
 public import LeanPool.OSforGFF.Minlos.SazonovTightness
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # `LeanPool.OSforGFF.Minlos` index

@@ -6,11 +6,13 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 module
 
 public import Mathlib.Algebra.Group.Finsupp
-public import Mathlib.Algebra.Group.Units.Defs
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Order.Filter.Ultrafilter.Basic
-public import Mathlib.Topology.Algebra.Group.Basic
 public import Mathlib.Topology.Compactness.CountablyCompact
+public import Mathlib.Algebra.Group.Submonoid.Defs
+public import Mathlib.Algebra.Ring.Int.Defs
+public import Mathlib.Topology.Algebra.Group.Defs
+import Mathlib.Algebra.Order.AbsoluteValue.Basic
+import Mathlib.Data.Rat.Floor
+import Mathlib.Topology.Algebra.Monoid
 
 /-!
 # The Wallace semigroup deduction

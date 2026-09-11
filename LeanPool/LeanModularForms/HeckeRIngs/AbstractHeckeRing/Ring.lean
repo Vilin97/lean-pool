@@ -5,7 +5,15 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativity
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Module
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativity
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.SMul
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Hecke Rings: Ring Instance and API

@@ -5,7 +5,11 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.CoulombFluxConv
+public import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.CoulombFluxConv
+import LeanPool.Clawristotle.IteratedDerivHelpers
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Flux Derivative Decay and IBP Integrability for Coulomb

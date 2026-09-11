@@ -6,9 +6,18 @@ Authors: Sven Manthe
 module
 
 public import Mathlib.Order.Category.PartOrd
-public import Mathlib.Topology.Category.TopCat.Basic
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+public import Mathlib.Tactic.Continuity
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.LenTreeHom

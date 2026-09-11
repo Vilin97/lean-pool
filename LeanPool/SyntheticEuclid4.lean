@@ -6,6 +6,12 @@ Authors: André Hernandez-Espiet, Vladimir Sedlacek
 module
 
 public import LeanPool.SyntheticEuclid4.SyntheticEuclid4
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Synthetic Euclidean geometry: Euclid's Elements Book I

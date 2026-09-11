@@ -6,6 +6,10 @@ Authors: KitaKen1
 module
 
 public import LeanPool.Erdos346.LimitExistsVariant
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem 346: Ratio Limit Forces the Golden Ratio

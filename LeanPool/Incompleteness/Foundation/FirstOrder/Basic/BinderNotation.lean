@@ -6,6 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Operator
+import Mathlib.Tactic.Bound.Init
 
 /-! # BinderNotation -/
 

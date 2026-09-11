@@ -6,12 +6,16 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
-public import Mathlib.Analysis.Normed.Group.FunctionSeries
 public import Mathlib.Topology.Algebra.Module.ModuleTopology
-public import Mathlib.Topology.ContinuousMap.Compact
-public import LeanPool.LeanModularForms.Modularforms.ExpLems
-public import LeanPool.LeanModularForms.Modularforms.Iteratedderivs
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.Iteratedderivs
+import Mathlib.Analysis.Calculus.UniformLimitsDeriv
+import Mathlib.Analysis.Normed.Group.FunctionSeries
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Topology.ContinuousMap.Compact
 
 /-! # TsumderivWithin -/
 

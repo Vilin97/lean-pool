@@ -5,25 +5,18 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 public import LeanPool.OSforGFF.General.PositiveDefinite
-public import LeanPool.OSforGFF.General.GaussianRBF
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.Fintype.Basic
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Analysis.LocallyConvex.Basic
-public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import LeanPool.OSforGFF.Measure.NuclearSpace
-public import Mathlib.Data.Matrix.Basic
-public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Mathlib.Analysis.InnerProductSpace.EuclideanDist
-public import Mathlib.Analysis.InnerProductSpace.PiL2
 -- Bochner library imports for proven Minlos theorem
-public import LeanPool.OSforGFF.Minlos.Main
 public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
+public import Mathlib.Analysis.CStarAlgebra.Classes
+import LeanPool.OSforGFF.General.GaussianRBF
+import LeanPool.OSforGFF.Minlos.Main
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Minlos Theorem and Gaussian Measure Construction

@@ -5,9 +5,18 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.BoundaryVanishing
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CutoffInfrastructure
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.BoundaryVanishing
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CutoffInfrastructure
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Per-Term PV Vanishing and CPV Helpers

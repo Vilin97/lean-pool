@@ -7,6 +7,12 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise122
 public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 3.25 (Scott 1981, PRG-19, §3) — the open sets of `|𝒟|` form a domain

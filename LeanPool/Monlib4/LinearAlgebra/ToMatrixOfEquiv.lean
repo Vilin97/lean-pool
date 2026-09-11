@@ -5,14 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Equiv
-public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.RCLike.Basic
 public import LeanPool.Monlib4.LinearAlgebra.InnerAut
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
 public import LeanPool.Monlib4.Preq.StarAlgEquiv
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Linear equivalence conjugation compatibility

@@ -5,7 +5,14 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Triangulation
+public import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
+public import Mathlib.Geometry.Manifold.Instances.Real
+import LeanPool.ClassificationOfSurfaces.Moise.PuncturedSurface
+import LeanPool.ClassificationOfSurfaces.Triangulation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Fixed-vertex stars in a surface triangulation

@@ -5,7 +5,8 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
 
 /-!
 # Edge cases of classical complex Weierstrass preparation

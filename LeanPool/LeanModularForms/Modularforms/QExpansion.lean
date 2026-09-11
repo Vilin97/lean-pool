@@ -6,10 +6,12 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Analysis.Normed.Group.Tannery
-public import Mathlib.NumberTheory.ModularForms.JacobiTheta.Bounds
-public import LeanPool.LeanModularForms.Modularforms.JacobiTheta
-public import LeanPool.LeanModularForms.Modularforms.AtImInfty
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import LeanPool.LeanModularForms.ForMathlib.AtImInfty
+import LeanPool.LeanModularForms.Modularforms.JacobiTheta
+import Mathlib.Analysis.Normed.Group.Tannery
 
 /-! # QExpansion -/
 

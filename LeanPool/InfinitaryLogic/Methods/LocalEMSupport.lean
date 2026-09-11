@@ -7,7 +7,7 @@ module
 
 public import Mathlib.ModelTheory.Semantics
 public import Mathlib.Data.Finset.Sort
-public import Mathlib.Order.Interval.Finset.Fin
+import Mathlib.Order.Interval.Finset.Fin
 
 /-!
 # Shared generic support for the EM term-model constructions

@@ -6,9 +6,12 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+public import Mathlib.Geometry.Manifold.SmoothEmbedding
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.IFT
+import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
 # Embedded Manifold Geometry

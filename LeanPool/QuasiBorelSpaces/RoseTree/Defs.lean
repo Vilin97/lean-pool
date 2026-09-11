@@ -5,10 +5,7 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Tactic.Lemma
-public import Mathlib.Tactic.TypeStar
 public import Mathlib.Logic.Equiv.List
-public import Mathlib.Logic.Encodable.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.RoseTree.Defs

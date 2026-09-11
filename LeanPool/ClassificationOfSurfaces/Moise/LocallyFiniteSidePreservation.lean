@@ -6,6 +6,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFinitePLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Side preservation for locally finite face fillings

@@ -5,8 +5,10 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderSyntax
+public import Mathlib.SetTheory.Cardinal.Aleph
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
 /-!
 # The ladder upper bound
 

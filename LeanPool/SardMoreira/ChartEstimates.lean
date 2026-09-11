@@ -7,6 +7,10 @@ module
 
 public import Mathlib.MeasureTheory.Measure.Hausdorff
 public import LeanPool.SardMoreira.Chart
+import LeanPool.SardMoreira.LocalEstimates
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.SardMoreira.ChartEstimates

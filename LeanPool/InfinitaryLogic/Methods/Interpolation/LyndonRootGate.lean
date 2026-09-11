@@ -5,8 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 public import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
+import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 /-!
 # The signed root gate (issue #14, Unit 5, commit 1)
 

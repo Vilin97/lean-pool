@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Odlyzko.TestFunction.Basic
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-! TODO: Add doc-string. -/
 

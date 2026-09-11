@@ -5,14 +5,9 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import Mathlib.Analysis.Complex.TaylorSeries
-public import Mathlib.Analysis.Complex.UpperHalfPlane.Exp
-public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
-public import Mathlib.NumberTheory.ModularForms.Basic
-public import Mathlib.NumberTheory.ModularForms.Identities
 public import Mathlib.NumberTheory.ModularForms.QExpansion
-public import LeanPool.LeanModularForms.ForMathlib.Identities
-public import Mathlib.RingTheory.PowerSeries.Basic
+public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
+import LeanPool.LeanModularForms.ForMathlib.Identities
 
 /-!
 # q-expansions of modular forms (project-local extensions)

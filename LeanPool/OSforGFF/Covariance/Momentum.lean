@@ -5,26 +5,16 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.Fourier.FourierTransform
-public import Mathlib.Analysis.SpecialFunctions.Bernstein
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.Data.Nat.Factorial.DoubleFactorial
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.Analysis.Complex.Exponential
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.Probability.Moments.IntegrableExpMul
 
 -- Import our basic definitions
 public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Spacetime.Euclidean
 public import LeanPool.OSforGFF.General.FunctionalAnalysis
 public import LeanPool.OSforGFF.General.BesselFunction
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.MeasureTheory.Constructions.HaarToSphere
+import Mathlib.Probability.Moments.IntegrableExpMul
 
 /-!
 # Momentum Space Propagator for Gaussian Free Field

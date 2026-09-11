@@ -5,10 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.NumberTheory.Real.Irrational
+import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
 
 /-!
 EGRS75 two-prime crux — route `mathlib-api`: the equidistribution INPUT.

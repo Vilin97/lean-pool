@@ -5,7 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.EM.Indiscernible
+public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
 /-!
 # Ehrenfeucht–Mostowski templates for Lω₁ω
 

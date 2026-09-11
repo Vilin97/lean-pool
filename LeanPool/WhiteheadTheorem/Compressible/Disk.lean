@@ -7,10 +7,13 @@ module
 
 public import LeanPool.WhiteheadTheorem.Compressible.Defs
 public import LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
-public import LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq
-public import LeanPool.WhiteheadTheorem.HEP.CubeJar
-public import Mathlib.Topology.Homotopy.Contractible
+public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
+public import LeanPool.WhiteheadTheorem.Shapes.Disk
+import LeanPool.WhiteheadTheorem.HEP.CubeJar
+import LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt
+import LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq
+import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 This file proves that if `f : C(X, Y)` is a weak homotopy equivalence,

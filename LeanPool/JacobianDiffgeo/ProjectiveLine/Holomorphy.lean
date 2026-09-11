@@ -6,9 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
 public import Mathlib.Analysis.Meromorphic.Order
 public import Mathlib.Geometry.Manifold.Diffeomorph
+import LeanPool.JacobianDiffgeo.Surface.Bridges
 
 /-!
 # Holomorphy transfer kit for `ℙ¹` (CC5)

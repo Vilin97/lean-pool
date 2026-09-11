@@ -7,7 +7,10 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseGraphApproximation
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Cellwise extension of a close intrinsic graph approximation

@@ -5,14 +5,14 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
-public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-public import LeanPool.Monlib4.Preq.RCLikeLe
-public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-public import Mathlib.Analysis.Normed.Module.Dual
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
 public import Mathlib.Analysis.Convex.Extreme
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+import LeanPool.Monlib4.Preq.RCLikeLe
+import Mathlib.Analysis.InnerProductSpace.Symmetric
+import Mathlib.Analysis.Normed.Module.HahnBanach
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.OfNorm

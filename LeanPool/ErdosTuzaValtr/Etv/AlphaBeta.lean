@@ -8,9 +8,13 @@ module
 public import Mathlib.Data.Finset.Sort
 public import Mathlib.Data.List.MinMax
 public import Mathlib.Data.List.Sublists
-public import Mathlib.Data.List.Chain
-public import LeanPool.ErdosTuzaValtr.Etv.Defs
 public import LeanPool.ErdosTuzaValtr.Etv.Label
+import Mathlib.Data.List.Chain
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Etv.AlphaBeta

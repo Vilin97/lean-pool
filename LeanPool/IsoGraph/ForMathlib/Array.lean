@@ -5,10 +5,14 @@ Authors: Alex Meiburg
 -/
 module
 
-public import Mathlib.Data.List.Basic
-public import Mathlib.Data.List.Nodup
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
+public import Aesop.BuiltinRules
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.List.Nodup
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lemmas about arrays and `getElem!`

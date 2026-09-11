@@ -7,9 +7,8 @@ module
 
 public import LeanPool.WhiteheadTheorem.Shapes.Disk
 public import Mathlib.Topology.Category.TopCat.Limits.Basic
-public import Mathlib.CategoryTheory.Limits.Shapes.Products
-public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
 public import Mathlib.CategoryTheory.Functor.OfSequence
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs
 
 /-!
 # LeanPool.WhiteheadTheorem.CWComplex.Basic

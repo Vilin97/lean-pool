@@ -6,7 +6,6 @@ Authors: Alexander Loitzl, Martin Dvorak
 module
 
 public import Mathlib.Computability.ContextFreeGrammar
-public import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
 
 /-!
 # Chomsky Normal Form Grammars

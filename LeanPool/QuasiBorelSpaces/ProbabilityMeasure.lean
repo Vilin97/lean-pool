@@ -5,12 +5,14 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.ENNReal
 public import LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
 public import LeanPool.QuasiBorelSpaces.SeparatesPoints
 public import LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd
-public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.ENNReal
+import LeanPool.QuasiBorelSpaces.IsHomDiagonal
+import LeanPool.QuasiBorelSpaces.Prop
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Probability Measures over Quasi-Borel Spaces

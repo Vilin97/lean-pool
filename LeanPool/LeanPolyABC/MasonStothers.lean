@@ -5,12 +5,9 @@ Authors: Seewoo Lee
 -/
 module
 
-public import Mathlib.Algebra.CharP.Defs
-public import Mathlib.Algebra.EuclideanDomain.Defs
-public import Mathlib.Algebra.Polynomial.FieldDivision
-public import LeanPool.LeanPolyABC.Lib.Wronskian
 public import LeanPool.LeanPolyABC.Lib.DivRadical
 public import LeanPool.LeanPolyABC.Lib.Max3
+import Mathlib.RingTheory.Polynomial.Content
 
 /-!
 # LeanPool.LeanPolyABC.MasonStothers

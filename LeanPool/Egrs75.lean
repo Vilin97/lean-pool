@@ -23,6 +23,8 @@ public import LeanPool.Egrs75.SeedWindow
 public import LeanPool.Egrs75.MoveDigits
 public import LeanPool.Egrs75.MuFinish
 public import LeanPool.Egrs75.Instances
+import Mathlib.Data.Nat.Totient
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # The Erdős–Graham–Ruzsa–Straus two-prime theorem

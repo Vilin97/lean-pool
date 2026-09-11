@@ -5,7 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.Rado.Surface.Assembly
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+import LeanPool.Rado.Surface.Assembly
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Radó's theorem: Riemann surfaces are second countable

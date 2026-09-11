@@ -5,49 +5,13 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.Analysis.Distribution.TemperateGrowth
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.NatInt
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.FunProp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Tauto
-public import Mathlib.Tactic.ApplyFun
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.SimpRw
-public import Mathlib.Tactic.SuppressCompilation
-public import Mathlib.Tactic.Use
-public import Mathlib.Tactic.Set
-public import Mathlib.Tactic.Polyrith
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Generalize
-public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Algebra.Order.Chebyshev
 
-public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Schwinger.Defs
 public import LeanPool.OSforGFF.Measure.Construct
-public import LeanPool.OSforGFF.Measure.IsGaussian
-public import LeanPool.OSforGFF.OS.OS2Invariance
-public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 public import LeanPool.OSforGFF.Spacetime.TimeTranslation
-public import LeanPool.OSforGFF.OS.Axioms
+import LeanPool.OSforGFF.Measure.IsGaussian
+import LeanPool.OSforGFF.OS.OS2Invariance
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # OS4 — Shared Infrastructure

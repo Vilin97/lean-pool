@@ -6,11 +6,10 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Core.Cost
 public import LeanPool.LeanQuantumAlg.Core.Gate
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-public import Mathlib.RingTheory.RootsOfUnity.Complex
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+import Mathlib.RingTheory.RootsOfUnity.Complex
 
 /-!
 # Quantum Fourier Transform

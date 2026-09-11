@@ -6,8 +6,7 @@ Authors: Óscar Álvarez Sánchez
 module
 
 public import Mathlib.GroupTheory.Coxeter.Inversion
-public import Mathlib.Algebra.Group.NatPowAssoc
-public import Init.Data.List.Lemmas
+import Mathlib.Algebra.Group.NatPowAssoc
 
 /-!
 # LeanPool.DemazureOperatorsLean.StrongExchange

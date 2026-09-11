@@ -7,14 +7,10 @@ module
 
 public import Mathlib.GroupTheory.SemidirectProduct
 public import Mathlib.GroupTheory.GroupAction.Primitive
-public import Mathlib.Algebra.Group.Action.Faithful
-public import Mathlib.Algebra.Group.Pointwise.Set.Card
 public import Mathlib.RepresentationTheory.Irreducible
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Algebra.Module.ZMod
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.FinCases
 public import LeanPool.CommonNeighbourConjecture.Saxl.Basic
+import Mathlib.Algebra.Module.ZMod
 
 /-!
 # Affine actions and the regular-difference criterion

@@ -5,7 +5,6 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import LeanPool.Wallace.MathlibFoundations
 public import Mathlib.Topology.Instances.AddCircle.Real
 
 /-!

@@ -5,10 +5,10 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import Mathlib.Algebra.Ring.Subring.Basic
-public import Mathlib.LinearAlgebra.Basis.Basic
-public import Mathlib.RingTheory.Localization.Module
-public import Mathlib.Tactic.Common
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Mathlib.RingTheory.Localization.FractionRing
+import Mathlib.RingTheory.Localization.Module
 /-!
 # LeanPool.BruhatTits.Utils.Subring
 -/

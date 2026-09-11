@@ -7,7 +7,6 @@ module
 
 public import LeanPool.JacobianDiffgeo.ProjectiveLine.Inversion
 public import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
-public import Mathlib.Analysis.Analytic.Constructions
 
 /-!
 # The two-chart complex-manifold structure on `ℙ¹` (CC5)

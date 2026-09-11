@@ -5,8 +5,6 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.AnalyticSeries
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
 public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
 public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
 

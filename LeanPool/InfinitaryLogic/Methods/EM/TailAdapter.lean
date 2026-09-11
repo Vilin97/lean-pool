@@ -5,8 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
 public import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+public import LeanPool.InfinitaryLogic.Methods.EM.Indiscernible
+public import LeanPool.InfinitaryLogic.Methods.EM.Realization
+import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
 /-!
 # Tail-indiscernibility: the eventually-form EM adapter
 

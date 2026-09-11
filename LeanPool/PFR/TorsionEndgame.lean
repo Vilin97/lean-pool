@@ -6,12 +6,16 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.Set.Card
-public import Mathlib.Algebra.Group.Pointwise.Finset.BigOperators
-public import LeanPool.PFR.Main
-public import LeanPool.PFR.Mathlib.Order.Interval.Finset.Defs
 public import LeanPool.PFR.MultiTauFunctional
-public import LeanPool.PFR.BoundingMutual
+import LeanPool.PFR.BoundingMutual
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.Main
+import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import Mathlib.Algebra.Group.Pointwise.Finset.BigOperators
+import Mathlib.Combinatorics.Additive.RuzsaCovering
+import Mathlib.Data.SetLike.Fintype
 
 /-!
 # Endgame for the Torsion PFR theorem

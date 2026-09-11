@@ -9,6 +9,8 @@ public import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
 public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
 public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
 public import LeanPool.JacobianDiffgeo.LaurentTail.RiemannRoch
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # laurent-tails: Miranda's Laurent-tail calculus for `H¹(D)` (namespace `RS.LaurentTail`)

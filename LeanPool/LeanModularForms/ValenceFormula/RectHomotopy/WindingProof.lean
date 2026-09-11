@@ -6,7 +6,12 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingBase
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.AngleAnalysis
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingBase
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Winding number computation

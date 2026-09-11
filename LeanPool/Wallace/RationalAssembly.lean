@@ -7,6 +7,8 @@ module
 
 public import LeanPool.Wallace.RationalFusionRun
 public import LeanPool.Wallace.FullTopology
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Global assembly for the rational vector group

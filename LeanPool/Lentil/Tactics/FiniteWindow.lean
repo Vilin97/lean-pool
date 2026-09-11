@@ -10,8 +10,9 @@ public meta import LeanPool.Lentil.Tactics.Basic
 public meta import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Nat
 public meta import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Core
 
-public import Lean
 public import LeanPool.Lentil.Tactics.Basic
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 

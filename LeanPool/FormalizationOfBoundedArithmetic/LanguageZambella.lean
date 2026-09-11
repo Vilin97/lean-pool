@@ -5,12 +5,10 @@ Authors: ruplet
 -/
 module
 
-public import Mathlib.ModelTheory.Syntax
-public import Mathlib.ModelTheory.Order
-public import Mathlib.ModelTheory.LanguageMap
 
 public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
 public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
+import LeanPool.FormalizationOfBoundedArithmetic.Register
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella

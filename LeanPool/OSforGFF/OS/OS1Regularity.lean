@@ -5,13 +5,12 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.Spacetime.Basic
 public import LeanPool.OSforGFF.OS.Axioms
-public import LeanPool.OSforGFF.Covariance.Position
-public import LeanPool.OSforGFF.Covariance.Momentum
-public import LeanPool.OSforGFF.Covariance.RealForm
 public import LeanPool.OSforGFF.Measure.Construct
-public import LeanPool.OSforGFF.Measure.IsGaussian
+import LeanPool.OSforGFF.Measure.IsGaussian
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # OS1 — Regularity (Exponential Bounds)

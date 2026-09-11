@@ -5,7 +5,8 @@ Authors: Joris Roos
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Finset.BooleanAlgebra
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Auxiliary `Finset` lemmas

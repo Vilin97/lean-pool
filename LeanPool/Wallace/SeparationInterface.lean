@@ -6,7 +6,8 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 module
 
 public import LeanPool.Wallace.Result
-public import Mathlib.Analysis.Normed.Group.AddCircle
+public import Mathlib.Topology.Instances.AddCircle.Real
+import Mathlib.Analysis.Normed.Group.AddCircle
 
 /-!
 # Minimal construction interface for the Wallace counterexample

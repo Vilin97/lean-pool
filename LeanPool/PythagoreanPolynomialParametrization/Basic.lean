@@ -5,20 +5,14 @@ Authors: Lazar Milikic
 -/
 module
 
-public import Mathlib.Algebra.MvPolynomial.Funext
-public import Mathlib.Algebra.MvPolynomial.Monad
-public import Mathlib.NumberTheory.PythagoreanTriples
-public import Mathlib.NumberTheory.SumFourSquares
-public import Mathlib.RingTheory.Binomial
-public import Mathlib.RingTheory.MvPolynomial.Basic
-public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.NormNum.Prime
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.MvPolynomial.Eval
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Basic definitions for Pythagorean polynomial parametrizations
 

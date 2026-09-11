@@ -7,7 +7,7 @@ module
 
 public import Mathlib.FieldTheory.RatFunc.AsPolynomial
 
-public import LeanPool.LeanPolyABC.Corollaries.FltCatalan
+import LeanPool.LeanPolyABC.Corollaries.FltCatalan
 
 /-!
 # LeanPool.LeanPolyABC.Corollaries.NoParametrization

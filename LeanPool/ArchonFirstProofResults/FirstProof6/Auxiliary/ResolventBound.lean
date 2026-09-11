@@ -5,7 +5,9 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.BarrierPotential
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.BarrierPotential
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Resolvent Bound

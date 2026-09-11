@@ -6,8 +6,9 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.BooleanIsoperimetry.CoherentGap
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.Ring
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Conway--Guy coherent-gap data

@@ -6,17 +6,13 @@ Authors: Keston Aquino-Michaels
 module
 
 public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Data.Finset.Max
-public import Mathlib.Data.Fintype.Powerset
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Fintype.EquivFin
-public import Mathlib.Data.Nat.Choose.Basic
-public import Mathlib.Algebra.BigOperators.Intervals
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Algebra.Group.PUnit
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.NormNum
-public import LeanPool.CriticalPortraits.CycleLemma  -- the cycle lemma (Raney, sum=1), PROVED sorry-free
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Core definitions + the count numerator (Mathlib)

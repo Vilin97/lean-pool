@@ -5,8 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
-public import Mathlib.Analysis.Analytic.Uniqueness
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import Mathlib.Analysis.Analytic.Uniqueness
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Identity theorem for 1-form coefficients (§6.4)

@@ -7,7 +7,6 @@ module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Combinatorics.SimpleGraph.Basic
-public import Mathlib.Data.ZMod.Basic
 
 /-!
 # Plane unit-distance graph and triangular lattice

@@ -9,9 +9,11 @@ Blueprint unit: mapping-degree. Local constancy of `fiberMultSum` (heart, part 2
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
 public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
-public import Mathlib.Topology.LocallyConstant.Basic
+public import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Local constancy of `fiberMultSum` (heart, part 2)

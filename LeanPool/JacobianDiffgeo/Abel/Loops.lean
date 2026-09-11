@@ -5,8 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.AbelWeak
-public import LeanPool.JacobianDiffgeo.JacobianConstruction
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: loop-cancellation algebra (`docs/design/abel-theorem.md` §4.2, D2, §2.1 steps 1-3)

@@ -6,9 +6,10 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
-public import LeanPool.ClassificationOfSurfaces.Triangulation
-public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-public import Mathlib.Data.Fintype.Fin
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Finite cyclic presentations of triangulations

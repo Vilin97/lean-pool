@@ -5,10 +5,18 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.UFDConstruction
-public import Mathlib.Algebra.Polynomial.Cardinal
-public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
-public import Mathlib.RingTheory.SimpleRing.Principal
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.UFDConstruction
+import Mathlib.Algebra.Polynomial.Cardinal
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Krull domain intersection construction

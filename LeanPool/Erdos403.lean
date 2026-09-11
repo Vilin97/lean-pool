@@ -8,6 +8,12 @@ module
 public import LeanPool.Erdos403.Basic
 public import LeanPool.Erdos403.FactBase
 public import LeanPool.Erdos403.Sharp
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Sums of Distinct Factorials That Are Powers of Two (Erdos Problem 403)

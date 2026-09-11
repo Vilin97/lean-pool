@@ -6,6 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Basic definitions and properties of semantics-related notions

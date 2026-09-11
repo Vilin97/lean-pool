@@ -12,7 +12,8 @@ Haar model. Paper: §§3--4.
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
-public import LeanPool.ConnesRigidity.Paper.Section3.FourierCoordinates
+import LeanPool.ConnesRigidity.Paper.Section3.CrossedAction
+import LeanPool.ConnesRigidity.Porting.CoreTransfer
 
 /-!
 The quotient action component of the Connes rigidity formalization.

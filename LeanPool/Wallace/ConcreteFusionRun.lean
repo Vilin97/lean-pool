@@ -7,6 +7,8 @@ module
 
 public import LeanPool.Wallace.LocalEnumeration
 public import LeanPool.Wallace.LocalFusion
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The unconditional concrete local fusion

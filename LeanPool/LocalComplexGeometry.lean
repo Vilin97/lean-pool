@@ -15,6 +15,8 @@ public import LeanPool.LocalComplexGeometry.Nullstellensatz.FiberCancellation
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
 public import LeanPool.LocalComplexGeometry.Nullstellensatz.OneVariable
 public import LeanPool.LocalComplexGeometry.Palomar
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Foundational local complex-analytic geometry

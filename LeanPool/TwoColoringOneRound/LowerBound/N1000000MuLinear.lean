@@ -5,23 +5,12 @@ Authors: Jukka Suomela
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import Mathlib.Data.List.GetD
-public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 
-public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuWitness
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import Mathlib.Data.Rat.Star
+import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000MuLinear

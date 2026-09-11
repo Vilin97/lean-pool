@@ -5,9 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
-public import Mathlib.Data.Set.Countable
 
 /-!
 # The function-generated sublanguage of an `L_{ω₁ω}` formula

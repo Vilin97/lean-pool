@@ -7,7 +7,7 @@ module
 
 public import LeanPool.InfinitaryLogic.Descriptive.GSGraph
 public import LeanPool.InfinitaryLogic.Descriptive.G0Dichotomy
-public import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Data.List.GetD
 
 /-!
 # Fusion for the `G₀`-dichotomy: level objects and edge bookkeeping

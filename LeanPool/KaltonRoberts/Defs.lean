@@ -12,34 +12,13 @@ the companion paper.
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.Convex.Combination
-public import Mathlib.Analysis.Convex.Deriv
-public import Mathlib.Analysis.LocallyConvex.Separation
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Combinatorics.Hall.Basic
-public import Mathlib.Data.Fintype.Perm
-public import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Order.BooleanSubalgebra
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.CongrExclamation
-public import Mathlib.Tactic.Continuity
-public import Mathlib.Tactic.Contrapose
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Qify
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Zify
-public import Aesop
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Definitions for the Kalton-Roberts formalization

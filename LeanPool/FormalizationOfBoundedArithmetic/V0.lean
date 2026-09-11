@@ -20,21 +20,10 @@ Authors: ruplet
 --    interesting result at all
 module
 
-public import Lean.Elab.Command
 
-public import Mathlib.ModelTheory.Basic
-public import Mathlib.ModelTheory.Syntax
-public import Mathlib.ModelTheory.Complexity
-public import Mathlib.Tactic.SimpRw
 
-public import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
-public import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
 public import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
-public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-public import LeanPool.FormalizationOfBoundedArithmetic.Complexity
-public import LeanPool.FormalizationOfBoundedArithmetic.Algebra
-public import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
-public import LeanPool.FormalizationOfBoundedArithmetic.Register
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.V0

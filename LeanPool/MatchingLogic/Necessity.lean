@@ -21,6 +21,7 @@ in `C`, and a one-point complement leaves them equal.
 module
 
 public import LeanPool.MatchingLogic.Locality
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.Necessity

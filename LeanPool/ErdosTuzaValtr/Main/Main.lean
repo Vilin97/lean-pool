@@ -5,13 +5,17 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Data.Nat.Choose.Basic
-public import Mathlib.Data.Finset.Basic
-public import LeanPool.ErdosTuzaValtr.Config.Default
-public import LeanPool.ErdosTuzaValtr.Etv.Default
 public import LeanPool.ErdosTuzaValtr.Main.Defs
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.Default
-public import LeanPool.ErdosTuzaValtr.Main.InductionStep
+public import LeanPool.ErdosTuzaValtr.Config.Mirror
+import LeanPool.ErdosTuzaValtr.Etv.Mirror
+import LeanPool.ErdosTuzaValtr.Main.InductionStep
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.Main

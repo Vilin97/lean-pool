@@ -8,6 +8,8 @@ module
 public import LeanPool.Wallace.RationalLocalSetup
 public import LeanPool.Wallace.LocalFusion
 public import LeanPool.Wallace.LocalEnumeration
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The unconditional local fusion for the rational direct sum

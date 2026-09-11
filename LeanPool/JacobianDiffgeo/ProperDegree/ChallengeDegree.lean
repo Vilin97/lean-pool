@@ -5,7 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.MappingDegree
+public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+public import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The challenge-signature mapping degree (proper-map-degree, file 1 of 3)

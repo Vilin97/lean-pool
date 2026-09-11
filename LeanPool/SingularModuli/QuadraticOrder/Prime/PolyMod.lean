@@ -7,14 +7,8 @@ module
 
 public import LeanPool.SingularModuli.QuadraticOrder.Basic
 public import Mathlib.Algebra.QuadraticDiscriminant
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Data.ZMod.QuotientRing
-public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.NumberTheory.LegendreSymbol.Basic
-public import Mathlib.Algebra.Polynomial.SpecificDegree
-public import Mathlib.Algebra.Polynomial.RingDivision
-public import Mathlib.Algebra.Squarefree.Basic
-public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+import Mathlib.Algebra.Polynomial.SpecificDegree
 
 /-!
 # Prime classification, part 1: the reduced polynomial `polyMod d p`

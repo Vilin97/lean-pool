@@ -6,7 +6,9 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+import Mathlib.ModelTheory.Encoding
+import Mathlib.Order.Filter.AtTopBot.Basic
 /-!
 # Exact cardinality of the local EM carrier (issue #11 unit 5)
 

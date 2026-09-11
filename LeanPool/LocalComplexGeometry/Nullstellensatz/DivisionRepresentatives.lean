@@ -6,8 +6,11 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Germs.Representatives
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
 public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Representatives of canonical Weierstrass division

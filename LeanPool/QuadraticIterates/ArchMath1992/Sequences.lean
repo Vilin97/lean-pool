@@ -5,12 +5,24 @@ Authors: Michael Stoll
 -/
 module
 
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.EvenComp
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Squares
-public import LeanPool.QuadraticIterates.Mathlib.Data.Int.DvdSequence
-public import LeanPool.QuadraticIterates.Mathlib.Data.ZMod
 public import LeanPool.QuadraticIterates.Mathlib.RingTheory.MoebiusFactor
-public import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.Algebra.Polynomial.Expand
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.EvenComp
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Squares
+import LeanPool.QuadraticIterates.Mathlib.Data.Int.DvdSequence
+import LeanPool.QuadraticIterates.Mathlib.Data.ZMod
+import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
+import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The iteration sequence of a polynomial and its Möbius factors

@@ -7,7 +7,6 @@ module
 
 public import Mathlib.Algebra.Group.Prod
 public import Mathlib.Data.Int.Cast.Lemmas
-public import Mathlib.Algebra.Ring.Basic
 public import LeanPool.Polylean.UnitConjecture.EnumDecide
 
 /-!

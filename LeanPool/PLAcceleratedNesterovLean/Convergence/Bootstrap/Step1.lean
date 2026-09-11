@@ -5,7 +5,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 
 /-!
 # Bootstrap Step 1: Geometric Decay by Induction

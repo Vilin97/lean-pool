@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 /-!
 # The finite inseparable-pair consistency family and its structural lemmas (issue #8, commit 4a)
 

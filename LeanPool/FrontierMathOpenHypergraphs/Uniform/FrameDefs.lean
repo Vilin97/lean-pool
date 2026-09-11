@@ -5,20 +5,17 @@ Authors: Dean Cureton
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Data.Fintype.Fin
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.Data.Nat.Bitwise
-public import Mathlib.Data.Nat.Pairing
-public import Mathlib.Data.Finset.Powerset
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
 public import LeanPool.FrontierMathOpenHypergraphs.Substitution
+public import Mathlib.Data.Fintype.Powerset
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Nat.Bitwise
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # The uniform 26/25 factor and the finite bootstrap

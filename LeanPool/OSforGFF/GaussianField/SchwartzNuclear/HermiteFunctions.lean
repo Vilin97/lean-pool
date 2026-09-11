@@ -6,13 +6,12 @@ Authors: Michael R. Douglas
 module
 
 public import Mathlib.RingTheory.Polynomial.Hermite.Basic
-public import Mathlib.RingTheory.Polynomial.Hermite.Gaussian
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.Analysis.PSeries
-public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-public import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import Mathlib.Analysis.PSeries
+import Mathlib.RingTheory.Polynomial.Hermite.Gaussian
 
 /-!
 # Hermite Functions and Nuclear Structure of Schwartz Space

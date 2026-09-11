@@ -5,10 +5,13 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.PLMoves
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalCrosscut
-public import Mathlib.Analysis.LocallyConvex.Separation
+public import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
+public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
+import LeanPool.ClassificationOfSurfaces.Moise.PLMoves
+import Mathlib.Analysis.LocallyConvex.Separation
+import Mathlib.Topology.Algebra.Module.Cardinality
 
 /-!
 # The Schoenflies theorem for polygons

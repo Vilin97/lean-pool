@@ -5,10 +5,14 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.OrdinalUtil
-public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
 public import LeanPool.InfinitaryLogic.Scott.BackAndForth
 public import Mathlib.SetTheory.Cardinal.Aleph
+public import LeanPool.InfinitaryLogic.Descriptive.Measurable
+import LeanPool.InfinitaryLogic.OrdinalUtil
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # BFEquiv is Borel on the Pair Space
 

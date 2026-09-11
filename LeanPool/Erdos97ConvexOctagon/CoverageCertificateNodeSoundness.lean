@@ -5,9 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCoverSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryValidity
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSemanticSoundness
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
 
 /-! # Soundness of flat postorder coverage-certificate nodes -/
 

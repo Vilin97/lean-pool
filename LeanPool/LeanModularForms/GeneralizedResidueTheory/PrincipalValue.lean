@@ -6,6 +6,10 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Cauchy Principal Value Theory

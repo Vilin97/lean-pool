@@ -9,9 +9,11 @@ module
 public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Dirac
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Dirac
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
 
 /-!
 # Entropy of a measure

@@ -5,7 +5,9 @@ Authors: Elan Roth
 -/
 module
 
-public import LeanPool.UlmsTheorem.PGroups.Basic
+public import Mathlib.Algebra.Group.Nat.Defs
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+import Mathlib.Algebra.Module.NatInt
 
 /-!
 # Subgroup-level algebra for reduced abelian p-groups

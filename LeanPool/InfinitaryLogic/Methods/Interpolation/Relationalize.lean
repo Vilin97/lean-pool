@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.TermGraph
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Relationalization of formulas (Craig Layer 3, Unit 4)
 

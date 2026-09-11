@@ -7,12 +7,13 @@ Authors: Reid Barton, Johan Commelin, Jesse Michael Han, Chris Hughes, Robert Y.
 -/
 module
 
-public import Mathlib.Analysis.Normed.Module.Basic
 public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.LinearAlgebra.Dual.Lemmas
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-public import Mathlib.Tactic.ApplyFun
-public import Mathlib.Tactic.FinCases
+public import Mathlib.LinearAlgebra.Dual.Basis
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.LinearAlgebra.Dimension.DivisionRing
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 
 /-!
 # Huang's sensitivity theorem

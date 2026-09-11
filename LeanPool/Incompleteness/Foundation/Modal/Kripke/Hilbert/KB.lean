@@ -5,7 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
 
 /-! # KB -/
 

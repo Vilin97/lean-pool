@@ -6,6 +6,8 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.IdealElementDecomposition
+public import LeanPool.Odlyzko.CompletedZeta.ConeGaussianRadial
+import LeanPool.Odlyzko.CompletedZeta.ConeGaussianInterchange
 
 /-! TODO: Add doc-string. -/
 

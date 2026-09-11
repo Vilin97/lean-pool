@@ -5,9 +5,8 @@ Authors: Julius Marx
 -/
 module
 
-public import Lean.Elab.Tactic.Basic
-public import Mathlib.Tactic.Push
-public import Mathlib.Data.Set.Basic
+public meta import Lean.Elab.Tactic.Basic
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # GeneralCustomTactics

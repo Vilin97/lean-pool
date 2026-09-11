@@ -5,7 +5,14 @@ Authors: Alex Meiburg
 -/
 module
 
-public import LeanPool.IsoGraph.Canon.Jump
+public import LeanPool.IsoGraph.Canon.Pinned
+import LeanPool.IsoGraph.Canon.Jump
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The leaves and generators a state holds

@@ -5,7 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Cech.H0
+public import LeanPool.JacobianDiffgeo.Cech.Cochains
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Refinement maps, 12.3 independence (CC8)

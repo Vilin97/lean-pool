@@ -6,7 +6,11 @@ Authors: Jiazhen Xia
 module
 
 public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
-public import LeanPool.WhiteheadTheorem.HEP.Retract
+import LeanPool.WhiteheadTheorem.HEP.Retract
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression

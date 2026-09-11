@@ -17,7 +17,7 @@ symbol/position pairs, and their contexts fill every sibling position with
 module
 
 public import LeanPool.MatchingLogic.EntryIII.CanonicalCore
-public import Mathlib.Logic.Relation
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.Generated

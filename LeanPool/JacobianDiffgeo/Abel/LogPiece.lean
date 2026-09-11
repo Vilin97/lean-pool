@@ -5,9 +5,15 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
-public import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
 public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the planar log piece and its residue identity (design §4.1 step 5, planar core)

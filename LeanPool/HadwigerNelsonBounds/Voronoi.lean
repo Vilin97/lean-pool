@@ -5,7 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.VoronoiQuadratic
+public import LeanPool.HadwigerNelsonBounds.Basic
+import LeanPool.HadwigerNelsonBounds.VoronoiQuadratic
 
 /-!
 # Triangular-lattice covering radius

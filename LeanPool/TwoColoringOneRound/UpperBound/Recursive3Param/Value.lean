@@ -6,19 +6,7 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 /-!
 Exact computation of `ClassicalAlgorithm.p recursive3ParamAlg`.
 

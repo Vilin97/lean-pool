@@ -5,10 +5,14 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.Ring
 public import LeanPool.Koethe.MultiProjective
 public import LeanPool.Koethe.Pencil
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Coefficientwise multihomogeneity for matrix words

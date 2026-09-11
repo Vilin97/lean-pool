@@ -7,7 +7,13 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise516
 public import Mathlib.Data.Nat.Bits
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Group.Nat.Defs
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Exercise 5.16 follow-up (Scott 1981, PRG-19, Lecture V) — the Thue–Morse

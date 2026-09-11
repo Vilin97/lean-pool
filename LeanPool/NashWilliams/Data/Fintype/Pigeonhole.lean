@@ -5,7 +5,9 @@ Authors: Yann Pequignot
 -/
 module
 
-public import Mathlib.Data.Fintype.Pigeonhole
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Fintype.Pigeonhole
 
 /-!
 # Infinite pigeonhole on `ℕ`

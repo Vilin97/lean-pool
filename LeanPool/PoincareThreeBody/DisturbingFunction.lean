@@ -5,11 +5,11 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.Averaging
 public import LeanPool.PoincareThreeBody.ResonantOrbit
-public import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.Tactic.Ring
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.Averaging
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # The resonant disturbing average

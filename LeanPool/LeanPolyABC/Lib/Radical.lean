@@ -6,10 +6,6 @@ Authors: Seewoo Lee
 module
 
 public import Mathlib.Algebra.Polynomial.FieldDivision
-public import Mathlib.Algebra.Ring.Regular
-public import Mathlib.RingTheory.Polynomial.Content
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
-public import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
 
 /-!
 # LeanPool.LeanPolyABC.Lib.Radical

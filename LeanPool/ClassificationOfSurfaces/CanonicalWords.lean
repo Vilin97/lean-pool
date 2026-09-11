@@ -7,6 +7,10 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
 public import LeanPool.ClassificationOfSurfaces.Representatives
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Canonical normal-form boundary words

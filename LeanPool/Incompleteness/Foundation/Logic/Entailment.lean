@@ -5,9 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
 public import LeanPool.Incompleteness.Foundation.Logic.Semantics
 public import LeanPool.Incompleteness.Foundation.Vorspiel.Collection
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Basic definitions and properties of proof system related notions

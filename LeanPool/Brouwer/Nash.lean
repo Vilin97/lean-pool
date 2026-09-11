@@ -5,8 +5,13 @@ Authors: Math_XMUM
 -/
 module
 
-public import LeanPool.Brouwer.BrouwerProduct
 public import LeanPool.Brouwer.Simplex
+import LeanPool.Brouwer.BrouwerProduct
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Existence of mixed Nash equilibria

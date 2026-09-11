@@ -5,9 +5,7 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Analysis.Normed.Group.Basic
 public import Mathlib.Analysis.Normed.Lp.PiLp
-public import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
  # Normed additive commutative groups of rings

@@ -5,8 +5,12 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.Relabelling
-public import Mathlib.Data.List.Sort
+public import LeanPool.Erdos97ConvexOctagon.Incidence
+public import Mathlib.Data.List.Sublists
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Erdős 97 convex-octagon formalization: Finite Model -/
 

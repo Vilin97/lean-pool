@@ -6,7 +6,12 @@ Authors: Vico Bonfioli
 module
 
 public import LeanPool.ThreeGap.ChevallierCount
-public import LeanPool.ThreeGap.SupNormGrowth
+public import LeanPool.ThreeGap.SimultaneousApprox
+import LeanPool.ThreeGap.SupNormGrowth
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The sup-norm defect cost: growth of its record denominators is *unconditional*

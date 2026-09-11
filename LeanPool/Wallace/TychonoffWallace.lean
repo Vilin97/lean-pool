@@ -5,8 +5,12 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import LeanPool.Wallace.FullTopologyMain
 public import Mathlib.Topology.Separation.CompletelyRegular
+public import LeanPool.Wallace.FullTopology
+public import LeanPool.Wallace.TriangularPreprocess
+import LeanPool.Wallace.FullTopologyMain
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The commutative Tychonoff Wallace semigroup

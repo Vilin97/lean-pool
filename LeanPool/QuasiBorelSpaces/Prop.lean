@@ -5,11 +5,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Basic
-public import LeanPool.QuasiBorelSpaces.Pi
-public import LeanPool.QuasiBorelSpaces.Defs
-public import LeanPool.QuasiBorelSpaces.Prod
 public import LeanPool.QuasiBorelSpaces.Subtype
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Prod
 
 /-!
 # LeanPool.QuasiBorelSpaces.Prop

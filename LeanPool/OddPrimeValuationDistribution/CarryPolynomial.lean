@@ -6,10 +6,9 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.OddPrimeValuationDistribution.CarryArithmetic
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Algebra.Polynomial.Coeff
-public import Mathlib.Data.Fintype.Vector
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.Logic.Equiv.Fin.Basic
+import Mathlib.Data.Nat.SuccPred
 
 /-!
 # Carry polynomials in an arbitrary odd base

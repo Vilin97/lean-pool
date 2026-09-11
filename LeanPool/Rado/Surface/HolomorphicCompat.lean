@@ -5,8 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Complex.CauchyIntegral
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # `C^1` compatibility over `ℂ` is holomorphic compatibility

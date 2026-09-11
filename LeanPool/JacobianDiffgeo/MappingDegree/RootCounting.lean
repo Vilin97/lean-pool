@@ -9,11 +9,10 @@ Blueprint unit: mapping-degree. Planar root counting: total multiplicity of `z â
 -/
 module
 
-public import Mathlib.RingTheory.RootsOfUnity.Complex
 public import Mathlib.Analysis.Analytic.Order
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.Algebra.BigOperators.Finprod
-public import Mathlib.Data.Set.Card
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Analysis.Complex.Basic
+import Mathlib.RingTheory.RootsOfUnity.Complex
 
 /-!
 # Planar root counting (mapping-degree, planar layer)

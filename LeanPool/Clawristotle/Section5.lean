@@ -6,7 +6,10 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.Defs
-public import LeanPool.Clawristotle.Section3
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.Section3
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Polynomial Matching (Section 5)

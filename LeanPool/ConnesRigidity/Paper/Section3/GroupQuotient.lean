@@ -11,6 +11,8 @@ Paper: §3.
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section3.GroupFactor
+import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
+import LeanPool.ConnesRigidity.Porting.CoreTransfer
 
 /-!
 The group quotient component of the Connes rigidity formalization.

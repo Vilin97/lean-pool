@@ -5,9 +5,14 @@ Authors: Nikolay Ulyanov
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Logic.Equiv.Prod
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Algebra.Ring.Parity
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.ZMod.Defs
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Data.ZMod.Basic
 
 /-!
 # The odd balancing theorem

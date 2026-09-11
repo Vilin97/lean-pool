@@ -5,10 +5,12 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
-public import LeanPool.LocalComplexGeometry.FiniteProjection.Main
-public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
+public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
+import LeanPool.LocalComplexGeometry.FiniteProjection.Main
+import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Palomar-facing theorem surface

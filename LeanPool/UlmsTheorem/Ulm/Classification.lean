@@ -6,6 +6,9 @@ Authors: Elan Roth
 module
 
 public import LeanPool.UlmsTheorem.Ulm.Extension
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Classification machinery for countable reduced abelian p-groups

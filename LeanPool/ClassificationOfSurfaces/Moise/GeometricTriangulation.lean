@@ -6,8 +6,6 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import Mathlib.Analysis.Convex.StdSimplex
-public import Mathlib.Topology.Homeomorph.Lemmas
-public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # Geometric triangulations

@@ -9,6 +9,7 @@ public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
 public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral2
 public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegralCircleAverage
 public import LeanPool.LeanComplexAnalysis.Harmonic.Positive
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Index: harmonic functions

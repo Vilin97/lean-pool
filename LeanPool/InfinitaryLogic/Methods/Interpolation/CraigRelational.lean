@@ -5,12 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
-public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
-public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 /-!
 # Craig interpolation for `L_ω₁ω`, countable relational core (issue #8, Layer 1)
 

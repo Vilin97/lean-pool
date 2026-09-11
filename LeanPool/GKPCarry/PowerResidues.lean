@@ -5,8 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Mathlib.Data.Fintype.EquivFin
-public import Mathlib.RingTheory.ZMod.UnitsCyclic
+public import Mathlib.Data.ZMod.Basic
+import Mathlib.RingTheory.ZMod.UnitsCyclic
 
 /-!
 # Powers of two modulo powers of three

@@ -7,7 +7,7 @@ module
 
 public import Mathlib.ModelTheory.Order
 
-public import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.Register
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano

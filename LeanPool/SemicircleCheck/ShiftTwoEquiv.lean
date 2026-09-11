@@ -5,8 +5,8 @@ Authors: Wondermonger-daydreaming
 -/
 module
 
-public import Mathlib.Data.Fin.Basic
-public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Algebra.Group.End
+import Mathlib.Data.Fin.Basic
 
 /-!
   CANONICAL DELETION OF THE BOUNDARY PAIR

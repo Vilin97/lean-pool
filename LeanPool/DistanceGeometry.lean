@@ -10,6 +10,7 @@ public import LeanPool.DistanceGeometry.Schoenberg
 public import LeanPool.DistanceGeometry.SchoenbergHard
 public import LeanPool.DistanceGeometry.Trilateration
 public import LeanPool.DistanceGeometry.CayleyMengerVolume
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Euclidean Distance Geometry

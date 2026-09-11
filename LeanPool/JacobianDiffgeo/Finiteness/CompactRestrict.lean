@@ -6,8 +6,12 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
-public import LeanPool.JacobianDiffgeo.Forms.Montel
 public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+import LeanPool.JacobianDiffgeo.Forms.Montel
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Topology.ContinuousMap.Compact
 
 /-!
 # Montel compactness of `restrictCLM` (`finiteness-and-chi`)

@@ -6,7 +6,7 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import Batteries.Data.List.Basic
-public import Mathlib.Logic.Function.Basic
+import Mathlib.Tactic.TypeStar
 
 /-!
 # LeanPool.BruhatTits.Utils.List

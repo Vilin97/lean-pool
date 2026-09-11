@@ -6,6 +6,9 @@ Authors: Ben Cassie
 module
 
 public import LeanPool.Kuramoto.Weighted
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Hebbian phase/weight dynamics

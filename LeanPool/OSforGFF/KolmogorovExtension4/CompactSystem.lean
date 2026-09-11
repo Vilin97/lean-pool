@@ -7,7 +7,7 @@ module
 
 public import Mathlib.MeasureTheory.Constructions.ClosedCompactCylinders
 public import Mathlib.Topology.Compactness.CompactSystem
-public import Mathlib.Topology.IsClosedRestrict
+import Mathlib.Topology.IsClosedRestrict
 
 /-!
 # Compact Systems

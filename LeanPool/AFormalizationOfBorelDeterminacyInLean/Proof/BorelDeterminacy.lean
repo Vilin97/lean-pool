@@ -6,10 +6,11 @@ Authors: Sven Manthe
 module
 
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-public import Mathlib.MeasureTheory.MeasurableSpace.Basic
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringLim
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy

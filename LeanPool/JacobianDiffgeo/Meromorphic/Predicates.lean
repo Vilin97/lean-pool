@@ -5,12 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Meromorphic.Basic
-public import Mathlib.Analysis.Meromorphic.Order
-public import Mathlib.Analysis.Meromorphic.IsolatedZeros
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
 public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Analysis.Meromorphic.IsolatedZeros
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Meromorphic predicates and orders on a Riemann surface (CC3, chart layer)

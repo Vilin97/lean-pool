@@ -5,10 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.Topology.MetricSpace.CantorScheme
-public import Mathlib.Topology.GDelta.Basic
-public import Mathlib.Topology.Baire.Lemmas
-public import Mathlib.Topology.Baire.CompleteMetrizable
+public import Mathlib.Topology.MetricSpace.PiNat
+import Mathlib.Topology.Baire.CompleteMetrizable
+import Mathlib.Topology.MetricSpace.CantorScheme
 
 /-!
 # Mycielski's theorem for Cantor space

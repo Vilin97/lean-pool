@@ -7,6 +7,12 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
 public import LeanPool.ClassificationOfSurfaces.WeightedCircle
+public import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Polygonal realization of Gallier--Xu P1

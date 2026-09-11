@@ -7,11 +7,11 @@ module
 
 public import LeanPool.Sabidussi.Color
 public import LeanPool.Sabidussi.Statement
-public import Mathlib.Data.Fin.Rev
-public import Mathlib.Logic.Equiv.Fin.Rotate
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Finite.Set
-public import Mathlib.Data.Fintype.Sets
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Finite endpoint multigraphs with loops

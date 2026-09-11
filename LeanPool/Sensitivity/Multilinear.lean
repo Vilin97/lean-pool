@@ -6,10 +6,8 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.Sensitivity.Defs
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Data.Finset.Powerset
 public import Mathlib.Data.Fintype.Powerset
-public import Mathlib.Data.Int.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 
 /-!
 # Multilinear Representation and Degree

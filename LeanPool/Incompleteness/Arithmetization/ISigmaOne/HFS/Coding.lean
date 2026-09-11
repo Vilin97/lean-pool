@@ -5,7 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Vec
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Bit
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Coding -/
 

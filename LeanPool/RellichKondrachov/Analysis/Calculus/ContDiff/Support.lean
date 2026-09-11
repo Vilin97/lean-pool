@@ -5,8 +5,8 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Topology.Algebra.Support
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import Mathlib.Analysis.Calculus.ContDiff.Basic
 
 /-!
 # `RellichKondrachov.Analysis.Calculus.ContDiff.Support`

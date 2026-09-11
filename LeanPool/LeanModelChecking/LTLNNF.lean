@@ -5,12 +5,11 @@ Authors: György Kurucz
 -/
 module
 
-public import Mathlib.Data.Set.Basic
-public import Mathlib.Data.Set.Operations
-public import Mathlib.Data.Set.Insert
-public import Mathlib.Order.SetNotation
 
 public import LeanPool.LeanModelChecking.LTLNBWStatement
+public import Aesop.BuiltinRules
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.Push
 
 /-!
 # Negation normal form for Linear Temporal Logic

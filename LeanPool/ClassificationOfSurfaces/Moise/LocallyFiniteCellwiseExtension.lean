@@ -6,6 +6,7 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceFilling
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Cellwise assembly for locally finite PL face fillings

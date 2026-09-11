@@ -8,7 +8,7 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Construction.PaperActions
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
 
 /-!
 ICC transfer for Zhou §5. Since the acting group is

@@ -5,7 +5,9 @@ Authors: Shuhao Song
 -/
 module
 
-public import Lean
+public meta import Lean.Meta.Tactic.Simp.Simproc
+meta import Lean.Meta.Tactic.Simp.Attr
+import Lean.Meta.Tactic.Simp.RegisterCommand
 
 /-!
 # Simp attributes for the ZF realization machinery

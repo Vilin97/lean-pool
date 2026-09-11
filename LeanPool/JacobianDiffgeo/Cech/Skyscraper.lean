@@ -5,8 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Cech.Window
-public import LeanPool.JacobianDiffgeo.Cech.Injectivity
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Cech.H0
+import LeanPool.JacobianDiffgeo.Cech.Injectivity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The Mittag-Leffler atom and the skyscraper fragment (CC8, D7, proof plan §6.9)

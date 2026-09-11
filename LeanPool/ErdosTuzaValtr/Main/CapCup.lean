@@ -6,10 +6,17 @@ Authors: Jineon Baek
 module
 
 public import Mathlib.Data.Nat.Choose.Basic
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Tactic.Ring.RingNF
-public import LeanPool.ErdosTuzaValtr.Config.Default
-public import LeanPool.ErdosTuzaValtr.Etv.Default
+public import LeanPool.ErdosTuzaValtr.Config.Defs
+public import Mathlib.Data.Finset.Card
+import LeanPool.ErdosTuzaValtr.Config.Lemmas
+import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+import Mathlib.Data.Finset.Sort
+import Mathlib.Data.List.Chain
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.CapCup

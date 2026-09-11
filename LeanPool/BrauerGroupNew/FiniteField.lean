@@ -6,7 +6,10 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import LeanPool.BrauerGroupNew.BrauerGroup
-public import Mathlib.RingTheory.LittleWedderburn
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.RingTheory.LittleWedderburn
 
 /-!
 # Brauer groups over finite fields

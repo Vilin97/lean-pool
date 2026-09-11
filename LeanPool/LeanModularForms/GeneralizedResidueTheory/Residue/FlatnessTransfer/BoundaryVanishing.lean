@@ -6,6 +6,13 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.DivergenceTheorem
 
 /-!
 # Boundary Vanishing for Higher-Order Polar Terms

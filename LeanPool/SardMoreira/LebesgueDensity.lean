@@ -5,22 +5,15 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import LeanPool.SardMoreira.UpperLowerSemicontinuous
-public import LeanPool.SardMoreira.NormedSpace
-public import LeanPool.SardMoreira.MeasureComap
-public import LeanPool.SardMoreira.MeasureBallSemicontinuous
-public import LeanPool.SardMoreira.Topology
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.LinearAlgebra.FreeModule.PID
 public import Mathlib.MeasureTheory.Constructions.HaarToSphere
-public import Mathlib.MeasureTheory.Covering.Besicovitch
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Topology.EMetricSpace.Paracompact
-public import Mathlib.Topology.Separation.CompletelyRegular
-public import Mathlib.Dynamics.Ergodic.Action.Regular
-public import Mathlib.MeasureTheory.Constructions.Polish.Basic
-public import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-public import Mathlib.MeasureTheory.Measure.Haar.Unique
+import LeanPool.SardMoreira.MeasureBallSemicontinuous
+import LeanPool.SardMoreira.MeasureComap
+import LeanPool.SardMoreira.NormedSpace
+import LeanPool.SardMoreira.Topology
+import Mathlib.Dynamics.Ergodic.Action.Regular
+import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
+import Mathlib.MeasureTheory.Measure.Haar.Unique
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 # LeanPool.SardMoreira.LebesgueDensity

@@ -6,6 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Basic -/
 

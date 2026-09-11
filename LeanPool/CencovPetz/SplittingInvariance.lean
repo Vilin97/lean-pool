@@ -5,8 +5,14 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.CencovPetz.LeftInverseIsometry
 public import LeanPool.CencovPetz.Splitting
+public import LeanPool.CencovPetz.MonotoneMetric
+public import Mathlib.LinearAlgebra.BilinearForm.Hom
+import LeanPool.CencovPetz.LeftInverseIsometry
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

@@ -5,9 +5,14 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonSlope
-public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Radial homotopy from polygon to unit circle

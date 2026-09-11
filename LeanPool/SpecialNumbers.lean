@@ -8,6 +8,8 @@ module
 public import LeanPool.SpecialNumbers.Eulerian
 public import LeanPool.SpecialNumbers.Euclidian
 public import LeanPool.SpecialNumbers.Sylvester
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Special Numbers

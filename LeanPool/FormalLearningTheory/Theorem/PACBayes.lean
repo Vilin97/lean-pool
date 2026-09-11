@@ -5,11 +5,12 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
-public import LeanPool.FormalLearningTheory.Complexity.Symmetrization
 public import LeanPool.FormalLearningTheory.PureMath.KLDivergence
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # PAC-Bayes Bounds

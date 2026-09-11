@@ -5,12 +5,11 @@ Authors: Daniel Smania
 -/
 module
 
-public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Analysis.Normed.Field.Basic
 public import Mathlib.Analysis.Normed.Module.Basic
-public import Mathlib.Analysis.Normed.Operator.Extend
-public import Mathlib.Topology.Algebra.InfiniteSum.Module
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.Normed.Operator.Extend
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Topology.Algebra.InfiniteSum.Module
 
 /-!
 # Unconditional Schauder Bases

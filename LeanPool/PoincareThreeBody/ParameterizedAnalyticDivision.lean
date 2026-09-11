@@ -6,9 +6,11 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.NormalizationClosure
-public import Mathlib.Analysis.Normed.Operator.Prod
-public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.Normed.Operator.Prod
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Parameterized analytic division

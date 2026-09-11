@@ -5,13 +5,12 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.InnerProductSpace.Spectrum
-public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
 public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-public import LeanPool.Monlib4.LinearAlgebra.End
 public import Mathlib.Analysis.InnerProductSpace.Positive
-public import LeanPool.Monlib4.Preq.RCLikeLe
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 

@@ -12,6 +12,8 @@ public import LeanPool.SpectralPositivity.Operator.SpectralRadius
 public import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
 public import LeanPool.SpectralPositivity.Matrix.MMatrixInverse
 public import LeanPool.SpectralPositivity.Operator.KernelPositivity
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Spectral positivity

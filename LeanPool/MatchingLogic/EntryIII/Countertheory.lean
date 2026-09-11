@@ -15,6 +15,11 @@ module
 
 public import LeanPool.MatchingLogic.EntryIII.LocalTheory
 public import LeanPool.MatchingLogic.EntryIII.FiniteReduction
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.NeZero
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-!
 # MatchingLogic.EntryIII.Countertheory

@@ -6,8 +6,18 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.CircuitComplexity.Nondeterminism.Defs
-public import LeanPool.CircuitComplexity.Internal.Nondeterminism
-public import LeanPool.CircuitComplexity.Shannon
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Algebra.GroupWithZero.Nat
+import LeanPool.CircuitComplexity.Internal.Nondeterminism
+import LeanPool.CircuitComplexity.Internal.ShannonUpper
+import LeanPool.CircuitComplexity.Shannon
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-! # Nondeterministic Circuit Complexity Bounds
 

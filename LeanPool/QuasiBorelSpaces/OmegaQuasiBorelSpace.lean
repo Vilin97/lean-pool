@@ -5,10 +5,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Order.OmegaCompletePartialOrder
-public import LeanPool.QuasiBorelSpaces.Basic
 public import LeanPool.QuasiBorelSpaces.Chain
-public import LeanPool.QuasiBorelSpaces.Defs
+import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace

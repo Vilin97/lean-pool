@@ -15,12 +15,16 @@ and expander recombination to the final distance bound.
 -/
 module
 
-public import LeanPool.KaltonRoberts.Defs
-public import LeanPool.KaltonRoberts.Numerical
 public import LeanPool.KaltonRoberts.Collections
-public import LeanPool.KaltonRoberts.Lemmas
-public import LeanPool.KaltonRoberts.Intersections
-public import LeanPool.KaltonRoberts.Pippenger
+import LeanPool.KaltonRoberts.Intersections
+import LeanPool.KaltonRoberts.Numerical
+import LeanPool.KaltonRoberts.Pippenger
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pipeline from intersections to the final bound

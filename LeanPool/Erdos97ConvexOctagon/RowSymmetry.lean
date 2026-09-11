@@ -6,7 +6,8 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.RowMasks
-public import Mathlib.Tactic.FinCases
+public import LeanPool.Erdos97ConvexOctagon.FiniteModel
+public import LeanPool.Erdos97ConvexOctagon.Relabelling
 
 /-!
 # First-row symmetry reduction

@@ -6,7 +6,10 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.CoulombKernel
-public import Mathlib.Analysis.SpecialFunctions.Log.Base
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Base
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Newtonian Potential Bounds and Inverse-Norm Integrability

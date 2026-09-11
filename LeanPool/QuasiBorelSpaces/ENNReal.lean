@@ -5,10 +5,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.Basic
-public import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-public import LeanPool.QuasiBorelSpaces.Defs
 public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.ENNReal

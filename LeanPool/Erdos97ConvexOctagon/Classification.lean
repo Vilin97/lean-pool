@@ -5,7 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.CoverageBranches
+public import LeanPool.Erdos97ConvexOctagon.Relabelling
+import LeanPool.Erdos97ConvexOctagon.CoverageBranches
+import LeanPool.Erdos97ConvexOctagon.RowSymmetry
 
 /-!
 # Exhaustive normalized-incidence classification

@@ -6,9 +6,9 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Data.Fintype.Basic
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.IntervalCases
 
 /-!
 # Exercise 1.18 (Scott 1981, PRG-19, §1) — consistent subsets and filter

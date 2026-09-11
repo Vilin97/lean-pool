@@ -5,12 +5,10 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Analysis.Complex.Exponential
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.Real.Sqrt
-public import LeanPool.PebblingLean.LowerBound
 public import LeanPool.PebblingLean.UpperBoundLoss
+import LeanPool.PebblingLean.LowerBound
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Concrete parameter layer for the upper bound

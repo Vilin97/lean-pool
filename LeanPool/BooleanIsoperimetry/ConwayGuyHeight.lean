@@ -6,7 +6,13 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
-public import Mathlib.Tactic.Linarith
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The Conway--Guy triangular-block identity

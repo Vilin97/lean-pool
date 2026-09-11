@@ -6,14 +6,17 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
-public import LeanPool.LeanModularForms.Modularforms.ClogArgLems
-public import LeanPool.LeanModularForms.Modularforms.Eta
-public import LeanPool.LeanModularForms.Modularforms.MultipliableLems
 public import LeanPool.LeanModularForms.Modularforms.ResToImagAxis
-public import Mathlib.NumberTheory.ModularForms.QExpansion
 
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+public import Mathlib.NumberTheory.ModularForms.DedekindEta
+import LeanPool.LeanModularForms.Modularforms.ClogArgLems
+import LeanPool.LeanModularForms.Modularforms.Eta
+import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import LeanPool.LeanModularForms.Modularforms.MultipliableLems
+import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+import LeanPool.LeanModularForms.Modularforms.SummableLems
+import Mathlib.Analysis.Normed.Group.Tannery
 
 /-! # Delta -/
 

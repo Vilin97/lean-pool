@@ -9,3 +9,6 @@ public import LeanPool.ComputableReal.SpecialFunctions.Basic
 public import LeanPool.ComputableReal.SpecialFunctions.Sqrt
 public import LeanPool.ComputableReal.SpecialFunctions.Pi
 public import LeanPool.ComputableReal.SpecialFunctions.Exp
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Tactic.Positivity.Finset

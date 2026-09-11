@@ -5,28 +5,10 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
 module
 
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
 public import Mathlib.Analysis.Fourier.ZMod
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-public import Mathlib.Analysis.SpecificLimits.Basic
-public import Mathlib.NumberTheory.Divisors
-public import Mathlib.Data.Nat.Totient
-public import Mathlib.Data.Nat.Factorization.Basic
-public import Mathlib.Data.Set.Card.Arithmetic
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Data.ZMod.Coprime
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+import Mathlib.Data.Set.Card.Arithmetic
 
 /-!
 # LeanPool.LatticeTriangle.Solution

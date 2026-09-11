@@ -12,6 +12,8 @@ public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
 public import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
 public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
 public import LeanPool.JacobianDiffgeo.MappingDegree.Covering
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # mapping-degree: the mapping degree of a holomorphic map between compact Riemann surfaces

@@ -8,6 +8,7 @@ module
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
 public import Mathlib.RingTheory.Coalgebra.TensorProduct
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Schur Multiplication on Tensor Products

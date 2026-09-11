@@ -13,6 +13,11 @@ public import LeanPool.KaltonRoberts.Pipeline
 public import LeanPool.KaltonRoberts.PipelineEps
 public import LeanPool.KaltonRoberts.EpsilonRecombination
 public import LeanPool.KaltonRoberts.MainTheorem
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Halving the Kalton-Roberts upper bound

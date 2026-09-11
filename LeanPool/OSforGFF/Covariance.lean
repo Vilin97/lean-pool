@@ -9,6 +9,7 @@ public import LeanPool.OSforGFF.Covariance.Momentum
 public import LeanPool.OSforGFF.Covariance.Parseval
 public import LeanPool.OSforGFF.Covariance.Position
 public import LeanPool.OSforGFF.Covariance.RealForm
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # `LeanPool.OSforGFF.Covariance` index

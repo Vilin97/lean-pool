@@ -5,7 +5,8 @@ Authors: Wei Wang
 -/
 module
 
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Weighted radial representation

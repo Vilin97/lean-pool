@@ -5,7 +5,8 @@ Authors: Alexander Loitzl, Martin Dvorak
 -/
 module
 
-public import Mathlib.Data.List.Basic
+public import Mathlib.Data.Nat.Notation
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # List repetition utilities

@@ -6,10 +6,9 @@ Authors: Shangtong Zhang
 module
 
 public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Tactic.Linarith.Frontend
-public import Mathlib.Tactic.Ring.RingNF
 
 public import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # LeanPool.RlTheoryInLean.Data.Matrix.Mul

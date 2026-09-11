@@ -6,7 +6,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import LeanPool.QuasiBorelSpaces.Multiset
-public import Mathlib.SetTheory.Cardinal.Order
+public import LeanPool.QuasiBorelSpaces.Subtype
+import LeanPool.QuasiBorelSpaces.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.Finset

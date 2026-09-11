@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Erdos81PaperIContrib.FarkasLP
 public import LeanPool.Erdos81PaperIContrib.FgConeClosed
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finitely generated cones and finite LP duality

@@ -5,9 +5,14 @@ Authors: Julius Marx
 -/
 module
 
-public meta import LeanPool.MRiscX.Hoare.HoareCore
-public meta import LeanPool.MRiscX.Elab.CodeElaborator
-public meta import LeanPool.MRiscX.Parser.HoareSyntax
+public import LeanPool.MRiscX.Elab.CodeElaborator
+public import LeanPool.MRiscX.Hoare.EvalLabelInHoare
+public import LeanPool.MRiscX.Hoare.HoareAssignmentElab
+public import LeanPool.MRiscX.Parser.HoareSyntax
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+import LeanPool.MRiscX.Hoare.HoareCore
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # HoareElaborator

@@ -5,9 +5,10 @@ Authors: James Huang, Samuël Borza
 -/
 module
 
-public import LeanPool.IsTranscendentalPi.NivenPolynomials
-public import LeanPool.IsTranscendentalPi.SymmetricPolynomials
 public import Mathlib.Algebra.Polynomial.OfFn
+public import LeanPool.IsTranscendentalPi.ComplexExponential
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.RingTheory.Polynomial.Vieta
 
 /-!
 # Subset-sum polynomial

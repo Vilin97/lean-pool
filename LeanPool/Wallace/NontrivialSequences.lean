@@ -6,7 +6,10 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 module
 
 public import LeanPool.Wallace.SeparationInterface
-public import Mathlib.Data.Nat.Nth
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Data.Nat.Nth
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Excluding nontrivial convergent sequences

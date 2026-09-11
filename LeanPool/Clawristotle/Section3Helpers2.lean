@@ -5,7 +5,12 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.Section3Helpers
+public import LeanPool.Clawristotle.Defs
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.Section2
+import LeanPool.Clawristotle.Section3Helpers
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # LeanPool.Clawristotle.Section3Helpers2

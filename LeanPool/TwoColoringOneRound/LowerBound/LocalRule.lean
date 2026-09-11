@@ -5,8 +5,14 @@ Authors: Jukka Suomela
 -/
 module
 
-public import LeanPool.TwoColoringOneRound.LowerBound.Defs
 public import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.LocalRule

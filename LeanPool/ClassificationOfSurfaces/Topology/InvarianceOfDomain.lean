@@ -5,11 +5,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import Mathlib.Analysis.Complex.Tietze
-public import Mathlib.Analysis.InnerProductSpace.Calculus
 public import Mathlib.Geometry.Manifold.IsManifold.InteriorBoundary
-public import Mathlib.MeasureTheory.Function.Jacobian
-public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import Mathlib.Analysis.Complex.Tietze
+import Mathlib.MeasureTheory.Function.Jacobian
+import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 
 /-!
 # Invariance of domain

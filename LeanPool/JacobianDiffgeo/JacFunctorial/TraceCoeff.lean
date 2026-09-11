@@ -6,8 +6,10 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
-public import LeanPool.JacobianDiffgeo.Surface.Identity
 public import Mathlib.Analysis.Meromorphic.NormalForm
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `traceCoeff`: the repaired planar trace coefficient (jacobian-functoriality §6, planar layer)

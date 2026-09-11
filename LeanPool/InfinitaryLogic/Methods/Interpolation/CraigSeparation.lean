@@ -5,8 +5,10 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
-public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
 /-!
 # Craig separation (PC-separation) for `L_ω₁ω`, relational (issue #8, audit §10)
 

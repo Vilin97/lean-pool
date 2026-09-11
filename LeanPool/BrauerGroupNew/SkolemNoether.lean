@@ -5,8 +5,15 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.BrauerGroup
 public import LeanPool.BrauerGroupNew.ZeroSevenFourE
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.RingTheory.TensorProduct.Basic
+import LeanPool.BrauerGroupNew.BrauerGroup
+import LeanPool.BrauerGroupNew.MoritaEquivalence
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.SkolemNoether

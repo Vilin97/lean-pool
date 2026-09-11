@@ -5,9 +5,10 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
 public import Mathlib.RingTheory.AdicCompletion.Algebra
-public import Mathlib.RingTheory.LocalRing.RingHom.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+import Mathlib.RingTheory.LocalRing.RingHom.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Quasi-Complete Local Rings

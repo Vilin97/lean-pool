@@ -18,7 +18,10 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
-public import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
+import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # LeakageEstimate -/
 

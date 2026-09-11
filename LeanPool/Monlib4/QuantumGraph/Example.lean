@@ -5,12 +5,14 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.QuantumGraph.Basic
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+import LeanPool.Monlib4.Preq.RCLikeLe
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
   # Basic examples on quantum adjacency matrices

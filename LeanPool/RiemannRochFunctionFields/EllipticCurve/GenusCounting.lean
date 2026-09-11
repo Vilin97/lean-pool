@@ -5,14 +5,13 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.PlaceDictionary
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
-public import Mathlib.RingTheory.Valuation.IsTrivialOn
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.ByContra
+public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Infinity
+public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.PlaceDictionary
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.RingTheory.Valuation.IsTrivialOn
 
 /-!
 # Genus counting for Weierstrass function fields

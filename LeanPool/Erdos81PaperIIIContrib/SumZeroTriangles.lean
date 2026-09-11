@@ -5,17 +5,13 @@ Authors: Aristotle
 -/
 module
 
-public import Mathlib.Data.Finset.Card
 public import Mathlib.Data.Finset.Sym
-public import Mathlib.Data.Fintype.EquivFin
-public import Mathlib.Data.Sym.Sym2
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Order
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Data.ZMod.Defs
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The sum-zero triple system: a near-perfect triangle packing of a complete graph

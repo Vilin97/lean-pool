@@ -5,7 +5,9 @@ Authors: Junqi Liu, Jujian Zhang
 -/
 module
 
-public import LeanPool.Zeta3Irrational.Integral
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.Zeta3Irrational.Integral
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # LeanPool.Zeta3Irrational.Equality

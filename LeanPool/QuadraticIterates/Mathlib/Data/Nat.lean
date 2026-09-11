@@ -5,11 +5,15 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Data.Int.ConditionallyCompleteOrder
-public import Mathlib.Data.Int.Star
-public import Mathlib.Order.ConditionallyCompleteLattice.Basic
-public import Mathlib.Tactic.Linarith.Frontend
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Tactic.Linarith.Frontend
 
 /-!
 # Natural-number lemmas

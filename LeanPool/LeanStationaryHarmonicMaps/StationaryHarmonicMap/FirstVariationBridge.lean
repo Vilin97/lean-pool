@@ -6,6 +6,7 @@ Authors: Wei Wang
 module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # First-variation bridge

@@ -5,7 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.End
+public import Mathlib.Algebra.Algebra.Spectrum.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import LeanPool.Monlib4.LinearAlgebra.End
 
 /-!
  # One lemma of the spectrum of a linear map

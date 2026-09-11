@@ -6,8 +6,10 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.ComputableReal.SpecialFunctions.Sqrt
-public import Mathlib.Analysis.Real.Pi.Bounds
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Rify
 
 /-!
 # Verified rational bounds for pi

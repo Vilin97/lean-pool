@@ -7,6 +7,10 @@ module
 
 public import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
 public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Soundness of the transposed legal-row pair masks -/
 

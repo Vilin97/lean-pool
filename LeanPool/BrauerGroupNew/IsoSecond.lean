@@ -7,6 +7,14 @@ module
 
 public import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 public import LeanPool.BrauerGroupNew.ToSecond
+public import Mathlib.RingTheory.SimpleModule.Basic
+import LeanPool.BrauerGroupNew.Wedderburn
+import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.IsoSecond

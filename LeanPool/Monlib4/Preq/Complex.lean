@@ -5,10 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Data.Complex.Basic
 public import Mathlib.Analysis.Complex.Norm
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Data.Complex.BigOperators
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Complex.BigOperators
 
 /-!
 

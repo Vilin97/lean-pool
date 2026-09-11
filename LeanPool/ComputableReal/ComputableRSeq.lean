@@ -6,11 +6,12 @@ Authors: Alex Meiburg
 module
 
 public import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Algebra.Order.Archimedean.Real.Basic
 public import Mathlib.Data.Sign.Defs
-public import Mathlib.Tactic.Rify
 
 public import LeanPool.ComputableReal.AuxLemmas
+public import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
+import Mathlib.Tactic.Rify
 
 /-!
 # Interval-Cauchy real sequences

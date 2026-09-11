@@ -6,7 +6,14 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.CircuitComplexity.XOR
-public import LeanPool.CircuitComplexity.Internal.Bridge
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Algebra.GroupWithZero.Nat
+import LeanPool.CircuitComplexity.Internal.Bridge
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! # Schnorr's Lower Bound for XOR Circuits
 

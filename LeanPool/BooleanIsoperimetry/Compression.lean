@@ -7,6 +7,14 @@ module
 
 public import LeanPool.BooleanIsoperimetry.SimplicialCompression
 public import LeanPool.BooleanIsoperimetry.LayerWindows
+public import LeanPool.BooleanIsoperimetry.Cascade
+public import Mathlib.Combinatorics.SetFamily.Compression.UV
+import LeanPool.BooleanIsoperimetry.Macaulay
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Frankl-Furedi compression layer

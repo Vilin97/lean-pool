@@ -7,6 +7,8 @@ module
 
 public import LeanPool.CutAndProject.Basic
 public import LeanPool.CutAndProject.Irrational
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Period Lengths of Rational Cut-and-Project Gap Sequences

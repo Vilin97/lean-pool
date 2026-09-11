@@ -5,14 +5,13 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
 module
 
-public import Mathlib.Topology.Covering.Basic
-public import Mathlib.Topology.Homotopy.Lifting
-public import Mathlib.GroupTheory.FreeGroup.Reduce
-public import LeanPool.FiniteGraphFundamentalGroup.Cover
-public import LeanPool.FiniteGraphFundamentalGroup.Realization
 public import LeanPool.FiniteGraphFundamentalGroup.TopologicalCover
-public import LeanPool.FiniteGraphFundamentalGroup.TreeContraction
 public import LeanPool.FiniteGraphFundamentalGroup.Consequences
+public import Mathlib.Topology.Homotopy.Contractible
+import LeanPool.FiniteGraphFundamentalGroup.TreeContraction
+import Mathlib.GroupTheory.FreeGroup.Reduce
+import Mathlib.Topology.Homotopy.Lifting
+import Mathlib.Topology.WithTopology
 
 /-!
 # Comparison of combinatorial and topological fundamental groups

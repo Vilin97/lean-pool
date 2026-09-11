@@ -5,12 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.GeneralizedResidueTheorem
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Cycle
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
 public import LeanPool.LeanModularForms.Modularforms.Eisenstein
-public import LeanPool.LeanModularForms.SpherePacking.PhiHolomorphic
-public import LeanPool.LeanModularForms.SpherePacking.CuspDecay
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.SpherePacking.CuspDecay
+import LeanPool.LeanModularForms.SpherePacking.PhiHolomorphic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Viazovska's Magic Function — Original Contour Integrals

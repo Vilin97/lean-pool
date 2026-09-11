@@ -6,7 +6,7 @@ Authors: Humiliati
 module
 
 public import LeanPool.Sundogcert.Scaling
-public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
   Sundogcert/Looseness.lean — the BASIS-DEPENDENCE / looseness demonstration.

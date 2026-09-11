@@ -7,6 +7,13 @@ module
 
 public import LeanPool.Lean4GlCoalgebras.Pdl.Game
 public import LeanPool.Lean4GlCoalgebras.General.Proof
+public import Mathlib.Data.Finset.Powerset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! ## The GL-proof game.
 

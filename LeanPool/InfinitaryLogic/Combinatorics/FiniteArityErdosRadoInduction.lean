@@ -5,7 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Combinatorics.EndHomogeneousErdosRado
+public import Mathlib.SetTheory.Cardinal.Aleph
+import LeanPool.InfinitaryLogic.Combinatorics.EndHomogeneousErdosRado
+import Mathlib.SetTheory.Cardinal.Arithmetic
 /-!
 # Finite-arity Erdős–Rado: the induction scaffold
 

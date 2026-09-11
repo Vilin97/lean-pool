@@ -5,9 +5,8 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
-public import LeanPool.GrothendieckVanishing.TopologicalKrullDim
 public import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.FlasqueVanishing
 
 /-!
 # Flasqueness of the constant sheaf on an irreducible space

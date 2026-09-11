@@ -5,12 +5,17 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
 public import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Quotient
-public import LeanPool.KasamiCyclicAdditive.Geometry.FrobeniusAnnihilator
-public import LeanPool.KasamiCyclicAdditive.Geometry.BaseChange
+public import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
+import LeanPool.KasamiCyclicAdditive.Geometry.BaseChange
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Quotient
+import LeanPool.KasamiCyclicAdditive.Geometry.FrobeniusAnnihilator
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The even-dimensional root-existence branch: the quotient-first bridge

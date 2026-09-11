@@ -5,8 +5,15 @@ Authors: Martin Dvorak
 -/
 module
 
-public import Mathlib.Tactic.Peel
 public import LeanPool.Duality.LinearProgramming
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.LinearAlgebra.Matrix.DotProduct
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Peel
 
 /-!
 We prove properties of "normal" linear programs as a corollary of properties of extended

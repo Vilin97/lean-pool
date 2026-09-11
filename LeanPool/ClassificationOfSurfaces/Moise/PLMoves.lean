@@ -6,7 +6,6 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
-public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
 public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
 
 /-!

@@ -5,15 +5,9 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Sigmoid
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
 public import LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
-public import Mathlib.MeasureTheory.Constructions.UnitInterval
-public import Mathlib.MeasureTheory.Measure.Restrict
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization

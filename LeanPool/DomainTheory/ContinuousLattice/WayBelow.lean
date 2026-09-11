@@ -5,9 +5,8 @@ Authors: Catskills Research Company
 -/
 module
 
-public import Mathlib.Order.CompleteLattice.Basic
 public import Mathlib.Order.UpperLower.Basic
-public import Mathlib.Order.Directed
+public import Mathlib.Order.CompleteLattice.Defs
 
 /-!
 # The induced (Scott) topology and the way-below relation (Scott 1972, §2)

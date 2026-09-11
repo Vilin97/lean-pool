@@ -5,12 +5,12 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.DirectSum.Module
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Fintype.Prod
 public import Mathlib.RingTheory.TensorProduct.Basic
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 public import LeanPool.Monlib4.LinearAlgebra.DirectSumFromTo
+public import Mathlib.Algebra.Algebra.Pi
+public import Mathlib.Algebra.DirectSum.Basic
+import Mathlib.Tactic.NormNum.Ineq
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.PiDirectSum

@@ -5,9 +5,9 @@ Authors: Utensil Song
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
 public import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
-public import LeanPool.ConnesRigidity.Construction.SquareSpan
+public import LeanPool.ConnesRigidity.Construction.PaperActions
+import LeanPool.ConnesRigidity.Construction.SquareSpan
 
 /-!
 Finite chart span and exhaustion for Zhou's §4 detector. Paper: §4.

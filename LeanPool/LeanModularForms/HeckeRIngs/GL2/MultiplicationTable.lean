@@ -6,10 +6,19 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
-public import Mathlib.Data.Finset.NatDivisors
-public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finset.NatDivisors
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Shimura Theorem 3.24: Multiplication Table for GL₂ Hecke Algebra

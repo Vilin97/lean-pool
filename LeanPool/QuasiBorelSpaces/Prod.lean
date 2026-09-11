@@ -5,10 +5,11 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.Prod
-public import LeanPool.QuasiBorelSpaces.Basic
 public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+import LeanPool.QuasiBorelSpaces.Basic
+import Mathlib.MeasureTheory.Measure.Prod
 
 
 /-!

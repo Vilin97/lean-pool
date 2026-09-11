@@ -6,8 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
-public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
 /-!
 # Realization helpers for the closure fields (issue #12, commit 4b part 1)
 

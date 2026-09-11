@@ -20,10 +20,16 @@ the companion paper.
 -/
 module
 
-public import LeanPool.KaltonRoberts.Defs
-public import LeanPool.KaltonRoberts.Numerical
-public import LeanPool.KaltonRoberts.PhiAnalysis
 public import LeanPool.KaltonRoberts.PippengerProof
+import LeanPool.KaltonRoberts.Numerical
+import LeanPool.KaltonRoberts.PhiAnalysis
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Convex.Jensen
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pippenger expander construction

@@ -5,12 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Meromorphic
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
-public import Mathlib.Topology.Sets.Opens
 public import Mathlib.Topology.ContinuousMap.Bounded.Normed
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Analysis.Complex.CauchyIntegral
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
 
 /-!
 # `BddHoloOn`: bounded-holomorphic Banach spaces, and the germ bridges (`finiteness-and-chi`)

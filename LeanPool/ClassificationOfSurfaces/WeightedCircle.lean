@@ -5,8 +5,7 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
-public import Mathlib.Topology.Instances.AddCircle.Real
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 
 /-!
 # Weighted subdivisions of the circle

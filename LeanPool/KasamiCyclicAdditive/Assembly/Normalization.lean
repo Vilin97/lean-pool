@@ -5,11 +5,17 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
-public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-public import LeanPool.KasamiCyclicAdditive.Statement.CoefficientForm
-public import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Algebra.Ring.Parity
+public import Mathlib.Data.Fintype.Card
+import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Normalization and Frobenius coefficient transport
 

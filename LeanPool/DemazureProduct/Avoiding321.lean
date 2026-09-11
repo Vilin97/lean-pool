@@ -7,6 +7,13 @@ module
 
 public import LeanPool.DemazureProduct.InvSet
 public import LeanPool.DemazureProduct.Submodular
+import LeanPool.DemazureProduct.Utils
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # 321-avoiding permutations

@@ -7,6 +7,9 @@ module
 
 public import LeanPool.OSforGFF.GaussianField.Nuclear
 public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # `LeanPool.OSforGFF.GaussianField` index

@@ -6,6 +6,11 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 module
 
 public import LeanPool.KasamiCyclicAdditive.Main
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Carlet's Kasami cyclic-additive conjecture

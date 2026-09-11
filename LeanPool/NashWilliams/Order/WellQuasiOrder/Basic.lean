@@ -6,7 +6,7 @@ Authors: Yann Pequignot
 module
 
 public import Mathlib.Order.WellQuasiOrder
-public import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
+import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
 
 /-!
 # Perfect/bad dichotomy and monotone subsequences in a well-quasi-order

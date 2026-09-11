@@ -5,13 +5,18 @@ Authors: Alex J. Best
 -/
 module
 
-public import LeanPool.EcTateLean.Algebra.Ring.Basic
-public import Mathlib.Algebra.CharP.Basic
 public import LeanPool.EcTateLean.FieldTheory.PerfectClosure
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Common
+public import Mathlib.Algebra.Field.Defs
+import LeanPool.EcTateLean.Algebra.Ring.Basic
+import Mathlib.Algebra.Field.IsField
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.Model

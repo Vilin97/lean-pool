@@ -8,6 +8,9 @@ module
 public import LeanPool.FriezePatterns.Chapter1
 public import LeanPool.FriezePatterns.Chapter2
 public import LeanPool.FriezePatterns.Chapter3
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Maxima of Coxeter frieze patterns are Fibonacci numbers

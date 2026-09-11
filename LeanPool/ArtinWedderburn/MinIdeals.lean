@@ -5,9 +5,13 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import LeanPool.ArtinWedderburn.SetProd
 public import LeanPool.ArtinWedderburn.CornerRing
-public import LeanPool.ArtinWedderburn.Auxiliary
+import LeanPool.ArtinWedderburn.SetProd
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Minimal left ideals and idempotents

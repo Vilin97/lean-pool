@@ -5,7 +5,13 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.Shannon1948Formalization.Entropy.Rational
+public import LeanPool.Shannon1948Formalization.Entropy.Uniform
+import LeanPool.Shannon1948Formalization.Entropy.Rational
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Shannon.Entropy.Approx

@@ -6,8 +6,16 @@ Authors: Nathan Pflueger
 module
 
 public import LeanPool.DemazureProduct.Valley
-public import Mathlib.Algebra.BigOperators.Ring.Finset
 public import Mathlib.Data.Int.Interval
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Slipfaces

@@ -5,14 +5,14 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
-public import Mathlib.Analysis.Convex.Between
-public import Mathlib.Analysis.Convex.Join
-public import Mathlib.Analysis.Convex.Topology
-public import Mathlib.Analysis.Convex.Gauge
-public import Mathlib.Analysis.Normed.Affine.AddTorsorBases
-public import Mathlib.LinearAlgebra.Basis.Basic
-public import Mathlib.Topology.Separation.Connected
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+import Mathlib.Analysis.Convex.Between
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Analysis.Convex.Gauge
+import Mathlib.Analysis.Convex.Join
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+import Mathlib.Topology.Separation.Connected
 
 /-!
 # Coning a subdivided triangle boundary

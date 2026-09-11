@@ -6,7 +6,7 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 module
 
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
-public import LeanPool.DirectedTopologyLean4.DirectedHomotopy
+public import LeanPool.DirectedTopologyLean4.Dipath
 
 /-!
 # LeanPool.DirectedTopologyLean4.TransRefl

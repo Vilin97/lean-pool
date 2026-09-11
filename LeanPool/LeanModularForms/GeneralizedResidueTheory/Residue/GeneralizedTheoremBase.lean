@@ -5,12 +5,17 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV.DominatedConvergence
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurveLemma
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
-public import Mathlib.Analysis.Meromorphic.Order
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeasureHelpers
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV.DominatedConvergence
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Generalized Residue Theorem -- Base Infrastructure

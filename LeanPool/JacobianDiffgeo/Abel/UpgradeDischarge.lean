@@ -7,7 +7,16 @@ module
 
 public import LeanPool.JacobianDiffgeo.Abel.LinkData
 public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
-public import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.Abel.ChartSupported
+import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
+import LeanPool.JacobianDiffgeo.Abel.WeakToMero
+import LeanPool.JacobianDiffgeo.AbelWeak.ChainAssembly
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import Mathlib.Analysis.Complex.HasPrimitives
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the weak-solution-upgrade discharge (design §4.1 steps 5-7, assembled)

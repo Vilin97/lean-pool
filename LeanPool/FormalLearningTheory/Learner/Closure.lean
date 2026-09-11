@@ -5,8 +5,8 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Learner.Core
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Tail
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Closure of Measurable Learners under Combiners and Selection

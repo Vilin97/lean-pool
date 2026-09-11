@@ -6,7 +6,15 @@ Authors: Sven Manthe
 module
 
 public import Mathlib.SetTheory.Descriptive.Tree
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
+public import Mathlib.Algebra.Group.End
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees

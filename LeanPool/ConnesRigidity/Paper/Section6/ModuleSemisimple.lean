@@ -12,9 +12,9 @@ trivial `C` summand, rather than treating the paper input as an opaque field.
 module
 
 public import Mathlib.Data.FunLike.Fintype
-public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-public import Mathlib.RingTheory.PicardGroup
 public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
+public import LeanPool.ConnesRigidity.Construction.SquareSpan
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 The module semisimple component of the Connes rigidity formalization.

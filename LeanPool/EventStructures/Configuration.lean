@@ -6,7 +6,8 @@ Authors: Vikraman Choudhury
 module
 
 public import LeanPool.EventStructures.Basic
-public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Finset.Defs
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Configurations

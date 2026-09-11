@@ -10,10 +10,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Algebraic
 public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
+import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Algebraic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
+import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
 
 /-!
 # Curvature Absorption Assembly

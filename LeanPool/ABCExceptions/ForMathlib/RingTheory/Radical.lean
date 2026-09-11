@@ -5,12 +5,9 @@ Authors: Bhavik Mehta, Arend Mellendijk
 -/
 module
 
-public import Mathlib.Algebra.GCDMonoid.Nat
-public import Mathlib.Algebra.Squarefree.Basic
-public import Mathlib.Data.Nat.PrimeFin
-public import Mathlib.RingTheory.Coprime.Lemmas
-public import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
+public meta import Aesop.BuiltinRules
+public import Mathlib.Tactic.Positivity.Core
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical

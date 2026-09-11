@@ -5,13 +5,6 @@ Authors: Antoine de Saint Germain, Ambrose Tang
 -/
 module
 
-public import Mathlib.Order.Interval.Finset.Fin
-public import Mathlib.LinearAlgebra.RootSystem.Defs
-public import Mathlib.Tactic.Ext
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Aesop
 public import Mathlib.LinearAlgebra.RootSystem.Reduced
 
 /-!

@@ -5,9 +5,7 @@ Authors: Sven Manthe
 -/
 module
 
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
 public import Mathlib.Order.Heyting.Regular
-public import Mathlib.Tactic.ApplyFun
 public import Mathlib.Topology.Sets.Opens
 
 /-!

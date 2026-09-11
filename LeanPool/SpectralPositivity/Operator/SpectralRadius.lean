@@ -5,11 +5,12 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import LeanPool.SpectralPositivity.Operator.JentzschProof
-public import Mathlib.Analysis.InnerProductSpace.Rayleigh
 public import Mathlib.Analysis.Normed.Algebra.Spectrum
-public import Mathlib.Analysis.CStarAlgebra.Spectrum
-public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+import Mathlib.Analysis.CStarAlgebra.Spectrum
 
 /-!
 # Spectral Radius Equals Norm for Self-Adjoint Operators

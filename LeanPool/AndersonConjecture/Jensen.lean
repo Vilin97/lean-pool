@@ -16,6 +16,10 @@ public import LeanPool.AndersonConjecture.Jensen.Jensen
 public import LeanPool.AndersonConjecture.Jensen.KrullDomain
 public import LeanPool.AndersonConjecture.Jensen.NSubring
 public import LeanPool.AndersonConjecture.Jensen.TransfiniteUnion
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Inv
 
 /-!
 # Jensen's Corollary 2.4: UFDs with Prescribed Completion

@@ -5,13 +5,8 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Basic
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
-public import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
-public import Mathlib.Topology.Order.LocalExtr
-public import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
 Copyright (c) 2025. All rights reserved.

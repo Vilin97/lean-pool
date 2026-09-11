@@ -30,7 +30,8 @@ Statements pinned before any proof was attempted.
 -/
 module
 
-public import LeanPool.MatchingLogic.Composite
+public import LeanPool.MatchingLogic.Localization
+import Mathlib.Data.Set.Lattice
 
 /-!
 # MatchingLogic.Independence

@@ -5,9 +5,10 @@ Authors: Jukka Suomela
 -/
 module
 
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 public import LeanPool.TwoColoringOneRound.LowerBound.Certificate
 public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality

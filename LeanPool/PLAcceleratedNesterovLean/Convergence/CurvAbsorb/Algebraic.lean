@@ -6,6 +6,7 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 module
 
 public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+import Mathlib.Analysis.Calculus.MeanValue
 
 
 /-!

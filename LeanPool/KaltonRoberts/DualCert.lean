@@ -16,6 +16,12 @@ separation theorem.
 module
 
 public import LeanPool.KaltonRoberts.Defs
+public import Mathlib.Analysis.Convex.Hull
+public import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Analysis.LocallyConvex.Separation
+import Mathlib.Analysis.LocallyConvex.WithSeminorms
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Dual certificate existence

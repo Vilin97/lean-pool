@@ -12,9 +12,9 @@ exhaustion an input. See the upstream PORT_MAP.md.
 -/
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 public import Mathlib.Order.CompletePartialOrder
+import Mathlib.Algebra.Order.Ring.Star
 
 /-!
 The spectral detection component of the Connes rigidity formalization.

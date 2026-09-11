@@ -5,8 +5,6 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 module
 
-public import Mathlib.Data.QPF.Univariate.Basic
-public import Mathlib.Data.Vector3
 public import LeanPool.Lean4Itree.ITree.Utils
 
 /-!

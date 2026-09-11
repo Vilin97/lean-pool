@@ -8,12 +8,13 @@ Authors: ruplet
 -- extended with case for empty type
 module
 
-public import Lean.Elab.Deriving.Basic
-public import Mathlib.Logic.IsEmpty.Basic
-public import Mathlib.Logic.Equiv.Defs
 public import Mathlib.Data.Finite.Defs
-public import Mathlib.Data.List.Nodup
-public import Mathlib.Data.List.OfFn
+public import Aesop.BuiltinRules
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import Lean.Elab.Deriving.Basic
+import Mathlib.Data.List.OfFn
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.IsEnum

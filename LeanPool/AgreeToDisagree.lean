@@ -7,6 +7,7 @@ module
 
 public import LeanPool.AgreeToDisagree.AgreeToDisagree
 public import LeanPool.AgreeToDisagree.AgreeToDisagreeBeliefs
+import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # Aumann's Agreement Theorem

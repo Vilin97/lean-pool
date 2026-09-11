@@ -5,13 +5,19 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.LeftEdge
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArc
-public import LeanPool.LeanModularForms.ValenceFormula.InteriorWinding
-public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights
+public import LeanPool.LeanModularForms.ValenceFormula.OrbitPairing
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.LeftEdge
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArc
+import LeanPool.LeanModularForms.ValenceFormula.InteriorWinding
+import LeanPool.LeanModularForms.ValenceFormula.PVChain
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Core Identity for the Valence Formula

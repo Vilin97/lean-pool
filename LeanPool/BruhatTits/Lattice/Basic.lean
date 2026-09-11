@@ -6,10 +6,11 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import LeanPool.BruhatTits.Utils.Matrix
-public import LeanPool.BruhatTits.Utils.Misc
-public import Mathlib.LinearAlgebra.Dimension.Localization
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.Algebra.Group.Action.Pointwise.Set.Finite
+public import LeanPool.BruhatTits.Utils.Subring
+import LeanPool.BruhatTits.Utils.Misc
+import Mathlib.Algebra.Group.Action.Pointwise.Set.Finite
+import Mathlib.LinearAlgebra.Dimension.Localization
+import Mathlib.LinearAlgebra.FreeModule.PID
 
 /-!
 # Definition of lattices

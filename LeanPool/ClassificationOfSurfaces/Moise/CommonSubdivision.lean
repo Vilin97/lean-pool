@@ -6,6 +6,7 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
 
 /-!
 # Common subdivisions of finite plane triangle meshes

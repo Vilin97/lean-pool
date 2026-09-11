@@ -5,10 +5,17 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.LinearAlgebra.Basis.Bilinear
 public import LeanPool.VirasoroProject.CyclicTripleSum
 public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
+public import Mathlib.Algebra.Lie.Basic
+public import Mathlib.Algebra.NoZeroSMulDivisors.Defs
+public import Mathlib.LinearAlgebra.DFinsupp
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.LinearAlgebra.Basis.Bilinear
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Witt algebra

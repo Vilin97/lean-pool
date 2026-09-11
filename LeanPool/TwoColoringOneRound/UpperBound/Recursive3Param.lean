@@ -11,6 +11,9 @@ public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
 public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
 public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Regions
 public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Recursive three-parameter upper-bound construction

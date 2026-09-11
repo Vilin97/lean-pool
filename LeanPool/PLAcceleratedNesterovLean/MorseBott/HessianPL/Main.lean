@@ -5,8 +5,10 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Basics
-public import Mathlib.Topology.Order.Compact
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Basics
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 /-!
 # Hessian coercivity from PŁ — main theorems

@@ -5,7 +5,10 @@ Authors: Joseph McKinsey
 -/
 module
 
-public import Mathlib.Data.Rat.Defs
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Int.Notation
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.ToDual
 
 /-!
 # Floating-Point Configuration

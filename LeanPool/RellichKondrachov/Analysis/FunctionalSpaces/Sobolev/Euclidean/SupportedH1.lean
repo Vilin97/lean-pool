@@ -7,6 +7,7 @@ module
 
 public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
 public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
+import Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1`

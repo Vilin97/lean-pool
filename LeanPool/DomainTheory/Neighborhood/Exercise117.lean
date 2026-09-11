@@ -6,9 +6,8 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Algebra.Order.Archimedean.Real.Basic
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
 /-!
 # Exercise 1.17 (Scott 1981, PRG-19, §1) — rational open intervals on `ℝ`

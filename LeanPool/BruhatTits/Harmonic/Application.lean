@@ -8,6 +8,7 @@ module
 public import LeanPool.BruhatTits.Graph.Orientation
 public import LeanPool.BruhatTits.Graph.Regular
 public import LeanPool.BruhatTits.Harmonic.Basic
+import LeanPool.BruhatTits.Graph.Tree
 
 /-!
 # Surjectivity of the Bruhat-Tits Laplacian

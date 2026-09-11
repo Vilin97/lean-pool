@@ -6,6 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Product
+import Mathlib.Order.BooleanAlgebra.Set
 
 /-!
 # Exercise 3.15 (Scott 1981, PRG-19, §3) — the usual product isomorphisms

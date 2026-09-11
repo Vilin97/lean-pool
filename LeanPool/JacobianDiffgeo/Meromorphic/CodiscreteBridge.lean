@@ -6,8 +6,10 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
-public import LeanPool.JacobianDiffgeo.Surface.Identity
-public import Mathlib.Topology.DiscreteSubset
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The codiscrete ⇄ punctured-neighborhood bridge (D2) and the identity dichotomy

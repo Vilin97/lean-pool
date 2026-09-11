@@ -7,6 +7,9 @@ module
 
 public import LeanPool.LeanComplexAnalysis.Harmonic
 public import LeanPool.LeanComplexAnalysis.UnivalentFunctions
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Formalized Complex Analysis in Lean

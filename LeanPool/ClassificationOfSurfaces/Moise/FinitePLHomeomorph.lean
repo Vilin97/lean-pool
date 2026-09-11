@@ -7,6 +7,7 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
 public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
 
 /-!
 # Finite PL homeomorphisms on compact plane polyhedra

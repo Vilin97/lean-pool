@@ -6,6 +6,13 @@ Authors: Dean Cureton
 module
 
 public import LeanPool.FrontierMathOpenHypergraphs.Uniform.Frames
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Nat.Pairing
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The uniform 26/25 factor and the finite bootstrap

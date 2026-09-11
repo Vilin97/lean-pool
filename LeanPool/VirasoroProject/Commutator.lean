@@ -5,8 +5,10 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Basic
-public import Mathlib.Algebra.EuclideanDomain.Field
+public import Mathlib.Algebra.Algebra.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Module.LinearMap.End
+import Mathlib.Algebra.Algebra.Basic
 
 /-!
 # Commutators of linear maps

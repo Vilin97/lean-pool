@@ -5,7 +5,11 @@ Authors: Yann Pequignot
 -/
 module
 
-public import Mathlib.Data.Nat.Nth
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Order.Monotone.Defs
+import Mathlib.Data.Nat.Nth
 
 /-!
 # Strictly monotone enumerations of infinite sets of naturals

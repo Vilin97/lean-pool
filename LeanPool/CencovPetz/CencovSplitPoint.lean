@@ -5,11 +5,15 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.CencovPetz.SplittingInvariance
-public import LeanPool.CencovPetz.SplittingUniform
 public import LeanPool.CencovPetz.RationalPoint
 public import LeanPool.CencovPetz.UniformScalarConstant
-public import LeanPool.CencovPetz.UniformScalarMultiple
+import LeanPool.CencovPetz.PermutationInvariance
+import LeanPool.CencovPetz.SplittingInvariance
+import LeanPool.CencovPetz.UniformScalarMultiple
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

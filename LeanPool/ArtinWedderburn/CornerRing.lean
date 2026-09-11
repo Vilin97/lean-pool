@@ -5,16 +5,17 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.RingTheory.Artinian.Ring
-public import Mathlib.Algebra.Field.Defs
-public import Mathlib.RingTheory.SimpleRing.Basic
-public import Mathlib.Algebra.Ring.Idempotent
-public import Mathlib.Algebra.Ring.MinimalAxioms
-public import Mathlib.RingTheory.Ideal.Span
-public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 public import LeanPool.ArtinWedderburn.PrimeRing
 public import LeanPool.ArtinWedderburn.NonUnitalToUnital
 public import LeanPool.ArtinWedderburn.Auxiliary
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.RingTheory.Artinian.Defs
+public import Mathlib.Tactic.NoncommRing
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Corner subrings `eRe`

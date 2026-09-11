@@ -10,9 +10,10 @@ chart-invariance (task item 1).
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
 public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Pair-form residues (`form-trace-tower`, file 1/6)

@@ -5,8 +5,13 @@ Authors: Alex Meiburg
 -/
 module
 
-public import LeanPool.IsoGraph.Canon.Node
-public import LeanPool.IsoGraph.ForMathlib.Array
+public import LeanPool.IsoGraph.Canon.Search
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Refinement splits cells, so the search terminates with a leaf in hand

@@ -7,24 +7,15 @@ module
 
 import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
 
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
-public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
-public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
-public import Mathlib.Analysis.Normed.Module.Multilinear.Curry
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
-public import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.SardMoreira.ContDiff

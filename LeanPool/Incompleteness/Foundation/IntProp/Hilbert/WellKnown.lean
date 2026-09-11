@@ -6,6 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Int
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # WellKnown -/
 

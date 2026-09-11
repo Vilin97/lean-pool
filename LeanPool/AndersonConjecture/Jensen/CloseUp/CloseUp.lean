@@ -5,9 +5,19 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.CoprimeSplit
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.Factor
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import LeanPool.AndersonConjecture.Jensen.CloseUp.CoprimeSplit
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Factor
+import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
+import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Heitmann's Lemma 4 — Closing Up Finitely Generated Ideals

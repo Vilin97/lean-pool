@@ -6,12 +6,14 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Basic
-public import Mathlib.Computability.TuringMachine.StackTuringMachine
-public import Mathlib.Computability.Primrec.List
-public import Mathlib.Computability.Partrec
 public import Mathlib.Computability.PartrecCode
-public import Mathlib.Computability.Encoding
-public import Mathlib.SetTheory.Ordinal.Arithmetic
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Computation and Formal Language Theory

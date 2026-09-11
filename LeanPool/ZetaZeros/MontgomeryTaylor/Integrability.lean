@@ -5,7 +5,8 @@ Authors: Axiom Math
 -/
 module
 
-public import LeanPool.ZetaZeros.MontgomeryTaylor.TestFunction
+public import LeanPool.ZetaZeros.Zeta.Defs
+import LeanPool.ZetaZeros.MontgomeryTaylor.TestFunction
 
 /-!
 # Interval-integrability of the integrands

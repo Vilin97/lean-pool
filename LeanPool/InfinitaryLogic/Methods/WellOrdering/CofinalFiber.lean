@@ -5,7 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.SetTheory.Cardinal.Regular
+public import Mathlib.SetTheory.Cardinal.Aleph
+import Mathlib.SetTheory.Cardinal.Regular
 
 /-!
 # The `ω₁` cofinal-fiber engine (issue #12, risky engine 1)

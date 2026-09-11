@@ -5,8 +5,15 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
 public import LeanPool.BooleanIsoperimetry.Cube
+public import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
+import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # From unit relations to consecutive subset-sum gaps

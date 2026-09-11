@@ -11,6 +11,7 @@ Authors: ruplet
 module
 
 public import LeanPool.FormalizationOfBoundedArithmetic.V0
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm

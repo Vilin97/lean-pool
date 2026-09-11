@@ -6,9 +6,8 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Germs.Coordinates
-public import LeanPool.LocalComplexGeometry.WPTBridge.DivisionUniqueness
-public import Mathlib.RingTheory.Ideal.Operations
-public import Mathlib.RingTheory.Ideal.Span
+import LeanPool.LocalComplexGeometry.WPTBridge.Division
+import LeanPool.LocalComplexGeometry.WPTBridge.DivisionUniqueness
 
 /-!
 # Weierstrass division on holomorphic germs

@@ -5,9 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
-public import Mathlib.Analysis.Analytic.IsolatedZeros
-public import Mathlib.Analysis.Complex.OpenMapping
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
 
 /-!
 # Identity theorem, isolated fibers, open mapping, surjectivity

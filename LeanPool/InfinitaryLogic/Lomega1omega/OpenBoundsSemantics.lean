@@ -6,7 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
-public import LeanPool.InfinitaryLogic.Util
+import LeanPool.InfinitaryLogic.Util
 /-!
 # Semantics of `openBounds` and of relabeling by `insertLastBound`
 

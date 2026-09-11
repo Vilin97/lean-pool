@@ -6,8 +6,15 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.GlobalEnergySection
-public import LeanPool.PoincareThreeBody.ActionFactorization
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+public import LeanPool.PoincareThreeBody.ActionPoisson
+import LeanPool.PoincareThreeBody.ActionFactorization
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.KeplerHamiltonian
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # A local Delaunay chart at the rational elliptic anchor

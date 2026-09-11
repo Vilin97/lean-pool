@@ -7,8 +7,6 @@ module
 
 public import Mathlib.Data.Matrix.Mul           -- Matrix, mulVec/vecMul, the `*ᵥ` / `ᵥ*` notation
 public import Mathlib.InformationTheory.Hamming  -- hammingNorm (the error weight)
-public import Mathlib.Data.Fintype.BigOperators  -- Fintype.card_fun (for secret_bits_lost)
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset  -- card_biUnion_le_card_mul (column-weight)
 
 /-!
   Sundog syndrome certificate — soundness + lossiness core  (Lean 4 / mathlib v4.30.0)

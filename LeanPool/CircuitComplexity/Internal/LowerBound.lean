@@ -5,9 +5,10 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 public import LeanPool.CircuitComplexity.EssentialInput
 public import LeanPool.CircuitComplexity.AON.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Fintype.Sum
 
 /-! # Internal: Gate Elimination Lower Bound
 

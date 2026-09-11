@@ -5,7 +5,7 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import Mathlib.Topology.Connected.PathConnected
+public import Mathlib.Topology.UnitInterval
 
 /-!
 # LeanPool.DirectedTopologyLean4.Fraction

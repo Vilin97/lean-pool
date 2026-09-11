@@ -5,10 +5,14 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.GKPCharacterization
-public import LeanPool.GKPCarry.ModularPrefix
 public import Mathlib.Data.Finset.Card
-public import Mathlib.Tactic.IntervalCases
+public import LeanPool.GKPCarry.BadCarryLanguage
+public import Mathlib.Data.Nat.Choose.Central
+import LeanPool.GKPCarry.CarryArithmetic
+import LeanPool.GKPCarry.GKPCharacterization
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Infinite periodic slices of the GKP carry condition

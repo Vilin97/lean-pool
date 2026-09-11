@@ -6,7 +6,8 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 module
 
 public import Mathlib.Algebra.Algebra.Subalgebra.Basic
-public import Mathlib.LinearAlgebra.Matrix.IsDiag
+public import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.IsDiag
 
 /-!
 # LeanPool.BrauerGroupNew.MatrixCenterEquiv

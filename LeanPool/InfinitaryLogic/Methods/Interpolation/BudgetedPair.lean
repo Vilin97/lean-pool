@@ -5,10 +5,14 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.ConstantSurgery
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantGeneralization
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
 public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+import LeanPool.InfinitaryLogic.Methods.ConstantSurgery
+import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantGeneralization
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
+import Mathlib.Data.Set.Finite.Lattice
 /-!
 # The budgeted labelled pair (issue #15, side-labelled restart)
 

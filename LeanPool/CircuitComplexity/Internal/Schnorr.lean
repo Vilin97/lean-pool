@@ -5,10 +5,10 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Tactic.IntervalCases
 public import LeanPool.CircuitComplexity.XOR
 public import LeanPool.CircuitComplexity.Internal.CircDesc
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Tactic.IntervalCases
 
 
 /-! # Internal: Schnorr's Lower Bound for XOR Circuits

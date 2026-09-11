@@ -6,11 +6,16 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
 -- Note: Does NOT import FlatnessTransfer to avoid circular dependencies.
 -- The zpow FTC lemmas used here are reproved locally.
-public import Mathlib.Analysis.Meromorphic.NormalForm
-public import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import Mathlib.Analysis.Meromorphic.Order
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Meromorphic Laurent Principal Parts

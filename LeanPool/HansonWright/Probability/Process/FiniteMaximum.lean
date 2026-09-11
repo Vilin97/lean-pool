@@ -5,7 +5,8 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
 module
 
-public import LeanPool.HansonWright.Probability.Moments.Exponential
+public import Mathlib.Probability.Moments.Basic
+import LeanPool.HansonWright.Probability.Moments.Exponential
 
 /-!
 # Finite Maxima of Sub-Gaussian Variables

@@ -6,9 +6,9 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
 
 /-!
 # Public existence from analytic sequence preparation

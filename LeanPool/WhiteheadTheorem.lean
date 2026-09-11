@@ -35,6 +35,7 @@ public import LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
 public import LeanPool.WhiteheadTheorem.Shapes.Maps
 public import LeanPool.WhiteheadTheorem.Shapes.Pushout
 public import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Whitehead's theorem for CW-complexes

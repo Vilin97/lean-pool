@@ -5,7 +5,10 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.DelaunaySection
+public import LeanPool.PoincareThreeBody.DelaunayActions
+import LeanPool.PoincareThreeBody.DelaunayFlow
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Poisson brackets and the Cartesian Delaunay action map

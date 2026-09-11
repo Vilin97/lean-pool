@@ -6,11 +6,14 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.OSforGFF.Minlos.ProjectiveFamily
-public import LeanPool.OSforGFF.Minlos.MinlosConcentration
-public import Mathlib.Topology.Bases
-public import Mathlib.Topology.ExtendFrom
-public import Mathlib.Data.Finsupp.Basic
-public import Mathlib.Data.Finsupp.Encodable
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
+import LeanPool.OSforGFF.Minlos.MinlosConcentration
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Finsupp.Encodable
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.MeasureTheory.Function.StronglyMeasurable.Inner
 
 /-!
 # Measurable Modification for Minlos' Theorem

@@ -6,6 +6,9 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.Order.Sub.Basic
 
 /-!
 

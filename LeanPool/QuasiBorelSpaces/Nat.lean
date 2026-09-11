@@ -6,7 +6,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import LeanPool.QuasiBorelSpaces.Prod
-public import LeanPool.QuasiBorelSpaces.Prop
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Prop
 
 /-!
 # LeanPool.QuasiBorelSpaces.Nat

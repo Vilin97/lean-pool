@@ -11,7 +11,8 @@ Paper: §3.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
+public import LeanPool.ConnesRigidity.Paper.Section3.GroupFactor
+import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
 
 /-!
 The group vacuum component of the Connes rigidity formalization.

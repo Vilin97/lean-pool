@@ -5,9 +5,11 @@ Authors: Vincent Beffara
 -/
 module
 
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Analysis.Complex.OpenMapping
 public import LeanPool.RiemannMappingTheorem.Defs
+import LeanPool.RiemannMappingTheorem.ToMathlib
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.RiemannMappingTheorem.Spaces

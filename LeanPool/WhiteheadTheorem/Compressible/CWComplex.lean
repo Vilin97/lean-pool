@@ -5,9 +5,9 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.CWComplex.IProd.Iso
-public import LeanPool.WhiteheadTheorem.HEP.Cofibration
 public import LeanPool.WhiteheadTheorem.Compressible.Defs
+public import LeanPool.WhiteheadTheorem.CWComplex.Basic
+import LeanPool.WhiteheadTheorem.HEP.Cofibration
 
 /-!
 This file proves that if a map is compressible with respect to

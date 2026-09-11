@@ -6,6 +6,9 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 module
 
 public import LeanPool.CommonNeighbourConjecture.Saxl.Basic
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.NeZero
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Generalized Saxl adjacency

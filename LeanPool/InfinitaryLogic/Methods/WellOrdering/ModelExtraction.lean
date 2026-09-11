@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.WOConsistency
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.WOConsistency
 /-!
 # Model extraction from the completed well-ordering set (issue #12, step 5)
 

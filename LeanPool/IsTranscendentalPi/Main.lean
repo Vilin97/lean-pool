@@ -5,10 +5,10 @@ Authors: James Huang, Samuël Borza
 -/
 module
 
-public import Mathlib.Analysis.Complex.IsIntegral
-public import LeanPool.IsTranscendentalPi.AnalyticEstimates
 public import LeanPool.IsTranscendentalPi.ScaledAuxiliaryPolynomial
-public import LeanPool.IsTranscendentalPi.SymmetricPolynomials
+import LeanPool.IsTranscendentalPi.AnalyticEstimates
+import Mathlib.Analysis.Complex.IsIntegral
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Transcendence of `π`

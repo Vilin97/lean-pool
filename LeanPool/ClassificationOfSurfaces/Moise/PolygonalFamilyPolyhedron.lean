@@ -7,6 +7,7 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
 public import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
 
 /-!
 # Finite unions of polygonal disks

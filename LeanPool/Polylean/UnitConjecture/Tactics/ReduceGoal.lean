@@ -5,7 +5,8 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public meta import Lean
+public meta import Lean.Elab.Tactic.Basic
+meta import Lean.Meta.Reduce
 
 public meta section
 

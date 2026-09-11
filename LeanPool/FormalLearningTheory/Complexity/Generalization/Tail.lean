@@ -5,7 +5,11 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+public import LeanPool.FormalLearningTheory.Complexity.VCDimension
+public import LeanPool.FormalLearningTheory.Criterion.PAC
+public import Mathlib.Probability.Independence.Basic
+import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+import Mathlib.Probability.ProductMeasure
 
 /-!
 # LeanPool.FormalLearningTheory.Complexity.Generalization.Tail

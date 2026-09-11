@@ -6,7 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
-public import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
 /-!
 # Model Existence Theorem
 

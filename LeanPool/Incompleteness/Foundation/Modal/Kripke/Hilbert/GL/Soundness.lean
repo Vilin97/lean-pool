@@ -6,8 +6,8 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Soundness -/
 

@@ -5,7 +5,9 @@ Authors: Caleb L. Geiger
 -/
 module
 
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
+public import LeanPool.SingularModuli.QuadraticOrder.Basic
+import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
+import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 
 /-!
 # Prime classification, part 4: the ramified case

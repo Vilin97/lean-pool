@@ -5,8 +5,9 @@ Authors: Wei Wang
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Basic
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 
 /-!
 # Euclidean coordinate interface

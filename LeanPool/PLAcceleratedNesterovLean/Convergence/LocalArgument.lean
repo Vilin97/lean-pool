@@ -5,8 +5,11 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
 
 /-!
 # Local Convergence Argument

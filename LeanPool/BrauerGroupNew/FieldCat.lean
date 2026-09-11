@@ -12,9 +12,8 @@ Authors: Yunzhou Xie
 module
 
 public import Mathlib.Algebra.Category.Ring.Basic
-public import Mathlib.Algebra.EuclideanDomain.Field
-public import Mathlib.Algebra.Ring.CompTypeclasses
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.Algebra.Field.Defs
 
 /-!
 # Category instances for `Field`.

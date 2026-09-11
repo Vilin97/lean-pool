@@ -12,6 +12,8 @@ conceptual action and transvection lemmas.
 module
 
 public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kernel-checked `Sp₄(𝔽₂)` normal-subgroup certificate

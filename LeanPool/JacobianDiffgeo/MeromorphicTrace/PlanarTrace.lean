@@ -10,14 +10,12 @@ Blueprint unit: meromorphic-trace. The planar trace atom `traceZk h k w` (trace 
 -/
 module
 
-public import Mathlib.Analysis.Complex.RemovableSingularity
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.RingTheory.RootsOfUnity.Complex
-public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
-public import Mathlib.Algebra.Field.GeomSum
 public import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
 public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.RingTheory.RootsOfUnity.Complex
 
 /-!
 # The planar trace atom `traceZk` (meromorphic-trace, cluster 2)

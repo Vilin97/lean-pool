@@ -5,11 +5,17 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos132ThreeChain.FivePoints
 public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Finset.Lattice.Fold
-public import Mathlib.Data.Finset.Max
-public import Mathlib.Data.Finset.Prod
+public import LeanPool.Erdos132ThreeChain.Basic
+import LeanPool.Erdos132ThreeChain.FivePoints
+import LeanPool.Erdos132ThreeChain.FourPoints
+import Mathlib.Data.Finset.Max
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # From five labelled points to five-element sets

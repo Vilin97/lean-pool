@@ -7,7 +7,8 @@ module
 
 public meta import Lean.LabelAttribute
 
-public import Mathlib.CategoryTheory.Category.Basic
+import Lean.LabelAttribute
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # LeanPool.ZFLean.Tactics

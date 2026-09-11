@@ -5,12 +5,8 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.Order.Interval.Finset.Defs
-public import Mathlib.MeasureTheory.MeasurableSpace.Instances
-public import Mathlib.MeasureTheory.Function.L1Space.Integrable
-public import Mathlib.Probability.Process.Filtration
-public import Mathlib.Topology.Bornology.Basic
+public import Mathlib.MeasureTheory.Measure.Prod
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.MeasureTheory.Measure.Prod

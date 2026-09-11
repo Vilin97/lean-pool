@@ -17,6 +17,12 @@ recombination pipeline (Sections 3–5).
 module
 
 public import LeanPool.KaltonRoberts.Defs
+public import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Weighted finite collections and certificate mass decomposition

@@ -5,11 +5,13 @@ Authors: Alex Meiburg
 -/
 module
 
-public import Mathlib.Data.Fintype.EquivFin
-public import Mathlib.Logic.Equiv.Defs
-public import LeanPool.IsoGraph.Canon.Algorithm
 public import LeanPool.IsoGraph.Canon.Equivariance
-public import LeanPool.IsoGraph.Canon.Correct
+import LeanPool.IsoGraph.Canon.Correct
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # From the canonical labelling algorithm to permutations, and its specification

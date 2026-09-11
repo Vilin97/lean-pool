@@ -6,6 +6,9 @@ Authors: Abdullah Uyu
 module
 
 public import LeanPool.Desargues.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-!
 # Morphisms of projective geometries

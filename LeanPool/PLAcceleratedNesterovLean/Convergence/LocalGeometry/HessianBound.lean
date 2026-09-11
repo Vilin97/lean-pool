@@ -5,8 +5,9 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Hessian coercivity from the Polyak-Łojasiewicz condition

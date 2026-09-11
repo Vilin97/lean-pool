@@ -17,6 +17,11 @@ public import LeanPool.ArtinWedderburn.CornerCornerLemma
 public import LeanPool.ArtinWedderburn.MatrixUnits
 public import LeanPool.ArtinWedderburn.NiceIdeals
 public import LeanPool.ArtinWedderburn.ArtinWedderburnTheorem
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Artin-Wedderburn Theorem

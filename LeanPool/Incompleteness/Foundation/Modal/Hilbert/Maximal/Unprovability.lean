@@ -6,7 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Basic
-public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Classical
+import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Classical
 
 /-! # Unprovability -/
 

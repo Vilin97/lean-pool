@@ -5,7 +5,11 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.CoulombFlux
+public import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.NewtonianPotential
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # PSD Helpers: Continuity and Pointwise Bounds for Coulomb

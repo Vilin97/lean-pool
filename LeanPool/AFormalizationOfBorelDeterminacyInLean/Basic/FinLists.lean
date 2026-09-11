@@ -5,7 +5,20 @@ Authors: Sven Manthe
 -/
 module
 
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+public import Aesop.BuiltinRules
+public import Batteries.Data.List.Basic
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Data.Set.Operations
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.ToAdditive
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists

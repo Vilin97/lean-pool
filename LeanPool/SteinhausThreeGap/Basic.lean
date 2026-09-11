@@ -5,19 +5,10 @@ Authors: Dirk Kunert
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
 public import Mathlib.Algebra.Order.Archimedean.Real.Basic
-public import Mathlib.Algebra.Order.Floor.Ring
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Finset.Max
 public import Mathlib.Data.Finset.Sort
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Order.Interval.Set.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Group.Multiset.Defs
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # The Three-Gap (Steinhaus) theorem

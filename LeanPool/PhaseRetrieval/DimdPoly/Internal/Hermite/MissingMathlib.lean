@@ -13,9 +13,8 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
-public import Mathlib.Order.Interval.Finset.Nat
-public import Mathlib.Analysis.Normed.Group.Bounded
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! # MissingMathlib -/
 

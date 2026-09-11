@@ -5,9 +5,11 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward
 public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
+public import Mathlib.Geometry.Manifold.Riemannian.PathELength
+public import Mathlib.Topology.VectorBundle.Riemannian
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian`

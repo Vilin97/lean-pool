@@ -5,12 +5,18 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
-public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
-public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
 public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.Framework
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.LogDerivFTC
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Generalized Winding Number at Right Edge Points

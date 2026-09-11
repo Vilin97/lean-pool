@@ -5,9 +5,11 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import LeanPool.BruhatTits.Cartan.Uniqueness
 public import LeanPool.BruhatTits.Lattice.Basic
-public import LeanPool.BruhatTits.Utils.Matrix
+public import LeanPool.BruhatTits.Utils.RingHom
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+import LeanPool.BruhatTits.Cartan.Uniqueness
+import LeanPool.BruhatTits.Utils.ValuationRings
 
 /-!
 # Distance on lattices and vertices

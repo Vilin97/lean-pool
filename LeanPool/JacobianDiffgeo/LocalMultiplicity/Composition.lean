@@ -9,9 +9,10 @@ Blueprint unit: local-multiplicity (CC4). Composition law and multiplicity-one c
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
-public import Mathlib.Analysis.Calculus.Deriv.Pow
-public import Mathlib.RingTheory.RootsOfUnity.Complex
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.RingTheory.RootsOfUnity.Complex
 
 /-!
 # Composition law and multiplicity-one criteria

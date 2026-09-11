@@ -5,18 +5,20 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
-public import Mathlib.Analysis.InnerProductSpace.Orthonormal
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.LinearAlgebra.TensorProduct.Basis
-public import Mathlib.Tactic.Ring
 public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
 public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
 public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.Preq.StarAlgEquiv
+public import Mathlib.LinearAlgebra.Basis.MulOpposite
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quantum Sets

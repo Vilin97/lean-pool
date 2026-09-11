@@ -6,7 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.Rado.Surface.Harmonic
-public import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.Analysis.Complex.Harmonic.Analytic
+import Mathlib.Analysis.Complex.OpenMapping
 
 /-!
 # Conjugate germs and the étale space

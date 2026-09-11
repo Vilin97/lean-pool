@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Equivariance of the local EM quotient (the issue #11 spike)
 

@@ -5,13 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.LeafInduction
 public import LeanPool.Egrs75.DigitVector
 public import LeanPool.Egrs75.DigitAtToolkit
-public import Mathlib.Data.Nat.Digits.Lemmas
-public import Mathlib.Data.List.GetD
+public import Mathlib.Data.Nat.Factorization.Defs
+import LeanPool.Egrs75.RoundUp
 
 /-!
 EGRS75 two-prime ALIGN leaf — LOW case, PRIMITIVE P3 (SUBTRACT branch).

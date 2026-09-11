@@ -7,6 +7,7 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Approximable
 public import LeanPool.DomainTheory.Neighborhood.ExampleB
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Example 2.4 (Scott 1981, PRG-19, §2) — eliminating the first run of `1`'s, `g :

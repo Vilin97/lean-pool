@@ -5,8 +5,14 @@ Authors: Jineon Baek
 -/
 module
 
-public import LeanPool.ErdosTuzaValtr.Config.Default
 public import LeanPool.ErdosTuzaValtr.Etv.Defs
+public import LeanPool.ErdosTuzaValtr.Config.Mirror
+import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Etv.Mirror

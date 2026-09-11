@@ -17,6 +17,7 @@ module
 
 public import LeanPool.MatchingLogic.DoubleCover
 public import LeanPool.MatchingLogic.Localization
+import LeanPool.MatchingLogic.Locality
 
 /-!
 # MatchingLogic.Composite

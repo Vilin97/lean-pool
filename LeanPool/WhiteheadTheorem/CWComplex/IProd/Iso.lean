@@ -6,7 +6,6 @@ Authors: Jiazhen Xia
 module
 
 public import LeanPool.WhiteheadTheorem.CWComplex.IProd.Def
-public import Mathlib.CategoryTheory.Adjunction.Limits
 
 /-!
 This file verifies that the pair `(X.IProd.sk 0, X.IProd)` is homeomorphic to

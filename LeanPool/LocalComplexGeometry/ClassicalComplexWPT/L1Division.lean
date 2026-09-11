@@ -6,8 +6,8 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Analytic.Basic
+import Mathlib.Analysis.Analytic.Constructions
 
 /-!
 # Division in weighted `ℓ¹` sequence algebras

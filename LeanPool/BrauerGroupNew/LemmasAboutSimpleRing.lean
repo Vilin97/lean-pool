@@ -5,9 +5,18 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.CentralSimple
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
-public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.LinearAlgebra.Basis.VectorSpace
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.BrauerGroupNew.LemmasAboutSimpleRing

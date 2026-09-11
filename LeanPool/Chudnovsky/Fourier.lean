@@ -6,6 +6,7 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.Lattices
+import LeanPool.Chudnovsky.Liouville
 
 /-!
 # Fourier expansions: the lattice ↔ modular-forms bridge

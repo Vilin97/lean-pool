@@ -6,6 +6,7 @@ Authors: Wei Wang
 module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIntegrability
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Weak radial stationarity identity

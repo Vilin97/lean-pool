@@ -6,7 +6,6 @@ Authors: Dhruv Gupta
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # KL Divergence and Finite PMFs

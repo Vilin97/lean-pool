@@ -5,8 +5,10 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
 public import LeanPool.DomainTheory.Neighborhood.Product
+public import LeanPool.DomainTheory.Neighborhood.Exercise318
+import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+import Mathlib.Order.BooleanAlgebra.Set
 
 /-!
 # Exercise 3.24(iii)(iv) (Scott 1981, PRG-19, §3) — sum/product "isomorphisms"

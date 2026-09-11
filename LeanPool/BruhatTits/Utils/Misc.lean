@@ -5,12 +5,9 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import Mathlib.RingTheory.Valuation.Basic
-public import Mathlib.LinearAlgebra.StdBasis
 public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 public import Mathlib.RingTheory.LocalRing.Defs
-public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
-public import Mathlib.Tactic.Common
+import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 /-!
 # LeanPool.BruhatTits.Utils.Misc
 -/

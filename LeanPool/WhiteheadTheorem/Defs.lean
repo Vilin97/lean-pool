@@ -6,6 +6,8 @@ Authors: Jiazhen Xia
 module
 
 public import LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
+public import Mathlib.Topology.Homotopy.Equiv
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.WhiteheadTheorem.Defs

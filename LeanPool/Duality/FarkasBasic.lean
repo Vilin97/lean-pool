@@ -5,12 +5,17 @@ Authors: Martin Dvorak
 -/
 module
 
-public import Mathlib.Algebra.Order.Sum
-public import Mathlib.Algebra.Order.Group.PosPart
-public import Mathlib.LinearAlgebra.Matrix.DotProduct
-public import Mathlib.Data.Matrix.ColumnRowPartitioned
-public import Mathlib.LinearAlgebra.Matrix.ToLin
-public import LeanPool.Duality.FarkasBartl
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Data.Matrix.Mul
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import LeanPool.Duality.Common
+import LeanPool.Duality.FarkasBartl
+import Mathlib.Algebra.Order.Group.PosPart
+import Mathlib.Algebra.Order.Sum
+import Mathlib.Data.Matrix.ColumnRowPartitioned
+import Mathlib.LinearAlgebra.Matrix.DotProduct
+import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
 # LeanPool.Duality.FarkasBasic

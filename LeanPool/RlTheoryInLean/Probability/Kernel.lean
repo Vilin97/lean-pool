@@ -7,6 +7,7 @@ module
 
 public import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
 public import LeanPool.RlTheoryInLean.Probability.Kernel.Composition
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Kernel

@@ -5,10 +5,11 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.EuclideanAngle
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Data.Fin.Tuple.Sort
-public import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+public import Mathlib.LinearAlgebra.Orientation
+import Mathlib.Data.Fin.Tuple.Sort
+import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
 
 /-!
 # The sharp Euclidean five-distance theorem `g₂ ≤ 5` — Haynes–Marklof Theorem 8 core

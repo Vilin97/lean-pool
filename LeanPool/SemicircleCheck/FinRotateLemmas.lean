@@ -5,9 +5,11 @@ Authors: Wondermonger-daydreaming
 -/
 module
 
-public import Mathlib.GroupTheory.Perm.Fin
-public import Mathlib.GroupTheory.Perm.Cycle.Type
-public import Mathlib.Data.Fin.Basic
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Logic.Equiv.Fin.Rotate
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
   `finRotate` arithmetic lemmas isolated for eventual Mathlib extraction.

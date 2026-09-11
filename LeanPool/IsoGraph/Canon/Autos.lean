@@ -6,6 +6,12 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.IsoGraph.Canon.Search
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Harvested automorphisms, and how they act on the search tree

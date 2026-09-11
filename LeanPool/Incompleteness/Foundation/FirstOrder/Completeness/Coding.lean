@@ -5,7 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Coding
+public import Mathlib.Logic.Encodable.Pi
+import Mathlib.Tactic.Bound.Init
 
 /-! # Coding -/
 

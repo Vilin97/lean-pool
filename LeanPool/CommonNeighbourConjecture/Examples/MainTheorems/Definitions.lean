@@ -6,7 +6,6 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Basic
-public import Mathlib.GroupTheory.GroupAction.Basic
 public import Mathlib.Order.Lattice.Nat
 
 /-!

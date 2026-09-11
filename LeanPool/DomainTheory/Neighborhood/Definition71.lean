@@ -5,7 +5,6 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Basic
 public import LeanPool.DomainTheory.Neighborhood.Exercise315
 public import LeanPool.DomainTheory.Neighborhood.Recursive
 

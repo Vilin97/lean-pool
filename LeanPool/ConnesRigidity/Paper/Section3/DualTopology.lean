@@ -12,7 +12,7 @@ Paper: §§3--4.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActions
+public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
 
 /-!
 The dual topology component of the Connes rigidity formalization.

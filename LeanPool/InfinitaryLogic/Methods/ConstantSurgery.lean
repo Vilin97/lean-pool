@@ -5,9 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
 public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+public import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
+public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 /-!
 # Constant surgery: substituting one constant for another
 

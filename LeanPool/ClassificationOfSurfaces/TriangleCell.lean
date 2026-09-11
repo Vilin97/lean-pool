@@ -5,11 +5,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
 public import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
-public import Mathlib.Analysis.Convex.GaugeRescale
-public import Mathlib.Topology.Instances.AddCircle.Real
+public import LeanPool.ClassificationOfSurfaces.Moise.Anchors
+import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+import Mathlib.Analysis.Convex.GaugeRescale
 
 /-!
 # A side-parameter-compatible polygon cell model for a triangle

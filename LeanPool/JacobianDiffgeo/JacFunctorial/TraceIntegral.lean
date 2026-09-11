@@ -6,8 +6,11 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
-public import LeanPool.JacobianDiffgeo.Path
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
+import LeanPool.JacobianDiffgeo.Path.Planar
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The trace–period relation (jacobian-functoriality §7, period-level form)

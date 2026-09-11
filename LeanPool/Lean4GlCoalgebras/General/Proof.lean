@@ -6,18 +6,15 @@ Authors: Madeleine Gignoux
 module
 
 public import LeanPool.Lean4GlCoalgebras.Logic.Syntax
-public import Mathlib.Data.Set.Defs
-public import Mathlib.CategoryTheory.Limits.Shapes.IsTerminal
-public import Mathlib.CategoryTheory.Functor.EpiMono
-public import Mathlib.CategoryTheory.Functor.Const
-public import Mathlib.Data.Finset.Powerset
-public import Mathlib.Data.Fintype.Defs
 public import Mathlib.CategoryTheory.Endofunctor.Algebra
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.Nat.Basic
-public import Aesop
-public import Mathlib.Data.Setoid.Partition
-public import Mathlib.Data.Finset.Lattice.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Finset.Powerset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! ## Defining GL-proof systems.
 

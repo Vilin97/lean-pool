@@ -7,6 +7,10 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Example62
 public import LeanPool.DomainTheory.Neighborhood.Product
+import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+import Mathlib.Data.List.Monad
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Exercise 6.19 (Scott 1981, PRG-19, §6) — sum and product on the category of

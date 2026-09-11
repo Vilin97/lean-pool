@@ -5,8 +5,11 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
-public import LeanPool.Lentil.Basic
+public import Lean.Expr
+public import LeanPool.Lentil.Utils.MetaUtil
+import Lean.Data.AssocList
+import Lean.Meta.AppBuilder
+import LeanPool.Lentil.Basic
 
 /-! Gadgets for lifting a propositional theorem to the level of temporal logic. -/
 

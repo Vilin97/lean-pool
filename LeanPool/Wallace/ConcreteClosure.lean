@@ -7,6 +7,13 @@ module
 
 public import LeanPool.Wallace.ConcreteData
 public import LeanPool.Wallace.CountableClosure
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Concrete countable dependency closures

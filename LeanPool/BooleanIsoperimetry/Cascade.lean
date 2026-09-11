@@ -5,9 +5,9 @@ Authors: Alexey Milovanov
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Module
-public import Mathlib.Data.Nat.Choose.Sum
 public import LeanPool.BooleanIsoperimetry.Cube
+import Mathlib.Algebra.BigOperators.Module
+import Mathlib.Data.Nat.Choose.Sum
 
 /-!
 # Binomial cascade arithmetic

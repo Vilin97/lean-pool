@@ -5,7 +5,14 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import LeanPool.Lean4GlCoalgebras.Interpolation.PartialInterpolation
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+import LeanPool.Lean4GlCoalgebras.Interpolation.PartialInterpolation
+import LeanPool.Lean4GlCoalgebras.Split.Completeness
+import LeanPool.Lean4GlCoalgebras.Split.Soundness
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Interpolation
 

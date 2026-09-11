@@ -6,8 +6,6 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.MeasureTheory.Measure.Hausdorff
-public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Mathlib.MeasureTheory.Measure.OpenPos
 
 /-!
 # `RellichKondrachov.MeasureTheory.Measure.HausdorffVolume`

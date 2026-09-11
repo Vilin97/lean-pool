@@ -5,10 +5,13 @@ Authors: Palalansoukî
 -/
 module
 
-public import Mathlib.Data.Fintype.Card
-public import Mathlib.Data.Fintype.List
-public import Mathlib.Data.List.Chain
-public import Mathlib.Data.Set.Finite.Basic
+public import Aesop.BuiltinRules
+public import Batteries.Data.List.Basic
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Data.Fintype.List
 
 /-! # Chain -/
 

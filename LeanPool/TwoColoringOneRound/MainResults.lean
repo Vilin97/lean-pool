@@ -6,7 +6,11 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.Definitions
-public import LeanPool.TwoColoringOneRound.Reduction
+import LeanPool.TwoColoringOneRound.Reduction
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Distributed2Coloring: Main results

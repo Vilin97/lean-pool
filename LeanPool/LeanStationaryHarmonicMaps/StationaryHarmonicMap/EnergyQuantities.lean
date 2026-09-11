@@ -6,7 +6,8 @@ Authors: Wei Wang
 module
 
 public import Mathlib.MeasureTheory.Function.AbsolutelyContinuous
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Energy Quantities

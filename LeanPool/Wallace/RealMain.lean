@@ -5,8 +5,11 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 module
 
-public import LeanPool.Wallace.GeneralMain
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import LeanPool.Wallace.PackageTransport
+public import LeanPool.Wallace.RationalAssembly
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.NumberTheory.NumberField.Basic
 
 /-!
 # The rational proposition on the additive group of real numbers

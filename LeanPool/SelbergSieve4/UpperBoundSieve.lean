@@ -5,13 +5,9 @@ Authors: Arend Mellendijk
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 public import Mathlib.Data.Real.Basic
-public import Mathlib.NumberTheory.ArithmeticFunction.Defs
-public import Mathlib.NumberTheory.ArithmeticFunction.Misc
-public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+public import Mathlib.NumberTheory.Divisors
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # LeanPool.SelbergSieve4.UpperBoundSieve

@@ -5,18 +5,12 @@ Authors: Daniel Smania
 -/
 module
 
-public import Mathlib.Analysis.Convex.Function
-public import Mathlib.Analysis.Convex.Deriv
-public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
-public import Mathlib.Analysis.InnerProductSpace.NormPow
-public import Mathlib.Analysis.MeanInequalities
-public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!

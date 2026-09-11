@@ -5,10 +5,17 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import Mathlib.Data.List.Chain
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Data.Setoid.Basic
 public import LeanPool.Lean4GlCoalgebras.Logic.Syntax
+public import Mathlib.CategoryTheory.Endofunctor.Algebra
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Finset.Powerset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Data.Setoid.Basic
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Defining GL-split proof systems.
 

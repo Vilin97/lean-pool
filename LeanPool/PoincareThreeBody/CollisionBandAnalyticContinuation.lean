@@ -6,7 +6,10 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.CollisionBandObstruction
-public import Mathlib.Analysis.Analytic.Uniqueness
+import Mathlib.Analysis.Analytic.Uniqueness
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Analytic continuation from the collision band

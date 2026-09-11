@@ -6,10 +6,17 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
-public import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
-public import LeanPool.JacobianDiffgeo.TailDuality
-public import LeanPool.JacobianDiffgeo.LaurentTail
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.Forms.Finiteness
+import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the Serre functional (design §4.3, routing decision #2's "honest integration atom")

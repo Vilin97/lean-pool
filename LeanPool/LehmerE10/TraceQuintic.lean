@@ -5,9 +5,13 @@ Authors: Dillon Ryan
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Topology.Order.IntermediateValue
-public import Mathlib.Topology.Algebra.Polynomial
+public import Mathlib.Analysis.Complex.Norm
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # locating the roots of Lehmer's polynomial via its trace quintic.

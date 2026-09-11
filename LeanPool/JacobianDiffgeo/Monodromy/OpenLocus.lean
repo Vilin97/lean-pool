@@ -5,8 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Path
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import Mathlib.Data.Complex.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `monodromy`: the open pole/zero-free locus as a Riemann surface

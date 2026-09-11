@@ -6,7 +6,10 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import LeanPool.BruhatTits.Lattice.Basic
-public import LeanPool.BruhatTits.Utils.ValuationRings
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+import LeanPool.BruhatTits.Utils.Misc
+import LeanPool.BruhatTits.Utils.ValuationRings
+import Mathlib.RingTheory.Localization.Module
 
 /-!
 # Basic constructions and operations on lattices

@@ -6,6 +6,9 @@ Authors: Scott D. Hughes
 module
 
 public import LeanPool.Erdos137.JointFiniteness
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: the smooth-part radical refinement and the sharpened threshold (g = 3)

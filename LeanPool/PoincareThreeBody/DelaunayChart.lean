@@ -5,8 +5,8 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.IrrationalTorusFlow
 public import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # The lifted planar Delaunay chart

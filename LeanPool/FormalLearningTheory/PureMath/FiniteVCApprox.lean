@@ -6,7 +6,8 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
-public import LeanPool.FormalLearningTheory.PureMath.BinaryMatrix
+public import Mathlib.Combinatorics.SetFamily.Shatter
+import Mathlib.Algebra.BigOperators.Field
 
 /-!
 # Finite Sample Approximation for FinitePMF

@@ -40,6 +40,7 @@ public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Stationa
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryMap
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Monotonicity Formula for Stationary Harmonic Maps

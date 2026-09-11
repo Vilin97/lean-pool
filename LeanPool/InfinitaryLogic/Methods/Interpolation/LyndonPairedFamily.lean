@@ -6,7 +6,6 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonClosures
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
 /-!
 # The polarity-refined paired family and its cross gates (issue #14, Unit 4a)
 

@@ -5,10 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Path
-public import LeanPool.JacobianDiffgeo.Forms
-public import Mathlib.Geometry.Manifold.Complex
-public import Mathlib.Analysis.Convex.PathConnected
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Forms.MDifferential
+public import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import LeanPool.JacobianDiffgeo.Path.HomotopySquare
+import LeanPool.JacobianDiffgeo.Path.Planar
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Geometry.Manifold.Complex
 
 /-!
 # The genus-0 engine: simply connected ⇒ every `Form1` has a global primitive (CC-sphere-topology)

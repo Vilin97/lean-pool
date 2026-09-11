@@ -6,10 +6,8 @@ Authors: Jiazhen Xia
 module
 
 public import LeanPool.WhiteheadTheorem.Defs
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
 public import LeanPool.WhiteheadTheorem.HEP.Cube
-public import LeanPool.WhiteheadTheorem.HEP.Cofibration
-public import LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt

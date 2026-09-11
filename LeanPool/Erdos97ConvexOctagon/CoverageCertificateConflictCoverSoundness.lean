@@ -5,8 +5,12 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Global validity of the generated conflict covers -/
 

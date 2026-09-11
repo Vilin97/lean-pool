@@ -10,8 +10,8 @@ functionals.
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
 public import Mathlib.Order.Filter.Germ.Basic
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
 
 /-!
 # Germ packaging of meromorphic functions (residue-calculus)

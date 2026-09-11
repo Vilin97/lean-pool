@@ -5,8 +5,10 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.AlignedAverageBlowup
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+public import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # A phase avoiding every boundary collision

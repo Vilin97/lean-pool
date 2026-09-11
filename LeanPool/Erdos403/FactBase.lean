@@ -5,10 +5,13 @@ Authors: Trevor Morris
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Data.Nat.SuccPred
-public import Mathlib.Order.Interval.Finset.Nat
 public import LeanPool.Erdos403.Basic
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The factorial number system (for Erdős #403)

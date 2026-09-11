@@ -5,8 +5,13 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.EuclideanDefect
-public import LeanPool.ThreeGap.SimultaneousDirichlet
+public import LeanPool.ThreeGap.ChevallierCount
+public import LeanPool.ThreeGap.EuclideanGrowth
+public import Mathlib.NumberTheory.Real.Irrational
+import LeanPool.ThreeGap.EuclideanDefect
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import LeanPool.ThreeGap.SimultaneousDirichlet
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Euclidean record denominators ⟹ `g₂ ≤ 6` (combinatorial, unconditional)

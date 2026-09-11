@@ -5,19 +5,12 @@ Authors: Junqi Liu, Jujian Zhang
 -/
 module
 
-public import Mathlib.Analysis.Normed.Field.Instances
-public import Mathlib.Analysis.PSeries
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-public import Mathlib.Topology.Algebra.Module.ModuleTopology
-public import Mathlib.Data.Finset.Attr
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Continuity
-public import Mathlib.Tactic.Finiteness.Attr
-public import Mathlib.Tactic.SetLike
-public import Mathlib.Util.CompileInductive
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.PSeries
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Function.AEEqOfIntegral
+import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 
 /-!
 # LeanPool.Zeta3Irrational.Integral

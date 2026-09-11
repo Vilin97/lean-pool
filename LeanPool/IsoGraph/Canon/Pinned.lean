@@ -5,7 +5,14 @@ Authors: Alex Meiburg
 -/
 module
 
-public import LeanPool.IsoGraph.Canon.Paths
+public import LeanPool.IsoGraph.Canon.Node
+import LeanPool.IsoGraph.Canon.Progress
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Individualised vertices stay where they were put

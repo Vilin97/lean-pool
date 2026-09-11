@@ -6,6 +6,16 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurve
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+import Mathlib.Analysis.Calculus.Deriv.ZPow
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.DivergenceTheorem
 
 /-!
 # Sector Curve PV Lemmas

@@ -13,6 +13,11 @@ public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeBody
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeExtensions
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeLim
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Tree index

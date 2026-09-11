@@ -13,6 +13,8 @@ public import LeanPool.JacobianDiffgeo.Dbar.Operator
 public import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
 public import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
 public import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # dbar-solvability: the `dbar`-equation on Riemann surfaces (namespace `RS`)

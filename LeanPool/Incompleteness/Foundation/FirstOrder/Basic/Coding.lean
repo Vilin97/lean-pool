@@ -5,7 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.BinderNotation
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Formula
+import Mathlib.Tactic.Bound.Init
 
 /-! # Coding -/
 

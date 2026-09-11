@@ -5,10 +5,8 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import Mathlib.Topology.MetricSpace.Basic
-public import Mathlib.Topology.MetricSpace.Pseudo.Real
-public import Mathlib.Topology.UnitInterval
 public import LeanPool.DirectedTopologyLean4.Fraction
+import Mathlib.Topology.MetricSpace.Pseudo.Real
 
 /-! ### Auxiliary lemmas -/
 

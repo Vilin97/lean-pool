@@ -6,6 +6,7 @@ Authors: Wei Wang
 module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Local `L²` bridge

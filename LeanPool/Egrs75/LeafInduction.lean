@@ -6,9 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import Mathlib.Data.Nat.Digits.Lemmas
-public import Mathlib.Order.Preorder.Finite
+import Mathlib.Data.Finset.Attr
 
 /-!
 EGRS75 two-prime ALIGN leaf — route "induction": isolate the single irreducible

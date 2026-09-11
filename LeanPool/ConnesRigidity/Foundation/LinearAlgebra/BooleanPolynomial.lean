@@ -6,11 +6,11 @@ Authors: Utensil Song, OpenAI
 module
 
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Algebra.Module.Pi
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Algebra.Module.Pi
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at

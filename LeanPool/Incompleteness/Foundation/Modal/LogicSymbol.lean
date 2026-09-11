@@ -6,6 +6,9 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
+public import Mathlib.Data.Finset.Preimage
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-! # LogicSymbol -/
 

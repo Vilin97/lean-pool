@@ -6,10 +6,8 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-public import Mathlib.Analysis.Convex.Segment
-public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
-public import Mathlib.LinearAlgebra.AffineSpace.Combination
-public import Mathlib.Order.Fin.Finset
+import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+import Mathlib.Order.Fin.Finset
 
 /-!
 # Subdividing finite plane complexes by affine lines

@@ -5,9 +5,9 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.PureMath.ChoquetCapacity
-public import Mathlib.MeasureTheory.Measure.NullMeasurable
-public import Mathlib.MeasureTheory.Measure.Real
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+import LeanPool.FormalLearningTheory.PureMath.ChoquetCapacity
+import Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # Analytic Sets are NullMeasurableSet

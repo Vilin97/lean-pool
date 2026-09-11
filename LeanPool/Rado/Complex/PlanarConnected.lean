@@ -5,13 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Normed.Module.Connected
-public import Mathlib.Analysis.Complex.Convex
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-public import Mathlib.Topology.Instances.Complex
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Topology.Connected.PathConnected
+import Mathlib.Analysis.Complex.Convex
+import Mathlib.Analysis.Normed.Module.Connected
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # Planar connectivity for the standard configuration

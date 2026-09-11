@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
 /-!
 # Base-symbol occurrence projections (neutral layer)
 

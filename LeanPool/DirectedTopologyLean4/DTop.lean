@@ -7,7 +7,6 @@ module
 
 public import LeanPool.DirectedTopologyLean4.Constructions
 public import Mathlib.CategoryTheory.ConcreteCategory.Basic
-public import Mathlib.CategoryTheory.Elementwise
 
 /-!
 # LeanPool.DirectedTopologyLean4.DTop

@@ -5,8 +5,15 @@ Authors: Jeremy Tan
 -/
 module
 
-public import Mathlib.FieldTheory.Finite.Basic
 public import LeanPool.Redhill.Common.VWPair
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Zify
 
 /-!
 # Definitions for the general case

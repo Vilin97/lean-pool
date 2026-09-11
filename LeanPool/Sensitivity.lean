@@ -13,6 +13,8 @@ public import LeanPool.Sensitivity.Parity
 public import LeanPool.Sensitivity.HuangBridge
 public import LeanPool.Sensitivity.Main
 public import LeanPool.Sensitivity.Consequences
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Sensitivity Conjecture: sqrt(deg) <= sensitivity

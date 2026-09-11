@@ -5,9 +5,26 @@ Authors: Sven Manthe
 -/
 module
 
-public meta import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Core
 
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+public meta import Aesop.BuiltinRules
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.Attr.Core
+public meta import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.Push
+public meta import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+public import Mathlib.Tactic.ToDual
+public meta import Qq.Typ
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Player

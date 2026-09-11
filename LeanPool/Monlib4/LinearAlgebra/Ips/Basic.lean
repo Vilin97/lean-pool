@@ -5,8 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
-public import LeanPool.Monlib4.Preq.RCLikeLe
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
+import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 

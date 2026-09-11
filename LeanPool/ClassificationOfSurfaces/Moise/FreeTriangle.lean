@@ -5,11 +5,9 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
-public import Mathlib.Analysis.Normed.Affine.AddTorsorBases
-public import Mathlib.Analysis.Normed.Module.Connected
-public import Mathlib.LinearAlgebra.Dimension.Finrank
-public import Mathlib.Order.Interval.Set.Infinite
+public import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+import Mathlib.Analysis.Normed.Module.Connected
 
 /-!
 # Free triangles in finite planar meshes

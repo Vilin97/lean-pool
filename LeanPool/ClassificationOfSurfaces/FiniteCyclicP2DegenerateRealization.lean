@@ -7,6 +7,10 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
 public import LeanPool.ClassificationOfSurfaces.P2DegenerateDisk
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Polygonal realization of one-sided-degenerate Gallier--Xu P2

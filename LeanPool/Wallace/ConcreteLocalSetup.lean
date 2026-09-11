@@ -7,8 +7,11 @@ module
 
 public import LeanPool.Wallace.ConcreteClosure
 public import LeanPool.Wallace.CountableDisjointization
-public import LeanPool.Wallace.FusionSchedule
-public import LeanPool.Wallace.BoundedIndependentMap
+import LeanPool.Wallace.BoundedIndependentMap
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The concrete countable block schedule around one nonzero vector

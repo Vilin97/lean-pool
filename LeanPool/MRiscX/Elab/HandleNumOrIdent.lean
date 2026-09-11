@@ -5,8 +5,10 @@ Authors: Julius Marx
 -/
 module
 
-public meta import LeanPool.MRiscX.Parser.AssemblySyntax
-public meta import Lean
+public meta import Lean.Elab.Term.TermElabM
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Exception
+import LeanPool.MRiscX.Parser.AssemblySyntax
 
 /-!
 # HandleNumOrIdent

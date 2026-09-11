@@ -6,9 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Descriptive.Topology
-public import Mathlib.Topology.MetricSpace.Polish
-public import Mathlib.Topology.Metrizable.Basic
 public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import LeanPool.InfinitaryLogic.Descriptive.Measurable
 /-!
 # Polish Space and Borel Space Structure on the Structure Space
 

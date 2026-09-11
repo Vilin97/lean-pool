@@ -5,8 +5,11 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian
-public import LeanPool.RellichKondrachov.MeasureTheory.Measure.HausdorffVolume
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian
+import LeanPool.RellichKondrachov.MeasureTheory.Measure.HausdorffVolume
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume`

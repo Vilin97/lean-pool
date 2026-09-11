@@ -5,14 +5,15 @@ Authors: Jose Fonollosa
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Algebra.Order.Ring.Star
 public import Mathlib.Data.Nat.Log
 public import Mathlib.Data.Nat.ModEq
-public import Mathlib.Data.Nat.SuccPred
-public import Mathlib.Tactic.NormNum.Ineq
-public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Tactic.NormNum.Ineq
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Minimum modulus for the unique multiset-sum problem

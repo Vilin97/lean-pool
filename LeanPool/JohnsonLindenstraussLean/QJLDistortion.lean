@@ -5,12 +5,13 @@ Authors: claytomode
 -/
 module
 
-public import Mathlib.Probability.Distributions.Gaussian.Fernique
 
 public import LeanPool.JohnsonLindenstraussLean.QJL
-public import LeanPool.JohnsonLindenstraussLean.GaussianTail
-public import Mathlib.Probability.Moments.Variance
 public import Mathlib.Probability.Moments.SubGaussian
+import LeanPool.JohnsonLindenstraussLean.GaussianTail
+import Mathlib.Probability.Distributions.Gaussian.Fernique
+import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 
 /-!
 # QJL distortion / concentration bound

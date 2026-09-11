@@ -5,8 +5,8 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Order
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+import Mathlib.Topology.Algebra.InfiniteSum.Basic
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum.Basic

@@ -5,7 +5,8 @@ Authors: seb488, Aristotle
 -/
 module
 
-public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral2
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Circle-average Poisson integral formulas

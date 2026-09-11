@@ -6,8 +6,10 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.Defs
-public import LeanPool.Clawristotle.FlatTorus3Lemmas
-public import LeanPool.Clawristotle.Section3
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.Section3Helpers2
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Transport Constraints (Section 4)

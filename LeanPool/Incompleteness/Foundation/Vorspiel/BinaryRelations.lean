@@ -5,8 +5,12 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
-public import Mathlib.Data.Fintype.Pigeonhole
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Order.Lattice
+import Mathlib.Data.Fintype.Pigeonhole
+import Mathlib.Order.WellFounded
+import Mathlib.Tactic.Bound.Init
 
 /-! # BinaryRelations -/
 

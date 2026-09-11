@@ -5,7 +5,9 @@ Authors: Vincent Trélat
 -/
 module
 
-public import LeanPool.ZFLean.Basic
+public import Mathlib.SetTheory.ZFC.Basic
+import LeanPool.ZFLean.Basic
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Boolean algebra on `ZFSet`

@@ -5,7 +5,15 @@ Authors: Alexey Milovanov
 -/
 module
 
-public import LeanPool.BooleanIsoperimetry.Shadow
+public import LeanPool.BooleanIsoperimetry.Cascade
+public import LeanPool.BooleanIsoperimetry.SimplicialCompression
+import LeanPool.BooleanIsoperimetry.Macaulay
+import LeanPool.BooleanIsoperimetry.Shadow
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Scalar Macaulay minimization

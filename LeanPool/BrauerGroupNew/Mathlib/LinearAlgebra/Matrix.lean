@@ -7,6 +7,7 @@ module
 
 public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.Charpoly
 public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Brauer Group New Mathlib LinearAlgebra Matrix

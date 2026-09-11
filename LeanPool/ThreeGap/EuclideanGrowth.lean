@@ -5,8 +5,10 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.ModTwoGrowth
 public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.ThreeGap.SimultaneousApprox
+import LeanPool.ThreeGap.ModTwoGrowth
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Euclidean growth inequality (instantiating the any-norm mod-2 theorem)

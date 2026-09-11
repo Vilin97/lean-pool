@@ -5,13 +5,18 @@ Authors: Axiom Math
 -/
 module
 
-public import LeanPool.ZetaZeros.Hilbert.AlphaExpansion
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Basic
 public import LeanPool.ZetaZeros.Zeta.Asymptotics
-public import LeanPool.ZetaZeros.Defs
-public import LeanPool.ZetaZeros.Zeta.Cutoff
-public import LeanPool.ZetaZeros.Zeta.Finite
-public import LeanPool.ZetaZeros.Zeta.Mass
+public import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
+public import LeanPool.ZetaZeros.Zeta.Defs
+import LeanPool.ZetaZeros.Hilbert.AlphaExpansion
+import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.MontgomeryTaylor.Basic
+import LeanPool.ZetaZeros.Zeta.Basic
+import LeanPool.ZetaZeros.Zeta.Cutoff
+import LeanPool.ZetaZeros.Zeta.Mass
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Construction of the pair-correlation kernel

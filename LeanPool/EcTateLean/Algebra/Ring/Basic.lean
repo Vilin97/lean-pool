@@ -5,10 +5,10 @@ Authors: Alex J. Best
 -/
 module
 
-public import Mathlib.Algebra.Ring.Basic
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Contrapose
+public import Mathlib.Algebra.Group.Basic
+public import Mathlib.Algebra.Ring.Defs
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.EcTateLean.Algebra.Ring.Basic

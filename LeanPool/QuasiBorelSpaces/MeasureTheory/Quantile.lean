@@ -6,8 +6,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import Mathlib.Probability.CDF
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
 public import Mathlib.MeasureTheory.Constructions.UnitInterval
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile

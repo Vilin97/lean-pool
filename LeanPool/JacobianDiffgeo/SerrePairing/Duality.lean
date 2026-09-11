@@ -6,8 +6,10 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
-public import Mathlib.LinearAlgebra.Dual.Lemmas
-public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The injectivity core and the generic dimension inequality (serre-duality-cech, §2 D4–D5)

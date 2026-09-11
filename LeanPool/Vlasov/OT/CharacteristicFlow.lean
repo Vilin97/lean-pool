@@ -5,12 +5,13 @@ Authors: Joseph K. Miller
 -/
 module
 
-public import Mathlib.Algebra.Order.Field.GeomSum
-public import Mathlib.Analysis.Calculus.ParametricIntegral
-public import Mathlib.MeasureTheory.Integral.Prod
 public import LeanPool.Vlasov.Basic
-public import LeanPool.Vlasov.ForMathlib.PicardLindelof
 public import LeanPool.Vlasov.OT.Coupling
+public import Mathlib.Analysis.ODE.Gronwall
+import LeanPool.Vlasov.ForMathlib.PicardLindelof
+import Mathlib.Algebra.Order.Field.GeomSum
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Characteristic flow for the Vlasov ODE + Lagrangian-Eulerian equivalence

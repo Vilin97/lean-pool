@@ -11,9 +11,19 @@ Authors: Jujian Zhang
 -/
 module
 
-public import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
-public import LeanPool.BrauerGroupNew.SkolemNoether
 public import Mathlib.RingTheory.SimpleRing.Field
+public import LeanPool.BrauerGroupNew.BrauerGroup
+import LeanPool.BrauerGroupNew.Centralizer
+import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.SkolemNoether
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Central.Matrix
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.DoubleCentralizer

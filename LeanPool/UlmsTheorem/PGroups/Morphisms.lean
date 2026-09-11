@@ -5,7 +5,10 @@ Authors: Elan Roth
 -/
 module
 
-public import LeanPool.UlmsTheorem.Ulm.Invariance
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Morphisms and invariance lemmas

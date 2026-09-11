@@ -5,7 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Typed
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+public import Mathlib.Algebra.Order.Sub.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-!
 

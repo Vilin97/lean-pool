@@ -5,9 +5,16 @@ Authors: Dillon Ryan
 -/
 module
 
-public import LeanPool.LehmerE10.Defs
-public import LeanPool.LehmerE10.Mahler
 public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # the finite contrast: the E₈ Coxeter element has order 30.

@@ -5,12 +5,11 @@ Authors: Julius Marx
 -/
 module
 
-public meta import LeanPool.MRiscX.Parser.AssemblySyntax
-public meta import LeanPool.MRiscX.AbstractSyntax.Map
-public meta import LeanPool.MRiscX.AbstractSyntax.Instr
 public meta import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public meta import LeanPool.MRiscX.Elab.HandleNumOrIdent
-public meta import Lean
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+public import LeanPool.MRiscX.Parser.AssemblySyntax
+import Lean.Exception
+import LeanPool.MRiscX.AbstractSyntax.Map
 
 /-!
 # CodeElaborator

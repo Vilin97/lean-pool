@@ -5,8 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Forms
-public import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.Forms.Finiteness
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Path.Periods
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `basis`, `periodVector`, `periodSubgroup` (CC9)

@@ -5,17 +5,17 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteAverage
 public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
 public import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
-public import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
-public import LeanPool.KasamiCyclicAdditive.Phase.RootCount
 public import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
-public import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
-public import LeanPool.KasamiCyclicAdditive.Geometry.EvenCase
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+import LeanPool.KasamiCyclicAdditive.Geometry.EvenCase
+import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.Phase.PowerMap
+import LeanPool.KasamiCyclicAdditive.Phase.RootCount
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteAverage
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The assembled Kasami chain

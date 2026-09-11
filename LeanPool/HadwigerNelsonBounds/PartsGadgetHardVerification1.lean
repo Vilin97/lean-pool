@@ -5,7 +5,13 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData0
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData1
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Kernel checks for hard-case certificate group 1. -/
 

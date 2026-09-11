@@ -10,10 +10,13 @@ proof-theoretic alpha bridge.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.Conclusion
 public import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
-public import Mathlib.Algebra.BigOperators.Fin
-public import Mathlib.Tactic.FinCases
+import LeanPool.MatchingLogic.EntryIII.Conclusion
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Tactic.FinCases
 
 /-!
 # MatchingLogic.EntryIII.AlphaFreshWitnessed

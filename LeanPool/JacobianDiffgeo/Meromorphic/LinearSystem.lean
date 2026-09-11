@@ -6,7 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
-public import Mathlib.Geometry.Manifold.Complex
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.Complex
 
 /-!
 # The linear system `L(D)` and `l(D)` (CC3, D4)

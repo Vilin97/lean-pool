@@ -7,7 +7,6 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
 public import Mathlib.RingTheory.Ideal.Span
-public import Mathlib.Tactic.Ring
 
 /-!
 # Exercise 1.26 (Scott 1981, PRG-19, §1) — ideals of a commutative ring

@@ -6,6 +6,14 @@ Authors: Sven Manthe
 module
 
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift

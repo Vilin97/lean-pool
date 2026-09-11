@@ -7,6 +7,7 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
 public import LeanPool.DomainTheory.Neighborhood.Exercise122
+import Mathlib.Topology.Continuous
 
 /-!
 # Exercise 2.13 (Scott 1981, PRG-19, §2) — approximable maps **are** the

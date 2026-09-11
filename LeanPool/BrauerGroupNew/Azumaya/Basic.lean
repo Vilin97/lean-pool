@@ -5,9 +5,23 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.BrauerGroup
-public import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
-public import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+public import LeanPool.BrauerGroupNew.Wedderburn
+public import Mathlib.Algebra.Azumaya.Defs
+public import Mathlib.Algebra.BrauerGroup.Defs
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Morita.Basic
+import LeanPool.BrauerGroupNew.BrauerGroup
+import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Central.Matrix
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.RingTheory.FiniteLength
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.Azumaya.Basic

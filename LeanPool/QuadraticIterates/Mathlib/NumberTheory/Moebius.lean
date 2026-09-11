@@ -5,14 +5,12 @@ Authors: Michael Stoll
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
 public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Order
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.RingTheory.Radical.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Sums of the Möbius function over divisors

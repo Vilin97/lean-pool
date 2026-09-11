@@ -6,11 +6,13 @@ Authors: Yann Pequignot
 module
 
 public import Mathlib.SetTheory.Ordinal.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Push
-public import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
 public import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
+import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # 2-better-quasi-orders (2-BQO)

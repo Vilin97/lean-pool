@@ -5,8 +5,9 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbedding
-public import LeanPool.HadwigerNelsonBounds.IsbellColoring
+public import LeanPool.HadwigerNelsonBounds.PartsPlaneGeometry
+import LeanPool.HadwigerNelsonBounds.IsbellColoring
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbedding
 
 /-!
 # The Parts spindle and the known bounds

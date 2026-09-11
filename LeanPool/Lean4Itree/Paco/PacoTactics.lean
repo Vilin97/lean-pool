@@ -9,13 +9,15 @@ public meta import Lean.Meta.ArgsPacker
 
 public meta import Lean.Meta.Tactic.Cleanup
 
-public meta import Lean.Meta.Tactic.Rewrite
 
 public meta import Lean.Meta.Tactic.Delta
 
-public import Lean.Meta
-public import Lean.Elab
-public import LeanPool.Lean4Itree.Paco.PacoDefs
+public meta import Lean.Elab.Tactic.Basic
+public meta import Lean.Meta.Tactic.Apply
+import Lean.Exception
+import Lean.Meta.ArgsPacker.Basic
+meta import Lean.Meta.Tactic.Rewrite
+import LeanPool.Lean4Itree.Paco.PacoDefs
 
 /-!
 # Parameterized-coinduction tactics

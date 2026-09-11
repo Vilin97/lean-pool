@@ -7,6 +7,7 @@ module
 
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Reconstructing functions from a model of the graph axioms (Craig Layer 3, Unit 5b)
 

@@ -6,6 +6,8 @@ Authors: Shuhao Song
 module
 
 public import LeanPool.SetTheory.ElementaryEmbedding
+import Mathlib.Tactic.FinCases
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # The Kunen inconsistency theorem

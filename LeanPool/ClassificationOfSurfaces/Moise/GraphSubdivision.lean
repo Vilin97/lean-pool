@@ -6,6 +6,7 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
+import Mathlib.Analysis.Normed.Affine.AddTorsor
 
 /-!
 # Finite line-arrangement subdivisions of plane graphs

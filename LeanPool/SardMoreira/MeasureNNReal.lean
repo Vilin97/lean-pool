@@ -5,8 +5,8 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import LeanPool.SardMoreira.MeasureComap
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.SardMoreira.MeasureComap
 
 /-!
 # LeanPool.SardMoreira.MeasureNNReal

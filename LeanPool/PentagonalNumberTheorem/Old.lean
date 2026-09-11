@@ -5,32 +5,12 @@ Authors: Weiyi Wang
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 public import Mathlib.Algebra.Ring.NegOnePow
 public import Mathlib.Combinatorics.Enumerative.Partition.Basic
-public import Mathlib.Data.Set.Card
-public import Mathlib.Data.List.Basic
-public import Mathlib.Data.List.Forall2
-public import Mathlib.Data.List.Range
-public import Mathlib.Data.List.Sort
-public import Mathlib.Data.PNat.Interval
-public import Mathlib.RingTheory.PowerSeries.Basic
-public import Mathlib.RingTheory.PowerSeries.WellKnown
 public import Mathlib.RingTheory.PowerSeries.PiTopology
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Zify
-public import Mathlib.Tactic.Lift
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.Measurability
-public import Mathlib.Tactic.Abel
+import Mathlib.Data.PNat.Interval
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 

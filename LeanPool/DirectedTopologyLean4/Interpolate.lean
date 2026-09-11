@@ -5,8 +5,8 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import LeanPool.DirectedTopologyLean4.Dipath
-public import LeanPool.DirectedTopologyLean4.DTop
+public import LeanPool.DirectedTopologyLean4.DirectedUnitInterval
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # LeanPool.DirectedTopologyLean4.Interpolate

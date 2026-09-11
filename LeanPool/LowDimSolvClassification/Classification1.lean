@@ -5,17 +5,15 @@ Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
 module
 
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.LinearAlgebra.LinearIndependent.Basic
-public import Mathlib.LinearAlgebra.Dimension.DivisionRing
 public import Mathlib.LinearAlgebra.Dimension.Finrank
-public import Mathlib.LinearAlgebra.Dimension.Free
-public import Mathlib.Algebra.Lie.Basic
-public import Mathlib.Algebra.Lie.Abelian
 public import Mathlib.Algebra.Lie.Solvable
-public import Mathlib.Algebra.Field.Defs
-public import LeanPool.LowDimSolvClassification.GeneralResults
-public import LeanPool.LowDimSolvClassification.InstancesLowDim
+import LeanPool.LowDimSolvClassification.GeneralResults
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.GroupTheory.GroupAction.Ring
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.LowDimSolvClassification.Classification1

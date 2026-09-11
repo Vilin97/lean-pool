@@ -7,7 +7,10 @@ module
 
 public import LeanPool.ThreeGap.EuclideanRecords
 public import LeanPool.ThreeGap.EuclideanNN
-public import LeanPool.ThreeGap.EuclideanGrowthFour
+import LeanPool.ThreeGap.EuclideanDefect
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import LeanPool.ThreeGap.EuclideanGrowthFour
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The sharp Euclidean five-distance theorem `g₂ ≤ 5`

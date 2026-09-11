@@ -6,8 +6,9 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 module
 
 public import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
-public import LeanPool.DirectedTopologyLean4.Fraction
-public import LeanPool.DirectedTopologyLean4.FractionEqualities
+import LeanPool.DirectedTopologyLean4.FractionEqualities
+import LeanPool.DirectedTopologyLean4.UnitIntervalAux
+import Mathlib.CategoryTheory.Category.Init
 
 /-! ### General -/
 

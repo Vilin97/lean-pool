@@ -9,6 +9,8 @@ public import LeanPool.OSforGFF.Bochner.FejerPD
 public import LeanPool.OSforGFF.Bochner.Main
 public import LeanPool.OSforGFF.Bochner.PositiveDefinite
 public import LeanPool.OSforGFF.Bochner.Sazonov
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # `LeanPool.OSforGFF.Bochner` index

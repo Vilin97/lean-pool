@@ -16,18 +16,10 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 module
 
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Integral.MeanInequalities
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum.BigOperators
-public import Mathlib.Tactic.NormNum.NatFactorial
-public import Mathlib.Tactic.NormNum.Parity
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Poincare -/
 

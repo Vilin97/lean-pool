@@ -5,14 +5,19 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
-public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
+import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Derivative
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 
 /-!

@@ -6,7 +6,6 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
-public import Mathlib.Logic.Encodable.Basic
 
 /-!
 # Lω₁ω Syntax — compatibility facade over the fixed-carrier syntax

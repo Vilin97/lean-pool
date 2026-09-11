@@ -7,6 +7,10 @@ module
 
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData10
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData11
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Bounded coverage-certificate computation facts -/
 

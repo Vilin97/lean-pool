@@ -5,7 +5,7 @@ Authors: Alex J. Best
 -/
 module
 
-public import Mathlib.Tactic.Basic
+import Mathlib.Tactic.Lemma
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes

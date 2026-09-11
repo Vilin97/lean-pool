@@ -5,12 +5,10 @@ Authors: Humiliati
 -/
 module
 
-public import LeanPool.Sundogcert.SATReductionForward
-public import LeanPool.Sundogcert.SATReductionReverse
 public import LeanPool.Sundogcert.SATReduction
 public import LeanPool.Sundogcert.ThreeDMReindex
-public import LeanPool.Sundogcert.MatchingNPHard
-public import LeanPool.Sundogcert.DecodingNPHard
+import LeanPool.Sundogcert.SATReductionForward
+import LeanPool.Sundogcert.SATReductionReverse
 
 /-!
   Sundogcert/SATReductionMain.lean — MILESTONE 9 (CAPSTONE) of the `3SAT ≤ 3DM` marathon: the

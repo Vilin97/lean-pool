@@ -6,6 +6,7 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
 
 /-!
 # Finite PL models for intrinsic graph replacements

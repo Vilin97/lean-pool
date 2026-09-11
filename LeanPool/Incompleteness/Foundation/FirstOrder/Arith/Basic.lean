@@ -5,7 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Order.Le
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Eq
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # Basic -/
 

@@ -6,9 +6,7 @@ Authors: Shangtong Zhang
 module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.MeasureTheory.MeasurableSpace.Defs
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Probability.Kernel.Defs
 

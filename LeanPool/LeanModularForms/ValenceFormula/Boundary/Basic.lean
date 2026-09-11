@@ -5,8 +5,8 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
 public import LeanPool.LeanModularForms.ValenceFormula.Definitions
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Fundamental Domain Boundary – Basic Definitions

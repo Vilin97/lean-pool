@@ -21,6 +21,10 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData12
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData13
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData14
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData15
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Exhaustive fixed-branch coverage-certificate manifest -/
 

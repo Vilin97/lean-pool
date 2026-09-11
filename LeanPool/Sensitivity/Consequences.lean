@@ -5,10 +5,10 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.Sensitivity.Defs
-public import LeanPool.Sensitivity.Basic
 public import LeanPool.Sensitivity.Multilinear
-public import LeanPool.Sensitivity.Main
+import LeanPool.Sensitivity.Main
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Consequences of the Sensitivity Theorem

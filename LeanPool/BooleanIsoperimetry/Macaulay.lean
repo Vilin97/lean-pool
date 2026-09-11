@@ -6,6 +6,15 @@ Authors: Alexey Milovanov
 module
 
 public import LeanPool.BooleanIsoperimetry.Cascade
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Algebra.Group.Action.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Macaulay increment arithmetic

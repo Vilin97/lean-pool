@@ -8,6 +8,9 @@ module
 public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
 public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
 public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Winding Number Weights at Elliptic Points

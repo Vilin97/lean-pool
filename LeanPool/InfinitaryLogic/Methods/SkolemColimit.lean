@@ -5,7 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.ModelTheory.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 /-!
 # Sequential colimits
 

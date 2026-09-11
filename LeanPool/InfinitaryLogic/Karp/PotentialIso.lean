@@ -6,7 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Scott.BackAndForth
-public import Mathlib.SetTheory.Ordinal.Family
+import Mathlib.SetTheory.Ordinal.Family
 
 /-!
 # Potential Isomorphism

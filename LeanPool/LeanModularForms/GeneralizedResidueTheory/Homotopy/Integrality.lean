@@ -6,7 +6,11 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-public import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Winding Number Integrality

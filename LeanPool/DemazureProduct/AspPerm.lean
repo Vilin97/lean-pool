@@ -5,11 +5,16 @@ Authors: Nathan Pflueger
 -/
 module
 
-public import LeanPool.DemazureProduct.Utils
 public import LeanPool.DemazureProduct.SlipFace
-public import Mathlib.Data.Int.LeastGreatest
 public import Mathlib.Data.Set.Card
-public import Mathlib.Tactic.Ring
+import LeanPool.DemazureProduct.Utils
+import Mathlib.Data.Int.LeastGreatest
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Almost-sign-preserving permutations

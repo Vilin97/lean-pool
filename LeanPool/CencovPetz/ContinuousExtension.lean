@@ -6,6 +6,11 @@ Authors: Adam Benenson
 module
 
 public import LeanPool.CencovPetz.SimplexTopology
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Metrizable.Uniformity
 
 
 /-!

@@ -6,9 +6,9 @@ Authors: Judith Ludwig, Christian Merten
 module
 
 public import LeanPool.BruhatTits.Cartan.Existence
-public import LeanPool.BruhatTits.Utils.Misc
-public import Mathlib.Data.Fin.Tuple.Sort
 public import Mathlib.GroupTheory.DoubleCoset
+import LeanPool.BruhatTits.Utils.ValuationRings
+import Mathlib.Data.Fin.Tuple.Sort
 
 /-!
 # Uniqueness of the Cartan decomposition

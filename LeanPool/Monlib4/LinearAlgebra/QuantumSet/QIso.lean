@@ -6,6 +6,10 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.QuantumSet.QIso

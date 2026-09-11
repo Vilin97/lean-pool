@@ -6,6 +6,7 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 module
 
 public import LeanPool.DirectedTopologyLean4.DirectedHomotopy
+public import LeanPool.DirectedTopologyLean4.DTop
 
 /-!
 # LeanPool.DirectedTopologyLean4.DihomotopyFlip

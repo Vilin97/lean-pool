@@ -7,6 +7,9 @@ module
 
 public import LeanPool.Erdos137.SpliceFiniteness
 public import LeanPool.Erdos137.SquarefreeCapacity
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: the combined four-range splice

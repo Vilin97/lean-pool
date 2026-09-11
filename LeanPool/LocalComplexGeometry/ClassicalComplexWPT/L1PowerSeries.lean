@@ -6,7 +6,8 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
-public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.Analytic.Basic
+import Mathlib.Analysis.Analytic.Constructions
 
 /-!
 # Analytic evaluation of an `ℓ¹` coefficient sequence

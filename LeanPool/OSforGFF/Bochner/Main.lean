@@ -8,17 +8,17 @@ module
 import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
 
 public import LeanPool.OSforGFF.Bochner.PositiveDefinite
-public import LeanPool.OSforGFF.Bochner.FejerPD
-public import Mathlib.Analysis.Fourier.FourierTransform
-public import Mathlib.Analysis.Fourier.Inversion
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-public import Mathlib.MeasureTheory.Integral.DominatedConvergence
-public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-public import Mathlib.MeasureTheory.Measure.Prokhorov
-public import Mathlib.MeasureTheory.Measure.TightNormed
-public import Mathlib.MeasureTheory.Measure.IntegralCharFun
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Measure.Tight
+import LeanPool.OSforGFF.Bochner.FejerPD
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Fourier.Inversion
+import Mathlib.MeasureTheory.Measure.IntegralCharFun
+import Mathlib.MeasureTheory.Measure.Prokhorov
+import Mathlib.MeasureTheory.Measure.TightNormed
 
 /-!
 # Bochner's Theorem

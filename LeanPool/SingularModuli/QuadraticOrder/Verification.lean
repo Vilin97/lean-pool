@@ -5,7 +5,11 @@ Authors: Caleb L. Geiger
 -/
 module
 
-public import LeanPool.SingularModuli.QuadraticOrder.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quadratic-order verification checks

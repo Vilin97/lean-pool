@@ -6,12 +6,10 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.SpectralPositivity.Matrix.NonnegPower
-public import Mathlib.Analysis.Normed.Algebra.MatrixExponential
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.Module
-public import Mathlib.Topology.Algebra.InfiniteSum.Order
-public import Mathlib.Topology.Order.OrderClosed
-public import Mathlib.Analysis.SpecialFunctions.Exponential
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.Exponential
 
 /-!
 # Metzler Matrix Exponential Positivity

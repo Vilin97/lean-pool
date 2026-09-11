@@ -5,12 +5,11 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
-public import LeanPool.Monlib4.Preq.RCLikeLe
-public import LeanPool.Monlib4.LinearAlgebra.IsReal
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
 public import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
+import LeanPool.Monlib4.Preq.Dite
+import LeanPool.Monlib4.Preq.Ites
+import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 

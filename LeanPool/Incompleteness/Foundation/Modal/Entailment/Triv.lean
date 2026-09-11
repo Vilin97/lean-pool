@@ -5,8 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KT
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KTc
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
 
 /-! # Triv -/
 

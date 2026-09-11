@@ -5,9 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
 
 /-!
 # Weak solutions (`abel-weak-solutions`, D1 / Forster §20.1, §20.1's Lemma-20.1 multiplicativity)

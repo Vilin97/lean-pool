@@ -5,8 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaRectangle
-public import Mathlib.Order.Interval.Set.Infinite
+public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquation
+import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Zero Free Rectangles

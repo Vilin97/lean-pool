@@ -5,8 +5,11 @@ Authors: Óscar Álvarez Sánchez
 -/
 module
 
-public import LeanPool.DemazureOperatorsLean.Demazure
 public import LeanPool.DemazureOperatorsLean.DemazureAux
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.DemazureOperatorsLean.DemazureAuxRelations

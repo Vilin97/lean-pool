@@ -6,8 +6,11 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Basic
-public import LeanPool.FormalLearningTheory.Data
-public import LeanPool.FormalLearningTheory.Computation
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Core Learner Types

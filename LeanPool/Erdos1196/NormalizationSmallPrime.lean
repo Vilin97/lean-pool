@@ -6,7 +6,11 @@ Authors: Math Inc
 module
 
 public import LeanPool.Erdos1196.NormalizationCore
-public import Mathlib.Order.Filter.AtTopBot.Field
+import LeanPool.Erdos1196.PreliminariesTailAux
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Analysis.SumIntegralComparisons
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Small-prime bounds for the normalization constant

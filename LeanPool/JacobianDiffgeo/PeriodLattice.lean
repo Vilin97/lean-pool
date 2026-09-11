@@ -12,6 +12,9 @@ public import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
 public import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
 public import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
 public import LeanPool.JacobianDiffgeo.PeriodLattice.FullRank
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # period-lattice-rank: the period lattice is discrete and spans (Forster §21.1–21.4)

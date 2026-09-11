@@ -6,9 +6,9 @@ Authors: Michael Stoll
 module
 
 public import Mathlib.Algebra.GCDMonoid.Basic
-public import Mathlib.Algebra.Order.Ring.Star
 public import Mathlib.Algebra.Polynomial.Expand
-public import Mathlib.Tactic.LinearCombination
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic.LinearCombination
 
 /-!
 # Even polynomials as polynomials in `X² + c`

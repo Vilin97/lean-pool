@@ -5,7 +5,6 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 public import Mathlib.ModelTheory.Basic
 /-!
 # Coding Space for Countable Structures

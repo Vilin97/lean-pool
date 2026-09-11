@@ -5,9 +5,10 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Topology.ShrinkingLemma
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-public import Mathlib.Topology.GDelta.MetrizableSpace
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Topology.ShrinkingLemma
 
 /-!
 # Finite smooth partitions of unity on planar open sets (`Jacobian/Dbar/PlanarPoU.lean`)

@@ -5,21 +5,10 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.Fourier.FourierTransform
-public import Mathlib.Analysis.SpecialFunctions.Bernstein
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.Data.Nat.Factorial.DoubleFactorial
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.Data.Complex.Basic
 
-public import LeanPool.OSforGFF.Spacetime.Basic
 public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
 public import LeanPool.OSforGFF.Covariance.Position
-public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-public import LeanPool.OSforGFF.Covariance.Momentum
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # Real Covariance Form and Square Root Propagator Embedding

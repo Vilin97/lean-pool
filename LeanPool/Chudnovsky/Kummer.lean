@@ -6,9 +6,12 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.PicardFuchs
-public import LeanPool.Chudnovsky.Estimates
-public import LeanPool.Chudnovsky.Ramanujan
-public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.Clausen
+import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.Ramanujan
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.NumberTheory.ModularForms.LevelOne.DimensionFormula
 
 /-!
 # Kummer's solution of the Picard–Fuchs equation

@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 /-!
 # The Malitz root gate (issue #15)
 

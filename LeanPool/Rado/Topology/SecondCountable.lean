@@ -6,8 +6,7 @@ Authors: Rado Kirov
 module
 
 public import Mathlib.Topology.Bases
-public import Mathlib.Topology.Compactness.Compact
-public import Mathlib.Topology.LocalAtTarget
+import Mathlib.Topology.LocalAtTarget
 
 /-!
 # Second-countability helpers

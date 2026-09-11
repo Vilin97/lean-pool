@@ -5,10 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Formula
 public import LeanPool.Incompleteness.Foundation.Modal.Substitution
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Lukasiewicz
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # Basic -/
 

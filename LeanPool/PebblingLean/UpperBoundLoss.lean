@@ -5,9 +5,10 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Analysis.SpecificLimits.Basic
-public import Mathlib.Analysis.SpecialFunctions.Exp
 public import LeanPool.PebblingLean.UpperBoundRecurrence
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Loss bookkeeping for the recursive upper bound

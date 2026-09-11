@@ -6,6 +6,11 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 module
 
 public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Curve
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The affine Fermat chart and the Hessian addition formula

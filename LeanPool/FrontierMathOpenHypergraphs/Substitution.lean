@@ -5,18 +5,14 @@ Authors: Dean Cureton
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Data.Fin.Basic
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Fintype.Basic
-public import Mathlib.Data.Multiset.Basic
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
 public import LeanPool.FrontierMathOpenHypergraphs.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Support gadgets and the substitution theorem

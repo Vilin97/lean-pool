@@ -5,9 +5,12 @@ Authors: Math Inc
 -/
 module
 
-public import LeanPool.Erdos1196.Markov
-public import LeanPool.Erdos1196.HitMass
-public import LeanPool.Erdos1196.PrimitiveWeight
+public import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.HitMass
+import LeanPool.Erdos1196.Markov
+import LeanPool.Erdos1196.PrimitiveWeight
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Main theorem for primitive sets above `x`

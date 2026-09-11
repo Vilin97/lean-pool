@@ -5,9 +5,10 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.DenseResonantObstruction
-public import LeanPool.PoincareThreeBody.AnalyticDensity
-public import LeanPool.PoincareThreeBody.DisturbingAverageAnalytic
+public import LeanPool.PoincareThreeBody.DelaunaySection
+import LeanPool.PoincareThreeBody.AnalyticDensity
+import LeanPool.PoincareThreeBody.DenseResonantObstruction
+import LeanPool.PoincareThreeBody.DisturbingAverageAnalytic
 
 /-!
 # The classical Poincaré set

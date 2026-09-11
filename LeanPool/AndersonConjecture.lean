@@ -13,6 +13,10 @@ public import LeanPool.AndersonConjecture.CompleteDomain
 public import LeanPool.AndersonConjecture.Jensen
 public import LeanPool.AndersonConjecture.Main
 public import LeanPool.AndersonConjecture.QuasiCompleteRing
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Inv
 
 /-!
 # The Anderson Conjecture: A Weakly Quasi-Complete Ring Need Not Be Quasi-Complete

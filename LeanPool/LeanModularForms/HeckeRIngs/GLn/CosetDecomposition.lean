@@ -6,6 +6,7 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
+import Mathlib.Analysis.Normed.Ring.Lemmas
 
 /-!
 # Left Coset Decomposition for GL_n Hecke Ring

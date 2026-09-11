@@ -5,7 +5,17 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.VMLInputDerive
+public import LeanPool.Clawristotle.Defs
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.Section3
+import LeanPool.Clawristotle.Section3Helpers
+import LeanPool.Clawristotle.Section4
+import LeanPool.Clawristotle.Section5
+import LeanPool.Clawristotle.Section7
+import LeanPool.Clawristotle.VMLInputDerive
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Abstract Theorem 4.2: Steady State Implies Maxwellian

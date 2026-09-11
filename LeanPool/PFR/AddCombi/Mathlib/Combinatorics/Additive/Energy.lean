@@ -5,13 +5,16 @@ Authors: Yaël Dillies, Ella Yu
 -/
 
 module
-public import LeanPool.PFR.AddCombi.Mathlib.Data.Finset.Density
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 public import Mathlib.Combinatorics.Additive.Convolution
 
-public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
+public import Mathlib.Data.Finset.Density
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Additive energy

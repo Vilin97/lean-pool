@@ -10,10 +10,8 @@ Blueprint unit: local-multiplicity (CC4). Chart bridge: `inChartAt` and transiti
 module
 
 public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-public import Mathlib.Analysis.Calculus.Deriv.Comp
 public import Mathlib.Order.Filter.EventuallyConst
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
 
 /-!
 # Chart bridge for local multiplicity

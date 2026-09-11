@@ -7,7 +7,11 @@ module
 
 public import LeanPool.ThreeGap.ChevallierGapBound
 public import Mathlib.Order.Interval.Finset.Nat
-public import Mathlib.Data.Finset.Max
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Chevallier's Lemma: the gap count is `≤ n − m + 1` (Chevallier 1996, Lemma 1.3)

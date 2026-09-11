@@ -6,8 +6,11 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.Rado.Surface.Barriers
-public import LeanPool.Rado.Surface.Germs
-public import LeanPool.Rado.Topology.PoincareVolterra
+import LeanPool.Rado.Surface.Germs
+import LeanPool.Rado.Topology.PoincareVolterra
+import LeanPool.Rado.Topology.SecondCountable
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Topology.LocalAtTarget
 
 /-!
 # Assembly: Radó's theorem

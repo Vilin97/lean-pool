@@ -5,12 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Complex.HasPrimitives
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Normed.Module.Connected
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.Topology.Homotopy.Path
-public import Mathlib.Analysis.Convex.Segment
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.Complex.HasPrimitives
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.Topology.Algebra.Module.Cardinality
 
 /-!
 # Planar atoms for paths-and-integrals (CC6)

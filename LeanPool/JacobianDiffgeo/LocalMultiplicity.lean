@@ -11,6 +11,7 @@ public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
 public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
 public import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
 public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # local-multiplicity (CC4): local multiplicity of holomorphic maps (namespace `RS`)

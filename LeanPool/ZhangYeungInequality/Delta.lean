@@ -5,7 +5,7 @@ Authors: Christopher Boone
 -/
 module
 
-public import LeanPool.ZhangYeungInequality.Prelude
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 
 /-!
 # The Zhang-Yeung delta quantity

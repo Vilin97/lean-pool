@@ -6,7 +6,8 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.DisturbingFunction
-public import LeanPool.PoincareThreeBody.ValidatedQuadrature
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.TrapezoidalRule
+import LeanPool.PoincareThreeBody.ValidatedQuadrature
 
 /-!
 # Finite certificates for nonconstant resonant averages

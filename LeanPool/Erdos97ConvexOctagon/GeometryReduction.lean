@@ -7,9 +7,9 @@ module
 
 public import LeanPool.Erdos97ConvexOctagon.Basic
 public import LeanPool.Erdos97ConvexOctagon.Incidence
-public import Mathlib.Analysis.Convex.Between
 public import Mathlib.Analysis.Convex.Independent
-public import Mathlib.Geometry.Euclidean.PerpBisector
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+import Mathlib.Geometry.Euclidean.PerpBisector
 
 /-! # Erdős 97 convex-octagon formalization: Geometry Reduction -/
 

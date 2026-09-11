@@ -6,6 +6,8 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.Preq.Finset
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Matrix

@@ -16,6 +16,8 @@ module
 
 public import LeanPool.MatchingLogic.EntryIII.WitnessPush
 public import LeanPool.MatchingLogic.EntryIII.Witnessed
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.FreshWitnessElim

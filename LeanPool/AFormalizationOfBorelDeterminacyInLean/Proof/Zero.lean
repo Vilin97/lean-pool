@@ -9,6 +9,11 @@ public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Player zero proof index

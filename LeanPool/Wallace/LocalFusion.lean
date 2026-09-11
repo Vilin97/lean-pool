@@ -6,14 +6,14 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 module
 
 public import LeanPool.Wallace.ConcreteLocalSetup
-public import LeanPool.Wallace.BlockLimit
 public import LeanPool.Wallace.GlobalAssembly
 public import LeanPool.Wallace.FusionSchedule
-public import LeanPool.Wallace.FusionStage
 public import LeanPool.Wallace.FusionLimit
-public import LeanPool.Wallace.InitialCharacter
-public import Mathlib.Data.Finset.Lattice.Basic
-public import Mathlib.Data.Finset.SDiff
+import LeanPool.Wallace.BlockLimit
+import LeanPool.Wallace.FusionStage
+import LeanPool.Wallace.InitialCharacter
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # A local character-fusion core

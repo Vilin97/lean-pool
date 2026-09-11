@@ -6,8 +6,11 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.CodeStateExactness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateLookup
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
+public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
+public import LeanPool.Erdos97ConvexOctagon.PairStateExactness
+public import LeanPool.Erdos97ConvexOctagon.Relabelling
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
 
 /-! # Semantic consequences of compact coverage certificates -/
 

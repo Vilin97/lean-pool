@@ -6,7 +6,6 @@ Authors: QudeLeap Team
 
 module
 
-public import Mathlib.Data.Nat.Notation
 
 /-!
 # QuantumAlg initialization

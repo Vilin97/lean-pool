@@ -5,9 +5,19 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.CoefficientLimitRigidity
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ProductAnnulusLocalization
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.CoefficientLimitRigidity
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ImportedAnalyticInputs
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.ProductAnnulusLocalization
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # OrthogonalCoercivity -/
 

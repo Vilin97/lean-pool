@@ -5,7 +5,9 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arithmetization.Definability.BoundedBoldface
+public import LeanPool.Incompleteness.Arithmetization.Definability.Boldface
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
 
 /-! # Absoluteness -/
 

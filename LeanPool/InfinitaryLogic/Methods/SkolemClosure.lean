@@ -5,8 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.SkolemColimit
-public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
 /-!
 # Staged set-closure (generic core for the Skolem-closed family `Γ*`)
 

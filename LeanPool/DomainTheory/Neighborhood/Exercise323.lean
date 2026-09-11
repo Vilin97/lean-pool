@@ -7,6 +7,13 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise315
 public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 3.23 (Scott 1981, PRG-19, §3) — the category of domains is cartesian

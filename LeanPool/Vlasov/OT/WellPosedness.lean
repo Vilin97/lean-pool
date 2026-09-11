@@ -6,6 +6,11 @@ Authors: Joseph K. Miller
 module
 
 public import LeanPool.Vlasov.OT.CharacteristicFlow
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Well-posedness ladder for the Vlasov equation + Dobrushin stability

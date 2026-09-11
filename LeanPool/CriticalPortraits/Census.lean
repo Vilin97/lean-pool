@@ -5,10 +5,16 @@ Authors: Keston Aquino-Michaels
 -/
 module
 
-public import LeanPool.CriticalPortraits.Surjectivity
-public import LeanPool.CriticalPortraits.Injectivity
-public import LeanPool.CriticalPortraits.Forward
-public import LeanPool.CriticalPortraits.Denominator
+public import LeanPool.CriticalPortraits.Portraits
+import LeanPool.CriticalPortraits.Denominator
+import LeanPool.CriticalPortraits.Surjectivity
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The headline census theorem: `#{portraits} = C(N, d−1) / d` for all `d`

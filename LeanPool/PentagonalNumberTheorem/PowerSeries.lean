@@ -6,9 +6,9 @@ Authors: Weiyi Wang
 module
 
 public import LeanPool.PentagonalNumberTheorem.Generic
-public import Mathlib.RingTheory.PowerSeries.Basic
-public import Mathlib.RingTheory.PowerSeries.Order
 public import Mathlib.RingTheory.PowerSeries.PiTopology
+public import Mathlib.Algebra.Ring.NegOnePow
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 

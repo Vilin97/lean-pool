@@ -5,22 +5,11 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.Analytic.Basic
-public import Mathlib.Analysis.Analytic.Constructions
-public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-public import Mathlib.LinearAlgebra.BilinearMap
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
 
-public import LeanPool.OSforGFF.Spacetime.Basic
 public import LeanPool.OSforGFF.OS.Axioms
 public import LeanPool.OSforGFF.Measure.Construct
-public import LeanPool.OSforGFF.Spacetime.Euclidean
-public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-public import LeanPool.OSforGFF.Schwinger.Defs
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Gaussian Free Field Assembly

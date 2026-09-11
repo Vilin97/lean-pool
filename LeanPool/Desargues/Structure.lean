@@ -6,6 +6,13 @@ Authors: Abdullah Uyu
 module
 
 public import LeanPool.Desargues.Basic
+public import Mathlib.Data.Set.Restrict
+public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.Attr.Core
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.ApplyAt
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-!
 # Subspaces and subgeometries

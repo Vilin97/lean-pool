@@ -5,11 +5,10 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import LeanPool.SpectralPositivity.Operator.JentzschProof
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.MeasureTheory.Measure.Prod
-public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kernel Positivity-Improving Criterion

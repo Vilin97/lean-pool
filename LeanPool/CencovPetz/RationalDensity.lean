@@ -7,8 +7,11 @@ module
 
 public import LeanPool.CencovPetz.RationalPoint
 public import LeanPool.CencovPetz.SimplexTopology
-public import Mathlib.Analysis.SpecificLimits.Basic
-public import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
 
 
 /-!

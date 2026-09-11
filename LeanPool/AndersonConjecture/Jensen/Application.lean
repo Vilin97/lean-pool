@@ -5,8 +5,17 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.Construction.Construction
-public import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+public import LeanPool.AndersonConjecture.Jensen.Defs
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Regular.RegularSequence
+import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+import LeanPool.AndersonConjecture.Jensen.Construction.Construction
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Cardinality
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Application to T = C[[x,y,z]]/(x^2 - yz)

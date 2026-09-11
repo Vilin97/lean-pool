@@ -5,8 +5,21 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.Jensen
-public import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
+public import LeanPool.AndersonConjecture.Basic
+public import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+public import LeanPool.AndersonConjecture.Jensen.Defs
+public import Mathlib.RingTheory.AdicCompletion.Functoriality
+import LeanPool.AndersonConjecture.AdicLocal
+import LeanPool.AndersonConjecture.Jensen.Jensen
+import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.KrullDimension.Regular
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Main Theorem: WQC Does Not Imply QC

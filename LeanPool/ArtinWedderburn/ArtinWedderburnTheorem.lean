@@ -5,16 +5,17 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.RingTheory.Artinian.Ring
-public import Mathlib.RingTheory.SimpleRing.Basic
-public import Mathlib.Algebra.Ring.Idempotent
 public import LeanPool.ArtinWedderburn.PrimeRing
-public import LeanPool.ArtinWedderburn.CornerRing
-public import LeanPool.ArtinWedderburn.MatrixUnits
-public import LeanPool.ArtinWedderburn.Idempotents
-public import LeanPool.ArtinWedderburn.NiceIdeals
-public import LeanPool.ArtinWedderburn.Auxiliary
-public import Mathlib.RingTheory.SimpleModule.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.RingTheory.Artinian.Defs
+import LeanPool.ArtinWedderburn.MatrixUnits
+import LeanPool.ArtinWedderburn.NiceIdeals
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.RingTheory.SimpleRing.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # The Artin–Wedderburn theorem

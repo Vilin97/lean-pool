@@ -5,10 +5,10 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.RingTheory.AdicCompletion.RingHom
 public import Mathlib.RingTheory.Ideal.Height
 public import Mathlib.RingTheory.Regular.RegularSequence
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+import Mathlib.RingTheory.AdicCompletion.RingHom
 
 /-!
 # Heitmann's Proposition 1

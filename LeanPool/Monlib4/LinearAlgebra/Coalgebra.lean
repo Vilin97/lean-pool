@@ -8,6 +8,7 @@ module
 public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
 public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
 public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Coalgebra

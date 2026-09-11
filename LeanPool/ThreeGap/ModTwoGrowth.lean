@@ -6,9 +6,9 @@ Authors: Vico Bonfioli
 module
 
 public import LeanPool.ThreeGap.SimultaneousApprox
-public import Mathlib.Analysis.Normed.Module.Basic
-public import Mathlib.Data.Fintype.Pigeonhole
-public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The any-norm growth inequality via the mod-2 pigeonhole (Lagarias II, Theorem 6)

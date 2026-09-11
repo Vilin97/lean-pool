@@ -6,7 +6,6 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 module
 
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-public import Mathlib.Combinatorics.Quiver.Arborescence
 public import LeanPool.FiniteGraphFundamentalGroup.Realization
 
 /-!

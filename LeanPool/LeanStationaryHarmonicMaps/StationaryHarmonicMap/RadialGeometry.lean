@@ -5,8 +5,9 @@ Authors: Wei Wang
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Calculus
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Radial Geometry

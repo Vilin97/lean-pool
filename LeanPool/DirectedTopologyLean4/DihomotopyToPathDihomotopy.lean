@@ -5,8 +5,8 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 module
 
-public import LeanPool.DirectedTopologyLean4.FundamentalCategory
 public import LeanPool.DirectedTopologyLean4.DihomotopyFlip
+public import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
 
 /-!
 # LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy

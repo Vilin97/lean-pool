@@ -7,6 +7,7 @@ module
 
 public import LeanPool.Incompleteness.Foundation.Modal.LogicSymbol
 public import LeanPool.Incompleteness.Foundation.Modal.Geachean
+import Mathlib.Tactic.Bound.Init
 
 /-! # Axioms -/
 

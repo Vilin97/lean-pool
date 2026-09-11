@@ -6,6 +6,7 @@ Authors: Shangtong Zhang
 module
 
 public import LeanPool.RlTheoryInLean.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # Group

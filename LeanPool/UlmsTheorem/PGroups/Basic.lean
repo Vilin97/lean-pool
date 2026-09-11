@@ -5,7 +5,8 @@ Authors: Elan Roth
 -/
 module
 
-public import LeanPool.UlmsTheorem.Basic
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # Basic shared setup for reduced abelian p-groups

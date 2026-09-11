@@ -5,16 +5,17 @@ Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
 module
 
-public import Mathlib.Algebra.Field.Basic
-public import Mathlib.Data.Finite.Prod
-public import Mathlib.Data.Nat.Basic
-public import Mathlib.Data.Set.Finite.Range
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Set.Operations
+import Mathlib.Data.Finite.Prod
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # LeanPool.FriezePatterns.Chapter1

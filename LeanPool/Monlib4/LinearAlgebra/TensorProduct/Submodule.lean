@@ -5,13 +5,15 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
-public import Mathlib.LinearAlgebra.TensorProduct.Finiteness
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
-public import Mathlib.LinearAlgebra.TensorProduct.RightExactness
 public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
+public import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.FieldTheory.Finiteness
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule

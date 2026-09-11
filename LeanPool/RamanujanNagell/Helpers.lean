@@ -6,19 +6,11 @@ Authors: Barinder S. Banwait
 module
 
 public import Mathlib.Algebra.QuadraticAlgebra.Basic
-public import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
-public import Mathlib.Algebra.Order.Round
 public import Mathlib.Data.Rat.Floor
-public import Mathlib.RingTheory.PrincipalIdealDomain
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
-public import Mathlib.NumberTheory.Padics.PadicVal.Basic
-public import Mathlib.NumberTheory.Multiplicity
-public import Mathlib.RingTheory.Polynomial.Basic
-public import Mathlib.RingTheory.Int.Basic
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Polyrith
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Algebraic infrastructure for `R = QuadraticAlgebra ℤ (-2) 1 = ℤ[(1+√-7)/2]`

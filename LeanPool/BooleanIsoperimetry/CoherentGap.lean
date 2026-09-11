@@ -5,8 +5,10 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Fin
 public import Mathlib.Data.Real.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Basic
+import Mathlib.Algebra.BigOperators.Fin
 
 /-!
 # Coherent-gap certificates

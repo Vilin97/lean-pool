@@ -5,7 +5,19 @@ Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
 module
 
-public import LeanPool.BrauerGroupNew.FrobeniusTheorem
+public import LeanPool.BrauerGroupNew.BrauerGroup
+public import Mathlib.Algebra.Azumaya.Basic
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Quaternion
+public import Mathlib.Analysis.RCLike.Lemmas
+public import Mathlib.LinearAlgebra.FreeModule.PID
+import LeanPool.BrauerGroupNew.FrobeniusTheorem
+import LeanPool.BrauerGroupNew.Wedderburn
+import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.BrauerOverR

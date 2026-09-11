@@ -6,8 +6,9 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Data.Fintype.Basic
-public import Mathlib.Tactic.FinCases
+public import Mathlib.Data.Set.Basic
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Tactic.FinCases
 
 /-!
 # Exercise 1.19 (Scott 1981, PRG-19, §1) — positive neighbourhood systems

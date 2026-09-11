@@ -5,8 +5,11 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Bridge to Mathlib Circle Integrals

@@ -5,17 +5,8 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Data.Matrix.Basic
 public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Mathlib.Analysis.Matrix.Spectrum
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.LinearAlgebra.Matrix.Diagonal
-public import Mathlib.LinearAlgebra.Matrix.Orthogonal
-public import Mathlib.LinearAlgebra.UnitaryGroup
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Frobenius Positivity

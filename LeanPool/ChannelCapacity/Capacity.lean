@@ -5,8 +5,8 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.ChannelCapacity.StrictConcavity
-public import Mathlib.Topology.Semicontinuity.Basic
+public import LeanPool.ChannelCapacity.NonDegeneracy
+import LeanPool.ChannelCapacity.StrictConcavity
 
 /-!
 # ChannelCapacity.Capacity

@@ -5,14 +5,8 @@ Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
 module
 
-public import Mathlib.Algebra.Lie.Basic
-public import Mathlib.Algebra.Lie.Abelian
-public import Mathlib.LinearAlgebra.AffineSpace.AffineMap
-public import Mathlib.Algebra.Lie.DirectSum
 public import Mathlib.LinearAlgebra.Determinant
 public import Mathlib.LinearAlgebra.Trace
-public import LeanPool.LowDimSolvClassification.Semidirect
-public import LeanPool.LowDimSolvClassification.GeneralResults
 public import LeanPool.LowDimSolvClassification.InstancesConstructions
 
 /-!

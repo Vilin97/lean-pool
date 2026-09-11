@@ -6,7 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.Fin.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Logic.Function.Defs
 
 /-!
 # Elementary lemmas about finite types

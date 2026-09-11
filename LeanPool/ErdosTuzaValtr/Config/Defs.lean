@@ -5,10 +5,7 @@ Authors: Jineon Baek
 -/
 module
 
-public import Mathlib.Data.List.Basic
-public import Mathlib.Data.Finset.Basic
-public import LeanPool.ErdosTuzaValtr.Lib.List.Default
-public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
+public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
 
 /-!
 # LeanPool.ErdosTuzaValtr.Config.Defs

@@ -6,6 +6,8 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The truncation map `α_D` and `H¹Tail(D)` (laurent-tails, design §2 D3, §4.2)

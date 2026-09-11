@@ -6,6 +6,8 @@ Authors: James Huang, Samuël Borza
 module
 
 public import LeanPool.IsTranscendentalPi.CalculusOnPoly
+import LeanPool.IsTranscendentalPi.ComplexExponential
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Niven polynomials

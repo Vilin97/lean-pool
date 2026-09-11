@@ -5,9 +5,11 @@ Authors: Christopher Boone
 -/
 module
 
-public import LeanPool.ZhangYeungInequality.Delta
-public import LeanPool.ZhangYeungInequality.Prelude
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
+import LeanPool.ZhangYeungInequality.Delta
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # Zhang-Yeung Theorem 2: a conditional information inequality

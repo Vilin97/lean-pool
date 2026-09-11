@@ -6,6 +6,10 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.AnalyticNormalization
+public import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+public import LeanPool.PoincareThreeBody.PoincareSet
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The first Poincaré coefficient-normalization cycle

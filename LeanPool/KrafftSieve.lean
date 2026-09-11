@@ -12,6 +12,10 @@ public import LeanPool.KrafftSieve.Variance
 public import LeanPool.KrafftSieve.SelbergWeights
 public import LeanPool.KrafftSieve.OptimalWeights
 public import LeanPool.KrafftSieve.MainTheorem
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 /-!
 # A Conditional Sieve Criterion for Twin Primes via Krafft Geometry

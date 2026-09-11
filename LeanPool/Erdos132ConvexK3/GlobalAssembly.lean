@@ -6,11 +6,12 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos132ConvexK3.Assembly
-public import LeanPool.Erdos132ConvexK3.TerminalColorClosure
-public import Lean.Elab.Tactic.Omega
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
+public import LeanPool.Erdos132ConvexK3.UseSite
+import LeanPool.Erdos132ConvexK3.TailClosure
+import LeanPool.Erdos132ConvexK3.TerminalColorClosure
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Global convex k = 3 assembly

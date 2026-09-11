@@ -5,7 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Hierarchy
+public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+import Mathlib.Algebra.Order.Ring.Nat
 
 /-! # Basic -/
 

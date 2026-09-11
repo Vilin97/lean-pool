@@ -6,6 +6,7 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.ComputableReal.ComputableRSeq
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
 /-!
 # The quotient field of interval-Cauchy sequences

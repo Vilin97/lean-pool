@@ -23,13 +23,14 @@ See the upstream PORT_MAP.md.
 -/
 module
 
-public import Mathlib.Analysis.CStarAlgebra.PositiveLinearMap
-public import Mathlib.Analysis.InnerProductSpace.StarOrder
-public import Mathlib.Analysis.Normed.Operator.ContinuousAlgEquiv
 public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.Topology.Order.Hom.Esakia
 public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.ValuedSpectralMeasure
+public import Mathlib.Analysis.CStarAlgebra.GelfandDuality
+import Mathlib.Analysis.CStarAlgebra.PositiveLinearMap
+import Mathlib.Analysis.InnerProductSpace.StarOrder
+import Mathlib.Analysis.Normed.Operator.ContinuousAlgEquiv
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Topology.Order.Hom.Esakia
 
 /-!
 The positive spectral measure component of the Connes rigidity formalization.

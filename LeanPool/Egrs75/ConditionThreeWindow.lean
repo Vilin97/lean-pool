@@ -5,13 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.LeafInduction
 public import LeanPool.Egrs75.DigitVector
-public import LeanPool.Egrs75.DigitAtToolkit
-public import Mathlib.Algebra.Order.Ring.GeomSum
-public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Ring.GeomSum
 
 /-!
 EGRS75 LOW-case clearing — PRIMITIVE P4: condition-(3) window producer (2026-06-08).

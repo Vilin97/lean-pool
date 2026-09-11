@@ -6,8 +6,6 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import LeanPool.LeanQuantumAlg.Core.State
 public import LeanPool.LeanQuantumAlg.Core.Tensor
 public import Mathlib.LinearAlgebra.Matrix.PosDef
 

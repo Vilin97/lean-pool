@@ -6,7 +6,8 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Data.List.Infix
+public import Mathlib.Data.Set.Basic
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Example 1.B (Scott 1981, PRG-19, §1) — binary sequences

@@ -5,7 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Egrs75.KummerValuation
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.Prime.Defs
+import LeanPool.Egrs75.KummerValuation
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 Erdős Problem #376 — first Lean target (the Kummer digit *bridge*, NOT the

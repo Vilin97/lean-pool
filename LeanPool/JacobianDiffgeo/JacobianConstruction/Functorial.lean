@@ -6,6 +6,7 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # The `→ₜ+` functoriality substrate, wrapped through the `ULift` shell (§9.4)

@@ -6,10 +6,9 @@ Authors: claytomode
 module
 
 public import Mathlib.Probability.Moments.SubGaussian
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-public import Mathlib.Analysis.Calculus.MeanValue
-public import Mathlib.Analysis.Calculus.DerivativeTest
-public import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+public import Mathlib.Probability.Distributions.Gaussian.Real
+import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+import Mathlib.Analysis.Calculus.DerivativeTest
 
 /-!
 # Gaussian tail analysis: the centered folded normal is 1-sub-Gaussian

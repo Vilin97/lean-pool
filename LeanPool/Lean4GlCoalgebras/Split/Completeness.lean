@@ -5,8 +5,16 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import LeanPool.Lean4GlCoalgebras.Split.Soundness
 public import LeanPool.Lean4GlCoalgebras.Split.Game
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+public import Mathlib.Algebra.Group.Nat.Even
+public import Mathlib.Data.Fin.Tuple.Basic
+import LeanPool.Lean4GlCoalgebras.Split.Soundness
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! ## Prover winning the GL-split game builds a GL-split proof.
 

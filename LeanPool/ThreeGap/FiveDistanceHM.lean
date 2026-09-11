@@ -5,9 +5,13 @@ Authors: Vico Bonfioli
 -/
 module
 
-public import LeanPool.ThreeGap.EuclideanGrowthFive
-public import LeanPool.ThreeGap.FiveDistance
-public import Mathlib.Geometry.Euclidean.Angle.Unoriented.TriangleInequality
+public import LeanPool.ThreeGap.SimultaneousApprox
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+import LeanPool.ThreeGap.EuclideanAngle
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import Mathlib.Geometry.Euclidean.Angle.Unoriented.TriangleInequality
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Toward the sharp Euclidean five-distance theorem via Haynes–Marklof Theorem 8

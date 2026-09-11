@@ -7,12 +7,9 @@ module
 
 public import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
 public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
-public import Mathlib.Data.Fin.VecNotation
-public import Mathlib.Data.Nat.Nth
-public import Mathlib.Data.Set.Finite.Basic
-public import Mathlib.Data.Set.Lattice
-public import Mathlib.Order.Hom.Basic
-public import Mathlib.Order.WellFounded
+public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Order.Lattice.Nat
 /-!
 # The local EM template-realization bridge
 

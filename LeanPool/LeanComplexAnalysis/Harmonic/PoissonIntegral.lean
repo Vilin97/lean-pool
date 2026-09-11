@@ -5,7 +5,10 @@ Authors: seb488, Aristotle
 -/
 module
 
-public import Mathlib.Analysis.Complex.Harmonic.Analytic
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import Mathlib.Analysis.Complex.Harmonic.Analytic
 
 /-!
 # The Poisson Integral Formula on the Unit Disc

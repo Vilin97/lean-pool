@@ -8,7 +8,10 @@ module
 import Mathlib.Probability.Distributions.Gaussian.Fernique
 import Mathlib.Probability.Independence.Integration
 public import Mathlib.Data.Real.Sign
-public import LeanPool.JohnsonLindenstraussLean.Rotation
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
 
 /-!
 # Quantized Johnson–Lindenstrauss (QJL): unbiasedness of the 1-bit estimator

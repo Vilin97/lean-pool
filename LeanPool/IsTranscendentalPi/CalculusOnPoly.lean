@@ -5,7 +5,14 @@ Authors: James Huang, Samuël Borza
 -/
 module
 
-public import LeanPool.IsTranscendentalPi.ComplexExponential
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.IsTranscendentalPi.ComplexExponential
+import Mathlib.Analysis.Calculus.Deriv.Polynomial
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Topology.Algebra.Polynomial
 
 /-!
 # Calculus on polynomials

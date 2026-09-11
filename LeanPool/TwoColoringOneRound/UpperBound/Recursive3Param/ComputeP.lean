@@ -6,8 +6,7 @@ Authors: Jukka Suomela
 module
 
 public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Basic
-public import Mathlib.MeasureTheory.Integral.Marginal
-public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Computation of `ClassicalAlgorithm.p` for `recursive3ParamAlg`.

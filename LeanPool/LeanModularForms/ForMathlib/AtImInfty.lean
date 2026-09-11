@@ -5,7 +5,6 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import Mathlib.Analysis.Normed.Group.Tannery
 public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 
 /- Probably put this at Analysis/Complex/UpperHalfPlane/FunctionsBoundedAtInfty.lean -/

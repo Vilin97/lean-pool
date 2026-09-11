@@ -6,9 +6,6 @@ Authors: Egor Lyfar
 module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.LinearAlgebra.Dimension.Finite
-public import Mathlib.LinearAlgebra.LinearIndependent.Defs
 
 /-! # Erdős 97 convex-octagon formalization: Basic -/
 

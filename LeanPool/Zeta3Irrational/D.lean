@@ -5,13 +5,10 @@ Authors: Junqi Liu, Jujian Zhang
 -/
 module
 
-public import Mathlib.Algebra.GCDMonoid.Finset
-public import Mathlib.Algebra.GCDMonoid.Nat
-public import Mathlib.Analysis.SpecialFunctions.Log.Base
-public import Mathlib.Data.Nat.Choose.Factorization
-public import Mathlib.Data.Nat.Factorization.LCM
-public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Base
+import Mathlib.Data.Nat.Choose.Factorization
 
 /-!
 # LeanPool.Zeta3Irrational.D

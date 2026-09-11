@@ -6,6 +6,8 @@ Authors: James Huang, Samuël Borza
 module
 
 public import LeanPool.IsTranscendentalPi.SubsetSumPolynomial
+public import LeanPool.IsTranscendentalPi.NivenPolynomials
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Scaled auxiliary polynomial

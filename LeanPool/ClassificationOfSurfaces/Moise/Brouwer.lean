@@ -5,17 +5,13 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
 public import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
-public import Mathlib.Analysis.InnerProductSpace.Continuous
-public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Geometry.Euclidean.Sphere.Basic
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
+import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Geometry.Euclidean.Sphere.Basic
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Brouwer's fixed-point theorem for the plane disk

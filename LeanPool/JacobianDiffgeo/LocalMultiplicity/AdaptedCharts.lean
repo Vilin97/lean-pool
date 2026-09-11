@@ -10,6 +10,9 @@ Blueprint unit: local-multiplicity (CC4). Adapted charts: the local normal form 
 module
 
 public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Adapted charts (Forster Thm 2.1)

@@ -6,6 +6,7 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Learner.Core
+public import LeanPool.FormalLearningTheory.Data
 
 /-!
 # Active Learning, Teachers, and Meta-Learning

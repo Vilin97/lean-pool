@@ -12,7 +12,9 @@ Paper: §3.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
+public import LeanPool.ConnesRigidity.Core
+public import Mathlib.GroupTheory.SemidirectProduct
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
 
 /-!
 The semidirect generator transport component of the Connes rigidity formalization.

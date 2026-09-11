@@ -5,13 +5,14 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
-public import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
-public import LeanPool.GrothendieckVanishing.ConstantSheafFlasque
-public import LeanPool.GrothendieckVanishing.FinitelyGeneratedVanishing
-public import LeanPool.GrothendieckVanishing.FlasqueVanishing
-public import LeanPool.GrothendieckVanishing.TopologicalKrullDim
-public import LeanPool.GrothendieckVanishing.ZeroOutside
-public import Mathlib.GroupTheory.Archimedean
+public import LeanPool.GrothendieckVanishing.GeneratedSubsheaf
+public import Mathlib.Topology.KrullDimension
+public import Mathlib.Topology.NoetherianSpace
+import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
+import LeanPool.GrothendieckVanishing.ConstantSheafFlasque
+import LeanPool.GrothendieckVanishing.FinitelyGeneratedVanishing
+import LeanPool.GrothendieckVanishing.TopologicalKrullDim
+import Mathlib.GroupTheory.Archimedean
 
 /-!
 # Irreducible positive-dimensional vanishing

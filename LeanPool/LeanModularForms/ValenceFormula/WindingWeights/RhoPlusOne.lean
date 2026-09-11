@@ -5,9 +5,16 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
-public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
-public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Winding Number Weight at ρ+1

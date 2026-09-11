@@ -5,8 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetForcedPair
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbeddingCore
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification
+import LeanPool.HadwigerNelsonBounds.PartsGadgetForcedPair
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
 
 /-!
 # The finite Parts gadget inside the unit-distance plane

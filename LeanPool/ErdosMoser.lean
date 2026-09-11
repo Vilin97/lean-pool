@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.ErdosMoser.Bounds
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Leo Moser's finite distinct-subset-sums inequality

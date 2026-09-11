@@ -5,7 +5,14 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.CoulombConcreteTheorem42
+public import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.CoulombConcreteTheorem42
+import LeanPool.Clawristotle.IteratedDerivHelpers
+import LeanPool.Clawristotle.Section2
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Non-vacuousness of the Coulomb Concrete Theorem

@@ -5,8 +5,14 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.Polish
 public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+public import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+import LeanPool.InfinitaryLogic.Descriptive.Measurable
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Generic Satisfaction Measurability for Carrier-Parametric Structure Spaces
 

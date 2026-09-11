@@ -8,6 +8,8 @@ module
 public import LeanPool.Wallace.GeneralMain
 public import LeanPool.Wallace.RealMain
 public import LeanPool.Wallace.TychonoffWallace
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The Wallace problem in ZFC

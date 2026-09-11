@@ -6,7 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
 
 /-! # WellKnown -/
 

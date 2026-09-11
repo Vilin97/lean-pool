@@ -5,8 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.OrdinalUtil
 public import LeanPool.InfinitaryLogic.Scott.Sentence
+import LeanPool.InfinitaryLogic.OrdinalUtil
+import Mathlib.SetTheory.Cardinal.Regular
 /-!
 # Proof of CountableRefinementHypothesis
 

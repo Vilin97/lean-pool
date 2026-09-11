@@ -7,6 +7,10 @@ module
 
 public import LeanPool.LehmerE10.Main
 public import Mathlib.Analysis.Polynomial.MahlerMeasure
+import LeanPool.LehmerE10.Kronecker
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # the Mahler measure of Lehmer's polynomial, in Mathlib's own API.

@@ -6,7 +6,11 @@ Authors: Adam Benenson
 module
 
 public import Mathlib.Analysis.InnerProductSpace.l2Space
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 
 /-!
 # Compact self-adjoint operators: spectral theorem (Hilbert basis of eigenvectors)

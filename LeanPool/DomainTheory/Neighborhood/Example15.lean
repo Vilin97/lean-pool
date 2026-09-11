@@ -6,8 +6,10 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Data.Fintype.Basic
-public import Mathlib.Tactic.FinCases
+public import Mathlib.Data.Set.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.SetLike
 
 /-!
 # Example 1.5 (Scott 1981, PRG-19, §1)

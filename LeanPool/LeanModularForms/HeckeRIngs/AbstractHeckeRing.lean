@@ -12,6 +12,11 @@ public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativi
 public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
 public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
 public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Commutativity
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Construction of Hecke rings following Shimura

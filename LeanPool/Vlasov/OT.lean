@@ -10,6 +10,8 @@ public import LeanPool.Vlasov.OT.Coupling
 public import LeanPool.Vlasov.OT.Wasserstein
 public import LeanPool.Vlasov.OT.WeakToLagrangian
 public import LeanPool.Vlasov.OT.WellPosedness
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-! # Optimal transport, characteristic flow, and the well-posedness ladder. -/
 

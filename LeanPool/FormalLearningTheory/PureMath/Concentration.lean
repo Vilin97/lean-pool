@@ -5,11 +5,8 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import Mathlib.MeasureTheory.Measure.MeasureSpace
 public import Mathlib.Probability.Independence.Basic
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.Probability.Moments.Variance
+import Mathlib.Probability.Moments.Variance
 
 /-!
 # Concentration Inequalities

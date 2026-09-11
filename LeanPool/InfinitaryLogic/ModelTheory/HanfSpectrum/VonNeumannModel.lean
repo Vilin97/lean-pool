@@ -7,7 +7,6 @@ module
 
 public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
 public import Mathlib.SetTheory.ZFC.VonNeumann
-public import Mathlib.SetTheory.ZFC.Cardinal
 
 /-!
 # The von Neumann ladder model

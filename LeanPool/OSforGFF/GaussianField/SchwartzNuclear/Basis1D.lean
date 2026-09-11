@@ -6,6 +6,8 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Nuclear Schauder Basis for S(ℝ, ℝ) — 1D Case

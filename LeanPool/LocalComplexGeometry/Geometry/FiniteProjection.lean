@@ -6,10 +6,9 @@ Authors: BochaoKong
 module
 
 public import LeanPool.LocalComplexGeometry.Germs.Coordinates
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
-public import Mathlib.Analysis.Complex.Polynomial.Basic
-public import Mathlib.Topology.MetricSpace.ProperSpace
-public import Mathlib.Topology.Maps.Proper.CompactlyGenerated
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Geometric finite projection of a prepared hypersurface

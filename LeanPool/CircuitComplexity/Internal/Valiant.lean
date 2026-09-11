@@ -6,15 +6,13 @@ Authors: Samuel Schlesinger
 module
 
 public import LeanPool.CircuitComplexity.Digraph.Defs
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
-public import Mathlib.Data.Finset.Card
-public import Mathlib.Data.Finset.Max
-public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Fintype.Prod
-public import Mathlib.Data.Nat.Bitwise
-public import Mathlib.Data.Nat.Log
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Algebra.Order.Sub.Basic
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Nat.Bitwise
+import Mathlib.Tactic.Ring.RingNF
 
 /-! # Internal helpers for Valiant's Depth Reduction Lemma
 

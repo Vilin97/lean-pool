@@ -11,7 +11,8 @@ model. This is the kernel part of the §3 crossed-product bridge. Paper: §3.
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section3.FourierAction
-public import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
+public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
+import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
 
 /-!
 The fourier coordinates component of the Connes rigidity formalization.

@@ -5,7 +5,12 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 module
 
-public import LeanPool.DeadEnds.CountingBlocks
+public import LeanPool.DeadEnds.CRT
+import LeanPool.DeadEnds.CountingBlocks
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Finite-prime counting bounds and comparison with the Euler product density.

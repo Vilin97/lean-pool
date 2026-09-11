@@ -5,13 +5,20 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public import LeanPool.MRiscX.AbstractSyntax.MState
 public import LeanPool.MRiscX.Semantics.Run
-public import LeanPool.MRiscX.Util.BasicTheorems
 
-public import Mathlib.Data.Set.Basic
-public import Lean.Elab.Command
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Data.Set.Defs
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import LeanPool.MRiscX.Util.BasicTheorems
+import Mathlib.Algebra.Group.Nat.Defs
+import Mathlib.Data.Set.Basic
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 Basic theorems

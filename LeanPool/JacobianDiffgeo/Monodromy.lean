@@ -7,6 +7,9 @@ module
 
 public import LeanPool.JacobianDiffgeo.Monodromy.OpenLocus
 public import LeanPool.JacobianDiffgeo.Monodromy.LogContinuation
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # monodromy (namespace `RS.Monodromy`)

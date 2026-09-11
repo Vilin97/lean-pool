@@ -5,8 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
-public import LeanPool.JacobianDiffgeo.JacobianConstruction
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Functorial
+import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
+import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Period-space plumbing and the pushforward map (jacobian-functoriality §8, pushforward half)

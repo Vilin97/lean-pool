@@ -16,6 +16,11 @@ public import LeanPool.DemazureProduct.Transpositions
 public import LeanPool.DemazureProduct.InvSet
 public import LeanPool.DemazureProduct.Avoiding321
 public import LeanPool.DemazureProduct.Tableaux
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Extended Demazure Product on ASP Permutations

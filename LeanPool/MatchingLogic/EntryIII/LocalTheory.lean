@@ -15,6 +15,7 @@ right-associated finite-list conjunction `conj`.
 module
 
 public import LeanPool.MatchingLogic.ProofSystem
+public import Mathlib.Data.Set.BooleanAlgebra
 
 /-!
 # MatchingLogic.EntryIII.LocalTheory

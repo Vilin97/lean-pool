@@ -5,8 +5,12 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
 public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
+import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Dolbeault comparison `H¹(X, 𝒪) ≅ H^{0,1}(X)` (`Jacobian/DolbeaultComparison/Comparison.lean`)

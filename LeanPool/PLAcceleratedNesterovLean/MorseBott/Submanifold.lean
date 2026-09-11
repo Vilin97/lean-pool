@@ -5,9 +5,12 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.IFTProof
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.GradAlign
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.GradAlign
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.IFTProof
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Theorem 2.16: PŁ ⟹ S is a submanifold

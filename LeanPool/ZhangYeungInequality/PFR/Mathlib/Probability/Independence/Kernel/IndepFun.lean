@@ -6,8 +6,8 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.Finset.Pairwise
 public import Mathlib.Probability.Independence.Kernel.IndepFun
+import Mathlib.Data.Finset.Pairwise
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Kernel.IndepFun

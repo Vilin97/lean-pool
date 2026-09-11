@@ -6,6 +6,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
+import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Radó crossing weld and chart induction

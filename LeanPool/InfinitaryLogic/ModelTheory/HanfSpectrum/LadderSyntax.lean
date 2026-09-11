@@ -6,7 +6,8 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.CountableIndex
-public import Mathlib.SetTheory.Ordinal.Arithmetic
+public import Mathlib.SetTheory.Ordinal.Basic
+import Mathlib.SetTheory.Ordinal.Arithmetic
 
 /-!
 # The beth-ladder syntax (Marker, Exercise 5.3)

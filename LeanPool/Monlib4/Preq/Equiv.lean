@@ -5,9 +5,12 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
 public import Mathlib.Data.Matrix.PEquiv
 public import Mathlib.LinearAlgebra.UnitaryGroup
+import LeanPool.Monlib4.Preq.Ites
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monlib4.Preq.Equiv

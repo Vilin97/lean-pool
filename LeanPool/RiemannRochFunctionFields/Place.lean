@@ -7,13 +7,10 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.Divisor
 public import Mathlib.NumberTheory.FunctionField
-public import Mathlib.RingTheory.Jacobson.Ring
-public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
 public import Mathlib.RingTheory.Valuation.AlgebraInstances
-public import Mathlib.RingTheory.Valuation.Discrete.Basic
-public import Mathlib.RingTheory.Valuation.Discrete.RankOne
-public import Mathlib.RingTheory.Valuation.IsTrivialOn
-public import Mathlib.GroupTheory.ArchimedeanDensely
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.GroupTheory.ArchimedeanDensely
 
 /-!
 # Coordinate places of a function field

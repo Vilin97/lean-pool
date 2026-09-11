@@ -5,17 +5,8 @@ Authors: ruplet
 -/
 module
 
-public import Lean.Elab.Command
 
-public import Mathlib.ModelTheory.Syntax
-public import Mathlib.ModelTheory.Semantics
 
-public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
-public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
-public import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-public import LeanPool.FormalizationOfBoundedArithmetic.Semantics
 public import LeanPool.FormalizationOfBoundedArithmetic.Order
 
 /-!

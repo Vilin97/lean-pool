@@ -6,6 +6,8 @@ Authors: Dan Clemens Posch
 module
 
 public import LeanPool.KahnKalai.DoubleCount
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Tran–Vu Theorem 2.3: the covering theorem.

@@ -5,8 +5,8 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
 module
 
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma

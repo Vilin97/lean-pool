@@ -5,18 +5,10 @@ Authors: Dirk Kunert
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Algebra.Order.Floor.Defs
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Data.Int.CardIntervalMod
-public import Mathlib.Data.Real.Basic
 public import Mathlib.Data.ZMod.Basic
-public import Mathlib.GroupTheory.OrderOfElement
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Period lengths of rational cut-and-project gap sequences

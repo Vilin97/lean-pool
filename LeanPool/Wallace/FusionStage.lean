@@ -7,7 +7,8 @@ module
 
 public import LeanPool.Wallace.FiniteCombinatorics
 public import LeanPool.Wallace.UniformKronecker
-public import Mathlib.Data.Finset.Lattice.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # One finite character-fusion stage

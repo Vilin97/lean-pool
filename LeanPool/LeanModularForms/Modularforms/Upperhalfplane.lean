@@ -7,7 +7,6 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Algebra.Order.Star.Real
 
 /-! # Upperhalfplane -/
 

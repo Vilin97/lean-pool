@@ -6,9 +6,9 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Scott.Formula
-public import LeanPool.InfinitaryLogic.Karp.PotentialIso
-public import Mathlib.ModelTheory.PartialEquiv
-public import Mathlib.SetTheory.Cardinal.Regular
+import LeanPool.InfinitaryLogic.Karp.PotentialIso
+import LeanPool.InfinitaryLogic.Util
+import Mathlib.SetTheory.Cardinal.Regular
 /-!
 # Scott Sentences
 

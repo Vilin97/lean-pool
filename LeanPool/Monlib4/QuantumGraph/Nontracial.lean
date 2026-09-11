@@ -5,15 +5,6 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
-public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-public import LeanPool.Monlib4.LinearAlgebra.IsReal
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
-public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
 

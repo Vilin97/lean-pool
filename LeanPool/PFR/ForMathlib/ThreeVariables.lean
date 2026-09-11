@@ -6,8 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Pair
+public import Mathlib.Probability.Independence.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # Consequences of three-way independence

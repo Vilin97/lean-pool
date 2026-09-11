@@ -6,9 +6,10 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.Place
-public import LeanPool.RiemannRochFunctionFields.SeparableRelNorm
-public import Mathlib.Data.Finsupp.Order
-public import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
+public import Mathlib.RingTheory.Ideal.Norm.RelNorm
+import LeanPool.RiemannRochFunctionFields.SeparableRelNorm
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
 
 /-!
 # Divisor degree and order on a function field

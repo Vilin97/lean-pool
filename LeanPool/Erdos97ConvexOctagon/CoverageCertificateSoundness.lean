@@ -6,8 +6,11 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateNodeSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateValidity
-public import LeanPool.Erdos97ConvexOctagon.RowSymmetry
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateManifest
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCoverSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryValidity
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateValidity
+import LeanPool.Erdos97ConvexOctagon.RowSymmetry
 
 /-! # Soundness of the exhaustive coverage-certificate manifest -/
 

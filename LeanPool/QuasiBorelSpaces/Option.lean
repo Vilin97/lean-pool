@@ -6,9 +6,10 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
-public import LeanPool.QuasiBorelSpaces.Nat
 public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Option
-public import LeanPool.QuasiBorelSpaces.Sum
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Nat
+import LeanPool.QuasiBorelSpaces.Prop
 
 /-!
 # LeanPool.QuasiBorelSpaces.Option

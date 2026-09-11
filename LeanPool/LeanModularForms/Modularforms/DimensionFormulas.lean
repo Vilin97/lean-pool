@@ -6,10 +6,10 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Data.Rat.Star
-public import Mathlib.LinearAlgebra.Dimension.Localization
-public import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
 public import LeanPool.LeanModularForms.Modularforms.Eisenstein
+import LeanPool.LeanModularForms.Modularforms.QExpansionLems
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Rat.Star
 
 /-! # DimensionFormulas -/
 

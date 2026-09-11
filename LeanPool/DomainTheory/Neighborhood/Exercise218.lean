@@ -5,8 +5,11 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Example24
-public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+public import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import Mathlib.Tactic.Attr.Core
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.Widget.Calc
 
 /-!
 # Exercise 2.18 (Scott 1981, PRG-19, §2) — the "spacing" map `h : 𝔹 → 𝔹`

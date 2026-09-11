@@ -5,15 +5,15 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
 public import LeanPool.OSforGFF.OS.Axioms
 public import LeanPool.OSforGFF.Measure.Construct
-public import LeanPool.OSforGFF.General.HadamardExp
-public import LeanPool.OSforGFF.Covariance.RealForm
-public import LeanPool.OSforGFF.OS.OS3CovarianceRP
-public import LeanPool.OSforGFF.Measure.IsGaussian
+import LeanPool.OSforGFF.General.HadamardExp
+import LeanPool.OSforGFF.Measure.IsGaussian
+import LeanPool.OSforGFF.OS.OS3CovarianceRP
+import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # OS3 — Reflection Positivity for the GFF

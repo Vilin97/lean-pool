@@ -5,8 +5,12 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.DynamicColoring
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.OneSidedBarrier
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.BarrierPotential
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ColoringFramework
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LaplacianBasics
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.DynamicColoring
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LoewnerPullback
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.OneSidedBarrier
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Main Proof

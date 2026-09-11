@@ -5,8 +5,8 @@ Authors: Catskills Research Company
 -/
 module
 
-public import LeanPool.DomainTheory.Neighborhood.Approximable
 public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+import Mathlib.Data.Set.Image
 
 /-!
 # Lecture III (§3) — the product system: Definitions 3.1, 3.3, Propositions 3.2,

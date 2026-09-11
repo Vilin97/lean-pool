@@ -5,9 +5,10 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Algebra.Order.Group.Nat
 public import LeanPool.PebblingLean.Hypercube
-public import LeanPool.PebblingLean.Product
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Upper-bound scaffolding

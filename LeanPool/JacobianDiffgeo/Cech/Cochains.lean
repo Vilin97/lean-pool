@@ -6,7 +6,9 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Cech.Covers
-public import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Čech cochains, coboundary maps, `Z¹`/`B¹`/`H¹(𝒰,D)` (CC8, D5/D6)

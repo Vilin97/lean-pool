@@ -7,6 +7,8 @@ module
 
 public import Mathlib.Data.Nat.Prime.Infinite
 public import LeanPool.Redhill.Common.SubsumCondition
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 # Prime chains

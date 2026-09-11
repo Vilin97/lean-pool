@@ -5,16 +5,20 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.AdicLocal
-public import LeanPool.AndersonConjecture.AdicNoetherian
-public import LeanPool.AndersonConjecture.QuasiCompleteRing.Complete
-public import Mathlib.Order.BourbakiWitt
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Mathlib.RingTheory.Flat.TorsionFree
-public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-public import Mathlib.RingTheory.KrullDimension.Field
-public import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
+public import LeanPool.AndersonConjecture.Basic
+public import Mathlib.RingTheory.KrullDimension.Basic
+import LeanPool.AndersonConjecture.AdicKerEval
+import LeanPool.AndersonConjecture.AdicLocal
+import LeanPool.AndersonConjecture.AdicNoetherian
+import LeanPool.AndersonConjecture.QuasiCompleteRing.Complete
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+import Mathlib.RingTheory.KrullDimension.Field
+import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing

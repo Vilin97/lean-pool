@@ -5,7 +5,15 @@ Authors: Ricky Cipollini
 -/
 module
 
-public import LeanPool.Erdos865.Folding
+public import LeanPool.Erdos865.Defs
+import LeanPool.Erdos865.Folding
+import Mathlib.Data.Finset.Max
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # The even-`N` upper bound (Erdős 865, §4)

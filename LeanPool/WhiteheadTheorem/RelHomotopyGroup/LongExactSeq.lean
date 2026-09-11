@@ -5,7 +5,12 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression
+public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
+import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq

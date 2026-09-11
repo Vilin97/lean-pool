@@ -7,6 +7,8 @@ module
 
 public import LeanPool.JacobianDiffgeo.Cech.Refinement
 public import Mathlib.Algebra.Colimit.Module
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `H¹(D)` as a directed colimit (CC8, D1)

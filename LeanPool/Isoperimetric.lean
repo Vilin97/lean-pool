@@ -9,6 +9,8 @@ public import LeanPool.Isoperimetric.Basic
 public import LeanPool.Isoperimetric.BrunnMinkowski
 public import LeanPool.Isoperimetric.Isoperimetric
 public import LeanPool.Isoperimetric.PrekopaLeindler
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Prekopa-Leindler, Brunn-Minkowski, and the isoperimetric inequality

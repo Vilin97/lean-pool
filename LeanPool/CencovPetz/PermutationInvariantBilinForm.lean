@@ -5,8 +5,13 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.CencovPetz.PermutationInvariance
 public import LeanPool.CencovPetz.UniformSimplex
+public import LeanPool.CencovPetz.MonotoneMetric
+import LeanPool.CencovPetz.PermutationInvariance
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

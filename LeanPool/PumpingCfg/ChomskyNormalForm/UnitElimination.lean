@@ -5,7 +5,6 @@ Authors: Alexander Loitzl
 -/
 module
 
-public import Mathlib.Computability.ContextFreeGrammar
 public import Mathlib.Data.Finset.Prod
 public import LeanPool.PumpingCfg.ChomskyNormalForm.EmptyElimination
 

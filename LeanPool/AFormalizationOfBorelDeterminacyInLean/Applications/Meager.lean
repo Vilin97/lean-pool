@@ -5,9 +5,11 @@ Authors: Sven Manthe
 -/
 module
 
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
 public import Mathlib.Topology.Baire.BaireMeasurable
-public import Mathlib.Topology.Baire.Lemmas
+public import Mathlib.Order.Heyting.Regular
+public import Mathlib.Topology.Sets.Opens
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Meager

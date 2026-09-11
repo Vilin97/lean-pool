@@ -5,7 +5,11 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Finset.Insert
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-! # Collection -/
 

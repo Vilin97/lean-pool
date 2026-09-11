@@ -5,16 +5,9 @@ Authors: Reid Barton, Mario Carneiro, Alfie Davies, contributors
 -/
 module
 
-public import LeanPool.MisereGames.Mathlib.Small
-public import LeanPool.MisereGames.OfSets
 public import LeanPool.MisereGames.Form
-public import Mathlib.Algebra.Group.Pointwise.Set.Small
-public import Mathlib.Algebra.Order.Group.Nat
-public import Mathlib.Algebra.Order.Group.Unbundled.Basic
-public import Mathlib.Algebra.Ring.Int.Defs
 public import Mathlib.Data.QPF.Univariate.Basic
-public import Mathlib.Logic.Small.Defs
-public import Mathlib.Logic.Small.Set
+import LeanPool.MisereGames.Mathlib.Small
 
 /-!
 Misere combinatorial games.

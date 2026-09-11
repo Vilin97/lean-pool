@@ -5,8 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigRelational
-public import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigRelational
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
 /-!
 # Craig interpolation for `L_ω₁ω`, relational core without global countability (Layer 2)
 

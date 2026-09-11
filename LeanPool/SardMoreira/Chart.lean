@@ -5,13 +5,20 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.Comp
 public import Mathlib.Analysis.Calculus.Implicit
 public import Mathlib.Analysis.LocallyConvex.HahnBanach
-public import Mathlib.Analysis.Normed.Module.HahnBanach
-public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-public import LeanPool.SardMoreira.ImplicitFunction
-public import LeanPool.SardMoreira.LocalEstimates
+public import LeanPool.SardMoreira.ContDiffMoreiraHolder
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Topology.GDelta.MetrizableSpace
+import LeanPool.SardMoreira.ContDiff
+import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.ContDiff.RCLike
+import Mathlib.Analysis.Normed.Module.HahnBanach
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.RingTheory.SimpleRing.Principal
 
 /-!
 # LeanPool.SardMoreira.Chart

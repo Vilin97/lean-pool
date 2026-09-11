@@ -6,6 +6,9 @@ Authors: Lazar Milikic
 module
 
 public import LeanPool.PythagoreanPolynomialParametrization.Basic
+import Mathlib.NumberTheory.PythagoreanTriples
+import Mathlib.NumberTheory.SumFourSquares
+import Mathlib.Tactic.NormNum.Prime
 
 /-! # Source-level handoff lemmas
 

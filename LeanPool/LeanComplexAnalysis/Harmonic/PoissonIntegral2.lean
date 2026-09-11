@@ -5,8 +5,12 @@ Authors: seb488, Aristotle
 -/
 module
 
-public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
 public import Mathlib.MeasureTheory.Integral.CircleAverage
+public import Mathlib.Analysis.Calculus.DiffContOnCl
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
+import Mathlib.Analysis.Complex.Harmonic.Analytic
 
 /-!
 # The Poisson Integral Formula on Disc

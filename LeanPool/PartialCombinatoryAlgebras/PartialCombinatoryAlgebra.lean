@@ -5,8 +5,12 @@ Authors: Andrej Bauer
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
 public import LeanPool.PartialCombinatoryAlgebras.Basic
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
+import Mathlib.Tactic.Widget.Calc
 
 /-!
 # Partial combinatory algebras

@@ -10,6 +10,9 @@ public import LeanPool.PentagonalNumberTheorem.Generic
 public import LeanPool.PentagonalNumberTheorem.Old
 public import LeanPool.PentagonalNumberTheorem.Partition
 public import LeanPool.PentagonalNumberTheorem.PowerSeries
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Euler's pentagonal number theorem

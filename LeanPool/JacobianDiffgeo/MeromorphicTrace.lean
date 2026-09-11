@@ -10,6 +10,8 @@ public import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
 public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
 public import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
 public import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # meromorphic-trace: the argument principle and the fibre trace of functions (namespace `RS.MTrace`)

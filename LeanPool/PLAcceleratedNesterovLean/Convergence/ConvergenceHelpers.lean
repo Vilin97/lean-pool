@@ -5,10 +5,10 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
 public import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
 
 /-!
 # Helpers for single-phase convergence proof

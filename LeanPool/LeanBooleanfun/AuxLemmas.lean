@@ -5,10 +5,10 @@ Authors: Joris Roos
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Algebra.BigOperators.Finprod
 public import Mathlib.Data.Real.Basic
 public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 General lemmas not specific to analysis of Boolean functions.

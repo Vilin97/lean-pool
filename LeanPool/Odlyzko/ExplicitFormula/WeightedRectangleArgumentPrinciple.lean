@@ -7,6 +7,9 @@ module
 
 public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.RectangleIntegral
 public import LeanPool.Odlyzko.ExplicitFormula.WeightedDiskArgumentPrinciple
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Weighted Rectangle Argument Principle

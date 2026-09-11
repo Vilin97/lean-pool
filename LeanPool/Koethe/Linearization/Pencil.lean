@@ -5,11 +5,10 @@ Authors: GPT-6 Astra, Tom Adamczewski
 -/
 module
 
-public import Mathlib.Algebra.Polynomial.Degree.Operations
 public import Mathlib.Logic.Equiv.Fin.Basic
-public import Mathlib.RingTheory.Nilpotent.Basic
-public import Mathlib.Tactic.Ring
 public import LeanPool.Koethe.Linearization.Basic
+import Mathlib.Algebra.Polynomial.Degree.Operations
+import Mathlib.RingTheory.Nilpotent.Basic
 
 /-!
 # Root-row pencils and the polynomial root-column argument

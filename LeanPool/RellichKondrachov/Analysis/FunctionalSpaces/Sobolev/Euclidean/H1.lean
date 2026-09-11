@@ -5,12 +5,12 @@ Authors: Adam Benenson
 -/
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
-public import Mathlib.Analysis.Calculus.FDeriv.Const
 public import Mathlib.Analysis.InnerProductSpace.Dual
-public import Mathlib.MeasureTheory.Function.LpSpace.Complete
-public import Mathlib.MeasureTheory.Function.LpSpace.Indicator
-public import Mathlib.Topology.Algebra.Support
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.MeasureTheory.Function.LpSpace.Complete
+import Mathlib.MeasureTheory.Function.LpSpace.Indicator
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1`

@@ -5,7 +5,13 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.JointSlabIntegral
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.PoincareThreeBody.JointSlabIntegral
+import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # Analyticity under integration over a compact time set

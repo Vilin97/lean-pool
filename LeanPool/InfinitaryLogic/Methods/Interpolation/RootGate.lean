@@ -5,7 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
 /-!
 # The semantic root gate (issue #8 tranche 1.5 item 2)
 

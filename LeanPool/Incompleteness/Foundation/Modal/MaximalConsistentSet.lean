@@ -6,7 +6,11 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Formula
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
+public import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import Mathlib.Order.Zorn
+import Mathlib.Tactic.TautoSet
 
 /-! # MaximalConsistentSet -/
 

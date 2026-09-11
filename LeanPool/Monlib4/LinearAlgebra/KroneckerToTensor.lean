@@ -6,10 +6,11 @@ Authors: Monica Omar
 module
 
 public import Mathlib.RingTheory.MatrixAlgebra
-public import Mathlib.LinearAlgebra.TensorProduct.Matrix
-public import Mathlib.LinearAlgebra.TensorProduct.Finiteness
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+public import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.LinearAlgebra.TensorProduct.Finiteness
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kronecker product to the tensor product

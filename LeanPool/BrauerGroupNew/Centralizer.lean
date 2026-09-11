@@ -11,11 +11,9 @@ Authors: Jujian Zhang
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Subalgebra.Basic
-public import Mathlib.RingTheory.Adjoin.Basic
 public import Mathlib.RingTheory.TensorProduct.Maps
-public import Mathlib.LinearAlgebra.TensorProduct.Basis
 public import Mathlib.LinearAlgebra.FreeModule.Basic
+import Mathlib.LinearAlgebra.TensorProduct.Basis
 
 /-!
 # Properties of centers and centralizers

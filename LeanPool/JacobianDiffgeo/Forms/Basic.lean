@@ -6,9 +6,8 @@ Authors: Rado Kirov
 module
 
 public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Geometry.Manifold.VectorBundle.Hom
-public import Mathlib.Geometry.Manifold.VectorBundle.Tangent
 public import Mathlib.Geometry.Manifold.VectorBundle.ContMDiffSection
+public import Mathlib.Topology.VectorBundle.Hom
 
 /-!
 # Holomorphic 1-forms: the definition (CC1)

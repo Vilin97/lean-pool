@@ -20,21 +20,10 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.SpecialFunctions.Stirling
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.Analysis.Convex.Deriv
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Bound
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum.BigOperators
-public import Mathlib.Tactic.NormNum.NatFactorial
-public import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Stirling
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # LaplaceFactorial -/
 

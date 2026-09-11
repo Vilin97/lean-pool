@@ -5,7 +5,15 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 module
 
-public import LeanPool.DeadEnds.RelevantPrimes
+public import LeanPool.DeadEnds.Basic
+import LeanPool.DeadEnds.Counting
+import LeanPool.DeadEnds.PrimeTail
+import LeanPool.DeadEnds.RelevantPrimes
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Asymptotic tail estimates that turn finite-prime counts into density bounds.

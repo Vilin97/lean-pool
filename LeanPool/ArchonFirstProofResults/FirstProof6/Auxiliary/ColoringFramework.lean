@@ -5,10 +5,13 @@ Authors: FrenzyMath
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Combinatorics.SimpleGraph.Basic
-public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Combinatorics.SimpleGraph.Init
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Coloring Framework

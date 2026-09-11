@@ -5,7 +5,6 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Logic.Entailment
 public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
 
 /-! # Supplemental -/

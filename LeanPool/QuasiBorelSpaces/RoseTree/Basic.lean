@@ -6,8 +6,7 @@ Authors: Anthony Vandikas, Kiarash Sotoudeh
 module
 
 public import LeanPool.QuasiBorelSpaces.RoseTree.Defs
-public import Mathlib.Tactic.NthRewrite
-public import Mathlib.Control.Traversable.Instances
+import Mathlib.Control.Traversable.Instances
 
 /-!
 # LeanPool.QuasiBorelSpaces.RoseTree.Basic

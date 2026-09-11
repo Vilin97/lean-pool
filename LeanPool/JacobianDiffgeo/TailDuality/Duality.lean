@@ -6,6 +6,10 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.TailDuality.Counting
+public import LeanPool.JacobianDiffgeo.TailDuality.Pairing
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Miranda Lemma 3.6, the surjectivity endgame, and Serre duality (serre-duality-tails)

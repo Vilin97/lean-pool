@@ -5,9 +5,7 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
 public import Mathlib.Topology.Compactification.OnePoint.Sphere
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # The challenge bridge: `ℙ¹ ≃ₜ` the unit 2-sphere (CC5)

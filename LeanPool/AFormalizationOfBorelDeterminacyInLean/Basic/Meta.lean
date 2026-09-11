@@ -5,7 +5,10 @@ Authors: Sven Manthe
 -/
 module
 
-public meta import Mathlib.Tactic.Common
+public meta import Aesop.BuiltinRules
+public meta import Lean.Elab.Tactic.Simp
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Elab.Tactic.Simp
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta

@@ -5,12 +5,9 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.InnerProductSpace.Adjoint
 public import Mathlib.Analysis.InnerProductSpace.Positive
 public import Mathlib.Analysis.InnerProductSpace.l2Space
-public import Mathlib.Analysis.LocallyConvex.WithSeminorms
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Sazonov Topology

@@ -8,6 +8,8 @@ module
 public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
 public import LeanPool.JacobianDiffgeo.ProperDegree.DivisorDegreeZero
 public import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # proper-map-degree: the challenge degree, `deg(div f) = 0`, and the genus-0 finisher

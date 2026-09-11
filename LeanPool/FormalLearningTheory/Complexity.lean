@@ -16,6 +16,9 @@ public import LeanPool.FormalLearningTheory.Complexity.GeneralizationResults
 public import LeanPool.FormalLearningTheory.Complexity.Structures
 public import LeanPool.FormalLearningTheory.Complexity.Measurability
 public import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.FormalLearningTheory.Complexity

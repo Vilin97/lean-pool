@@ -6,8 +6,8 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.Basic
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Estimates for `1728·J` and `s₂` (Milla, arXiv:1809.00533v6, Chapter 5)

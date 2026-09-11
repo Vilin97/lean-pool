@@ -6,10 +6,6 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.ContinuousLattice.ScottMaps
-public import Mathlib.Data.Finset.Lattice.Fold
-public import Mathlib.Topology.ContinuousMap.Basic
-public import Mathlib.Topology.Order
-public import Mathlib.Order.CompleteLattice.Basic
 public import Mathlib.Order.FixedPoints
 
 /-!

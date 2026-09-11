@@ -5,14 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
-public import Mathlib.Analysis.Calculus.FDeriv.Add
-public import Mathlib.Analysis.Calculus.FDeriv.Mul
-public import Mathlib.Analysis.Calculus.FDeriv.Comp
-public import Mathlib.Analysis.Calculus.FDeriv.Congr
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Topology.Algebra.Support
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Wirtinger derivatives and the Cauchy–Riemann bridge

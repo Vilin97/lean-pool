@@ -12,6 +12,9 @@ public import LeanPool.SardMoreira.ToMathlib.PR32986
 public import LeanPool.SardMoreira.ToMathlib.PR32993
 public import LeanPool.SardMoreira.ToMathlib.PR33029
 public import LeanPool.SardMoreira.ToMathlib.PR33114
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Lemmas slated for Mathlib

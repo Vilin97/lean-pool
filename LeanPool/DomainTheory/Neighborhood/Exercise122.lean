@@ -6,7 +6,8 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Topology.Inseparable
+public import Mathlib.Topology.Defs.Filter
+import Mathlib.Topology.Inseparable
 
 /-!
 # Exercise 1.22 (Scott 1981, PRG-19, §1) — the topology on `|𝒟|`

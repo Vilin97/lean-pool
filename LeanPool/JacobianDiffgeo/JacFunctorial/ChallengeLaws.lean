@@ -6,7 +6,10 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
-public import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
+public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Challenge-signature functoriality laws and the projection formula (jacobian-functoriality §9)

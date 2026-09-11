@@ -6,6 +6,7 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 module
 
 public import LeanPool.DirectedTopologyLean4.Constructions
+import LeanPool.DirectedTopologyLean4.MonotonePath
 
 /-!
 # LeanPool.DirectedTopologyLean4.DirectedUnitInterval

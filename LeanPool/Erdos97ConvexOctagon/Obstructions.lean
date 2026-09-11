@@ -5,10 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.Erdos97ConvexOctagon.CycleStrip
-public import LeanPool.Erdos97ConvexOctagon.EquidistantFour
-public import LeanPool.Erdos97ConvexOctagon.Pentagon
 public import LeanPool.Erdos97ConvexOctagon.Radius
+import LeanPool.Erdos97ConvexOctagon.CycleStrip
+import LeanPool.Erdos97ConvexOctagon.EquidistantFour
+import LeanPool.Erdos97ConvexOctagon.Pentagon
+import Mathlib.Geometry.Euclidean.PerpBisector
 
 /-! # Erdős 97 convex-octagon formalization: Obstructions -/
 

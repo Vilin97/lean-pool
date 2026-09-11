@@ -5,12 +5,14 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import Mathlib.Data.List.Enum
 
 public import LeanPool.BruhatTits.Graph.Vertices
-public import LeanPool.BruhatTits.Lattice.Quotient
-public import LeanPool.BruhatTits.Utils.GLSubmoduleAction
-public import LeanPool.BruhatTits.Utils.List
+public import LeanPool.BruhatTits.Lattice.Transvect
+import LeanPool.BruhatTits.Lattice.Quotient
+import LeanPool.BruhatTits.Utils.GLSubmoduleAction
+import LeanPool.BruhatTits.Utils.List
+import LeanPool.BruhatTits.Utils.ValuationRings
+import Mathlib.Data.List.Enum
 
 /-!
 # The edges of the Bruhat-Tits graph

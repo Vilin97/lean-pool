@@ -5,8 +5,13 @@ Authors: Lior Pachter
 -/
 module
 
-public import Mathlib.Tactic.Linarith
 public import LeanPool.PebblingLean.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Direct delivery along paths

@@ -6,8 +6,15 @@ Authors: Dillon Ryan
 module
 
 public import LeanPool.LehmerE10.Defs
-public import LeanPool.LehmerE10.UnitCircleFactors
 public import LeanPool.LehmerE10.TraceQuintic
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import LeanPool.LehmerE10.CyclotomicKill
+import LeanPool.LehmerE10.Kronecker
+import LeanPool.LehmerE10.UnitCircleFactors
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # the assembly:

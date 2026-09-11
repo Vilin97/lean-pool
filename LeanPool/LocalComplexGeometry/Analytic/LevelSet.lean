@@ -5,7 +5,11 @@ Authors: BochaoKong
 -/
 module
 
-public import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Regular holomorphic level sets

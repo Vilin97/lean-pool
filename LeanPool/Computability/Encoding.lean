@@ -5,15 +5,12 @@ Authors: Tanner Duve, Elan Roth
 -/
 module
 
-public import LeanPool.Computability.TuringDegree
-public import Mathlib.Data.Option.Basic
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Logic.Denumerable
-public import Mathlib.Logic.Encodable.Basic
-public import Mathlib.Data.Nat.PSub
-public import Mathlib.Data.PFun
-public import Mathlib.Data.Part
-public import Mathlib.Tactic.Cases
+public import LeanPool.Computability.Oracle
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 
 /-!

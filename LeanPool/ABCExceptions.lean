@@ -8,6 +8,9 @@ module
 public import LeanPool.ABCExceptions.ForMathlib
 public import LeanPool.ABCExceptions.Section2
 public import LeanPool.ABCExceptions.Section4
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Exceptional Set in the abc Conjecture

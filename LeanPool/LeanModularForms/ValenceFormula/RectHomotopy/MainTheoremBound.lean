@@ -5,9 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDerivBounds
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDiff
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDerivBounds
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Uniform derivative bound for the homotopy

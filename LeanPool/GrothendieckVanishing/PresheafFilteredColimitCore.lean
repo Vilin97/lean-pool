@@ -6,8 +6,9 @@ Authors: Vasily Ilin, Brian Nugent
 module
 
 public import Mathlib.Topology.NoetherianSpace
-public import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
-public import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
+public import LeanPool.GrothendieckVanishing.FlasqueVanishing
+import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
+import Mathlib.Algebra.Category.Grp.AB
 
 /-!
 # Noetherian filtered-colimit infrastructure for sheaf cohomology

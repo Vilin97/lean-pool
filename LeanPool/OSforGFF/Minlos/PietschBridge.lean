@@ -6,7 +6,8 @@ Authors: Michael R. Douglas
 module
 
 public import LeanPool.OSforGFF.Minlos.NuclearSpace
-public import Mathlib.Topology.Instances.RealVectorSpace
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Bridge: Pietsch Nuclearity → Bochner IsHilbertNuclear

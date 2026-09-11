@@ -6,12 +6,11 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.Defs
-public import LeanPool.Clawristotle.Section2
-public import LeanPool.Clawristotle.GaussianHelpers
-public import Mathlib.MeasureTheory.Integral.Pi
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import LeanPool.Clawristotle.Section2
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Helper Lemmas for Section 3

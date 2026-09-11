@@ -5,8 +5,10 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryIII.Compactness
 public import LeanPool.MatchingLogic.ProofSystem
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+import LeanPool.MatchingLogic.EntryIII.Compactness
 
 /-!
 # MatchingLogic.EntryIII.FiniteReduction

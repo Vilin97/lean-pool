@@ -5,11 +5,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.Anchors
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseCellwiseExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.ChartInduction
 public import LeanPool.ClassificationOfSurfaces.CellComplex
-public import Mathlib.Topology.Instances.Rat
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Countermodels and semantic anchors

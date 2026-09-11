@@ -5,12 +5,8 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import LeanPool.FormalLearningTheory.Basic
 public import LeanPool.FormalLearningTheory.Learner.Core
 public import LeanPool.FormalLearningTheory.Complexity.VCDimension
-public import LeanPool.FormalLearningTheory.Criterion.Online
-public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.Basic
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!

@@ -6,7 +6,8 @@ Authors: Jun Kwon
 module
 
 public import LeanPool.Polytopes.Halfspace
-public import Mathlib.Analysis.Convex.KreinMilman
+public import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.LocallyConvex.Separation
 
 /-!
 Polar duals and their compactness properties.

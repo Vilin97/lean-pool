@@ -6,6 +6,9 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Language
+public import LeanPool.Incompleteness.Foundation.Vorspiel.Collection
+public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Terms of first-order logic

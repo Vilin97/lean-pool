@@ -8,8 +8,6 @@ module
 public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
 public import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
 public import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
-public import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
-public import Mathlib.GroupTheory.Perm.Basic
 /-!
 # Finite-Carrier Counting via Permutation Orbits
 

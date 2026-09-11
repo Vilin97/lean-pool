@@ -5,10 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Bilinear
-public import Mathlib.LinearAlgebra.Basis.VectorSpace
 public import Mathlib.LinearAlgebra.TensorProduct.Basis
 public import Mathlib.RingTheory.TensorProduct.Maps
+import Mathlib.LinearAlgebra.Basis.VectorSpace
 
 /-!
 # Some lemmas about `tensor_product`

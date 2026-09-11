@@ -5,8 +5,7 @@ Authors: BochaoKong
 -/
 module
 
-public import Mathlib.Analysis.Analytic.ChangeOrigin
-public import Mathlib.Analysis.Normed.Ring.InfiniteSum
+public import Mathlib.Analysis.Analytic.Basic
 
 /-!
 # Normally convergent families of formal multilinear series

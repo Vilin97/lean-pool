@@ -8,6 +8,8 @@ module
 public import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
 public import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
 public import LeanPool.JacobianDiffgeo.SerrePairing.Duality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # serre-duality-cech: the Serre pairing at the Čech level (namespace `RS`/`RS.SerrePairing`)

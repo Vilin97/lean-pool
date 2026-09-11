@@ -5,11 +5,13 @@ Authors: Shangtong Zhang
 -/
 module
 
-public import Mathlib.Order.Filter.Basic
-public import Mathlib.Data.Finset.Basic
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Algebra.Group.Pi.Basic
+public import Mathlib.Order.Filter.Defs
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Order.AbsoluteValue.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Order.Filter.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Order.Filter.Basic

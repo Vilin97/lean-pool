@@ -7,6 +7,8 @@ module
 
 public import LeanPool.KahnKalai.Cost
 public import LeanPool.KahnKalai.Numeric
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Tran–Vu Lemma 2.4 (double counting of large minimals `G_W`).

@@ -6,11 +6,14 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
-public import LeanPool.LeanModularForms.ValenceFormula.Definitions
 public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
-public import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Main
-public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Main
+import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # PV Chain Helpers

@@ -9,7 +9,12 @@ Blueprint unit: mapping-degree. Ramification and branch loci are finite; regular
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Ramification locus, branch locus, regular values

@@ -7,6 +7,8 @@ module
 
 public import LeanPool.PoincareThreeBody.DelaunayAnchorChart
 public import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Local energy leaves at the rational anchor

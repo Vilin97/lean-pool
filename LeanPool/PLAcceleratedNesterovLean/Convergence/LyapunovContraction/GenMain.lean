@@ -5,14 +5,13 @@ Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
 module
 
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step3
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
 public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step3
+import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
 
 
 /-!

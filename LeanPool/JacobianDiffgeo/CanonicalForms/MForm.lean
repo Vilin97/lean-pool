@@ -5,8 +5,13 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Forms
-public import LeanPool.JacobianDiffgeo.Meromorphic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Meromorphic.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `MFormData X`: raw chart-coefficient families for meromorphic 1-forms (D1–D3, data layer)

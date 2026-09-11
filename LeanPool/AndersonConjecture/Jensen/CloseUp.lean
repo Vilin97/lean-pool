@@ -16,6 +16,12 @@ public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
 public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionStep
 public import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
 public import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Closing Up Finitely Generated Ideals

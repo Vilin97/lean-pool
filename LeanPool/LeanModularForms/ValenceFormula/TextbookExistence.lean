@@ -6,6 +6,7 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+public import LeanPool.LeanModularForms.ValenceFormula.OrbitPairing
 
 /-!
 # Canonical Representatives for Non-Elliptic Orbits

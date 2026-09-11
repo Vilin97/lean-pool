@@ -9,6 +9,8 @@ public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
 public import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
 public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
 public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # dolbeault-comparison: Leray's theorem and the Dolbeault comparison (namespaces `RS`, `RS.Cech`,

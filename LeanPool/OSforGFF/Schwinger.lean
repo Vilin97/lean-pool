@@ -8,6 +8,8 @@ module
 public import LeanPool.OSforGFF.Schwinger.Defs
 public import LeanPool.OSforGFF.Schwinger.GaussianMoments
 public import LeanPool.OSforGFF.Schwinger.TwoPoint
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # `LeanPool.OSforGFF.Schwinger` index

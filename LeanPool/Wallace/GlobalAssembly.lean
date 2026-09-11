@@ -7,6 +7,14 @@ module
 
 public import LeanPool.Wallace.ConcreteClosure
 public import LeanPool.Wallace.SeparationInterface
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Inv
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # From the local fusions to the Wallace counterexample

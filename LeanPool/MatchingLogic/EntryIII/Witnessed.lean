@@ -15,8 +15,10 @@ only for the conservative-extension proof, not for the public operation.
 module
 
 public import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
-public import LeanPool.MatchingLogic.EntryIII.Lindenbaum
 public import Mathlib.Data.Countable.Defs
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.Lindenbaum
 
 /-!
 # MatchingLogic.EntryIII.Witnessed

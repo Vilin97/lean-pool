@@ -5,8 +5,12 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomDot3
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomDot3
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # S4Dot3 -/
 

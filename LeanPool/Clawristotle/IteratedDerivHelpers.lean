@@ -6,7 +6,9 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.Defs
-public import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Iterated Derivative Helpers

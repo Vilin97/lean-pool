@@ -5,10 +5,14 @@ Authors: Xuanji Li
 -/
 module
 
-public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
-public import LeanPool.Chudnovsky.SingularModuli.CMRelations
-public import LeanPool.Chudnovsky.SingularModuli.Valence
-public import Mathlib.Tactic.NormNum.Prime
+public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+public import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
+import LeanPool.Chudnovsky.SingularModuli.CMRelations
+import LeanPool.Chudnovsky.SingularModuli.FormReduction
+import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
+import LeanPool.Chudnovsky.SingularModuli.Valence
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Rationality of `j(τ₁₆₃)`: the three-prime argument (Phase C, §4.2)

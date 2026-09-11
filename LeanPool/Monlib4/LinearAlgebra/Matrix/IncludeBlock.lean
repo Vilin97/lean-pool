@@ -5,15 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Block
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.Data.Matrix.Basis
-public import LeanPool.Monlib4.Preq.Dite
-public import Mathlib.LinearAlgebra.Matrix.Hermitian
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-public import Mathlib.LinearAlgebra.Matrix.Kronecker
 public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+import LeanPool.Monlib4.Preq.Dite
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 

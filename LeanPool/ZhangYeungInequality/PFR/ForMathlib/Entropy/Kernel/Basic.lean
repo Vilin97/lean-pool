@@ -6,9 +6,12 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.MeasureTheory.Integral.Prod
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Measure
 public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Kernel.Disintegration
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Countable
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Entropy of a kernel with respect to a measure

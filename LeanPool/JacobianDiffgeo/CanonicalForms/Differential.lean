@@ -6,6 +6,12 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import Mathlib.Algebra.Module.MinimalAxioms
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `ofForm1`, the `ℳ(X)`-module structure, `d`, `dlog` (D7), data + quotient layers

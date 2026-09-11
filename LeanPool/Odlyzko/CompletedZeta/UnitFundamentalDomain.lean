@@ -6,7 +6,6 @@ Authors: The FLT Project
 module
 
 public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.NormLeOne
-public import Mathlib.Algebra.Order.Floor.Ring
 
 /-! TODO: Add doc-string. -/
 

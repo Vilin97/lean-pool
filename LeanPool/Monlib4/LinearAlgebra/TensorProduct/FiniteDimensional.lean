@@ -5,16 +5,9 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.LinearAlgebra.TensorProduct.Basis
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Algebra.Star.TensorProduct
-public import Mathlib.RingTheory.TensorProduct.Finite
 public import LeanPool.Monlib4.LinearAlgebra.IsReal
 public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
 public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
 
 /-!
 

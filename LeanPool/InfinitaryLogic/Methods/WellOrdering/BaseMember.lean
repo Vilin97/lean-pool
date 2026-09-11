@@ -5,7 +5,9 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
 /-!
 # The initial member: `Bφ ∈ P` (issue #12, the mathematical starting gate)
 

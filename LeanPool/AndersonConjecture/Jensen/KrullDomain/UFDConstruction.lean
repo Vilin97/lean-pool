@@ -5,10 +5,17 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
-public import Mathlib.Order.BourbakiWitt
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.RingTheory.UniqueFactorizationDomain.Kaplansky
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Krull domain construction: UFD proof

@@ -5,8 +5,8 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Functions
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Iteration
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Language
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Thy -/
 

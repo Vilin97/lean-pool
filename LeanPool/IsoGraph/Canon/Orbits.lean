@@ -5,7 +5,19 @@ Authors: Alex Meiburg
 -/
 module
 
-public import LeanPool.IsoGraph.Canon.Node
+public import Aesop.BuiltinRules
+public import LeanPool.IsoGraph.Canon.Algorithm
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Orbit closure

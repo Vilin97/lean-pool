@@ -6,7 +6,8 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Tactic.Set
+import Mathlib.Data.Set.Basic
+import Mathlib.Tactic.Set
 
 /-!
 # Lecture II (§2) — approximable mappings: Definitions 2.1, 2.2 and Theorems

@@ -7,7 +7,8 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
 public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceBoundary
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Coherent polygonal boundary maps for locally finite faces

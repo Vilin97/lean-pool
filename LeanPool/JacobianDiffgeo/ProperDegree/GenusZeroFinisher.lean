@@ -5,9 +5,14 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
-public import LeanPool.JacobianDiffgeo.MappingDegree
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `homeoSphere_of_exists_simple_pole` (proper-map-degree, file 3 of 3)

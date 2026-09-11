@@ -6,8 +6,10 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.Perturbation
-public import Mathlib.Analysis.Calculus.Deriv.Mul
-public import Mathlib.Tactic.Ring
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The first homological equation

@@ -6,6 +6,9 @@ Authors: FredRaj3
 module
 
 public import LeanPool.SemicircleLaw.SemicircleDistribution
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Wigner Semicircle Distribution

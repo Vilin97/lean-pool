@@ -5,7 +5,7 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+public import Mathlib.ModelTheory.LanguageMap
 /-!
 # The functional witness language (issue #10, Unit 1 part 1)
 

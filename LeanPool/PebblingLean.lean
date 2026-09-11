@@ -24,6 +24,9 @@ public import LeanPool.PebblingLean.UpperBoundLoss
 public import LeanPool.PebblingLean.UpperBoundParameters
 public import LeanPool.PebblingLean.Paper
 public import LeanPool.PebblingLean.Examples
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Optimal Pebbling Number of the Hypercube

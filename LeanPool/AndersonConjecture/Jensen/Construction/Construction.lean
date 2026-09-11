@@ -5,9 +5,18 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
-public import LeanPool.AndersonConjecture.Jensen.Construction.Transfinite
 public import LeanPool.AndersonConjecture.Jensen.Defs
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Regular.RegularSequence
+import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
+import LeanPool.AndersonConjecture.Jensen.Construction.Transfinite
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.RingTheory.AdicCompletion.RingHom
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The Main Transfinite Construction

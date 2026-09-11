@@ -6,7 +6,8 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Logarithmic growth near a resonant collision

@@ -5,8 +5,11 @@ Authors: Vasily Ilin
 -/
 module
 
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 
 /-!
 # Core Definitions for the Vlasov-Maxwell-Landau System

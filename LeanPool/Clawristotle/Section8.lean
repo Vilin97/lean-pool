@@ -6,7 +6,9 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.VMLStructures
-public import LeanPool.Clawristotle.Section6
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.Section6
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Magnetic Field and Final Assembly (Section 8)

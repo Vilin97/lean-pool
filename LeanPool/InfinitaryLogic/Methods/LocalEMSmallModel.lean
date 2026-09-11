@@ -5,11 +5,14 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
-public import LeanPool.InfinitaryLogic.Methods.LocalEMSmall
-public import LeanPool.InfinitaryLogic.Methods.LocalEMCardinality
-public import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveExistence
 public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveExistence
+import LeanPool.InfinitaryLogic.Methods.LocalEMCardinality
+import LeanPool.InfinitaryLogic.Methods.LocalEMSmall
+import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
+import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
+import LeanPool.InfinitaryLogic.Methods.SchemaTermTruth
 /-!
 # Small models of every infinite size: the countable-symbol core (issue #11 unit 7a)
 

@@ -5,8 +5,11 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRootGate
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairModel
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairModel
+import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRootGate
+import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 /-!
 # Malitz interpolation, countable relational core (issue #15)
 

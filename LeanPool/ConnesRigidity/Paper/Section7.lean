@@ -8,6 +8,9 @@ Authors: Utensil Song
 module
 
 public import LeanPool.ConnesRigidity.Paper.Section7.TheoremACompletion
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Zhou §7: completion of Theorem A

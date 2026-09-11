@@ -5,8 +5,7 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ColoringFramework
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LoewnerPullback
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LaplacianBasics
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Dynamic Coloring

@@ -6,7 +6,8 @@ Authors: Vasily Ilin
 module
 
 public import LeanPool.Clawristotle.VMLStructures
-public import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Bulk Velocity Vanishes (Section 6)

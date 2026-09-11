@@ -5,16 +5,12 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import Mathlib.LinearAlgebra.Dimension.Localization
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
 public import Mathlib.LinearAlgebra.TensorProduct.Pi
 public import Mathlib.LinearAlgebra.TensorProduct.Quotient
 public import Mathlib.Algebra.Module.Torsion.Basic
 public import Mathlib.RingTheory.Ideal.Quotient.Operations
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.FieldSimp
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 /-!
 # LeanPool.BruhatTits.Utils.LinearAlgebra
 -/

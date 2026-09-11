@@ -5,7 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
 /-!
 # Paired inseparability: the cross-coordinate gates (issue #8, commit 4c — risky core)
 

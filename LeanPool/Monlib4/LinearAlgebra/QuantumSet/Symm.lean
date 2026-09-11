@@ -5,12 +5,14 @@ Authors: Monica Omar
 -/
 module
 
-public import LeanPool.Monlib4.LinearAlgebra.IsReal
 -- import LeanPool.Monlib4.LinearAlgebra.MyIps.Nontracial
-public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
 public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
 public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import Mathlib.FieldTheory.Finiteness
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Symmetry Maps for Quantum Sets

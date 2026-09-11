@@ -8,17 +8,10 @@ Authors: ruplet
 -- as all `simp` lemmas in scope will get our `delta0_simp` attribute!
 module
 
-public import Lean.Elab.Command
-public import Mathlib.Lean.Meta.Simp
-public import Mathlib.Tactic.Simps.Basic
 
-public import Mathlib.ModelTheory.Basic
-public import Mathlib.ModelTheory.Syntax
-public import Mathlib.ModelTheory.Semantics
 public import Mathlib.ModelTheory.Order
-public import Mathlib.ModelTheory.Complexity
 
-public import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.Register
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps

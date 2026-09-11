@@ -9,11 +9,8 @@ Blueprint unit: residue-calculus. The residue functional `resAt` and its algebra
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-public import Mathlib.Analysis.Calculus.Deriv.ZPow
-public import Mathlib.Analysis.Calculus.Deriv.Shift
-public import Mathlib.Analysis.Calculus.FDeriv.Analytic
-public import Mathlib.Analysis.Calculus.LogDeriv
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
+import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
 
 /-!
 # The residue functional (residue-calculus)

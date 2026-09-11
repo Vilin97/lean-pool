@@ -5,8 +5,10 @@ Authors: Dillon Ryan
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 public import Mathlib.LinearAlgebra.Matrix.Notation
+public import Mathlib.Algebra.Polynomial.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # the objects of the claim.

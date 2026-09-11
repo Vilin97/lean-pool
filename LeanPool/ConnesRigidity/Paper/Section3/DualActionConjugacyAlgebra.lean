@@ -9,7 +9,13 @@ Algebraic covariance lemmas for Zhou's dual fiber shear. Paper: §3.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 The dual action conjugacy algebra component of the Connes rigidity formalization.

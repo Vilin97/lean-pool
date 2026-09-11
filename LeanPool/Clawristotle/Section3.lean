@@ -5,8 +5,12 @@ Authors: Vasily Ilin
 -/
 module
 
-public import LeanPool.Clawristotle.Section3Helpers
-public import LeanPool.Clawristotle.Section3Helpers2
+public import LeanPool.Clawristotle.Defs
+import LeanPool.Clawristotle.Section2
+import LeanPool.Clawristotle.Section3Helpers
+import LeanPool.Clawristotle.Section3Helpers2
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Nullspace of the Landau Operator (Section 3)

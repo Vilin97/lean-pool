@@ -8,7 +8,13 @@ module
 public import LeanPool.CompositionAlgebras.Composition.Defs
 public import LeanPool.CompositionAlgebras.OctonionModule
 public import Mathlib.Algebra.Quaternion
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.LinearAlgebra.Complex.Module
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!

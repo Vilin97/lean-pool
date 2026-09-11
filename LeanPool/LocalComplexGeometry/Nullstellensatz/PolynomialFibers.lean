@@ -7,6 +7,7 @@ module
 
 public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
 public import Mathlib.FieldTheory.Separable
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Polynomial rigidity on simple finite fibers

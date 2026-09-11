@@ -7,6 +7,8 @@ module
 
 public import LeanPool.DomainTheory.Neighborhood.Definition610
 public import LeanPool.DomainTheory.Neighborhood.Exercise222
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # Lecture VI — Proposition 6.11 (Scott 1981, PRG-19): the subsystems of `E` form a

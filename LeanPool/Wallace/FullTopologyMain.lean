@@ -6,7 +6,8 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 module
 
 public import LeanPool.Wallace.ConcreteFusionRun
-public import LeanPool.Wallace.FullTopology
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The full free-Abelian group theorem

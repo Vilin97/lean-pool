@@ -5,9 +5,12 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
 public import LeanPool.InfinitaryLogic.Descriptive.FiniteCarrier
-public import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
+import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
+import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
+import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
+import LeanPool.InfinitaryLogic.Scott.RefinementCount
+import LeanPool.InfinitaryLogic.Util
 /-!
 # Morley's Counting Theorem via Scott-Height Stratification
 

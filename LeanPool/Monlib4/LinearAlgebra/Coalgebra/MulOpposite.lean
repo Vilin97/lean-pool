@@ -7,8 +7,9 @@ module
 
 public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
 public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
-public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
-public import Mathlib.LinearAlgebra.TensorProduct.Opposite
+public import Mathlib.RingTheory.Coalgebra.Basic
+import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite

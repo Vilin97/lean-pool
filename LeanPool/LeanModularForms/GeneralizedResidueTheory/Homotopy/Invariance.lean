@@ -6,7 +6,12 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.ParametricDiff
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.ParametricDiff
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Homotopy Invariance of Winding Numbers

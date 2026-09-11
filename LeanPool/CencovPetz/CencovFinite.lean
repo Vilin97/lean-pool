@@ -5,10 +5,17 @@ Authors: Adam Benenson
 -/
 module
 
-public import LeanPool.CencovPetz.CencovSplitPoint
-public import LeanPool.CencovPetz.ContinuousExtension
-public import LeanPool.CencovPetz.FisherContinuity
-public import LeanPool.CencovPetz.RationalDensity
+public import LeanPool.CencovPetz.SimplexTopology
+public import LeanPool.CencovPetz.UniformScalarConstant
+import LeanPool.CencovPetz.CencovSplitPoint
+import LeanPool.CencovPetz.ContinuousExtension
+import LeanPool.CencovPetz.FisherContinuity
+import LeanPool.CencovPetz.RationalDensity
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

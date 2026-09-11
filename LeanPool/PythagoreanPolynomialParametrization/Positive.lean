@@ -6,6 +6,15 @@ Authors: Lazar Milikic
 module
 
 public import LeanPool.PythagoreanPolynomialParametrization.IntegerValued
+import LeanPool.PythagoreanPolynomialParametrization.SourceLemmas
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Positive Pythagorean triples and 16-parameter variant
 

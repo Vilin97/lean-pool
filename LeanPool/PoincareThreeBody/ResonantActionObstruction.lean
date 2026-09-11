@@ -5,9 +5,18 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.ActionFactorization
-public import LeanPool.PoincareThreeBody.DisturbingFunction
 public import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
+public import LeanPool.PoincareThreeBody.ActionPoisson
+public import LeanPool.PoincareThreeBody.DelaunaySection
+import LeanPool.PoincareThreeBody.ActionFactorization
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.Averaging
+import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
+import LeanPool.PoincareThreeBody.KeplerHamiltonian
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # The resonant action form of the first homological obstruction

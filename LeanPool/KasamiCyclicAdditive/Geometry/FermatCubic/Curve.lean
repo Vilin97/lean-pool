@@ -5,8 +5,11 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Frobenius
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The Fermat cubic `X^3 + Y^3 = Z^3` in characteristic two, via a Weierstrass model

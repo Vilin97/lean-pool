@@ -5,11 +5,15 @@ Authors: Trevor Morris
 -/
 module
 
-public import Mathlib.Algebra.Order.Star.Basic
-public import Mathlib.Data.Nat.ModEq
-public import Mathlib.Tactic.IntervalCases
-public import LeanPool.Erdos403.Basic
 public import LeanPool.Erdos403.FactBase
+public import Mathlib.Algebra.Group.Even
+import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Data.Finset.Powerset
+import Mathlib.Data.Nat.ModEq
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Erdős #403 — the sharp bound `m ≤ 7` (Phases B–D)

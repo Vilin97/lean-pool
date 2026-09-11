@@ -5,11 +5,13 @@ Authors: Samuel Schlesinger
 -/
 module
 
-public import LeanPool.Sensitivity.Defs
 public import LeanPool.Sensitivity.Multilinear
-public import LeanPool.Sensitivity.Subcube
-public import LeanPool.Sensitivity.Parity
-public import LeanPool.Sensitivity.HuangBridge
+public import Mathlib.Analysis.Real.Sqrt
+import LeanPool.Sensitivity.HuangBridge
+import LeanPool.Sensitivity.Parity
+import LeanPool.Sensitivity.Subcube
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # The Sensitivity Theorem

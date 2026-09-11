@@ -5,67 +5,19 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.FunProp
-public import Mathlib.Tactic.GCongr
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Tauto
-public import Mathlib.Tactic.ApplyFun
-public import Mathlib.Tactic.Convert
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Cases
-public import Mathlib.Tactic.Choose
-public import Mathlib.Tactic.SimpRw
-public import Mathlib.Tactic.SuppressCompilation
-public import Mathlib.Tactic.Use
-public import Mathlib.Tactic.Set
-public import Mathlib.Tactic.Polyrith
-public import Mathlib.Tactic.SplitIfs
-public import Mathlib.Tactic.Generalize
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.Analysis.Complex.Exponential
-public import Mathlib.Algebra.Group.Support
-public import Mathlib.Analysis.InnerProductSpace.LinearMap
-public import Mathlib.Analysis.Complex.Basic
-public import Mathlib.Analysis.Analytic.Basic
-public import Mathlib.Analysis.Analytic.Constructions
-public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
 
-public import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.MeasureTheory.Measure.FiniteMeasureExt
 
-public import Mathlib.Probability.Independence.Basic
-public import Mathlib.Probability.Density
 
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Analysis.Normed.Module.RCLike.Basic
-public import Mathlib.Analysis.Normed.Module.RCLike.Real
 
-public import Mathlib.Topology.Basic
-public import Mathlib.Order.Filter.Basic
 
-public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.General.FunctionalAnalysis
 public import LeanPool.OSforGFF.Spacetime.Euclidean
-public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
 public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 public import LeanPool.OSforGFF.Spacetime.TimeTranslation
 public import LeanPool.OSforGFF.Schwinger.TwoPoint
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 ## Osterwalder-Schrader Axioms

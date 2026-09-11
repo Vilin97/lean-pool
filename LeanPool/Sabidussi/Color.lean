@@ -5,14 +5,14 @@ Authors: Nikolay Ulyanov
 -/
 module
 
-public import Mathlib.Algebra.BigOperators.Fin
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Tactic.Abel
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.SplitIfs
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The four colours used in the Sabidussi proof

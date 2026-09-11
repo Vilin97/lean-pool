@@ -27,7 +27,8 @@ Statements pinned before any proof was attempted.
 -/
 module
 
-public import LeanPool.MatchingLogic.EntryPoints
+public import LeanPool.MatchingLogic.Semantics
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.SetVariables

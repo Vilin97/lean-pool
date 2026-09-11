@@ -7,8 +7,13 @@ module
 
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
 public import LeanPool.ClassificationOfSurfaces.FiniteCyclicTriangulation
-public import LeanPool.ClassificationOfSurfaces.StrongVertexStar
 public import LeanPool.ClassificationOfSurfaces.TriangleCell
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
+import LeanPool.ClassificationOfSurfaces.StrongVertexStar
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Faithful polygonal realization of a geometric triangulation

@@ -45,7 +45,8 @@ Statements pinned before any proof was attempted.
 -/
 module
 
-public import LeanPool.MatchingLogic.Composite
+public import LeanPool.MatchingLogic.Boxes
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.ProofSystem

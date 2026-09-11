@@ -5,8 +5,12 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
 module
 
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+public import Mathlib.Data.FunLike.Fintype
+public import Mathlib.NumberTheory.GaussSum
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.NumberTheory.MulChar.Duality
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 
 /-!
 # Character-sum lemmas over a finite field

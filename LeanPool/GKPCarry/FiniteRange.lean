@@ -5,7 +5,11 @@ Authors: Egor Lyfar
 -/
 module
 
-public import LeanPool.GKPCarry.ModularPrefix
+public import LeanPool.GKPCarry.Definitions
+import LeanPool.GKPCarry.ModularPrefix
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kernel-checked bounded C3 certificate

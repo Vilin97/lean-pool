@@ -5,8 +5,8 @@ Authors: Vikraman Choudhury
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Order.WellFounded
+public import Mathlib.Data.Finset.Empty
+import Mathlib.Data.Finset.Insert
 
 /-!
 # Minimal elements of finite posets

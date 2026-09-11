@@ -5,7 +5,6 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
 
 /-! ## A `Foldable` typeclass for big operators
 

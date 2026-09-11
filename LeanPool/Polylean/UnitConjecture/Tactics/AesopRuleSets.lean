@@ -5,7 +5,7 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public import Aesop
+import Aesop.Frontend.Command
 
 /-!
 # LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets

@@ -5,11 +5,14 @@ Authors: Michael R. Douglas, Sarah Hoback
 -/
 module
 
-public import LeanPool.OSforGFF.Minlos.NuclearSpace
 public import LeanPool.OSforGFF.Minlos.PietschBridge
-public import LeanPool.OSforGFF.Minlos.Main
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
 public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Nuclear Space Infrastructure for Schwartz Space

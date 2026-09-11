@@ -17,12 +17,18 @@ the resulting inequalities to obtain the bounds C₁ and C₂.
 module
 
 public import LeanPool.KaltonRoberts.Defs
-public import LeanPool.KaltonRoberts.Numerical
-public import LeanPool.KaltonRoberts.Lemmas
-public import LeanPool.KaltonRoberts.Collections
-public import LeanPool.KaltonRoberts.Pipeline
-public import LeanPool.KaltonRoberts.PipelineEps
-public import LeanPool.KaltonRoberts.EpsilonRecombination
+public import Mathlib.Order.BooleanSubalgebra
+import LeanPool.KaltonRoberts.EpsilonRecombination
+import LeanPool.KaltonRoberts.Lemmas
+import LeanPool.KaltonRoberts.Numerical
+import LeanPool.KaltonRoberts.Pipeline
+import LeanPool.KaltonRoberts.PipelineEps
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Main theorem: the Kalton-Roberts upper bound

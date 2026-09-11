@@ -5,8 +5,8 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.Analysis.Normed.Group.Basic
 public import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
+import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # LeanPool.SardMoreira.MeasureComap

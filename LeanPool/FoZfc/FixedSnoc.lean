@@ -5,10 +5,8 @@ Authors: Tetsuya Ishiu
 -/
 module
 
-public import Init.Data.Fin.Basic
-public import Mathlib.Data.Set.Basic
-public import Mathlib.Data.Fin.Tuple.Basic
 public import Mathlib.Data.Fin.VecNotation
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # The version of Fin.snoc for the fixed type.

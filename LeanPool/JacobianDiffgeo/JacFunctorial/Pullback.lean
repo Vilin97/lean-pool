@@ -5,7 +5,9 @@ Authors: Rado Kirov
 -/
 module
 
-public import LeanPool.JacobianDiffgeo.Forms
+public import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Form1.pullback` — the easy direction (jacobian-functoriality §3)

@@ -6,9 +6,11 @@ Authors: Vico Bonfioli
 module
 
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Data.Nat.Find
-public import Mathlib.Order.Monotone.Basic
-public import Mathlib.Tactic.Linarith
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # The combinatorial core of the higher-dimensional three-distance bound (Shutov / Chevallier)

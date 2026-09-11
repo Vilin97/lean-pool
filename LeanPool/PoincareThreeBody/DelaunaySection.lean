@@ -7,7 +7,8 @@ module
 
 public import LeanPool.PoincareThreeBody.DelaunayActions
 public import LeanPool.PoincareThreeBody.DelaunayFlow
-public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # An analytic periapsis section of the planar Delaunay action map

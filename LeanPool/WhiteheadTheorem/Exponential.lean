@@ -5,9 +5,11 @@ Authors: Jiazhen Xia
 -/
 module
 
-public import Mathlib.Topology.UnitInterval
 public import Mathlib.Topology.CompactOpen
-public import Mathlib.Topology.Category.TopCat.Limits.Products
+public import Mathlib.Algebra.Group.End
+public import Mathlib.CategoryTheory.Adjunction.Basic
+public import Mathlib.Topology.Category.TopCat.Basic
+import Mathlib.Topology.UnitInterval
 
 /-!
 # LeanPool.WhiteheadTheorem.Exponential

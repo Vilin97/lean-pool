@@ -8,26 +8,10 @@ module
 public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.Algebra.Module.ZMod
 public import Mathlib.FieldTheory.Galois.Basic
-public import Mathlib.FieldTheory.Perfect
 public import Mathlib.FieldTheory.Relrank
-public import Mathlib.GroupTheory.QuotientGroup.Basic
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.Dimension.Finrank
-public import Mathlib.LinearAlgebra.Span.Defs
-public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
-public import Mathlib.Tactic.ComputeDegree
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.FinCases
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Order
-public import Mathlib.Tactic.Push
-public import Mathlib.Tactic.Ring
 
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
-public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup
+import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup
 
 /-!
 # Multiquadratic field extensions

@@ -11,14 +11,17 @@ conceptual action and transvection lemmas.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard0
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard1
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard2
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard3
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard4
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard5
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard6
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard0
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard1
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard2
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard3
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard4
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard5
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard6
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kernel-checked `Sp₄(𝔽₂)` normal-subgroup certificate

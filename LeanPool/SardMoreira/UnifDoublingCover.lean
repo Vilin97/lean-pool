@@ -5,19 +5,11 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.MeasureTheory.Covering.Besicovitch
-public import Mathlib.MeasureTheory.Covering.LiminfLimsup
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-public import Mathlib.Tactic.Common
-public import Mathlib.Tactic.Linarith
-public import Mathlib.Tactic.Ring
-public import Mathlib.Tactic.Ring.RingNF
-public import Mathlib.Tactic.FieldSimp
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.IntervalCases
-public import Mathlib.Tactic.LinearCombination
-public import Mathlib.Tactic.Polyrith
+public import Mathlib.MeasureTheory.Measure.Doubling
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Covering.Vitali
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # LeanPool.SardMoreira.UnifDoublingCover
 -/

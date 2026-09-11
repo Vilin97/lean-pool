@@ -5,14 +5,11 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-public import Mathlib.Topology.MetricSpace.Bounded
-public import Mathlib.Probability.Moments.IntegrableExpMul
 public import LeanPool.OSforGFF.General.SchwartzTranslationDecay
+import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Measure.Haar.Unique
+import Mathlib.Probability.Moments.IntegrableExpMul
 
 /-!
 # Quantitative Decay for Schwartz Bilinear Forms

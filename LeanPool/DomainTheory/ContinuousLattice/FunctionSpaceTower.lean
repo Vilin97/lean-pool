@@ -6,7 +6,6 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.ContinuousLattice.InverseLimits
-public import Mathlib.Order.Hom.Basic
 
 /-!
 # The function-space tower and Scott's `D_∞ ≅ [D_∞ → D_∞]` (Scott 1972, §4,

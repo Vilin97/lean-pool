@@ -6,6 +6,10 @@ Authors: Dan Clemens Posch
 module
 
 public import LeanPool.KahnKalai.ParkPham
+import LeanPool.KahnKalai.Covering
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kahn–Kalai expectation-threshold theorem

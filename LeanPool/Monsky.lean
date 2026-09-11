@@ -16,6 +16,8 @@ public import LeanPool.Monsky.SegmentCounting
 public import LeanPool.Monsky.SegmentTriangle
 public import LeanPool.Monsky.SimplexBasic
 public import LeanPool.Monsky.Square
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Monsky's Theorem

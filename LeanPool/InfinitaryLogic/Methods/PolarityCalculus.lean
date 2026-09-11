@@ -6,12 +6,7 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
-public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
-public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
-public import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 /-!
 # The signed occurrence calculus (issue #14, Unit 0 layer 2)

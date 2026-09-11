@@ -6,7 +6,10 @@ Authors: Gershon Bialer
 module
 
 public import LeanPool.PoincareThreeBody.JointBallFiberSeries
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.PoincareThreeBody.AnalyticParameterIntegral
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Integral.IntegrableOn
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-!
 # Integrating a joint analytic power series over a time slab

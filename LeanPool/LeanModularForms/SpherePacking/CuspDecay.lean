@@ -5,10 +5,10 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.Modularforms.AtImInfty
 public import LeanPool.LeanModularForms.Modularforms.Eisenstein
-public import LeanPool.LeanModularForms.ForMathlib.QExpansion
-public import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
+import LeanPool.LeanModularForms.ForMathlib.AtImInfty
+import LeanPool.LeanModularForms.ForMathlib.QExpansion
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Cusp decay for Eisenstein series and the Viazovska integrand

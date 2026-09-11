@@ -5,8 +5,8 @@ Authors: Cameron Freer
 -/
 module
 
-public import Mathlib.SetTheory.Cardinal.Arithmetic
 public import Mathlib.SetTheory.Cardinal.Aleph
+import Mathlib.SetTheory.Cardinal.Arithmetic
 
 /-!
 # Cardinal lemmas for the beth ladder

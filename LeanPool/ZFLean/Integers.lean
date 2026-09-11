@@ -7,8 +7,11 @@ module
 
 public import LeanPool.ZFLean.Naturals
 public import Mathlib.Algebra.Order.Ring.Defs
-public import Mathlib.Algebra.Order.Group.Defs
-public import Mathlib.SetTheory.Cardinal.SchroederBernstein
+public import Mathlib.Algebra.Group.End
+import LeanPool.ZFLean.Basic
+import Mathlib.SetTheory.Cardinal.SchroederBernstein
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 /-! # ZFC Integers
 This file provides a construction of the integers in ZFC based on the construction of natural
 numbers. It follows the usual construction of integers as equivalence classes of pairs of natural

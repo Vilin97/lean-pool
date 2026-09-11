@@ -7,6 +7,13 @@ module
 
 public import LeanPool.CriticalPortraits.Core
 public import LeanPool.CriticalPortraits.Portraits
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Forward bound (brick 3b): `T P` is level-canonical, for every degree `d`.

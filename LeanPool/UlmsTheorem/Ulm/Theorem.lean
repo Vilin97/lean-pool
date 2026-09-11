@@ -5,8 +5,12 @@ Authors: Elan Roth
 -/
 module
 
-public import LeanPool.UlmsTheorem.Ulm.Classification
-public import LeanPool.UlmsTheorem.Ulm.Invariance
+public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
+import LeanPool.UlmsTheorem.Ulm.Classification
+import LeanPool.UlmsTheorem.Ulm.Invariance
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Ulm's theorem

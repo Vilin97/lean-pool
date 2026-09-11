@@ -6,8 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.MeasureTheory.Measure.Real
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real

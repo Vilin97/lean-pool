@@ -5,12 +5,9 @@ Authors: Vikraman Choudhury
 -/
 module
 
-public import LeanPool.EventStructures.Configuration
 public import LeanPool.EventStructures.Path
-public import LeanPool.EventStructures.FinitePoset
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Data.Set.Finite.Basic
 public import Mathlib.Data.Set.Card
+import LeanPool.EventStructures.FinitePoset
 
 /-!
 # Rollback

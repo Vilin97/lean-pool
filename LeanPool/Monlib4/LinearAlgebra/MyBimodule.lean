@@ -5,14 +5,13 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Bilinear
-public import Mathlib.LinearAlgebra.Basis.VectorSpace
-public import Mathlib.LinearAlgebra.TensorProduct.Basis
 public import Mathlib.RingTheory.TensorProduct.Basic
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-public import LeanPool.Monlib4.LinearAlgebra.End
-public import LeanPool.Monlib4.Preq.Finset
 public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.Preq.Finset
 
 /-!
 # (A-A)-Bimodules

@@ -6,6 +6,9 @@ Authors: Vincent Beffara
 module
 
 public import LeanPool.RiemannMappingTheorem.Main
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Riemann Mapping Theorem

@@ -16,8 +16,9 @@ with `1 ≤ y ≤ 2`, and `t = (y-1)/(y+1)`.
 -/
 module
 
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Log bounds for Phi endpoint proofs

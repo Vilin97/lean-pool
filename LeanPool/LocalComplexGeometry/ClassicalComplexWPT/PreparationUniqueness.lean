@@ -7,11 +7,11 @@ module
 
 public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
 public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
-public import Mathlib.Analysis.Analytic.Uniqueness
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
+import Mathlib.Analysis.Analytic.Uniqueness
 
 /-!
 # The algebraic uniqueness layer for Weierstrass preparation

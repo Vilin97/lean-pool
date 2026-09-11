@@ -5,7 +5,14 @@ Authors: Alexey Milovanov
 -/
 module
 
-public import LeanPool.BooleanIsoperimetry.Compression
+public import LeanPool.BooleanIsoperimetry.Cascade
+import LeanPool.BooleanIsoperimetry.Compression
+import LeanPool.BooleanIsoperimetry.Macaulay
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Upper-shadow and Macaulay layer

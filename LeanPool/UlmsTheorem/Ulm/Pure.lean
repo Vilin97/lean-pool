@@ -5,9 +5,13 @@ Authors: Elan Roth
 -/
 module
 
-public import Mathlib.RingTheory.Coprime.Lemmas
-public import LeanPool.UlmsTheorem.PGroups.Socle
-public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
+public import LeanPool.UlmsTheorem.PGroups.Heights
+public import Mathlib.Data.Nat.Prime.Defs
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.Coprime.Lemmas
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Pure subgroups and height-preserving partial maps

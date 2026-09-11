@@ -19,6 +19,9 @@ public import LeanPool.Erdos137.SexticCrude
 public import LeanPool.Erdos137.SquarefreeCapacity
 public import LeanPool.Erdos137.CombinedSplice
 public import LeanPool.Erdos137.AxiomAudit
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: powerful products of consecutive integers

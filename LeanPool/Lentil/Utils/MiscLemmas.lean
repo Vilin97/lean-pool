@@ -5,7 +5,9 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
+public import Std.Data.HashSet.Basic
+import Std.Data.DTreeMap.Internal.Operations
+import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
 

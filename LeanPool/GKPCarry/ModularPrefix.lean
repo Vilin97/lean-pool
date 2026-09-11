@@ -6,10 +6,9 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.GKPCarry.Definitions
-public import Mathlib.Data.Nat.Digits.Lemmas
-public import Mathlib.Tactic.NormNum
-public import Mathlib.Tactic.Positivity
-public import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Modular evaluation of ternary prefixes

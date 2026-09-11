@@ -6,12 +6,12 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
-public import Mathlib.Analysis.SpecialFunctions.Log.Summable
-public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-public import Mathlib.Tactic.Cases
+public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Log.Summable
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-! # ClogArgLems -/
 

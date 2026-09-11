@@ -5,8 +5,10 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic
-public import Mathlib.Order.Filter.Ultrafilter.Basic
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Semantics
+public import Mathlib.Order.Filter.Ultrafilter.Defs
+import Mathlib.Order.Filter.Ultrafilter.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-! # Ultraproduct -/
 

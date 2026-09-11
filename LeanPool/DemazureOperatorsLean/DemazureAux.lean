@@ -6,6 +6,11 @@ Authors: Óscar Álvarez Sánchez
 module
 
 public import LeanPool.DemazureOperatorsLean.Demazure
+public import Mathlib.Analysis.Complex.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.RingTheory.MvPolynomial.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.DemazureOperatorsLean.DemazureAux

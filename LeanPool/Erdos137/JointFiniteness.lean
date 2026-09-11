@@ -5,9 +5,10 @@ Authors: Scott D. Hughes
 -/
 module
 
-public import LeanPool.Erdos137.Finiteness
-public import LeanPool.Erdos137.Base
 public import LeanPool.Erdos137.BlockFramework
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: per-`k` non-powerfulness via the triple tiling (g = 3 instance)

@@ -5,9 +5,9 @@ Authors: Vincent Beffara
 -/
 module
 
-public import Mathlib.Analysis.Complex.Schwarz
 public import LeanPool.RiemannMappingTheorem.Defs
-public import LeanPool.RiemannMappingTheorem.ToMathlib
+import Mathlib.Analysis.Complex.Schwarz
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.RiemannMappingTheorem.Etape2

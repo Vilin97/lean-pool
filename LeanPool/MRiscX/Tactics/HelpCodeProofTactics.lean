@@ -5,9 +5,11 @@ Authors: Julius Marx
 -/
 module
 
-public import Lean.Elab.Tactic.Basic
 public import LeanPool.MRiscX.Elab.HandleExpr
-public import LeanPool.MRiscX.Hoare.HoareCore
+public meta import Lean.Elab.Tactic.RCases
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Elab.Tactic.RCases
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # HelpCodeProofTactics

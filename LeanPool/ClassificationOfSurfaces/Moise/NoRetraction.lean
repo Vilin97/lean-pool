@@ -6,12 +6,11 @@ Authors: Ryan McCorvie, Jack McCarthy
 module
 
 public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
-public import Mathlib.Analysis.Convex.GaugeRescale
-public import Mathlib.Analysis.Normed.Module.Connected
-public import Mathlib.Analysis.LocallyConvex.WithSeminorms
-public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-public import Mathlib.Topology.Algebra.Module.LocallyConvex
-public import Mathlib.Topology.Homotopy.Lifting
+public import Mathlib.Analysis.Complex.Circle
+import Mathlib.Analysis.Convex.Contractible
+import Mathlib.Analysis.Convex.GaugeRescale
+import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+import Mathlib.Topology.Homotopy.Lifting
 
 /-!
 # The disk has no retraction onto its boundary

@@ -6,7 +6,13 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
-public import Mathlib.Analysis.Meromorphic.NormalForm
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Order, canonical value, and `holoRepr` on germ classes (CC3, D3/D5)

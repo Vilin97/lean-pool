@@ -8,6 +8,8 @@ module
 public import LeanPool.RlTheoryInLean.Data.Matrix.Mul
 public import LeanPool.RlTheoryInLean.Data.Matrix.PosDef
 public import LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Matrix

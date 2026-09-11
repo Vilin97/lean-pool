@@ -6,8 +6,12 @@ Authors: Jeremy Tan
 module
 
 public import LeanPool.Redhill.Odd.Pell
-public import LeanPool.Redhill.Odd.Subsum
 public import LeanPool.Redhill.Common.Conjectures
+public import LeanPool.Redhill.Odd.Defs
+public import Mathlib.Algebra.EuclideanDomain.Int
+public import Mathlib.RingTheory.PrincipalIdealDomain
+import LeanPool.Redhill.Odd.Subsum
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # The odd case (Theorem 1.13)

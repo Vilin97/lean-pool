@@ -9,8 +9,9 @@ Concrete SL₃ orbit witnesses for the finite polynomial charts. Paper: §4.
 -/
 module
 
-public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
 public import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
+public import LeanPool.ConnesRigidity.Construction.PaperActions
+import LeanPool.ConnesRigidity.Construction.PaperActionInstances
 
 /-!
 The chart orbits component of the Connes rigidity formalization.

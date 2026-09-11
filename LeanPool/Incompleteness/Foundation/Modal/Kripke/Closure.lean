@@ -5,7 +5,6 @@ Authors: Palalansoukî
 -/
 module
 
-public import LeanPool.Incompleteness.Foundation.Vorspiel.BinaryRelations
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
 
 /-! # Closure -/

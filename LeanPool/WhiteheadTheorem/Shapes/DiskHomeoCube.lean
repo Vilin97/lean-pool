@@ -7,13 +7,9 @@ Authors: Jiazhen Xia
 -- import Mathlib.Topology.CWComplex
 module
 
-public import LeanPool.WhiteheadTheorem.Auxiliary
 public import LeanPool.WhiteheadTheorem.Shapes.Disk
 public import LeanPool.WhiteheadTheorem.Shapes.Cube
-public import Mathlib.Topology.Homotopy.HomotopyGroup
-public import Mathlib.Topology.Category.TopCat.Limits.Basic
-public import Mathlib.CategoryTheory.Comma.Arrow
-public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.WhiteheadTheorem.Auxiliary
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube

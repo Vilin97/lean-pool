@@ -6,10 +6,14 @@ Authors: Cameron Freer
 module
 
 public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.FunctionalTheta
-public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
 public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
-public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Assembly and graph translation: the PC sentence (issue #10, Unit 2b)
 

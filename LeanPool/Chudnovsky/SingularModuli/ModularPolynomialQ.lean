@@ -6,7 +6,8 @@ Authors: Xuanji Li
 module
 
 public import LeanPool.Chudnovsky.SingularModuli.CosetOrbit
-public import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
+import LeanPool.Chudnovsky.Ramanujan
+import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
 
 /-!
 # The modular polynomial `Φ_m ∈ ℚ[X, Y]` (Phase C, chunks B3–B5)

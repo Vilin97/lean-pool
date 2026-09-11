@@ -7,17 +7,13 @@ module
 
 public meta import LeanPool.MRiscX.Tactics.TacticUtil
 
-public import Lean.Elab.Tactic.Basic
-public import LeanPool.MRiscX.AbstractSyntax.Instr
-public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public import LeanPool.MRiscX.Semantics.Specification
-public import LeanPool.MRiscX.Elab.HandleNumOrIdent
 public import LeanPool.MRiscX.Elab.HandleExpr
-public import LeanPool.MRiscX.Tactics.TacticUtil
-public import LeanPool.MRiscX.Tactics.GeneralCustomTactics
-public import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 
-public import Mathlib.Data.Set.Basic
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+public meta import Std.Do.Triple.SpecLemmas
+import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # ApplySpec

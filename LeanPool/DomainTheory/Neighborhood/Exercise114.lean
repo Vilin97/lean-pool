@@ -6,7 +6,9 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Set.Basic
+import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # Exercise 1.14 (Scott 1981, PRG-19, §1) — finite non-empty subsets of `ℕ`

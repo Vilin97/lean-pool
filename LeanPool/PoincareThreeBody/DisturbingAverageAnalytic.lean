@@ -5,8 +5,10 @@ Authors: Gershon Bialer
 -/
 module
 
-public import LeanPool.PoincareThreeBody.AnalyticCompactParameterIntegral
-public import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
+public import LeanPool.PoincareThreeBody.DisturbingFunction
+import LeanPool.PoincareThreeBody.AnalyticCompactParameterIntegral
+import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Analytic eccentricity dependence of the resonant disturbing average

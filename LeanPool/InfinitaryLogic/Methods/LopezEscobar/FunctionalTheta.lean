@@ -8,6 +8,11 @@ module
 public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
 public import LeanPool.InfinitaryLogic.Descriptive.QueryCode
 public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The functional Θ: syntax and semantics (issue #10, Unit 2a)
 

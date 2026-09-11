@@ -7,8 +7,11 @@ Authors: Utensil Song
 -/
 module
 
-public import LeanPool.ConnesRigidity.Core
-public import LeanPool.ConnesRigidity.Paper.Section7
+public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
+import LeanPool.ConnesRigidity.Paper.Section7.TheoremACompletion
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 Completion boundary for Zhou's Theorem A.

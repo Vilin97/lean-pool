@@ -6,8 +6,7 @@ Authors: Dhruv Gupta
 module
 
 public import LeanPool.FormalLearningTheory.Basic
-public import Mathlib.MeasureTheory.Measure.MeasureSpace
-public import Mathlib.Probability.ProbabilityMassFunction.Basic
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 
 /-!
 # Data Presentations

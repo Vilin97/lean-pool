@@ -5,9 +5,11 @@ Authors: Yann Pequignot
 -/
 module
 
-public import LeanPool.NashWilliams.Combinatorics.Front.Ray
 public import LeanPool.NashWilliams.Combinatorics.Front.Shrink
-public import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
+import LeanPool.NashWilliams.Combinatorics.Front.Ray
+import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
+import LeanPool.NashWilliams.Data.Nat.Nth
+import Mathlib.Data.Finset.Sort
 
 /-!
 # The Nash-Williams theorem

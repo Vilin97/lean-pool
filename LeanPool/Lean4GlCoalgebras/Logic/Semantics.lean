@@ -5,11 +5,13 @@ Authors: Madeleine Gignoux
 -/
 module
 
-public import Mathlib.Data.Finset.Basic
-public import Mathlib.Order.CompleteLattice.Basic
-public import Mathlib.Order.FixedPoints
-public import Mathlib.Data.Set.Lattice
 public import LeanPool.Lean4GlCoalgebras.Logic.Syntax
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! ## Semantics of GL
 

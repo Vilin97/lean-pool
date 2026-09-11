@@ -5,10 +5,11 @@ Authors: Vincent Trélat
 -/
 module
 
-public import LeanPool.ZFLean.Basic
-public import LeanPool.ZFLean.Booleans
-public import LeanPool.ZFLean.Integers
 public import LeanPool.ZFLean.Functions
+import LeanPool.ZFLean.Tactics
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ZFLean.Sum

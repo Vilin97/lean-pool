@@ -6,6 +6,8 @@ Authors: seb488, Aristotle
 module
 
 public import LeanPool.LeanComplexAnalysis.UnivalentFunctions.ClassS
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Index: univalent functions

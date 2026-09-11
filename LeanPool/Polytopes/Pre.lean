@@ -5,10 +5,11 @@ Authors: Jun Kwon
 -/
 module
 
-public import Mathlib.Analysis.Convex.Intrinsic
 public import Mathlib.Analysis.InnerProductSpace.Orthogonal
-public import Mathlib.Data.Vector.Basic
-public import Mathlib.LinearAlgebra.Basis.Submodule
+public import Mathlib.Analysis.Normed.Affine.Isometry
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 Preliminary lemmas and definitions used by the Polytopes formalization.

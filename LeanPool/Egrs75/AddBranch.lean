@@ -6,11 +6,9 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.LeafInduction
-public import LeanPool.Egrs75.DigitVector
-public import LeanPool.Egrs75.DigitAtToolkit
-public import Mathlib.Data.Nat.Digits.Lemmas
+import LeanPool.Egrs75.DigitAtToolkit
+import LeanPool.Egrs75.DigitVector
+import LeanPool.Egrs75.RoundUp
 
 /-!
 EGRS75 two-prime clearing — PRIMITIVE P2: the ADD branch (`add_clears`).

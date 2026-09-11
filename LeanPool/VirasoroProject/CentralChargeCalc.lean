@@ -5,12 +5,21 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Algebra.EuclideanDomain.Field
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Normed.Field.Lemmas
-public import Mathlib.Data.Int.Star
-public import Mathlib.RingTheory.Henselian
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.CharZero.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Group.Action.Pi
+public import Mathlib.Algebra.GroupWithZero.Action.Defs
+public import Mathlib.Data.Nat.Factorial.Basic
+public import Mathlib.Data.Rat.Defs
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.RingTheory.Henselian
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Central charge calculations for Sugawara constructions

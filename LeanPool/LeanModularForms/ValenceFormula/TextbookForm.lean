@@ -5,9 +5,12 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.CoreIdentity
 public import LeanPool.LeanModularForms.ValenceFormula.TextbookExistence
-public import Mathlib.Algebra.BigOperators.Finprod
+import LeanPool.LeanModularForms.ValenceFormula.CoreIdentity
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Textbook Orbit-Finsum Form of the Valence Formula

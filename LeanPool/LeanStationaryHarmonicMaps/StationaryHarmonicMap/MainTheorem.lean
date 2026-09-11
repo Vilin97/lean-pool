@@ -6,6 +6,7 @@ Authors: Wei Wang
 module
 
 public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryMap
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Main monotonicity theorem

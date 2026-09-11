@@ -7,7 +7,9 @@ module
 
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
 public import LeanPool.Monlib4.LinearAlgebra.InnerAut
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+import LeanPool.Monlib4.Preq.RCLikeLe
+import LeanPool.Monlib4.RepTheory.AutMat
 
 /-!
 # Real powers of positive definite matrices

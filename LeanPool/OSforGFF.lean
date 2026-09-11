@@ -15,6 +15,8 @@ public import LeanPool.OSforGFF.Minlos
 public import LeanPool.OSforGFF.OS
 public import LeanPool.OSforGFF.Schwinger
 public import LeanPool.OSforGFF.Spacetime
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Osterwalder-Schrader Axioms for the Gaussian Free Field

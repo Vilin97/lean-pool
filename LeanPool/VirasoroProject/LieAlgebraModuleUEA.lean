@@ -6,8 +6,6 @@ Authors: Kalle Kytölä
 module
 
 public import Mathlib.Algebra.Lie.UniversalEnveloping
-public import Mathlib.GroupTheory.GroupAction.Ring
-public import Mathlib.Order.CompletePartialOrder
 public import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
 
 /-!

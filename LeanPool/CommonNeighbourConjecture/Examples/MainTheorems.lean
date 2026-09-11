@@ -6,6 +6,10 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 module
 
 public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.ProofAliases
+public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Definitions
+public import Mathlib.GroupTheory.GroupAction.Primitive
+import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Internal
+import Mathlib.Data.Rat.Floor
 
 /-!
 # Main theorem

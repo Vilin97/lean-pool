@@ -5,14 +5,10 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Basic
-public import Mathlib.Algebra.Algebra.Bilinear
-public import Mathlib.Algebra.Algebra.Spectrum.Basic
-public import Mathlib.Algebra.Star.BigOperators
-public import Mathlib.Algebra.Star.StarAlgHom
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.RCLike.Basic
-public import LeanPool.Monlib4.LinearAlgebra.End
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+import LeanPool.Monlib4.LinearAlgebra.End
+import Mathlib.Analysis.Complex.Order
 
 /-!
 # Real Linear Maps

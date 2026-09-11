@@ -6,6 +6,7 @@ Authors: Joris Roos
 module
 
 public import LeanPool.LeanBooleanfun.ToMathlib.Finset
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Auxiliary lemmas suitable for upstream

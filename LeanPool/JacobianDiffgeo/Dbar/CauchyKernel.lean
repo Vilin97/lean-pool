@@ -5,11 +5,11 @@ Authors: Rado Kirov
 -/
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.Analysis.SpecialFunctions.PolarCoord
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.Analysis.Convolution
+import Mathlib.Analysis.Calculus.ContDiff.Convolution
+import Mathlib.Analysis.SpecialFunctions.PolarCoord
+import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 /-!
 # The Cauchy kernel, the Cauchy transform, and Cauchy–Pompeiu (Forster 13.1)

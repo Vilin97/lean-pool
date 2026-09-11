@@ -5,7 +5,11 @@ Authors: Chris Birkbeck
 -/
 module
 
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Fundamental Domain Boundary – Smoothness

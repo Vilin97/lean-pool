@@ -5,7 +5,6 @@ Authors: Cameron Freer
 -/
 module
 
-public import LeanPool.InfinitaryLogic.Methods.LocalEMTruth
 public import LeanPool.InfinitaryLogic.Methods.LocalSkolemUniversal
 /-!
 # The local EM truth lemma, layer 2: readiness + the staged truth lemma

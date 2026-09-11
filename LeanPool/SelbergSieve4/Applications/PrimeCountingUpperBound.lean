@@ -6,13 +6,15 @@ Authors: Arend Mellendijk
 module
 
 public import Mathlib.NumberTheory.Primorial
-public import Mathlib.NumberTheory.PrimeCounting
-public import Mathlib.Analysis.Asymptotics.Lemmas
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.Algebra.Order.Field.Basic
-public import Mathlib.Algebra.Order.Field.GeomSum
 public import LeanPool.SelbergSieve4.Selberg
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import LeanPool.SelbergSieve4.AuxResults
+import LeanPool.SelbergSieve4.Tactic.AesopInit
+import Mathlib.Algebra.Order.Field.GeomSum
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound

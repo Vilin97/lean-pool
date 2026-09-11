@@ -5,12 +5,15 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
-public import Mathlib.Combinatorics.SimpleGraph.Basic
-public import Mathlib.Combinatorics.SimpleGraph.Finite
-public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.Combinatorics.SimpleGraph.Acyclic
-public import Mathlib.Combinatorics.SimpleGraph.Metric
 public import LeanPool.BruhatTits.Utils.GraphAction
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Algebra.Module.Pi
+import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+import Mathlib.Data.Nat.Totient
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.SuppressCompilation
 
 /-!
 # Definition and Surjectivity of Laplacian

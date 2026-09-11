@@ -6,10 +6,15 @@ Authors: Rado Kirov
 module
 
 public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceCoeff
-public import LeanPool.JacobianDiffgeo.JacFunctorial.Density
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
 public import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
-public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+import LeanPool.JacobianDiffgeo.JacFunctorial.Density
+import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Form1.trace` — the fibrewise trace of a holomorphic 1-form (jacobian-functoriality §6)

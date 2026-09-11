@@ -5,9 +5,11 @@ Authors: Bryan Ehrlich
 -/
 module
 
-public import LeanPool.CompositionAlgebras.OctonionTrace
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import LeanPool.CompositionAlgebras.Octonions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import LeanPool.CompositionAlgebras.OctonionTrace
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!

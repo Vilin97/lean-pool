@@ -7,8 +7,8 @@ module
 
 public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
 public import Mathlib.Analysis.Calculus.ImplicitContDiff
-public import Mathlib.Analysis.Calculus.LocalExtr.Basic
-public import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Tubular Neighborhood Projection -- IFT-Based C¹ Regularity

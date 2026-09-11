@@ -5,8 +5,17 @@ Authors: FrenzyMath
 -/
 module
 
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.FactorDivisibility
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionStep
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import LeanPool.AndersonConjecture.Jensen.CloseUp.FactorDivisibility
+import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionStep
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Close-up: factor theorem

@@ -6,7 +6,8 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Finset.Empty
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Elementary lemmas about finite sets

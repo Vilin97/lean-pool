@@ -6,9 +6,13 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-public import Mathlib.Topology.Order.ExtendFrom
+public import Mathlib.Analysis.Analytic.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 
 /-!

@@ -5,7 +5,12 @@ Authors: Ryan McCorvie, Jack McCarthy
 -/
 module
 
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFinitePLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteSidePreservation
+import Mathlib.Analysis.Normed.Affine.AddTorsor
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The per-face comparison map for locally finite side preservation

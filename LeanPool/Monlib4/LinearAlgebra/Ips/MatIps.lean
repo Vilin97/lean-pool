@@ -6,11 +6,11 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-public import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 
 /-!
 

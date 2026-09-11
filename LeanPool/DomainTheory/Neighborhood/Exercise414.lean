@@ -6,7 +6,6 @@ Authors: Catskills Research Company
 module
 
 public import Mathlib.Data.Set.Basic
-public import Mathlib.Order.Monotone.Basic
 
 /-!
 # Exercise 4.14 (Scott 1981, PRG-19, Lecture IV) — `P A` has a maximum fixed point

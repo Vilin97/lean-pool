@@ -9,16 +9,12 @@ public meta import Lean.Elab.Tactic.Conv.Congr
 public meta import Lean.Elab.Tactic.Conv.Rewrite
 public meta import Lean.Elab.Tactic.Conv.Unfold
 
-public import Lean.Elab.Command
 
-public import Mathlib.ModelTheory.Semantics
 
-public import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-public import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 public import LeanPool.FormalizationOfBoundedArithmetic.Order
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
+import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Semantics

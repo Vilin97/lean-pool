@@ -6,6 +6,12 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.Other.Sonia
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Other

@@ -5,7 +5,13 @@ Authors: Math_XMUM
 -/
 module
 
-public import LeanPool.Brouwer.Brouwer
+public import Mathlib.Analysis.Convex.StdSimplex
+import LeanPool.Brouwer.Brouwer
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Brouwer's fixed-point theorem on a product of simplices
