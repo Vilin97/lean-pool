@@ -7974,6 +7974,90 @@ projects:
       - "52C17"
       - "41A60"
       - "42A38"
+  - slug: bollobas-nikiforov
+    title: The Bollobás–Nikiforov conjecture
+    summary: 'Proves the Bollobás–Nikiforov conjecture (2007): every finite noncomplete simple
+      graph G on at least two vertices satisfies λ₁(G)² + λ₂(G)² ≤ 2 (1 - 1/ω(G)) |E(G)|, where
+      λ₁ ≥ λ₂ are the two largest adjacency eigenvalues and ω(G) is the clique number. The
+      inequality is derived from a weighted spectral inequality for symmetric entrywise
+      nonnegative matrices supported on the edges of G, which in turn rests on a complete
+      positivity theorem for planar Gram matrices and a rank-two Gram inequality. The rank-two
+      Gram inequality also identifies the conic parameter of Coutinho, Spier and Zhang with the
+      clique number. The supporting library develops the completely positive cone and its
+      closedness, the Motzkin–Straus inequality in completely positive form, total
+      nonnegativity of truncated-square and convex kernels via Cauchy–Binet, weighted Laplacian
+      updates, Schur complements, Perron eigenvectors, the Schur product theorem and Cauchy
+      interlacing over Mathlib.'
+    branch: spectral graph theory
+    entry_module: LeanPool.BollobasNikiforov
+    authors:
+      - Gabriel Coutinho
+      - Yinchen Liu
+      - Thomás Jung Spier
+      - Quanyu Tang
+      - Shengtong Zhang
+    source:
+      title: The Bollobás–Nikiforov inequality for nonnegative edge weights
+      authors:
+        - Gabriel Coutinho
+        - Yinchen Liu
+        - Thomás Jung Spier
+        - Quanyu Tang
+        - Shengtong Zhang
+      url: https://github.com/ShengtongZhang-alt/BN
+      github_repo: ShengtongZhang-alt/BN
+      commit: edb5259dfd055ea31b4c46ac9ea4d33a758c2b99
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - BollobasNikiforov.lambda1_sq_add_lambda2_sq_le
+    main_results:
+      - declaration: BollobasNikiforov.lambda1_sq_add_lambda2_sq_le
+        informal: For every finite simple graph G on at least two vertices that is not complete,
+          the two largest adjacency eigenvalues satisfy λ₁(G)² + λ₂(G)² ≤ 2 (1 - 1/ω(G)) |E(G)|,
+          with ω(G) the clique number and |E(G)| the number of edges.
+      - declaration: BollobasNikiforov.weighted
+        informal: If B is a real symmetric matrix, indexed by a finite type with at least two
+          elements, that is entrywise nonnegative, has zero diagonal and vanishes off the edges
+          of a graph G on that type, then the sum of the squares of its two largest positive
+          eigenvalues is at most (1 - 1/ω(G)) times its squared Frobenius norm.
+      - declaration: BollobasNikiforov.matrix_theorem
+        informal: If planar vectors z₁, …, zₙ lie in a closed half-plane through the origin and
+          X is their Gram matrix, then X ∘ X plus the weighted Laplacian with weights X_ij² on
+          the pairs i < j with X_ij < 0 is completely positive.
+      - declaration: BollobasNikiforov.gram_le
+        informal: For every real positive semidefinite matrix X of rank at most two,
+          ∑_{i,j} (A_G)_ij (X_ij)₊² ≤ (1 - 1/ω(G)) ‖X‖_F², where (·)₊ is the positive part.
+      - declaration: BollobasNikiforov.chiVec3_eq_cliqueNum
+        informal: For every graph G on a nonempty finite vertex type, the rank-two conic
+          parameter χ''_{vec,3}(G) of Coutinho, Spier and Zhang, defined as the supremum of
+          ‖X‖_F² over positive semidefinite X of rank at most two with nonnegative entries on
+          the edges and unit off-edge mass, equals the clique number ω(G).
+      - declaration: BollobasNikiforov.motzkinStraus
+        informal: Motzkin–Straus inequality; for every entrywise nonnegative vector y,
+          yᵀ A_G y ≤ (1 - 1/ω(G)) (∑ᵢ yᵢ)².
+      - declaration: BollobasNikiforov.posSemidef_hadamard
+        informal: Schur product theorem over the reals; the Hadamard product of two positive
+          semidefinite matrices is positive semidefinite.
+      - declaration: BollobasNikiforov.isClosed_isCompletelyPositive
+        informal: The cone of completely positive real matrices is closed.
+      - declaration: BollobasNikiforov.IsTotallyNonneg.mul
+        informal: Cauchy–Binet; the product of two totally nonnegative real matrices is totally
+          nonnegative.
+      - declaration: BollobasNikiforov.exists_nonneg_eigenvector_lambdaMax
+        informal: Perron; a real symmetric entrywise nonnegative matrix on a nonempty finite
+          index type has an entrywise nonnegative unit eigenvector for its largest eigenvalue.
+    tags:
+      - spectral-graph-theory
+      - clique-number
+      - completely-positive-matrices
+      - motzkin-straus
+    msc:
+      - "05C50"
+      - "15B48"
+      - "05C35"
+      - "15A18"
   - slug: navier-stokes-and-euler
     title: Finite-time breakdown for Navier–Stokes and Euler
     summary: Formalizes forced three-dimensional Navier–Stokes breakdown on Euclidean space and the
