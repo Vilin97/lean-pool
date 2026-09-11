@@ -25,8 +25,11 @@ from __future__ import annotations
 
 import argparse
 import logging
+import re
 import sys
 from pathlib import Path
+
+from lean_pool.exposition.source_text import code_view
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +48,16 @@ def render_index(root: Path) -> str:
         + str(path.relative_to(pool)).removesuffix(".lean").replace("/", ".")
         for path in pool.rglob("*.lean")
     )
-    return "".join(f"import {module}\n" for module in modules)
+    index = root / INDEX
+    existing = code_view(index.read_text()) if index.exists() else ""
+    # During a rebase the index may still contain conflict markers. Preserve
+    # module style if either side has adopted it, matching mk_all's output.
+    uses_modules = re.search(r"^\s*module(?:\s|$)", existing, re.MULTILINE)
+    header = "module  -- shake: keep-all --deprecated_module: ignore\n\n"
+    prefix = "public " if uses_modules else ""
+    return (header if uses_modules else "") + "".join(
+        f"{prefix}import {module}\n" for module in modules
+    )
 
 
 def split_cards(text: str) -> tuple[str, list[tuple[str, str]]]:
