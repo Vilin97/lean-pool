@@ -3562,6 +3562,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.DNSelection
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.DeformationVolume
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.DifferentialOperators
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.EnergyBootstrap
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.GevreyFunctions
@@ -3602,6 +3603,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothSobolev
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDefinitions
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevProducts
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialCutoffs
