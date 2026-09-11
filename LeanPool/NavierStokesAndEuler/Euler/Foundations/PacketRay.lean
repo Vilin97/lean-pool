@@ -112,7 +112,7 @@ theorem triangular_ray_kernel_bound
   have hq := mul_le_mul_of_nonneg_right hcol2 (abs_nonneg q)
   have hn := mul_le_mul_of_nonneg_right hcol3 (abs_nonneg n)
   unfold norm3
-  nlinarith
+  linarith
 
 /-- The exact triangular ray equations imply a polynomial Duhamel bound. -/
 theorem triangular_ray_forced_bound
@@ -216,14 +216,14 @@ theorem triangular_ray_perturbed_bound
       (fun s hs => hforcing s ⟨hs.1, hs.2.trans ht.2⟩)
     rw [intervalIntegral.integral_const_mul] at hi
     have hm := mul_le_mul_of_nonneg_left hi (show 0 ≤ 4 * Θ ^ 2 by positivity)
-    nlinarith [hforced t ht]
+    linarith [hforced t ht]
   have hresult := integral_absorb
     (g := fun t => norm3 (P t) (Q t) (N t))
     (A := 4 * Θ ^ 2 * norm3 (P 0) (Q 0) (N 0)) (K := 4 * Θ ^ 2 * δ)
     hT0 hstate (fun _ _ => by unfold norm3; positivity) (by positivity)
     (by simpa using hsmall) hineq
   intro t ht
-  nlinarith [hresult t ht]
+  linarith [hresult t ht]
 
 /-- Ray closeness is derived from the ODE and the forcing bound, with a
 polynomial loss and arbitrary small initial ray error. -/
@@ -286,7 +286,7 @@ theorem triangular_ray_difference_bound
   have hinit := mul_le_mul_of_nonneg_left hinitial (show 0 ≤ 4 * Θ ^ 2 by positivity)
   have herr := herror t ht
   simp only [zero_pow (by decide : 2 ≠ 0), mul_zero, sub_zero, add_zero] at herr
-  nlinarith
+  linarith
 
 /-- Entries of the triangular ideal ray generator. -/
 def idealRayEntry (β : ℝ) (i j : Fin 3) : ℝ :=
@@ -302,7 +302,7 @@ theorem three_term_bound {a b c p q n e : ℝ}
   have hq := mul_le_mul_of_nonneg_right hb (abs_nonneg q)
   have hn := mul_le_mul_of_nonneg_right hc (abs_nonneg n)
   unfold norm3
-  nlinarith
+  linarith
 
 /-- The ray closeness estimate follows from entrywise coefficient error.
 No closeness of the ray itself is assumed.  The third component stays away
@@ -362,18 +362,18 @@ theorem ray_closeness_of_coefficient_error
       · simpa [idealRayEntry] using hclose t ht 2 2
     unfold norm3
     unfold norm3 at hf hg hh
-    nlinarith
+    linarith
   have hΘ0 : 0 ≤ Θ := le_trans zero_le_one hΘ
   have hpow35 : Θ ^ 3 ≤ Θ ^ 5 := pow_le_pow_right₀ hΘ (by norm_num)
   have hpow25 : Θ ^ 2 ≤ Θ ^ 5 := pow_le_pow_right₀ hΘ (by norm_num)
   have hpow5 : 1 ≤ Θ ^ 5 := one_le_pow₀ hΘ
   have he1 : e ≤ 1 := by
     have hm := mul_le_mul_of_nonneg_left hpow5 he
-    nlinarith
+    linarith
   have hsm : 4 * Θ ^ 2 * (3 * e) * T ≤ 1 / 2 := by
     have ht := mul_le_mul_of_nonneg_left hT (show 0 ≤ 12 * e * Θ ^ 2 by positivity)
     have hp := mul_le_mul_of_nonneg_left hpow35 (show 0 ≤ 12 * e by positivity)
-    nlinarith
+    linarith
   have hdiff := triangular_ray_difference_bound hβ hβupper hΘ hT0 hT
     (by positivity : 0 ≤ 3 * e) he hsm hPf hQg hNh hfc hgc hhc hforcing hinitial
   intro t ht
@@ -382,13 +382,13 @@ theorem ray_closeness_of_coefficient_error
     have h2 := mul_le_mul_of_nonneg_left (show 1 + e ≤ 2 by linarith)
       (show 0 ≤ 96 * e * Θ ^ 5 by positivity)
     have hp : 0 ≤ e * Θ ^ 5 := by positivity
-    nlinarith [hdiff t ht]
+    linarith [hdiff t ht]
   refine ⟨hbound, ?_⟩
   have hNabs : |N t - 1| ≤ 200 * e * Θ ^ 5 := by
     unfold norm3 at hbound
     linarith [abs_nonneg (P t - β * t ^ 2), abs_nonneg (Q t + 2 * β * t)]
   have hn := (abs_le.mp hNabs).1
-  nlinarith
+  linarith
 
 /-- The skew matrix of the moving orthonormal frame in the source. -/
 def frameSkew (B : Fin 3 → Fin 3 → ℝ) (i j : Fin 3) : ℝ :=
@@ -564,7 +564,7 @@ theorem ray_geometric_bounds
             (mul_le_mul_of_nonneg_right hq (abs_nonneg _))
         _ ≤ 3 * Θ ^ 2 * (|U| + |V|) := by nlinarith [sq_nonneg Θ, abs_nonneg U]
     have hmul := mul_le_mul_of_nonneg_left hn (by positivity : 0 ≤ 6 * Θ ^ 2 * (|U| + |V|))
-    nlinarith only [hb, hmul]
+    linarith only [hb, hmul]
   have hD : 1 / 4 ≤ rayDenominator ε P Q N := by
     unfold rayDenominator
     nlinarith [sq_nonneg P, mul_nonneg (sq_nonneg ε) (sq_nonneg Q)]
@@ -584,7 +584,7 @@ theorem ray_geometric_bounds
     have hsq := sq_le_sq₀ (abs_nonneg Q) (by positivity : 0 ≤ 3 * Θ ^ 2)
     have hh := hsq.mpr hq
     rw [sq_abs] at hh
-    nlinarith only [hh]
+    linarith only [hh]
   refine ⟨hn, hp, hq, hnabs, hw, hD, ?_⟩
   calc
     |rayDenominator ε P Q N - (1 + P₀ ^ 2)| =
@@ -598,7 +598,7 @@ theorem ray_geometric_bounds
     _ ≤ 6 * ρ * Θ ^ 2 + 9 * ε ^ 2 * Θ ^ 4 := by
       have hqq := mul_le_mul_of_nonneg_left hQsq (sq_nonneg ε)
       have hrr := mul_le_mul_of_nonneg_left hΘ2 (by positivity : 0 ≤ 3 * ρ)
-      nlinarith only [hPsq, hNsq, hqq, hrr]
+      linarith only [hPsq, hNsq, hqq, hrr]
 
 /-- The three rows entering `J_v`, with the middle row multiplied by ε. -/
 def normalizedVelocityEntry (ε H α κ : ℝ) (B E : Fin 3 → Fin 3 → ℝ)
@@ -698,7 +698,7 @@ theorem velocity_numerator_error
   have hnorm : norm3 U V W ≤ 7 * Θ ^ 2 * (|U| + |V|) := by
     unfold norm3
     have hm := mul_le_mul_of_nonneg_right hΘ2 hL
-    nlinarith only [hw, hm]
+    linarith only [hw, hm]
   have hrow : ∀ i, |(A i 0 - idealVelocityEntry β i 0) * U +
       (A i 1 - idealVelocityEntry β i 1) * V +
       (A i 2 - idealVelocityEntry β i 2) * W| ≤
@@ -706,7 +706,7 @@ theorem velocity_numerator_error
     intro i
     have hh := three_term_bound (p := U) (q := V) (n := W) (hA i 0) (hA i 1) (hA i 2)
     have hm := mul_le_mul_of_nonneg_left hnorm he
-    nlinarith only [hh, hm]
+    linarith only [hh, hm]
   have hrow0 := hrow 0
   have hrow1 := hrow 1
   have hrow2 := hrow 2
@@ -725,14 +725,14 @@ theorem velocity_numerator_error
       have ht1 := abs_add_le (P * r0 + Q * r1) (N * r2)
       simp only [abs_mul] at ht0 ht1
       dsimp [r0, r1, r2] at *
-      nlinarith only [h0, h1, h2, ht0, ht1]
+      linarith only [h0, h1, h2, ht0, ht1]
     have hs : |P| + |Q| + |N| ≤ 7 * Θ ^ 2 := by linarith
     have hm := mul_le_mul_of_nonneg_right hs
       (by positivity : 0 ≤ 7 * e * Θ ^ 2 * (|U| + |V|))
     have hid : velocityNumerator A P Q N U V W - (P * V + Q * U + N * β * V) =
         P * r0 + Q * r1 + N * r2 := by unfold velocityNumerator r0 r1 r2; ring
     rw [hid]
-    nlinarith only [htri, hm]
+    linarith only [htri, hm]
   have hRay : |P * V + Q * U + N * β * V - ((P₀ + β) * V + Q₀ * U)| ≤
       2 * ρ * (|U| + |V|) := by
     have hNb : |(N - 1) * β| ≤ ρ := by
@@ -753,7 +753,7 @@ theorem velocity_numerator_error
       (P * V + Q * U + N * β * V - ((P₀ + β) * V + Q₀ * U)) =
       velocityNumerator A P Q N U V W - ((P₀ + β) * V + Q₀ * U) := by ring
   rw [hid] at ht
-  nlinarith only [ht, hJnear, hRay]
+  linarith only [ht, hJnear, hRay]
 
 /-- The first two velocity rows before pressure projection. -/
 def normalizedUnprojectedEntry (ε H α : ℝ) (B E : Fin 3 → Fin 3 → ℝ)
@@ -814,7 +814,7 @@ theorem normalized_unprojected_entry_error
   have hαε : |ε ^ 2 * α| ≤ 2 * e := by
     rw [abs_mul, abs_of_nonneg (sq_nonneg ε)]
     have hh := mul_le_mul hε2e hαabs (abs_nonneg α) he
-    nlinarith only [hh]
+    linarith only [hh]
   have b00 := abs_le.mp (hB 0 0)
   have b02 := abs_le.mp (hB 0 2)
   have b11 := abs_le.mp (hB 1 1)
@@ -856,7 +856,7 @@ theorem quotient_difference_bound
   rw [hid, abs_div, abs_of_pos (mul_pos hDp hD₀p), div_le_iff₀ (mul_pos hDp hD₀p)]
   have h₁ := mul_le_mul_of_nonneg_left hD (mul_nonneg hρ hD₀p.le)
   have h₂ := mul_le_mul_of_nonneg_left hprod (mul_nonneg hA hd)
-  nlinarith only [hn, h₁, h₂]
+  linarith only [hn, h₁, h₂]
 
 /-- Quantitative stability of the two pressure projection components. -/
 theorem velocity_projection_error
@@ -878,18 +878,18 @@ theorem velocity_projection_error
   have hratio0 : |P₀ / D₀| ≤ Θ ^ 2 := by
     rw [abs_div, abs_of_pos hD₀p, div_le_iff₀ hD₀p]
     have hm := mul_le_mul_of_nonneg_left hD₀ (sq_nonneg Θ)
-    nlinarith only [hP₀, hm]
+    linarith only [hP₀, hm]
   have hJabs : |J| ≤ 3 * Θ ^ 2 * (|U| + |V|) := by
     have ht := abs_add_le (J - J₀) J₀
     have hid : J - J₀ + J₀ = J := by ring
     rw [hid] at ht
     have hm₁ := mul_le_mul_of_nonneg_right hjupper hL
     have hm₂ := mul_le_mul_of_nonneg_right hΘ2 hL
-    nlinarith only [ht, hJ, hJ₀, hm₁, hm₂]
+    linarith only [ht, hJ, hJ₀, hm₁, hm₂]
   have hratioP : |P / D| ≤ 8 * Θ ^ 2 := by
     rw [abs_div, abs_of_pos hDp, div_le_iff₀ hDp]
     have hm := mul_le_mul_of_nonneg_left hD (by positivity : 0 ≤ 8 * Θ ^ 2)
-    nlinarith only [hp, hm]
+    linarith only [hp, hm]
   have hU : |2 * P * J / D - 2 * P₀ * J₀ / D₀| ≤
       (16 * Θ ^ 2 * j + 16 * ρ * Θ ^ 2 + 16 * Θ ^ 4 * d) * (|U| + |V|) := by
     have hh := abs_product_difference hratio hJ hratio0 hJabs
@@ -904,12 +904,12 @@ theorem velocity_projection_error
           (P / D) * J - (P₀ / D₀) * J₀ := by ring
       rw [hid] at ht
       simp only [abs_mul] at ht
-      nlinarith only [ht, h₁, h₂]
+      linarith only [ht, h₁, h₂]
     have hid : 2 * P * J / D - 2 * P₀ * J₀ / D₀ =
         2 * ((P / D) * J - (P₀ / D₀) * J₀) := by ring
     rw [hid, abs_mul]
     norm_num only [abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]
-    nlinarith only [hbetter]
+    linarith only [hbetter]
   have hV : |2 * ε ^ 2 * Q * J / D| ≤ 72 * ε ^ 2 * Θ ^ 4 * (|U| + |V|) := by
     rw [abs_div, abs_mul, abs_mul, abs_mul, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2),
       abs_of_nonneg (sq_nonneg ε), abs_of_pos hDp, div_le_iff₀ hDp]
@@ -917,8 +917,8 @@ theorem velocity_projection_error
     have hm₁ := mul_le_mul_of_nonneg_left hh (by positivity : 0 ≤ 2 * ε ^ 2)
     have hm₂ := mul_le_mul_of_nonneg_left hD
       (by positivity : 0 ≤ 72 * ε ^ 2 * Θ ^ 4 * (|U| + |V|))
-    nlinarith only [hm₁, hm₂]
-  nlinarith only [hU, hV]
+    linarith only [hm₁, hm₂]
+  linarith only [hU, hV]
 
 /-- The first normalized velocity equation with pressure projection. -/
 noncomputable def velocityFirstRhs
@@ -955,12 +955,12 @@ theorem velocity_rhs_error
   have hΘ5 : 1 ≤ Θ ^ 5 := one_le_pow₀ hΘ
   have heupper : e ≤ 1 := by
     have hm := mul_le_mul_of_nonneg_left hΘ5 he
-    nlinarith only [hsmall, hm]
+    linarith only [hsmall, hm]
   have hεupper : ε ≤ 1 := hεe.trans heupper
   have hε2e : ε ^ 2 ≤ e := by nlinarith only [hε, hεupper, hεe]
   let ρ := 800 * e * Θ ^ 5
   have hρ : 0 ≤ ρ := by dsimp [ρ]; positivity
-  have hρupper : ρ ≤ 1 / 2 := by dsimp [ρ]; nlinarith only [hsmall]
+  have hρupper : ρ ≤ 1 / 2 := by dsimp [ρ]; linarith only [hsmall]
   obtain ⟨hn, hp, hq, hnabs, hw, hD, hDD⟩ :=
     ray_geometric_bounds (ε := ε) (U := U) (V := V) hΘ hρ hρupper hP₀ hQ₀ hP hQ hN
   let W := velocityThird P Q N U V
@@ -976,12 +976,12 @@ theorem velocity_rhs_error
   have hjupper : j ≤ 1 := by
     have hm := mul_le_mul_of_nonneg_left h45 (by positivity : 0 ≤ 147 * e)
     dsimp [j, ρ]
-    nlinarith only [hsmall, hm]
+    linarith only [hsmall, hm]
   have hJ : |J - J₀| ≤ j * (|U| + |V|) := by
     have hh := velocity_numerator_error hΘ hρ (by
         positivity : 0 ≤ 3 * e) hβ hA hp hq hnabs hP hQ hN hw
     dsimp [J, J₀, W, j]
-    nlinarith only [hh]
+    linarith only [hh]
   have hJ₀ : |J₀| ≤ 2 * Θ ^ 2 * (|U| + |V|) := by
     have hcoef : |P₀ + β| ≤ 2 * Θ ^ 2 := by linarith [abs_add_le P₀ β]
     have hh := three_term_bound (p := V) (q := U) (n := (0 : ℝ)) hcoef hQ₀
@@ -989,14 +989,14 @@ theorem velocity_rhs_error
           simp only [abs_zero]; positivity)
     dsimp [J₀]
     simpa only [zero_mul, add_zero, norm3, abs_zero, add_comm] using hh
-  have hD₀ : 1 ≤ D₀ := by dsimp [D₀]; nlinarith [sq_nonneg P₀]
+  have hD₀ : 1 ≤ D₀ := by dsimp [D₀]; linarith [sq_nonneg P₀]
   have hproj := velocity_projection_error (ε := ε) hΘ hρ hd hj hjupper hD hD₀ hP hP₀ hp hq hDD hJ
       hJ₀
   have hL : 0 ≤ |U| + |V| := add_nonneg (abs_nonneg _) (abs_nonneg _)
   have hnorm : norm3 U V W ≤ 7 * Θ ^ 2 * (|U| + |V|) := by
     unfold norm3
     have hm := mul_le_mul_of_nonneg_right hΘ2 hL
-    nlinarith only [hw, hm]
+    linarith only [hw, hm]
   have hrow : ∀ i, |(C i 0 - idealUnprojectedEntry i 0) * U +
       (C i 1 - idealUnprojectedEntry i 1) * V +
       (C i 2 - idealUnprojectedEntry i 2) * W| ≤
@@ -1004,7 +1004,7 @@ theorem velocity_rhs_error
     intro i
     have hh := three_term_bound (p := U) (q := V) (n := W) (hC i 0) (hC i 1) (hC i 2)
     have hm := mul_le_mul_of_nonneg_left hnorm (by positivity : 0 ≤ 5 * e)
-    nlinarith only [hh, hm]
+    linarith only [hh, hm]
   have hu := hrow 0
   have hv := hrow 1
   norm_num [idealUnprojectedEntry, Fin.ext_iff] at hu hv
@@ -1040,9 +1040,9 @@ theorem velocity_rhs_error
     have hε4 := mul_le_mul_of_nonneg_right hε2e (by positivity : 0 ≤ Θ ^ 4)
     have hε8 := mul_le_mul_of_nonneg_right hε2e (by positivity : 0 ≤ Θ ^ 8)
     dsimp [j, d, ρ]
-    nlinarith only [he2, he4, he6, he7, he8, he11, hε4, hε8,
+    linarith only [he2, he4, he6, he7, he8, he11, hε4, hε8,
       mul_nonneg he (pow_nonneg hΘ0 12)]
   have hm := mul_le_mul_of_nonneg_right hcoefficient hL
-  nlinarith only [htU, htV, hu, hv, hproj, hm]
+  linarith only [htU, htV, hu, hv, hproj, hm]
 
 end EulerPacketRay

@@ -514,9 +514,9 @@ theorem exists_shifted_rpow_absorption {C δ p : ℝ}
   intro A hA
   have hboundA := hbound (A + 1) (by linarith)
   have hsquare : (A + 1) ^ 2 ≤ 2 * A ^ 2 + 2 := by
-    nlinarith [sq_nonneg (A - 1)]
+    linarith [sq_nonneg (A - 1)]
   have hscaled := mul_le_mul_of_nonneg_left hsquare (half_pos hδ).le
-  nlinarith
+  linarith
 
 /-- Dividing the shifted estimate by a radius at least one preserves the
 arbitrarily small square coefficient and makes the constant decay as `1 / R`. -/
@@ -534,7 +534,7 @@ theorem exists_scaled_shifted_rpow_absorption {C δ p : ℝ}
   have hquadratic := mul_le_mul_of_nonneg_left hInv1
     (mul_nonneg hδ.le (sq_nonneg A))
   simp only [div_eq_mul_inv]
-  nlinarith
+  linarith
 
 /-- The pressure and transport cutoff remainders are controlled by one shifted
 subquadratic power. The estimate retains the full factor `1 / R`. -/
@@ -564,7 +564,7 @@ theorem cutoff_expression_le {C A R : ℝ}
     have hone := Real.one_le_rpow hB1 (by norm_num : (0 : ℝ) ≤ 1 / 2)
     linarith
   have hlinear : R⁻¹ * A + R ^ (-2 : ℝ) ≤ R⁻¹ * (A + 1) := by
-    nlinarith
+    linarith
   have hlinear0 : 0 ≤ R⁻¹ * A + R ^ (-2 : ℝ) :=
     add_nonneg (mul_nonneg hInv hA) (Real.rpow_nonneg hRpos.le _)
   have hprod : (A + 1) ^ (1 / 2 : ℝ) * (A + 1) =
@@ -592,7 +592,7 @@ theorem cutoff_expression_le {C A R : ℝ}
     (mul_le_mul hR74 hthreeQuarters (Real.rpow_nonneg hx _) hInv) hC
   have hterm3 := mul_le_mul_of_nonneg_left hthreeHalves (mul_nonneg hC hInv)
   simp only [div_eq_mul_inv]
-  nlinarith only [hterm1, hterm2, hterm3]
+  linarith only [hterm1, hterm2, hterm3]
 
 /-- Scalar Young absorption of all cutoff remainders. The same nonnegative
 constant works for every nonnegative gradient norm and every radius at least
@@ -654,7 +654,7 @@ theorem exists_uniform_flux_absorption {C1 C2 S M δ : ℝ}
   have hSMQ : S * M ≤ Q :=
     (mul_le_mul_of_nonneg_left (le_max_right 1 M) hS).trans (le_max_right _ _)
   have hQ0 : 0 ≤ Q := (mul_nonneg hS hM).trans hSMQ
-  have hQsq1 : 1 ≤ Q ^ 2 := by nlinarith [sq_nonneg (Q - 1)]
+  have hQsq1 : 1 ≤ Q ^ 2 := by linarith [sq_nonneg (Q - 1)]
   let C : ℝ := (C1 + C2) * Q ^ 2
   have hC : 0 ≤ C := mul_nonneg (add_nonneg hC1 hC2) (sq_nonneg _)
   have hC1Q : C1 * Q ^ 2 ≤ C :=
@@ -728,7 +728,7 @@ theorem exists_uniform_flux_absorption {C1 C2 S M δ : ℝ}
       C * (x ^ (1 / 2 : ℝ) + 1) * (R⁻¹ * A + R ^ (-2 : ℝ)) +
         C * R ^ (-7 / 4 : ℝ) * x ^ (3 / 4 : ℝ) +
         C * R⁻¹ * x ^ (3 / 2 : ℝ) := by
-    nlinarith only [hpressure, hcommutator, htransport]
+    linarith only [hpressure, hcommutator, htransport]
   exact hsum.trans (hD_bound A hA R hR)
 
 /-- One radius-independent constant turns the full localized energy inequality
@@ -748,13 +748,13 @@ theorem exists_uniform_rate_bound {C0 C1 C2 S M : ℝ}
   refine ⟨2 * (C0 + D), by positivity, ?_⟩
   intro R hR A hA B hB hSobolev E E' G henergy
   have hRpos : 0 < R := zero_lt_one.trans_le hR
-  have hRsq : R ≤ R ^ 2 := by nlinarith [sq_nonneg (R - 1)]
+  have hRsq : R ≤ R ^ 2 := by linarith [sq_nonneg (R - 1)]
   have hC0radius : C0 / R ^ 2 ≤ C0 / R :=
     div_le_div_of_nonneg_left hC0 hRpos hRsq
   have hbound := hflux R hR A hA B hB hSobolev
   have hdivide : 2 * (C0 + D) / R = 2 * (C0 / R + D / R) := by ring
   rw [hdivide]
-  nlinarith only [henergy, hbound, hC0radius, sq_nonneg A]
+  linarith only [henergy, hbound, hC0radius, sq_nonneg A]
 
 end NavierStokesR3.ComparisonRateBound
 
@@ -817,7 +817,7 @@ theorem neg_coupling_le_weightedEnergy {χ : Space → ℝ} {u w : VelocityField
     G * (χ x * ‖w (t, x)‖ ^ 2)
   have h := NavierStokes.PeriodicUniqueness.nonlinear_energy_bound
     (spatialDerivative u t x) (w (t, x)) (hG x)
-  nlinarith [mul_le_mul_of_nonneg_left h (hχ0 x)]
+  linarith [mul_le_mul_of_nonneg_left h (hχ0 x)]
 
 /-- Derivative of the energy weight. -/
 theorem fderiv_cutoff_eight {φ : Space → ℝ} {x : Space}
@@ -1179,7 +1179,7 @@ theorem eq_zero_of_forall_radius_bound {x D : ℝ} (hx : 0 ≤ x) (hD : 0 ≤ D)
   have hmul : x * R ≤ D := (le_div_iff₀ hRpos).mp (hbound R hR)
   have hcancel : (D + 1) / x * x = D + 1 := div_mul_cancel₀ _ hxpos.ne'
   dsimp [R] at hmul
-  nlinarith
+  linarith
 
 /-- For a fixed compact set, the cutoff bound is available only after the
 radius contains that set. Such a bound is still sufficient for vanishing. -/
@@ -1194,7 +1194,7 @@ theorem eq_zero_of_forall_large_radius_bound {x D R₀ : ℝ} (hx : 0 ≤ x)
   have hsize : (D + 1) / x + 1 ≤ R := le_max_right _ _
   have hsize_mul := mul_le_mul_of_nonneg_left hsize hx
   have hcancel : (D + 1) / x * x = D + 1 := div_mul_cancel₀ _ hxpos.ne'
-  nlinarith
+  linarith
 
 end NavierStokesR3.ComparisonGronwall
 

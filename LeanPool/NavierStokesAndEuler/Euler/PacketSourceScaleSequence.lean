@@ -82,10 +82,10 @@ theorem sourceTheta_bounds {J : ℕ} (hJ : 1 ≤ J) {C : ℝ} (hC : 1 ≤ C)
   unfold sourceTheta
   have hC₀ : 0 ≤ C := by linarith
   constructor
-  · nlinarith only [hC, hjx, mul_nonneg hC₀ (by nlinarith only [hjx] :
+  · linarith only [hC, hjx, mul_nonneg hC₀ (by linarith only [hjx] :
       0 ≤ ((J + n : ℕ) : ℝ) ^ 2 * (x n) ^ 2)]
   · have hh := mul_le_mul_of_nonneg_left hjx hC₀
-    nlinarith only [hh]
+    linarith only [hh]
 
 /-- The explicit logarithmic scale comparison also allows an arbitrary
 fixed polynomial prefactor. -/
@@ -134,7 +134,7 @@ theorem source_neighbor_error_summable
       have hd := div_le_div_of_nonneg_left (mul_nonneg hc (hxp n).le)
         (by positivity : 0 < ((J - 1 + n : ℕ) : ℝ) ^ 4) hp4
       simp only [div_eq_mul_inv] at hd ⊢
-      nlinarith only [hd]
+      linarith only [hd]
     have hθ := pow_le_pow_left₀ (by linarith [(sourceTheta_bounds hJ1 hC hx1 n).1] :
       0 ≤ sourceTheta J C x n) (sourceTheta_bounds hJ1 hC hx1 n).2 A
     have hh := mul_le_mul herr hθ (pow_nonneg (by linarith [(sourceTheta_bounds hJ1 hC hx1 n).1]) A)
@@ -294,7 +294,7 @@ theorem source_coefficient_error_eventually_small
   simp only [mul_zero] at hh
   have hh' := hh.eventually_le_const (by norm_num : (0 : ℝ) < 1)
   filter_upwards [hh'] with n hn
-  nlinarith only [hn]
+  linarith only [hn]
 
 end EulerPacketSourceScales
 
@@ -406,7 +406,7 @@ theorem source_time_width_eventually_contracts
   rw [source_time_ratio_identity]
   have hW : 0 ≤ sourceTimeWidth J x n := by unfold sourceTimeWidth; positivity
   have hb := mul_le_mul_of_nonneg_right hn hW
-  nlinarith only [hb]
+  linarith only [hb]
 
 /-- The extra normalized horizon length has the explicit polynomial/exponential
 bound asserted after (39). -/
@@ -513,7 +513,7 @@ theorem source_good_interval_cost_summable
     rw [← exp_add, ← exp_add]
     apply exp_le_exp.mpr
     simp only [div_eq_mul_inv] at hd₁ hd₂ ⊢
-    nlinarith only [hd₁, hd₂]
+    linarith only [hd₁, hd₂]
 
 end EulerPacketSourceTime
 
@@ -590,7 +590,7 @@ theorem sourceNeighborError_bound (J : ℕ) (hJ : 3 ≤ J) (c : ℝ) (hc : 0 ≤
   unfold sourceNeighborError
   apply exp_le_exp.mpr
   simp only [div_eq_mul_inv] at hd ⊢
-  nlinarith only [hd]
+  linarith only [hd]
 
 /-- The complete coefficient error is controlled by three explicit costs,
 with exactly the preceding-stage powers and the real support exponent 7/2. -/
@@ -687,7 +687,7 @@ theorem sourceGoodCost_bound (J : ℕ) (hJ : 3 ≤ J) (x : ℕ → ℝ) (n : ℕ
   simp only [monomialCost, pow_zero, mul_one, one_mul, neg_one_mul, rpow_ofNat]
   apply exp_le_exp.mpr
   simp only [div_eq_mul_inv] at hd₁ hd₂ ⊢
-  nlinarith only [hd₁, hd₂]
+  linarith only [hd₁, hd₂]
 
 end EulerPacketSourceScaleBounds
 
@@ -743,7 +743,7 @@ theorem polynomial_log_bound {j X C p q : ℝ} (hj : 1 ≤ j) (hX : 1 ≤ X) :
     linarith
   have hCb : C ≤ |C| * j * sqrt X := by
     have hh := mul_le_mul_of_nonneg_left hsj (abs_nonneg C)
-    nlinarith only [hh, le_abs_self C]
+    linarith only [hh, le_abs_self C]
   have hp₁ := mul_le_mul_of_nonneg_right (le_abs_self p) hlj
   have hp₂ := mul_le_mul_of_nonneg_left hljb (abs_nonneg p)
   have hp₃ := mul_le_mul_of_nonneg_left hs (mul_nonneg (abs_nonneg p) hjp.le)
@@ -751,7 +751,7 @@ theorem polynomial_log_bound {j X C p q : ℝ} (hj : 1 ≤ j) (hX : 1 ≤ X) :
   have hq₂ := mul_le_mul_of_nonneg_left hlXb (abs_nonneg q)
   have hq₃ := mul_le_mul_of_nonneg_right hj (mul_nonneg (by
       positivity : 0 ≤ 2 * |q|) (sqrt_nonneg X))
-  nlinarith only [hCb, hp₁, hp₂, hp₃, hq₁, hq₂, hq₃]
+  linarith only [hCb, hp₁, hp₂, hp₃, hq₁, hq₂, hq₃]
 
 /-- A single explicit lower bound on the initial scale absorbs the
 polynomial logarithms at every subsequent quadratic stage. -/
@@ -782,7 +782,7 @@ theorem polynomial_logs_uniformly_absorbed
   have hbase := mul_le_mul_of_nonneg_right hone
     (div_nonneg (le_trans zero_le_one hx0) (pow_nonneg hJp.le (2 * A + 2)))
   have hscale : L ^ 2 ≤ x n / ((J + n : ℕ) : ℝ) ^ (2 * A + 2) := by
-    nlinarith only [hstart, hbase, hgeom n]
+    linarith only [hstart, hbase, hgeom n]
   have hsquare := (le_div_iff₀ (pow_pos hj (2 * A + 2))).mp hscale
   have hroot : L * ((J + n : ℕ) : ℝ) ^ (A + 1) ≤ sqrt (x n) := by
     have hp : (((J + n : ℕ) : ℝ) ^ (A + 1)) ^ 2 = ((J + n : ℕ) : ℝ) ^ (2 * A + 2) := by
@@ -809,7 +809,7 @@ theorem polynomial_logs_uniformly_absorbed
       _ = _ := by rw [sq_sqrt (le_trans zero_le_one (hx1 n))]
   rw [pow_succ] at hmul
   dsimp only [S] at hmul
-  nlinarith only [hlogmul, hmul]
+  linarith only [hlogmul, hmul]
 
 end EulerPacketUniformLogBounds
 
@@ -887,7 +887,7 @@ theorem uniform_source_exponent_bound
     field_simp [(rpow_pos_of_pos hj a).ne', hp.ne']
   have hscaleB := mul_le_mul_of_nonneg_left hscales hb.le
   have hl := hlog n
-  nlinarith only [hct, hscaleB, hl]
+  linarith only [hct, hscaleB, hl]
 
 /-- The complete logarithmic source cost has a uniform geometric-series
 bound after choosing the stage and then the initial scale. -/

@@ -488,7 +488,7 @@ theorem exists_normalized_repair (P : Patch) (b : ℝ) (hb : GoodExponent b) :
   have hsub : Metric.ball (0 : Coeff) ε ⊆ Metric.ball 0 (r / (4 * β)) :=
     Metric.ball_subset_ball (min_le_left _ _)
   have hC₀ : 2 * β ≤ C := by dsimp [C]; nlinarith
-  have hC₁ : D * (2 * β) ≤ C := by dsimp [C]; nlinarith
+  have hC₁ : D * (2 * β) ≤ C := by dsimp [C]; linarith
   have hzero : g 0 = 0 := by
     have hz := (hgeq 0 (Metric.mem_ball_self (div_pos hr (by positivity)))).2
     simpa only [norm_zero, mul_zero, norm_le_zero_iff] using hz
@@ -899,7 +899,7 @@ theorem compact_parameter_repair (P : Patch) (b : ℝ) (hb : GoodExponent b)
     nlinarith [mul_pos hC hD, mul_pos hL hJ]
   have hKJ : L * J * (C * D) ≤ K := by
     dsimp [K]
-    nlinarith [mul_pos hC hD, mul_pos hL (mul_pos hC hD), mul_pos hJ (mul_pos hC hD)]
+    linarith [mul_pos hC hD, mul_pos hL (mul_pos hC hD), mul_pos hJ (mul_pos hC hD)]
   refine ⟨ε₀ / D, K, div_pos hε₀ hD, hK, ?_⟩
   intro d hd hsmall
   let f : ℝ → Coeff := fun p => normalizedDebt (A p) (G p) (d p)
@@ -1134,7 +1134,7 @@ theorem physical_mixed_jets_small (P : Patch) {g : Coeff → Coeff} {r C : ℝ}
       (hc.of_le (by exact_mod_cast (le_top : (N : ℕ∞) ≤ ⊤))) hAb hcb
   have hcost : J * (‖L‖ * (2 : ℝ) ^ N * B * (D * tau)) ≤ K * B * tau := by
     dsimp [K]
-    nlinarith [show 0 ≤ J * (2 : ℝ) ^ N * B * D * tau by positivity]
+    linarith [show 0 ≤ J * (2 : ℝ) ^ N * B * D * tau by positivity]
   have huFun : (fun p => iteratedDeriv k (fun y => A p * u P (g (f p)) y) x) =
       fun p => iteratedDeriv k (u P (v p)) x := by
     funext p

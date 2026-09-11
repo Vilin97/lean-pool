@@ -576,7 +576,7 @@ theorem damped_integral_bound {F : ℝ → ℝ} (hF : Continuous F) {T κ y M : 
   by_cases hyt : y ≤ T
   · have hi : |∫ t in (0 : ℝ)..y, F t| ≤ M * y := by
       simpa only [sub_zero] using integral_norm_bound hy hbM
-    exact hi.trans (mul_le_mul_of_nonneg_left (by nlinarith [mul_nonneg hκ.1 hy]) hM)
+    exact hi.trans (mul_le_mul_of_nonneg_left (by linarith [mul_nonneg hκ.1 hy]) hM)
   · have hTy : T ≤ y := (lt_of_not_ge hyt).le
     have hsplit := intervalIntegral.integral_add_adjacent_intervals (μ := volume)
       (hF.intervalIntegrable 0 T) (hF.intervalIntegrable T y)
@@ -591,7 +591,7 @@ theorem damped_integral_bound {F : ℝ → ℝ} (hF : Continuous F) {T κ y M : 
     calc
       _ ≤ |∫ t in (0 : ℝ)..T, F t| + |∫ t in T..y, F t| := abs_add_le _ _
       _ ≤ M * T + (κ * M) * (y - T) := add_le_add hfirst hlast
-      _ ≤ M * (T + κ * y) := by nlinarith [mul_nonneg (mul_nonneg hκ.1 hM) hT.le]
+      _ ≤ M * (T + κ * y) := by linarith [mul_nonneg (mul_nonneg hκ.1 hM) hT.le]
 
 theorem jet_slice_continuous {J : Set ℝ} (hJ : IsOpen J) {F : Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (n : ℕ) {η : ℝ} (hη : η ∈ J) :
@@ -636,7 +636,7 @@ theorem controlled_product_bound {a d z M : ℝ} (ha : a ∈ Icc (0 : ℝ) 1)
   rw [abs_of_pos (by norm_num : (0 : ℝ) < 2)]
   have hza : a * |z| ≤ M :=
     (mul_le_mul_of_nonneg_left hz ha.1).trans (mul_le_of_le_one_left hM ha.2)
-  nlinarith [mul_le_mul_of_nonneg_left hza hd, mul_nonneg hd hM]
+  linarith [mul_le_mul_of_nonneg_left hza hd, mul_nonneg hd hM]
 
 theorem axialField_jet_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (initial : ℝ → ℝ)
@@ -695,7 +695,7 @@ theorem logField_value_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
       dsimp [B]
       rw [abs_mul, abs_of_nonneg (step_mem (b + w₁) w₂ t).1,
         abs_of_pos (by norm_num : (0 : ℝ) < 2 / 5)]
-      nlinarith [(step_mem (b + w₁) w₂ t).2]
+      linarith [(step_mem (b + w₁) w₂ t).2]
     · intro t ht
       dsimp [B]
       rw [step_zero hw₂ (show t ≤ b + w₁ by linarith [ht.2]), mul_zero]
@@ -780,11 +780,11 @@ theorem L_pos_parameterInterval {h j η : ℝ} (hs : NaturalAxisData.SmallParame
   have hη' : -(11 / 10 : ℝ) < η ∧ η < 11 / 10 := by
     simpa only [parameterInterval, NaturalAxisCoefficients.window, mem_Ioo, neg_div] using hη
   have hsquare : η ^ 2 ≤ (121 / 100 : ℝ) := by
-    nlinarith [mul_nonneg (show 0 ≤ η + 11 / 10 by linarith [hη'.1])
+    linarith [mul_nonneg (show 0 ≤ η + 11 / 10 by linarith [hη'.1])
       (show 0 ≤ 11 / 10 - η by linarith [hη'.2])]
   have hm := mul_le_mul hs.h_le hsquare (sq_nonneg η) (by norm_num : (0 : ℝ) ≤ 1 / 1000)
   unfold NaturalAxisData.L
-  nlinarith
+  linarith
 
 /-- No stock or differential equation is postulated in this constructor:
 the underlying profiles and all five histories are the completed REF path. -/
@@ -1376,7 +1376,7 @@ theorem exists_small_log_control (hJ : IsOpen J) {K : Set ℝ} (hK : IsCompact K
     linarith [hw₁.2, hw₂.2]
   have hcontrol (y : ℝ) (hy : y ∈ Icc (0 : ℝ) R.finalTime) : M * (T + κ * y) < ε / 4 := by
     have hky : κ * y ≤ s * R.finalTime := mul_le_mul hκs.le hy.2 hy.1 hs.le
-    have hsum : T + κ * y < s * (1 + R.finalTime) := by nlinarith
+    have hsum : T + κ * y < s * (1 + R.finalTime) := by linarith
     have hm := mul_lt_mul_of_pos_left hsum hM
     have he : M * (s * (1 + R.finalTime)) = ε / 4 := by
       dsimp [s]
@@ -1398,7 +1398,7 @@ theorem exists_small_log_control (hJ : IsOpen J) {K : Set ℝ} (hK : IsCompact K
     have hv := logField_value_error_bound hJ (R.angularStock_smooth hJ) R.initialLog
       hT.1 hκ1 hb hw₁.1.le hw₂.1 hy.1 hy.2 (hKJ hη) hM.le
       (fun t ht => (ha 0 (Nat.zero_le N) t ⟨ht.1, ht.2.trans hyf.2⟩ η hη).trans haM)
-    exact hv.trans_lt (by nlinarith [hcontrol y hyf])
+    exact hv.trans_lt (by linarith [hcontrol y hyf])
 
 /-- The same estimates stated directly for the actual physical fields. -/
 structure SmallPhysicalControl (K : Set ℝ) (N : ℕ) (ε T κ w₁ w₂ : ℝ) : Prop where
@@ -1794,7 +1794,7 @@ theorem exists_normalized_natural_jets (hΛ : 0 < Λ) (hσ : 0 < σ)
   obtain ⟨A, hA, ha⟩ := compact_scalar_jets parameterInterval_open isCompact_Icc
     original_interval_interior (phase_smooth d) N
   obtain ⟨L, hL, hl⟩ := exists_uniform_logPhi_jets d hσ hscale N
-  refine ⟨1 + Λ * A + L, by nlinarith [mul_nonneg hΛ.le hA], ?_⟩
+  refine ⟨1 + Λ * A + L, by linarith [mul_nonneg hΛ.le hA], ?_⟩
   intro C E Y hY n hn η hη
   have hηJ := original_interval_interior hη
   have hphase := ((phase_smooth d).contDiffAt (parameterInterval_open.mem_nhds hηJ)).of_le
@@ -2011,7 +2011,7 @@ theorem endpointLog_jets_of_control (hJ : IsOpen J) {K : Set ℝ} (hKJ : K ⊆ J
       ring
     rw [heq, iteratedDeriv_const_add hnpos]
     exact ((hbound R.finalTime (ha0.trans ha) η hη).2 n hn hnpos).trans
-      (by nlinarith [abs_nonneg (Real.log 220 / 2)])
+      (by linarith [abs_nonneg (Real.log 220 / 2)])
 
 theorem SmallLogControl.mono_tolerance {K : Set ℝ} {N : ℕ} {ε ε' T κ w₁ w₂ : ℝ}
     (hc : R.SmallLogControl K N ε T κ w₁ w₂) (hε : ε ≤ ε') :
@@ -2285,7 +2285,7 @@ theorem ordered_seed_bounds (hΛ : 0 < Λ) (hsmall : NaturalAxisData.SmallParame
   have hBJ : 1 ≤ BJ := by
     dsimp [BJ]
     have hg : 0 < Real.log (11 / 10 : ℝ) := Real.log_pos (by norm_num)
-    nlinarith [abs_nonneg (Real.log 220 / 2)]
+    linarith [abs_nonneg (Real.log 220 / 2)]
   refine ⟨U + 1, by linarith, K, hK, BJ, hBJ, ?_⟩
   intro C hC E δ hδ hδT R T κ w₁ w₂ hb hw₁ hw₂ hc
   let A := Input.ofNatural hΛ E.family

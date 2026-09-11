@@ -32,7 +32,7 @@ theorem scaled_power_le
   have hpow := pow_le_pow_right₀ hΘ hnm
   have hm := mul_le_mul_of_nonneg_left hpow he
   have hKmul := mul_le_mul_of_nonneg_right hK (by positivity : 0 ≤ e * Θ ^ m)
-  nlinarith only [hm, hKmul]
+  linarith only [hm, hKmul]
 
 /-- Explicit polynomial control of all target-frame perturbation losses. -/
 theorem frame_error_polynomial_bounds
@@ -57,7 +57,7 @@ theorem frame_error_polynomial_bounds
   let dS := (1100 * ρ + 400 * η + 2520 * e * Θ ^ 2 + 500 * ε ^ 2) * Θ ^ 4
   let M := K * e * Θ ^ 40
   have hM : 0 ≤ M := by dsimp [M]; positivity
-  have hMb : 1000000 * M ≤ 1 := by dsimp [M]; nlinarith only [hsmall]
+  have hMb : 1000000 * M ≤ 1 := by dsimp [M]; linarith only [hsmall]
   have hp (n : ℕ) (hn : n ≤ 40) : e * Θ ^ n ≤ M := scaled_power_le hΘ hK he hn
   have hKp (n : ℕ) (hn : n ≤ 40) : K * e * Θ ^ n ≤ M := by
     have hh := pow_le_pow_right₀ hΘ hn
@@ -66,62 +66,62 @@ theorem frame_error_polynomial_bounds
   have he1 : e ≤ 1 := by
     have hh := hp 0 (by decide)
     norm_num at hh
-    nlinarith only [hh, hMb]
+    linarith only [hh, hMb]
   have hε1 : ε ≤ 1 := hεe.trans he1
   have hε2 : ε ^ 2 ≤ e := by nlinarith only [hε, hε1, hεe]
   have hεp (n : ℕ) (hn : n ≤ 40) : ε ^ 2 * Θ ^ n ≤ M := by
     have hh := mul_le_mul_of_nonneg_right hε2 (by positivity : 0 ≤ Θ ^ n)
     exact hh.trans (hp n hn)
-  have hρb : ρ ≤ 1 / 2 := by have hh := hp 5 (by decide); dsimp [ρ]; nlinarith only [hh, hMb]
-  have hηb : η ≤ 1 / 2 := by have hh := hKp 29 (by decide); dsimp [η]; nlinarith only [hh, hMb]
-  have hAb : 210 * e * Θ ^ 2 ≤ 1 := by have hh := hp 2 (by decide); nlinarith only [hh, hMb]
-  have hEb : dE ≤ 1 := by have hh := hεp 4 (by decide); dsimp [dE]; nlinarith only [hh, hMb]
+  have hρb : ρ ≤ 1 / 2 := by have hh := hp 5 (by decide); dsimp [ρ]; linarith only [hh, hMb]
+  have hηb : η ≤ 1 / 2 := by have hh := hKp 29 (by decide); dsimp [η]; linarith only [hh, hMb]
+  have hAb : 210 * e * Θ ^ 2 ≤ 1 := by have hh := hp 2 (by decide); linarith only [hh, hMb]
+  have hEb : dE ≤ 1 := by have hh := hεp 4 (by decide); dsimp [dE]; linarith only [hh, hMb]
   have hJbound : dJ ≤ 17490 * M := by
     have h4 := hp 4 (by decide)
     have h5 := hp 5 (by decide)
     have h31 := hKp 31 (by decide)
     dsimp [dJ, ρ, η]
-    nlinarith only [h4, h5, h31]
-  have hJb : dJ ≤ P₀ / 4 := by nlinarith only [hJbound, hMb, hP₀]
+    linarith only [h4, h5, h31]
+  have hJb : dJ ≤ P₀ / 4 := by linarith only [hJbound, hMb, hP₀]
   have hD0 : 0 ≤ dD := by dsimp [dD, ρ]; positivity
   have hE0 : 0 ≤ dE := by dsimp [dE]; positivity
   have hJ0 : 0 ≤ dJ := by dsimp [dJ, ρ, η]; positivity
   have hP₀0 : 0 ≤ P₀ := by linarith
   have hP₀sq : P₀ ^ 2 ≤ Θ ^ 4 := by
     have hh := (sq_le_sq₀ hP₀0 (sq_nonneg Θ)).mpr hP₀upper
-    nlinarith only [hh]
+    linarith only [hh]
   have hPD : P₀ * dD ≤ 4809 * M := by
     have hm := mul_le_mul_of_nonneg_right hP₀upper hD0
     have h9 := hp 9 (by decide)
     have h6 := hεp 6 (by decide)
     dsimp [dD, ρ] at hm ⊢
-    nlinarith only [hm, h9, h6]
+    linarith only [hm, h9, h6]
   have hPE : P₀ ^ 2 * dE ≤ 3681 * M := by
     have hm := mul_le_mul_of_nonneg_right hP₀sq hE0
     have h8 := hεp 8 (by decide)
     dsimp [dE] at hm ⊢
-    nlinarith only [hm, h8]
+    linarith only [hm, h8]
   have hSbound : dS ≤ 883420 * M := by
     have h9 := hp 9 (by decide)
     have h33 := hKp 33 (by decide)
     have h6 := hp 6 (by decide)
     have h4 := hεp 4 (by decide)
     dsimp [dS, ρ, η]
-    nlinarith only [h9, h33, h6, h4]
+    linarith only [h9, h33, h6, h4]
   have hEbound : dE ≤ 3681 * M := by
     have hh := hεp 4 (by decide)
     dsimp [dE]
-    nlinarith only [hh]
+    linarith only [hh]
   have hJdiv : dJ / P₀ ≤ dJ := by
     apply (div_le_iff₀ (by linarith : 0 < P₀)).mpr
-    nlinarith only [mul_nonneg hJ0 (sub_nonneg.mpr hP₀)]
+    linarith only [mul_nonneg hJ0 (sub_nonneg.mpr hP₀)]
   change ρ ≤ 1 / 2 ∧ η ≤ 1 / 2 ∧ 210 * e * Θ ^ 2 ≤ 1 ∧ dE ≤ 1 ∧ dJ ≤ P₀ / 4 ∧
     4 * dJ + 16 * P₀ * dD + 16 * P₀ ^ 2 * dE ≤ 30000000 * K * e * Θ ^ 40 ∧
     8 * dS + 640 * (dJ / P₀) + 640 * dE ≤ 30000000 * K * e * Θ ^ 40
   dsimp [M] at hJbound hPD hPE hSbound hEbound hM
   refine ⟨hρb, hηb, hAb, hEb, hJb, ?_, ?_⟩
-  · nlinarith only [hJbound, hPD, hPE, hM]
-  · nlinarith only [hSbound, hJbound, hJdiv, hEbound, hM]
+  · linarith only [hJbound, hPD, hPE, hM]
+  · linarith only [hSbound, hJbound, hJdiv, hEbound, hM]
 
 /-- The source's `Θ^40` frame-renewal estimate, derived from coefficient,
 ray, and relative state errors and the actual scalar initial value problem. -/
@@ -174,11 +174,11 @@ theorem frame_renewal_order40
   have hyinvΘ : y⁻¹ ≤ Θ := by
     have hh := (div_le_iff₀ hσ).mp htΘ
     have hm := mul_le_mul_of_nonneg_left (show σ ≤ 1 by linarith) hΘ0
-    nlinarith only [hh, hm]
+    linarith only [hh, hm]
   have ht : 1 ≤ t := by
     dsimp [t]
     apply (le_div_iff₀ hσ).mpr
-    nlinarith only [hyinv, hσsmall]
+    linarith only [hyinv, hσsmall]
   have hP₀ : 1 ≤ P₀ := by dsimp [P₀]; nlinarith only [hyinv]
   have hP₀upper : P₀ ≤ Θ ^ 2 := (sq_le_sq₀ hyinv0 hΘ0).mpr hyinvΘ
   have hP₀abs : |P₀| ≤ Θ ^ 2 := by rw [abs_of_nonneg (by dsimp [P₀]; positivity)]; exact hP₀upper
@@ -188,7 +188,7 @@ theorem frame_renewal_order40
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]
     have hm := mul_le_mul_of_nonneg_right (show σ ≤ 1 by linarith) hyinv0
     have hΘ2 : Θ ≤ Θ ^ 2 := by nlinarith only [hΘ]
-    nlinarith only [hm, hyinvΘ, hΘ2]
+    linarith only [hm, hyinvΘ, hΘ2]
   have hσabs : |σ ^ 2| ≤ 1 := by rw [abs_of_nonneg (sq_nonneg σ)]; nlinarith only [hσ, hσsmall]
   have hρ : 0 ≤ ρ := by dsimp [ρ]; positivity
   have hη : 0 ≤ η := by dsimp [η]; positivity
@@ -217,25 +217,25 @@ theorem frame_renewal_order40
   have hEE : E - 1 ≤ dE := hEnorm.2
   have hE : 1 ≤ E := hEnorm.1
   have hcross := frame_cross_error_from_matrix (ε := ε) hΘ hρ hρsmall hη hηsmall
-    (by positivity : 0 ≤ 3 * e) (by nlinarith only [hAsmall] : 70 * (3 * e) * Θ ^ 2 ≤ 1)
+    (by positivity : 0 ≤ 3 * e) (by linarith only [hAsmall] : 70 * (3 * e) * Θ ^ 2 ≤ 1)
     hσabs hP₀abs hQ₀abs hP hQ' hN hr₀ hr' hA
   have hSE' : |S - idealCrossNumerator (σ ^ 2) P₀ Q₀ r₀| ≤ dS := by
     dsimp only at hcross
     dsimp [S, dS]
-    nlinarith only [hcross]
+    linarith only [hcross]
   let j := 147 * e * Θ ^ 4 + 2 * ρ
   have hj : 0 ≤ j := by dsimp [j]; positivity
   have hJraw : |J - ((P₀ + σ ^ 2) * 1 + Q₀ * r)| ≤ j * (|r| + |(1 : ℝ)|) := by
     have hh := velocity_numerator_error hΘ hρ (by
         positivity : 0 ≤ 3 * e) hσabs hA hp hq hn hP hQ' hN hw
     dsimp [J, j, w, P₀]
-    nlinarith only [hh]
+    linarith only [hh]
   have hpressure := pressure_ratio_error hΘ hη hηsmall hj (by norm_num : (0 : ℝ) < 1)
     hQ₀abs hr₀ (by simpa only [div_one] using hr') hJraw
   have hJE' : |J - (P₀ + σ ^ 2 + Q₀ * r₀)| ≤ dJ := by
     simp only [div_one] at hpressure
     dsimp [j, dJ] at *
-    nlinarith only [hpressure]
+    linarith only [hpressure]
   have hPeq : σ ^ 2 * t ^ 2 = P₀ := by dsimp [t, P₀]; field_simp
   have hQeq : -2 * σ ^ 2 * t = Q₀ := by dsimp [t, Q₀]; field_simp
   have hJideal : idealTargetPressure σ y Z Z₁ = P₀ + σ ^ 2 + Q₀ * r₀ := by
@@ -252,8 +252,8 @@ theorem frame_renewal_order40
   constructor
   · have hh := hrenew.1
     dsimp [P₀] at hAbound
-    nlinarith only [hh, hAbound]
+    linarith only [hh, hAbound]
   · have hh := hrenew.2
-    exact hh.trans (by dsimp [P₀] at hBbound; nlinarith only [hBbound])
+    exact hh.trans (by dsimp [P₀] at hBbound; linarith only [hBbound])
 
 end EulerPacketFrameQuantitative

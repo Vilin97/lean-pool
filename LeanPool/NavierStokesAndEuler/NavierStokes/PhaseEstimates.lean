@@ -117,9 +117,9 @@ theorem upper_edge_factor_negative
     mul_le_mul_of_nonneg_left (by linarith [(abs_le.mp he11).1, (abs_le.mp he22).2]) hr.le
   have hquad : -(r ^ 2 * e12) ≤ r ^ 2 * eps := by
     have h := mul_le_mul_of_nonneg_left (abs_le.mp he12).1 (sq_nonneg r)
-    nlinarith
+    linarith
   have hrate : lamMin * r ≤ lam * r := mul_le_mul_of_nonneg_right hlam hr.le
-  nlinarith [(abs_le.mp he21).2]
+  linarith [(abs_le.mp he21).2]
 
 /-- The inward algebra at the lower edge follows by reversing the off-diagonal signs. -/
 theorem lower_edge_factor_negative
@@ -132,7 +132,7 @@ theorem lower_edge_factor_negative
   have h := upper_edge_factor_negative (e12 := -e12) (e21 := -e21)
     hr hlam he11 (by simpa only [abs_neg] using he12)
     (by simpa only [abs_neg] using he21) he22 hgap
-  nlinarith
+  linarith
 
 /-- The quadratic cone boundary has strictly negative derivative at every
 nonzero boundary point. Scalar damping cancels from this computation. -/
@@ -145,17 +145,17 @@ theorem cone_boundary_derivative_negative
     (hgap : eps * (1 + r) ^ 2 < 2 * lamMin * r) :
     2 * q * (e21 * p + (-lam - damping + e22) * q) -
       r ^ 2 * (2 * p * ((lam - damping + e11) * p + e12 * q)) < 0 := by
-  have hsq : q ^ 2 = (r * p) ^ 2 := by nlinarith [hboundary]
+  have hsq : q ^ 2 = (r * p) ^ 2 := by linarith [hboundary]
   have hpos : 0 < 2 * r * p ^ 2 := mul_pos (by linarith) (sq_pos_of_ne_zero hp)
   rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq with hq | hq
   · rw [hq]
     have h := mul_neg_of_pos_of_neg hpos
       (upper_edge_factor_negative hr hlam he11 he12 he21 he22 hgap)
-    nlinarith [h]
+    linarith [h]
   · rw [hq]
     have h := mul_neg_of_pos_of_neg hpos
       (lower_edge_factor_negative hr hlam he11 he12 he21 he22 hgap)
-    nlinarith [h]
+    linarith [h]
 
 theorem hasDerivAt_coordinate {z : ℝ → State} {z' : State} {t : ℝ}
     (hz : HasDerivAt z z' t) (i : Fin 2) :
@@ -202,7 +202,7 @@ theorem positive_invariant_cone
       (B := fun _ => (0 : ℝ)) (B' := fun _ => (0 : ℝ))
     · dsimp [barrier]
       rw [hminus]
-      nlinarith [mul_nonneg (sq_nonneg r) (sq_nonneg (z a 0))]
+      linarith [mul_nonneg (sq_nonneg r) (sq_nonneg (z a 0))]
     · exact continuousOn_const
     · exact fun t _ => (hasDerivAt_const t (0 : ℝ)).hasDerivWithinAt
     · intro t ht heq
@@ -240,7 +240,7 @@ theorem positive_invariant_cone
   refine ⟨hppos, abs_le_of_sq_le_sq ?_ (mul_nonneg hr.le hppos.le)⟩
   have hb := hbarrier t ht
   dsimp [barrier] at hb
-  nlinarith
+  linarith
 
 /-- A fixed constant for the manuscript's `O(1/S)` cone width. The added one
 allows the same statement when the perturbation bound is zero. -/
@@ -274,7 +274,7 @@ theorem scaled_cone_conditions {lamMin C S : ℝ}
     convert! h using 1
     ring
   refine ⟨hr, hrhalf, ?_⟩
-  nlinarith [mul_pos hlamMin hr]
+  linarith [mul_pos hlamMin hr]
 
 /-- The fixed-width result in the exact `K/S` form used in (28). -/
 theorem scaled_positive_invariant_cone
@@ -431,7 +431,7 @@ theorem scaled_growing_mode_bounds
       simpa only [mul_one] using h
     calc
       D / S + (C / S) * (1 + coneConstant lamMin C / S) ≤ D / S + 2 * (C / S) := by
-        nlinarith
+        linarith
       _ = (D + 2 * C) / S := by ring
   let p' : ℝ → ℝ := fun t => (lam t - damping t + e11 t) * z t 0 + e12 t * z t 1
   have hp (t : ℝ) (ht : t ∈ Icc a b) : HasDerivAt (fun s => z s 0) (p' t) t :=
@@ -454,7 +454,7 @@ theorem scaled_growing_mode_bounds
   have hlo : Real.exp (-(D + 2 * C) * L) ≤
       Real.exp (-((D + 2 * C) / S) * (t - a)) := by
     apply Real.exp_le_exp.mpr
-    nlinarith
+    linarith
   have hhi : Real.exp (((D + 2 * C) / S) * (t - a)) ≤
       Real.exp ((D + 2 * C) * L) := Real.exp_le_exp.mpr hexponent
   have hratio : 0 ≤ z a 0 / P a := div_nonneg hplus.le (hPpos a ⟨le_rfl, hab⟩).le
@@ -486,7 +486,7 @@ theorem original_coordinate_bounds {p q h r : ℝ}
     mul_le_mul_of_nonneg_left hxlower (by positivity)
   simp only [abs_mul, abs_neg]
   rw [abs_of_pos (show (0 : ℝ) < 2 by norm_num)]
-  nlinarith
+  linarith
 
 end NavierStokes.GrowingMode
 
@@ -1017,7 +1017,7 @@ theorem reciprocal_quadratic_difference (r s : ℝ) :
   calc
     |(s - r) * (s + r) / ((1 + r ^ 2) * (1 + s ^ 2))| ≤ |(s - r) * (s + r)| :=
       abs_div_le_of_one_le _ _ (by
-        nlinarith only [sq_nonneg r, sq_nonneg s, mul_nonneg (sq_nonneg r) (sq_nonneg s)])
+        linarith only [sq_nonneg r, sq_nonneg s, mul_nonneg (sq_nonneg r) (sq_nonneg s)])
     _ ≤ |r - s| * (|r| + |s|) := by
       rw [abs_mul, abs_sub_comm s r]
       exact mul_le_mul_of_nonneg_left (by linarith [abs_add_le s r]) (abs_nonneg _)
@@ -1085,14 +1085,14 @@ theorem scalar_coefficients_close
   constructor
   · calc
       |coeff11 ρ ρ' gK| ≤ |ρ * (gK - ρ')| := abs_div_le_of_one_le _ _ (by
-          nlinarith only [sq_nonneg ρ])
+          linarith only [sq_nonneg ρ])
       _ = |ρ| * |gK - ρ'| := abs_mul _ _
       _ ≤ M * (η + η) := mul_le_mul hρ ((abs_sub _ _).trans (add_le_add hgK hρ'))
         (abs_nonneg _) hM0
       _ ≤ 16 * M ^ 2 * η := by
         have h := mul_le_mul_of_nonneg_right (show 2 * M ≤ 16 * M ^ 2 by
-            nlinarith only [hM, sq_nonneg (M - 1)]) hη
-        nlinarith only [h]
+            linarith only [hM, sq_nonneg (M - 1)]) hη
+        linarith only [h]
   constructor
   · have hρden : 1 + ρ ^ 2 ≠ 0 := by positivity
     have hsden : 1 + s ^ 2 ≠ 0 := by positivity
@@ -1106,12 +1106,12 @@ theorem scalar_coefficients_close
       _ ≤ |(2 * F * N - ρ * rot - 2 * F0 * N0) / (1 + ρ ^ 2)| +
           |(2 * F0 * N0) * (1 / (1 + ρ ^ 2) - 1 / (1 + s ^ 2))| := abs_add_le _ _
       _ ≤ (2 + 3 * M) * η + (2 * M) * (2 * M * η) := add_le_add
-        ((abs_div_le_of_one_le _ _ (by nlinarith only [sq_nonneg ρ])).trans hnum)
+        ((abs_div_le_of_one_le _ _ (by linarith only [sq_nonneg ρ])).trans hnum)
         (by rw [abs_mul]; exact mul_le_mul hreference hinv (abs_nonneg _) (by positivity))
       _ ≤ 16 * M ^ 2 * η := by
         have h := mul_le_mul_of_nonneg_right
-          (show 2 + 3 * M + 4 * M ^ 2 ≤ 16 * M ^ 2 by nlinarith only [hM, sq_nonneg (M - 1)]) hη
-        nlinarith only [h]
+          (show 2 + 3 * M + 4 * M ^ 2 ≤ 16 * M ^ 2 by linarith only [hM, sq_nonneg (M - 1)]) hη
+        linarith only [h]
   · calc
       |coeff21 F N gN ρ rot - (-(2 * F0 * N0 + g0))| =
           |-(2 * F * N - 2 * F0 * N0) - (gN - g0) + ρ * rot| := by
@@ -1125,8 +1125,8 @@ theorem scalar_coefficients_close
       _ ≤ (2 * (1 + M) * η + η) + M * η := add_le_add (add_le_add htwoprod hgN) hrotation
       _ ≤ 16 * M ^ 2 * η := by
         have h := mul_le_mul_of_nonneg_right (show 3 + 3 * M ≤ 16 * M ^ 2 by
-            nlinarith only [hM, sq_nonneg (M - 1)]) hη
-        nlinarith only [h]
+            linarith only [hM, sq_nonneg (M - 1)]) hη
+        linarith only [h]
 
 theorem inner_perturbation_le {K K0 g g0 : Plane} {M η : ℝ}
     (hK : ‖K‖ ≤ 1) (hg0 : ‖g0‖ ≤ M)
@@ -1171,7 +1171,7 @@ theorem frame_coefficients_close {B B0 : Frame} {g g0 : Plane}
     |coeff21 F ((B 1) 0) ⟪B 1, g⟫_ℝ ρ rot - (-(2 * F0 * ((B0 1) 0) + ⟪B0 1, g0⟫_ℝ))| ≤
       (16 * M ^ 2 * (1 + M)) * η := by
   have hM0 : 0 ≤ M := le_trans zero_le_one hM
-  have henlarge : η ≤ (1 + M) * η := by nlinarith only [mul_nonneg hM0 hη]
+  have henlarge : η ≤ (1 + M) * η := by linarith only [mul_nonneg hM0 hη]
   have hgK := inner_perturbation_le (le_of_eq (B.norm_eq_one 0)) hg0 hK hg
   rw [horth, sub_zero] at hgK
   have hgN := inner_perturbation_le (le_of_eq (B.norm_eq_one 1)) hg0 hN hg
@@ -1253,7 +1253,7 @@ theorem hasDerivAt_modal {p q h : ℝ → ℝ}
   have hx' := (hp.add hq).unique hx
   have hy' := (hh.fun_mul (hp.fun_sub hq)).unique hy
   have hsys := (modal_equations_iff hh0 (p v) (q v) p' q' lam damping a b c rate fx fy).mp
-    ⟨hx', by nlinarith only [hy']⟩
+    ⟨hx', by linarith only [hy']⟩
   have hd : HasDerivAt (fun s => !₂[p s, q s]) !₂[p', q'] v :=
     pairCLM.hasFDerivAt.comp_hasDerivAt v (hp.prodMk hq)
   convert! hd using 1
@@ -1304,7 +1304,7 @@ theorem tangent_reconstructed {β ρ : ℝ} (hβ : β ≠ 0) (B : Frame) (t : Sp
   apply frame_ext B
   · rfl
   · rw [normal_inner] at ht
-    have hz : β * (ρ * t 0 + ⟪B 0, tail t⟫_ℝ) = 0 := by nlinarith only [ht]
+    have hz : β * (ρ * t 0 + ⟪B 0, tail t⟫_ℝ) = 0 := by linarith only [ht]
     have h := (mul_eq_zero.mp hz).resolve_left hβ
     simp only [tangent, tail_pack, inner_add_right, inner_smul_right,
       frame_inner00, frame_inner01, mul_one, mul_zero, add_zero]
@@ -1718,7 +1718,7 @@ theorem inverse_cube_bounds {S : ℝ} (hS : 1 ≤ S) :
   have h2 : S ≤ S ^ 2 := by nlinarith only [hS]
   have h3 : S ^ 2 ≤ S ^ 3 := by
     have h := mul_le_mul_of_nonneg_left hS (sq_nonneg S)
-    nlinarith only [h]
+    linarith only [h]
   constructor
   · exact one_div_le_one_div_of_le hS0 (h2.trans h3)
   · have heq : S * (1 / S ^ 3) = 1 / S ^ 2 := by field_simp
@@ -1790,20 +1790,20 @@ theorem assembled_error_scaled {M S ε k v tilt : ℝ}
   have h2 : M ≤ M ^ 2 := by nlinarith only [hM]
   have h3 : M ^ 2 ≤ M ^ 3 := by
     have h := mul_le_mul_of_nonneg_left hM (sq_nonneg M)
-    nlinarith only [h]
+    linarith only [h]
   have hcoeff : M ^ 2 + M ≤ 2 * M ^ 3 := by linarith only [h2, h3]
   have hlast := mul_le_mul_of_nonneg_right hcoeff hE
   unfold phaseConstant
-  nlinarith only [hround, hbase, hangle, hdiam, htilt', haxial, hlast]
+  linarith only [hround, hbase, hangle, hdiam, htilt', haxial, hlast]
 
 theorem phaseError_le_four_div {S ε k : ℝ} (hS : 0 < S)
     (hε2 : S ^ 2 * ε ^ 2 ≤ 1) (hk2 : S ^ 2 / k ≤ 1) (hε1 : ε * S ^ 2 ≤ 1) :
     phaseError S ε k ≤ 4 / S := by
-  have h1 : S * ε ^ 2 ≤ 1 / S := (le_div_iff₀ hS).2 (by nlinarith only [hε2])
+  have h1 : S * ε ^ 2 ≤ 1 / S := (le_div_iff₀ hS).2 (by linarith only [hε2])
   have h2 : S / k ≤ 1 / S := (le_div_iff₀ hS).2 (by
     have heq : S / k * S = S ^ 2 / k := by ring
     rwa [heq])
-  have h3 : ε * S ≤ 1 / S := (le_div_iff₀ hS).2 (by nlinarith only [hε1])
+  have h3 : ε * S ≤ 1 / S := (le_div_iff₀ hS).2 (by linarith only [hε1])
   unfold phaseError
   rw [show 4 / S = 4 * (1 / S) by ring]
   linarith only [h1, h2, h3]
@@ -1870,20 +1870,20 @@ theorem velocity_error_scaled {M S ε k : ℝ}
       (add_le_add (inverse_cube_bounds hS).1
         (by simpa only [one_mul] using mul_le_mul_of_nonneg_right hS (sq_nonneg ε))).trans h1
     have hh' := mul_le_mul_of_nonneg_left hh (show 0 ≤ 2 * M ^ 2 by positivity)
-    nlinarith only [hh']
+    linarith only [hh']
   have hd : |ε| * (3 * M ^ 2) ≤ 3 * M ^ 2 * phaseError S ε k := by
     rw [abs_of_nonneg hε]
     have hεle : ε ≤ ε * S := by simpa only [mul_one] using mul_le_mul_of_nonneg_left hS hε
     have hh : ε ≤ phaseError S ε k := hεle.trans h3
-    nlinarith only [mul_le_mul_of_nonneg_left hh (show 0 ≤ 3 * M ^ 2 by positivity)]
+    linarith only [mul_le_mul_of_nonneg_left hh (show 0 ≤ 3 * M ^ 2 by positivity)]
   have hm2 : M ≤ M ^ 2 := by nlinarith only [hM]
   have hm3 : M ^ 2 ≤ M ^ 3 := by
-    nlinarith only [mul_le_mul_of_nonneg_left hM (sq_nonneg M)]
+    linarith only [mul_le_mul_of_nonneg_left hM (sq_nonneg M)]
   have hm4 : 0 ≤ M ^ 4 := pow_nonneg hM0 _
   have hcoeff : M ^ 3 + M + 5 * M ^ 2 ≤ phaseConstant M := by
     unfold phaseConstant
     linarith only [hm2, hm3, hm4, pow_nonneg hM0 3]
-  nlinarith only [ha, hb, hc, hd, mul_le_mul_of_nonneg_right hcoeff hE]
+  linarith only [ha, hb, hc, hd, mul_le_mul_of_nonneg_right hcoeff hE]
 
 /-- Quantitative estimates for the actual rounded phase.  The C2 comparison
 lemma above supplies the two `M (S⁻³ + ε²)` derivative hypotheses. -/
@@ -2266,7 +2266,7 @@ theorem localBase_shear_error {F G F0 G0 : Slow → ℝ} {U : Set Slow}
   have hh := mul_le_mul_of_nonneg_right hm2 he0
   have hd' : M * diameter ≤ M * (diameter + ε ^ 2) :=
     mul_le_mul_of_nonneg_left (le_add_of_nonneg_right (sq_nonneg _)) hM0
-  nlinarith only [hn, ha, hG, hh, hd', mul_nonneg (sq_nonneg M) he0]
+  linarith only [hn, ha, hG, hh, hd', mul_nonneg (sq_nonneg M) he0]
 
 /-- The principal estimate stated for the actual PhaseCalculus normal, with
 local C1/C2 hypotheses and the actual punctured-lattice rounded frequency. -/
@@ -2372,7 +2372,7 @@ theorem signedSlot_bound {sigma u L v : ℝ}
   have h := mul_le_mul_of_nonneg_left hvdiv hu
   simp only [mul_one] at h
   rw [mul_div_assoc]
-  nlinarith only [h]
+  linarith only [h]
 
 theorem radialSlope_uniform_bound {n : Space} {K : Plane} {B s δ A : ℝ}
     (hB : 0 < B) (hK : ‖K‖ = 1) (hδ : δ ≤ B / 2)
@@ -2382,7 +2382,7 @@ theorem radialSlope_uniform_bound {n : Space} {K : Plane} {B s δ A : ℝ}
   have hscale : 2 * (1 + |s|) * δ / B ≤ 1 + |s| := by
     apply (div_le_iff₀ hB).2
     have h := mul_le_mul_of_nonneg_left hδ (show 0 ≤ 2 * (1 + |s|) by positivity)
-    nlinarith only [h]
+    linarith only [h]
   have h := abs_add_le (MovingFrameODE.radialSlope n - s) s
   rw [sub_add_cancel] at h
   linarith only [hc, hscale, h, hs]
@@ -2466,6 +2466,6 @@ theorem eventually_error_small (h : ℝ) (hh : 0 < h) {C B : ℝ} (hC : 0 ≤ C)
   calc
     _ ≤ C * (4 / ChartScales.S n) := mul_le_mul_of_nonneg_left he hC
     _ = (4 * C) / ChartScales.S n := by ring
-    _ ≤ B / 2 := (div_le_iff₀ hS0).mpr (by nlinarith only [hb])
+    _ ≤ B / 2 := (div_le_iff₀ hS0).mpr (by linarith only [hb])
 
 end NavierStokes.PhaseEstimates

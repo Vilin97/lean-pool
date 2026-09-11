@@ -567,7 +567,7 @@ theorem square_mem_Ico {R r : ℝ} (hr : r ∈ Ioo (-R) R) :
     r ^ 2 ∈ Ico (0 : ℝ) (R ^ 2) := by
   refine ⟨sq_nonneg _, ?_⟩
   have hprod : 0 < (R - r) * (R + r) := mul_pos (by linarith [hr.2]) (by linarith [hr.1])
-  nlinarith
+  linarith
 
 /-- The genuine real first-order system, with all six ordinary derivatives. -/
 def RealSixSystem (R : ℝ) (J : Set ℝ) (h lam C : ℝ) (G : RealCoefficientData)

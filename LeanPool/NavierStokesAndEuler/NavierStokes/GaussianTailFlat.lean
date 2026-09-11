@@ -157,7 +157,7 @@ theorem gaussian_off_plateau {c L v : ℝ} (hc : 0 ≤ c) (hL : 0 < L)
     simpa only [sq_abs] using pow_le_pow_left₀ (by positivity : 0 ≤ L / 5) hv 2
   apply Real.exp_le_exp.2
   apply (div_le_iff₀ hL).2
-  nlinarith [mul_le_mul_of_nonneg_left hsq hc]
+  linarith [mul_le_mul_of_nonneg_left hsq hc]
 
 theorem reference_envelope_off_plateau {lam u L v : ℝ}
     (hlam : 0 < lam) (hu : 0 < u) (hL : 0 < L) (hv : v ∈ Icc 0 L)
@@ -254,7 +254,7 @@ theorem gaussian_beats_Q_power {c : ℝ} (hc : 0 < c) (p : ℕ) (N : ℝ) :
     suffices A * (n : ℝ) - c / 2 * (n : ℝ) ^ 2 ≤ K by linarith
     dsimp [K]
     apply (le_div_iff₀ hc2).2
-    nlinarith
+    linarith
   have hexp : Real.exp (-c * ChartScales.S n) ≤
       Real.exp (-(c / 2) * ChartScales.S n) * Real.exp K * ChartScales.Q n ^ N := by
     rw [Q_rpow_eq_exp, ← Real.exp_add, ← Real.exp_add]
@@ -276,7 +276,7 @@ theorem gaussian_beats_Q_power {c : ℝ} (hc : 0 < c) (p : ℕ) (N : ℝ) :
 theorem gaussian_length_comparison {c κ L S : ℝ} (hc : 0 ≤ c) (hL : κ * S ≤ L) :
     Real.exp (-(c / 25) * L) ≤ Real.exp (-(c * κ / 25) * S) := by
   apply Real.exp_le_exp.2
-  nlinarith [mul_le_mul_of_nonneg_left hL hc]
+  linarith [mul_le_mul_of_nonneg_left hL hc]
 
 /-- A fixed power loss consumes only half of a Gaussian tail. -/
 theorem fixed_power_gaussian_bound {c : ℝ} (hc : 0 < c) (r : ℝ) :
@@ -597,7 +597,7 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
   have hPg : P n x ≤ Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) := by
     apply (hP n x hx).trans
     apply (Real.exp_le_exp.2 ?_).trans (gaussian_length_comparison hc.le (g.length_lower n))
-    nlinarith [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (g.length_pos n).le)]
+    linarith [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (g.length_pos n).le)]
   have hslow0 : 0 ≤ s.slow n := zero_le_one.trans (s.one_le_slow n)
   have hK0 : 0 ≤ scales.boundConstant := zero_le_one.trans scales.constant_one_le
   have hslowp : s.slow n ^ p ≤
@@ -736,7 +736,7 @@ noncomputable def actualSlotFamily (s : StripData D) (r0 h : ℝ)
     simpa only [one_div] using one_div_le_one_div_of_le hκ.1 (hκL n)
   · intro n
     apply le_trans _ (hκ.2 n)
-    nlinarith [hκ.1]
+    linarith [hκ.1]
 
 @[simp] theorem actualSlotFamily_length (s : StripData D) (r0 h : ℝ)
     (hr0 : 0 < r0) (hh : 0 ≤ h) (η : D →L[ℝ] ℝ) (center : ℕ → ℝ) (n : ℕ) :

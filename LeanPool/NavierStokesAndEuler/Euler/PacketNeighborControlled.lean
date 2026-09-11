@@ -84,7 +84,7 @@ theorem velocity_difference_bound
   have hδ : 0 ≤ e*Θ^12 := by positivity
   have hs : 20*Θ^8*(e*Θ^12)*(T-0) ≤ 1/2 := by
     have hm := mul_le_mul_of_nonneg_left hT (show 0 ≤ 20*e*Θ^20 by positivity)
-    nlinarith only [hsmall, hm]
+    linarith only [hsmall, hm]
   have hh := equation30_perturbed_difference_bound hσ hσsmall hΘ (by norm_num : (0:ℝ) ≤ 0)
     hT0 hT hδ hs hF hG hfluxF hfluxG hF0 hF₁0 hG₁0 hY hfluxY hZ hfluxZ hfc hgc hforcing
   have habs (x y : ℝ) : |-x-y| = |x+y| := by rw [show -x-y = -(x+y) by ring, abs_neg]
@@ -143,7 +143,7 @@ theorem neighbor_initial_error_bound
   have hnorm : |v₀|+|u₀| ≤ 1+lam+η := by linarith only [hv, hu, hi]
   have h1 := mul_le_mul_of_nonneg_left hi (show 0 ≤ 20*Θ^8*Ft by positivity)
   have h2 := mul_le_mul_of_nonneg_left hnorm (show 0 ≤ 800*e*Θ^29*Ft by positivity)
-  nlinarith only [hb, h1, h2]
+  linarith only [hb, h1, h2]
 
 end EulerPacketMovingFrame
 
@@ -185,14 +185,14 @@ theorem ray_controlled_velocity_error_within
           |velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) U V+U| ≤
             200000*e*Θ^12*(|U|+|V|) := by
   have hΘ0 : 0 ≤ Θ := by linarith only [hΘ]
-  have hs : 400*(4*e)*Θ^5 ≤ 1 := by nlinarith only [hsmall, mul_nonneg he (pow_nonneg hΘ0 5)]
+  have hs : 400*(4*e)*Θ^5 ≤ 1 := by linarith only [hsmall, mul_nonneg he (pow_nonneg hΘ0 5)]
   have hi : norm3 (P 0) (Q 0) (N 0-1) ≤ 4*e := hinitial.trans (by linarith only [he])
   have hnear := ray_closeness_within hβ hβupper hΘ hT0 hT
     (show 0 ≤ 4*e by positivity) hs hRc hP hQ hN hRclose hi
   intro t ht
   obtain ⟨herr, hn⟩ := hnear t ht
   have herr' : norm3 (P t-β*t^2) (Q t+2*β*t) (N t-1) ≤ 800*e*Θ^5 := by
-    nlinarith only [herr]
+    linarith only [herr]
   refine ⟨⟨herr', hn⟩, ?_⟩
   intro U V
   have herrorP : |P t-β*t^2| ≤ 800*e*Θ^5 := by
@@ -210,11 +210,11 @@ theorem ray_controlled_velocity_error_within
   have ht2 : t^2 ≤ Θ^2 := (sq_le_sq₀ ht.1 hΘ0).mpr htΘ
   have hP₀ : |β*t^2| ≤ Θ^2 := by
     rw [abs_of_nonneg (mul_nonneg hβ (sq_nonneg t))]
-    nlinarith only [mul_le_mul_of_nonneg_right hβupper (sq_nonneg t), ht2]
+    linarith only [mul_le_mul_of_nonneg_right hβupper (sq_nonneg t), ht2]
   have hQ₀ : |-2*β*t| ≤ 2*Θ^2 := by
     rw [abs_mul, abs_mul, abs_of_nonneg hβ, abs_of_nonneg ht.1]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0:ℝ) ≤ 2)]
-    nlinarith only [mul_le_mul_of_nonneg_right hβupper ht.1, htΘ, hΘ, sq_nonneg (Θ-1)]
+    linarith only [mul_le_mul_of_nonneg_right hβupper ht.1, htΘ, hΘ, sq_nonneg (Θ-1)]
   have hb : |β| ≤ 1 := by rwa [abs_of_nonneg hβ]
   exact velocity_rhs_error_firstTwo hΘ he hε hεe hsmall hb (hAclose t ht)
     (hCclose t ht) hP₀ hQ₀ herrorP herrorQ herrorN
@@ -262,10 +262,10 @@ theorem controlled_neighbor_relative_error_within
   have hσ2 : σ^2 ≤ 1 := by nlinarith only [hσ, hσsmall]
   have hgeom : 10000*e*Θ^5 ≤ 1 := by
     have hh := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 5 ≤ 21)) he
-    nlinarith only [hsmall, hh, mul_nonneg he (pow_nonneg hΘ0 21)]
+    linarith only [hsmall, hh, mul_nonneg he (pow_nonneg hΘ0 21)]
   have he1 : e ≤ 1 := by
     have hh := mul_le_mul_of_nonneg_left (one_le_pow₀ hΘ : 1 ≤ Θ^21) he
-    nlinarith only [hsmall, hh, he]
+    linarith only [hsmall, hh, he]
   have hcontrol := ray_controlled_velocity_error_within (sq_nonneg σ) hσ2 hΘ hT0 hT
     he hε hεe hgeom hRc hP hQ hN hRclose hAclose hCclose hrayInitial
   have hPc : ContinuousOn P (Icc 0 T) := fun t ht => (hP t ht).continuousWithinAt
@@ -277,7 +277,7 @@ theorem controlled_neighbor_relative_error_within
     intro t ht
     linarith only [(hcontrol t ht).1.2]
   obtain ⟨hU₁c, hV₁c⟩ := continuousOn_velocity_rhs (ε := ε) hAc hCc hPc hQc hNc hUc hVc hNne
-  have hs : 40*(200000*e)*Θ^21 ≤ 1 := by nlinarith only [hsmall]
+  have hs : 40*(200000*e)*Θ^21 ≤ 1 := by linarith only [hsmall]
   have herror := velocity_difference_bound_within hσ hσsmall hΘ hT0 hT
     (show 0 ≤ 200000*e by positivity) hs hF hG hfluxF hfluxG hF0 hF₁0 hG₁0
     hU hV hU₁c hV₁c hZ hfluxZ (fun t ht => (hcontrol t ht).2 (U t) (V t))
@@ -286,7 +286,7 @@ theorem controlled_neighbor_relative_error_within
       (show 0 ≤ 20*e by positivity)
     have h2 := mul_le_mul_of_nonneg_left (show 1+lam+e ≤ 2*(1+lam) by linarith only [he1, hlam])
       (show 0 ≤ 160000000*e*Θ^29 by positivity)
-    nlinarith only [h1, h2, mul_nonneg (mul_nonneg he (pow_nonneg hΘ0 29)) hlam,
+    linarith only [h1, h2, mul_nonneg (mul_nonneg he (pow_nonneg hΘ0 29)) hlam,
       mul_nonneg he (pow_nonneg hΘ0 29)]
   intro t ht
   have hFp : 0 ≤ F t := (equation30_global_positive hσ hσsmall hF hfluxF hF0
@@ -350,7 +350,7 @@ theorem controlled_neighbor_stage_references_within
     have hm := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 21 ≤ 40)) he
     have hprod := mul_nonneg (show 0 ≤ neighborStabilityConstant-8 by linarith only [hK])
       (mul_nonneg he (pow_nonneg hΘ0 40))
-    nlinarith only [hsmall, hm, hprod]
+    linarith only [hsmall, hm, hprod]
   have herror := controlled_neighbor_relative_error_within hσ hσsmall hΘ hT0 hT he hε hεe
     hlam hsmallODE (fun t _ => hF t) (fun t _ => hG t) (fun t _ => hfluxF t) (fun t _ => hfluxG t)
     hF0 hF₁0 hG₁0 hRc hAc hCc hP hQ hN hU hV hRclose hAclose hCclose
@@ -365,7 +365,7 @@ theorem controlled_neighbor_stage_references_within
     have hn : 0 ≤ neighborStabilityConstant*e*Θ^40 := by positivity [neighborStabilityConstant]
     dsimp [δ]
     unfold neighborStabilityConstant at hm hn hsmall
-    nlinarith only [hm, hn, hsmall]
+    linarith only [hm, hn, hsmall]
   have herror' : |V t-Z t|+|U t+Z₁ t| ≤ δ*(1+lam)*F t :=
     herror t ⟨by linarith only [ht.1], ht.2⟩
   have hc := equation30_relative_state_consequences hσ hσsmall hlam ht.1 hδ hs
@@ -375,10 +375,10 @@ theorem controlled_neighbor_stage_references_within
   · dsimp [δ]
       at hc
     unfold neighborStabilityConstant
-    nlinarith only [hc.2.1, mul_nonneg (mul_nonneg (exp_pos (6:ℝ)).le he) (pow_nonneg hΘ0 29)]
+    linarith only [hc.2.1, mul_nonneg (mul_nonneg (exp_pos (6:ℝ)).le he) (pow_nonneg hΘ0 29)]
   · dsimp [δ]
       at hc
     unfold neighborStabilityConstant
-    nlinarith only [hc.2.2, mul_nonneg (mul_nonneg (exp_pos (6:ℝ)).le he) (pow_nonneg hΘ0 29)]
+    linarith only [hc.2.2, mul_nonneg (mul_nonneg (exp_pos (6:ℝ)).le he) (pow_nonneg hΘ0 29)]
 
 end EulerPacketMovingFrame

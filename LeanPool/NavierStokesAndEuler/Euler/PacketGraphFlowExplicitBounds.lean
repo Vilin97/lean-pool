@@ -54,7 +54,7 @@ private theorem flow_radius_polynomial (B R T w : ℝ)
   have hleft : 4*R+1 ≤ 5*w := by linarith
   have hright : (1+B*T)*(6*R)+2 ≤ 14*w := by
     have h := mul_le_mul_of_nonneg_right (show 1+B*T ≤ 2 by linarith) (by positivity : 0 ≤ 6*R)
-    nlinarith
+    linarith
   have hlarge : flowRadius B R T (6*R) ≤ 70*w^2 := by
     have h := mul_le_mul hleft hright (by
         positivity : 0 ≤ (1+B*T)*(6*R)+2) (by positivity : 0 ≤ 5*w)
@@ -62,12 +62,12 @@ private theorem flow_radius_polynomial (B R T w : ℝ)
   have hsmallR : flowRadius B R T R ≤ flowRadius B R T (6*R) := by
     unfold flowRadius
     gcongr
-    nlinarith
+    linarith
   have hsq : 1 ≤ w^2 := by nlinarith
   have h71 : 71*w^2 ≤ w^3 := by
     have h := mul_le_mul_of_nonneg_right hw (sq_nonneg w)
-    nlinarith
-  have hb : 1+flowRadius B R T (6*R) ≤ w^3 := by nlinarith
+    linarith
+  have hb : 1+flowRadius B R T (6*R) ≤ w^3 := by linarith
   exact ⟨(add_le_add le_rfl hsmallR).trans hb,hb⟩
 
 private theorem physical_polynomial_bounds (K B R T C1 k ell w : ℝ)
@@ -83,7 +83,7 @@ private theorem physical_polynomial_bounds (K B R T C1 k ell w : ℝ)
   have hw0 : 0 ≤ w := by linarith
   have hB1 : B ≤ 1 := by
     have h := mul_le_mul_of_nonneg_left (show 1 ≤ w by linarith) hB
-    nlinarith
+    linarith
   have hBT : 0 ≤ T*B := mul_nonneg hT hB
   obtain ⟨hv,ha⟩ := flow_radius_polynomial B R T w hB hR hT hw hRw hTw hsmall
   have hVr : 0 ≤ flowRadius B R T R := by unfold flowRadius; positivity
@@ -100,7 +100,7 @@ private theorem physical_polynomial_bounds (K B R T C1 k ell w : ℝ)
   have hb2 : B^2 ≤ 1 := by nlinarith
   have hac : C1+3*B^2*R ≤ 4*w := by
     have h := mul_le_mul_of_nonneg_right hb2 hR
-    nlinarith
+    linarith
   have hab : K*(C1+3*B^2*R)*(1+flowRadius B R T (6*R)) ≤ w^6 := by
     calc
       _ ≤ w*(4*w)*w^3 := by gcongr
@@ -147,7 +147,7 @@ theorem physical_bounds_of_power (ε η K k B R T C1 ell : ℝ)
     hK hB hR hT hC1 hk hell hw hKw hRw hTw hCw hBw
   have h6 : (k^η)^6 ≤ k^ε := by
     rw [← Real.rpow_mul_natCast hk0.le]
-    exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; nlinarith)
+    exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; linarith)
   have hdisp : B*(k^η)^5 ≤ k^(-(1/2 : ℝ)+ε) := by
     calc
       _ ≤ (2*k^(-(1/2 : ℝ)))*(k^η)^5 :=
@@ -159,7 +159,7 @@ theorem physical_bounds_of_power (ε η K k B R T C1 ell : ℝ)
   have hrad : ell⁻¹*k*(k^η)^4 ≤ ell⁻¹*k^(1+ε) := by
     have h4 : (k^η)^4 ≤ k^ε := by
       rw [← Real.rpow_mul_natCast hk0.le]
-      exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; nlinarith)
+      exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; linarith)
     calc
       _ ≤ ell⁻¹*k*k^ε := mul_le_mul_of_nonneg_left h4 (by positivity)
       _ = ell⁻¹*(k^(1 : ℝ)*k^ε) := by rw [Real.rpow_one]; ring
@@ -374,14 +374,14 @@ theorem data_sup_bounds_explicit (G : Data P T) (k : ℝ)
   have hg0 := graphFactor_nonneg k m
   have hdisp : G.B*T ≤ k^(-(1/4 : ℝ)) := by
     apply (show G.B*T ≤ T*G.B*(1+flowRadius G.B G.R T G.R) by
-      nlinarith [mul_nonneg (mul_nonneg hB0 hT0) hf0]).trans
+      linarith [mul_nonneg (mul_nonneg hB0 hT0) hf0]).trans
     simpa only [one_mul] using hn.1
   have hvel : G.B ≤ k^(-(1/4 : ℝ)) := by
-    apply (show G.B ≤ G.B*(1+flowRadius G.B G.R T G.R) by nlinarith [mul_nonneg hB0 hf0]).trans
+    apply (show G.B ≤ G.B*(1+flowRadius G.B G.R T G.R) by linarith [mul_nonneg hB0 hf0]).trans
     simpa only [one_mul] using hn.2.1
   have hRflow : G.R ≤ flowRadius G.B G.R T G.R := by
     have hleft : (1 : ℝ) ≤ 4*G.R+1 := by linarith
-    have hright : G.R ≤ (1+G.B*T)*G.R+2 := by nlinarith [mul_nonneg (mul_nonneg hB0 hT0) hR0]
+    have hright : G.R ≤ (1+G.B*T)*G.R+2 := by linarith [mul_nonneg (mul_nonneg hB0 hT0) hR0]
     have h := mul_le_mul hleft hright hR0 (by positivity : 0 ≤ 4*G.R+1)
     simpa only [one_mul,flowRadius] using h
   constructor
@@ -394,6 +394,6 @@ theorem data_sup_bounds_explicit (G : Data P T) (k : ℝ)
     rw [hgf]
     apply le_trans _ hrad
     gcongr
-    nlinarith
+    linarith
 
 end EulerPhysicalGraphFlowBounds

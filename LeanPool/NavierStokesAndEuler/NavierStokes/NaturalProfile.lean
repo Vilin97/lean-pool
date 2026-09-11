@@ -95,13 +95,13 @@ theorem kernel_pos (a η : ℝ) : 0 < kernel a η := Real.exp_pos _
 
 theorem kernel_le_one {a : ℝ} (ha : 0 ≤ a) (η : ℝ) : kernel a η ≤ 1 := by
   apply Real.exp_le_one_iff.mpr
-  have hl : 0 ≤ Real.log (1 + η ^ 2) := Real.log_nonneg (by nlinarith [sq_nonneg η])
-  exact mul_nonpos_of_nonpos_of_nonneg (by nlinarith) hl
+  have hl : 0 ≤ Real.log (1 + η ^ 2) := Real.log_nonneg (by linarith [sq_nonneg η])
+  exact mul_nonpos_of_nonpos_of_nonneg (by linarith) hl
 
 theorem kernel_antitone {a b : ℝ} (hab : a ≤ b) (η : ℝ) :
     kernel b η ≤ kernel a η := by
   apply Real.exp_le_exp.mpr
-  have hl : 0 ≤ Real.log (1 + η ^ 2) := Real.log_nonneg (by nlinarith [sq_nonneg η])
+  have hl : 0 ≤ Real.log (1 + η ^ 2) := Real.log_nonneg (by linarith [sq_nonneg η])
   exact mul_le_mul_of_nonneg_right (by linarith) hl
 
 @[simp] theorem kernel_neg (a η : ℝ) : kernel a (-η) = kernel a η := by
@@ -137,7 +137,7 @@ theorem pressure_le_mass {g a : ℝ → ℝ} {A : ℝ}
       (fun y => mul_le_mul_of_nonneg_left (kernel_antitone (h.exponent_le y) η) (h.nonneg y))
   rw [integral_mul_const] at hm
   dsimp [pressure]
-  nlinarith
+  linarith
 
 /-- Shifting the logarithmic clock leaves the datum unchanged. -/
 theorem pressure_translate (g a : ℝ → ℝ) (c η : ℝ) :
@@ -395,7 +395,7 @@ theorem weighted_kernel_pos {g a : ℝ → ℝ} {A : ℝ}
   have hp := pressure_le_mass (exponent_weight_admissible h) η
   have hpos := mul_pos (kernel_pos A η) hmass
   dsimp [pressure] at hp
-  nlinarith
+  linarith
 
 theorem deriv_pressure_pos {g a : ℝ → ℝ} {A : ℝ}
     (h : Admissible g a A) (hmass : 0 < ∫ y, g y * a y)
@@ -433,7 +433,7 @@ theorem pressure_le_prefix {g a : ℝ → ℝ} {A b : ℝ}
     rw [ha y hy]
   rw [heq] at hp
   dsimp [pressure]
-  nlinarith
+  linarith
 
 theorem pressure_le_prefix_mass {g a : ℝ → ℝ} {A b m : ℝ}
     (h : Admissible g a A) {s : Set ℝ} (hs : MeasurableSet s)
@@ -441,7 +441,7 @@ theorem pressure_le_prefix_mass {g a : ℝ → ℝ} {A b m : ℝ}
     pressure g a η ≤ -(1 / 2 : ℝ) * m * kernel b η := by
   have hp := pressure_le_prefix h hs ha η
   have hk := mul_le_mul_of_nonneg_left hm (kernel_pos b η).le
-  nlinarith
+  linarith
 
 theorem kernel_one (η : ℝ) : kernel 1 η = (1 + η ^ 2)⁻¹ ^ 2 := by
   rw [kernel_eq_rpow]
@@ -456,7 +456,7 @@ theorem manuscript_prefix_bound {g a : ℝ → ℝ} {A P : ℝ}
     pressure g a η ≤ -(5 / 2 : ℝ) * P ^ 2 * ((1 + η ^ 2)⁻¹) ^ 2 := by
   have hp := pressure_le_prefix_mass h hs ha hm η
   rw [kernel_one] at hp
-  nlinarith
+  linarith
 
 /-- Exact integral of the ideal clock prefix `P² exp(y/5)`. -/
 theorem ideal_prefix_mass (P : ℝ) :
@@ -570,13 +570,13 @@ theorem d_nonneg {η : ℝ} (hη : η ∈ Icc (-1 : ℝ) 1) : 0 ≤ d η := by
   have hp := mul_nonneg (sub_nonneg.mpr hη.2)
     (show 0 ≤ η + 1 by linarith [hη.1])
   unfold d
-  nlinarith
+  linarith
 
 theorem L_lower_bound {h j η : ℝ} (p : SmallParameters h j)
     (hη : η ∈ Icc (-1 : ℝ) 1) : 499 / 500 ≤ L h η := by
   have hp := mul_nonneg p.h_pos.le (d_nonneg hη)
   dsimp [d, L] at *
-  nlinarith [p.h_le]
+  linarith [p.h_le]
 
 theorem L_pos {h j η : ℝ} (p : SmallParameters h j)
     (hη : η ∈ Icc (-1 : ℝ) 1) : 0 < L h η := by
@@ -593,15 +593,15 @@ theorem neg_W_lower_bound {h j η : ℝ} (p : SmallParameters h j)
   have hDj : 0 ≤ 2 * D h * j :=
     mul_nonneg (mul_nonneg (by norm_num) (D_pos p).le) p.j_pos.le
   have hDjle : 2 * D h * j ≤ j := by
-    nlinarith [mul_nonneg (show 0 ≤ 1 - 2 * D h by linarith [(D_bounds p).2]) p.j_pos.le]
+    linarith [mul_nonneg (show 0 ≤ 1 - 2 * D h by linarith [(D_bounds p).2]) p.j_pos.le]
   have hηDj : -(2 * D h * j) ≤ 2 * D h * j * η := by
-    nlinarith [mul_nonneg hDj (show 0 ≤ η + 1 by linarith [hη.1])]
+    linarith [mul_nonneg hDj (show 0 ≤ η + 1 by linarith [hη.1])]
   have hhη : h * η ^ 2 ≤ h := by
     have hp := mul_nonneg p.h_pos.le (d_nonneg hη)
     dsimp [d] at hp
-    nlinarith
+    linarith
   rw [neg_W_formula]
-  nlinarith [p.h_le, p.j_le]
+  linarith [p.h_le, p.j_le]
 
 theorem neg_W_gt {h j η : ℝ} (p : SmallParameters h j)
     (hη : η ∈ Icc (-1 : ℝ) 1) : 14 / 5 < -W h j η := by
@@ -632,8 +632,8 @@ theorem H_right_pos {h j : ℝ} (p : SmallParameters h j) : 0 < H h j (-j / 5) :
   apply mul_pos (div_pos p.j_pos (by norm_num))
   have hj1 : j ≤ 1 := by linarith [p.j_le]
   have hj2 : j ^ 2 ≤ 1 := by
-    nlinarith [mul_nonneg (sub_nonneg.mpr hj1) (show 0 ≤ j + 1 by linarith [p.j_pos])]
-  nlinarith [(D_bounds p).2]
+    linarith [mul_nonneg (sub_nonneg.mpr hj1) (show 0 ≤ j + 1 by linarith [p.j_pos])]
+  linarith [(D_bounds p).2]
 
 theorem H_pos_of_nonneg {h j η : ℝ} (p : SmallParameters h j)
     (hη : η ∈ Icc (-1 : ℝ) 1) (hη0 : 0 ≤ η) : 0 < H h j η := by
@@ -718,23 +718,23 @@ theorem Z_at_root_lower {h j η : ℝ} {P : ℝ → ℝ} (p : SmallParameters h 
   have hUj : U j η < j / 5 := by dsimp [U]; linarith [hη.2]
   have hrU : -η * U j η ≤ U j η := by
     simpa using mul_le_mul_of_nonneg_right (show -η ≤ 1 by linarith [hI.1]) hU.le
-  have hfactor : 1 - 2 * η * U j η ≤ 2 := by nlinarith [p.j_le]
+  have hfactor : 1 - 2 * η * U j η ≤ 2 := by linarith [p.j_le]
   have hadverse : (1 - 2 * η * U j η) * U j η < 2 * j / 5 :=
     lt_of_le_of_lt (mul_le_mul_of_nonneg_right hfactor hU.le) (by linarith)
   have hpressure := mul_le_mul_of_nonpos_left hP hηn.le
   have hcore : 2 * j / 5 < -(1 - 2 * η * U j η) * U j η + 4 * η * P η := by
-    nlinarith [hη.2]
+    linarith [hη.2]
   have hderiv : d η * deriv P η ≤ 0 :=
     mul_nonpos_of_nonneg_of_nonpos (d_nonneg hI) hP'
   calc
     j / 5 ≤ A h * (2 * j / 5) := by
-      nlinarith [mul_nonneg (show 0 ≤ A h - 1 / 2 by linarith [(A_bounds p).1]) p.j_pos.le]
+      linarith [mul_nonneg (show 0 ≤ A h - 1 / 2 by linarith [(A_bounds p).1]) p.j_pos.le]
     _ < A h * (-(1 - 2 * η * U j η) * U j η + 4 * η * P η) :=
       mul_lt_mul_of_pos_left hcore (A_pos p)
     _ ≤ Z h j P η := by
       unfold Z
       rw [hz]
-      nlinarith
+      linarith
 
 theorem Z_continuous (h j : ℝ) {P : ℝ → ℝ} (hP : ContDiff ℝ ∞ P) :
     Continuous (Z h j P) := by
@@ -812,10 +812,10 @@ theorem exists_sigma {h j : ℝ} {P : ℝ → ℝ}
   refine ⟨σ, hσ, ?_⟩
   intro η hη hZ
   have hH := hbound η hη hZ
-  have hden : 0 < (H h j η) ^ 2 + σ ^ 2 := by nlinarith [sq_nonneg σ]
+  have hden : 0 < (H h j η) ^ 2 + σ ^ 2 := by linarith [sq_nonneg σ]
   unfold chi
   apply (lt_div_iff₀ hden).mpr
-  nlinarith
+  linarith
 
 /-- The requested fixed positive choices, with no input separation premise. -/
 theorem exists_cutoff_parameters {h j : ℝ} {P : ℝ → ℝ}
@@ -847,13 +847,13 @@ theorem pressureData_of_ideal_prefix {g a : ℝ → ℝ} {cap B : ℝ}
       apply (le_div_iff₀ hden).mpr
       linarith
     have hisq : (1 / 4 : ℝ) ≤ ((1 + η ^ 2)⁻¹) ^ 2 := by
-      nlinarith [sq_nonneg ((1 + η ^ 2)⁻¹ - 1 / 2)]
+      linarith [sq_nonneg ((1 + η ^ 2)⁻¹ - 1 / 2)]
     have hBsq : (4 : ℝ) ≤ B ^ 2 := by nlinarith
     have hprod : (1 : ℝ) ≤ B ^ 2 * ((1 + η ^ 2)⁻¹) ^ 2 := by
       have hm := mul_le_mul hBsq hisq (by norm_num : (0 : ℝ) ≤ 1 / 4) (sq_nonneg B)
-      nlinarith
+      linarith
     have hpressure := PressureDatum.pressure_le_of_ideal_prefix hp hg ha η
-    nlinarith
+    linarith
   · intro η hη
     rcases lt_trichotomy η 0 with hn | rfl | hpη
     · exact (mul_pos_of_neg_of_neg hn (PressureDatum.deriv_pressure_neg hp hmass hn)).le
@@ -1594,10 +1594,10 @@ theorem L_pos_on_window {h j : ℝ} (hp : NaturalAxisData.SmallParameters h j)
   have hx' : -(11 / 10 : ℝ) ≤ x ∧ x ≤ 11 / 10 := by
     simpa [window, Window.interval, neg_div] using hx
   have hs : x ^ 2 ≤ 2 := by
-    nlinarith [mul_nonneg (sub_nonneg.mpr hx'.2) (show 0 ≤ x + 11 / 10 by linarith [hx'.1])]
+    linarith [mul_nonneg (sub_nonneg.mpr hx'.2) (show 0 ≤ x + 11 / 10 by linarith [hx'.1])]
   have hh := mul_le_mul_of_nonneg_left hs hp.h_pos.le
   dsimp [NaturalAxisData.L]
-  nlinarith [hp.h_le]
+  linarith [hp.h_le]
 
 theorem denominator_ne_zero_on_real (h j : ℝ) {σ : ℝ} (hσ : 0 < σ) (x : ℝ) :
     denominator h j σ (x : ℂ) ≠ 0 := by

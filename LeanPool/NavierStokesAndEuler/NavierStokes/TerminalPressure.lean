@@ -303,7 +303,7 @@ theorem compactDeficit_integrand_smooth {h B : ℝ} {f : ℝ → ℝ}
     (p : ℝ × ℝ) (hν : 0 < p.1) (u : ℝ) (hu : u ∈ Icc (0 : ℝ) 1) :
     ContDiffAt ℝ ∞
       (fun z : (ℝ × ℝ) × ℝ => deficitDensity h f z.1 (1 + (B - 1) * z.2)) (p, u) := by
-  have hv : 0 < 1 + (B - 1) * u := by nlinarith [mul_nonneg (sub_nonneg.mpr hB) hu.1]
+  have hv : 0 < 1 + (B - 1) * u := by linarith [mul_nonneg (sub_nonneg.mpr hB) hu.1]
   exact (deficitDensity_contDiffAt hh hf hν hv).comp (p, u)
     (contDiffAt_fst.prodMk (contDiffAt_const.add (contDiffAt_const.mul contDiffAt_snd)))
 
@@ -853,7 +853,7 @@ theorem logScaleDerivative_bound {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
   calc
     _ ≤ 2 / (SimilarityProfile.q h p ^ CoordinateAlgebra.D h * CoordinateAlgebra.L h
         (SimilarityProfile.eta h p)) := by
-      exact div_le_div_of_nonneg_right (by nlinarith) (mul_pos hpow hL).le
+      exact div_le_div_of_nonneg_right (by linarith) (mul_pos hpow hL).le
     _ ≤ 2 / (SimilarityProfile.q h p ^ CoordinateAlgebra.D h * (1 - 2 * h)) :=
       div_le_div_of_nonneg_left (by norm_num) (mul_pos hpow hh0)
         (mul_le_mul_of_nonneg_left hL0 hpow.le)
@@ -1224,7 +1224,7 @@ theorem heatAmplitude_annulus_lower {C h t r R Λ : ℝ}
   have hpow : Λ ^ (-amplitudeExponent h) * (r ^ 2 / 2) ^ (-amplitudeExponent h) ≤
       (R ^ 2 / 2) ^ (-amplitudeExponent h) := by
     rw [← Real.mul_rpow hΛp.le ha.le]
-    exact Real.rpow_le_rpow_of_nonpos hb (by nlinarith) (by dsimp [amplitudeExponent]; linarith)
+    exact Real.rpow_le_rpow_of_nonpos hb (by linarith) (by dsimp [amplitudeExponent]; linarith)
   have harg : 2 * (1 - t) / (R ^ 2 / 2) ≤ 2 * (1 - t) / (r ^ 2 / 2) :=
     div_le_div_of_nonneg_left (by positivity) ha hab
   have hH := heatProfile_antitoneOn hh (div_pos (by
@@ -1295,7 +1295,7 @@ theorem terminal_tilt_bound {C h t z r R Y Λ : ℝ} {f : ℝ → ℝ}
   have hax := (axialBackwardStress_bound hC hh hh1 ht hr hrR hf hb hmono hplateau hR).2
   have hlength : (R ^ 2 - r ^ 2) / (2 * r) ≤ (Λ - 1) * r / 2 := by
     apply (div_le_iff₀ (by positivity : 0 < 2 * r)).mpr
-    nlinarith
+    linarith
   have hB : |axialBackwardStress C h f t z r| ≤
       ((Λ - 1) * r / 2) * (c * q ^ (-CoordinateAlgebra.D h)) * K ^ 2 * E := by
     apply hax.trans
@@ -1506,7 +1506,7 @@ theorem released_terminal_tilt_small (d : OutgoingTail.TailData) {K y0 t z r R �
   have hs : d.h * (1 + B) ≤ ε := (le_div_iff₀ (by linarith : 0 < 1 + B)).mp hsmall
   apply hb.trans
   change B * d.h ^ 4 ≤ ε
-  nlinarith [mul_le_mul_of_nonneg_left hhpow hB, d.h_pos]
+  linarith [mul_le_mul_of_nonneg_left hhpow hB, d.h_pos]
 
 /-- Full physical residual formula after discharging the pressure regularity
 and improper-integral assumptions. The axial viscosity of the swirl is retained. -/
@@ -1560,7 +1560,7 @@ theorem axialBackwardStress_divergence {C h t z r R Y : ℝ} {f : ℝ → ℝ}
   let g : ℝ → ℝ := fun s => SimilarityProfile.partialZ (TerminalStress.canonicalPressure
     (TerminalStress.swirlCoefficient C h f)) (t, (s, z))
   have ha : 0 < (r / 2) ^ 2 / 2 := by positivity
-  have hab : (r / 2) ^ 2 / 2 < r ^ 2 / 2 := by nlinarith [sq_pos_of_pos hr]
+  have hab : (r / 2) ^ 2 / 2 < r ^ 2 / 2 := by linarith [sq_pos_of_pos hr]
   have hi : IntegrableOn g (Ioi ((r / 2) ^ 2 / 2)) :=
     (axialBackwardStress_bound hC hh hh1 ht (by positivity : 0 < r / 2)
       (by linarith : r / 2 ≤ R) hf hb hmono hplateau hR).1

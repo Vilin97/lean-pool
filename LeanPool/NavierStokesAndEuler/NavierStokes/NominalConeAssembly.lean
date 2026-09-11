@@ -61,7 +61,7 @@ theorem shape_axis_lower {h j eta ell theta : ℝ}
       theta * H h j eta * OutgoingEntranceCone.shapeGradient eta := by
   have heta : |eta| ≤ 1 := abs_le.mpr hη
   have hd0 := d_nonneg hη
-  have hd1 : d eta ≤ 1 := by unfold d; nlinarith [sq_nonneg eta]
+  have hd1 : d eta ≤ 1 := by unfold d; linarith [sq_nonneg eta]
   have hD := D_pos hs
   have hu : |U j eta| ≤ 4001 / 1000 := by
     calc
@@ -88,7 +88,7 @@ theorem shape_axis_lower {h j eta ell theta : ℝ}
     (mul_le_of_le_one_left hs.j_pos.le hd1).trans hs.j_le
   have herr : -(1 / 500 : ℝ) ≤ d eta * j * OutgoingEntranceCone.shapeGradient eta := by
     have hm := mul_le_mul_of_nonneg_left (abs_le.mp hgabs).1 hdj
-    nlinarith
+    linarith
   have hid : H h j eta * OutgoingEntranceCone.shapeGradient eta =
       (D h + 4 * d eta) * (eta * OutgoingEntranceCone.shapeGradient eta) +
         d eta * j * OutgoingEntranceCone.shapeGradient eta := by
@@ -99,7 +99,7 @@ theorem shape_axis_lower {h j eta ell theta : ℝ}
     linarith
   have htheta : -(1 / 500 : ℝ) ≤ theta * H h j eta * OutgoingEntranceCone.shapeGradient eta := by
     have hm := mul_le_mul_of_nonneg_left hH ht.1
-    nlinarith [ht.2]
+    linarith [ht.2]
   have hW := neg_W_lower_bound hs hη
   have hbase : (2991 / 1000 : ℝ) * (11 / 20) ≤ -W h j eta * ell :=
     mul_le_mul hW hl (by norm_num) (by linarith)
@@ -185,7 +185,7 @@ theorem shapeModel_uniform_lower {h j sigma : ℝ} (hs : SmallParameters h j)
     have hm := (div_lt_iff₀ htau).mp (show 1 / tau < Λ by
       have := (le_max_right M0 (1 + 1 / tau)).trans hΛ
       linarith)
-    nlinarith
+    linarith
   have he := (abs_lt.mp (hpert p (1 / Λ) ht)).1
   have hm := hmain Λ ((le_max_left _ _).trans hΛ) p
   linarith
@@ -295,7 +295,7 @@ theorem angular_barrier {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
     have he := ReferenceBounds.angularSource_eq P (hmem s hs) (hf s hs).ne' h
     have hterm : 2 * L h eta * ReferenceBounds.logSlope P (s, eta) ≤ 2 := by
       have hh := mul_le_mul_of_nonneg_left (hl s hs) (show 0 ≤ 2 * L h eta by positivity)
-      nlinarith
+      linarith
     have hsq : 2 < s * ReferenceBounds.sourceQ P h (s, eta) := by
       have hh := mul_lt_mul_of_pos_left (hq s hs) (hspos s hs)
       linarith [hs.1]
@@ -317,12 +317,12 @@ theorem angular_barrier {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
     rw [ReferenceBounds.p1_primitive P (hspos a ⟨le_rfl, haX⟩).ne' h] at hinit
     have hi := (lt_div_iff₀ (mul_pos hL (hHpos a ⟨le_rfl, haX⟩))).mp hinit
     unfold angularGap
-    nlinarith
+    linarith
   have hout : 0 < angularGap P h eta X := hini.trans_le (hm ⟨le_rfl, haX⟩ ⟨haX, le_rfl⟩ haX)
   rw [ReferenceBounds.p1_primitive P (hspos X ⟨haX, le_rfl⟩).ne' h]
   apply (lt_div_iff₀ (mul_pos hL (hHpos X ⟨haX, le_rfl⟩))).mpr
   unfold angularGap at hout
-  nlinarith
+  linarith
 
 theorem shape_relaxed_from_source {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
     (ha : 2 ≤ a) (haX : a ≤ X) (hL : 0 < L h eta) (hL1 : L h eta ≤ 1)
@@ -373,7 +373,7 @@ theorem seedU_error_jets {N : ℕ} {eps X eta : ℝ}
   · have hxn : X ≤ 4 / A.scale := by simpa only [c.reference_radius] using hx
     have hY : A.scale * X ∈ Ioo (-20 : ℝ) 20 := by
       have hb := (le_div_iff₀ A.scale_pos).mp hxn
-      constructor <;> nlinarith [mul_nonneg A.scale_pos.le hX]
+      constructor <;> linarith [mul_nonneg A.scale_pos.le hX]
     have he : (fun e => c.seedU (X, e) - U A.j e) =
         (fun e => A.natural.profile.family.U (X, e) - U A.j e) := by
       funext e
@@ -383,7 +383,7 @@ theorem seedU_error_jets {N : ℕ} {eps X eta : ℝ}
     have hY5 : |A.scale * X| ≤ 5 := by
       rw [abs_of_nonneg (mul_nonneg A.scale_pos.le hX)]
       have hb := (le_div_iff₀ A.scale_pos).mp hxn
-      nlinarith
+      linarith
     have hb := (ReferenceJetBounds.coefficient_jet_bound A.preparation.inputs.coefficients
       A.natural.profile.coefficients A.natural.profile.norm_ball 0 n (p := (A.scale * X, eta))
           hY5).2
@@ -932,7 +932,7 @@ theorem exists_ordered_prepared_continuation (F : OutgoingProfile.Profile) (N : 
     have hm := (le_div_iff₀ (show 0 < 2 * K by positivity)).mp (min_le_right
       (min 1 (NominalProfile.resetSolver.radius / 2)) (delta / (2 * K)))
     change tau * (2 * K) ≤ delta at hm
-    nlinarith [mul_nonneg hK.le htau.le]
+    linarith [mul_nonneg hK.le htau.le]
   let rho := tau ^ (N + 1)
   have hrho : 0 < rho := pow_pos htau _
   have hpow : rho ≤ tau := by
@@ -962,7 +962,7 @@ theorem exists_ordered_prepared_continuation (F : OutgoingProfile.Profile) (N : 
       ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 n / Λ ≤ delta / 3 := by
     apply (div_le_iff₀ hΛ).mpr
     have hmul := (div_le_iff₀ hdelta).mp hLD
-    nlinarith [hDb n hn]
+    linarith [hDb n hn]
   obtain ⟨T, hT, Cmatch, hCmatch, hnorm⟩ := hmatch Λ hΛ hLm
   obtain ⟨Cgeo, hgeo⟩ := eventually_atTop.mp
     (NominalProfile.eventually_matching_geometry F T radiusFloor Cmatch)

@@ -348,7 +348,7 @@ theorem residual_weighted {C R : ℝ} (hG : G.WordBound 6 R C 0)
     hR (by positivity) s N hN ρ hρ hsmall t
   apply hh.trans
   unfold residualCost
-  nlinarith only [sq_nonneg ε]
+  linarith only [sq_nonneg ε]
 
 end EulerSmallCorrection
 
@@ -449,11 +449,11 @@ def scale (C R E : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) (hE : 0 < E) : Scale P C R
   have hd' : v*(4*E*Real.exp (3*growth P)+1) ≤ 1 :=
     (le_div_iff₀ (by positivity)).mp h5
   refine ⟨v,hv,h1,?_,?_,?_,?_⟩
-  · nlinarith only [ha',hv]
-  · nlinarith only [hb',hv]
-  · nlinarith only [hc',hv]
+  · linarith only [ha',hv]
+  · linarith only [hb',hv]
+  · linarith only [hc',hv]
   · have hh := mul_le_mul_of_nonneg_left hd' hv.le
-    nlinarith only [hh,sq_nonneg v]
+    linarith only [hh,sq_nonneg v]
 
 /-- Radius as an element of `C(Icc (0 : ℝ) 1,ℝ)`. -/
 def Scale.radius {C R E : ℝ} (S : Scale P C R E) : C(Icc (0 : ℝ) 1,ℝ) :=
@@ -1544,7 +1544,7 @@ theorem retainedRadius_small (R : ℝ) (hR : 0 ≤ R) :
   have hn := mul_nonneg (EulerSmallCorrection.initialRadius_pos _ (mixedRadius_nonneg R hR)).le
     (mixedRadius_nonneg R hR)
   dsimp [retainedRadius]
-  nlinarith
+  linarith
 
 theorem baseErrorFactor_nonneg : 0 ≤ baseErrorFactor :=
   div_nonneg (zero_le_one.trans (metricAmplification_one_le (by
@@ -2174,7 +2174,7 @@ theorem horizon_small (T B R : ℝ) (hT : 0 < T) (hB : 0 ≤ B) (hR : 0 ≤ R) :
   have hd : 0 < 8*(1+B*R) := by positivity
   have he := (le_div_iff₀ hd).1 (min_le_right T (1/(8*(1+B*R))))
   change horizon T B R*(8*(1+B*R)) ≤ 1 at he
-  nlinarith
+  linarith
 
 /-- Of interval, bundling `T`, `T_pos`, `field`, `derivative` and the required compatibility
 proofs. -/
@@ -3246,7 +3246,7 @@ theorem coordinate_bound_on_ball (i : Fin 3) (x : Space) (hx : ‖x‖ ≤ 2) (n
     ‖iteratedFDeriv ℝ n (fun y : Space => y i) x‖ ≤ 2*majorant 256 0 n := by
   apply (linear_bound_on_ball (EuclideanSpace.proj i) 2 256 (by
       norm_num) (by norm_num) x hx n).trans
-  exact mul_le_mul_of_nonneg_right (by nlinarith [coordinate_norm_le i])
+  exact mul_le_mul_of_nonneg_right (by linarith [coordinate_norm_le i])
     (majorant_nonneg 256 (by norm_num) 0 n)
 
 theorem linear_coordinate_bound_on_ball (L : Space →L[ℝ] Space) (i : Fin 3)
@@ -3872,6 +3872,6 @@ theorem initial_pressure_numerator_on_support (t : Icc (0 : ℝ) initialTime)
     simpa only [Metric.mem_ball,dist_zero_right] using EulerSpatialCutoffs.innerCutoff_support hx
   rw [norm_smul,Real.norm_eq_abs,abs_of_pos hell]
   have hb := mul_le_mul_of_nonneg_right hell1 (norm_nonneg x)
-  nlinarith
+  linarith
 
 end EulerBaseDatum

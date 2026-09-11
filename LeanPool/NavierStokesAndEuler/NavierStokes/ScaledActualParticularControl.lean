@@ -536,7 +536,7 @@ private theorem majorant_enlarge (s : StripData E) (w : ℕ → E → ℝ) (α :
   have ht := mul_le_mul_of_nonneg_right hp
     (mul_nonneg (Real.rpow_pos_of_pos (s.epsilon_pos n) α).le hw)
   unfold majorant
-  nlinarith only [ht]
+  linarith only [ht]
 
 /-- A stage's finite harmonic range can be folded into the external label
 with one constant before both.  This never infers uniformity over an
@@ -1674,13 +1674,13 @@ theorem geometry_cost (clock : ActualSignedControl.PositiveScale Label)
   have hcx := hcoord.trans (mul_le_mul_of_nonneg_left hc (zero_le_one.trans hU))
   have hpx := hpoint.trans (mul_le_mul_of_nonneg_left hp (zero_le_one.trans hU))
   have hB : 1 ≤ U*CommonCoverClass.argumentCost g := by
-    nlinarith [mul_nonneg (sub_nonneg.mpr hU) (sub_nonneg.mpr hcost)]
+    linarith [mul_nonneg (sub_nonneg.mpr hU) (sub_nonneg.mpr hcost)]
   change 1+‖G.coordinateLinear‖+‖G.pointLinear‖*(1+‖G.coordinateLinear‖) ≤ _
   have hproduct := mul_le_mul hpx (add_le_add_right hcx 1)
     (by
         positivity : 0 ≤ 1+‖G.coordinateLinear‖) (by
             positivity : 0 ≤ U*CommonCoverClass.argumentCost g)
-  nlinarith [sq_nonneg (U*CommonCoverClass.argumentCost g-1)]
+  linarith [sq_nonneg (U*CommonCoverClass.argumentCost g-1)]
 
 theorem geometry_cost_uniform (s : StripData P) (clock : ActualSignedControl.PositiveScale Label)
     (reference : Label → ℕ → Geometry) (gap : Label → ℕ → ℕ) (budget : ℕ)
@@ -1701,7 +1701,7 @@ theorem geometry_cost_constant_one (clock : ActualSignedControl.PositiveScale La
     (budget : ℕ) {C : ℝ} (hC : 1 ≤ C) : 1 ≤ 4*(geometryFactor clock budget)^2*C^2 := by
   have hU := one_le_pow₀ (n := 2) (geometryFactor_one clock budget)
   have hC2 := one_le_pow₀ (n := 2) hC
-  nlinarith [mul_nonneg (sub_nonneg.mpr hU) (sub_nonneg.mpr hC2)]
+  linarith [mul_nonneg (sub_nonneg.mpr hU) (sub_nonneg.mpr hC2)]
 
 /-! ## The actual active-window parameter and frequency scales -/
 
@@ -1777,7 +1777,7 @@ theorem slotCost_one (clock : ActualSignedControl.PositiveScale Label) (budget :
     1 ≤ slotCost hdet clock budget :=
   geometry_cost_constant_one clock budget (by
     have hc := CommonCoverClass.bandArgumentCost_one_le (TorusAverages.slotChart vr vt hdet) 0
-    nlinarith)
+    linarith)
 
 theorem slot_geometry_cost (s : StripData P) (hh : 0 ≤ h)
     (clock : ActualSignedControl.PositiveScale Label) (gap : Label → ℕ → ℕ) (budget : ℕ)

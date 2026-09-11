@@ -42,23 +42,23 @@ theorem source_activation_ode_guards {j x β : ℝ}
   have hβ : 0 < β := by nlinarith only [hβx, sq_nonneg x]
   have hx64 : 64 ≤ x ^ 2 := by nlinarith only [hx]
   have hm := mul_le_mul_of_nonneg_left hx64 hβ.le
-  have hβsmall : β ≤ 1 / 16 := by nlinarith only [hm, hβx₂]
+  have hβsmall : β ≤ 1 / 16 := by linarith only [hm, hβx₂]
   have hσ : 0 < sqrt β := sqrt_pos.mpr hβ
-  have hσsmall : sqrt β ≤ 1 / 4 := (sqrt_le_iff).2 ⟨by norm_num, by nlinarith only [hβsmall]⟩
+  have hσsmall : sqrt β ≤ 1 / 4 := (sqrt_le_iff).2 ⟨by norm_num, by linarith only [hβsmall]⟩
   have hj2 : 9 ≤ j ^ 2 := by nlinarith only [hj]
   have hX : 2 ≤ j ^ 2 * x := by
     have hh := mul_le_mul hj2 hx (by norm_num : (0 : ℝ) ≤ 8) (sq_nonneg j)
-    nlinarith only [hh]
+    linarith only [hh]
   have htLow : 1 / sqrt β ≤ (j ^ 2 * x) / sqrt β :=
     div_le_div_of_nonneg_right (by linarith only [hX]) hσ.le
   have htime := activation_time_bounds (a := 1) (H := 1) (β := β) (x := x) (X := j ^ 2 * x)
     (by norm_num) (by norm_num) (by norm_num) hxp (by positivity) hβx hβx₂
   norm_num only [mul_one, sqrt_one, div_one] at htime
-  have htUp : (j ^ 2 * x) / sqrt β ≤ 2 * j ^ 2 * x ^ 2 := by nlinarith only [htime.2]
+  have htUp : (j ^ 2 * x) / sqrt β ≤ 2 * j ^ 2 * x ^ 2 := by linarith only [htime.2]
   have hy : 0 < 1 / (j ^ 2 * x) := by positivity
   have hy₂ : 1 / (j ^ 2 * x) ≤ 1 / 2 := by
     apply (div_le_iff₀ (by positivity : 0 < j ^ 2 * x)).2
-    nlinarith only [hX]
+    linarith only [hX]
   exact ⟨hβ, hβsmall, hσ, hσsmall, htLow, htUp, hy, hy₂⟩
 
 /-- The source polynomial horizon contains the target activation time. -/
@@ -70,8 +70,8 @@ theorem source_activation_within_horizon {j x β C : ℝ}
       β * ((j ^ 2 * x) / sqrt β) ^ 2 = (j ^ 2 * x) ^ 2 := by
   obtain ⟨hβ, _, _, _, _, ht, _, _⟩ := source_activation_ode_guards hj hx hβx hβx₂
   have hn : 0 ≤ j ^ 2 * x ^ 2 := mul_nonneg (sq_nonneg _) (sq_nonneg _)
-  have hh := mul_le_mul_of_nonneg_right hC (by nlinarith only [hn] : 0 ≤ 1 + j ^ 2 * x ^ 2)
-  refine ⟨by nlinarith only [hh, hn], by nlinarith only [ht, hh], ?_⟩
+  have hh := mul_le_mul_of_nonneg_right hC (by linarith only [hn] : 0 ≤ 1 + j ^ 2 * x ^ 2)
+  refine ⟨by linarith only [hh, hn], by linarith only [ht, hh], ?_⟩
   rw [div_pow, sq_sqrt hβ.le]
   field_simp
 
@@ -156,7 +156,7 @@ theorem actualWidths_contract (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
   have hh := (actualTimeRatio_le J (by omega) X (by linarith only [hX]) hb.initial_shear n).trans
     ((hb.normal.width.term_le n).trans hδ)
   have hmul := (div_le_iff₀ (timeWidth_pos J (by omega) (by linarith only [hX]) n)).mp hh
-  nlinarith only [hmul]
+  linarith only [hmul]
 
 theorem coefficient_small (J D : ℕ) (hJ : 3 ≤ J) (C c X δ : ℝ)
     (hC : 1 ≤ C) (hX : 8 ≤ X) (hb : ActualBounds J D C c X δ)
@@ -178,13 +178,13 @@ theorem compression_of_error_small {a ε Θ target G d : ℝ}
     (hG : 1 ≤ G) (hd : 0 ≤ d)
     (herr : 16 * (ε * Θ * (4 * G) ^ 2 + d) ≤ 1) : 60*(G+d)*target*ε < a := by
   have hprod : 0 ≤ ε*Θ*G^2 := mul_nonneg (mul_nonneg hε hΘ) (sq_nonneg G)
-  have hd1 : d ≤ 1 := by nlinarith only [herr, hprod]
+  have hd1 : d ≤ 1 := by linarith only [herr, hprod]
   have hG₀ : 0 ≤ G := le_trans zero_le_one hG
-  have hGsq : G+d ≤ 2*G^2 := by nlinarith only [hG, hd1, sq_nonneg (G-1)]
+  have hGsq : G+d ≤ 2*G^2 := by linarith only [hG, hd1, sq_nonneg (G-1)]
   have htargetmul := mul_le_mul_of_nonneg_right htarget hε
   have hfull := mul_le_mul_of_nonneg_left htargetmul (show 0 ≤ 60*(G+d) by positivity)
   have hscale := mul_le_mul_of_nonneg_right hGsq (mul_nonneg hΘ hε)
-  nlinarith only [herr, hd, hfull, hscale, ha]
+  linarith only [herr, hd, hfull, hscale, ha]
 
 theorem scaleSequence_ge_initial (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 0 ≤ X) (n : ℕ) :
     X ≤ scaleSequence J X n := by
@@ -249,7 +249,7 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
   have hextra1 : actualExtraTime J X (a n) n ≤ 1 := by
     have hh := mul_le_mul_of_nonneg_left (one_le_pow₀ hθ : 1 ≤ sourceTheta J C (scaleSequence J X)
         n^60) hextra₀
-    nlinarith only [hh, hextra, hδ]
+    linarith only [hh, hextra, hδ]
   have hpow : 0 < sourceTheta J C (scaleSequence J X) n^60 := pow_pos hθp 60
   have hextraSharp : actualExtraTime J X (a n) n ≤ 1/sourceTheta J C (scaleSequence J X) n^60 :=
     (le_div_iff₀ hpow).mpr (hextra.trans (by linarith only [hδ]))
@@ -270,18 +270,18 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
     linarith only [hh, hδ]
   have heps1 : epsilon J X (a n) n ≤ 1 := by
     have hG : 1 ≤ (4*(1+olderShear J X n))^2 := by
-        nlinarith only [hg, sq_nonneg (1+olderShear J X n-1)]
+        linarith only [hg, sq_nonneg (1+olderShear J X n-1)]
     have htG : 1 ≤ sourceTheta J C (scaleSequence J X) n*(4*(1+olderShear J X n))^2 :=
       one_le_mul_of_one_le_of_one_le hθ hG
     have hh := mul_le_mul_of_nonneg_left htG heps.le
     unfold geometryError at he0
-    nlinarith only [he0, hh, hd]
+    linarith only [he0, hh, hd]
   have htθ : targetTime J X (β n) n ≤ sourceTheta J C (scaleSequence J X) n := by
     have hnonneg : 0 ≤ ((J+n:ℕ):ℝ)^2*scaleSequence J X n^2 := by positivity
     have hm := mul_le_mul_of_nonneg_right hC (by
         linarith only [hnonneg] : 0 ≤ 1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
     unfold sourceTheta
-    nlinarith only [hm, hnonneg, ht]
+    linarith only [hm, hnonneg, ht]
   refine ⟨heps, heps1, hact.2.2.1, hact.2.2.2.1, ?_, ?_, ?_, ?_, ?_, ?_,
     actualWidths_contract J D hJ C c X δ hX hb hδ n, ?_, ?_⟩
   · simpa only [one_div, scaleSequence_succ] using hact.2.2.2.2.2.2.1
@@ -292,12 +292,12 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
     have hm := mul_le_mul_of_nonneg_right hC (by
         linarith only [hnonneg] : 0 ≤ 1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
     unfold horizon sourceTheta
-    nlinarith only [hm, hnonneg, ht, hextra1]
+    linarith only [hm, hnonneg, ht, hextra1]
   · simpa only [horizon, add_sub_cancel_left] using hextraSharp
   · have hh := mul_le_mul_of_nonneg_left
       (coefficient_small J D hJ C c X δ hC1 hX hb a ha₀ ha₂ 40 (by omega) n)
       (show 0 ≤ 1000000*K by positivity)
-    nlinarith only [hh, hδK]
+    linarith only [hh, hδK]
   · exact compression_of_error_small (ha n) heps.le hθp.le htθ hg hd
       (by simpa only [geometryError, add_assoc] using he0)
 
@@ -321,7 +321,7 @@ theorem exists_guarded_sequence (D : ℕ) (hD : 1000 ≤ D) (C c K : ℝ)
   have hδinv : δ ≤ 1/(1000000*K) := (min_le_right _ _).trans (min_le_right _ _)
   have hδK : 1000000*K*δ ≤ 1 := by
     have hh := (le_div_iff₀ (show 0 < 1000000*K by positivity)).mp hδinv
-    nlinarith only [hh]
+    linarith only [hh]
   obtain ⟨X₀, hX₀, hX⟩ := hchoice δ hδpos
   refine ⟨X₀, δ, hX₀, hδpos, hδη, ?_⟩
   intro X hXX

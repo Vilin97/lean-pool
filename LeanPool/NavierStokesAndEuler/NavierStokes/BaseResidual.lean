@@ -2092,23 +2092,23 @@ theorem baseResidual_jetRate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi
       (fun z => baseVelocity a h C d z - prefixVelocity J h C d z) (m + 2) (n + b) := by
     apply finiteRate_weaken (velocity_prefix_rate hh hh1 A hd ha J (m + 2) (by omega)) hq
     push_cast
-    nlinarith
+    linarith
   have hpres : FiniteJetRate l (fun z => (cartesianChart h z).1)
       (fun z => basePressure a h C d z - prefixPressure J h C d z) (m + 1) (n + b) := by
     apply finiteRate_weaken (pressure_prefix_rate hh hh1 A hd ha J (m + 1) (by omega)) hq
     push_cast
-    nlinarith
+    linarith
   have hstress : JetRate l (fun z => (cartesianChart h z).1)
       (fun z => baseStressForce a h C d z - prefixStressForce J h C d z) m n := by
     apply (finiteRate_at (stress_prefix_rate hh hh1 A hlo hd ha J m (by omega)) le_rfl).weaken hq
     dsimp [b] at hgain
-    nlinarith
+    linarith
   have htail : JetRate l (fun z => (cartesianChart h z).1)
       (fun z => truncationResidual J h C f z.1 z.2) m n := by
     apply (finiteRate_at (truncationResidual_rate hh hh1 A hlo hO hKO J C f
       (fun j _ => hv j) (fun j _ => hu j) (fun j _ => hf j) hX hL m) le_rfl).weaken hq
     dsimp [b] at hgain
-    nlinarith
+    linarith
   let EJ : SpaceTime → Space := fun z =>
     navierStokesResidual (prefixVelocity J h C d) (prefixPressure J h C d) z.1 z.2 -
       prefixStressForce J h C d z
@@ -2851,11 +2851,11 @@ theorem eqOn_of_off_axis {V : Type} [NormedAddCommGroup V]
   have hx0 : z.2 0 = 0 := by
     apply sq_eq_zero_iff.mp
     unfold AxisymmetricFields.radialEnergy at hs0
-    nlinarith [sq_nonneg (z.2 0), sq_nonneg (z.2 1)]
+    linarith [sq_nonneg (z.2 0), sq_nonneg (z.2 1)]
   have hx1 : z.2 1 = 0 := by
     apply sq_eq_zero_iff.mp
     unfold AxisymmetricFields.radialEnergy at hs0
-    nlinarith [sq_nonneg (z.2 0), sq_nonneg (z.2 1)]
+    linarith [sq_nonneg (z.2 0), sq_nonneg (z.2 1)]
   let gamma : ℝ → SpaceTime := fun t => (z.1, z.2 + t • coordinateVector 0)
   have hgamma : Continuous gamma := continuous_const.prodMk (continuous_const.add
       (continuous_id.smul continuous_const))
@@ -3114,18 +3114,18 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
       (fun z => baseVelocity a h C d z - prefixVelocity J h C d z) (m + 2) (n + b) := by
     apply finiteRate_weaken (velocity_prefix_rate hh hh1 A hd ha J (m + 2) (by omega)) hq
     push_cast
-    nlinarith
+    linarith
   have hpres : FiniteJetRate l (fun z => (cartesianChart h z).1)
       (fun z => basePressure a h C d z - prefixPressure J h C d z) (m + 1) (n + b) := by
     apply finiteRate_weaken (pressure_prefix_rate hh hh1 A hd ha J (m + 1) (by omega)) hq
     push_cast
-    nlinarith
+    linarith
   have hstress : JetRate l (fun z => (cartesianChart h z).1)
       (fun z => baseStressForce a h C d z - prefixStressForce J h C d z) m n := by
     apply (finiteRate_at (stress_prefix_rate_axis hh hh1 A hr hd hc ha J m (by
         omega)) le_rfl).weaken hq
     dsimp [b] at hgain
-    nlinarith
+    linarith
   let EJ : SpaceTime → Space := fun z =>
     navierStokesResidual (prefixVelocity J h C d) (prefixPressure J h C d) z.1 z.2 -
       prefixStressForce J h C d z
@@ -3134,7 +3134,7 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
       (fun j _ => hp j) (fun j _ => hu j) (fun j _ => hb j)
       (fun j _ => hv j) (fun j _ => heu j) (fun j _ => hep j) hL m) le_rfl).weaken hq
     dsimp [b] at hgain
-    nlinarith
+    linarith
   have hEJs : ContDiffOn ℝ ∞ EJ past :=
     (ResidualRegularity.contDiffOn_residual hU huJs hpJs).sub htJ
   let Df := residualDifference (prefixVelocity J h C d)

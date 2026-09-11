@@ -210,7 +210,7 @@ theorem logarithmicSlope_bounds {T K B : ℝ} {li : ℝ → ℝ}
         hData (abs_nonneg _) (div_nonneg hK hT.le)
       _ ≤ 1 / 20 := by
         rw [div_mul_eq_mul_div]
-        exact (div_le_iff₀ hT).mpr (by nlinarith)
+        exact (div_le_iff₀ hT).mpr (by linarith)
   have hab := abs_le.mp hb
   dsimp [logarithmicSlope]
   constructor <;> linarith
@@ -541,7 +541,7 @@ theorem shapeField_jet_bound {Xi C T X B K : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
   · have hXpos : 0 < X := hXi.trans (lt_of_not_ge hXXi)
     have hy : Real.log (X / Xi) ≤ T :=
       (Real.log_le_iff_le_exp (div_pos hXpos hXi)).mpr
-        ((div_le_iff₀ hXi).mpr (by nlinarith))
+        ((div_le_iff₀ hXi).mpr (by linarith))
     have he : (fun e => shapeField Xi T li old (X, e)) =
         fun e => (Real.sqrt (2 * X))⁻¹ * angular C T li (Real.log (X / Xi), e) := by
       funext e
@@ -829,7 +829,7 @@ theorem prefixJetSize_bound {R r L B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r) (h
   have hKC : 0 ≤ K / C := div_nonneg hK hCpos.le
   have hKCle : K / C ≤ K := div_le_self hK hC
   have hroot : Real.sqrt R ≤ R + 1 := by
-    nlinarith [Real.sqrt_nonneg R, Real.sq_sqrt hR, sq_nonneg (Real.sqrt R - 1)]
+    linarith [Real.sqrt_nonneg R, Real.sq_sqrt hR, sq_nonneg (Real.sqrt R - 1)]
   have hrr : Real.sqrt R * r ≤ L + 1 := calc
     _ ≤ (R + 1) * r := mul_le_mul_of_nonneg_right hroot hr
     _ = L + r := by rw [add_mul, hRL, one_mul]
@@ -858,7 +858,7 @@ theorem prefixJetSize_bound {R r L B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r) (h
     rw [← hRL, div_pow]
     ring
   dsimp [prefixJetSize, prefixCoefficient]
-  nlinarith
+  linarith
 
 theorem prefix_bound_tendsto (n : ℕ) (B K L T P : ℝ) :
     Tendsto (fun C : ℝ => prefixCoefficient n B K L * separation T C P +
@@ -1065,7 +1065,7 @@ theorem idealPrefixJetSize_bound {r B K : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1)
     rw [abs_mul, abs_mul, abs_of_nonneg hr]
     have hleft := mul_le_mul_of_nonneg_left hGG hr
     have hright := mul_le_mul (idealWeightS_bound hr hr1) hAA (abs_nonneg _) (by positivity)
-    nlinarith
+    linarith
   have hp : |iteratedDeriv n (idealP A r) eta| ≤
       (5 / 2) * (2 ^ n * K ^ 2) * r ^ (1 / 5 : ℝ) := by
     change |iteratedDeriv n (fun e => idealWeightP r * A e ^ 2) eta| ≤ _
@@ -1074,7 +1074,7 @@ theorem idealPrefixJetSize_bound {r B K : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1)
     convert! mul_le_mul_of_nonneg_left hAA
       (show 0 ≤ (5 / 2 : ℝ) * r ^ (1 / 5 : ℝ) by positivity) using 1; ring
   dsimp [idealPrefixJetSize, idealPrefixCoefficient]
-  nlinarith
+  linarith
 
 theorem separation_fifth_tendsto (T : ℝ) {P : ℝ} (hP : P ≠ 0) :
     Tendsto (fun C : ℝ => separation T C P ^ (1 / 5 : ℝ)) atTop (𝓝 0) := by
@@ -1265,7 +1265,7 @@ theorem restoreJetSize_bound {a b B K delta : ℝ} (ha : 0 < a) (hab : a ≤ b) 
   have hj' := hj.trans (mul_le_of_le_one_right (by positivity) hlen1)
   have hs' := hs.trans (mul_le_of_le_one_right (by positivity) hlen1)
   dsimp [restoreJetSize]
-  nlinarith
+  linarith
 
 /-! ## Subtracting the ideal rows and including restoration -/
 

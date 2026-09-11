@@ -58,7 +58,7 @@ theorem hold_Qs_pos {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hp : 0 < ShapedWaitBounds.holdFloor d.core.m *
       (eta ^ 2 + d.core.lam + Real.exp (-(1 - d.core.lam) * t)) := by
     exact mul_pos hf (by
-        nlinarith [sq_nonneg eta, d.core.lam_pos, Real.exp_pos (-(1 - d.core.lam) * t)])
+        linarith [sq_nonneg eta, d.core.lam_pos, Real.exp_pos (-(1 - d.core.lam) * t)])
   exact hp.trans_le hl
 
 /-- Hold ratio constant, given by `ShapedWaitBounds.axialWaitConstant P m / (2 *
@@ -92,11 +92,11 @@ theorem hold_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
     ring
   have hsq : 2 * |eta| * s ≤ eta ^ 2 + Real.exp (-(1 - d.core.lam) * t) := by
     have hb := sq_nonneg (|eta| - s)
-    nlinarith [hs, sq_abs eta]
+    linarith [hs, sq_abs eta]
   have hmul := mul_le_mul_of_nonneg_left hsq hc.le
   have hqeta : 2 * ShapedWaitBounds.holdFloor d.core.m * |eta| * s ≤
       OutgoingHistories.Qs w Amp (d.core.holdStart + t, eta) := by
-    nlinarith [mul_pos hc d.core.lam_pos]
+    linarith [mul_pos hc d.core.lam_pos]
   have hfac : 0 ≤ holdRatioConstant d.core.P d.core.m * (1 + t) * Real.exp (d.core.lam * t / 2) :=
     mul_nonneg (mul_nonneg (holdRatioConstant_pos d.core.P_pos d.core.m).le (by
         linarith)) (Real.exp_pos _).le
@@ -138,7 +138,7 @@ theorem hold_sqrt_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have htlog : t ≤ 60 * Real.log (1 / d.core.lam) := by rwa [hwait] at htw
   have hlin : 1 + t ≤ 60 * (1 + Real.log (1 / d.core.lam)) := by linarith
   have hlambda := mul_le_mul_of_nonneg_left htlog d.core.lam_pos.le
-  have harg : d.core.lam * t / 2 ≤ 30 := by nlinarith [TailCone.lambda_log_bound d]
+  have harg : d.core.lam * t / 2 ≤ 30 := by linarith [TailCone.lambda_log_bound d]
   have hex := Real.exp_le_exp.mpr harg
   have hb := hold_ratio_bound w ha hh1 hhlam hhT heta ht htw
   have hC := (holdRatioConstant_pos d.core.P_pos d.core.m).le
@@ -148,11 +148,11 @@ theorem hold_sqrt_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K)
   have hraw : |coneRatio w Amp (d.core.holdStart + t, eta)| ≤
       holdSmallConstant d.core.P d.core.m * (1 + Real.log (1 / d.core.lam)) := by
     dsimp [holdSmallConstant]
-    nlinarith
+    linarith
   have hs := mul_le_mul_of_nonneg_left hraw (Real.sqrt_nonneg d.core.lam)
   have hr := (PulseCone.coneRate_parts d.core.lam_pos (by linarith [d.core.lam_lt])).2.2
   have hr' := mul_le_mul_of_nonneg_left hr (holdSmallConstant_pos d.core.P_pos d.core.m).le
-  nlinarith
+  linarith
 
 theorem exists_hold_threshold (P m : ℝ) :
     ∃ lam0 : ℝ, 0 < lam0 ∧ ∀ lam : ℝ, 0 < lam → lam < lam0 →
@@ -222,7 +222,7 @@ theorem hold_source_criterion {d : TailData} {K : ℝ} (w : ResetWitness d K)
   · simp only [zero_mul, sub_zero]
     linarith [d.core.lam_pos]
   · norm_num only [zero_mul, mul_zero, zero_pow, zero_div, zero_add, add_zero]
-    nlinarith
+    linarith
   · linarith [d.core.lam_pos]
 
 /-! ## Common actual cone coordinates and source tests -/
@@ -272,7 +272,7 @@ theorem normalV_gt_two_of_radial {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) (ha : 2 < coneA w p) : 2 < normalV w Amp p := by
   have hm := mul_nonneg (show 0 ≤ coneA w p by linarith) (sq_nonneg (coneB w Amp p / coneA w p))
   unfold normalV
-  nlinarith
+  linarith
 
 theorem sourceCriterion_before_endpoint {d : TailData} {K : ℝ} (w : ResetWitness d K)
     {Amp : ℝ → ℝ} (ha : ContDiff ℝ ∞ Amp)
@@ -693,7 +693,7 @@ theorem leading_gap_of_finite {s c j v : ℝ} (hs : 0 < s) (hv : 2 < v)
     apply (sq_lt_sq₀ (by linarith : 0 ≤ s * c - v) (mul_pos hs hc).le).mpr
     linarith
   have hgap : s ^ 2 * ((v - 2) * j ^ 2) < s ^ 2 * (2 * c ^ 2) := by
-    nlinarith only [hquad, hd]
+    linarith only [hquad, hd]
   exact ⟨hc, sub_pos.mpr ((mul_lt_mul_iff_right₀ (sq_pos_of_pos hs)).mp hgap)⟩
 
 theorem clean_true_source_positive {d : TailData} {K : ℝ} (w : ResetWitness d K)

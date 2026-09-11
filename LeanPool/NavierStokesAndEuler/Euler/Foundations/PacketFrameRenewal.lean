@@ -44,7 +44,7 @@ theorem sqrt_ray_error
   have hs0 := sqrt_nonneg D
   have hs₀ : 1 ≤ sqrt D₀ := Real.one_le_sqrt.mpr hD₀
   have hsum : 1 ≤ sqrt D + sqrt D₀ := by linarith
-  have hid : (sqrt D - sqrt D₀) * (sqrt D + sqrt D₀) = D - D₀ := by nlinarith only [hsq, hsq₀]
+  have hid : (sqrt D - sqrt D₀) * (sqrt D + sqrt D₀) = D - D₀ := by linarith only [hsq, hsq₀]
   have hh : |sqrt D - sqrt D₀| * (sqrt D + sqrt D₀) ≤ d := by
     rw [← abs_of_nonneg (by linarith : 0 ≤ sqrt D + sqrt D₀), ← abs_mul, hid]
     exact herror
@@ -67,7 +67,7 @@ theorem expansion_quotient_error
   have hM : 0 ≤ M := (abs_nonneg _).trans hJ₀
   have hden : 1 / 4 ≤ sqrt D * sqrt E := by
     have hh := mul_le_mul hrootD hrootE (by norm_num : (0 : ℝ) ≤ 1) (sqrt_nonneg D)
-    nlinarith only [hh]
+    linarith only [hh]
   have hdenDiff : |sqrt D * sqrt E - sqrt D₀| ≤ 2 * dD + M * dE := by
     have hh := abs_product_difference hrootDiff hrootEE
       (show |sqrt D₀| ≤ M by rw [abs_of_nonneg (sqrt_nonneg D₀)]; exact hroot)
@@ -78,7 +78,7 @@ theorem expansion_quotient_error
   have hid : J / (sqrt D * sqrt E) - J₀ / sqrt D₀ + (J₀ / sqrt D₀ - 1) =
       J / (sqrt D * sqrt E) - 1 := by ring
   rw [hid] at ht
-  nlinarith only [ht, hdiff, hideal]
+  linarith only [ht, hdiff, hideal]
 
 /-- Quotient stability when the reference denominator is at least one half. -/
 theorem quotient_error_half_denominator
@@ -104,7 +104,7 @@ theorem quotient_error_half_denominator
   have h₁ : 2 * a / (2 * b) = a / b := by field_simp
   have h₂ : 2 * a₀ / (2 * b₀) = a₀ / b₀ := by field_simp
   rw [h₁, h₂] at hh
-  nlinarith only [hh]
+  linarith only [hh]
 
 /-- Stability of the next coupling multiplied by the target scale squared. -/
 theorem coupling_quotient_error
@@ -120,14 +120,14 @@ theorem coupling_quotient_error
   have hJscaled : |J / P₀ - J₀ / P₀| ≤ dJ / P₀ := by
     rw [← sub_div, abs_div, abs_of_pos hP₀]
     exact div_le_div_of_nonneg_right hJE hP₀.le
-  have hJsmall : dJ / P₀ ≤ 1 / 4 := (div_le_iff₀ hP₀).mpr (by nlinarith only [hJEsmall])
+  have hJsmall : dJ / P₀ ≤ 1 / 4 := (div_le_iff₀ hP₀).mpr (by linarith only [hJEsmall])
   have hJlower : 1 / 4 ≤ J / P₀ := by
     have hh := (abs_le.mp hJscaled).1
-    nlinarith only [hh, hJ₀, hJsmall]
+    linarith only [hh, hJ₀, hJsmall]
   have hden : 1 / 4 ≤ (J / P₀) * sqrt E := by
     have hh := mul_le_mul hJlower hrootE (by norm_num : (0 : ℝ) ≤ 1)
       (by linarith : 0 ≤ J / P₀)
-    nlinarith only [hh]
+    linarith only [hh]
   have hJ₀abs : |J₀ / P₀| ≤ 2 := by rw [abs_of_nonneg (by linarith : 0 ≤ J₀ / P₀)]; exact hJ₀upper
   have hdenDiff : |(J / P₀) * sqrt E - J₀ / P₀| ≤ 2 * (dJ / P₀) + 2 * dE := by
     have hh := abs_product_difference hJscaled hrootEE hJ₀abs
@@ -143,7 +143,7 @@ theorem coupling_quotient_error
   have hsum : S / ((J / P₀) * sqrt E) - S₀ / (J₀ / P₀) + (S₀ / (J₀ / P₀) - 1) =
       S / ((J / P₀) * sqrt E) - 1 := by ring
   rw [hsum] at ht
-  nlinarith only [ht, hdiff, hideal]
+  linarith only [ht, hdiff, hideal]
 
 /-- Absolute bounds for the ideal inversion-coordinate frame quantities. -/
 theorem ideal_frame_absolute_bounds
@@ -163,26 +163,26 @@ theorem ideal_frame_absolute_bounds
   have hε2 : ε ^ 2 ≤ 1 / 16 := by nlinarith only [hε, hεsmall]
   have hT : ε ^ 2 * y ^ 2 ≤ 1 / 64 := by
     have hh := mul_le_mul hε2 hy2 (sq_nonneg y) (by norm_num : (0 : ℝ) ≤ 1 / 16)
-    nlinarith only [hh]
+    linarith only [hh]
   have hZ : (1 + y ^ 4) * z ^ 2 ≤ 17 := by
     have hh := mul_le_mul (show 1 + y ^ 4 ≤ 17 / 16 by linarith only [hy4]) hz2
       (sq_nonneg z) (by norm_num : (0 : ℝ) ≤ 17 / 16)
-    nlinarith only [hh]
+    linarith only [hh]
   have hεz : ε * z ≤ 1 := by
     have hh := mul_le_mul hεsmall hzupper hz (by norm_num : (0 : ℝ) ≤ 1 / 4)
-    nlinarith only [hh]
+    linarith only [hh]
   have hU : 2 * ε * z * y ^ 3 ≤ 1 / 4 := by
     have hh := mul_le_mul hεz hy3 (pow_nonneg hy 3) (by norm_num : (0 : ℝ) ≤ 1)
-    nlinarith only [hh]
+    linarith only [hh]
   have hT0 : 0 ≤ ε ^ 2 * y ^ 2 := mul_nonneg (sq_nonneg ε) (sq_nonneg y)
   have hZ0 : 0 ≤ (1 + y ^ 4) * z ^ 2 := by positivity
   have hU0 : 0 ≤ 2 * ε * z * y ^ 3 := by positivity
   constructor
   · unfold idealFrameDenominator
-    nlinarith only [hT0, hU]
+    linarith only [hT0, hU]
   · unfold idealFrameNumerator
     apply abs_le.mpr
-    constructor <;> nlinarith only [hT0, hZ0, hU0, hT, hZ, hU]
+    constructor <;> linarith only [hT0, hZ0, hU0, hT, hZ, hU]
 
 theorem target_sqrt_identity {y : ℝ} (hy : y ≠ 0) :
     sqrt (1 + (y⁻¹) ^ 4) = sqrt (1 + y ^ 4) / y ^ 2 := by
@@ -225,7 +225,7 @@ theorem equation30_target_ideal_quantities
     have hh := inverted_logarithmic_identity (V₁ := V₁) hεne hyne (ne_of_gt hVp)
     dsimp [r₀, t, z]
     rw [neg_div]
-    nlinarith only [hh]
+    linarith only [hh]
   have hJr : J₀ = idealFrameDenominator ε y z / y ^ 2 := by
     dsimp [J₀]
     rw [hPr, hQr, hr]
@@ -266,30 +266,30 @@ theorem perturbed_target_compression
   have hPb := abs_le.mp hP
   have hQb := abs_le.mp hQ
   have hNb := abs_le.mp hN
-  have hPlower : β * t ^ 2 / 2 ≤ P := by nlinarith only [hPb, hρsmall, hscale]
-  have hPupper : P ≤ 3 / 2 * (β * t ^ 2) := by nlinarith only [hPb, hρsmall, hscale]
-  have hPpos : 0 < P := by nlinarith only [hPlower, hscale]
-  have hQupper : Q ≤ -β * t := by nlinarith only [hQb, hρQ]
+  have hPlower : β * t ^ 2 / 2 ≤ P := by linarith only [hPb, hρsmall, hscale]
+  have hPupper : P ≤ 3 / 2 * (β * t ^ 2) := by linarith only [hPb, hρsmall, hscale]
+  have hPpos : 0 < P := by linarith only [hPlower, hscale]
+  have hQupper : Q ≤ -β * t := by linarith only [hQb, hρQ]
   have hNabs : |N| ≤ 3 / 2 := by
     apply abs_le.mpr
-    constructor <;> nlinarith only [hNb, hρsmall]
+    constructor <;> linarith only [hNb, hρsmall]
   have hPabs : |P| ≤ 3 / 2 * (β * t ^ 2) := by rwa [abs_of_pos hPpos]
   have hPsq : P ^ 2 ≤ 9 / 4 * (β * t ^ 2) ^ 2 := by
     have hh := (sq_le_sq₀ (abs_nonneg P) (by positivity : 0 ≤ 3 / 2 * (β * t ^ 2))).mpr hPabs
     rw [sq_abs] at hh
-    nlinarith only [hh]
+    linarith only [hh]
   have hNsq : N ^ 2 ≤ 9 / 4 := by
     have hh := (sq_le_sq₀ (abs_nonneg N) (by norm_num : (0 : ℝ) ≤ 3 / 2)).mpr hNabs
     rw [sq_abs] at hh
-    nlinarith only [hh]
+    linarith only [hh]
   have hεQsq : ε ^ 2 * Q ^ 2 ≤ 1 / 4 := by
     have hh := (sq_le_sq₀ (abs_nonneg (ε * Q)) (by norm_num : (0 : ℝ) ≤ 1 / 2)).mpr hεQ
     rw [sq_abs] at hh
-    nlinarith only [hh]
+    linarith only [hh]
   have hscale2 : 1 ≤ (β * t ^ 2) ^ 2 := by nlinarith only [hscale]
   have hDupper : rayDenominator ε P Q N ≤ 5 * β ^ 2 * t ^ 4 := by
     unfold rayDenominator
-    nlinarith only [hPsq, hNsq, hεQsq, hscale2]
+    linarith only [hPsq, hNsq, hεQsq, hscale2]
   have hDpos : 0 < rayDenominator ε P Q N := by
     unfold rayDenominator
     have hh : 0 < P ^ 2 := sq_pos_of_pos hPpos
@@ -297,13 +297,13 @@ theorem perturbed_target_compression
   have hQP : Q * P ≤ -(β ^ 2 * t ^ 3) / 2 := by
     have h₁ := mul_le_mul_of_nonneg_right hQupper hPpos.le
     have h₂ := mul_le_mul_of_nonneg_left hPlower (mul_nonneg hβ.le ht.le)
-    nlinarith only [h₁, h₂]
+    linarith only [h₁, h₂]
   have hHε : 0 ≤ H * ε := mul_nonneg hH hε
   have hnum := mul_le_mul_of_nonneg_left hQP hHε
   have hnumtime := mul_le_mul_of_nonneg_right hnum (by positivity : 0 ≤ 10 * t)
   have hden := mul_le_mul_of_nonneg_left hDupper hHε
   apply (div_le_div_iff₀ hDpos (by positivity : 0 < 10 * t)).mpr
-  nlinarith only [hnumtime, hden]
+  linarith only [hnumtime, hden]
 
 /-- The coordinate quadratic form of a real three-by-three matrix. -/
 def quadraticForm3 (B : Fin 3 → Fin 3 → ℝ) (p q n : ℝ) : ℝ :=
@@ -336,10 +336,10 @@ theorem quadratic_form_bound
     have hq := sq_abs q
     have hn := sq_abs n
     unfold norm3
-    nlinarith only [h₁, h₂, h₃, hp, hq, hn]
+    linarith only [h₁, h₂, h₃, hp, hq, hn]
   have hm := mul_le_mul_of_nonneg_left hnorm hG
   unfold quadraticForm3 norm3 at *
-  nlinarith only [h₀, h₁, h₂, ht0, ht1, hm]
+  linarith only [h₀, h₁, h₂, ht0, ht1, hm]
 
 /-- The full normalized compression is the negative shear term plus a
 controlled contribution from the older gradient and the packet error. -/
@@ -358,7 +358,7 @@ theorem parent_ray_compression
       3 * G * rayDenominator ε P Q N := by
     have hh := le_abs_self (quadraticForm3 (fun i j => B i j + E i j) P (ε * Q) N)
     unfold rayDenominator
-    nlinarith only [hh, hb]
+    linarith only [hh, hb]
   rw [hid, add_div]
   gcongr
   exact (div_le_iff₀ hD).mpr hquad
@@ -408,11 +408,11 @@ theorem equation30_target_frame_renewal
   have hP₀pos : 0 < P₀ := by linarith
   have hJ₀pos : 0 < J₀ := by
     have hh := (le_div_iff₀ hP₀pos).mp hJ₀lower
-    nlinarith only [hh, hP₀pos]
+    linarith only [hh, hP₀pos]
   have hJ₀abs : |J₀| ≤ 2 * P₀ := by
     rw [abs_of_pos hJ₀pos]
     exact (div_le_iff₀ hP₀pos).mp hJ₀upper
-  have hD₀ : 1 ≤ 1 + P₀ ^ 2 := by nlinarith [sq_nonneg P₀]
+  have hD₀ : 1 ≤ 1 + P₀ ^ 2 := by linarith [sq_nonneg P₀]
   have hroot : sqrt (1 + P₀ ^ 2) ≤ 2 * P₀ := by
     have hh := sq_sqrt (by positivity : 0 ≤ 1 + P₀ ^ 2)
     have hn := sqrt_nonneg (1 + P₀ ^ 2)
@@ -424,7 +424,7 @@ theorem equation30_target_frame_renewal
       hBideal
   constructor
   · dsimp [P₀] at ha
-    nlinarith only [ha]
+    linarith only [ha]
   · exact hb
 
 end EulerPacketFrameRenewal

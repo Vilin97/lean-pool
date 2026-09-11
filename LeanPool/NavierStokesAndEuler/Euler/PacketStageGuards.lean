@@ -332,7 +332,7 @@ theorem previousShear_monotone : Monotone (previousShear S.J S.X) := by
   have hp := S.previousShear_one n
   have hs := S.shear_separation n
   change previousShear S.J S.X n ≤ shear S.J S.X n
-  nlinarith only [hp,hs,sq_nonneg (previousShear S.J S.X n-1)]
+  linarith only [hp,hs,sq_nonneg (previousShear S.J S.X n-1)]
 
 theorem previousShear_double_base {n : ℕ} (hn : n ≠ 0) :
     2*S.X^1000 ≤ previousShear S.J S.X n := by
@@ -342,7 +342,7 @@ theorem previousShear_double_base {n : ℕ} (hn : n ≠ 0) :
   change shear S.J S.X 0 ≤ previousShear S.J S.X n at hm
   change (S.X^1000)^2 ≤ shear S.J S.X 0/4 at hs
   change 1 ≤ S.X^1000 at hp
-  nlinarith only [hm,hs,hp,sq_nonneg (S.X^1000-1)]
+  linarith only [hm,hs,hp,sq_nonneg (S.X^1000-1)]
 
 end EulerPacketInductionScales.Scales
 
@@ -432,7 +432,7 @@ theorem joined_history_hessian (hn : n ≠ 0) :
     (initialInclusion P.restrictedParent.T P.time P.time_lt_nextHorizon.le t) 0
   have hm := mul_le_mul_of_nonneg_left (S.olderShear_le n)
     (mul_nonneg hessian_nonneg (zero_le_one.trans (S.previousShear_one n)))
-  exact hp.trans (by nlinarith only [hm])
+  exact hp.trans (by linarith only [hm])
 
 end General
 
@@ -520,7 +520,7 @@ theorem frequency_monotone (J : ℕ) (hJ : 2 ≤ J) (X : ℝ) (hX : 0 ≤ X) :
     dsimp [j]
     push_cast
     ring
-  have hstep : j+1 ≤ j^2 := by nlinarith only [hj2,sq_nonneg (j-2)]
+  have hstep : j+1 ≤ j^2 := by linarith only [hj2,sq_nonneg (j-2)]
   have hsq : (j+1)^2 ≤ (j^2)^2 := pow_le_pow_left₀ (by positivity) hstep 2
   apply exp_le_exp.mpr
   change scaleSequence J X n/j^2 ≤ scaleSequence J X (n+1)/((J+(n+1) : ℕ) : ℝ)^2
@@ -542,7 +542,7 @@ theorem initial_frequency_le_first (J D : ℕ) (hJ : 3 ≤ J) (X : ℝ) (hX : 0 
   have hadd : (J : ℝ)=j+1 := by
     dsimp [j]
     exact_mod_cast (show J=J-1+1 by omega)
-  have hstep : j+1 ≤ j^2 := by nlinarith only [hj2,sq_nonneg (j-2)]
+  have hstep : j+1 ≤ j^2 := by linarith only [hj2,sq_nonneg (j-2)]
   have hsq : (J : ℝ)^2 ≤ j^4 := by
     rw [hadd]
     simpa only [← pow_mul] using pow_le_pow_left₀ (by positivity) hstep 2
@@ -691,7 +691,7 @@ def forwardGeometryGuardsOfStage
     simp only [inv_inv,hsigma,targetTime]
   have htarget1 : 1 ≤ targetTime J X (β n) n := by
     have hh : 1 ≤ 1/Real.sqrt (β n) :=
-      (le_div_iff₀ stage.sigma_pos).2 (by nlinarith only [stage.sigma_small])
+      (le_div_iff₀ stage.sigma_pos).2 (by linarith only [stage.sigma_small])
     exact hh.trans stage.target_from_sigma
   have htH : targetTime J X (β n) n ≤ P.horizon := by
     rw [htime]
@@ -734,7 +734,7 @@ def forwardGeometryGuardsOfStage
   have hcoef0 : 0 ≤ 16*(P.epsilon*P.horizon*(4*P.G)^2+P.forwardError ρ) := by
     positivity
   have hN1 : 1 ≤ 1000000*neighborStabilityConstant := by
-    nlinarith only [neighborStabilityConstant_ge]
+    linarith only [neighborStabilityConstant_ge]
   have hN : 0 ≤ 1000000*neighborStabilityConstant := zero_le_one.trans hN1
   have hsmall : 1000000*neighborStabilityConstant *
       (16*(P.epsilon*P.horizon*(4*P.G)^2+P.forwardError ρ))*P.horizon^40 ≤ 1 := by
@@ -751,7 +751,7 @@ def forwardGeometryGuardsOfStage
     have hh : 1 ≤ 1000000*neighborStabilityConstant*P.horizon^40 :=
       one_le_mul_of_one_le_of_one_le hN1 (one_le_pow₀ hH)
     have hh' := mul_le_mul_of_nonneg_right hh hcoef0
-    nlinarith only [hh',hsmall]
+    linarith only [hh',hsmall]
   refine {
     radius := ρ, y := (scaleSequence J X (n+1))⁻¹, δ := δ, hchild := hchild,
     radius_nonneg := hρ, delta_nonneg := hδ, child_nonneg := hhchild,
@@ -802,7 +802,7 @@ theorem polynomial_le_monomial (A K Ti H k h : ℝ) (n q c : ℕ)
   have hkk : k^q ≤ k^q*h := le_mul_of_one_le_right hkq0 hh
   have hhh : h ≤ k^q*h := le_mul_of_one_le_left hh0 hkq
   have hb : 1+K+Ti+H ≤ 4*k^q*h := by
-    nlinarith only [hkh,hKk.trans hkk,hTik.trans hkk,hHh.trans hhh]
+    linarith only [hkh,hKk.trans hkk,hTik.trans hkk,hHh.trans hhh]
   calc
     _ ≤ A*(4*k^q*h)^n := mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (by positivity) hb n) hA
     _ = (A*4^n)*(k^(q*n)*h^n) := by simp only [mul_pow,← pow_mul]; ring

@@ -471,7 +471,7 @@ theorem localChart_periodic_agree {V : Type*} (f : Plane → V)
     f (localChart i p) = f (localChart j p) := by
   obtain ⟨n, hn⟩ := localChart_angle_difference i j hi hj
   have he : (localChart i p).2 = (localChart j p).2 + n * (2 * Real.pi) := by
-    nlinarith [hn]
+    linarith [hn]
   have hv := ((hf (radius p)).int_mul n) (localChart j p).2
   have hri : (localChart i p).1 = radius p := by simp only [localChart_apply]
   have hrj : (localChart j p).1 = radius p := by simp only [localChart_apply]
@@ -538,13 +538,13 @@ noncomputable def timeDirection : Plane := (Real.sqrt 2 - 1, 1)
 theorem cover_radialDirection :
     SlotGeometry.cover radialDirection = ChartScales.Lambda • radialDirection := by
   ext <;> simp [SlotGeometry.cover_apply, radialDirection, ChartScales.Lambda] <;>
-    nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+    linarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
 
 theorem cover_timeDirection :
     SlotGeometry.cover timeDirection = ChartScales.Tg • timeDirection := by
   ext <;> simp [SlotGeometry.cover_apply, timeDirection, ChartScales.Tg, SlotColoring.coverGrowth]
       <;>
-    nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+    linarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
 
 theorem cover_pow_radialDirection (i : ℕ) :
     (SlotGeometry.cover ^ i) radialDirection = ChartScales.Lambda ^ i • radialDirection := by
@@ -1279,7 +1279,7 @@ theorem carrier_graph_jet_bound {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h ≤ 1 / 2)
     rw [abs_mul, abs_of_nonneg (Nat.cast_nonneg _)]
     have he := mul_le_mul (carrier_upper hh n) hH (abs_nonneg _)
       (mul_nonneg (by norm_num) (Real.rpow_nonneg hq.le _))
-    exact he.trans (by dsimp [M]; nlinarith)
+    exact he.trans (by dsimp [M]; linarith)
   have hw := character_comp_jet_bound hΦ (physicalLift h n p) m hB hM hc hΦb
   have hwsm := (character_smooth ((ChartScales.carrier h n : ℝ) * (j : ℝ))).comp hΦ
   have hb : 0 ≤ (2 : ℝ) ^ m * P * ((m.factorial : ℝ) * M ^ m * B ^ m) := by positivity
@@ -1643,7 +1643,7 @@ theorem norm_slotLinear_le (ci : ℝ) : ‖slotLinear ci‖ ≤ 1 + |ci⁻¹| * 
   rw [max_eq_right (norm_nonneg (liftZT y)), max_eq_right (abs_nonneg (ci⁻¹ * etaCoordinate y.2))]
   apply max_le
   · exact hzt.trans (by nlinarith [norm_nonneg y])
-  · exact he.trans (by nlinarith [norm_nonneg y])
+  · exact he.trans (by linarith [norm_nonneg y])
 
 theorem positive_jet_affine_bound {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] (L : E →L[ℝ] F) (c : F)

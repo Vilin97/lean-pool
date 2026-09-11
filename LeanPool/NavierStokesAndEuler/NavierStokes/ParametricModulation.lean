@@ -334,7 +334,7 @@ theorem quadraticFactor_identity (s : ℝ) : baseVariance s = s ^ 2 * quadraticF
   simp only [sub_zero, smul_eq_mul, baseVariance_zero, dslope_same, baseVariance_deriv_zero]
       at h₁ h₂
   change baseVariance s = s ^ 2 * dslope (dslope baseVariance 0) 0 s
-  nlinarith [congrArg (fun z : ℝ => s * z) h₂]
+  linarith [congrArg (fun z : ℝ => s * z) h₂]
 
 theorem quadraticFactor_analyticAt (s : ℝ) : AnalyticAt ℝ quadraticFactor s := by
   by_cases hs : s = 0
@@ -479,12 +479,12 @@ theorem normalizer_double_square_lower (t : ℝ) (ht : 1 ≤ t) :
       have h := mul_le_mul_of_nonneg_left hx.1 htpos.le
       simpa only [mul_neg, mul_one_div_cancel (ne_of_gt htpos)] using h
     have hsq : (t * x) ^ 2 ≤ 1 := by
-      nlinarith [mul_nonneg (show 0 ≤ 1 - t * x by linarith)
+      linarith [mul_nonneg (show 0 ≤ 1 - t * x by linarith)
         (show 0 ≤ 1 + t * x by linarith)]
     apply Real.exp_le_exp.mpr
     have hc := Real.one_sub_sq_div_two_le_cos (x := x)
     have hm := mul_le_mul_of_nonneg_left hc (show 0 ≤ 2 * t ^ 2 by positivity)
-    nlinarith
+    linarith
   have hloc := intervalIntegral.integral_mono_on (μ := volume) hab
     (continuous_const.intervalIntegrable _ _) (he.intervalIntegrable _ _) hbound
   rw [intervalIntegral.integral_const] at hloc
@@ -634,7 +634,7 @@ theorem inverseRoot_deriv_zero : deriv inverseRoot 0 = 1 / Real.sqrt (1 / 2) := 
   have hprod := hcomp.unique (hasDerivAt_id 0)
   have hroot : Real.sqrt (1 / 2) ≠ 0 := ne_of_gt (Real.sqrt_pos.mpr (by norm_num))
   apply (eq_div_iff hroot).mpr
-  nlinarith
+  linarith
 
 /-- An analytic divided difference of the actual inverse, which removes the
 apparent `1/p` singularity in the parameter-dependent variance solve. -/
@@ -852,7 +852,7 @@ theorem regularizedDensitySlope_identity (s θ : ℝ) :
   have hnz := ne_of_gt (expNormalizer_pos s)
   field_simp
   dsimp [expDivided, normalizerDivided]
-  nlinarith
+  linarith
 
 theorem regularizedDensitySlope_joint_contDiff :
     ContDiff ℝ ω (fun x : ℝ × ℝ => regularizedDensitySlope x.1 x.2) := by

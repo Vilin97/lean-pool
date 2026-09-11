@@ -45,10 +45,10 @@ theorem scalar_size_comparison {s₀ D D₀ E V Z : ℝ}
   have hVp : 0 ≤ V := by linarith only [hVlo, hZ]
   have hrootD : Real.sqrt D₀/2 ≤ Real.sqrt D := by
     have hh : Real.sqrt D₀ ≤ 2*Real.sqrt D := Real.sqrt_le_iff.mpr
-      ⟨by positivity, by nlinarith only [Real.sq_sqrt hDp.le, hd.1, hD₀]⟩
+      ⟨by positivity, by linarith only [Real.sq_sqrt hDp.le, hd.1, hD₀]⟩
     linarith only [hh]
   have hrootD' : Real.sqrt D ≤ 2*Real.sqrt D₀ := Real.sqrt_le_iff.mpr
-    ⟨by positivity, by nlinarith only [Real.sq_sqrt hD₀p, hd.2, hD₀]⟩
+    ⟨by positivity, by linarith only [Real.sq_sqrt hD₀p, hd.2, hD₀]⟩
   have hrootE : 1 ≤ Real.sqrt E := Real.one_le_sqrt.mpr hElo
   have hrootE' : Real.sqrt E ≤ 2 := Real.sqrt_le_iff.mpr ⟨by norm_num, by linarith only [hEup]⟩
   have hlower := mul_le_mul
@@ -57,7 +57,7 @@ theorem scalar_size_comparison {s₀ D D₀ E V Z : ℝ}
   have hupper := mul_le_mul
     (mul_le_mul (mul_le_mul_of_nonneg_left hrootD' hs₀) hVup hVp (by positivity))
     hrootE' (Real.sqrt_nonneg E) (by positivity)
-  constructor <;> nlinarith only [hlower, hupper]
+  constructor <;> linarith only [hlower, hupper]
 
 /-- The actual primary size lies between fixed multiples of its ideal
 size under the same quantitative ray and relative-state estimates already
@@ -94,7 +94,7 @@ theorem physical_size_comparison_order40 (m v r w : ℝ → Space)
     exact mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 29 ≤ 40))
       (mul_nonneg hK0 he)
   have hρ0 : 0 ≤ ρ := by dsimp [ρ]; positivity
-  have hρ : ρ ≤ 1/2 := by have hh := hp 5 (by decide); dsimp [ρ]; nlinarith only [hh, hA]
+  have hρ : ρ ≤ 1/2 := by have hh := hp 5 (by decide); dsimp [ρ]; linarith only [hh, hA]
   have hη0 : 0 ≤ η := by dsimp [η]; positivity
   have hη : η ≤ 1/2 := by linarith only [hηA, hA]
   have he1 : e ≤ 1 := by have hh := hp 0 (by decide); norm_num at hh; linarith only [hh, hA]
@@ -107,7 +107,7 @@ theorem physical_size_comparison_order40 (m v r w : ℝ → Space)
     have hid : V 1/Z-1 = (V 1-Z)/Z := by field_simp
     rw [hid, abs_div, abs_of_pos hZ] at hrel
     have hh := (div_le_iff₀ hZ).mp hrel
-    nlinarith only [hh]
+    linarith only [hh]
   have hVp : 0 < V 1 := by have hh := (abs_le.mp hVdiff).1; linarith only [hh, hZ]
   have hNne : R 2 ≠ 0 := by
     have hh := (abs_le.mp hN).1
@@ -119,14 +119,14 @@ theorem physical_size_comparison_order40 (m v r w : ℝ → Space)
   rw [← hthird] at hwabs
   have hE := velocity_direction_norm_bound (ε := ε) hΘ hrabs hwabs
   have hEup : velocityDirectionNormSq ε (V 0/V 1) (V 2/V 1) ≤ 2 := by
-    nlinarith only [hE.2, hε4, hA]
+    linarith only [hE.2, hε4, hA]
   obtain ⟨_, _, _, _, _, _, hDD⟩ := ray_geometric_bounds (ε := ε) (U := V 0/V 1) (V := 1)
     hΘ hρ0 hρ hP₀ hQ₀ hP hQ hN
   have hDsmall : |rayDenominator ε (R 0) (R 1) (R 2)-(1+P₀^2)| ≤ 1/2 := by
     have hp7 := hp 7 (by decide)
     dsimp [ρ] at hDD
-    nlinarith only [hDD, hp7, hε4, hA]
-  have hb := scalar_size_comparison hs₀.le (show 1 ≤ 1+P₀^2 by nlinarith [sq_nonneg P₀])
+    linarith only [hDD, hp7, hε4, hA]
+  have hb := scalar_size_comparison hs₀.le (show 1 ≤ 1+P₀^2 by linarith [sq_nonneg P₀])
     hDsmall hE.1 hEup hZ hVdiff
   have hid := physical_primary_size m v r w hs₀ (ne_of_gt hε) hm hv hmv hVp
   rw [hid]
@@ -178,7 +178,7 @@ theorem physical_ideal_size_comparison_order40 (m v r w : ℝ → Space)
     rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg σ), abs_of_nonneg hτ0]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0:ℝ) ≤ 2)]
     have hh := mul_le_mul_of_nonneg_right hσ2 hτ0
-    nlinarith only [hh, hτΘ, sq_nonneg (Θ-1), hΘ]
+    linarith only [hh, hτΘ, sq_nonneg (Θ-1), hΘ]
   have hzpos := equation30_global_positive hσ hσsmall hZ hfluxZ hZ0 hZ₁0 τ hτ0
   have hslope := equation30_primary_logderivative_bound hσ hσsmall hZ hfluxZ hZ0 hZ₁0 τ hτ
   have hr₀ : |-Z₁ τ/Z τ| ≤ 4 := by simpa only [neg_div, abs_neg] using hslope
@@ -186,7 +186,7 @@ theorem physical_ideal_size_comparison_order40 (m v r w : ℝ → Space)
       ≤ 10*(K*e*Θ^29) := by simpa only [neg_div, sub_neg_eq_add] using hratio
   obtain ⟨hl, hu⟩ := physical_size_comparison_order40 m v r w hs₀ hε hm hv hmv hrw
     hΘ hK he hεe hsmall hP₀ hQ₀ hr₀ hzpos hP hQ hN hVrel hr'
-  constructor <;> dsimp only [idealPrimarySize] <;> nlinarith only [hl, hu]
+  constructor <;> dsimp only [idealPrimarySize] <;> linarith only [hl, hu]
 
 /-- Every controlled neighboring primary before target is bounded by a
 fixed multiple of the center's actual target size.  All comparisons use
@@ -233,6 +233,6 @@ theorem physical_before_target_size_bound {α : Type*} (center : α)
   have hideal := equation30_ideal_size_comparison hσ hσsmall hZ hfluxZ hZ0 hZ₁0
     (by linarith only [hτ.1] : 0 ≤ τ) hτ.2
   have hh := mul_le_mul_of_nonneg_left hideal hs₀.le
-  nlinarith only [htarget, hcurrent, hh]
+  linarith only [htarget, hcurrent, hh]
 
 end EulerPacketMovingFrame

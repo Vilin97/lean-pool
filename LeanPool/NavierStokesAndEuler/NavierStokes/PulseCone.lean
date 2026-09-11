@@ -196,7 +196,7 @@ theorem decay_inv_cube_le (c : Parameters) {M : ℝ} (hM : 0 ≤ M) :
   have hp := pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 2 / 5) hd 3
   have hb : 1 ≤ 16 * decay c ^ 3 := by norm_num at hp; linarith
   apply (div_le_iff₀ (pow_pos (decay_pos c) 3)).mpr
-  nlinarith [mul_le_mul_of_nonneg_right hb hM]
+  linarith [mul_le_mul_of_nonneg_right hb hM]
 
 /-- The exponential correction is smaller than a fixed quadratic rate,
 uniformly for every positive lambda. -/
@@ -313,7 +313,7 @@ theorem forcing_second_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
         |iteratedDeriv 2 (affineProfile c q A) y| := abs_add_le _ _
     _ ≤ |A| * c.lam ^ 2 * mainSecondBound +
         correctionJetBound c.P c.m 2 * (64 * c.lam ^ 2) * (|q| + |A|) := add_le_add hm hc'
-    _ ≤ _ := by dsimp [forcingBound]; nlinarith
+    _ ≤ _ := by dsimp [forcingBound]; linarith
 
 /-- Affine lag, given by `lag (decay c) (prefixCoefficient c 0 * q) (forcing c q A) y`. -/
 noncomputable def affineLag (c : Parameters) (q A y : ℝ) : ℝ :=
@@ -647,7 +647,7 @@ theorem initial_memory_bound (c : Parameters)
     _ ≤ prefixBound c.P c.m 0 * |q| * c.lam ^ 2 := by
       have h := mul_le_mul_of_nonneg_left hpow
         (mul_nonneg (prefixBound_pos c.P_pos c.m 0).le (abs_nonneg q))
-      nlinarith
+      linarith
 
 /-- Full lag bound, given by `5 * lagBound P m + 4 * prefixBound P m 0`. -/
 noncomputable def fullLagBound (P m : ℝ) : ℝ := 5 * lagBound P m + 4 * prefixBound P m 0
@@ -679,13 +679,13 @@ theorem fullError_bounds_of_amplitude_bounds (c : Parameters)
       have ht : 2 + |amp eta| ≤ 4 := by linarith
       have h := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left ht hL.le)
         (sq_nonneg c.lam)
-      nlinarith
+      linarith
     have hmemory : |(prefixCoefficient c 0 * parameterPolynomial eta) * Real.exp (-decay c * y)| ≤
         2 * prefixBound c.P c.m 0 * c.lam ^ 2 := by
       apply (initial_memory_bound c hwait hsmall _ hy).trans
       have h := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hq hP.le)
         (sq_nonneg c.lam)
-      nlinarith
+      linarith
     rw [fullError_eq]
     refine (abs_add_le _ _).trans ((add_le_add hmain hmemory).trans ?_)
     dsimp [fullLagBound]
@@ -697,13 +697,13 @@ theorem fullError_bounds_of_amplitude_bounds (c : Parameters)
       have hs : |1 + 3 * eta ^ 2| + |amp'| ≤ 5 := by linarith
       have h := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hs hL.le)
         (sq_nonneg c.lam)
-      nlinarith
+      linarith
     have hmemory : |(prefixCoefficient c 0 * (1 + 3 * eta ^ 2)) * Real.exp (-decay c * y)| ≤
         4 * prefixBound c.P c.m 0 * c.lam ^ 2 := by
       apply (initial_memory_bound c hwait hsmall _ hy).trans
       have h := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hq' hP.le)
         (sq_nonneg c.lam)
-      nlinarith
+      linarith
     refine (abs_add_le _ _).trans ((add_le_add hmain hmemory).trans_eq ?_)
     dsimp [fullLagBound]
     ring
@@ -990,7 +990,7 @@ theorem logarithmicRate_le_one (c : Parameters) : PulseAmplitude.logarithmicRate
   have he : c.lam * (1 / c.lam - 1) = 1 - c.lam := by field_simp [c.lam_pos.ne']
   rw [he] at hm
   unfold PulseAmplitude.logarithmicRate
-  nlinarith
+  linarith
 
 theorem prefix_sum_bound (c : Parameters)
     (hwait : c.wait = 60 * Real.log (1 / c.lam)) :
@@ -1007,12 +1007,12 @@ theorem prefix_sum_bound (c : Parameters)
   rw [he] at hb
   have h := (div_le_iff₀ (PulseAmplitude.normalization_pos c)).mp hb
   apply (le_div_iff₀ c.lam_pos).mpr
-  nlinarith
+  linarith
 
 theorem shape_bounds {eta : ℝ} (heta : |eta| ≤ 1) :
     (1 / 4 : ℝ) ≤ shape eta ^ 2 ∧ shape eta ^ 2 ≤ 1 ∧ |shapeRate eta| ≤ 2 := by
   have hs : eta ^ 2 ≤ 1 := by
-    nlinarith [sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta, sq_abs eta]
+    linarith [sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta, sq_abs eta]
   have hlo : (1 / 2 : ℝ) ≤ shape eta := by
     change 1 / 2 ≤ (1 + eta ^ 2)⁻¹
     rw [← one_div]
@@ -1022,7 +1022,7 @@ theorem shape_bounds {eta : ℝ} (heta : |eta| ≤ 1) :
   rw [shapeRate, abs_div, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2),
     abs_of_pos (by positivity : 0 < 1 + eta ^ 2)]
   apply (div_le_iff₀ (by positivity : 0 < 1 + eta ^ 2)).mpr
-  nlinarith [sq_nonneg eta]
+  linarith [sq_nonneg eta]
 
 /-- One bound covers both normalized source factors. -/
 theorem source_factor_bounds {R Reta rate B : ℝ} (hB : 0 ≤ B)
@@ -1030,7 +1030,7 @@ theorem source_factor_bounds {R Reta rate B : ℝ} (hB : 0 ≤ B)
     |R ^ 2 - 1 / 2| ≤ 6 * B ^ 2 + 2 ∧
       |2 * R * Reta - 2 * rate * (R ^ 2 - 1 / 2)| ≤ 6 * B ^ 2 + 2 := by
   have hRsq : R ^ 2 ≤ B ^ 2 := by
-    nlinarith [sq_le_sq₀ (abs_nonneg R) hB |>.mpr hR, sq_abs R]
+    linarith [sq_le_sq₀ (abs_nonneg R) hB |>.mpr hR, sq_abs R]
   have hbase : |R ^ 2 - 1 / 2| ≤ B ^ 2 + 1 / 2 := by
     apply (abs_sub _ _).trans
     rw [abs_of_nonneg (sq_nonneg R), abs_of_pos (by norm_num : (0 : ℝ) < 1 / 2)]
@@ -1044,8 +1044,8 @@ theorem source_factor_bounds {R Reta rate B : ℝ} (hB : 0 ≤ B)
     linarith
   have hsecond : |2 * rate * (R ^ 2 - 1 / 2)| ≤ 4 * (B ^ 2 + 1 / 2) := by
     rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-    nlinarith [mul_le_mul hrate hbase (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 2)]
-  exact ⟨hbase.trans (by nlinarith [sq_nonneg B]),
+    linarith [mul_le_mul hrate hbase (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 2)]
+  exact ⟨hbase.trans (by linarith [sq_nonneg B]),
     (abs_sub _ _).trans (by linarith)⟩
 
 /-- The actual energy source and its actual parameter derivative have a common bound. -/
@@ -1089,25 +1089,25 @@ theorem initial_history_bounds (w : ResetWitness d K) {amp : ℝ → ℝ}
   have hG : 0 ≤ G := PulseAmplitude.prefixAngularEnergy_nonneg d.core
   have hs := shape_bounds heta
   have heta2 : eta ^ 2 ≤ 1 := by
-    nlinarith [sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta, sq_abs eta]
+    linarith [sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta, sq_abs eta]
   have hval : |S w amp (d.core.pulseStart, eta)| ≤ 4 * (A + G) := by
     rw [S_at_pulseStart w ha]
     change |A * eta ^ 2 - G * shape eta ^ 2| ≤ _
     apply (abs_sub _ _).trans
     rw [abs_of_nonneg (mul_nonneg hA (sq_nonneg _)),
       abs_of_nonneg (mul_nonneg hG (sq_nonneg _))]
-    nlinarith [mul_le_of_le_one_right hA heta2, mul_le_of_le_one_right hG hs.2.1]
+    linarith [mul_le_of_le_one_right hA heta2, mul_le_of_le_one_right hG hs.2.1]
   have hder : |dEta (S w amp) (d.core.pulseStart, eta)| ≤ 4 * (A + G) := by
     rw [dEta_S_at_pulseStart w ha]
     change |2 * A * eta + 2 * G * shape eta ^ 2 * shapeRate eta| ≤ _
     apply (abs_add_le _ _).trans
     have hfirst : |2 * A * eta| ≤ 2 * A := by
       rw [abs_mul, abs_of_nonneg (mul_nonneg (by norm_num) hA)]
-      nlinarith [mul_le_of_le_one_right (show 0 ≤ 2 * A by positivity) heta]
+      linarith [mul_le_of_le_one_right (show 0 ≤ 2 * A by positivity) heta]
     have hsecond : |2 * G * shape eta ^ 2 * shapeRate eta| ≤ 4 * G := by
       rw [abs_mul, abs_of_nonneg (by positivity : 0 ≤ 2 * G * shape eta ^ 2)]
       have hh := mul_le_mul hs.2.1 hs.2.2 (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1)
-      nlinarith [mul_le_mul_of_nonneg_left hh (show 0 ≤ 2 * G by positivity)]
+      linarith [mul_le_mul_of_nonneg_left hh (show 0 ≤ 2 * G by positivity)]
     linarith
   have hscale : 4 * (A + G) ≤
       pulseNormalization d.core eta * (16 * PulseAmplitude.prefixBoundConstant d.core.P d.core.m) /
@@ -1156,7 +1156,7 @@ theorem normalized_history_bound {H g : ℝ → ℝ} {lam N C M y : ℝ}
   have hfactor : 1 ≤ Real.exp 26 * Real.exp (-2 * lam * y) := by
     rw [← Real.exp_add]
     apply Real.one_le_exp
-    nlinarith [(le_div_iff₀ hlam).mp hy']
+    linarith [(le_div_iff₀ hlam).mp hy']
   apply (div_le_iff₀ (mul_pos hN (Real.exp_pos _))).mpr
   calc
     _ ≤ N * (C + 13 * M) / lam := hvalue
@@ -1238,7 +1238,7 @@ theorem forcing_abs_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120) (q A y :
     simpa only [mul_one] using h
   have hm : |A * mainPulse (c.lam * y)| ≤ OutgoingPulseBounds.mainBound * |A| := by
     rw [abs_mul]
-    nlinarith [mul_le_mul_of_nonneg_left (OutgoingPulseBounds.mainPulse_abs_le (c.lam * y))
+    linarith [mul_le_mul_of_nonneg_left (OutgoingPulseBounds.mainPulse_abs_le (c.lam * y))
       (abs_nonneg A)]
   calc
     _ ≤ |A * mainPulse (c.lam * y)| + |OutgoingPulseBounds.affineProfile c q A y| := abs_add_le _ _
@@ -1246,7 +1246,7 @@ theorem forcing_abs_bound (c : Parameters) (hsmall : c.lam ≤ 1 / 120) (q A y :
         OutgoingPulseBounds.correctionJetBound c.P c.m 0 * (|q| + |A|) := add_le_add hm hc'
     _ ≤ _ := by
       unfold forceConstant
-      nlinarith [mul_nonneg OutgoingPulseBounds.mainBound_pos.le (abs_nonneg q)]
+      linarith [mul_nonneg OutgoingPulseBounds.mainBound_pos.le (abs_nonneg q)]
 
 /-- The parameter derivative includes the derivative of the actual moment repair. -/
 theorem pulseRatio_eta_hasDerivAt (c : Parameters) {amp : ℝ → ℝ} {eta amp' : ℝ}
@@ -1278,11 +1278,11 @@ theorem pulse_ratio_bounds (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
   constructor
   · rw [← PulseLag.forcing_eq_pulseRatio c amp eta y]
     apply (forcing_abs_bound c hsmall _ _ y).trans
-    nlinarith [mul_le_mul_of_nonneg_left
+    linarith [mul_le_mul_of_nonneg_left
       (show |OutgoingPulseBounds.parameterPolynomial eta| + |amp eta| ≤ 6 by linarith) hF]
   · rw [(pulseRatio_eta_hasDerivAt c ha y).deriv]
     apply (forcing_abs_bound c hsmall _ _ y).trans
-    nlinarith [mul_le_mul_of_nonneg_left
+    linarith [mul_le_mul_of_nonneg_left
       (show |1 + 3 * eta ^ 2| + |amp'| ≤ 6 by linarith) hF]
 
 /-- This constant depends only on the fixed parameters `P,m`. -/
@@ -1328,7 +1328,7 @@ theorem corrected_pulse_history_bounds (w : ResetWitness d K) (hK : 0 < K)
       historyConstant d.core.P d.core.m * Real.exp 26 / d.core.lam := by
   obtain ⟨ha, hspec⟩ := CorrectedPulseAmplitude.amplitude_spec w hK hsmall hwait hscale
   have heta2 : eta ^ 2 ≤ 1 := by
-    nlinarith [sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta, sq_abs eta]
+    linarith [sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta, sq_abs eta]
   obtain ⟨hlo, hhi, _, hd, _⟩ := hspec eta heta2
   apply pulse_history_bounds w ha hwait hsmall heta _ _ hy hy'
   · rw [abs_of_pos (by linarith : 0 < CorrectedPulseAmplitude.amplitude d w.coefficients eta)]
@@ -1373,11 +1373,11 @@ theorem forcing_abs_le (c : Parameters) (hsmall : c.lam ≤ 1 / 120) (q A y : �
     simpa only [mul_one] using h
   have hm : |A * mainPulse (c.lam * y)| ≤ mainBound * |A| := by
     rw [abs_mul]
-    nlinarith [mul_le_mul_of_nonneg_left (mainPulse_abs_le (c.lam * y)) (abs_nonneg A)]
+    linarith [mul_le_mul_of_nonneg_left (mainPulse_abs_le (c.lam * y)) (abs_nonneg A)]
   calc
     _ ≤ |A * mainPulse (c.lam * y)| + |affineProfile c q A y| := abs_add_le _ _
     _ ≤ mainBound * |A| + correctionJetBound c.P c.m 0 * (|q| + |A|) := add_le_add hm hc'
-    _ ≤ _ := by dsimp [forceConstant]; nlinarith [mul_nonneg mainBound_pos.le (abs_nonneg q)]
+    _ ≤ _ := by dsimp [forceConstant]; linarith [mul_nonneg mainBound_pos.le (abs_nonneg q)]
 
 theorem initial_coefficient_le (c : Parameters)
     (hwait : c.wait = 60 * Real.log (1 / c.lam)) (hsmall : c.lam ≤ 1 / 120) :
@@ -1390,7 +1390,7 @@ theorem decay_div_le_three (c : Parameters) {M : ℝ} (hM : 0 ≤ M) :
     M / decay c ≤ 3 * M := by
   have hd : (2 / 5 : ℝ) ≤ decay c := by dsimp [decay]; linarith [c.lam_lt]
   apply (div_le_iff₀ (decay_pos c)).mpr
-  nlinarith [mul_nonneg hM (show 0 ≤ 3 * decay c - 1 by linarith)]
+  linarith [mul_nonneg hM (show 0 ≤ 3 * decay c - 1 by linarith)]
 
 theorem affineLag_abs_le (c : Parameters)
     (hwait : c.wait = 60 * Real.log (1 / c.lam)) (hsmall : c.lam ≤ 1 / 120)
@@ -1446,19 +1446,19 @@ theorem pulse_data_bounds (c : Parameters)
   constructor
   · rw [← forcing_eq_pulseRatio c amp eta y]
     apply (forcing_abs_le c hsmall _ _ y).trans
-    nlinarith [mul_le_mul_of_nonneg_left (show |parameterPolynomial eta| + |amp eta| ≤ 6 by
+    linarith [mul_le_mul_of_nonneg_left (show |parameterPolynomial eta| + |amp eta| ≤ 6 by
         linarith) hf.le]
   constructor
   · rw [normalizedLag_eq_affineLag c amp eta hy]
     apply (affineLag_abs_le c hwait hsmall _ _ hy).trans
     dsimp [averageConstant]
     have hs : |parameterPolynomial eta| + |amp eta| ≤ 6 := by linarith
-    nlinarith [mul_le_mul_of_nonneg_left hq hp.le, mul_le_mul_of_nonneg_left hs hf.le]
+    linarith [mul_le_mul_of_nonneg_left hq hp.le, mul_le_mul_of_nonneg_left hs hf.le]
   · rw [(normalizedLag_eta_hasDerivAt c ha hy).deriv]
     apply (affineLag_abs_le c hwait hsmall _ _ hy).trans
     dsimp [averageConstant]
     have hs : |1 + 3 * eta ^ 2| + |amp'| ≤ 6 := by linarith
-    nlinarith [mul_le_mul_of_nonneg_left hq' hp.le, mul_le_mul_of_nonneg_left hs hf.le]
+    linarith [mul_le_mul_of_nonneg_left hq' hp.le, mul_le_mul_of_nonneg_left hs hf.le]
 
 /-- Energy constant, given by `P * Real.exp (Real.exp m + 12)`. -/
 noncomputable def energyConstant (P m : ℝ) : ℝ := P * Real.exp (Real.exp m + 12)
@@ -1470,7 +1470,7 @@ theorem shape_le_one (eta : ℝ) : shape eta ≤ 1 := by
   unfold shape
   rw [← one_div]
   apply (div_le_one (by positivity : 0 < 1 + eta ^ 2)).mpr
-  nlinarith [sq_nonneg eta]
+  linarith [sq_nonneg eta]
 
 theorem pulse_angular_small (c : Parameters)
     (hwait : c.wait = 60 * Real.log (1 / c.lam)) (eta : ℝ) {y : ℝ} (hy : 0 ≤ y) :
@@ -1494,7 +1494,7 @@ theorem shapeGradient_bound {eta : ℝ} (heta : |eta| ≤ 1) : |shapeGradient et
   rw [shapeGradient, abs_div, abs_mul, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2),
     abs_of_pos (by positivity : 0 < 1 + eta ^ 2)]
   apply (div_le_iff₀ (by positivity : 0 < 1 + eta ^ 2)).mpr
-  nlinarith [sq_nonneg eta]
+  linarith [sq_nonneg eta]
 
 theorem source_remainder_bound {E lam a b c m mp R M F : ℝ}
     (hE : 0 ≤ E) (hlam : 0 ≤ lam) (hlam' : lam ≤ 1)
@@ -1524,8 +1524,8 @@ theorem geometric_coefficient_bounds {h eta : ℝ} (hh : 0 ≤ h) (hh' : h ≤ 1
     |2 * (1 / 2 - h) * eta - (1 - eta ^ 2) * shapeGradient eta| ≤ 3 ∧
       |1 - eta ^ 2| ≤ 1 ∧ |2 * h * eta + (1 - eta ^ 2) * shapeGradient eta| ≤ 3 := by
   have hs : eta ^ 2 ≤ 1 := by
-      nlinarith [sq_abs eta, sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta]
-  have hd : |1 - eta ^ 2| ≤ 1 := by rw [abs_of_nonneg (by linarith)]; nlinarith [sq_nonneg eta]
+      linarith [sq_abs eta, sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1) |>.mpr heta]
+  have hd : |1 - eta ^ 2| ≤ 1 := by rw [abs_of_nonneg (by linarith)]; linarith [sq_nonneg eta]
   have hD : |1 / 2 - h| ≤ 1 / 2 := by rw [abs_of_nonneg (by linarith)]; linarith
   have hg : |(1 - eta ^ 2) * shapeGradient eta| ≤ 2 := by
     rw [abs_mul]
@@ -1534,10 +1534,10 @@ theorem geometric_coefficient_bounds {h eta : ℝ} (hh : 0 ≤ h) (hh' : h ≤ 1
     exact hm
   have hDeta : |2 * (1 / 2 - h) * eta| ≤ 1 := by
     rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-    nlinarith [mul_le_mul hD heta (abs_nonneg eta) (by norm_num)]
+    linarith [mul_le_mul hD heta (abs_nonneg eta) (by norm_num)]
   have heta' : |2 * h * eta| ≤ 1 := by
     rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2), abs_of_nonneg hh]
-    nlinarith [mul_le_mul hh' heta (abs_nonneg eta) (by norm_num)]
+    linarith [mul_le_mul hh' heta (abs_nonneg eta) (by norm_num)]
   exact ⟨(abs_sub _ _).trans (by linarith), hd, (abs_add_le _ _).trans (by linarith)⟩
 
 /-- Pulse angular source as an element of `ℝ`. -/
@@ -1595,7 +1595,7 @@ theorem pulseAngularSource_error_bound (c : Parameters)
     positivity
   have he := mul_le_mul_of_nonneg_right (pulse_angular_small c hwait eta hy) hp
   dsimp [sourceConstant]
-  nlinarith
+  linarith
 
 theorem pulseAngularSource_lower (d : OutgoingTail.TailData)
     (hwait : d.core.wait = 60 * Real.log (1 / d.core.lam)) (hsmall : d.core.lam ≤ 1 / 120)
@@ -1617,7 +1617,7 @@ theorem pulseAngularSource_lower (d : OutgoingTail.TailData)
     positivity
   have hc := mul_nonneg (show 0 ≤ 1 / 2 - d.h by linarith [d.h_lt_half]) hg
   have hlo := (abs_le.mp he).1
-  nlinarith [d.h_small]
+  linarith [d.h_small]
 
 /-- A lower barrier for the exact scalar lag equation on a finite interval.
 Only the differential equation and a lower source bound are used. -/
@@ -1686,7 +1686,7 @@ theorem pulse_endpoint_lower (c : Parameters) {Q S : ℝ → ℝ} (hQ₀ : 0 ≤
       linarith)
     (by norm_num : (0 : ℝ) ≤ 2 / 3) hpos
   have hini := mul_nonneg hQ₀ he.le
-  nlinarith
+  linarith
 
 /-! ## Binding the pulse formulas to the actual corrected histories -/
 
@@ -1855,7 +1855,7 @@ theorem source_error_small (c : Parameters)
   have hprod := (le_div_iff₀ (show 0 < 8 * sourceConstant c.P c.m by positivity)).mp
     (hsmall.trans (min_le_right _ _))
   have hm := mul_le_mul_of_nonneg_left hp hc.le
-  nlinarith
+  linarith
 
 /-- Exact stability estimate for a scalar lag around a constant source.
 The source error is allowed to have either sign. -/
@@ -1885,10 +1885,10 @@ theorem ode_equilibrium_error {r s δ L : ℝ} (hr : 0 < r) (hδ : 0 ≤ δ) (hL
   constructor
   · rw [sub_div]
       at hlo
-    nlinarith
+    linarith
   · rw [neg_div, add_div]
       at hhi
-    nlinarith
+    linarith
 
 /-- Uniform angular-lag error throughout the actual pulse; the incoming
 error is retained explicitly for the shaped-wait theorem to supply. -/
@@ -1952,7 +1952,7 @@ theorem corrected_Qs_endpoint_lower (w : ResetWitness d K) (hK : 0 < K)
   have hs := CorrectedPulseAmplitude.amplitude_spec w hK hsmall hwait hscale
   have heta₂ : eta ^ 2 ≤ 1 := by
     have h := (sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1)).mpr heta
-    nlinarith [sq_abs eta]
+    linarith [sq_abs eta]
   have hb := hs.2 eta heta₂
   apply Qs_endpoint_lower w hwait hsmall hpulse hh₁ hhT hs.1 heta
   · rw [abs_of_pos (CorrectedPulseAmplitude.amplitude_pos d w.coefficients eta)]
@@ -2133,7 +2133,7 @@ theorem mainPulse_deriv_le_one {z : ℝ} (hz : 0 ≤ z) : deriv mainPulse z ≤ 
     (sub_nonneg.mpr (sigma_le_one (z - 10))) zero_le_one
   have hcut := mul_nonneg (PulseAmplitude.pulseRamp_nonneg hz)
     (OutgoingTail.sigma_derivative_nonneg (z - 10))
-  nlinarith
+  linarith
 
 /-- Main first bound, choosing the witness provided by
 `LocalizedMomentRepair.smooth_compact_derivative_bound`. -/
@@ -2227,14 +2227,14 @@ theorem scaledPulse_deriv_abs_le (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
   have hm : |amp eta * deriv mainPulse (c.lam * y)| ≤ 2 * mainFirstBound := by
     rw [abs_mul]
     exact (mul_le_mul hamp (main_first_le _) (abs_nonneg _) (by norm_num)).trans
-      (by nlinarith [mainFirstBound_pos])
+      (by linarith [mainFirstBound_pos])
   have hc := mul_le_mul_of_nonneg_left (show c.lam ≤ 1 by linarith [c.lam_lt])
     (derivativeRepairConstant_pos c.P_pos c.m).le
   have htriangle := abs_add_le (deriv (scaledPulse c amp eta) (c.lam * y) -
     amp eta * deriv mainPulse (c.lam * y)) (amp eta * deriv mainPulse (c.lam * y))
   rw [sub_add_cancel] at htriangle
   dsimp [derivativeConstant]
-  nlinarith
+  linarith
 
 theorem forcing_fine_abs_le (c : Parameters) (hsmall : c.lam ≤ 1 / 120) (q A y : ℝ) :
     |forcing c q A y| ≤ mainBound * |A| +
@@ -2246,10 +2246,10 @@ theorem forcing_fine_abs_le (c : Parameters) (hsmall : c.lam ≤ 1 / 120) (q A y
       (correctionJetBound_pos c.P_pos c.m 0).le) (by positivity : 0 ≤ |q| + |A|)
   have hm : |A * mainPulse (c.lam * y)| ≤ mainBound * |A| := by
     rw [abs_mul]
-    nlinarith [mul_le_mul_of_nonneg_left (mainPulse_abs_le (c.lam * y)) (abs_nonneg A)]
+    linarith [mul_le_mul_of_nonneg_left (mainPulse_abs_le (c.lam * y)) (abs_nonneg A)]
   apply (abs_add_le _ _).trans
   change |A * mainPulse (c.lam * y)| + |affineProfile c q A y| ≤ _
-  nlinarith
+  linarith
 
 theorem affineLag_fine_abs_le (c : Parameters)
     (hwait : c.wait = 60 * Real.log (1 / c.lam)) (hsmall : c.lam ≤ 1 / 120)
@@ -2267,7 +2267,7 @@ theorem affineLag_fine_abs_le (c : Parameters)
   have ht := abs_add_le ((prefixCoefficient c 0 * q) * Real.exp (-decay c * y))
     (convolution (decay c) (forcing c q A) y)
   change |affineLag c q A y| ≤ _ at ht
-  nlinarith
+  linarith
 
 /-- Parameter lag constant, given by `4 * prefixBound P m 0 + 960 * correctionJetBound P m 0`. -/
 noncomputable def parameterLagConstant (P m : ℝ) : ℝ :=
@@ -2300,7 +2300,7 @@ theorem normalizedLag_parameter_fine_bound (c : Parameters)
       192 * correctionJetBound c.P c.m 0 * (|1 + 3 * eta ^ 2| + |amp'|) ≤ parameterLagConstant c.P
           c.m := by
     dsimp [parameterLagConstant]
-    nlinarith
+    linarith
   exact add_le_add_right (mul_le_mul_of_nonneg_right hcoeff (sq_nonneg c.lam)) _
 
 /-! ## The coefficient in the pulse-direction expansion -/
@@ -2337,11 +2337,11 @@ theorem eta_shapeGradient_bounds {eta : ℝ} (heta : |eta| ≤ 1) :
     ring
   have hs : eta ^ 2 ≤ 1 := by
     have h := (sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1)).mpr heta
-    nlinarith [sq_abs eta]
+    linarith [sq_abs eta]
   rw [he]
   constructor
   · apply (le_div_iff₀ (by positivity : 0 < 1 + eta ^ 2)).mpr
-    nlinarith [mul_nonneg (sq_nonneg eta) (sub_nonneg.mpr hs)]
+    linarith [mul_nonneg (sq_nonneg eta) (sub_nonneg.mpr hs)]
   · apply (div_le_iff₀ (by positivity : 0 < 1 + eta ^ 2)).mpr
     linarith
 
@@ -2364,7 +2364,7 @@ theorem pulse_geometric_bounds (d : TailData) {eta : ℝ} (heta : |eta| ≤ 1) :
   have hc₂ := mul_le_mul_of_nonneg_left hg₂ (show 0 ≤ 1 / 2 - d.h by linarith)
   have hc₃ := mul_le_mul_of_nonneg_right hD (sq_nonneg eta)
   dsimp [geometricSource, equilibriumNumerator] at *
-  constructor <;> nlinarith [d.h_pos, d.h_small]
+  constructor <;> linarith [d.h_pos, d.h_small]
 
 theorem derivativeCoefficient_nonneg (d : TailData) (eta : ℝ) :
     0 ≤ derivativeCoefficient d eta := by
@@ -2383,7 +2383,7 @@ theorem derivativeCoefficient_le (d : TailData)
   have hb : (49999 / 100000 : ℝ) ≤ decay d.core := by dsimp [decay]; linarith
   have hb₂ := pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 49999 / 100000) hb 2
   have hbase : (1 / 2 : ℝ) ≤ (2001 / 1000) * decay d.core ^ 2 * (99999 / 100000) := by
-    nlinarith
+    linarith
   have hg := geometricSource_nonneg d eta
   have hD : 0 ≤ 1 / 2 - d.h := by linarith [d.h_lt_half]
   have hA : (99999 / 100000) * d.core.lam + geometricSource d eta ≤ equilibriumNumerator d eta := by
@@ -2394,16 +2394,16 @@ theorem derivativeCoefficient_le (d : TailData)
     have hm := mul_le_mul_of_nonneg_left (show 1 - d.core.lam ≤ 1 by linarith [d.core.lam_pos])
       (mul_nonneg d.core.lam_pos.le (add_nonneg hD hg))
     have hh' := mul_le_mul_of_nonneg_left d.h_pos.le d.core.lam_pos.le
-    nlinarith
+    linarith
   have hbase' := mul_le_mul_of_nonneg_right hbase d.core.lam_pos.le
-  have hc : d.core.lam ≤ (2001 / 1000) * decay d.core ^ 2 := by nlinarith [d.core.lam_pos]
+  have hc : d.core.lam ≤ (2001 / 1000) * decay d.core ^ 2 := by linarith [d.core.lam_pos]
   have hc' := mul_le_mul_of_nonneg_right hc hg
   have hA' := mul_le_mul_of_nonneg_left hA
     (show 0 ≤ (2001 / 1000) * decay d.core ^ 2 by positivity)
   unfold derivativeCoefficient
   apply (div_le_iff₀ (mul_pos (sq_pos_of_pos (decay_pos d.core)) (equilibriumNumerator_pos d
       eta))).mpr
-  nlinarith
+  linarith
 
 /-- Main direction as an element of `ℝ`. -/
 noncomputable def mainDirection (d : TailData) (amp : ℝ → ℝ) (eta y : ℝ) : ℝ :=
@@ -2447,19 +2447,19 @@ theorem Ns_pulse_expansion (w : ResetWitness d K) {amp : ℝ → ℝ}
 
 theorem first_quadratic_margin (R : ℝ) :
     -2 * R ^ 2 + (241 / 100) * R ≤ 73 / 100 := by
-  nlinarith [sq_nonneg (R - 241 / 400)]
+  linarith [sq_nonneg (R - 241 / 400)]
 
 theorem second_quadratic_margin (R : ℝ) :
     -(7 / 2) * R ^ 2 + (241 / 50) * R ≤ 167 / 100 := by
-  nlinarith [sq_nonneg (R - 241 / 350)]
+  linarith [sq_nonneg (R - 241 / 350)]
 
 theorem ideal_cross_bound {R C Z : ℝ} (hR : 0 ≤ R) (hC : 0 ≤ C)
     (hC' : C ≤ 2001 / 1000) (hZ : Z ≤ 6 / 5) :
     -R * (2 * R - C * Z) ≤ -2 * R ^ 2 + (241 / 100) * R := by
   have hc := mul_le_mul_of_nonneg_left hZ hC
-  have hcz : C * Z ≤ 241 / 100 := by nlinarith
+  have hcz : C * Z ≤ 241 / 100 := by linarith
   have hm := mul_le_mul_of_nonneg_left hcz hR
-  nlinarith
+  linarith
 
 /-- Cone error budget, given by `2 * eps * (M + F + 1) + eps * (2 * F + 1) / 2 + 2 * lam * (M +
 1) ^ 2`. -/
@@ -2494,7 +2494,7 @@ theorem perturbed_cone_margins {lam R C Z b v eps F M : ℝ}
     rw [abs_mul, abs_mul, abs_of_nonneg hR]
     have h₁ := mul_le_mul hb hvabs (abs_nonneg v) heps
     have h₂ := mul_le_mul hR' hv (abs_nonneg _) hF
-    nlinarith
+    linarith
   have hdiff : |b - R| ≤ 2 * F + 1 := by
     have h := abs_sub b R
     rw [abs_of_nonneg hR] at h
@@ -2525,7 +2525,7 @@ theorem perturbed_cone_margins {lam R C Z b v eps F M : ℝ}
       _ = _ := by ring
   constructor
   · have herr : eps * (M + F + 1) ≤ 1 / 200 := by
-      nlinarith only [hbudget, hnonneg₁, hnonneg₂]
+      linarith only [hbudget, hnonneg₁, hnonneg₂]
     calc
       _ ≤ -2 * R ^ 2 + (241 / 100) * R + eps * (M + F + 1) := hcrossBound
       _ ≤ 73 / 100 + 1 / 200 := add_le_add (first_quadratic_margin R) herr
@@ -2560,8 +2560,8 @@ theorem perturbed_true_cone {lam R C Z b v eps F M : ℝ}
   constructor
   · linarith [h.1]
   constructor
-  · nlinarith [h.2]
-  · nlinarith
+  · linarith [h.2]
+  · linarith
 
 /-! ## The axial history error is derived from actual moments -/
 
@@ -2650,13 +2650,13 @@ theorem axialHistoryError_bound (w : ResetWitness d K)
   have ha' : |4 * d.h * eta| ≤ 2 := by
     rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 4), abs_of_pos d.h_pos]
     have h := mul_le_mul d.h_lt_half.le heta (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1 / 2)
-    nlinarith
+    linarith
   have hc' : |4 * (1 / 2 + d.h) * eta| ≤ 4 := by
     rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 4),
       abs_of_pos (by linarith [d.h_pos] : 0 < 1 / 2 + d.h)]
     have h := mul_le_mul (show 1 / 2 + d.h ≤ 1 by
         linarith [d.h_lt_half]) heta (abs_nonneg eta) zero_le_one
-    nlinarith
+    linarith
   have hw' : |(1 - W d amp p) / E w p| ≤ 4 * averageConstant d.core.P d.core.m := by
     rw [abs_div, abs_of_pos hE]
     exact (div_le_iff₀ hE).mpr hW
@@ -2737,12 +2737,12 @@ theorem denominator_bounds (d : TailData) {eta Q : ℝ} (heta : |eta| ≤ 1)
     0 < Q ∧ 1 / Q ≤ 4 / d.core.lam ∧ |eta| / Q ≤ 4 / Real.sqrt d.core.lam := by
   have hA := (pulse_geometric_bounds d heta).2
   have hq : d.core.lam / 4 + eta ^ 2 / 5 ≤ Q := by linarith
-  have hQpos : 0 < Q := by nlinarith [d.core.lam_pos, sq_nonneg eta]
+  have hQpos : 0 < Q := by linarith [d.core.lam_pos, sq_nonneg eta]
   have hs := Real.sqrt_pos.mpr d.core.lam_pos
   have hs₂ := Real.sq_sqrt d.core.lam_pos.le
   refine ⟨hQpos, ?_, ?_⟩
   · apply (div_le_div_iff₀ hQpos d.core.lam_pos).mpr
-    nlinarith [sq_nonneg eta]
+    linarith [sq_nonneg eta]
   · apply (div_le_div_iff₀ hQpos hs).mpr
     nlinarith [sq_nonneg (Real.sqrt d.core.lam - |eta| / 2), sq_abs eta]
 
@@ -2784,7 +2784,7 @@ theorem mainDirection_abs_le (d : TailData)
   apply (abs_sub _ _).trans
   rw [abs_mul, abs_mul, abs_of_nonneg hr₀, abs_of_nonneg hc₀]
   dsimp [mainDirectionBound]
-  nlinarith
+  linarith
 
 private theorem quotient_remainder_bound
     {N Q q B C D eta e m H eQ eE eM eH BM I J : ℝ}
@@ -2894,12 +2894,12 @@ theorem main_profile_bounds (d : TailData)
     have h := mul_le_mul hamp (mainPulse_abs_le (d.core.lam * y)) (abs_nonneg _) (by
         norm_num : (0 : ℝ) ≤ 6 / 5)
     dsimp [mainRatioBound]
-    nlinarith [mainBound_pos]
+    linarith [mainBound_pos]
   have hZ : |mainSlope d.core amp eta y| ≤ 2 * mainFirstBound := by
     rw [mainSlope, abs_mul]
     have h := mul_le_mul hamp (main_first_le (d.core.lam * y)) (abs_nonneg _) (by
         norm_num : (0 : ℝ) ≤ 6 / 5)
-    nlinarith [mainFirstBound_pos]
+    linarith [mainFirstBound_pos]
   have hZup := mul_le_mul_of_nonneg_left
     (mainPulse_deriv_le_one (mul_nonneg d.core.lam_pos.le hy)) hamp₀
   have hCd : |derivativeCoefficient d eta| ≤ 3 := by
@@ -2914,7 +2914,7 @@ theorem main_profile_bounds (d : TailData)
     apply (abs_sub _ _).trans
     rw [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2), abs_mul]
     dsimp [idealDirectionBound, mainRatioBound] at *
-    nlinarith
+    linarith
 
 theorem pulseRatio_abs_le (c : Parameters) (hsmall : c.lam ≤ 1 / 120)
     (amp : ℝ → ℝ) {eta : ℝ} (heta : |eta| ≤ 1) (hamp : |amp eta| ≤ 6 / 5) (y : ℝ) :
@@ -2974,7 +2974,7 @@ theorem shearB_main_error (w : ResetWitness d K) (hsmall : d.core.lam ≤ 1 / 12
   have hm := mul_le_mul_of_nonneg_left hdiff (show 0 ≤ 2 * d.core.lam by linarith [d.core.lam_pos])
   dsimp only [mainRatio] at *
   dsimp [shearErrorConstant]
-  nlinarith
+  linarith
 
 theorem mainDirection_ideal_error (d : TailData)
     (hsmall : d.core.lam ≤ 1 / 100000) (hh : d.h ≤ d.core.lam / 100000)
@@ -3008,7 +3008,7 @@ theorem mainDirection_ideal_error (d : TailData)
   apply (add_le_add_left (abs_add_le _ _) _).trans
   rw [abs_mul, abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
   dsimp [directionMainErrorConstant, mainRatio, mainSlope] at *
-  nlinarith
+  linarith
 
 /-! ## The shaped wait supplies the actual angular equilibrium error -/
 
@@ -3024,7 +3024,7 @@ theorem canonical_wait_for_power28 (c : Parameters)
     have h := PulseAmplitude.log_inverse_nonneg c
     simpa only [one_div, Real.log_inv] using h
   have hm := mul_nonneg hl (show 0 ≤ (1 : ℝ) / 10 - c.lam by linarith [c.lam_lt])
-  nlinarith
+  linarith
 
 /-- Angular error constant, given by `19 + 2 * sourceConstant P m`. -/
 noncomputable def angularErrorConstant (P m : ℝ) : ℝ := 19 + 2 * sourceConstant P m
@@ -3064,9 +3064,9 @@ theorem actual_Qs_pulse_error (w : ResetWitness d K)
   have hc : sourceConstant d.core.P d.core.m * d.core.lam ^ 30 / (1 - d.core.lam) ≤
       2 * sourceConstant d.core.P d.core.m * d.core.lam ^ 28 := by
     apply (div_le_iff₀ hr).mpr
-    nlinarith only [hs, hfac']
+    linarith only [hs, hfac']
   dsimp [angularErrorConstant]
-  nlinarith only [hb, hiprod, hc]
+  linarith only [hb, hiprod, hc]
 
 theorem actual_Qs_pulse_lower (w : ResetWitness d K)
     (hwait : d.core.wait = 60 * Real.log (1 / d.core.lam)) (hsmall : d.core.lam ≤ 1 / 120)
@@ -3083,9 +3083,9 @@ theorem actual_Qs_pulse_lower (w : ResetWitness d K)
   have hA := (pulse_geometric_bounds d heta).2
   have heq : equilibriumNumerator d eta ≤ angularEquilibrium d eta := by
     apply (le_div_iff₀ (show 0 < 1 - d.core.lam by linarith [d.core.lam_lt])).mpr
-    nlinarith [mul_nonneg (equilibriumNumerator_pos d eta).le d.core.lam_pos.le]
+    linarith [mul_nonneg (equilibriumNumerator_pos d eta).le d.core.lam_pos.le]
   have hlo := (abs_le.mp he).1
-  nlinarith [sq_nonneg eta]
+  linarith [sq_nonneg eta]
 
 /-! ## A single explicit vanishing rate for the cone errors -/
 
@@ -3136,7 +3136,7 @@ private theorem raw_error_le_rate {lam Q B M H P A F v : ℝ}
       (Q * B + M + H) * lam ^ 2 := by
     have h₁ := mul_le_mul_of_nonneg_left hp28 (mul_nonneg hQ hB)
     have h₂ := mul_le_mul_of_nonneg_left hp29 hH
-    nlinarith only [h₁, h₂]
+    linarith only [h₁, h₂]
   have hfirst : (4 / lam) * (Q * lam ^ 28 * B + M * lam ^ 2 + H * lam ^ 29) ≤
       4 * (Q * B + M + H) * lam := by
     have h := mul_le_mul_of_nonneg_left hfirstInside (by positivity : 0 ≤ 4 / lam)
@@ -3153,7 +3153,7 @@ private theorem raw_error_le_rate {lam Q B M H P A F v : ℝ}
   have hp2 : lam ^ 2 / Real.sqrt lam ≤ lam := by
     apply (div_le_iff₀ hs).mpr
     have hl : lam ≤ Real.sqrt lam := Real.le_sqrt_of_sq_le (by nlinarith only [hlam, hsmall])
-    nlinarith only [mul_le_mul_of_nonneg_left hl hlam.le]
+    linarith only [mul_le_mul_of_nonneg_left hl hlam.le]
   have hsecond : (4 / Real.sqrt lam) * (3 * F * v + P * lam ^ 2) ≤
       12 * F * A * (Real.sqrt lam * (1 + Real.log (1 / lam))) + 4 * P * lam := by
     have h₁ := mul_le_mul_of_nonneg_left hv' (mul_nonneg (by norm_num : (0 : ℝ) ≤ 12) hF)
@@ -3168,7 +3168,7 @@ private theorem raw_error_le_rate {lam Q B M H P A F v : ℝ}
     (show 0 ≤ 4 * (Q * B + M + H + P) by positivity)
   have hparameter := mul_le_mul_of_nonneg_left hr.2.2
     (show 0 ≤ 12 * F * A by positivity)
-  nlinarith only [hfirst, hsecond, hlinear, hparameter]
+  linarith only [hfirst, hsecond, hlinear, hparameter]
 
 /-- Direction error constant, constructed using `4`. -/
 noncomputable def directionErrorConstant (P m A : ℝ) : ℝ :=
@@ -3262,7 +3262,7 @@ private theorem cone_budget_eps_le_one {F M eps lam : ℝ}
   have h₂ : 0 ≤ eps * (2 * F + 1) / 2 := by positivity
   have h₃ : 0 ≤ 2 * lam * (M + 1) ^ 2 := by positivity
   dsimp [coneErrorBudget] at hb
-  nlinarith only [h₁, h₂, h₃, hb]
+  linarith only [h₁, h₂, h₃, hb]
 
 /-- The numerical margins refer only to the actual global stress histories
 and the actual first radial derivatives of the corrected fields. -/
@@ -3285,7 +3285,7 @@ theorem PulseConeAt.true_criterion {w : ResetWitness d K} {amp : ℝ → ℝ} {p
   refine ⟨?_, ?_, ?_⟩
   · linarith [h.first_margin]
   · linarith [h.second_margin]
-  · nlinarith only [ha, hmul]
+  · linarith only [ha, hmul]
 
 /-- The full pulse cone for any smooth amplitude with the proved size and
 first-derivative rate. Every further hypothesis is a scalar parameter bound. -/
@@ -3348,7 +3348,7 @@ theorem corrected_pulse_cone (w : ResetWitness d K) (hK : 0 < K)
   have hs := CorrectedPulseAmplitude.amplitude_spec w hK (by linarith) hwait hscale
   have heta₂ : eta ^ 2 ≤ 1 := by
     have h := (sq_le_sq₀ (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1)).mpr heta
-    nlinarith [sq_abs eta]
+    linarith [sq_abs eta]
   have hb := hs.2 eta heta₂
   have hamp : |CorrectedPulseAmplitude.amplitude d w.coefficients eta| ≤ 6 / 5 := by
     rw [abs_of_pos (CorrectedPulseAmplitude.amplitude_pos d w.coefficients eta)]
@@ -3420,7 +3420,7 @@ theorem exists_corrected_pulse_threshold (P m K : ℝ) (hP : 0 < P) (hK : 0 < K)
         (show d.core.lam ≤ 1 by linarith) (show 1 ≤ 27 by norm_num)
     have hm := mul_le_mul_of_nonneg_left hp hC.le
     have hd := (le_div_iff₀ (show 0 < 4 * angularErrorConstant P m by positivity)).mp hCsmall
-    nlinarith only [hm, hd]
+    linarith only [hm, hd]
   have hscale' : CorrectedPulseAmplitude.combinedScale d K ≤ 1 / 1000 := by
     dsimp [CorrectedPulseAmplitude.combinedScale]
     rw [hdP, hdm]

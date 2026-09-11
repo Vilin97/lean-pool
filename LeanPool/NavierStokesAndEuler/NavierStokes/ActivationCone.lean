@@ -91,26 +91,26 @@ theorem ramp_cone_of_errors {c B r e s P J v : ℝ}
   have hrgap : 1 ≤ r - 2 * s := by linarith
   have hgap : e ≤ P - v := by
     have h := mul_le_mul_of_nonneg_left hrgap he.le
-    nlinarith
+    linarith
   have hPgt : 2 + c / 4 < P := by linarith
   have hvB : v - 2 ≤ B := by
     have h := mul_nonneg he.le hrpos.le
-    nlinarith
+    linarith
   have hJsq : J ^ 2 ≤ s ^ 2 * e ^ 2 := by
     have h := mul_nonneg (show 0 ≤ s * e - J by linarith)
       (show 0 ≤ s * e + J by linarith)
-    nlinarith
-  have hBs : B * s ≤ 1 / 4 := by nlinarith
+    linarith
+  have hBs : B * s ≤ 1 / 4 := by linarith
   have hBss : B * s ^ 2 ≤ 1 / 16 := by
     have h := mul_le_mul_of_nonneg_right hBs hs
-    nlinarith
+    linarith
   have he2 : 0 < e ^ 2 := sq_pos_of_pos he
   have hquad : (v - 2) * J ^ 2 < 2 * (P - v) ^ 2 := calc
     (v - 2) * J ^ 2 ≤ B * J ^ 2 := mul_le_mul_of_nonneg_right hvB (sq_nonneg J)
     _ ≤ B * (s ^ 2 * e ^ 2) := mul_le_mul_of_nonneg_left hJsq hBpos.le
     _ = (B * s ^ 2) * e ^ 2 := by ring
     _ ≤ (1 / 16 : ℝ) * e ^ 2 := mul_le_mul_of_nonneg_right hBss he2.le
-    _ < 2 * e ^ 2 := by nlinarith
+    _ < 2 * e ^ 2 := by linarith
     _ ≤ 2 * (P - v) ^ 2 := by nlinarith
   exact ⟨hgap, hPgt, hquad⟩
 
@@ -123,7 +123,7 @@ theorem collar_lower_of_errors {c B r e s v : ℝ}
     2 + c / 2 < v := by
   have hl := (abs_le.mp hv).1
   have hm := mul_le_mul_of_nonneg_left (show r + s ≤ B + 1 by linarith) he
-  nlinarith
+  linarith
 
 /-- Combining the ramp and collar estimates gives the actual lower-root
 criterion, including the strict lower bound on `v`. -/
@@ -159,7 +159,7 @@ theorem errorTolerance_bounds {c B s : ℝ} (hB : 0 ≤ B) (hs : s ≤ errorTole
   have hp : 0 < 4 * (B + 1) := by positivity
   have hm := (le_div_iff₀ hp).mp h3
   refine ⟨h1, h2, ?_⟩
-  nlinarith
+  linarith
 
 /-- Positivity of the actual flat activation on the nonzero ramp. -/
 theorem activation_pos {T κ y : ℝ} (hT : 0 < T) (hκ : κ < 1) (hy : 0 < y) :
@@ -249,7 +249,7 @@ theorem uniform_ramp_from_comparison {K : Set ℝ} {r : Field}
   have hsmall := hsmallactivation T hT.1 κ ⟨hκ.1.le, hκ.2.le⟩ y ⟨hy.1.le, hycollar⟩
   have heB : activation T κ y * (B + 1) ≤ c / 4 := by
     have h := (lt_div_iff₀ hBp).mp hsmall
-    nlinarith
+    linarith
   exact collar_lower_of_errors hc hr.1 hr.2 he.le (by linarith) heB hve
 
 /-- Exact stress factorization when stock and shear-ratio errors carry the
@@ -290,7 +290,7 @@ theorem reducedStress_first_positive {F A B κ y dA dB dR α M : ℝ}
   apply mul_pos hF
   have hlo := (abs_le.mp hdA).1
   have hm := mul_le_mul_of_nonneg_left hlo hy
-  nlinarith
+  linarith
 
 theorem reducedStress_nonzero {F A B κ y dA dB dR α M : ℝ}
     (hF : 0 < F) (hα : 0 < α) (hA : α ≤ A) (hy : 0 ≤ y)
@@ -405,7 +405,7 @@ theorem cone_error_bounds {κ A B z dA dB dR M : ℝ}
       |sizeError κ A B z dR| = |κ| * |B ^ 2 / A| * |dR| * |2 + z * dR| := by
         simp only [sizeError, abs_mul]
       _ ≤ 1 * M * M * (2 + M) := by gcongr
-      _ ≤ comparisonConstant M := by unfold comparisonConstant; nlinarith
+      _ ≤ comparisonConstant M := by unfold comparisonConstant; linarith
 
 private theorem bounded_error_factor {M z x : ℝ} (hM : 0 ≤ M) (hz : 0 ≤ z)
     (hx : |x| ≤ M * z) : ∃ d : ℝ, |d| ≤ M ∧ x = z * d := by
@@ -440,9 +440,9 @@ theorem cone_comparison_from_stock_bounds {κ A B z p q R M : ℝ}
     (by simpa only [abs_of_nonneg hz] using hz1) hB hBA hB2A hdA hdB hdR
   rw [hfP, hfJ, hfv]
   simp only [abs_mul, abs_of_nonneg hz]
-  exact ⟨by nlinarith [mul_le_mul_of_nonneg_left hbP hz],
-    by nlinarith [mul_le_mul_of_nonneg_left hbv hz],
-    by nlinarith [mul_le_mul_of_nonneg_left hbJ hz]⟩
+  exact ⟨by linarith [mul_le_mul_of_nonneg_left hbP hz],
+    by linarith [mul_le_mul_of_nonneg_left hbv hz],
+    by linarith [mul_le_mul_of_nonneg_left hbJ hz]⟩
 
 /-- The genuine derivative-defined shear size has the cancellation form used
 in the error transport. -/
@@ -456,7 +456,7 @@ theorem shearSize_eq (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX0
         (referenceAngular L (y, η) / activatedAngular T κ L (y, η)) ^ 2) := by
   have h := shearSize_error T hκ hX0 hJ hL hU y hη hA
   unfold referenceSize at h
-  nlinarith
+  linarith
 
 /-- Activated stock one, given by `ActivationStocks.logViewOne h X0 (activatedAngular T κ L)
 (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))`. -/
@@ -641,15 +641,15 @@ theorem actual_comparisons (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
   simp only [iteratedDeriv_zero, hm1, hm2] at hsval
   have hpbound : |activatedStockOne h X0 initial L U T κ (y, η) - referenceP1 L (y, η)| ≤
       M * (y * activation T κ y) := by
-    exact hsval.1.trans (by nlinarith [mul_le_mul_of_nonneg_right hsM hz])
+    exact hsval.1.trans (by linarith [mul_le_mul_of_nonneg_right hsM hz])
   have hqbound : |activatedStockTwo h X0 initial L U T κ (y, η) - referenceP2 X0 L U (y, η)| ≤
       M * (y * activation T κ y) := by
-    exact hsval.2.trans (by nlinarith [mul_le_mul_of_nonneg_right hsM hz])
+    exact hsval.2.trans (by linarith [mul_le_mul_of_nonneg_right hsM hz])
   have hrval := hr T hT κ hκcc y hy η hη
   simp only [iteratedDeriv_zero] at hrval
   have hrbound : |referenceAngular L (y, η) / activatedAngular T κ L (y, η) - 1| ≤
       M * (y * activation T κ y) :=
-    hrval.trans (by nlinarith [mul_le_mul_of_nonneg_right hrM hz])
+    hrval.trans (by linarith [mul_le_mul_of_nonneg_right hrM hz])
   have hcomp := cone_comparison_from_stock_bounds hM ha hdamp hz hz1
     (hb.trans hrefM) (hba.trans hrefM) (hb2.trans hrefM) hpbound hqbound hrbound
   unfold activatedProjection activatedCross

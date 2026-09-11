@@ -245,14 +245,14 @@ theorem physical_neighbor_stage_references
   have hbase : 1000000*e*Θ^40 ≤ 1 := by
     have hnonneg := mul_nonneg (sub_nonneg.mpr hK) (mul_nonneg he (pow_nonneg hΘ0 40))
     change 1000000*neighborStabilityConstant*e*Θ^40 ≤ 1 at hsmall
-    nlinarith only [hsmall, hnonneg]
+    linarith only [hsmall, hnonneg]
   have heΘ : e ≤ e*Θ^40 := by
     simpa only [mul_one] using mul_le_mul_of_nonneg_left (one_le_pow₀ hΘ : 1 ≤ Θ^40) he
-  have heSmall : e ≤ 1 := by nlinarith only [hbase, heΘ, he]
+  have heSmall : e ≤ 1 := by linarith only [hbase, heΘ, he]
   have hpow : e*Θ^5 ≤ e*Θ^40 :=
     mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 5 ≤ 40)) he
   have hsmallRay : 400*(4*e)*Θ^5 ≤ 1 := by
-    nlinarith only [hbase, hpow, mul_nonneg he (pow_nonneg hΘ0 5)]
+    linarith only [hbase, hpow, mul_nonneg he (pow_nonneg hΘ0 5)]
   have ha0 : 0 < a := by linarith
   have hσsq : σ^2 ≤ 1 := by nlinarith only [hσ, hσsmall]
   have herr := physical_matrix_errors ha hε hΘ hG hd heSmall hmap hBd hmd hvd hm0 hv0 hmv
@@ -318,7 +318,7 @@ theorem physical_neighbor_stage_references
   refine ⟨?_, ?_⟩
   · intro τ hτ
     refine ⟨?_, (hnear τ hτ).2, hpair τ hτ⟩
-    nlinarith only [(hnear τ hτ).1]
+    linarith only [(hnear τ hτ).1]
   · exact controlled_neighbor_stage_references_within hσ hσsmall hΘ hT0 hT he hε.le herr.1 hlam
       hsmall
       hRmc hAmc hCmc hP hQ hN (fun τ hτ => (hUV τ hτ).1) (fun τ hτ => (hUV τ hτ).2)
@@ -491,13 +491,13 @@ theorem physical_family_amplification_and_size {α : Type*} (center : α)
     (fun ξ => (hcommon ξ).1), (fun ξ => (hcommon ξ).2.1), (fun ξ => (hcommon ξ).2.2), ?_⟩
   have he : 0 ≤ e := by dsimp [e]; positivity
   have hεe : ε ≤ e := by
-    have hg : 1 ≤ (4*G)^2 := by nlinarith only [hG, sq_nonneg (G-1)]
+    have hg : 1 ≤ (4*G)^2 := by linarith only [hG, sq_nonneg (G-1)]
     have hc : 1 ≤ Θ*(4*G)^2 := by
       simpa only [one_mul] using mul_le_mul hΘ hg
         (by norm_num : (0:ℝ) ≤ 1) (by linarith only [hΘ] : 0 ≤ Θ)
     have hh := mul_le_mul_of_nonneg_left hc hε.le
     dsimp [e]
-    nlinarith only [hh, hd, hε]
+    linarith only [hh, hd, hε]
   have hK : 1 ≤ neighborStabilityConstant := (by
       norm_num : (1:ℝ) ≤ 1000000000).trans neighborStabilityConstant_ge
   have hsub : Icc (1:ℝ) T ⊆ Icc 0 T := fun _ ht => ⟨by linarith only [ht.1], ht.2⟩
@@ -618,7 +618,7 @@ theorem velocity_propagator_bound_within
   have hspan : t-s ≤ Θ := by linarith only [ht, hT, hs]
   have hsmall' : 20*Θ^8*(e*Θ^12)*(t-s) ≤ 1/2 := by
     have hh := mul_le_mul_of_nonneg_left hspan (show 0 ≤ 20*e*Θ^20 by positivity)
-    nlinarith only [hh, hsmall]
+    linarith only [hh, hsmall]
   have he' : ∀ x ∈ Icc s t,
       |U₁ x-idealVelocityFirst (σ^2) x (U' x) (V' x)|+|V₁ x+U' x| ≤
         (e*Θ^12)*(|U' x|+|V' x|) := by
@@ -672,7 +672,7 @@ theorem scaled_pair_le_physical_norm (m v w : ℝ → Space) {t₀ a ε τ : ℝ
   have hh : |scaledVelocity m v w t₀ a ε τ 0|+|scaledVelocity m v w t₀ a ε τ 1| ≤
       (2*‖w (physicalTime t₀ a ε τ)‖)/ε := by
     apply (le_div_iff₀ hε).mpr
-    nlinarith only [hU, hεV, hεnorm]
+    linarith only [hU, hεV, hεnorm]
   convert! hh using 1
   ring
 
@@ -701,7 +701,7 @@ theorem physical_velocity_le_scaled_state (m v r w : ℝ → Space)
   have hV : norm3 (V 0) (V 1) (V 2) ≤ 7*Θ^2*(|V 0|+|V 1|) := by
     dsimp [norm3]
     have ht := mul_le_mul_of_nonneg_right hΘ2 (add_nonneg (abs_nonneg (V 0)) (abs_nonneg (V 1)))
-    nlinarith only [hw, ht]
+    linarith only [hw, ht]
   exact (scaledVelocity_norm_le_norm3 m v w hε hε1 hm hv hmv).trans hV
 
 end EulerPacketMovingFrame
@@ -771,7 +771,7 @@ theorem equation30_slope_ratio_dominates
   have hr := hmono ⟨hs, hst⟩ ⟨ht, le_rfl⟩ hst
   have hp := (div_le_div_iff₀ (hFp s hs) (hFp t ht)).mp hr
   apply (div_le_div_iff₀ (hFp s hs) (hZp s hs)).mpr
-  nlinarith only [hp]
+  linarith only [hp]
 
 end EulerPacketMovingFrame
 
@@ -827,7 +827,7 @@ theorem controlled_velocity_propagator_within
   have hΘ0 : 0 ≤ Θ := by linarith only [hΘ]
   have hgeom : 10000*e*Θ^5 ≤ 1 := by
     have hh := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 5 ≤ 21)) he
-    nlinarith only [hsmall, hh, mul_nonneg he (pow_nonneg hΘ0 21)]
+    linarith only [hsmall, hh, mul_nonneg he (pow_nonneg hΘ0 21)]
   have hcontrol := ray_controlled_velocity_error_within (sq_nonneg σ) hσ2 hΘ hT0 hT
     he hε hεe hgeom hRc hP hQ hN hRclose hAclose hCclose hrayInitial
   have hPc : ContinuousOn P (Icc 0 T) := fun t ht => (hP t ht).continuousWithinAt
@@ -839,7 +839,7 @@ theorem controlled_velocity_propagator_within
     intro t ht
     linarith only [(hcontrol t ht).1.2]
   obtain ⟨hU₁c, hV₁c⟩ := continuousOn_velocity_rhs (ε := ε) hAc hCc hPc hQc hNc hUc hVc hNne
-  have hs : 40*(200000*e)*Θ^21 ≤ 1 := by nlinarith only [hsmall]
+  have hs : 40*(200000*e)*Θ^21 ≤ 1 := by linarith only [hsmall]
   have hprop := velocity_propagator_bound_within hσ hσsmall hΘ hT0 hT
     (show 0 ≤ 200000*e by positivity) hs (fun t _ => hF t) (fun t _ => hG t)
     (fun t _ => hfluxF t) (fun t _ => hfluxG t) hF0 hF₁0 hG₁0 hU hV hU₁c hV₁c
@@ -918,11 +918,11 @@ theorem physical_tangent_propagator
   change 8000000*e*Θ^21 ≤ 1 at hsmall
   have heΘ : e ≤ e*Θ^21 := by
     simpa only [mul_one] using mul_le_mul_of_nonneg_left (one_le_pow₀ hΘ : 1 ≤ Θ^21) he
-  have heSmall : e ≤ 1 := by nlinarith only [hsmall, heΘ, he]
+  have heSmall : e ≤ 1 := by linarith only [hsmall, heΘ, he]
   have hpow : e*Θ^5 ≤ e*Θ^21 :=
     mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 5 ≤ 21)) he
   have hsmallRay : 400*(4*e)*Θ^5 ≤ 1 := by
-    nlinarith only [hsmall, hpow, mul_nonneg he (pow_nonneg hΘ0 5)]
+    linarith only [hsmall, hpow, mul_nonneg he (pow_nonneg hΘ0 5)]
   have ha0 : 0 < a := by linarith
   have hσsq : σ^2 ≤ 1 := by nlinarith only [hσ, hσsmall]
   have herr := physical_matrix_errors ha hε hΘ hG hd heSmall hmap hBd hmd hvd hm0 hv0 hmv
@@ -1000,9 +1000,9 @@ theorem physical_tangent_propagator
   have hε1 : ε ≤ 1 := herr.1.trans heSmall
   have hρ0 : 0 ≤ 800*e*Θ^5 := by positivity
   have hρ : 800*e*Θ^5 ≤ 1/2 := by
-    nlinarith only [hsmall, hpow, mul_nonneg he (pow_nonneg hΘ0 5)]
+    linarith only [hsmall, hpow, mul_nonneg he (pow_nonneg hΘ0 5)]
   have hrt : norm3 (Rp t 0-σ^2*t^2) (Rp t 1+2*σ^2*t) (Rp t 2-1) ≤ 800*e*Θ^5 := by
-    nlinarith only [(hnear t htT).1]
+    linarith only [(hnear t htT).1]
   have hPt : |Rp t 0-σ^2*t^2| ≤ 800*e*Θ^5 := by
     dsimp [norm3] at hrt
     linarith only [hrt, abs_nonneg (Rp t 1+2*σ^2*t), abs_nonneg (Rp t 2-1)]
@@ -1017,11 +1017,11 @@ theorem physical_tangent_propagator
   have ht2 : t^2 ≤ Θ^2 := (sq_le_sq₀ htT.1 hΘ0).mpr htΘ
   have hP₀ : |σ^2*t^2| ≤ Θ^2 := by
     rw [abs_of_nonneg (by positivity : 0 ≤ σ^2*t^2)]
-    nlinarith only [mul_le_mul_of_nonneg_right hσsq (sq_nonneg t), ht2]
+    linarith only [mul_le_mul_of_nonneg_right hσsq (sq_nonneg t), ht2]
   have hQ₀ : |-2*σ^2*t| ≤ 2*Θ^2 := by
     rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg σ), abs_of_nonneg htT.1]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0:ℝ) ≤ 2)]
-    nlinarith only [mul_le_mul_of_nonneg_right hσsq htT.1, htΘ, hΘ, sq_nonneg (Θ-1)]
+    linarith only [mul_le_mul_of_nonneg_right hσsq htT.1, htΘ, hΘ, sq_nonneg (Θ-1)]
   have hfinish := physical_velocity_le_scaled_state m v r w hs₀ hε hε1
     (hm0 _ htimeT) (hv0 _ htimeT) (hmv _ htimeT) (hpair t htT) hΘ hρ0 hρ hP₀ hQ₀ hPt hQt hNt
   have hstart := scaled_pair_le_physical_norm m v w hε hε1 (hm0 _ htimeS) (hv0 _ htimeS) (hmv _
@@ -1067,7 +1067,7 @@ noncomputable def stabilityConstant : ℝ := 320000000 * exp 6
 theorem stabilityConstant_ge : 320000000 ≤ stabilityConstant := by
   have hh : (1 : ℝ) ≤ exp 6 := one_le_exp_iff.mpr (by norm_num)
   unfold stabilityConstant
-  nlinarith only [hh]
+  linarith only [hh]
 
 /-- The controlled velocity system has an exact scalar comparison
 solution, constructed from the axioms rather than supplied as a hypothesis. -/
@@ -1118,7 +1118,7 @@ theorem controlled_stage_references
     have hm := mul_le_mul_of_nonneg_left hpow21 he
     have hKmul := mul_nonneg (show 0 ≤ stabilityConstant - 8 by linarith)
       (mul_nonneg he (pow_nonneg hΘ0 40))
-    nlinarith only [hsmall, hm, hKmul]
+    linarith only [hsmall, hm, hKmul]
   have herror := controlled_velocity_relative_error hσ hσsmall hΘ hT0 hT he hε hεe hlam hsmallODE
     (fun t _ => hF t) (fun t _ => hG t) (fun t _ => hfluxF t) (fun t _ => hfluxG t)
     hF0 hF₁0 hG₁0 hRc hAc hCc hP hQ hN hU hV hRclose hAclose hCclose
@@ -1132,7 +1132,7 @@ theorem controlled_stage_references
     have hn : 0 ≤ stabilityConstant * e * Θ ^ 40 := by positivity
     dsimp [δ]
     unfold stabilityConstant at hm hn hsmall
-    nlinarith only [hm, hn, hsmall]
+    linarith only [hm, hn, hsmall]
   have herror' : |V t - Z t| + |U t + Z₁ t| ≤ δ * (1 + lam) * F t :=
     herror t ⟨by linarith [ht.1], ht.2⟩
   have hc := equation30_relative_state_consequences hσ hσsmall hlam ht.1 hδ hrelSmall
@@ -1142,11 +1142,11 @@ theorem controlled_stage_references
   · dsimp [δ]
       at hc
     unfold stabilityConstant
-    nlinarith only [hc.2.1]
+    linarith only [hc.2.1]
   · dsimp [δ]
       at hc
     unfold stabilityConstant
-    nlinarith only [hc.2.2]
+    linarith only [hc.2.2]
 
 /-- Early forward amplitudes are exponentially small relative to target
 amplitude, with the initial slope cancelling from the estimate.  This is
@@ -1172,7 +1172,7 @@ theorem early_forward_exponential_suppression
     nlinarith only [hh, hσ, hσsmall, hTpos]
   have hx : 1 ≤ σ * T := by
     have hh := (div_le_iff₀ hσ).mp hTtarget
-    nlinarith only [hh]
+    linarith only [hh]
   have hxpos : 0 < σ * T := by positivity
   have hF₁0pos : 0 ≤ F₁ 0 := by rw [hF₁0]
   have hZ₁0pos : 0 ≤ Z₁ 0 := by rw [hZ₁0]; exact hlam
@@ -1184,10 +1184,10 @@ theorem early_forward_exponential_suppression
   have hVpos := hc.1
   have hVlower : Z T / 2 ≤ V T := by
     have hh := (abs_le.mp hc.2.1).1
-    have hη : 2 * exp 6 * δ ≤ 1 / 2 := by nlinarith only [hδsmall]
-    have hratio : (1 : ℝ) / 2 ≤ V T / Z T := by nlinarith only [hh, hη]
+    have hη : 2 * exp 6 * δ ≤ 1 / 2 := by linarith only [hδsmall]
+    have hratio : (1 : ℝ) / 2 ≤ V T / Z T := by linarith only [hh, hη]
     have hm := (le_div_iff₀ hZpos).mp hratio
-    nlinarith only [hm]
+    linarith only [hm]
   have hZlower := equation30_slope_uniform_lower hσ hσsmall hlam
     (fun t _ => hF t) (fun t _ => hZ t) (fun t _ => hfluxF t) (fun t _ => hfluxZ t)
     hF0 hF₁0 hZ0 hZ₁0 T hT1
@@ -1200,18 +1200,18 @@ theorem early_forward_exponential_suppression
   rw [mul_div_cancel_left₀ T hσne] at hpost
   have hFtarget : exp (1 / (4 * σ)) ≤ (σ * T) * F T := by
     have hh := (div_le_iff₀ hxpos).mp hpost
-    nlinarith only [hgrowth, hh]
+    linarith only [hgrowth, hh]
   have hexp6 : 0 < exp (6 : ℝ) := exp_pos _
   have hZscaled : (1 + lam) * F T ≤ 2 * exp 6 * Z T := by
     have hm := mul_le_mul_of_nonneg_left hZlower (by positivity : 0 ≤ 2 * exp (6 : ℝ))
     have hid : (2 * exp 6) * (((1 + lam) / (2 * exp 6)) * F T) = (1 + lam) * F T := by field_simp
     rw [hid] at hm
-    nlinarith only [hm]
+    linarith only [hm]
   have htarget : (1 + lam) * exp (1 / (4 * σ)) ≤ 4 * exp 6 * (σ * T) * V T := by
     have h₁ := mul_le_mul_of_nonneg_left hFtarget (by positivity : 0 ≤ 1 + lam)
     have h₂ := mul_le_mul_of_nonneg_left hZscaled hxpos.le
     have h₃ := mul_le_mul_of_nonneg_left hVlower (by positivity : 0 ≤ 4 * exp 6 * (σ * T))
-    nlinarith only [h₁, h₂, h₃]
+    linarith only [h₁, h₂, h₃]
   refine ⟨hVpos, ?_⟩
   intro s hs
   have hsT : s ∈ Icc 0 T := ⟨hs.1, hs.2.trans hT1⟩
@@ -1226,7 +1226,7 @@ theorem early_forward_exponential_suppression
   have hδ1 : δ ≤ 1 := by
     have hh : (1 : ℝ) ≤ exp 6 := one_le_exp_iff.mpr (by norm_num)
     have hm := mul_le_mul_of_nonneg_right hh hδ
-    nlinarith only [hm, hδsmall]
+    linarith only [hm, hδsmall]
   have hUtri := abs_add_le (U s + Z₁ s) (-Z₁ s)
   have hVtri := abs_add_le (V s - Z s) (Z s)
   rw [abs_neg] at hUtri
@@ -1238,7 +1238,7 @@ theorem early_forward_exponential_suppression
     have herr := herror s hsT
     have hmδ := mul_le_mul_of_nonneg_right hδ1 (by positivity : 0 ≤ (1 + lam) * F s)
     have hmF := mul_le_mul_of_nonneg_right hFsmall (by positivity : 0 ≤ 21 * (1 + lam))
-    nlinarith only [hUtri, hVtri, herr, hZstate, hmδ, hmF]
+    linarith only [hUtri, hVtri, herr, hZstate, hmδ, hmF]
   have hscaled := mul_le_mul_of_nonneg_left htarget
     (by positivity : 0 ≤ 21 * exp 3 * exp (-(1 / (4 * σ))))
   have hexpCancel : exp (-(1 / (4 * σ))) * exp (1 / (4 * σ)) = 1 := by
@@ -1252,14 +1252,14 @@ theorem early_forward_exponential_suppression
         _ = _ := by rw [hexpCancel, mul_one]
     rw [hid] at hscaled
     rw [hexp9]
-    nlinarith only [hscaled]
+    linarith only [hscaled]
   have hxΘ : σ * T ≤ Θ := by
     have hm := mul_le_mul_of_nonneg_right (show σ ≤ 1 by linarith) hTpos.le
-    nlinarith only [hm, hT]
+    linarith only [hm, hT]
   have hmΘ := mul_le_mul_of_nonneg_right hxΘ
     (by positivity : 0 ≤ 84 * exp 9 * exp (-(1 / (4 * σ))) * V T)
   apply (div_le_iff₀ hVpos).mpr
-  nlinarith only [hnorm, hscaled', hmΘ]
+  linarith only [hnorm, hscaled', hmΘ]
 
 end EulerPacketStage
 
@@ -1313,20 +1313,20 @@ theorem controlled_pressure_ratio_lower
   have hρ : ρ ≤ 1/2 := by
     have hp := scaled_power_le hΘ hK he (by decide : 5 ≤ 40)
     dsimp [ρ]
-    nlinarith only [hp, hsmall]
+    linarith only [hp, hsmall]
   have hη : η ≤ 1/2 := by
     have hp := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 29 ≤ 40))
       (mul_nonneg hK0 he)
     dsimp [η]
-    nlinarith only [hp, hsmall]
+    linarith only [hp, hsmall]
   have ht2 : τ^2 ≤ Θ^2 := (sq_le_sq₀ hτ0 hΘ0).mpr hτΘ
   have hP₀ : |σ^2*τ^2| ≤ Θ^2 := by
     rw [abs_of_nonneg (mul_nonneg (sq_nonneg σ) (sq_nonneg τ))]
-    nlinarith only [mul_le_mul_of_nonneg_right hσ2 (sq_nonneg τ), ht2]
+    linarith only [mul_le_mul_of_nonneg_right hσ2 (sq_nonneg τ), ht2]
   have hQ₀ : |-2*σ^2*τ| ≤ 2*Θ^2 := by
     rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg σ), abs_of_nonneg hτ0]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0:ℝ) ≤ 2)]
-    nlinarith only [mul_le_mul_of_nonneg_right hσ2 hτ0, hτΘ, hΘ, sq_nonneg (Θ-1)]
+    linarith only [mul_le_mul_of_nonneg_right hσ2 hτ0, hτΘ, hΘ, sq_nonneg (Θ-1)]
   obtain ⟨_, hp, hq, hn, hw, _, _⟩ := ray_geometric_bounds (ε := 0) (U := r) (V := 1)
     hΘ hρ0 hρ hP₀ hQ₀ hP hQ hN
   have hβ : |σ^2| ≤ 1 := by simpa only [abs_of_nonneg (sq_nonneg σ)] using hσ2
@@ -1335,7 +1335,7 @@ theorem controlled_pressure_ratio_lower
     have hh := velocity_numerator_error hΘ hρ0 (show 0 ≤ 3*e by positivity)
       hβ hA hp hq hn hP hQ hN hw
     dsimp [j, ρ] at *
-    nlinarith only [hh]
+    linarith only [hh]
   have hslope := equation30_primary_logderivative_bound hσ hσsmall hZ hfluxZ hZ0 hZ₁0 τ hτ
   have hr₀ : |-Z₁ τ/Z τ| ≤ 4 := by simpa only [neg_div, abs_neg] using hslope
   have hr' : |r/1-(-Z₁ τ/Z τ)| ≤ 10*η := by
@@ -1349,12 +1349,12 @@ theorem controlled_pressure_ratio_lower
       (mul_nonneg hK0 he)
     have hs : (10*j+20*Θ^2*η)*Θ^2 ≤ 1/2 := by
       dsimp [j, η]
-      nlinarith only [hp6, hp7, hp33, hsmall]
+      linarith only [hp6, hp7, hp33, hsmall]
     have hστ : 1 ≤ σ^2*Θ^2 := by
       have hh := mul_le_mul hσΘ hσΘ (by norm_num : (0:ℝ) ≤ 1) (by positivity : 0 ≤ σ*Θ)
-      nlinarith only [hh]
+      linarith only [hh]
     apply (mul_le_mul_iff_right₀ (sq_pos_of_pos hΘpos)).mp
-    nlinarith only [hs, hστ]
+    linarith only [hs, hστ]
   have hZpos := equation30_global_positive hσ hσsmall hZ hfluxZ hZ0 hZ₁0 τ hτ0
   have hnum := equation30_ideal_numerator_positive hσ hσsmall hZ hfluxZ hZ0 hZ₁0 τ hτ0
   have hideal : σ^2 ≤ σ^2*τ^2+σ^2+(-2*σ^2*τ)*(-Z₁ τ/Z τ) := by
@@ -1362,7 +1362,7 @@ theorem controlled_pressure_ratio_lower
     have hz : Z τ ≠ 0 := ne_of_gt hZpos
     have hid : (σ^2*τ^2+σ^2+(-2*σ^2*τ)*(-Z₁ τ/Z τ))*Z τ =
         (σ^2*τ^2+σ^2)*Z τ+2*σ^2*τ*Z₁ τ := by field_simp
-    nlinarith only [hid, hnum]
+    linarith only [hid, hnum]
   linarith only [(abs_le.mp herr).1, herrorSmall, hideal]
 
 /-- Source (33), stated for the actual physical ray and velocity. -/
@@ -1392,7 +1392,7 @@ theorem physical_pressure_positive_order40 (M : Space →L[ℝ] Space) (m v r w 
   let R := scaledRay m v r s₀ t₀ a ε τ
   let V := scaledVelocity m v w t₀ a ε τ
   have hp := scaled_power_le hΘ hK he (by decide : 5 ≤ 40)
-  have hρ : 800*e*Θ^5 ≤ 1/2 := by nlinarith only [hp, hsmall]
+  have hρ : 800*e*Θ^5 ≤ 1/2 := by linarith only [hp, hsmall]
   have hNne : R 2 ≠ 0 := by
     have hh := (abs_le.mp hN).1
     change -(800*e*Θ^5) ≤ R 2-1 at hh
@@ -1519,12 +1519,12 @@ theorem early_physical_size_suppression {α : Type*} (center : α)
   have hP₀ : |σ^2*τ^2| ≤ Θ^2 := by
     rw [abs_of_nonneg (by positivity : 0 ≤ σ^2*τ^2)]
     have hh := mul_le_mul hσ2 hτ2 (sq_nonneg τ) (by norm_num : (0:ℝ) ≤ 1)
-    nlinarith only [hh, hΘ2]
+    linarith only [hh, hΘ2]
   have hQ₀ : |-2*σ^2*τ| ≤ 2*Θ^2 := by
     rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg σ), abs_of_nonneg hτ.1]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0:ℝ) ≤ 2)]
     have hh := mul_le_mul hσ2 hτ.2 hτ.1 (by norm_num : (0:ℝ) ≤ 1)
-    nlinarith only [hh, hΘ2]
+    linarith only [hh, hΘ2]
   have hupper := physical_size_le_scaled_state m v (r ξ) (w ξ) hs₀ hε hε1
     (hm τ hτT) (hv τ hτT) (hmv τ hτT) (hrw ξ τ hτT) hΘ hρ0 hρ hP₀ hQ₀
     (hP ξ τ hτT) (hQ ξ τ hτT) (hN ξ τ hτT)
@@ -1533,7 +1533,7 @@ theorem early_physical_size_suppression {α : Type*} (center : α)
   have ht := mul_le_mul_of_nonneg_left htarget
     (show 0 ≤ 8232*exp 9*Θ^5*exp (-(1/(4*σ))) by positivity)
   apply (div_le_iff₀ htargetpos).mpr
-  nlinarith only [hupper, hs, ht]
+  linarith only [hupper, hs, ht]
 
 end EulerPacketMovingFrame
 
@@ -1746,7 +1746,7 @@ theorem PhysicalGeometryData.exists_geometry {α : Type*} (D : PhysicalGeometryD
       (hτ.2.trans D.horizon_le_Theta) D.small (fun t _ => hZ t) (fun t _ => hfluxZ t) hZ0 hZ₁pos
       hp.1 hp.2.1 hp.2.2 hv.2.2 (D.action_error ξ (hsub hτ))).2
   · have hn := add_le_add (D.B_bound _ htframes) (D.E_bound D.center _ htframes)
-    exact hcomp.1.trans (by nlinarith only [hn])
+    exact hcomp.1.trans (by linarith only [hn])
   · apply csSup_le
     · exact ⟨D.amplitude*Z 0, 0, ⟨le_rfl, D.horizon_pos.le⟩, rfl⟩
     · rintro _ ⟨τ, hτ, rfl⟩

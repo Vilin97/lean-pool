@@ -1078,7 +1078,7 @@ theorem perturbed_difference_energy (A B : SmoothL2Field Space)
   have hpair : 2*⟪W,e⟫_ℝ ≤ ‖W‖^2+(ea+eb)^2 := by
     have hi : ⟪W,e⟫_ℝ ≤ ‖W‖*(ea+eb) :=
       (real_inner_le_norm _ _).trans (mul_le_mul_of_nonneg_left hn (norm_nonneg W))
-    nlinarith [sq_nonneg (‖W‖-(ea+eb))]
+    linarith [sq_nonneg (‖W‖-(ea+eb))]
   rw [he,inner_add_right,mul_add]
   exact (add_le_add (projected_difference_energy A B hA hB K hK) hpair).trans_eq (by
       dsimp [W]; ring)
@@ -1193,7 +1193,7 @@ theorem regularized_cauchy {T : ℝ} {hT : 0 ≤ T}
   apply (regularized_l2_comparison (U j) (U k) M (hM j) (hM k) (hinit j k)).trans_lt
   have hj' := hN j hj
   have hk' := hN k hk
-  nlinarith
+  linarith
 
 end EulerOrdinarySobolev
 
@@ -1259,7 +1259,7 @@ theorem quadratic_energy_bound (T C : ℝ) (hT : 0 ≤ T)
     rw [he,one_div]
     linarith
   have hcross := (div_le_div_iff₀ (mul_pos (by norm_num) (hp 0 hz)) (hp t ht)).mp hi
-  nlinarith
+  linarith
 
 end EulerOrdinarySobolev
 
@@ -1349,7 +1349,7 @@ theorem energy_quadratic (t : Icc (0 : ℝ) T) :
   have hs := Real.sq_sqrt hx
   have hsq : Real.sqrt (U.energy 3 t)*U.energy 3 t ≤ (1+U.energy 3 t)^2 := by
     have hl : Real.sqrt (U.energy 3 t) ≤ 1+U.energy 3 t := by nlinarith
-    nlinarith [mul_le_mul_of_nonneg_right hl hx]
+    linarith [mul_le_mul_of_nonneg_right hl hx]
   simpa only [mul_assoc] using mul_le_mul_of_nonneg_left hsq (tameEnergyConstant_nonneg 3)
 
 theorem short_energy (hsmall : tameEnergyConstant 3 * T ≤ (1 + U.energy 3 ⟨0, le_rfl, hT⟩)⁻¹ / 2)
@@ -1414,7 +1414,7 @@ theorem regularized_h3 (A : SmoothL2Field Space) {S : SmoothingOperator}
   have hs : tameEnergyConstant 3*regularizedTime A ≤ (1+wordEnergy 3 A)⁻¹/2 := by
     calc
       _ ≤ (1+tameEnergyConstant 3)*regularizedTime A := by
-        nlinarith [regularizedTime_pos A]
+        linarith [regularizedTime_pos A]
       _ = _ := by unfold regularizedTime; field_simp [hc.ne',ha.ne']
   have hu := U.short_energy (by simpa only [he] using hs) t
   rw [he] at hu

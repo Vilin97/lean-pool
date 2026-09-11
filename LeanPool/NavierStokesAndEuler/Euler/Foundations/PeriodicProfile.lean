@@ -55,7 +55,7 @@ theorem reciprocal_derivative_recurrence (f : ℝ → ℝ) (hf : ContDiff ℝ �
     ↓reduceIte] at hp
   have h := congrArg (fun z : ℝ => (f x)⁻¹ * z) hp
   field_simp [hnz x] at h ⊢
-  nlinarith
+  linarith
 
 theorem reciprocal_gevrey_shift (f : ℝ → ℝ) (hf : ContDiff ℝ ∞ f)
     (hnz : ∀ x, f x ≠ 0) (A Rc R : ℝ) (hA : 1 ≤ A) (hRc : 0 ≤ Rc)
@@ -112,7 +112,7 @@ theorem shift_one_bound (R : ℝ) (hR : 0 ≤ R) (n : ℕ) :
     Nat.cast_one, mul_pow, pow_succ]
   have hp := mul_le_mul_of_nonneg_right hs
     (mul_nonneg (pow_nonneg hR n) (mul_nonneg hR (sq_nonneg (n.factorial : ℝ))))
-  nlinarith
+  linarith
 
 theorem reciprocal_gevrey (f : ℝ → ℝ) (hf : ContDiff ℝ ∞ f)
     (hnz : ∀ x, f x ≠ 0) (A Rc R : ℝ) (hA : 1 ≤ A) (hRc : 0 ≤ Rc)
@@ -154,7 +154,7 @@ theorem first_denominator_pos (δ : ℝ) (hδ : 0 < δ) (t : ℝ) : 0 < 1 + δ -
 theorem denominator_lower (δ : ℝ) (hδ : 0 ≤ δ) (t : ℝ) : δ ^ 2 ≤ denominator δ t := by
   have h := mul_nonneg (show 0 ≤ 2 * (1 + δ) by positivity) (sub_nonneg.mpr (cos_le_one t))
   dsimp [denominator]
-  nlinarith
+  linarith
 
 theorem denominator_pos (δ : ℝ) (hδ : 0 < δ) (t : ℝ) : 0 < denominator δ t :=
   lt_of_lt_of_le (sq_pos_of_pos hδ) (denominator_lower δ hδ.le t)
@@ -190,9 +190,9 @@ theorem profile_hasDerivAt (δ : ℝ) (hδ : 0 < δ) (t : ℝ) :
       ((1 + δ) * cos t - 1) / denominator δ t := by
     have hds : (1 + δ - cos t) ^ 2 + sin t ^ 2 = denominator δ t := by
       dsimp [denominator]
-      nlinarith
+      linarith
     have hnum : cos t * (1 + δ - cos t) - sin t * sin t = (1 + δ) * cos t - 1 := by
-      nlinarith
+      linarith
     rw [hnum]
     field_simp [hd.ne', he.ne']
     rw [hds]
@@ -214,7 +214,7 @@ theorem profile_deriv_lower (δ : ℝ) (hδ : 0 < δ) (t : ℝ) : -1 ≤ deriv (
   rw [profile_deriv δ hδ, le_div_iff₀ (denominator_pos δ hδ t)]
   have h := mul_pos (show 0 < 1 + δ by linarith) (first_denominator_pos δ hδ t)
   dsimp [denominator]
-  nlinarith
+  linarith
 
 theorem profile_deriv_upper (δ : ℝ) (hδ : 0 < δ) (t : ℝ) : deriv (profile δ) t ≤ δ⁻¹ := by
   rw [profile_deriv δ hδ, inv_eq_one_div,
@@ -222,7 +222,7 @@ theorem profile_deriv_upper (δ : ℝ) (hδ : 0 < δ) (t : ℝ) : deriv (profile
   have h := mul_nonneg (mul_nonneg (show 0 ≤ 2 + δ by linarith)
     (show 0 ≤ 1 + δ by linarith)) (sub_nonneg.mpr (cos_le_one t))
   dsimp [denominator]
-  nlinarith
+  linarith
 
 theorem profile_mean_zero (δ : ℝ) : ∫ t in (-π)..π, profile δ t = 0 := by
   have he : (fun t => profile δ (-t)) = fun t => -profile δ t := funext (profile_odd δ)
@@ -248,7 +248,7 @@ theorem denominator_derivative_bound (δ : ℝ) (hδ : 0 ≤ δ) (hδ1 : δ ≤ 
   have hp : (4 : ℝ) ≤ 4 ^ (n + 1) := by
     have h : (1 : ℝ) ≤ 4 ^ n := one_le_pow₀ (by norm_num)
     rw [pow_succ]
-    nlinarith
+    linarith
   have hf : (1 : ℝ) ≤ ((n + 1).factorial : ℝ) ^ 2 := by
     have hh : (1 : ℝ) ≤ (n + 1).factorial := by exact_mod_cast Nat.factorial_pos (n + 1)
     nlinarith
@@ -296,7 +296,7 @@ theorem numerator_derivative_bound (δ : ℝ) (hδ : 0 ≤ δ) (hδ1 : δ ≤ 1)
       abs_mul, abs_of_nonneg (show 0 ≤ 1 + δ by positivity)]
     have h := mul_le_mul_of_nonneg_left (abs_iteratedDeriv_cos_le_one (n + 1) t)
       (show 0 ≤ 1 + δ by positivity)
-    nlinarith
+    linarith
 
 theorem profile_gevrey (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (n : ℕ) (t : ℝ) :
     |iteratedDeriv n (profile δ) t| ≤
@@ -315,7 +315,7 @@ theorem profile_gevrey (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (n : ℕ) (t 
     have hm := neg_pi_div_two_lt_arctan (sin t / (1 + δ - cos t))
     rw [abs_le]
     dsimp [profile]
-    constructor <;> nlinarith [pi_le_four]
+    constructor <;> linarith [pi_le_four]
   | succ n =>
     have hn (k : ℕ) (x : ℝ) : ‖iteratedFDeriv ℝ k (numerator δ) x‖ ≤
         3 * majorant (40 * (δ ^ 2)⁻¹) 0 k := by
@@ -350,7 +350,7 @@ theorem profile_gevrey (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (n : ℕ) (t 
         (90 * (δ ^ 2)⁻¹) * majorant (40 * (δ ^ 2)⁻¹) 0 n := by
       simpa only [norm_iteratedFDeriv_eq_norm_iteratedDeriv, Real.norm_eq_abs,
         show (3 : ℝ) * 3 * (10 * (δ ^ 2)⁻¹) = 90 * (δ ^ 2)⁻¹ by ring] using hp
-    exact hp'.trans (mul_le_mul (by nlinarith) hm (majorant_nonneg _ hBi _ _)
+    exact hp'.trans (mul_le_mul (by linarith) hm (majorant_nonneg _ hBi _ _)
       (by positivity))
 
 end EulerPeriodicProfile

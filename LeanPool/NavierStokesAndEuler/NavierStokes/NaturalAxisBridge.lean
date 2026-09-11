@@ -1609,7 +1609,7 @@ theorem exists_fixedPoint_of_controlled [CompleteSpace E]
     have h := hdiff hym hx
     change ‖F y - F x‖ ≤ (1 / 2 : ℝ) * ‖y - x‖ at h
     rw [show F y = y from hyfix, hfix.eq] at h
-    have : ‖y - x‖ = 0 := by nlinarith [norm_nonneg (y - x)]
+    have : ‖y - x‖ = 0 := by linarith [norm_nonneg (y - x)]
     exact sub_eq_zero.mp (norm_eq_zero.mp this)
 
 /-- Actual bounded coefficient operators, later instantiated by AxisOperators.
@@ -3283,7 +3283,7 @@ theorem integrated_solution (I : Window) {ε : ℝ} (hε : 0 < ε)
           (2 * s) * angularRemainder (parameters I ε χ d) t
             (AxisEvaluation.profile I ε x.1) (AxisEvaluation.profile I ε x.2)
             (AxisEvaluation.profile I ε (AxisOperators.average I hε x.2)) p := by
-        nlinarith only [he]
+        linarith only [he]
       _ = _ := by rw [hst]
   · intro p hp
     have hY : |p.1| < 20 := abs_lt.mpr hp.1
@@ -3305,7 +3305,7 @@ theorem integrated_solution (I : Window) {ε : ℝ} (hε : 0 < ε)
             (AxisEvaluation.profile I ε x.2)
             (AxisEvaluation.profile I ε (AxisOperators.average I hε x.2))
             (AxisEvaluation.profile I ε (pressureCoefficient I hε a x.1)) p := by
-        nlinarith only [he]
+        linarith only [he]
       _ = _ := by rw [hst]
 
 /-- The leading pair defined using the proved angular resolvent. -/

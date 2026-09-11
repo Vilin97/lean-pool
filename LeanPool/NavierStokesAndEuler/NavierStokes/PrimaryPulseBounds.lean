@@ -158,7 +158,7 @@ noncomputable def rescaleConstant (N : ℕ) (K : ℝ) : ℝ := 2 ^ N * K ^ 2 + K
 
 theorem le_rescaleConstant (N : ℕ) (K : ℝ) : K ≤ rescaleConstant N K := by
   unfold rescaleConstant
-  nlinarith [mul_nonneg (pow_nonneg (by norm_num : (0 : ℝ) ≤ 2) N) (sq_nonneg K)]
+  linarith [mul_nonneg (pow_nonneg (by norm_num : (0 : ℝ) ≤ 2) N) (sq_nonneg K)]
 
 section JointEstimate
 
@@ -723,7 +723,7 @@ theorem EnvelopeJets.normalize_slot
     change max 1 (L i) ≤ (M + 1) * D.scale i
     apply max_le
     · nlinarith [D.one_le_scale i]
-    · nlinarith [hslot i, D.one_le_scale i]
+    · linarith [hslot i, D.one_le_scale i]
 
 end NormalizeSlot
 
@@ -903,7 +903,7 @@ theorem covariance_weights_class
     have h2 := mul_le_mul (hentry n x hx 0 1) (hentry n x hx 1 0)
       (abs_nonneg _) (zero_le_one.trans hM)
     simp only [abs_mul] at h1 h2 ⊢
-    nlinarith
+    linarith
   have hinv := hD.inv hb hdet hDupper
   have hscale : UnweightedClass s 0 (fun n x => r n ^ 2 *
       (normalizedMatrix (r n) (H n x)).det⁻¹) := polynomial_memClass s ((hr.pow 2).mul hinv)
@@ -1099,7 +1099,7 @@ theorem EnvelopeJets.map {f : ι → E → F} (hf : EnvelopeJets D w f)
       have hs := pow_nonneg (zero_le_one.trans (D.one_le_scale i)) m
       have hw := hf.nonneg i x hx
       have hcw : 0 ≤ C * D.scale i ^ m * w i x := by positivity
-      nlinarith [mul_nonneg (show 0 ≤ C by linarith) (mul_nonneg hs hw)]
+      linarith [mul_nonneg (show 0 ≤ C by linarith) (mul_nonneg hs hw)]
 
 theorem EnvelopeJets.add {f g : ι → E → F}
     (hf : EnvelopeJets D w f) (hg : EnvelopeJets D w g) :

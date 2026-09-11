@@ -50,7 +50,7 @@ theorem sigma_derivative_nonneg (x : ℝ) : 0 ≤ deriv sigma x := by
   change HasDerivAt sigma _ x at hq
   rw [hq.deriv]
   apply div_nonneg
-  · nlinarith [mul_nonneg (edge_derivative_nonneg x) (FlatCutoff.edge_nonneg 1 (1 - x)),
+  · linarith [mul_nonneg (edge_derivative_nonneg x) (FlatCutoff.edge_nonneg 1 (1 - x)),
       mul_nonneg (FlatCutoff.edge_nonneg 1 x) (edge_derivative_nonneg (1 - x))]
   · positivity
 
@@ -105,12 +105,12 @@ def tailCoefficient : ℝ := Real.exp (-5) / (16 * (stepBound + 1))
 
 theorem tailCoefficient_pos : 0 < tailCoefficient := by
   apply div_pos (Real.exp_pos _)
-  nlinarith [stepBound_ge_one]
+  linarith [stepBound_ge_one]
 
 theorem tailCoefficient_le : tailCoefficient ≤ Real.exp (-5) / 16 := by
   unfold tailCoefficient
   apply div_le_div_of_nonneg_left (Real.exp_pos _).le (by norm_num)
-  nlinarith [stepBound_ge_one]
+  linarith [stepBound_ge_one]
 
 theorem tailCoefficient_lt_one : tailCoefficient < 1 := by
   have he : Real.exp (-5 : ℝ) ≤ 1 := Real.exp_le_one_iff.mpr (by norm_num)
@@ -267,7 +267,7 @@ theorem tailDebt_bounds (d : TailData) :
       exact mul_le_mul_of_nonneg_right he (tailShapeDeriv_nonneg d t)
   · have he : 1 ≤ Real.exp ((1 - d.h) * t) :=
       Real.one_le_exp_iff.mpr (mul_nonneg d.one_sub_h_pos.le ht.1)
-    nlinarith [mul_le_mul_of_nonneg_right he (tailShapeDeriv_nonneg d t)]
+    linarith [mul_le_mul_of_nonneg_right he (tailShapeDeriv_nonneg d t)]
 
 theorem tailDebt_pos (d : TailData) : 0 < tailDebt d :=
   (div_pos d.rho_pos (by linarith [d.rho_lt_half])).trans_le (tailDebt_bounds d).1
@@ -277,7 +277,7 @@ theorem tailDebt_small (d : TailData) : tailDebt d < Real.exp (-2) * d.h := by
   have hp : 0 ≤ Real.exp 3 * d.rho := mul_nonneg (Real.exp_pos _).le d.rho_pos.le
   have hdiv : Real.exp 3 * d.rho / (1 - d.rho) ≤ 2 * Real.exp 3 * d.rho := by
     apply (div_le_iff₀ hden).mpr
-    nlinarith [mul_nonneg hp (show 0 ≤ 1 - 2 * d.rho by linarith [d.rho_lt_half])]
+    linarith [mul_nonneg hp (show 0 ≤ 1 - 2 * d.rho by linarith [d.rho_lt_half])]
   have hr : d.rho ≤ (Real.exp (-5) / 16) * d.h :=
     mul_le_mul_of_nonneg_right tailCoefficient_le d.h_pos.le
   have hb : tailDebt d ≤ Real.exp (-2) * d.h / 8 := by
@@ -288,7 +288,7 @@ theorem tailDebt_small (d : TailData) : tailDebt d < Real.exp (-2) * d.h := by
         mul_le_mul_of_nonneg_left hr (by positivity)
       _ = (Real.exp 3 * Real.exp (-5)) * d.h / 8 := by ring
       _ = Real.exp (-2) * d.h / 8 := by rw [← Real.exp_add]; norm_num
-  exact hb.trans_lt (by nlinarith [mul_pos (Real.exp_pos (-2)) d.h_pos])
+  exact hb.trans_lt (by linarith [mul_pos (Real.exp_pos (-2)) d.h_pos])
 
 theorem tail_taper_log_derivative (d : TailData) (t : ℝ) :
     0 ≤ tailShapeDeriv d t / tailShape d t ∧
@@ -297,21 +297,21 @@ theorem tail_taper_log_derivative (d : TailData) (t : ℝ) :
   have hcoef : tailCoefficient * stepBound ≤ 1 / 16 := by
     unfold tailCoefficient
     rw [div_mul_eq_mul_div]
-    apply (div_le_iff₀ (show 0 < 16 * (stepBound + 1) by nlinarith)).mpr
+    apply (div_le_iff₀ (show 0 < 16 * (stepBound + 1) by linarith)).mpr
     have he : Real.exp (-5 : ℝ) ≤ 1 := Real.exp_le_one_iff.mpr (by norm_num)
-    nlinarith [mul_le_mul_of_nonneg_right he hS]
+    linarith [mul_le_mul_of_nonneg_right he hS]
   have hder : tailShapeDeriv d t ≤ d.rho / 2 * stepBound :=
     mul_le_mul_of_nonneg_left (sigma_derivative_le _) (by
         exact div_nonneg d.rho_pos.le (by norm_num))
   have hrS : d.rho * stepBound ≤ d.h / 16 := by
     have h := mul_le_mul_of_nonneg_right hcoef d.h_pos.le
     unfold TailData.rho
-    nlinarith
+    linarith
   have hhalf : 1 / 2 ≤ tailShape d t := by
     linarith [(tailShape_bounds d t).1, d.rho_lt_half]
   have hratio : tailShapeDeriv d t / tailShape d t ≤ d.rho * stepBound := by
     apply (div_le_iff₀ (tailShape_pos d t)).mpr
-    nlinarith [mul_le_mul_of_nonneg_left hhalf (mul_nonneg d.rho_pos.le hS)]
+    linarith [mul_le_mul_of_nonneg_left hhalf (mul_nonneg d.rho_pos.le hS)]
   exact ⟨div_nonneg (tailShapeDeriv_nonneg d t) (tailShape_pos d t).le,
     hratio.trans_lt (by linarith [d.h_pos])⟩
 
@@ -364,7 +364,7 @@ theorem releaseSlope_bounds (d : TailData) (t : ℝ) :
   have hba := mul_le_mul_of_nonneg_left hab hh
   have hgap := mul_le_mul_of_nonneg_left ha1 (sub_nonneg.mpr d.h_lt_lam.le)
   unfold releaseSlope
-  constructor <;> nlinarith
+  constructor <;> linarith
 
 /-- Release rate, given by `1 + releaseSlope d t`. -/
 def releaseRate (d : TailData) (t : ℝ) : ℝ := 1 + releaseSlope d t
@@ -375,7 +375,7 @@ def initialLag (d : TailData) : ℝ := (d.core.lam - d.h) / (1 - d.core.lam)
 
 theorem initialLag_gt_h (d : TailData) : d.h < initialLag d := by
   apply (lt_div_iff₀ (show 0 < 1 - d.core.lam by linarith [d.core.lam_lt])).mpr
-  nlinarith [d.h_small, mul_pos d.h_pos d.core.lam_pos]
+  linarith [d.h_small, mul_pos d.h_pos d.core.lam_pos]
 
 theorem releaseRate_contDiff (d : TailData) : ContDiff ℝ ∞ (releaseRate d) :=
   contDiff_const.add (releaseSlope_contDiff d)
@@ -409,7 +409,7 @@ theorem linearLag_hasDerivAt {a b : ℝ → ℝ} (ha : Continuous a) (hb : Conti
     simp
   convert! h using 1
   dsimp [linearLag]
-  nlinarith [congrArg (fun v : ℝ => v * b t) he]
+  linarith [congrArg (fun v : ℝ => v * b t) he]
 
 /-- Release lag, given by `linearLag (releaseRate d) (releaseSource d) (initialLag d)`. -/
 def releaseLag (d : TailData) : ℝ → ℝ :=
@@ -481,7 +481,7 @@ theorem releaseLag_lower (d : TailData) :
     Real.exp_le_exp.mpr (by linarith [release_rate_integral_bound d])
   have hq : 0 ≤ initialLag d := d.h_pos.le.trans (initialLag_gt_h d).le
   unfold releaseLag linearLag
-  nlinarith [mul_nonneg (Real.exp_pos (-primitive (releaseRate d) d.rampEnd)).le hsource,
+  linarith [mul_nonneg (Real.exp_pos (-primitive (releaseRate d) d.rampEnd)).le hsource,
     mul_le_mul_of_nonneg_right he hq]
 
 theorem releaseLag_gt_tailDebt (d : TailData) : tailDebt d < releaseLag d d.rampEnd := by
@@ -815,7 +815,7 @@ theorem tailNumerator_hasDerivAt (d : TailData) (t : ℝ) :
     convert! Real.exp_zero using 1; ring_nf
   convert! h using 1
   dsimp [tailNumerator, weightedTailDerivative]
-  nlinarith [congrArg (fun x : ℝ => x * tailShapeDeriv d t) he]
+  linarith [congrArg (fun x : ℝ => x * tailShapeDeriv d t) he]
 
 theorem tailLag_hasDerivAt (d : TailData) (t : ℝ) :
     HasDerivAt (tailLag d)
@@ -909,9 +909,9 @@ def flatteningSlope (d : TailData) (y eta : ℝ) : ℝ :=
 theorem flatteningSlope_bounds (d : TailData) (y eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     -d.core.lam - 1 / 10 ≤ flatteningSlope d y eta ∧
       flatteningSlope d y eta ≤ -d.core.lam := by
-  have hJ0 : 0 ≤ logShape eta := Real.log_nonneg (by nlinarith [sq_nonneg eta])
+  have hJ0 : 0 ≤ logShape eta := Real.log_nonneg (by linarith [sq_nonneg eta])
   have hJ1 : logShape eta ≤ Real.log 2 :=
-    Real.log_le_log (by positivity) (by nlinarith)
+    Real.log_le_log (by positivity) (by linarith)
   have hD0 := sigma_derivative_nonneg ((y - d.core.endpoint) / flattenLength)
   have hD1 := sigma_derivative_le ((y - d.core.endpoint) / flattenLength)
   have hS : 0 ≤ stepBound := le_trans (by norm_num) stepBound_ge_one
@@ -919,10 +919,10 @@ theorem flatteningSlope_bounds (d : TailData) (y eta : ℝ) (heta : eta ^ 2 ≤ 
   have hprod : deriv sigma ((y - d.core.endpoint) / flattenLength) *
       (Real.log 2 - logShape eta) ≤ stepBound * Real.log 2 := by
     have h := mul_le_mul_of_nonneg_right hD1 (sub_nonneg.mpr hJ1)
-    nlinarith [mul_nonneg hS hJ0]
+    linarith [mul_nonneg hS hJ0]
   have hlen : stepBound * Real.log 2 ≤ flattenLength / 10 := by
     unfold flattenLength
-    nlinarith
+    linarith
   have hquot : (deriv sigma ((y - d.core.endpoint) / flattenLength) *
       (Real.log 2 - logShape eta)) / flattenLength ≤ 1 / 10 := by
     apply (div_le_iff₀ flattenLength_pos).mpr
@@ -1054,7 +1054,7 @@ theorem uniformWait_gt_twentyseven (d : TailData) : 27 < d.uniformWait := by
   simp only [one_div, inv_inv] at h
   dsimp [TailData.uniformWait]
   simp only [one_div]
-  nlinarith [d.core.lam_lt]
+  linarith [d.core.lam_lt]
 
 theorem finalAngular_last_four (d : TailData) (eta : ℝ) {y : ℝ}
     (hy : d.releaseStart - 4 ≤ y) (hy' : y ≤ d.releaseStart) :
