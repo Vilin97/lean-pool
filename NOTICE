@@ -90,6 +90,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/HadwigerNelsonBounds      https://github.com/lyfar/hadwiger-nelson-bounds-lean
   LeanPool/HansonWright              https://github.com/Lean-MoDS/StatsMLlib
   LeanPool/Incompleteness            https://github.com/FormalizedFormalLogic/Incompleteness
+  LeanPool/InfinitaryLogic           https://github.com/cameronfreer/infinitary-logic
   LeanPool/IsTranscendentalPi        https://github.com/samuelborza/IsTranscendentalPi
   LeanPool/IsoGraph                  https://github.com/Timeroot/IsoGraph
   LeanPool/Isoperimetric             https://github.com/hojonathanho/isoperimetric
