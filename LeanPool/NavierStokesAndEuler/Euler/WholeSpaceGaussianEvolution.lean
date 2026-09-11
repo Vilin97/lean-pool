@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
 import Mathlib.Analysis.Calculus.ParametricIntegral
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
@@ -79,7 +81,7 @@ theorem timeKernel_bound {t : ℝ} (ht : 0 < t) (y : Space) :
 
 theorem timeKernel_integrable {t : ℝ} (ht : 0 < t) : Integrable (timeKernel t) := by
   apply ((wideKernel_integrable ht).const_mul ((15/2:ℝ)*t⁻¹)).mono'
-    (timeKernel_continuous t).aestronglyMeasurable
+    (timeKernel_continuous t).aestronglyMeasurable_of_secondCountable
   exact Eventually.of_forall (timeKernel_bound ht)
 
 /-- Time envelope, given by `(15*t⁻¹*normalization (t/2))*Real.exp (-(4*t)⁻¹*‖y‖^2)`. -/
@@ -146,10 +148,10 @@ theorem average_hasDerivAt_kernel {t : ℝ} (ht : 0 < t)
   let F' : ℝ → Space → V := fun s y => timeKernel s y • f (x+y)
   have hF (s : ℝ) : AEStronglyMeasurable (F s) volume :=
     ((kernel_smooth s).continuous.smul (hf.comp (continuous_const.add
-        continuous_id))).aestronglyMeasurable
+        continuous_id))).aestronglyMeasurable_of_secondCountable
   have hFd : AEStronglyMeasurable (F' t) volume :=
     ((timeKernel_continuous t).smul (hf.comp (continuous_const.add
-        continuous_id))).aestronglyMeasurable
+        continuous_id))).aestronglyMeasurable_of_secondCountable
   have hb (y : Space) (s : ℝ) (hs : s ∈ Ioo (t/2) (2*t)) :
       ‖F' s y‖ ≤ timeEnvelope t y*C₀ := by
     change ‖timeKernel s y • f (x+y)‖ ≤ _
