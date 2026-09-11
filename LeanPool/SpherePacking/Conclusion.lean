@@ -25,6 +25,77 @@ Sharp radial and unrestricted sphere-packing conclusions.
 section
 
 open Filter
+open scoped Topology
+
+namespace CohnElkies
+
+private structure SharpCohnElkiesManuscriptConclusions : Prop where
+  root_before_infimum :
+    Tendsto
+      (fun d : ℕ =>
+        sInf {q : ℝ | ∃ f : Admissible d,
+          quotient f ^ ((d : ℝ)⁻¹) = q} /
+          Real.sqrt (d : ℝ))
+      atTop (𝓝 (1 / Real.pi))
+  root_before_infimum_vanishing_error :
+    ∃ err : ℕ → ℝ,
+      Tendsto err atTop (𝓝 0) ∧
+      ∀ d : ℕ, 0 < d →
+        sInf {q : ℝ | ∃ f : Admissible d,
+          quotient f ^ ((d : ℝ)⁻¹) = q} =
+          (1 / Real.pi + err d) * Real.sqrt (d : ℝ)
+  linear_program_root :
+    Tendsto
+      (fun d : ℕ => (linearProgram d) ^ ((d : ℝ)⁻¹))
+      atTop (𝓝 (Real.sqrt (Real.exp 1 / (2 * Real.pi))))
+  natural_logarithmic_rate :
+    Tendsto
+      (fun d : ℕ => Real.log (linearProgram d) / (d : ℝ))
+      atTop
+      (𝓝 ((1 / 2 : ℝ) * Real.log (Real.exp 1 / (2 * Real.pi))))
+  natural_vanishing_exponential_error :
+    ∃ err : ℕ → ℝ,
+      Tendsto err atTop (𝓝 0) ∧
+      (∀ᶠ d : ℕ in atTop,
+        linearProgram d =
+          (Real.sqrt (Real.exp 1 / (2 * Real.pi)) + err d) ^ d)
+  universal_nonnegative_delta :
+    ∃ δ : ℕ → ℝ,
+      Tendsto δ atTop (𝓝 0) ∧
+      (∀ d : ℕ, 0 ≤ δ d) ∧
+      (∀ᶠ d : ℕ in atTop, ∀ f : Admissible d,
+        (2 : ℝ) ^ d / unitBallVolume d *
+          (Real.sqrt (Real.exp 1 / (2 * Real.pi)) - δ d) ^ d ≤
+            quotient f)
+  base_two_exponent_positive :
+    0 < (1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1)
+  base_two_decimal_certificate :
+    (1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1) ∈
+      Set.Ioo
+        (0.604400544291677695341677307053 : ℝ)
+        0.604400544291677695341677307054
+  base_two_logarithmic_rate :
+    Tendsto
+      (fun d : ℕ => Real.logb 2 (linearProgram d) / (d : ℝ))
+      atTop
+      (𝓝 (-((1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1))))
+  base_two_vanishing_exponential_error :
+    ∃ err : ℕ → ℝ,
+      Tendsto err atTop (𝓝 0) ∧
+      (∀ᶠ d : ℕ in atTop,
+        linearProgram d =
+          (2 : ℝ) ^
+            (-((1 / 2 : ℝ) *
+                Real.logb 2 (2 * Real.pi / Real.exp 1) + err d) *
+              (d : ℝ)))
+
+end CohnElkies
+
+end
+
+section
+
+open Filter
 open scoped FourierTransform SchwartzMap Topology
 
 namespace PackingBounds.RadialMain
@@ -1679,66 +1750,6 @@ private theorem manuscriptQuotientRootSet_eq_literal (d : ℕ) :
         quotient f ^ ((d : ℝ)⁻¹) = q} := by
   ext q
   simp only [manuscriptQuotientRootSet, Set.mem_range, Set.mem_ofPred_eq]
-
-private structure SharpCohnElkiesManuscriptConclusions : Prop where
-  root_before_infimum :
-    Tendsto
-      (fun d : ℕ =>
-        sInf {q : ℝ | ∃ f : Admissible d,
-          quotient f ^ ((d : ℝ)⁻¹) = q} /
-          Real.sqrt (d : ℝ))
-      atTop (𝓝 (1 / Real.pi))
-  root_before_infimum_vanishing_error :
-    ∃ err : ℕ → ℝ,
-      Tendsto err atTop (𝓝 0) ∧
-      ∀ d : ℕ, 0 < d →
-        sInf {q : ℝ | ∃ f : Admissible d,
-          quotient f ^ ((d : ℝ)⁻¹) = q} =
-          (1 / Real.pi + err d) * Real.sqrt (d : ℝ)
-  linear_program_root :
-    Tendsto
-      (fun d : ℕ => (linearProgram d) ^ ((d : ℝ)⁻¹))
-      atTop (𝓝 (Real.sqrt (Real.exp 1 / (2 * Real.pi))))
-  natural_logarithmic_rate :
-    Tendsto
-      (fun d : ℕ => Real.log (linearProgram d) / (d : ℝ))
-      atTop
-      (𝓝 ((1 / 2 : ℝ) * Real.log (Real.exp 1 / (2 * Real.pi))))
-  natural_vanishing_exponential_error :
-    ∃ err : ℕ → ℝ,
-      Tendsto err atTop (𝓝 0) ∧
-      (∀ᶠ d : ℕ in atTop,
-        linearProgram d =
-          (Real.sqrt (Real.exp 1 / (2 * Real.pi)) + err d) ^ d)
-  universal_nonnegative_delta :
-    ∃ δ : ℕ → ℝ,
-      Tendsto δ atTop (𝓝 0) ∧
-      (∀ d : ℕ, 0 ≤ δ d) ∧
-      (∀ᶠ d : ℕ in atTop, ∀ f : Admissible d,
-        (2 : ℝ) ^ d / unitBallVolume d *
-          (Real.sqrt (Real.exp 1 / (2 * Real.pi)) - δ d) ^ d ≤
-            quotient f)
-  base_two_exponent_positive :
-    0 < (1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1)
-  base_two_decimal_certificate :
-    (1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1) ∈
-      Set.Ioo
-        (0.604400544291677695341677307053 : ℝ)
-        0.604400544291677695341677307054
-  base_two_logarithmic_rate :
-    Tendsto
-      (fun d : ℕ => Real.logb 2 (linearProgram d) / (d : ℝ))
-      atTop
-      (𝓝 (-((1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1))))
-  base_two_vanishing_exponential_error :
-    ∃ err : ℕ → ℝ,
-      Tendsto err atTop (𝓝 0) ∧
-      (∀ᶠ d : ℕ in atTop,
-        linearProgram d =
-          (2 : ℝ) ^
-            (-((1 / 2 : ℝ) *
-                Real.logb 2 (2 * Real.pi / Real.exp 1) + err d) *
-              (d : ℝ)))
 
 private theorem sharpCohnElkiesManuscriptConclusions :
     SharpCohnElkiesManuscriptConclusions := by
