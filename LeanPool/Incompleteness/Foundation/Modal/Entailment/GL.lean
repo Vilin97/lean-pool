@@ -70,7 +70,7 @@ instance : HasAxiomH 𝓢 := ⟨fun _ ↦ GL.axiomH⟩
 
 end GL
 
-private noncomputable def lem_boxdot_Grz_of_L :
+noncomputable def lem_boxdot_Grz_of_L :
     𝓢 ⊢ (⊡(⊡(φ ==> ⊡φ) ==> φ)) ==> (□(φ ==> ⊡φ) ==> φ) := by
   have : 𝓢 ⊢ (□(φ ==> ⊡φ) ⋏ ∼φ) ==> ⊡(φ ==> ⊡φ) := by
     apply deduct';

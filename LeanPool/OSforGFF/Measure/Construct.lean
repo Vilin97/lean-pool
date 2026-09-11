@@ -118,7 +118,7 @@ noncomputable def constructGaussianMeasureMinlosFree (m : ℝ) [Fact (0 < m)] :
   -- Continuity, symmetry, and normalization
   have h_cont := freeCovarianceFormR_continuous m
   have h_symm : ∀ f, freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f :=
-    freeCovarianceFormR_neg_neg m
+    private_decl% (freeCovarianceFormR_neg_neg m)
   have h_zero : freeCovarianceFormR m (0) (0) = 0 := by simp [freeCovarianceFormR]
   -- Use Minlos: directly obtain a ProbabilityMeasure with the Gaussian characteristic functional
   have h_minlos :=
@@ -158,7 +158,7 @@ theorem gff_real_characteristic (m : ℝ) [Fact (0 < m)] :
     Classical.choose_spec ex4
   have h_cont := freeCovarianceFormR_continuous m
   have h_symm : ∀ f, freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f :=
-    freeCovarianceFormR_neg_neg m
+    private_decl% (freeCovarianceFormR_neg_neg m)
   have h_zero : freeCovarianceFormR m (0) (0) = 0 := by simp [freeCovarianceFormR]
   have h_minlos :=
     gaussian_measure_characteristic_functional
@@ -342,7 +342,7 @@ lemma freeCovarianceFormR_gaussian_cf_pd (m : ℝ) [Fact (0 < m)] :
       freeCovarianceFormR m f f = ‖T f‖^2 :=
     Classical.choose_spec ex4
   have h_symm : ∀ f, freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f :=
-    freeCovarianceFormR_neg_neg m
+    private_decl% (freeCovarianceFormR_neg_neg m)
   exact gaussian_positive_definite_bochner T (freeCovarianceFormR m) h_eq h_symm
 
 /-- The free covariance form as a MinlosAnalytic.CovarianceForm structure. -/

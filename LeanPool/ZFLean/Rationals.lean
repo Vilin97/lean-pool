@@ -298,11 +298,11 @@ theorem add_eq_sub_iff {a b c : ZFRat} : a + b = c ↔ a = c - b where
   mpr := fun h => by rw [h, sub_add_cancel]
 
 
-private noncomputable abbrev nsmul : ℕ → ZFRat → ZFRat
+noncomputable abbrev nsmul : ℕ → ZFRat → ZFRat
   | 0, _ => 0
   | n+1, m => m + nsmul n m
 
-private noncomputable abbrev zsmul (n : ℤ) (x : ZFRat) : ZFRat :=
+noncomputable abbrev zsmul (n : ℤ) (x : ZFRat) : ZFRat :=
   match n with
   | .ofNat n => nsmul n x
   | .negSucc n => -nsmul (n+1) x
@@ -471,9 +471,9 @@ theorem inv_mul {a : ZFRat} (ha : a ≠ 0) : a⁻¹ * a = 1 := by
 noncomputable instance : RatCast ZFRat where
   ratCast q := ((q.num : ZFRat) / (q.den : ZFRat))
 
-private noncomputable def qsmul (k : ℚ) (m : ZFRat) : ZFRat := (k : ZFRat) * m
+noncomputable def qsmul (k : ℚ) (m : ZFRat) : ZFRat := (k : ZFRat) * m
 
-private noncomputable def nnqsmul : ℚ≥0 → ZFRat → ZFRat :=
+noncomputable def nnqsmul : ℚ≥0 → ZFRat → ZFRat :=
   fun ⟨k, _⟩ m ↦ qsmul k m
 
 open Classical in

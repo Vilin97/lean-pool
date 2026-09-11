@@ -342,7 +342,7 @@ noncomputable def finish {P : ValidPresentation}
 end CancellationResult
 
 /-- If cancelling a displayed inverse pair leaves no tail, the source normalizes to the sphere. -/
-private noncomputable def cancellationResult_sphere_of_lowerTail_eq_nil {n : ℕ}
+noncomputable def cancellationResult_sphere_of_lowerTail_eq_nil {n : ℕ}
     {word : List (SignedDart (Fin (n + 1)))} (pair : CancellablePair word)
     (ha : pair.edge ∉ pair.tail.map edgeOfDart)
     (hlower : Cancellation.lowerTail pair.edge pair.tail = [])
@@ -431,7 +431,7 @@ private noncomputable def cancellationResult_sphere_of_lowerTail_eq_nil {n : ℕ
       (hToBase.trans (Cancellation.sphereNormalizationEquivalent validEmpty))
 
 /-- A displayed inverse pair with nonempty lower tail gives one certified cancellation step. -/
-private theorem exists_cancellationStep_of_lowerTail_ne_nil {n : ℕ}
+theorem exists_cancellationStep_of_lowerTail_ne_nil {n : ℕ}
     {word : List (SignedDart (Fin (n + 1)))} (pair : CancellablePair word)
     (ha : pair.edge ∉ pair.tail.map edgeOfDart)
     (hlower : Cancellation.lowerTail pair.edge pair.tail ≠ [])
@@ -996,10 +996,7 @@ noncomputable def reduceResidualPairsFuel (fuel : ℕ) {n : ℕ}
           rfl
         length_le := le_refl _ }
 termination_by fuel
-decreasing_by
-  apply Nat.sub_lt
-  · exact hfuelPositive
-  · omega
+decreasing_by all_goals exact Nat.sub_lt hfuelPositive (by omega)
 
 /-- Repeatedly delete every adjacent inverse pair from a residual word while retaining its ambient
 edge namespace and the surface multiplicities of all surviving names. -/

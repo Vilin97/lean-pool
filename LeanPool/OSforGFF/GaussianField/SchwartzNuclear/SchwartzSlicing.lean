@@ -186,11 +186,11 @@ noncomputable def schwartzSlice (d : ℕ)
     (y : EuclideanSpace ℝ (Fin (d + 1))) :
     SchwartzMap ℝ ℝ where
   toFun t := f (euclideanSnoc (d + 1) y t)
-  smooth' :=
-    (compCLMOfAntilipschitz ℝ (euclideanSnoc_hasTemperateGrowth d y)
+  smooth' := by
+    exact (compCLMOfAntilipschitz ℝ (euclideanSnoc_hasTemperateGrowth d y)
       (euclideanSnoc_antilipschitz d y) f).smooth'
-  decay' :=
-    (compCLMOfAntilipschitz ℝ (euclideanSnoc_hasTemperateGrowth d y)
+  decay' := by
+    exact (compCLMOfAntilipschitz ℝ (euclideanSnoc_hasTemperateGrowth d y)
       (euclideanSnoc_antilipschitz d y) f).decay'
 
 /-! ## A2: Partial Hermite coefficient is Schwartz
@@ -500,8 +500,9 @@ private lemma schwartz_partial_hermiteCoeff_decay (d : ℕ)
   -- 4. Integrate against |ψ_n(t)| dt (finite since ψ_n is Schwartz)
   exact ⟨f.seminorm ℝ k m * ∫ t, ‖hermiteFunction n t‖, fun y => by
     obtain ⟨_, h_comm⟩ := contDiff_parametric_hermiteCoeff d f n
-    change ‖y‖ ^ k * ‖iteratedFDeriv ℝ m
-      (fun y' => ∫ t, f (euclideanSnoc (d + 1) y' t) * hermiteFunction n t) y‖ ≤ _
+    have hslice (y') (t : ℝ) :
+        schwartzSlice d f y' t = f (euclideanSnoc (d + 1) y' t) := rfl
+    simp only [hermiteCoeff1D, hslice]
     rw [h_comm]
     -- Factor hermiteFunction n t out of iteratedFDeriv using const_smul
     have h_factor : ∀ t, iteratedFDeriv ℝ m
@@ -549,8 +550,8 @@ noncomputable def schwartzPartialHermiteCoeff (d : ℕ)
     (n : ℕ) :
     SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ where
   toFun y := hermiteCoeff1D n (schwartzSlice d f y)
-  smooth' := schwartz_partial_hermiteCoeff_smooth d f n
-  decay' := schwartz_partial_hermiteCoeff_decay d f n
+  smooth' := by exact schwartz_partial_hermiteCoeff_smooth d f n
+  decay' := by exact schwartz_partial_hermiteCoeff_decay d f n
 
 -- A3b: Partial coefficient relates to 1D slice (definitionally true)
 lemma schwartz_partial_hermiteCoeff_eq_1D (d : ℕ)

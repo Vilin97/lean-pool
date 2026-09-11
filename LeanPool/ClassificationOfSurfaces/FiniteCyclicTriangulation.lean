@@ -28,7 +28,7 @@ namespace ClassificationOfSurfaces
 namespace SurfaceCellComplex
 
 /-- Oriented triangulation edges and signed cell-complex darts carry the same data. -/
-private def orientedEdgeSignedDartEquiv {Edge : Type*} :
+def orientedEdgeSignedDartEquiv {Edge : Type*} :
     OrientedEdge Edge ≃ SignedDart Edge where
   toFun := signedDartOfOrientedEdge
   invFun

@@ -372,7 +372,7 @@ lemma embeddingMap_norm_sq (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
             conv_rhs => arg 2; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
 
 /-- ℝ-linear view of the Lp multiplication CLM (avoiding `restrictScalars`). -/
-private noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fact (0 < m)] :
+noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fact (0 < m)] :
     Lp ℂ 2 (volume : Measure SpaceTime) →L[ℝ]
       Lp ℂ 2 (volume : Measure SpaceTime) where
   toLinearMap :=

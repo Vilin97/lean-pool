@@ -743,19 +743,19 @@ def lambda (dom : ZFSet) (ran : ZFSet) (exp : ZFSet → ZFSet) : ZFSet :=
 
 open Lean Parser Term
 /-- Imported ZFLean declaration. -/
-def funZType : Parser :=
+meta def funZType : Parser :=
   ":" >> ppSpace >> termParser leadPrec >> ppSpace >>
     unicodeSymbol "→" "->" >> ppSpace >> termParser leadPrec
 /-- Imported ZFLean declaration. -/
-def funZAlts : Parser :=
+meta def funZAlts : Parser :=
   "|" >> ppSpace >> Term.ident >> ppSpace >> unicodeSymbol "↦" "=>" >> ppSpace >> termParser
 
 /-- Parser for the domain, codomain, binder, and body of ZF function notation. -/
-def basicFunZ : Parser := leading_parser (withAnonymousAntiquot := false)
+meta def basicFunZ : Parser := leading_parser (withAnonymousAntiquot := false)
   ppGroup (ppSpace >> funZType) >> funZAlts
 
 /-- Parser for ZF lambda notation. -/
-@[term_parser] def funZ := leading_parser:maxPrec
+@[term_parser] meta def funZ := leading_parser:maxPrec
   ppAllowUngrouped >> unicodeSymbol "λᶻ" "funᶻ" >> basicFunZ
 
 /--

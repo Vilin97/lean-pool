@@ -139,7 +139,7 @@ about the source sequence (`LocalEMOmegaHomogeneous` below). -/
 /-- **Decidedness of a formula's eventual deep truth** (the named output of
 `eventualDeepTruth_decided`): either it holds eventually, or it fails eventually. Local analogue of
 `EMContext.Decided`, with the ambient `[Λ.Structure M]` in place of the `skolemColim` `letI`. -/
-private def LocalEMContext.Decided (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
+def LocalEMContext.Decided (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
     (φ : Λ.BoundedFormulaω Empty m)
     (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J) : Prop :=
   (∀ᶠ d in Filter.atTop, φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts i)) ∨

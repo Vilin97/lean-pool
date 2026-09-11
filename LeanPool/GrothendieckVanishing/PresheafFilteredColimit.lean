@@ -29,7 +29,7 @@ attribute [local implicit_reducible]
 /-- The global-sections functor used in the degree-`1` filtered-colimit boundary
 construction. -/
 @[implicit_reducible]
-private noncomputable def sheafH_filtered_colimit_h1_sectionsFunctor
+noncomputable def sheafH_filtered_colimit_h1_sectionsFunctor
     {X : TopCat.{u}} :
     TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
   sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u} ⋙
@@ -42,7 +42,7 @@ variable (Y' : J' ⥤ TopCat.Sheaf AddCommGrpCat.{u} X) [Zero (TopCat.Sheaf AddC
 
 /-- The stagewise top-sections map from the injective replacement to its quotient in the
 degree-`1` filtered-colimit comparison. -/
-private noncomputable def sheafH_filtered_colimit_h1_gTopNat :
+noncomputable def sheafH_filtered_colimit_h1_gTopNat :
     (sheafHFilteredColimitSuccInj Y' ⋙ sheafH_filtered_colimit_h1_sectionsFunctor) ⟶
       (sheafHFilteredColimitSuccQuotient Y' ⋙ sheafH_filtered_colimit_h1_sectionsFunctor) :=
   { app := fun j ↦
@@ -76,7 +76,7 @@ private theorem sheafH_filtered_colimit_succ_Inj_obj_injective (j : J') :
 
 /-- The functor of stagewise cokernels of the top-sections maps used in the degree-`1`
 filtered-colimit boundary construction. -/
-private noncomputable def sheafH_filtered_colimit_h1_cokernelFunctor :
+noncomputable def sheafH_filtered_colimit_h1_cokernelFunctor :
     J' ⥤ AddCommGrpCat.{u} :=
   { obj := fun j ↦ cokernel ((sheafH_filtered_colimit_h1_gTopNat Y').app j)
     map := fun {j j'} f ↦
@@ -117,7 +117,7 @@ private noncomputable def sheafH_filtered_colimit_h1_cokernelFunctor :
 
 /-- Evaluation at each diagram object identifies the stagewise cokernel functor with the
 cokernel of `sheafH_filtered_colimit_h1_gTopNat`. -/
-private noncomputable def sheafH_filtered_colimit_h1_cokernelFunctorIso :
+noncomputable def sheafH_filtered_colimit_h1_cokernelFunctorIso :
     sheafH_filtered_colimit_h1_cokernelFunctor Y' ≅
       cokernel (sheafH_filtered_colimit_h1_gTopNat Y') :=
   NatIso.ofComponents
@@ -162,7 +162,7 @@ private noncomputable def sheafH_filtered_colimit_h1_cokernelFunctorIso :
 
 /-- The stagewise identification of `H¹` with the cokernel of top sections for the
 injective-replacement short exact sequence used in the filtered-colimit comparison. -/
-private noncomputable def sheafH_filtered_colimit_h1_stageNatIso
+noncomputable def sheafH_filtered_colimit_h1_stageNatIso
     (h_mid : ∀ j, Subsingleton (Sheaf.H ((sheafHFilteredColimitSuccInj Y').obj j) 1)) :
     sheafH_filtered_colimit_h1_cokernelFunctor Y' ≅
       Y' ⋙ sheafCohomologyFunctor X 1 :=
@@ -260,7 +260,7 @@ private theorem sheafH_filtered_colimit_h1_boundary_square
       (hπ_top.trans
         (congrArg (fun t ↦ t ≫ sectionsFunctor.map (cokernel.π ι')) heInj).symm)
 
-private noncomputable def sheafH_filtered_colimit_h1_global_cokernel_iso
+noncomputable def sheafH_filtered_colimit_h1_global_cokernel_iso
     (h_colim : Subsingleton (Sheaf.H (sheafHFilteredColimitSuccInjCocone Y').pt 1)) :
     cokernel ((sheafH_filtered_colimit_h1_sectionsFunctor (X := X)).map
       (cokernel.π (sheafHFilteredColimitSuccIota Y' c' hc'))) ≅
@@ -288,7 +288,7 @@ include hcsh
 
 /-- The degree-`1` filtered-colimit comparison isomorphism, obtained by identifying `H¹`
 with the cokernel of top sections for the injective-replacement short exact sequence. -/
-private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
+noncomputable def sheafH_filtered_colimit_comparison_one_iso :
     colimit (Ysh ⋙ sheafCohomologyFunctor X 1) ≅
       (sheafCohomologyFunctor X 1).obj csh.pt := by
   letI : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) := Limits.HasZeroObject.zero' _
@@ -297,8 +297,8 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
   let sectionsFunctor := sheafH_filtered_colimit_h1_sectionsFunctor (X := X)
   let ι' := sheafHFilteredColimitSuccIota Ysh csh hcsh
   let toPsh := sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
-  have hInj (j) : Injective (Inj.obj j) :=
-    sheafH_filtered_colimit_succ_Inj_obj_injective (Y' := Ysh) j
+  have hInj (j) : Injective (Inj.obj j) := by
+    exact private_decl% (sheafH_filtered_colimit_succ_Inj_obj_injective (Y' := Ysh) j)
   have h_mid (j) : Subsingleton (Sheaf.H (Inj.obj j) 1) :=
     @sheafH_subsingleton_of_injective
       (Opens X) _ (Opens.grothendieckTopology X) _ _ (Inj.obj j) (hInj j) 0
@@ -339,7 +339,8 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
         sectionsFunctor.obj (sheafHFilteredColimitSuccQuotientCocone Ysh csh hcsh).pt :=
     (colimit.isColimit (sheafHFilteredColimitSuccQuotient Ysh ⋙
       sectionsFunctor)).coconePointUniqueUpToIso hc_sections_q
-  let globalIso := by
+  let globalIso : cokernel (sectionsFunctor.map (cokernel.π ι')) ≅
+      (sheafCohomologyFunctor X 1).obj csh.pt := by
     simpa [sectionsFunctor, ι'] using
       (sheafH_filtered_colimit_h1_global_cokernel_iso (Y' := Ysh) (c' := csh) (hc' := hcsh) h_colim)
   exact
@@ -366,8 +367,8 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
   let evTop := (CategoryTheory.evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op ⊤)
   let sectionsFunctor := sheafH_filtered_colimit_h1_sectionsFunctor (X := X)
   let ι' := sheafHFilteredColimitSuccIota Ysh csh hcsh
-  have hInj (j) : Injective (Inj.obj j) :=
-    sheafH_filtered_colimit_succ_Inj_obj_injective (Y' := Ysh) j
+  have hInj (j) : Injective (Inj.obj j) := by
+    exact private_decl% (sheafH_filtered_colimit_succ_Inj_obj_injective (Y' := Ysh) j)
   have h_mid (j) : Subsingleton (Sheaf.H (Inj.obj j) 1) :=
     @sheafH_subsingleton_of_injective
       (Opens X) _ (Opens.grothendieckTopology X) _ _ (Inj.obj j) (hInj j) 0
@@ -533,7 +534,7 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
   exact hleft.trans hright
 
 /-- The degree-`0` comparison up to identifying `H⁰` with global sections. -/
-private noncomputable def sheafH_filtered_colimit_zero_sections_iso :
+noncomputable def sheafH_filtered_colimit_zero_sections_iso :
     colimit (Ysh ⋙ sheafCohomologyFunctor X 0) ≅
       (sheafH_filtered_colimit_h1_sectionsFunctor (X := X)).obj csh.pt := by
   let sectionsFunctor := sheafH_filtered_colimit_h1_sectionsFunctor (X := X)
@@ -555,7 +556,7 @@ private noncomputable def sheafH_filtered_colimit_zero_sections_iso :
       (colimit.isColimit (Ysh ⋙ sectionsFunctor)).coconePointUniqueUpToIso hc_sections
 
 /-- The degree-`0` filtered-colimit comparison isomorphism, obtained from global sections. -/
-private noncomputable def sheafH_filtered_colimit_comparison_zero_iso :
+noncomputable def sheafH_filtered_colimit_comparison_zero_iso :
     colimit (Ysh ⋙ sheafCohomologyFunctor X 0) ≅
       (sheafCohomologyFunctor X 0).obj csh.pt :=
   sheafH_filtered_colimit_zero_sections_iso (Ysh := Ysh) csh hcsh ≪≫
@@ -665,8 +666,8 @@ private theorem sheafH_filtered_colimit_comparison_isIso_succ_succ
     ih
       (Ysh := sheafHFilteredColimitSuccQuotient Ysh) (csh := qCocone)
       (sheafHFilteredColimitSuccQuotientCoconeIsColimit Ysh csh hcsh)
-  have hInj (j) : Injective (Inj.obj j) :=
-    sheafH_filtered_colimit_succ_Inj_obj_injective (Y' := Ysh) j
+  have hInj (j) : Injective (Inj.obj j) := by
+    exact private_decl% (sheafH_filtered_colimit_succ_Inj_obj_injective (Y' := Ysh) j)
   have h_mid (r) (j) : Subsingleton (Sheaf.H (Inj.obj j) (r + 1)) :=
     @sheafH_subsingleton_of_injective
       (Opens X) _ (Opens.grothendieckTopology X) _ _ (Inj.obj j) (hInj j) r
@@ -724,6 +725,6 @@ noncomputable def sheafHPreservesFilteredColimits
     (n : ℕ) :
     colimit (Y' ⋙ sheafCohomologyFunctor X n) ≅
       (sheafCohomologyFunctor X n).obj c'.pt := by
-  haveI : IsIso (sheafHFilteredColimitComparison Y' n c') :=
-    sheafH_filtered_colimit_comparison_isIso Y' c' hc' n
+  haveI : IsIso (sheafHFilteredColimitComparison Y' n c') := by
+    exact sheafH_filtered_colimit_comparison_isIso Y' c' hc' n
   exact asIso (sheafHFilteredColimitComparison Y' n c')

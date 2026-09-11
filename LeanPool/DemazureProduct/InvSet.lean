@@ -93,7 +93,7 @@ private lemma not_mem_of_ge (asps : AspSet) {m n : ℤ} (n_le_m : n ≤ m) : ⟨
   asps.not_mem_of_ge (le_refl n)
 
 /-- The order on indices after the inversions in `asps` are applied. -/
-private def post_lt (asps : AspSet) (m n : ℤ) : Prop :=
+def post_lt (asps : AspSet) (m n : ℤ) : Prop :=
   (m < n ∧ ⟨m, n⟩ ∉ asps) ∨ (n < m ∧ ⟨n, m⟩ ∈ asps)
 
 @[simp] private lemma not_post_lt_self (asps : AspSet) (n : ℤ) : ¬ asps.post_lt n n := by
@@ -652,7 +652,7 @@ theorem func_asp : isAsp (asps.recon χ) := by
 /-- Package the function reconstructed from an ASP set and a shift as an
 `AspPerm`. -/
 noncomputable def toAspPerm : AspPerm :=
-  ⟨asps.recon χ, func_bijective asps χ, func_asp asps χ⟩
+  ⟨asps.recon χ, (by exact func_bijective asps χ), (by exact func_asp asps χ)⟩
 
 lemma invSet_of_toAspPerm : invSet (toAspPerm asps χ)= asps := invSet_func asps χ
 

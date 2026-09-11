@@ -37,7 +37,7 @@ variable (Λ : Language.{0, 0}) (J : Type) [LinearOrder J]
 
 /-- The located term code: compression arity, the support's increasing enumeration, and the
 compressed term. Unlike the orbit code, it remembers WHERE the support sits in `J`. -/
-private def LocatedTermCode : Type :=
+def LocatedTermCode : Type :=
   Σ k : ℕ, (Fin k ↪o J) × Λ[[Fin k]].Term Empty
 
 /-- Expansion of a located code — total, since the embedding travels with the code. -/

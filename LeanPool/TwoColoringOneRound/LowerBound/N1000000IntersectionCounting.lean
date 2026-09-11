@@ -64,7 +64,7 @@ theorem card_freeCoord (a d : DirIdx) :
   exact Fintype.card_subtype
     (fun j : Fin 3 => colMatch (maskAt a) j = none ∧ rowMatch (maskAt d) j = none)
 
-private noncomputable def freeSyms {k : DirIdx} (u : BaseOrbit k) : Finset SymN :=
+noncomputable def freeSyms {k : DirIdx} (u : BaseOrbit k) : Finset SymN :=
   (Finset.univ : Finset (FreeCol k)).image (fun j => u.1.1 j.1)
 
 private lemma freeSyms_disjoint_baseSet {k : DirIdx} (u : BaseOrbit k) :
@@ -317,10 +317,12 @@ noncomputable def encodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) (w :
     have hrel : dirMask w.1 u.1 = maskAt d := w.2.2
     have hwge : 3 ≤ (w.1.1 j.1).1 :=
       baseOrbit_freeCoord_outside (u := ⟨w.1, hbase⟩) ⟨j.1, j.2.1⟩
-    have hnotBase : w.1.1 j.1 ∉ baseSet := not_mem_baseSet_of_ge_three (x := w.1.1 j.1) hwge
+    have hnotBase : w.1.1 j.1 ∉ baseSet :=
+      private_decl% (not_mem_baseSet_of_ge_three (x := w.1.1 j.1) hwge)
     have hneAll :
         ∀ t : Fin 3, w.1.1 j.1 ≠ u.1.1 t :=
-      ne_of_dirMask_rowMatch_none (u := w.1) (v := u.1) (d := d) (h := hrel) (i := j.1) j.2.2
+      private_decl% (ne_of_dirMask_rowMatch_none (u := w.1) (v := u.1) (d := d)
+        (h := hrel) (i := j.1) j.2.2)
     have hnotFree : w.1.1 j.1 ∉ freeSyms (k := k) u := by
       intro hmem
       rcases Finset.mem_image.1 hmem with ⟨jf, _hjfUniv, hjf⟩
@@ -341,12 +343,12 @@ noncomputable def gOfEmbeddingVal {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
     classical
     refine dite (rowMatch (maskAt d) j.1 = none) (fun hnone => ?_) (fun hne => ?_)
     · let x : AvailFor u := e ⟨j.1, ⟨j.2, hnone⟩⟩
-      exact ⟨x.1, availFor_ge_three (u := u) x⟩
+      exact ⟨x.1, private_decl% (availFor_ge_three (u := u) x)⟩
     · let l : Fin 3 := Classical.choose ((Option.ne_none_iff_exists').1 hne)
       have hl : rowMatch (maskAt d) j.1 = some l :=
         Classical.choose_spec ((Option.ne_none_iff_exists').1 hne)
       have hAt : consistentAt (maskAt k) (maskAt a) (maskAt d) j.1 = true :=
-        consistentAt_of_consistent (k := k) (a := a) (d := d) hcons j.1
+        private_decl% (consistentAt_of_consistent (k := k) (a := a) (d := d) hcons j.1)
       have hkFree : colMatch (maskAt k) l = none :=
         of_decide_eq_true (by simpa [consistentAt, j.2, hl] using hAt)
       exact ⟨u.1.1 l, baseOrbit_freeCoord_outside (u := u) ⟨l, hkFree⟩⟩
@@ -441,7 +443,7 @@ noncomputable def gOfEmbedding {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
     (hcons : consistent (maskAt k) (maskAt a) (maskAt d) = true)
     (e : FreeCoord a d ↪ AvailFor u) : FreeCol a ↪ AvailFrom3 :=
   ⟨gOfEmbeddingVal (u := u) (a := a) (d := d) hcons e,
-    gOfEmbeddingVal_injective (u := u) (a := a) (d := d) hcons e⟩
+    (private_decl% (gOfEmbeddingVal_injective (u := u) (a := a) (d := d) hcons e))⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
@@ -475,12 +477,12 @@ noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                 simpa [v, decodeVertex] using
                   (decodeTuple_of_colMatch_some (k := a) (g := g) (j := i) (i := ib) hcol)
               have hAti : consistentAt (maskAt k) (maskAt a) (maskAt d) i = true :=
-                consistentAt_of_consistent (k := k) (a := a) (d := d) hcons i
+                (private_decl% (consistentAt_of_consistent (k := k) (a := a) (d := d) hcons i))
               have hk : rowMatch (maskAt k) ib = some l :=
                 of_decide_eq_true (by simpa [consistentAt, hcol, hrow] using hAti)
               have hubase : baseVertex.1 ib = u.1.1 l :=
-                eq_of_dirMask_rowMatch (u := baseVertex) (v := u.1) (d := k)
-                  (h := u.2) (i := ib) (j := l) hk
+                (private_decl% (eq_of_dirMask_rowMatch (u := baseVertex) (v := u.1) (d := k)
+                  (h := u.2) (i := ib) (j := l) hk))
               simp [hv0, hubase]
         by_cases hj : j = l
         · simp_all
@@ -509,18 +511,18 @@ noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                 simpa [g, gOfEmbedding] using this
               intro hEq
               have : (e ⟨i, ⟨hcol, hrow⟩⟩).1 = u.1.1 j' := by simpa [hv0, hg0] using hEq
-              exact (availFor_ne_u_coord (k := k) u (e ⟨i, ⟨hcol, hrow⟩⟩) j') this
+              exact ((private_decl% (availFor_ne_u_coord (k := k) u (e ⟨i, ⟨hcol, hrow⟩⟩) j'))) this
           | some ib =>
               have hv0 : v.1 i = baseVertex.1 ib := by
                 simpa [v, decodeVertex] using
                   (decodeTuple_of_colMatch_some (k := a) (g := g) (j := i) (i := ib) hcol)
               have hAti : consistentAt (maskAt k) (maskAt a) (maskAt d) i = true :=
-                consistentAt_of_consistent (k := k) (a := a) (d := d) hcons i
+                (private_decl% (consistentAt_of_consistent (k := k) (a := a) (d := d) hcons i))
               have hkNone : rowMatch (maskAt k) ib = none :=
                 of_decide_eq_true (by simpa [consistentAt, hcol, hrow] using hAti)
               have hne :=
-                ne_of_dirMask_rowMatch_none (u := baseVertex) (v := u.1) (d := k)
-                  (h := u.2) (i := ib) hkNone j'
+                (private_decl% (ne_of_dirMask_rowMatch_none (u := baseVertex) (v := u.1) (d := k)
+                  (h := u.2) (i := ib) hkNone j'))
               simpa [hv0, eq_comm] using hne
         simp_all
   have hvRel : dirMask v u.1 = maskAt d := by

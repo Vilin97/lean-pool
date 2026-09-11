@@ -5,6 +5,8 @@ Authors: Julius Marx
 -/
 module
 
+public meta import LeanPool.MRiscX.Tactics.TacticUtil
+
 public import Lean.Elab.Tactic.Basic
 public import LeanPool.MRiscX.AbstractSyntax.Instr
 public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
@@ -23,7 +25,7 @@ public import Mathlib.Data.Set.Basic
 This module provides the tactic applying per-instruction specifications.
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Meta Elab Parser Tactic Syntax Term
 

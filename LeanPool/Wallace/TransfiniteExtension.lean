@@ -29,7 +29,7 @@ universe u
 open CoefficientTransfiniteExtension
 
 /-- Extend a prescribed circle value to the corresponding integer character. -/
-private def integerCoordinateExtension : CoordinateExtension ℤ where
+def integerCoordinateExtension : CoordinateExtension ℤ where
   ofValue := fun t ↦ (zmultiplesHom UnitAddCircle) t
   ofValue_one := by
     intro t

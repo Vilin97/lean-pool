@@ -251,7 +251,7 @@ noncomputable def sheafHFilteredColimitSuccQuotientCocone
 attribute [local implicit_reducible] sheafHFilteredColimitSuccQuotientCocone
 
 @[implicit_reducible]
-private noncomputable def sheafH_filtered_colimit_succ_liftedCocone
+noncomputable def sheafH_filtered_colimit_succ_liftedCocone
     (s : Cocone (sheafHFilteredColimitSuccQuotient Y')) :
     Cocone (sheafHFilteredColimitSuccInj Y') :=
   Cocone.mk s.pt

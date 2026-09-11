@@ -104,7 +104,7 @@ theorem edgeOrbit_inv (K : SurfaceCellComplex) (d : K.Dart) :
 noncomputable instance edgeOrbitFintype (K : SurfaceCellComplex) : Fintype K.EdgeOrbit :=
   Fintype.ofFinite _
 
-private noncomputable def edgeRepresentative
+noncomputable def edgeRepresentative
     (K : SurfaceCellComplex) (e : K.EdgeOrbit) : K.Dart :=
   Quotient.out e
 
@@ -114,7 +114,7 @@ private theorem edgeOrbit_representative
     K.edgeOrbit (K.edgeRepresentative e) = e :=
   Quotient.out_eq e
 
-private noncomputable def signedDartToDart (K : SurfaceCellComplex) :
+noncomputable def signedDartToDart (K : SurfaceCellComplex) :
     SignedDart K.EdgeOrbit → K.Dart
   | .pos e => K.edgeRepresentative e
   | .neg e => K.inv (K.edgeRepresentative e)
@@ -183,7 +183,7 @@ noncomputable def signedDartEquiv
     (K : SurfaceCellComplex) (hinv : ∀ d, K.inv d ≠ d) :
     SignedDart K.EdgeOrbit ≃ K.Dart :=
   Equiv.ofBijective K.signedDartToDart
-    ⟨K.signedDartToDart_injective hinv, K.signedDartToDart_surjective⟩
+    (by exact ⟨K.signedDartToDart_injective hinv, K.signedDartToDart_surjective⟩)
 
 @[simp]
 theorem signedDartEquiv_symm_inv

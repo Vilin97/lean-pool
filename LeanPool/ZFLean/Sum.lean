@@ -223,7 +223,7 @@ noncomputable abbrev the {S : ZFSet} (S_nemp : S ≠ ∅) (x : Option S) : {x //
 
 
 open Classical in
-private noncomputable def into {T : ZFSet} : Option T → _root_.Option {x // x ∈ T} := fun x ↦
+noncomputable def into {T : ZFSet} : Option T → _root_.Option {x // x ∈ T} := fun x ↦
   if hx : x = none then .none else .some <| Classical.choose <| Or.resolve_left (casesOn x) hx
 
 theorem _root_.ZFSet.Option.some.injEq
@@ -291,7 +291,7 @@ noncomputable def instEquivZFOptionOption {T : ZFSet} :
 
 
 
-private def outof {T : ZFSet} : _root_.Option {x // x ∈ T} → Option T
+def outof {T : ZFSet} : _root_.Option {x // x ∈ T} → Option T
   | .some ⟨x, hx⟩ => some ⟨x, hx⟩
   | .none => none
 

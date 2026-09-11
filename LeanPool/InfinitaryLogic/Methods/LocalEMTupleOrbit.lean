@@ -36,7 +36,7 @@ namespace Language
 variable {Λ : Language.{0, 0}} {J : Type} [LinearOrder J] {M : Type} [Λ.Structure M]
 
 /-- The common finite skeleton support of a tuple's chosen representatives. -/
-private noncomputable def LocalEMContext.tupleSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+noncomputable def LocalEMContext.tupleSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (a : Fin n → ctx.Carrier) : Finset J :=
   Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (a i))
 
@@ -53,7 +53,7 @@ noncomputable def LocalEMContext.tupleCode (ctx : LocalEMContext Λ J (M := M)) 
     (a : Fin n → ctx.Carrier) : LocalEMTupleCode Λ n :=
   ⟨(ctx.tupleSupport a).card, fun i =>
     locJCompress Λ J (ctx.tupleSupport a) (Quotient.out (a i))
-      (ctx.locJSupport_out_subset_tupleSupport a i)⟩
+      (by exact ctx.locJSupport_out_subset_tupleSupport a i)⟩
 
 /-- **The orbit theorem**: over a highly order-transitive skeleton, tuples with equal codes lie
 in the same orbit of the induced structure automorphisms — some order automorphism of `J`
@@ -78,21 +78,21 @@ theorem LocalEMContext.exists_carrierEquiv_of_tupleCode_eq
   -- in place, whereas `Eq.trans` elaborates at default transparency.
   have hexp : (some fun i => locJExpand Λ J ((ctx.tupleSupport b).orderEmbOfFin hk.symm)
         (locJCompress Λ J (ctx.tupleSupport a) (Quotient.out (a i))
-          (ctx.locJSupport_out_subset_tupleSupport a i)))
+          (by exact ctx.locJSupport_out_subset_tupleSupport a i)))
       = some fun i => locJExpand Λ J ((ctx.tupleSupport b).orderEmbOfFin rfl)
           (locJCompress Λ J (ctx.tupleSupport b) (Quotient.out (b i))
             (ctx.locJSupport_out_subset_tupleSupport b i)) :=
     (dite_eq_left hk.symm).symm.trans (hcode.trans (dite_eq_left rfl))
   have hcomp : locJExpand Λ J ((ctx.tupleSupport b).orderEmbOfFin hk.symm)
       (locJCompress Λ J (ctx.tupleSupport a) (Quotient.out (a i))
-        (ctx.locJSupport_out_subset_tupleSupport a i))
+        (by exact ctx.locJSupport_out_subset_tupleSupport a i))
       = Quotient.out (b i) := by
     have hBi := congrFun (Option.some.inj hexp) i
     exact hBi.trans (locJExpand_compress Λ J (ctx.tupleSupport b) (Quotient.out (b i))
       (ctx.locJSupport_out_subset_tupleSupport b i))
   have hterm : locJRename Λ J e (Quotient.out (a i)) = Quotient.out (b i) := by
     conv_lhs => rw [← locJExpand_compress Λ J (ctx.tupleSupport a) (Quotient.out (a i))
-      (ctx.locJSupport_out_subset_tupleSupport a i)]
+      (by exact ctx.locJSupport_out_subset_tupleSupport a i)]
     rw [locJRename_expand Λ J e _ _ he]
     exact hcomp
   calc ctx.carrierEquiv e (a i)

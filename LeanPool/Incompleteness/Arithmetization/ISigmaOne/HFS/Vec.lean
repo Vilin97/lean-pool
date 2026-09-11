@@ -41,7 +41,7 @@ macro_rules
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Cons.cons]
-def consUnexpander : Lean.PrettyPrinter.Unexpander
+meta def consUnexpander : Lean.PrettyPrinter.Unexpander
   | `($_ $term ?[$terms,*]) => `(?[$term, $terms,*])
   | `($_ $term 0) => `(?[$term])
   | _ => throw ()

@@ -586,7 +586,7 @@ theorem Pi.transposeAlgEquiv_symm_op_apply (A : PiMat ℂ k s) :
     (Pi.transposeAlgEquiv k s).symm (MulOpposite.op A) = fun i => (A i)ᵀ :=
   rfl
 
-private noncomputable def f₂_equiv :
+noncomputable def f₂_equiv :
     (PiMat ℂ k s) ⊗[ℂ] (PiMat ℂ k s) ≃ₐ[ℂ] (Π i : k × k,
       Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) := by
   let this :=
@@ -595,7 +595,7 @@ private noncomputable def f₂_equiv :
       (fun i => Matrix.instAlgebra) fun i => Matrix.instAlgebra
   exact this
 
-private noncomputable def f₃_equiv :
+noncomputable def f₃_equiv :
     (Π i : k × k, Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) ≃ₐ[ℂ]
       (Π i : k × k, Matrix (s i.1 × s i.2) (s i.1 × s i.2) ℂ) := by
   apply AlgEquiv.piCongrRight

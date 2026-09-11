@@ -191,7 +191,7 @@ theorem eventually_idem : (◇ ◇ p) =tla= ◇ p := by
 
 theorem always_eventually_always : (□ ◇ □ p) =tla= ◇ □ p := by
   funext e; ext; constructor
-  on_goal 1=> apply always_weaken
+  · apply always_weaken
   tlaUnfoldSimp; intro kk h k; exists kk; intros k2
   have hq : k + kk + k2 = kk + (k + k2) := by omega
   rw [hq]; apply h
@@ -334,7 +334,7 @@ theorem eventually_and_split : (◇ (p ∧ q)) |-tla- (◇ p ∧ ◇ q) := by
 -- NOTE: this __DOES NOT__ apply if we change `∧` into `∀`, unless, e.g. `α` is finite!
 theorem eventually_always_and_distrib : (◇ □ (p ∧ q)) =tla= (◇ □ p ∧ ◇ □ q) := by
   rw [pred_eq_iff_iff]; constructor
-  on_goal 1=> rw [always_and]; apply eventually_and_split
+  · rw [always_and]; apply eventually_and_split
   tlaUnfoldSimp; intro e n1 h1 n2 h2; exists (n1 + n2)
   intro k
   specialize h1 (n2 + k); specialize h2 (n1 + k)

@@ -5,6 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.ProofMode.Basic
+
 public import LeanPool.Lentil.ProofMode.Basic
 
 @[expose] public section
@@ -19,7 +21,7 @@ open Lean Meta Elab Tactic
     is unreachable from `tla_exit` — that branch goes through
     `Entails_nil_eq_valid` so the raw goal becomes `valid rhs` instead of the
     equivalent `(⊤) |-tla- rhs`. -/
-private def buildAndChain (_σ : Expr) : List Expr → MetaM Expr
+private meta def buildAndChain (_σ : Expr) : List Expr → MetaM Expr
   | [] => panic! "buildAndChain: empty list"
   | [p] => pure p
   | p :: ps => do mkAppM ``TLA.tlaAnd #[p, ← buildAndChain _σ ps]

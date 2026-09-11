@@ -273,7 +273,7 @@ variable {s₀ : LocalStage} {M : Type} [(localColim s₀).Structure M] [LinearO
 the decided sign's connective: a positive `iSup` gets a disjunct, a negative `iInf` a refuted
 conjunct. Returns the next stage with consistency, monotonicity, and the balanced decision record
 `(positive ∧ iSup-witnessed) ∨ (negative ∧ neg-iInf-witnessed)`. -/
-private noncomputable def stageStep
+noncomputable def stageStep
     (Fp : {F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) // MarkerHenkinConsistent M F})
     (n : ℕ) :
     {G : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) //
@@ -321,10 +321,10 @@ private noncomputable def stageStep
       exact absurd ⟨φs', hφs'⟩ hInf
 
 /-- **The completion stages.** `T 0 = ∅`; `T (n+1)` is the `stageStep` of `T n`. -/
-private noncomputable def schemaCompletionStage
+noncomputable def schemaCompletionStage
     (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M) :
     ℕ → {F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) // MarkerHenkinConsistent M F}
-  | 0 => ⟨∅, markerHenkinConsistent_empty hM⟩
+  | 0 => ⟨∅, by exact markerHenkinConsistent_empty hM⟩
   | n + 1 =>
     ⟨(stageStep ρ (schemaCompletionStage hM n) n).1,
       (stageStep ρ (schemaCompletionStage hM n) n).2.1⟩
@@ -417,13 +417,13 @@ variable {s₀ : LocalStage} {M : Type} [(localColim s₀).Structure M] [LinearO
 /-- **The canonical enumeration** of the schema universe (from countable + nonempty). -/
 noncomputable def schemaEnumeration (s₀ : LocalStage) :
     ℕ → FSentence (L'' := localColim s₀) (J := ℕ) :=
-  ((schemaFSentenceUniverse_countable (s₀ := s₀)).exists_eq_range
-    schemaFSentenceUniverse_nonempty).choose
+  (private_decl% ((schemaFSentenceUniverse_countable (s₀ := s₀)).exists_eq_range
+    schemaFSentenceUniverse_nonempty)).choose
 
 private theorem schemaEnumeration_range :
     Set.range (schemaEnumeration s₀) = schemaFSentenceUniverse s₀ :=
-  (((schemaFSentenceUniverse_countable (s₀ := s₀)).exists_eq_range
-    schemaFSentenceUniverse_nonempty).choose_spec).symm
+  ((private_decl% ((schemaFSentenceUniverse_countable (s₀ := s₀)).exists_eq_range
+    schemaFSentenceUniverse_nonempty)).choose_spec).symm
 
 variable (ρ : ℕ → FSentence (L'' := localColim s₀) (J := ℕ))
   (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M)

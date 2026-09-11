@@ -63,9 +63,8 @@ namespace SetTheory
   congr! 4 with y hy sub
   simp only [ne_eq, ZFSet.ext_iff, notMem_empty, iff_false, not_forall, not_not, Set.Nonempty,
     Set.mem_ofPred_eq, Subtype.exists, exists_prop]
-  conv =>
-    enter [2, 1, z]
-    erw [and_iff_right_of_imp (@hy z)]
+  simp_all
+  aesop
 
 /-- The `ωₛ` declaration. -/
 def ωₛ := Ordinal.toZFSet ω

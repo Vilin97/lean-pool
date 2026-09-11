@@ -5,6 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import Batteries.Lean.Expr
+
 public import LeanPool.Lentil.ProofMode.Tactics.Intro
 
 @[expose] public section
@@ -15,9 +17,9 @@ open Lean Meta Elab Tactic
 
 -- NOTE: The following approach to restoring binder names is inspired by
 -- `binderNameHint` and `resolveBinderNameHint`
-private def binderNameHintAsString (_n : String) (p : α → β) : α → β := p
+def binderNameHintAsString (_n : String) (p : α → β) : α → β := p
 
-private def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do
+private meta def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do
   Core.transform e (post := fun e' => do
     if e'.isAppOfArity' ``binderNameHintAsString 4 then
       let args := e'.getAppArgs'
@@ -67,13 +69,13 @@ theorem Entails_revert_all :
 
 end
 
-private def revertTacDSimps := #[``List.findIdx, ``List.findIdx.go,
+private meta def revertTacDSimps := #[``List.findIdx, ``List.findIdx.go,
   ``List.get?Internal, ``List.eraseIdx, ``String.reduceBEq,
   ``String.reduceBNe, ``Bool.cond_false, ``Bool.cond_true, ``Option.elim]
 
-private def revertAllTacDSimps := #[``repeatedImplies, ``List.map, ``List.foldr]
+private meta def revertAllTacDSimps := #[``repeatedImplies, ``List.map, ``List.foldr]
 
-private def restoreBinderNameInForallCase : TacticM Unit := do
+private meta def restoreBinderNameInForallCase : TacticM Unit := do
   let g ← getMainGoal
   g.withContext do
     let ty ← getMainTarget

@@ -74,7 +74,7 @@ lemma curveCast_symm_some {W W' : WeierstrassCurve K} (h : W = W') {x y : K}
   subst h; rfl
 
 /-- The Frobenius `x ↦ x ^ 2`, as a `ℤ`-algebra map. -/
-private noncomputable def frobAlg (K : Type*) [Field K] [CharP K 2] : K →ₐ[ℤ] K :=
+noncomputable def frobAlg (K : Type*) [Field K] [CharP K 2] : K →ₐ[ℤ] K :=
   (frobenius K 2).toIntAlgHom
 
 omit [DecidableEq K] in

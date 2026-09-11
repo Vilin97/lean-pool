@@ -387,22 +387,22 @@ noncomputable def polygonalCircleOfCycle (p : K.vertexGraph.Walk v v) (hp : p.Is
     consecutive_inter := ?_
     nonadjacent_disjoint := ?_ }
   · intro i hpos
-    exact (cycle_adj K p hp i).ne (K.position_injective hpos)
+    exact (private_decl% (cycle_adj K p hp i)).ne (K.position_injective hpos)
   · intro i
     change segment ℝ (K.position (p.getVert i.val))
         (K.position (p.getVert (i + 1).val)) ∩
       segment ℝ (K.position (p.getVert (i + 1).val))
         (K.position (p.getVert (i + 2).val)) =
       {K.position (p.getVert (i + 1).val)}
-    rw [← cycle_edge_carrier K p hp i]
-    have hnextCarrier := cycle_edge_carrier K p hp (i + 1)
+    rw [← private_decl% (cycle_edge_carrier K p hp i)]
+    have hnextCarrier := (private_decl% (cycle_edge_carrier K p hp (i + 1)))
     rw [show i + 1 + 1 = i + 2 by ring] at hnextCarrier
     rw [← hnextCarrier]
-    have hface := K.face_inter _ (cycle_edge_face K p hp i) _
-      (cycle_edge_face K p hp (i + 1))
+    have hface := K.face_inter _ ((private_decl% (cycle_edge_face K p hp i))) _
+      (private_decl% (cycle_edge_face K p hp (i + 1)))
     rw [show i + 1 + 1 = i + 2 by ring] at hface
     change K.cellCarrier _ ∩ K.cellCarrier _ = K.cellCarrier _ at hface
-    rw [cycle_edge_inter_next K p hp i] at hface
+    rw [private_decl% (cycle_edge_inter_next K p hp i)] at hface
     rw [hface, PlaneComplex.cellCarrier]
     have himage : K.position ''
         (({p.getVert (i + 1).val} : Finset K.Vertex) : Set K.Vertex) =
@@ -411,21 +411,22 @@ noncomputable def polygonalCircleOfCycle (p : K.vertexGraph.Walk v v) (hp : p.Is
       simp [point]
     rw [himage, convexHull_singleton]
   · intro i j hij hiprev hjnext
-    rw [← cycle_edge_carrier K p hp i, ← cycle_edge_carrier K p hp j]
+    rw [← private_decl% (cycle_edge_carrier K p hp i),
+      ← private_decl% (cycle_edge_carrier K p hp j)]
     have hdis : Disjoint
         ({p.getVert i.val, p.getVert (i + 1).val} : Finset K.Vertex)
         {p.getVert j.val, p.getVert (j + 1).val} := by
       rw [Finset.disjoint_left]
       intro w hwI hwJ
       simp only [Finset.mem_insert, Finset.mem_singleton] at hwI hwJ
-      have hinj := cycle_index_injective K p hp
+      have hinj := (private_decl% (cycle_index_injective K p hp))
       rcases hwI with hwi | hwi <;> rcases hwJ with hwj | hwj
       · exact hij (hinj (hwi.symm.trans hwj))
       · exact hiprev (hinj (hwi.symm.trans hwj))
       · exact hjnext (hinj (hwi.symm.trans hwj)).symm
       · exact hij (add_right_cancel (hinj (hwi.symm.trans hwj)))
-    have hface := K.face_inter _ (cycle_edge_face K p hp i) _
-      (cycle_edge_face K p hp j)
+    have hface := K.face_inter _ ((private_decl% (cycle_edge_face K p hp i))) _
+      ((private_decl% (cycle_edge_face K p hp j)))
     rw [Finset.disjoint_iff_inter_eq_empty.mp hdis] at hface
     simpa [PlaneComplex.cellCarrier] using hface
 

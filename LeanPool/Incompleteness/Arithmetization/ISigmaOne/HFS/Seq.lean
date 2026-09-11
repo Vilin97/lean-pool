@@ -411,7 +411,7 @@ macro_rules
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander seqCons]
-def vecConsUnexpander : Lean.PrettyPrinter.Unexpander
+meta def vecConsUnexpander : Lean.PrettyPrinter.Unexpander
   | `($_ !⟦$term2, $terms,*⟧ $term) => `(!⟦$term2, $terms,*, $term⟧)
   | `($_ !⟦$term2⟧ $term) => `(!⟦$term2, $term⟧)
   | `($_ ∅ $term) => `(!⟦$term⟧)

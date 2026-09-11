@@ -195,10 +195,10 @@ theorem sub_right_cancel (a b c : ZFInt) : c - a = c - b → a = b := by
 theorem add_eq_sub_iff {a b c : ZFInt} : a + b = c ↔ a = c - b where
   mp := fun h => by rw [← h, add_sub_cancel]
   mpr := fun h => by rw [h, sub_add_cancel]
-private noncomputable abbrev nsmul : ℕ → ZFInt → ZFInt
+noncomputable abbrev nsmul : ℕ → ZFInt → ZFInt
   | 0, _ => 0
   | n+1, m => m + nsmul n m
-private noncomputable abbrev zsmul (n : ℤ) (x : ZFInt) : ZFInt :=
+noncomputable abbrev zsmul (n : ℤ) (x : ZFInt) : ZFInt :=
   match n with
   | .ofNat n => nsmul n x
   | .negSucc n => -nsmul (n+1) x
@@ -223,7 +223,8 @@ private theorem mul_wf {a b c d s t u v : ZFNat}
 /-- Integer multiplication in the ZF integer model. -/
 noncomputable abbrev mul (n m : ZFInt) : ZFInt :=
   Quotient.liftOn₂ n m
-    (fun ⟨a, b⟩ ⟨c, d⟩ => mk (a * c + b * d, a * d + b * c)) fun _ _ _ _ => (sound <| mul_wf · ·)
+    (fun ⟨a, b⟩ ⟨c, d⟩ => mk (a * c + b * d, a * d + b * c)) fun _ _ _ _ => by
+      exact (sound <| mul_wf · ·)
 /-- Imported ZFLean declaration. -/
 noncomputable instance : Mul ZFInt := ⟨ZFInt.mul⟩
 theorem mul_eq (n m : ZFNat × ZFNat) :
@@ -840,7 +841,7 @@ noncomputable def ofInt : ℤ → ZFSet
 noncomputable def toZFInt : ℤ → ZFInt
   | .ofNat n => ZFInt.mk (0, ↑n)
   | .negSucc n => ZFInt.mk (↑n+1, 0)
-private def ofInt' : (n : ℤ) → PSet
+def ofInt' : (n : ℤ) → PSet
   | .ofNat 0 => {{∅}}
   | .ofNat (n+1) => {{∅}, {∅, .ofNat n}} -- (0, n)
   | .negSucc n => {{.ofNat (n+1)}, {∅, .ofNat (n+1)}} -- (n, 0)
@@ -932,7 +933,7 @@ theorem mem_Int_proj' {x : ZFSet} :
 namespace ZFInt
 
 open Classical in
-private noncomputable def outof : {x // x ∈ Int} → ZFInt := fun ⟨n, hn⟩ =>
+noncomputable def outof : {x // x ∈ Int} → ZFInt := fun ⟨n, hn⟩ =>
   have := mem_Int_proj' hn
   if case : n.π₁ = ∅ ∧ n.π₂ ∈ Nat then
     ZFInt.mk ⟨0, n.π₂, case.right⟩

@@ -51,10 +51,10 @@ section Coefficients
 
 variable (A Y : Finset G)
 
-private abbrev unionEquiv : Fin (A ∪ Y).card ≃ (A ∪ Y : Finset G) :=
+abbrev unionEquiv : Fin (A ∪ Y).card ≃ (A ∪ Y : Finset G) :=
   (A ∪ Y).equivFin.symm
 
-private def unionTuple : Fin (A ∪ Y).card → G :=
+def unionTuple : Fin (A ∪ Y).card → G :=
   fun i ↦ (unionEquiv A Y i : G)
 
 private def unionCoefficient (a : Fin (A ∪ Y).card → ℤ) (x : G) : ℤ := by
@@ -98,7 +98,7 @@ private theorem sum_unionCoefficient
 end Coefficients
 
 /-- The target which keeps the old character on `A` and is zero on the new set `Y`. -/
-private def stageTarget (A Y : Finset G) (old : G →+ UnitAddCircle) :
+def stageTarget (A Y : Finset G) (old : G →+ UnitAddCircle) :
     Fin (A ∪ Y).card → UnitAddCircle := by
   classical
   exact fun i ↦ if unionTuple A Y i ∈ A then old (unionTuple A Y i) else 0

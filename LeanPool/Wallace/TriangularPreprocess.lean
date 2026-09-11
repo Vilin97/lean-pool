@@ -237,15 +237,15 @@ theorem exists_index_gt_avoiding_finset
 
 /-- State of the recursive block selector.  `values l` contains the values already selected in
 block `l`; `last` is the last source index used. -/
-private structure BlockSelectionState (G : Type*) where
+structure BlockSelectionState (G : Type*) where
   last : ℕ
   values : ℕ → Finset G
 
-private def initialBlockSelectionState (G : Type*) : BlockSelectionState G where
+def initialBlockSelectionState (G : Type*) : BlockSelectionState G where
   last := 0
   values := fun _ => ∅
 
-private noncomputable def excludedAt
+noncomputable def excludedAt
     {G : Type*} [AddCommGroup G] (M block : ℕ → ℕ) (n : ℕ)
     (st : BlockSelectionState G) : Finset G := by
   classical
@@ -254,7 +254,7 @@ private noncomputable def excludedAt
 
 /-- The next source index: strictly later than the previous one and outside both the values
 already used in this block and every bounded forbidden equation over them. -/
-private def nextBlockIndex
+def nextBlockIndex
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) : ℕ :=
   Classical.choose <|
@@ -287,7 +287,7 @@ private theorem nextBlockIndex_not_forbidden
   exact (nextBlockIndex_spec u hu M block n st).2
     (Finset.mem_union_right _ <| forbidden_mem_forbiddenFinset h)
 
-private noncomputable def blockSelectionStep
+noncomputable def blockSelectionStep
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) :
     BlockSelectionState G := by
@@ -299,7 +299,7 @@ private noncomputable def blockSelectionStep
         (insert (u k) (st.values (block n))) }
 
 /-- States after the first `n` positions of the new sequence have been selected. -/
-private def blockSelectionStates
+def blockSelectionStates
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) : ℕ → BlockSelectionState G
   | 0 => initialBlockSelectionState G
@@ -454,7 +454,7 @@ private theorem exists_lt_next_blockStart
 
 /-- The unique block label whose consecutive half-open interval contains `n`. -/
 def blockOf (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (n : ℕ) : ℕ :=
-  Nat.find (exists_lt_next_blockStart N hN n)
+  Nat.find (private_decl% (exists_lt_next_blockStart N hN n))
 
 theorem blockOf_spec (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (n : ℕ) :
     blockStart N (blockOf N hN n) ≤ n ∧

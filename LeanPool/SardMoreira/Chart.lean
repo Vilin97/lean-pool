@@ -191,7 +191,7 @@ theorem fst_implicitFunction_chartImplicitDataEventuallyEq {f : E × F → ℝ} 
       =ᶠ[𝓝 ((chartImplicitData f a hfa hk hdf).rightFun a)] Prod.fst := by
   have := (continuousAt_const.prodMk continuousAt_id).eventually
     (chartImplicitData f a hfa hk hdf).rightFun_implicitFunction
-  rw [chartImplicitData_pt] at this
+  simp only [chartImplicitData_pt, ImplicitFunctionData.prodFun_apply] at this
   filter_upwards [this] with x hx
   change ((chartImplicitData f a hfa hk hdf).implicitFunction (f a) x).1 = x.1
   simpa only [fst_rightFun_chartImplicitData, chartImplicitData_leftFun, id_eq] using
@@ -316,6 +316,8 @@ theorem exists_dim_lt_map_nhdsWithin_eq (hs : ¬IsLargeAt k α s a)
   rcases hs with ⟨f, hfk, hf₀, hdf⟩
   set ψ := chartImplicitData f a (hfk.self_of_nhdsWithin has) hk hdf
   set g := ψ.implicitFunction 0
+  have hg_def : g = fun x => ψ.toOpenPartialHomeomorph.symm (0, x) :=
+    funext fun _ => ψ.implicitFunction_apply
   have hae : a ∈ ψ.toOpenPartialHomeomorph.source := by
     simpa [ψ] using ψ.pt_mem_toOpenPartialHomeomorph_source
   have hfa₀ : f a = 0 := hf₀.self_of_nhdsWithin has
@@ -345,8 +347,12 @@ theorem exists_dim_lt_map_nhdsWithin_eq (hs : ¬IsLargeAt k α s a)
       simp only [ψ, chartImplicitData_pt] at this
       apply this.eventually
       refine (ContDiffAt.continuousAt_fderiv ?_ (n := k) (mod_cast hk)).tendsto.comp hg_tendsto
-      simp +unfoldPartialApp only [ψ, ImplicitFunctionData.prodFun, chartImplicitData]
-      exact hfka.contDiffAt.prodMk (by fun_prop)
+      rw [show ψ.prodFun = fun x => (ψ.leftFun x, ψ.rightFun x) from
+        funext ψ.prodFun_apply]
+      simp only [ψ, chartImplicitData]
+      apply ContDiffAt.prodMk
+      · exact hfka.contDiffAt
+      · fun_prop
     rw [ψ.hasStrictFDerivAt.hasFDerivAt.fderiv]
     apply ContinuousLinearMap.isInvertible_equiv
   have HcontDiff : ∀ᶠ x in 𝓝 (ψ.rightFun a), (g x ∈ s → ContDiffMoreiraHolderAt k α g x) := by
@@ -354,8 +360,11 @@ theorem exists_dim_lt_map_nhdsWithin_eq (hs : ¬IsLargeAt k α s a)
       eventually_map, eventually_nhdsWithin_iff] at hfk
     filter_upwards [Hmem_target, HisInvertible, hfk] with x hx₁ hx₂ hx₃ hgx
     suffices ContDiffMoreiraHolderAt k α ψ.toOpenPartialHomeomorph.symm (0, x) from
-      this.comp (.prodMk .const .id) hk
-    apply OpenPartialHomeomorph.contDiffMoreiraHolderAt_symm _ hx₁ hx₂
+      by simpa only [hg_def, Function.comp_def] using
+        this.comp (.prodMk .const .id) hk
+    apply OpenPartialHomeomorph.contDiffMoreiraHolderAt_symm _ hx₁
+      (by simpa only [ImplicitFunctionData.toOpenPartialHomeomorph_coe,
+        g, ImplicitFunctionData.implicitFunction_apply] using hx₂)
     convert (hx₃ hgx).prodMk _ using 3
     · rw [ImplicitFunctionData.toOpenPartialHomeomorph_apply]
       simp [ψ]
@@ -374,13 +383,16 @@ theorem exists_dim_lt_map_nhdsWithin_eq (hs : ¬IsLargeAt k α s a)
       filter_upwards [hUo.eventually_mem hxU] with y hyU
       rw [← hU_fst y hyU]
     rw [this.fderiv_eq]
-    have : fderiv ℝ g x = _ :=
-      ψ.toOpenPartialHomeomorph.hasFDerivAt_symm_inverse (hU_target x hxU) (hUinv x hxU)
-      |>.comp x
-        (ContinuousLinearMap.inr ℝ ℝ (E × (fderiv ℝ f a ∘L .inr ℝ E F).ker)).hasFDerivAt |>.fderiv
-    rw [this, ContinuousLinearMap.coe_comp]
+    have hinv := ψ.toOpenPartialHomeomorph.hasFDerivAt_symm_inverse (hU_target x hxU)
+      (by simpa only [ImplicitFunctionData.toOpenPartialHomeomorph_coe,
+        g, ImplicitFunctionData.implicitFunction_apply] using hUinv x hxU)
+    have hderivative := (hinv.comp x
+      (ContinuousLinearMap.inr ℝ ℝ (E × (fderiv ℝ f a ∘L .inr ℝ E F).ker)).hasFDerivAt).fderiv
+    simp only [Function.comp_def, ← hg_def] at hderivative
+    rw [hderivative, ContinuousLinearMap.coe_comp]
     apply Injective.comp
-    · exact (hUinv _ hxU).inverse.injective
+    · simpa only [ImplicitFunctionData.toOpenPartialHomeomorph_coe,
+        g, ImplicitFunctionData.implicitFunction_apply] using (hUinv x hxU).inverse.injective
     · intro x y hxy
       exact congrArg Prod.snd hxy
   · exact Submodule.finrank_le _
@@ -391,9 +403,10 @@ theorem exists_dim_lt_map_nhdsWithin_eq (hs : ¬IsLargeAt k α s a)
   · refine ⟨hUmem, ?_⟩
     change g (ψ.rightFun a) ∈ s
     simpa [hga] using has
-  · simp only
-    rw [← map_implicitFunction_chartImplicitData_nhdsWithin_preimage hfka hk hdf _ hf₀ has,
-      nhdsWithin_inter_of_mem]
+  · have hmap : (𝓝[g ⁻¹' s] (ψ.rightFun a)).map g = 𝓝[s] a :=
+      map_implicitFunction_chartImplicitData_nhdsWithin_preimage hfka hk hdf s hf₀ has
+    change Filter.map (fun x ↦ (x.1, (g x).2)) (𝓝[U ∩ g ⁻¹' s] (ψ.rightFun a)) = _
+    rw [← hmap, nhdsWithin_inter_of_mem]
     · apply Filter.map_congr
       filter_upwards [mem_nhdsWithin_of_mem_nhds <| hUo.mem_nhds hUmem] with x hxU
       rw [← hU_fst x hxU]

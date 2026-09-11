@@ -75,27 +75,29 @@ private theorem relevantLabels_pairwise (index : ContinuumIndex ↪ ContinuumInd
 /-- Pairwise-disjoint refinements of the labels of all codes relevant to `D`. -/
 def refinedLabel (index : ContinuumIndex ↪ ContinuumIndex)
     (D : Set ContinuumIndex) (hD : D.Countable) : RelevantCode index D → Set ℕ := by
-  let : Countable (RelevantCode index D) := relevantCode_countable index D hD
+  let : Countable (RelevantCode index D) := by exact relevantCode_countable index D hD
   exact Classical.choose
     (exists_disjoint_refinement_countable
-      (fun a : RelevantCode index D ↦ label a.1) (relevantLabels_pairwise index D))
+      (fun a : RelevantCode index D ↦ label a.1) (private_decl% (relevantLabels_pairwise index D)))
 
 theorem refinedLabel_pairwise (index : ContinuumIndex ↪ ContinuumIndex)
     (D : Set ContinuumIndex) (hD : D.Countable) :
     Pairwise fun a b : RelevantCode index D ↦
       Disjoint (refinedLabel index D hD a) (refinedLabel index D hD b) := by
-  let : Countable (RelevantCode index D) := relevantCode_countable index D hD
+  let : Countable (RelevantCode index D) := by exact relevantCode_countable index D hD
   exact (Classical.choose_spec
     (exists_disjoint_refinement_countable
-      (fun a : RelevantCode index D ↦ label a.1) (relevantLabels_pairwise index D))).1
+      (fun a : RelevantCode index D ↦ label a.1)
+      (private_decl% (relevantLabels_pairwise index D)))).1
 
 theorem label_diff_refinedLabel_finite (index : ContinuumIndex ↪ ContinuumIndex)
     (D : Set ContinuumIndex) (hD : D.Countable) (a : RelevantCode index D) :
     (label a.1 \ refinedLabel index D hD a).Finite := by
-  let : Countable (RelevantCode index D) := relevantCode_countable index D hD
+  let : Countable (RelevantCode index D) := by exact relevantCode_countable index D hD
   exact (Classical.choose_spec
     (exists_disjoint_refinement_countable
-      (fun a : RelevantCode index D ↦ label a.1) (relevantLabels_pairwise index D))).2 a |>.2
+      (fun a : RelevantCode index D ↦ label a.1)
+      (private_decl% (relevantLabels_pairwise index D)))).2 a |>.2
 
 private theorem refinedLabel_unique (index : ContinuumIndex ↪ ContinuumIndex)
     (D : Set ContinuumIndex) (hD : D.Countable) {l : ℕ}

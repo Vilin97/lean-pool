@@ -5,6 +5,8 @@ Authors: Sven Manthe
 -/
 module
 
+import all LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+
 public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
 
 /-!

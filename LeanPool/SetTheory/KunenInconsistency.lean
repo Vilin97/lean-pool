@@ -162,7 +162,7 @@ def s (α : ν.ToType) : ℕ → κω := by
   · ext x; simp
   · apply sdiff_nonempty_of_mk_lt_mk
     refine lt_of_le_of_lt mk_range_le ?_
-    refine lt_of_lt_of_le (mk_Iio_ToType_lt _) ?_
+    refine lt_of_lt_of_le (private_decl% (mk_Iio_ToType_lt _)) ?_
     have equivType : {x : ℕ → κω | ∀ n, ↑(x n) ∈ X α} ≃ (ℕ → X α) := {
       toFun := fun | ⟨x, hx⟩, n => ⟨x n, hx n⟩,
       invFun := fun | x => ⟨fun n => ⟨↑(x n), X_subset_κω _ (x n).2⟩, fun n => (x n).2⟩,

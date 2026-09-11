@@ -270,7 +270,7 @@ instance : Infinite Carrier :=
   Cardinal.infinite_iff.mpr (mk_Carrier ▸ Cardinal.aleph0_le_beth _)
 
 /-- A copy of `ℕ` inside the carrier, along which heights are unbounded. -/
-private noncomputable def emb : ℕ ↪ Carrier := Infinite.natEmbedding Carrier
+noncomputable def emb : ℕ ↪ Carrier := Infinite.natEmbedding Carrier
 
 /-- The height of a carrier element: the inverse of `emb` on its range, arbitrary elsewhere. -/
 noncomputable def hgt (x : Carrier) : ℕ := Function.invFun emb x
@@ -281,7 +281,7 @@ def P (i : ℕ) : Lang.BoundedFormulaω Empty 1 :=
     (fun _ => Term.var (Sum.inr (0 : Fin 1)))
 
 /-- The countable conjunction `⋀ᵢ Pᵢ x₀`. -/
-private def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
+def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
 
 /-- The seed: `⋀ᵢ Pᵢ` first, then every `Pᵢ`. -/
 def seed : ℕ → Σ n, Lang.BoundedFormulaω Empty n := fun k =>

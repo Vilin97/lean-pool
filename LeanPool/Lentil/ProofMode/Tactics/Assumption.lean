@@ -5,6 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.ProofMode.Basic
+
 public import LeanPool.Lentil.ProofMode.Basic
 
 @[expose] public section
@@ -34,7 +36,7 @@ Outside proof mode, `tla_assumption` falls back to Lean's ordinary
 syntax (name := tlaAssumptionTac) "tla_assumption" : tactic
 
 -- CHECK If in the future Lean has built-in `findIdxMOpt`, use it instead
-private def findIdxMOpt (xs : List α) (p : α → TacticM Bool) : TacticM (Option Nat) :=
+private meta def findIdxMOpt (xs : List α) (p : α → TacticM Bool) : TacticM (Option Nat) :=
   go 0 xs
 where
   go (idx : Nat) : List α → TacticM (Option Nat)

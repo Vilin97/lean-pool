@@ -1507,7 +1507,7 @@ lemma _root_.PiMat.modAut_includeBlock :
   ext i
   by_cases h : j = i
   · subst i
-    simp [Matrix.includeBlock_apply_same, modAut, sig_apply]
+    simp [Matrix.includeBlock_apply_same, modAut, piSig, sig_apply]
   · simp [PiMat.modAut, Matrix.includeBlock_apply_ne_same _ h]
 
 omit [Fintype ι] [DecidableEq ι] in

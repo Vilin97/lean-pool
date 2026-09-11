@@ -35,7 +35,7 @@ theorem Entails_pull_pure {σ : Type u} {hyps : List (NamedPred σ)} {goal : pre
   rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]
   rwa [← Entails_pure_fact_intro]
 
-private def pullPureTacDSimps := #[``List.findIdx, ``List.findIdx.go, ``List.eraseIdx, ``String.reduceBEq,
+private meta def pullPureTacDSimps := #[``List.findIdx, ``List.findIdx.go, ``List.eraseIdx, ``String.reduceBEq,
   ``String.reduceBNe, ``Bool.cond_false, ``Bool.cond_true, ``Option.elim]
 
 /--

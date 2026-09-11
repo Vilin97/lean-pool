@@ -5,6 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import Batteries.Lean.Expr
+
 public import LeanPool.Lentil.ProofMode.Tactics.Revert
 public import LeanPool.Lentil.ProofMode.Tactics.Specialize
 

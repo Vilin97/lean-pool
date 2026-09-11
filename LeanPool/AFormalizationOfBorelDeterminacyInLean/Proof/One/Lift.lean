@@ -329,7 +329,7 @@ lemma winnable : H.Winnable := by
   exact congrArg principalOpen hux
 lemma exists_prefix : ∃ n h, (H.take n h).Won := ⟨H.x.val.length, by simpa using H.won⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-noncomputable def minLength := by
+noncomputable def minLength : ℕ := by
   classical
   exact Nat.find H.exists_prefix
 @[simp] lemma minLength_le : H.minLength ≤ H.x.val.length (α := no_index _) := by

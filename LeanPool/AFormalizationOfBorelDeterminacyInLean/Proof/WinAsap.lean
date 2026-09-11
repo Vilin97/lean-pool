@@ -63,7 +63,7 @@ section «Section2»
 variable {x : List A} (h : WinningPrefix G p x)
 
 /-- the length of the shortest prefix of `x` that is winning for `p` -/
-noncomputable def num := by
+noncomputable def num : ℕ := by
   classical
   exact Nat.find h
 lemma num_spec : (G.residual (x.take h.num)).ExistsWinning (p.residual (x.take h.num)) := by
@@ -193,7 +193,7 @@ lemma val_cast' {T T' : tree A} {b : T} {b' : T'} (hT : T = T')
   cast (by subst hT h; rfl) x = y ↔ x.val = y.val := by
     subst h hT; symm; apply Subtype.val_inj
 lemma cast_val {T y} (h : x = y) (a : subAt T x) :
-  Subtype.val (cast (by rw [h]) a) = a.val := by
+  Subtype.val (cast (show ↥(subAt T x) = ↥(subAt T y) by rw [h]) a) = a.val := by
   symm; apply (val_cast h a (cast (by rw [h]) a)).mp; rfl
 lemma hEq_drop_take {y} (hy : y ∈ subAt G.tree (x.take h.num)) (hxy) :
   HEq (Tree.drop _ (h.shrink.extend y).num

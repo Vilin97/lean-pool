@@ -341,13 +341,13 @@ def revMap : ℤ × ℤ → ℤ × ℤ := fun ⟨i, j⟩ => ⟨τ j, τ i⟩
 $s_\tau(a,b) = \#\{n \geq b : \tau(n) < a\}$, in the notation of
 *Equation (4)* (`eq:sa`) in [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 In the repository, this is denoted as `τ.s_raw a b`. -/
-private noncomputable def s_raw (a b : ℤ) : ℤ := ↑(southeastSet τ a b).ncard
+noncomputable def s_raw (a b : ℤ) : ℤ := ↑(southeastSet τ a b).ncard
 
 /-- The companion counting function $s_{\tau^{-1}}(b,a)$.
 
 In Lean this is written `τ.s'_raw b a`; later `dual_inverse_raw` identifies it with
 `(τ⁻¹).s_raw`. -/
-private noncomputable def s'_raw (b a : ℤ) : ℤ := ↑(northwestSet τ a b).ncard
+noncomputable def s'_raw (b a : ℤ) : ℤ := ↑(northwestSet τ a b).ncard
 
 private lemma dual_inverse_raw : τ.s'_raw = (τ⁻¹).s_raw := by
   funext b a
@@ -730,8 +730,8 @@ noncomputable def s : SlipFace := {
     intro a b
     rw [τ.b_step_raw a b]
     by_cases h : τ b < a <;> simp [h]
-  nonneg := τ.s_nonneg_raw
-  ge_diff := τ.s_ge_raw
+  nonneg := by exact τ.s_nonneg_raw
+  ge_diff := by exact τ.s_ge_raw
   small_a := by
     intro b
     obtain ⟨A, hA⟩ := τ.tend_zero_a_raw b
@@ -1337,18 +1337,21 @@ end Wings
 /-- The rightmost index whose image is the last value with `s` below `m` in row `b`. -/
 noncomputable def v (b : ℤ) {m : ℤ} (m_pos : m > 0) : ℤ :=
   τ⁻¹ ( Classical.choose <| Int.exists_greatest_of_bdd
-    (Wings.R_bddAbove τ b m) (Wings.R_nonempty τ b m m_pos) )
+    (private_decl% (Wings.R_bddAbove τ b m))
+      (private_decl% (Wings.R_nonempty τ b m m_pos)) )
 
 private lemma v_spec (b : ℤ) {m : ℤ} (m_pos : m > 0) :
   τ.s (τ (τ.v b m_pos)) b < m
   ∧ ∀ a : ℤ, τ.s a b < m → a ≤ τ (τ.v b m_pos) := by
   let v := τ.v b m_pos
   let τv := Classical.choose <| Int.exists_greatest_of_bdd
-    (Wings.R_bddAbove τ b m) (Wings.R_nonempty τ b m m_pos)
+    (private_decl% (Wings.R_bddAbove τ b m))
+      (private_decl% (Wings.R_nonempty τ b m m_pos))
   have τ_vs: τ v = τv := by simp only [AspPerm.v, mul_inv_cancel_eval, v, τv]
   let R := Wings.R τ b m
   have : τv ∈ R ∧ ∀ n : ℤ, n ∈ R → n ≤ τv := Classical.choose_spec
-    (Int.exists_greatest_of_bdd (Wings.R_bddAbove τ b m) (Wings.R_nonempty τ b m m_pos))
+    (Int.exists_greatest_of_bdd (private_decl% (Wings.R_bddAbove τ b m))
+      (private_decl% (Wings.R_nonempty τ b m m_pos)))
   rw [← τ_vs] at this
   simpa [v, R, Wings.R] using this
 
@@ -1409,18 +1412,21 @@ lemma τv_lt (b : ℤ) {m : ℤ} (m_pos : m > 0)
 /-- The rightmost index witnessing the dual lower bound `n` in row `b`. -/
 noncomputable def u (b : ℤ) {n : ℤ} (n_pos : n > 0) : ℤ :=
   τ⁻¹ <|Classical.choose <| Int.exists_greatest_of_bdd
-    (Wings.L_bddAbove τ b n n_pos) (Wings.L_nonnempty τ b n)
+    (private_decl% (Wings.L_bddAbove τ b n n_pos))
+      (private_decl% (Wings.L_nonnempty τ b n))
 
 private lemma u_spec (b : ℤ) {n : ℤ} (n_pos : n > 0) :
   τ⁻¹.s b (τ (τ.u b n_pos)) ≥ n
   ∧ ∀ a : ℤ, τ⁻¹.s b a ≥ n → a ≤ τ (τ.u b n_pos) := by
   let u := τ.u b n_pos
   let τu := Classical.choose <| Int.exists_greatest_of_bdd
-    (Wings.L_bddAbove τ b n n_pos) (Wings.L_nonnempty τ b n)
+    (private_decl% (Wings.L_bddAbove τ b n n_pos))
+      (private_decl% (Wings.L_nonnempty τ b n))
   have τ_us: τ u = τu := by simp only [AspPerm.u, mul_inv_cancel_eval, u, τu]
   let L := Wings.L τ b n
   have : τu ∈ L ∧ ∀ n : ℤ, n ∈ L → τu ≥ n := Classical.choose_spec
-    (Int.exists_greatest_of_bdd (Wings.L_bddAbove τ b n n_pos) (Wings.L_nonnempty τ b n))
+    (Int.exists_greatest_of_bdd (private_decl% (Wings.L_bddAbove τ b n n_pos))
+      (private_decl% (Wings.L_nonnempty τ b n)))
   rw [← τ_us] at this
   simpa [L, Wings.L] using this
 
@@ -1841,7 +1847,7 @@ lemma ess_asp_eq_ess_sf (τ : AspPerm) : τ.ess = τ.s.ess := by
 /-- The bounded-difference condition for an ASP permutation. -/
 def isBdiff : Prop := ∃ (M : ℤ), ∀ (n : ℤ), abs (n - τ n) ≤ M
 
-private def width_bound (N : ℤ) : Prop :=
+def width_bound (N : ℤ) : Prop :=
   ∀ (a b : ℤ), N ≤ abs (a - b) → τ.s a b = max 0 (a - b + τ.χ)
 
 

@@ -434,10 +434,10 @@ variable (hfresh_independent : ∀ l,
   BoundedIndependent (FusionSchedule.stageIndependenceBound l) (fresh l))
 variable (initial : G →+ UnitAddCircle)
 
-private abbrev states (l : ℕ) : FusionState G l :=
+abbrev states (l : ℕ) : FusionState G l :=
   fusionStates fresh enumeration x hfresh_card hfresh_independent initial l
 
-private abbrev step (l : ℕ) : FusionStep fresh enumeration x l (states fresh enumeration x
+abbrev step (l : ℕ) : FusionStep fresh enumeration x l (states fresh enumeration x
     hfresh_card hfresh_independent initial l) :=
   chosenFusionStep fresh enumeration x hfresh_card hfresh_independent l
     (states fresh enumeration x hfresh_card hfresh_independent initial l)

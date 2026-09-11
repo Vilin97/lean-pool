@@ -39,7 +39,7 @@ namespace Language
 variable {L : Language.{0, 0}}
 
 /-- The dummy language: one function and one relation symbol at every arity. -/
-private def dummyLang : Language.{0, 0} :=
+def dummyLang : Language.{0, 0} :=
   ⟨fun _ => Unit, fun _ => Unit⟩
 
 /-- The uniform countable target: `φ`'s generated sublanguage plus the dummies. -/

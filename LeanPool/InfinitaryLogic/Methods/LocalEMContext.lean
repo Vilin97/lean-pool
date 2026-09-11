@@ -524,7 +524,7 @@ def LocalEMContext.mkClass (ctx : LocalEMContext Λ J (M := M)) (t : Λ[[J]].Ter
 /-- A common support covering all argument representatives — the support over which a
 relation's deep
 truth is read. -/
-private noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (xs : Fin n → ctx.Carrier) : Finset J :=
   Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (xs i))
 

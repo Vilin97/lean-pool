@@ -342,7 +342,7 @@ private theorem schemaTermRel_congr {l : ℕ} (R : (localColim s₀).Relations l
 /-- The setoid on closed schema terms induced by the completed theory. -/
 def schemaTermSetoid : Setoid ((localColim s₀)[[ℕ]].Term Empty) where
   r := SchemaTermEq hM
-  iseqv := ⟨schemaTermEq_refl hM, schemaTermEq_symm hM, schemaTermEq_trans hM⟩
+  iseqv := by exact ⟨schemaTermEq_refl hM, schemaTermEq_symm hM, schemaTermEq_trans hM⟩
 
 /-- **The schema term-model carrier**: closed `(localColim s₀)[[ℕ]]` terms quotiented by the
 completed theory's equality. An `abbrev`, so `Quotient` lemmas and dot-notation apply

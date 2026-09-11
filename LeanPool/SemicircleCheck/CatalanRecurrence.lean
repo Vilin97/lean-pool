@@ -930,11 +930,11 @@ private lemma inside_closed {n : ℕ} (p : Pairing (n + 1)) (h_nc : p.IsNoncross
 noncomputable def restrictInsidePerm {n : ℕ} (p : Pairing (n + 1))
     (h_nc : p.IsNoncrossing) : Perm (Fin (2 * (extractK p h_nc).val)) where
   toFun j :=
-    let bounds := inside_closed p h_nc j
+    let bounds := private_decl% (inside_closed p h_nc j)
     ⟨(p.val ⟨j.val + 1, by have := j.isLt; have := extractK_le p h_nc; omega⟩).val - 1,
      by have := bounds.1; have := bounds.2; omega⟩
   invFun j :=
-    let bounds := inside_closed p h_nc j
+    let bounds := private_decl% (inside_closed p h_nc j)
     ⟨(p.val ⟨j.val + 1, by have := j.isLt; have := extractK_le p h_nc; omega⟩).val - 1,
      by have := bounds.1; have := bounds.2; omega⟩
   left_inv j := by
@@ -1013,7 +1013,8 @@ private lemma restrictInsidePerm_isPairing {n : ℕ} (p : Pairing (n + 1))
     (shifting indices by +1), contradicting noncrossing. -/
 private lemma restrictInsidePerm_isNoncrossing {n : ℕ} (p : Pairing (n + 1))
     (h_nc : p.IsNoncrossing) :
-    let q : Pairing _ := ⟨restrictInsidePerm p h_nc, restrictInsidePerm_isPairing p h_nc⟩
+    let q : Pairing _ :=
+      ⟨restrictInsidePerm p h_nc, (private_decl% (restrictInsidePerm_isPairing p h_nc))⟩
     q.IsNoncrossing := by
   intro q
   apply no_crossing_imp_IsNoncrossing
@@ -1062,8 +1063,8 @@ private lemma restrictInsidePerm_isNoncrossing {n : ℕ} (p : Pairing (n + 1))
     on 2(n+1) points with p(0) = 2k+1. -/
 noncomputable def insidePairing {n : ℕ} (p : Pairing (n + 1))
     (h_nc : p.IsNoncrossing) : NoncrossingPairing (extractK p h_nc).val :=
-  ⟨⟨restrictInsidePerm p h_nc, restrictInsidePerm_isPairing p h_nc⟩,
-   restrictInsidePerm_isNoncrossing p h_nc⟩
+  ⟨⟨restrictInsidePerm p h_nc, (private_decl% (restrictInsidePerm_isPairing p h_nc))⟩,
+   (private_decl% (restrictInsidePerm_isNoncrossing p h_nc))⟩
 
 /-- Helper: outside interval is closed under p (both bounds). -/
 private lemma outside_closed {n : ℕ} (p : Pairing (n + 1)) (h_nc : p.IsNoncrossing)
@@ -1082,14 +1083,14 @@ private lemma outside_closed {n : ℕ} (p : Pairing (n + 1)) (h_nc : p.IsNoncros
 noncomputable def restrictOutsidePerm {n : ℕ} (p : Pairing (n + 1))
     (h_nc : p.IsNoncrossing) : Perm (Fin (2 * (n - (extractK p h_nc).val))) where
   toFun j :=
-    let bound := outside_closed p h_nc j
+    let bound := private_decl% (outside_closed p h_nc j)
     ⟨(p.val ⟨j.val + 2 * (extractK p h_nc).val + 2, by
         have := j.isLt; have := extractK_le p h_nc; omega⟩).val -
       (2 * (extractK p h_nc).val + 2), by
       have hpi := (p.val ⟨j.val + 2 * (extractK p h_nc).val + 2, by omega⟩).isLt
       have := bound; omega⟩
   invFun j :=
-    let bound := outside_closed p h_nc j
+    let bound := private_decl% (outside_closed p h_nc j)
     ⟨(p.val ⟨j.val + 2 * (extractK p h_nc).val + 2, by
         have := j.isLt; have := extractK_le p h_nc; omega⟩).val -
       (2 * (extractK p h_nc).val + 2), by
@@ -1481,7 +1482,8 @@ private lemma restrictOutsidePerm_isPairing {n : ℕ} (p : Pairing (n + 1))
 /-- The restricted outside pairing is noncrossing. -/
 private lemma restrictOutsidePerm_isNoncrossing {n : ℕ} (p : Pairing (n + 1))
     (h_nc : p.IsNoncrossing) :
-    let q : Pairing _ := ⟨restrictOutsidePerm p h_nc, restrictOutsidePerm_isPairing p h_nc⟩
+    let q : Pairing _ :=
+      ⟨restrictOutsidePerm p h_nc, (private_decl% (restrictOutsidePerm_isPairing p h_nc))⟩
     q.IsNoncrossing := by
   intro q
   apply no_crossing_imp_IsNoncrossing
@@ -1526,8 +1528,8 @@ private lemma restrictOutsidePerm_isNoncrossing {n : ℕ} (p : Pairing (n + 1))
 noncomputable def outsidePairing {n : ℕ} (p : Pairing (n + 1))
     (h_nc : p.IsNoncrossing) :
     NoncrossingPairing (n - (extractK p h_nc).val) :=
-  ⟨⟨restrictOutsidePerm p h_nc, restrictOutsidePerm_isPairing p h_nc⟩,
-   restrictOutsidePerm_isNoncrossing p h_nc⟩
+  ⟨⟨restrictOutsidePerm p h_nc, (private_decl% (restrictOutsidePerm_isPairing p h_nc))⟩,
+   (private_decl% (restrictOutsidePerm_isNoncrossing p h_nc))⟩
 
 /-! ### Assembly: the inverse direction
 
@@ -1643,7 +1645,7 @@ noncomputable def assemblePerm (n : ℕ) (k : Fin (n + 1))
     (p_in : Perm (Fin (2 * k.val))) (p_out : Perm (Fin (2 * (n - k.val))))
     (hinv_in : ∀ x, p_in (p_in x) = x) (hinv_out : ∀ x, p_out (p_out x) = x) :
     Perm (Fin (2 * (n + 1))) :=
-  (assembleF_involutive n k p_in p_out hinv_in hinv_out).toPerm
+  ((private_decl% (assembleF_involutive n k p_in p_out hinv_in hinv_out))).toPerm
 
 /-- The assembled permutation is a pairing. -/
 private lemma assemblePerm_isPairing (n : ℕ) (k : Fin (n + 1))
@@ -1712,7 +1714,8 @@ private lemma assemblePerm_isNoncrossing (n : ℕ) (k : Fin (n + 1))
           change (p_in.val.val * p_in.val.val) x = x; simp [h])
       (by intro x; have h := p_out.val.property.1; rw [sq] at h
           change (p_out.val.val * p_out.val.val) x = x; simp [h])
-    let pairing : Pairing (n + 1) := ⟨ap, assemblePerm_isPairing n k p_in.val p_out.val⟩
+    let pairing : Pairing (n + 1) :=
+      ⟨ap, (private_decl% (assemblePerm_isPairing n k p_in.val p_out.val))⟩
     pairing.IsNoncrossing := by
   intro ap pairing
   apply no_crossing_imp_IsNoncrossing
@@ -1820,8 +1823,8 @@ noncomputable def catalanAssemble (n : ℕ)
     intro x; have h := p_out.val.property.1; rw [sq] at h
     change (p_out.val.val * p_out.val.val) x = x; simp [h]
   let ap := assemblePerm n k p_in.val.val p_out.val.val hinv_in hinv_out
-  ⟨⟨ap, assemblePerm_isPairing n k p_in.val p_out.val⟩,
-   assemblePerm_isNoncrossing n k p_in p_out⟩
+  ⟨⟨ap, (private_decl% (assemblePerm_isPairing n k p_in.val p_out.val))⟩,
+   (private_decl% (assemblePerm_isNoncrossing n k p_in p_out))⟩
 
 /-! ### Round-trip lemmas for the Catalan equivalence -/
 
@@ -1898,8 +1901,9 @@ private lemma extractK_of_assemble (n : ℕ) (k : Fin (n + 1))
       intro x; have h := p_out.val.property.1; rw [sq] at h
       change (p_out.val.val * p_out.val.val) x = x; simp [h]
     let ap := assemblePerm n k p_in.val.val p_out.val.val hinv_in hinv_out
-    let pairing : Pairing (n + 1) := ⟨ap, assemblePerm_isPairing n k p_in.val p_out.val⟩
-    let h_nc := assemblePerm_isNoncrossing n k p_in p_out
+    let pairing : Pairing (n + 1) :=
+      ⟨ap, (private_decl% (assemblePerm_isPairing n k p_in.val p_out.val))⟩
+    let h_nc := (private_decl% (assemblePerm_isNoncrossing n k p_in p_out))
     extractK pairing h_nc = k := by
   intro hinv_in hinv_out ap pairing h_nc
   apply Fin.ext
@@ -1970,7 +1974,8 @@ private lemma catalanEquiv_right_inv (n : ℕ)
     -- Need: (assembled ⟨j.val + 1, _⟩).val - 1 = (p_in.val.val ⟨j.val, _⟩).val
     -- assembled = assemblePerm = toPerm(assembleF)
     -- For j+1 in inside range, assembleF gives p_in(j+1-1) + 1 = p_in(j) + 1
-    have hek : (extractK _ (assemblePerm_isNoncrossing n k p_in p_out)).val = k.val :=
+    have hek :
+      (extractK _ ((private_decl% (assemblePerm_isNoncrossing n k p_in p_out)))).val = k.val :=
       congr_arg Fin.val (extractK_of_assemble n k p_in p_out)
     have hj_lt : j.val < 2 * k.val := by have := j.isLt; omega
     -- Reduce the assembled permutation to `assembleF`; the input `j + 1`
@@ -1988,20 +1993,23 @@ private lemma catalanEquiv_right_inv (n : ℕ)
     intro j
     simp only [catalanAssemble, outsidePairing,
                restrictOutsidePerm, Equiv.coe_fn_mk, Fin.val_mk]
-    have hek : (extractK _ (assemblePerm_isNoncrossing n k p_in p_out)).val = k.val :=
+    have hek :
+      (extractK _ ((private_decl% (assemblePerm_isNoncrossing n k p_in p_out)))).val = k.val :=
       congr_arg Fin.val (extractK_of_assemble n k p_in p_out)
     have hj_lt : j.val < 2 * (n - k.val) := by have := j.isLt; omega
     have hk_le : k.val ≤ n := by have := k.isLt; omega
     -- Unfold everything to assembleF application
     -- Show that assembleF applied to ⟨j + 2*(extractK..)+2, _⟩ gives outside branch
     -- The input index is > 2k+1, so the outside (else) branch fires
-    set ov := j.val + 2 * (extractK _ (assemblePerm_isNoncrossing n k p_in p_out)).val + 2 with hov
+    set ov :=
+      j.val + 2 *
+        (extractK _ (private_decl% (assemblePerm_isNoncrossing n k p_in p_out))).val + 2 with hov
     have h0 : ¬ (ov = 0) := by omega
     have ht : ¬ (ov = 2 * k.val + 1) := by omega
     have hout : ¬ (ov ≤ 2 * k.val) := by omega
     change (assembleF n k p_in.val.val p_out.val.val
       ⟨ov, _⟩).val -
-      (2 * (extractK _ (assemblePerm_isNoncrossing n k p_in p_out)).val + 2) =
+      (2 * (extractK _ ((private_decl% (assemblePerm_isNoncrossing n k p_in p_out)))).val + 2) =
       (p_out.val.val ⟨j.val, by omega⟩).val
     simp only [assembleF, h0, ht, hout, ↓reduceDIte, Fin.val_mk]
     have hfin : (⟨ov - (2 * k.val + 2), by omega⟩ :
@@ -2026,7 +2034,7 @@ noncomputable def catalanEquiv (n : ℕ) :
     change (Function.Involutive.toPerm _ _) x = p.val.val x
     simp only [Function.Involutive.toPerm]
     exact assembleF_eq_of_decompose p.val p.property x
-  right_inv := catalanEquiv_right_inv n
+  right_inv := by exact catalanEquiv_right_inv n
 
 /-! ## 5. Counting: NoncrossingPairing n has catalan n elements
 

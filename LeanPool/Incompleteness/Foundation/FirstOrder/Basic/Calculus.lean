@@ -352,7 +352,7 @@ instance : Tait.Axiomatized (SyntacticFormula L) (Theory L) where
 
 variable [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)]
 
-private def not_close' (φ) : T ⟹ [∼(∀∀φ), φ] :=
+def not_close' (φ) : T ⟹ [∼(∀∀φ), φ] :=
   have :
       T ⟹ [∃* ∼(@Rew.fixitr L 0 (fvSup φ) ▹ φ), φ] := instances (v := fun x ↦ &x) (em (φ := φ) (by
         simp) (by simp))
@@ -366,7 +366,7 @@ omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)
 /-- Imported declaration from the Incompleteness formalization. -/
 lemma «invClose!» (b : T ⊢! ∀∀φ) : T ⊢! φ := ⟨invClose b.get⟩
 
-private def deductionAux {Γ : Sequent L} : T ⟹ Γ → T \ {φ} ⟹ ∼(∀∀φ) :: Γ
+def deductionAux {Γ : Sequent L} : T ⟹ Γ → T \ {φ} ⟹ ∼(∀∀φ) :: Γ
   | axL Γ R v       => Tait.wkTail <| axL Γ R v
   | verum Γ         => Tait.wkTail <| verum Γ
   | and d₁ d₂       =>

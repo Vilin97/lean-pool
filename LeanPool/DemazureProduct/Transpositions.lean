@@ -107,8 +107,8 @@ private lemma sigmaFun_asp (S : Set ℤ) : isAsp (sigmaFun S) := by
 for $n \in S$. -/
 noncomputable def sigma (S : Set ℤ) (hS : NoConsecutive S) : AspPerm where
   func := sigmaFun S
-  bijective := ⟨sigmaFun_injective hS, sigmaFun_surjective hS⟩
-  asp := sigmaFun_asp S
+  bijective := by exact ⟨sigmaFun_injective hS, sigmaFun_surjective hS⟩
+  asp := by exact sigmaFun_asp S
 
 @[simp] private lemma sigma_apply (S : Set ℤ) (hS : NoConsecutive S) (n : ℤ) :
     sigma S hS n = sigmaFun S n := rfl
@@ -852,7 +852,7 @@ private lemma residual_sigma_eq_self (α : AspPerm) (S : Set ℤ) (hS : NoConsec
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 1/4.* -/
 theorem starSigma (α : AspPerm) (S : Set ℤ) (hS : NoConsecutive S) :
     α ⋆ sigma S hS =
-        α * sigma (risingSet α S) (noConsecutive_risingSet α hS) := by
+        α * sigma (risingSet α S) (by exact noConsecutive_risingSet α hS) := by
   -- Proof written by GPT 5.5.
   let R := risingSet α S
   let F := fallingSet α S
@@ -891,7 +891,7 @@ theorem starSigma (α : AspPerm) (S : Set ℤ) (hS : NoConsecutive S) :
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 2/4.* -/
 theorem residualSigma (α : AspPerm) (S : Set ℤ) (hS : NoConsecutive S) :
     α ◃ sigma S hS =
-        α * sigma (fallingSet α S) (noConsecutive_fallingSet α hS) := by
+        α * sigma (fallingSet α S) (by exact noConsecutive_fallingSet α hS) := by
   -- Proof written by GPT 5.5.
   let R := risingSet α S
   let F := fallingSet α S

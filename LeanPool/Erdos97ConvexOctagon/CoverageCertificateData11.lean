@@ -13,7 +13,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
-private def branchClaims_5_29_group_00 : Array NodeClaim :=
+def branchClaims_5_29_group_00 : Array NodeClaim :=
   #[⟨4, 5447385933821406238, 36240594489113854, 211107577362618,
       4356, 8589934592, 0, 8589934592, #[⟨6, [], [1262], [], []⟩]⟩,
     ⟨3, 5404320262384675870, 36240042585816318, 211107308927010,
@@ -255,7 +255,7 @@ private def branchClaims_5_29_group_00 : Array NodeClaim :=
       4360, 17180164096, 0, 32768, #[⟨3, [], [121], [61], []⟩,
         ⟨6, [], [], [62], []⟩]⟩]
 
-private def branchClaims_5_29_group_01 : Array NodeClaim :=
+def branchClaims_5_29_group_01 : Array NodeClaim :=
   #[⟨2, 324637191198, 36240454902676702, 70369819510784,
       3358, 65668, 0, 65540, #[⟨0, [], [391], [], []⟩,
         ⟨1, [], [], [63], []⟩,
@@ -492,7 +492,7 @@ private def branchClaims_5_29_group_01 : Array NodeClaim :=
         ⟨3, [], [380], [], []⟩,
         ⟨5, [], [144], [], []⟩]⟩]
 
-private def branchClaims_5_29_group_02 : Array NodeClaim :=
+def branchClaims_5_29_group_02 : Array NodeClaim :=
   #[⟨3, 3098476851557985310, 36240592333241598, 211106774150178,
       4005, 147456, 0, 147456, #[⟨2, [], [128], [], []⟩,
         ⟨3, [], [668], [], []⟩]⟩,
@@ -730,7 +730,7 @@ private def branchClaims_5_29_group_02 : Array NodeClaim :=
     ⟨3, 3674937621091609630, 36240592341630074, 211244748929026,
       3207, 131072, 0, 131072, #[⟨3, [], [286], [], []⟩]⟩]
 
-private def branchClaims_5_29_group_03 : Array NodeClaim :=
+def branchClaims_5_29_group_03 : Array NodeClaim :=
   #[⟨4, 4145282307175115806, 36240592341630206, 211245562645514,
       262, 524288, 0, 524288, #[⟨3, [], [420], [], []⟩]⟩,
     ⟨3, 4107283185319177246, 36240592341630074, 211245554223112,
@@ -919,7 +919,7 @@ def branchClaims5Row29 : BranchClaims :=
   ⟨#[branchClaims_5_29_group_00, branchClaims_5_29_group_01, branchClaims_5_29_group_02,
     branchClaims_5_29_group_03], 249, 248⟩
 
-private def branchClaims_5_31_group_00 : Array NodeClaim :=
+def branchClaims_5_31_group_00 : Array NodeClaim :=
   #[⟨4, 5162533412006292510, 36240594489081086, 140878960661734,
       3104, 0, 0, 0, #[]⟩,
     ⟨3, 5116090040849034270, 36240594480692478, 141470209090,
@@ -1126,7 +1126,7 @@ private def branchClaims_5_31_group_00 : Array NodeClaim :=
         ⟨5, [], [174], [62], []⟩,
         ⟨6, [], [898], [], []⟩]⟩]
 
-private def branchClaims_5_31_group_01 : Array NodeClaim :=
+def branchClaims_5_31_group_01 : Array NodeClaim :=
   #[⟨4, 5995699332063980574, 36240869367020790, 140875740533810,
       3361, 262144, 0, 262144, #[⟨3, [], [939], [], []⟩]⟩,
     ⟨3, 5980781158298315806, 36240869367020786, 140738298434562,
@@ -1330,7 +1330,7 @@ private def branchClaims_5_31_group_01 : Array NodeClaim :=
     ⟨3, 2810247008315010078, 36240594489113830, 36028797831087302,
       4412, 536870912, 0, 536870912, #[⟨5, [], [140], [], []⟩]⟩]
 
-private def branchClaims_5_31_group_02 : Array NodeClaim :=
+def branchClaims_5_31_group_02 : Array NodeClaim :=
   #[⟨3, 3819053324846001182, 36240594489105654, 36028935271088324,
       4424, 0, 0, 0, #[]⟩,
     ⟨4, 8225544085251320862, 36240869367020774, 36099304014247110,
@@ -1535,7 +1535,7 @@ private def branchClaims_5_31_group_02 : Array NodeClaim :=
       4088, 512, 8, 0, #[⟨0, [5], [], [], []⟩,
         ⟨1, [], [], [190], []⟩]⟩]
 
-private def branchClaims_5_31_group_03 : Array NodeClaim :=
+def branchClaims_5_31_group_03 : Array NodeClaim :=
   #[⟨4, 8261009417122114590, 36240869366988030, 212070186899648,
       621, 0, 0, 0, #[]⟩,
     ⟨3, 8214566045964856350, 36240869358599386, 71332696447040,
@@ -1743,7 +1743,7 @@ private def branchClaims_5_31_group_03 : Array NodeClaim :=
     ⟨3, 3674937604663962654, 36240594480692470, 211244481516642,
       4387, 16384, 0, 16384, #[⟨2, [], [284], [], []⟩]⟩]
 
-private def branchClaims_5_31_group_04 : Array NodeClaim :=
+def branchClaims_5_31_group_04 : Array NodeClaim :=
   #[⟨3, 3819052792739818526, 36240594480684278, 211244484658276,
       798, 320, 0, 320, #[⟨1, [], [619, 282], [], []⟩]⟩,
     ⟨2, 308729637918, 36240594480684262, 211107042559040,
@@ -1917,7 +1917,7 @@ private def branchClaims_5_31_group_04 : Array NodeClaim :=
       4459, 256, 16384, 256, #[⟨1, [], [1144], [], []⟩,
         ⟨2, [1], [], [], []⟩]⟩]
 
-private def branchClaims_5_31_group_05 : Array NodeClaim :=
+def branchClaims_5_31_group_05 : Array NodeClaim :=
   #[⟨2, 866085530654, 36240594489097416, 140741517509632,
       4456, 541440, 536871040, 16384, #[⟨1, [6], [], [316, 318], []⟩,
         ⟨2, [], [898], [], []⟩,
@@ -2109,7 +2109,7 @@ private def branchClaims_5_31_group_05 : Array NodeClaim :=
     ⟨3, 8142508297324882974, 36240869358632054, 71331624784928,
       935, 64, 0, 0, #[⟨1, [], [], [382], []⟩]⟩]
 
-private def branchClaims_5_31_group_06 : Array NodeClaim :=
+def branchClaims_5_31_group_06 : Array NodeClaim :=
   #[⟨2, 171039026206, 36240869358631974, 550563746816,
       3477, 541248, 0, 576, #[⟨1, [], [441, 148], [], []⟩,
         ⟨2, [], [], [381], []⟩,
@@ -2298,7 +2298,7 @@ private def branchClaims_5_31_group_06 : Array NodeClaim :=
     ⟨3, 5116089777497074718, 36240594480725198, 211109190093826,
       3553, 8192, 16384, 0, #[⟨2, [5], [], [446], []⟩]⟩]
 
-private def branchClaims_5_31_group_07 : Array NodeClaim :=
+def branchClaims_5_31_group_07 : Array NodeClaim :=
   #[⟨2, 600804191262, 36240594480725130, 211109185882112,
       3593, 16648, 25174150, 16640, #[⟨0, [6, 6], [], [447], []⟩,
         ⟨1, [6], [377], [], []⟩,
@@ -2428,7 +2428,7 @@ def branchClaims5Row31 : BranchClaims :=
     branchClaims_5_31_group_03, branchClaims_5_31_group_04, branchClaims_5_31_group_05,
     branchClaims_5_31_group_06, branchClaims_5_31_group_07], 486, 485⟩
 
-private def branchClaims_5_32_group_00 : Array NodeClaim :=
+def branchClaims_5_32_group_00 : Array NodeClaim :=
   #[⟨4, 5166755399220096030, 36240869366988030, 141428717524002,
       3215, 0, 0, 0, #[]⟩,
     ⟨3, 5116089903412177950, 36240869358599422, 4031255586,
@@ -2641,7 +2641,7 @@ private def branchClaims_5_32_group_00 : Array NodeClaim :=
     ⟨3, 3819053337162574878, 36240869367020726, 36028798369039392,
       338, 0, 0, 0, #[]⟩]
 
-private def branchClaims_5_32_group_01 : Array NodeClaim :=
+def branchClaims_5_32_group_01 : Array NodeClaim :=
   #[⟨2, 853152394270, 36240731928067234, 36028798365893632,
       4513, 533152, 536871168, 524960, #[⟨1, [5], [374, 147, 147], [], []⟩,
         ⟨2, [], [], [63], []⟩,
@@ -2874,7 +2874,7 @@ private def branchClaims_5_32_group_01 : Array NodeClaim :=
     ⟨3, 3819053187409144862, 36240869367004406, 36028798369005732,
       332, 805306368, 0, 805306368, #[⟨5, [], [335, 136], [], []⟩]⟩]
 
-private def branchClaims_5_32_group_02 : Array NodeClaim :=
+def branchClaims_5_32_group_02 : Array NodeClaim :=
   #[⟨3, 8142508829684821022, 36240869367004406, 36099441987944672,
       4532, 847249408, 8606711810, 847249408, #[⟨0, [5], [], [], []⟩,
         ⟨4, [5], [105], [], []⟩,
@@ -3100,7 +3100,7 @@ private def branchClaims_5_32_group_02 : Array NodeClaim :=
     ⟨4, 8225544084917873694, 36240869358632182, 36100129180644514,
       142, 0, 0, 0, #[]⟩]
 
-private def branchClaims_5_32_group_03 : Array NodeClaim :=
+def branchClaims_5_32_group_03 : Array NodeClaim :=
   #[⟨3, 8214566560826158110, 36240869358632178, 36100129178538112,
       3609, 4, 301989920, 0, #[⟨0, [], [], [191], []⟩,
         ⟨1, [2], [], [], []⟩,
@@ -3292,7 +3292,7 @@ private def branchClaims_5_32_group_03 : Array NodeClaim :=
       949, 16392, 0, 0, #[⟨0, [], [], [253], []⟩,
         ⟨2, [], [], [254], []⟩]⟩]
 
-private def branchClaims_5_32_group_04 : Array NodeClaim :=
+def branchClaims_5_32_group_04 : Array NodeClaim :=
   #[⟨4, 5991758563173231646, 36240731919678710, 36240182158572642,
       3167, 16384, 0, 0, #[⟨2, [], [], [], [515]⟩]⟩,
     ⟨4, 5995699212847180830, 36240869358632182, 36240182159612016,
@@ -3507,7 +3507,7 @@ private def branchClaims_5_32_group_04 : Array NodeClaim :=
       902, 16392, 0, 16392, #[⟨0, [], [122], [], []⟩,
         ⟨2, [], [347], [], []⟩]⟩]
 
-private def branchClaims_5_32_group_05 : Array NodeClaim :=
+def branchClaims_5_32_group_05 : Array NodeClaim :=
   #[⟨2, 710596389918, 36240869366987940, 70644966887424,
       4563, 40, 0, 0, #[⟨0, [], [], [318], []⟩,
         ⟨1, [], [], [319], []⟩]⟩,
@@ -3705,7 +3705,7 @@ private def branchClaims_5_32_group_05 : Array NodeClaim :=
         ⟨5, [0, 0, 0], [], [], []⟩,
         ⟨6, [0], [], [], []⟩]⟩]
 
-private def branchClaims_5_32_group_06 : Array NodeClaim :=
+def branchClaims_5_32_group_06 : Array NodeClaim :=
   #[⟨4, 6030601547335363614, 36240869358632182, 36240729230046258,
       3140, 0, 0, 0, #[]⟩,
     ⟨3, 5980780476457577502, 36240731919678582, 36099441985876994,

@@ -5,6 +5,14 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 module
 
+public meta import Lean.Meta.ArgsPacker
+
+public meta import Lean.Meta.Tactic.Cleanup
+
+public meta import Lean.Meta.Tactic.Rewrite
+
+public meta import Lean.Meta.Tactic.Delta
+
 public import Lean.Meta
 public import Lean.Elab
 public import LeanPool.Lean4Itree.Paco.PacoDefs
@@ -18,7 +26,7 @@ The elaborators, macros and syntax that drive parameterized-coinduction proofs
 point `plfp` and its accumulation principle `plfp_acc` from `PacoDefs`.
 -/
 
-@[expose] public section
+public meta section
 
 namespace Lean4Itree
 

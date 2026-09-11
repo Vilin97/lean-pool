@@ -117,7 +117,7 @@ theorem qamA.toMatrix [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
   rw [Matrix.conj, ← this, ← _root_.map_mul]
 
 @[reducible, instance]
-private noncomputable def has_smul.units_matrix_ne_zero : SMul ℂˣ { x : Matrix n n ℂ // x ≠ 0 }
+noncomputable def has_smul.units_matrix_ne_zero : SMul ℂˣ { x : Matrix n n ℂ // x ≠ 0 }
     where smul α x :=
     (⟨((α : ℂ) • x.1 : Matrix n n ℂ),
         smul_ne_zero (Units.ne_zero α) (Set.mem_ofPred.mp (Subtype.mem x))⟩ :

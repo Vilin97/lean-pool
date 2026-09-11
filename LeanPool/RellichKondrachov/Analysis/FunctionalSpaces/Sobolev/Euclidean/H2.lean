@@ -42,10 +42,8 @@ local instance instOpensMeasurableSpaceH2 : OpensMeasurableSpace E := by infer_i
 
 variable (μ : Measure E) [IsFiniteMeasureOnCompacts μ]
 
-private abbrev L2ℝ : Type _ := ↥(E →₂[μ] ℝ)
-private abbrev L2E : Type _ := ↥(E →₂[μ] E)
-private abbrev L2EE : Type _ := ↥(E →₂[μ] (E →L[ℝ] E))
-private abbrev H2Target : Type _ := L2ℝ (μ := μ) × (L2E (μ := μ) × L2EE (μ := μ))
+abbrev L2EE : Type _ := ↥(E →₂[μ] (E →L[ℝ] E))
+abbrev H2Target : Type _ := L2ℝ (μ := μ) × (L2E (μ := μ) × L2EE (μ := μ))
 
 /-- `C²` real-valued functions on `E` with compact support, as a submodule of `E → ℝ`. -/
 def C2c : Submodule ℝ (E → ℝ) where
@@ -190,8 +188,8 @@ private lemma toL2Hess_smul (c : ℝ) (f : ↥(C2c (E := E))) :
 /-- Linear map sending `C²_c` functions to the `L²` class of their Hessian. -/
 noncomputable def toL2HessLinear : ↥(C2c (E := E)) →ₗ[ℝ] L2EE (μ := μ) where
   toFun := toL2Hess (μ := μ) (E := E)
-  map_add' := toL2Hess_add (μ := μ) (E := E)
-  map_smul' := toL2Hess_smul (μ := μ) (E := E)
+  map_add' := by exact toL2Hess_add (μ := μ) (E := E)
+  map_smul' := by exact toL2Hess_smul (μ := μ) (E := E)
 
 /-- Linear map `C²_c → L²` (via the inclusion `C²_c ⊆ C¹_c`). -/
 noncomputable def toL2FromC2cLinear : ↥(C2c (E := E)) →ₗ[ℝ] L2ℝ (μ := μ) :=

@@ -13,7 +13,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
-private def branchClaims_6_31_group_00 : Array NodeClaim :=
+def branchClaims_6_31_group_00 : Array NodeClaim :=
   #[⟨3, 5548435579105502238, 36240594489113838, 36169534782571590,
       786, 0, 0, 0, #[]⟩,
     ⟨3, 6124896331408925726, 36240868293278966, 36169534783095878,
@@ -195,7 +195,7 @@ private def branchClaims_6_31_group_00 : Array NodeClaim :=
         ⟨5, [], [63, 203, 203], [], []⟩,
         ⟨6, [], [501, 501], [], []⟩]⟩]
 
-private def branchClaims_6_31_group_01 : Array NodeClaim :=
+def branchClaims_6_31_group_01 : Array NodeClaim :=
   #[⟨4, 3857052058242311198, 36240869367012606, 211244488332406,
       5490, 268435456, 0, 268435456, #[⟨5, [], [328], [], []⟩]⟩,
     ⟨3, 3819052936386372638, 36240869366979710, 211244479942768,
@@ -424,7 +424,7 @@ private def branchClaims_6_31_group_01 : Array NodeClaim :=
         ⟨2, [1], [], [], []⟩,
         ⟨4, [], [105], [], []⟩]⟩]
 
-private def branchClaims_6_31_group_02 : Array NodeClaim :=
+def branchClaims_6_31_group_02 : Array NodeClaim :=
   #[⟨2, 324030489630, 36240869366979706, 211243939924032,
       5505, 16779270, 0, 16777222, #[⟨0, [], [143, 390], [], []⟩,
         ⟨2, [], [], [127], []⟩,
@@ -647,7 +647,7 @@ private def branchClaims_6_31_group_02 : Array NodeClaim :=
     ⟨4, 5416986508541879326, 36240869367020782, 211244487826446,
       960, 524288, 0, 0, #[⟨3, [], [], [], [1013]⟩]⟩]
 
-private def branchClaims_6_31_group_03 : Array NodeClaim :=
+def branchClaims_6_31_group_03 : Array NodeClaim :=
   #[⟨3, 5404320134589899806, 36240869367020750, 211243948334082,
       5467, 2048, 0, 0, #[⟨2, [], [], [191], []⟩]⟩,
     ⟨2, 581745304606, 36240868293278854, 211243948315648,
@@ -841,7 +841,7 @@ def branchClaims6Row31 : BranchClaims :=
   ⟨#[branchClaims_6_31_group_00, branchClaims_6_31_group_01, branchClaims_6_31_group_02,
     branchClaims_6_31_group_03], 250, 249⟩
 
-private def branchClaims_6_32_group_00 : Array NodeClaim :=
+def branchClaims_6_32_group_00 : Array NodeClaim :=
   #[⟨4, 6028350032147178526, 36240731928034558, 36240182158064674,
       5286, 16384, 0, 0, #[⟨2, [], [], [], [1064]⟩]⟩,
     ⟨3, 5980780761083077662, 36240731928034422, 36099441985354754,
@@ -1046,7 +1046,7 @@ private def branchClaims_6_32_group_00 : Array NodeClaim :=
     ⟨3, 2810246894735385630, 36240731928034558, 36169811803247650,
       5545, 0, 16384, 0, #[⟨2, [5], [], [], []⟩]⟩]
 
-private def branchClaims_6_32_group_01 : Array NodeClaim :=
+def branchClaims_6_32_group_01 : Array NodeClaim :=
   #[⟨4, 7653023869042222110, 36240869366988030, 36240182159104048,
       5287, 8, 0, 0, #[⟨0, [], [], [], [1067]⟩]⟩,
     ⟨3, 7638105695276557342, 36240731928034554, 36240182155958272,
@@ -1278,7 +1278,7 @@ private def branchClaims_6_32_group_01 : Array NodeClaim :=
     ⟨4, 3292694876471747614, 36240869367004414, 36240867742750760,
       5402, 4, 0, 0, #[⟨0, [], [], [], [1070]⟩]⟩]
 
-private def branchClaims_6_32_group_02 : Array NodeClaim :=
+def branchClaims_6_32_group_02 : Array NodeClaim :=
   #[⟨3, 3242592330617250846, 36240869366996222, 36099443059591208,
       1078, 536870912, 16793866, 0, #[⟨0, [5, 5], [], [], []⟩,
         ⟨1, [5], [], [], []⟩,
@@ -1502,7 +1502,7 @@ private def branchClaims_6_32_group_02 : Array NodeClaim :=
     ⟨4, 3148298196256089118, 36240869367020734, 36240865601010850,
       5192, 2048, 0, 0, #[⟨2, [], [], [], [1073]⟩]⟩]
 
-private def branchClaims_6_32_group_03 : Array NodeClaim :=
+def branchClaims_6_32_group_03 : Array NodeClaim :=
   #[⟨3, 3098477125378303006, 36240869367020718, 36099440917888002,
       5539, 796672, 0, 272384, #[⟨2, [], [831, 654], [], []⟩,
         ⟨3, [], [154], [191], []⟩]⟩,
@@ -1700,7 +1700,7 @@ private def branchClaims_6_32_group_03 : Array NodeClaim :=
         ⟨5, [0], [], [], []⟩,
         ⟨6, [0], [], [], []⟩]⟩]
 
-private def branchClaims_6_32_group_04 : Array NodeClaim :=
+def branchClaims_6_32_group_04 : Array NodeClaim :=
   #[⟨0, 14214174, 36240731391138816, 36028797287399424,
       2918, 3455286783, 0, 3253763073, #[⟨0, [], [192], [11, 30, 44, 57], []⟩,
         ⟨1, [], [], [67, 78, 92, 114], []⟩,

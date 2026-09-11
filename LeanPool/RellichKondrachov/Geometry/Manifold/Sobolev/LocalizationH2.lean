@@ -54,9 +54,6 @@ namespace FiniteChartData
 
 variable (d : FiniteChartData (H := H) (M := M) I)
 
-private abbrev chart (i : d.ι) : PartialEquiv M E :=
-  extChartAt I (d.center i)
-
 private abbrev Iℝ : ModelWithCorners ℝ ℝ ℝ := 𝓘(ℝ, ℝ)
 
 omit [CompleteSpace E] [IsManifold I (1 : WithTop ℕ∞) M]

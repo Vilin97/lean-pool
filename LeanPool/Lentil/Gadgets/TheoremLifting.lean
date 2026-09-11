@@ -10,7 +10,7 @@ public import LeanPool.Lentil.Basic
 
 /-! Gadgets for lifting a propositional theorem to the level of temporal logic. -/
 
-@[expose] public section
+public meta section
 
 namespace TLA.Lifting
 
@@ -127,7 +127,7 @@ private def guessWhereToStartAux (es xs : List Expr) : MetaM Nat :=
 
 /-- Given `thmStmt` being `x₁ → x₂ → ⋯ → xₙ`, find the longest suffix `xₘ → ⋯ → xₙ`
     such that each `xᵢ` is a `Prop` and independent. -/
-private def guessWhereToStart (thmStmt : Expr) : MetaM Nat := do
+def guessWhereToStart (thmStmt : Expr) : MetaM Nat := do
   forallTelescope thmStmt fun xs body =>
     guessWhereToStartAux [body] xs.reverse.toList
 

@@ -102,9 +102,10 @@ def mapVecOfBotTopSides : (k : Fin 3) → C(botTopSidesCover n k, Z) :=
       apply (f01 1).hom.continuous.comp
       fun_prop⟩
   let gs : C(sides.{u} n, Z) :=
-    { toFun := fun ⟨⟨y, _⟩, _⟩ ↦
+    { toFun := fun ⟨⟨y, hy⟩, hs⟩ ↦
         fs ⟨(Cube.splitAtLast y).fst,
-          ⟨(Cube.splitAtLast y).snd, splitAtLast_snd_mem_boundary_of_mem_sides ‹_›⟩ ⟩
+          ⟨(Cube.splitAtLast y).snd,
+            splitAtLast_snd_mem_boundary_of_mem_sides.{u} (y := ⟨y, hy⟩) hs⟩ ⟩
       continuous_toFun := by fun_prop }
   Fin.cons g0 <| Fin.cons g1 <| Fin.cons gs <| finZeroElim
 

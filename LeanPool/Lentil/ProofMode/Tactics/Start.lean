@@ -5,10 +5,14 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.ProofMode.Basic
+
+public meta import LeanPool.Lentil.Expr
+
 public import LeanPool.Lentil.ProofMode.Basic
 public import LeanPool.Lentil.Expr
 
-@[expose] public section
+public meta section
 
 namespace TLA.ProofMode
 

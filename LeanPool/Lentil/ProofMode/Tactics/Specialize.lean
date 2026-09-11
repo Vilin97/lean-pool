@@ -5,6 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.ProofMode.Basic
+
 public import LeanPool.Lentil.ProofMode.Tactics.Rename
 
 @[expose] public section
@@ -60,10 +62,10 @@ private theorem Entails_specializeHyp_aux
   ((repeatedAnd subHyps)) |-tla- (newHyp) → Entails hyps' goal → Entails hyps goal := by
   intro h1 h2
   rcases h with rfl | ⟨hidx, rfl⟩
-  on_goal 1=> exact h2
+  · exact h2
   apply Entails_add_new (newHypName := (hyps[idx]'hidx).name)
-  on_goal 2=> apply h1
-  on_goal 1=> exact hinc
+  · exact hinc
+  · exact h1
   unfold Entails
   have htmp2 := repeatedAnd_modifyHyp_reorder hyps _ hidx fun ⟨name, _⟩ => NamedPred.mk name newHyp
   dsimp only at htmp2
@@ -201,7 +203,7 @@ end
 
 end
 
-private def specializeTacDSimps := #[``replaceChosenPred, ``modifyHypByName, ``List.findIdx?, ``List.findIdx?.go,
+private meta def specializeTacDSimps := #[``replaceChosenPred, ``modifyHypByName, ``List.findIdx?, ``List.findIdx?.go,
   ``String.reduceBEq, ``String.reduceBNe, ``dreduceIte, ``Option.elim,
   ``Bool.false_eq_true, ``List.modify, ``List.modifyTailIdx, ``List.modifyTailIdx.go,
   ``List.modifyHead]
@@ -210,7 +212,7 @@ private def specializeTacDSimps := #[``replaceChosenPred, ``modifyHypByName, ``L
 hypothesis list back to the literal proof-mode context. Callers build repeated
 specialization by invoking this after each argument, so each step sees the
 predicate produced by the previous step. -/
-def tlaSpecializeStep (pos : TemporalHypLoc) (arg : TSyntax `term) : TacticM Unit := withMainContext do
+meta def tlaSpecializeStep (pos : TemporalHypLoc) (arg : TSyntax `term) : TacticM Unit := withMainContext do
   -- FIXME: Repetitively running `recognizeEntailsHypsFromGoal` and `find?` on it
   -- might be slow in some extreme cases?
   let some (_, hyps) ← recognizeEntailsHypsFromGoal | throwError "tla_specialize: failed to read the hypotheses from the goal"

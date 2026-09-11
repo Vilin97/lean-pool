@@ -5,12 +5,14 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.ProofMode.Basic
+
 public import Lean.Meta.Tactic.Generalize
 public import Lean.Meta.CollectFVars
 public import Lean.Elab.Tactic.Config
 public import LeanPool.Lentil.ProofMode.Basic
 
-@[expose] public section
+public meta section
 
 namespace TLA.ProofMode
 

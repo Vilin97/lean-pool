@@ -59,7 +59,7 @@ def LocallyAdmissible {R : Type w} {I : Type u} [AddCommMonoid R] [One R] [LT I]
       (nhds (character (Finsupp.single ⟨E.codeIndex c, hc⟩ 1)))
 
 /-- The character on a direct sum induced by its coordinate characters. -/
-private def finsuppAddHom {R : Type w} {I : Type u} [AddCommMonoid R]
+def finsuppAddHom {R : Type w} {I : Type u} [AddCommMonoid R]
     (coordinates : I → (R →+ UnitAddCircle)) : (I →₀ R) →+ UnitAddCircle :=
   Finsupp.liftAddHom coordinates
 
@@ -70,20 +70,20 @@ private theorem finsuppAddHom_single {R : Type w} {I : Type u} [AddCommMonoid R]
   simp [finsuppAddHom]
 
 /-- Totalize the coordinate characters available below a recursive stage. -/
-private def stageCoordinates {R : Type w} {I : Type u} [AddCommMonoid R] [LT I]
+def stageCoordinates {R : Type w} {I : Type u} [AddCommMonoid R] [LT I]
     [DecidableRel ((· < ·) : I → I → Prop)] (i : I)
     (previous : ∀ j, j < i → (R →+ UnitAddCircle)) : I → (R →+ UnitAddCircle) :=
   fun j ↦ if h : j < i then previous j h else 0
 
 /-- Evaluate a prepared term using only coordinates below the current stage. -/
-private def stageEvaluation {R : Type w} {I : Type u} [AddCommMonoid R] [LT I]
+def stageEvaluation {R : Type w} {I : Type u} [AddCommMonoid R] [LT I]
     [DecidableRel ((· < ·) : I → I → Prop)] (E : Data R I) (i : I)
     (previous : ∀ j, j < i → (R →+ UnitAddCircle))
     (c : E.Code) (n : ℕ) : UnitAddCircle :=
   finsuppAddHom (stageCoordinates i previous) (E.prepared c n)
 
 /-- The compact ultrafilter limit selected at a code coordinate. -/
-private def compactStageLimit {R : Type w} {I : Type u} [AddCommMonoid R] [LT I]
+def compactStageLimit {R : Type w} {I : Type u} [AddCommMonoid R] [LT I]
     [DecidableRel ((· < ·) : I → I → Prop)] (E : Data R I) (i : I)
     (previous : ∀ j, j < i → (R →+ UnitAddCircle))
     (c : E.Code) : UnitAddCircle :=
@@ -100,7 +100,7 @@ private theorem finsuppAddHom_eq_of_eq_on_support
   rw [h i hi]
 
 /-- One step of the well-founded coordinate recursion. -/
-private def coordinateStep
+def coordinateStep
     {R : Type w} {I : Type u} [AddCommMonoid R] [One R] [LinearOrder I]
     (extension : CoordinateExtension R) (E : Data R I) (D : Set I)
     (character : (D →₀ R) →+ UnitAddCircle) (i : I)
@@ -114,7 +114,7 @@ private def coordinateStep
       0
 
 /-- The coordinate characters constructed by well-founded recursion. -/
-private def globalCoordinate {R : Type w} {I : Type u} [AddCommMonoid R] [One R]
+def globalCoordinate {R : Type w} {I : Type u} [AddCommMonoid R] [One R]
     [LinearOrder I] [WellFoundedLT I] (extension : CoordinateExtension R)
     (E : Data R I) (D : Set I) (character : (D →₀ R) →+ UnitAddCircle) :
     I → (R →+ UnitAddCircle) :=

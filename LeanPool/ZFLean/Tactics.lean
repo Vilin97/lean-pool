@@ -5,6 +5,8 @@ Authors: Vincent Trélat
 -/
 module
 
+public meta import Lean.LabelAttribute
+
 public import Mathlib.CategoryTheory.Category.Basic
 
 /-!
@@ -13,7 +15,7 @@ public import Mathlib.CategoryTheory.Category.Basic
 Imported Lean Pool material for `LeanPool.ZFLean.Tactics`.
 -/
 
-@[expose] public section
+public meta section
 /-- Imported ZFLean declaration. -/
 register_label_attr zrel
 /-- Imported ZFLean declaration. -/

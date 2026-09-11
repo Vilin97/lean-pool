@@ -438,7 +438,7 @@ private lemma fdBoundary_H_eq_fdBoundary_on_13 (H : ℝ) {t : ℝ}
 
 omit f hf in
 private lemma norm_ge_one_of_normSq_ge_one {z : ℂ} (h : normSq z ≥ 1) : ‖z‖ ≥ 1 :=
-  calc ‖z‖ = Real.sqrt (normSq z) := rfl
+  calc ‖z‖ = Real.sqrt (normSq z) := RCLike.sqrt_normSq_eq_norm.symm
     _ ≥ Real.sqrt 1 := Real.sqrt_le_sqrt h
     _ = 1 := Real.sqrt_one
 

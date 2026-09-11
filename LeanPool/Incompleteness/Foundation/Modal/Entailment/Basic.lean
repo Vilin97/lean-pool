@@ -624,7 +624,7 @@ private lemma unnec_of_mdp_aux [ModalDisjunctive 𝓢] (h : 𝓢 ⊢! □φ) : �
 
 noncomputable instance unnecessitationOfModalDisjunctive [ModalDisjunctive 𝓢] :
     Unnecessitation 𝓢 where
-  unnec h := (unnec_of_mdp_aux ⟨h⟩).some
+  unnec h := (private_decl% (unnec_of_mdp_aux ⟨h⟩)).some
 
 end «lp_section_24»
 

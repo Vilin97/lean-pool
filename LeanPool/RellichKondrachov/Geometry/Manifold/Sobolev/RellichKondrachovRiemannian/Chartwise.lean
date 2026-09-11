@@ -86,7 +86,7 @@ open RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean
 
 variable (i : dR.d.ι)
 
-private noncomputable def eL2RangeChartVol (i : dR.d.ι)
+noncomputable def eL2RangeChartVol (i : dR.d.ι)
     (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F] :
     let μM :=
       RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure (I := I) (M := M)

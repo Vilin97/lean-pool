@@ -55,8 +55,9 @@ theorem paperTransvection_square (i j : I) (hij : i ≠ j) (f : R) :
     paperTransvection i j hij f * paperTransvection i j hij f = 1 := by
   apply Subtype.ext
   have hself : Matrix.single i j f + Matrix.single i j f = 0 := by
-    ext r s
-    exact CharTwo.add_self_eq_zero _
+    apply Matrix.ext
+    intro r s
+    exact CharTwo.add_self_eq_zero (Matrix.single i j f r s)
   change ((1 : M) + Matrix.single i j f) *
     ((1 : M) + Matrix.single i j f) = 1
   simp only [Matrix.mul_add, Matrix.add_mul,

@@ -5,13 +5,15 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.Expr
+
 public import Lean
 public import LeanPool.Lentil.Rules.Basic
 public import LeanPool.Lentil.Expr
 
 /-! Gadgets for providing different variants of a proven theorem. -/
 
-@[expose] public section
+public meta section
 
 namespace TLA.Deriving
 

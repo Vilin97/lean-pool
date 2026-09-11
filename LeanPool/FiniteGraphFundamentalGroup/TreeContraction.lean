@@ -69,7 +69,7 @@ theorem graphTreeRootPath_cons {a b : V} (e : a ⟶ b) :
   rw [h]
   rfl
 
-private def treeContractionCoordinate (t s : I) : I :=
+def treeContractionCoordinate (t s : I) : I :=
   ⟨(1 - (s : ℝ)) * ((1 + (t : ℝ)) / 2), by
     have hs : 0 ≤ 1 - (s : ℝ) := by linarith [s.2.2]
     have hs' : 1 - (s : ℝ) ≤ 1 := by linarith [s.2.1]
@@ -120,8 +120,8 @@ theorem treeContractionCoordinate_one_right (t : I) :
 /-- The square which contracts the cell of an edge towards the root. -/
 def graphTreeEdgeContraction (e : Quiver.Total V) : C(I × I, graphRealization V) where
   toFun p := graphTreeRootPath e.right (treeContractionCoordinate p.1 p.2)
-  continuous_toFun :=
-    (graphTreeRootPath e.right).continuous.comp continuous_treeContractionCoordinate
+  continuous_toFun := by
+    exact (graphTreeRootPath e.right).continuous.comp continuous_treeContractionCoordinate
 
 /-- The path which contracts a vertex of the tree to the root. -/
 def graphTreeVertexContraction (v : V) : C(I, graphRealization V) :=

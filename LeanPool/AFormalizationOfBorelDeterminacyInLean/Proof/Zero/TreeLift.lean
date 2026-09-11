@@ -412,7 +412,7 @@ lemma x_mem_tree_short h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Pl
 def WinnableOrLost := ∃ h, (H.lift h).Winnable ∨ (H.lift h).Lost
 variable (hWL : H.WinnableOrLost)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-noncomputable def wLLift' := by
+noncomputable def wLLift' : WLLift' hyp := by
   classical
   exact
     if hW : (H.lift hWL.1).Winnable then

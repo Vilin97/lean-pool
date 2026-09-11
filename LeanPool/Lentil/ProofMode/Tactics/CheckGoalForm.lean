@@ -5,9 +5,11 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.ProofMode.Basic
+
 public import LeanPool.Lentil.ProofMode.Basic
 
-@[expose] public section
+public meta section
 
 namespace TLA.ProofMode
 

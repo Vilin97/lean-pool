@@ -83,18 +83,18 @@ def continuumBasis (hcard : #G = 𝔠) :
 
 /-- A numerator in `G` representing a vector of the chosen basis of the divisible hull. -/
 def basisNumerator (hcard : #G = 𝔠) (i : TriangularPreprocess.ContinuumIndex) : G :=
-  Classical.choose (exists_divisibleHull_mk (G := G) (continuumBasis hcard i))
+  Classical.choose (private_decl% (exists_divisibleHull_mk (G := G) (continuumBasis hcard i)))
 
 /-- The positive denominator attached to `basisNumerator`. -/
 def basisDenominator (hcard : #G = 𝔠) (i : TriangularPreprocess.ContinuumIndex) : ℕ+ :=
   Classical.choose (Classical.choose_spec
-    (exists_divisibleHull_mk (G := G) (continuumBasis hcard i)))
+    (private_decl% (exists_divisibleHull_mk (G := G) (continuumBasis hcard i))))
 
 theorem basisFraction (hcard : #G = 𝔠) (i : TriangularPreprocess.ContinuumIndex) :
     DivisibleHull.mk (basisNumerator hcard i) (basisDenominator hcard i) =
       continuumBasis hcard i :=
   Classical.choose_spec (Classical.choose_spec
-    (exists_divisibleHull_mk (G := G) (continuumBasis hcard i)))
+    (private_decl% (exists_divisibleHull_mk (G := G) (continuumBasis hcard i))))
 
 theorem denominator_smul_basis (hcard : #G = 𝔠)
     (i : TriangularPreprocess.ContinuumIndex) :

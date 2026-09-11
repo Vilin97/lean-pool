@@ -251,7 +251,7 @@ namespace ControlledAdaptiveComplex
 variable (hU : IsOpen U) (f : U → Plane) (hf : Continuous f)
   (phi : U → ℝ) (hphi : StronglyPositiveOn Set.univ phi)
 
-private noncomputable abbrev L : LocallyFiniteTriangleComplex U :=
+noncomputable abbrev L : LocallyFiniteTriangleComplex U :=
   K.controlledAdaptiveComplex U hU f hf phi hphi
 
 /-- Each adaptive face inherits one quantitative scale from the cover member containing it. -/
@@ -451,7 +451,7 @@ variable (hU : IsOpen U) (V : Set Plane) (hV : IsOpen V)
   (f : U → Plane) (hf : Continuous f) (hmem : ∀ x, f x ∈ V)
   (phi : U → ℝ) (hphi : StronglyPositiveOn Set.univ phi)
 
-private noncomputable abbrev R : LocallyFiniteTriangleComplex U :=
+noncomputable abbrev R : LocallyFiniteTriangleComplex U :=
   K.regionControlledAdaptiveComplex U hU V hV f hf hmem phi hphi
 
 /-- The adaptive face-boundary estimate for the frontier-reduced tolerance. -/

@@ -5,6 +5,8 @@ Authors: Qiyuan Zhao
 -/
 module
 
+public meta import LeanPool.Lentil.ProofMode.Basic
+
 public import LeanPool.Lentil.ProofMode.Basic
 
 @[expose] public section
@@ -53,11 +55,11 @@ leaves only `hq : q` in the proof-mode context.
 -/
 syntax (name := tlaClearTac) "tla_clear" (ppSpace colGt ident)+ : tactic
 
-private def clearTacDSimps := #[``List.filter, ``List.contains, ``List.elem, ``or, ``and, ``not,
+meta def clearTacDSimps := #[``List.filter, ``List.contains, ``List.elem, ``or, ``and, ``not,
   ``String.reduceBEq, ``String.reduceBNe, ``Bool.false_or, ``Bool.or_false]
 
 /-- Clear the proof-mode hypotheses with the given names. -/
-def tlaClearByName (name : List String) : TacticM Unit := do
+meta def tlaClearByName (name : List String) : TacticM Unit := do
   evalTactic <| ← `(tactic| refine $(mkIdent ``Entails_clear) ($(quote name)) ?_)
   postDSimpAfterApplyingReflectionTheorem clearTacDSimps
 

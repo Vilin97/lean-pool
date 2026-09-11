@@ -195,8 +195,8 @@ private lemma asp_bijective {s : SlipFace} (hsub : s.submodular) :
 /-- The ASP permutation associated to a submodular slipface. It can be reconstructed from the set
 $\Gamma$ in the manner described in Section 4 of [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 noncomputable def asp {s : SlipFace} (hsub : s.submodular) : AspPerm where
-  func := fun b => (unique_a hsub b).choose
-  bijective := asp_bijective hsub
+  func := fun b => (private_decl% (unique_a hsub b)).choose
+  bijective := by exact asp_bijective hsub
   asp := by
     let S := {b : ℤ | b * (asp_func hsub b) < 0}
     suffices S.Finite by exact this
@@ -379,7 +379,7 @@ the $M_{\alpha \star \beta}(a,b)$ of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). In Lean that rightmost
 minimizer is `(AspValley α β a b).M`. *Definition 4.6 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), unlabeled in source.* -/
-private noncomputable def AspValley (α β : AspPerm) (a b : ℤ) : Valley where
+noncomputable def AspValley (α β : AspPerm) (a b : ℤ) : Valley where
     f := fun l => α.s a l + β.s l b
     rises := by
       intro m
@@ -1057,7 +1057,7 @@ $$
 
 In Lean this operation is written `α ⋆ β`. -/
 noncomputable def star (α β : AspPerm) : AspPerm :=
-  Classical.choose (star_exists α β)
+  Classical.choose (private_decl% (star_exists α β))
 
 /-- The Demazure product on ASP is characterized by the equation
 $s_{\alpha \star \beta} = s_\alpha \star s_\beta$.
@@ -1074,7 +1074,7 @@ $s_{\alpha \triangleleft \beta} = s_\alpha \triangleleft s_\beta$.
 
 In Lean this operation is written `α ◃ β`. -/
 noncomputable def lres (α β : AspPerm) : AspPerm :=
-  Classical.choose (lres_exists α β)
+  Classical.choose (private_decl% (lres_exists α β))
 
 /-- Left residual on ASP permutations is characterized by
 $s_{\alpha \triangleleft \beta} = s_\alpha \triangleleft s_\beta$.
@@ -1092,7 +1092,7 @@ $s_{\alpha \triangleright \beta} = s_\alpha \triangleright s_\beta$.
 
 In Lean this operation is written `α ▹ β`. -/
 noncomputable def rres (α β : AspPerm) : AspPerm :=
-  Classical.choose (rres_exists α β)
+  Classical.choose (private_decl% (rres_exists α β))
 
 /-- Right residual on ASP permutations is characterized by
 $s_{\alpha \triangleright \beta} = s_\alpha \triangleright s_\beta$.

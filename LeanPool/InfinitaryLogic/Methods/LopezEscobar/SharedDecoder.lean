@@ -73,7 +73,8 @@ noncomputable def sharedToBase (T₀ T₁ : (n : ℕ) → Set ((Fin n → Bool) 
     sharedLang L T₀ T₁ →ᴸ L where
   onFunction {_} f := f.1.elim
   onRelation {_} r :=
-    Classical.choose (exists_base_of_mem_relSym (pcSentence_relationsIn_inter T₀ T₁ r.2))
+    Classical.choose (private_decl%
+      (exists_base_of_mem_relSym (pcSentence_relationsIn_inter T₀ T₁ r.2)))
 
 /-- The decoder recovers the shared symbol: its base image is the symbol itself. -/
 private theorem sharedToBase_onRelation_spec

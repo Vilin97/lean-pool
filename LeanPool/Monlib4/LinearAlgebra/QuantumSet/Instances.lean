@@ -439,7 +439,7 @@ variable {k : Type*} [Fintype k] [DecidableEq k] {s : k → Type*} [Π i, Fintyp
 
 
 
-private noncomputable def piSig (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
+noncomputable def piSig (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
     (z : ℝ) : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s where
   toFun x i := sig (hψ i) z (x i)
   invFun x i := (sig (hψ i) z).symm (x i)
@@ -490,8 +490,8 @@ private theorem piSig_star (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
 noncomputable def PiMat.isStarAlgebra [_hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
     starAlgebra (PiMat ℂ k s) where
   modAut := piSig _hψ
-  modAut_trans := piSig_trans_sig
-  modAut_star := piSig_star _hψ
+  modAut_trans := by exact piSig_trans_sig
+  modAut_star := by exact piSig_star _hψ
 
 
 -- attribute [-instance] Pi.module.Dual.isNormedAddCommGroupOfRing
@@ -672,7 +672,15 @@ theorem Pi.Qam.Nontracial.delta_ne_zero [Nonempty k] [∀ i, Nontrivial (s i)] {
 @[reducible]
 noncomputable
 def Matrix.quantumSetDeltaForm [Nonempty n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
-    [hφ : φ.IsFaithfulPosMap] := by
+    [hφ : φ.IsFaithfulPosMap] :
+  letI : starAlgebra (Matrix n n ℂ) := Matrix.isStarAlgebra (φ := φ)
+  letI : QuantumSet (Matrix n n ℂ) :=
+    Module.Dual.IsFaithfulPosMap.quantumSet (φ := φ)
+  letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
+  letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) :=
+    Module.Dual.InnerProductSpace (φ := φ)
+  letI : Coalgebra ℂ (Matrix n n ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  QuantumSetDeltaForm (Matrix n n ℂ) := by
   letI : starAlgebra (Matrix n n ℂ) := Matrix.isStarAlgebra (φ := φ)
   letI : QuantumSet (Matrix n n ℂ) :=
     Module.Dual.IsFaithfulPosMap.quantumSet (φ := φ)
@@ -689,7 +697,18 @@ def Matrix.quantumSetDeltaForm [Nonempty n] {φ : Module.Dual ℂ (Matrix n n �
 @[reducible]
 noncomputable def PiMat.quantumSetDeltaForm [Nonempty k] [∀ i, Nontrivial (s i)] {d : ℂ}
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
-  [hφ : ∀ i, (φ i).IsFaithfulPosMap] [hφ₂ : Fact (∀ i, (φ i).matrix⁻¹.trace = d)] := by
+  [hφ : ∀ i, (φ i).IsFaithfulPosMap] [hφ₂ : Fact (∀ i, (φ i).matrix⁻¹.trace = d)] :
+  letI : starAlgebra (PiMat ℂ k s) := PiMat.isStarAlgebra (ψ := φ)
+  letI : QuantumSet (PiMat ℂ k s) :=
+    Module.Dual.pi.IsFaithfulPosMap.quantumSet (ψ := φ)
+  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) :=
+    Module.Dual.PiNormedAddCommGroup (φ := φ)
+  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
+    (Module.Dual.PiNormedAddCommGroup (φ := φ)).toSeminormedAddCommGroup
+  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) :=
+    Module.Dual.pi.InnerProductSpace (φ := φ)
+  letI : Coalgebra ℂ (PiMat ℂ k s) := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  QuantumSetDeltaForm (PiMat ℂ k s) := by
   letI : starAlgebra (PiMat ℂ k s) := PiMat.isStarAlgebra (ψ := φ)
   letI : QuantumSet (PiMat ℂ k s) :=
     Module.Dual.pi.IsFaithfulPosMap.quantumSet (ψ := φ)
