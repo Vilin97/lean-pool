@@ -111,13 +111,16 @@ projects:
       informal: Riemann's inequality ℓ(D) ≥ deg D + 1 − g holds for every divisor D.
     - declaration: FunctionField.clifford
       informal: Clifford's inequality 2(ℓ(D) − 1) ≤ deg D holds for every divisor D with
-        0 ≤ deg D ≤ 2g − 2, ℓ(D) > 0, and ℓ(W − D) > 0 for a canonical divisor W.
+        0 ≤ deg D ≤ 2g − 2, ℓ(D) > 0, and ℓ(W − D) > 0 for a canonical divisor W. The degree
+        bounds are not needed for the inequality and are dropped in
+        FunctionField.clifford_of_ell_pos.
     - declaration: FunctionField.exists_isCanonical
       informal: Every function field admits a canonical divisor, namely the divisor of a
         nonzero Weil differential.
     - declaration: WeierstrassCurve.Affine.genus_eq_one
-      informal: The function field of a Weierstrass elliptic curve over an algebraically closed
-        field of characteristic zero has genus one.
+      informal: The function field of a Weierstrass elliptic curve over a field k that is its
+        full constant field (for example any algebraically closed k, in any characteristic)
+        has genus one.
     - declaration: WeierstrassCurve.Affine.picTorsor_compat_groupLaw
       informal: The bijection between degree-one places of an elliptic function field and the
         class group of the coordinate ring is compatible with the elliptic group law.
