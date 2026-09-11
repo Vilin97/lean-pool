@@ -5,6 +5,8 @@ Authors: Martin Dvorak
 -/
 module
 
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+
 public import Mathlib.Algebra.Order.Module.Defs
 public import Mathlib.Algebra.Module.LinearMap.Basic
 public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
@@ -141,7 +143,7 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
   else
     push Not at is_easy
     obtain ⟨y', hay', hby'⟩ := is_easy
-    let M : Fin m.succ := ⟨m, lt_add_one m⟩ -- the last (new) index
+    let M : Fin m.succ := ⟨m, Nat.lt_succ_self m⟩ -- the last (new) index
     let y : W := (A y' M)⁻¹ • y' -- rescaled `y'`
     have hAy' : A y' M < 0 := by
       by_contra! contr

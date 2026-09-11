@@ -349,7 +349,8 @@ private lemma matrixModuleEnd_apply {n : ℕ} [NeZero n]
     _ = v i * f (Pi.single (M := fun _ : Fin n => D) (0 : Fin n) (1 : D)) 0 := rfl
 
 omit [IsSimpleRing A] [FiniteDimensional k A] in
-private noncomputable def matrixModuleEndAlgEquivMop {n : ℕ} [NeZero n]
+/-- The endomorphism algebra of the standard matrix module is the opposite scalar algebra. -/
+noncomputable def matrixModuleEndAlgEquivMop {n : ℕ} [NeZero n]
     (D : Type v) [DivisionRing D] [Algebra k D]
     [IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D)]
     [SMulCommClass (Matrix (Fin n) (Fin n) D) k (Fin n → D)] :

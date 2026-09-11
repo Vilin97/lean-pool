@@ -181,7 +181,8 @@ local instance haarProbabilityTarget
     (Y : HaarProbabilityAction K Ξ) : IsProbabilityMeasure Y.measure :=
   Y.probability
 
-private def crossedFiberwiseOperatorContinuousLinearMap
+/-- Apply a bounded operator to each fibre of a square-summable family. -/
+def crossedFiberwiseOperatorContinuousLinearMap
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] :
     (E →L[ℂ] E) →L[ℂ]
       (lp (fun _ : K ↦ E) 2 →L[ℂ] lp (fun _ : K ↦ E) 2) := by

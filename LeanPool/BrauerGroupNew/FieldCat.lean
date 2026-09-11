@@ -28,7 +28,7 @@ open CategoryTheory
 
 /-- The category of fields. -/
 structure FieldCat where
-  private mk ::
+  mk ::
   /-- The underlying type. -/
   carrier : Type u
   [field : Field carrier]
@@ -56,7 +56,7 @@ variable {R} in
 /-- The type of morphisms in `FieldCat`. -/
 @[ext]
 structure Hom (R S : FieldCat) where
-  private mk ::
+  mk ::
   /-- The underlying ring hom. -/
   hom : R →+* S
 

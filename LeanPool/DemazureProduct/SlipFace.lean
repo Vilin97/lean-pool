@@ -466,7 +466,7 @@ private lemma star_exists (s t : SlipFace) : ∃ p : SlipFace,
 See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
 noncomputable def star (s t : SlipFace) : SlipFace :=
-  Classical.choose (star_exists s t)
+  Classical.choose (private_decl% (star_exists s t))
 
 noncomputable instance : Mul SlipFace := ⟨star⟩
 
@@ -963,7 +963,7 @@ private lemma rres_exists (s t : SlipFace) (a b : ℤ) : ∃ m, ∀ l,
 
 /-- The argmax witnessing the right residual value $s \triangleright t (a,b)$. -/
 noncomputable def rresWit (s t : SlipFace) (a b : ℤ) : ℤ :=
-  Classical.choose (rres_exists s t a b)
+  Classical.choose (private_decl% (rres_exists s t a b))
 
 /-- The right residual function
 $$
@@ -1162,7 +1162,7 @@ private lemma lres_exists (s t : SlipFace) : ∃ p : SlipFace,
 `lresFunc`. See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 noncomputable def lres (s t : SlipFace) : SlipFace :=
-  Classical.choose (lres_exists s t)
+  Classical.choose (private_decl% (lres_exists s t))
 
 /-- Infix notation for the slipface left residual. -/
 infixl:70 " ◃ " => lres

@@ -55,7 +55,8 @@ def componentTreeB (R : RawIncidence) (root : Vertex) : List Vertex → Bool
 def TreeLabelledEdge (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Prop :=
   (a ∈ component ∧ b ∈ R a) ∨ (b ∈ component ∧ a ∈ R b)
 
-private def treeLabelledEdgeB
+/-- Boolean test for a selected edge incident to the validated tree. -/
+def treeLabelledEdgeB
     (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Bool :=
   (decide (a ∈ component) && decide (b ∈ R a)) ||
     (decide (b ∈ component) && decide (a ∈ R b))
@@ -108,7 +109,8 @@ def Certificate.Valid (R : RawIncidence) : Certificate → Prop
         ∀ v w, w ∈ R v ↔
           forward w ∈ (residualRepresentative (Fin.ofNat 13 classIndex)).targets (forward v)
 
-private def residualValidB (R : RawIncidence) (payload : UInt64) : Bool :=
+/-- Check the residual class and its encoded incidence isomorphism. -/
+def residualValidB (R : RawIncidence) (payload : UInt64) : Bool :=
   let classIndex := payloadClass payload
   let forward := decodeMap (payloadForwardCode payload)
   let inverse := decodeMap (payloadInverseCode payload)

@@ -236,7 +236,7 @@ theorem mod_pow_succ (n q t : ℕ) :
 
 /-- The partial tail lower bound `LB q n j t = b_j·q^j + B·(q^{j+1} + … + q^{t-1})`,
 expressed as `(n/q^j%q)·q^j + B·∑_{j < s < t} q^s`.  (Only used internally.) -/
-private def tailLB (q n j t : ℕ) : ℕ :=
+def tailLB (q n j t : ℕ) : ℕ :=
   (n / q ^ j % q) * q ^ j + ((q - 1) / 2) * ∑ s ∈ Finset.Ico (j + 1) t, q ^ s
 
 /-- **Inductive tail bound (KERNEL-CLEAN).**  For `j = topBadIndex q n`, `i = leastGoodAbove`,

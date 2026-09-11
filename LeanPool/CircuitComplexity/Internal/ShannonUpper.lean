@@ -53,7 +53,7 @@ def dataBits (N : Nat) : Nat := N - addrBits N
 /-! ## Gate Construction Helpers -/
 
 /-- Build a fan-in-2 gate bundled with an acyclicity proof. -/
-private def mkGate2' (op : AONOp) {W : Nat} (w₀ w₁ : Fin W) (n₀ n₁ : Bool)
+def mkGate2' (op : AONOp) {W : Nat} (w₀ w₁ : Fin W) (n₀ n₁ : Bool)
     (bound : Nat) (hw₀ : w₀.val < bound) (hw₁ : w₁.val < bound) :
     { g : Gate Basis.andOr2 W // ∀ k : Fin g.fanIn, (g.inputs k).val < bound } :=
   ⟨{ op := op, fanIn := 2, arityOk := rfl,
@@ -62,26 +62,27 @@ private def mkGate2' (op : AONOp) {W : Nat} (w₀ w₁ : Fin W) (n₀ n₁ : Boo
    fun k => by dsimp; split_ifs <;> assumption⟩
 
 /-- Remap a wire from c₂'s space into the combined space. -/
-private def remap₂ (N G₁ G₂ : Nat) (w : Fin (N + G₂)) : Fin (N + (G₁ + G₂ + 2)) :=
+def remap₂ (N G₁ G₂ : Nat) (w : Fin (N + G₂)) : Fin (N + (G₁ + G₂ + 2)) :=
   if h : w.val < N then ⟨w.val, by omega⟩
   else ⟨w.val + G₁ + 1, by have := w.isLt; omega⟩
 
-private lemma remap₂_val_lt (N G₁ G₂ : Nat) (w : Fin (N + G₂))
+/-- Remapping a wire preserves its bound in the combined circuit. -/
+lemma remap₂_val_lt (N G₁ G₂ : Nat) (w : Fin (N + G₂))
     (bound : Nat) (hb : G₁ + 1 ≤ bound) (hw : w.val < N + (bound - G₁ - 1)) :
     (remap₂ N G₁ G₂ w).val < N + bound := by
   unfold remap₂; split_ifs <;> dsimp <;> omega
 
-private def gw (idx : Nat) {W : Nat} (g : Gate Basis.andOr2 W)
+def gw (idx : Nat) {W : Nat} (g : Gate Basis.andOr2 W)
     (_ : idx < 2 := by omega) : Fin W :=
   g.inputs ⟨idx, by rw [andOr2_fanIn]; omega⟩
-private def gn (idx : Nat) {W : Nat} (g : Gate Basis.andOr2 W)
+def gn (idx : Nat) {W : Nat} (g : Gate Basis.andOr2 W)
     (_ : idx < 2 := by omega) : Bool :=
   g.negated ⟨idx, by rw [andOr2_fanIn]; omega⟩
 
 /-! ## Binary Circuit Composition -/
 
 /-- Gate + acyclicity proof for the binary composition, bundled as a subtype. -/
-private def binopGWP {N G₁ G₂ : Nat} [NeZero N]
+def binopGWP {N G₁ G₂ : Nat} [NeZero N]
     (c₁ : Circuit Basis.andOr2 N 1 G₁) (c₂ : Circuit Basis.andOr2 N 1 G₂)
     (i : Fin (G₁ + G₂ + 2)) :
     { g : Gate Basis.andOr2 (N + (G₁ + G₂ + 2)) //

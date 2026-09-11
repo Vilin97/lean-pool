@@ -2068,7 +2068,6 @@ theorem strictMeshFor_triangles (v : Fin 3 → M.Vertex)
   simp [strictMeshFor, strictPatternTriangles, referenceSplitMesh,
     referenceSplitTriangles, TriangleMesh.reindex, TriangleMesh.mapAffineEquiv,
     strictVerticesEmbedding]
-  rfl
 
 theorem edgeMeshFor_triangles (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
@@ -2078,7 +2077,6 @@ theorem edgeMeshFor_triangles (v : Fin 3 → M.Vertex)
   simp [edgeMeshFor, edgePatternTriangles, referenceEdgeSplitMesh,
     referenceEdgeSplitTriangles, TriangleMesh.reindex, TriangleMesh.mapAffineEquiv,
     edgeVerticesEmbedding]
-  rfl
 
 theorem strictNegativeMeshFor_monochromatic (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))

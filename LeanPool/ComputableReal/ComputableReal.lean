@@ -198,7 +198,8 @@ theorem val_nsmul (x : Computableℝ) (n : ℕ) : (n • x).val = n • x.val :=
 
 section safeInv
 
-private def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
+/-- Identify nonzero computable reals with the quotient of their nonzero representatives. -/
+def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
     (fun x : ComputableℝSeq ↦ x.val ≠ 0)
     (fun x : Computableℝ ↦ x ≠ 0)
     (fun _ ↦ ⟨
@@ -212,7 +213,7 @@ private def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
 
 /-- Auxiliary inverse definition that operates on the nonzero Computableℝ values. -/
 noncomputable def safeInv' : { x : Computableℝ // x ≠ 0 } → { x : Computableℝ // x ≠ 0 } :=
-  fun v ↦ nz_quot_equiv.invFun <| Quotient.map _ fun x y h₁ ↦ by
+  fun v ↦ nz_quot_equiv.invFun <| Quotient.map ComputableℝSeq.invNz fun x y h₁ ↦ by
     change (ComputableℝSeq.invNz x).val.val = (ComputableℝSeq.invNz y).val.val
     rw [ComputableℝSeq.val_invNz x, ComputableℝSeq.val_invNz y, h₁]
   (nz_quot_equiv.toFun v)

@@ -353,8 +353,8 @@ sharpening `X' ⊆ X`
 means `↑X ⊑ ↑X'`, so `e(↑X) ⊑ e(↑X')` and the output transports along, then widens
 by `up_mem`. -/
 def ofIso (e : V₀.Element ≃o V₁.Element) : ApproximableMap V₀ V₁ where
-  rel X Y := ∃ _ : V₀.mem X, (e (V₀.principal ‹V₀.mem X›)).mem Y
-  rel_dom := fun ⟨hX, _⟩ => hX
+  rel X Y := ∃ hX : V₀.mem X, (e (V₀.principal hX)).mem Y
+  rel_dom := by rintro X Y ⟨hX, _⟩; exact hX
   rel_cod := fun ⟨_, hY⟩ => (e _).sub hY
   master_rel := ⟨V₀.master_mem, (e _).master_mem⟩
   inter_right := by

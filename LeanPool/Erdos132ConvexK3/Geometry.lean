@@ -25,7 +25,8 @@ uniqueness for two-circle intersections.
 
 namespace LeanPool.Erdos132ConvexK3
 
-private def toComplex (p : Point ℝ) : ℂ := ⟨p.1, p.2⟩
+/-- Regard a Cartesian point as a complex number. -/
+def toComplex (p : Point ℝ) : ℂ := ⟨p.1, p.2⟩
 
 /-- Ordinary Euclidean distance between real Cartesian points. -/
 noncomputable def euclideanDist (a b : Point ℝ) : ℝ :=

@@ -85,23 +85,23 @@ private theorem VMLInput.isMaxwellian_at (p : VMLInput X) (x : X) : IsMaxwellian
 
 /-- The local log-density parameter `a(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def _root_.VML.VMLInput.aLoc (p : VMLInput X) : X → ℝ :=
-  fun x => (p.isMaxwellian_at x).choose
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose
 
 /-- The local drift parameter `b(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def _root_.VML.VMLInput.bLoc (p : VMLInput X) : X → (Fin 3 → ℝ) :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose
 
 /-- The local inverse-temperature parameter `c(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def _root_.VML.VMLInput.cLoc (p : VMLInput X) : X → ℝ :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose_spec.choose
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose_spec.choose
 
 lemma _root_.VML.VMLInput.hc_neg (p : VMLInput X) : ∀ x, p.cLoc x < 0 :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose_spec.choose_spec.1
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose_spec.choose_spec.1
 
 lemma _root_.VML.VMLInput.hMaxwellianForm (p : VMLInput X) :
     ∀ x v, p.f x v = Real.exp (p.aLoc x + dotProduct (p.bLoc x) v +
       p.cLoc x * normSq v) :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose_spec.choose_spec.2
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose_spec.choose_spec.2
 
 /-- IsSpatiallySmooth 2 for the Maxwellian parameters aLoc, bLoc, cLoc. -/
 lemma _root_.VML.VMLInput.hDiff_abc (p : VMLInput X) :

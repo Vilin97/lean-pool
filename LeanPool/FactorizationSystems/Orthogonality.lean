@@ -224,7 +224,7 @@ lemma hom_cospan_pullback_condition {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
 def isCartesianSquare {A B X Y : C} (S : square A B X Y) : Prop :=
-  IsIso (Limits.pullback.lift S.top S.left (by rw [S.comm]))
+  IsIso (Limits.pullback.lift S.top S.left S.comm.symm)
 
 /- The second characterization of orthogonality via the hom square in Set -/
 /-- Imported FactorizationSystems declaration. -/

@@ -5,6 +5,8 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 -/
 module
 
+import Mathlib.Algebra.Order.Ring.Pow
+
 public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Main
 public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Definitions
 public import LeanPool.CommonNeighbourConjecture.Saxl.Generalized

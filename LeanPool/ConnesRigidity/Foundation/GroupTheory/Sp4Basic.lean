@@ -32,11 +32,11 @@ abbrev F := ZMod 2
 /-- Symplectic group carrier. Paper: §§2, 6. -/
 abbrev Group := Matrix.symplecticGroup (Fin 2) F
 
-private abbrev Matrix4 := Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) F
+abbrev Matrix4 := Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) F
 
-private def allMatrices : Finset Matrix4 := Finset.univ
+def allMatrices : Finset Matrix4 := Finset.univ
 
-private def symplecticMatrices : Finset Matrix4 :=
+def symplecticMatrices : Finset Matrix4 :=
   allMatrices.filter (fun A =>
     A * Matrix.J (Fin 2) F * A.transpose = Matrix.J (Fin 2) F)
 

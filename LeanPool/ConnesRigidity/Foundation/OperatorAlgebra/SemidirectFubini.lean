@@ -33,7 +33,8 @@ universe u v
 
 /- The curry map is the discrete ℓ² Fubini equivalence used for the fibres.
 Paper: §3. -/
-private def l2CurryFiber {ι : Type u} {κ : Type v}
+/-- Restrict a square-summable family on a product to one fibre. -/
+def l2CurryFiber {ι : Type u} {κ : Type v}
     (ξ : GroupL2 (ι × κ)) (i : ι) : GroupL2 κ :=
   ⟨fun k => ξ (i, k), by
     change Memℓp (fun k => ξ (i, k)) 2
@@ -82,8 +83,8 @@ The `l2Curry` construction used in the Connes rigidity formalization.
 def l2Curry (ι : Type u) (κ : Type v) :
     GroupL2 (ι × κ) ≃ₗᵢ[ℂ] lp (fun _ : ι => GroupL2 κ) 2 where
   toLinearEquiv :=
-    { toFun := fun ξ => ⟨fun i => l2CurryFiber ξ i, l2Curry_mem ξ⟩
-      invFun := fun ξ => ⟨fun p => ξ p.1 p.2, l2Uncurry_mem ξ⟩
+    { toFun := fun ξ => ⟨fun i => l2CurryFiber ξ i, by exact l2Curry_mem ξ⟩
+      invFun := fun ξ => ⟨fun p => ξ p.1 p.2, by exact l2Uncurry_mem ξ⟩
       left_inv := by
         intro ξ
         ext p

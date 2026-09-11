@@ -5,7 +5,7 @@ Authors: Sven Manthe
 -/
 module
 
-public import Mathlib.Tactic.Common
+public meta import Mathlib.Tactic.Common
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
@@ -13,7 +13,7 @@ public import Mathlib.Tactic.Common
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public meta section
 
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

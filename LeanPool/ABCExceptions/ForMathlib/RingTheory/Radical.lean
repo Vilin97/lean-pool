@@ -28,7 +28,7 @@ open Positivity
 attribute [local instance] monadLiftOptionMetaM in
 /-- Positivity extension for radical. Proves radicals are nonzero. -/
 @[positivity UniqueFactorizationMonoid.radical _]
-def evalRadical : PositivityExt where eval {u α} _ _ e := do
+meta def evalRadical : PositivityExt where eval {u α} _ _ e := do
   match e with
   | ~q(@radical _ $inst $inst' $inst'' $n) =>
     have _ := ← synthInstanceQ q(Nontrivial $α)

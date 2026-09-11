@@ -263,7 +263,7 @@ abbrev toModuleOverTensor : TensorModule R A C ⥤ ModuleCat (A ⊗[R] C) where
     map_smul' ac m := by
       induction ac using TensorProduct.induction_on with
       | zero => simp
-      | tmul a c => simp [moduleAux_apply, TensorModule.commutes_apply]
+      | tmul a c => simp [TensorModule.commutes_apply]
       | add _ _ _ _ => simp_all [add_smul]
   }
   map_id M := by ext; simp
@@ -294,7 +294,7 @@ abbrev e01 (M : TensorModule R A C) :
       · exact AddHom.id _
       · intro a m
         change a • m = (moduleAux R A C M (a ⊗ₜ[R] (1 : C))) m
-        simp [moduleAux_apply]
+        simp
     · exact id
     · exact congrFun rfl
     · exact congrFun rfl)) fun c ↦ by

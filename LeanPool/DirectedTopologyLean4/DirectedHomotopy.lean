@@ -398,7 +398,7 @@ def cast {f₀ f₁ g₀ g₁ : D(X,Y)} (F : Dihomotopy f₀ f₁) (h₀ : f₀ 
     map_one_left := by simp [←h₁]
 
 /-- Horizontal composition for `ContinuousMap.Homotopy`. -/
-private def Homotopy.hcomp' {f₀ f₁ : C(X, Y)} {g₀ g₁ : C(Y, Z)}
+def Homotopy.hcomp' {f₀ f₁ : C(X, Y)} {g₀ g₁ : C(Y, Z)}
     (F : ContinuousMap.Homotopy f₀ f₁) (G : ContinuousMap.Homotopy g₀ g₁) :
     ContinuousMap.Homotopy (g₀.comp f₀) (g₁.comp f₁) where
   toFun := fun p => G (p.1, F p)

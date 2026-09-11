@@ -603,7 +603,8 @@ lemma permMatrix_smul_toSubmodule (b : Basis ι K (ι → K)) (e : ι ≃ ι) :
   ext i : 1
   simp [permMatrix, toLinear_symm_ofLinearEquiv_mulVec]
 
-private def swap₂ : Fin 2 ≃ Fin 2 where
+/-- The permutation exchanging the two indices of a rank-two basis. -/
+def swap₂ : Fin 2 ≃ Fin 2 where
   toFun
     | 0 => 1
     | 1 => 2

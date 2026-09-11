@@ -38,7 +38,7 @@ For each of the `2^N` possible inputs `s` (decoded via `Nat.testBit`),
 internal gate `i` is the indicator AND for `s` when `f s = true`, or a
 trivially-false 0-input OR otherwise. The single output OR gate disjoins
 all internal gates. -/
-private def AONFor.mkGate {N : Nat} (f : BitString N → Bool) (i : Fin (2 ^ N)) :
+def AONFor.mkGate {N : Nat} (f : BitString N → Bool) (i : Fin (2 ^ N)) :
     Gate Basis.unboundedAON (N + 2 ^ N) :=
   if f (fun j => i.val.testBit j.val) then
     { op := .and, fanIn := N, arityOk := trivial,
@@ -69,7 +69,7 @@ def AONFor {N : Nat} [NeZero N] (f : BitString N → Bool) :
     { op := .or, fanIn := 2 ^ N, arityOk := trivial,
       inputs := fun j => (j.natAdd N),
       negated := fun _ => false }
-  acyclic := AONFor.mkGate_acyclic f
+  acyclic := private AONFor.mkGate_acyclic f
 
 private lemma AONFor_wireValue_gate {N : Nat} [NeZero N] (f : BitString N → Bool)
     (x : BitString N) (i : Fin (2 ^ N)) :
@@ -227,13 +227,13 @@ theorem AONFor_is_Correct {N : Nat} [NeZero N] (f : BitString N → Bool) :
 /-- Internal gate for the multi-output DNF circuit.
 Gate `idx` encodes output bit `j = idx / 2^N` and indicator index `i = idx % 2^N`.
 If `f(bitstring i)[j] = true`, it's an AND indicator gate; otherwise a trivially-false OR gate. -/
-private def AONForM_j {N M : Nat} (idx : Fin (M * 2 ^ N)) : Fin M :=
+def AONForM_j {N M : Nat} (idx : Fin (M * 2 ^ N)) : Fin M :=
   ⟨idx.val / 2 ^ N, Nat.div_lt_of_lt_mul (Nat.mul_comm M (2^N) ▸ idx.isLt)⟩
 
-private def AONForM_i {N : Nat} {M : Nat} (idx : Fin (M * 2 ^ N)) : Fin (2 ^ N) :=
+def AONForM_i {N : Nat} {M : Nat} (idx : Fin (M * 2 ^ N)) : Fin (2 ^ N) :=
   ⟨idx.val % 2 ^ N, Nat.mod_lt _ (Nat.two_pow_pos N)⟩
 
-private def AONForM_mkGate {N M : Nat} (f : BitString N → BitString M) (idx : Fin (M * 2 ^ N)) :
+def AONForM_mkGate {N M : Nat} (f : BitString N → BitString M) (idx : Fin (M * 2 ^ N)) :
     Gate Basis.unboundedAON (N + M * 2 ^ N) :=
   if f (fun k => (AONForM_i idx).val.testBit k.val) (AONForM_j idx) then
     { op := .and, fanIn := N, arityOk := trivial,
@@ -271,9 +271,9 @@ def AONForM {N M : Nat} [NeZero N] [NeZero M] (f : BitString N → BitString M) 
   gates := AONForM_mkGate f
   outputs j :=
     { op := .or, fanIn := 2 ^ N, arityOk := trivial,
-      inputs := fun k => ⟨N + j.val * 2 ^ N + k.val, AONForM_output_bound j k⟩,
+      inputs := fun k => ⟨N + j.val * 2 ^ N + k.val, by exact AONForM_output_bound j k⟩,
       negated := fun _ => false }
-  acyclic := AONForM_mkGate_acyclic f
+  acyclic := private AONForM_mkGate_acyclic f
 
 private lemma AONForM_wireValue_input {N M : Nat} [NeZero N] [NeZero M]
     (f : BitString N → BitString M) (x : BitString N) (k : Fin N) :
@@ -351,7 +351,7 @@ theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
   -- Now the goal involves Fin.foldl over wireValues at output wires
   -- We need to connect wireValue to mkGate eval
   have key : ∀ k : Fin (2^N),
-    (AONForM f).wireValue x ⟨N + j.val * 2 ^ N + k.val, AONForM_output_bound j k⟩ =
+    (AONForM f).wireValue x ⟨N + j.val * 2 ^ N + k.val, by exact AONForM_output_bound j k⟩ =
     (AONForM_mkGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x) := by
     intro k
     have h := AONForM_wireValue_gate f x (AONForM_idx j k)
