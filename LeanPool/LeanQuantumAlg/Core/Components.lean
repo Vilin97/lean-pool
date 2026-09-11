@@ -6,6 +6,8 @@ Authors: QudeLeap Team
 
 module
 
+public import LeanPool.LeanQuantumAlg.Init
+
 public import LeanPool.LeanQuantumAlg.Core.Components.Kets
 public import LeanPool.LeanQuantumAlg.Core.Components.Gates
 public import LeanPool.LeanQuantumAlg.Core.Components.Oracle

@@ -5,6 +5,8 @@ Authors: Jineon Baek
 -/
 module
 
+public import LeanPool.ErdosTuzaValtr.Main.Main
+
 public import LeanPool.ErdosTuzaValtr.All
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Rat.Cast.Order

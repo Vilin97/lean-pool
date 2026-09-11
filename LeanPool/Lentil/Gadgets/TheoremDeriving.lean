@@ -95,6 +95,7 @@ def deriveForPredImpliesOrValid (nm : Name) : CoreM Unit := do
   let info ← getConstInfo nm
   let ty := info.type
   let lvlParams := info.levelParams
+  let levels := lvlParams.toArray.map mkIdent
   let noncomputable? := isNoncomputable (← getEnv) nm
   MetaM.run' do
     let (thmName1, thmStmt1, thmName2, thmStmt2) ←
@@ -118,7 +119,7 @@ def deriveForPredImpliesOrValid (nm : Name) : CoreM Unit := do
       -- to avoid this, we add a separate branch where there is no `have`.
       (← `(term| by solve
         | tlaNontemporalSimp; aesop
-        | have := @$(mkIdent nm); tlaNontemporalSimp; aesop)) noncomputable?
+        | have := @$(mkIdent nm).{$levels,*}; tlaNontemporalSimp; aesop)) noncomputable?
     simpleProveTheorem thmName2 lvlParams thmStmt2
       (← do
         let htmp ← mkIdent <$> mkFreshUserName `htmp
@@ -126,7 +127,7 @@ def deriveForPredImpliesOrValid (nm : Name) : CoreM Unit := do
         let introNames ← ty.getForallBinderNames.toArray.mapM (mkIdent <$> mkFreshUserName ·)
         `(term| by solve
         | tlaNontemporalSimp; aesop
-        | intro $introNames*; have $htmp := @$(mkIdent nm) $introNames*
+        | intro $introNames*; have $htmp := @$(mkIdent nm).{$levels,*} $introNames*
           (try rw [← TLA.impl_intro] at $htmp:ident)
           repeat (first
             | (solve

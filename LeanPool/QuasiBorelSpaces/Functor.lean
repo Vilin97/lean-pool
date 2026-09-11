@@ -176,8 +176,10 @@ lemma isHom_coe
 
 end Limit
 
+universe u
+
 /-- A type bundled with its quasi-Borel space structure. -/
-structure Bundle.{u} : Type _ where
+structure Bundle : Type _ where
   /-- The underlying type of a bundled quasi-Borel space. -/
   Carrier : Type u
   /-- The quasi-Borel structure on the bundled carrier. -/

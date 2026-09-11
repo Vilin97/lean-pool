@@ -10,6 +10,8 @@ implementation lives with the bijective specialization in `Renaming`.
 -/
 module
 
+public import LeanPool.MatchingLogic.EntryIII.Renaming
+
 import Mathlib.Data.Finset.Attr
 import Mathlib.Tactic.Finiteness.Attr
 import Mathlib.Tactic.SetLike

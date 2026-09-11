@@ -5,6 +5,8 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
+public import LeanPool.Polylean.Complexes.Structures.FreeGroupoid
+
 
 @[expose] public section
 

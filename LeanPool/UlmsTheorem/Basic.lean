@@ -5,6 +5,11 @@ Authors: Elan Roth
 -/
 module
 
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.Algebra.Module.NatInt
+public import Mathlib.Data.Nat.Prime.Defs
+
 import Mathlib.Tactic.Finiteness.Attr
 import Mathlib.Tactic.SetLike
 

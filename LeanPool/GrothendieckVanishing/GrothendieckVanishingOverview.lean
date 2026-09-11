@@ -5,6 +5,10 @@ Authors: Vasily Ilin, Brian Nugent
 -/
 module
 
+public import LeanPool.GrothendieckVanishing.ClosedImmersion
+public import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.GrothendieckVanishing
+
 import Mathlib.CategoryTheory.Category.Init
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Rat.Floor

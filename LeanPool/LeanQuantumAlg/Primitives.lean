@@ -6,6 +6,8 @@ Authors: QudeLeap Team
 
 module
 
+public import LeanPool.LeanQuantumAlg.Init
+
 public import LeanPool.LeanQuantumAlg.Primitives.BellPair
 public import LeanPool.LeanQuantumAlg.Primitives.WalshHadamard
 public import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback

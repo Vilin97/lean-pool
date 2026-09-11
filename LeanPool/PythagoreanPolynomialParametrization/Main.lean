@@ -5,6 +5,13 @@ Authors: Lazar Milikic
 -/
 module
 
+public import LeanPool.PythagoreanPolynomialParametrization.Basic
+public import LeanPool.PythagoreanPolynomialParametrization.SourceLemmas
+public import LeanPool.PythagoreanPolynomialParametrization.Obstructions
+public import LeanPool.PythagoreanPolynomialParametrization.IntegerValued
+public import LeanPool.PythagoreanPolynomialParametrization.Positive
+public import LeanPool.PythagoreanPolynomialParametrization.Explanatory
+
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Nat.Totient
 import Mathlib.Data.Sym.Sym2.Init

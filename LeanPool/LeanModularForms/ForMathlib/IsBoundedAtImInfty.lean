@@ -5,6 +5,8 @@ Authors: Chris Birkbeck
 -/
 module
 
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.IsBoundedAtImInfty
+
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal

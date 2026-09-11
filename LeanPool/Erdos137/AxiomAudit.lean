@@ -5,6 +5,20 @@ Authors: Scott D. Hughes
 -/
 module
 
+public import LeanPool.Erdos137.Finiteness
+public import LeanPool.Erdos137.Base
+public import LeanPool.Erdos137.BlockFramework
+public import LeanPool.Erdos137.RefinedOverlap
+public import LeanPool.Erdos137.JointFiniteness
+public import LeanPool.Erdos137.SmoothRefinement
+public import LeanPool.Erdos137.TaoPoint
+public import LeanPool.Erdos137.RoughPartStructure
+public import LeanPool.Erdos137.SpliceFiniteness
+public import LeanPool.Erdos137.QuarticCrude
+public import LeanPool.Erdos137.SexticCrude
+public import LeanPool.Erdos137.SquarefreeCapacity
+public import LeanPool.Erdos137.CombinedSplice
+
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic.NormNum.Prime

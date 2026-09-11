@@ -5,6 +5,14 @@ Authors: Monica Omar
 -/
 module
 
+public import LeanPool.Monlib4.QuantumGraph.Basic
+
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+
+public import LeanPool.Monlib4.RepTheory.AutMat
+
 public import LeanPool.Monlib4.Monlib
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal

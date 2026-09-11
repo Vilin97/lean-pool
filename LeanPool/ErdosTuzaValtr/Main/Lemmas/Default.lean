@@ -5,6 +5,11 @@ Authors: Jineon Baek
 -/
 module
 
+public import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
+public import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
+public import LeanPool.ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon
+public import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
+
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.NormNum.Abs

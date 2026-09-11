@@ -5,6 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
+public import LeanPool.OddPrimeValuationDistribution.GeneratingFunction
+
 public import LeanPool.OddPrimeValuationDistribution.LowValuations
 import Mathlib.Data.Sym.Sym2.Init
 

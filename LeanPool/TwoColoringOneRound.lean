@@ -5,6 +5,8 @@ Authors: Jukka Suomela
 -/
 module
 
+public import LeanPool.TwoColoringOneRound.MainResults
+
 public import LeanPool.TwoColoringOneRound.API
 public import LeanPool.TwoColoringOneRound.LowerBound
 public import LeanPool.TwoColoringOneRound.SimpleBounds

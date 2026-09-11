@@ -5,6 +5,9 @@ Authors: Yury G. Kudryashov
 -/
 module
 
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Constructions.Pi
+
 import Mathlib.Analysis.Normed.Group.Basic
 import Mathlib.Data.EReal.Inv
 import Mathlib.Tactic.Measurability.Init

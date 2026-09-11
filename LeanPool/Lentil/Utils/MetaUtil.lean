@@ -29,7 +29,9 @@ def simpleAddTheorem (name : Name) (lvlParams : List Name) (type value : Expr) (
 def simpleProveTheorem (name : Name) (lvlParams : List Name) (type : Expr) (proofScript : TSyntax `term)
     (nonComputable? : Bool) : MetaM Unit := do
   let type ← instantiateMVars type
-  let (type, proof) ← liftCommandElabM <| Command.liftTermElabM do
+  -- Stay in the current elaborator so auxiliary declarations retain their kernel diagnostics.
+  let (type, proof) ← withDeclNameForAuxNaming name <|
+      Term.TermElabM.run' (s := { levelNames := lvlParams }) do
     -- when things go wrong, print the proof goal
     let proof ← Term.elabTermAndSynthesize proofScript type
     if proof.hasSorry then
@@ -41,10 +43,9 @@ def simpleProveTheorem (name : Name) (lvlParams : List Name) (type : Expr) (proo
     if type.hasMVar then
       throwError "unresolved metavariables in generated theorem statement {name}"
     let proof ← instantiateMVars proof
-    -- Auxiliary proof declarations can retain universe parameters absent from the statement.
-    for level in (collectLevelMVars {} proof).result do
-      assignLevelMVar level .zero
-    return (← instantiateMVars type, ← instantiateMVars proof)
+    if proof.hasMVar then
+      throwError "unresolved metavariables in generated proof {name}"
+    return (type, proof)
   simpleAddTheorem name lvlParams type proof nonComputable?
 
 -- inspired by [this discussion](https://leanprover.zulipchat.com/#narrow/channel/239415-metaprogramming-.2F-tactics/topic/Generating.20fresh.20names.20for.20universe.20levels)

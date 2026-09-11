@@ -5,6 +5,8 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 module
 
+public import LeanPool.Lean4Itree.Paco.PacoDefs
+
 
 /-!
 # Paco notations

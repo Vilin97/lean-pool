@@ -5,6 +5,8 @@ Authors: Egor Lyfar
 -/
 module
 
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSoundness
+
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Data.Sym.Sym2.Init

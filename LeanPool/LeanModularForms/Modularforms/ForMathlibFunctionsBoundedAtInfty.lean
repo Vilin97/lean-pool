@@ -5,6 +5,8 @@ Authors: Chris Birkbeck
 -/
 module
 
+public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+
 public import LeanPool.LeanModularForms.ForMathlib.FunctionsBoundedAtInfty
 
 /-! Compatibility import for the canonical lemmas in `LeanModularForms.ForMathlib`. -/
