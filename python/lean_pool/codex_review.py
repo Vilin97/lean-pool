@@ -187,9 +187,11 @@ def run_codex(request: dict, directory: Path) -> dict:
             request["messages"][1]["content"], timeout=TIMEOUT_SECONDS
         )
     except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGKILL)
-        process.communicate()
+        stop_codex(process)
         raise RuntimeError("Azure Codex review timed out") from None
+    except BaseException:
+        stop_codex(process)
+        raise
     if process.returncode:
         raise RuntimeError(f"Codex exited {process.returncode}: {stderr[-2000:]}")
     envelope = json.loads((directory / "answer.json").read_text())
@@ -203,6 +205,24 @@ def run_codex(request: dict, directory: Path) -> dict:
         "effort": request["effort"],
         "usage": usage,
     }
+
+
+def stop_codex(process: subprocess.Popen) -> None:
+    """Let the account dispatcher forward termination to its separate child group."""
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    try:
+        process.communicate(timeout=15)
+    except subprocess.TimeoutExpired:
+        os.killpg(process.pid, signal.SIGKILL)
+        process.communicate()
+
+
+def interrupted(signum: int, frame: Any) -> None:
+    """Unwind the active worker when SSH disconnects or the job is cancelled."""
+    raise InterruptedError(f"Review interrupted by signal {signum}")
 
 
 def extract_usage(stdout: str) -> dict | None:
@@ -223,6 +243,8 @@ def extract_usage(stdout: str) -> dict | None:
 
 def main() -> int:
     """Serve one SSH request using an isolated temporary directory on /data."""
+    signal.signal(signal.SIGTERM, interrupted)
+    signal.signal(signal.SIGHUP, interrupted)
     try:
         raw = sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
         if len(raw) > MAX_REQUEST_BYTES:

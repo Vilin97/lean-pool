@@ -178,7 +178,7 @@ def test_worker_timeout_kills_process_group(monkeypatch, tmp_path):
     monkeypatch.setattr(codex_review.os, "killpg", lambda *args: killed.append(args))
     with pytest.raises(RuntimeError, match="timed out"):
         codex_review.run_codex(_request(), tmp_path)
-    assert killed == [(1234, codex_review.signal.SIGKILL)]
+    assert killed == [(1234, codex_review.signal.SIGTERM)]
 
 
 def test_azure_rubric_footer_reports_quota():
