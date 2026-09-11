@@ -61,7 +61,7 @@ this is a junk value that simplifies the API by avoiding an explicit positivity 
 noncomputable def diagMat (a : Fin n → ℕ) : GL (Fin n) ℚ :=
   if h : ∀ i, 0 < a i then
     GeneralLinearGroup.mkOfDetNeZero (Matrix.diagonal (fun i => (a i : ℚ)))
-      (natDiagDetNeZero n a h)
+      (by exact natDiagDetNeZero n a h)
   else 1
 
 @[simp] lemma diagMat_val (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
@@ -195,7 +195,7 @@ private lemma transvection_det_ne_zero {i j : Fin n} (hij : i ≠ j) (c : ℤ) :
 noncomputable def transvectionGL {i j : Fin n} (hij : i ≠ j) (c : ℤ) : GL (Fin n) ℚ :=
   GeneralLinearGroup.mkOfDetNeZero
     ((Matrix.TransvectionStruct.mk i j hij c).toMatrix.map (Int.cast : ℤ → ℚ))
-    (transvection_det_ne_zero n hij c)
+    (by exact transvection_det_ne_zero n hij c)
 
 lemma transvectionGL_hasIntEntries {i j : Fin n} (hij : i ≠ j) (c : ℤ) :
     HasIntEntries n (transvectionGL n hij c) :=

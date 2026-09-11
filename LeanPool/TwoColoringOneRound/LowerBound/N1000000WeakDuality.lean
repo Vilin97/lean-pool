@@ -39,7 +39,7 @@ abbrev Mu := Fin muSupport.size
 def xEdge (x : Var → Q) : Q :=
   x ⟨edgeVar, by decide⟩
 
-private def defaultMu : Nat × Array Int × Int := (0, #[], 0)
+def defaultMu : Nat × Array Int × Int := (0, #[], 0)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def muNumD (k : Mu) : Int :=

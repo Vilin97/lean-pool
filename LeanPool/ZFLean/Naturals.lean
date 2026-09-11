@@ -87,7 +87,7 @@ notation "ω" => omega
 theorem omega_inductive : inductiveSet ω := ⟨omega_zero, fun _ => omega_succ⟩
 
 /-- Witness for an infinite set, meant to be used for definitional purpose only. -/
-private abbrev some_inf := @Classical.choose _ inductiveSet ⟨_, omega_inductive⟩
+abbrev some_inf := @Classical.choose _ inductiveSet ⟨_, omega_inductive⟩
 
 /-- The set `some_inf` is inductive. -/
 private lemma inductive_some_inf : inductiveSet some_inf := Classical.choose_spec _
@@ -585,7 +585,7 @@ def rec' {motive : ZFSet → Sort u} (n : ZFSet) (h : n ∈ Nat)
     specialize succ (pred x) (pred x).2 ih
     conv at succ =>
       arg 1
-      rw [← succ_lift_eq, succ_pred x_eq_0]
+      rw [← private_decl% succ_lift_eq, succ_pred x_eq_0]
     assumption
 
 /-- Provides the base case of the recursion principle for sets in `Nat`. -/

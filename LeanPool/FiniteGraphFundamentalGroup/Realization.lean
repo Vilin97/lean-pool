@@ -5,6 +5,8 @@ Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
 module
 
+public import Mathlib.Topology.WithTopology
+
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
 public import Mathlib.Topology.Connected.PathConnected
@@ -301,6 +303,9 @@ theorem graphRealization_pathConnected {V : Type u} [Quiver.{u} V]
 theorem graphRealization_compact {V : Type u} [Quiver.{u} V]
     [Finite V] [FiniteQuiver V] : CompactSpace (graphRealization V) := by
   let _ : Fintype V := Fintype.ofFinite V
+  let _ : Finite (Quiver.Total V) := Finite.of_injective
+    (fun e : Quiver.Total V ↦ (⟨e.left, e.right, e.hom⟩ : Σ a b : V, a ⟶ b))
+    (by intro a b h; cases a; cases b; cases h; rfl)
   let _ : CompactSpace (graphRealizationPre V) := by infer_instance
   infer_instance
 

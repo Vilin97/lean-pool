@@ -1347,7 +1347,7 @@ theorem resolvedCarrier_subset (hstart : B.start ∈ U) : B.resolvedCarrier ⊆ 
   · obtain ⟨i, hxi⟩ := Set.mem_iUnion.mp hx
     exact B.resolvedSegment_subset i hxi
 
-private def IsResolvedFace (s : Finset B.arrangementMesh.toPlaneComplex.Vertex) : Prop :=
+def IsResolvedFace (s : Finset B.arrangementMesh.toPlaneComplex.Vertex) : Prop :=
   s.Nonempty ∧
     ((B.resolvedWalk.length = 0 ∧ s ⊆ {B.resolvedWalk.getVert 0}) ∨
       ∃ i : Fin B.resolvedWalk.length,

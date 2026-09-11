@@ -208,7 +208,7 @@ noncomputable def cyclePairToEdgeExtraK : CyclePairs → EdgeExtraK
         exact idx4_ne_remIndex k i hIdx
       ⟨(e, (r, k)), hr⟩
 
-private def choice (k : Fin 5) : Fin 5 → Option (Fin 4) :=
+def choice (k : Fin 5) : Fin 5 → Option (Fin 4) :=
   match k.1 with
   | 0 =>
       fun i =>

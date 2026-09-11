@@ -210,8 +210,8 @@ private theorem inducedMap'_respects (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ 
 induced by a morphism `f : X ⟶ Y` of pointed topological spaces -/
 def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     π_ n X.as X.point → π_ n Y.as Y.point :=
-  Quotient.map (GenLoop.inducedMap' n f) fun {α β} hαβ ↦
-    inducedMap'_respects n f (α := α) (β := β) hαβ
+  Quotient.map (GenLoop.inducedMap' n f) fun {α β} hαβ ↦ by
+    exact inducedMap'_respects n f (α := α) (β := β) hαβ
 
 lemma inducedMap'_default (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     inducedMap' n f (default : π_ n X.as X.point) = (default : π_ n Y.as Y.point) := by

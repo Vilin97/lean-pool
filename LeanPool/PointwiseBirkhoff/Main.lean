@@ -90,7 +90,7 @@ lemma birkhoffMax_measurable [MeasurableSpace α]
 
 open MeasureTheory Measure MeasurableSpace Filter Topology
 
-variable {α : Type*} [msα : MeasurableSpace α] (μ : Measure α := by volume_tac)
+variable {α : Type*} [msα : MeasurableSpace α] (μ : Measure α)
 
 /-- The supremum of `birkhoffSum f φ (n + 1) x` over `n : ℕ`. -/
 noncomputable def birkhoffSup (f : α → α) (φ : α → ℝ) (x : α) : EReal :=
@@ -218,11 +218,7 @@ variable {f : α → α} (hf : MeasurePreserving f μ μ)
 
 lemma iterates_integrable {i : ℕ} (hf : MeasurePreserving f μ μ) (hφ : Integrable φ μ) :
     Integrable (φ ∘ f^[i]) μ := by
-  apply (integrable_map_measure _ _).mp
-  · rwa [(hf.iterate i).map_eq]
-  · rw [(hf.iterate i).map_eq]
-    exact hφ.aestronglyMeasurable
-  exact (hf.iterate i).measurable.aemeasurable
+  exact (hf.iterate i).integrable_comp_of_integrable hφ
 
 lemma birkhoffSum_integrable (hf : MeasurePreserving f μ μ) (hφ : Integrable φ μ) :
     Integrable (birkhoffSum f φ n) μ :=
@@ -329,7 +325,7 @@ lemma limsup_birkhoffAverage_nonpos_of_condexp_neg (hf : MeasurePreserving f μ 
 
 /-- Conditional expectation of an observable onto the invariant measurable space of `f`. -/
 noncomputable def invCondexp
-    (μ : Measure α := by volume_tac) (f : α → α) (φ : α → ℝ) : α → ℝ :=
+    (μ : Measure α) (f : α → α) (φ : α → ℝ) : α → ℝ :=
   μ[φ | invariants f]
 
 theorem birkhoffErgodicTheorem_aux {ε : ℝ} (hε : 0 < ε) (hf : MeasurePreserving f μ μ)

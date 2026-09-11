@@ -5,6 +5,8 @@ Authors: Michael R. Douglas
 -/
 module
 
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
 public import Mathlib.Analysis.Calculus.ParametricIntegral

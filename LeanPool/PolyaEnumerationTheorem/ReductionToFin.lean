@@ -53,10 +53,10 @@ private lemma smul_inv_fin (g : G) (i : Fin enum.card) :
   rw [smul_fin_eq, enum.equiv.symm_apply_apply]
 
 /-- Forward map: a coloring of `X` to a coloring of `Fin enum.card`. -/
-private def fwdColoring (f : X → Y) : Fin enum.card → Y := fun i => f (enum.equiv.symm i)
+def fwdColoring (f : X → Y) : Fin enum.card → Y := fun i => f (enum.equiv.symm i)
 
 /-- Inverse map: a coloring of `Fin enum.card` to a coloring of `X`. -/
-private def invColoring (f : Fin enum.card → Y) : X → Y := fun x => f (enum.equiv x)
+def invColoring (f : Fin enum.card → Y) : X → Y := fun x => f (enum.equiv x)
 
 private lemma fwd_inv (f : X → Y) : invColoring X Y (fwdColoring X Y f) = f := by
   funext x

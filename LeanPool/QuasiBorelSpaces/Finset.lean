@@ -23,7 +23,7 @@ variable
   {B : Type*} [QuasiBorelSpace B]
   {C : Type*} [QuasiBorelSpace C]
 
-private irreducible_def toSubtype : Finset A → { xs : Multiset A // Multiset.Nodup xs }
+irreducible_def toSubtype : Finset A → { xs : Multiset A // Multiset.Nodup xs }
   | ⟨x, h⟩ => ⟨x, h⟩
 
 private irreducible_def ofSubtype : { xs : Multiset A // Multiset.Nodup xs } → Finset A

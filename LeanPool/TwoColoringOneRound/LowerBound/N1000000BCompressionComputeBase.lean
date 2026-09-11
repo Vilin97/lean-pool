@@ -60,7 +60,7 @@ private theorem tTr_lt (d : DirIdx) : tTr[d.1]! < masks.size := by fin_cases d <
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def invDir (d : DirIdx) : DirIdx :=
-  ⟨tTr[d.1]!, tTr_lt d⟩
+  ⟨tTr[d.1]!, (by exact tTr_lt d)⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev basisDen (r : Block) : Nat :=
@@ -238,7 +238,7 @@ private theorem varToOrbitRep_lt (i : Var) : varToOrbitRep[i.1]! < masks.size :=
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def varOrbit (i : Var) : DirIdx :=
-  ⟨varToOrbitRep[i.1]!, varToOrbitRep_lt i⟩
+  ⟨varToOrbitRep[i.1]!, (by exact varToOrbitRep_lt i)⟩
 
 end N1000000BCompressionCompute
 

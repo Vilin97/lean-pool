@@ -24,13 +24,13 @@ in several files with different proof terms.
 
 @[expose] public section
 
-private noncomputable instance instNormSMulClassRealComplex : NormSMulClass ℝ ℂ :=
+noncomputable instance instNormSMulClassRealComplex : NormSMulClass ℝ ℂ :=
   NormedSpace.toNormSMulClass
 
-private noncomputable instance instIsBoundedSMulRealComplex : IsBoundedSMul ℝ ℂ :=
+noncomputable instance instIsBoundedSMulRealComplex : IsBoundedSMul ℝ ℂ :=
   NormSMulClass.toIsBoundedSMul
 
-private noncomputable instance instContinuousSMulRealComplex : ContinuousSMul ℝ ℂ :=
+noncomputable instance instContinuousSMulRealComplex : ContinuousSMul ℝ ℂ :=
   IsBoundedSMul.continuousSMul
 
-private instance instIsScalarTowerRealComplexComplex : IsScalarTower ℝ ℂ ℂ := inferInstance
+instance instIsScalarTowerRealComplexComplex : IsScalarTower ℝ ℂ ℂ := inferInstance

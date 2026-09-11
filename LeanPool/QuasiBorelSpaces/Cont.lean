@@ -40,7 +40,7 @@ instance : PartialOrder (Cont R A) :=
     simp only [mk.injEq, imp_self])
 
 /-- The underlying continuation as an order homomorphism. -/
-private def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
+def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
   toFun := apply
   monotone' _ _ h := h
 

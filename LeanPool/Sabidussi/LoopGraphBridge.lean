@@ -45,7 +45,7 @@ omit [DecidableEq E] [DecidableEq V] in
 theorem eulerWord_prev (i : T.Pos) : T.eulerWord.prev i = T.prev i := rfl
 
 /-- Reversal is an equivalence on the two transition sides. -/
-private def revFinTwoEquiv : Fin 2 ≃ Fin 2 :=
+def revFinTwoEquiv : Fin 2 ≃ Fin 2 :=
   Fin.rev_involutive.toPerm
 
 /-- Occurrence sides with the cyclic-word convention are exactly the incident half-edges. -/

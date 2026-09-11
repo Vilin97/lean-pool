@@ -5,6 +5,8 @@ Authors: Julius Marx
 -/
 module
 
+public import Batteries.Data.UInt
+
 public import LeanPool.MRiscX.Hoare.HoareCore
 public import Mathlib.Tactic.NthRewrite
 public import Mathlib.Algebra.Order.Sub.Unbundled.Basic
@@ -161,5 +163,5 @@ instance instPreorderUInt64LeanPool : Preorder UInt64 where
 instance : WellFoundedLT UInt64 where
   wf := by
     apply Subrelation.wf (r := InvImage (· < ·) UInt64.toNat)
-      (fun h => UInt64.lt_iff_toNat_lt_toNat.mp h)
+      (fun h => (UInt64.lt_iff_toNat_lt_toNat).mp h)
     exact InvImage.wf _ wellFounded_lt

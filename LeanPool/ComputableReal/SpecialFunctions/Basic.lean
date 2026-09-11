@@ -54,11 +54,11 @@ noncomputable instance instComputableSign (x : ℝ) [hx : IsComputable x] : IsCo
 --with this implementation.
 noncomputable instance instComputableMax (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (max x y) :=
-  liftEq (x := ite (x ≤ y) ..) (by rw [max_def]; congr) inferInstance
+  liftEq (x := ite (x ≤ y) y x) (by rw [max_def]; congr) inferInstance
 
 noncomputable instance instComputableMin (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (min x y) :=
-  liftEq (x := ite (x ≤ y) ..) (by rw [min_def]; congr) inferInstance
+  liftEq (x := ite (x ≤ y) x y) (by rw [min_def]; congr) inferInstance
 
 --This ends up calling the same sequence twice (which leads to an exponential
 --slowdown when many nested `abs` are present); would be good to write one that

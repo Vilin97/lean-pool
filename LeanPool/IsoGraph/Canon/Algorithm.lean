@@ -788,6 +788,8 @@ def dfsChildren (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UIn
 
 end
 
+attribute [elab_as_elim] dfsNode.induct
+
 /-! ## Entry points -/
 
 /-- The result of canonicalisation. -/

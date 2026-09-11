@@ -80,10 +80,10 @@ private lemma rho_plus_one_normSq_eq_one :
   exact normSq_half_add_sqrt3_half_I (1/2) (by norm_num)
 
 theorem ellipticPointRhoPlusOne_norm : ‖ellipticPointRhoPlusOne‖ = 1 := by
-  change Real.sqrt (Complex.normSq _) = 1; rw [rho_plus_one_normSq_eq_one, Real.sqrt_one]
+  rw [Complex.norm_def, rho_plus_one_normSq_eq_one, Real.sqrt_one]
 
 theorem ellipticPointRho_norm : ‖ellipticPointRho‖ = 1 := by
-  change Real.sqrt (Complex.normSq _) = 1; rw [rho_normSq_eq_one, Real.sqrt_one]
+  rw [Complex.norm_def, rho_normSq_eq_one, Real.sqrt_one]
 
 theorem ellipticPointI_mem_fd : ellipticPointI' ∈ 𝒟 := by
   simp only [ModularGroup.fd, ellipticPointI', mem_ofPred_eq]

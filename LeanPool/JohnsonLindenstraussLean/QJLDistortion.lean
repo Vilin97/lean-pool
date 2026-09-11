@@ -5,6 +5,8 @@ Authors: claytomode
 -/
 module
 
+public import Mathlib.Probability.Distributions.Gaussian.Fernique
+
 public import LeanPool.JohnsonLindenstraussLean.QJL
 public import LeanPool.JohnsonLindenstraussLean.GaussianTail
 public import Mathlib.Probability.Moments.Variance

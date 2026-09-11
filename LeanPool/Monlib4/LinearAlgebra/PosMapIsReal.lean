@@ -5,6 +5,10 @@ Authors: Monica Omar
 -/
 module
 
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
 public import LeanPool.Monlib4.LinearAlgebra.InnerAut
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
 public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
@@ -131,6 +135,8 @@ by rw [← ContinuousLinearMap.toLinearMapAlgEquiv_apply, AlgEquiv.spectrum_eq]
 
 variable {B : Type*} [NormedAddCommGroup B] [InnerProductSpace ℂ B]
   [FiniteDimensional ℂ B]
+
+local instance : CompleteSpace B := FiniteDimensional.complete ℂ B
 
 open scoped MatrixOrder ComplexOrder FiniteDimensional
 theorem ContinuousLinearMap.nonneg_iff_isSelfAdjoint_and_nonneg_spectrum

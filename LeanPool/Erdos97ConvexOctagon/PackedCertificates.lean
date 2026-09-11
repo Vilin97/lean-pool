@@ -31,12 +31,12 @@ def packedComponentTreeB
   | first :: remaining =>
       decide (first = root) && packedExtendsTreeB code {root} remaining
 
-private def packedTreeLabelledEdgeB
+def packedTreeLabelledEdgeB
     (code : UInt64) (component : List Vertex) (a b : Vertex) : Bool :=
   (decide (a ∈ component) && packedSelectsB code a b) ||
     (decide (b ∈ component) && packedSelectsB code b a)
 
-private def packedResidualValidB (code payload : UInt64) : Bool :=
+def packedResidualValidB (code payload : UInt64) : Bool :=
   let classIndex := payloadClass payload
   let forward := decodeMap (payloadForwardCode payload)
   let inverse := decodeMap (payloadInverseCode payload)

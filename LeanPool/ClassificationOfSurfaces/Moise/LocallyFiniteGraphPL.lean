@@ -566,11 +566,11 @@ private theorem exists_trimActive_vertex (i : Fin 2) :
 
 /-- The `leftTrimVertex` declaration. -/
 noncomputable def leftTrimVertex : A.trimTarget.Vertex :=
-  Classical.choose (A.exists_trimActive_vertex 0)
+  Classical.choose (private_decl% (A.exists_trimActive_vertex 0))
 
 /-- The `rightTrimVertex` declaration. -/
 noncomputable def rightTrimVertex : A.trimTarget.Vertex :=
-  Classical.choose (A.exists_trimActive_vertex 1)
+  Classical.choose (private_decl% (A.exists_trimActive_vertex 1))
 
 theorem leftTrimVertex_face :
     ({A.leftTrimVertex} : Finset A.trimTarget.Vertex) ∈ A.trimTarget.simplexes :=
@@ -583,13 +583,13 @@ theorem rightTrimVertex_face :
 theorem leftTrimVertex_sourcePosition :
     A.trimActive.position A.leftTrimVertex = A.leftSourcePoint := by
   change A.trimActive.position
-    (Classical.choose (A.exists_trimActive_vertex 0)) = A.leftSourcePoint
+    (Classical.choose (private_decl% (A.exists_trimActive_vertex 0))) = A.leftSourcePoint
   exact (Classical.choose_spec (A.exists_trimActive_vertex 0)).2.trans A.trimMark_zero
 
 theorem rightTrimVertex_sourcePosition :
     A.trimActive.position A.rightTrimVertex = A.rightSourcePoint := by
   change A.trimActive.position
-    (Classical.choose (A.exists_trimActive_vertex 1)) = A.rightSourcePoint
+    (Classical.choose (private_decl% (A.exists_trimActive_vertex 1))) = A.rightSourcePoint
   exact (Classical.choose_spec (A.exists_trimActive_vertex 1)).2.trans A.trimMark_one
 
 theorem map_leftSourcePoint :

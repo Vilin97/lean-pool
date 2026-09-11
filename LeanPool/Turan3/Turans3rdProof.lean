@@ -2509,12 +2509,10 @@ theorem finale_bound {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMa
 /-- Defines the uniform vertex weight function that asisngs all vertices the same weight 1 /|V| -/
 noncomputable
 def UnivFun [Nonempty α] : FunToMax G where
-  w := fun _ => 1 / #univ
-  h_w := (by
-    rw [sum_const]
-    simp only [one_div, nsmul_eq_mul]
-    rw [mul_inv_cancel₀]
-    simp only [card_univ, ne_eq, Nat.cast_eq_zero, Fintype.card_ne_zero, not_false_eq_true])
+  w := fun _ => 1 / Fintype.card α
+  h_w := by
+    change (∑ _ : α, (1 / Fintype.card α : NNReal)) = 1
+    simp [nsmul_eq_mul, Fintype.card_ne_zero]
 
 omit [DecidableEq α] in
 /--

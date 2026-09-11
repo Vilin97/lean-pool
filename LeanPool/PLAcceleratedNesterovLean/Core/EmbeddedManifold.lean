@@ -142,8 +142,8 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
   have hp_source : p ∈ c.source := mem_extChartAt_source p
   -- Step 3: Key analytic properties of g
   have hg_smooth : ContDiffAt ℝ 2 g a := by
-    obtain ⟨F, _, _, hF⟩ := hι.isImmersion
-    have hFp := hF p
+    let F := hι.isImmersion.complement
+    have hFp := hι.isImmersion.isImmersionOfComplement_complement p
     have hp_ext_source : p ∈ (hFp.domChart.extend (modelI n)).source := by
       rw [hFp.domChart.extend_source]; exact hFp.mem_domChart_source
     have hp_inTarget := (hFp.domChart.extend (modelI n)).map_source hp_ext_source
@@ -173,8 +173,8 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
     change ι (c.symm (c p)) = m
     rw [PartialEquiv.left_inv c hp_source, hp]
   have hg_inj : Function.Injective (fderiv ℝ g a) := by
-    obtain ⟨F, _, _, hF⟩ := hι.isImmersion
-    have hFp := hF p
+    let F := hι.isImmersion.complement
+    have hFp := hι.isImmersion.isImmersionOfComplement_complement p
     have : (modelI n).Boundaryless := by unfold modelI; infer_instance
     have hg_diff' : DifferentiableAt ℝ g a := hg_smooth.differentiableAt (by norm_num)
     have hp_ext_source : p ∈ (hFp.domChart.extend (modelI n)).source := by

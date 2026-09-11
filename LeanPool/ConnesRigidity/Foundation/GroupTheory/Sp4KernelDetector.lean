@@ -27,19 +27,18 @@ symplectic-matrix carrier for the public theorem used in Zhou §6.
 namespace Connes
 namespace Sp4
 
-private abbrev Matrix4 := Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) F
-private abbrev BVMatrix := BitVec 16
-private abbrev BMatrix := Fin 4 → Fin 4 → Bool
+abbrev BVMatrix := BitVec 16
+abbrev BMatrix := Fin 4 → Fin 4 → Bool
 
-private def bvEntry (x : BVMatrix) : BMatrix := fun i j =>
+def bvEntry (x : BVMatrix) : BMatrix := fun i j =>
   x.getLsbD (4 * i.val + j.val)
 
-private def boolDot (a b : BMatrix) (i j : Fin 4) : Bool :=
+def boolDot (a b : BMatrix) (i j : Fin 4) : Bool :=
   (a i 0 && b 0 j) ^^ (a i 1 && b 1 j) ^^
   (a i 2 && b 2 j) ^^ (a i 3 && b 3 j)
 
-private def boolMul (a b : BMatrix) : BMatrix := boolDot a b
-private def boolTranspose (a : BMatrix) : BMatrix := fun i j => a j i
+def boolMul (a b : BMatrix) : BMatrix := boolDot a b
+def boolTranspose (a : BMatrix) : BMatrix := fun i j => a j i
 
 private def boolMatrixEq (a b : BMatrix) : Prop :=
   a 0 0 = b 0 0 ∧ a 0 1 = b 0 1 ∧ a 0 2 = b 0 2 ∧ a 0 3 = b 0 3 ∧
@@ -47,7 +46,7 @@ private def boolMatrixEq (a b : BMatrix) : Prop :=
   a 2 0 = b 2 0 ∧ a 2 1 = b 2 1 ∧ a 2 2 = b 2 2 ∧ a 2 3 = b 2 3 ∧
   a 3 0 = b 3 0 ∧ a 3 1 = b 3 1 ∧ a 3 2 = b 3 2 ∧ a 3 3 = b 3 3
 
-private def boolMatrixEqB (a b : BMatrix) : Bool :=
+def boolMatrixEqB (a b : BMatrix) : Bool :=
   (a 0 0 == b 0 0) && (a 0 1 == b 0 1) &&
   (a 0 2 == b 0 2) && (a 0 3 == b 0 3) &&
   (a 1 0 == b 1 0) && (a 1 1 == b 1 1) &&
@@ -62,21 +61,21 @@ private theorem boolMatrixEqB_eq_true_iff (a b : BMatrix) :
   simp only [boolMatrixEqB, Bool.and_eq_true, beq_iff_eq, boolMatrixEq]
   tauto
 
-private def boolOne : BMatrix := bvEntry (BitVec.ofNat 16 0x8421)
-private def boolJ : BMatrix := bvEntry (BitVec.ofNat 16 0x2184)
-private def boolG1 : BMatrix := bvEntry (BitVec.ofNat 16 0x13DB)
-private def boolG1Inv : BMatrix := bvEntry (BitVec.ofNat 16 0x5FC8)
-private def boolG2 : BMatrix := bvEntry (BitVec.ofNat 16 0x21B7)
-private def boolG2Inv : BMatrix := bvEntry (BitVec.ofNat 16 0xED84)
+def boolOne : BMatrix := bvEntry (BitVec.ofNat 16 0x8421)
+def boolJ : BMatrix := bvEntry (BitVec.ofNat 16 0x2184)
+def boolG1 : BMatrix := bvEntry (BitVec.ofNat 16 0x13DB)
+def boolG1Inv : BMatrix := bvEntry (BitVec.ofNat 16 0x5FC8)
+def boolG2 : BMatrix := bvEntry (BitVec.ofNat 16 0x21B7)
+def boolG2Inv : BMatrix := bvEntry (BitVec.ofNat 16 0xED84)
 
 private def boolSymplectic (x : BMatrix) : Prop :=
   boolMatrixEq (boolMul (boolMul x boolJ) (boolTranspose x)) boolJ
 
-private def boolConj (g gi x : BMatrix) : BMatrix := boolMul (boolMul g x) gi
+def boolConj (g gi x : BMatrix) : BMatrix := boolMul (boolMul g x) gi
 private def boolCommutes (a b : BMatrix) : Prop :=
   boolMatrixEq (boolMul a b) (boolMul b a)
 
-private def boolCommutesB (a b : BMatrix) : Bool :=
+def boolCommutesB (a b : BMatrix) : Bool :=
   boolMatrixEqB (boolMul a b) (boolMul b a)
 
 /-- Boolean certificate predicate used by the kernel-checked finite search. -/

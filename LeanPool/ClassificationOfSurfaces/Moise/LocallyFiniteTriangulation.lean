@@ -1460,11 +1460,13 @@ theorem locallyFinite_oneSkeleton_cover : LocallyFinite K.edgeCarrier :=
 /-- The canonical interval parameter of a point known to lie on an edge carrier. -/
 noncomputable def edgeParameter (e : K.Edge) (p : S) (hp : p ∈ K.edgeCarrier e) :
     Set.Icc (0 : ℝ) 1 :=
-  Classical.choose (by rw [← K.range_edgePath e] at hp; exact hp)
+  Classical.choose (show ∃ r, K.edgePath e r = p from by
+    rw [← K.range_edgePath e] at hp; exact hp)
 
 theorem edgePath_edgeParameter (e : K.Edge) (p : S) (hp : p ∈ K.edgeCarrier e) :
     K.edgePath e (K.edgeParameter e p hp) = p :=
-  Classical.choose_spec (by rw [← K.range_edgePath e] at hp; exact hp)
+  Classical.choose_spec (show ∃ r, K.edgePath e r = p from by
+    rw [← K.range_edgePath e] at hp; exact hp)
 
 theorem edgeParameter_unique (e : K.Edge) (p : S) (hp : p ∈ K.edgeCarrier e)
     (r : Set.Icc (0 : ℝ) 1) (hr : K.edgePath e r = p) :

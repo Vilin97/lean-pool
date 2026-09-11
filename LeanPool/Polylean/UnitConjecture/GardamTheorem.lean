@@ -82,11 +82,11 @@ namespace Gardam
 open P
 
 /-- Embed a group element as the corresponding basis element of `𝔽₂[P]`. -/
-private abbrev groupRingOf (g : P) : 𝔽₂[P] :=
+abbrev groupRingOf (g : P) : 𝔽₂[P] :=
   ⟦[(1, g)]⟧
 
 /-- The group-ring multiplication, made explicit to avoid the monomial `HMul R G` notation. -/
-private abbrev ringMul (u v : 𝔽₂[P]) : 𝔽₂[P] :=
+abbrev ringMul (u v : 𝔽₂[P]) : 𝔽₂[P] :=
   GroupRing.mul u v
 
 /-- The `p` component of Gardam's non-trivial unit `α`. -/

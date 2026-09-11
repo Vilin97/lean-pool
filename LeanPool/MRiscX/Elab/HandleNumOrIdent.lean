@@ -5,8 +5,8 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.Parser.AssemblySyntax
-public import Lean
+public meta import LeanPool.MRiscX.Parser.AssemblySyntax
+public meta import Lean
 
 /-!
 # HandleNumOrIdent
@@ -14,7 +14,7 @@ public import Lean
 This module provides elaboration helpers for numeric/identifier operands.
 -/
 
-@[expose] public section
+public meta section
 open Nat Lean PrettyPrinter Expr Meta Elab
 
 /-

@@ -74,7 +74,7 @@ existential body and of all finite-stage component conjunctions. -/
 def tupleAllVars (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Finset Nat :=
   p.allVars ∪ Finset.univ.biUnion (fun i => (Phi i).allVars)
 
-private def tupleFreshBase (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Nat :=
+def tupleFreshBase (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Nat :=
   (insert 0 (tupleAllVars p Phi)).max' (by simp)
 
 /-- The source's tuple of pairwise distinct fresh variables, constructed from

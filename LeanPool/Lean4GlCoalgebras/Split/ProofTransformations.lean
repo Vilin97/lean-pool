@@ -879,6 +879,6 @@ noncomputable def proofTransformation {𝕏 : Proof} {σ}
     ExtSkip.Proof :=
   { X := (y : 𝕏.X) × (partialProof y).X
     α := proofTransformationMap partialProof
-    step := proofTransformation_step partialProof root_prop
-    path := proofTransformation_path partialProof box_prop }
+    step := by exact proofTransformation_step partialProof root_prop
+    path := by exact proofTransformation_path partialProof box_prop }
 end Lean4GlCoalgebras

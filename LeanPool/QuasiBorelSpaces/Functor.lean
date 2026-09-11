@@ -72,7 +72,7 @@ attribute [reducible, instance] Sequence.quasiBorelSpace
 
 /-- The composition of a `Functor` with a `Sequence`. -/
 structure Comp (F) [Functor F] (S) [Sequence S] (n : ℕ) where
-  private mk ::
+  mk ::
   /-- The underlying element of `F (S n)`. -/
   get : F (S n)
 
@@ -150,7 +150,7 @@ lemma toFun_eq_coe (f : Limit S) : toFun f = ⇑f := rfl
 @[simp]
 lemma project_coe (n) (f : Limit S) : Sequence.project n (f (n + 1)) = f n := f.property n
 
-private def toSubtype {S} [Sequence S] (x : Limit S)
+def toSubtype {S} [Sequence S] (x : Limit S)
     : { f : ∀ n, S n // ∀ n, Sequence.project n (f (n + 1)) = f n } :=
   ⟨x.toFun, x.property⟩
 
@@ -175,19 +175,19 @@ lemma isHom_coe
 
 end Limit
 
-private structure Bundle.{u} : Type _ where
+structure Bundle.{u} : Type _ where
   Carrier : Type u
   [quasiBorelSpace : QuasiBorelSpace Carrier]
 
 attribute [local instance] Bundle.quasiBorelSpace
 
-private def Iter₀ (F) [Functor F] : ℕ → Bundle
+def Iter₀ (F) [Functor F] : ℕ → Bundle
   | 0 => .mk PUnit
   | n + 1 => .mk (F (Iter₀ F n).Carrier)
 
 /-- The `Sequence` obtained by iterating a `Functor`. -/
 structure Iter (F) [Functor F] (n : ℕ) : Type* where
-  private mk ::
+  mk ::
   /-- The underlying element at the `n`th iterate. -/
   get : (Iter₀ F n).Carrier
 
@@ -207,10 +207,10 @@ lemma isHom_mk {n} : IsHom (mk (F := F) (n := n)) := by
   simp only [isHom_to_lift, isHom_id']
 
 /-- The underlying-value projection as a quasi-Borel homomorphism. -/
-private def getHom {n} : Iter F n →𝒒 (Iter₀ F n).Carrier := .mk get
+def getHom {n} : Iter F n →𝒒 (Iter₀ F n).Carrier := .mk get
 
 /-- The wrapper constructor as a quasi-Borel homomorphism. -/
-private def mkHom {n} : (Iter₀ F n).Carrier →𝒒 Iter F n := .mk mk
+def mkHom {n} : (Iter₀ F n).Carrier →𝒒 Iter F n := .mk mk
 
 private lemma getHom_comp_mkHom {n} :
     (getHom (F := F) (n := n)).comp (mkHom (F := F) (n := n)) = .id := by
@@ -258,7 +258,7 @@ lemma unsucc_succ {n} (x : F (Iter F n)) : unsucc (succ x) = x := by
 lemma succ_injective {n} {x y : F (Iter F n)} (h : succ x = succ y) : x = y := by
   rw [← unsucc_succ x, ← unsucc_succ y, h]
 
-private def project : ∀ n, Iter F (n + 1) →𝒒 Iter F n
+def project : ∀ n, Iter F (n + 1) →𝒒 Iter F n
   | 0 => .mk fun _ ↦ .zero
   | n + 1 => succ.comp ((Functor.map (project n)).comp unsucc)
 
@@ -316,7 +316,7 @@ end Continuous
 
 /-- The greatest fixed point of a `Functor`. -/
 structure Nu (F) [Functor F] where
-  private mk ::
+  mk ::
   /-- The underlying compatible sequence of finite iterates. -/
   get : Limit (Iter F)
 
@@ -334,7 +334,7 @@ lemma isHom_mk : IsHom (mk (F := F)) := by
   simp only [isHom_to_lift (A := Nu F), isHom_id']
 
 @[simps]
-private def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
+def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
   toFun x := {
     toFun n := .mk (Iter.unsucc (x (n + 1)))
     property n := by
@@ -347,7 +347,7 @@ private def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
   }
 
 @[simps -fullyApplied]
-private def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
+def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
   toFun x := {
     toFun
       | 0 => .zero

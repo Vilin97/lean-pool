@@ -5,6 +5,8 @@ Authors: Michael Stoll
 -/
 module
 
+import Mathlib.Tactic.Ring
+
 public import Mathlib.Data.ENat.Lattice
 public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp

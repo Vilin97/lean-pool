@@ -5,6 +5,8 @@ Authors: Julius Marx
 -/
 module
 
+public meta import LeanPool.MRiscX.Tactics.TacticUtil
+
 public import Lean.Elab.Tactic.Basic
 public import LeanPool.MRiscX.Hoare.HoareCore
 public import LeanPool.MRiscX.AbstractSyntax.Instr
@@ -20,7 +22,7 @@ public import Mathlib.Data.Set.Basic
 This module provides a tactic splitting the last instruction off a code sequence.
 -/
 
-@[expose] public section
+public meta section
 open Lean Meta Elab Parser Tactic
 
 

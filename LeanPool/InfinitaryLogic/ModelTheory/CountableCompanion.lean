@@ -35,7 +35,7 @@ variable {L : Language.{u, v}} {M : Type w} [L.Structure M]
 
 /-- The controlling seed: all isolators, and the existential closures of all isolators of one
 higher arity. -/
-private def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
+def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
     Set (Σ n, L.BoundedFormulaω Empty n) :=
   (⋃ n : ℕ, (fun p : Set (L.BoundedFormulaω Empty n) =>
       (⟨n, isolatingFormula (hsmall n) p⟩ : Σ n, L.BoundedFormulaω Empty n)) ''

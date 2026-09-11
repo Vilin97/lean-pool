@@ -987,7 +987,7 @@ macro_rules (kind := substituteNotation)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Rewriting.substitute]
-def _root_.unexpsnderSubstitute : Unexpander
+meta def _root_.unexpsnderSubstitute : Unexpander
   | `($_ $φ:term ![$ts:term,*]) => `($φ /[ $ts,* ])
   | _                           => throw ()
 

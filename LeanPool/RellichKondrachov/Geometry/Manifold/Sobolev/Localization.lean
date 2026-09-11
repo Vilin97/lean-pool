@@ -55,13 +55,13 @@ variable [T2Space M] [CompactSpace M]
 local instance instMeasurableSpaceLocalization : MeasurableSpace M := borel M
 local instance instBorelSpaceLocalization : BorelSpace M := ⟨rfl⟩
 
-private abbrev Iℝ : ModelWithCorners ℝ ℝ ℝ := 𝓘(ℝ, ℝ)
+abbrev Iℝ : ModelWithCorners ℝ ℝ ℝ := 𝓘(ℝ, ℝ)
 
 namespace FiniteChartData
 
 variable (d : FiniteChartData (H := H) (M := M) I)
 
-private abbrev chart (i : d.ι) : PartialEquiv M E :=
+abbrev chart (i : d.ι) : PartialEquiv M E :=
   extChartAt I (d.center i)
 
 /-- The localization of a scalar function `f : M → ℝ` to a chart `i`, as a function on `E`. -/

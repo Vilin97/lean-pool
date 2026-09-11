@@ -171,7 +171,7 @@ lemma lt_of_lt_succ_of_neq {m : ℕ} (h1 : m < n + 1) (h2 : m ≠ n) : m < n := 
   omega
 
 /-- Embed `i : Fin n` into `Fin (n + 1)` by keeping the same underlying value. -/
-private def liftFin (i : Fin n) : Fin (n + 1) := ⟨i.1, Nat.lt_succ_of_lt i.2⟩
+def liftFin (i : Fin n) : Fin (n + 1) := ⟨i.1, Nat.lt_succ_of_lt i.2⟩
 
 @[simp] private lemma liftFin_val (i : Fin n) : (liftFin i).1 = i.1 := rfl
 
@@ -191,7 +191,7 @@ lemma perm_perm_val_lt_of_perm_val_eq {f : Equiv.Perm (Fin (n + 1))} {i : Fin n}
   omega
 
 /-- The forward direction of `permContract`. -/
-private def contractFwd (f : Equiv.Perm (Fin (n + 1))) (i : Fin n) : Fin n :=
+def contractFwd (f : Equiv.Perm (Fin (n + 1))) (i : Fin n) : Fin n :=
   if h : (f (liftFin i)).1 = n
   then ⟨(f (f (liftFin i))).1, perm_perm_val_lt_of_perm_val_eq h⟩
   else ⟨(f (liftFin i)).1, lt_of_lt_succ_of_neq (f (liftFin i)).2 h⟩
@@ -265,7 +265,7 @@ def permContract (f : Equiv.Perm (Fin (n + 1))) : Equiv.Perm (Fin n) where
       simp_all
 
 /-- The forward direction of `permExpand`. -/
-private def expandFwd (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Fin (n + 1) :=
+def expandFwd (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Fin (n + 1) :=
   if h : i.1 = n
   then ⟨n, Nat.lt_succ_self n⟩
   else liftFin (f ⟨i.1, lt_of_lt_succ_of_neq i.2 h⟩)

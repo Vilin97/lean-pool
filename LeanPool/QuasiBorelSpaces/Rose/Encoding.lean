@@ -41,7 +41,7 @@ def mk (x : A) (xs : List (Encoding A)) : Encoding A where
 def fold (mk : A → List B → B) : Encoding A → B
   | ⟨⟨(), xs⟩, k⟩ => mk
     (k [])
-    (List.ofFn fun i ↦ fold mk ⟨xs[i], fun is ↦ k (i :: is)⟩)
+    (List.ofFn fun i : Fin xs.length ↦ fold mk ⟨xs[i], fun is ↦ k (i :: is)⟩)
   decreasing_by
     simp only [Fin.getElem_fin, Sigma.mk.sizeOf_spec, sizeOf_default, Nat.add_zero, mk.sizeOf_spec,
       Unit.sizeOf, Nat.reduceAdd, Nat.add_lt_add_iff_left]

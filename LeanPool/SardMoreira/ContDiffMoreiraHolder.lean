@@ -5,6 +5,8 @@ Authors: Yury G. Kudryashov
 -/
 module
 
+public import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
+
 public import Mathlib.Analysis.Calculus.ContDiff.Basic
 public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 public import Mathlib.Analysis.Asymptotics.Lemmas

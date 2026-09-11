@@ -16,7 +16,7 @@ public import LeanPool.MRiscX.AbstractSyntax.Instr
 This module provides delaborators rendering MRiscX `Code` back to assembly syntax.
 -/
 
-@[expose] public section
+public meta section
 open Lean PrettyPrinter Delaborator SubExpr Expr Nat
 
 /-
@@ -26,7 +26,7 @@ is implemented as unexpander of the Code.mk function.
 
 /-- A total map from instruction indices to parsed instruction syntax, used while
 delaborating a `Code` value back into surface assembly. -/
-def SyntaxInstrMap := TMap UInt64  (TSyntax `mriscxInstr)
+@[expose] def SyntaxInstrMap := TMap UInt64  (TSyntax `mriscxInstr)
 deriving Repr, Inhabited
 
 
@@ -186,7 +186,7 @@ private def termSyntaxSize : Syntax → Nat
   | _ => 1
 
 /-- Fuel-bounded core of `termToInstrMap`; `fuel` bounds the syntax-tree recursion. -/
-private def termToInstrMapAux (fuel : Nat) (t : TSyntax `term) :
+def termToInstrMapAux (fuel : Nat) (t : TSyntax `term) :
     UnexpandM SyntaxInstrMap := do
   match t with
   | `(TMap.empty $_) =>
@@ -207,7 +207,7 @@ def termToInstrMap (t: TSyntax `term) : UnexpandM SyntaxInstrMap :=
   termToInstrMapAux (termSyntaxSize t) t
 
 /-- Fuel-bounded core of `termToLabelMap`; `fuel` bounds the syntax-tree recursion. -/
-private def termToLabelMapAux (fuel : Nat) (t : TSyntax `term) : LabelMap :=
+def termToLabelMapAux (fuel : Nat) (t : TSyntax `term) : LabelMap :=
   match t with
   | `(PMap.empty) => PMap.empty
   | `(EmptyLabels) => PMap.empty

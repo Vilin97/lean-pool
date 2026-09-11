@@ -42,7 +42,7 @@ sensitivity conjecture: for every Boolean function `f` with `deg(f) ≥ 1`,
 `deg(f) ≤ s(f)²`. The argument restricts `f` to a subcube of dimension
 `deg(f)` on which the top Möbius coefficient is preserved, derives a
 parity-sign imbalance there, and feeds the result into the Huang hypercube
-lemma `Sensitivity.huang_degree_theorem` from `Mathlib`'s
+lemma `LeanPoolSensitivity.Huang.huang_degree_theorem`, a module port of Mathlib’s
 `Archive.Sensitivity`.
 
 The exported modules follow the proof structure: core definitions

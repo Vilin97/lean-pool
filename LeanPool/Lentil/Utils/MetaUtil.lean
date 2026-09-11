@@ -5,9 +5,9 @@ Authors: Qiyuan Zhao
 -/
 module
 
-public import Lean
+public meta import Lean
 
-@[expose] public section
+public meta section
 
 open Lean Meta Elab Tactic
 

@@ -2639,11 +2639,11 @@ lemma E4_pos_fiber_ncard_le_two (X : ℝ) (hX : 4 < X) (x : ℕ+)
               (↑u : ℝ) ≤ Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)}.ncard := hvia
       _ ≤ 2 := ncard_pos_int_in_interval_lt_two _ _ hlen
 
-private def pos_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
+def pos_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
   {u : ℤ | 0 < u ∧ (↑u : ℝ) ^ 2 ≥ 5 * (↑↑x : ℝ) ^ 22 - 4 * X ∧
             (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}
 
-private def neg_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
+def neg_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
   {u : ℤ | u < 0 ∧ (↑u : ℝ) ^ 2 ≥ 5 * (↑↑x : ℝ) ^ 22 - 4 * X ∧
             (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}
 

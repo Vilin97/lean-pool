@@ -100,7 +100,7 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
       rw [← mul_left_inj' hβ', inv_mul_cancel₀ hβ', ← Complex.normSq_eq_conj_mul_self]
       norm_cast
       simp_rw [Complex.normSq_eq_norm_sq, ← Complex.norm_pow, hβ]
-      exact Hα'.symm
+      simpa only [RCLike.sqrt_normSq_eq_norm] using Hα'.symm
     have hαβ : β * α⁻¹ = β⁻¹ := by
       rw [← hβ, pow_two, mul_inv, ← mul_assoc, mul_inv_cancel₀ hβ', one_mul]
     use β

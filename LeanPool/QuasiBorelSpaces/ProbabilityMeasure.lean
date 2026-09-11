@@ -35,7 +35,7 @@ variable {A B C A' B' C' : Type*}
 
 /-- The type of _(quasi-borel) probability measures_. -/
 structure ProbabilityMeasure (A : Type*) [QuasiBorelSpace A] where
-  private fromQuotient ::
+  fromQuotient ::
   /-- The quotient of pre-probability measures represented by this probability measure. -/
   val : Quotient (PreProbabilityMeasure.setoid A)
 

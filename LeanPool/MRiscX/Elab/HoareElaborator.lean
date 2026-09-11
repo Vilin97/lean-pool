@@ -5,9 +5,9 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.Hoare.HoareCore
-public import LeanPool.MRiscX.Elab.CodeElaborator
-public import LeanPool.MRiscX.Parser.HoareSyntax
+public meta import LeanPool.MRiscX.Hoare.HoareCore
+public meta import LeanPool.MRiscX.Elab.CodeElaborator
+public meta import LeanPool.MRiscX.Parser.HoareSyntax
 
 /-!
 # HoareElaborator
@@ -15,7 +15,7 @@ public import LeanPool.MRiscX.Parser.HoareSyntax
 This module provides the elaborator for MRiscX Hoare-triple syntax.
 -/
 
-@[expose] public section
+public meta section
 
 
 open Lean Meta Elab

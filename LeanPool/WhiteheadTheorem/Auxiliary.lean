@@ -79,8 +79,8 @@ lemma Real.forall_le_of_iSup_le_of_bddAbove {ι : Sort*} {f : ι → ℝ} {a : �
   · exact Real.isLUB_sSup ‹_› hbdd |>.left (Set.mem_range_self i) |>.trans hf
 
 lemma Real.range_bddAbove_of_finite_domain {ι : Type*} (f : ι → ℝ) [Finite ι] :
-    BddAbove (Set.range f) := by
-  simp_all
+    BddAbove (Set.range f) :=
+  (Set.finite_range f).bddAbove
 
 lemma Real.forall_le_of_iSup_le_of_finite_domain {ι : Type*} {f : ι → ℝ} {a : ℝ}
     [Finite ι] (hf : ⨆ i, f i ≤ a) : ∀ (i : ι), f i ≤ a :=

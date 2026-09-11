@@ -110,8 +110,8 @@ lemma volume_restrict_normalize : volume.restrict (Set.Ico 0 (1 : I)) = volume :
   apply MeasureTheory.measure_inter_conull
   simp_all
 
-private noncomputable def packI [StandardBorelSpace A] : A → I := unpack ∘ pack
-private noncomputable def unpackI [StandardBorelSpace A] [Nonempty A] : I → A := unpack ∘ pack
+noncomputable def packI [StandardBorelSpace A] : A → I := unpack ∘ pack
+noncomputable def unpackI [StandardBorelSpace A] [Nonempty A] : I → A := unpack ∘ pack
 
 @[local simp, local fun_prop]
 private lemma measurable_packI [StandardBorelSpace A] : Measurable (packI (A := A)) := by

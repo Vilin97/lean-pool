@@ -87,7 +87,7 @@ lemma pt_congr {w t w' t' : K} (h : w ^ 3 + t ^ 3 = 1) (h' : w' ^ 3 + t' ^ 3 = 1
 
 /-- **The diagonal translation formula**: `(w,t) + P_a = (a*w, a^{-1}*t)`. -/
 theorem add_ptInf {w t a : K} (h : w ^ 3 + t ^ 3 = 1) (ha : a ^ 3 = 1) :
-    pt w t h + ptInf a ha = pt (a * w) (a ^ 2 * t) (fermat_rotate h ha) := by
+    pt w t h + ptInf a ha = pt (a * w) (a ^ 2 * t) (private_decl% (fermat_rotate h ha)) := by
   by_cases ha1 : a = 1
   · subst ha1
     rw [ptInf_one, add_zero]

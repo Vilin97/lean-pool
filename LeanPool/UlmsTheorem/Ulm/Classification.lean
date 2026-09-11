@@ -42,13 +42,13 @@ hypothesis, and applying it to the inverse stage supplies the back hypothesis.
 abbrev BFIsoStep := UlmStage p (G := G) (H := H)
 
 /-- Policy for extending a finite stage so that it covers a chosen source element. -/
-private abbrev BFForthPolicy :=
+abbrev BFForthPolicy :=
   ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
     ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
       g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a
 
 /-- Policy for extending a finite stage so that it covers a chosen target element. -/
-private abbrev BFBackPolicy :=
+abbrev BFBackPolicy :=
   ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
     ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
       h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a

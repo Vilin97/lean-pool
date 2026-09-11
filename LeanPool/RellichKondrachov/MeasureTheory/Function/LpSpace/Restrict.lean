@@ -45,7 +45,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {p : ℝ≥0∞} [Fact (1 ≤ p)]
 variable {s : Set α} (hs : MeasurableSet s)
 
-private noncomputable def extendByZeroFun (f : Lp E p (μ.restrict s)) : Lp E p μ :=
+noncomputable def extendByZeroFun (f : Lp E p (μ.restrict s)) : Lp E p μ :=
   let hf : MemLp (fun x : α => f x) p (μ.restrict s) := Lp.memLp f
   let hfi : MemLp (s.indicator fun x : α => f x) p μ :=
     (memLp_indicator_iff_restrict (μ := μ) (p := p) (s := s) (f := fun x : α => f x) hs).2 hf

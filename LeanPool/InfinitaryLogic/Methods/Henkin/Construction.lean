@@ -206,7 +206,7 @@ language L. Two terms are equivalent if the maximal consistent set contains
 the equation `t₁ = t₂`. The quotient model satisfies all sentences in S. -/
 
 /-- Equivalence relation on closed terms induced by a maximal consistent set. -/
-private def termEquiv (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+def termEquiv (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (_hmax : C.toConsistencyProperty.MaximalConsistent S) :
     L.Term Empty → L.Term Empty → Prop :=
   fun t₁ t₂ => BoundedFormulaω.equal
@@ -305,10 +305,10 @@ private theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.S
 /-! ### Term Setoid and Quotient -/
 
 /-- The Setoid on closed terms induced by the equivalence relation from S*. -/
-private def termSetoid (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+def termSetoid (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (hmax : C.toConsistencyProperty.MaximalConsistent S) : Setoid (L.Term Empty) where
   r := termEquiv C S hmax
-  iseqv := termEquiv_equivalence C S hmax
+  iseqv := by exact termEquiv_equivalence C S hmax
 
 /-- The carrier of the term model: closed terms quotiented by the equivalence
 relation `t₁ ~ t₂ ↔ (t₁ = t₂) ∈ S*`. -/
@@ -335,7 +335,7 @@ def TermModel.mk (t : L.Term Empty) : TermModel C S hmax :=
   Quotient.mk (termSetoid C S hmax) t
 
 /-- The constant family of setoids for the quotient lifting. -/
-private def termSetoidFamily (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+def termSetoidFamily (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (hmax : C.toConsistencyProperty.MaximalConsistent S) (n : ℕ) :
     ∀ (_ : Fin n), Setoid (L.Term Empty) :=
   fun _ => termSetoid C S hmax
@@ -600,13 +600,13 @@ noncomputable instance termModelStructure :
     @Quotient.finLiftOn (Fin n) _ _ (fun _ => L.Term Empty) (termSetoidFamily C S hmax n)
       (TermModel C S hmax) xs
       (fun ts => TermModel.mk (Term.func f ts))
-      (fun a b hab => Quotient.sound (func_congr f a b hab))
+      (fun a b hab => by exact Quotient.sound (func_congr f a b hab))
   RelMap {n} R xs :=
     @Quotient.finLiftOn (Fin n) _ _ (fun _ => L.Term Empty) (termSetoidFamily C S hmax n)
       Prop xs
       (fun ts => BoundedFormulaω.rel R
         (fun i => (ts i).relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) ∈ S)
-      (fun a b hab => rel_congr R a b hab)
+      (fun a b hab => by exact rel_congr R a b hab)
 
 /-! ### Truth Lemma Infrastructure -/
 
@@ -798,13 +798,13 @@ theorem truthLemma :
         Prop (fun i => Quotient.mk _ ((ts i).toEmpty))
         (fun ts => BoundedFormulaω.rel R
           (fun i => (ts i).relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) ∈ S)
-        (fun a b hab => rel_congr R a b hab)
+        (fun a b hab => by exact rel_congr R a b hab)
     have hsimp := congr_fun (congr_fun
       (Quotient.finLiftOn_mk (S := termSetoidFamily C S hmax _)
         (β := Prop) (fun i => (ts i).toEmpty))
       (fun ts => BoundedFormulaω.rel R
         (fun i => (ts i).relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) ∈ S))
-      (fun a b hab => rel_congr R a b hab)
+      (fun a b hab => by exact rel_congr R a b hab)
     rw [hsimp]; dsimp only []
     -- Now goal is: rel R ts ∈ S ↔ rel R (fun i => ((ts i).toEmpty).relabel Sum.inl) ∈ S
     have hconv : (fun i => ((ts i).toEmpty).relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) =

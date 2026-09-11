@@ -347,7 +347,7 @@ This is $$S^*_{α,β,γ}(X)$$ in the paper and blueprint.
 noncomputable def refinedCountTriplesStar (α β γ : ℝ) (X : ℕ) : ℕ := #(dyadicPoints α β γ X)
 
 /-- The set over which we take the supremum in lemma 2.2. -/
-private noncomputable def indexSet (ε : ℝ) (X : ℕ) : Finset (ℕ × ℕ × ℕ × ℕ) :=
+noncomputable def indexSet (ε : ℝ) (X : ℕ) : Finset (ℕ × ℕ × ℕ × ℕ) :=
   (Finset.Icc 0 (Nat.log 2 X)) ×ˢ (Finset.Icc 0 (Nat.log 2 X)) ×ˢ
   (Finset.Icc 0 (Nat.log 2 X)) ×ˢ (Finset.Icc 1 (Nat.log 2 X+1)) |>.filter fun ⟨i, j, k, n⟩ ↦
     i + j + k ≤ (1 - ε) * n
@@ -715,7 +715,7 @@ private theorem hd_pos : 0 < d := by
   rw [hd, Nat.floor_pos]
   nlinarith only [two_lt_eps_inv]
 
-private instance hd_ne_zero : NeZero d := by
+instance hd_ne_zero : NeZero d := by
   simp_rw [neZero_iff]
   apply ne_of_gt hd_pos
 
@@ -911,7 +911,7 @@ private theorem c_le_X_pow : c ≤ (X : ℝ) ^ ε := calc
     · norm_cast
       linarith
 
-private noncomputable def KIndex : Fin d := Fin.ofNat d (K - 1)
+noncomputable def KIndex : Fin d := Fin.ofNat d (K - 1)
 
 @[simp]
 private theorem KIndex_val_add_one : KIndex.val + 1 = K := by

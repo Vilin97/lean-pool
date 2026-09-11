@@ -237,7 +237,7 @@ variable [Nonempty C]
 /-- The color of the tuple `r ⌢ y` when `r` is strictly monotone and bounded by `y`
 (junk otherwise). Factoring the tree's recorded colors through `colorAbove` makes every
 "the color depends only on the underlying points" step a `congrArg`. -/
-private noncomputable def colorAbove (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam)
+noncomputable def colorAbove (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam)
     (r : Fin (n + 1) → Source lam) : C := by
   classical
   exact if h : StrictMono r ∧ ∀ k, r k < y then
@@ -255,7 +255,7 @@ private theorem colorAbove_eq (G : (Fin (n + 2) ↪o Source lam) → C) {y : Sou
 
 /-- The successor set `S(h)` of a node with reps `rep`: points `y` strictly above every
 rep whose appended tuple colors all match the recorded ones. -/
-private def nodeFiber (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+def nodeFiber (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (rep : β.ToType → Source lam) (col : NodeAt C n β) : Set (Source lam) :=
   { y | (∀ x : β.ToType, rep x < y) ∧
         ∀ τ : Fin (n + 1) ↪o β.ToType, colorAbove G y (fun k => rep (τ k)) = col τ }
@@ -284,7 +284,7 @@ decreasing_by
     rwa [Ordinal.type_toType] at hh
 
 /-- The reps along a node: the chosen rep of the restriction to each position. -/
-private noncomputable def nodeRep (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+noncomputable def nodeRep (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) : β.ToType → Source lam := by
   haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
   exact fun x => nodeChosen G (Ordinal.typein (· < ·) x)

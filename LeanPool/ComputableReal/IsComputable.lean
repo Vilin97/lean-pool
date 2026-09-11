@@ -5,6 +5,8 @@ Authors: Alex Meiburg
 -/
 module
 
+public import Mathlib.Data.String.Defs
+
 public import LeanPool.ComputableReal.ComputableReal
 public import Mathlib.Analysis.RCLike.Basic
 public import Mathlib.Tactic.Peel

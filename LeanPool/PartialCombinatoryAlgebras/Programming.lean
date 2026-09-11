@@ -103,8 +103,7 @@ theorem eq_pair (u v w : Part A) (hu : u ⇓) (hv : v ⇓) (hw : w ⇓) :
   unfold pair
   simp only [compile]
   rw [eval_abstr_app _ _ _ _ hu, eval_abstr_app _ _ _ _ hv, eval_abstr_app _ _ _ _ hw]
-  change Part.some (w.get hw) ⬝ Part.some (u.get hu) ⬝ Part.some (v.get hv) = w ⬝ u ⬝ v
-  rw [Part.some_get hw, Part.some_get hu, Part.some_get hv]
+  simp [HasDot.dot, eval, subst]
 
 /-- The first projection. -/
 def fst : Part A := [pca: ≪ `x ≫ .var `x ⬝ .K]
@@ -121,8 +120,7 @@ theorem eq_fst (u : Part A) (hu : u ⇓) : fst ⬝ u = u ⬝ PCA.K := by
   unfold fst
   simp only [compile]
   rw [eval_abstr_app _ _ _ _ hu]
-  change Part.some (u.get hu) ⬝ PCA.K = u ⬝ PCA.K
-  rw [Part.some_get hu]
+  simp [HasDot.dot, eval, subst]
 
 /-- The second projection. -/
 def snd : Part A := [pca: ≪ `x ≫ .var `x ⬝ .K']
@@ -139,8 +137,7 @@ theorem eq_snd (u : Part A) (hu : u ⇓) : snd ⬝ u = u ⬝ K' := by
   unfold snd
   simp only [compile]
   rw [eval_abstr_app _ _ _ _ hu]
-  change Part.some (u.get hu) ⬝ K' = u ⬝ K'
-  rw [Part.some_get hu]
+  simp [HasDot.dot, eval, subst, Expr.K', Expr.I, K', I]
 
 theorem eq_fst_pair (u v : Part A) (hu : u ⇓) (hv : v ⇓) : fst ⬝ (pair ⬝ u ⬝ v) = u := by
   calc
@@ -206,9 +203,7 @@ theorem eq_X (u v w : Part A) (hu : u ⇓) (hv : v ⇓) (hw : w ⇓) :
   unfold X
   simp only [compile]
   rw [eval_abstr_app _ _ _ _ hu, eval_abstr_app _ _ _ _ hv, eval_abstr_app _ _ _ _ hw]
-  change Part.some (v.get hv) ⬝ (Part.some (u.get hu) ⬝ Part.some (u.get hu) ⬝
-    Part.some (v.get hv)) ⬝ Part.some (w.get hw) = v ⬝ (u ⬝ u ⬝ v) ⬝ w
-  rw [Part.some_get hu, Part.some_get hv, Part.some_get hw]
+  simp [HasDot.dot, eval, subst]
 
 /-- The call-by-name fixed-point combinator. -/
 def Z : Part A := X ⬝ X
@@ -250,9 +245,7 @@ theorem eq_W (u v : Part A) (hu : u ⇓) (hv : v ⇓) :
   unfold W
   simp only [compile]
   rw [eval_abstr_app _ _ _ _ hu, eval_abstr_app _ _ _ _ hv]
-  change Part.some (v.get hv) ⬝ (Part.some (u.get hu) ⬝
-    Part.some (u.get hu) ⬝ Part.some (v.get hv)) = v ⬝ (u ⬝ u ⬝ v)
-  rw [Part.some_get hu, Part.some_get hv]
+  simp [HasDot.dot, eval, subst]
 
 /-- The call-by-value fixed-point combinator. -/
 def Y : Part A := W ⬝ W

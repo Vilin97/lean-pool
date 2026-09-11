@@ -74,7 +74,7 @@ initialize proofCache :
     IO.Ref (Std.HashMap Wrd ProofNode) ← IO.mkRef Std.HashMap.emptyWithCapacity
 
 /-- Look up a cached floating-point length bound. -/
-private def cacheLength? (w : Wrd) : IO (Option Float) :=
+def cacheLength? (w : Wrd) : IO (Option Float) :=
     do
     let cache ← floatNormCache.get
     match cache.get? w with
@@ -140,7 +140,7 @@ def powerLength : Wrd → Nat → IO Float
       return l₀
 
 /-- Recursively expand cached proof nodes with a bounded traversal fuel. -/
-private def resolveProofWithFuel : Nat → Wrd → IO ((List ProofNode) × (List Wrd))
+def resolveProofWithFuel : Nat → Wrd → IO ((List ProofNode) × (List Wrd))
 | 0, w => return ([], [w])
 | fuel + 1, w => do
   let cache ← proofCache.get
@@ -157,7 +157,7 @@ def resolveProof (w : Wrd) : IO ((List ProofNode) × (List Wrd)) := do
   resolveProofWithFuel (cache.size + 1) w
 
 /-- Recompute a derived length with a bounded traversal fuel. -/
-private def derivedLengthWithFuel : Nat → Wrd → IO Float
+def derivedLengthWithFuel : Nat → Wrd → IO Float
 | 0, w => throw <| IO.userError s!"proof cache recursion exhausted at {w}"
 | fuel + 1, w => do
   let cache ← proofCache.get
@@ -177,7 +177,7 @@ def derivedLength (w : Wrd) : IO Float := do
   derivedLengthWithFuel (cache.size + 1) w
 
 /-- Recompute a derived length proof with a bounded traversal fuel. -/
-private def derivedProofWithFuel : Nat → Wrd → IO (Float × (List ProofNode))
+def derivedProofWithFuel : Nat → Wrd → IO (Float × (List ProofNode))
 | 0, w => throw <| IO.userError s!"proof cache recursion exhausted at {w}"
 | fuel + 1, w => do
   let cache ← proofCache.get

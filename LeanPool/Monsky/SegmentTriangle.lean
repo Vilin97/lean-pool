@@ -5,6 +5,8 @@ Authors: Dhyan Aranha, contributors
 -/
 module
 
+import Mathlib.Algebra.Order.Interval.Set.Group
+
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Tactic.Common
 public import Mathlib.Tactic.Linarith

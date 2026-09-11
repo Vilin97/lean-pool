@@ -37,7 +37,7 @@ variable {F : Set (Σ n, L.Functions n)} [Countable ↥F]
 
 /-- The function value extracted from a model of the graph axioms: the totality witness for
 `f ∈ F` (unique by functionality), an arbitrary element outside `F`. -/
-private noncomputable def graphValue (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
+noncomputable def graphValue (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
     (f : L.Functions n) (xs : Fin n → M) : M :=
   letI := Classical.dec ((⟨n, f⟩ : Σ n, L.Functions n) ∈ F)
   if h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F then

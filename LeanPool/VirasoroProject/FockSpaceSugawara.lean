@@ -122,7 +122,7 @@ noncomputable def sugawaraRepresentationOfModuleUeaHeisenbergAlgebra
     ModuleOfModuleAlgebra.lsmul 𝕜 V (ιUEA 𝕜 (jgen 𝕜 k))
   sugawaraRepresentation (heiOper := heiOper)
     (fun v ↦ htrunc ((ModuleOfModuleAlgebra.unMkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) v))
-    (commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
+    (by exact commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
 
 open HeisenbergAlgebra Filter in
 lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_lgen_apply
@@ -137,7 +137,7 @@ lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_lgen_apply
                       • ModuleOfModuleAlgebra.unMkAddHom 𝕜 _ V v))) := by
   apply sugawaraRepresentation_lgen_apply _
     ((fun v ↦ htrunc ((ModuleOfModuleAlgebra.unMkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) v)))
-    (commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
+    (by exact commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
 
 open HeisenbergAlgebra Filter in
 lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_cgen_apply
@@ -147,7 +147,7 @@ lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_cgen_apply
     sugawaraRepresentationOfModuleUeaHeisenbergAlgebra 𝕜 htrunc hc (.cgen 𝕜) v = v := by
   have key := sugawaraRepresentation_cgen _
     ((fun v ↦ htrunc ((ModuleOfModuleAlgebra.unMkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) v)))
-    (commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
+    (by exact commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
   simpa [sugawaraRepresentationOfModuleUeaHeisenbergAlgebra] using congr_arg (fun A ↦ A v) key
 
 end auxiliary

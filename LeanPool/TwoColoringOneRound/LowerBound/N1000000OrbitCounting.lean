@@ -138,7 +138,7 @@ theorem baseOrbit_freeCoord_outside {k : DirIdx} (u : BaseOrbit k) (j : FreeCol 
     ge_three_of_ne_base (x := u.1.1 j.1)
       (h0 := hne ⟨0, by decide⟩) (h1 := hne ⟨1, by decide⟩) (h2 := hne ⟨2, by decide⟩)
 
-private def encodeBaseOrbit (k : DirIdx) (u : BaseOrbit k) : FreeCol k ↪ AvailFrom3 :=
+def encodeBaseOrbit (k : DirIdx) (u : BaseOrbit k) : FreeCol k ↪ AvailFrom3 :=
   ⟨fun j => ⟨u.1.1 j.1, baseOrbit_freeCoord_outside (u := u) (j := j)⟩, by
     intro j₁ j₂ hEq
     have : u.1.1 j₁.1 = u.1.1 j₂.1 := by
@@ -219,7 +219,7 @@ private theorem decodeTuple_injective (k : DirIdx) (g : FreeCol k ↪ AvailFrom3
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def decodeVertex (k : DirIdx) (g : FreeCol k ↪ AvailFrom3) : V :=
-  ⟨decodeTuple (k := k) g, decodeTuple_injective (k := k) g⟩
+  ⟨decodeTuple (k := k) g, by exact decodeTuple_injective (k := k) g⟩
 
 private lemma decide_base_eq_decodeVertex_eq_decide_colMatch (k : DirIdx)
     (g : FreeCol k ↪ AvailFrom3)
@@ -370,8 +370,8 @@ noncomputable def baseOrbitEquivEmbedding (k : DirIdx) :
     BaseOrbit k ≃ (FreeCol k ↪ AvailFrom3) where
   toFun := encodeBaseOrbit k
   invFun := decodeBaseOrbit k
-  left_inv := decode_encode_id k
-  right_inv := encode_decode_id k
+  left_inv := by exact decode_encode_id k
+  right_inv := by exact encode_decode_id k
 
 theorem baseOrbit_card (k : DirIdx) : Fintype.card (BaseOrbit k) = baseTypeCount k := by
   classical

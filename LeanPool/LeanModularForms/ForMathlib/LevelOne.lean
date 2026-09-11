@@ -21,9 +21,3 @@ TODO: Add finite-dimensionality of these spaces of modular forms.
 -/
 
 @[expose] public section
-
-open UpperHalfPlane ModularGroup SlashInvariantForm ModularForm Complex
-  CongruenceSubgroup Real Function SlashInvariantFormClass ModularFormClass Periodic
-
-local notation "𝕢" => qParam
-

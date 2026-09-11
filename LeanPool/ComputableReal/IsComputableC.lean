@@ -162,7 +162,8 @@ noncomputable instance instComputableInner : IsComputable (inner ℝ x y) :=
     (inferInstanceAs (IsComputable (Complex.re (y * conj x))))
 
 noncomputable instance instComputableNorm : IsComputable ‖x‖ :=
-  inferInstanceAs (IsComputable (√(Complex.normSq x)))
+  IsComputable.liftEq RCLike.sqrt_normSq_eq_norm
+    (inferInstanceAs (IsComputable (√(Complex.normSq x))))
 
 noncomputable instance instComputableNNNorm : IsComputable ‖x‖₊ :=
   instComputableNorm x

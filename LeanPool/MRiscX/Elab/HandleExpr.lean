@@ -5,8 +5,10 @@ Authors: Julius Marx
 -/
 module
 
-public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public import Lean
+public meta import LeanPool.MRiscX.AbstractSyntax.Map
+public meta import LeanPool.MRiscX.AbstractSyntax.Instr
+public meta import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public meta import Lean
 
 /-!
 # HandleExpr
@@ -14,7 +16,7 @@ public import Lean
 This module provides helpers reflecting Lean `Expr`s into MRiscX data.
 -/
 
-@[expose] public section
+public meta section
 open Lean Meta Elab
 
 /-

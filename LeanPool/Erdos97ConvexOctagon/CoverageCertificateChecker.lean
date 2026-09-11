@@ -70,13 +70,13 @@ inductive BranchClaim where
   /-- The five remaining rows are covered by postorder local claims. -/
   | search (claims : BranchClaims)
 
-private def defaultNodeClaim : NodeClaim :=
+def defaultNodeClaim : NodeClaim :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0, #[]⟩
 
-private def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
+def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
   ⟨wordIndex, [], [], [], []⟩
 
-private def nodeWordClaimAtAux
+def nodeWordClaimAtAux
   (wordClaims : Array NodeWordClaim) (wordIndex position : Nat) :
     Nat → NodeWordClaim
   | 0 => emptyNodeWordClaim wordIndex
@@ -117,13 +117,13 @@ def pairStateFromAssignments (assignments : List RowAssignment) : PairState :=
 def columnStateFromAssignments (assignments : List RowAssignment) : ColumnState :=
   assignments.foldl (fun state assignment => state.add assignment.2) ColumnState.empty
 
-private structure LocalCursor where
+structure LocalCursor where
   ok : Bool
   patternOrigins : List Nat
   childIds : List Nat
   hardOrigins : List Nat
 
-private structure RejectionCursor where
+structure RejectionCursor where
   ok : Bool
   targets : List Nat
 
@@ -198,7 +198,7 @@ def conflictCoverLookup (identifier : Nat) : Option ConflictCover :=
   | none => none
   | some group => group[identifier % 64]?
 
-private def processRow
+def processRow
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (cursor : LocalCursor) (index : Nat) : LocalCursor :=
@@ -232,7 +232,7 @@ private def processRow
           ⟨childValid, cursor.patternOrigins, childIds, cursor.hardOrigins⟩
 
 /-- Process at most five compatible rows while threading the local witness streams. -/
-private def processFiveRows
+def processFiveRows
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (indices : List Nat) (initial : LocalCursor) : LocalCursor :=
@@ -348,7 +348,7 @@ def rejectedRowValidB
       decide (count + remainingColumnCapacity remaining targetVertex < 4)
   else false
 
-private def processRejectedRow
+def processRejectedRow
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (cursor : RejectionCursor) (index : Nat) : RejectionCursor :=
   if !cursor.ok then cursor

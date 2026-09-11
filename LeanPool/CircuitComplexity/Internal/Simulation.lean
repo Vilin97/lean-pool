@@ -273,11 +273,11 @@ def fin2 (a b : α) : Fin 2 → α := fun i => if i.val = 0 then a else b
 @[simp] lemma fin2_one (a b : α) : fin2 a b 1 = b := rfl
 
 /-- Operation for the chain gate: dual-op for constants, same op otherwise. -/
-private def mkChainOp (op : AONOp) (k : Nat) : AONOp :=
+def mkChainOp (op : AONOp) (k : Nat) : AONOp :=
   if k = 0 then op.dual else op
 
 /-- Input wires for the j-th chain gate. -/
-private def mkChainInputs {W : Nat} (hW : 0 < W) (k : Nat)
+def mkChainInputs {W : Nat} (hW : 0 < W) (k : Nat)
     (ri : Fin k → Fin W) (base : Nat) (j : Nat)
     (hj : j < chainLen k) (hbase : base + chainLen k ≤ W) : Fin 2 → Fin W :=
   if hk0 : k = 0 then fun _ => ⟨0, hW⟩
@@ -291,7 +291,7 @@ private def mkChainInputs {W : Nat} (hW : 0 < W) (k : Nat)
     fin2 ⟨base + j - 1, by omega⟩ (ri ⟨j + 1, by omega⟩)
 
 /-- Negation flags for the j-th chain gate. -/
-private def mkChainNeg (k : Nat) (rn : Fin k → Bool) (j : Nat)
+def mkChainNeg (k : Nat) (rn : Fin k → Bool) (j : Nat)
     (hj : j < chainLen k) : Fin 2 → Bool :=
   if hk0 : k = 0 then fin2 false true
   else if hk1 : k = 1 then fun _ => rn ⟨0, by omega⟩
@@ -332,7 +332,7 @@ private lemma mkChainInputs_lt {W : Nat} (hW : 0 < W) (k : Nat)
 /-! ## Compiled circuit -/
 
 /-- Input wires for the compiled gate at flat index `idx`. -/
-private def compileGateInputs (c : Circuit Basis.unboundedAON N M G) (idx : Fin (G' c)) :
+def compileGateInputs (c : Circuit Basis.unboundedAON N M G) (idx : Fin (G' c)) :
     Fin 2 → Fin (N + G' c) :=
   if h : idx.val < iTotal c then
     let seg := segLookup G (iChainF c) idx.val h
@@ -356,7 +356,7 @@ private def compileGateInputs (c : Circuit Basis.unboundedAON N M G) (idx : Fin 
       (by have := oOffset_chain_le_G' c hj; omega)
 
 /-- Operation for the compiled gate at flat index `idx`. -/
-private def compileGateOp (c : Circuit Basis.unboundedAON N M G) (idx : Fin (G' c)) : AONOp :=
+def compileGateOp (c : Circuit Basis.unboundedAON N M G) (idx : Fin (G' c)) : AONOp :=
   if h : idx.val < iTotal c then
     let seg := segLookup G (iChainF c) idx.val h
     have hi : seg.1 < G := segLookup_fst_lt G _ _ h
@@ -369,7 +369,7 @@ private def compileGateOp (c : Circuit Basis.unboundedAON N M G) (idx : Fin (G' 
     mkChainOp (c.outputs ⟨seg.1, hj⟩).op (c.outputs ⟨seg.1, hj⟩).fanIn
 
 /-- Negation flags for the compiled gate at flat index `idx`. -/
-private def compileGateNeg (c : Circuit Basis.unboundedAON N M G) (idx : Fin (G' c)) :
+def compileGateNeg (c : Circuit Basis.unboundedAON N M G) (idx : Fin (G' c)) :
     Fin 2 → Bool :=
   if h : idx.val < iTotal c then
     let seg := segLookup G (iChainF c) idx.val h

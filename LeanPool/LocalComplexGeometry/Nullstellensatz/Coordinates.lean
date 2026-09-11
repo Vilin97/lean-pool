@@ -39,7 +39,7 @@ private theorem continuousLinearMap_tendsto_zero {n m : ℕ}
 def localSetGermPullback {n m : ℕ}
     (L : ComplexEuclidean n →L[ℂ] ComplexEuclidean m) :
     LocalSetGerm m → LocalSetGerm n :=
-  fun Z ↦ Z.compTendsto L (continuousLinearMap_tendsto_zero L)
+  fun Z ↦ Z.compTendsto L (private_decl% (continuousLinearMap_tendsto_zero L))
 
 @[simp]
 theorem localSetGermPullback_top {n m : ℕ}
@@ -67,7 +67,7 @@ theorem localSetGermPullback_mono {n m : ℕ}
     ((P ∘ L : ComplexEuclidean n → Prop) : LocalSetGerm n) ≤
       ((Q ∘ L : ComplexEuclidean n → Prop) : LocalSetGerm n)
   rw [Filter.Germ.coe_le]
-  exact (continuousLinearMap_tendsto_zero L).eventually hPQ
+  exact (private_decl% (continuousLinearMap_tendsto_zero L)).eventually hPQ
 
 @[simp]
 theorem localSetGermPullback_zeroLocus {n m : ℕ}

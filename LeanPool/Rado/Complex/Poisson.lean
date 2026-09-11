@@ -87,6 +87,9 @@ theorem poissonKernel_continuousOn_sphere (hw : w ∈ ball c R) :
   have h : ContinuousAt
       (fun z : ℂ ↦ (‖z - c‖ ^ 2 - ‖w - c‖ ^ 2) / ‖(z - c) - (w - c)‖ ^ 2) z :=
     ContinuousAt.div (by fun_prop) (by fun_prop) hne
+  rw [show poissonKernel c w =
+    (fun z : ℂ ↦ (‖z - c‖ ^ 2 - ‖w - c‖ ^ 2) / ‖(z - c) - (w - c)‖ ^ 2) from
+      funext (poissonKernel_def c w)]
   exact h.continuousWithinAt
 
 /-- Unit mass of the Poisson kernel. -/

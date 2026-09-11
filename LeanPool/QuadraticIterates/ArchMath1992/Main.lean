@@ -5,6 +5,8 @@ Authors: Michael Stoll
 -/
 module
 
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+
 public import Mathlib.Algebra.Order.Field.Power
 public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 

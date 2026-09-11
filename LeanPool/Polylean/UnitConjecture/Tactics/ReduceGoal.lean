@@ -5,9 +5,9 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-public import Lean
+public meta import Lean
 
-@[expose] public section
+public meta section
 
 open Lean Meta Elab Tactic Term
 

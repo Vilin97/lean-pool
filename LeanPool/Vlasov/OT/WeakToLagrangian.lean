@@ -5,6 +5,8 @@ Authors: Joseph K. Miller
 -/
 module
 
+public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
+
 public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff

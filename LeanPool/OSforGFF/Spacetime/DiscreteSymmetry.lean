@@ -178,7 +178,7 @@ private lemma timeReflection_hg_upper :
 noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ :=
   SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := timeReflectionCLM.hasTemperateGrowth)
-    (hg_upper := timeReflection_hg_upper)
+    (hg_upper := by exact timeReflection_hg_upper)
 
 /-- Composition with time reflection as a continuous linear map on **real-valued**
     test functions. This version will be used when working with positive-time
@@ -188,7 +188,7 @@ noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ
 noncomputable def compTimeReflectionReal : TestFunction →L[ℝ] TestFunction :=
   SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := timeReflectionCLM.hasTemperateGrowth)
-    (hg_upper := timeReflection_hg_upper)
+    (hg_upper := by exact timeReflection_hg_upper)
 
 /-- Time reflection is linear on real test functions. -/
 lemma compTimeReflectionReal_linear_combination {n : ℕ} (f : Fin n → TestFunction) (c : Fin n → ℝ) :

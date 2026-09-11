@@ -24,7 +24,7 @@ macro_rules
 
 /-- Pretty-print `Extend F` back as `F∞`. -/
 @[app_unexpander Extend]
-def unexpandExtend : Lean.PrettyPrinter.Unexpander
+meta def unexpandExtend : Lean.PrettyPrinter.Unexpander
 | `($(_) $F:ident) => `($F:ident∞)
 | _ => throw ()
 
@@ -45,7 +45,7 @@ macro_rules
 
 /-- Pretty-print `NNeg F` back as `F≥0`. -/
 @[app_unexpander NNeg]
-def unexpandNNeg : Lean.PrettyPrinter.Unexpander
+meta def unexpandNNeg : Lean.PrettyPrinter.Unexpander
 | `($(_) $F:ident) => `($F:ident≥0)
 | _ => throw ()
 

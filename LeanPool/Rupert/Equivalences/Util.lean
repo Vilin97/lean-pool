@@ -6,6 +6,7 @@ Authors: David Renshaw
 module
 
 public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import LeanPool.Rupert.Affine
 public import LeanPool.Rupert.Basic
 public import LeanPool.Rupert.Set
 
@@ -50,3 +51,7 @@ def projXyRotationIsAffine (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
 noncomputable
 def fullTransformAffine (off : E 2) (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
   AffineMap.comp (offsetAffine off) (projXyRotationIsAffine rot)
+
+proof_wanted affine_rupert_iff_rupert_set
+    (X : Set (EuclideanSpace ℝ (Fin 3))) :
+    IsAffineRupertSet X ↔ IsRupertSet X

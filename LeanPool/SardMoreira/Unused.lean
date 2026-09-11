@@ -5,6 +5,8 @@ Authors: Yury G. Kudryashov
 -/
 module
 
+public import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
+
 public import LeanPool.SardMoreira.ContDiff
 
 /-!

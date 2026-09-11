@@ -32,8 +32,8 @@ structure OmegaQuasiBorelHom
     [OmegaQuasiBorelSpace X] [OmegaQuasiBorelSpace Y] where
   /-- The underlying function of an ω-quasi-borel morphism. -/
   toFun : X → Y
-  private isHom' : IsHom toFun := by fun_prop
-  private ωScottContinuous' : ωScottContinuous toFun := by fun_prop
+  isHom' : IsHom toFun := by fun_prop
+  ωScottContinuous' : ωScottContinuous toFun := by fun_prop
 
 @[inherit_doc] infixr:25 " →ω𝒒 " => OmegaQuasiBorelHom
 
@@ -108,7 +108,7 @@ def toQuasiBorelHom (f : X →ω𝒒 Y) : X →𝒒 Y where
   toFun := f
 
 /-- The underlying pointwise function as an order homomorphism. -/
-private def coeOrderHom : (X →ω𝒒 Y) →o (X → Y) where
+def coeOrderHom : (X →ω𝒒 Y) →o (X → Y) where
   toFun f := f
   monotone' _ _ h := h
 

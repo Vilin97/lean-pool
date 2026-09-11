@@ -5,6 +5,8 @@ Authors: Yury G. Kudryashov
 -/
 module
 
+import Mathlib.Topology.Order.AtTopBotIxx
+
 public import Mathlib.Analysis.Normed.Order.Lattice
 public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Order

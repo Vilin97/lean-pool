@@ -5,6 +5,8 @@ Authors: Judith Ludwig, Christian Merten
 -/
 module
 
+public import Mathlib.Data.List.Enum
+
 public import LeanPool.BruhatTits.Graph.Vertices
 public import LeanPool.BruhatTits.Lattice.Quotient
 public import LeanPool.BruhatTits.Utils.GLSubmoduleAction

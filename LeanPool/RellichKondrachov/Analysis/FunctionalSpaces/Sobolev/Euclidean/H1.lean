@@ -65,9 +65,9 @@ local instance instOpensMeasurableSpaceH1 : OpensMeasurableSpace E := by infer_i
 
 variable (μ : Measure E) [IsFiniteMeasureOnCompacts μ]
 
-private abbrev L2ℝ : Type _ := ↥(E →₂[μ] ℝ)
-private abbrev L2E : Type _ := ↥(E →₂[μ] E)
-private abbrev H1Target : Type _ := L2ℝ (μ := μ) × L2E (μ := μ)
+abbrev L2ℝ : Type _ := ↥(E →₂[μ] ℝ)
+abbrev L2E : Type _ := ↥(E →₂[μ] E)
+abbrev H1Target : Type _ := L2ℝ (μ := μ) × L2E (μ := μ)
 
 /-- `C¹` real-valued functions on `E` with compact support, as a submodule of `E → ℝ`. -/
 def C1c : Submodule ℝ (E → ℝ) where
@@ -169,8 +169,8 @@ private lemma toL2_smul (c : ℝ) (f : ↥(C1c (E := E))) :
 /-- Linear map sending `C¹_c` functions to their `L²` classes. -/
 noncomputable def toL2Linear : ↥(C1c (E := E)) →ₗ[ℝ] L2ℝ (μ := μ) where
   toFun := toL2 (μ := μ) (E := E)
-  map_add' := toL2_add (μ := μ) (E := E)
-  map_smul' := toL2_smul (μ := μ) (E := E)
+  map_add' := by exact toL2_add (μ := μ) (E := E)
+  map_smul' := by exact toL2_smul (μ := μ) (E := E)
 
 private lemma toL2Grad_add (f g : ↥(C1c (E := E))) :
     toL2Grad (μ := μ) (E := E) (f + g) =
@@ -230,8 +230,8 @@ private lemma toL2Grad_smul (c : ℝ) (f : ↥(C1c (E := E))) :
 /-- Linear map sending `C¹_c` functions to the `L²` class of their gradient. -/
 noncomputable def toL2GradLinear : ↥(C1c (E := E)) →ₗ[ℝ] L2E (μ := μ) where
   toFun := toL2Grad (μ := μ) (E := E)
-  map_add' := toL2Grad_add (μ := μ) (E := E)
-  map_smul' := toL2Grad_smul (μ := μ) (E := E)
+  map_add' := by exact toL2Grad_add (μ := μ) (E := E)
+  map_smul' := by exact toL2Grad_smul (μ := μ) (E := E)
 
 /-- The graph map `f ↦ (f, ∇f)` into `L² × L²(E)`. -/
 noncomputable def graph : ↥(C1c (E := E)) →ₗ[ℝ] H1Target (μ := μ) :=

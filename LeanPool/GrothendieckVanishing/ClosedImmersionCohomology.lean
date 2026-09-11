@@ -35,7 +35,7 @@ open CategoryTheory TopologicalSpace Abelian Limits Opposite
 /-! ## Closed-immersion cohomology consequences -/
 
 -- Instance search does not unfold the subtype topology in `TopCat.of Z`.
-private noncomputable instance subtypeSheafHAddCommGroup
+noncomputable instance subtypeSheafHAddCommGroup
     {X : TopCat.{u}} {Z : Set X}
     (G : TopCat.Sheaf AddCommGrpCat.{u} (TopCat.of Z)) (n : ℕ) :
     AddCommGroup (Sheaf.H G n) :=

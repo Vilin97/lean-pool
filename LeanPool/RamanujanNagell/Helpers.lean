@@ -261,7 +261,7 @@ private lemma sixteen_norm_rem_le (a b : R) (hb : b ≠ 0) :
     nlinarith [hv_bd, huv_bd]
   nlinarith [h_chain, h_bd, hN_pos, sq N]
 
-private noncomputable def normMeasure (a : R) : ℕ := Int.natAbs (QuadraticAlgebra.norm a)
+noncomputable def normMeasure (a : R) : ℕ := Int.natAbs (QuadraticAlgebra.norm a)
 
 private lemma natAbs_norm_rem_lt (a : R) {b : R} (hb : b ≠ 0) :
     normMeasure (rem a b) < normMeasure b := by
@@ -296,8 +296,8 @@ noncomputable instance instEuclideanDomain : EuclideanDomain R where
   quotient_mul_add_remainder_eq := quot_mul_add_rem_eq
   r := fun a b => normMeasure a < normMeasure b
   r_wellFounded := (measure normMeasure).wf
-  remainder_lt := natAbs_norm_rem_lt
-  mul_left_not_lt := norm_mul_left_not_lt
+  remainder_lt := by exact natAbs_norm_rem_lt
+  mul_left_not_lt := by exact norm_mul_left_not_lt
 
 /-- `R` is a principal ideal ring, since every Euclidean domain is one. -/
 instance instPrincipalIdealRing : IsPrincipalIdealRing R :=

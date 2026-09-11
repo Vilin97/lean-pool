@@ -950,7 +950,7 @@ noncomputable instance [HasAxiomDNE 𝓢] : HasAxiomPeirce 𝓢 where
     apply deduct;
     refine (FiniteContext.byAxm (φ := (φ ==> ψ) ==> φ)) ⨀ ?_;
     apply deduct;
-    apply efqOfMemEither (by aesop) (by aesop)
+    apply efqOfMemEither (φ := φ) (by aesop) (by aesop)
 
 omit [DecidableEq F] in
 instance [HasAxiomDNE 𝓢] : HasAxiomElimContra 𝓢 where

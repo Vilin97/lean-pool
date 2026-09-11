@@ -15,7 +15,7 @@ public import LeanPool.MRiscX.Elab.HandleNumOrIdent
 This module provides delaborators for MRiscX Hoare triples.
 -/
 
-@[expose] public section
+public meta section
 open Lean PrettyPrinter SubExpr Expr Nat Elab
 
 /-

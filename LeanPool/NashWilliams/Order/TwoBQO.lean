@@ -102,7 +102,7 @@ theorem perfect_or_bad {α : Type*} (r : α → α → Prop) (f : PairSeq α) :
 end PairSeq
 
 /-- `r` is **2-BQO** if there is no bad pair-sequence for `r`. -/
-private def TwoBQO_n {α : Type*} (r : α → α → Prop) : Prop :=
+def TwoBQO_n {α : Type*} (r : α → α → Prop) : Prop :=
   ¬ ∃ f : PairSeq α, PairSeq.IsBad r f
 
 /-- `r` is **2-BQO** if every pair-sequence has a good triple `m < n < l`, i.e.

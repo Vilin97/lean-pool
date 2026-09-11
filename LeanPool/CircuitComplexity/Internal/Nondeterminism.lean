@@ -66,7 +66,7 @@ private theorem andOr2_eval_two {W : Nat} (g : Gate Basis.andOr2 W)
 /-! ## Restriction gate construction -/
 
 /-- A constant-output gate: `OR(x, ¬x) = true` or `AND(x, ¬x) = false`. -/
-private def mkConstGateP {G : Nat} [NeZero m] (val : Bool) (bound : Nat) :
+def mkConstGateP {G : Nat} [NeZero m] (val : Bool) (bound : Nat) :
     { g : Gate Basis.andOr2 (k + m + G) //
       ∀ j : Fin g.fanIn, (g.inputs j).val < k + m + bound } :=
   have hW : 0 < k + m + G := by have := NeZero.ne m; omega
@@ -83,7 +83,7 @@ private def mkConstGateP {G : Nat} [NeZero m] (val : Bool) (bound : Nat) :
      fun _ => by dsimp; exact hB⟩
 
 /-- An identity/passthrough gate: `OP(w, w)` with negation `neg`. -/
-private def mkIdentGateP {G : Nat} (op : AONOp) (w : Fin (k + m + G)) (neg : Bool) (bound : Nat)
+def mkIdentGateP {G : Nat} (op : AONOp) (w : Fin (k + m + G)) (neg : Bool) (bound : Nat)
     (hw : w.val < k + m + bound) :
     { g : Gate Basis.andOr2 (k + m + G) //
       ∀ j : Fin g.fanIn, (g.inputs j).val < k + m + bound } :=
@@ -112,7 +112,7 @@ private theorem mkIdentGateP_eval {G : Nat} (op : AONOp) (w : Fin (k + m + G)) (
     The gate's two inputs are inspected. For each input referencing wire 0,
     the effective constant `b ^^ negated` is computed. The gate is then
     simplified: identity, constant, or shifted, depending on the case. -/
-private def restrictGateP {G : Nat} [NeZero m] (b : Bool)
+def restrictGateP {G : Nat} [NeZero m] (b : Bool)
     (g : Gate Basis.andOr2 ((k + 1) + m + G))
     (hfanIn : g.fanIn = 2)
     (bound : Nat)

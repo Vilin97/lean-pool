@@ -48,9 +48,9 @@ private lemma memLp_changeMeasure {c : ℝ≥0∞} (hc : c ≠ ∞) (hν : ν �
     MeasureTheory.MemLp.of_measure_le_smul
       (μ := μ) (μ' := ν) (p := p) (f := fun x : α => f x) hc hν hfμ
 
-private noncomputable def changeMeasureFun {c : ℝ≥0∞} (hc : c ≠ ∞) (hν : ν ≤ c • μ) (f : Lp E p μ) :
+noncomputable def changeMeasureFun {c : ℝ≥0∞} (hc : c ≠ ∞) (hν : ν ≤ c • μ) (f : Lp E p μ) :
     Lp E p ν :=
-  (memLp_changeMeasure (μ := μ) (ν := ν) (p := p) hc hν f).toLp fun x : α => f x
+  (private_decl% (memLp_changeMeasure (μ := μ) (ν := ν) (p := p) hc hν f)).toLp fun x : α => f x
 
 omit [NormedSpace ℝ E] [Fact (1 ≤ p)] in
 private lemma changeMeasureFun_coe {c : ℝ≥0∞} (hc : c ≠ ∞) (hν : ν ≤ c • μ) (f : Lp E p μ) :
@@ -185,7 +185,7 @@ lemma changeMeasureL_coeFn_ae_eq {c : ℝ≥0∞} (hc : c ≠ ∞) (hν : ν ≤
     (changeMeasureL (μ := μ) (ν := ν) (E := E) (p := p) hc hν hp f : α → E) =ᵐ[ν] f := by
   -- `mkContinuous` does not change the underlying function.
   simpa [changeMeasureL, changeMeasureₗ, changeMeasureFun] using
-    (changeMeasureFun_coe (μ := μ) (ν := ν) (E := E) (p := p) (c := c) hc hν f)
+    (private_decl% (changeMeasureFun_coe (μ := μ) (ν := ν) (E := E) (p := p) (c := c) hc hν f))
 
 lemma changeMeasureL_congr {c : ℝ≥0∞} (hc₁ hc₂ : c ≠ ∞) (hν₁ hν₂ : ν ≤ c • μ) (hp₁ hp₂ : p ≠ ∞) :
     changeMeasureL (μ := μ) (ν := ν) (E := E) (p := p) hc₁ hν₁ hp₁ =
@@ -228,11 +228,11 @@ noncomputable def changeMeasureEquiv {c₁ c₂ : ℝ≥0∞} (hc₁ : c₁ ≠ 
     have habs : ν ≪ μ := Measure.absolutelyContinuous_of_le_smul hν
     have hbwdμ : (bwd g : α → E) =ᵐ[μ] g := by
       simpa [bwd, changeMeasureL, changeMeasureₗ] using
-        (changeMeasureFun_coe (μ := ν) (ν := μ) (p := p) hc₂ hμ g)
+        (private_decl% (changeMeasureFun_coe (μ := ν) (ν := μ) (p := p) hc₂ hμ g))
     have hbwdν : (bwd g : α → E) =ᵐ[ν] g := habs.ae_le hbwdμ
     have hfwd : (fwd (bwd g) : α → E) =ᵐ[ν] (bwd g) := by
       simpa [fwd, bwd, changeMeasureL, changeMeasureₗ] using
-        (changeMeasureFun_coe (μ := μ) (ν := ν) (p := p) hc₁ hν (bwd g))
+        (private_decl% (changeMeasureFun_coe (μ := μ) (ν := ν) (p := p) hc₁ hν (bwd g)))
     filter_upwards [hfwd, hbwdν] with x hfwd hbwd
     exact hfwd.trans hbwd
   · refine ContinuousLinearMap.ext ?_
@@ -241,10 +241,10 @@ noncomputable def changeMeasureEquiv {c₁ c₂ : ℝ≥0∞} (hc₁ : c₁ ≠ 
     have habs : μ ≪ ν := Measure.absolutelyContinuous_of_le_smul hμ
     have hbwd : (bwd (fwd f) : α → E) =ᵐ[μ] (fwd f) := by
       simpa [fwd, bwd, changeMeasureL, changeMeasureₗ] using
-        (changeMeasureFun_coe (μ := ν) (ν := μ) (p := p) hc₂ hμ (fwd f))
+        (private_decl% (changeMeasureFun_coe (μ := ν) (ν := μ) (p := p) hc₂ hμ (fwd f)))
     have hfwdν : (fwd f : α → E) =ᵐ[ν] f := by
       simpa [fwd, changeMeasureL, changeMeasureₗ] using
-        (changeMeasureFun_coe (μ := μ) (ν := ν) (p := p) hc₁ hν f)
+        (private_decl% (changeMeasureFun_coe (μ := μ) (ν := ν) (p := p) hc₁ hν f))
     have hfwdμ : (fwd f : α → E) =ᵐ[μ] f := habs.ae_le hfwdν
     filter_upwards [hbwd, hfwdμ] with x hbwd hfwd
     exact hbwd.trans hfwd

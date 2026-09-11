@@ -549,37 +549,37 @@ def builderMovePremises {Γ : Sequent} {strat : Strategy coalgebraGame Prover}
       | RuleApp.ax _ _ _ => []
       | RuleApp.or Δ φ1 φ2 φ_in =>
         if rep : (Δ \ {φ1 v φ2}) ∪ {φ1, φ2} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {φ1 v φ2}) ∪ {φ1, φ2}) Γ g (by convert rep; grind)]
               else
-                [nextNext g h (by convert rep; grind)
+                [nextNext (Δ := (Δ \ {φ1 v φ2}) ∪ {φ1, φ2}) g h (by convert rep; grind)
                   (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
       | RuleApp.and Δ φ1 φ2 φ_in =>
         if rep1 : (Δ \ {φ1 & φ2}) ∪ {φ1} ∈ Γs
           then
             if rep2 : (Δ \ {φ1 & φ2}) ∪ {φ2} ∈ Γs
               then
-                [repNext Γ g (by convert rep1; grind),
-                  repNext Γ g (by convert rep2; grind)]
+                [repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) Γ g (by convert rep1; grind),
+                  repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) Γ g (by convert rep2; grind)]
               else
-                [repNext Γ g (by convert rep1; grind),
-                  nextNext g h (by convert rep2; grind)
+                [repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) Γ g (by convert rep1; grind),
+                  nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) g h (by convert rep2; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
           else
             if rep2 : (Δ \ {φ1 & φ2}) ∪ {φ2} ∈ Γs
               then
-                [nextNext g h (by convert rep1; grind)
+                [nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) g h (by convert rep1; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp]),
-                  repNext Γ g (by convert rep2; grind)]
+                  repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) Γ g (by convert rep2; grind)]
               else
-                [nextNext g h (by convert rep1; grind)
+                [nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) g h (by convert rep1; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp]),
-                  nextNext g h (by convert rep2; grind)
+                  nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) g h (by convert rep2; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
       | RuleApp.box Δ φ φ_in =>
         if rep : (Δ \ {□φ}).D ∪ {φ} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {□φ}).D ∪ {φ}) Γ g (by convert rep; grind)]
           else
-            [nextNext g h (by convert rep; grind)
+            [nextNext (Δ := (Δ \ {□φ}).D ∪ {φ}) g h (by convert rep; grind)
               (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
 
 /-- If Prover has a winning strategy in the game starting from `Γ`, then there is a proof

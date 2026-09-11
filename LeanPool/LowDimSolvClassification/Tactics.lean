@@ -5,11 +5,11 @@ Authors: Mario Carneiro, Heather Macbeth, the LieLean team
 -/
 module
 
-public import Lean.Meta.Tactic.NormCast
+public meta import Lean.Meta.Tactic.NormCast
 public import Mathlib.Algebra.Algebra.Tower
 public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-public import Mathlib.Tactic.Ring
-public import Mathlib.Util.AtomM
+public meta import Mathlib.Tactic.Ring
+public meta import Mathlib.Util.AtomM
 public import Mathlib.Algebra.Lie.Basic
 
 /-!
@@ -25,6 +25,8 @@ open Meta Elab Qq Mathlib.Tactic List
 expression or a pair of expressions tracked together. -/
 @[implicit_reducible]
 def V (M : Type*) := Sum M (M × M)
+
+meta section
 
 namespace AtomD
 
@@ -93,6 +95,8 @@ def addAtomDoubleQ {u : Level} {α : Q(Type u)} (e₁ e₂ : Q($α)) :
   | true =>
     return (n, Sum.inr ⟨⟨e₁',e₂'⟩, ⟨⟨⟩, ⟨⟩⟩⟩)
 end AtomD
+
+end
 
 namespace Mathlib.Tactic.LieSolver
 
@@ -289,6 +293,8 @@ theorem eval_algebraMap [CommSemiring S] [Semiring R] [Algebra S R] [LieRing M]
   simp [IsScalarTower.algebraMap_smul]
 
 end NF
+
+meta section
 
 variable {u v : Level}
 
@@ -586,6 +592,8 @@ and discharges each with `ring`. -/
 elab "module_lie" : tactic => Tactic.liftMetaFinishingTactic fun g ↦ do
   let l ← matchScalars g
   discard <| l.mapM fun mvar ↦ AtomM.run .instances (Ring.proveEq mvar)
+
+end
 
 end Mathlib.Tactic.LieSolver
 

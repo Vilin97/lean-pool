@@ -15,7 +15,7 @@ public import LeanPool.MRiscX.Hoare.HoareCore
 This module provides auxiliary helpers for the MRiscX code-proof tactics.
 -/
 
-@[expose] public section
+public meta section
 
 open Lean Elab Parser Tactic RCases
 

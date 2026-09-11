@@ -31,7 +31,7 @@ private lemma inv_mul_mul_cancel (a b : ℂ) (hb : b ≠ 0) : (a * b)⁻¹ * b =
 private lemma one_lt_norm_of_one_lt_normSq {s : ℂ} (h : 1 < Complex.normSq s) : 1 < ‖s‖ :=
   calc (1 : ℝ) = Real.sqrt 1 := Real.sqrt_one.symm
     _ < Real.sqrt (Complex.normSq s) := Real.sqrt_lt_sqrt (by norm_num) h
-    _ = ‖s‖ := rfl
+    _ = ‖s‖ := RCLike.sqrt_normSq_eq_norm
 
 /-- `∫ t in a..1, t⁻¹ = log 1 - log a` for `0 < a ≤ 1`. -/
 private lemma integral_inv_eq_log_sub (a : ℝ) (ha : 0 < a) (ha1 : a ≤ 1) :

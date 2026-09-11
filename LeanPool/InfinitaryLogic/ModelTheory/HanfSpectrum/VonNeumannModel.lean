@@ -54,7 +54,7 @@ private theorem ladderLevel_add_one (β : Ordinal.{0}) :
   rw [ladderLevel, ladderLevel, ← add_assoc, ZFSet.vonNeumann_add_one]
 
 /-- The countable enumeration of the base level `V_ω`. -/
-private noncomputable def omegaEnum : ℕ ≃ Shrink.{0} ↥(ladderLevel 0) :=
+noncomputable def omegaEnum : ℕ ≃ Shrink.{0} ↥(ladderLevel 0) :=
   Classical.choice (Cardinal.eq.mp (by
     rw [Cardinal.mk_nat]
     exact (show (ladderLevel 0).card = Cardinal.aleph0 by

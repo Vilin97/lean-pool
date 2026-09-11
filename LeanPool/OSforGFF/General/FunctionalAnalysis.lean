@@ -5,6 +5,9 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
+public import Mathlib.Analysis.Convolution
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 public import Mathlib.MeasureTheory.Function.Holder
 public import Mathlib.Analysis.Fourier.Inversion
@@ -154,18 +157,11 @@ complex Lp functions, with support on the real subspace.
 noncomputable def liftMeasureRealToComplex
     (dμ_real : ProbabilityMeasure (Lp ℝ 2 μ)) :
     ProbabilityMeasure (Lp ℂ 2 μ) :=
-  let dμ_complex_measure : Measure (Lp ℂ 2 μ) :=
-    Measure.map embeddingRealToComplex dμ_real
-  have h_ae : AEMeasurable embeddingRealToComplex dμ_real := by
+  ⟨Measure.map embeddingRealToComplex dμ_real, by
+    apply isProbabilityMeasure_map
     apply Continuous.aemeasurable
     unfold embeddingRealToComplex composedFunction
-    have :
-        Continuous
-          (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) :=
-      Complex.ofRealCLM_continuous_compLp
-    exact this
-  have h_is_prob := isProbabilityMeasure_map h_ae
-  ⟨dμ_complex_measure, h_is_prob⟩
+    exact Complex.ofRealCLM_continuous_compLp⟩
 
 end LiftMeasure
 

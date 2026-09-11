@@ -19,8 +19,6 @@ quadratic fiber shear and its characteristic-two involutivity.
 namespace Connes
 namespace PaperFactorIsomorphism
 
-open MeasureTheory
-
 noncomputable section
 
 /--

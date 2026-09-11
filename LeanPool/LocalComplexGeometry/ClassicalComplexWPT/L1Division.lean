@@ -254,7 +254,7 @@ private lemma norm_neg_divisionPerturbation_lt_one (d : ℕ) (p : L1Coeff (A × 
 noncomputable def divisionInverse (d : ℕ) (p : L1Coeff (A × ℕ)) (hp : ‖p‖ < 1) :
     L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ) :=
   ↑((Units.oneSub (-(divisionPerturbation d p))
-    (norm_neg_divisionPerturbation_lt_one d p hp))⁻¹)
+    (by exact norm_neg_divisionPerturbation_lt_one d p hp))⁻¹)
 
 theorem divisionInverse_right (d : ℕ) (p : L1Coeff (A × ℕ)) (hp : ‖p‖ < 1)
     (b : L1Coeff (A × ℕ)) :
@@ -628,7 +628,7 @@ private lemma norm_neg_seqDivisionPerturbation_lt_one (d : ℕ) (p : L1Coeff ℕ
 noncomputable def seqDivisionInverse (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1) :
     L1Coeff ℕ →L[ℂ] L1Coeff ℕ :=
   ↑((Units.oneSub (-(seqDivisionPerturbation d p))
-    (norm_neg_seqDivisionPerturbation_lt_one d p hp))⁻¹)
+    (by exact norm_neg_seqDivisionPerturbation_lt_one d p hp))⁻¹)
 
 theorem seqDivisionInverse_right (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1)
     (b : L1Coeff ℕ) :

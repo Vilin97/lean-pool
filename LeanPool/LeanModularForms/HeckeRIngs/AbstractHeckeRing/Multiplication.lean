@@ -112,8 +112,8 @@ of their product `H(σ_i τ_j)H`. -/
 noncomputable def mulMap (g₁ g₂ : P.Δ)
     (i : decompQuot P g₁ × decompQuot P g₂) : HeckeCoset P :=
   ⟦⟨i.1.out * g₁ * (i.2.out * g₂),
-    Submonoid.mul_mem _ (mul_mem_delta P.H P.Δ i.1.out g₁ P.h₀)
-      (mul_mem_delta P.H P.Δ i.2.out g₂ P.h₀)⟩⟧
+    Submonoid.mul_mem _ (by exact mul_mem_delta P.H P.Δ i.1.out g₁ P.h₀)
+      (by exact mul_mem_delta P.H P.Δ i.2.out g₂ P.h₀)⟩⟧
 
 /-- Shimura's multiplicity (Proposition 3.2): `heckeMultiplicity(g₁, g₂, d)` counts pairs
 `(i,j)` such that `σᵢ τⱼ H = ξ H`. -/

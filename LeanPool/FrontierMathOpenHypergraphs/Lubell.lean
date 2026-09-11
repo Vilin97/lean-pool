@@ -35,6 +35,7 @@ public import Mathlib.Tactic.Ring
 public import LeanPool.FrontierMathOpenHypergraphs.Basic
 public import LeanPool.FrontierMathOpenHypergraphs.Substitution
 public import LeanPool.FrontierMathOpenHypergraphs.Uniform
+import all LeanPool.FrontierMathOpenHypergraphs.Uniform
 
 /-!
 # Lubell frames and asymptotic context
@@ -63,7 +64,7 @@ noncomputable def lubellMultiplicity (t j : ℕ) : ℕ :=
 noncomputable def lubellCap (t : ℕ) : Fin t → ℕ := Function.const (Fin t) (M t)
 
 /-- Embed a `j`-subset of `[t]` into the type of support patterns. -/
-private def supportPatternEmbedding {t j : ℕ} (hj : 2 ≤ j) :
+def supportPatternEmbedding {t j : ℕ} (hj : 2 ≤ j) :
     {S // S ∈ (((Finset.univ : Finset (Fin t)).powersetCard j).val)} ↪ SupportPattern t where
   toFun := fun S =>
     ⟨S.1, by

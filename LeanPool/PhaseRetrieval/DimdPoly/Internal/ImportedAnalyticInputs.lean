@@ -5,6 +5,8 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
 module
 
+import Mathlib.Analysis.Normed.Lp.SmoothApprox
+
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 public import Mathlib.Analysis.Distribution.TemperedDistribution
@@ -1354,8 +1356,9 @@ private theorem sub_const_antilipschitz {d : Nat} (a : RealVec d) :
 /-- `schwartzCompSubConstCLM`: schwartz Comp Sub Const CLM. -/
 noncomputable def schwartzCompSubConstCLM {d : Nat} (a : RealVec d) :
     SchwartzMap (RealVec d) ℂ →L[ℂ] SchwartzMap (RealVec d) ℂ :=
-  SchwartzMap.compCLMOfAntilipschitz ℂ (sub_const_hasTemperateGrowth a)
-    (sub_const_antilipschitz a)
+  SchwartzMap.compCLMOfAntilipschitz ℂ (K := 1) (g := fun x : RealVec d => x - a)
+    (by exact sub_const_hasTemperateGrowth a)
+    (by exact sub_const_antilipschitz a)
 
 @[simp] theorem schwartzCompSubConstCLM_apply {d : Nat} (a : RealVec d)
     (f : SchwartzMap (RealVec d) ℂ) :
@@ -1933,7 +1936,7 @@ private theorem modulateL2_mem {d : Nat} (ω : RealVec d) (f : L2Real d) :
 
 /-- `modulateL2`: modulate L2. -/
 noncomputable def modulateL2 {d : Nat} (ω : RealVec d) (f : L2Real d) : L2Real d :=
-  (modulateL2_mem ω f).toLp
+  (private_decl% (modulateL2_mem ω f)).toLp
     (fun t : RealVec d => modulationPhase ω t * (f : RealVec d -> ℂ) t)
 
 theorem modulateL2_coeFn {d : Nat} (ω : RealVec d) (f : L2Real d) :

@@ -1239,7 +1239,7 @@ private lemma lift_norm_bound
     _ = K * RapidDecaySeq.rapidDecaySeminorm N a := by rfl
 
 /-- The underlying linear map for `lift`. -/
-private def liftLM
+def liftLM
     (B : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] G)
     {C : ℝ} {s₁ : Finset (@DyninMityaginSpace.ι E₁ _ _ _ _ _ _)}
     {s₂ : Finset (@DyninMityaginSpace.ι E₂ _ _ _ _ _ _)}
@@ -1392,7 +1392,7 @@ end Lift
 /-! ### Bilinear evaluation: tensor product of functionals -/
 
 /-- The bilinear multiplication form `(x, y) ↦ x * y` as a bilinear map ℝ →ₗ ℝ →ₗ ℝ. -/
-private def mulBilin : ℝ →ₗ[ℝ] ℝ →ₗ[ℝ] ℝ where
+def mulBilin : ℝ →ₗ[ℝ] ℝ →ₗ[ℝ] ℝ where
   toFun x :=
     { toFun := fun y => x * y
       map_add' := fun y₁ y₂ => mul_add x y₁ y₂
@@ -1403,7 +1403,7 @@ private def mulBilin : ℝ →ₗ[ℝ] ℝ →ₗ[ℝ] ℝ where
 section Eval
 
 /-- Compose the multiplication bilinear form with CLMs on each factor. -/
-private def compBilin (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
+def compBilin (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
     E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] ℝ :=
   (mulBilin.comp φ₁.toLinearMap).compl₂ φ₂.toLinearMap
 
@@ -1443,7 +1443,7 @@ def _root_.GaussianField.NuclearTensorProduct.evalCLM
     ((normSeminorm ℝ ℝ).comp φ₂.toLinearMap) hq₂
   -- The bilinear bound: ‖φ₁ e₁ * φ₂ e₂‖ ≤ (C₁ * C₂) * (s₁.sup p) e₁ * (s₂.sup p) e₂
   have hC_pos : (0 : ℝ) < C₁ * C₂ := by positivity
-  exact lift (compBilin φ₁ φ₂) hC_pos (fun e₁ e₂ => by
+  exact lift (s₁ := s₁) (s₂ := s₂) (compBilin φ₁ φ₂) hC_pos (fun e₁ e₂ => by
     simp only [compBilin_apply]
     rw [Real.norm_eq_abs, abs_mul]
     have h₁ : |φ₁ e₁| ≤ C₁ * (s₁.sup DyninMityaginSpace.p) e₁ := by

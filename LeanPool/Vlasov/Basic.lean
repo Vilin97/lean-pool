@@ -5,6 +5,8 @@ Authors: Joseph K. Miller
 -/
 module
 
+import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+
 public import Mathlib.Analysis.Calculus.ContDiff.Basic
 public import Mathlib.Analysis.Calculus.Deriv.Add
 public import Mathlib.Analysis.Calculus.Deriv.Basic

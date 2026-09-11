@@ -294,8 +294,8 @@ noncomputable def _root_.VirasoroProject.VirasoroVerma.universalMap {c h : 𝕜}
     VirasoroVerma 𝕜 c h →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] M := by
   apply @TriangularDecomposition.VermaHW.universalMap 𝕜 _ (VirasoroAlgebra 𝕜) _ _ (virasoroTri 𝕜)
         (VirasoroAlgebra.hw _ c h) M _ _ hwv ?_ ?_
-  · exact cartan_smul_eq_of_cgen_smul_eq_of_lzero_smul_eq 𝕜 hwv_c hwv_lzero
-  · exact upper_smul_eq_zero_of_forall_pos_lgen_smul_eq_zero 𝕜 hwv_lpos
+  · exact private_decl% (cartan_smul_eq_of_cgen_smul_eq_of_lzero_smul_eq 𝕜 hwv_c hwv_lzero)
+  · exact private_decl% (upper_smul_eq_zero_of_forall_pos_lgen_smul_eq_zero 𝕜 hwv_lpos)
 
 lemma _root_.VirasoroProject.VirasoroVerma.universalMap_hwVec (c h : 𝕜)
     (M : Type*) [AddCommGroup M] [Module (𝓤 𝕜 (VirasoroAlgebra 𝕜)) M] {hwv : M}

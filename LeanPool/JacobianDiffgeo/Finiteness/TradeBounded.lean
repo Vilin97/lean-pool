@@ -282,7 +282,7 @@ variable [T2Space X] [CompactSpace X]
 noncomputable def boundZ1 {P : Fin T.n → Opens X}
     (h : ∀ i, closure (P i : Set X) ⊆ (T.Ustar i : Set X))
     (F : Z1 (0 : RS.Divisor X) T.coverStar) : NC1 T P :=
-  fun p => restrictGerm (closure_inf_pair_subset T h p.1 p.2)
+  fun p => restrictGerm (private_decl% (closure_inf_pair_subset T h p.1 p.2))
     ((F : C1 (0 : RS.Divisor X) T.coverStar) (p.1, p.2))
 
 /-- The `(i, j)`-component of a good-cover cocycle, as a `LinSysOn`-membership term (a named

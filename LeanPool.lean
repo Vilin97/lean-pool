@@ -4153,6 +4153,7 @@ public import LeanPool.Sensitivity
 public import LeanPool.Sensitivity.Basic
 public import LeanPool.Sensitivity.Consequences
 public import LeanPool.Sensitivity.Defs
+public import LeanPool.Sensitivity.Huang
 public import LeanPool.Sensitivity.HuangBridge
 public import LeanPool.Sensitivity.Main
 public import LeanPool.Sensitivity.Multilinear
@@ -4166,6 +4167,7 @@ public import LeanPool.SetTheory.Omega
 public import LeanPool.SetTheory.OrderTheory
 public import LeanPool.SetTheory.Ordinals
 public import LeanPool.SetTheory.Realize
+public import LeanPool.SetTheory.RealizeCore
 public import LeanPool.SetTheory.SimpAttr
 public import LeanPool.Shannon1948Formalization
 public import LeanPool.Shannon1948Formalization.Entropy

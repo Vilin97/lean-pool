@@ -810,7 +810,7 @@ lemma scaled_tail_bound
 /-! ## Restriction of Operators to Marginal Subspaces -/
 
 /-- The embedding t ↦ ∑ tᵢvᵢ from EuclideanSpace to H. -/
-private def embedON {n : ℕ} (v : Fin n → H) : EuclideanSpace ℝ (Fin n) →ₗ[ℝ] H :=
+def embedON {n : ℕ} (v : Fin n → H) : EuclideanSpace ℝ (Fin n) →ₗ[ℝ] H :=
   { toFun := fun t => ∑ i, t i • v i
     map_add' := fun x y => by simp [add_smul, Finset.sum_add_distrib]
     map_smul' := fun r x => by
@@ -818,7 +818,7 @@ private def embedON {n : ℕ} (v : Fin n → H) : EuclideanSpace ℝ (Fin n) →
       congr 1; ext i; simp [smul_smul, mul_comm r] }
 
 /-- The projection x ↦ (⟪vᵢ, x⟫)ᵢ from H to EuclideanSpace. -/
-private def projON {n : ℕ} (v : Fin n → H) : H →ₗ[ℝ] EuclideanSpace ℝ (Fin n) :=
+def projON {n : ℕ} (v : Fin n → H) : H →ₗ[ℝ] EuclideanSpace ℝ (Fin n) :=
   { toFun := fun x => EuclideanSpace.equiv (Fin n) ℝ |>.symm (fun i => @inner ℝ H _ (v i) x)
     map_add' := fun x y => by ext i; simp [inner_add_right]
     map_smul' := fun r x => by ext i; simp [inner_smul_right] }

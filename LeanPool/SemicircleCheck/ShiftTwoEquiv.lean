@@ -92,7 +92,7 @@ def contractZeroOne (π : Equiv.Perm (Fin (2 * n + 2)))
     (h₁ : π ⟨1, by omega⟩ = ⟨0, by omega⟩) :
     Equiv.Perm (Fin (2 * n)) :=
   let hmaps := mapsTo_remaining h₀ h₁
-  let hmaps_inv := symm_mapsTo_remaining h₀ h₁
+  let hmaps_inv := private_decl% (symm_mapsTo_remaining h₀ h₁)
   let restrictPerm : Equiv.Perm { x : Fin (2 * n + 2) // 2 ≤ x.val } :=
     { toFun := fun ⟨x, hx⟩ => ⟨π x, hmaps hx⟩
       invFun := fun ⟨x, hx⟩ => ⟨π.symm x, hmaps_inv hx⟩

@@ -16,7 +16,3 @@ Imported Lean Pool material for `LeanPool.Rupert.Equivalences.AffineRupertEquivR
 -/
 
 @[expose] public section
-
-proof_wanted affine_rupert_iff_rupert_set
-    (X : Set (EuclideanSpace ℝ (Fin 3))) :
-    IsAffineRupertSet X ↔ IsRupertSet X

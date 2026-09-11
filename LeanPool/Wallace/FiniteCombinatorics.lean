@@ -97,7 +97,7 @@ omit [AddCommGroup G] in
   rw [coefficientPatterns, Fintype.mem_piFinset]
   simp only [mem_boundedIntFinset_iff]
 
-private noncomputable def equationSolution (B : Finset G) (q : ℤ) (c : B → ℤ) : G :=
+noncomputable def equationSolution (B : Finset G) (q : ℤ) (c : B → ℤ) : G :=
   by
     classical
     exact if h : ∃ x : G, q • x + ∑ b, c b • (b : G) = 0 then Classical.choose h else 0
@@ -212,12 +212,12 @@ theorem exists_integer_dependence (s : ℕ) (b : Fin (s + 1) → Fin s → ℤ) 
 abbrev BoundedInt (Q : ℕ) := ↑(boundedIntFinset Q)
 
 /-- All bounded vector families of every dimension at most `r`. -/
-private structure BoundedVectorFamily (r Q : ℕ) where
+structure BoundedVectorFamily (r Q : ℕ) where
   size : Fin (r + 1)
   vec : Fin (size + 1) → Fin size → BoundedInt Q
 deriving Fintype
 
-private noncomputable def chosenIntegerDependence {r Q : ℕ} (B : BoundedVectorFamily r Q) :
+noncomputable def chosenIntegerDependence {r Q : ℕ} (B : BoundedVectorFamily r Q) :
     Fin (B.size + 1) → ℤ :=
   Classical.choose <| exists_integer_dependence B.size fun i j ↦ B.vec i j
 
@@ -226,7 +226,7 @@ private theorem chosenIntegerDependence_spec {r Q : ℕ} (B : BoundedVectorFamil
       ∀ j, ∑ i, chosenIntegerDependence B i * (B.vec i j : ℤ) = 0 :=
   Classical.choose_spec <| exists_integer_dependence B.size fun i j ↦ B.vec i j
 
-private noncomputable def familyDependenceBound {r Q : ℕ} (B : BoundedVectorFamily r Q) : ℕ :=
+noncomputable def familyDependenceBound {r Q : ℕ} (B : BoundedVectorFamily r Q) : ℕ :=
   Finset.univ.sup fun i ↦ Int.natAbs (chosenIntegerDependence B i)
 
 /-- A uniform bound for an integer dependence among any `s+1` vectors in `ℤ^s`, for `s ≤ r`,

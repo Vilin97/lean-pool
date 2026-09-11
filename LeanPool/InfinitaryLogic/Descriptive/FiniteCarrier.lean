@@ -101,7 +101,7 @@ structures they decode on `Fin n` are `L`-isomorphic.  Stated on all of
 This mirrors `structureIsoSetoid` at the `ℕ` tier, and for the same reason: perfectness of a set
 of codes must be a property of the ambient space, not of whichever refinement was chosen to make
 one model class Polish. -/
-private def structureIsoSetoidOn (L : Language.{u, v}) [L.IsRelational] (n : ℕ) :
+def structureIsoSetoidOn (L : Language.{u, v}) [L.IsRelational] (n : ℕ) :
     Setoid (StructureSpaceOn L (Fin n)) where
   r c₁ c₂ := Nonempty (@Language.Equiv L (Fin n) (Fin n)
     (StructureSpaceOn.toStructure c₁) (StructureSpaceOn.toStructure c₂))

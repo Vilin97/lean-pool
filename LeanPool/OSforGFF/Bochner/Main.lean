@@ -5,6 +5,8 @@ Authors: Michael R. Douglas
 -/
 module
 
+import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+
 public import LeanPool.OSforGFF.Bochner.PositiveDefinite
 public import LeanPool.OSforGFF.Bochner.FejerPD
 public import Mathlib.Analysis.Fourier.FourierTransform

@@ -211,7 +211,7 @@ noncomputable def MulOpposite.coalgebra
   {R A : Type*} [CommSemiring R]
   [AddCommMonoid A] [Module R A]
   [Coalgebra R A] : Coalgebra R Aᵐᵒᵖ where
-    coassoc := MulOpposite_coassoc
+    coassoc := by exact MulOpposite_coassoc
     rTensor_counit_comp_comul := by
         rw [comul_def', counit_def, ← LinearMap.comp_assoc,
           LinearMap.rTensor_comp_map, LinearMap.comp_assoc,
