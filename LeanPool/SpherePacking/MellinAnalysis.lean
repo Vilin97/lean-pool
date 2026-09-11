@@ -2479,7 +2479,7 @@ private theorem saddleRadius_wallis_constant :
         Real.exp (-(1 / 2 : ℝ) * Real.log (Real.pi / 2)) := by
     positivity
   have hright : 0 ≤ Real.pi⁻¹ := (inv_pos.mpr Real.pi_pos).le
-  nlinarith
+  exact (pow_left_inj₀ hleft hright two_ne_zero).mp hsquare
 
 private theorem tendsto_limitingSaddleRadius :
     Tendsto limitingSaddleRadius (𝓝[>] (0 : ℝ))
@@ -4707,7 +4707,7 @@ private theorem stripPoissonKernel_integrable {σ : ℝ}
     (hbelow : -1 < σ) (habove : σ < 1) :
     Integrable (stripPoissonKernel σ) := by
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   have hright := stripPoissonKernel_integrableOn_Ioi hbelow habove
   refine ⟨?_, hright⟩
   have hreflected :
@@ -4779,14 +4779,8 @@ private theorem stripPoissonPrimitive_centered_hasDerivAt
           stripPoissonPrimitive σ (s - r))
       (stripPoissonKernel σ (x + r) -
         stripPoissonKernel σ (x - r)) x := by
-  have hplus :=
-    (stripPoissonPrimitive_hasDerivAt hbelow habove (x + r)).comp x
-      ((hasDerivAt_id x).add_const r)
-  have hminus :=
-    (stripPoissonPrimitive_hasDerivAt hbelow habove (x - r)).comp x
-      ((hasDerivAt_id x).sub_const r)
-  convert! hplus.sub hminus using 1
-  all_goals simp only [mul_one]
+  exact ((stripPoissonPrimitive_hasDerivAt hbelow habove (x + r)).comp_add_const x r).sub
+    ((stripPoissonPrimitive_hasDerivAt hbelow habove (x - r)).comp_sub_const x r)
 
 private theorem stripPoissonPrimitive_centered_antitoneOn
     {σ : ℝ} (hbelow : -1 < σ) (habove : σ < 1)
@@ -4915,7 +4909,7 @@ private theorem stripComplexPoissonKernel_re
     Complex.normSq_apply]
   norm_num
   field_simp [hexp.ne', hden.ne']
-  nlinarith
+  linear_combination (-32 * Real.exp (Real.pi * T / 2) ^ 2) * htrig
 
 private noncomputable def stripSchwarzExponential (ℓ : ℝ) (z : ℂ) (y : ℝ) : ℂ :=
   Complex.exp
@@ -4988,6 +4982,13 @@ private theorem stripSchwarzAngle_mem_Ioo
   · apply (div_lt_iff₀ (mul_pos (by norm_num) hℓ)).2
     linarith [mul_pos Real.pi_pos (show 0 < ℓ - z.im by linarith)]
 
+/-- The squared distance from `e * (cos θ + i sin θ)` to `1` dominates `sin θ ^ 2`. -/
+private theorem sin_sq_le_shifted_normSq {e s c : ℝ} (htrig : s ^ 2 + c ^ 2 = 1) :
+    s ^ 2 ≤ (e * c - 1) * (e * c - 1) + e * s * (e * s) := by
+  have hkey : (e * c - 1) * (e * c - 1) + e * s * (e * s) - s ^ 2 = (e - c) ^ 2 := by
+    linear_combination (e ^ 2 - 1) * htrig
+  linarith only [hkey, sq_nonneg (e - c)]
+
 private theorem stripSchwarzExponential_sub_one_norm_ge_sin
     {ℓ : ℝ} (hℓ : 0 < ℓ) {z : ℂ}
     (hz : z ∈ Complex.im ⁻¹' Ioo (-ℓ) ℓ) (y : ℝ) :
@@ -5006,10 +5007,8 @@ private theorem stripSchwarzExponential_sub_one_norm_ge_sin
       Complex.sub_re, Complex.sub_im, Complex.one_re,
       Complex.one_im, sub_zero,
       stripSchwarzExponential_re, stripSchwarzExponential_im]
-    nlinarith [sq_nonneg
-      (Real.exp (Real.pi * (z.re - y) / (2 * ℓ)) -
-        Real.cos (Real.pi * (z.im + ℓ) / (2 * ℓ)))]
-  nlinarith [norm_nonneg (stripSchwarzExponential ℓ z y - 1)]
+    exact sin_sq_le_shifted_normSq htrig
+  exact le_of_pow_le_pow_left₀ two_ne_zero (norm_nonneg _) hsquare
 
 private theorem stripSchwarzExponential_sub_one_norm_ge_exp_mul_sin
     {ℓ : ℝ} (hℓ : 0 < ℓ) {z : ℂ}
@@ -5174,7 +5173,7 @@ private theorem norm_stripRegularizedHolomorphicPoissonKernelDeriv_pos
   have hsq :
       Real.sin (Real.pi * (z.im + ℓ) / (2 * ℓ)) ^ 2 ≤
         ‖stripSchwarzExponential ℓ z y - 1‖ ^ 2 := by
-    nlinarith [norm_nonneg (stripSchwarzExponential ℓ z y - 1)]
+    exact pow_le_pow_left₀ hsin.le hden 2
   calc
     ‖stripRegularizedHolomorphicPoissonKernelDeriv ℓ z y‖ =
       Real.pi * Real.exp (Real.pi * (z.re - y) / (2 * ℓ)) /
@@ -5621,7 +5620,7 @@ private theorem strip_exp_abs_integrable {a : ℝ} (ha : 0 < a) :
     ((Measure.measurePreserving_neg (volume : Measure ℝ)).integrableOn_comp_preimage
       (Homeomorph.neg ℝ).measurableEmbedding).mp hreflected
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   exact ⟨hleft, hright⟩
 
 private theorem strip_abs_log_le_add_rpow {x : ℝ} (hx : 0 < x) :
@@ -5730,7 +5729,7 @@ theorem strip_exp_abs_log_abs_integrable {a : ℝ} (ha : 0 < a) :
     rw [abs_of_neg (mem_Iio.mp hx)]
     simp only [Real.log_neg_eq_log, mul_neg, neg_mul, neg_neg]
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   exact ⟨hleft, hright⟩
 
 private theorem stripRegularizedHolomorphicPoissonKernel_re
@@ -6466,7 +6465,7 @@ private theorem lower_exp_log_sqrtFactor_integrable
     ((Measure.measurePreserving_neg (volume : Measure ℝ)).integrableOn_comp_preimage
       (Homeomorph.neg ℝ).measurableEmbedding).mp hreflected
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   exact ⟨hleft, hright⟩
 
 private theorem lowerGammaBoundaryLog_integer_exp_integrable
@@ -6685,7 +6684,7 @@ private theorem lowerStripGammaOuter_integrable_of_exp_integrable
         simp only [mul_neg, neg_mul, neg_neg]
         ring
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   exact ⟨hleft, hright⟩
 
 private theorem norm_halfIntegerGammaFactor (j : ℕ) (y : ℝ) :
@@ -7153,14 +7152,14 @@ private theorem lowerCoth_log_abs_integrable :
         have hfactor :
             1 ≤ Real.exp 1 * Real.exp ((-1 : ℝ) * |y|) := by
           rw [← Real.exp_add]
-          exact (Real.one_le_exp_iff).2 (by linarith)
+          exact (Real.one_le_exp_iff).2 (by linarith only [hsmall])
         have hpolynonneg : 0 ≤ A + 3 * |Real.log (|y|)| := by
           positivity
         have hproduct :
             A + 3 * |Real.log (|y|)| ≤
               (Real.exp 1 * Real.exp ((-1 : ℝ) * |y|)) *
                 (A + 3 * |Real.log (|y|)|) := by
-          linarith [mul_nonneg
+          linarith only [mul_nonneg
             (sub_nonneg.mpr hfactor) hpolynonneg]
         have hrewrite :
             (Real.exp 1 * Real.exp ((-1 : ℝ) * |y|)) *
@@ -7322,7 +7321,7 @@ private theorem lower_exp_log_coth_div_integrable
     ((Measure.measurePreserving_neg (volume : Measure ℝ)).integrableOn_comp_preimage
       (Homeomorph.neg ℝ).measurableEmbedding).mp hreflected
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   exact ⟨hleft, hright⟩
 
 private theorem gamma_log_coth_ratio {x : ℝ} (hx : x ≠ 0) :
@@ -7392,7 +7391,7 @@ private theorem gamma_log_coth_ratio {x : ℝ} (hx : x ≠ 0) :
         ((Real.log Real.pi -
             Real.log (x * Real.sinh (Real.pi * x))) -
           (Real.log Real.pi - Real.log (Real.cosh (Real.pi * x)))) := by
-        linarith
+        linear_combination (1 / 2 : ℝ) * himaginary - (1 / 2 : ℝ) * hhalf
     _ = (1 / 2 : ℝ) *
           (Real.log (Real.cosh (Real.pi * x)) -
             Real.log (x * Real.sinh (Real.pi * x))) := by
@@ -7493,7 +7492,7 @@ private theorem lowerGammaBoundaryLog_halfInteger_log_tail
         (1 / 2 : ℝ) *
           (Real.log (lowerCoth (Real.pi * |y| / 2)) -
             Real.log (|y| / 2)) := by
-      linarith
+      linarith only [hsum]
     _ = ((k : ℝ) + 1 / 2) *
           (Real.log (Real.pi * R ^ 2) -
             Real.log (|y| / 2)) +
@@ -7785,7 +7784,7 @@ private theorem lowerGammaBoundaryLog_dimension_scaled_nonpos_of_large
   have hratio :
       4 * Real.pi * c ^ 2 / |Y| ≤ (1 / 2 : ℝ) := by
     apply (div_le_iff₀ hden).2
-    linarith
+    linarith only [hradius]
   have hratio_pos : 0 < 4 * Real.pi * c ^ 2 / |Y| :=
     div_pos hA hden
   have hlogratio :
@@ -7803,11 +7802,9 @@ private theorem lowerGammaBoundaryLog_dimension_scaled_nonpos_of_large
     norm_num at h ⊢
     exact h
   have hpiabs : 3 ≤ Real.pi * |Y| := by
-    linarith [Real.pi_gt_three,
-      mul_nonneg (by linarith [Real.pi_gt_three] : 0 ≤ Real.pi - 3)
-        (sub_nonneg.mpr hyone)]
+    linarith only [Real.pi_gt_three, mul_le_mul_of_nonneg_left hyone Real.pi_pos.le]
   have harg : 1 ≤ Real.pi * |Y| / 2 := by
-    linarith
+    linarith only [hpiabs]
   have hexpthree : 4 ≤ Real.exp (3 : ℝ) := by
     linarith [Real.add_one_le_exp (3 : ℝ)]
   have hexpsmall :
@@ -7846,9 +7843,8 @@ private theorem lowerGammaBoundaryLog_dimension_scaled_nonpos_of_large
         ((d : ℝ) / 2) * (-(Real.log (2 : ℝ))) :=
         mul_le_mul_of_nonneg_left hlogratio (by positivity)
       _ ≤ -(Real.log (2 : ℝ)) := by
-        linarith [mul_nonneg
-          (sub_nonneg.mpr hℓ)
-          (show 0 ≤ Real.log (2 : ℝ) by linarith)]
+        linarith only [mul_nonneg (sub_nonneg.mpr hℓ)
+          (show 0 ≤ Real.log (2 : ℝ) by linarith only [hlogtwo])]
   have htail := lowerGammaBoundaryLog_dimension_scaled_log_tail_uniform
     hd hc hY
   linarith
@@ -7981,13 +7977,11 @@ private theorem lowerGammaBoundaryLog_integer_antitoneOn
           (Real.sqrt ((j : ℝ) ^ 2 + (y / 2) ^ 2)) := by
     apply Finset.sum_le_sum
     intro j hj
-    have hradx : 0 < (j : ℝ) ^ 2 + (x / 2) ^ 2 := by
-      linarith [sq_nonneg (j : ℝ), sq_pos_of_pos (half_pos hx)]
+    have hradx : 0 < (j : ℝ) ^ 2 + (x / 2) ^ 2 := by positivity
     apply Real.log_le_log (Real.sqrt_pos.mpr hradx)
     apply Real.sqrt_le_sqrt
-    linarith [sq_nonneg (y / 2 - x / 2),
-      mul_nonneg (half_pos hx).le
-        (show 0 ≤ y / 2 - x / 2 by linarith)]
+    exact add_le_add le_rfl
+      (pow_le_pow_left₀ (half_pos hx).le (div_le_div_of_nonneg_right hxy zero_le_two) 2)
   linarith
 
 private theorem lowerGammaBoundaryLog_halfInteger_antitoneOn
@@ -8013,13 +8007,11 @@ private theorem lowerGammaBoundaryLog_halfInteger_antitoneOn
     intro j hj
     have hradx :
         0 < ((j : ℝ) + 1 / 2) ^ 2 + (x / 2) ^ 2 := by
-      linarith [sq_nonneg ((j : ℝ) + 1 / 2),
-        sq_pos_of_pos (half_pos hx)]
+      positivity
     apply Real.log_le_log (Real.sqrt_pos.mpr hradx)
     apply Real.sqrt_le_sqrt
-    linarith [sq_nonneg (y / 2 - x / 2),
-      mul_nonneg (half_pos hx).le
-        (show 0 ≤ y / 2 - x / 2 by linarith)]
+    exact add_le_add le_rfl
+      (pow_le_pow_left₀ (half_pos hx).le (div_le_div_of_nonneg_right hxy zero_le_two) 2)
   have hxarg : 0 < Real.pi * x / 2 := by positivity
   have hyarg : 0 < Real.pi * y / 2 := by positivity
   have harg : Real.pi * x / 2 ≤ Real.pi * y / 2 := by
@@ -8044,7 +8036,7 @@ private theorem lowerGammaBoundaryLog_halfInteger_antitoneOn
         Real.log (lowerCoth (Real.pi * x / 2) / (x / 2)) :=
     Real.log_le_log
       (div_pos (lowerCoth_pos hyarg) (half_pos hy)) hratio
-  linarith
+  linarith only [hsum, hcorr]
 
 private theorem lowerGammaBoundaryLog_dimension_antitoneOn
     {d : ℕ} (R : ℝ) :
@@ -8408,7 +8400,8 @@ private theorem lowerRiemannLogPrimitive_hasDerivAt
   rw [Real.log_sqrt hrad.le]
   have habs : |T| ^ 2 = T ^ 2 := sq_abs T
   field_simp [hrad.ne', ha.ne']
-  nlinarith
+  rw [habs]
+  ring
 
 private theorem integral_lowerRiemannLog
     {T : ℝ} (hT : T ≠ 0) :

@@ -1823,9 +1823,9 @@ private theorem upperFirstBranch_saddleSourceGaussianVariance_upper_bound
   have hgammabound :=
     (upperGammaVariance_bounds hℓ hη).2
   have hsmallterm : 1 / (ℓ * η ^ 2) ≤ 1 / η := by
-    rw [div_le_div_iff₀ (by positivity : 0 < ℓ * η ^ 2) hη]
-    try dsimp [η] at hscale ⊢
-    nlinarith [hscale]
+    rw [div_le_div_iff₀ (by positivity : 0 < ℓ * η ^ 2) hη, one_mul, one_mul, sq,
+      ← mul_assoc]
+    exact le_mul_of_one_le_left hη.le hscale
   have hgamma : upperGammaVariance ℓ η ≤
       (3 / 2 : ℝ) / η := by
     calc
@@ -1857,11 +1857,9 @@ private theorem upperFirstBranch_saddleSourceGaussianVariance_upper_bound
     _ ≤ ((3 / 2 : ℝ) +
           (2 + ε / 2) *
             upperPositiveShellVariance ε (ε / 2)) / η := by
-      apply (le_div_iff₀ hη).mpr
-      field_simp
-      linarith [
-        mul_nonneg hpositive
-          (show 0 ≤ (2 + ε / 2) - η by linarith)]
+      rw [le_div_iff₀ hη, add_mul, div_mul_cancel₀ _ hη.ne',
+        mul_comm (upperPositiveShellVariance ε (ε / 2)) η]
+      exact add_le_add le_rfl (mul_le_mul_of_nonneg_right hηupper hpositive)
     _ = ((3 / 2 : ℝ) +
           (2 + ε / 2) *
             upperPositiveShellVariance ε (ε / 2)) /
@@ -2325,7 +2323,8 @@ private theorem saddleSource_firstBranch_normalized_tail_bound
         Real.exp (-(c / (4 * C)) * z ^ 2) := by
     apply Real.exp_le_exp.mpr
     try dsimp [R]
-    linarith [hexponent]
+    rw [neg_mul, neg_mul]
+    exact neg_le_neg hexponent
   have hexplinear :
       Real.exp (-((c * ℓ) / 4) * R) ≤ 1 := by
     rw [← Real.exp_zero]
@@ -2402,7 +2401,8 @@ private theorem saddleSource_firstBranch_normalized_tail_bound
                 Real.sqrt (C / (ℓ * η)) * 1 := by
                 gcongr
           _ = _ := by ring
-      linarith [hfirst, hsecond]
+      rw [mul_add]
+      exact add_le_add hfirst hsecond
 
 private noncomputable def saddleSourceFirstBranchVarianceCoefficient
     (ε : ℝ) : ℝ :=
@@ -2589,8 +2589,7 @@ private theorem eventually_saddleSource_firstBranch_uniform_tail :
     hV hC hupper hz (by
       convert! hquadratic using 1; dsimp [c, η]; ring) (by
       convert! hlinear using 1; dsimp [c]; ring)
-  have hlognonneg : 0 ≤ Real.log ℓ / 4 := by
-    linarith
+  have hlognonneg : 0 ≤ Real.log ℓ / 4 := zero_le_one.trans hlogoneℓ
   have hpower :
       (Real.log ℓ / 4) ^ (1 / 6 : ℝ) ≤ z ^ 2 := by
     have hmono := Real.rpow_le_rpow
@@ -2611,16 +2610,14 @@ private theorem eventually_saddleSource_firstBranch_uniform_tail :
         Real.exp
           (-(c / (4 * C)) *
             (Real.log ℓ / 4) ^ (1 / 6 : ℝ)) := by
-    apply Real.exp_le_exp.mpr
-    linarith [mul_nonneg hrate.le
-      (show 0 ≤ z ^ 2 -
-        (Real.log ℓ / 4) ^ (1 / 6 : ℝ) by linarith)]
+    exact Real.exp_le_exp.mpr
+      (mul_le_mul_of_nonpos_left hpower (neg_nonpos.mpr hrate.le))
   have hsqrt :
       Real.sqrt (C / (ℓ * η)) ≤
         Real.sqrt (C / (Real.log ℓ / 4)) := by
     apply Real.sqrt_le_sqrt
     apply div_le_div_of_nonneg_left hC.le
-      (by linarith : 0 < Real.log ℓ / 4)
+      (zero_lt_one.trans_le hlogoneℓ)
       hlogscale
   change
     Real.sqrt (ℓ * V) *
@@ -2932,7 +2929,7 @@ private theorem upperFirstBranch_saddleSourceThirdMoment_scaled_le
     (5 / 2 : ℝ) +
       (3 / 2 : ℝ) * (10 * Real.log (1 / ε)) * U +
       U ^ 2 * upperPositiveShellThirdMoment ε (ε / 2)
-  linarith
+  linarith only [hthirdgamma, hshort, hremoteScaled]
 
 private noncomputable def saddleSourceSecondBranchVarianceFloor (ε : ℝ) : ℝ :=
   (99 / 200 : ℝ) * (ε⁻¹ ^ 3) ^ 2 *
@@ -3264,8 +3261,7 @@ private theorem saddleSource_scaled_cubic_window_le
         Real.sq_sqrt (mul_nonneg hℓ.le hη.le),
         Real.sq_sqrt (mul_nonneg hη.le hV.le)]
       ring
-    nlinarith [mul_pos hs hη,
-      mul_pos ht hw]
+    exact (pow_left_inj₀ (mul_pos hs hη).le (mul_pos ht hw).le two_ne_zero).mp heq
   have hwlower : Real.sqrt c ≤ Real.sqrt (η * V) :=
     Real.sqrt_le_sqrt hvariance
   have hratio :
@@ -3521,7 +3517,7 @@ private theorem saddleSource_scaled_central_radius_le
         Real.sq_sqrt (mul_nonneg hℓ.le hη.le),
         Real.sq_sqrt (mul_nonneg hη.le hV.le)]
       ring
-    nlinarith [mul_pos hs hη, mul_pos ht hw]
+    exact (pow_left_inj₀ (mul_pos hs hη).le (mul_pos ht hw).le two_ne_zero).mp heq
   have hwlower : Real.sqrt c ≤ Real.sqrt (η * V) :=
     Real.sqrt_le_sqrt hvariance
   have hU : 0 ≤ U := hη.le.trans hηU
@@ -4220,7 +4216,7 @@ private theorem upperGammaDamping_local_variance_lower
       (fun _ : ℝ => C) (Ioc p q) := by
     exact integrableOn_const (by
       rw [Real.volume_Ioc]
-      exact ENNReal.ofReal_ne_top)
+      exact ENNReal.ofReal_ne_top) enorm_ne_top
   have hpoint : ∀ a ∈ Ioc p q,
       C ≤ upperGammaDampingIntegrand ℓ η T a := by
     intro a ha
@@ -4859,8 +4855,7 @@ private theorem eventually_saddleSource_secondBranch_pointwise_gaussian_plus_out
     have hsquare : t₀ ^ 2 ≤ T ^ 2 := by
       have h := pow_le_pow_left₀ ht₀.le houtside 2
       simpa only [ge_iff_le, sq_abs] using! h
-    have hone : t₀ ^ 2 ≤ (1 : ℝ) := by
-      nlinarith [sq_nonneg (1 - t₀)]
+    have hone : t₀ ^ 2 ≤ (1 : ℝ) := pow_le_one₀ ht₀.le ht₀one
     have hminimum : t₀ ^ 2 ≤ min (T ^ 2) 1 :=
       le_min hsquare hone
     have hshell := positiveShellDamping_lower_bound
@@ -5280,7 +5275,7 @@ private theorem eventually_saddleSource_secondBranch_normalized_tail_bound :
             ε ℓ δ / 4) *
             (z / Real.sqrt (ℓ * V)) ^ 2 =
               -(z ^ 2 / (400 * Real.exp 1)) := by
-        linarith
+        rw [neg_mul, hexponent']
       have hpref' :
           Real.sqrt (ℓ * V) *
             Real.sqrt
@@ -5290,13 +5285,8 @@ private theorem eventually_saddleSource_secondBranch_normalized_tail_bound :
             Real.sqrt (400 * Real.exp 1 * Real.pi) := by
         simpa only [V] using! hpref
       try dsimp [R]
-      rw [hnegative]
-      have hscaled := congrArg
-        (fun x : ℝ =>
-          2 * Real.exp
-            (-(z ^ 2 / (400 * Real.exp 1))) * x)
-        hpref'
-      linarith
+      rw [hnegative, ← hpref']
+      ring
 
 private theorem saddle_sqrt_le_one_add
     {x : ℝ} (hx : 0 ≤ x) :
@@ -5482,11 +5472,9 @@ private theorem saddleSourceSecondBranch_outerMoment_le
   let η : ℝ := 2 + δ
   let q : ℝ := saddleSourceSecondBranchGammaGaussianRate ℓ δ
   let a : ℝ := saddleSourceSecondBranchGammaLinearRate ℓ
-  have hℓpositive : 0 < ℓ := by linarith
-  have hη : 1 ≤ η := by
-    try dsimp [η]
-    linarith
-  have hηpositive : 0 < η := by linarith
+  have hℓpositive : 0 < ℓ := zero_lt_one.trans_le hℓ
+  have hη : 1 ≤ η := one_le_two.trans (le_add_of_nonneg_right hδ)
+  have hηpositive : 0 < η := zero_lt_one.trans_le hη
   have hC : 0 < C := by
     try dsimp [C]
     positivity
@@ -6270,8 +6258,8 @@ private theorem saddleSourceGaussianKernel_normalized_tail_le
       try dsimp [s]
       exact Real.sq_sqrt hproduct.le
     try dsimp [k, R]
-    field_simp [hs.ne']
-    nlinarith [hsquare]
+    rw [div_pow, hsquare, mul_div_assoc', div_eq_div_iff hproduct.ne' (by norm_num)]
+    ring
   have hroot :
       s * Real.sqrt (Real.pi / (k / 4)) =
         2 * Real.sqrt (2 * Real.pi) := by
@@ -6295,9 +6283,9 @@ private theorem saddleSourceGaussianKernel_normalized_tail_le
       have hV' : 0 < V := hV
       field_simp [hℓ.ne', hV'.ne']
       norm_num
-    nlinarith
+    exact (pow_left_inj₀ hleft hright two_ne_zero).mp hsquare
   have hexponent' : -(k / 4) * R ^ 2 = -(z ^ 2) / 8 := by
-    linarith [hexponent]
+    rw [neg_mul, hexponent, neg_div]
   change
     s * (∫ T : ℝ in saddleGaussianTailSet R,
       saddleSourceGaussianKernel ε ℓ u T) ≤
@@ -7519,7 +7507,7 @@ private theorem saddleSinhShellInterval_hasDerivAt
     (hF' u).aestronglyMeasurable
   have hconstant : Integrable (fun _ : ℝ => C)
       (volume.restrict (Set.Icc a b)) :=
-    integrableOn_const isCompact_Icc.measure_ne_top
+    integrableOn_const isCompact_Icc.measure_ne_top enorm_ne_top
   have hdifferentiable :
       ∀ᵐ x ∂volume.restrict (Set.Icc a b),
         ∀ v ∈ Metric.ball u 1,

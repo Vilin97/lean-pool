@@ -1874,7 +1874,7 @@ private lemma lattice_points_in_ball_finite (L : ℝ) (hL : 0 < L) (R : ℝ) :
   have hzero : ∀ g : axisCellLattice (d := d) L hL, ‖g‖ < ε → g = 0 := by
     intro g hg
     apply hεzero g
-    simpa only [dist_zero_right, AddSubgroupClass.coe_norm] using hg
+    rwa [dist_zero_right]
   let P : SpherePacking d :=
     { centers := (axisCellLattice (d := d) L hL : Set (EuclideanSpace ℝ (Fin d)))
       separation := ε
@@ -3271,7 +3271,7 @@ private lemma summable_restricted_lattice_translate_norms (K : TopologicalSpace.
           sub_neg_eq_add] using! (norm_sub_norm_le (ℓ : (EuclideanSpace ℝ (Fin d))) (-x))
       have hxlt : ‖(x : (EuclideanSpace ℝ (Fin d)))‖ < (1 / 2 : ℝ) * ‖(ℓ : (EuclideanSpace ℝ
         (Fin d)))‖ := by
-        grind
+        linarith only [hxnorm, hnorm_lt]
       have : (1 / 2 : ℝ) * ‖(ℓ : (EuclideanSpace ℝ (Fin d)))‖ ≤ ‖(ℓ : (EuclideanSpace ℝ (Fin
         d)))‖ - ‖(x : (EuclideanSpace ℝ (Fin d)))‖ := by
         linarith [le_of_lt hxlt]
@@ -4742,7 +4742,7 @@ private lemma packing_spectral_sum_exchange (f : 𝓢(EuclideanSpace ℝ (Fin d)
   have hRealCoeff (m : SchwartzMap.polarIntegerLattice (d := d) P.lattice) :
       (((𝓕 f m).re : ℝ) : ℂ) = 𝓕 f m :=
     hRealFourier (m : EuclideanSpace ℝ (Fin d))
-  simpa [tsum_fintype, c, hRealCoeff] using congrArg Complex.re hExchange
+  simpa only [tsum_fintype, hRealCoeff] using congrArg Complex.re hExchange
 
 end SpherePacking.CohnElkies
 
@@ -5448,8 +5448,7 @@ private theorem packing_bound_spectral_estimate (hd : 0 < d) :
           exp (2 * π * I *
             ⟪↑x, (m : EuclideanSpace ℝ (Fin d))⟫_[ℝ]))]
     change _ ≤ N ^ 2 * ‖(𝓕 f) (m : EuclideanSpace ℝ (Fin d))‖
-    simpa [F, mul_comm] using
-      (mul_le_mul hcoeff hsq (sq_nonneg _) (norm_nonneg _))
+    exact (mul_le_mul hcoeff hsq (sq_nonneg _) (norm_nonneg _)).trans_eq (mul_comm _ _)
   have htail :
       0 ≤ ∑' m : SchwartzMap.polarIntegerLattice (d := d) P.lattice,
         if m = 0 then 0 else F m := by
@@ -5473,7 +5472,8 @@ private theorem packing_bound_spectral_estimate (hd : 0 < d) :
     exact abs_nonneg _
   have hscaled := mul_le_mul_of_nonneg_left hsum
     (by positivity : 0 ≤ (1 / ZLattice.covolume P.lattice volume : ℝ))
-  simpa [F, N, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hscaled
+  exact (show N ^ 2 * (𝓕 f 0).re / ZLattice.covolume P.lattice volume =
+      1 / ZLattice.covolume P.lattice volume * ((𝓕 f 0).re * N ^ 2) by ring).trans_le hscaled
 
 omit [Nonempty P.centers] in
 include d f hP hne_zero hReal hRealFourier hCohnElkies₁ hCohnElkies₂ hD_unique_covers in
@@ -5573,10 +5573,10 @@ private theorem LinearProgrammingBound' (hd : 0 < d) :
     rw [P.density_eq_numReps_mul_volume_ball_div_covolume hd, hP,
       P.orbit_cardinality_eq_bounded_representatives hd hD_isBounded
         hD_unique_covers]
-    simpa only [ENat.toENNReal_coe, div_eq_mul_inv, one_mul, mul_comm, mul_left_comm, mul_assoc,
-      ge_iff_le] using
-      mul_le_mul_left hnonnegative'
-        (volume (Metric.ball (0 : EuclideanSpace ℝ (Fin d)) (1 / 2)))
+    have h := mul_le_mul_left hnonnegative'
+      (volume (Metric.ball (0 : EuclideanSpace ℝ (Fin d)) (1 / 2)))
+    simp only [ENat.toENNReal_coe, div_eq_mul_inv] at h ⊢
+    exact le_of_eq_of_le (by ring) (h.trans_eq (by ring))
 
 end Main_Theorem_For_One_Packing
 

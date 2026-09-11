@@ -892,7 +892,7 @@ private theorem integrable_exp_neg_mul_abs {a : ℝ} (ha : 0 < a) :
     congr 1
     ring
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   exact ⟨hleft, hright⟩
 
 private theorem stripPoissonExponentialMajorant_integrable :
@@ -937,7 +937,7 @@ private theorem integrable_abs_pow_mul_exp_neg_mul_abs
     ((Measure.measurePreserving_neg (volume : Measure ℝ)).integrableOn_comp_preimage
       (Homeomorph.neg ℝ).measurableEmbedding).mp hreflected
   rw [← integrableOn_univ, ← @Iio_union_Ici _ _ (0 : ℝ),
-    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi]
+    integrableOn_union, integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top]
   exact ⟨hleft, hright⟩
 
 private theorem limitingStripPoissonDensity_integrable :
@@ -2720,17 +2720,13 @@ private theorem plusPolynomial_imaginary_cubic_growth_le
     plusPolynomial_imaginary_norm_ge_beta hε hu
   by_cases hbounded : u ≤ 2
   · have habs : |u| ≤ 2 := by
-      exact (abs_le).mpr ⟨by linarith, hbounded⟩
+      exact (abs_le).mpr ⟨by linarith only [hu], hbounded⟩
     have hcube : (1 + |u|) ^ 3 ≤ 27 := by
-      have hbase : 1 + |u| ≤ (3 : ℝ) := by linarith
-      have hpow := pow_le_pow_left₀
-        (show 0 ≤ 1 + |u| by positivity) hbase 3
-      norm_num at hpow ⊢
-      exact hpow
+      have hbase : 1 + |u| ≤ (3 : ℝ) := by linarith only [habs]
+      exact (pow_le_pow_left₀ (by positivity) hbase 3).trans_eq (by norm_num)
     calc
       (1 + |u|) ^ 3 ≤ 27 := hcube
-      _ = (27 / (ε / 4)) * (ε / 4) := by
-        field_simp [hb.ne']
+      _ = (27 / (ε / 4)) * (ε / 4) := (div_mul_cancel₀ _ hb.ne').symm
       _ ≤ (27 / (ε / 4)) *
           ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ :=
         mul_le_mul_of_nonneg_left hnorm (by positivity)
@@ -2738,9 +2734,9 @@ private theorem plusPolynomial_imaginary_cubic_growth_le
           ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
         have hnonnegative :=
           norm_nonneg (plusPolynomial ε (Complex.I * (u : ℂ)))
-        linarith
+        linarith only [hnonnegative]
   · have hlarge : 2 < u := lt_of_not_ge hbounded
-    have habs : |u| = u := abs_of_pos (by linarith)
+    have habs : |u| = u := abs_of_pos (by linarith only [hlarge])
     have hvalue :
         ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ =
           (ε / 4) + (1 - u) ^ 2 * (1 + u) := by
@@ -2748,18 +2744,18 @@ private theorem plusPolynomial_imaginary_cubic_growth_le
         Real.norm_eq_abs]
       apply abs_of_pos
       exact add_pos_of_pos_of_nonneg hb
-        (mul_nonneg (sq_nonneg _) (by linarith))
+        (mul_nonneg (sq_nonneg _) (by linarith only [hlarge]))
     have hsq :
         (1 + u) ^ 2 ≤ 9 * (1 - u) ^ 2 := by
       have hfactor : 0 ≤ (2 * u - 1) * (u - 2) :=
-        mul_nonneg (by linarith) (by linarith)
-      linarith
+        mul_nonneg (by linarith only [hlarge]) (by linarith only [hlarge])
+      linarith only [hfactor]
     have hcube :
         (1 + u) ^ 3 ≤
           9 * ((1 - u) ^ 2 * (1 + u)) := by
       have hproduct := mul_le_mul_of_nonneg_right
-        hsq (show 0 ≤ 1 + u by linarith)
-      linarith
+        hsq (show 0 ≤ 1 + u by linarith only [hlarge])
+      linarith only [hproduct]
     rw [habs]
     calc
       (1 + u) ^ 3 ≤
@@ -2767,14 +2763,14 @@ private theorem plusPolynomial_imaginary_cubic_growth_le
       _ ≤ 9 * ‖plusPolynomial ε
           (Complex.I * (u : ℂ))‖ := by
         rw [hvalue]
-        linarith
+        linarith only [hb]
       _ ≤ (27 / (ε / 4) + 9) *
           ‖plusPolynomial ε (Complex.I * (u : ℂ))‖ := by
         have hnonnegative :=
           norm_nonneg (plusPolynomial ε (Complex.I * (u : ℂ)))
         have hcoefficient : 0 ≤ 27 / (ε / 4) := by
           positivity
-        linarith [mul_nonneg hcoefficient hnonnegative]
+        linarith only [mul_nonneg hcoefficient hnonnegative]
 
 private theorem minusPolynomial_imaginary_norm_ge_three_beta
     {ε u : ℝ} (hε : 0 < ε)
@@ -2810,25 +2806,23 @@ private theorem minusPolynomial_imaginary_cubic_growth_le
       (9 / (ε / 4) + 6) *
         ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
   have hb : 0 < (ε / 4) := div_pos hε four_pos
-  have hone : 1 ≤ u := by linarith
+  have hone : 1 ≤ u := by linarith only [hu, hb]
   have hbeta : (ε / 4) ≤ u - 1 := by
-    linarith
-  have habs : |u| = u := abs_of_pos (by linarith)
+    linarith only [hu]
+  have habs : |u| = u := abs_of_pos (zero_lt_one.trans_le hone)
   have hnorm := minusPolynomial_imaginary_norm_ge_three_beta
     hε hu
   by_cases hbounded : u ≤ 2
   · have hcube : (1 + |u|) ^ 3 ≤ 27 := by
       have hbase : 1 + |u| ≤ (3 : ℝ) := by
         rw [habs]
-        linarith
-      have hpow := pow_le_pow_left₀
-        (show 0 ≤ 1 + |u| by positivity) hbase 3
-      norm_num at hpow ⊢
-      exact hpow
+        linarith only [hbounded]
+      exact (pow_le_pow_left₀ (by positivity) hbase 3).trans_eq (by norm_num)
     calc
       (1 + |u|) ^ 3 ≤ 27 := hcube
       _ = (9 / (ε / 4)) * (3 * (ε / 4)) := by
-        field_simp [hb.ne']; norm_num
+        rw [div_mul_eq_mul_div, mul_div_assoc, mul_div_cancel_right₀ _ hb.ne']
+        norm_num
       _ ≤ (9 / (ε / 4)) *
           ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ :=
         mul_le_mul_of_nonneg_left hnorm (by positivity)
@@ -2837,7 +2831,7 @@ private theorem minusPolynomial_imaginary_cubic_growth_le
         have hnonnegative :=
           norm_nonneg (minusPolynomial ε
             (Complex.I * (u : ℂ)))
-        linarith
+        linarith only [hnonnegative]
   · have hlarge : 2 < u := lt_of_not_ge hbounded
     have hnegative := minusPolynomial_imaginary_re_neg hε hu
     have hvalue :
@@ -2852,22 +2846,22 @@ private theorem minusPolynomial_imaginary_cubic_growth_le
       rw [abs_of_neg harg]
       ring
     have hsquare : (4 : ℝ) ≤ (1 + u) ^ 2 := by
-      linarith [sq_nonneg (u - 1)]
+      linarith only [sq_nonneg (u - 1), hlarge]
     have hterm :
         2 * (ε / 4) ≤ (u - 1) * (1 + u) ^ 2 := by
       calc
-        2 * (ε / 4) ≤ 4 * (ε / 4) := by linarith
+        2 * (ε / 4) ≤ 4 * (ε / 4) := by linarith only [hb]
         _ = (ε / 4) * 4 := by ring
         _ ≤ (u - 1) * (1 + u) ^ 2 :=
-          mul_le_mul hbeta hsquare (by norm_num) (by linarith)
+          mul_le_mul hbeta hsquare (by norm_num) (by linarith only [hone])
     have hlinear : 1 + u ≤ 3 * (u - 1) := by
-      linarith
+      linarith only [hlarge]
     have hcubic :
         (1 + u) ^ 3 ≤
           3 * ((u - 1) * (1 + u) ^ 2) := by
       have hproduct :=
         mul_le_mul_of_nonneg_right hlinear (sq_nonneg (1 + u))
-      linarith
+      linarith only [hproduct]
     rw [habs]
     calc
       (1 + u) ^ 3 ≤
@@ -2875,7 +2869,7 @@ private theorem minusPolynomial_imaginary_cubic_growth_le
       _ ≤ 6 * ‖minusPolynomial ε
           (Complex.I * (u : ℂ))‖ := by
         rw [hvalue]
-        linarith
+        linarith only [hterm]
       _ ≤ (9 / (ε / 4) + 6) *
           ‖minusPolynomial ε (Complex.I * (u : ℂ))‖ := by
         have hnonnegative :=
@@ -2883,7 +2877,7 @@ private theorem minusPolynomial_imaginary_cubic_growth_le
             (Complex.I * (u : ℂ)))
         have hcoefficient : 0 ≤ 9 / (ε / 4) := by
           positivity
-        linarith [mul_nonneg hcoefficient hnonnegative]
+        linarith only [mul_nonneg hcoefficient hnonnegative]
 
 private theorem saddle_complex_frequency_norm_le (T u : ℝ) :
     ‖(T : ℂ) + Complex.I * (u : ℂ)‖ ≤ |T| + |u| := by
@@ -3432,7 +3426,7 @@ private theorem eventually_upper_shellLocation_gt_shortEndpoint :
         ε ^ 3 * (ε⁻¹ ^ 3) := by
     rw [hinv]
     exact hbound
-  nlinarith [hmul]
+  exact lt_of_mul_lt_mul_left hmul hcube.le
 
 private noncomputable def upperShellShortCoefficient (ε : ℝ) : ℝ :=
   (10 * Real.log (1 / ε)) + (ε ^ 3)⁻¹
@@ -3626,7 +3620,7 @@ private theorem upper_shortShell_oscillation_div_sq_le
       _ = T ^ 2 / 4 := by
         field_simp [ha.ne']; ring
       _ ≤ T ^ 2 := by
-        linarith [sq_nonneg T]
+        linarith only [sq_nonneg T]
   · calc
       (1 - Real.cos (a * T)) / (2 * a ^ 2) ≤
           2 / (2 * a ^ 2) :=
@@ -4245,8 +4239,7 @@ private theorem eventually_upper_shortShellVariance_domination :
     with ε hε hεone horder hseparation hmargin
   change 0 < ε at hε
   intro δ hδ
-  have hδnonneg : 0 ≤ δ := by
-    linarith
+  have hδnonneg : 0 ≤ δ := (half_pos hε).le.trans hδ
   have hB : 1 ≤ (ε⁻¹ ^ 3) :=
     upper_shellLocation_one_le hε hεone.le
   have hBsq : 1 ≤ (ε⁻¹ ^ 3) ^ 2 := by
@@ -5169,7 +5162,7 @@ private theorem plusSaddleProfile_div_origin_eq_small_radius_residue_series
     exact_mod_cast (saddleOriginValue_pos hε ℓ).ne'
   rw [plusSaddleProfile_eq_small_radius_residue_series
     hε hℓ horder hr N]
-  field_simp [hzero]
+  rw [add_div, mul_div_cancel_left₀ _ hzero]
 
 private theorem realHyperbolicShellPhase_contDiff
     {ε : ℝ}
@@ -5847,9 +5840,7 @@ private theorem saddleExpSeries_tail_term_le_geometric
       rw [show m + (k + 1) = (m + k) + 1 by omega,
         Nat.factorial_succ, pow_succ]
       push_cast
-      have hfact : ((m + k).factorial : ℝ) ≠ 0 := by
-        exact_mod_cast Nat.factorial_ne_zero (m + k)
-      field_simp
+      rw [div_mul_div_comm, mul_comm ((m + k).factorial : ℝ)]
     calc
       y ^ (m + (k + 1)) /
           ((m + (k + 1)).factorial : ℝ) =
@@ -6119,9 +6110,9 @@ private theorem upper_one_sub_cos_quadratic_lower
     have h := pow_le_pow_left₀ hnonnegative hx 2
     simpa only [sq_le_one_iff_abs_le_one, ge_iff_le, hsquare, one_pow] using! h
   have hx4 : x ^ 4 ≤ x ^ 2 := by
-    linarith [mul_nonneg (sq_nonneg x)
+    linarith only [mul_nonneg (sq_nonneg x)
       (sub_nonneg.mpr hx2)]
-  nlinarith
+  linarith only [hquartic, hx4, sq_nonneg x]
 
 private noncomputable def upperGammaDampingIntegrand (ℓ η T a : ℝ) : ℝ :=
   (1 - Real.cos (a * T)) *

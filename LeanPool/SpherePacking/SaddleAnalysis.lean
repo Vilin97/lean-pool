@@ -2637,11 +2637,8 @@ private theorem upperNegativeContour_gamma_mul_exp_short_le
         abs_of_pos (by norm_num : (0 : ℝ) < 2)]
       ring
     rw [habs] at hlog
-    linarith [mul_nonneg (show 0 ≤ 2 * ε by positivity)
-      (show 0 ≤ Real.log C -
-        (Real.pi * |s| / 2 - Real.log 2) by
-        try dsimp [C]
-        linarith)]
+    try dsimp only [C]
+    linarith only [mul_le_mul_of_nonneg_left hlog (by positivity : (0 : ℝ) ≤ 2 * ε)]
   have hΓ : 0 < Real.Gamma ((N : ℝ) + 3 / 2) := by
     apply Real.Gamma_pos_of_pos
     positivity
@@ -3202,7 +3199,7 @@ private theorem saddleSmallRadiusVariable_sqrt_eq_source
   have hsqrtpos := Real.sqrt_nonneg
     (saddleSmallRadiusVariable ε r)
   change Real.sqrt (saddleSmallRadiusVariable ε r) = q
-  nlinarith
+  exact (pow_left_inj₀ hsqrtpos hq two_ne_zero).mp (hsqrt.trans hsq.symm)
 
 private theorem saddleSmallRadiusVariable_halfIntegerFactor
     (ε : ℝ) {r : ℝ} (hr : 0 ≤ r) (N : ℕ) :

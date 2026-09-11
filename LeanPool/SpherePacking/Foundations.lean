@@ -1534,17 +1534,12 @@ private theorem gaussianMellinMixture_integrable {d : ℕ}
   · have hnegative :
         -(d : ℝ) <
           ((-(2 * b.re) : ℝ) : ℂ).re := by
-      simpa only [Complex.ofReal_neg, Complex.ofReal_mul, Complex.ofReal_ofNat, Complex.neg_re,
-        Complex.mul_re,
-        Complex.re_ofNat, Complex.ofReal_re, Complex.im_ofNat, Complex.ofReal_im, mul_zero,
-          sub_zero, neg_lt_neg_iff] using! (show -(d : ℝ) < -(2 * b.re) by linarith)
+      rw [Complex.ofReal_re]
+      linarith only [hbd]
     have hnonpositive :
         ((-(2 * b.re) : ℝ) : ℂ).re ≤ 0 := by
-      simpa only [Complex.ofReal_neg, Complex.ofReal_mul, Complex.ofReal_ofNat, Complex.neg_re,
-        Complex.mul_re,
-        Complex.re_ofNat, Complex.ofReal_re, Complex.im_ofNat, Complex.ofReal_im, mul_zero,
-          sub_zero, Left.neg_nonpos_iff,
-        Nat.ofNat_pos, mul_nonneg_iff_of_pos_left] using! (show -(2 * b.re) ≤ 0 by linarith)
+      rw [Complex.ofReal_re]
+      linarith only [hb]
     have hrieszComplex :=
       schwartz_mul_norm_cpow_integrable hd f
         ((-(2 * b.re) : ℝ) : ℂ) hnegative hnonpositive
@@ -2047,7 +2042,7 @@ private theorem cos_le_quartic {x : ℝ} (hx0 : 0 ≤ x) (hx1 : x ≤ 1) :
     Real.cos x ≤ 1 - x ^ 2 / 2 + x ^ 4 * (5 / 96 : ℝ) := by
   have hbound := Real.cos_bound (show |x| ≤ 1 by simpa only [abs_of_nonneg hx0] using! hx1)
   rw [abs_of_nonneg hx0] at hbound
-  linarith [(le_abs_self (Real.cos x - (1 - x ^ 2 / 2)))]
+  linarith only [hbound, le_abs_self (Real.cos x - (1 - x ^ 2 / 2))]
 
 private theorem sin_le_quintic {x : ℝ} (hx0 : 0 ≤ x) (hx1 : x ≤ 1) :
     Real.sin x ≤ x - x ^ 3 / 6 + x ^ 5 / 96 := by
@@ -2077,7 +2072,7 @@ private theorem sin_le_linear_sub_cubic {x : ℝ}
   have hx1 : x ≤ (1 : ℝ) := by linarith
   have hsin := sin_le_quintic hx0 hx1
   have hsq : x ^ 2 ≤ (1 / 4 : ℝ) := by
-    linarith [mul_nonneg hx0 (sub_nonneg.mpr hxhalf)]
+    linarith only [mul_nonneg hx0 (sub_nonneg.mpr hxhalf), hxhalf]
   have hcub : 0 ≤ x ^ 3 := pow_nonneg hx0 _
   have hfifth : x ^ 5 ≤ x ^ 3 / 4 := by
     have hprod := mul_nonneg hcub (sub_nonneg.mpr hsq)
@@ -2095,7 +2090,7 @@ private theorem sinc_quadratic_gap_nonneg {x : ℝ}
   rcases hx0.eq_or_lt with rfl | hxpos
   · norm_num
   have hxpi : x ≤ Real.pi := by
-    linarith [Real.pi_gt_three]
+    linarith only [hxhalf, Real.pi_gt_three]
   have hsin0 : 0 ≤ Real.sin x :=
     Real.sin_nonneg_of_nonneg_of_le_pi hxpos.le hxpi
   rw [Real.sinc_of_ne_zero hxpos.ne',
@@ -2113,7 +2108,7 @@ private theorem abs_sinc_le_twentyfour_twentyfive {x : ℝ}
   have hhalf : Real.sin (1 / 2 : ℝ) ≤ (12 / 25 : ℝ) := by
     have h := sin_le_quintic (x := (1 / 2 : ℝ)) (by norm_num) (by norm_num)
     norm_num at h ⊢
-    linarith
+    exact h.trans (by norm_num)
   by_cases hxpi : x ≤ Real.pi
   · have hsin0 := Real.sin_nonneg_of_nonneg_of_le_pi hxpos.le hxpi
     rw [Real.sinc_of_ne_zero hxpos.ne',
@@ -2121,7 +2116,7 @@ private theorem abs_sinc_le_twentyfour_twentyfive {x : ℝ}
     have hend :
         Real.sin (1 / 2 : ℝ) / (1 / 2 : ℝ) ≤ (24 / 25 : ℝ) := by
       apply (div_le_iff₀ (by norm_num : (0 : ℝ) < 1 / 2)).2
-      linarith
+      exact hhalf.trans (by norm_num)
     rcases hx.eq_or_lt with heq | hlt
     · subst x
       exact hend
@@ -2138,7 +2133,7 @@ private theorem abs_sinc_le_twentyfour_twentyfive {x : ℝ}
       abs_of_nonneg hxpos.le]
     apply (div_le_iff₀ hxpos).2
     have hsin := Real.abs_sin_le_one x
-    linarith [Real.pi_gt_three]
+    linarith only [hsin, hbig, Real.pi_gt_three]
 
 private theorem sinc_explicit (T : ℝ) :
     (1 / 25 : ℝ) * min (T ^ 2) 1 ≤
@@ -2183,8 +2178,8 @@ private theorem shellOscillation_lower_bound (B T : ℝ) :
         le_abs_self _
       _ = |Real.sinc (T / 2)| * |Real.cos ((B + 1 / 2) * T)| :=
         abs_mul _ _
-      _ ≤ |Real.sinc (T / 2)| := by
-        nlinarith [abs_nonneg (Real.sinc (T / 2))]
+      _ ≤ |Real.sinc (T / 2)| :=
+        mul_le_of_le_one_right (abs_nonneg _) hcos
   linarith [sinc_explicit T]
 
 private theorem cosh_ratio_lower {a δ : ℝ} (ha : 0 ≤ a) (hδ : 0 ≤ δ) :
@@ -2913,8 +2908,7 @@ private theorem abs_realOscillatoryShellPhase_le {ε : ℝ}
         positiveShellDensity ε a * (Real.cos (a * t) - 1)| ≤
           2 * ∫ a in (ε⁻¹ ^ 3)..(ε⁻¹ ^ 3 + 1),
             |positiveShellDensity ε a| := by
-    have hB : (ε⁻¹ ^ 3) ≤ (ε⁻¹ ^ 3) + 1 := by
-      linarith
+    have hB : (ε⁻¹ ^ 3) ≤ (ε⁻¹ ^ 3) + 1 := le_add_of_nonneg_right zero_le_one
     calc
       |∫ a in (ε⁻¹ ^ 3)..(ε⁻¹ ^ 3 + 1),
           positiveShellDensity ε a * (Real.cos (a * t) - 1)|
@@ -3579,7 +3573,7 @@ private theorem saddlePoleLowerProduct_ne_zero
   change
     -(2 * ((n : ℝ) + 1)) < z.re ∧
       z.re < -(2 * (n : ℝ)) + 1 at hz
-  linarith
+  linarith only [hre, hz.2, hjreal]
 
 private noncomputable def saddleNthGammaPoleNumerator (n : ℕ) (z : ℂ) : ℂ :=
   (2 : ℂ) *
@@ -6081,8 +6075,8 @@ private theorem saddleEnvelope_vertical_polynomial_bound {ε ℓ : ℝ}
       |t| ^ k * ‖Complex.Gamma z‖ =
           (2 : ℝ) ^ k *
             ((|t| / 2) ^ k * ‖Complex.Gamma z‖) := by
-              rw [div_pow]
-              field_simp
+              rw [div_pow, div_mul_eq_mul_div, mul_div_assoc',
+                mul_div_cancel_left₀ _ (pow_ne_zero k two_ne_zero)]
       _ ≤ (2 : ℝ) ^ k * Real.Gamma (ℓ / 2 + k) := by
               gcongr
   have hunit :
