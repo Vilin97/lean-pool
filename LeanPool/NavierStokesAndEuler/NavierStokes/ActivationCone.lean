@@ -85,7 +85,6 @@ theorem ramp_cone_of_errors {c B r e s P J v : ℝ}
   have hBpos : 0 < B := lt_of_lt_of_le hrpos hrB
   obtain ⟨hPl, hPu⟩ := abs_le.mp hP
   obtain ⟨hvl, hvu⟩ := abs_le.mp hv
-  obtain ⟨hJl, hJu⟩ := abs_le.mp hJ
   have hse : 0 ≤ s * e := mul_nonneg hs he.le
   have hsle : s * e ≤ s := mul_le_of_le_one_right hs he1
   have hrgap : 1 ≤ r - 2 * s := by linarith
@@ -97,9 +96,7 @@ theorem ramp_cone_of_errors {c B r e s P J v : ℝ}
     have h := mul_nonneg he.le hrpos.le
     linarith
   have hJsq : J ^ 2 ≤ s ^ 2 * e ^ 2 := by
-    have h := mul_nonneg (show 0 ≤ s * e - J by linarith)
-      (show 0 ≤ s * e + J by linarith)
-    linarith
+    simpa only [mul_pow] using sq_le_sq' (abs_le.mp hJ).1 (abs_le.mp hJ).2
   have hBs : B * s ≤ 1 / 4 := by linarith
   have hBss : B * s ^ 2 ≤ 1 / 16 := by
     have h := mul_le_mul_of_nonneg_right hBs hs
@@ -111,7 +108,8 @@ theorem ramp_cone_of_errors {c B r e s P J v : ℝ}
     _ = (B * s ^ 2) * e ^ 2 := by ring
     _ ≤ (1 / 16 : ℝ) * e ^ 2 := mul_le_mul_of_nonneg_right hBss he2.le
     _ < 2 * e ^ 2 := by linarith
-    _ ≤ 2 * (P - v) ^ 2 := by nlinarith
+    _ ≤ 2 * (P - v) ^ 2 :=
+      mul_le_mul_of_nonneg_left (pow_le_pow_left₀ he.le hgap 2) (by norm_num)
   exact ⟨hgap, hPgt, hquad⟩
 
 /-- A small activation preserves a uniform part of the reference `v > 2`
@@ -233,7 +231,7 @@ theorem uniform_ramp_from_comparison {K : Set ℝ} {r : Field}
     hy.2.trans (hT.2.trans (min_le_right _ _))
   have hstol : C * y ≤ errorTolerance c B := by
     have h := (le_div_iff₀ hCp).mp hytol
-    nlinarith
+    nlinarith only [h, hy.1]
   obtain ⟨hsq, hsc, hsB⟩ := errorTolerance_bounds hB hstol
   have hve : |v T κ (y, η) - (1 - activation T κ y) * r (y, η)| ≤
       (C * y) * activation T κ y := herrors.2.1
