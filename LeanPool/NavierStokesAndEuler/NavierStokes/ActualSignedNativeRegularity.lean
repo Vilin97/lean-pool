@@ -3,11 +3,13 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.FlatDyadicExtension
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedUnmaskedBinding
+public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveEdgeExtension
+import LeanPool.NavierStokesAndEuler.NavierStokes.NativeBandExtension
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedUnmaskedBounds
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
 
 /-!
 # Native regularity of the actual signed cut sources
@@ -18,8 +20,580 @@ radial edges; no smooth continuation of the unmasked request at a dyadic
 face is assumed.
 -/
 
+section
+
+/-!
+# Exact native-source factorization for the actual signed family
+
+The primitive state, primary choice, request, and lattice copy are unchanged.
+The identities retain the one Gaussian already present in the native cutoff.
+They hold on the whole native coordinate space, before any smoothness claim
+or own-band/harmonic gate is applied.
+-/
+
 @[expose] public section
 
+noncomputable section
+
+namespace NavierStokes.ActualSignedUnmaskedBinding
+
+open Set Function Filter CorrectionState CorrectionInitialization
+open scoped ContDiff Topology
+
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
+abbrev Label := ActualSignedPhysicalBinding.Label
+/-- Native label: an abbreviation for `ActualSignedPhysicalData.NativeLabel
+(ActualSignedExterior.labels B N0)`. -/
+abbrev NativeLabel (B N0 : ℕ) :=
+  ActualSignedPhysicalData.NativeLabel (ActualSignedExterior.labels B N0)
+/-- Point: an abbreviation for `LocalSignedRequest.Point`. -/
+abbrev Point := LocalSignedRequest.Point
+/-- Cylinder: an abbreviation for `ActualSignedPhysicalBinding.Cylinder`. -/
+abbrev Cylinder := ActualSignedPhysicalBinding.Cylinder
+/-- Native: an abbreviation for `ActualSignedPhysicalData.Native`. -/
+abbrev Native := ActualSignedPhysicalData.Native
+/-- Copy: an abbreviation for `TorusInverse.Frequency`. -/
+abbrev Copy := TorusInverse.Frequency
+
+variable {B N0 : ℕ}
+
+/-- Request, given by `LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P (2 *
+ActualPrimary.h) (ActualPrimary.commonContext B) u`. -/
+noncomputable def request (P : SignedStressPrimitive.Patch) (u : State Point) :=
+  LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P (2 * ActualPrimary.h)
+    (ActualPrimary.commonContext B) u
+
+variable (P : SignedStressPrimitive.Patch) (u : State Point)
+    (H : MeanStateRegularity.PrimitiveData ActualPrimary.standardRegion P.a P.b
+      (ActualPrimary.commonContext B) u)
+    (hp : GaugeMomentBalances.MovingField ActualPrimary.standardRegion P.a P.b u.pressure)
+
+/-- States, given by `ActualSignedPhysicalBinding.nativeStateData l P u H hp`. -/
+noncomputable def states (l : Label B N0) : (ActualSignedPhysicalBinding.nativeViews l).StateData :=
+  ActualSignedPhysicalBinding.nativeStateData l P u H hp
+
+/-- Branch, given by `(ActualSignedExterior.family (states P u H hp)).singleton L`. -/
+noncomputable def branch (L : NativeLabel B N0) :=
+  (ActualSignedExterior.family (states P u H hp)).singleton L
+
+/-- Branch label, given by `(ActualSignedExterior.family (states P u H hp)).singletonLabel L`. -/
+noncomputable def branchLabel (L : NativeLabel B N0) :
+    ActualSignedPhysicalData.NativeLabel (branch P u H hp L).active :=
+  (ActualSignedExterior.family (states P u H hp)).singletonLabel L
+
+theorem branch_request (L : NativeLabel B N0) :
+    ((branch P u H hp L).state (branchLabel P u H hp L)).referenceRequest =
+      (ActualSignedPhysicalBinding.nativeStateData (ActualSignedExterior.actualLabel L)
+        P u H hp).referenceRequest := by
+  exact ((ActualSignedExterior.family (states P u H hp)).singleton_referenceRequest L).trans
+    (ActualSignedExterior.family_referenceRequest (states P u H hp) L)
+
+omit P u H hp in
+theorem layout_eq (L : NativeLabel B N0) :
+    ActualSignedPhysicalData.layout ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+      L.val L.property 0 = ActualSignedPhysicalBinding.layout (ActualSignedExterior.actualLabel L)
+          := by
+  have he : ActualSignedPhysicalBinding.spatialLabel (ActualSignedExterior.actualLabel L) = L.val :=
+    congrArg Subtype.val (ActualSignedExterior.bandLabel_actualLabel L)
+  unfold ActualSignedPhysicalBinding.layout
+  congr 1
+  exact he.symm
+
+/- Identity view maps identify the genuine native pulse, without a
+support or nonvanishing assumption. -/
+omit P u H hp in
+theorem unit_reference (l : Label B N0) (k : Copy) (x : Cylinder) :
+    ActualPeriodizedSignedRealization.nativeUnit (ActualSignedPhysicalBinding.primary l)
+      (ActualSignedPhysicalBinding.layout l) (ActualSignedPhysicalBinding.nativeViews l) l.2 k
+      (ActualSignedPhysicalBinding.reference l) x =
+    ActualPeriodizedSignedRealization.referenceNativeUnit (ActualSignedPhysicalBinding.primary l)
+      (ActualSignedPhysicalBinding.layout l) l.2 (ActualSignedPhysicalBinding.reference l) k x := by
+  simp only [ActualPeriodizedSignedRealization.nativeUnit,
+    ActualPeriodizedSignedRealization.referenceNativeUnit,
+    ActualSignedPhysicalBinding.nativeViews_map]
+
+theorem reference_amplitude_formula (l : Label B N0) (k : Copy) (x : Cylinder) :
+    (ActualSignedPhysicalBinding.referenceCopies l P u H hp).amplitude
+      (ActualSignedPhysicalBinding.reference l) k x =
+    ActualPeriodizedSignedRealization.referenceScalar (ActualSignedPhysicalBinding.primary l)
+      (ActualSignedPhysicalBinding.nativeStateData l P u H hp).referenceRequest l.2
+      (ActualSignedPhysicalBinding.reference l) x • CurlClassBounds.complexify
+      (ActualPeriodizedSignedRealization.referenceNativeUnit (ActualSignedPhysicalBinding.primary l)
+        (ActualSignedPhysicalBinding.layout l) l.2 (ActualSignedPhysicalBinding.reference l) k x)
+            := by
+  change (ActualSignedPhysicalData.dynamicCoefficients ActualPrimary.slots
+    ActualPrimary.outgoing.data.h_pos.le (ActualSignedPhysicalBinding.spatialLabel l)
+    (ActualSignedPhysicalBinding.label_large l) 0 (ActualSignedPhysicalBinding.primary l)
+    (ActualSignedPhysicalBinding.nativeViews l)
+    (ActualSignedPhysicalBinding.nativeStateData l P u H hp).referenceRequest l.2 k).amplitude
+      (ActualSignedPhysicalBinding.reference l) x = _
+  rw [ActualSignedPhysicalBinding.dynamicCoefficients_eq]
+  unfold ActualSignedPhysicalBinding.nativeCoefficients
+  rw [ActualPeriodizedSignedRealization.coefficients_amplitude_at, unit_reference]
+  rfl
+
+theorem reference_pressure_formula (l : Label B N0) (k : Copy) (x : Cylinder) :
+    (ActualSignedPhysicalBinding.referenceCopies l P u H hp).pressure
+      (ActualSignedPhysicalBinding.reference l) k x =
+    ActualPeriodizedSignedRealization.referenceScalar (ActualSignedPhysicalBinding.primary l)
+      (ActualSignedPhysicalBinding.nativeStateData l P u H hp).referenceRequest l.2
+      (ActualSignedPhysicalBinding.reference l) x •
+      ActualPeriodizedSignedRealization.homogeneousPressure
+        ((ActualSignedPhysicalBinding.primary l).base.frequency
+            (ActualSignedPhysicalBinding.reference l))
+        ((ActualSignedPhysicalBinding.primary l).base.normal (ActualSignedPhysicalBinding.primary
+            l).strip
+          (ActualSignedPhysicalBinding.primary l).directions (ActualSignedPhysicalBinding.reference
+              l) x)
+        ((ActualSignedPhysicalBinding.primary l).normalMotion
+            (ActualSignedPhysicalBinding.reference l) x)
+        ((ActualSignedPhysicalBinding.primary l).action (ActualSignedPhysicalBinding.reference l) x)
+        (ActualPeriodizedSignedRealization.referenceNativeUnit (ActualSignedPhysicalBinding.primary
+            l)
+          (ActualSignedPhysicalBinding.layout l) l.2 (ActualSignedPhysicalBinding.reference l) k x)
+              := by
+  change (ActualSignedPhysicalData.dynamicCoefficients ActualPrimary.slots
+    ActualPrimary.outgoing.data.h_pos.le (ActualSignedPhysicalBinding.spatialLabel l)
+    (ActualSignedPhysicalBinding.label_large l) 0 (ActualSignedPhysicalBinding.primary l)
+    (ActualSignedPhysicalBinding.nativeViews l)
+    (ActualSignedPhysicalBinding.nativeStateData l P u H hp).referenceRequest l.2 k).pressure
+      (ActualSignedPhysicalBinding.reference l) x = _
+  rw [ActualSignedPhysicalBinding.dynamicCoefficients_eq]
+  unfold ActualSignedPhysicalBinding.nativeCoefficients
+  rw [ActualPeriodizedSignedRealization.coefficients_pressure_at, unit_reference]
+  rfl
+
+theorem branch_amplitude_reference (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
+    ActualSignedPhysicalData.rawSignedAmplitude ActualPrimary.slots
+        ActualPrimary.outgoing.data.h_pos.le
+      (branch P u H hp L) (branchLabel P u H hp L) k x =
+    (ActualSignedPhysicalBinding.referenceCopies (ActualSignedExterior.actualLabel L) P u H
+        hp).amplitude
+      (ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel L)) k x := by
+  rw [reference_amplitude_formula]
+  unfold ActualSignedPhysicalData.rawSignedAmplitude
+  rw [branch_request]
+  change ActualPeriodizedSignedRealization.referenceScalar _ _ _ L.val.1 x •
+    CurlClassBounds.complexify (ActualPeriodizedSignedRealization.referenceNativeUnit _
+      (ActualSignedPhysicalData.layout ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+        L.val L.property 0) _ L.val.1 k x) = _
+  rw [layout_eq, ← ActualSignedExterior.actualLabel_reference L]
+  rfl
+
+theorem branch_pressure_reference (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
+    ActualSignedPhysicalData.rawPressure ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+      (branch P u H hp L) (branchLabel P u H hp L) k x =
+    (ActualSignedPhysicalBinding.referenceCopies (ActualSignedExterior.actualLabel L) P u H
+        hp).pressure
+      (ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel L)) k x := by
+  rw [reference_pressure_formula]
+  unfold ActualSignedPhysicalData.rawPressure
+  rw [branch_request]
+  change ActualPeriodizedSignedRealization.referenceScalar _ _ _ L.val.1 x •
+    ActualPeriodizedSignedRealization.homogeneousPressure _ _ _ _
+      (ActualPeriodizedSignedRealization.referenceNativeUnit _
+        (ActualSignedPhysicalData.layout ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+          L.val L.property 0) _ L.val.1 k x) = _
+  rw [layout_eq, ← ActualSignedExterior.actualLabel_reference L]
+  rfl
+
+theorem branch_potential_reference (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
+    ActualSignedPhysicalData.rawPotential ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+      (branch P u H hp L) (branchLabel P u H hp L) k x =
+    ActualSignedPhysicalData.potentialMap
+      ((ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).base.frequency
+        (ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel L)))
+      ((ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).base.normal
+        (ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).strip
+        (ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).directions
+        (ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel L)) x)
+      ((ActualSignedPhysicalBinding.referenceCopies (ActualSignedExterior.actualLabel L) P u H
+          hp).amplitude
+        (ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel L)) k x) := by
+  unfold ActualSignedPhysicalData.rawPotential
+  rw [branch_amplitude_reference]
+  change CurlClassBounds.inverseCarrier
+    ((ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).base.frequency
+        L.val.1) •
+    CurlClassBounds.normalCoefficient
+      ((ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).base.normal
+        (ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).strip
+        (ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L)).directions
+            L.val.1 x) _ = _
+  rw [← ActualSignedExterior.actualLabel_reference L]
+  rfl
+
+theorem waveMask_reference (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
+    ActualSignedPhysicalData.waveMask ActualPrimary.slots L.val
+      ((ActualSignedPhysicalData.geometry ActualPrimary.slots L.val 0).coordinates k x.1.2.2) =
+    (ActualSignedPhysicalBinding.referenceCopies (ActualSignedExterior.actualLabel L) P u H
+        hp).cutoff
+      (ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel L)) k x := by
+  have he : ActualSignedPhysicalBinding.spatialLabel (ActualSignedExterior.actualLabel L) = L.val :=
+    congrArg Subtype.val (ActualSignedExterior.bandLabel_actualLabel L)
+  rw [← he]
+  simp only [ActualSignedPhysicalBinding.referenceCopies, ActualSignedPhysicalData.dynamicCopyData,
+    ActualSignedPhysicalBinding.nativeViews_map]
+  rfl
+
+/-- The scalar factor is removed after the one existing native Gaussian
+has been applied. No additional cutoff is introduced. -/
+theorem cylinder_potential_factor (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
+    ActualSignedPhysicalData.waveMask ActualPrimary.slots L.val
+      ((ActualSignedPhysicalData.geometry ActualPrimary.slots L.val 0).coordinates k x.1.2.2) •
+      ActualSignedPhysicalData.rawPotential ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+        (branch P u H hp L) (branchLabel P u H hp L) k x =
+    ActualSignedUnmaskedBounds.dyadicFactor (ActualSignedExterior.actualLabel L) k
+      (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
+      (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L) x) •
+      ActualSignedUnmaskedBounds.potential (request (B := B) P u) (ActualSignedExterior.actualLabel
+          L) k
+        (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
+        (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L) x) := by
+  let l := ActualSignedExterior.actualLabel L
+  rw [branch_potential_reference P u H hp L k x, waveMask_reference P u H hp L k x]
+  rw [← map_smul]
+  change ActualSignedPhysicalData.potentialMap _ _
+    (((ActualSignedPhysicalBinding.referenceCopies l P u H hp).localized k).amplitude
+      (ActualSignedPhysicalBinding.reference l) x) = _
+  rw [ActualSignedPhysicalData.potentialMap_apply,
+    ActualSignedPhysicalBinding.primary_normal_reference,
+    ← ActualSignedPhysicalBinding.localized_amplitude_reference l P u H hp k x]
+  exact ActualSignedUnmaskedBounds.potential_factor (request (B := B) P u) l k
+    (ActualSignedUnmaskedBounds.reference l) (ActualSignedPhysicalBinding.toCommonCylinder l x)
+
+theorem cylinder_pressure_factor (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
+    ActualSignedPhysicalData.waveMask ActualPrimary.slots L.val
+      ((ActualSignedPhysicalData.geometry ActualPrimary.slots L.val 0).coordinates k x.1.2.2) •
+      ActualSignedPhysicalData.rawPressure ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+        (branch P u H hp L) (branchLabel P u H hp L) k x =
+    ActualSignedUnmaskedBounds.dyadicFactor (ActualSignedExterior.actualLabel L) k
+      (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
+      (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L) x) •
+      ActualSignedUnmaskedBounds.pressure (request (B := B) P u) (ActualSignedExterior.actualLabel
+          L) k
+        (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
+        (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L) x) := by
+  let l := ActualSignedExterior.actualLabel L
+  rw [branch_pressure_reference P u H hp L k x, waveMask_reference P u H hp L k x]
+  change (((ActualSignedPhysicalBinding.referenceCopies l P u H hp).localized k).pressure
+    (ActualSignedPhysicalBinding.reference l) x) = _
+  rw [← ActualSignedPhysicalBinding.localized_pressure_reference l P u H hp k x]
+  exact ActualSignedUnmaskedBounds.pressure_factor (request (B := B) P u) l k
+    (ActualSignedUnmaskedBounds.reference l) (ActualSignedPhysicalBinding.toCommonCylinder l x)
+
+theorem native_potential_factor (L : NativeLabel B N0) (k : Copy) (y : Native) :
+    ActualSignedPhysicalData.waveMask ActualPrimary.slots L.val
+      ((ActualSignedPhysicalData.geometry ActualPrimary.slots L.val 0).coordinates k y.2.2) •
+      ActualSignedPhysicalData.rawPotential ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+        (branch P u H hp L) (branchLabel P u H hp L) k (ActualSignedPhysicalData.nativeCylinder y) =
+    SquaredPartition.dyadicProfile (SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) y.2.1) •
+      ActualSignedUnmaskedBounds.potential (request (B := B) P u) (ActualSignedExterior.actualLabel
+          L) k
+        (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
+        (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L)
+          (ActualSignedPhysicalData.nativeCylinder y)) := by
+  have he := cylinder_potential_factor P u H hp L k (ActualSignedPhysicalData.nativeCylinder y)
+  rw [ActualSignedUnmaskedBounds.dyadicFactor_reference] at he
+  exact he
+
+theorem native_pressure_factor (L : NativeLabel B N0) (k : Copy) (y : Native) :
+    ActualSignedPhysicalData.waveMask ActualPrimary.slots L.val
+      ((ActualSignedPhysicalData.geometry ActualPrimary.slots L.val 0).coordinates k y.2.2) •
+      ActualSignedPhysicalData.rawPressure ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
+        (branch P u H hp L) (branchLabel P u H hp L) k (ActualSignedPhysicalData.nativeCylinder y) =
+    SquaredPartition.dyadicProfile (SimilarityCoordinates.coordinateQ (2 * ActualPrimary.h) y.2.1) •
+      ActualSignedUnmaskedBounds.pressure (request (B := B) P u) (ActualSignedExterior.actualLabel
+          L) k
+        (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
+        (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L)
+          (ActualSignedPhysicalData.nativeCylinder y)) := by
+  have he := cylinder_pressure_factor P u H hp L k (ActualSignedPhysicalData.nativeCylinder y)
+  rw [ActualSignedUnmaskedBounds.dyadicFactor_reference] at he
+  exact he
+
+end NavierStokes.ActualSignedUnmaskedBinding
+
+end
+end
+
+end
+
+section
+
+/-!
+# Literal flat dyadic products from locally bounded interior jets
+
+The unmasked factor is smooth only in the open dyadic band.  Its actual
+interior jets are locally bounded at each face.  Flatness of the fixed cutoff
+then proves smoothness and vanishing of all jets of the literal product,
+without assigning new values to the unmasked factor outside the band.
+-/
+
+@[expose] public section
+
+noncomputable section
+
+namespace NavierStokes.FlatDyadicExtension
+
+open Set Function Filter
+open WaveEdgeExtension (window windowDomain extension extendedJets)
+open scoped Topology ContDiff BigOperators
+
+variable {D E : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
+  [NormedAddCommGroup E] [NormedSpace ℝ E]
+
+private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
+  ENat.natCast_le_of_coe_top_le_withTop le_rfl n
+
+/-- The constant and neighborhood may depend on the face point and finite
+jet order.  Values and derivatives of `g` outside the open band are unused. -/
+def LocalJetBounds (Ω : Set D) (q : D → ℝ) (g : D → E) : Prop :=
+  ∀ x ∈ Ω, q x = 1 / 2 ∨ q x = 2 → ∀ m : ℕ,
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ y in 𝓝 x,
+      y ∈ windowDomain Ω q (1 / 2) 2 →
+        ∀ j : ℕ, j ≤ m → ‖iteratedFDeriv ℝ j g y‖ ≤ C
+
+theorem tensor_hasFDerivAt {f : D → E} {x : D} (hf : ContDiffAt ℝ ∞ f x) (n : ℕ) :
+    HasFDerivAt (iteratedFDeriv ℝ n f) (iteratedFDeriv ℝ (n + 1) f x).curryLeft x := by
+  have hi : ContDiffAt ℝ 1 (iteratedFDeriv ℝ n f) x :=
+    hf.iteratedFDeriv_right (by exact_mod_cast (le_top : 1 + (n : ℕ∞) ≤ ⊤))
+  have hd := (hi.differentiableAt (by simp)).hasFDerivAt
+  simp only [fderiv_iteratedFDeriv, Function.comp_apply] at hd
+  exact hd
+
+/-- One extra zero tensor makes each flat jet little-o of ambient distance. -/
+theorem flat_jet_isLittleO {f : D → E} {x : D} (hf : ContDiffAt ℝ ∞ f x)
+    (hz : ∀ n : ℕ, iteratedFDeriv ℝ n f x = 0) (n : ℕ) :
+    (iteratedFDeriv ℝ n f) =o[𝓝 x] (fun y => y - x) := by
+  have hcurry : (0 : D[×(n + 1)]→L[ℝ] E).curryLeft = 0 := by
+    ext u v
+    rfl
+  have hd : HasFDerivAt (iteratedFDeriv ℝ n f) (0 : D →L[ℝ] (D[×n]→L[ℝ] E)) x := by
+    have ht := tensor_hasFDerivAt hf n
+    rw [hz (n + 1), hcurry] at ht
+    exact ht
+  rw [hasFDerivAt_iff_isLittleO] at hd
+  simpa only [hz n, _root_.zero_apply, sub_zero] using
+    hd
+
+/-- A flat smooth scalar times a factor with locally bounded interior jets
+has little-o interior product jets.  Zero extension needs no source values
+or source regularity on the other side of the boundary. -/
+theorem product_jet_extension_isLittleO {Ω : Set D} (hΩ : IsOpen Ω)
+    {q φ : D → ℝ} (hq : ContinuousOn q Ω) (hφ : ContDiffOn ℝ ∞ φ Ω)
+    {a b : ℝ} {g : D → E} (hg : ContDiffOn ℝ ∞ g (windowDomain Ω q a b))
+    {x : D} (hx : x ∈ Ω) (hflat : ∀ n : ℕ, iteratedFDeriv ℝ n φ x = 0)
+    (m : ℕ)
+    (hB : ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ y in 𝓝 x,
+      y ∈ windowDomain Ω q a b → ∀ j : ℕ, j ≤ m → ‖iteratedFDeriv ℝ j g y‖ ≤ C) :
+    extension q a b (iteratedFDeriv ℝ m (fun y => φ y • g y))
+      =o[𝓝 x] (fun y => y - x) := by
+  obtain ⟨C, hC, hb⟩ := hB
+  let M : ℝ := C + 1
+  have hM : 0 < M := by dsimp [M]; linarith
+  have hCM : C ≤ M := by dsimp [M]; linarith
+  have hU := WaveEdgeExtension.windowDomain_open hΩ hq a b
+  have hφx := hφ.contDiffAt (hΩ.mem_nhds hx)
+  apply Asymptotics.IsLittleO.of_bound
+  intro ε hε
+  let δ : ℝ := ε / ((2 : ℝ) ^ m * M)
+  have hden : 0 < (2 : ℝ) ^ m * M := mul_pos (pow_pos (by norm_num) _) hM
+  have hδ : 0 < δ := div_pos hε hden
+  have hsmall : ∀ᶠ y in 𝓝 x, ∀ j ∈ Finset.range (m + 1),
+      ‖iteratedFDeriv ℝ j φ y‖ ≤ δ * ‖y - x‖ :=
+    (eventually_all_finset _).2 (fun j _ => (flat_jet_isLittleO hφx hflat j).bound hδ)
+  filter_upwards [hΩ.mem_nhds hx, hb, hsmall] with y hyΩ hby hsy
+  by_cases hy : y ∈ window q a b
+  · rw [WaveEdgeExtension.extension_inside q a b _ hy]
+    have hyU : y ∈ windowDomain Ω q a b := ⟨hyΩ, hy⟩
+    change IsOpen (Ω ∩ window q a b) at hU
+    change y ∈ Ω ∩ window q a b at hyU
+    have hprod := norm_iteratedFDerivWithin_smul_le
+      (hφ.mono (inter_subset_left (t := window q a b))) hg hU.uniqueDiffOn hyU
+      (n := m) (nat_le_infty m)
+    simp only [iteratedFDerivWithin_of_isOpen _ hU hyU] at hprod
+    calc
+      _ ≤ ∑ j ∈ Finset.range (m + 1), (m.choose j : ℝ) *
+          ‖iteratedFDeriv ℝ j φ y‖ * ‖iteratedFDeriv ℝ (m - j) g y‖ := hprod
+      _ ≤ ∑ j ∈ Finset.range (m + 1), (m.choose j : ℝ) * (δ * ‖y - x‖) * M := by
+        apply Finset.sum_le_sum
+        intro j hj
+        exact mul_le_mul
+          (mul_le_mul_of_nonneg_left (hsy j hj) (Nat.cast_nonneg _))
+          ((hby hyU (m - j) (Nat.sub_le _ _)).trans hCM)
+          (norm_nonneg _) (mul_nonneg (Nat.cast_nonneg _) (mul_nonneg hδ.le (norm_nonneg _)))
+      _ = (2 : ℝ) ^ m * (δ * ‖y - x‖) * M := by
+        rw [← Finset.sum_mul, ← Finset.sum_mul]
+        have hchoose : (∑ j ∈ Finset.range (m + 1), (m.choose j : ℝ)) = (2 : ℝ) ^ m := by
+          exact_mod_cast Nat.sum_range_choose m
+        rw [hchoose]
+      _ = (δ * ((2 : ℝ) ^ m * M)) * ‖y - x‖ := by ring
+      _ = ε * ‖y - x‖ := by rw [div_mul_cancel₀ ε hden.ne']
+  · rw [WaveEdgeExtension.extension_outside q a b _ hy, norm_zero]
+    exact mul_nonneg hε.le (norm_nonneg _)
+
+/-! ## A Taylor family for the literal window extension -/
+
+/-- Small O jets, given by `∀ n : ℕ, ∀ x ∈ Ω, q x = a ∨ q x = b → extension q a b
+(iteratedFDeriv ℝ n f) =o[𝓝 x] (fun y => y - x)`. -/
+def SmallOJets (Ω : Set D) (q : D → ℝ) (a b : ℝ) (f : D → E) : Prop :=
+  ∀ n : ℕ, ∀ x ∈ Ω, q x = a ∨ q x = b →
+    extension q a b (iteratedFDeriv ℝ n f) =o[𝓝 x] (fun y => y - x)
+
+theorem hasFDerivAt_extension_zero {q : D → ℝ} {a b : ℝ} {f : D → E} {x : D}
+    (hx : x ∉ window q a b)
+    (hf : extension q a b f =o[𝓝 x] (fun y => y - x)) :
+    HasFDerivAt (extension q a b f) (0 : D →L[ℝ] E) x := by
+  rw [hasFDerivAt_iff_isLittleO]
+  simpa only [WaveEdgeExtension.extension_outside q a b f hx,
+    _root_.zero_apply, sub_zero] using hf
+
+theorem extendedJets_hasFDerivAt {Ω : Set D} (hΩ : IsOpen Ω) {q : D → ℝ}
+    (hq : ContinuousOn q Ω) {a b : ℝ} {f : D → E}
+    (hf : ContDiffOn ℝ ∞ f (windowDomain Ω q a b))
+    (hB : SmallOJets Ω q a b f) (n : ℕ) {x : D} (hx : x ∈ Ω) :
+    HasFDerivAt (fun y => extendedJets q a b f y n)
+      (extendedJets q a b f x (n + 1)).curryLeft x := by
+  have hqc := (hq x hx).continuousAt (hΩ.mem_nhds hx)
+  change HasFDerivAt (extension q a b (iteratedFDeriv ℝ n f))
+    (extension q a b (iteratedFDeriv ℝ (n + 1) f) x).curryLeft x
+  have hcurry : (0 : D[×(n + 1)]→L[ℝ] E).curryLeft = 0 := by
+    ext u v
+    rfl
+  rcases lt_trichotomy (q x) a with hleft | heq | hleft
+  · have hn : x ∉ window q a b := fun h => (not_lt_of_ge hleft.le) h.1
+    rw [WaveEdgeExtension.extension_outside q a b _ hn, hcurry]
+    exact (hasFDerivAt_const (0 : D[×n]→L[ℝ] E) x).congr_of_eventuallyEq
+      (WaveEdgeExtension.extension_germ_left a b _ hqc hleft)
+  · have hn : x ∉ window q a b := fun h => (not_lt_of_ge heq.le) h.1
+    rw [WaveEdgeExtension.extension_outside q a b _ hn, hcurry]
+    exact hasFDerivAt_extension_zero hn (hB n x hx (Or.inl heq))
+  · rcases lt_trichotomy (q x) b with hright | heq | hright
+    · have hin : x ∈ window q a b := ⟨hleft, hright⟩
+      rw [WaveEdgeExtension.extension_inside q a b _ hin]
+      have hd := tensor_hasFDerivAt
+        (hf.contDiffAt ((WaveEdgeExtension.windowDomain_open hΩ hq a b).mem_nhds ⟨hx, hin⟩)) n
+      exact hd.congr_of_eventuallyEq (WaveEdgeExtension.extension_germ_inside a b _ hqc hin)
+    · have hn : x ∉ window q a b := fun h => (not_lt_of_ge heq.ge) h.2
+      rw [WaveEdgeExtension.extension_outside q a b _ hn, hcurry]
+      exact hasFDerivAt_extension_zero hn (hB n x hx (Or.inr heq))
+    · have hn : x ∉ window q a b := fun h => (not_lt_of_ge hright.le) h.2
+      rw [WaveEdgeExtension.extension_outside q a b _ hn, hcurry]
+      exact (hasFDerivAt_const (0 : D[×n]→L[ℝ] E) x).congr_of_eventuallyEq
+        (WaveEdgeExtension.extension_germ_right a b _ hqc hright)
+
+theorem hasFTaylorSeriesUpToOn_extension {Ω : Set D} (hΩ : IsOpen Ω) {q : D → ℝ}
+    (hq : ContinuousOn q Ω) {a b : ℝ} {f : D → E}
+    (hf : ContDiffOn ℝ ∞ f (windowDomain Ω q a b)) (hB : SmallOJets Ω q a b f) :
+    HasFTaylorSeriesUpToOn ∞ (extension q a b f) (extendedJets q a b f) Ω := by
+  classical
+  constructor
+  · intro x hx
+    by_cases hi : x ∈ window q a b
+    · simp only [extendedJets, extension, ite_eq_left hi]
+      rfl
+    · simp only [extendedJets, extension, ite_eq_right hi]
+      rfl
+  · intro n _ x hx
+    exact (extendedJets_hasFDerivAt hΩ hq hf hB n hx).hasFDerivWithinAt
+  · intro n _ x hx
+    exact (extendedJets_hasFDerivAt hΩ hq hf hB n hx).continuousAt.continuousWithinAt
+
+theorem iteratedFDeriv_extension {Ω : Set D} (hΩ : IsOpen Ω) {q : D → ℝ}
+    (hq : ContinuousOn q Ω) {a b : ℝ} {f : D → E}
+    (hf : ContDiffOn ℝ ∞ f (windowDomain Ω q a b)) (hB : SmallOJets Ω q a b f)
+    (n : ℕ) {x : D} (hx : x ∈ Ω) :
+    iteratedFDeriv ℝ n (extension q a b f) x = extension q a b (iteratedFDeriv ℝ n f) x := by
+  have h := hasFTaylorSeriesUpToOn_extension hΩ hq hf hB
+  have he := (h.eq_iteratedFDerivWithin_of_uniqueDiffOn
+    (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le hΩ.uniqueDiffOn hx).symm
+  rwa [iteratedFDerivWithin_of_isOpen n hΩ hx] at he
+
+/-! ## The fixed dyadic cutoff -/
+
+omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
+theorem dyadicProduct_eq_extension (q : D → ℝ) (g : D → E) :
+    (fun x => SquaredPartition.dyadicProfile (q x) • g x) =
+      extension q (1 / 2) 2 (fun x => SquaredPartition.dyadicProfile (q x) • g x) := by
+  classical
+  funext x
+  by_cases hx : x ∈ window q (1 / 2) 2
+  · exact (WaveEdgeExtension.extension_inside q (1 / 2) 2
+      (fun y => SquaredPartition.dyadicProfile (q y) • g y) hx).symm
+  · rw [WaveEdgeExtension.extension_outside q (1 / 2) 2
+      (fun y => SquaredPartition.dyadicProfile (q y) • g y) hx]
+    have hz : SquaredPartition.dyadicProfile (q x) = 0 := by
+      by_contra hn
+      have hm : q x ∈ Function.support SquaredPartition.dyadicProfile := hn
+      rw [SquaredPartition.dyadicProfile_support] at hm
+      exact hx hm
+    rw [hz, zero_smul]
+
+/-- Main endpoint: the literal product is smooth on the ambient open domain
+and every actual tensor vanishes at either dyadic face. -/
+theorem dyadic_product_smooth_and_flat {Ω : Set D} (hΩ : IsOpen Ω)
+    {q : D → ℝ} (hq : ContDiffOn ℝ ∞ q Ω) {g : D → E}
+    (hg : ContDiffOn ℝ ∞ g (windowDomain Ω q (1 / 2) 2))
+    (hB : LocalJetBounds Ω q g) :
+    ContDiffOn ℝ ∞ (fun x => SquaredPartition.dyadicProfile (q x) • g x) Ω ∧
+      ∀ x ∈ Ω, q x = 1 / 2 ∨ q x = 2 → ∀ n : ℕ,
+        iteratedFDeriv ℝ n (fun y => SquaredPartition.dyadicProfile (q y) • g y) x = 0 := by
+  let φ : D → ℝ := fun x => SquaredPartition.dyadicProfile (q x)
+  let f : D → E := fun x => φ x • g x
+  have hφ : ContDiffOn ℝ ∞ φ Ω := SquaredPartition.dyadicProfile_smooth.comp_contDiffOn hq
+  have hf : ContDiffOn ℝ ∞ f (windowDomain Ω q (1 / 2) 2) :=
+    (hφ.mono (inter_subset_left (t := window q (1 / 2) 2))).smul hg
+  have hsmall : SmallOJets Ω q (1 / 2) 2 f := by
+    intro n x hx hedge
+    have hflat : ∀ j : ℕ, iteratedFDeriv ℝ j φ x = 0 := by
+      intro j
+      apply NativeBandExtension.flat_comp_jets SquaredPartition.dyadicProfile_smooth
+        (hq.contDiffAt (hΩ.mem_nhds hx)) _ j
+      intro k
+      rcases hedge with he | he
+      · rw [he]
+        exact (NativeBandExtension.dyadicProfile_endpoint_jets k).1
+      · rw [he]
+        exact (NativeBandExtension.dyadicProfile_endpoint_jets k).2
+    exact product_jet_extension_isLittleO hΩ hq.continuousOn hφ hg hx hflat n (hB x hx hedge n)
+  have heq : f = extension q (1 / 2) 2 f := dyadicProduct_eq_extension q g
+  constructor
+  · change ContDiffOn ℝ ∞ f Ω
+    rw [heq]
+    exact (hasFTaylorSeriesUpToOn_extension hΩ hq.continuousOn hf hsmall).contDiffOn
+  · intro x hx hedge n
+    change iteratedFDeriv ℝ n f x = 0
+    rw [heq, iteratedFDeriv_extension hΩ hq.continuousOn hf hsmall n hx]
+    apply WaveEdgeExtension.extension_outside
+    rcases hedge with he | he
+    · exact fun hin => (not_lt_of_ge he.le) hin.1
+    · exact fun hin => (not_lt_of_ge he.ge) hin.2
+
+theorem dyadic_product_contDiffOn {Ω : Set D} (hΩ : IsOpen Ω)
+    {q : D → ℝ} (hq : ContDiffOn ℝ ∞ q Ω) {g : D → E}
+    (hg : ContDiffOn ℝ ∞ g (windowDomain Ω q (1 / 2) 2))
+    (hB : LocalJetBounds Ω q g) :
+    ContDiffOn ℝ ∞ (fun x => SquaredPartition.dyadicProfile (q x) • g x) Ω :=
+  (dyadic_product_smooth_and_flat hΩ hq hg hB).1
+
+theorem dyadic_product_face {Ω : Set D} (hΩ : IsOpen Ω)
+    {q : D → ℝ} (hq : ContDiffOn ℝ ∞ q Ω) {g : D → E}
+    (hg : ContDiffOn ℝ ∞ g (windowDomain Ω q (1 / 2) 2))
+    (hB : LocalJetBounds Ω q g) {x : D} (hx : x ∈ Ω) (he : q x = 1 / 2 ∨ q x = 2) :
+    ContDiffAt ℝ ∞ (fun y => SquaredPartition.dyadicProfile (q y) • g y) x ∧
+      ∀ n : ℕ, iteratedFDeriv ℝ n (fun y => SquaredPartition.dyadicProfile (q y) • g y) x = 0 :=
+  ⟨(dyadic_product_contDiffOn hΩ hq hg hB).contDiffAt (hΩ.mem_nhds hx),
+    (dyadic_product_smooth_and_flat hΩ hq hg hB).2 x hx he⟩
+
+end NavierStokes.FlatDyadicExtension
+
+end
+end
+
+end
+
+@[expose] public section
 
 noncomputable section
 
@@ -28,7 +602,6 @@ namespace NavierStokes.ActualSignedNativeRegularity
 open Set Function Filter WeightedClasses
 open CorrectionInitialization
 open scoped Topology ContDiff
-
 
 /-- Full point: an abbreviation for `ActualWaveRegularityData.FullPoint`. -/
 abbrev FullPoint := ActualWaveRegularityData.FullPoint

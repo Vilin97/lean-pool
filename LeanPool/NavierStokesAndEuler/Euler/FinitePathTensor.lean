@@ -11,9 +11,6 @@ public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.Topology.Algebra.Module.FiniteDimension
 public import Mathlib.Topology.ContinuousMap.Compact
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A continuous multilinear map with continuous-path values gives a
 genuine continuous path of tensors. Finite spatial coordinates establish

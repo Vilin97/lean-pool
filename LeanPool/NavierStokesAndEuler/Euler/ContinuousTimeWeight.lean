@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Actual profile normalization of continuous time paths

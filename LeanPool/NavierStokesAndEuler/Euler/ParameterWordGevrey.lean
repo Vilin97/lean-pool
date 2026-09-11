@@ -8,12 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
 public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.ContinuousFunctionalCalculus
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 # Actual ordered parameter derivatives and their factorial word sums

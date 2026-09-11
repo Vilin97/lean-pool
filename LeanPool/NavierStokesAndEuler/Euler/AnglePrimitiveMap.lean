@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Bounded linear maps commute with the literal normalized angular integral. -/
 

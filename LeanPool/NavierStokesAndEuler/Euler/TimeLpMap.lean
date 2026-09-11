@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Exact bounded-map compatibility for the actual continuous-path to Bochner L² inclusion. -/
 

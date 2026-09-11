@@ -8,8 +8,6 @@ module
 
 public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 public import Mathlib.Analysis.InnerProductSpace.Defs
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # The actual supported subspace of ordinary spatial L²

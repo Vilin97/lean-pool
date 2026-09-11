@@ -10,7 +10,6 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Dominated convergence in genuine L², also for Banach-valued representatives. -/
 

@@ -8,13 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAlgebra
 import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Tactic.Continuity.Init
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.Abs
-import Mathlib.Tactic.NormNum.DivMod
-import Mathlib.Tactic.NormNum.OfScientific
-import Mathlib.Tactic.NormNum.Pow
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Degree bounds and the exact shift caused by a fast derivative. -/
 

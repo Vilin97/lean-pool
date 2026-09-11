@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramPath
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Continuous acceleration from the genuine Gram inverse

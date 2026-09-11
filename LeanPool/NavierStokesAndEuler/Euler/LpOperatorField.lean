@@ -9,9 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedSubspace
 public import Mathlib.Topology.ContinuousMap.Bounded.Normed
 public import Mathlib.Analysis.Normed.Operator.NormedSpace
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
-import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Rectangular coefficient fields acting on actual spatial L²

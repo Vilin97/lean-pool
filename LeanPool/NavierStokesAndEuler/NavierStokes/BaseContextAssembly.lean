@@ -3,16 +3,18 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.LocalRankDefect
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryResidualClass
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryMaterialDefect
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalResidualTZ
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryTargetBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BaseRadialJets
 import LeanPool.NavierStokesAndEuler.NavierStokes.AllBandBaseJets
+public import LeanPool.NavierStokesAndEuler.NavierStokes.LinearWaveBounds
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PrimaryPulseBounds
+import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicWaveInteraction
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SignedWaveUpdate
 
 /-!
 # The correction context of the actual slow base
@@ -22,8 +24,1254 @@ converts to the `(R,(Z,T))` order used by the physical base charts. Every
 field below uses one fixed final profile, coefficient family, and schedule.
 -/
 
+section
+
+/-!
+# Initial primary residual classes
+
+The primary coefficient and its Gaussian error are the actual cutoff/curl
+construction. The improved nonlinear bound uses the exact divergence of that
+curl, before projecting the literal residual into its finite harmonics.
+-/
+
 @[expose] public section
 
+noncomputable section
+
+namespace NavierStokes.PrimaryResidualClass
+
+open Set Function Filter HarmonicCalculus HarmonicFields WeightedClasses
+open CopyAngularInvariance
+open scoped Topology ContDiff BigOperators ComplexConjugate
+
+variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
+
+/-- The context's literal graph directions lifted to the explicit angle. -/
+noncomputable def directions (c : CorrectionState.Context D) :
+    LinearWaveBounds.GraphDirections (D × ℝ) where
+  radial := (c.operators.eR, 0)
+  auxiliary := (c.operators.vR, 0)
+  axial := (c.operators.eZ, 0)
+  angular := (0, 1)
+  slow := (c.operators.eT, 0)
+  fast := (c.operators.vT, 0)
+  radialScale := c.operators.radialFrequency
+  fastScale := c.operators.fastCoefficient
+  radialProfile := fun p => c.operators.radialProfile p.1
+
+theorem directions_radial (c : CorrectionState.Context D) (n : ℕ) :
+    (directions c).radialField n =
+      HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).radial := by
+  funext p
+  simp [directions, LinearWaveBounds.GraphDirections.radialField,
+    HarmonicResidual.liftDirection, HarmonicResidual.contextFrame, smul_smul]
+
+theorem directions_axial (s : StripData D) (c : CorrectionState.Context D)
+    (hε : s.epsilon = c.operators.epsilon) (n : ℕ) :
+    (directions c).axialField (HarmonicWaveInteraction.productStrip s) n =
+      HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).axial := by
+  funext p
+  simp [directions, LinearWaveBounds.GraphDirections.axialField,
+    HarmonicResidual.liftDirection, HarmonicResidual.contextFrame,
+    HarmonicWaveInteraction.productStrip, HarmonicWaveInteraction.pullbackStrip, hε]
+
+theorem directions_time (s : StripData D) (c : CorrectionState.Context D)
+    (hε : s.epsilon = c.operators.epsilon) (n : ℕ) :
+    LinearWaveResidual.timeDirection ((HarmonicWaveInteraction.productStrip s).epsilon n)
+      ((directions c).fastField n) (fun _ => (directions c).slow) =
+        HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).time := by
+  funext p
+  simp [directions, LinearWaveBounds.GraphDirections.fastField, LinearWaveResidual.timeDirection,
+    HarmonicResidual.liftDirection, HarmonicResidual.contextFrame,
+    HarmonicWaveInteraction.productStrip, HarmonicWaveInteraction.pullbackStrip, hε]
+
+/-- Matching concerns primitive fields, never a residual or a residual bound. -/
+structure Matches (s : StripData D) (c : CorrectionState.Context D)
+    (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) : Prop where
+  epsilon : s.epsilon = c.operators.epsilon
+  radius : a.radius = fun _ p => c.operators.radius p.1
+  base : ∀ n, LinearWaveResidual.complexBase (a.radius n) (a.radialBase n)
+    (a.frequencyBase n) (a.axialBase n) = fun p => HarmonicResidual.contextBase c n p.1
+
+/-- Primitive angular translation data for one primary field. -/
+structure AngularData (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
+    (ψ : ℕ → D × ℝ → ℝ) : Prop where
+  radius : ∀ n, Invariant ((0 : D), 1) (a.radius n)
+  radialBase : ∀ n, Invariant ((0 : D), 1) (a.radialBase n)
+  frequencyBase : ∀ n, Invariant ((0 : D), 1) (a.frequencyBase n)
+  axialBase : ∀ n, Invariant ((0 : D), 1) (a.axialBase n)
+  phase : ∀ n, ∃ m, AffinePhase ((0 : D), 1) m (a.phase n)
+  amplitude : ∀ n, Invariant ((0 : D), 1) (a.amplitude n)
+  pressure : ∀ n, Invariant ((0 : D), 1) (a.pressure n)
+  cutoff : ∀ n, Invariant ((0 : D), 1) (ψ n)
+
+theorem invariant_fst {E : Type} (f : D → E) :
+    Invariant ((0 : D), 1) (fun p : D × ℝ => f p.1) := by
+  intro p t
+  simp
+
+theorem directions_radial_invariant (c : CorrectionState.Context D) (n : ℕ) :
+    Invariant ((0 : D), 1) ((directions c).radialField n) := by
+  rw [directions_radial]
+  exact invariant_fst (fun x => ((HarmonicResidual.contextFrame c n).radial x, (0 : ℝ)))
+
+theorem AngularData.corrected_amplitude {a : LinearWaveBounds.WaveCoefficients (D × ℝ)}
+    {ψ : ℕ → D × ℝ → ℝ} (ha : AngularData a ψ) (s : StripData D)
+    (c : CorrectionState.Context D) (n : ℕ) :
+    Invariant ((0 : D), 1)
+      ((a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ).amplitude n) :=
+  corrected_amplitude_invariant ψ ha.radius (directions_radial_invariant c)
+    (fun _ => Invariant.const _) ha.phase ha.amplitude ha.cutoff n
+
+theorem AngularData.corrected_pressure {a : LinearWaveBounds.WaveCoefficients (D × ℝ)}
+    {ψ : ℕ → D × ℝ → ℝ} (ha : AngularData a ψ) (s : StripData D)
+    (c : CorrectionState.Context D) (n : ℕ) :
+    Invariant ((0 : D), 1)
+      ((a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ).pressure n) :=
+  corrected_pressure_invariant ψ ha.pressure ha.cutoff n
+
+section InvariantOperators
+
+variable {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
+  {θ : X} {R b F G : X → ℝ} {Vr Vθ Vz Vf Vs : X → X}
+  {Φ : X → ℝ} {m : ℝ} {a : X → ComplexVector} {p : X → ℂ}
+
+theorem principal_invariant (hR : Invariant θ R) (hF : Invariant θ F)
+    (hG : Invariant θ G) (hr : Invariant θ Vr) (hθ : Invariant θ Vθ)
+    (hz : Invariant θ Vz) (hf : Invariant θ Vf)
+    (hΦ : AffinePhase θ m Φ) (ha : Invariant θ a) (hp : Invariant θ p)
+    (ε k : ℝ) : Invariant θ (LinearWaveResidual.principal ε k R F G Vr Vθ Vz Vf Φ a p) := by
+  have hN := phaseNormal_invariant hR hr hθ hz hΦ
+  intro x t
+  funext i
+  simp only [LinearWaveResidual.principal, LinearWaveResidual.shear,
+    (ha.component i).along hf x t, hF.along hr x t, hG.along hr x t,
+    hN x t, hR x t, hF x t, ha x t, hp x t]
+
+theorem remainder_invariant (hR : Invariant θ R) (hb : Invariant θ b)
+    (hF : Invariant θ F) (hG : Invariant θ G) (hr : Invariant θ Vr)
+    (hθ : Invariant θ Vθ) (hz : Invariant θ Vz) (hf : Invariant θ Vf)
+    (hs : Invariant θ Vs) (hΦ : AffinePhase θ m Φ) (ha : Invariant θ a)
+    (hp : Invariant θ p) (ε k : ℝ) :
+    Invariant θ (LinearWaveResidual.remainder ε k R b F G Vr Vθ Vz Vf Vs Φ a p) := by
+  have hN := phaseNormal_invariant hR hr hθ hz hΦ
+  have hB := base_invariant hR hb hF hG
+  have ht : Invariant θ (LinearWaveResidual.timeDirection ε Vf Vs) :=
+    hf.map₂ hs (fun v w => v - ε • w)
+  intro x t
+  funext i
+  simp only [LinearWaveResidual.remainder, LinearWaveResidual.slowTransport,
+    LinearWaveResidual.materialPhaseDefect, LinearWaveResidual.baseDerivativeRemainder,
+    LinearWaveResidual.strippedPressureGradient, LinearWaveResidual.viscousRemainder,
+    (ha.component i).along hs x t, (ha.component i).along hr x t,
+    (ha.component i).along hz x t, ((ha.component i).along hr).along hr x t,
+    ((ha.component i).along hz).along hz x t, hΦ.along_invariant ht x t,
+    hΦ.along_invariant hr x t, hΦ.along_invariant hθ x t, hΦ.along_invariant hz x t,
+    hb.along hr x t, (hB.component i).along hz x t, hp.along hr x t, hp.along hz x t,
+    (hN.map (fun N => N 0)).along hr x t, (hN.map (fun N => N 2)).along hz x t,
+    hR x t, hb x t, hF x t, hG x t, hN x t, ha x t]
+
+end InvariantOperators
+
+theorem AngularData.constructedGood {a : LinearWaveBounds.WaveCoefficients (D × ℝ)}
+    {ψ : ℕ → D × ℝ → ℝ} (ha : AngularData a ψ) (s : StripData D)
+    (c : CorrectionState.Context D) (n : ℕ) :
+    Invariant ((0 : D), 1)
+      (a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n) := by
+  obtain ⟨m, hm⟩ := ha.phase n
+  have hc : Invariant ((0 : D), 1)
+      (((a.withCutoff ψ).curlCorrection (HarmonicWaveInteraction.productStrip s) (directions c)) n)
+          :=
+    curlRemainder_invariant (ha.radius n) (directions_radial_invariant c n)
+      (Invariant.const _) (Invariant.const _)
+      (coefficient_invariant (ha.radius n) (directions_radial_invariant c n)
+        (Invariant.const _) (Invariant.const _) hm
+        ((ha.cutoff n).map₂ (ha.amplitude n) (fun r v => r • v))) (a.frequency n)
+  exact (principal_invariant (ha.radius n) (ha.frequencyBase n) (ha.axialBase n)
+    (directions_radial_invariant c n) (Invariant.const _) (Invariant.const _)
+    (Invariant.const _) hm hc (Invariant.const _) _ _).map₂
+      (remainder_invariant (ha.radius n) (ha.radialBase n) (ha.frequencyBase n) (ha.axialBase n)
+        (directions_radial_invariant c n) (Invariant.const _) (Invariant.const _)
+        (Invariant.const _) (Invariant.const _) hm (ha.corrected_amplitude s c n)
+        (ha.corrected_pressure s c n) _ _) (· + ·)
+
+/-- Quantitative and geometric inputs concern the primitive primary wave.
+In particular neither a good-residual class nor a residual identity is a field. -/
+structure Inputs (s : StripData D) (P : ℕ → D → ℝ) (κ : ℝ)
+    (c : CorrectionState.Context D) (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
+    (ψ : ℕ → D × ℝ → ℝ) (kp : ℕ → ℤ) : Prop where
+  matching : Matches s c a
+  operators : MeanIncrementBounds.OperatorBounds s c.operators κ
+  loss_le : κ ≤ 1 / 10
+  coefficients : LinearWaveBounds.InputBounds (HarmonicWaveInteraction.productStrip s)
+    (fun n p => P n p.1) (1 / 2) κ (directions c) a
+  cutoff : UnweightedClass (HarmonicWaveInteraction.productStrip s) 0 ψ
+  angular : AngularData a ψ
+  phase_smooth : ∀ n, ContDiffOn ℝ ∞ (a.phase n) (HarmonicWaveInteraction.productStrip s).domain
+  phase_split : ∀ n x θ, a.frequency n * a.phase n (x, θ) =
+    a.frequency n * a.phase n (x, 0) + (kp n : ℝ) * θ
+  frequency_ne : ∀ n, a.frequency n ≠ 0
+  angular_ne : ∀ n, kp n ≠ 0
+  normal_jets : PhaseJetBounds.PolynomialJets
+    (CurlClassBounds.phaseDomain (HarmonicWaveInteraction.productStrip s))
+    (a.normal (HarmonicWaveInteraction.productStrip s) (directions c))
+  normal_bounds : ∃ b M : ℝ, 0 < b ∧
+    (∀ n p, p.1 ∈ s.domain → b ≤ ‖a.normal (HarmonicWaveInteraction.productStrip s) (directions c)
+        n p‖) ∧
+    (∀ n p, p.1 ∈ s.domain → ‖a.normal (HarmonicWaveInteraction.productStrip s) (directions c) n p‖
+        ≤ M)
+  inverse_frequency : BandBound (HarmonicWaveInteraction.productStrip s) (1 / 2)
+    (fun n => 1 / a.frequency n)
+  geometry : ∀ n, CurlClassBounds.CylindricalGeometry (HarmonicWaveInteraction.productStrip
+      s).domain
+    (a.radius n) ((directions c).radialField n) (fun _ => (directions c).angular)
+    ((directions c).axialField (HarmonicWaveInteraction.productStrip s) n)
+  tangent : ∀ n p, p.1 ∈ s.domain →
+    normalDot (a.normal (HarmonicWaveInteraction.productStrip s) (directions c) n p) (a.amplitude n
+        p) = 0
+  principal_zero : ∀ n p, p.1 ∈ s.domain → ψ n p ≠ 0 →
+    a.principal (HarmonicWaveInteraction.productStrip s) (directions c) n p = 0
+  profile_nonneg : ∀ n x, x ∈ s.domain → 0 ≤ P n x
+  profile_le_one : ∀ n x, x ∈ s.domain → P n x ≤ 1
+  radius_pos : ∀ x ∈ s.domain, 0 < c.operators.radius x
+
+/-- Corrected, given by `a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ`. -/
+noncomputable def corrected (s : StripData D) (c : CorrectionState.Context D)
+    (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :=
+  a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ
+
+/-- Primary block, given by `SignedWaveUpdate.blockOfCoefficients (corrected s c a ψ) kp`. -/
+noncomputable def primaryBlock (s : StripData D) (c : CorrectionState.Context D)
+    (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) (kp : ℕ → ℤ) :=
+  SignedWaveUpdate.blockOfCoefficients (corrected s c a ψ) kp
+
+/-- Gaussian coefficients, defined pointwise by `ErrorHarmonics.conjugatePair 1 (fun x =>
+LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n (x, 0) i)`. -/
+noncomputable def gaussianCoefficients (c : CorrectionState.Context D)
+    (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :
+    HarmonicResidual.BlockCoefficients D :=
+  fun n i => ErrorHarmonics.conjugatePair 1
+    (fun x => LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n (x, 0) i)
+
+/-- Good coefficients, defined pointwise by `ErrorHarmonics.conjugatePair 1 (fun x =>
+a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n (x, 0) i)`. -/
+noncomputable def goodCoefficients (s : StripData D) (c : CorrectionState.Context D)
+    (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :
+    HarmonicResidual.BlockCoefficients D :=
+  fun n i => ErrorHarmonics.conjugatePair 1
+    (fun x => a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n (x, 0)
+        i)
+
+theorem wave_slice {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ} {f : ℕ → D × ℝ → E}
+    (hf : WaveClass (HarmonicWaveInteraction.productStrip s) (fun n p => P n p.1) α f) :
+    WaveClass s P α (fun n x => f n (x, 0)) :=
+  HarmonicWaveInteraction.class_slice (s := s) (w := fun n x => Real.sqrt (s.zeta x) * P n x) hf
+
+namespace Inputs
+
+variable {s : StripData D} {P : ℕ → D → ℝ} {κ : ℝ} {c : CorrectionState.Context D}
+  {a : LinearWaveBounds.WaveCoefficients (D × ℝ)} {ψ : ℕ → D × ℝ → ℝ} {kp : ℕ → ℤ}
+  (h : Inputs s P κ c a ψ kp)
+
+include h
+
+theorem corrected_bounds : LinearWaveBounds.InputBounds (HarmonicWaveInteraction.productStrip s)
+    (fun n p => P n p.1) (1 / 2) κ (directions c) (corrected s c a ψ) := by
+  obtain ⟨b, M, hb, hlo, hhi⟩ := h.normal_bounds
+  have hc := (h.coefficients.with_cutoff h.cutoff).curlCorrection_class h.matching.radius
+    h.normal_jets hb hlo hhi h.inverse_frequency
+  exact (h.coefficients.with_cutoff h.cutoff).add_curl_amplitude (by linarith [h.loss_le])
+    (fun i => CurlClassBounds.class_component hc i)
+
+theorem good_class : WaveClass (HarmonicWaveInteraction.productStrip s) (fun n p => P n p.1)
+    (1 - 3 * κ) (a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ) := by
+  obtain ⟨b, M, hb, hlo, hhi⟩ := h.normal_bounds
+  have hg := h.coefficients.constructed_goodCoefficient_class (by linarith [h.loss_le]) h.cutoff
+    h.matching.radius h.normal_jets hb hlo hhi h.inverse_frequency
+  convert! hg using 1
+  ring
+
+theorem good_coefficients_class (j : ℤ) (i : Fin 3) : WaveClass s P (1 - 3 * κ)
+    (fun n x => goodCoefficients s c a ψ n i j x) :=
+  SignedWaveUpdate.conjugatePair_class
+    (wave_slice (CurlClassBounds.class_component h.good_class i)) j
+
+theorem primary_bounds : (primaryBlock s c a ψ kp).WaveBounds s P (1 / 2) := by
+  intro i j _
+  exact SignedWaveUpdate.conjugatePair_class
+    (wave_slice (h.corrected_bounds.amplitude i)) j
+
+theorem primary_pressure : (primaryBlock s c a ψ kp).PressureBounds s P 1 := by
+  intro j _
+  have hp := SignedWaveUpdate.conjugatePair_class
+    (wave_slice h.corrected_bounds.pressure) j
+  simp only [show (1 / 2 : ℝ) + 1 / 2 = 1 by norm_num] at hp
+  exact hp
+
+theorem exact_conditions : LinearWaveBounds.ExactConditions (HarmonicWaveInteraction.productStrip s)
+    (directions c) (corrected s c a ψ) :=
+  exactConditions_corrected_of_invariants ψ h.phase_smooth
+    (fun n => (h.geometry n).radius_ne) (fun n => (h.geometry n).radial_radius)
+    h.angular.radius h.angular.radialBase h.angular.frequencyBase h.angular.axialBase
+    (directions_radial_invariant c) (fun _ => Invariant.const _) h.angular.phase
+    h.angular.amplitude h.angular.pressure h.angular.cutoff
+
+theorem normal_ne (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
+    a.normal (HarmonicWaveInteraction.productStrip s) (directions c) n p ≠ 0 := by
+  obtain ⟨b, M, hb, hlo, hhi⟩ := h.normal_bounds
+  intro hn
+  have := hlo n p hp
+  rw [hn, norm_zero] at this
+  linarith
+
+theorem corrected_divergence (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
+    cylindricalDivergence (a.radius n) ((directions c).radialField n)
+      (fun _ => (directions c).angular) ((directions c).axialField
+          (HarmonicWaveInteraction.productStrip s) n)
+      (vectorMode (a.frequency n) (a.phase n) ((corrected s c a ψ).amplitude n)) p = 0 :=
+  LinearWaveBounds.corrected_divergence h.coefficients h.cutoff n (h.geometry n)
+    (h.frequency_ne n) (h.phase_smooth n) (h.normal_ne n) (h.tangent n) hp
+
+theorem linear_identity (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
+    (corrected s c a ψ).harmonicResidual (HarmonicWaveInteraction.productStrip s) (directions c) n
+        p =
+      vectorMode (a.frequency n) (a.phase n)
+        (a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n) p +
+      vectorMode (a.frequency n) (a.phase n)
+        (LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n) p := by
+  obtain ⟨b, M, hb, hlo, hhi⟩ := h.normal_bounds
+  let f := (a.withCutoff ψ).curlCorrection (HarmonicWaveInteraction.productStrip s) (directions c)
+  have hf : WaveClass (HarmonicWaveInteraction.productStrip s) (fun n p => P n p.1)
+      (1 / 2 + 1 / 2 - κ) f :=
+    (h.coefficients.with_cutoff h.cutoff).curlCorrection_class h.matching.radius
+      h.normal_jets hb hlo hhi h.inverse_frequency
+  have hadd := (h.coefficients.with_cutoff h.cutoff).principal_add_curl
+    (fun i => CurlClassBounds.class_component hf i) n hp
+  have hcut := LinearWaveBounds.principal_cutoff h.coefficients ψ 0 n hp
+    (((h.cutoff.smooth n).contDiffAt
+      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
+          simp))
+  have hzero : ψ n p • a.principal (HarmonicWaveInteraction.productStrip s) (directions c) n p = 0
+      := by
+    by_cases hψ : ψ n p = 0
+    · rw [hψ, zero_smul]
+    · rw [h.principal_zero n p hp hψ, smul_zero]
+  simp only [Pi.zero_apply, add_zero, hzero, zero_add] at hcut
+  have he : (corrected s c a ψ).principal (HarmonicWaveInteraction.productStrip s) (directions c) n
+      p +
+      (corrected s c a ψ).remainder (HarmonicWaveInteraction.productStrip s) (directions c) n p =
+      a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n p +
+        LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n p := by
+    change ((a.withCutoff ψ).addAmplitude f).principal _ _ n p + _ = _
+    rw [hadd, hcut]
+    change _ + a.principalVelocity (HarmonicWaveInteraction.productStrip s) (directions c) f n p +
+      ((a.withCutoff ψ).addAmplitude f).remainder _ _ n p =
+      (a.principalVelocity (HarmonicWaveInteraction.productStrip s) (directions c) f n p +
+        ((a.withCutoff ψ).addAmplitude f).remainder _ _ n p) + _
+    abel
+  rw [LinearWaveBounds.harmonicResidual_eq h.corrected_bounds h.exact_conditions n hp]
+  ext i
+  have hei := congrFun he i
+  simp only [Pi.add_apply] at hei
+  change ((_ + _) * carrier (a.frequency n) (a.phase n) p) = _
+  rw [hei, add_mul]
+  rfl
+
+end Inputs
+
+/-- Real projection, given by `Complex.ofRealCLM.comp Complex.reCLM`. -/
+noncomputable def realProjection : ℂ →L[ℝ] ℂ := Complex.ofRealCLM.comp Complex.reCLM
+
+@[simp] theorem realProjection_apply (z : ℂ) : realProjection z = (z.re : ℂ) := rfl
+
+theorem divergence_map {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    (L : ℂ →L[ℝ] ℂ) (R : X → ℝ) (Vr Vθ Vz : X → X)
+    {v : X → ComplexVector} {x : X}
+    (hv : ∀ i, DifferentiableAt ℝ (fun y => v y i) x) :
+    cylindricalDivergence R Vr Vθ Vz (fun y i => L (v y i)) x =
+      L (cylindricalDivergence R Vr Vθ Vz v x) := by
+  simp only [cylindricalDivergence, LinearWaveResidual.along_map L _ (hv _), map_add, map_smul]
+
+theorem linearResidual_realProjection {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    {U : Set X} (hU : IsOpen U) (ε : ℝ) (R : X → ℝ) {Vr Vθ Vz : X → X}
+    (Vt : X → X) (hVr : ContDiffOn ℝ ∞ Vr U) (hVθ : ContDiffOn ℝ ∞ Vθ U)
+    (hVz : ContDiffOn ℝ ∞ Vz U) {B : X → Fin 3 → ℝ} {v : X → ComplexVector} {p : X → ℂ}
+    (hv : ∀ i, ContDiffOn ℝ ∞ (fun y => v y i) U) {x : X}
+    (hB : ∀ i, DifferentiableAt ℝ (fun y => B y i) x)
+    (hp : DifferentiableAt ℝ p x) (hx : x ∈ U) (i : Fin 3) :
+    (LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt (LinearWaveResidual.realLift B)
+      (fun y j => realProjection (v y j)) (fun y => realProjection (p y)) x i).re =
+    (LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt (LinearWaveResidual.realLift B) v p x i).re
+        := by
+  have h0 := LinearWaveResidual.realMap_linearResidual Complex.reCLM ε R Vt hU hVr hVθ hVz
+    hv hB hp hx
+  have h1 := LinearWaveResidual.realMap_linearResidual Complex.reCLM ε R Vt hU hVr hVθ hVz
+    (fun j => realProjection.contDiff.comp_contDiffOn (hv j)) hB
+    (realProjection.differentiableAt.comp x hp) hx
+  exact (congrFun h1 i).trans (by simpa using (congrFun h0 i).symm)
+
+theorem pair_field_of_invariant {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    {f : X × ℝ → ℂ} {Φ : X × ℝ → ℝ} (k : ℝ) (kp : ℤ)
+    (hf : Invariant ((0 : X), 1) f)
+    (hΦ : ∀ x θ, k * Φ (x, θ) = k * Φ (x, 0) + (kp : ℝ) * θ) (p : X × ℝ) :
+    field (ErrorHarmonics.conjugatePair 1 (fun x => f (x, 0))) k
+      (fun x => Φ (x, 0)) kp p = realProjection (mode k Φ f p) := by
+  rw [ErrorHarmonics.field_conjugatePair, ← hΦ p.1 p.2]
+  have hc := character_eq_carrier 1 k Φ p
+  simp only [Int.cast_one, mul_one] at hc
+  rw [hc]
+  change ((f (p.1, 0) * carrier k Φ p).re : ℂ) = ((f p * carrier k Φ p).re : ℂ)
+  rw [invariant_eq_zeroSlice hf p.1 p.2]
+
+theorem excluded_invariant {a : LinearWaveBounds.WaveCoefficients (D × ℝ)}
+    {ψ : ℕ → D × ℝ → ℝ} (ha : AngularData a ψ) (c : CorrectionState.Context D) (n : ℕ) :
+    Invariant ((0 : D), 1) (LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n) :=
+        by
+  have hf : Invariant ((0 : D), 1) ((directions c).fastField n) :=
+    Invariant.const ((directions c).fastScale n • (directions c).fast)
+  intro x t
+  simp only [LinearWaveBounds.excludedSlotError, LinearWaveBounds.GraphDirections.Dfast,
+    (ha.cutoff n).along hf x t, ha.cutoff n x t, ha.amplitude n x t,
+    Pi.zero_apply]
+
+namespace Inputs
+
+variable {s : StripData D} {P : ℕ → D → ℝ} {κ : ℝ} {c : CorrectionState.Context D}
+  {a : LinearWaveBounds.WaveCoefficients (D × ℝ)} {ψ : ℕ → D × ℝ → ℝ} {kp : ℕ → ℤ}
+  (h : Inputs s P κ c a ψ kp)
+
+include h
+
+theorem primary_field (n : ℕ) (p : D × ℝ) (i : Fin 3) :
+    field ((primaryBlock s c a ψ kp).velocity n i) (a.frequency n)
+      (fun x => a.phase n (x, 0)) (kp n) p =
+    realProjection (vectorMode (a.frequency n) (a.phase n) ((corrected s c a ψ).amplitude n) p i) :=
+  pair_field_of_invariant _ _ ((h.angular.corrected_amplitude s c n).component i) (h.phase_split n)
+      p
+
+theorem pressure_field (n : ℕ) (p : D × ℝ) :
+    field ((primaryBlock s c a ψ kp).pressure n) (a.frequency n)
+      (fun x => a.phase n (x, 0)) (kp n) p =
+    realProjection (mode (a.frequency n) (a.phase n) ((corrected s c a ψ).pressure n) p) :=
+  pair_field_of_invariant _ _ (h.angular.corrected_pressure s c n) (h.phase_split n) p
+
+theorem good_field (n : ℕ) (p : D × ℝ) (i : Fin 3) :
+    field (goodCoefficients s c a ψ n i) (a.frequency n)
+      (fun x => a.phase n (x, 0)) (kp n) p =
+    realProjection (vectorMode (a.frequency n) (a.phase n)
+      (a.constructedGood (HarmonicWaveInteraction.productStrip s) (directions c) ψ n) p i) :=
+  pair_field_of_invariant _ _ ((h.angular.constructedGood s c n).component i) (h.phase_split n) p
+
+theorem gaussian_field (n : ℕ) (p : D × ℝ) (i : Fin 3) :
+    field (gaussianCoefficients c a ψ n i) (a.frequency n)
+      (fun x => a.phase n (x, 0)) (kp n) p =
+    realProjection (vectorMode (a.frequency n) (a.phase n)
+      (LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n) p i) :=
+  pair_field_of_invariant _ _ ((excluded_invariant h.angular c n).component i) (h.phase_split n) p
+
+theorem phase_slow_smooth (n : ℕ) : ContDiffOn ℝ ∞ (fun x => a.phase n (x, 0)) s.domain :=
+  (h.phase_smooth n).comp (HarmonicWaveInteraction.inclusion (D := D)).contDiff.contDiffOn
+    (fun _ hx => hx)
+
+theorem primary_smooth (n : ℕ) (i : Fin 3) :
+    HarmonicResidual.SmoothCoefficients s.domain ((primaryBlock s c a ψ kp).velocity n i) := by
+  intro j
+  exact (SignedWaveUpdate.conjugatePair_class
+    (wave_slice (h.corrected_bounds.amplitude i)) j).smooth n
+
+theorem pressure_smooth (n : ℕ) :
+    HarmonicResidual.SmoothCoefficients s.domain ((primaryBlock s c a ψ kp).pressure n) := by
+  intro j
+  exact (SignedWaveUpdate.conjugatePair_class
+    (wave_slice h.corrected_bounds.pressure) j).smooth n
+
+theorem raw_velocity_smooth (n : ℕ) (i : Fin 3) :
+    ContDiffOn ℝ ∞ (fun p => vectorMode (a.frequency n) (a.phase n)
+      ((corrected s c a ψ).amplitude n) p i) (HarmonicWaveInteraction.productStrip s).domain :=
+  contDiffOn_mode _ (h.phase_smooth n) ((h.corrected_bounds.amplitude i).smooth n)
+
+theorem raw_pressure_smooth (n : ℕ) :
+    ContDiffOn ℝ ∞ (mode (a.frequency n) (a.phase n) ((corrected s c a ψ).pressure n))
+      (HarmonicWaveInteraction.productStrip s).domain :=
+  contDiffOn_mode _ (h.phase_smooth n) (h.corrected_bounds.pressure.smooth n)
+
+end Inputs
+
+/-- Linear coefficients as an element of `HarmonicResidual.BlockCoefficients D`. -/
+noncomputable def linearCoefficients (s : StripData D) (c : CorrectionState.Context D)
+    (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) (kp : ℕ → ℤ) :
+    HarmonicResidual.BlockCoefficients D := fun n =>
+  HarmonicResidual.linearResidual (HarmonicResidual.contextFrame c n) (a.frequency n)
+    (fun x => a.phase n (x, 0)) (kp n) (HarmonicResidual.constantVector
+        (HarmonicResidual.contextBase c n))
+    (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n)
+    (HarmonicResidual.realCoefficients ((primaryBlock s c a ψ kp).pressure n))
+
+namespace Inputs
+
+variable {s : StripData D} {P : ℕ → D → ℝ} {κ : ℝ} {c : CorrectionState.Context D}
+  {a : LinearWaveBounds.WaveCoefficients (D × ℝ)} {ψ : ℕ → D × ℝ → ℝ} {kp : ℕ → ℤ}
+  (h : Inputs s P κ c a ψ kp)
+
+include h
+
+theorem base_smooth (n : ℕ) (i : Fin 3) :
+    ContDiffOn ℝ ∞ (fun x => HarmonicResidual.contextBase c n x i) s.domain := by
+  have hs : ContDiffOn ℝ ∞ (fun p => LinearWaveResidual.complexBase
+      (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase n) p i)
+      (HarmonicWaveInteraction.productStrip s).domain := by
+    apply Complex.ofRealCLM.contDiff.comp_contDiffOn
+    fin_cases i
+    · exact h.coefficients.radial_base.smooth n
+    · exact (h.coefficients.radius.smooth n).mul (h.coefficients.frequency_base.smooth n)
+    · exact h.coefficients.axial_base.smooth n
+  rw [h.matching.base n] at hs
+  exact hs.comp (HarmonicWaveInteraction.inclusion (D := D)).contDiff.contDiffOn (fun _ hx => hx)
+
+theorem radial_smooth (n : ℕ) :
+    ContDiffOn ℝ ∞ (HarmonicResidual.contextFrame c n).radial s.domain :=
+  (HarmonicMeanInteraction.slowGeometry c h.operators h.radius_pos).radial_class.smooth n
+
+theorem axial_smooth (n : ℕ) :
+    ContDiffOn ℝ ∞ (HarmonicResidual.contextFrame c n).axial s.domain :=
+  (HarmonicMeanInteraction.slowGeometry c h.operators h.radius_pos).axial_class.smooth n
+
+omit h in
+theorem primary_amplitude_real (n : ℕ) :
+    HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n =
+      (primaryBlock s c a ψ kp).velocity n := by
+  funext i
+  exact HarmonicResidual.realCoefficients_eq_self
+    (ErrorHarmonics.conjugatePair_symmetric 1 (fun x => (corrected s c a ψ).amplitude n (x, 0) i))
+
+omit h in
+theorem primary_pressure_real (n : ℕ) :
+    HarmonicResidual.realCoefficients ((primaryBlock s c a ψ kp).pressure n) =
+      (primaryBlock s c a ψ kp).pressure n :=
+  HarmonicResidual.realCoefficients_eq_self
+    (ErrorHarmonics.conjugatePair_symmetric 1 (fun x => (corrected s c a ψ).pressure n (x, 0)))
+
+theorem harmonicResidual_context (n : ℕ) :
+    (corrected s c a ψ).harmonicResidual (HarmonicWaveInteraction.productStrip s) (directions c) n =
+      LinearWaveResidual.linearResidual (c.operators.epsilon n)
+        (fun p => c.operators.radius p.1)
+        (HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).radial)
+        HarmonicResidual.angularDirection
+        (HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).axial)
+        (HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).time)
+        (fun p => HarmonicResidual.contextBase c n p.1)
+        (vectorMode (a.frequency n) (a.phase n) ((corrected s c a ψ).amplitude n))
+        (mode (a.frequency n) (a.phase n) ((corrected s c a ψ).pressure n)) := by
+  change LinearWaveResidual.linearResidual (s.epsilon n) (a.radius n)
+    ((directions c).radialField n) (fun _ => (directions c).angular)
+    ((directions c).axialField (HarmonicWaveInteraction.productStrip s) n)
+    (LinearWaveResidual.timeDirection (s.epsilon n) ((directions c).fastField n) (fun _ =>
+        (directions c).slow))
+    (LinearWaveResidual.complexBase (a.radius n) (a.radialBase n) (a.frequencyBase n) (a.axialBase
+        n))
+    _ _ = _
+  have ht := directions_time s c h.matching.epsilon n
+  change LinearWaveResidual.timeDirection (s.epsilon n) ((directions c).fastField n)
+    (fun _ => (directions c).slow) = _ at ht
+  rw [h.matching.base n, h.matching.radius, directions_radial,
+    directions_axial s c h.matching.epsilon, ht]
+  rw [h.matching.epsilon]
+  rfl
+
+theorem linear_field_re (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) (i : Fin 3) :
+    (field (linearCoefficients s c a ψ kp n i) (a.frequency n)
+      (fun x => a.phase n (x, 0)) (kp n) p).re =
+    ((corrected s c a ψ).harmonicResidual (HarmonicWaveInteraction.productStrip s) (directions c) n
+        p i).re := by
+  have he := HarmonicResidual.field_linearResidual s.isOpen_domain
+    (HarmonicResidual.contextFrame c n) (h.radial_smooth n) (h.axial_smooth n)
+    (B := HarmonicResidual.constantVector (HarmonicResidual.contextBase c n))
+    (fun j => HarmonicResidual.smoothCoefficients_constant (h.base_smooth n j))
+    (h.primary_smooth n) (h.pressure_smooth n) (h.phase_slow_smooth n)
+    (a.frequency n) (kp n) (p := p) ⟨hp, trivial⟩
+  have hv : HarmonicResidual.vectorField ((primaryBlock s c a ψ kp).velocity n)
+      (a.frequency n) (fun x => a.phase n (x, 0)) (kp n) =
+        fun y j => realProjection (vectorMode (a.frequency n) (a.phase n)
+          ((corrected s c a ψ).amplitude n) y j) := by
+    funext y j
+    exact h.primary_field n y j
+  have hpr : field ((primaryBlock s c a ψ kp).pressure n)
+      (a.frequency n) (fun x => a.phase n (x, 0)) (kp n) =
+        fun y => realProjection (mode (a.frequency n) (a.phase n)
+          ((corrected s c a ψ).pressure n) y) := by
+    funext y
+    exact h.pressure_field n y
+  have hbase : HarmonicResidual.vectorField
+      (HarmonicResidual.constantVector (HarmonicResidual.contextBase c n))
+      (a.frequency n) (fun x => a.phase n (x, 0)) (kp n) =
+        LinearWaveResidual.realLift (fun y j => (HarmonicResidual.contextBase c n y.1 j).re) := by
+    funext y j
+    rw [HarmonicResidual.vectorField_constantVector]
+    fin_cases j <;> simp [HarmonicResidual.contextBase, LinearWaveResidual.realLift]
+  rw [hv, hpr, hbase] at he
+  have hd := linearResidual_realProjection
+    (HarmonicWaveInteraction.productStrip s).isOpen_domain (c.operators.epsilon n)
+    (fun y => c.operators.radius y.1)
+    (HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).time)
+    (by simpa only [directions_radial] using (h.geometry n).radial_smooth)
+    (h.geometry n).angular_smooth
+    (by simpa only [directions_axial s c h.matching.epsilon] using (h.geometry n).axial_smooth)
+    (B := fun (y : D × ℝ) j => (HarmonicResidual.contextBase c n y.1 j).re)
+    (h.raw_velocity_smooth n)
+    (fun j => (((Complex.reCLM.contDiff.comp_contDiffOn
+      ((h.base_smooth n j).comp contDiffOn_fst (fun _ hx => hx))).contDiffAt
+        ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
+            simp)))
+    (((h.raw_pressure_smooth n).contDiffAt
+      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
+          simp)) hp i
+  have hbase' : LinearWaveResidual.realLift (fun (y : D × ℝ) j => (HarmonicResidual.contextBase c n
+      y.1 j).re) =
+      fun y => HarmonicResidual.contextBase c n y.1 := by
+    funext y j
+    fin_cases j <;> simp [HarmonicResidual.contextBase, LinearWaveResidual.realLift]
+  rw [hbase'] at he hd
+  rw [linearCoefficients,
+    primary_amplitude_real (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp) n,
+    primary_pressure_real (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp) n]
+  exact (congrArg Complex.re (congrFun he i)).trans (hd.trans (by
+    rw [h.harmonicResidual_context n]
+    rfl))
+
+theorem linear_gaussian_coefficient (n : ℕ) (x : D) (hx : x ∈ s.domain) (i : Fin 3) (j : ℤ) :
+    HarmonicResidual.realCoefficients
+      (linearCoefficients s c a ψ kp n i - gaussianCoefficients c a ψ n i) j x =
+        goodCoefficients s c a ψ n i j x := by
+  apply HarmonicWaveInteraction.coefficient_eq_of_field_eq_at _ _ (a.frequency n)
+    (fun y => a.phase n (y, 0)) (h.angular_ne n) j x
+  intro θ
+  rw [HarmonicResidual.field_realCoefficients, HarmonicResidual.field_sub, Complex.sub_re,
+    h.linear_field_re n (x, θ) hx i, h.gaussian_field n (x, θ) i,
+    h.good_field n (x, θ) i, h.linear_identity n (x, θ) hx]
+  simp only [Pi.add_apply, Complex.add_re, realProjection_apply, Complex.ofReal_re,
+    add_sub_cancel_right]
+
+theorem full_primary_divergence (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
+    cylindricalDivergence (fun q => c.operators.radius q.1)
+      (HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).radial)
+      HarmonicResidual.angularDirection
+      (HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).axial)
+      (fun q i => ((primaryBlock s c a ψ kp).oscillation n q i : ℂ)) p = 0 := by
+  have he : (fun q i => ((primaryBlock s c a ψ kp).oscillation n q i : ℂ)) =
+      fun q i => realProjection (vectorMode (a.frequency n) (a.phase n)
+        ((corrected s c a ψ).amplitude n) q i) := by
+    funext q i
+    change ((field ((primaryBlock s c a ψ kp).velocity n i) (a.frequency n)
+      (fun x => a.phase n (x, 0)) (kp n) q).re : ℂ) = _
+    rw [h.primary_field]
+    rfl
+  rw [he, divergence_map realProjection _ _ _ _ (fun i =>
+    ((h.raw_velocity_smooth n i).contDiffAt
+      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
+          simp))]
+  have hd := h.corrected_divergence n p hp
+  rw [h.matching.radius, directions_radial, directions_axial s c h.matching.epsilon] at hd
+  change cylindricalDivergence _ _ HarmonicResidual.angularDirection _ _ p = 0 at hd
+  rw [hd, map_zero]
+
+theorem primary_modeSolenoidal :
+    HarmonicWaveInteraction.ModeSolenoidal s c (primaryBlock s c a ψ kp) :=
+  HarmonicWaveInteraction.modeSolenoidal_of_full c (primaryBlock s c a ψ kp)
+    h.phase_slow_smooth h.angular_ne h.primary_smooth h.full_primary_divergence
+
+omit h in
+theorem primary_band : (primaryBlock s c a ψ kp).BandLimited 1 :=
+  SignedWaveUpdate.coefficientBlock_band a.frequency (fun n x => a.phase n (x, 0)) kp
+    (fun n x => (corrected s c a ψ).amplitude n (x, 0))
+    (fun n x => (corrected s c a ψ).pressure n (x, 0))
+
+omit h in
+theorem primary_zeroMode : HarmonicWaveInteraction.ZeroMode (primaryBlock s c a ψ kp) :=
+  (SignedWaveUpdate.coefficientBlock_zero_coefficient a.frequency (fun n x => a.phase n (x, 0)) kp
+    (fun n x => (corrected s c a ψ).amplitude n (x, 0))
+    (fun n x => (corrected s c a ψ).pressure n (x, 0))).1
+
+theorem convection_class (j : ℤ) (i : Fin 3) :
+    WaveClass s P (1 - κ) (fun n x =>
+      HarmonicResidual.transport (HarmonicResidual.contextFrame c n)
+        (a.frequency n) (fun y => a.phase n (y, 0)) (kp n)
+        (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n)
+        (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n) i j x) := by
+  have hc := HarmonicWaveInteraction.transport_wave_class c h.operators h.radius_pos
+    h.primary_bounds h.primary_bounds
+    (primary_zeroMode (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp))
+    (primary_zeroMode (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp))
+    (primary_band (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp))
+    h.phase_slow_smooth h.frequency_ne h.primary_modeSolenoidal h.profile_nonneg h.profile_le_one j
+        i
+  convert! hc using 1
+  ring
+
+theorem linear_good_class (j : ℤ) (i : Fin 3) :
+    WaveClass s P (1 - 3 * κ) (fun n x => HarmonicResidual.realCoefficients
+      (linearCoefficients s c a ψ kp n i - gaussianCoefficients c a ψ n i) j x) := by
+  apply LinearWaveBounds.class_congr (h.good_coefficients_class j i)
+  intro n x hx
+  exact (h.linear_gaussian_coefficient n x hx i j).symm
+
+/-- The actual extracted residual of the initial primary wave. The alias is
+retained in the literal formula; its proved zero-mode property is used only
+after the nonconstant coefficient is selected. -/
+theorem initial_residual_class (u : CorrectionState.State D)
+    (hmean : u.mean = ⟨0, 0, 0⟩) (A : HarmonicResidual.BlockCoefficients D)
+    (hA : ∀ n i j, j ≠ 0 → A n i j = 0) :
+    (HarmonicResidual.residualBlock c u (primaryBlock s c a ψ kp)
+      (gaussianCoefficients c a ψ) A).WaveBounds s P (7 / 10) := by
+  intro i j hj
+  have hl := (h.linear_good_class j i).mono_exponent (show (7 / 10 : ℝ) ≤ 1 - 3 * κ by
+      linarith [h.loss_le])
+  have hc (m : ℤ) := (h.convection_class m i).mono_exponent
+    (show (7 / 10 : ℝ) ≤ 1 - κ by linarith [h.loss_le])
+  have hcr := HarmonicMeanInteraction.realCoefficient_class
+    (fun n => HarmonicResidual.transport (HarmonicResidual.contextFrame c n)
+      (a.frequency n) (fun y => a.phase n (y, 0)) (kp n)
+      (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n)
+      (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n) i)
+    j (hc j) (hc (-j))
+  apply LinearWaveBounds.class_congr (hl.add hcr)
+  intro n x hx
+  have hz : HarmonicResidual.stateMean u n = 0 := by
+    funext y k
+    fin_cases k <;> simp [HarmonicResidual.stateMean, hmean]
+  change _ = HarmonicResidual.nonconstant
+    ((HarmonicResidual.ofBlock (primaryBlock s c a ψ kp) (gaussianCoefficients c a ψ) A
+        n).residualCoefficients
+      (HarmonicResidual.contextFrame c n) (HarmonicResidual.contextBase c n)
+          (HarmonicResidual.stateMean u n) i) j x
+  rw [HarmonicMeanInteraction.nonconstant_apply_of_ne _ hj, hz,
+      HarmonicResidual.LabelData.residualCoefficients]
+  simp only [add_zero]
+  let L := linearCoefficients s c a ψ kp n i
+  let T := HarmonicResidual.transport (HarmonicResidual.contextFrame c n)
+    (a.frequency n) (fun y => a.phase n (y, 0)) (kp n)
+    (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n)
+    (HarmonicMeanInteraction.blockAmplitude (primaryBlock s c a ψ kp) n) i
+  change HarmonicResidual.realCoefficients (L - gaussianCoefficients c a ψ n i) j x +
+    HarmonicResidual.realCoefficients T j x =
+      HarmonicResidual.realCoefficients (L + T - gaussianCoefficients c a ψ n i - A n i) j x
+  simp only [
+    HarmonicResidual.realCoefficients_apply, HarmonicMeanInteraction.coeff_add,
+    HarmonicMeanInteraction.coeff_sub, hA n i j hj, hA n i (-j) (neg_ne_zero.mpr hj),
+    Pi.zero_apply, map_sub, map_add, sub_zero]
+  ring
+
+theorem initial_residual_class_of_zero_mode (u : CorrectionState.State D)
+    (hmean : u.mean = ⟨0, 0, 0⟩) (A : HarmonicResidual.BlockCoefficients D)
+    (hA : ∀ n i, HarmonicFields.BandLimited (A n i) 0) :
+    (HarmonicResidual.residualBlock c u (primaryBlock s c a ψ kp)
+      (gaussianCoefficients c a ψ) A).WaveBounds s P (7 / 10) := by
+  apply h.initial_residual_class u hmean A
+  intro n i j hj
+  rw [HarmonicResidual.band_zero_eq_constant (hA n i)]
+  simp [constantCoefficient, hj]
+
+omit h in
+theorem initial_residual_band (u : CorrectionState.State D)
+    (A : HarmonicResidual.BlockCoefficients D)
+    (hA : ∀ n i, HarmonicFields.BandLimited (A n i) 0) :
+    (HarmonicResidual.residualBlock c u (primaryBlock s c a ψ kp)
+      (gaussianCoefficients c a ψ) A).BandLimited 2 := by
+  have hg : ∀ n i, HarmonicFields.BandLimited (gaussianCoefficients c a ψ n i) 1 :=
+    fun n i => ErrorHarmonics.band_conjugatePair 1 _
+  have ha : ∀ n i, HarmonicFields.BandLimited (A n i) 1 := fun n i => (hA n i).mono (by decide)
+  simpa using HarmonicResidual.residualBlock_band c u (primaryBlock s c a ψ kp)
+    (gaussianCoefficients c a ψ) A
+    (primary_band (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp)) hg ha
+
+end Inputs
+
+end NavierStokes.PrimaryResidualClass
+
+end
+end
+
+end
+
+section
+
+/-!
+# The actual primary material-phase defect
+
+The large axial term in the phase is cancelled by its actual material
+derivative before estimating any jets.  Only the slow coordinate map and
+slot coordinate require polynomial bounds; the angular coordinate and
+the unstripped phase itself need no such bound.
+-/
+
+@[expose] public section
+
+noncomputable section
+
+namespace NavierStokes.PrimaryMaterialDefect
+
+open Set WeightedClasses LinearWaveBounds
+open scoped Topology ContDiff
+
+/-- Slow: an abbreviation for `PhaseCalculus.Slow`. -/
+abbrev Slow := PhaseCalculus.Slow
+/-- Slot: an abbreviation for `PhaseCalculus.Slot`. -/
+abbrev Slot := PhaseCalculus.Slot
+
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+
+/-- First-order chart identities, including the direction annihilated by
+the physical radial graph derivative.  No phase derivative is an input. -/
+structure NativeCoordinates (s : StripData E) (d : GraphDirections E)
+    (χ : ℕ → E → Slot) : Prop where
+  differentiable : ∀ n x, x ∈ s.domain → DifferentiableAt ℝ (χ n) x
+  radial : ∀ n x, x ∈ s.domain → fderiv ℝ (χ n) x d.radial = PhaseCalculus.eR
+  auxiliary : ∀ n x, x ∈ s.domain → fderiv ℝ (χ n) x d.auxiliary = 0
+  angular : ∀ n x, x ∈ s.domain → fderiv ℝ (χ n) x d.angular = PhaseCalculus.eTheta
+  axial : ∀ n x, x ∈ s.domain → fderiv ℝ (χ n) x d.axial = PhaseCalculus.eZ
+  fast : ∀ n x, x ∈ s.domain → fderiv ℝ (χ n) x (d.fastField n x) = PhaseCalculus.eV
+  slow : ∀ n x, x ∈ s.domain → fderiv ℝ (χ n) x d.slow = PhaseCalculus.eT
+
+namespace NativeCoordinates
+
+variable {s : StripData E} {d : GraphDirections E} {χ : ℕ → E → Slot}
+variable (hχ : NativeCoordinates s d χ)
+
+include hχ
+
+theorem radialField (n : ℕ) {x : E} (hx : x ∈ s.domain) :
+    fderiv ℝ (χ n) x (d.radialField n x) = PhaseCalculus.eR := by
+  simp only [GraphDirections.radialField, map_add, map_smul,
+    hχ.radial n x hx, hχ.auxiliary n x hx, smul_zero, add_zero]
+
+theorem axialField (n : ℕ) {x : E} (hx : x ∈ s.domain) :
+    fderiv ℝ (χ n) x (d.axialField s n x) = s.epsilon n • PhaseCalculus.eZ := by
+  simp only [GraphDirections.axialField, map_smul, hχ.axial n x hx]
+
+theorem timeField (n : ℕ) {x : E} (hx : x ∈ s.domain) :
+    fderiv ℝ (χ n) x
+      (LinearWaveResidual.timeDirection (s.epsilon n) (d.fastField n) (fun _ => d.slow) x) =
+      PhaseCalculus.eV - s.epsilon n • PhaseCalculus.eT := by
+  simp only [LinearWaveResidual.timeDirection, map_sub, map_smul,
+    hχ.fast n x hx, hχ.slow n x hx]
+
+end NativeCoordinates
+
+/-- For affine native/common coordinate maps, checking the six images is
+linear algebra.  No differentiability premise is needed. -/
+theorem affine_coordinates (s : StripData E) (d : GraphDirections E)
+    (L : ℕ → E →L[ℝ] Slot) (c : ℕ → Slot)
+    (hr : ∀ n, L n d.radial = PhaseCalculus.eR)
+    (ha : ∀ n, L n d.auxiliary = 0)
+    (hθ : ∀ n, L n d.angular = PhaseCalculus.eTheta)
+    (hz : ∀ n, L n d.axial = PhaseCalculus.eZ)
+    (hf : ∀ n, d.fastScale n • L n d.fast = PhaseCalculus.eV)
+    (ht : ∀ n, L n d.slow = PhaseCalculus.eT) :
+    NativeCoordinates s d (fun n x => L n x + c n) := by
+  have hd n x : fderiv ℝ (fun y => L n y + c n) x = L n :=
+    ((L n).hasFDerivAt.add_const (c n)).fderiv
+  refine ⟨fun n _ _ => (L n).differentiableAt.add_const _, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro n x _; rw [hd]; exact hr n
+  · intro n x _; rw [hd]; exact ha n
+  · intro n x _; rw [hd]; exact hθ n
+  · intro n x _; rw [hd]; exact hz n
+  · intro n x _; rw [hd]; simpa only [GraphDirections.fastField, map_smul] using hf n
+  · intro n x _; rw [hd]; exact ht n
+
+section CommonPullback
+
+variable {E' : Type*} [NormedAddCommGroup E'] [NormedSpace ℝ E']
+
+/-- Differential matching for a change from a common chart to a native
+chart.  It concerns the coordinate map, not the phase or its defect. -/
+structure DirectionMatch (s : StripData E) (d : GraphDirections E)
+    (s' : StripData E') (d' : GraphDirections E') (ψ : ℕ → E' → E) : Prop where
+  maps : ∀ n, MapsTo (ψ n) s'.domain s.domain
+  differentiable : ∀ n x, x ∈ s'.domain → DifferentiableAt ℝ (ψ n) x
+  radial : ∀ n x, x ∈ s'.domain → fderiv ℝ (ψ n) x d'.radial = d.radial
+  auxiliary : ∀ n x, x ∈ s'.domain → fderiv ℝ (ψ n) x d'.auxiliary = d.auxiliary
+  angular : ∀ n x, x ∈ s'.domain → fderiv ℝ (ψ n) x d'.angular = d.angular
+  axial : ∀ n x, x ∈ s'.domain → fderiv ℝ (ψ n) x d'.axial = d.axial
+  fast : ∀ n x, x ∈ s'.domain → fderiv ℝ (ψ n) x (d'.fastField n x) = d.fastField n (ψ n x)
+  slow : ∀ n x, x ∈ s'.domain → fderiv ℝ (ψ n) x d'.slow = d.slow
+
+theorem NativeCoordinates.comp
+    {s : StripData E} {d : GraphDirections E} {χ : ℕ → E → Slot}
+    (hχ : NativeCoordinates s d χ)
+    {s' : StripData E'} {d' : GraphDirections E'} {ψ : ℕ → E' → E}
+    (hψ : DirectionMatch s d s' d' ψ) :
+    NativeCoordinates s' d' (fun n => χ n ∘ ψ n) := by
+  have hd n x hx := fderiv_comp x (hχ.differentiable n (ψ n x) (hψ.maps n hx))
+    (hψ.differentiable n x hx)
+  refine ⟨fun n x hx => (hχ.differentiable n (ψ n x) (hψ.maps n hx)).comp x
+    (hψ.differentiable n x hx), ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro n x hx; rw [hd n x hx, ContinuousLinearMap.comp_apply, hψ.radial n x hx]
+    exact hχ.radial n _ (hψ.maps n hx)
+  · intro n x hx; rw [hd n x hx, ContinuousLinearMap.comp_apply, hψ.auxiliary n x hx]
+    exact hχ.auxiliary n _ (hψ.maps n hx)
+  · intro n x hx; rw [hd n x hx, ContinuousLinearMap.comp_apply, hψ.angular n x hx]
+    exact hχ.angular n _ (hψ.maps n hx)
+  · intro n x hx; rw [hd n x hx, ContinuousLinearMap.comp_apply, hψ.axial n x hx]
+    exact hχ.axial n _ (hψ.maps n hx)
+  · intro n x hx; rw [hd n x hx, ContinuousLinearMap.comp_apply, hψ.fast n x hx]
+    exact hχ.fast n _ (hψ.maps n hx)
+  · intro n x hx; rw [hd n x hx, ContinuousLinearMap.comp_apply, hψ.slow n x hx]
+    exact hχ.slow n _ (hψ.maps n hx)
+
+end CommonPullback
+
+theorem differentiableAt_phase (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot)
+    (hF : DifferentiableAt ℝ F q.1) (hG : DifferentiableAt ℝ G q.1) :
+    DifferentiableAt ℝ (PhaseCalculus.phase ε p pz x0 F G) q := by
+  have hi : DifferentiableAt ℝ (fun z : Slot => z) q := differentiableAt_id
+  have hFl := hF.comp q hi.fst
+  have hGl := hG.comp q hi.fst
+  exact (((hi.snd.fst.const_mul p).add (hi.fst.snd.fst.const_mul (pz / ε))).add
+    (hi.fst.fst.const_mul x0)).sub
+      (hi.snd.snd.mul ((hFl.const_mul p).add (hGl.const_mul pz)))
+
+/-- The algebraic expression after exact material cancellation. -/
+noncomputable def expression (ε p pz x0 v b G FR GR FT GT FZ GZ : ℝ) : ℝ :=
+  b * x0 - v * (b * (p * FR + pz * GR) - ε * (p * FT + pz * GT) +
+    ε * G * (p * FZ + pz * GZ))
+
+/-- A chart pullback of the actual phase has exactly the native backward
+material derivative, using only the chart differential identities. -/
+theorem material_pullback
+    (χ : E → Slot) (ε p pz x0 : ℝ) (b F G : Slow → ℝ)
+    (Vr Vθ Vz Vf Vs : E → E) {x : E}
+    (hχ : DifferentiableAt ℝ χ x) (hε : ε ≠ 0) (hR : 0 < (χ x).1.1)
+    (hF : DifferentiableAt ℝ F (χ x).1) (hG : DifferentiableAt ℝ G (χ x).1)
+    (hr : fderiv ℝ χ x (Vr x) = PhaseCalculus.eR)
+    (hθ : fderiv ℝ χ x (Vθ x) = PhaseCalculus.eTheta)
+    (hz : fderiv ℝ χ x (Vz x) = ε • PhaseCalculus.eZ)
+    (hf : fderiv ℝ χ x (Vf x) = PhaseCalculus.eV)
+    (hs : fderiv ℝ χ x (Vs x) = PhaseCalculus.eT) :
+    LinearWaveResidual.materialPhaseDefect (fun y => (χ y).1.1)
+      (fun y => b (χ y).1) (fun y => F (χ y).1) (fun y => G (χ y).1)
+      Vr Vθ Vz (LinearWaveResidual.timeDirection ε Vf Vs)
+      (PhaseCalculus.phase ε p pz x0 F G ∘ χ) x =
+    expression ε p pz x0 (χ x).2.2 (b (χ x).1) (G (χ x).1)
+      (PhaseCalculus.slowR F (χ x).1) (PhaseCalculus.slowR G (χ x).1)
+      (PhaseCalculus.slowT F (χ x).1) (PhaseCalculus.slowT G (χ x).1)
+      (PhaseCalculus.slowZ F (χ x).1) (PhaseCalculus.slowZ G (χ x).1) := by
+  have hΦ := differentiableAt_phase ε p pz x0 F G (χ x) hF hG
+  have hd := fderiv_comp x hΦ hχ
+  have hcancel : PhaseCalculus.baseV F (χ x).1 / (χ x).1.1 = F (χ x).1 := by
+    unfold PhaseCalculus.baseV
+    field_simp
+  calc
+    _ = PhaseCalculus.backwardMaterialOp ε b F G (PhaseCalculus.phase ε p pz x0 F G) (χ x) := by
+      unfold LinearWaveResidual.materialPhaseDefect HarmonicCalculus.along
+      simp only [hd, ContinuousLinearMap.comp_apply, LinearWaveResidual.timeDirection,
+        map_sub, map_smul, hr, hθ, hz, hf, hs, smul_eq_mul]
+      unfold PhaseCalculus.backwardMaterialOp PhaseCalculus.signedMaterialOp
+      rw [hcancel]
+      ring
+    _ = _ := PhaseCalculus.backwardMaterialOp_phase ε p pz x0 b F G (χ x) hε hR hF hG
+
+/-- Direct class estimate for the exact expression.  The six derivatives
+here are scalar coefficient families; the primary specialization below
+derives their classes from actual base-field jets. -/
+theorem expression_class {s : StripData E}
+    {p pz x0 v b G FR GR FT GT FZ GZ : ℕ → E → ℝ}
+    (hp : UnweightedClass s 0 p) (hpz : UnweightedClass s 0 pz)
+    (hx0 : UnweightedClass s 0 x0) (hv : UnweightedClass s 0 v)
+    (hb : UnweightedClass s 1 b) (hG : UnweightedClass s 0 G)
+    (hFR : UnweightedClass s 0 FR) (hGR : UnweightedClass s 0 GR)
+    (hFT : UnweightedClass s 0 FT) (hGT : UnweightedClass s 0 GT)
+    (hFZ : UnweightedClass s 0 FZ) (hGZ : UnweightedClass s 0 GZ) :
+    UnweightedClass s 1 (fun n x => expression (s.epsilon n) (p n x) (pz n x)
+      (x0 n x) (v n x) (b n x) (G n x) (FR n x) (GR n x)
+      (FT n x) (GT n x) (FZ n x) (GZ n x)) := by
+  have hR : UnweightedClass s 0 (fun n x => p n x * FR n x + pz n x * GR n x) := by
+    simpa only [zero_add] using (unweighted_mul hp hFR).add (unweighted_mul hpz hGR)
+  have hT : UnweightedClass s 0 (fun n x => p n x * FT n x + pz n x * GT n x) := by
+    simpa only [zero_add] using (unweighted_mul hp hFT).add (unweighted_mul hpz hGT)
+  have hZ : UnweightedClass s 0 (fun n x => p n x * FZ n x + pz n x * GZ n x) := by
+    simpa only [zero_add] using (unweighted_mul hp hFZ).add (unweighted_mul hpz hGZ)
+  have hbR : UnweightedClass s 1 (fun n x => b n x *
+      (p n x * FR n x + pz n x * GR n x)) := by
+    simpa only [add_zero] using unweighted_mul hb hR
+  have heT : UnweightedClass s 1 (fun n x => s.epsilon n *
+      (p n x * FT n x + pz n x * GT n x)) := by
+    simpa only [zero_add, smul_eq_mul] using hT.band_smul (band_epsilon s)
+  have heZ : UnweightedClass s 1 (fun n x => s.epsilon n * G n x *
+      (p n x * FZ n x + pz n x * GZ n x)) := by
+    simpa only [zero_add, smul_eq_mul, mul_assoc] using
+      (unweighted_mul hG hZ).band_smul (band_epsilon s)
+  have hinside := (class_sub hbR heT).add heZ
+  have hfirst : UnweightedClass s 1 (fun n x => b n x * x0 n x) := by
+    simpa only [add_zero] using unweighted_mul hb hx0
+  have htail : UnweightedClass s 1 (fun n x => v n x *
+      (b n x * (p n x * FR n x + pz n x * GR n x) -
+        s.epsilon n * (p n x * FT n x + pz n x * GT n x) +
+        s.epsilon n * G n x * (p n x * FZ n x + pz n x * GZ n x))) := by
+    simpa only [zero_add] using unweighted_mul hv hinside
+  exact class_sub hfirst htail
+
+/-- Polynomial base jets compose with the actual slow coordinate map.
+The angular coordinate is absent from this quantitative hypothesis. -/
+theorem polynomial_comp_unweighted
+    {s : StripData E} {U : PhaseJetBounds.Domain ℕ Slow}
+    {f : ℕ → Slow → ℝ} (hf : PhaseJetBounds.PolynomialJets U f)
+    {c : ℕ → E → Slow} (hc : PhaseJetBounds.PolynomialJets (PrimaryPulseBounds.phaseDomain s) c)
+    (hscale : ∀ n, U.scale n = s.slow n)
+    (hmap : ∀ n, MapsTo (c n) s.domain (U.carrier n)) :
+    UnweightedClass s 0 (fun n x => f n (c n x)) :=
+  ((PrimaryPulseBounds.EnvelopeJets.of_polynomial hf).comp hc hscale hmap).memClass s
+    (fun _ => rfl) (fun _ => rfl)
+
+/-- The same composition result allows polynomial inverse-edge losses in
+the slow chart itself.  This is a quantitative chain-rule estimate, not
+an assumption about the pulled-back base derivatives. -/
+theorem polynomial_comp_with_edges
+    {s : StripData E} {U : PhaseJetBounds.Domain ℕ Slow}
+    {f : ℕ → Slow → ℝ} (hf : PhaseJetBounds.PolynomialJets U f)
+    {c : ℕ → E → Slow} (hc : UnweightedClass s 0 c)
+    (hscale : ∀ n, U.scale n = s.slow n)
+    (hmap : ∀ n, MapsTo (c n) s.domain (U.carrier n)) :
+    UnweightedClass s 0 (fun n x => f n (c n x)) := by
+  refine ⟨fun _ _ _ => zero_le_one, fun n => (hf.smooth n).comp (hc.smooth n) (hmap n), ?_⟩
+  intro N
+  obtain ⟨A, hA, m, ha⟩ := hf.bound N
+  obtain ⟨B, hB, k, hb⟩ := hc.bounds N
+  refine ⟨(N.factorial : ℝ) * A * (B + 1) ^ N, by positivity, m + k * N, ?_⟩
+  intro n x hx j hj
+  have hg0 := s.growth_nonneg n x
+  have hg1 := s.one_le_growth n x
+  have hD : 1 ≤ (B + 1) * s.growth n x ^ k :=
+    one_le_mul_of_one_le_of_one_le (by linarith) (one_le_pow₀ hg1)
+  have hinner (a : ℕ) (haN : a ≤ N) :
+      ‖iteratedFDeriv ℝ a (c n) x‖ ≤ (B + 1) * s.growth n x ^ k := by
+    have hh := hb n x hx a haN
+    simp only [majorant, Real.rpow_zero, mul_one] at hh
+    exact hh.trans (mul_le_mul_of_nonneg_right (by linarith) (pow_nonneg hg0 _))
+  have houter (a : ℕ) (haN : a ≤ N) :
+      ‖iteratedFDeriv ℝ a (f n) (c n x)‖ ≤ A * s.growth n x ^ m := by
+    have hh := ha n a haN _ (hmap n hx)
+    rw [hscale n] at hh
+    exact hh.trans (mul_le_mul_of_nonneg_left
+      (pow_le_pow_left₀ (zero_le_one.trans (s.one_le_slow n)) (s.slow_le_growth n x) _)
+      (zero_le_one.trans hA))
+  have hn : (j : WithTop ℕ∞) ≤ ∞ := ENat.natCast_le_of_coe_top_le_withTop le_rfl j
+  have hchain := norm_iteratedFDerivWithin_comp_le (hf.smooth n) (hc.smooth n) hn
+    (U.isOpen n).uniqueDiffOn s.isOpen_domain.uniqueDiffOn (hmap n) hx
+    (C := A * s.growth n x ^ m) (D := (B + 1) * s.growth n x ^ k)
+    (fun a haj => ?_) (fun a ha1 haj => ?_)
+  · rw [iteratedFDerivWithin_of_isOpen j s.isOpen_domain hx] at hchain
+    simp only [majorant, Real.rpow_zero, mul_one]
+    calc
+      _ ≤ (j.factorial : ℝ) * (A * s.growth n x ^ m) * ((B + 1) * s.growth n x ^ k) ^ j := hchain
+      _ ≤ (N.factorial : ℝ) * (A * s.growth n x ^ m) * ((B + 1) * s.growth n x ^ k) ^ N := by
+        apply mul_le_mul
+        · exact mul_le_mul_of_nonneg_right (by exact_mod_cast Nat.factorial_le hj) (by positivity)
+        · exact pow_le_pow_right₀ hD hj
+        · positivity
+        · positivity
+      _ = _ := by rw [mul_pow, pow_add, pow_mul]; ring
+  · rw [iteratedFDerivWithin_of_isOpen a (U.isOpen n) (hmap n hx)]
+    exact houter a (haj.trans hj)
+  · rw [iteratedFDerivWithin_of_isOpen a s.isOpen_domain hx]
+    exact (hinner a (haj.trans hj)).trans (by simpa using pow_le_pow_right₀ hD ha1)
+
+/-- The actual affine clock has polynomial jets from its value and linear
+coefficient bounds.  This supplies the slot-coordinate class in either
+native or common coordinates. -/
+theorem affine_slot_class (s : StripData E) (L : ℕ → E →L[ℝ] ℝ) (c : ℕ → ℝ)
+    {C : ℝ} {m : ℕ} (hC : 1 ≤ C)
+    (hL : ∀ n, ‖L n‖ ≤ C * s.slow n ^ m)
+    (hv : ∀ n x, x ∈ s.domain → |L n x + c n| ≤ C * s.slow n ^ m) :
+    UnweightedClass s 0 (fun n x => L n x + c n) := by
+  apply PrimaryPulseBounds.polynomial_memClass s
+  refine ⟨fun n => (L n).contDiff.contDiffOn.add contDiffOn_const, fun _ => ⟨C, hC, m, ?_⟩⟩
+  intro n j _ x hx
+  have hd : fderiv ℝ (fun y => L n y + c n) = fun _ => L n := by
+    funext y
+    exact ((L n).hasFDerivAt.add_const (c n)).fderiv
+  cases j with
+  | zero =>
+      simpa only [norm_iteratedFDeriv_zero, Real.norm_eq_abs, PrimaryPulseBounds.phaseDomain] using
+          hv n x hx
+  | succ j =>
+      rw [← norm_iteratedFDeriv_fderiv, hd]
+      cases j with
+      | zero => simpa only [norm_iteratedFDeriv_zero, PrimaryPulseBounds.phaseDomain] using hL n
+      | succ j =>
+          rw [iteratedFDeriv_succ_const]
+          simp only [Pi.zero_apply, norm_zero]
+          exact mul_nonneg (zero_le_one.trans hC)
+            (pow_nonneg (zero_le_one.trans (s.one_le_slow n)) _)
+
+section Primary
+
+variable {U : PhaseJetBounds.Domain ℕ Slow}
+
+/-- Pulled phase, given by `PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n)
+(P.phase.x0 n) (P.phase.F n) (P.phase.G n) (χ n x)`. -/
+noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
+    (χ : ℕ → E → Slot) (n : ℕ) (x : E) : ℝ :=
+  PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
+    (P.phase.F n) (P.phase.G n) (χ n x)
+
+/-- Canonical raw geometry with arbitrary amplitude/pressure.  Those two
+fields do not enter the material defect.  The angular base field here is
+the frequency `F`, as required by `LinearWaveResidual`, not `R*F`. -/
+noncomputable def coefficients (P : PrimaryPulseBounds.PhaseConstruction U)
+    (b : ℕ → Slow → ℝ) (χ : ℕ → E → Slot)
+    (amplitude : ℕ → E → HarmonicCalculus.ComplexVector)
+    (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ) : WaveCoefficients E where
+  radius n x := (χ n x).1.1
+  radialBase n x := b n (χ n x).1
+  frequencyBase n x := P.phase.F n (χ n x).1
+  axialBase n x := P.phase.G n (χ n x).1
+  phase := pulledPhase P χ
+  amplitude := amplitude
+  pressure := pressure
+  frequency := frequency
+
+theorem defect_formula (P : PrimaryPulseBounds.PhaseConstruction U)
+    (s : StripData E) (d : GraphDirections E) (χ : ℕ → E → Slot) (b : ℕ → Slow → ℝ)
+    (amplitude : ℕ → E → HarmonicCalculus.ComplexVector)
+    (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ)
+    (hχ : NativeCoordinates s d χ)
+    (hmap : ∀ n, MapsTo (fun x => (χ n x).1) s.domain (U.carrier n))
+    (heps : ∀ n, P.phase.epsilon n = s.epsilon n)
+    (n : ℕ) {x : E} (hx : x ∈ s.domain) (hR : 0 < (χ n x).1.1) :
+    (coefficients P b χ amplitude pressure frequency).defect s d n x =
+      expression (s.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
+        (χ n x).2.2 (b n (χ n x).1) (P.phase.G n (χ n x).1)
+        (PhaseCalculus.slowR (P.phase.F n) (χ n x).1)
+        (PhaseCalculus.slowR (P.phase.G n) (χ n x).1)
+        (PhaseCalculus.slowT (P.phase.F n) (χ n x).1)
+        (PhaseCalculus.slowT (P.phase.G n) (χ n x).1)
+        (PhaseCalculus.slowZ (P.phase.F n) (χ n x).1)
+        (PhaseCalculus.slowZ (P.phase.G n) (χ n x).1) := by
+  have hF := ((P.baseF.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
+      (by
+      simp)
+  have hG := ((P.baseG.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
+      (by
+      simp)
+  have hm := material_pullback (χ n) (s.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
+    (b n) (P.phase.F n) (P.phase.G n) (d.radialField n) (fun _ => d.angular)
+    (d.axialField s n) (d.fastField n) (fun _ => d.slow)
+    (hχ.differentiable n x hx) (s.epsilon_pos n).ne' hR hF hG
+    (hχ.radialField n hx) (hχ.angular n x hx) (hχ.axialField n hx)
+    (hχ.fast n x hx) (hχ.slow n x hx)
+  have hpull : pulledPhase P χ n =
+      PhaseCalculus.phase (s.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
+        (P.phase.F n) (P.phase.G n) ∘ χ n := by
+    funext y
+    simp only [pulledPhase, heps n, Function.comp_apply]
+  simp only [WaveCoefficients.defect, coefficients]
+  rw [hpull]
+  exact hm
+
+theorem frozen_classes (P : PrimaryPulseBounds.PhaseConstruction U) (s : StripData E) :
+    UnweightedClass s 0 (fun n _ => P.phase.p n) ∧
+    UnweightedClass s 0 (fun n _ => P.phase.pz n) ∧
+    UnweightedClass s 0 (fun n _ => P.phase.x0 n) := by
+  have hconst (c : ℕ → ℝ) (hc : ∀ n, |c n| ≤ P.M) :
+      UnweightedClass s 0 (fun n _ => c n) := by
+    apply PrimaryPulseBounds.polynomial_memClass s
+    exact PhaseJetBounds.PolynomialJets.const_uniform c P.one_le_M
+      (fun n => by simpa only [Real.norm_eq_abs] using hc n)
+  exact ⟨hconst _ (fun n => (P.constants n).2.1),
+    hconst _ (fun n => (P.constants n).2.2.1), hconst _ (fun n => (P.constants n).2.2.2)⟩
+
+/-- Actual all-order defect bounds from base jets and primitive chart
+data.  The six base-derivative classes are derived in the proof. -/
+theorem defect_class (P : PrimaryPulseBounds.PhaseConstruction U)
+    (s : StripData E) (d : GraphDirections E) (χ : ℕ → E → Slot) (b : ℕ → Slow → ℝ)
+    (amplitude : ℕ → E → HarmonicCalculus.ComplexVector)
+    (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ)
+    (hχ : NativeCoordinates s d χ)
+    (hslow : PhaseJetBounds.PolynomialJets (PrimaryPulseBounds.phaseDomain s) (fun n x => (χ n
+        x).1))
+    (hslot : UnweightedClass s 0 (fun n x => (χ n x).2.2))
+    (hscale : ∀ n, U.scale n = s.slow n)
+    (hmap : ∀ n, MapsTo (fun x => (χ n x).1) s.domain (U.carrier n))
+    (heps : ∀ n, P.phase.epsilon n = s.epsilon n)
+    (hR : ∀ n x, x ∈ s.domain → 0 < (χ n x).1.1)
+    (hb : UnweightedClass s 1 (fun n x => b n (χ n x).1)) :
+    UnweightedClass s 1 ((coefficients P b χ amplitude pressure frequency).defect s d) := by
+  obtain ⟨hp, hpz, hx0⟩ := frozen_classes P s
+  have hG := polynomial_comp_unweighted P.baseG hslow hscale hmap
+  have hFR := polynomial_comp_unweighted (P.baseF.directional (1, (0, 0))) hslow hscale hmap
+  have hGR := polynomial_comp_unweighted (P.baseG.directional (1, (0, 0))) hslow hscale hmap
+  have hFT := polynomial_comp_unweighted (P.baseF.directional (0, (0, 1))) hslow hscale hmap
+  have hGT := polynomial_comp_unweighted (P.baseG.directional (0, (0, 1))) hslow hscale hmap
+  have hFZ := polynomial_comp_unweighted (P.baseF.directional (0, (1, 0))) hslow hscale hmap
+  have hGZ := polynomial_comp_unweighted (P.baseG.directional (0, (1, 0))) hslow hscale hmap
+  have he := expression_class hp hpz hx0 hslot hb hG hFR hGR hFT hGT hFZ hGZ
+  apply class_congr he
+  intro n x hx
+  exact (defect_formula P s d χ b amplitude pressure frequency hχ hmap heps n hx (hR n x hx)).symm
+
+theorem defect_class_of_mean (P : PrimaryPulseBounds.PhaseConstruction U)
+    (s : StripData E) (d : GraphDirections E) (χ : ℕ → E → Slot) (b : ℕ → Slow → ℝ)
+    (amplitude : ℕ → E → HarmonicCalculus.ComplexVector)
+    (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ)
+    (hχ : NativeCoordinates s d χ)
+    (hslow : PhaseJetBounds.PolynomialJets (PrimaryPulseBounds.phaseDomain s) (fun n x => (χ n
+        x).1))
+    (hslot : UnweightedClass s 0 (fun n x => (χ n x).2.2))
+    (hscale : ∀ n, U.scale n = s.slow n)
+    (hmap : ∀ n, MapsTo (fun x => (χ n x).1) s.domain (U.carrier n))
+    (heps : ∀ n, P.phase.epsilon n = s.epsilon n)
+    (hR : ∀ n x, x ∈ s.domain → 0 < (χ n x).1.1)
+    (hζ : ∀ x ∈ s.domain, s.zeta x ≤ 1)
+    (hb : MeanClass s 1 (fun n x => b n (χ n x).1)) :
+    UnweightedClass s 1 ((coefficients P b χ amplitude pressure frequency).defect s d) :=
+  defect_class P s d χ b amplitude pressure frequency hχ hslow hslot hscale hmap heps hR
+    (mean_unweighted hb hζ)
+
+/-- Field matching binds an existing wave record to the exact phase.  It
+does not assume equality or bounds of its material defect. -/
+theorem defect_class_of_fields (P : PrimaryPulseBounds.PhaseConstruction U)
+    (s : StripData E) (d : GraphDirections E) (χ : ℕ → E → Slot) (b : ℕ → Slow → ℝ)
+    (a : WaveCoefficients E)
+    (hχ : NativeCoordinates s d χ)
+    (hslow : PhaseJetBounds.PolynomialJets (PrimaryPulseBounds.phaseDomain s) (fun n x => (χ n
+        x).1))
+    (hslot : UnweightedClass s 0 (fun n x => (χ n x).2.2))
+    (hscale : ∀ n, U.scale n = s.slow n)
+    (hmap : ∀ n, MapsTo (fun x => (χ n x).1) s.domain (U.carrier n))
+    (heps : ∀ n, P.phase.epsilon n = s.epsilon n)
+    (hR : ∀ n x, x ∈ s.domain → 0 < (χ n x).1.1)
+    (hb : UnweightedClass s 1 (fun n x => b n (χ n x).1))
+    (hbfield : a.radialBase = fun n x => b n (χ n x).1)
+    (hFfield : a.frequencyBase = fun n x => P.phase.F n (χ n x).1)
+    (hGfield : a.axialBase = fun n x => P.phase.G n (χ n x).1)
+    (hphase : a.phase = pulledPhase P χ) : UnweightedClass s 1 (a.defect s d) := by
+  have hd := defect_class P s d χ b a.amplitude a.pressure a.frequency
+    hχ hslow hslot hscale hmap heps hR hb
+  apply class_congr hd
+  intro n x _
+  simp only [WaveCoefficients.defect, LinearWaveResidual.materialPhaseDefect,
+    coefficients, hbfield, hFfield, hGfield, hphase]
+
+end Primary
+
+/-- One finite-prefix constant and one polynomial degree work for every
+band and point.  This is the explicit jet form of the order-one class. -/
+theorem finite_jet_bounds {s : StripData E} {f : ℕ → E → ℝ}
+    (hf : UnweightedClass s 1 f) (m : ℕ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ, ∀ n x, x ∈ s.domain → ∀ j ≤ m,
+      ‖iteratedFDeriv ℝ j (f n) x‖ ≤ C * s.epsilon n * s.growth n x ^ p := by
+  obtain ⟨C, hC, p, hb⟩ := hf.bounds m
+  exact ⟨C, hC, p, fun n x hx j hj => by
+    simpa only [majorant, Real.rpow_one, mul_one] using hb n x hx j hj⟩
+
+end NavierStokes.PrimaryMaterialDefect
+
+end
+end
+
+end
+
+@[expose] public section
 
 noncomputable section
 

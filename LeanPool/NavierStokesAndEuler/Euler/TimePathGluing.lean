@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Exact pasting of actual continuous solution paths on adjacent compact time intervals. -/
 

@@ -9,11 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteMetricEnergy
 public import Mathlib.Topology.ContinuousMap.Algebra
 import Mathlib.Analysis.InnerProductSpace.Continuous
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! Uniform convergence of actual finite metric energies along continuous Hilbert-space paths. -/
 

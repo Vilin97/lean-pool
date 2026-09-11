@@ -9,13 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAlgebra
 import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeSupport
 import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-import Mathlib.Tactic.Continuity.Init
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.Abs
-import Mathlib.Tactic.NormNum.DivMod
-import Mathlib.Tactic.NormNum.OfScientific
-import Mathlib.Tactic.NormNum.Pow
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Reindexing the literal primary/corrector packet into its actual power coefficients. -/
 

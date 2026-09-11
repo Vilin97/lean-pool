@@ -3,16 +3,18 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedExterior
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalGeometry
 public import LeanPool.NavierStokesAndEuler.NavierStokes.CurrentSignedCurl
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedCurrentSupport
-import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalZeros
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedReferenceGeometry
-import LeanPool.NavierStokesAndEuler.NavierStokes.SignedPhysicalSumCalculus
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalWaveSum
+public import LeanPool.NavierStokesAndEuler.NavierStokes.PhysicalCurlCovariance
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPotentialCoherence
+import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedNativeRegularity
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualPolarCoverage
+public import LeanPool.NavierStokesAndEuler.NavierStokes.ActualSignedPhysicalData
 
 /-!
 # The canonical signed physical family and its current-band realization
@@ -22,8 +24,610 @@ are retained.  Native faces are treated by the literal zero mask before a
 current-band comparison is used.
 -/
 
+section
+
+/-!
+# Geometry for current signed waves in physical polar charts
+
+The actual active annulus is covered for every band whose physical scale
+ratio lies in `(1/2,2)`.  An explicit change of the chart radius identifies
+the scaled Cartesian lift with the full native cylindrical graph.
+-/
+
 @[expose] public section
 
+noncomputable section
+
+namespace NavierStokes.ActualSignedPhysicalGeometry
+
+open Set Function Filter ProblemStatement PhysicalWaveSum
+open PhysicalGraphBounds PhysicalMeanJetBounds
+open CorrectionInitialization CorrectionInitialization.ActualPrimary
+open scoped Topology ContDiff
+
+/-- The annulus estimate uses only comparability of the two positive scales,
+so it holds throughout the full open native scale window. -/
+theorem annulus_of_ratio (n : ℕ) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hactive : w ∈ ActualPolarCoverage.active)
+    (hq : physicalQ h w / ChartScales.Q n ∈ Ioo (1 / 2 : ℝ) 2) :
+    scaledRadial n w ∈ annulus ActualPolarCoverage.inner ActualPolarCoverage.outer := by
+  have hQ := ChartScales.Q_pos n
+  have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by
+    have he := (div_lt_iff₀ hQ).mp hq.2
+    linarith
+  have hhi : ChartScales.Q n ≤ 2 * physicalQ h w := by
+    have he := (lt_div_iff₀ hQ).mp hq.1
+    linarith
+  have hell := graph_length_pos outgoing.data.h_pos outgoing.data.h_lt_half n 0 hw
+  have hlen := graph_length_bounds outgoing.data.h_pos outgoing.data.h_lt_half n 0 hw hlo hhi
+  have hr := ActualPolarCoverage.graph_profileRadius_mem nominal n 0 hw hactive
+  have hloR := (le_div_iff₀ hell).mp hr.1
+  have hhiR := (div_le_iff₀ hell).mp hr.2
+  have ha := PrimaryTargetBounds.leftRadius_pos nominal
+  have hb := PrimaryTargetBounds.rightRadius_pos nominal
+  have hRlo : PrimaryTargetBounds.leftRadius nominal / 2 ≤ (graph h n 0 w).1 := by
+    nlinarith [hlen.1]
+  have hRhi : (graph h n 0 w).1 ≤ 2 * PrimaryTargetBounds.rightRadius nominal := by
+    nlinarith [hlen.2]
+  rw [graph_radius] at hRlo hRhi
+  refine ⟨?_, ?_⟩
+  · simpa only [ActualPolarCoverage.outer, Metric.mem_closedBall, dist_zero_right] using
+      (PolarCharts.norm_le_radius (scaledRadial n w)).trans hRhi
+  · change PrimaryTargetBounds.leftRadius nominal / 4 ≤ ‖scaledRadial n w‖
+    linarith only [hRlo, PolarCharts.radius_le_two_norm (scaledRadial n w)]
+
+theorem chart_exists_of_ratio (n : ℕ) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hactive : w ∈ ActualPolarCoverage.active)
+    (hq : physicalQ h w / ChartScales.Q n ∈ Ioo (1 / 2 : ℝ) 2) :
+    ∃ j : PolarCharts.Index,
+      scaledRadial n w ∈ PolarCharts.chartDomain ActualPolarCoverage.inner j := by
+  obtain ⟨j, hj⟩ := PolarCharts.annulus_covered ActualPolarCoverage.inner_pos
+    (annulus_of_ratio n hw hactive hq)
+  exact ⟨j, PolarCharts.sector_subset_chartDomain ActualPolarCoverage.inner_pos j hj⟩
+
+/-- The exact unscaled chart radius corresponding to a native chart radius. -/
+noncomputable def chartRadius (a : ℝ) (n : ℕ) : ℝ :=
+  a / ChartScales.Q n ^ (-(1 / 2 : ℝ))
+
+theorem chartRadius_pos {a : ℝ} (ha : 0 < a) (n : ℕ) : 0 < chartRadius a n :=
+  div_pos ha (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _)
+
+theorem chartDomain_unscale {a c : ℝ} (hc : 0 < c) (j : PolarCharts.Index)
+    {p : PolarCharts.Plane} (hp : c • p ∈ PolarCharts.chartDomain a j) :
+    p ∈ PolarCharts.chartDomain (a / c) j := by
+  change a / 4 < (PolarCharts.rotate j (c • p)).1 at hp
+  rw [PolarCharts.rotate_smul] at hp
+  change a / 4 < c * (PolarCharts.rotate j p).1 at hp
+  change (a / c) / 4 < (PolarCharts.rotate j p).1
+  calc
+    (a / c) / 4 = (a / 4) / c := by ring
+    _ < _ := (div_lt_iff₀ hc).mpr (by simpa only [mul_comm] using hp)
+
+theorem physical_chart_mem (n : ℕ) {a : ℝ} (j : PolarCharts.Index) {w : SpaceTime}
+    (hchart : scaledRadial n w ∈ PolarCharts.chartDomain a j) :
+    radialProjection w ∈ PolarCharts.chartDomain (chartRadius a n) j :=
+  chartDomain_unscale (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) j hchart
+
+/-- The scaled and unscaled charts have exactly the same angle. -/
+theorem physical_chart_scale (n : ℕ) {a : ℝ} (ha : 0 < a)
+    (j : PolarCharts.Index) {w : SpaceTime}
+    (hchart : scaledRadial n w ∈ PolarCharts.chartDomain a j) :
+    PolarCharts.chart a j (scaledRadial n w) =
+      (ChartScales.Q n ^ (-(1 / 2 : ℝ)) *
+        (PolarCharts.chart (chartRadius a n) j (radialProjection w)).1,
+       (PolarCharts.chart (chartRadius a n) j (radialProjection w)).2) := by
+  rw [PolarCharts.chart_eq_localChart ha j hchart,
+    PolarCharts.chart_eq_localChart (chartRadius_pos ha n) j (physical_chart_mem n j hchart)]
+  exact PolarCharts.localChart_smul j (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) _
+
+/-- No angle choice or auxiliary coordinate is discarded by this identity. -/
+theorem cylinderAt_physical_chart (h : ℝ) (n : ℕ) {a : ℝ} (ha : 0 < a)
+    (j : PolarCharts.Index) {w : SpaceTime}
+    (hchart : scaledRadial n w ∈ PolarCharts.chartDomain a j) :
+    ActualSignedPhysicalData.cylinderAt a j (physicalLift h n w) =
+      (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
+        (ChartScales.nativeIndex h n)).map
+          (PhysicalCurlCovariance.polarCoordinates (chartRadius a n) j w) := by
+  have hb := chartRadius_pos ha n
+  have hphysical := physical_chart_mem n j hchart
+  have hv := ActualSignedPhysicalData.polarCoordinates_valid hb j hphysical
+  have he := ActualSignedPhysicalData.polarCoordinates_backward hb j hphysical
+  have hc : scaledRadial n
+      ((PhysicalCurlCovariance.polarCoordinates (chartRadius a n) j w).1,
+        CylindricalResidual.chart
+          (PhysicalCurlCovariance.polarCoordinates (chartRadius a n) j w).2) ∈
+        PolarCharts.chartDomain a j := by
+    rwa [he]
+  simpa only [he] using ActualSignedPhysicalData.cylinderAt_physical_forward h n ha j
+    (PhysicalCurlCovariance.polarCoordinates (chartRadius a n) j w) hv.1 hv.2.1 hc
+
+theorem exists_physical_chart (h : ℝ) (n : ℕ) {a : ℝ} (ha : 0 < a)
+    (j : PolarCharts.Index) {w : SpaceTime}
+    (hchart : scaledRadial n w ∈ PolarCharts.chartDomain a j) :
+    ∃ b : ℝ, 0 < b ∧ radialProjection w ∈ PolarCharts.chartDomain b j ∧
+      ActualSignedPhysicalData.cylinderAt a j (physicalLift h n w) =
+        (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
+          (ChartScales.nativeIndex h n)).map (PhysicalCurlCovariance.polarCoordinates b j w) :=
+  ⟨chartRadius a n, chartRadius_pos ha n, physical_chart_mem n j hchart,
+    cylinderAt_physical_chart h n ha j hchart⟩
+
+/-- The mean graph's slow coordinate does not depend on its auxiliary cover. -/
+theorem graph_slow_mem_standard_of_ratio {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
+    (n d : ℕ) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q n ∈ Ioo (1 / 2 : ℝ) 2) :
+    (graph h n d w).2.1 ∈ (ActualSignedGeometry.standardSlowRegion hh hh1).carrier := by
+  change 0 < (graph h n d w).2.1.1 ∧
+    SimilarityCoordinates.coordinateQ (2 * h) (graph h n d w).2.1 ∈ Ioo (1 / 2 : ℝ) 2
+  refine ⟨graph_time_pos h n d hw, ?_⟩
+  rwa [graph_q_eq hh hh1 n d hw]
+
+/-- This identity is global and needs no radius or time positivity premise. -/
+theorem commonGraph_slow (h : ℝ) (n i d : ℕ) (z : SpaceTime) :
+    (PhysicalResidualTZ.swapCylinder
+      ((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h i).map z)).1.2.1 =
+      (graph h n d (z.1, CylindricalResidual.chart z.2)).2.1 := by
+  rw [graph_slow]
+  change
+    (((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h i).velocityScale *
+      (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h i).radialScale *
+      (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h i).epsilon) * (1 - z.1),
+     ((PhysicalResidualBridge.commonGraph (ChartScales.Q n) h i).radialScale *
+      (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h i).epsilon) * z.2 2) = _
+  rw [PhysicalResidualBridge.commonGraph_slowTimeScale (ChartScales.Q_pos n),
+    PhysicalResidualBridge.commonGraph_axialScale (ChartScales.Q_pos n), Real.rpow_neg_one]
+  simp only [CylindricalResidual.chart, AxisymmetricResidual.pack_two]
+  congr 1
+  ring
+
+theorem nativePoint_slow (n d : ℕ) (z : SpaceTime) :
+    (ActualSignedPotentialCoherence.nativePoint n z).1.2.1 =
+      (graph h n d (z.1, CylindricalResidual.chart z.2)).2.1 :=
+  commonGraph_slow h n (CommonWindow.index h n) d z
+
+theorem nativePoint_mem_physicalDomain (n : ℕ) (z : SpaceTime) (hr : 0 < z.2 0)
+    (hw : (z.1, CylindricalResidual.chart z.2) ∈ preterminal)
+    (hq : physicalQ h (z.1, CylindricalResidual.chart z.2) / ChartScales.Q n ∈
+      Ioo (1 / 2 : ℝ) 2) :
+    z ∈ ActualSignedPotentialCoherence.physicalDomain n := by
+  refine ⟨hr, ?_⟩
+  rw [nativePoint_slow n 0]
+  exact graph_slow_mem_standard_of_ratio outgoing.data.h_pos outgoing.data.h_lt_half n 0 hw hq
+
+theorem polarCoordinates_mem_physicalDomain (n : ℕ) {a : ℝ} (ha : 0 < a)
+    (j : PolarCharts.Index) {w : SpaceTime}
+    (hchart : radialProjection w ∈ PolarCharts.chartDomain a j)
+    (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q n ∈ Ioo (1 / 2 : ℝ) 2) :
+    PhysicalCurlCovariance.polarCoordinates a j w ∈
+      ActualSignedPotentialCoherence.physicalDomain n := by
+  have hv := ActualSignedPhysicalData.polarCoordinates_valid ha j hchart
+  have he := ActualSignedPhysicalData.polarCoordinates_backward ha j hchart
+  apply nativePoint_mem_physicalDomain n _ hv.1
+  · rwa [he]
+  · rwa [he]
+
+theorem scaledChart_mem_physicalDomain (n : ℕ) {a : ℝ} (ha : 0 < a)
+    (j : PolarCharts.Index) {w : SpaceTime}
+    (hchart : scaledRadial n w ∈ PolarCharts.chartDomain a j)
+    (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q n ∈ Ioo (1 / 2 : ℝ) 2) :
+    PhysicalCurlCovariance.polarCoordinates (chartRadius a n) j w ∈
+      ActualSignedPotentialCoherence.physicalDomain n :=
+  polarCoordinates_mem_physicalDomain n (chartRadius_pos ha n) j
+    (physical_chart_mem n j hchart) hw hq
+
+end NavierStokes.ActualSignedPhysicalGeometry
+
+end
+end
+
+end
+
+section
+
+/-!
+# Zeros of the actual signed physical coefficients
+
+The native dyadic mask vanishes at both faces and outside the open native
+band.  This file transfers that literal zero to the canonical physical
+copy family and to every current-band representation of the same label.
+The current state and the native reference requests are arbitrary.
+-/
+
+@[expose] public section
+
+noncomputable section
+
+namespace NavierStokes.ActualSignedPhysicalZeros
+
+open Set Function Filter ProblemStatement PhysicalWaveSum PhysicalCopyBounds
+open CorrectionInitialization CorrectionInitialization.ActualPrimary
+open ActualSignedExterior
+open scoped Topology ContDiff BigOperators
+
+/-- Label: an abbreviation for `ActualSignedPhysicalBinding.Label`. -/
+abbrev Label := ActualSignedPhysicalBinding.Label
+/-- Point: an abbreviation for `ActualSignedCoherence.Point`. -/
+abbrev Point := ActualSignedCoherence.Point
+/-- Full point: an abbreviation for `ActualSignedCoherence.FullPoint`. -/
+abbrev FullPoint := ActualSignedCoherence.FullPoint
+/-- Frequency: an abbreviation for `TorusInverse.Frequency`. -/
+abbrev Frequency := TorusInverse.Frequency
+
+variable {B N0 : ℕ}
+
+theorem physicalLift_coordinateQ (n : ℕ) {w : SpaceTime} (hw : w ∈ preterminal) :
+    SimilarityCoordinates.coordinateQ (2 * h)
+      ((ActualSignedPhysicalData.cylinderZero (PhysicalGraphBounds.physicalLift h n w)).1.2.1.2,
+       (ActualSignedPhysicalData.cylinderZero (PhysicalGraphBounds.physicalLift h n w)).1.2.1.1) =
+      physicalQ h w / ChartScales.Q n := by
+  have he := congrArg (fun p : PhaseCalculus.Slow => (p.2.2, p.2.1))
+    (physicalLift_slow n w)
+  change _ = (PhysicalMeanJetBounds.graph h n 0 w).2.1 at he
+  dsimp only at he
+  rw [he]
+  exact PhysicalMeanJetBounds.graph_q_eq outgoing.data.h_pos outgoing.data.h_lt_half n 0 hw
+
+theorem primary_mask_physicalLift_zero (l : Label B N0) (m n : ℕ)
+    {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q n ∉ Ioo (1 / 2 : ℝ) 2) :
+    (ActualSignedPhysicalBinding.primary l).mask m
+      (ActualSignedPhysicalData.cylinderZero (PhysicalGraphBounds.physicalLift h n w)) = 0 := by
+  apply ActualSignedNativeRegularity.primary_mask_zero_outside
+  rwa [physicalLift_coordinateQ n hw]
+
+section CanonicalFamily
+
+variable (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews l).StateData)
+
+theorem canonical_potential_amplitude_zero_of_nativeQ (l : Label B N0) (i : Fin 3)
+    (k : Frequency) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉
+      Ioo (1 / 2 : ℝ) 2) :
+    ((family s).potentialCopies slots outgoing.data.h_pos.le i).amplitude k
+      (ActualSignedPhysicalData.positiveIndex (nativeLabel l))
+      (PhysicalGraphBounds.physicalLift h (ActualSignedPhysicalBinding.reference l) w) = 0 := by
+  classical
+  change ((family s).copyAt (fun L => ActualSignedPhysicalData.potentialFamily
+    slots outgoing.data.h_pos.le ((family s).singleton L) i) (nativeLabel l)).amplitude k _ _ = 0
+  erw [DependentSignedPhysicalFamily.Family.copyAt_active]
+  by_contra hn
+  obtain ⟨_, _, hm, _⟩ := ActualSignedPhysicalData.potential_amplitude_inputs
+    slots outgoing.data.h_pos.le ((family s).singleton (nativeLabel l)) i k _ _ hn
+  apply hm
+  change (ActualSignedPhysicalBinding.primary (actualLabel (nativeLabel l))).mask
+    (ActualSignedPhysicalBinding.reference l) _ = 0
+  rw [actualLabel_nativeLabel]
+  exact primary_mask_physicalLift_zero l _ _ hw hq
+
+theorem canonical_pressure_amplitude_zero_of_nativeQ (l : Label B N0)
+    (k : Frequency) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉
+      Ioo (1 / 2 : ℝ) 2) :
+    ((family s).pressureCopies slots outgoing.data.h_pos.le).amplitude k
+      (ActualSignedPhysicalData.positiveIndex (nativeLabel l))
+      (PhysicalGraphBounds.physicalLift h (ActualSignedPhysicalBinding.reference l) w) = 0 := by
+  classical
+  change ((family s).copyAt (fun L => ActualSignedPhysicalData.pressureFamily
+    slots outgoing.data.h_pos.le ((family s).singleton L)) (nativeLabel l)).amplitude k _ _ = 0
+  erw [DependentSignedPhysicalFamily.Family.copyAt_active]
+  by_contra hn
+  obtain ⟨_, _, hm, _⟩ := ActualSignedPhysicalData.pressure_amplitude_inputs
+    slots outgoing.data.h_pos.le ((family s).singleton (nativeLabel l)) k _ _ hn
+  apply hm
+  change (ActualSignedPhysicalBinding.primary (actualLabel (nativeLabel l))).mask
+    (ActualSignedPhysicalBinding.reference l) _ = 0
+  rw [actualLabel_nativeLabel]
+  exact primary_mask_physicalLift_zero l _ _ hw hq
+
+theorem canonical_potential_term_zero_of_nativeQ (l : Label B N0) (i : Fin 3)
+    (k : Frequency) (a r0 : ℝ) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉
+      Ioo (1 / 2 : ℝ) 2) :
+    ((family s).potentialCopies slots outgoing.data.h_pos.le i).term a h r0
+      (ActualSignedPhysicalData.positiveIndex (nativeLabel l)) k w = 0 := by
+  apply globalWave_eq_zero
+  change ((family s).potentialCopies slots outgoing.data.h_pos.le i).amplitude k
+    (ActualSignedPhysicalData.positiveIndex (nativeLabel l))
+    (commonLift h (ActualSignedPhysicalBinding.reference l)
+      (((family s).potentialCopies slots outgoing.data.h_pos.le i).gap (nativeLabel l)) w) = 0
+  rw [potential_gap, ActualSignedPhysicalData.commonLift_zero]
+  exact canonical_potential_amplitude_zero_of_nativeQ s l i k hw hq
+
+theorem canonical_pressure_term_zero_of_nativeQ (l : Label B N0)
+    (k : Frequency) (a r0 : ℝ) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉
+      Ioo (1 / 2 : ℝ) 2) :
+    ((family s).pressureCopies slots outgoing.data.h_pos.le).term a h r0
+      (ActualSignedPhysicalData.positiveIndex (nativeLabel l)) k w = 0 := by
+  apply globalWave_eq_zero
+  change ((family s).pressureCopies slots outgoing.data.h_pos.le).amplitude k
+    (ActualSignedPhysicalData.positiveIndex (nativeLabel l))
+    (commonLift h (ActualSignedPhysicalBinding.reference l)
+      (((family s).pressureCopies slots outgoing.data.h_pos.le).gap (nativeLabel l)) w) = 0
+  rw [pressure_gap, ActualSignedPhysicalData.commonLift_zero]
+  exact canonical_pressure_amplitude_zero_of_nativeQ s l k hw hq
+
+theorem canonical_potential_periodized_zero_of_nativeQ (l : Label B N0) (i : Fin 3)
+    (a r0 : ℝ) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉
+      Ioo (1 / 2 : ℝ) 2) :
+    ((family s).potentialCopies slots outgoing.data.h_pos.le i).periodized a h r0
+      (ActualSignedPhysicalData.positiveIndex (nativeLabel l)) w = 0 := by
+  simp only [CopyFamily.periodized, canonical_potential_term_zero_of_nativeQ s l i _ a r0 hw hq,
+    tsum_zero]
+
+theorem canonical_pressure_periodized_zero_of_nativeQ (l : Label B N0)
+    (a r0 : ℝ) {w : SpaceTime} (hw : w ∈ preterminal)
+    (hq : physicalQ h w / ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉
+      Ioo (1 / 2 : ℝ) 2) :
+    ((family s).pressureCopies slots outgoing.data.h_pos.le).periodized a h r0
+      (ActualSignedPhysicalData.positiveIndex (nativeLabel l)) w = 0 := by
+  simp only [CopyFamily.periodized, canonical_pressure_term_zero_of_nativeQ s l _ a r0 hw hq,
+    tsum_zero]
+
+end CanonicalFamily
+
+/-! ## The same native slow point in every current band -/
+
+theorem current_nativeSlow_reference (l : Label B N0) (n : ℕ) (k : Frequency)
+    (z : SpaceTime) (hr : 0 < z.2 0) :
+    (ActualSignedStageControls.nativePoint l n k
+      (ActualSignedPotentialCoherence.nativePoint n z)).1 =
+      BaseContextAssembly.slowCoordinates
+        (ActualSignedPotentialCoherence.nativePoint (ActualSignedPhysicalBinding.reference l) z).1
+            := by
+  have he := congrArg Prod.fst
+    ((ActualSignedPotentialCoherence.nativePoint_absolute n z hr).trans
+      (ActualSignedPotentialCoherence.nativePoint_absolute
+        (ActualSignedPhysicalBinding.reference l) z hr).symm)
+  change toAbsolute n (ActualSignedPotentialCoherence.nativePoint n z).1 =
+    toAbsolute (ActualSignedPhysicalBinding.reference l)
+      (ActualSignedPotentialCoherence.nativePoint (ActualSignedPhysicalBinding.reference l) z).1
+          at he
+  change nativeSlow l.1 (toAbsolute n (ActualSignedPotentialCoherence.nativePoint n z).1) = _
+  rw [he]
+  exact nativeSlow_toAbsolute l.1 _
+
+theorem nativePoint_slowCoordinates (n : ℕ) (z : SpaceTime) (hr : 0 < z.2 0) :
+    BaseContextAssembly.slowCoordinates (ActualSignedPotentialCoherence.nativePoint n z).1 =
+      ActualSignedPhysicalData.nativeSlow
+        (PhysicalMeanJetBounds.graph h n 0 (z.1, CylindricalResidual.chart z.2)) := by
+  apply Prod.ext
+  · change (ActualSignedPotentialCoherence.nativePoint n z).1.1 =
+      (PhysicalMeanJetBounds.graph h n 0 (z.1, CylindricalResidual.chart z.2)).1
+    rw [PhysicalMeanJetBounds.graph_radius, ActualSignedPhysicalData.scaledRadial_forward,
+      PolarCharts.radius_polar,
+      abs_of_pos (mul_pos (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _) hr)]
+    simp only [ActualSignedPotentialCoherence.nativePoint,
+      PhysicalResidualBridge.commonGraph_map (ChartScales.Q_pos n) h _ hr,
+      PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply]
+  · change ((ActualSignedPotentialCoherence.nativePoint n z).1.2.1.2,
+      (ActualSignedPotentialCoherence.nativePoint n z).1.2.1.1) =
+      ((PhysicalMeanJetBounds.graph h n 0 (z.1, CylindricalResidual.chart z.2)).2.1.2,
+       (PhysicalMeanJetBounds.graph h n 0 (z.1, CylindricalResidual.chart z.2)).2.1.1)
+    rw [ActualSignedPhysicalGeometry.nativePoint_slow n 0]
+
+theorem current_nativeSlow_physicalLift (l : Label B N0) (n : ℕ) (k : Frequency)
+    (z : SpaceTime) (hr : 0 < z.2 0) :
+    (ActualSignedStageControls.nativePoint l n k
+      (ActualSignedPotentialCoherence.nativePoint n z)).1 =
+      ((ActualSignedPhysicalData.cylinderZero
+          (PhysicalGraphBounds.physicalLift h (ActualSignedPhysicalBinding.reference l)
+            (z.1, CylindricalResidual.chart z.2))).1.1,
+       (ActualSignedPhysicalData.cylinderZero
+          (PhysicalGraphBounds.physicalLift h (ActualSignedPhysicalBinding.reference l)
+            (z.1, CylindricalResidual.chart z.2))).1.2.1) := by
+  rw [current_nativeSlow_reference l n k z hr, nativePoint_slowCoordinates _ z hr]
+  exact (physicalLift_slow _ _).symm
+
+theorem current_mask_physicalLift (l : Label B N0) (n : ℕ) (k : Frequency)
+    (z : SpaceTime) (hr : 0 < z.2 0) :
+    ActualSignedStageControls.mask l k n (ActualSignedPotentialCoherence.nativePoint n z) =
+      (ActualSignedPhysicalBinding.primary l).mask n
+        (ActualSignedPhysicalData.cylinderZero
+          (PhysicalGraphBounds.physicalLift h (ActualSignedPhysicalBinding.reference l)
+            (z.1, CylindricalResidual.chart z.2))) := by
+  change spatialMask l.1 _ = spatialMask l.1 _
+  rw [current_nativeSlow_physicalLift l n k z hr]
+
+theorem current_target_physicalLift (l : Label B N0) (n : ℕ) (k : Frequency)
+    (z : SpaceTime) (hr : 0 < z.2 0) :
+    ActualSignedStageControls.target l k n (ActualSignedPotentialCoherence.nativePoint n z) =
+      ActualSignedStageControls.coefficientScale l n ^ 2 •
+        (ActualSignedPhysicalBinding.primary l).target n
+          (ActualSignedPhysicalData.cylinderZero
+            (PhysicalGraphBounds.physicalLift h (ActualSignedPhysicalBinding.reference l)
+              (z.1, CylindricalResidual.chart z.2))) := by
+  unfold ActualSignedStageControls.target
+  rw [current_nativeSlow_physicalLift l n k z hr]
+  rfl
+
+/-! ## Passing literal raw zeros through the current copy sum -/
+
+theorem common_zero_of_raw (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (x : FullPoint)
+    (hz : ∀ k, (ActualSignedCoherence.copies l u).amplitude n k x = 0 ∧
+      (ActualSignedCoherence.copies l u).pressure n k x = 0) :
+    (ActualSignedCoherence.copies l u).common.amplitude n x = 0 ∧
+      (ActualSignedCoherence.copies l u).common.pressure n x = 0 := by
+  constructor
+  · change (∑' k, (ActualSignedCoherence.copies l u).cutoff n k x •
+      (ActualSignedCoherence.copies l u).amplitude n k x) = 0
+    simp only [(hz _).1, smul_zero, tsum_zero]
+  · change (∑' k, ((ActualSignedCoherence.copies l u).cutoff n k x : ℂ) *
+      (ActualSignedCoherence.copies l u).pressure n k x) = 0
+    simp only [(hz _).2, mul_zero, tsum_zero]
+
+theorem cylindrical_zero_of_raw (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (z : SpaceTime)
+    (hz : ∀ k, (ActualSignedCoherence.copies l u).amplitude n k
+      (ActualSignedPotentialCoherence.nativePoint n z) = 0 ∧
+      (ActualSignedCoherence.copies l u).pressure n k
+        (ActualSignedPotentialCoherence.nativePoint n z) = 0) :
+    ActualSignedPotentialCoherence.cylindricalPotential l u n z = 0 ∧
+      ActualSignedPotentialCoherence.cylindricalPressureMode l u n z = 0 := by
+  have hc := common_zero_of_raw l u n _ hz
+  constructor
+  · have hp : ActualSignedPotentialCoherence.potentialCoefficient l u n
+        (ActualSignedPotentialCoherence.nativePoint n z) = 0 := by
+      simp [ActualSignedPotentialCoherence.potentialCoefficient, hc.1,
+        CurlClassBounds.normalCoefficient, CurlClassBounds.normalCross]
+    have hv : ActualSignedPotentialCoherence.potential l u n
+        (ActualSignedPotentialCoherence.nativePoint n z) = 0 := by
+      rw [ActualSignedPotentialCoherence.potential_eq_mode]
+      ext i
+      simp only [HarmonicCalculus.vectorMode, HarmonicCalculus.mode, hp, Pi.zero_apply, zero_mul]
+    rw [ActualSignedPotentialCoherence.cylindricalPotential,
+      ActualSignedPotentialCoherence.rescaledPotential, hv, smul_zero]
+  · simp [ActualSignedPotentialCoherence.cylindricalPressureMode,
+      ActualSignedPotentialCoherence.rescaledPressureMode,
+      ActualSignedPotentialCoherence.pressureMode, HarmonicCalculus.mode, hc.2]
+
+theorem current_raw_zero_of_nativeQ (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (k : Frequency) (z : SpaceTime) (hr : 0 < z.2 0)
+    (hw : (z.1, CylindricalResidual.chart z.2) ∈ preterminal)
+    (hq : physicalQ h (z.1, CylindricalResidual.chart z.2) /
+      ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉ Ioo (1 / 2 : ℝ) 2) :
+    (ActualSignedCoherence.copies l u).amplitude n k
+      (ActualSignedPotentialCoherence.nativePoint n z) = 0 ∧
+      (ActualSignedCoherence.copies l u).pressure n k
+        (ActualSignedPotentialCoherence.nativePoint n z) = 0 := by
+  apply (ActualSignedStageControls.parameters l).raw_zero_of_mask
+  change ActualSignedStageControls.mask l k n (ActualSignedPotentialCoherence.nativePoint n z) = 0
+  rw [current_mask_physicalLift l n k z hr]
+  exact primary_mask_physicalLift_zero l _ _ hw hq
+
+theorem cylindricalPotential_zero_of_nativeQ (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (z : SpaceTime) (hr : 0 < z.2 0)
+    (hw : (z.1, CylindricalResidual.chart z.2) ∈ preterminal)
+    (hq : physicalQ h (z.1, CylindricalResidual.chart z.2) /
+      ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉ Ioo (1 / 2 : ℝ) 2) :
+    ActualSignedPotentialCoherence.cylindricalPotential l u n z = 0 :=
+  (cylindrical_zero_of_raw l u n z (fun k => current_raw_zero_of_nativeQ l u n k z hr hw hq)).1
+
+theorem cylindricalPressureMode_zero_of_nativeQ (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (z : SpaceTime) (hr : 0 < z.2 0)
+    (hw : (z.1, CylindricalResidual.chart z.2) ∈ preterminal)
+    (hq : physicalQ h (z.1, CylindricalResidual.chart z.2) /
+      ChartScales.Q (ActualSignedPhysicalBinding.reference l) ∉ Ioo (1 / 2 : ℝ) 2) :
+    ActualSignedPotentialCoherence.cylindricalPressureMode l u n z = 0 :=
+  (cylindrical_zero_of_raw l u n z (fun k => current_raw_zero_of_nativeQ l u n k z hr hw hq)).2
+
+/-! ## The fixed physical exterior -/
+
+theorem current_raw_zero_of_exterior (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (k : Frequency) (z : SpaceTime) (hr : 0 < z.2 0)
+    (hw : (z.1, CylindricalResidual.chart z.2) ∈ preterminal)
+    (hout : (z.1, CylindricalResidual.chart z.2) ∉ active) :
+    (ActualSignedCoherence.copies l u).amplitude n k
+      (ActualSignedPotentialCoherence.nativePoint n z) = 0 ∧
+      (ActualSignedCoherence.copies l u).pressure n k
+        (ActualSignedPotentialCoherence.nativePoint n z) = 0 := by
+  rcases primary_mask_or_target_zero l n (ActualSignedPhysicalBinding.reference l) hw hout with hm
+      | ht
+  · apply (ActualSignedStageControls.parameters l).raw_zero_of_mask
+    change ActualSignedStageControls.mask l k n (ActualSignedPotentialCoherence.nativePoint n z) = 0
+    rw [current_mask_physicalLift l n k z hr, hm]
+  · apply ActualWaveRegularityData.raw_zero_of_target
+    rw [current_target_physicalLift l n k z hr, ht, smul_zero]
+
+theorem cylindricalPotential_zero_of_exterior (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (z : SpaceTime) (hr : 0 < z.2 0)
+    (hw : (z.1, CylindricalResidual.chart z.2) ∈ preterminal)
+    (hout : (z.1, CylindricalResidual.chart z.2) ∉ active) :
+    ActualSignedPotentialCoherence.cylindricalPotential l u n z = 0 :=
+  (cylindrical_zero_of_raw l u n z (fun k => current_raw_zero_of_exterior l u n k z hr hw hout)).1
+
+theorem cylindricalPressureMode_zero_of_exterior (l : Label B N0) (u : CorrectionState.State Point)
+    (n : ℕ) (z : SpaceTime) (hr : 0 < z.2 0)
+    (hw : (z.1, CylindricalResidual.chart z.2) ∈ preterminal)
+    (hout : (z.1, CylindricalResidual.chart z.2) ∉ active) :
+    ActualSignedPotentialCoherence.cylindricalPressureMode l u n z = 0 :=
+  (cylindrical_zero_of_raw l u n z (fun k => current_raw_zero_of_exterior l u n k z hr hw hout)).2
+
+end NavierStokes.ActualSignedPhysicalZeros
+
+end
+end
+
+end
+
+section
+
+/-!
+# Finite-support sums in physical coordinates
+
+These identities only use finite support and the literal real-coordinate maps.
+They let a physical wave assembly retain an unrestricted label `finsum` while
+identifying its value with the finite active-label sum.
+-/
+
+@[expose] public section
+
+noncomputable section
+
+namespace NavierStokes.SignedPhysicalSumCalculus
+
+open Set Function ProblemStatement HarmonicCalculus
+open scoped BigOperators
+
+theorem finsum_eq_sum_of_zero_off {α E : Type*} [AddCommMonoid E]
+    (s : Finset α) (f : α → E) (hz : ∀ l, l ∉ s → f l = 0) :
+    (∑ᶠ l, f l) = ∑ l ∈ s, f l := by
+  classical
+  apply finsum_eq_sum_of_support_subset
+  intro l hl
+  by_contra hn
+  exact hl (hz l hn)
+
+theorem sum_realCoordinate (v : ComplexVector) :
+    (∑ i : Fin 3, PhysicalWaveSum.realCoordinate i (v i)) =
+      PhysicalCurlCovariance.realVector v := by
+  ext i
+  fin_cases i <;>
+    simp [Fin.sum_univ_succ, PhysicalWaveSum.realCoordinate_apply,
+      coordinateVector, PhysicalCurlCovariance.realVector_apply]
+
+/-- An unrestricted scalar-label sum becomes the finite real-part sum once
+the labels outside the specified finite set vanish. -/
+theorem real_finsum_eq_sum {α : Type*} (s : Finset α) (p : α → ℂ) (q : α → ℝ)
+    (hz : ∀ l, l ∉ s → p l = 0) (hreal : ∀ l, (p l).re = q l) :
+    (∑ᶠ l, p l).re = ∑ l ∈ s, q l := by
+  rw [finsum_eq_sum_of_zero_off s p hz]
+  change Complex.reCLM (∑ l ∈ s, p l) = _
+  rw [map_sum]
+  exact Finset.sum_congr rfl (fun l _ => hreal l)
+
+/-- Reconstructing the Euclidean vector after the componentwise label sums
+agrees exactly with summing the real vectors of the active labels. -/
+theorem realCoordinate_finsum_eq_sum {α : Type*} (s : Finset α)
+    (F : α → ComplexVector) (G : α → Space)
+    (hz : ∀ l, l ∉ s → F l = 0)
+    (hreal : ∀ l, PhysicalCurlCovariance.realVector (F l) = G l) :
+    (∑ i : Fin 3, PhysicalWaveSum.realCoordinate i (∑ᶠ l, F l i)) =
+      ∑ l ∈ s, G l := by
+  classical
+  have hs (i : Fin 3) : (∑ᶠ l, F l i) = ∑ l ∈ s, F l i :=
+    finsum_eq_sum_of_zero_off s (fun l => F l i) (fun l hl => congrFun (hz l hl) i)
+  calc
+    _ = ∑ i : Fin 3, ∑ l ∈ s, PhysicalWaveSum.realCoordinate i (F l i) := by
+      simp only [hs, map_sum]
+    _ = ∑ l ∈ s, ∑ i : Fin 3, PhysicalWaveSum.realCoordinate i (F l i) :=
+      Finset.sum_comm
+    _ = ∑ l ∈ s, G l := by
+      apply Finset.sum_congr rfl
+      intro l _
+      rw [sum_realCoordinate, hreal]
+
+end NavierStokes.SignedPhysicalSumCalculus
+
+end
+end
+
+end
+
+@[expose] public section
 
 noncomputable section
 

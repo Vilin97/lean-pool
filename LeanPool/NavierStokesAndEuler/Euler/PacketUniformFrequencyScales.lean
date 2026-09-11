@@ -9,9 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleSequence
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! Uniform frequency separation for polynomial source sizes. These
 costs can be placed in the same finite list as the geometric and pressure

@@ -9,9 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! Elementary bounds for the literal source parameters in (39).
 Polynomial factors include the growing base core constant and inverse

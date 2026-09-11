@@ -13,7 +13,6 @@ public import Mathlib.Topology.Algebra.Ring.Real
 meta import Lean.Meta.Tactic.NormCast
 import Mathlib.Analysis.Normed.Group.Continuity
 import Mathlib.Analysis.Normed.MulAction
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Rational auxiliary slots separated under bounded covering powers

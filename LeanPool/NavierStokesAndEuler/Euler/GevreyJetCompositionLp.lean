@@ -11,7 +11,6 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
 import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The L² composition estimate over an arbitrary measure space.  This
 version allows the base to be a periodic cylinder while the derivatives

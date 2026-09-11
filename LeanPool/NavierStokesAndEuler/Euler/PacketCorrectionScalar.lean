@@ -8,9 +8,6 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! Explicit scalar choices for the actual drift-aware correction budget.
 The error target is exp(-sqrt X), with X=k^ϑ in the source construction. -/

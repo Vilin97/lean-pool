@@ -13,14 +13,7 @@ public import Mathlib.Order.Interval.Finset.Nat
 import Mathlib.Algebra.BigOperators.GroupWithZero.Action
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.Module.Submodule.LinearMap
-import Mathlib.Tactic.Continuity.Init
 import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.Abs
-import Mathlib.Tactic.NormNum.DivMod
-import Mathlib.Tactic.NormNum.OfScientific
-import Mathlib.Tactic.NormNum.Pow
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Exact finite graded identities for the literal packet residual. -/
 

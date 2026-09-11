@@ -7,8 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 The Hilbert-space inverse used for the packet pressure equation.

@@ -7,12 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Normed.Operator.Basic
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.ContinuousFunctionalCalculus
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! Bounds for the surviving grades of the actual finite packet residual. -/
 

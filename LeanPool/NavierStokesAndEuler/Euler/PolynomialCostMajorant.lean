@@ -9,10 +9,10 @@ module
 public import Mathlib.Algebra.Polynomial.Degree.Defs
 public import Mathlib.Algebra.Polynomial.Eval.Defs
 public import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Algebra.Polynomial.Degree.Operations
 import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Tactic.Continuity.Init
 import Mathlib.Tactic.ContinuousFunctionalCalculus
 import Mathlib.Tactic.NormNum.BigOperators

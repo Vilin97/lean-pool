@@ -7,8 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The L² derivative-field construction is a contraction between the actual Banach spaces. -/
 

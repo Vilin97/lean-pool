@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Tactic.Positivity.Finset
 
 /-! A continuous Banach-valued path has its strong time derivative once
 that derivative is continuous and is verified through a separating family

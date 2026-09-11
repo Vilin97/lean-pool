@@ -9,14 +9,8 @@ module
 import Mathlib.Data.Nat.Choose.Cast
 public import Mathlib.Data.Real.Basic
 public import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Analysis.Normed.Field.Basic
 import Mathlib.Tactic.Bound
-import Mathlib.Tactic.ContinuousFunctionalCalculus
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 Exact weight identities used in the proposed packet's Gevrey estimates (18)--(19).

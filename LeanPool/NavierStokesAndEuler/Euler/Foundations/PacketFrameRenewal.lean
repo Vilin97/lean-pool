@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Packet Frame Renewal

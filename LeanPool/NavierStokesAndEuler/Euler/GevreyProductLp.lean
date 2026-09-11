@@ -14,7 +14,6 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
 import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
-import Mathlib.Tactic.NormNum.GCD
 
 /-! A genuine L² Gevrey product estimate, with the coefficient tensors
 bounded uniformly and the field tensors measured in L². It applies on

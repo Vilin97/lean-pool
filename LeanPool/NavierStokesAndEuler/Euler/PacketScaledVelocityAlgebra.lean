@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketRay
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Exact finite-dimensional algebra of the source ray/velocity scaling. -/
 

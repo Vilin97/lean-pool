@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedLipschitzFlow
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The actual bounded Lipschitz flow is jointly continuous in both times
 and the initial point. Reversing its two time arguments gives its genuine

@@ -10,13 +10,6 @@ public import Aesop.BuiltinRules
 public import Mathlib.Data.Nat.Notation
 public import Mathlib.Tactic.ToAdditive
 public import Mathlib.Tactic.ToDual
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Continuity.Init
-import Mathlib.Tactic.ContinuousFunctionalCalculus
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! Uniform shift room for the recursive packet estimates in the manuscript. -/
 

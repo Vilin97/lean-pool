@@ -9,7 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamel
 import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.Calculus.FDeriv.Linear
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Naturality of the actual Duhamel solution

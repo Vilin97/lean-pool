@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketRay
 import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Ray control for the genuine within-interval packet equations. -/
 

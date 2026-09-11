@@ -8,9 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! Numerical absorption in the sharp gradient and Hessian bounds,
 and the common localized coercivity guard for all nested horizons. -/

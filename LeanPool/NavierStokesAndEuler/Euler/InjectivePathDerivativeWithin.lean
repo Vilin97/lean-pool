@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 import LeanPool.NavierStokesAndEuler.Euler.InjectivePathDerivative
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Genuine closed-interval derivatives lift through injective bounded embeddings. -/
 

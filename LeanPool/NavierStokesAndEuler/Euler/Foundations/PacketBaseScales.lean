@@ -7,10 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Packet Base Scales

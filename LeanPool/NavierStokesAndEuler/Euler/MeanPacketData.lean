@@ -3,14 +3,15 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientTime
 public import LeanPool.NavierStokesAndEuler.Euler.MeanFrameCoefficients
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
 import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientFrame
-public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceStrongInverse
+public import LeanPool.NavierStokesAndEuler.Euler.MeanSourceVariationalInverse
+public import LeanPool.NavierStokesAndEuler.Euler.MeanStrongEquation
+import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryPhysicalSupport
 
 /-!
 # Concrete source data for the mean packet provider
@@ -20,8 +21,132 @@ pointwise inequalities and time identities. Its solver and strong evolution
 are the previously constructed actual variational inverse, not input fields.
 -/
 
+section
+
+/-! The actual strong mean inverse under the manuscript's spatial hypotheses. -/
+
+section
+
+/-!
+# Strong regularity of the genuinely constructed mean inverse
+
+The result applies the strong-coordinate theorem to the actual coercive solve.
+The input boundary inequality still has to be supplied by the concrete cutoff
+operator and harmonic localization. No solution, momentum equation, acceleration,
+or initial velocity condition is included in the hypotheses.
+-/
+
 @[expose] public section
 
+noncomputable section
+
+namespace EulerMeanVariationalInverse
+
+open Set InnerProductSpace EulerTimeLp EulerTerminalTimePrimitive EulerMeanSolenoidal
+  EulerVolterraConvolution
+
+/-- The actual bounded mean solution operator produces a strong mean evolution
+with the literal projected equation and original initial velocity condition. -/
+theorem meanSolver_strong (T : ℝ) (hT : 0 ≤ T)
+    (FInv F F₁ F₂ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
+    (M0 A : L2 →L[ℝ] L2) (L K B : ℝ) (hK : 0 ≤ K) (hB : 0 ≤ B)
+    (hFInv₀ : FInv ⟨0, le_rfl, hT⟩ = ContinuousLinearMap.id ℝ L2)
+    (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K * ‖z‖ ^ 2)
+    (hboundary : ∀ z : L2, z ∈ solenoidalSpace →
+      -B*‖z‖^2 ≤ ⟪M0 z, z⟫_ℝ+L*⟪A z, z⟫_ℝ)
+    (hsmall : K*(T^2/2)+B*T ≤ 1/2)
+    (hF : ∀ t : Icc (0 : ℝ) T,
+      HasDerivWithinAt (extendPath T hT F) (F₁ t) (Icc (0 : ℝ) T) t)
+    (hF₁ : ∀ t : Icc (0 : ℝ) T,
+      HasDerivWithinAt (extendPath T hT F₁) (F₂ t) (Icc (0 : ℝ) T) t)
+    (hInv : ∀ (t : Icc (0 : ℝ) T) (x : L2), FInv t (F t x) = x)
+    (hRight : ∀ (t : Icc (0 : ℝ) T) (x : L2), F t (FInv t x) = x)
+    (hF₁₀ : F₁ ⟨0, le_rfl, hT⟩ = M0)
+    (hODE : ∀ t, F₂ t = -(H t).comp (F t))
+    (hAσ : ∀ z : L2, z ∈ solenoidalSpace → A z ∈ solenoidalSpace)
+    (f : TimeLp T L2) :
+    Nonempty (StrongMeanEvolution T hT FInv F F₁ A L
+      (meanSolver T hT FInv H M0 A L K B hK hB hFInv₀ hH hboundary hsmall f) f) :=
+  meanWeakSolution_strong T hT FInv F F₁ F₂ H M0 A L hF hF₁ hInv hRight hFInv₀ hF₁₀ hODE hAσ
+    (meanSolver T hT FInv H M0 A L K B hK hB hFInv₀ hH hboundary hsmall f) f
+    (meanSolver_weak T hT FInv H M0 A L K B hK hB hFInv₀ hH hboundary hsmall f)
+
+end EulerMeanVariationalInverse
+
+end
+end
+
+end
+
+@[expose] public section
+
+noncomputable section
+
+namespace EulerMeanSourceInverse
+
+open MeasureTheory Set InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal
+  EulerMeanHarmonic EulerMeanBoundary EulerLiftedPressure EulerTimeLp
+  EulerMeanVariationalInverse EulerVolterraConvolution
+open scoped NNReal
+
+/-- The constructed source mean inverse has H² solenoidal coordinates and the
+original compact-support-producing initial velocity condition. -/
+theorem sourceMeanSolver_strong (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 < ℓ)
+    (M : Space → Space →L[ℝ] Space) (hM : AEStronglyMeasurable M volume)
+    (C : ℝ≥0) (hC : ∀ x, ‖M x‖ ≤ C)
+    (Be Bc L r : ℝ) (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc)
+    (hL : boundaryLocalizationC1 * Bc ≤ L) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4)
+    (hext : ∀ x, r ≤ ‖ℓ • x‖ → ∀ v : Space, -Be * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
+    (hcore : ∀ x, ‖ℓ • x‖ < r → ∀ v : Space, -Bc * ‖v‖^2 ≤ ⟪M x v, v⟫_ℝ)
+    (FInv F F₁ F₂ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (K : ℝ) (hK : 0 ≤ K)
+    (hF0 : FInv ⟨0, le_rfl, hT⟩ = ContinuousLinearMap.id ℝ L2)
+    (hH : ∀ t z, ⟪H t z, z⟫_ℝ ≤ K*‖z‖^2)
+    (hsmall : K*(T^2/2) + Be*T + boundaryLocalizationC2*Bc*r^3*T ≤ 1/2)
+    (hF : ∀ t : Icc (0 : ℝ) T,
+      HasDerivWithinAt (extendPath T hT F) (F₁ t) (Icc (0 : ℝ) T) t)
+    (hF₁ : ∀ t : Icc (0 : ℝ) T,
+      HasDerivWithinAt (extendPath T hT F₁) (F₂ t) (Icc (0 : ℝ) T) t)
+    (hInv : ∀ (t : Icc (0 : ℝ) T) (x : L2), FInv t (F t x) = x)
+    (hRight : ∀ (t : Icc (0 : ℝ) T) (x : L2), F t (FInv t x) = x)
+    (hF₁₀ : F₁ ⟨0, le_rfl, hT⟩ = coefficientOperator M hM C hC)
+    (hODE : ∀ t, F₂ t = -(H t).comp (F t)) (f : TimeLp T L2) :
+    Nonempty (StrongMeanEvolution T hT FInv F F₁ (boundaryOperator (scaledCutoff ℓ hℓ)) L
+      (sourceMeanSolver T hT ℓ hℓ M hM C hC Be Bc L r hBe hBc hL hr hrquarter
+        hext hcore FInv H K hK hF0 hH hsmall f) f) :=
+  meanSolver_strong T hT FInv F F₁ F₂ H (coefficientOperator M hM C hC)
+    (boundaryOperator (scaledCutoff ℓ hℓ)) L K (effectiveNegativeBound Be Bc r)
+    hK (effectiveNegativeBound_nonneg Be Bc r hBe hBc hr) hF0 hH
+    (scaled_mean_boundary_lower_bound ℓ hℓ M hM C hC Be Bc L r hBe hBc hL hr hrquarter hext hcore)
+    (source_smallness T K Be Bc r hsmall)
+    hF hF₁ hInv hRight hF₁₀ hODE
+    (fun z _ => boundaryOperator_solenoidal (scaledCutoff ℓ hℓ) z) f
+
+theorem sourceStrong_initial_ae_support (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 < ℓ)
+    (FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (L : ℝ) (u f : TimeLp T L2)
+    (S : StrongMeanEvolution T hT FInv F F₁ (boundaryOperator (scaledCutoff ℓ hℓ)) L u f) :
+    ∀ᵐ x ∂volume, 2 < ‖ℓ • x‖ → (S.velocity 0 : L2) x = 0 := by
+  have H := scaledBoundary_multiple_zero_outside ℓ hℓ L (S.label 0 : L2)
+  rw [← S.initial_velocity] at H
+  exact H
+
+/-- A continuous representative of the actual initial mean velocity is compactly supported. -/
+theorem sourceStrong_initial_compact (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 < ℓ)
+    (FInv F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (L : ℝ) (u f : TimeLp T L2)
+    (S : StrongMeanEvolution T hT FInv F F₁ (boundaryOperator (scaledCutoff ℓ hℓ)) L u f)
+    (b : Space → Space) (hb : Continuous b) (hrep : b =ᵐ[volume] (S.velocity 0 : L2)) :
+    HasCompactSupport b := by
+  apply scaledBoundary_continuous_compact ℓ hℓ L (S.label 0 : L2) b hb
+  rw [← S.initial_velocity]
+  exact hrep
+
+end EulerMeanSourceInverse
+
+end
+end
+
+end
+
+@[expose] public section
 
 noncomputable section
 

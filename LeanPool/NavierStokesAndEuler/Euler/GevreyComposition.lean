@@ -9,7 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionPartitions
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.ContDiff.Comp
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Composition preserves the Gevrey-two factorial bound

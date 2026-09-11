@@ -9,9 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketBaseGuardScales
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The literal activation times and nested horizons in (38). The same
 positive initial time interval is available to every finite packet state. -/

@@ -10,13 +10,8 @@ public import Mathlib.Data.Real.Basic
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 public import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 meta import Lean.Meta.Tactic.NormCast
 import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 Explicit numerical estimates for the factorial majorants used in the proposed

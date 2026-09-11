@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 import Mathlib.Topology.MetricSpace.Contracting
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Banach's theorem applied to the actual singular Volterra integral on continuous paths. -/
 

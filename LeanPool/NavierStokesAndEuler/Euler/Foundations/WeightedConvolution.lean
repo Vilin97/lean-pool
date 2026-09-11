@@ -9,10 +9,10 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketWeights
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
 import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Tactic.Continuity.Init
 import Mathlib.Tactic.Measurability.Init
 import Mathlib.Tactic.NormNum.BigOperators

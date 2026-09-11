@@ -8,7 +8,6 @@ module
 
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-! A genuine singular-kernel Volterra convolution on continuous Banach-valued paths. -/
 

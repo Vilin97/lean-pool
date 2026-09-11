@@ -9,7 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameStability
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketFrameRenewal
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Packet Frame Quantitative

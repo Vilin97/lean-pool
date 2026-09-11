@@ -13,7 +13,6 @@ import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveParameter
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Actual all-order estimates for a coercive inverse

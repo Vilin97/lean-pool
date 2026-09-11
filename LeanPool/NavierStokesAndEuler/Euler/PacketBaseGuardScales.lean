@@ -9,10 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleSequence
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBaseScales
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The literal base horizon and core radius satisfy the local-existence
 and localized coercivity guards after the final choice of the base scale. -/

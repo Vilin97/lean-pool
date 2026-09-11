@@ -12,8 +12,6 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricKernelBounds
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
 import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Normed.Operator.Prod
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 import Mathlib.Topology.Algebra.Module.ModuleTopology
 
 /-!

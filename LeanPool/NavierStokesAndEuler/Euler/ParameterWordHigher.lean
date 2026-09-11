@@ -9,11 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordGevrey
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import LeanPool.NavierStokesAndEuler.Euler.ParameterWordCalculus
-import Mathlib.Tactic.ContinuousFunctionalCalculus
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! Smoothness and exact concatenation of genuine directional word derivatives. -/
 

@@ -9,7 +9,6 @@ module
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 public import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Actual time derivatives of uniformly continuous bounded fields

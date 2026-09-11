@@ -8,9 +8,6 @@ module
 
 import Mathlib.Tactic.NormNum.RealSqrt
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The source's exponential tail follows quantitatively from its polynomial grade base. -/
 

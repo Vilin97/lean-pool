@@ -11,7 +11,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
 public import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The constructed Hilbert operator for the transverse displacement form

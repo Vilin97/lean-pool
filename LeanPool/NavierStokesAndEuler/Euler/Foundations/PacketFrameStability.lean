@@ -9,7 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketRay
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Packet Frame Stability

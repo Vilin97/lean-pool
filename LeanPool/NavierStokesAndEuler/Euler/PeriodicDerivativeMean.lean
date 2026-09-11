@@ -9,7 +9,6 @@ module
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Tactic.Positivity.Finset
 
 /-! The mean of a genuine derivative of a periodic field is zero. -/
 

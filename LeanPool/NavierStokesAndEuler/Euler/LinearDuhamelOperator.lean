@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamel
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeIntegral
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The actual bounded solution and Volterra inverse

@@ -11,7 +11,6 @@ public import Mathlib.Analysis.Calculus.Gradient.Basic
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Lagrangian

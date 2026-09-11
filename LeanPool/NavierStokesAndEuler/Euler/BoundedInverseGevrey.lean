@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Genuine derivative estimates for bounded inverses on normed spaces

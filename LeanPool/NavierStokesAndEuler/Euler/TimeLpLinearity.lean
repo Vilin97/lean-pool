@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
-import Mathlib.Tactic.Positivity.Finset
 
 /-! The actual continuous-path embedding as a bounded linear time-space map. -/
 

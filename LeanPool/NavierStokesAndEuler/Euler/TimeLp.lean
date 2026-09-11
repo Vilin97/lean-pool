@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Actual Bochner L² time spaces and continuous-path embeddings used by maximal regularity. -/
 

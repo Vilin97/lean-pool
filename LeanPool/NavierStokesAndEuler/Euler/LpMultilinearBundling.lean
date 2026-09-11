@@ -9,8 +9,6 @@ module
 public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
 public import Mathlib.Analysis.Normed.Operator.NormedSpace
 public import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.NormNum.GCD
 
 /-! Pointwise multilinear L² fields define genuine bounded multilinear maps into L². -/
 

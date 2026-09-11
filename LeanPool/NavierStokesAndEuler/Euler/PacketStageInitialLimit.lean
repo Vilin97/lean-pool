@@ -3,20 +3,149 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSmoothLimit
-import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleShift
-import LeanPool.NavierStokesAndEuler.Euler.PacketStageContradiction
+public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
+public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFieldPhysicalSobolev
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
+public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
+import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVaryingHorizon
+import LeanPool.NavierStokesAndEuler.Euler.PacketStageGrowth
+import LeanPool.NavierStokesAndEuler.Euler.ParentOrdinaryEvolution
+import LeanPool.NavierStokesAndEuler.Euler.SmoothL2Series
 
 /-! The literal initial increments of an actual stage family have one
 smooth L² limit in every Sobolev order. The finite exceptional prefix
 is retained in the initial velocity of stage one. -/
 
+section
+
+/-! Any actual family of packet stages with convergent H³ initial data
+excludes an ordinary Euler evolution on the base horizon. Each stage is
+compared only on its own genuine horizon. -/
+
 @[expose] public section
 
+noncomputable section
+
+namespace EulerPacketInduction.Stage
+
+open Set Filter EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
+  EulerPhysicalL2Scaling EulerOrdinarySobolev EulerSmoothL2Series
+  EulerPacketInductionScales EulerPacketSourceScaleActual EulerPacketBaseGuardScales
+open scoped Topology
+
+variable {c B : ℝ} {S : Scales c B} (P : ∀ n, Stage S n) (u₀ : Space → Space)
+  (hinit : Tendsto (fun n => derivativeSum 3
+    ((fun x => (P n).state.evolution.velocity (0, x)) - u₀)) atTop (𝓝 0))
+
+include P hinit
+
+theorem false_of_evolution
+    (U : Evolution (baseHorizon S.J S.X) (baseHorizon_pos S.J S.j_one S.x_pos).le)
+    (hU₀ : (U.velocity ⟨0, le_rfl, (baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field = u₀) :
+    False := by
+  let durations : ℕ → ℝ := fun n => (P n).parent.T
+  let hD : ∀ n, 0 ≤ durations n := fun n => (P n).parent.T_pos.le
+  let hDT : ∀ n, durations n ≤ baseHorizon S.J S.X := fun n => (P n).horizon_le
+  let V : ∀ n, Evolution (durations n) (hD n) :=
+    fun n => (P n).state.regularity.ordinaryEvolution
+  let times : ∀ n, Icc (0 : ℝ) (durations n) :=
+    fun n => ⟨(P n).time,(P n).time_nonneg,(P n).time_lt.le⟩
+  have hfield (n : ℕ) :
+      (((U.restrictTime (durations n) (hD n) (hDT n)).difference (V n))
+        ⟨0,le_rfl,hD n⟩).field = (fun x => (P n).state.evolution.velocity (0,x))-u₀ := by
+    funext x
+    rw [Evolution.difference,fieldSub_field]
+    change ((P n).state.regularity.velocity ⟨0,le_rfl,(P n).parent.T_pos.le⟩).field x -
+        (U.velocity ⟨0,le_rfl,(baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field x = _
+    rw [hU₀,← (P n).state.regularity.velocity_match ⟨0,le_rfl,(P n).parent.T_pos.le⟩ x]
+    rfl
+  have hnorm (n : ℕ) :
+      tensorNorm 3 ((U.restrictTime (durations n) (hD n) (hDT n)).difference
+        (V n) ⟨0,le_rfl,hD n⟩) =
+      derivativeSum 3 ((fun x => (P n).state.evolution.velocity (0,x))-u₀) := by
+    rw [tensorNorm_eq_derivativeSum,hfield]
+  have hlim : Tendsto (fun n => tensorNorm 3
+      ((U.restrictTime (durations n) (hD n) (hDT n)).difference (V n) ⟨0,le_rfl,hD n⟩))
+      atTop (𝓝 0) := by
+    simpa only [hnorm] using hinit
+  have hno := U.no_gradient_escape_of_initial_tendsto_varying durations hD hDT V hlim times
+  apply hno
+  have hactual (n : ℕ) : ((V n).velocity (times n)).field =
+      fun x => (P n).state.evolution.velocity ((P n).time,x) :=
+    funext (fun x => ((P n).state.regularity.velocity_match (times n) x).symm)
+  have heq : (fun n => ‖fderiv ℝ ((V n).velocity (times n)).field 0‖) =
+      fun n => (P n).activationGradient := by
+    funext n
+    rw [hactual]
+    rfl
+  rw [heq]
+  exact gradient_atTop P
+
+theorem no_euler_evolution_of_initial_H3 :
+    ¬ ∃ U : Evolution (baseHorizon S.J S.X) (baseHorizon_pos S.J S.j_one S.x_pos).le,
+      (U.velocity ⟨0,le_rfl,(baseHorizon_pos S.J S.j_one S.x_pos).le⟩).field=u₀ := by
+  rintro ⟨U,hU⟩
+  exact false_of_evolution P u₀ hinit U hU
+
+end EulerPacketInduction.Stage
+
+end
+end
+
+end
+
+section
+
+/-! Exact reindexing of the prescribed scale sequence after finitely many
+exceptional initial stages. No new choice of asymptotic scales is made. -/
+
+@[expose] public section
+
+noncomputable section
+
+namespace EulerPacketSourceScaleSequence
+
+open EulerPacketSourceScaleChoice EulerPacketUniformFrequencyScales
+
+theorem scaleSequence_shift (J : ℕ) (X : ℝ) (r n : ℕ) :
+    scaleSequence (J+r) (scaleSequence J X r) n=scaleSequence J X (r+n) := by
+  induction n with
+  | zero => simp only [scaleSequence_zero,Nat.add_zero]
+  | succ n ih =>
+    rw [scaleSequence_succ,ih,show r+(n+1)=(r+n)+1 by omega,scaleSequence_succ,Nat.add_assoc]
+
+theorem frequency_shift (J : ℕ) (X : ℝ) (r n : ℕ) :
+    frequency (J+r) (scaleSequence J X r) n=frequency J X (r+n) := by
+  simp only [frequency,scaleSequence_shift,Nat.add_assoc]
+
+theorem supportScale_shift (J : ℕ) (X : ℝ) (r n : ℕ) :
+    supportScale (J+r) (scaleSequence J X r) n=supportScale J X (r+n) := by
+  simp only [supportScale,scaleSequence_shift,Nat.add_assoc]
+
+theorem spike_shift (J : ℕ) (X : ℝ) (r n : ℕ) :
+    spike (J+r) (scaleSequence J X r) n=spike J X (r+n) := by
+  simp only [spike,scaleSequence_shift,Nat.add_assoc]
+
+theorem parameterEnvelope_shift (J : ℕ) (hJ : 1 ≤ J) (C c : ℝ) (p q : ℕ)
+    (X : ℝ) (r n : ℕ) :
+    parameterEnvelope (J+r) C c p q (scaleSequence J X r) n =
+      parameterEnvelope J C c p q X (r+n) := by
+  have he : J+r-1+n=J-1+(r+n) := by omega
+  simp only [parameterEnvelope,scaleSequence_shift,Nat.add_assoc,he]
+
+end EulerPacketSourceScaleSequence
+
+end
+end
+
+end
+
+@[expose] public section
 
 noncomputable section
 

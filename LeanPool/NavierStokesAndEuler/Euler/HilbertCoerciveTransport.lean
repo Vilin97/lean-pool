@@ -7,8 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Coercive operator transport between Hilbert models

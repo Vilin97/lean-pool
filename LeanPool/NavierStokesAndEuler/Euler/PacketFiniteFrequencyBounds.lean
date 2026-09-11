@@ -8,9 +8,6 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! Frequency guards turn the finite geometric remainder into fixed polynomial bounds. -/
 

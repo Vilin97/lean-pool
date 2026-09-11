@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Actual bounded time-dependent linear operators on Bochner L² time fields. -/
 

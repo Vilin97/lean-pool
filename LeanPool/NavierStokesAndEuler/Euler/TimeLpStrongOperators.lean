@@ -10,7 +10,6 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Genuine strong operator approximation on Bochner L² time spaces. -/
 

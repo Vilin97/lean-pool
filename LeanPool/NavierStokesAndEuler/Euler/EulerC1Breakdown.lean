@@ -3,12 +3,13 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.EulerFiniteLifespan
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerMaximal
 import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerContinuation
+public import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteLifespan
+import LeanPool.NavierStokesAndEuler.Euler.PacketFirstStageSupport
+public import LeanPool.NavierStokesAndEuler.Euler.PacketStageInitialLimit
 
 /-! C¹ breakdown for the concrete compactly supported datum. The
 infinite-limsup statement is expressed directly: after every time below
@@ -16,8 +17,124 @@ the maximal time, the actual gradient supremum exceeds every real bound.
 The norms are bounded-continuous-function norms at individual times,
 not totalized real L∞ seminorms of unverified measurable fields. -/
 
+section
+
+/-! The full smooth initial datum retains the common support of its
+finite initial base and its actual summable packet increments. -/
+
 @[expose] public section
 
+noncomputable section
+
+namespace EulerPacketInduction.Stage
+
+open Set EulerSmoothLimit EulerPacketInductionScales EulerPacketLowConstants
+  EulerParentNeighborThreshold EulerPacketSourceScaleChoice EulerPacketSourceScaleSequence
+  EulerNormalPacketParameters EulerPacketInitial EulerLpTranslation
+  EulerLpTranslation.SmoothL2Field
+
+variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B} (P : ∀ n, Stage S n)
+  (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
+
+theorem initialDataLimit_support
+    (hbase : tsupport (initialBase P).field ⊆ Metric.closedBall 0 2) :
+    tsupport (initialDataLimit P hq hB).field ⊆ Metric.closedBall 0 2 := by
+  let tail := initialLimit (initialTailInput P hq hB) (S.J+1)
+    (by have h := S.stage_large; omega) (sourceConstant 4) 320 (sourceConstant_pos 4)
+    (by norm_num) 20 1000 (scaleSequence S.J S.X 1) (S.sequence_one 1)
+    (initialTail_parameter P hq hB) (initialTail_scale P hq hB) (initialTail_sigma P hq hB)
+    (initialTail_four (S := S)) (initialTail_frequency P hq hB)
+  have htail : tsupport tail.field ⊆ Metric.closedBall 0 2 :=
+    initialLimit_support (initialTailInput P hq hB) (S.J+1)
+      (by have h := S.stage_large; omega) (sourceConstant 4) 320 (sourceConstant_pos 4)
+      (by norm_num) 20 1000 (scaleSequence S.J S.X 1) (S.sequence_one 1)
+      (initialTail_parameter P hq hB) (initialTail_scale P hq hB) (initialTail_sigma P hq hB)
+      (initialTail_four (S := S)) (initialTail_frequency P hq hB)
+  change tsupport ((initialBase P).field+tail.field) ⊆ Metric.closedBall 0 2
+  exact (tsupport_add _ _).trans (union_subset hbase htail)
+
+theorem initialDataLimit_compact
+    (hbase : tsupport (initialBase P).field ⊆ Metric.closedBall 0 2) :
+    HasCompactSupport (initialDataLimit P hq hB).field :=
+  (isCompact_closedBall (0 : Space) 2).of_isClosed_subset (isClosed_tsupport _)
+    (initialDataLimit_support P hq hB hbase)
+
+theorem initialDataLimit_support_of_physical
+    (hbase : tsupport (fun x => (P 1).state.evolution.velocity (0, x)) ⊆ Metric.closedBall 0 2) :
+    tsupport (initialDataLimit P hq hB).field ⊆ Metric.closedBall 0 2 := by
+  apply initialDataLimit_support P hq hB
+  have he : (initialBase P).field=(fun x => (P 1).state.evolution.velocity (0, x)) :=
+    funext (fun x => ((P 1).state.regularity.velocity_match (P 1).parent.zeroTime x).symm)
+  rwa [he]
+
+end EulerPacketInduction.Stage
+
+end
+end
+
+end
+
+section
+
+/-! A compactly supported, smooth, divergence-free initial velocity
+whose ordinary smooth Euler solutions have a finite maximal horizon.
+The separate continuation and vorticity criteria are not asserted here. -/
+
+@[expose] public section
+
+noncomputable section
+
+namespace EulerPacketInduction
+
+open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
+  EulerOrdinarySobolev EulerPacketBaseGuardScales
+open scoped ContDiff
+
+theorem initialDatum_support : tsupport initialDatum.field ⊆ Metric.closedBall 0 2 :=
+  Stage.initialDataLimit_support_of_physical packets le_rfl le_rfl
+    (constructionScales.firstForwardStage_initial_support le_rfl le_rfl)
+
+theorem initialDatum_compact : HasCompactSupport initialDatum.field :=
+  (isCompact_closedBall (0 : Space) 2).of_isClosed_subset (isClosed_tsupport _) initialDatum_support
+
+theorem lifespan_le_one : lifespan.duration ≤ 1 :=
+  lifespan_le_base.trans constructionScales.time_small
+
+/-- Has smooth euler solution, given by `∃ hT : 0 < T, ∃ U : Evolution T hT.le, (U.velocity
+⟨0,le_rfl,hT.le⟩).field=u₀`. -/
+def HasSmoothEulerSolution (u₀ : Space → Space) (T : ℝ) : Prop :=
+  ∃ hT : 0 < T, ∃ U : Evolution T hT.le,
+    (U.velocity ⟨0,le_rfl,hT.le⟩).field=u₀
+
+theorem hasSmoothEulerSolution_iff (A : SmoothL2Field Space) (T : ℝ) :
+    HasSmoothEulerSolution A.field T ↔ HasEulerEvolution A T := by
+  constructor
+  · rintro ⟨hT,U,hU⟩
+    exact ⟨hT,U,field_ext hU⟩
+  · rintro ⟨hT,U,hU⟩
+    exact ⟨hT,U,congrArg SmoothL2Field.field hU⟩
+
+theorem exists_compact_smooth_finite_lifespan :
+    ∃ u₀ : Space → Space, ContDiff ℝ ∞ u₀ ∧ HasCompactSupport u₀ ∧
+      (∀ x, divergence u₀ x=0) ∧
+      ∃ T : ℝ, 0 < T ∧ T ≤ 1 ∧
+        (∀ t : ℝ, 0 < t → t < T → HasSmoothEulerSolution u₀ t) ∧
+        (∀ t : ℝ, T < t → ¬ HasSmoothEulerSolution u₀ t) := by
+  refine ⟨initialDatum.field,initialDatum.smooth,initialDatum_compact,initialDatum_divergence,
+    lifespan.duration,lifespan.duration_pos,lifespan_le_one,?_,?_⟩
+  · intro t ht htT
+    exact (hasSmoothEulerSolution_iff initialDatum t).mpr (lifespan.shorter t ht htT)
+  · intro t hTt h
+    exact lifespan.maximal t hTt ((hasSmoothEulerSolution_iff initialDatum t).mp h)
+
+end EulerPacketInduction
+
+end
+end
+
+end
+
+@[expose] public section
 
 noncomputable section
 

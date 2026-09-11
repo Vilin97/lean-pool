@@ -10,10 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCorrectionScalar
 public import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The literal source truncation floor(k^ϑ), ϑ=10⁻⁶, meets the packet
 and correction guards from finitely many fixed-cost bounds. -/

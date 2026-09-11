@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.LinearDuhamelOperator
 public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeWeight
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Duhamel operators in the source's time profile

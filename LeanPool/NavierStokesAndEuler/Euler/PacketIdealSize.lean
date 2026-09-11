@@ -10,7 +10,6 @@ public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Uniform comparison of ideal primary sizes before target.  This follows

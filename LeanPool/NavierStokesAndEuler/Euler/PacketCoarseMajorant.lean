@@ -9,13 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
 import LeanPool.NavierStokesAndEuler.Euler.PacketMajorantShift
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 meta import Lean.Meta.Tactic.NormCast
 import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A polynomial base controls every surviving finite packet grade after the final factorial split.
 -/

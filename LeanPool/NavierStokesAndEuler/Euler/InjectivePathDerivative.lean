@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.IntegralPathLimit
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Lifting an actual continuous evolution equation through an injective bounded linear map. -/
 

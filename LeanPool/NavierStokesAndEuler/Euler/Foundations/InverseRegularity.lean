@@ -10,7 +10,6 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CoerciveProjection
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Inverse Regularity

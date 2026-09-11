@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.GraphPullback
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
 import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Tactic.Measurability.Init
 
 /-! Actual differentiation through the oscillating phase graph and a parent
 flow. These identities convert the normalized lifted equation into the

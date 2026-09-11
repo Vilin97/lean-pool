@@ -10,10 +10,6 @@ public import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Analysis.Calculus.MeanValue
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A short-interval estimate for actual differentiable trajectories.
 The proof uses the supremum norm and the mean value inequality, so the

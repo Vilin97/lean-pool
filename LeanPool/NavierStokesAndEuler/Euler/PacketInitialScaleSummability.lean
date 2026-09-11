@@ -9,9 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyScales
 import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParameterScales
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Positivity.Finset
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! The two literal initial-increment majorants are summable on the
 source scale sequence. The mean retains its full inverse-frequency square. -/

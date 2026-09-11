@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Tactic.Positivity.Finset
 
 /-! The normalized angular primitive reverses joint reflection parity. -/
 

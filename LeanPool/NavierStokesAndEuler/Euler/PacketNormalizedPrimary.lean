@@ -10,7 +10,6 @@ import Mathlib.Analysis.Calculus.Deriv.Inv
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 Differentiating the actual normalized ray and primary velocity.  The rates

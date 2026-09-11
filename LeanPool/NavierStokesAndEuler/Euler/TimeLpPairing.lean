@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 public import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Actual integral pairings and their strong limits for metric energy passage. -/
 

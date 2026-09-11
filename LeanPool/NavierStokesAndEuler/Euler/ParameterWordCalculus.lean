@@ -10,11 +10,6 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import LeanPool.NavierStokesAndEuler.Euler.ParameterWordGevrey
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
-import Mathlib.Tactic.ContinuousFunctionalCalculus
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 # Actual directional word calculus without changing radius

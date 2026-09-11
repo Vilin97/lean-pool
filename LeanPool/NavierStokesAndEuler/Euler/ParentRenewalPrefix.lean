@@ -7,11 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceScaleGuards
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Algebra.EuclideanDomain.Basic
 import Mathlib.Algebra.EuclideanDomain.Field
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-! Finite-prefix control of the actual coupling recurrence. Each step
 may use only the bounds already proved on its preceding prefix. -/

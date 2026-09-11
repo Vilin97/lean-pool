@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.Tactic.Measurability.Init
 
 /-! Quantitative endpoint selection in the activation step, equations (26)–(27). -/
 

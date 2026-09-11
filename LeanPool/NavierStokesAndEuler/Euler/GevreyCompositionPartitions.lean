@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # A factorial-square bound for the partitions in Faà di Bruno's formula

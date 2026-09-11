@@ -9,13 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCoarseMajorant
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 meta import Lean.Meta.Tactic.NormCast
 import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-! A single polynomial base absorbs the finite residual multiplicity and
 the fixed profile envelope, before the geometric tail is summed. -/

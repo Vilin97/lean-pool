@@ -8,7 +8,6 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.QuadraticCoefficients
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
-import Mathlib.Tactic.Positivity.Finset
 
 /-! The actual pressure-projected quadratic source passes to uniform Sobolev path limits. -/
 

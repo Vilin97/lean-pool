@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Exact core and carrier scaling

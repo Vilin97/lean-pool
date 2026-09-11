@@ -10,10 +10,7 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Packet Scale Geometry

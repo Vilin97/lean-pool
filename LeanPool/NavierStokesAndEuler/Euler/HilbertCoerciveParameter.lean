@@ -11,7 +11,6 @@ public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.InverseRegularity
 import Mathlib.Analysis.Calculus.ContDiff.Operations
 import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Parameter regularity of the genuinely constructed coercive inverse

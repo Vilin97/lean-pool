@@ -9,7 +9,6 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 public import Mathlib.MeasureTheory.Function.L2Space
 import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Strong Bochner energy passage on every genuine subinterval of the original time interval. -/
 

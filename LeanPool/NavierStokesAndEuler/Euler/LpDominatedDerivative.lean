@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpDerivativeMap
 public import Mathlib.Analysis.Calculus.FDeriv.Defs
 import LeanPool.NavierStokesAndEuler.Euler.LpDominatedConvergence
 import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Differentiating an actual L²-valued family by dominated ordinary derivatives. -/
 

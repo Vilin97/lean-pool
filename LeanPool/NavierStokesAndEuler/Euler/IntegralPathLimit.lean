@@ -10,7 +10,6 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Positivity.Finset
 
 /-! Passing genuine Banach-valued evolution equations through uniform time-path limits. -/
 

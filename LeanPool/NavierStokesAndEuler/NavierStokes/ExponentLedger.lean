@@ -8,10 +8,10 @@ module
 
 public import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Ring.RingNF
 import Mathlib.Tactic.NormNum.Abs
 import Mathlib.Tactic.NormNum.DivMod
 import Mathlib.Tactic.NormNum.OfScientific
-import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Arithmetic of the residual-order ledger

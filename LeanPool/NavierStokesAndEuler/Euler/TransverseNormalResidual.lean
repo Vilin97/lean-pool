@@ -7,7 +7,6 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Recovering the transverse normal residual

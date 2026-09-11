@@ -7,15 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
-import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
 import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Continuity.Init
-import Mathlib.Tactic.ContinuousFunctionalCalculus
-import Mathlib.Tactic.Measurability.Init
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.NormNum.NatFactorial
 
 /-!
 # Absorbing a fixed factorial shift into a coefficient radius
