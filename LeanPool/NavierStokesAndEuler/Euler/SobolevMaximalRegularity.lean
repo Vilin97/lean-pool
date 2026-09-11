@@ -285,7 +285,8 @@ theorem H2_norm_sq_le (u : SobolevSpace period 2) :
   by_cases hlow : n ≤ 1
   · have hnorm : ‖u.val ⟨⟨n, hn⟩, w⟩‖ ≤ ‖truncateOperator period 1 u‖ :=
       word_norm_le period (truncateOperator period 1 u) ⟨⟨n, Nat.lt_succ_of_le hlow⟩, w⟩
-    nlinarith [norm_nonneg (u.val ⟨⟨n, hn⟩, w⟩), norm_nonneg (truncateOperator period 1 u)]
+    exact (pow_le_pow_left₀ (norm_nonneg _) hnorm 2).trans
+      (le_add_of_nonneg_right hh)
   · have hn2 : n = 2 := by omega
     subst n
     exact (second_word_sq_le_hessian period u w).trans (le_add_of_nonneg_left (sq_nonneg _))
@@ -390,7 +391,7 @@ theorem gradientEnergy_bound (u : SobolevSpace period 1) : gradientEnergy period
     _ ≤ ∑ _i : Fin 4, ‖u‖^2 := Finset.sum_le_sum fun i _ => by
       have h := (value_norm_le period (derivativeOperator period 0 i u)).trans
           (derivativeOperator_bound period i u)
-      nlinarith [norm_nonneg (value period (derivativeOperator period 0 i u)), norm_nonneg u]
+      exact pow_le_pow_left₀ (norm_nonneg _) h 2
     _ = _ := by simp
 
 omit [Fact (0 < period)] in
@@ -417,8 +418,7 @@ theorem path_H2_point_bound (T : ℝ) (hT : 0 ≤ T) (u : C(Icc (0 : ℝ) T, Sob
   have hl := extendPath_norm_le T hT low t
   change ‖restrictOperator period (by norm_num : 1 ≤ 3) (extendPath T hT u t)‖ ≤ ‖low‖ at hl
   change _ ≤ ‖low‖^2 + _
-  nlinarith [norm_nonneg (restrictOperator period (by
-      norm_num : 1 ≤ 3) (extendPath T hT u t)), norm_nonneg low]
+  exact h.trans (add_le_add (pow_le_pow_left₀ (norm_nonneg _) hl 2) le_rfl)
 
 /-- The actual H² time norm is bounded by the H¹ path norm and the genuine Laplacian time integral.
 -/
@@ -464,8 +464,8 @@ theorem heat_time_H2_bound (T : ℝ) (hT : 0 ≤ T) (ν : ℝ) (hν : 0 < ν)
   change ‖restrictOperator period (by norm_num : 1 ≤ 3) (extendPath T hT u 0)‖ ≤ ‖low‖ at hl
   have hinit : gradientEnergy period (restrictOperator period (by
       norm_num : 1 ≤ 3) (extendPath T hT u 0)) ≤ 4*‖low‖^2 := by
-    nlinarith [norm_nonneg (restrictOperator period (by
-        norm_num : 1 ≤ 3) (extendPath T hT u 0)), norm_nonneg low]
+    exact hb.trans (mul_le_mul_of_nonneg_left
+      (pow_le_pow_left₀ (norm_nonneg _) hl 2) (by norm_num))
   have hs : (∫ t in (0 : ℝ)..T, ‖value period (extendPath T hT f t)‖^2) = ‖pathLp T hT source‖^2 :=
     (pathLp_norm_sq T hT source).symm
   rw [hs] at he
@@ -478,7 +478,10 @@ theorem heat_time_H2_bound (T : ℝ) (hT : 0 ≤ T) (ν : ℝ) (hν : 0 < ν)
   have hb2 := time_H2_elliptic_bound period T hT u
   change _ ≤ T*‖low‖^2 + L at hb2
   change _ ≤ (T+4*ν⁻¹)*‖low‖^2 + (ν⁻¹)^2*‖pathLp T hT source‖^2
-  nlinarith
+  calc
+    _ ≤ T*‖low‖^2 + (4*ν⁻¹*‖low‖^2 + (ν⁻¹)^2*‖pathLp T hT source‖^2) :=
+      hb2.trans (add_le_add le_rfl hL)
+    _ = _ := by ring
 
 end EulerHeatMaximalEstimate
 
@@ -596,8 +599,7 @@ theorem first_derivative_difference (T : ℝ) (hT : 0 ≤ T) (ν : ℝ)
     exact linear_heat_rhs_sub ((valueOperator period 0).comp (derivativeOperator period 0 i))
       (laplacianOperator period 1) ν (u (projIcc 0 T hT t)) (v (projIcc 0 T hT t))
       (f (projIcc 0 T hT t)) (g (projIcc 0 T hT t))
-  rw [he, hr]
-  exact h
+  exact (h.congr_deriv hr.symm).congr_of_eventuallyEq (Filter.Eventually.of_forall (congrFun he))
 
 /-- Restrict a regularized path to its actual H¹ topology. -/
 def lowerPath (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevSpace period 3)) :
@@ -742,8 +744,8 @@ theorem top_blocks_norm_sq (q : ℕ) (u : SobolevSpace period (2 + q)) :
   · have hnorm : ‖u.val ⟨⟨n, hn⟩, w⟩‖ ≤ ‖restrictOperator period (by omega : 1+q ≤ 2+q) u‖ :=
       word_norm_le period (restrictOperator period (by omega : 1+q ≤ 2+q) u)
         ⟨⟨n, Nat.lt_succ_of_le hlow⟩, w⟩
-    nlinarith [norm_nonneg (u.val ⟨⟨n, hn⟩, w⟩), norm_nonneg (restrictOperator period (by
-        omega : 1+q ≤ 2+q) u)]
+    exact (pow_le_pow_left₀ (norm_nonneg _) hnorm 2).trans
+      (le_add_of_nonneg_right hsum)
   · have hn2 : n = 2+q := by omega
     subst n
     have hw := top_word_block period q u w
@@ -755,10 +757,8 @@ theorem top_blocks_norm_sq (q : ℕ) (u : SobolevSpace period (2 + q)) :
       (le_refl 2) (fun i => w (Fin.castAdd q i))‖ ≤ _ at hnorm
     have hs := Finset.single_le_sum (fun v _ => sq_nonneg ‖wordBlock period 2 q v u‖)
       (Finset.mem_univ (fun i => w (Fin.natAdd 2 i)))
-    nlinarith [norm_nonneg (word period (wordBlock period 2 q (fun i => w (Fin.natAdd 2 i)) u)
-      (le_refl 2) (fun i => w (Fin.castAdd q i))),
-      norm_nonneg (wordBlock period 2 q (fun i => w (Fin.natAdd 2 i)) u),
-      sq_nonneg ‖restrictOperator period (by omega : 1+q ≤ 2+q) u‖]
+    exact ((pow_le_pow_left₀ (norm_nonneg _) hnorm 2).trans hs).trans
+      (le_add_of_nonneg_left (sq_nonneg _))
 
 end EulerSobolevTopBlocks
 
@@ -1087,8 +1087,7 @@ theorem top_blocks_norm_sq_original (q : ℕ) (u : SobolevSpace period (2 + q)) 
   have hr := restrictOperator_bound period (by omega : 1+q ≤ q+1)
     (restrictOperator period (by omega : q+1 ≤ 2+q) u)
   rw [restrictOperator_comp] at hr
-  nlinarith [norm_nonneg (restrictOperator period (by omega : 1+q ≤ 2+q) u),
-    norm_nonneg (restrictOperator period (by omega : q+1 ≤ 2+q) u)]
+  exact h.trans (add_le_add (pow_le_pow_left₀ (norm_nonneg _) hr 2) le_rfl)
 
 /-- Every actual top-word regularization is strongly Cauchy in time with its two full extra spatial
 derivatives. -/
