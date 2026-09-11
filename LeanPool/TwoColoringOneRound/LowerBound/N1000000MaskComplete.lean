@@ -5,15 +5,7 @@ Authors: Jukka Suomela
 -/
 
 import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
