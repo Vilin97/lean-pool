@@ -7,7 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDefinitions
 
 /-! Measure-preserving Euclidean coordinates and the actual L² bridge to the cylinder. -/
 

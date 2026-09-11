@@ -47,10 +47,6 @@ theorem sobolevNorm_mono (d : ℕ) {s t : ℝ} (hst : s ≤ t) (f : 𝓢(Domain 
     Real.norm_of_nonneg (besselWeight_pos d t ξ).le]
   exact mul_le_mul_of_nonneg_right (besselWeight_mono d hst ξ) (norm_nonneg _)
 
-/-- Repeated differentiation in one fixed direction, as a Schwartz function. -/
-noncomputable def directional (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, ℂ)) :
-    𝓢(Domain d, ℂ) := ∂^{fun _ : Fin n => v} f
-
 theorem directional_eq_iteratedDeriv (d n : ℕ) (v x : Domain d)
     (f : 𝓢(Domain d, ℂ)) :
     directional d n v f x = iteratedDeriv n (fun t : ℝ => f (x + t • v)) 0 := by

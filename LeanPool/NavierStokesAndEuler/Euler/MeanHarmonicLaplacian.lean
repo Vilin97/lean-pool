@@ -10,6 +10,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 public import Mathlib.Analysis.Calculus.Gradient.Basic
 public import Mathlib.Analysis.InnerProductSpace.Laplacian
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicEnergy
 import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
 import Mathlib.Algebra.Order.Star.Real

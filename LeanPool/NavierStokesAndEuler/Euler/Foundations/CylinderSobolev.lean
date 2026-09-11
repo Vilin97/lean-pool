@@ -7,7 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderCoordinates
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevProducts
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevProducts
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
 public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm

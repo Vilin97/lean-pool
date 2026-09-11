@@ -6,7 +6,8 @@ Authors: OpenAI
 
 module
 
-public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.DifferentialOperators
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.Analysis.Calculus.FDeriv.Symmetric
