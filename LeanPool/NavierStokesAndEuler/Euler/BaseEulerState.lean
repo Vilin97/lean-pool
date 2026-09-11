@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+
 public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerGuards
 import LeanPool.NavierStokesAndEuler.Euler.BaseEulerSign
 public import LeanPool.NavierStokesAndEuler.Euler.ParentEulerSobolev
@@ -727,10 +729,10 @@ theorem field_wordBound (q : ℕ) (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R)
       (embedding P) ∘ spatialOrbit u := by
     funext a
     exact embedding_translate P a u.toLp
-  rw [he] at hc
+  have hc' := hc.trans_eq (congrArg (fun f => block standardDirection q f n 0) he)
   have hm := block_comp_clm_le standardDirection q (embedding (V := Space) P) (spatialOrbit u) hF n
       0
-  apply hc.trans (hm.trans _)
+  apply hc'.trans (hm.trans _)
   exact (mul_le_mul (embedding_norm P) (hB n)
     (block_nonneg standardDirection q (spatialOrbit u) n 0) (Real.sqrt_nonneg P)).trans_eq (by ring)
 
@@ -1389,10 +1391,10 @@ theorem coefficient_time (ε : ℝ) (hε : 0 < ε)
     h (timeMap ε hε t) x
   have hi : HasDerivWithinAt (fun r : ℝ => r/ε) (1/ε) (Icc (0 : ℝ) ε) t := by
     simpa only [id_eq] using ((hasDerivAt_id (t : ℝ)).div_const ε).hasDerivWithinAt
-  have hd := (ho.scomp (t : ℝ) hi hmap).const_smul ε⁻¹
-  change HasDerivWithinAt
-    (fun r => ε⁻¹ • A.realField 1 zero_le_one (r/ε) x)
-    (ε⁻¹ • ((1/ε) • A₁.field (timeMap ε hε t) x)) (Icc (0 : ℝ) ε) t at hd
+  have hd : HasDerivWithinAt
+      (fun r => ε⁻¹ • A.realField 1 zero_le_one (r/ε) x)
+      (ε⁻¹ • ((1/ε) • A₁.field (timeMap ε hε t) x)) (Icc (0 : ℝ) ε) t :=
+    (ho.scomp (t : ℝ) hi hmap).const_smul ε⁻¹
   simp only [one_div,smul_smul,← pow_two] at hd
   have he (r : ℝ) (hr : r ∈ Icc (0 : ℝ) ε) :
       (coefficient ε hε A).realField ε hε.le r x =
@@ -2316,7 +2318,7 @@ theorem displacement_jet_integral (n : ℕ) (t : Icc (0 : ℝ) I.T) (x : Space) 
       ∫ s in (0 : ℝ)..(t : ℝ), extendPath I.T I.T_pos.le (I.velocity.jet n) s x := by
   let f : C(Icc (0 : ℝ) I.T,Space [×n]→L[ℝ] Space) :=
     ⟨fun s => I.velocity.jet n s x,
-      (BoundedContinuousFunction.evalCLM ℝ x).continuous.comp (I.velocity.jet n).continuous⟩
+      (I.velocity.jet n).continuous.eval_const x⟩
   have h := EulerContinuousTimeIntegral.eq_initial_add_integral I.T I.T_pos.le f
     (fun s => extendPath I.T I.T_pos.le (I.displacement.jet n) s x)
     (fun s => SmoothTimeField.TimeDerivative.jet_pointwise I.T I.T_pos.le
@@ -2355,7 +2357,7 @@ theorem displacement_memLp_and_bound (n : ℕ) (t : Icc (0 : ℝ) I.T) :
       rw [← SmoothL2Field.norm_jetLp]
       exact L.velocityField_bound _ n⟩
   have hp := EulerLpParameterIntegral.intervalIntegral_memLp_and_bound (t : ℝ) t.property.1
-    volume f hc.aestronglyMeasurable (L.C*L.velocityRadius^n*(n.factorial : ℝ)^2)
+    volume f hc.aestronglyMeasurable_of_secondCountable (L.C*L.velocityRadius^n*(n.factorial : ℝ)^2)
     (mul_nonneg (mul_nonneg L.C_nonneg (pow_nonneg L.velocityRadius_nonneg n)) (sq_nonneg _))
     (Eventually.of_forall hb)
   have he : (fun x => ∫ s in (0 : ℝ)..(t : ℝ), f (s,x)) =
