@@ -42,6 +42,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Circuitlib                https://github.com/matthunz/circuitlib
   LeanPool/ClassificationOfSurfaces  https://github.com/mccorvie/classification-of-surfaces
   LeanPool/CompactSpectral           https://github.com/abenenson/compact-spectral
+  LeanPool/CompactnessAndDegeneracy  https://github.com/openai/ten-proofs
   LeanPool/CompositionAlgebras       https://github.com/ehrlich-b/composition-algebras
   LeanPool/Computability             https://github.com/tannerduve/computability
   LeanPool/ComputableReal            https://github.com/Timeroot/computableReal
@@ -66,6 +67,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Erdos367                  https://github.com/scottdhughes/erdos367
   LeanPool/Erdos403                  https://github.com/gotrevor/erdos-403
   LeanPool/Erdos81PaperIContrib      https://github.com/jtraverso/erdos-81-chordal-clique-partitions
+  LeanPool/Erdos81PaperIIContrib     https://github.com/jtraverso/lean-pool
   LeanPool/Erdos81PaperIIIContrib    https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/Erdos865                  https://github.com/mrricky22/erdos-865-lean
   LeanPool/Erdos97ConvexOctagon      https://github.com/lyfar/erdos-97-octagon-lean
@@ -89,6 +91,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/HadwigerNelsonBounds      https://github.com/lyfar/hadwiger-nelson-bounds-lean
   LeanPool/HansonWright              https://github.com/Lean-MoDS/StatsMLlib
   LeanPool/Incompleteness            https://github.com/FormalizedFormalLogic/Incompleteness
+  LeanPool/InfinitaryLogic           https://github.com/cameronfreer/infinitary-logic
   LeanPool/IsTranscendentalPi        https://github.com/samuelborza/IsTranscendentalPi
   LeanPool/IsoGraph                  https://github.com/Timeroot/IsoGraph
   LeanPool/Isoperimetric             https://github.com/hojonathanho/isoperimetric
@@ -96,6 +99,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/JohnsonLindenstraussLean  https://github.com/claytomode/johnson-lindenstrauss-lean
   LeanPool/KahnKalai                 https://github.com/dcposch/kahn-kalai-lean
   LeanPool/KasamiCyclicAdditive      https://github.com/dsm054/kasami_cyclic_additive
+  LeanPool/Koethe                    https://github.com/tadamcz/koethe
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
   LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
@@ -118,12 +122,14 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Monsky                    https://github.com/dhyan-aranha/Monsky
   LeanPool/MoserLatticeColorings     https://github.com/lyfar/moser-lattice-colorings-lean
   LeanPool/MulticolorTriangleRamsey  https://github.com/openai/ten-proofs
+  LeanPool/NashWilliams              https://github.com/yannpequignot/TwoBQO
   LeanPool/Neukirch                  https://github.com/jjdishere/neukirch
   LeanPool/OSforGFF                  https://github.com/mrdouglasny/OSforGFF
   LeanPool/OddPrimeValuationDistribution
                                      https://github.com/lyfar/gkp-carry-lean
   LeanPool/Odlyzko                   https://github.com/ImperialCollegeLondon/FLT
   LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
+  LeanPool/PFR                       https://github.com/teorth/pfr
   LeanPool/PebblingLean              https://github.com/pachterlab/P_2026_2
   LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
   LeanPool/PermanentFormulaLowerBound

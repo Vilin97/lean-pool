@@ -177,64 +177,64 @@ box `|t| ≤ 15`, `1 ≤ λ ≤ 9` that contains every genuine solution
 def reprN (m d : ℕ) : Bool :=
   decide (∃ t ∈ Finset.range 16, ∃ l ∈ Finset.Icc 1 9, 4 * m - t ^ 2 = d * l ^ 2 ∧ t ^ 2 ≤ 4 * m)
 
+/-- `reprN` recomputed with plain `List.range` loops: the same search, but evaluated by the
+kernel without going through `Finset`/`Multiset` decidability instances. -/
+private def reprB (m d : ℕ) : Bool :=
+  (List.range 16).any fun t => (List.range 10).any fun l =>
+    decide (1 ≤ l) && (4 * m - t ^ 2 == d * l ^ 2) && decide (t ^ 2 ≤ 4 * m)
+
+private lemma reprN_eq_reprB (m d : ℕ) : reprN m d = reprB m d := by
+  rw [Bool.eq_iff_iff]
+  simp only [reprN, reprB, decide_eq_true_eq, List.any_eq_true, List.mem_range,
+    Bool.and_eq_true, beq_iff_eq, Finset.mem_range, Finset.mem_Icc]
+  constructor
+  · rintro ⟨t, ht, l, ⟨hl1, hl9⟩, h1, h2⟩; exact ⟨t, ht, l, by omega, ⟨hl1, h1⟩, h2⟩
+  · rintro ⟨t, ht, l, hl, ⟨hl1, h1⟩, h2⟩; exact ⟨t, ht, l, ⟨hl1, by omega⟩, h1, h2⟩
+
 /-- **(C5), computational core.** The only `d ∈ [1, 244]` simultaneously representable at
 `m = 41, 43, 61` is `d = 163` (i.e. `D₀ = −163`).  The `{41,43,47}` trap of §6.6 is exactly
-that `d = 43` would also survive there; here it does not.  Proved in four range chunks so each
-`decide` stays within the default recursion depth. -/
+that `d = 43` would also survive there; here it does not.  Decided by the kernel on the
+`List`-based recomputation `reprB` of `reprN`, which evaluates far faster than the
+`Finset` decidability instances. -/
 theorem three_prime_N : ∀ d ∈ Finset.Icc 1 244,
     reprN 41 d = true → reprN 43 d = true → reprN 61 d = true → d = 163 := by
-  have c1 : ∀ d ∈ Finset.Icc 1 61,
-      reprN 41 d = true → reprN 43 d = true → reprN 61 d = true → d = 163 := by decide
-  have c2 : ∀ d ∈ Finset.Icc 62 122,
-      reprN 41 d = true → reprN 43 d = true → reprN 61 d = true → d = 163 := by decide
-  have c3 : ∀ d ∈ Finset.Icc 123 183,
-      reprN 41 d = true → reprN 43 d = true → reprN 61 d = true → d = 163 := by decide
-  have c4 : ∀ d ∈ Finset.Icc 184 244,
-      reprN 41 d = true → reprN 43 d = true → reprN 61 d = true → d = 163 := by decide
-  intro d hd
-  simp only [Finset.mem_Icc] at hd
-  by_cases h1 : d ≤ 61
-  · exact c1 d (Finset.mem_Icc.mpr ⟨hd.1, h1⟩)
-  by_cases h2 : d ≤ 122
-  · exact c2 d (Finset.mem_Icc.mpr ⟨by omega, h2⟩)
-  by_cases h3 : d ≤ 183
-  · exact c3 d (Finset.mem_Icc.mpr ⟨by omega, h3⟩)
-  · exact c4 d (Finset.mem_Icc.mpr ⟨by omega, hd.2⟩)
+  have key : ∀ d < 245, reprB 41 d = true → reprB 43 d = true → reprB 61 d = true → d = 163 := by
+    decide +kernel
+  intro d hd h41 h43 h61
+  rw [reprN_eq_reprB] at h41 h43 h61
+  exact key d (by simp only [Finset.mem_Icc] at hd; omega) h41 h43 h61
 
 /-- Casting bridge: a genuine integer solution `t² − 4m = D₀ λ²` (with `m ≤ 61`, `D₀ ≤ −3`,
 `λ ≠ 0`) witnesses `reprN m (−D₀)`. -/
 private lemma reprN_of_relation {m : ℕ} (hm : m ≤ 61) {D0 t l : ℤ} (hD3 : D0 ≤ -3)
     (hl : l ≠ 0) (h : t ^ 2 - 4 * (m : ℤ) = D0 * l ^ 2) : reprN m (-D0).toNat = true := by
-  have hl2 : (1 : ℤ) ≤ l ^ 2 := by
-    rcases lt_or_gt_of_ne hl with h' | h' <;> nlinarith
   have hmD0 : (0 : ℤ) < -D0 := by linarith
   have hmle : (m : ℤ) ≤ 61 := by exact_mod_cast hm
   have hkey : 4 * (m : ℤ) - t ^ 2 = (-D0) * l ^ 2 := by linarith
-  have htle : t ^ 2 ≤ 4 * (m : ℤ) - 3 := by nlinarith [hkey, hmD0, hl2]
+  have hDtoNat : ((-D0).toNat : ℤ) = -D0 := Int.toNat_of_nonneg hmD0.le
   set tN := t.natAbs with htN
   set lN := l.natAbs with hlN
   have htNsq : (tN : ℤ) ^ 2 = t ^ 2 := by rw [htN]; exact Int.natAbs_sq t
   have hlNsq : (lN : ℤ) ^ 2 = l ^ 2 := by rw [hlN]; exact Int.natAbs_sq l
-  have hDtoNat : ((-D0).toNat : ℤ) = -D0 := Int.toNat_of_nonneg hmD0.le
-  -- `tN < 16` from `t² ≤ 4m − 3 ≤ 241 < 256`
-  have htNle : tN < 16 := by
-    by_contra hc
-    push Not at hc
-    have h16 : (16 : ℤ) ≤ (tN : ℤ) := by exact_mod_cast hc
-    have : (256 : ℤ) ≤ t ^ 2 := by rw [← htNsq]; nlinarith
-    linarith [htle, hmle]
-  -- `1 ≤ lN ≤ 9` from `l ≠ 0` and `3·l² ≤ (−D₀)·l² = 4m − t² ≤ 244`
-  have hlN1 : 1 ≤ lN := by
-    rw [hlN]; exact Int.natAbs_pos.mpr hl
+  have hlN1 : 1 ≤ lN := by rw [hlN]; exact Int.natAbs_pos.mpr hl
+  -- `3·l² ≤ (−D₀)·l² = 4m − t²`, so `l² ≤ 81` and `t² ≤ 4m − 3 ≤ 241 < 256`
+  have h3l : 3 * l ^ 2 ≤ 4 * (m : ℤ) - t ^ 2 := by
+    rw [hkey]; exact mul_le_mul_of_nonneg_right (by linarith) (sq_nonneg l)
+  have ht0 : 0 ≤ t ^ 2 := sq_nonneg t
+  have hl2 : (1 : ℤ) ≤ l ^ 2 := by
+    rw [← hlNsq]; exact_mod_cast Nat.one_le_pow _ _ hlN1
   have hlN9 : lN ≤ 9 := by
-    by_contra hc
-    push Not at hc
-    have h10 : (10 : ℤ) ≤ (lN : ℤ) := by exact_mod_cast hc
-    have hl100 : (100 : ℤ) ≤ l ^ 2 := by rw [← hlNsq]; nlinarith
-    nlinarith [hkey, hmle, sq_nonneg t]
-  -- the ℕ equation
+    have hsq : lN ^ 2 ≤ 9 ^ 2 := by
+      have : (lN : ℤ) ^ 2 ≤ 9 ^ 2 := by rw [hlNsq]; omega
+      exact_mod_cast this
+    exact (Nat.pow_le_pow_iff_left (by norm_num)).mp hsq
+  have htNle : tN < 16 := by
+    have hsq : tN ^ 2 < 16 ^ 2 := by
+      have : (tN : ℤ) ^ 2 < 16 ^ 2 := by rw [htNsq]; omega
+      exact_mod_cast this
+    exact (Nat.pow_lt_pow_iff_left (by norm_num)).mp hsq
   have htNsq4m : tN ^ 2 ≤ 4 * m := by
-    have : (tN : ℤ) ^ 2 ≤ 4 * (m : ℤ) := by rw [htNsq]; linarith
+    have : (tN : ℤ) ^ 2 ≤ 4 * (m : ℤ) := by rw [htNsq]; omega
     exact_mod_cast this
   have heq : 4 * m - tN ^ 2 = (-D0).toNat * lN ^ 2 := by
     have hz : ((4 * m - tN ^ 2 : ℕ) : ℤ) = (((-D0).toNat * lN ^ 2 : ℕ) : ℤ) := by

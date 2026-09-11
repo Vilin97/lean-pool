@@ -1,4 +1,78 @@
 projects:
+  - slug: koethe-conjecture-disproof
+    title: Disproof of the Köthe conjecture (Krempa's matrix form)
+    summary: >-
+      Refutes Köthe's 1930 conjecture in Krempa's matrix form: there is a ring
+      R (the unitization of a nil algebra of three weighted backward shifts
+      over the algebraic closure of F_2) with a nil two-sided ideal I such
+      that the matrix ideal M_2(I) contains a non-nilpotent matrix. The
+      compared theorem is exactly the negation of the research-open statement
+      `Koethe.KotherConjecture.variants.general_matrix` from Google DeepMind's
+      Formal Conjectures, in every universe. The supporting library proves a
+      multiprojective common-zero theorem via the Segre cone, the
+      Nullstellensatz and Krull's height theorem, a mask-mortality theorem for
+      one-row matrix pencils, a diagonal construction of universal mortal
+      sequences, and a linearization theorem reducing nilness of a
+      three-generator algebra to nilness of its root-row pencils.
+    branch: noncommutative ring theory
+    entry_module: LeanPool.Koethe
+    authors:
+      - Tom Adamczewski
+    source:
+      title: A counterexample to Köthe's conjecture and a question of Rowen
+      authors:
+        - Tom Adamczewski
+        - Bernhard Böhmler
+        - Rene Marczinzik
+      arxiv: '2609.07996'
+      url: https://github.com/tadamcz/koethe
+      github_repo: tadamcz/koethe
+      commit: a94a72aec957cb28d76aa30fb97a01d440990d7f
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Koethe.KotherConjecture.variants.general_matrix.disproof
+    main_results:
+      - declaration: Koethe.KotherConjecture.variants.general_matrix.disproof
+        informal: >-
+          It is not the case that for every ring R, every nil two-sided ideal
+          I of R and every finite index type n, the matrix ideal M_n(I) of
+          M_n(R) is nil. This is the negation of Krempa's matrix form of
+          Köthe's conjecture, stated verbatim as in Formal Conjectures.
+      - declaration: KoetheCounterexample.counterexample
+        informal: >-
+          In every universe there is a ring R with a nil two-sided ideal I
+          such that some 2 x 2 matrix with entries in I is not nilpotent.
+      - declaration: KoetheMultiProjective.exists_common_zero
+        informal: >-
+          Over an algebraically closed field, at most 2N polynomials that are
+          multihomogeneous of a common positive degree in each of N blocks of
+          three variables have a common zero with no block equal to zero.
+      - declaration: KoetheCounterexample.maskMortality
+        informal: >-
+          Over an algebraically closed field, every one-row matrix pencil and
+          every periodic mask with more than half of its residues free admit a
+          mask-compatible word of nonzero letters whose forward product is
+          the zero matrix.
+      - declaration: KoetheCounterexample.exists_universalMortalSequence
+        informal: >-
+          Over a countable field satisfying mask mortality there is a
+          sequence of nonzero letter triples such that every pencil has all
+          its windows of some fixed positive length equal to zero.
+      - declaration: KoetheCounterexample.nil_of_all_pencils_nil
+        informal: >-
+          If every root-row pencil lifted along three elements of an algebra
+          is nilpotent, then the non-unital subalgebra they generate is nil.
+    tags:
+      - ring-theory
+      - nil-ideals
+      - koethe-conjecture
+      - counterexample
+      - matrix-rings
+    msc:
+      - 16N40
+      - 16S50
   - slug: long-gaps-between-primes
     title: Improved long gaps between consecutive primes
     summary: >-
@@ -362,6 +436,56 @@ projects:
     msc:
       - "05D10"
       - "05C55"
+  - slug: compactness-and-degeneracy
+    title: Counterexamples to graph compactness and two-degenerate extremal bounds
+    summary: >-
+      Formalizes two counterexamples in extremal graph theory. The first gives
+      a finite family of connected bipartite cyclic graphs whose family
+      extremal number grows strictly slower than every member's extremal
+      number, disproving the Erdős--Simonovits compactness conjecture. The
+      second constructs a connected bipartite two-degenerate graph with
+      extremal number at least c n^(3/2+ε), disproving the proposed universal
+      n^(3/2) upper bound under the stated bipartition degree condition.
+    branch: extremal combinatorics and graph theory
+    entry_module: LeanPool.CompactnessAndDegeneracy
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - CompactnessConjecture.quantitativeCompactnessCounterexample
+    main_results:
+      - declaration: CompactnessConjecture.quantitativeCompactnessCounterexample
+        informal: >-
+          There is a nonempty finite family of connected bipartite cyclic
+          graphs such that every member has a uniform positive
+          n^(4/3)-scale extremal lower bound, while every family-free host on n
+          vertices has its sixteenth power of the edge count bounded by a
+          constant times n^21. Consequently the family is not compact and the
+          Erdős--Simonovits compactness conjecture is false.
+      - declaration: TwoDegenerateGraphs.twoDegenerateExtremalCounterexample
+        informal: >-
+          There is a connected bipartite two-degenerate finite graph H such
+          that each side of every two-coloring has a vertex of degree greater
+          than two, yet ex(n,H) is eventually at least c n^(3/2+ε) for some
+          positive constants c and ε.
+    tags:
+      - extremal-combinatorics
+      - extremal-graph-theory
+      - degenerate-graphs
+      - counterexamples
+    msc:
+      - "05C35"
+      - "05C75"
   - slug: connes-rigidity
     title: Conditional formalization of Zhou's Connes-rigidity counterexample
     summary: >-
@@ -7306,3 +7430,378 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: erdos81-paper-ii-chordal-heredity
+    title: "Chordal graphs: minimal separators and simplicial vertices"
+    summary: >-
+      A reusable formalization byproduct accompanying Paper II: defines chordal graphs through
+      the cycle-and-chord characterization, proves induced-subgraph heredity and the clique
+      property for finite minimal separators of fixed vertex pairs, proves Dirac's
+      simplicial-vertex theorem, and proves the connected non-complete case of the two-vertex
+      conclusion.
+    branch: graph theory
+    entry_module: LeanPool.Erdos81PaperIIContrib
+    authors:
+      - Juan Pablo Traverso Gianini
+    source:
+      title: Complete-Split Extremizers for a Fractional Triangle-Cover Functional on Chordal Graphs
+      authors:
+        - Juan Pablo Traverso Gianini
+      url: https://github.com/jtraverso/lean-pool/blob/822738f3089d92c5e65a6bfb8c88c992e4699167/LeanPool/Erdos81PaperIIContrib/Chordal.lean
+      github_repo: jtraverso/lean-pool
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial
+    main_results:
+      - declaration: SimpleGraph.IsChordal.comap
+        informal: >-
+          A graph that embeds as an induced subgraph of a chordal graph is itself chordal.
+      - declaration: SimpleGraph.IsChordal.induce
+        informal: >-
+          Every induced subgraph of a chordal graph is chordal.
+      - declaration: SimpleGraph.IsChordal.minimalSeparator_isClique
+        informal: >-
+          Every finite minimal separator of two fixed vertices in a chordal graph is a clique.
+      - declaration: SimpleGraph.IsChordal.exists_isSimplicial
+        informal: >-
+          Every nonempty finite chordal graph has a simplicial vertex.
+      - declaration: SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial
+        informal: >-
+          Every connected non-complete finite chordal graph has two non-adjacent simplicial
+          vertices.
+    tags:
+      - graph-theory
+      - chordal-graphs
+      - induced-subgraphs
+      - minimal-separators
+      - simplicial-vertices
+    msc:
+      - "05C75"
+  - slug: polynomial-freiman-ruzsa
+    title: The polynomial Freiman–Ruzsa conjecture
+    summary: >-
+      Formalizes Marton's polynomial Freiman–Ruzsa conjecture by the entropy method, including
+      the characteristic-two bounds with exponents twelve and nine, the bounded-torsion theorem
+      with an explicit exponent, and quantitative consequences for affine dimension and
+      approximate homomorphisms. The supporting development builds entropic Ruzsa distance,
+      multidistance, conditional entropy, and additive-energy machinery. This optimized import
+      reuses the pooled Zhang–Yeung entropy and kernel library in place of duplicate upstream
+      modules while preserving all six closed headline statements.
+    branch: additive combinatorics and information theory
+    entry_module: LeanPool.PFR
+    authors:
+      - PFR contributors
+    contributors:
+      - Aaron Anderson
+      - Mantas Bakšys
+      - Jonas Bayer
+      - Mauricio Collares
+      - Rémy Degenne
+      - Yaël Dillies
+      - Bhavik Mehta
+      - Ella Yu
+      - Ben Eltschig
+      - Sébastien Gouëzel
+      - Kalle Kytölä
+      - Rob Lewis
+      - Paul Lezeau
+      - Lorenzo Luccioli
+      - Heather Macbeth
+      - Patrick Massot
+      - Arend Mellendijk
+      - Kyle Miller
+      - Pietro Monticone
+      - Kim Morrison
+      - Oliver Nash
+      - Utensil Song
+      - Terence Tao
+      - Floris van Doorn
+      - Sky Wilshaw
+      - Lawrence Wu
+    source:
+      title: Marton's conjecture (the polynomial Freiman–Ruzsa conjecture)
+      authors:
+        - W. T. Gowers
+        - Ben Green
+        - Freddie Manners
+        - Terence Tao
+      arxiv: 2311.05762
+      url: https://github.com/teorth/pfr
+      github_repo: teorth/pfr
+      commit: 07839bddb1395c8808fa47db821ce2e4fff9362e
+    upstream_dependencies:
+      - title: AddCombi
+        github_repo: leanprover-community/add-combi
+        commit: 2d061f437c1ba00ba9b16d7cba1c7603ba4807a4
+        license: Apache-2.0
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - Marton.pfr_conjecture
+    main_results:
+      - declaration: Marton.pfr_conjecture
+        informal: >-
+          A nonempty finite set A of doubling at most K in an abelian group of exponent two is
+          covered by fewer than 2 K^12 cosets of a finite subgroup no larger than A.
+      - declaration: Marton.pfr_conjecture_nine
+        informal: >-
+          Strengthens the characteristic-two covering theorem to fewer than 2 K^9 cosets of a
+          finite subgroup no larger than A.
+      - declaration: Marton.torsion_pfr_conjecture
+        informal: >-
+          In an abelian group of exponent m at least two, a nonempty finite set of doubling at
+          most K is covered by fewer than m K^(256 m^3 + 1) cosets of a subgroup no larger than A.
+      - declaration: Marton.weak_pfr_int
+        informal: >-
+          A nonempty finite set of doubling at most K in a finite-rank free abelian group has a
+          subset of relative size at least K^(-34) and affine dimension at most
+          (80 / log 2) log K.
+      - declaration: Marton.homomorphism_pfr
+        informal: >-
+          A map between finite abelian groups of exponent two whose additive defects lie in S
+          differs from a homomorphism by a map taking at most |S|^10 values.
+      - declaration: Marton.approx_hom_pfr
+        informal: >-
+          A map between finite abelian groups of exponent two that is additive on at least a
+          1/K fraction of pairs agrees with a homomorphism on at least
+          (|G| / (2^144 K^122) - 1) / 2 points.
+    tags:
+      - additive-combinatorics
+      - polynomial-freiman-ruzsa
+      - entropy
+      - approximate-homomorphisms
+    msc:
+      - "11B30"
+      - "11P70"
+      - "20K01"
+      - "94A17"
+  - slug: infinitary-logic
+    title: Infinitary logic and countable model theory
+    summary: >-
+      Formalizes the syntax and semantics of infinitary logic and a broad
+      collection of its classical theorems: Scott sentences and ranks, Karp's
+      theorem, model existence, the sharp Morley--Hanf bound, Craig, Lyndon,
+      and Malitz interpolation, López--Escobar definability, undefinability of
+      well-ordering, the Silver--Burgess and Morley counting dichotomies, and
+      an honest coded-fragment interface whose HF compactness theorem is
+      derived from first-order compactness.
+    branch: mathematical logic and model theory
+    entry_module: LeanPool.InfinitaryLogic
+    authors:
+      - Cameron Freer
+    source:
+      title: Infinitary Logic in Lean 4
+      authors:
+        - Cameron Freer
+      url: https://github.com/cameronfreer/infinitary-logic
+      github_repo: cameronfreer/infinitary-logic
+      commit: 4d0c43c5288952267e7d5478d79302cae17945a9
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - FirstOrder.Language.scottSentence_characterizes
+    main_results:
+      - declaration: FirstOrder.Language.scottSentence
+        informal: >-
+          Every countable structure in a countable relational language has an
+          associated infinitary sentence.
+      - declaration: FirstOrder.Language.scottSentence_characterizes
+        informal: >-
+          A countable structure satisfies the Scott sentence of another
+          countable structure exactly when the two structures are isomorphic.
+      - declaration: FirstOrder.Language.scottRank
+        informal: >-
+          The Scott rank of a countable structure is the supremum of its
+          element ranks plus one.
+      - declaration: FirstOrder.Language.scottRank_lt_omega1
+        informal: >-
+          The Scott rank of every countable structure in a countable
+          relational language is a countable ordinal.
+      - declaration: FirstOrder.Language.karp_theorem_w
+        informal: >-
+          Two relational structures admit a nonempty potential isomorphism
+          exactly when they agree on every infinitary sentence over every
+          branching carrier in their shared universe.
+      - declaration: FirstOrder.Language.model_existence
+        informal: >-
+          Every countable set of infinitary sentences in an equality-respecting
+          consistency property over a countable language has a countable model.
+      - declaration: FirstOrder.Language.morley_hanf
+        informal: >-
+          Beth omega-one is a Hanf bound for every infinitary sentence.
+      - declaration: FirstOrder.Language.Lomega1omegaHanfNumber_eq_beth_omega1
+        informal: >-
+          The Hanf number of countable-conjunction infinitary logic is exactly
+          beth omega-one.
+      - declaration: FirstOrder.Language.exists_small_model_of_hasArbLargeModels
+        informal: >-
+          A sentence with arbitrarily large models has, at every infinite
+          cardinality, a model realizing only countably many complete types.
+      - declaration: FirstOrder.Language.exists_complete_sentence_of_lomega1omegaSmall
+        informal: >-
+          Every infinitary-small model belongs to a complete infinitary
+          subclass contained in any prescribed sentence it satisfies.
+      - declaration: FirstOrder.Language.exists_complete_kCategorical_of_hasArbLargeModels
+        informal: >-
+          A categorical sentence with arbitrarily large models has a complete
+          categorical refinement at the same infinite cardinality.
+      - declaration: FirstOrder.Language.craig_interpolation
+        informal: >-
+          Every sentence entailment has an interpolant using only the function
+          and relation symbols shared by its two endpoints.
+      - declaration: FirstOrder.Language.craig_pcSeparation
+        informal: >-
+          Disjoint projective infinitary classes can be separated by a single
+          infinitary sentence.
+      - declaration: FirstOrder.Language.lyndon_interpolation
+        informal: >-
+          Every sentence entailment has an interpolant whose positive and
+          negative relation occurrences lie in the corresponding shared
+          occurrence sets.
+      - declaration: FirstOrder.Language.malitz_interpolation
+        informal: >-
+          An entailment with universal consequent in a relational language has
+          a universal interpolant over the shared vocabulary.
+      - declaration: FirstOrder.Language.exists_model_relPreserving
+        informal: >-
+          If a sentence has chains of every countable length, some model
+          carries a relation-preserving map from the rationals.
+      - declaration: FirstOrder.Language.wellOrder_type_boundedness
+        informal: >-
+          The order types of all well-ordered models of one infinitary sentence
+          are bounded below omega-one.
+      - declaration: FirstOrder.Language.wellOrdering_undefinable
+        informal: >-
+          No single infinitary sentence defines exactly the well-orders.
+      - declaration: FirstOrder.Language.lopezEscobar_iff
+        informal: >-
+          A class of coded countable structures is Borel and
+          isomorphism-invariant exactly when it is the model class of one
+          infinitary sentence.
+      - declaration: FirstOrder.Language.lopezEscobar_action_iff
+        informal: >-
+          The López--Escobar characterization equivalently uses invariance
+          under the natural permutation action on coded structures.
+      - declaration: FirstOrder.Language.wellOrderClass_not_measurableSet
+        informal: >-
+          The class of coded well-orders is not a Borel set in the logic space.
+      - declaration: gandy_harrington_for_relation
+        informal: >-
+          A Borel equivalence relation on a Polish space with uncountably many
+          classes has a continuous Cantor injection of pairwise inequivalent
+          points.
+      - declaration: FirstOrder.Language.silverBurgessDichotomy
+        informal: >-
+          A standard-Borel quotient has at most countably many classes or
+          exactly continuum many classes.
+      - declaration: FirstOrder.Language.morley_counting
+        informal: >-
+          Assuming the Silver--Burgess dichotomy, the number of isomorphism
+          classes of coded countable models of an infinitary sentence is at
+          most aleph-one or exactly the continuum.
+      - declaration: FirstOrder.Language.iso_borel_of_bounded_scottHeight
+        informal: >-
+          Isomorphism among models of an infinitary sentence is Borel whenever
+          their Scott heights have a common countable bound.
+      - declaration: FirstOrder.Language.FamilyPresentation
+        informal: >-
+          A coded-family presentation packages codes with their indexed
+          decoding and a certificate for admissible infinitary formation.
+      - declaration: FirstOrder.Language.CodedFamily
+        informal: >-
+          A coded family packages a certified family code with an explicitly
+          indexed decoding, made unique by the presentation's decoding law.
+      - declaration: FirstOrder.Language.AdmissibleFragment
+        informal: >-
+          An admissible fragment is closed under exactly the coded infinitary
+          families certified by its presentation.
+      - declaration: FirstOrder.Language.hfFragment
+        informal: >-
+          The hereditarily finite fragment consists of the infinitary formulas
+          whose syntax contains no infinitary connective.
+      - declaration: FirstOrder.Language.hfAdmissibleFragment
+        informal: >-
+          The hereditarily finite fragment forms an admissible coded fragment
+          without assuming compactness data.
+      - declaration: FirstOrder.Language.finitaryFragment_compact
+        informal: >-
+          Every finitely satisfiable theory contained in the first-order image
+          fragment has a model.
+    tags:
+      - mathematical-logic
+      - infinitary-logic
+      - model-theory
+      - descriptive-set-theory
+    msc:
+      - "03C75"
+      - "03E15"
+      - "03C30"
+  - slug: nash-williams
+    title: Nash-Williams fronts and 2-better-quasi-orders
+    summary: >-
+      Formalizes Nash-Williams fronts through their well-founded prefix trees and ordinal ranks,
+      proves the finite-color Nash-Williams theorem, and derives the infinite Ramsey theorem for
+      arbitrary finite arity. The order-theoretic development proves that 2-better-quasi-orders
+      are well-quasi-orders and establishes closure under finite products, lexicographic sums,
+      domination of subsets, and pointwise embedding of sequences. Throughout, TwoBQO r is the
+      good-triple property of an arbitrary binary relation r (every pair-sequence has m < n < l
+      with f(m,n) related to f(n,l)); it assumes no reflexivity or transitivity of r.
+    branch: infinitary combinatorics and order theory
+    entry_module: LeanPool.NashWilliams
+    authors:
+      - Yann Pequignot
+    source:
+      title: "Towards better: A motivated introduction to better-quasi-orders"
+      authors:
+        - Yann Pequignot
+      doi: 10.4171/EMSS/4-2-2
+      url: https://github.com/yannpequignot/TwoBQO
+      github_repo: yannpequignot/TwoBQO
+      commit: 8adea92d7fa41700372ba16b9ff816dc7500579b
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - Front.IsFront.nash_williams
+      - TwoBQO.wellQuasiOrdered
+    main_results:
+      - declaration: Front.IsFront.nash_williams
+        informal: >-
+          Every two-coloring of a Nash-Williams front on an infinite set has an infinite
+          restriction whose front is monochromatic.
+      - declaration: Front.IsFront.nash_williams_fin
+        informal: >-
+          Every finite coloring of a Nash-Williams front has an infinite restriction whose
+          front is monochromatic.
+      - declaration: infinite_ramsey
+        informal: >-
+          Every finite coloring of the r-element subsets of an infinite set of natural numbers
+          is constant on all r-element subsets of some infinite subset.
+      - declaration: TwoBQO.wellQuasiOrdered
+        informal: >-
+          Every 2-better-quasi-order is a well-quasi-order.
+      - declaration: TwoBQO.lexSigmaQO
+        informal: >-
+          The 2-BQO good-triple property is preserved by lexicographic sums: if the index
+          relation and every fibre relation have it, so does the lexicographic-sum relation on
+          the sigma type. This asserts nothing about reflexivity or transitivity of the sum;
+          those are proved separately (LexSumRelQO.refl and LexSumRelQO.trans) under the
+          corresponding order hypotheses on the index and fibres.
+      - declaration: TwoBQO.embedForAll_wqo
+        informal: >-
+          If a preorder is a 2-better-quasi-order, then its infinite sequences are
+          well-quasi-ordered by the relation admitting a strictly monotone reindexing along
+          which corresponding terms are related.
+    tags:
+      - infinitary-combinatorics
+      - ramsey-theory
+      - better-quasi-orders
+      - well-quasi-orders
+      - ordinal-ranks
+    msc:
+      - "03E05"
+      - "05D10"
+      - "06A07"
