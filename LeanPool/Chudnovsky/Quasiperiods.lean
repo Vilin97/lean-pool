@@ -297,7 +297,9 @@ private lemma bridgeF_summable_subtype (τ : ℍ) {z : ℂ}
       weierstrassZetaTerm (z + 1) (l.1 : ℂ) - weierstrassZetaTerm z (l.1 : ℂ)) :=
     (summable_weierstrassZetaTerm (Lτ τ) (z + 1) hz1).sub
       (summable_weierstrassZetaTerm (Lτ τ) z hz)
-  exact ((bridgeEqv τ).subtypeEquiv (bridgeEqv_ne τ)).summable_iff.mpr hGl_sum
+  exact (Equiv.summable_iff (f := fun l : {l : (Lτ τ).lattice // l ≠ 0} =>
+    weierstrassZetaTerm (z + 1) (l.1 : ℂ) - weierstrassZetaTerm z (l.1 : ℂ))
+    ((bridgeEqv τ).subtypeEquiv (bridgeEqv_ne τ))).mpr hGl_sum
 
 /-- `bridgeF τ z` is summable over `ℤ × ℤ` (for a base point `z ∉ L_τ` with `z+1 ∉ L_τ`). -/
 private lemma bridgeF_summable (τ : ℍ) {z : ℂ}
@@ -308,7 +310,10 @@ private lemma bridgeF_summable (τ : ℍ) {z : ℂ}
       weierstrassZetaTerm (z + 1) ((bridgeEqv τ p : (Lτ τ).lattice) : ℂ)
         - weierstrassZetaTerm z ((bridgeEqv τ p : (Lτ τ).lattice) : ℂ)) := by
     rw [← Finset.summable_compl_iff ({0} : Finset (ℤ × ℤ))]
-    exact (Equiv.subtypeEquivRight (fun x => by simp)).summable_iff.mpr hFsum_sub
+    exact (Equiv.summable_iff (f := fun pp : {p : ℤ × ℤ // p ≠ 0} =>
+      weierstrassZetaTerm (z + 1) ((bridgeEqv τ pp.1 : (Lτ τ).lattice) : ℂ)
+        - weierstrassZetaTerm z ((bridgeEqv τ pp.1 : (Lτ τ).lattice) : ℂ))
+      (Equiv.subtypeEquivRight (fun x => by simp))).mpr hFsum_sub
   refine hFsum.congr (fun p => ?_)
   simp only [bridgeF, bridgeEqv_coe]
 

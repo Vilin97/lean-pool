@@ -5,8 +5,6 @@ Authors: Xuanji Li
 -/
 
 import LeanPool.Chudnovsky.Lattices
-import Mathlib.NumberTheory.ModularForms.EisensteinSeries.QExpansion
-import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
 
 /-!
 # Fourier expansions: the lattice ↔ modular-forms bridge

@@ -6,9 +6,7 @@ Authors: Xuanji Li
 
 import LeanPool.Chudnovsky.Quasiperiods
 import Mathlib.Analysis.Meromorphic.TrailingCoefficient
-import Mathlib.RingTheory.MvPolynomial.Basic
 import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.RingTheory.Polynomial.IntegralNormalization
 
 /-!
 # Division values (Milla, Appendix A)

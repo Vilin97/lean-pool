@@ -42,6 +42,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Circuitlib                https://github.com/matthunz/circuitlib
   LeanPool/ClassificationOfSurfaces  https://github.com/mccorvie/classification-of-surfaces
   LeanPool/CompactSpectral           https://github.com/abenenson/compact-spectral
+  LeanPool/CompactnessAndDegeneracy  https://github.com/openai/ten-proofs
   LeanPool/CompositionAlgebras       https://github.com/ehrlich-b/composition-algebras
   LeanPool/Computability             https://github.com/tannerduve/computability
   LeanPool/ComputableReal            https://github.com/Timeroot/computableReal

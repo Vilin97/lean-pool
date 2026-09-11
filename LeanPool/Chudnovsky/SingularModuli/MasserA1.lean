@@ -6,8 +6,6 @@ Authors: Xuanji Li
 
 import LeanPool.Chudnovsky.SingularModuli.Rationality
 import LeanPool.Chudnovsky.SingularModuli.Kronecker
-import LeanPool.Chudnovsky.Ramanujan
-import LeanPool.Chudnovsky.Estimates
 
 /-!
 # Masser's Theorem A1 at `τ₁₆₃`: rationality of `s₂` (Phase C, statement 3)
