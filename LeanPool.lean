@@ -1,4643 +1,4671 @@
-module  -- shake: keep-all --deprecated_module: ignore
-
-public import LeanPool.ABCExceptions
-public import LeanPool.ABCExceptions.ForMathlib
-public import LeanPool.ABCExceptions.ForMathlib.Misc
-public import LeanPool.ABCExceptions.ForMathlib.RingTheory
-public import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
-public import LeanPool.ABCExceptions.Section2
-public import LeanPool.ABCExceptions.Section4
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Choquet
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Meager
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InfLists
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Player
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringLim
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.PreLift
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.QualityAliases
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.BodyFunctor
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.LenTreeHom
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.PointedTrees
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeBody
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeExtensions
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeLim
-public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
-public import LeanPool.AgreeToDisagree
-public import LeanPool.AgreeToDisagree.AgreeToDisagree
-public import LeanPool.AgreeToDisagree.AgreeToDisagreeBeliefs
-public import LeanPool.AharoniKorman
-public import LeanPool.AharoniKorman.Counterexample
-public import LeanPool.AharoniKorman.ForMathlib
-public import LeanPool.AharoniKorman.ForMathlib.Misc
-public import LeanPool.AndersonConjecture
-public import LeanPool.AndersonConjecture.AdicKerEval
-public import LeanPool.AndersonConjecture.AdicLocal
-public import LeanPool.AndersonConjecture.AdicNoetherian
-public import LeanPool.AndersonConjecture.Basic
-public import LeanPool.AndersonConjecture.CompleteDomain
-public import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
-public import LeanPool.AndersonConjecture.CompleteDomain.Domain
-public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
-public import LeanPool.AndersonConjecture.Jensen
-public import LeanPool.AndersonConjecture.Jensen.Adjoin
-public import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
-public import LeanPool.AndersonConjecture.Jensen.Adjoin.FromPrime
-public import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
-public import LeanPool.AndersonConjecture.Jensen.Application
-public import LeanPool.AndersonConjecture.Jensen.Avoidance
-public import LeanPool.AndersonConjecture.Jensen.CloseUp
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.AvoidanceStep
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.CloseUp
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.CoprimeSplit
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.Factor
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.FactorDivisibility
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionStep
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
-public import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
-public import LeanPool.AndersonConjecture.Jensen.CombinedStep
-public import LeanPool.AndersonConjecture.Jensen.Construction
-public import LeanPool.AndersonConjecture.Jensen.Construction.ChainHelpers
-public import LeanPool.AndersonConjecture.Jensen.Construction.Construction
-public import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
-public import LeanPool.AndersonConjecture.Jensen.Construction.Transfinite
-public import LeanPool.AndersonConjecture.Jensen.Defs
-public import LeanPool.AndersonConjecture.Jensen.Jensen
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.HeightBound
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.KrullDomain
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
-public import LeanPool.AndersonConjecture.Jensen.KrullDomain.UFDConstruction
-public import LeanPool.AndersonConjecture.Jensen.NSubring
-public import LeanPool.AndersonConjecture.Jensen.TransfiniteUnion
-public import LeanPool.AndersonConjecture.Main
-public import LeanPool.AndersonConjecture.QuasiCompleteRing
-public import LeanPool.AndersonConjecture.QuasiCompleteRing.Complete
-public import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
-public import LeanPool.Apportionment
-public import LeanPool.Apportionment.Basic
-public import LeanPool.Apportionment.PlausibleInstances
-public import LeanPool.Apportionment.Utils
-public import LeanPool.ArchonFirstProofResults
-public import LeanPool.ArchonFirstProofResults.FirstProof4
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.BoxPlusRealRoots
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Continuity
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Defs
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Density
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.HarmonicBound
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.InvPhiN
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Obreschkoff
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.ObreschkoffTransport
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.PhiN
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.RPoly
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.RealRoots
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Residue
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.RootContinuity
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.SignSquarefree
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Transport
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.TransportDecomp
-public import LeanPool.ArchonFirstProofResults.FirstProof4.Problem4
-public import LeanPool.ArchonFirstProofResults.FirstProof6
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.BarrierPotential
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ColoringFramework
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.DynamicColoring
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LaplacianBasics
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LoewnerPullback
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.OneSidedBarrier
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ResolventBound
-public import LeanPool.ArchonFirstProofResults.FirstProof6.Problem6
-public import LeanPool.ArtinWedderburn
-public import LeanPool.ArtinWedderburn.ArtinWedderburnTheorem
-public import LeanPool.ArtinWedderburn.Auxiliary
-public import LeanPool.ArtinWedderburn.CornerCornerLemma
-public import LeanPool.ArtinWedderburn.CornerRing
-public import LeanPool.ArtinWedderburn.IdealProd
-public import LeanPool.ArtinWedderburn.Idempotents
-public import LeanPool.ArtinWedderburn.MatrixUnits
-public import LeanPool.ArtinWedderburn.MinIdeals
-public import LeanPool.ArtinWedderburn.NiceIdeals
-public import LeanPool.ArtinWedderburn.NonUnitalToUnital
-public import LeanPool.ArtinWedderburn.PrimeRing
-public import LeanPool.ArtinWedderburn.SetProd
-public import LeanPool.BannaiBannaiStanton
-public import LeanPool.BannaiBannaiStanton.BoundOnDistanceSet
-public import LeanPool.Basic
-public import LeanPool.Biswal
-public import LeanPool.Biswal.Theorem1
-public import LeanPool.Biswal.Theorem23
-public import LeanPool.BooleanIsoperimetry
-public import LeanPool.BooleanIsoperimetry.Cascade
-public import LeanPool.BooleanIsoperimetry.CoherentGap
-public import LeanPool.BooleanIsoperimetry.Compression
-public import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
-public import LeanPool.BooleanIsoperimetry.ConwayGuyHeight
-public import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
-public import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
-public import LeanPool.BooleanIsoperimetry.Cube
-public import LeanPool.BooleanIsoperimetry.Harper
-public import LeanPool.BooleanIsoperimetry.KruskalKatona
-public import LeanPool.BooleanIsoperimetry.LayerWindows
-public import LeanPool.BooleanIsoperimetry.Macaulay
-public import LeanPool.BooleanIsoperimetry.MacaulayMin
-public import LeanPool.BooleanIsoperimetry.SetFamilyShadow
-public import LeanPool.BooleanIsoperimetry.Shadow
-public import LeanPool.BooleanIsoperimetry.SimplicialCompression
-public import LeanPool.BrauerGroupNew
-public import LeanPool.BrauerGroupNew.AbsoluteIsoH2
-public import LeanPool.BrauerGroupNew.AlgClosedUnion
-public import LeanPool.BrauerGroupNew.Azumaya.Basic
-public import LeanPool.BrauerGroupNew.Azumaya.Mul
-public import LeanPool.BrauerGroupNew.BrauerGroup
-public import LeanPool.BrauerGroupNew.BrauerOverR
-public import LeanPool.BrauerGroupNew.CentralSimple
-public import LeanPool.BrauerGroupNew.Centralizer
-public import LeanPool.BrauerGroupNew.CrossProductAlgebra
-public import LeanPool.BrauerGroupNew.DoubleCentralizer
-public import LeanPool.BrauerGroupNew.Examples.ShortComplex.LeftHomologyMapData
-public import LeanPool.BrauerGroupNew.ExtendScalar
-public import LeanPool.BrauerGroupNew.FieldCat
-public import LeanPool.BrauerGroupNew.FiniteField
-public import LeanPool.BrauerGroupNew.FrobeniusTheorem
-public import LeanPool.BrauerGroupNew.IsoSecond
-public import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
-public import LeanPool.BrauerGroupNew.Mathlib
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Equiv
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed
-public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Lattice
-public import LeanPool.BrauerGroupNew.Mathlib.Data
-public import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp
-public import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.Defs
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.Charpoly
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span
-public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory
-public import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological
-public import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological.GroupCohomology
-public import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Defs
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.MatrixAlgebra
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubring
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubring.Defs
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring.Defs
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TensorProduct
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TensorProduct.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Basic
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Lattice
-public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
-public import LeanPool.BrauerGroupNew.MatrixCenterEquiv
-public import LeanPool.BrauerGroupNew.MatrixEquivTensor
-public import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
-public import LeanPool.BrauerGroupNew.Morita.TensorProduct
-public import LeanPool.BrauerGroupNew.MoritaEquivalence
-public import LeanPool.BrauerGroupNew.RelativeBrauer
-public import LeanPool.BrauerGroupNew.SkolemNoether
-public import LeanPool.BrauerGroupNew.SplittingOfCSA
-public import LeanPool.BrauerGroupNew.Subfield
-public import LeanPool.BrauerGroupNew.Subfield.Defs
-public import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
-public import LeanPool.BrauerGroupNew.Subfield.Separable
-public import LeanPool.BrauerGroupNew.Subfield.Splitting
-public import LeanPool.BrauerGroupNew.Subfield.Subfield
-public import LeanPool.BrauerGroupNew.ToSecond
-public import LeanPool.BrauerGroupNew.TwoSidedIdeal
-public import LeanPool.BrauerGroupNew.Wedderburn
-public import LeanPool.BrauerGroupNew.ZeroSevenFourE
-public import LeanPool.Brouwer
-public import LeanPool.Brouwer.Brouwer
-public import LeanPool.Brouwer.BrouwerProduct
-public import LeanPool.Brouwer.Nash
-public import LeanPool.Brouwer.Primitive
-public import LeanPool.Brouwer.Scarf
-public import LeanPool.Brouwer.ScarfPath
-public import LeanPool.Brouwer.Simplex
-public import LeanPool.BruhatTits
-public import LeanPool.BruhatTits.Cartan
-public import LeanPool.BruhatTits.Cartan.Existence
-public import LeanPool.BruhatTits.Cartan.Uniqueness
-public import LeanPool.BruhatTits.Graph
-public import LeanPool.BruhatTits.Graph.Edges
-public import LeanPool.BruhatTits.Graph.Graph
-public import LeanPool.BruhatTits.Graph.GroupAction
-public import LeanPool.BruhatTits.Graph.Orientation
-public import LeanPool.BruhatTits.Graph.Regular
-public import LeanPool.BruhatTits.Graph.Tree
-public import LeanPool.BruhatTits.Graph.Vertices
-public import LeanPool.BruhatTits.Harmonic
-public import LeanPool.BruhatTits.Harmonic.Application
-public import LeanPool.BruhatTits.Harmonic.Basic
-public import LeanPool.BruhatTits.Lattice
-public import LeanPool.BruhatTits.Lattice.Basic
-public import LeanPool.BruhatTits.Lattice.Construction
-public import LeanPool.BruhatTits.Lattice.Distance
-public import LeanPool.BruhatTits.Lattice.Quotient
-public import LeanPool.BruhatTits.Lattice.Transvect
-public import LeanPool.BruhatTits.Utils
-public import LeanPool.BruhatTits.Utils.GLSubmoduleAction
-public import LeanPool.BruhatTits.Utils.GraphAction
-public import LeanPool.BruhatTits.Utils.LinearAlgebra
-public import LeanPool.BruhatTits.Utils.List
-public import LeanPool.BruhatTits.Utils.Matrix
-public import LeanPool.BruhatTits.Utils.Misc
-public import LeanPool.BruhatTits.Utils.Order
-public import LeanPool.BruhatTits.Utils.RingHom
-public import LeanPool.BruhatTits.Utils.Subring
-public import LeanPool.BruhatTits.Utils.ValuationRings
-public import LeanPool.Burkholder
-public import LeanPool.Burkholder.Majorants
-public import LeanPool.Burkholder.Majorants.Definitions
-public import LeanPool.Burkholder.Majorants.MajorantPEq2
-public import LeanPool.Burkholder.Majorants.MajorantPG2
-public import LeanPool.Burkholder.Majorants.MajorantPL2
-public import LeanPool.Burkholder.MartingaleTransforms
-public import LeanPool.CencovPetz
-public import LeanPool.CencovPetz.Basic
-public import LeanPool.CencovPetz.CencovFinite
-public import LeanPool.CencovPetz.CencovSplitPoint
-public import LeanPool.CencovPetz.ContinuousExtension
-public import LeanPool.CencovPetz.FisherContinuity
-public import LeanPool.CencovPetz.LeftInverseIsometry
-public import LeanPool.CencovPetz.MarkovMorphism
-public import LeanPool.CencovPetz.MonotoneMetric
-public import LeanPool.CencovPetz.PermutationInvariance
-public import LeanPool.CencovPetz.PermutationInvariantBilinForm
-public import LeanPool.CencovPetz.RationalDensity
-public import LeanPool.CencovPetz.RationalPoint
-public import LeanPool.CencovPetz.Replication
-public import LeanPool.CencovPetz.ReplicationInvariance
-public import LeanPool.CencovPetz.Simplex
-public import LeanPool.CencovPetz.SimplexTopology
-public import LeanPool.CencovPetz.Splitting
-public import LeanPool.CencovPetz.SplittingInvariance
-public import LeanPool.CencovPetz.SplittingUniform
-public import LeanPool.CencovPetz.SufficientStatistic
-public import LeanPool.CencovPetz.Uniform
-public import LeanPool.CencovPetz.UniformScalarConstant
-public import LeanPool.CencovPetz.UniformScalarMultiple
-public import LeanPool.CencovPetz.UniformSimplex
-public import LeanPool.ChannelCapacity
-public import LeanPool.ChannelCapacity.Basic
-public import LeanPool.ChannelCapacity.Capacity
-public import LeanPool.ChannelCapacity.ChainRule
-public import LeanPool.ChannelCapacity.Counterexample
-public import LeanPool.ChannelCapacity.Discharged
-public import LeanPool.ChannelCapacity.DischargedExample
-public import LeanPool.ChannelCapacity.Finite
-public import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
-public import LeanPool.ChannelCapacity.NonDegeneracy
-public import LeanPool.ChannelCapacity.StrictConcavity
-public import LeanPool.Chudnovsky
-public import LeanPool.Chudnovsky.Basic
-public import LeanPool.Chudnovsky.Chudnovsky
-public import LeanPool.Chudnovsky.Clausen
-public import LeanPool.Chudnovsky.Coefficients
-public import LeanPool.Chudnovsky.ComplexMult
-public import LeanPool.Chudnovsky.DivisionValues
-public import LeanPool.Chudnovsky.Estimates
-public import LeanPool.Chudnovsky.Fourier
-public import LeanPool.Chudnovsky.Kummer
-public import LeanPool.Chudnovsky.Lattices
-public import LeanPool.Chudnovsky.Liouville
-public import LeanPool.Chudnovsky.MainTheorem
-public import LeanPool.Chudnovsky.Numerics
-public import LeanPool.Chudnovsky.PicardFuchs
-public import LeanPool.Chudnovsky.Quasiperiods
-public import LeanPool.Chudnovsky.Ramanujan
-public import LeanPool.Chudnovsky.SigmaZeta
-public import LeanPool.Chudnovsky.SingularModuli
-public import LeanPool.Chudnovsky.SingularModuli.CMRelations
-public import LeanPool.Chudnovsky.SingularModuli.CosetOrbit
-public import LeanPool.Chudnovsky.SingularModuli.FormReduction
-public import LeanPool.Chudnovsky.SingularModuli.JFunction
-public import LeanPool.Chudnovsky.SingularModuli.Kronecker
-public import LeanPool.Chudnovsky.SingularModuli.MasserA1
-public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
-public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
-public import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
-public import LeanPool.Chudnovsky.SingularModuli.Rationality
-public import LeanPool.Chudnovsky.SingularModuli.Valence
-public import LeanPool.Chudnovsky.WeierstrassMore
-public import LeanPool.CircuitComplexity
-public import LeanPool.CircuitComplexity.AC0
-public import LeanPool.CircuitComplexity.AC0.Defs
-public import LeanPool.CircuitComplexity.AON
-public import LeanPool.CircuitComplexity.AON.Defs
-public import LeanPool.CircuitComplexity.Basic
-public import LeanPool.CircuitComplexity.Digraph.Defs
-public import LeanPool.CircuitComplexity.EssentialInput
-public import LeanPool.CircuitComplexity.Internal.AON
-public import LeanPool.CircuitComplexity.Internal.Bridge
-public import LeanPool.CircuitComplexity.Internal.CircDesc
-public import LeanPool.CircuitComplexity.Internal.LowerBound
-public import LeanPool.CircuitComplexity.Internal.NF
-public import LeanPool.CircuitComplexity.Internal.Nondeterminism
-public import LeanPool.CircuitComplexity.Internal.Schnorr
-public import LeanPool.CircuitComplexity.Internal.ShannonUpper
-public import LeanPool.CircuitComplexity.Internal.Simulation
-public import LeanPool.CircuitComplexity.Internal.Valiant
-public import LeanPool.CircuitComplexity.LowerBound
-public import LeanPool.CircuitComplexity.NF
-public import LeanPool.CircuitComplexity.NF.Defs
-public import LeanPool.CircuitComplexity.Nondeterminism
-public import LeanPool.CircuitComplexity.Nondeterminism.Defs
-public import LeanPool.CircuitComplexity.Schnorr
-public import LeanPool.CircuitComplexity.Shannon
-public import LeanPool.CircuitComplexity.Valiant
-public import LeanPool.CircuitComplexity.XOR
-public import LeanPool.Circuitlib
-public import LeanPool.Circuitlib.Circuit.Basic
-public import LeanPool.Circuitlib.Circuit.Belnap.Basic
-public import LeanPool.Circuitlib.Circuit.Belnap.Gate
-public import LeanPool.Circuitlib.Circuit.Belnap.Level
-public import LeanPool.Circuitlib.Circuit.Category.Basic
-public import LeanPool.Circuitlib.Circuit.Category.Combinational
-public import LeanPool.Circuitlib.Circuit.Category.Sequential
-public import LeanPool.Circuitlib.Circuit.Combinational
-public import LeanPool.Circuitlib.Circuit.Gate
-public import LeanPool.Circuitlib.Circuit.Wires
-public import LeanPool.ClassificationOfSurfaces
-public import LeanPool.ClassificationOfSurfaces.API
-public import LeanPool.ClassificationOfSurfaces.Basic
-public import LeanPool.ClassificationOfSurfaces.CanonicalCoordinates
-public import LeanPool.ClassificationOfSurfaces.CanonicalGeneratorMaps
-public import LeanPool.ClassificationOfSurfaces.CanonicalPairings
-public import LeanPool.ClassificationOfSurfaces.CanonicalWords
-public import LeanPool.ClassificationOfSurfaces.CellComplex
-public import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
-public import LeanPool.ClassificationOfSurfaces.DiskSquare
-public import LeanPool.ClassificationOfSurfaces.EvalStatement
-public import LeanPool.ClassificationOfSurfaces.Examples
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonicalRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCrosscap
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicDerivedRewrites
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicDyck
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicFaceMerge
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoveRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalizationResult
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1Realization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2DegenerateRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicReduction
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSphereRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicTerminalNormalization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicTriangulation
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicUnorientedRealization
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReduction
-public import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReductionCore
-public import LeanPool.ClassificationOfSurfaces.GeometricTriangulationRealization
-public import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
-public import LeanPool.ClassificationOfSurfaces.LeanEval.RepresentativeSanity
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveControlledApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanAffine
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenCover
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTileComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
-public import LeanPool.ClassificationOfSurfaces.Moise.AmbientHomeomorph
-public import LeanPool.ClassificationOfSurfaces.Moise.Anchors
-public import LeanPool.ClassificationOfSurfaces.Moise.BoundaryInvariant
-public import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
-public import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
-public import LeanPool.ClassificationOfSurfaces.Moise.ChartExtraction
-public import LeanPool.ClassificationOfSurfaces.Moise.ChartInduction
-public import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
-public import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
-public import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.Countermodels
-public import LeanPool.ClassificationOfSurfaces.Moise.DualConnectivity
-public import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
-public import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
-public import LeanPool.ClassificationOfSurfaces.Moise.FacewiseComparison
-public import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
-public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
-public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
-public import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
-public import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
-public import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
-public import LeanPool.ClassificationOfSurfaces.Moise.GraphRefinement
-public import LeanPool.ClassificationOfSurfaces.Moise.GraphSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.HalfPlanePolygon
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseCellwiseExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseGraphApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceFilling
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphModel
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteCellwiseExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceBoundary
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceExtension
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceFilling
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphPL
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFinitePLApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteSidePreservation
-public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
-public import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
-public import LeanPool.ClassificationOfSurfaces.Moise.OpenMidpointComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
-public import LeanPool.ClassificationOfSurfaces.Moise.PLMoves
-public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-public import LeanPool.ClassificationOfSurfaces.Moise.PlaneCycle
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalCrosscut
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
-public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalSchoenflies
-public import LeanPool.ClassificationOfSurfaces.Moise.PuncturedSurface
-public import LeanPool.ClassificationOfSurfaces.Moise.RelativeSynchronizedArrangement
-public import LeanPool.ClassificationOfSurfaces.Moise.ThinKiteMove
-public import LeanPool.ClassificationOfSurfaces.NormalForm
-public import LeanPool.ClassificationOfSurfaces.P2DegenerateDisk
-public import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
-public import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
-public import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
-public import LeanPool.ClassificationOfSurfaces.Representatives
-public import LeanPool.ClassificationOfSurfaces.SignedPresentation
-public import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
-public import LeanPool.ClassificationOfSurfaces.SphereHemisphere
-public import LeanPool.ClassificationOfSurfaces.SphereQuotientHomeomorph
-public import LeanPool.ClassificationOfSurfaces.StrongVertexStar
-public import LeanPool.ClassificationOfSurfaces.Surface
-public import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
-public import LeanPool.ClassificationOfSurfaces.TriangleCell
-public import LeanPool.ClassificationOfSurfaces.Triangulation
-public import LeanPool.ClassificationOfSurfaces.WeightedCircle
-public import LeanPool.Clawristotle
-public import LeanPool.Clawristotle.CoulombConcreteTheorem42
-public import LeanPool.Clawristotle.CoulombFlux
-public import LeanPool.Clawristotle.CoulombFluxBound
-public import LeanPool.Clawristotle.CoulombFluxConv
-public import LeanPool.Clawristotle.CoulombFluxDiff
-public import LeanPool.Clawristotle.CoulombForceTransport
-public import LeanPool.Clawristotle.CoulombKernel
-public import LeanPool.Clawristotle.CoulombNonvacuous
-public import LeanPool.Clawristotle.CoulombPSD
-public import LeanPool.Clawristotle.CoulombPSDHelpers
-public import LeanPool.Clawristotle.CoulombSpatialTransport
-public import LeanPool.Clawristotle.Defs
-public import LeanPool.Clawristotle.FlatTorus3Lemmas
-public import LeanPool.Clawristotle.GaussianHelpers
-public import LeanPool.Clawristotle.IteratedDerivHelpers
-public import LeanPool.Clawristotle.LogBoundHelpers
-public import LeanPool.Clawristotle.NewtonianPotential
-public import LeanPool.Clawristotle.SchwartzDecayDefs
-public import LeanPool.Clawristotle.Section2
-public import LeanPool.Clawristotle.Section3
-public import LeanPool.Clawristotle.Section3Helpers
-public import LeanPool.Clawristotle.Section3Helpers2
-public import LeanPool.Clawristotle.Section4
-public import LeanPool.Clawristotle.Section5
-public import LeanPool.Clawristotle.Section6
-public import LeanPool.Clawristotle.Section7
-public import LeanPool.Clawristotle.Section8
-public import LeanPool.Clawristotle.Theorem42
-public import LeanPool.Clawristotle.TorusDefs
-public import LeanPool.Clawristotle.TorusInstance
-public import LeanPool.Clawristotle.TorusIntegration
-public import LeanPool.Clawristotle.VMLInputDerive
-public import LeanPool.Clawristotle.VMLStructures
-public import LeanPool.Clawristotle.VelocityDecayInstance
-public import LeanPool.CommonNeighbourConjecture
-public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
-public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.DeletedModule
-public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.FrobeniusGroup
-public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.GeneralConstruction
-public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Irreducible
-public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Main
-public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems
-public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Definitions
-public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Internal
-public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.ProofAliases
-public import LeanPool.CommonNeighbourConjecture.Saxl.Affine
-public import LeanPool.CommonNeighbourConjecture.Saxl.Basic
-public import LeanPool.CommonNeighbourConjecture.Saxl.Generalized
-public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
-public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Defs
-public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Irreducible
-public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Symmetric
-public import LeanPool.CompactSpectral
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactOperatorOrthonormal
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Basic
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.CutoffProjector
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralTheorem
-public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
-public import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
-public import LeanPool.CompactnessAndDegeneracy
-public import LeanPool.CompactnessAndDegeneracy.Compactness
-public import LeanPool.CompactnessAndDegeneracy.Degeneracy
-public import LeanPool.CompositionAlgebras
-public import LeanPool.CompositionAlgebras.Composition.CayleyDickson
-public import LeanPool.CompositionAlgebras.Composition.Classification
-public import LeanPool.CompositionAlgebras.Composition.Defs
-public import LeanPool.CompositionAlgebras.Composition.Doubling
-public import LeanPool.CompositionAlgebras.Composition.Hurwitz
-public import LeanPool.CompositionAlgebras.Composition.Instances
-public import LeanPool.CompositionAlgebras.Composition.Isomorphisms
-public import LeanPool.CompositionAlgebras.OctonionModule
-public import LeanPool.CompositionAlgebras.OctonionNucleus
-public import LeanPool.CompositionAlgebras.OctonionTrace
-public import LeanPool.CompositionAlgebras.Octonions
-public import LeanPool.Computability
-public import LeanPool.Computability.ArithHierarchy
-public import LeanPool.Computability.AutGrp
-public import LeanPool.Computability.Encoding
-public import LeanPool.Computability.Jump
-public import LeanPool.Computability.Oracle
-public import LeanPool.Computability.TuringDegree
-public import LeanPool.ComputableReal
-public import LeanPool.ComputableReal.AuxLemmas
-public import LeanPool.ComputableReal.ComputableRSeq
-public import LeanPool.ComputableReal.ComputableReal
-public import LeanPool.ComputableReal.IsComputable
-public import LeanPool.ComputableReal.IsComputableC
-public import LeanPool.ComputableReal.SpecialFunctions
-public import LeanPool.ComputableReal.SpecialFunctions.Basic
-public import LeanPool.ComputableReal.SpecialFunctions.Exp
-public import LeanPool.ComputableReal.SpecialFunctions.Pi
-public import LeanPool.ComputableReal.SpecialFunctions.Sqrt
-public import LeanPool.ConnesKreimer
-public import LeanPool.ConnesKreimer.Coassoc
-public import LeanPool.ConnesKreimer.Core
-public import LeanPool.ConnesKreimer.PowerSeriesLogMul
-public import LeanPool.ConnesRigidity
-public import LeanPool.ConnesRigidity.Construction
-public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-public import LeanPool.ConnesRigidity.Construction.PaperActions
-public import LeanPool.ConnesRigidity.Construction.SquareSpan
-public import LeanPool.ConnesRigidity.Core
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificate
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard0
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard1
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard2
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard3
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard4
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard5
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard6
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelDetector
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ElementaryGeneration
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
-public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtension
-public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.ArithmeticSymplectic
-public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.BooleanPolynomial
-public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.BinaryPontryaginDual
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProduct
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductTransport
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FactorWitness
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FinitePropertyT
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalizedHaar
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PositiveSpectralMeasure
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.Supremum
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.ValuedSpectralMeasure
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PropertyTTransfer
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectFubini
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectGeneratorTransport
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralCriterion
-public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralDetection
-public import LeanPool.ConnesRigidity.Main
-public import LeanPool.ConnesRigidity.Paper.Section3
-public import LeanPool.ConnesRigidity.Paper.Section3.CrossedAction
-public import LeanPool.ConnesRigidity.Paper.Section3.CrossedHaar
-public import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacy
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyAlgebra
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyCoordinates
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyFirst
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyQuadratic
-public import LeanPool.ConnesRigidity.Paper.Section3.DualActions
-public import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
-public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
-public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
-public import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
-public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
-public import LeanPool.ConnesRigidity.Paper.Section3.FactorClosure
-public import LeanPool.ConnesRigidity.Paper.Section3.FactorIsomorphism
-public import LeanPool.ConnesRigidity.Paper.Section3.Fourier
-public import LeanPool.ConnesRigidity.Paper.Section3.FourierAction
-public import LeanPool.ConnesRigidity.Paper.Section3.FourierCoordinates
-public import LeanPool.ConnesRigidity.Paper.Section3.GroupFactor
-public import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
-public import LeanPool.ConnesRigidity.Paper.Section3.GroupVacuum
-public import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
-public import LeanPool.ConnesRigidity.Paper.Section4
-public import LeanPool.ConnesRigidity.Paper.Section4.AChartDetectorMeasure
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartDetectorMeasure
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartMeasure
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
-public import LeanPool.ConnesRigidity.Paper.Section4.ChartSpan
-public import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
-public import LeanPool.ConnesRigidity.Paper.Section4.FiniteExtensions
-public import LeanPool.ConnesRigidity.Paper.Section4.FullDetectorMeasure
-public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
-public import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetector
-public import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
-public import LeanPool.ConnesRigidity.Paper.Section4.SpectralFiniteDetection
-public import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
-public import LeanPool.ConnesRigidity.Paper.Section4.SplitExtensions
-public import LeanPool.ConnesRigidity.Paper.Section5
-public import LeanPool.ConnesRigidity.Paper.Section5.ICC
-public import LeanPool.ConnesRigidity.Paper.Section5.ICCOrbits
-public import LeanPool.ConnesRigidity.Paper.Section6
-public import LeanPool.ConnesRigidity.Paper.Section6.Characteristic
-public import LeanPool.ConnesRigidity.Paper.Section6.CharacteristicTransport
-public import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimple
-public import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimpleTransport
-public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
-public import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismEmbedding
-public import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismProofs
-public import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismTransport
-public import LeanPool.ConnesRigidity.Paper.Section6.QuotientModuleTransport
-public import LeanPool.ConnesRigidity.Paper.Section7
-public import LeanPool.ConnesRigidity.Paper.Section7.TheoremACompletion
-public import LeanPool.ConnesRigidity.Porting.CoreTransfer
-public import LeanPool.CramerWold
-public import LeanPool.CriticalPortraits
-public import LeanPool.CriticalPortraits.Census
-public import LeanPool.CriticalPortraits.Core
-public import LeanPool.CriticalPortraits.CycleLemma
-public import LeanPool.CriticalPortraits.Denominator
-public import LeanPool.CriticalPortraits.Forward
-public import LeanPool.CriticalPortraits.Injectivity
-public import LeanPool.CriticalPortraits.Portraits
-public import LeanPool.CriticalPortraits.Surjectivity
-public import LeanPool.CutAndProject
-public import LeanPool.CutAndProject.Basic
-public import LeanPool.CutAndProject.Irrational
-public import LeanPool.DeadEnds
-public import LeanPool.DeadEnds.Basic
-public import LeanPool.DeadEnds.CRT
-public import LeanPool.DeadEnds.Counting
-public import LeanPool.DeadEnds.CountingBlocks
-public import LeanPool.DeadEnds.InclusionExclusion
-public import LeanPool.DeadEnds.PrimeTail
-public import LeanPool.DeadEnds.RelevantPrimes
-public import LeanPool.DeadEnds.Solution
-public import LeanPool.DeadEnds.TailEstimates
-public import LeanPool.DemazureOperatorsLean
-public import LeanPool.DemazureOperatorsLean.Demazure
-public import LeanPool.DemazureOperatorsLean.DemazureAux
-public import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
-public import LeanPool.DemazureOperatorsLean.DemazureRelations
-public import LeanPool.DemazureOperatorsLean.Matsumoto
-public import LeanPool.DemazureOperatorsLean.StrongExchange
-public import LeanPool.DemazureProduct
-public import LeanPool.DemazureProduct.AspPerm
-public import LeanPool.DemazureProduct.Avoiding321
-public import LeanPool.DemazureProduct.InvSet
-public import LeanPool.DemazureProduct.ReducedProducts
-public import LeanPool.DemazureProduct.Reduction
-public import LeanPool.DemazureProduct.SlipFace
-public import LeanPool.DemazureProduct.Submodular
-public import LeanPool.DemazureProduct.Tableaux
-public import LeanPool.DemazureProduct.Transpositions
-public import LeanPool.DemazureProduct.Utils
-public import LeanPool.DemazureProduct.Valley
-public import LeanPool.Desargues
-public import LeanPool.Desargues.Basic
-public import LeanPool.Desargues.Morphism
-public import LeanPool.Desargues.PV
-public import LeanPool.Desargues.Structure
-public import LeanPool.DirectedTopologyLean4
-public import LeanPool.DirectedTopologyLean4.Constructions
-public import LeanPool.DirectedTopologyLean4.CoverLemma
-public import LeanPool.DirectedTopologyLean4.DTop
-public import LeanPool.DirectedTopologyLean4.DihomotopyCover
-public import LeanPool.DirectedTopologyLean4.DihomotopyFlip
-public import LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
-public import LeanPool.DirectedTopologyLean4.Dipath
-public import LeanPool.DirectedTopologyLean4.DipathSubtype
-public import LeanPool.DirectedTopologyLean4.DirectedHomotopy
-public import LeanPool.DirectedTopologyLean4.DirectedMap
-public import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
-public import LeanPool.DirectedTopologyLean4.DirectedSpace
-public import LeanPool.DirectedTopologyLean4.DirectedUnitInterval
-public import LeanPool.DirectedTopologyLean4.DirectedVanKampen
-public import LeanPool.DirectedTopologyLean4.Fraction
-public import LeanPool.DirectedTopologyLean4.FractionEqualities
-public import LeanPool.DirectedTopologyLean4.FundamentalCategory
-public import LeanPool.DirectedTopologyLean4.Interpolate
-public import LeanPool.DirectedTopologyLean4.MonotonePath
-public import LeanPool.DirectedTopologyLean4.MorphismAux
-public import LeanPool.DirectedTopologyLean4.PathCover
-public import LeanPool.DirectedTopologyLean4.PushoutAlternative
-public import LeanPool.DirectedTopologyLean4.SplitDihomotopy
-public import LeanPool.DirectedTopologyLean4.SplitPath
-public import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
-public import LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
-public import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
-public import LeanPool.DirectedTopologyLean4.StretchPath
-public import LeanPool.DirectedTopologyLean4.TransRefl
-public import LeanPool.DirectedTopologyLean4.UnitIntervalAux
-public import LeanPool.DistanceGeometry
-public import LeanPool.DistanceGeometry.CayleyMengerVolume
-public import LeanPool.DistanceGeometry.Defs
-public import LeanPool.DistanceGeometry.Schoenberg
-public import LeanPool.DistanceGeometry.SchoenbergHard
-public import LeanPool.DistanceGeometry.Trilateration
-public import LeanPool.DomainTheory
-public import LeanPool.DomainTheory.Constructive
-public import LeanPool.DomainTheory.ContinuousLattice.Constructions
-public import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaceTower
-public import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
-public import LeanPool.DomainTheory.ContinuousLattice.Injective
-public import LeanPool.DomainTheory.ContinuousLattice.InverseLimits
-public import LeanPool.DomainTheory.ContinuousLattice.MilnerCorrection
-public import LeanPool.DomainTheory.ContinuousLattice.ScottMaps
-public import LeanPool.DomainTheory.ContinuousLattice.Specialization
-public import LeanPool.DomainTheory.ContinuousLattice.Theorem212
-public import LeanPool.DomainTheory.ContinuousLattice.WayBelow
-public import LeanPool.DomainTheory.InfoSys
-public import LeanPool.DomainTheory.Neighborhood.Approximable
-public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
-public import LeanPool.DomainTheory.Neighborhood.Basic
-public import LeanPool.DomainTheory.Neighborhood.Definition610
-public import LeanPool.DomainTheory.Neighborhood.Definition613
-public import LeanPool.DomainTheory.Neighborhood.Definition63
-public import LeanPool.DomainTheory.Neighborhood.Definition68
-public import LeanPool.DomainTheory.Neighborhood.Definition71
-public import LeanPool.DomainTheory.Neighborhood.Definition72
-public import LeanPool.DomainTheory.Neighborhood.Example12
-public import LeanPool.DomainTheory.Neighborhood.Example13
-public import LeanPool.DomainTheory.Neighborhood.Example14
-public import LeanPool.DomainTheory.Neighborhood.Example15
-public import LeanPool.DomainTheory.Neighborhood.Example23
-public import LeanPool.DomainTheory.Neighborhood.Example24
-public import LeanPool.DomainTheory.Neighborhood.Example43
-public import LeanPool.DomainTheory.Neighborhood.Example44
-public import LeanPool.DomainTheory.Neighborhood.Example61
-public import LeanPool.DomainTheory.Neighborhood.Example62
-public import LeanPool.DomainTheory.Neighborhood.Example62A
-public import LeanPool.DomainTheory.Neighborhood.Example62C
-public import LeanPool.DomainTheory.Neighborhood.Example62Regular
-public import LeanPool.DomainTheory.Neighborhood.ExampleB
-public import LeanPool.DomainTheory.Neighborhood.Exercise112
-public import LeanPool.DomainTheory.Neighborhood.Exercise113
-public import LeanPool.DomainTheory.Neighborhood.Exercise114
-public import LeanPool.DomainTheory.Neighborhood.Exercise115
-public import LeanPool.DomainTheory.Neighborhood.Exercise116
-public import LeanPool.DomainTheory.Neighborhood.Exercise117
-public import LeanPool.DomainTheory.Neighborhood.Exercise118
-public import LeanPool.DomainTheory.Neighborhood.Exercise119
-public import LeanPool.DomainTheory.Neighborhood.Exercise120
-public import LeanPool.DomainTheory.Neighborhood.Exercise121
-public import LeanPool.DomainTheory.Neighborhood.Exercise122
-public import LeanPool.DomainTheory.Neighborhood.Exercise123
-public import LeanPool.DomainTheory.Neighborhood.Exercise124
-public import LeanPool.DomainTheory.Neighborhood.Exercise125
-public import LeanPool.DomainTheory.Neighborhood.Exercise126
-public import LeanPool.DomainTheory.Neighborhood.Exercise127
-public import LeanPool.DomainTheory.Neighborhood.Exercise213
-public import LeanPool.DomainTheory.Neighborhood.Exercise214
-public import LeanPool.DomainTheory.Neighborhood.Exercise215
-public import LeanPool.DomainTheory.Neighborhood.Exercise216
-public import LeanPool.DomainTheory.Neighborhood.Exercise218
-public import LeanPool.DomainTheory.Neighborhood.Exercise220
-public import LeanPool.DomainTheory.Neighborhood.Exercise221
-public import LeanPool.DomainTheory.Neighborhood.Exercise222
-public import LeanPool.DomainTheory.Neighborhood.Exercise314
-public import LeanPool.DomainTheory.Neighborhood.Exercise315
-public import LeanPool.DomainTheory.Neighborhood.Exercise316
-public import LeanPool.DomainTheory.Neighborhood.Exercise317
-public import LeanPool.DomainTheory.Neighborhood.Exercise318
-public import LeanPool.DomainTheory.Neighborhood.Exercise319
-public import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
-public import LeanPool.DomainTheory.Neighborhood.Exercise321
-public import LeanPool.DomainTheory.Neighborhood.Exercise322
-public import LeanPool.DomainTheory.Neighborhood.Exercise323
-public import LeanPool.DomainTheory.Neighborhood.Exercise324
-public import LeanPool.DomainTheory.Neighborhood.Exercise324Distrib
-public import LeanPool.DomainTheory.Neighborhood.Exercise324Iter
-public import LeanPool.DomainTheory.Neighborhood.Exercise325
-public import LeanPool.DomainTheory.Neighborhood.Exercise326
-public import LeanPool.DomainTheory.Neighborhood.Exercise326Sum
-public import LeanPool.DomainTheory.Neighborhood.Exercise327
-public import LeanPool.DomainTheory.Neighborhood.Exercise328
-public import LeanPool.DomainTheory.Neighborhood.Exercise407
-public import LeanPool.DomainTheory.Neighborhood.Exercise408
-public import LeanPool.DomainTheory.Neighborhood.Exercise409
-public import LeanPool.DomainTheory.Neighborhood.Exercise410
-public import LeanPool.DomainTheory.Neighborhood.Exercise411
-public import LeanPool.DomainTheory.Neighborhood.Exercise412
-public import LeanPool.DomainTheory.Neighborhood.Exercise413
-public import LeanPool.DomainTheory.Neighborhood.Exercise414
-public import LeanPool.DomainTheory.Neighborhood.Exercise415
-public import LeanPool.DomainTheory.Neighborhood.Exercise416
-public import LeanPool.DomainTheory.Neighborhood.Exercise417
-public import LeanPool.DomainTheory.Neighborhood.Exercise418
-public import LeanPool.DomainTheory.Neighborhood.Exercise419
-public import LeanPool.DomainTheory.Neighborhood.Exercise420
-public import LeanPool.DomainTheory.Neighborhood.Exercise421
-public import LeanPool.DomainTheory.Neighborhood.Exercise422
-public import LeanPool.DomainTheory.Neighborhood.Exercise423
-public import LeanPool.DomainTheory.Neighborhood.Exercise424
-public import LeanPool.DomainTheory.Neighborhood.Exercise425
-public import LeanPool.DomainTheory.Neighborhood.Exercise507
-public import LeanPool.DomainTheory.Neighborhood.Exercise508
-public import LeanPool.DomainTheory.Neighborhood.Exercise509
-public import LeanPool.DomainTheory.Neighborhood.Exercise510
-public import LeanPool.DomainTheory.Neighborhood.Exercise511
-public import LeanPool.DomainTheory.Neighborhood.Exercise512
-public import LeanPool.DomainTheory.Neighborhood.Exercise513
-public import LeanPool.DomainTheory.Neighborhood.Exercise514
-public import LeanPool.DomainTheory.Neighborhood.Exercise515
-public import LeanPool.DomainTheory.Neighborhood.Exercise516
-public import LeanPool.DomainTheory.Neighborhood.Exercise516Overlap
-public import LeanPool.DomainTheory.Neighborhood.Exercise516ThueMorse
-public import LeanPool.DomainTheory.Neighborhood.Exercise617
-public import LeanPool.DomainTheory.Neighborhood.Exercise617Gen
-public import LeanPool.DomainTheory.Neighborhood.Exercise618
-public import LeanPool.DomainTheory.Neighborhood.Exercise619
-public import LeanPool.DomainTheory.Neighborhood.Exercise619PartB
-public import LeanPool.DomainTheory.Neighborhood.Exercise621
-public import LeanPool.DomainTheory.Neighborhood.Exercise622
-public import LeanPool.DomainTheory.Neighborhood.Exercise623
-public import LeanPool.DomainTheory.Neighborhood.Exercise624
-public import LeanPool.DomainTheory.Neighborhood.Exercise625
-public import LeanPool.DomainTheory.Neighborhood.Exercise626
-public import LeanPool.DomainTheory.Neighborhood.Exercise627
-public import LeanPool.DomainTheory.Neighborhood.Exercise628
-public import LeanPool.DomainTheory.Neighborhood.Exercise629
-public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
-public import LeanPool.DomainTheory.Neighborhood.Lemma615
-public import LeanPool.DomainTheory.Neighborhood.Product
-public import LeanPool.DomainTheory.Neighborhood.Proposition53
-public import LeanPool.DomainTheory.Neighborhood.Proposition54
-public import LeanPool.DomainTheory.Neighborhood.Proposition611
-public import LeanPool.DomainTheory.Neighborhood.Proposition612
-public import LeanPool.DomainTheory.Neighborhood.Proposition66
-public import LeanPool.DomainTheory.Neighborhood.Proposition67
-public import LeanPool.DomainTheory.Neighborhood.Proposition77
-public import LeanPool.DomainTheory.Neighborhood.Recursive
-public import LeanPool.DomainTheory.Neighborhood.Table55
-public import LeanPool.DomainTheory.Neighborhood.Theorem110
-public import LeanPool.DomainTheory.Neighborhood.Theorem111
-public import LeanPool.DomainTheory.Neighborhood.Theorem41
-public import LeanPool.DomainTheory.Neighborhood.Theorem46
-public import LeanPool.DomainTheory.Neighborhood.Theorem51
-public import LeanPool.DomainTheory.Neighborhood.Theorem52
-public import LeanPool.DomainTheory.Neighborhood.Theorem56
-public import LeanPool.DomainTheory.Neighborhood.Theorem56Full
-public import LeanPool.DomainTheory.Neighborhood.Theorem614
-public import LeanPool.DomainTheory.Neighborhood.Theorem616
-public import LeanPool.DomainTheory.Neighborhood.Theorem69
-public import LeanPool.DomainTheory.Neighborhood.Theorem74
-public import LeanPool.DomainTheory.Neighborhood.Theorem75
-public import LeanPool.DomainTheory.Neighborhood.Theorem76
-public import LeanPool.Duality
-public import LeanPool.Duality.Common
-public import LeanPool.Duality.ExtendedFields
-public import LeanPool.Duality.FarkasBartl
-public import LeanPool.Duality.FarkasBasic
-public import LeanPool.Duality.FarkasSpecial
-public import LeanPool.Duality.LinearProgramming
-public import LeanPool.Duality.LinearProgrammingB
-public import LeanPool.EcTateLean
-public import LeanPool.EcTateLean.Algebra.CharP.Basic
-public import LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas
-public import LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes
-public import LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker
-public import LeanPool.EcTateLean.Algebra.EllipticCurve.Model
-public import LeanPool.EcTateLean.Algebra.Ring.Basic
-public import LeanPool.EcTateLean.FieldTheory.PerfectClosure
-public import LeanPool.EcTateLean.Init.Data.Int.Lemmas
-public import LeanPool.Egrs75
-public import LeanPool.Egrs75.AddBranch
-public import LeanPool.Egrs75.BadPrefixRoute
-public import LeanPool.Egrs75.CentralBinomialDigits
-public import LeanPool.Egrs75.ClearingHigh
-public import LeanPool.Egrs75.ConditionThreeWindow
-public import LeanPool.Egrs75.Defs
-public import LeanPool.Egrs75.DigitAtToolkit
-public import LeanPool.Egrs75.DigitVector
-public import LeanPool.Egrs75.Instances
-public import LeanPool.Egrs75.KummerValuation
-public import LeanPool.Egrs75.LeafInduction
-public import LeanPool.Egrs75.LogIrrationality
-public import LeanPool.Egrs75.MoveDigits
-public import LeanPool.Egrs75.MuFinish
-public import LeanPool.Egrs75.Reduction
-public import LeanPool.Egrs75.RoundUp
-public import LeanPool.Egrs75.SeedWindow
-public import LeanPool.Egrs75.SubtractBranch
-public import LeanPool.EhrhartVolumeInequality
-public import LeanPool.EhrhartVolumeInequality.Convergence
-public import LeanPool.EhrhartVolumeInequality.Convexity
-public import LeanPool.EhrhartVolumeInequality.Foundations
-public import LeanPool.EhrhartVolumeInequality.FourierAnalysis
-public import LeanPool.EhrhartVolumeInequality.Regularization
-public import LeanPool.EhrhartVolumeInequality.Resolvent
-public import LeanPool.EhrhartVolumeInequality.Variation
-public import LeanPool.Erdos1196
-public import LeanPool.Erdos1196.Basic
-public import LeanPool.Erdos1196.FirstEntryRowTerm
-public import LeanPool.Erdos1196.FormalConjecturesErdos1196
-public import LeanPool.Erdos1196.HitMass
-public import LeanPool.Erdos1196.Main
-public import LeanPool.Erdos1196.Markov
-public import LeanPool.Erdos1196.Normalization
-public import LeanPool.Erdos1196.NormalizationCore
-public import LeanPool.Erdos1196.NormalizationSmallPrime
-public import LeanPool.Erdos1196.Preliminaries
-public import LeanPool.Erdos1196.PreliminariesMertens
-public import LeanPool.Erdos1196.PreliminariesTailAux
-public import LeanPool.Erdos1196.PrimitiveWeight
-public import LeanPool.Erdos132ConvexK3
-public import LeanPool.Erdos132ConvexK3.Assembly
-public import LeanPool.Erdos132ConvexK3.Basic
-public import LeanPool.Erdos132ConvexK3.CoordinatedMajorants
-public import LeanPool.Erdos132ConvexK3.Geometry
-public import LeanPool.Erdos132ConvexK3.GlobalAssembly
-public import LeanPool.Erdos132ConvexK3.GlobalClosure
-public import LeanPool.Erdos132ConvexK3.GlobalReduction
-public import LeanPool.Erdos132ConvexK3.Lens
-public import LeanPool.Erdos132ConvexK3.MajorantArcNesting
-public import LeanPool.Erdos132ConvexK3.Majorants
-public import LeanPool.Erdos132ConvexK3.MetricDichotomy
-public import LeanPool.Erdos132ConvexK3.Penultimate
-public import LeanPool.Erdos132ConvexK3.RegressionWitnesses
-public import LeanPool.Erdos132ConvexK3.ResidualBounds
-public import LeanPool.Erdos132ConvexK3.TailClosure
-public import LeanPool.Erdos132ConvexK3.TerminalCage
-public import LeanPool.Erdos132ConvexK3.TerminalColorClosure
-public import LeanPool.Erdos132ConvexK3.UseSite
-public import LeanPool.Erdos132ConvexK3.Witnesses
-public import LeanPool.Erdos132ConvexK3.WordClosures
-public import LeanPool.Erdos132N14
-public import LeanPool.Erdos132N14.Basic
-public import LeanPool.Erdos132N14.DiameterDescent
-public import LeanPool.Erdos132N14.HopfPannwitz
-public import LeanPool.Erdos132N14.HopfPannwitzGeometry
-public import LeanPool.Erdos132N14.Main
-public import LeanPool.Erdos132N14.PublishedInputs
-public import LeanPool.Erdos132N14.RegularTridecagon
-public import LeanPool.Erdos132ThreeChain
-public import LeanPool.Erdos132ThreeChain.Basic
-public import LeanPool.Erdos132ThreeChain.CaroWei
-public import LeanPool.Erdos132ThreeChain.FivePoints
-public import LeanPool.Erdos132ThreeChain.FourPoints
-public import LeanPool.Erdos132ThreeChain.HopfPannwitz
-public import LeanPool.Erdos132ThreeChain.Plane
-public import LeanPool.Erdos132ThreeChain.PowerThree
-public import LeanPool.Erdos132ThreeChain.Statement
-public import LeanPool.Erdos132ThreeChain.Support
-public import LeanPool.Erdos132ThreeChain.Witnesses
-public import LeanPool.Erdos137
-public import LeanPool.Erdos137.AxiomAudit
-public import LeanPool.Erdos137.Base
-public import LeanPool.Erdos137.BlockFramework
-public import LeanPool.Erdos137.CombinedSplice
-public import LeanPool.Erdos137.Finiteness
-public import LeanPool.Erdos137.JointFiniteness
-public import LeanPool.Erdos137.QuarticCrude
-public import LeanPool.Erdos137.RefinedOverlap
-public import LeanPool.Erdos137.RoughPartStructure
-public import LeanPool.Erdos137.SexticCrude
-public import LeanPool.Erdos137.SmoothRefinement
-public import LeanPool.Erdos137.SpliceFiniteness
-public import LeanPool.Erdos137.SquarefreeCapacity
-public import LeanPool.Erdos137.TaoPoint
-public import LeanPool.Erdos346
-public import LeanPool.Erdos346.LimitExistsVariant
-public import LeanPool.Erdos367
-public import LeanPool.Erdos367.Core139
-public import LeanPool.Erdos367.Core4027
-public import LeanPool.Erdos367.GeneralKUpperBound
-public import LeanPool.Erdos367.K3AbcUpperBound
-public import LeanPool.Erdos367.PellLimsup
-public import LeanPool.Erdos367.RFullLowerBound
-public import LeanPool.Erdos403
-public import LeanPool.Erdos403.Basic
-public import LeanPool.Erdos403.FactBase
-public import LeanPool.Erdos403.Sharp
-public import LeanPool.Erdos81PaperIContrib
-public import LeanPool.Erdos81PaperIContrib.FarkasLP
-public import LeanPool.Erdos81PaperIContrib.FgConeClosed
-public import LeanPool.Erdos81PaperIIContrib
-public import LeanPool.Erdos81PaperIIContrib.Chordal
-public import LeanPool.Erdos81PaperIIIContrib
-public import LeanPool.Erdos81PaperIIIContrib.SimpleGraph
-public import LeanPool.Erdos81PaperIIIContrib.SumZeroTriangles
-public import LeanPool.Erdos865
-public import LeanPool.Erdos865.Defs
-public import LeanPool.Erdos865.FoldedAux
-public import LeanPool.Erdos865.FoldedMain
-public import LeanPool.Erdos865.Folding
-public import LeanPool.Erdos865.Main
-public import LeanPool.Erdos865.Sharpness
-public import LeanPool.Erdos865.UpperBound
-public import LeanPool.Erdos97ConvexOctagon
-public import LeanPool.Erdos97ConvexOctagon.Basic
-public import LeanPool.Erdos97ConvexOctagon.CayleyMenger
-public import LeanPool.Erdos97ConvexOctagon.Certificates
-public import LeanPool.Erdos97ConvexOctagon.Classification
-public import LeanPool.Erdos97ConvexOctagon.CodeStateExactness
-public import LeanPool.Erdos97ConvexOctagon.CoverageBranches
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificate
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCoverSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCoverTypes
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers00
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers01
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers02
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers03
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers04
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers05
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers06
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers07
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers08
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers09
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers10
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers11
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers12
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers13
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers14
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers15
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers16
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers17
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers18
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers19
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers20
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers21
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData00
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData02
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData03
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData04
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData05
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData06
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData07
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData08
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData09
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData10
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData11
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData12
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData13
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData14
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData15
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts00
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts01
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts02
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts03
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts04
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts05
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts06
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts07
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummarySoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryValidity
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts00
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts01
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts02
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts03
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts04
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts05
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts06
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts07
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts08
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts09
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts10
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts11
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts12
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts13
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts14
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts15
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts16
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts17
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts18
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts19
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts20
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts21
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts22
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts23
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts24
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts25
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts26
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts27
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts28
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts29
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts30
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts31
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts32
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts33
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts34
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts35
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts36
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts37
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts38
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts39
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts40
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts41
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts42
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts43
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts44
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts45
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts46
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts47
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts48
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts49
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts50
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts51
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts52
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts53
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts54
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts55
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts56
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts57
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts58
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts59
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts60
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts61
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts62
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts63
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts64
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts65
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts66
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts67
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts68
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts69
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts70
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts71
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts72
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts73
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts74
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts75
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts76
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts77
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts78
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts79
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts80
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts81
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts82
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts83
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts84
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts85
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts86
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts87
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts88
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts89
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts90
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts91
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts92
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts93
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateLookup
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateManifest
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateNodeSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSemanticSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateValidity
-public import LeanPool.Erdos97ConvexOctagon.CoverageData00
-public import LeanPool.Erdos97ConvexOctagon.CoverageData01
-public import LeanPool.Erdos97ConvexOctagon.CoverageData02
-public import LeanPool.Erdos97ConvexOctagon.CoverageData03
-public import LeanPool.Erdos97ConvexOctagon.CoverageData04
-public import LeanPool.Erdos97ConvexOctagon.CoverageData05
-public import LeanPool.Erdos97ConvexOctagon.CoverageData06
-public import LeanPool.Erdos97ConvexOctagon.CoverageData07
-public import LeanPool.Erdos97ConvexOctagon.CoverageData08
-public import LeanPool.Erdos97ConvexOctagon.CoverageData09
-public import LeanPool.Erdos97ConvexOctagon.CoverageData10
-public import LeanPool.Erdos97ConvexOctagon.CoverageData11
-public import LeanPool.Erdos97ConvexOctagon.CoverageData12
-public import LeanPool.Erdos97ConvexOctagon.CoverageData13
-public import LeanPool.Erdos97ConvexOctagon.CoverageData14
-public import LeanPool.Erdos97ConvexOctagon.CoverageData15
-public import LeanPool.Erdos97ConvexOctagon.CoverageData16
-public import LeanPool.Erdos97ConvexOctagon.CoverageData17
-public import LeanPool.Erdos97ConvexOctagon.CoverageData18
-public import LeanPool.Erdos97ConvexOctagon.CoverageData19
-public import LeanPool.Erdos97ConvexOctagon.CoverageData20
-public import LeanPool.Erdos97ConvexOctagon.CoverageData21
-public import LeanPool.Erdos97ConvexOctagon.CoverageData22
-public import LeanPool.Erdos97ConvexOctagon.CoverageData23
-public import LeanPool.Erdos97ConvexOctagon.CoverageData24
-public import LeanPool.Erdos97ConvexOctagon.CoverageData25
-public import LeanPool.Erdos97ConvexOctagon.CoverageData26
-public import LeanPool.Erdos97ConvexOctagon.CoverageData27
-public import LeanPool.Erdos97ConvexOctagon.CoverageData28
-public import LeanPool.Erdos97ConvexOctagon.CoverageData29
-public import LeanPool.Erdos97ConvexOctagon.CoverageData30
-public import LeanPool.Erdos97ConvexOctagon.CoverageData31
-public import LeanPool.Erdos97ConvexOctagon.CoverageDataTypes
-public import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMaskSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
-public import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
-public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
-public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData00
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData01
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData02
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData03
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData04
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData05
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData06
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData07
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData08
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData09
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData10
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData11
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData12
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData13
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData14
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData15
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData16
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData17
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData18
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData19
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData20
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData21
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData22
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData23
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData24
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData25
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData26
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData27
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData28
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData29
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData30
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData31
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryDataTypes
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
-public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
-public import LeanPool.Erdos97ConvexOctagon.CycleStrip
-public import LeanPool.Erdos97ConvexOctagon.EquidistantFour
-public import LeanPool.Erdos97ConvexOctagon.FiniteModel
-public import LeanPool.Erdos97ConvexOctagon.GeometryReduction
-public import LeanPool.Erdos97ConvexOctagon.Gram
-public import LeanPool.Erdos97ConvexOctagon.Incidence
-public import LeanPool.Erdos97ConvexOctagon.Main
-public import LeanPool.Erdos97ConvexOctagon.Obstructions
-public import LeanPool.Erdos97ConvexOctagon.PackedCertificates
-public import LeanPool.Erdos97ConvexOctagon.PairCompatibility
-public import LeanPool.Erdos97ConvexOctagon.PairStateExactness
-public import LeanPool.Erdos97ConvexOctagon.Pentagon
-public import LeanPool.Erdos97ConvexOctagon.Radius
-public import LeanPool.Erdos97ConvexOctagon.Relabelling
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra00
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra01
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra02
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra03
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra04
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra05
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra06
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra07
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra08
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra09
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra10
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra11
-public import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra12
-public import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
-public import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
-public import LeanPool.Erdos97ConvexOctagon.RowMasks
-public import LeanPool.Erdos97ConvexOctagon.RowSymmetry
-public import LeanPool.ErdosMoser
-public import LeanPool.ErdosMoser.Basic
-public import LeanPool.ErdosMoser.Bounds
-public import LeanPool.ErdosMoser.DiscreteVariance
-public import LeanPool.ErdosMoser.SubsetSums
-public import LeanPool.ErdosTuzaValtr
-public import LeanPool.ErdosTuzaValtr.All
-public import LeanPool.ErdosTuzaValtr.Config.Default
-public import LeanPool.ErdosTuzaValtr.Config.Defs
-public import LeanPool.ErdosTuzaValtr.Config.Lemmas
-public import LeanPool.ErdosTuzaValtr.Config.Mirror
-public import LeanPool.ErdosTuzaValtr.Etv.AlphaBeta
-public import LeanPool.ErdosTuzaValtr.Etv.Default
-public import LeanPool.ErdosTuzaValtr.Etv.Defs
-public import LeanPool.ErdosTuzaValtr.Etv.Label
-public import LeanPool.ErdosTuzaValtr.Etv.Mirror
-public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
-public import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
-public import LeanPool.ErdosTuzaValtr.Lib.List.Default
-public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
-public import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
-public import LeanPool.ErdosTuzaValtr.Main.CapCup
-public import LeanPool.ErdosTuzaValtr.Main.Defs
-public import LeanPool.ErdosTuzaValtr.Main.InductionStep
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.Default
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
-public import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
-public import LeanPool.ErdosTuzaValtr.Main.Main
-public import LeanPool.EventStructures
-public import LeanPool.EventStructures.Basic
-public import LeanPool.EventStructures.Computation
-public import LeanPool.EventStructures.Configuration
-public import LeanPool.EventStructures.FinitePoset
-public import LeanPool.EventStructures.Log
-public import LeanPool.EventStructures.Path
-public import LeanPool.EventStructures.Replay
-public import LeanPool.EventStructures.Rollback
-public import LeanPool.EventStructures.Trace
-public import LeanPool.FactorizationSystems
-public import LeanPool.FactorizationSystems.Basic
-public import LeanPool.FactorizationSystems.Characterization
-public import LeanPool.FactorizationSystems.Examples
-public import LeanPool.FactorizationSystems.OrthogonalComplements
-public import LeanPool.FactorizationSystems.Orthogonality
-public import LeanPool.Feige
-public import LeanPool.Feige.AugmentedLatentSupport
-public import LeanPool.Feige.AugmentedParameterization
-public import LeanPool.Feige.AugmentedTwoPointKernel
-public import LeanPool.Feige.BooleanChain
-public import LeanPool.Feige.BoundaryNull
-public import LeanPool.Feige.Calibration
-public import LeanPool.Feige.ChainCalibration
-public import LeanPool.Feige.ChainFromBoolean
-public import LeanPool.Feige.ChainInsertion
-public import LeanPool.Feige.ChainMeasure
-public import LeanPool.Feige.ConditionalMainTheorem
-public import LeanPool.Feige.ConditionalProductKernel
-public import LeanPool.Feige.ConditionalTwoPointCalibration
-public import LeanPool.Feige.Constants
-public import LeanPool.Feige.ConvolutionLogConcave
-public import LeanPool.Feige.FiniteSignedExp
-public import LeanPool.Feige.GeometryBridge
-public import LeanPool.Feige.Grunbaum.Definitions
-public import LeanPool.Feige.Grunbaum.FinalBridge
-public import LeanPool.Feige.Grunbaum.Main
-public import LeanPool.Feige.Grunbaum.ProbabilityCore
-public import LeanPool.Feige.Grunbaum.Sharpness
-public import LeanPool.Feige.Grunbaum.SimplexCentroidCoordinates
-public import LeanPool.Feige.Grunbaum.StrictBoundaryBridge
-public import LeanPool.Feige.Grunbaum.TruncationConcavity
-public import LeanPool.Feige.GrunbaumImport
-public import LeanPool.Feige.GrunbaumSimplexProperty
-public import LeanPool.Feige.GrunbaumWeightedForm
-public import LeanPool.Feige.HighSetLaw
-public import LeanPool.Feige.IndependentCalibrationAssembly
-public import LeanPool.Feige.InsertionAlgebra
-public import LeanPool.Feige.InsertionAnalyticAssembly
-public import LeanPool.Feige.InsertionCommonDensity
-public import LeanPool.Feige.InsertionCommonLaw
-public import LeanPool.Feige.InsertionEdgeRealization
-public import LeanPool.Feige.InsertionExpectation
-public import LeanPool.Feige.InsertionK
-public import LeanPool.Feige.InsertionLastCoordinateLaw
-public import LeanPool.Feige.InsertionTerminalLaw
-public import LeanPool.Feige.KContinuity
-public import LeanPool.Feige.KStatistic
-public import LeanPool.Feige.KernelAveraging
-public import LeanPool.Feige.Lemma43
-public import LeanPool.Feige.Lemma43ArbitraryBase
-public import LeanPool.Feige.Lemma43Complete
-public import LeanPool.Feige.Lemma43Density
-public import LeanPool.Feige.Lemma43Endpoints
-public import LeanPool.Feige.Lemma43FiniteSigned
-public import LeanPool.Feige.Lemma43Insertion
-public import LeanPool.Feige.Lemma43Relations
-public import LeanPool.Feige.LikelihoodRatio
-public import LeanPool.Feige.MainTheorem
-public import LeanPool.Feige.MarginalLaw
-public import LeanPool.Feige.MeanOneAugmentedMixture
-public import LeanPool.Feige.MeanOneReduction
-public import LeanPool.Feige.MeasurableTwoPointKernel
-public import LeanPool.Feige.MixtureCalibration
-public import LeanPool.Feige.NNRealExponentialLaw
-public import LeanPool.Feige.NormalizedExponential
-public import LeanPool.Feige.NormalizedExponentialProbability
-public import LeanPool.Feige.OneSidedDensity
-public import LeanPool.Feige.OrderedTwoPointInduction
-public import LeanPool.Feige.PaperAssembly
-public import LeanPool.Feige.ProductSplit
-public import LeanPool.Feige.ProductTwoPointKernel
-public import LeanPool.Feige.RecursiveLatentProbability
-public import LeanPool.Feige.Reduction
-public import LeanPool.Feige.Sharpness
-public import LeanPool.Feige.SignedExpLaw
-public import LeanPool.Feige.SimplexExponentialIdentification
-public import LeanPool.Feige.SimplexExponentialLaw
-public import LeanPool.Feige.SimplexGeometry
-public import LeanPool.Feige.SimplexMeasure
-public import LeanPool.Feige.SteinIdentity
-public import LeanPool.Feige.StrictLocalInsertion
-public import LeanPool.Feige.TransferAlgebra
-public import LeanPool.Feige.TransferProbability
-public import LeanPool.Feige.TransferProbability23
-public import LeanPool.Feige.TransferStein
-public import LeanPool.Feige.TransferTestFunctions
-public import LeanPool.Feige.TranslationTP2
-public import LeanPool.Feige.TwoPoint
-public import LeanPool.Feige.TwoPointBoundary
-public import LeanPool.Feige.TwoPointInduction
-public import LeanPool.Feige.TwoPointMixture
-public import LeanPool.Feige.TwoPointProductLaw
-public import LeanPool.Feige.TwoPointReindex
-public import LeanPool.Feige.VlassisThomas.Main
-public import LeanPool.FelConjecture
-public import LeanPool.FelConjecture.Solution
-public import LeanPool.Fineqs
-public import LeanPool.Fineqs.Main
-public import LeanPool.FiniteGraphFundamentalGroup
-public import LeanPool.FiniteGraphFundamentalGroup.Consequences
-public import LeanPool.FiniteGraphFundamentalGroup.Cover
-public import LeanPool.FiniteGraphFundamentalGroup.Proof
-public import LeanPool.FiniteGraphFundamentalGroup.Realization
-public import LeanPool.FiniteGraphFundamentalGroup.TopologicalComparison
-public import LeanPool.FiniteGraphFundamentalGroup.TopologicalCover
-public import LeanPool.FiniteGraphFundamentalGroup.TreeContraction
-public import LeanPool.FiveEighthsTheorem
-public import LeanPool.FiveEighthsTheorem.Basic
-public import LeanPool.Flean
-public import LeanPool.Flean.Basic
-public import LeanPool.Flean.FloatCfg
-public import LeanPool.Flean.FloatRep
-public import LeanPool.Flean.IntRounding
-public import LeanPool.Flean.LogRules
-public import LeanPool.Flean.Rounding
-public import LeanPool.Flean.Subnorm
-public import LeanPool.FltRegular
-public import LeanPool.FltRegular.CaseI.Statement
-public import LeanPool.FltRegular.CaseII.AuxLemmas
-public import LeanPool.FltRegular.CaseII.InductionStep
-public import LeanPool.FltRegular.CaseII.Statement
-public import LeanPool.FltRegular.FltRegular
-public import LeanPool.FltRegular.MayAssume.Lemmas
-public import LeanPool.FltRegular.NumberTheory.Cyclotomic.CaseI
-public import LeanPool.FltRegular.NumberTheory.Cyclotomic.CyclRat
-public import LeanPool.FltRegular.NumberTheory.Cyclotomic.MoreLemmas
-public import LeanPool.FltRegular.NumberTheory.Cyclotomic.UnitLemmas
-public import LeanPool.FltRegular.NumberTheory.CyclotomicRing
-public import LeanPool.FltRegular.NumberTheory.Hilbert92
-public import LeanPool.FltRegular.NumberTheory.Hilbert94
-public import LeanPool.FltRegular.NumberTheory.KummersLemma.Field
-public import LeanPool.FltRegular.NumberTheory.KummersLemma.KummersLemma
-public import LeanPool.FltRegular.NumberTheory.RegularPrimes
-public import LeanPool.FltRegular.NumberTheory.SystemOfUnits
-public import LeanPool.FltRegular.NumberTheory.Unramified
-public import LeanPool.FoZfc
-public import LeanPool.FoZfc.Axioms
-public import LeanPool.FoZfc.Basic
-public import LeanPool.FoZfc.BoundedFormulaOps
-public import LeanPool.FoZfc.FixedSnoc
-public import LeanPool.FoZfc.Replacement
-public import LeanPool.FoZfc.Tostring
-public import LeanPool.FormalLearningTheory
-public import LeanPool.FormalLearningTheory.Basic
-public import LeanPool.FormalLearningTheory.Bridge
-public import LeanPool.FormalLearningTheory.Complexity
-public import LeanPool.FormalLearningTheory.Complexity.Amalgamation
-public import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
-public import LeanPool.FormalLearningTheory.Complexity.Compression
-public import LeanPool.FormalLearningTheory.Complexity.DualVC
-public import LeanPool.FormalLearningTheory.Complexity.FiniteSupportUC
-public import LeanPool.FormalLearningTheory.Complexity.GameInfra
-public import LeanPool.FormalLearningTheory.Complexity.Generalization
-public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
-public import LeanPool.FormalLearningTheory.Complexity.Generalization.Tail
-public import LeanPool.FormalLearningTheory.Complexity.GeneralizationResults
-public import LeanPool.FormalLearningTheory.Complexity.Interpolation
-public import LeanPool.FormalLearningTheory.Complexity.Littlestone
-public import LeanPool.FormalLearningTheory.Complexity.Measurability
-public import LeanPool.FormalLearningTheory.Complexity.MindChange
-public import LeanPool.FormalLearningTheory.Complexity.Ordinal
-public import LeanPool.FormalLearningTheory.Complexity.Rademacher
-public import LeanPool.FormalLearningTheory.Complexity.Structures
-public import LeanPool.FormalLearningTheory.Complexity.Symmetrization
-public import LeanPool.FormalLearningTheory.Complexity.VCDimension
-public import LeanPool.FormalLearningTheory.Computation
-public import LeanPool.FormalLearningTheory.Criterion
-public import LeanPool.FormalLearningTheory.Criterion.Extended
-public import LeanPool.FormalLearningTheory.Criterion.Gold
-public import LeanPool.FormalLearningTheory.Criterion.Online
-public import LeanPool.FormalLearningTheory.Criterion.PAC
-public import LeanPool.FormalLearningTheory.Data
-public import LeanPool.FormalLearningTheory.Learner
-public import LeanPool.FormalLearningTheory.Learner.Active
-public import LeanPool.FormalLearningTheory.Learner.Bayesian
-public import LeanPool.FormalLearningTheory.Learner.Closure
-public import LeanPool.FormalLearningTheory.Learner.Core
-public import LeanPool.FormalLearningTheory.Learner.Monad
-public import LeanPool.FormalLearningTheory.Learner.Properties
-public import LeanPool.FormalLearningTheory.Learner.VersionSpace
-public import LeanPool.FormalLearningTheory.Process
-public import LeanPool.FormalLearningTheory.PureMath.AnalyticMeasurability
-public import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
-public import LeanPool.FormalLearningTheory.PureMath.BinaryMatrix
-public import LeanPool.FormalLearningTheory.PureMath.ChoquetCapacity
-public import LeanPool.FormalLearningTheory.PureMath.Concentration
-public import LeanPool.FormalLearningTheory.PureMath.Exchangeability
-public import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
-public import LeanPool.FormalLearningTheory.PureMath.KLDivergence
-public import LeanPool.FormalLearningTheory.PureMath.ReaderMonad
-public import LeanPool.FormalLearningTheory.Theorem
-public import LeanPool.FormalLearningTheory.Theorem.BorelAnalyticSeparation
-public import LeanPool.FormalLearningTheory.Theorem.Extended
-public import LeanPool.FormalLearningTheory.Theorem.Gold
-public import LeanPool.FormalLearningTheory.Theorem.Online
-public import LeanPool.FormalLearningTheory.Theorem.PAC
-public import LeanPool.FormalLearningTheory.Theorem.PACBayes
-public import LeanPool.FormalLearningTheory.Theorem.Separation
-public import LeanPool.FormalizationOfBoundedArithmetic
-public import LeanPool.FormalizationOfBoundedArithmetic.Algebra
-public import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
-public import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
-public import LeanPool.FormalizationOfBoundedArithmetic.Complexity
-public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-public import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
-public import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
-public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
-public import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
-public import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
-public import LeanPool.FormalizationOfBoundedArithmetic.Order
-public import LeanPool.FormalizationOfBoundedArithmetic.Register
-public import LeanPool.FormalizationOfBoundedArithmetic.Semantics
-public import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
-public import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-public import LeanPool.FormalizationOfBoundedArithmetic.V0
-public import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddAssoc
-public import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
-public import LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
-public import LeanPool.ForwardEuler
-public import LeanPool.ForwardEuler.Main
-public import LeanPool.FriezePatterns
-public import LeanPool.FriezePatterns.Chapter1
-public import LeanPool.FriezePatterns.Chapter2
-public import LeanPool.FriezePatterns.Chapter3
-public import LeanPool.FrontierMathOpenHypergraphs
-public import LeanPool.FrontierMathOpenHypergraphs.Basic
-public import LeanPool.FrontierMathOpenHypergraphs.Lubell
-public import LeanPool.FrontierMathOpenHypergraphs.Substitution
-public import LeanPool.FrontierMathOpenHypergraphs.Uniform
-public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameBoosters
-public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
-public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameExact
-public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameResidues
-public import LeanPool.FrontierMathOpenHypergraphs.Uniform.Frames
-public import LeanPool.FundamentalInequality
-public import LeanPool.GKPCarry
-public import LeanPool.GKPCarry.BadCarryCounting
-public import LeanPool.GKPCarry.BadCarryLanguage
-public import LeanPool.GKPCarry.BinaryReduction
-public import LeanPool.GKPCarry.CarryArithmetic
-public import LeanPool.GKPCarry.Definitions
-public import LeanPool.GKPCarry.DensityOne
-public import LeanPool.GKPCarry.FiniteRange
-public import LeanPool.GKPCarry.FiniteRangeCorollary
-public import LeanPool.GKPCarry.GKPCharacterization
-public import LeanPool.GKPCarry.InfiniteSieve
-public import LeanPool.GKPCarry.InfiniteSlices
-public import LeanPool.GKPCarry.Kummer
-public import LeanPool.GKPCarry.ModularPrefix
-public import LeanPool.GKPCarry.PowerResidues
-public import LeanPool.GKPCarry.Statement
-public import LeanPool.GKPCarry.UnitCarryCounting
-public import LeanPool.GrothendieckVanishing
-public import LeanPool.GrothendieckVanishing.ClosedImmersion
-public import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
-public import LeanPool.GrothendieckVanishing.CohomologyAPI
-public import LeanPool.GrothendieckVanishing.ConstantSheafFlasque
-public import LeanPool.GrothendieckVanishing.FinitelyGeneratedVanishing
-public import LeanPool.GrothendieckVanishing.FlasqueVanishing
-public import LeanPool.GrothendieckVanishing.GeneratedSubsheaf
-public import LeanPool.GrothendieckVanishing.GrothendieckVanishing
-public import LeanPool.GrothendieckVanishing.GrothendieckVanishingOverview
-public import LeanPool.GrothendieckVanishing.IrreducibleStep
-public import LeanPool.GrothendieckVanishing.PresheafFilteredColimit
-public import LeanPool.GrothendieckVanishing.PresheafFilteredColimitCore
-public import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
-public import LeanPool.GrothendieckVanishing.TopologicalKrullDim
-public import LeanPool.GrothendieckVanishing.ZeroOutside
-public import LeanPool.HSDInteriorPointLP
-public import LeanPool.HSDInteriorPointLP.FixedYTMTheory
-public import LeanPool.HSDInteriorPointLP.GeneratedConvergence
-public import LeanPool.HSDInteriorPointLP.LocalNeighborhoodEstimates
-public import LeanPool.HSDInteriorPointLP.NewtonSystem
-public import LeanPool.HSDInteriorPointLP.PrimalDualData
-public import LeanPool.HadwigerNelsonBounds
-public import LeanPool.HadwigerNelsonBounds.Basic
-public import LeanPool.HadwigerNelsonBounds.IsbellColoring
-public import LeanPool.HadwigerNelsonBounds.LatticeSeparation
-public import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
-public import LeanPool.HadwigerNelsonBounds.PartsCertificate
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData0
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData1
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData2
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData3
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData4
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData5
-public import LeanPool.HadwigerNelsonBounds.PartsCertificateData6
-public import LeanPool.HadwigerNelsonBounds.PartsCoordinates
-public import LeanPool.HadwigerNelsonBounds.PartsFirstStage
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetCases
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetData
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification0
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification1
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification2
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification3
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbedding
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbeddingCore
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetForcedPair
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData0
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData1
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData2
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData3
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData4
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData5
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData6
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification0
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification1
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification2
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification3
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification4
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification5
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification6
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification7
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData0
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry0
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry1
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry2
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry3
-public import LeanPool.HadwigerNelsonBounds.PartsGadgetVerification
-public import LeanPool.HadwigerNelsonBounds.PartsGeometry
-public import LeanPool.HadwigerNelsonBounds.PartsPermutationData0
-public import LeanPool.HadwigerNelsonBounds.PartsPermutationData1
-public import LeanPool.HadwigerNelsonBounds.PartsPermutationData2
-public import LeanPool.HadwigerNelsonBounds.PartsPermutationData3
-public import LeanPool.HadwigerNelsonBounds.PartsPermutationData4
-public import LeanPool.HadwigerNelsonBounds.PartsPermutationData5
-public import LeanPool.HadwigerNelsonBounds.PartsPermutations
-public import LeanPool.HadwigerNelsonBounds.PartsPlaneGeometry
-public import LeanPool.HadwigerNelsonBounds.PartsRootDecision
-public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionCore
-public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData0
-public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData1
-public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData2
-public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData3
-public import LeanPool.HadwigerNelsonBounds.PartsSpindle
-public import LeanPool.HadwigerNelsonBounds.Voronoi
-public import LeanPool.HadwigerNelsonBounds.VoronoiQuadratic
-public import LeanPool.HansonWright
-public import LeanPool.HansonWright.MeasureTheory.Integral.LayerCake
-public import LeanPool.HansonWright.Probability.Concentration.Bernstein
-public import LeanPool.HansonWright.Probability.Concentration.Chernoff
-public import LeanPool.HansonWright.Probability.Concentration.HansonWright
-public import LeanPool.HansonWright.Probability.Moments.Cumulant
-public import LeanPool.HansonWright.Probability.Moments.Exponential
-public import LeanPool.HansonWright.Probability.Process.FiniteMaximum
-public import LeanPool.HansonWright.Probability.Process.SubGaussian
-public import LeanPool.Incompleteness
-public import LeanPool.Incompleteness.Arith.D1
-public import LeanPool.Incompleteness.Arith.D3
-public import LeanPool.Incompleteness.Arith.DC
-public import LeanPool.Incompleteness.Arith.First
-public import LeanPool.Incompleteness.Arith.FormalizedArithmetic
-public import LeanPool.Incompleteness.Arith.Second
-public import LeanPool.Incompleteness.Arith.Theory
-public import LeanPool.Incompleteness.Arithmetization.Basic.IOpen
-public import LeanPool.Incompleteness.Arithmetization.Basic.Ind
-public import LeanPool.Incompleteness.Arithmetization.Basic.PeanoMinus
-public import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
-public import LeanPool.Incompleteness.Arithmetization.Definability.Boldface
-public import LeanPool.Incompleteness.Arithmetization.Definability.BoundedBoldface
-public import LeanPool.Incompleteness.Arithmetization.Definability.Hierarchy
-public import LeanPool.Incompleteness.Arithmetization.Definability.Init
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Bit
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Basic
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Coding
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Fixpoint
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.PRF
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Seq
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Vec
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.CodedTheory
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Coding
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Basic
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Functions
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Iteration
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Typed
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Language
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Derivation
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Thy
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Typed
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Basic
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Functions
-public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Typed
-public import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Exp
-public import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Log
-public import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.PPow2
-public import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Pow2
-public import LeanPool.Incompleteness.Arithmetization.Vorspiel.ExistsUnique
-public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Graph
-public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Lemmata
-public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
-public import LeanPool.Incompleteness.DC.Basic
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Basic
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Hierarchy
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Representation
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.StrictHierarchy
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Theory
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.BinderNotation
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus2
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Coding
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Eq
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Model
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Operator
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Elementary
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Semantics
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Formula
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Coding
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.SearchTree
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.SubLanguage
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Order.Le
-public import LeanPool.Incompleteness.Foundation.FirstOrder.Ultraproduct
-public import LeanPool.Incompleteness.Foundation.IntProp.Formula
-public import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Basic
-public import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Int
-public import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.WellKnown
-public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Basic
-public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Basic
-public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Classical
-public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Soundness
-public import LeanPool.Incompleteness.Foundation.IntProp.Substitution
-public import LeanPool.Incompleteness.Foundation.Logic.Axioms
-public import LeanPool.Incompleteness.Foundation.Logic.Calculus
-public import LeanPool.Incompleteness.Foundation.Logic.Disjunctive
-public import LeanPool.Incompleteness.Foundation.Logic.Entailment
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Basic
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Lukasiewicz
-public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
-public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
-public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Language
-public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
-public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Rew
-public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
-public import LeanPool.Incompleteness.Foundation.Logic.Semantics
-public import LeanPool.Incompleteness.Foundation.Modal.Axioms
-public import LeanPool.Incompleteness.Foundation.Modal.Complement
-public import LeanPool.Incompleteness.Foundation.Modal.ComplementClosedConsistentFinset
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.GL
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K4
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K5
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KD
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KP
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KT
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KTc
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.S5
-public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Triv
-public import LeanPool.Incompleteness.Foundation.Modal.Formula
-public import LeanPool.Incompleteness.Foundation.Modal.Geachean
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Basic
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Geach
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Basic
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Unprovability
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.S5Grz
-public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
-public import LeanPool.Incompleteness.Foundation.Modal.IntProp
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomDot3
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomGrz
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomVer
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Closure
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Filteration
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Completeness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.MDP
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Soundness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Tree
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitation
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Completeness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Soundness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K4
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K45
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K5
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB4
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB5
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD4
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD45
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD5
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KDB
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT4B
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KTB
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot2
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot3
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S5
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Triv
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Ver
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.KHIncompleteness
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Preservation
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.SimpleExtension
-public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Tree
-public import LeanPool.Incompleteness.Foundation.Modal.Logic.Basic
-public import LeanPool.Incompleteness.Foundation.Modal.Logic.WellKnown
-public import LeanPool.Incompleteness.Foundation.Modal.LogicSymbol
-public import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
-public import LeanPool.Incompleteness.Foundation.Modal.Subformulas
-public import LeanPool.Incompleteness.Foundation.Modal.Substitution
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Arith
-public import LeanPool.Incompleteness.Foundation.Vorspiel.BinaryRelations
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Collection
-public import LeanPool.Incompleteness.Foundation.Vorspiel.ExistsUnique
-public import LeanPool.Incompleteness.Foundation.Vorspiel.NotationClass
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Order
-public import LeanPool.Incompleteness.Foundation.Vorspiel.RelItr
-public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
-public import LeanPool.Incompleteness.ProvabilityLogic.Basic
-public import LeanPool.Incompleteness.ToFoundation.Basic
-public import LeanPool.InfinitaryLogic
-public import LeanPool.InfinitaryLogic.Admissible.Family
-public import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
-public import LeanPool.InfinitaryLogic.Admissible.HF
-public import LeanPool.InfinitaryLogic.Combinatorics.EndHomogeneousErdosRado
-public import LeanPool.InfinitaryLogic.Combinatorics.FiniteArityErdosRadoInduction
-public import LeanPool.InfinitaryLogic.Combinatorics.PairErdosRadoGeneral
-public import LeanPool.InfinitaryLogic.Conditional.GandyHarrington
-public import LeanPool.InfinitaryLogic.Conditional.MorleyHanfSchemaDischarge
-public import LeanPool.InfinitaryLogic.Conditional.MorleyHanfTransfer
-public import LeanPool.InfinitaryLogic.Conditional.SilverCategoryRoute
-public import LeanPool.InfinitaryLogic.Descriptive.AnalyticTree
-public import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
-public import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
-public import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
-public import LeanPool.InfinitaryLogic.Descriptive.FiniteCarrier
-public import LeanPool.InfinitaryLogic.Descriptive.G0Dichotomy
-public import LeanPool.InfinitaryLogic.Descriptive.G0Fusion
-public import LeanPool.InfinitaryLogic.Descriptive.GSGraph
-public import LeanPool.InfinitaryLogic.Descriptive.InvariantMeasurableSpace
-public import LeanPool.InfinitaryLogic.Descriptive.IsomorphismBorel
-public import LeanPool.InfinitaryLogic.Descriptive.KuratowskiUlam
-public import LeanPool.InfinitaryLogic.Descriptive.LogicAction
-public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobar
-public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
-public import LeanPool.InfinitaryLogic.Descriptive.Measurable
-public import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
-public import LeanPool.InfinitaryLogic.Descriptive.Mycielski
-public import LeanPool.InfinitaryLogic.Descriptive.PerfectAntichain
-public import LeanPool.InfinitaryLogic.Descriptive.Polish
-public import LeanPool.InfinitaryLogic.Descriptive.QueryCode
-public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
-public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
-public import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
-public import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
-public import LeanPool.InfinitaryLogic.Descriptive.Topology
-public import LeanPool.InfinitaryLogic.Descriptive.WellOrderBridge
-public import LeanPool.InfinitaryLogic.Descriptive.WellOrderClass
-public import LeanPool.InfinitaryLogic.Descriptive.WellOrderNonBorel
-public import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
-public import LeanPool.InfinitaryLogic.Karp.PotentialIso
-public import LeanPool.InfinitaryLogic.Lomega1omega.CountableIndex
-public import LeanPool.InfinitaryLogic.Lomega1omega.Depth
-public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
-public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
-public import LeanPool.InfinitaryLogic.Lomega1omega.FirstOrderImage
-public import LeanPool.InfinitaryLogic.Lomega1omega.Fragment
-public import LeanPool.InfinitaryLogic.Lomega1omega.InfiniteAxiom
-public import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
-public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
-public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
-public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
-public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
-public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-public import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
-public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.IndexCoding
-public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
-public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Semantics
-public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
-public import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
-public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
-public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
-public import LeanPool.InfinitaryLogic.Methods.ConstantSurgery
-public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
-public import LeanPool.InfinitaryLogic.Methods.EM.Indiscernible
-public import LeanPool.InfinitaryLogic.Methods.EM.Realization
-public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
-public import LeanPool.InfinitaryLogic.Methods.EM.Template
-public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-public import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
-public import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTermModel
-public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
-public import LeanPool.InfinitaryLogic.Methods.Henkin.ModelExistence
-public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
-public import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveExistence
-public import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPair
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairCompletion
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairModel
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantGeneralization
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigArbitrary
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigRelational
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSeparation
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonArbitrary
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonClosures
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonInseparability
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedCP
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedFamily
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelational
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelationalize
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRootGate
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonSublanguage
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRelational
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRootGate
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzSublanguage
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInseparability
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
-public import LeanPool.InfinitaryLogic.Methods.Interpolation.TermGraph
-public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-public import LeanPool.InfinitaryLogic.Methods.LocalColimit
-public import LeanPool.InfinitaryLogic.Methods.LocalEMCardinality
-public import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
-public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
-public import LeanPool.InfinitaryLogic.Methods.LocalEMEquivariance
-public import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
-public import LeanPool.InfinitaryLogic.Methods.LocalEMSmall
-public import LeanPool.InfinitaryLogic.Methods.LocalEMSmallModel
-public import LeanPool.InfinitaryLogic.Methods.LocalEMSupport
-public import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
-public import LeanPool.InfinitaryLogic.Methods.LocalEMTruth
-public import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
-public import LeanPool.InfinitaryLogic.Methods.LocalEMTupleOrbit
-public import LeanPool.InfinitaryLogic.Methods.LocalSkolem
-public import LeanPool.InfinitaryLogic.Methods.LocalSkolemUniversal
-public import LeanPool.InfinitaryLogic.Methods.LocalTower
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Disjoint
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.FunctionalTheta
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCMem
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCSentence
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Separation
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.SharedDecoder
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.TaggedGlue
-public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
-public import LeanPool.InfinitaryLogic.Methods.MarkerStage
-public import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
-public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
-public import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
-public import LeanPool.InfinitaryLogic.Methods.SchemaOmegaWitness
-public import LeanPool.InfinitaryLogic.Methods.SchemaTermModel
-public import LeanPool.InfinitaryLogic.Methods.SchemaTermTruth
-public import LeanPool.InfinitaryLogic.Methods.SkolemClosure
-public import LeanPool.InfinitaryLogic.Methods.SkolemColimit
-public import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
-public import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
-public import LeanPool.InfinitaryLogic.Methods.UniformCollapse
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.BaseMember
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.ClosureFields
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.CofinalFiber
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Constants
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapInsertion
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.SymbolCountability
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Undefinability
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.WOConsistency
-public import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
-public import LeanPool.InfinitaryLogic.ModelTheory.AElementary
-public import LeanPool.InfinitaryLogic.ModelTheory.ArbitraryStabilization
-public import LeanPool.InfinitaryLogic.ModelTheory.CountableCompanion
-public import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
-public import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
-public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.BethLadder
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderBound
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderSyntax
-public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.VonNeumannModel
-public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
-public import LeanPool.InfinitaryLogic.ModelTheory.MorleyCounting
-public import LeanPool.InfinitaryLogic.ModelTheory.MorleyHanf
-public import LeanPool.InfinitaryLogic.ModelTheory.PCClass
-public import LeanPool.InfinitaryLogic.ModelTheory.ScottCompletion
-public import LeanPool.InfinitaryLogic.ModelTheory.TypeIsolation
-public import LeanPool.InfinitaryLogic.ModelTheory.TypePreservingBF
-public import LeanPool.InfinitaryLogic.OrdinalUtil
-public import LeanPool.InfinitaryLogic.Scott.AtomicDiagram
-public import LeanPool.InfinitaryLogic.Scott.BackAndForth
-public import LeanPool.InfinitaryLogic.Scott.Formula
-public import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
-public import LeanPool.InfinitaryLogic.Scott.Height.Defs
-public import LeanPool.InfinitaryLogic.Scott.Rank
-public import LeanPool.InfinitaryLogic.Scott.RefinementCount
-public import LeanPool.InfinitaryLogic.Scott.Sentence
-public import LeanPool.InfinitaryLogic.Util
-public import LeanPool.IsTranscendentalPi
-public import LeanPool.IsTranscendentalPi.AnalyticEstimates
-public import LeanPool.IsTranscendentalPi.CalculusOnPoly
-public import LeanPool.IsTranscendentalPi.ComplexExponential
-public import LeanPool.IsTranscendentalPi.IncrementalDerivatives
-public import LeanPool.IsTranscendentalPi.Main
-public import LeanPool.IsTranscendentalPi.NivenPolynomials
-public import LeanPool.IsTranscendentalPi.ScaledAuxiliaryPolynomial
-public import LeanPool.IsTranscendentalPi.SubsetSumPolynomial
-public import LeanPool.IsTranscendentalPi.SymmetricPolynomials
-public import LeanPool.IsoGraph
-public import LeanPool.IsoGraph.Canon.Algorithm
-public import LeanPool.IsoGraph.Canon.Autos
-public import LeanPool.IsoGraph.Canon.Branch
-public import LeanPool.IsoGraph.Canon.Correct
-public import LeanPool.IsoGraph.Canon.Dominate
-public import LeanPool.IsoGraph.Canon.Equivariance
-public import LeanPool.IsoGraph.Canon.Jump
-public import LeanPool.IsoGraph.Canon.Leaves
-public import LeanPool.IsoGraph.Canon.Monotone
-public import LeanPool.IsoGraph.Canon.Node
-public import LeanPool.IsoGraph.Canon.Optimal
-public import LeanPool.IsoGraph.Canon.Orbits
-public import LeanPool.IsoGraph.Canon.Paths
-public import LeanPool.IsoGraph.Canon.Pinned
-public import LeanPool.IsoGraph.Canon.Progress
-public import LeanPool.IsoGraph.Canon.Search
-public import LeanPool.IsoGraph.Canon.Spec
-public import LeanPool.IsoGraph.ForMathlib.Array
-public import LeanPool.IsoGraph.ForMathlib.Bits
-public import LeanPool.Isoperimetric
-public import LeanPool.Isoperimetric.Basic
-public import LeanPool.Isoperimetric.BrunnMinkowski
-public import LeanPool.Isoperimetric.Isoperimetric
-public import LeanPool.Isoperimetric.PrekopaLeindler
-public import LeanPool.JacobianDiffgeo
-public import LeanPool.JacobianDiffgeo.Abel
-public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
-public import LeanPool.JacobianDiffgeo.Abel.ChartSupported
-public import LeanPool.JacobianDiffgeo.Abel.DolbeaultBridge
-public import LeanPool.JacobianDiffgeo.Abel.LinkData
-public import LeanPool.JacobianDiffgeo.Abel.LogPiece
-public import LeanPool.JacobianDiffgeo.Abel.Loops
-public import LeanPool.JacobianDiffgeo.Abel.OfCurveInj
-public import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
-public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
-public import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
-public import LeanPool.JacobianDiffgeo.Abel.WeakToMero
-public import LeanPool.JacobianDiffgeo.AbelWeak
-public import LeanPool.JacobianDiffgeo.AbelWeak.ChainAssembly
-public import LeanPool.JacobianDiffgeo.AbelWeak.GeneralChain
-public import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
-public import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
-public import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
-public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
-public import LeanPool.JacobianDiffgeo.CanonicalForms
-public import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
-public import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
-public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
-public import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
-public import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
-public import LeanPool.JacobianDiffgeo.CanonicalForms.OrdRes
-public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
-public import LeanPool.JacobianDiffgeo.Cech
-public import LeanPool.JacobianDiffgeo.Cech.Cochains
-public import LeanPool.JacobianDiffgeo.Cech.Colimit
-public import LeanPool.JacobianDiffgeo.Cech.Covers
-public import LeanPool.JacobianDiffgeo.Cech.H0
-public import LeanPool.JacobianDiffgeo.Cech.Injectivity
-public import LeanPool.JacobianDiffgeo.Cech.Refinement
-public import LeanPool.JacobianDiffgeo.Cech.SixTerm
-public import LeanPool.JacobianDiffgeo.Cech.Skyscraper
-public import LeanPool.JacobianDiffgeo.Cech.Window
-public import LeanPool.JacobianDiffgeo.Cech.WindowRank
-public import LeanPool.JacobianDiffgeo.CechCount
-public import LeanPool.JacobianDiffgeo.CechCount.Count
-public import LeanPool.JacobianDiffgeo.CechCount.Final
-public import LeanPool.JacobianDiffgeo.CechCount.Mul
-public import LeanPool.JacobianDiffgeo.CechCount.Surjective
-public import LeanPool.JacobianDiffgeo.Challenge
-public import LeanPool.JacobianDiffgeo.Dbar
-public import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
-public import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
-public import LeanPool.JacobianDiffgeo.Dbar.Form01
-public import LeanPool.JacobianDiffgeo.Dbar.Operator
-public import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
-public import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
-public import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
-public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
-public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
-public import LeanPool.JacobianDiffgeo.Finiteness
-public import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
-public import LeanPool.JacobianDiffgeo.Finiteness.Chain
-public import LeanPool.JacobianDiffgeo.Finiteness.Chi
-public import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
-public import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
-public import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
-public import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
-public import LeanPool.JacobianDiffgeo.FormTrace
-public import LeanPool.JacobianDiffgeo.FormTrace.PairForm
-public import LeanPool.JacobianDiffgeo.FormTrace.ResidueTraceCompat
-public import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
-public import LeanPool.JacobianDiffgeo.Forms
-public import LeanPool.JacobianDiffgeo.Forms.Analyticity
-public import LeanPool.JacobianDiffgeo.Forms.Basic
-public import LeanPool.JacobianDiffgeo.Forms.Coeffs
-public import LeanPool.JacobianDiffgeo.Forms.Finiteness
-public import LeanPool.JacobianDiffgeo.Forms.Genus
-public import LeanPool.JacobianDiffgeo.Forms.MDifferential
-public import LeanPool.JacobianDiffgeo.Forms.Montel
-public import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
-public import LeanPool.JacobianDiffgeo.GenusSphereHeadline
-public import LeanPool.JacobianDiffgeo.GenusSphereHeadline.Basic
-public import LeanPool.JacobianDiffgeo.H1Genus
-public import LeanPool.JacobianDiffgeo.H1Genus.Basic
-public import LeanPool.JacobianDiffgeo.Init
-public import LeanPool.JacobianDiffgeo.JacFunctorial
-public import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
-public import LeanPool.JacobianDiffgeo.JacFunctorial.ChallengeLaws
-public import LeanPool.JacobianDiffgeo.JacFunctorial.Density
-public import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
-public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
-public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
-public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
-public import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
-public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceCoeff
-public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
-public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
-public import LeanPool.JacobianDiffgeo.JacobianConstruction
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.ChartedSpaceKitV
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.Functorial
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.Torus
-public import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
-public import LeanPool.JacobianDiffgeo.LaurentTail
-public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
-public import LeanPool.JacobianDiffgeo.LaurentTail.RiemannRoch
-public import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
-public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
-public import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
-public import LeanPool.JacobianDiffgeo.MappingDegree
-public import LeanPool.JacobianDiffgeo.MappingDegree.Basics
-public import LeanPool.JacobianDiffgeo.MappingDegree.Covering
-public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
-public import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
-public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
-public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
-public import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
-public import LeanPool.JacobianDiffgeo.Meromorphic
-public import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
-public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
-public import LeanPool.JacobianDiffgeo.Meromorphic.Field
-public import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
-public import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
-public import LeanPool.JacobianDiffgeo.Meromorphic.LinSysMulEquiv
-public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
-public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
-public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
-public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
-public import LeanPool.JacobianDiffgeo.Monodromy
-public import LeanPool.JacobianDiffgeo.Monodromy.LogContinuation
-public import LeanPool.JacobianDiffgeo.Monodromy.OpenLocus
-public import LeanPool.JacobianDiffgeo.Path
-public import LeanPool.JacobianDiffgeo.Path.Bridge
-public import LeanPool.JacobianDiffgeo.Path.Chain
-public import LeanPool.JacobianDiffgeo.Path.Continuation
-public import LeanPool.JacobianDiffgeo.Path.HomotopySquare
-public import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
-public import LeanPool.JacobianDiffgeo.Path.Periods
-public import LeanPool.JacobianDiffgeo.Path.Perturb
-public import LeanPool.JacobianDiffgeo.Path.Planar
-public import LeanPool.JacobianDiffgeo.PeriodLattice
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
-public import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
-public import LeanPool.JacobianDiffgeo.PeriodLattice.FullRank
-public import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
-public import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
-public import LeanPool.JacobianDiffgeo.PlanarStokes
-public import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
-public import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
-public import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
-public import LeanPool.JacobianDiffgeo.ProjectiveLine
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.GenusZero
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.Inversion
-public import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
-public import LeanPool.JacobianDiffgeo.ProperDegree
-public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
-public import LeanPool.JacobianDiffgeo.ProperDegree.DivisorDegreeZero
-public import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
-public import LeanPool.JacobianDiffgeo.ResidueCalculus
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.GermFunctionals
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.MittagLeffler
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-public import LeanPool.JacobianDiffgeo.ResidueCalculus.TaylorCoeff
-public import LeanPool.JacobianDiffgeo.ResidueTheorem
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
-public import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
-public import LeanPool.JacobianDiffgeo.RiemannRoch
-public import LeanPool.JacobianDiffgeo.RiemannRoch.Basic
-public import LeanPool.JacobianDiffgeo.SerrePairing
-public import LeanPool.JacobianDiffgeo.SerrePairing.Duality
-public import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
-public import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
-public import LeanPool.JacobianDiffgeo.SphereTopology
-public import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
-public import LeanPool.JacobianDiffgeo.SphereTopology.Headline
-public import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
-public import LeanPool.JacobianDiffgeo.Surface
-public import LeanPool.JacobianDiffgeo.Surface.Bridges
-public import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
-public import LeanPool.JacobianDiffgeo.Surface.Identity
-public import LeanPool.JacobianDiffgeo.Surface.InverseFunction
-public import LeanPool.JacobianDiffgeo.Surface.RealSmooth
-public import LeanPool.JacobianDiffgeo.TailDuality
-public import LeanPool.JacobianDiffgeo.TailDuality.ChiLedger
-public import LeanPool.JacobianDiffgeo.TailDuality.Counting
-public import LeanPool.JacobianDiffgeo.TailDuality.Duality
-public import LeanPool.JacobianDiffgeo.TailDuality.Pairing
-public import LeanPool.JacobianDiffgeo.TailDuality.TailOps
-public import LeanPool.JohnsonLindenstraussLean
-public import LeanPool.JohnsonLindenstraussLean.ChiSquared
-public import LeanPool.JohnsonLindenstraussLean.EndToEnd
-public import LeanPool.JohnsonLindenstraussLean.GaussianTail
-public import LeanPool.JohnsonLindenstraussLean.InnerProduct
-public import LeanPool.JohnsonLindenstraussLean.Lemma
-public import LeanPool.JohnsonLindenstraussLean.NormPreservation
-public import LeanPool.JohnsonLindenstraussLean.Projection
-public import LeanPool.JohnsonLindenstraussLean.QJL
-public import LeanPool.JohnsonLindenstraussLean.QJLDistortion
-public import LeanPool.JohnsonLindenstraussLean.Rotation
-public import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
-public import LeanPool.JohnsonLindenstraussLean.Verify
-public import LeanPool.KahnKalai
-public import LeanPool.KahnKalai.Basic
-public import LeanPool.KahnKalai.Cost
-public import LeanPool.KahnKalai.Covering
-public import LeanPool.KahnKalai.DoubleCount
-public import LeanPool.KahnKalai.Numeric
-public import LeanPool.KahnKalai.ParkPham
-public import LeanPool.KaltonRoberts
-public import LeanPool.KaltonRoberts.Collections
-public import LeanPool.KaltonRoberts.Defs
-public import LeanPool.KaltonRoberts.DualCert
-public import LeanPool.KaltonRoberts.EpsilonRecombination
-public import LeanPool.KaltonRoberts.Intersections
-public import LeanPool.KaltonRoberts.Lemmas
-public import LeanPool.KaltonRoberts.LogBounds
-public import LeanPool.KaltonRoberts.MainTheorem
-public import LeanPool.KaltonRoberts.Numerical
-public import LeanPool.KaltonRoberts.PhiAnalysis
-public import LeanPool.KaltonRoberts.PhiDeriv
-public import LeanPool.KaltonRoberts.Pipeline
-public import LeanPool.KaltonRoberts.PipelineEps
-public import LeanPool.KaltonRoberts.Pippenger
-public import LeanPool.KaltonRoberts.PippengerProof
-public import LeanPool.KaltonRoberts.Recombination
-public import LeanPool.KaltonRoberts.UniformRecombination
-public import LeanPool.KasamiCyclicAdditive
-public import LeanPool.KasamiCyclicAdditive.Assembly.CoefficientReduction
-public import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
-public import LeanPool.KasamiCyclicAdditive.Assembly.GeometricChain
-public import LeanPool.KasamiCyclicAdditive.Assembly.Normalization
-public import LeanPool.KasamiCyclicAdditive.Assembly.Reduction
-public import LeanPool.KasamiCyclicAdditive.Counting.Average
-public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-public import LeanPool.KasamiCyclicAdditive.Geometry.BaseChange
-public import LeanPool.KasamiCyclicAdditive.Geometry.Descent.Arithmetic
-public import LeanPool.KasamiCyclicAdditive.Geometry.EvenCase
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Chart
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Curve
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Frobenius
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Infinity
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Quotient
-public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
-public import LeanPool.KasamiCyclicAdditive.Geometry.FrobeniusAnnihilator
-public import LeanPool.KasamiCyclicAdditive.Geometry.IsogenyFactor
-public import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
-public import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
-public import LeanPool.KasamiCyclicAdditive.MCM.CharacterArithmetic
-public import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
-public import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
-public import LeanPool.KasamiCyclicAdditive.MCM.DicksonPhase
-public import LeanPool.KasamiCyclicAdditive.MCM.Fourier
-public import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
-public import LeanPool.KasamiCyclicAdditive.MCM.HalfSize
-public import LeanPool.KasamiCyclicAdditive.MCM.Halfspace
-public import LeanPool.KasamiCyclicAdditive.MCM.Permutation
-public import LeanPool.KasamiCyclicAdditive.MCM.PhaseFormula
-public import LeanPool.KasamiCyclicAdditive.Main
-public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
-public import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
-public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
-public import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
-public import LeanPool.KasamiCyclicAdditive.Phase.PowerMap
-public import LeanPool.KasamiCyclicAdditive.Phase.RootCount
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteAverage
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteCharacterCriterion
-public import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
-public import LeanPool.KasamiCyclicAdditive.Prelude
-public import LeanPool.KasamiCyclicAdditive.Statement.CoefficientForm
-public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
-public import LeanPool.KasamiCyclicAdditive.Statement.ParameterReduction
-public import LeanPool.Koethe
-public import LeanPool.Koethe.Counterexample
-public import LeanPool.Koethe.Disproof
-public import LeanPool.Koethe.Linearization.Basic
-public import LeanPool.Koethe.Linearization.Nil
-public import LeanPool.Koethe.Linearization.Pencil
-public import LeanPool.Koethe.MaskSequence.Basic
-public import LeanPool.Koethe.MaskSequence.Chain
-public import LeanPool.Koethe.MaskSequence.Universal
-public import LeanPool.Koethe.Mortality.Degree
-public import LeanPool.Koethe.Mortality.FormalWord
-public import LeanPool.Koethe.Mortality.Homogeneous
-public import LeanPool.Koethe.Mortality.Mask
-public import LeanPool.Koethe.Mortality.MaskMortality
-public import LeanPool.Koethe.Mortality.Minors
-public import LeanPool.Koethe.MultiProjective
-public import LeanPool.Koethe.Pencil
-public import LeanPool.Koethe.ShiftWitness.Band
-public import LeanPool.Koethe.ShiftWitness.Eigenvector
-public import LeanPool.Koethe.ShiftWitness.Endpoint
-public import LeanPool.Koethe.ShiftWitness.Witness
-public import LeanPool.KrafftSieve
-public import LeanPool.KrafftSieve.Basic
-public import LeanPool.KrafftSieve.Defs
-public import LeanPool.KrafftSieve.MainTheorem
-public import LeanPool.KrafftSieve.OptimalWeights
-public import LeanPool.KrafftSieve.SelbergWeights
-public import LeanPool.KrafftSieve.ThirdHarmonic
-public import LeanPool.KrafftSieve.Variance
-public import LeanPool.Kuramoto
-public import LeanPool.Kuramoto.Connections
-public import LeanPool.Kuramoto.Contraction
-public import LeanPool.Kuramoto.Frontier
-public import LeanPool.Kuramoto.GradientFlow
-public import LeanPool.Kuramoto.Hebbian
-public import LeanPool.Kuramoto.OrderParameter
-public import LeanPool.Kuramoto.Weighted
-public import LeanPool.Kuramoto.WitnessGeometry
-public import LeanPool.LatticeTriangle
-public import LeanPool.LatticeTriangle.Solution
-public import LeanPool.Lean4GlCoalgebras
-public import LeanPool.Lean4GlCoalgebras.General.Completeness
-public import LeanPool.Lean4GlCoalgebras.General.Game
-public import LeanPool.Lean4GlCoalgebras.General.Proof
-public import LeanPool.Lean4GlCoalgebras.General.Soundness
-public import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolants
-public import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolation
-public import LeanPool.Lean4GlCoalgebras.Interpolation.PartialInterpolation
-public import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
-public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
-public import LeanPool.Lean4GlCoalgebras.Logic.Syntax
-public import LeanPool.Lean4GlCoalgebras.Pdl.Game
-public import LeanPool.Lean4GlCoalgebras.Split.Completeness
-public import LeanPool.Lean4GlCoalgebras.Split.CutProof
-public import LeanPool.Lean4GlCoalgebras.Split.Game
-public import LeanPool.Lean4GlCoalgebras.Split.Proof
-public import LeanPool.Lean4GlCoalgebras.Split.ProofTransformations
-public import LeanPool.Lean4GlCoalgebras.Split.Soundness
-public import LeanPool.Lean4Itree
-public import LeanPool.Lean4Itree.ITree
-public import LeanPool.Lean4Itree.ITree.Basic
-public import LeanPool.Lean4Itree.ITree.EffectAlgebra
-public import LeanPool.Lean4Itree.ITree.Monad
-public import LeanPool.Lean4Itree.ITree.Utils
-public import LeanPool.Lean4Itree.Paco
-public import LeanPool.Lean4Itree.Paco.Paco
-public import LeanPool.Lean4Itree.Paco.PacoDefs
-public import LeanPool.Lean4Itree.Paco.PacoTactics
-public import LeanPool.LeanBooleanfun
-public import LeanPool.LeanBooleanfun.Arrow
-public import LeanPool.LeanBooleanfun.AuxLemmas
-public import LeanPool.LeanBooleanfun.Basic
-public import LeanPool.LeanBooleanfun.BooleanValued
-public import LeanPool.LeanBooleanfun.ToMathlib
-public import LeanPool.LeanBooleanfun.ToMathlib.Finset
-public import LeanPool.LeanComplexAnalysis
-public import LeanPool.LeanComplexAnalysis.Harmonic
-public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
-public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral2
-public import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegralCircleAverage
-public import LeanPool.LeanComplexAnalysis.Harmonic.Positive
-public import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HarnackIneq
-public import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszRepresentations
-public import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszUnique
-public import LeanPool.LeanComplexAnalysis.UnivalentFunctions
-public import LeanPool.LeanComplexAnalysis.UnivalentFunctions.ClassS
-public import LeanPool.LeanModelChecking
-public import LeanPool.LeanModelChecking.ABW
-public import LeanPool.LeanModelChecking.ABWNBW
-public import LeanPool.LeanModelChecking.LTLNBWResult
-public import LeanPool.LeanModelChecking.LTLNBWStatement
-public import LeanPool.LeanModelChecking.LTLNNF
-public import LeanPool.LeanModelChecking.NNFABW
-public import LeanPool.LeanModelChecking.SafetyLivenessDecomposition
-public import LeanPool.LeanModularForms
-public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
-public import LeanPool.LeanModularForms.ContourIntegral.PVSplit
-public import LeanPool.LeanModularForms.ContourIntegral.SegmentFTC
-public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
-public import LeanPool.LeanModularForms.ForMathlib.AtImInfty
-public import LeanPool.LeanModularForms.ForMathlib.Bounds
-public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgroupsCopy
-public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
-public import LeanPool.LeanModularForms.ForMathlib.FunctionsBoundedAtInfty
-public import LeanPool.LeanModularForms.ForMathlib.Hassumunifon
-public import LeanPool.LeanModularForms.ForMathlib.Identities
-public import LeanPool.LeanModularForms.ForMathlib.Instances
-public import LeanPool.LeanModularForms.ForMathlib.IsBoundedAtImInfty
-public import LeanPool.LeanModularForms.ForMathlib.LevelOne
-public import LeanPool.LeanModularForms.ForMathlib.Petersson
-public import LeanPool.LeanModularForms.ForMathlib.QExpansion
-public import LeanPool.LeanModularForms.ForMathlib.SlashActions
-public import LeanPool.LeanModularForms.ForMathlib.UpperHalfPlane
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Bridges
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CurveAvoidance
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Cycle
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.GeneralizedResidueTheorem
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.DixonProof
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Meromorphic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.MathlibBridge
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.ParametricDiff
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.LogDerivFTC
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.GammaAnalysis
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.RemainderAnalysis
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.SingularAnnulus
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.StepBounds
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.UniformStepBound
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PiecewiseCurveAPI
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.BoundaryVanishing
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CPVExistence
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CutoffInfrastructure
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.HigherOrderAssembly
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing.CPVHelpers
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheorem
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MathlibBridge
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeasureHelpers
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicLaurent
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV.DominatedConvergence
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurve
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurveLemma
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.CrossingAnalysis
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Decomposition
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
-public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativity
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Basic
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Commutativity
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Module
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Multiplication
-public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.CongruenceIndex
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.Degree
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.HeckeAction
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.HeckeModularForm
-public import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Basic
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.PolynomialRing
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.SLnTransvection
-public import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
-public import LeanPool.LeanModularForms.Modularforms.AtImInfty
-public import LeanPool.LeanModularForms.Modularforms.BigO
-public import LeanPool.LeanModularForms.Modularforms.Cauchylems
-public import LeanPool.LeanModularForms.Modularforms.ClogArgLems
-public import LeanPool.LeanModularForms.Modularforms.Cotangent
-public import LeanPool.LeanModularForms.Modularforms.Csqrt
-public import LeanPool.LeanModularForms.Modularforms.Delta
-public import LeanPool.LeanModularForms.Modularforms.Derivative
-public import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
-public import LeanPool.LeanModularForms.Modularforms.E2
-public import LeanPool.LeanModularForms.Modularforms.Eisenstein
-public import LeanPool.LeanModularForms.Modularforms.EisensteinAsymptotics
-public import LeanPool.LeanModularForms.Modularforms.Eisensteinqexpansions
-public import LeanPool.LeanModularForms.Modularforms.Equivs
-public import LeanPool.LeanModularForms.Modularforms.Eta
-public import LeanPool.LeanModularForms.Modularforms.EtaCleanup
-public import LeanPool.LeanModularForms.Modularforms.ExpLems
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibFunctionsBoundedAtInfty
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibSlashActions
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibUpperHalfPlane
-public import LeanPool.LeanModularForms.Modularforms.Generators
-public import LeanPool.LeanModularForms.Modularforms.Generators.Defs
-public import LeanPool.LeanModularForms.Modularforms.Generators.Injectivity
-public import LeanPool.LeanModularForms.Modularforms.Generators.Surjectivity
-public import LeanPool.LeanModularForms.Modularforms.IccIcoLems
-public import LeanPool.LeanModularForms.Modularforms.IsCuspForm
-public import LeanPool.LeanModularForms.Modularforms.Iteratedderivs
-public import LeanPool.LeanModularForms.Modularforms.JacobiTheta
-public import LeanPool.LeanModularForms.Modularforms.LimunderLems
-public import LeanPool.LeanModularForms.Modularforms.LogDerivLems
-public import LeanPool.LeanModularForms.Modularforms.MDifferentiableFunProp
-public import LeanPool.LeanModularForms.Modularforms.MultipliableLems
-public import LeanPool.LeanModularForms.Modularforms.PhiTransform
-public import LeanPool.LeanModularForms.Modularforms.QExpansion
-public import LeanPool.LeanModularForms.Modularforms.QExpansionLems
-public import LeanPool.LeanModularForms.Modularforms.RamanujanIdentities
-public import LeanPool.LeanModularForms.Modularforms.ResToImagAxis
-public import LeanPool.LeanModularForms.Modularforms.RiemannZetalems
-public import LeanPool.LeanModularForms.Modularforms.SerreDerivativeSlash
-public import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
-public import LeanPool.LeanModularForms.Modularforms.SummableLems
-public import LeanPool.LeanModularForms.Modularforms.Tendstolems
-public import LeanPool.LeanModularForms.Modularforms.ThetaDerivIdentities
-public import LeanPool.LeanModularForms.Modularforms.TsumderivWithin
-public import LeanPool.LeanModularForms.Modularforms.Uniformcts
-public import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
-public import LeanPool.LeanModularForms.SpherePacking.CuspDecay
-public import LeanPool.LeanModularForms.SpherePacking.PhiHolomorphic
-public import LeanPool.LeanModularForms.SpherePacking.ViazovskaMagicFunction
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.Framework
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.LeftEdge
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArc
-public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArcHelpers
-public import LeanPool.LeanModularForms.ValenceFormula.CoreIdentity
-public import LeanPool.LeanModularForms.ValenceFormula.Definitions
-public import LeanPool.LeanModularForms.ValenceFormula.InteriorWinding
-public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
-public import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Basic
-public import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.EndpointCorner
-public import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Main
-public import LeanPool.LeanModularForms.ValenceFormula.OrbitPairing
-public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.ArcContribution
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly.ResidueSide
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.ResidueSideInfra
-public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Seg5CuspIntegral
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.AngleAnalysis
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDerivBounds
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDiff
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheorem
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheoremBound
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheoremDerivCont
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonSlope
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.RadialHomotopy
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingBase
-public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingProof
-public import LeanPool.LeanModularForms.ValenceFormula.TextbookExistence
-public import LeanPool.LeanModularForms.ValenceFormula.TextbookForm
-public import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
-public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
-public import LeanPool.LeanPolyABC
-public import LeanPool.LeanPolyABC.All
-public import LeanPool.LeanPolyABC.Corollaries.Davenport
-public import LeanPool.LeanPolyABC.Corollaries.FltCatalan
-public import LeanPool.LeanPolyABC.Corollaries.NoParametrization
-public import LeanPool.LeanPolyABC.Lib.DivRadical
-public import LeanPool.LeanPolyABC.Lib.Max3
-public import LeanPool.LeanPolyABC.Lib.Radical
-public import LeanPool.LeanPolyABC.Lib.Wronskian
-public import LeanPool.LeanPolyABC.MasonStothers
-public import LeanPool.LeanQuantumAlg
-public import LeanPool.LeanQuantumAlg.Algorithms
-public import LeanPool.LeanQuantumAlg.Algorithms.AmplitudeEstimation
-public import LeanPool.LeanQuantumAlg.Algorithms.BernsteinVazirani
-public import LeanPool.LeanQuantumAlg.Algorithms.DeutschJozsa
-public import LeanPool.LeanQuantumAlg.Algorithms.GHZ
-public import LeanPool.LeanQuantumAlg.Algorithms.Grover
-public import LeanPool.LeanQuantumAlg.Algorithms.OrderFinding
-public import LeanPool.LeanQuantumAlg.Algorithms.QPE
-public import LeanPool.LeanQuantumAlg.Algorithms.Simon
-public import LeanPool.LeanQuantumAlg.Algorithms.SuperdenseCoding
-public import LeanPool.LeanQuantumAlg.Algorithms.Teleportation
-public import LeanPool.LeanQuantumAlg.Core
-public import LeanPool.LeanQuantumAlg.Core.Components
-public import LeanPool.LeanQuantumAlg.Core.Components.Control
-public import LeanPool.LeanQuantumAlg.Core.Components.Gates
-public import LeanPool.LeanQuantumAlg.Core.Components.Kets
-public import LeanPool.LeanQuantumAlg.Core.Components.Oracle
-public import LeanPool.LeanQuantumAlg.Core.Cost
-public import LeanPool.LeanQuantumAlg.Core.Gate
-public import LeanPool.LeanQuantumAlg.Core.Measurement
-public import LeanPool.LeanQuantumAlg.Core.State
-public import LeanPool.LeanQuantumAlg.Core.Tensor
-public import LeanPool.LeanQuantumAlg.Init
-public import LeanPool.LeanQuantumAlg.Primitives
-public import LeanPool.LeanQuantumAlg.Primitives.AmplitudeAmplification
-public import LeanPool.LeanQuantumAlg.Primitives.BellPair
-public import LeanPool.LeanQuantumAlg.Primitives.ControlledTransform
-public import LeanPool.LeanQuantumAlg.Primitives.HadamardTest
-public import LeanPool.LeanQuantumAlg.Primitives.LCU
-public import LeanPool.LeanQuantumAlg.Primitives.ParameterShift
-public import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
-public import LeanPool.LeanQuantumAlg.Primitives.QFT
-public import LeanPool.LeanQuantumAlg.Primitives.QKernel
-public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Advantage
-public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Concentration
-public import LeanPool.LeanQuantumAlg.Primitives.QKernel.DiscreteLogConcept
-public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Expressivity
-public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fidelity
-public import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fourier
-public import LeanPool.LeanQuantumAlg.Primitives.QNN
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.DynamicalLieAlgebra
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.FullDLABasis
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.LieAlgebraicBP
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.Overparametrization
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.PauliPropagation
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.Trainability
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.VarianceFormula
-public import LeanPool.LeanQuantumAlg.Primitives.QSP
-public import LeanPool.LeanQuantumAlg.Primitives.QSP.Chebyshev
-public import LeanPool.LeanQuantumAlg.Primitives.QSP.Fourier
-public import LeanPool.LeanQuantumAlg.Primitives.SwapTest
-public import LeanPool.LeanQuantumAlg.Primitives.WalshHadamard
-public import LeanPool.LeanQuantumAlg.Util
-public import LeanPool.LeanQuantumAlg.Util.Complex
-public import LeanPool.LeanQuantumAlg.Util.Concentration
-public import LeanPool.LeanQuantumAlg.Util.FinPow
-public import LeanPool.LeanQuantumAlg.Util.HilbertSchmidt
-public import LeanPool.LeanQuantumAlg.Util.Polynomial
-public import LeanPool.LeanQuantumAlg.Util.TrigPolynomial
-public import LeanPool.LeanStationaryHarmonicMaps
-public import LeanPool.LeanStationaryHarmonicMaps.Examples.StationaryMonotonicity
-public import LeanPool.LeanStationaryHarmonicMaps.Examples.UseMainTheorem
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.API
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BallIntegralAC
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Basic
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryBasics
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryFromRadial
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.CenterTranslation
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuclidean
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityFinal
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityRoutes
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.PrimitiveCutoffs
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialCutoffs
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIdentity
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIntegrability
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialMeasure
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusFormulas
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedDerivative
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedRepresentation
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeights
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevBridge
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevWitness
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationarityBridge
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryMap
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
-public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
-public import LeanPool.LehmerE10
-public import LeanPool.LehmerE10.CoxeterE8
-public import LeanPool.LehmerE10.CyclotomicKill
-public import LeanPool.LehmerE10.Defs
-public import LeanPool.LehmerE10.Ergodic
-public import LeanPool.LehmerE10.Kronecker
-public import LeanPool.LehmerE10.Mahler
-public import LeanPool.LehmerE10.Main
-public import LeanPool.LehmerE10.SalemSymmetry
-public import LeanPool.LehmerE10.TraceQuintic
-public import LeanPool.LehmerE10.UnitCircleFactors
-public import LeanPool.Lentil
-public import LeanPool.Lentil.Basic
-public import LeanPool.Lentil.Expr
-public import LeanPool.Lentil.Foldable
-public import LeanPool.Lentil.Gadgets.TheoremDeriving
-public import LeanPool.Lentil.Gadgets.TheoremLifting
-public import LeanPool.Lentil.ProofMode.Basic
-public import LeanPool.Lentil.ProofMode.Display
-public import LeanPool.Lentil.ProofMode.Location
-public import LeanPool.Lentil.ProofMode.Tactics
-public import LeanPool.Lentil.ProofMode.Tactics.Apply
-public import LeanPool.Lentil.ProofMode.Tactics.Assumption
-public import LeanPool.Lentil.ProofMode.Tactics.CheckGoalForm
-public import LeanPool.Lentil.ProofMode.Tactics.Clear
-public import LeanPool.Lentil.ProofMode.Tactics.CoalesceToPTL
-public import LeanPool.Lentil.ProofMode.Tactics.Contradiction
-public import LeanPool.Lentil.ProofMode.Tactics.Exists
-public import LeanPool.Lentil.ProofMode.Tactics.Exit
-public import LeanPool.Lentil.ProofMode.Tactics.Have
-public import LeanPool.Lentil.ProofMode.Tactics.Intro
-public import LeanPool.Lentil.ProofMode.Tactics.LeftRight
-public import LeanPool.Lentil.ProofMode.Tactics.ModalityMisc
-public import LeanPool.Lentil.ProofMode.Tactics.Monotone
-public import LeanPool.Lentil.ProofMode.Tactics.Normalize
-public import LeanPool.Lentil.ProofMode.Tactics.PurePred
-public import LeanPool.Lentil.ProofMode.Tactics.RCases
-public import LeanPool.Lentil.ProofMode.Tactics.Rename
-public import LeanPool.Lentil.ProofMode.Tactics.Revert
-public import LeanPool.Lentil.ProofMode.Tactics.Rewrite
-public import LeanPool.Lentil.ProofMode.Tactics.Simp
-public import LeanPool.Lentil.ProofMode.Tactics.Specialize
-public import LeanPool.Lentil.ProofMode.Tactics.SplitAnds
-public import LeanPool.Lentil.ProofMode.Tactics.Start
-public import LeanPool.Lentil.Rules.Basic
-public import LeanPool.Lentil.Rules.BigOp
-public import LeanPool.Lentil.Rules.LeadsTo
-public import LeanPool.Lentil.Rules.StatePred
-public import LeanPool.Lentil.Rules.WF
-public import LeanPool.Lentil.Tactics.Basic
-public import LeanPool.Lentil.Tactics.FiniteWindow
-public import LeanPool.Lentil.Util
-public import LeanPool.Lentil.Utils.MetaUtil
-public import LeanPool.Lentil.Utils.MiscLemmas
-public import LeanPool.Lentil.Utils.SyntaxUtil
-public import LeanPool.LocalComplexGeometry
-public import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
-public import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
-public import LeanPool.LocalComplexGeometry.Analytic.ConstantRankLinear
-public import LeanPool.LocalComplexGeometry.Analytic.LevelSet
-public import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
-public import LeanPool.LocalComplexGeometry.Analytic.Rank
-public import LeanPool.LocalComplexGeometry.Analytic.Regularization
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.AnalyticSeries
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.EdgeCases
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Examples
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Germs
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalSum
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
-public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
-public import LeanPool.LocalComplexGeometry.FiniteProjection.Main
-public import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
-public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
-public import LeanPool.LocalComplexGeometry.Germs.Basic
-public import LeanPool.LocalComplexGeometry.Germs.Coordinates
-public import LeanPool.LocalComplexGeometry.Germs.Representatives
-public import LeanPool.LocalComplexGeometry.Germs.Ring
-public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.Coordinates
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisionRepresentatives
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.FiberCancellation
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.IdealRepresentatives
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.OneVariable
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialRepresentativeOperations
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrime
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeCancellation
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeInduction
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
-public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
-public import LeanPool.LocalComplexGeometry.Palomar
-public import LeanPool.LocalComplexGeometry.WPTBridge.Division
-public import LeanPool.LocalComplexGeometry.WPTBridge.DivisionCore
-public import LeanPool.LocalComplexGeometry.WPTBridge.DivisionUniqueness
-public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
-public import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
-public import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
-public import LeanPool.LongGapsBetweenPrimes
-public import LeanPool.LongGapsBetweenPrimes.Main
-public import LeanPool.LowDimSolvClassification
-public import LeanPool.LowDimSolvClassification.Classification1
-public import LeanPool.LowDimSolvClassification.Classification2
-public import LeanPool.LowDimSolvClassification.Classification3
-public import LeanPool.LowDimSolvClassification.GeneralResults
-public import LeanPool.LowDimSolvClassification.InstancesConstructions
-public import LeanPool.LowDimSolvClassification.InstancesLowDim
-public import LeanPool.LowDimSolvClassification.LemmasDim3
-public import LeanPool.LowDimSolvClassification.QuotientSolvable
-public import LeanPool.LowDimSolvClassification.Semidirect
-public import LeanPool.LowDimSolvClassification.Tactics
-public import LeanPool.MRiscX
-public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-public import LeanPool.MRiscX.AbstractSyntax.Instr
-public import LeanPool.MRiscX.AbstractSyntax.MState
-public import LeanPool.MRiscX.AbstractSyntax.Map
-public import LeanPool.MRiscX.Basic
-public import LeanPool.MRiscX.Delab.DelabCode
-public import LeanPool.MRiscX.Delab.DelabHoare
-public import LeanPool.MRiscX.Elab.CodeElaborator
-public import LeanPool.MRiscX.Elab.HandleExpr
-public import LeanPool.MRiscX.Elab.HandleNumOrIdent
-public import LeanPool.MRiscX.Elab.HoareElaborator
-public import LeanPool.MRiscX.Examples.Examples
-public import LeanPool.MRiscX.Examples.OtpProof
-public import LeanPool.MRiscX.Examples.SingleProofsOTP
-public import LeanPool.MRiscX.Examples.SpecAutomation
-public import LeanPool.MRiscX.Hoare.EvalLabelInHoare
-public import LeanPool.MRiscX.Hoare.HoareAssignmentElab
-public import LeanPool.MRiscX.Hoare.HoareCore
-public import LeanPool.MRiscX.Hoare.HoareRules
-public import LeanPool.MRiscX.Hoare.HoareTheory
-public import LeanPool.MRiscX.Parser.AssemblySyntax
-public import LeanPool.MRiscX.Parser.HoareSyntax
-public import LeanPool.MRiscX.Semantics.MsTheory
-public import LeanPool.MRiscX.Semantics.Run
-public import LeanPool.MRiscX.Semantics.Specification
-public import LeanPool.MRiscX.Tactics.ApplySpec
-public import LeanPool.MRiscX.Tactics.CodeProofTactics
-public import LeanPool.MRiscX.Tactics.GeneralCustomTactics
-public import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
-public import LeanPool.MRiscX.Tactics.SpecificationTactics
-public import LeanPool.MRiscX.Tactics.SplitLastSeq
-public import LeanPool.MRiscX.Tactics.TacticUtil
-public import LeanPool.MRiscX.Util.BasicTheorems
-public import LeanPool.MatchingLogic
-public import LeanPool.MatchingLogic.Applicative
-public import LeanPool.MatchingLogic.Boxes
-public import LeanPool.MatchingLogic.BoxesControl
-public import LeanPool.MatchingLogic.Completeness
-public import LeanPool.MatchingLogic.Composite
-public import LeanPool.MatchingLogic.Core
-public import LeanPool.MatchingLogic.Definedness
-public import LeanPool.MatchingLogic.DoubleCover
-public import LeanPool.MatchingLogic.EntryIII.All
-public import LeanPool.MatchingLogic.EntryIII.Alpha
-public import LeanPool.MatchingLogic.EntryIII.AlphaFreshWitnessed
-public import LeanPool.MatchingLogic.EntryIII.CanonicalChoice
-public import LeanPool.MatchingLogic.EntryIII.CanonicalConstruction
-public import LeanPool.MatchingLogic.EntryIII.CanonicalCore
-public import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
-public import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
-public import LeanPool.MatchingLogic.EntryIII.Compactness
-public import LeanPool.MatchingLogic.EntryIII.Completion
-public import LeanPool.MatchingLogic.EntryIII.Conclusion
-public import LeanPool.MatchingLogic.EntryIII.Countertheory
-public import LeanPool.MatchingLogic.EntryIII.EmbeddingSemantics
-public import LeanPool.MatchingLogic.EntryIII.FiniteReduction
-public import LeanPool.MatchingLogic.EntryIII.Fresh
-public import LeanPool.MatchingLogic.EntryIII.FreshWitnessElim
-public import LeanPool.MatchingLogic.EntryIII.Generated
-public import LeanPool.MatchingLogic.EntryIII.Injection
-public import LeanPool.MatchingLogic.EntryIII.Lindenbaum
-public import LeanPool.MatchingLogic.EntryIII.LocalTheory
-public import LeanPool.MatchingLogic.EntryIII.MCSAlpha
-public import LeanPool.MatchingLogic.EntryIII.ModelExistence
-public import LeanPool.MatchingLogic.EntryIII.Regression
-public import LeanPool.MatchingLogic.EntryIII.Renaming
-public import LeanPool.MatchingLogic.EntryIII.SignatureReduction
-public import LeanPool.MatchingLogic.EntryIII.SignatureRestriction
-public import LeanPool.MatchingLogic.EntryIII.SymbolSupport
-public import LeanPool.MatchingLogic.EntryIII.Truth
-public import LeanPool.MatchingLogic.EntryIII.WitnessElim
-public import LeanPool.MatchingLogic.EntryIII.WitnessPush
-public import LeanPool.MatchingLogic.EntryIII.WitnessSupply
-public import LeanPool.MatchingLogic.EntryIII.Witnessed
-public import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
-public import LeanPool.MatchingLogic.EntryPoints
-public import LeanPool.MatchingLogic.Independence
-public import LeanPool.MatchingLogic.Locality
-public import LeanPool.MatchingLogic.Localization
-public import LeanPool.MatchingLogic.Necessity
-public import LeanPool.MatchingLogic.ProofSystem
-public import LeanPool.MatchingLogic.Sanity
-public import LeanPool.MatchingLogic.Semantics
-public import LeanPool.MatchingLogic.SetVariables
-public import LeanPool.MatchingLogic.Sorted
-public import LeanPool.MatchingLogic.SortedProof
-public import LeanPool.MatchingLogic.Soundness
-public import LeanPool.MinModulusUniqueMultisetSum
-public import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
-public import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
-public import LeanPool.MisereGames
-public import LeanPool.MisereGames.AugmentedForm
-public import LeanPool.MisereGames.AugmentedForm.Lift
-public import LeanPool.MisereGames.AugmentedForm.Short
-public import LeanPool.MisereGames.Form
-public import LeanPool.MisereGames.Form.Adjoint
-public import LeanPool.MisereGames.Form.Birthday
-public import LeanPool.MisereGames.Form.Classes
-public import LeanPool.MisereGames.Form.Misere.Adjoint
-public import LeanPool.MisereGames.Form.Misere.Outcome
-public import LeanPool.MisereGames.Form.Short
-public import LeanPool.MisereGames.GameForm
-public import LeanPool.MisereGames.GameForm.Birthday
-public import LeanPool.MisereGames.GameForm.Special
-public import LeanPool.MisereGames.GameGraph
-public import LeanPool.MisereGames.Literature.OnSumsOfPFreeFormsUnderMiserePlay
-public import LeanPool.MisereGames.Mathlib.NatOrdinal
-public import LeanPool.MisereGames.Mathlib.SimpleGraph
-public import LeanPool.MisereGames.Mathlib.Small
-public import LeanPool.MisereGames.Misere.Ambient
-public import LeanPool.MisereGames.Misere.Blocking
-public import LeanPool.MisereGames.Misere.Closures
-public import LeanPool.MisereGames.Misere.Comparison
-public import LeanPool.MisereGames.Misere.DeadEnding
-public import LeanPool.MisereGames.Misere.Hereditary.MaintenanceProviso
-public import LeanPool.MisereGames.Misere.IntegerInvertible
-public import LeanPool.MisereGames.Misere.LiftIncomparable
-public import LeanPool.MisereGames.Misere.NonInvertible
-public import LeanPool.MisereGames.Misere.Normal
-public import LeanPool.MisereGames.Misere.OutcomeStable
-public import LeanPool.MisereGames.Misere.OutcomeStable.PropertyX
-public import LeanPool.MisereGames.Misere.PFree
-public import LeanPool.MisereGames.Misere.PFreeBlocking
-public import LeanPool.MisereGames.Misere.PFreeDeadEnding
-public import LeanPool.MisereGames.Misere.Preservation
-public import LeanPool.MisereGames.Misere.Quotients
-public import LeanPool.MisereGames.Misere.Separation
-public import LeanPool.MisereGames.Misere.ShortIncomparable
-public import LeanPool.MisereGames.Misere.Stride
-public import LeanPool.MisereGames.Misere.TippingPoints
-public import LeanPool.MisereGames.Misere.Universe
-public import LeanPool.MisereGames.OfSets
-public import LeanPool.MisereGames.Outcome
-public import LeanPool.MisereGames.Player
-public import LeanPool.MisereGames.Ruleset
-public import LeanPool.MisereGames.Ruleset.Hackenbush
-public import LeanPool.MisereGames.Ruleset.Push
-public import LeanPool.MisereGames.Ruleset.Shove
-public import LeanPool.MisereGames.Ruleset.Strip
-public import LeanPool.MisereGames.Tactic.DocAlias
-public import LeanPool.Monlib4
-public import LeanPool.Monlib4.LinearAlgebra
-public import LeanPool.Monlib4.LinearAlgebra.Coalgebra
-public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
-public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
-public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite
-public import LeanPool.Monlib4.LinearAlgebra.DirectSumFromTo
-public import LeanPool.Monlib4.LinearAlgebra.End
-public import LeanPool.Monlib4.LinearAlgebra.InnerAut
-public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
-public import LeanPool.Monlib4.LinearAlgebra.Ips
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
-public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
-public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Strict
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
-public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-public import LeanPool.Monlib4.LinearAlgebra.Ips.Vn
-public import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
-public import LeanPool.Monlib4.LinearAlgebra.IsReal
-public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
-public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
-public import LeanPool.Monlib4.LinearAlgebra.Matrix
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
-public import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
-public import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
-public import LeanPool.Monlib4.LinearAlgebra.MyBimodule
-public import LeanPool.Monlib4.LinearAlgebra.MySpec
-public import LeanPool.Monlib4.LinearAlgebra.Nacgor
-public import LeanPool.Monlib4.LinearAlgebra.OfNorm
-public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-public import LeanPool.Monlib4.LinearAlgebra.PiStarOrderedRing
-public import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.PhiMap
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.QIso
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMulTensor
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
-public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
-public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
-public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-public import LeanPool.Monlib4.Monlib
-public import LeanPool.Monlib4.Other
-public import LeanPool.Monlib4.Other.Sonia
-public import LeanPool.Monlib4.Preq
-public import LeanPool.Monlib4.Preq.Complex
-public import LeanPool.Monlib4.Preq.Dite
-public import LeanPool.Monlib4.Preq.Equiv
-public import LeanPool.Monlib4.Preq.Finset
-public import LeanPool.Monlib4.Preq.Ites
-public import LeanPool.Monlib4.Preq.RCLikeLe
-public import LeanPool.Monlib4.Preq.Set
-public import LeanPool.Monlib4.Preq.StarAlgEquiv
-public import LeanPool.Monlib4.QuantumGraph
-public import LeanPool.Monlib4.QuantumGraph.Basic
-public import LeanPool.Monlib4.QuantumGraph.Degree
-public import LeanPool.Monlib4.QuantumGraph.Example
-public import LeanPool.Monlib4.QuantumGraph.Grad
-public import LeanPool.Monlib4.QuantumGraph.Iso
-public import LeanPool.Monlib4.QuantumGraph.Matrix
-public import LeanPool.Monlib4.QuantumGraph.Nontracial
-public import LeanPool.Monlib4.QuantumGraph.OfClassicalGraph
-public import LeanPool.Monlib4.QuantumGraph.PiMat
-public import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
-public import LeanPool.Monlib4.QuantumGraph.QamA
-public import LeanPool.Monlib4.QuantumGraph.QamAExample
-public import LeanPool.Monlib4.QuantumGraph.ToProjections
-public import LeanPool.Monlib4.RepTheory
-public import LeanPool.Monlib4.RepTheory.AutMat
-public import LeanPool.Monsky
-public import LeanPool.Monsky.Appendix
-public import LeanPool.Monsky.BasicDefinitions
-public import LeanPool.Monsky.MainStatement
-public import LeanPool.Monsky.Miscellaneous
-public import LeanPool.Monsky.MonskyEven
-public import LeanPool.Monsky.RainbowTriangles
-public import LeanPool.Monsky.SegmentCounting
-public import LeanPool.Monsky.SegmentTriangle
-public import LeanPool.Monsky.SimplexBasic
-public import LeanPool.Monsky.Square
-public import LeanPool.Monsky.TriangleCorollary
-public import LeanPool.MoserLatticeColorings
-public import LeanPool.MoserLatticeColorings.Basic
-public import LeanPool.MoserLatticeColorings.Ring
-public import LeanPool.MulticolorTriangleRamsey
-public import LeanPool.NashWilliams
-public import LeanPool.NashWilliams.Combinatorics
-public import LeanPool.NashWilliams.Combinatorics.Front
-public import LeanPool.NashWilliams.Combinatorics.Front.Defs
-public import LeanPool.NashWilliams.Combinatorics.Front.NashWilliams
-public import LeanPool.NashWilliams.Combinatorics.Front.Rank
-public import LeanPool.NashWilliams.Combinatorics.Front.Ray
-public import LeanPool.NashWilliams.Combinatorics.Front.Shrink
-public import LeanPool.NashWilliams.Combinatorics.Ramsey
-public import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
-public import LeanPool.NashWilliams.Data
-public import LeanPool.NashWilliams.Data.Fintype
-public import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
-public import LeanPool.NashWilliams.Data.Nat
-public import LeanPool.NashWilliams.Data.Nat.Nth
-public import LeanPool.NashWilliams.Order
-public import LeanPool.NashWilliams.Order.TwoBQO
-public import LeanPool.NashWilliams.Order.WellQuasiOrder
-public import LeanPool.NashWilliams.Order.WellQuasiOrder.Basic
-public import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
-public import LeanPool.Neukirch
-public import LeanPool.Neukirch.ExtensionOfDedekindDomains
-public import LeanPool.Neukirch.HilbertRamificationTheory
-public import LeanPool.OSforGFF
-public import LeanPool.OSforGFF.Bochner
-public import LeanPool.OSforGFF.Bochner.FejerPD
-public import LeanPool.OSforGFF.Bochner.Main
-public import LeanPool.OSforGFF.Bochner.PositiveDefinite
-public import LeanPool.OSforGFF.Bochner.Sazonov
-public import LeanPool.OSforGFF.Covariance
-public import LeanPool.OSforGFF.Covariance.Momentum
-public import LeanPool.OSforGFF.Covariance.Parseval
-public import LeanPool.OSforGFF.Covariance.Position
-public import LeanPool.OSforGFF.Covariance.RealForm
-public import LeanPool.OSforGFF.GaussianField
-public import LeanPool.OSforGFF.GaussianField.Nuclear
-public import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
-public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
-public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearTensorProduct
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.Basis1D
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteFunctions
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteTensorProduct
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.ParametricCalculus
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
-public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzSlicing
-public import LeanPool.OSforGFF.General
-public import LeanPool.OSforGFF.General.BesselFunction
-public import LeanPool.OSforGFF.General.FourierTransforms
-public import LeanPool.OSforGFF.General.FrobeniusPositivity
-public import LeanPool.OSforGFF.General.FunctionalAnalysis
-public import LeanPool.OSforGFF.General.GaussianRBF
-public import LeanPool.OSforGFF.General.HadamardExp
-public import LeanPool.OSforGFF.General.L2TimeIntegral
-public import LeanPool.OSforGFF.General.LaplaceIntegral
-public import LeanPool.OSforGFF.General.PositiveDefinite
-public import LeanPool.OSforGFF.General.QuantitativeDecay
-public import LeanPool.OSforGFF.General.SchurProduct
-public import LeanPool.OSforGFF.General.SchwartzTranslationDecay
-public import LeanPool.OSforGFF.KolmogorovExtension4
-public import LeanPool.OSforGFF.KolmogorovExtension4.AuxLemmas
-public import LeanPool.OSforGFF.KolmogorovExtension4.CompactSystem
-public import LeanPool.OSforGFF.KolmogorovExtension4.KolmogorovExtension
-public import LeanPool.OSforGFF.KolmogorovExtension4.RegularContent
-public import LeanPool.OSforGFF.KolmogorovExtension4.Semiring
-public import LeanPool.OSforGFF.Measure
-public import LeanPool.OSforGFF.Measure.Construct
-public import LeanPool.OSforGFF.Measure.GaussianFreeField
-public import LeanPool.OSforGFF.Measure.IsGaussian
-public import LeanPool.OSforGFF.Measure.Minlos
-public import LeanPool.OSforGFF.Measure.MinlosAnalytic
-public import LeanPool.OSforGFF.Measure.NuclearSpace
-public import LeanPool.OSforGFF.Minlos
-public import LeanPool.OSforGFF.Minlos.FinDimMarginals
-public import LeanPool.OSforGFF.Minlos.Main
-public import LeanPool.OSforGFF.Minlos.MeasurableModification
-public import LeanPool.OSforGFF.Minlos.MinlosConcentration
-public import LeanPool.OSforGFF.Minlos.NuclearSpace
-public import LeanPool.OSforGFF.Minlos.PietschBridge
-public import LeanPool.OSforGFF.Minlos.ProjectiveFamily
-public import LeanPool.OSforGFF.Minlos.SazonovTightness
-public import LeanPool.OSforGFF.OS
-public import LeanPool.OSforGFF.OS.Axioms
-public import LeanPool.OSforGFF.OS.Master
-public import LeanPool.OSforGFF.OS.NonTrivial
-public import LeanPool.OSforGFF.OS.OS0Analyticity
-public import LeanPool.OSforGFF.OS.OS1Regularity
-public import LeanPool.OSforGFF.OS.OS2Invariance
-public import LeanPool.OSforGFF.OS.OS3CovarianceRP
-public import LeanPool.OSforGFF.OS.OS3MixedRep
-public import LeanPool.OSforGFF.OS.OS3MixedRepInfra
-public import LeanPool.OSforGFF.OS.OS3ReflectionPositivity
-public import LeanPool.OSforGFF.OS.OS4Clustering
-public import LeanPool.OSforGFF.OS.OS4Ergodicity
-public import LeanPool.OSforGFF.OS.OS4MGF
-public import LeanPool.OSforGFF.Schwinger
-public import LeanPool.OSforGFF.Schwinger.Defs
-public import LeanPool.OSforGFF.Schwinger.GaussianMoments
-public import LeanPool.OSforGFF.Schwinger.TwoPoint
-public import LeanPool.OSforGFF.Spacetime
-public import LeanPool.OSforGFF.Spacetime.Basic
-public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-public import LeanPool.OSforGFF.Spacetime.Decomposition
-public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-public import LeanPool.OSforGFF.Spacetime.Euclidean
-public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-public import LeanPool.OSforGFF.Spacetime.ProdIntegrable
-public import LeanPool.OSforGFF.Spacetime.TimeTranslation
-public import LeanPool.OSforGFF.Spacetime.Tonelli
-public import LeanPool.OddPrimeValuationDistribution
-public import LeanPool.OddPrimeValuationDistribution.CarryArithmetic
-public import LeanPool.OddPrimeValuationDistribution.CarryPolynomial
-public import LeanPool.OddPrimeValuationDistribution.GeneratingFunction
-public import LeanPool.OddPrimeValuationDistribution.Kummer
-public import LeanPool.OddPrimeValuationDistribution.LowValuations
-public import LeanPool.OddPrimeValuationDistribution.ValuationBlocks
-public import LeanPool.Odlyzko
-public import LeanPool.Odlyzko.CompletedZeta.ClassRepresentatives
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenter
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredContinuation
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredHolomorphy
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredReflection
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredRepresentative
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaIntegral
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaPoisson
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaRadial
-public import LeanPool.Odlyzko.CompletedZeta.ConeGaussianIntegral
-public import LeanPool.Odlyzko.CompletedZeta.ConeGaussianInterchange
-public import LeanPool.Odlyzko.CompletedZeta.ConeGaussianRadial
-public import LeanPool.Odlyzko.CompletedZeta.Defs
-public import LeanPool.Odlyzko.CompletedZeta.FractionalShapeTheta
-public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquation
-public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
-public import LeanPool.Odlyzko.CompletedZeta.FundamentalConeSeries
-public import LeanPool.Odlyzko.CompletedZeta.GammaFactor
-public import LeanPool.Odlyzko.CompletedZeta.IdealElementDecomposition
-public import LeanPool.Odlyzko.CompletedZeta.IdealThetaUnfolding
-public import LeanPool.Odlyzko.CompletedZeta.LogarithmicMellinHalfIntegral
-public import LeanPool.Odlyzko.CompletedZeta.RadialKernelFormula
-public import LeanPool.Odlyzko.CompletedZeta.RightHalfPlane
-public import LeanPool.Odlyzko.CompletedZeta.ShapeMellinTranslation
-public import LeanPool.Odlyzko.CompletedZeta.ShapeThetaPeriodicity
-public import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
-public import LeanPool.Odlyzko.CompletedZeta.TraceDualClass
-public import LeanPool.Odlyzko.CompletedZeta.UnitAveragedGaussian
-public import LeanPool.Odlyzko.CompletedZeta.UnitDecomposition
-public import LeanPool.Odlyzko.CompletedZeta.UnitFundamentalDomain
-public import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadial
-public import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadialIntegral
-public import LeanPool.Odlyzko.CompletedZeta.UnitSlabTranslation
-public import LeanPool.Odlyzko.CompletedZeta.VerticalGrowth
-public import LeanPool.Odlyzko.CompletedZeta.VerticalLowerBound
-public import LeanPool.Odlyzko.DedekindZeta.Coefficients
-public import LeanPool.Odlyzko.DedekindZeta.Convergence
-public import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
-public import LeanPool.Odlyzko.DedekindZeta.IdealPrimeFactorization
-public import LeanPool.Odlyzko.DedekindZeta.IdealSeries
-public import LeanPool.Odlyzko.DedekindZeta.LocalFactor
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealFactor
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
-public import LeanPool.Odlyzko.DedekindZeta.PrimePowerExpansion
-public import LeanPool.Odlyzko.ECanonicalDecomposition
-public import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaCenterLogBound
-public import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaRectangle
-public import LeanPool.Odlyzko.ExplicitFormula.FiniteSetAvoidance
-public import LeanPool.Odlyzko.ExplicitFormula.GaussDigammaEqDigamma
-public import LeanPool.Odlyzko.ExplicitFormula.PoitouEstimate
-public import LeanPool.Odlyzko.ExplicitFormula.PoitouTransform
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouContourLimit
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouQuadraticDecay
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPrimePowerSeriesIntegral
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartar
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartarTransform
-public import LeanPool.Odlyzko.ExplicitFormula.TartarPoitouTransform
-public import LeanPool.Odlyzko.ExplicitFormula.WeightedDiskArgumentPrinciple
-public import LeanPool.Odlyzko.ExplicitFormula.WeightedRectangleArgumentPrinciple
-public import LeanPool.Odlyzko.ExplicitFormula.ZeroFreeRectangles
-public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.LogDerivativeResidue
-public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.RectangleIntegral
-public import LeanPool.Odlyzko.Numerics.Degree
-public import LeanPool.Odlyzko.Numerics.Integrability
-public import LeanPool.Odlyzko.Numerics.IntegralTail
-public import LeanPool.Odlyzko.Numerics.Tail
-public import LeanPool.Odlyzko.Reduction
-public import LeanPool.Odlyzko.TestFunction.Amplitude
-public import LeanPool.Odlyzko.TestFunction.Basic
-public import LeanPool.Odlyzko.TestFunction.Bounds
-public import LeanPool.Odlyzko.TestFunction.ComplexFourier
-public import LeanPool.Odlyzko.TestFunction.Fourier
-public import LeanPool.Odlyzko.TestFunction.Quadratic
-public import LeanPool.Odlyzko.TestFunction.TartarDerivativeBounds
-public import LeanPool.Odlyzko.TestFunction.TaylorBound
-public import LeanPool.Odlyzko.Theta.PoissonSummation
-public import LeanPool.Odlyzko.Theta.TraceDualIdeal
-public import LeanPool.Odlyzko.Theta.TraceDualLattice
-public import LeanPool.OrderPQ
-public import LeanPool.OrderPQ.Basic
-public import LeanPool.OrderPQ.IsCyclic
-public import LeanPool.OrderPQ.Main
-public import LeanPool.OrderPQ.MonoidHom
-public import LeanPool.OrderPQ.MulZMod
-public import LeanPool.OrderPQ.PrimeOrder
-public import LeanPool.OrderPQ.SemidirectProduct
-public import LeanPool.OrderPQ.TorsionBy
-public import LeanPool.PCFTheory
-public import LeanPool.PCFTheory.Background
-public import LeanPool.PCFTheory.Background.Club
-public import LeanPool.PCFTheory.Background.Cofinality
-public import LeanPool.PCFTheory.Background.Ordinal
-public import LeanPool.PCFTheory.Background.Topology
-public import LeanPool.PCFTheory.ClubGuessing
-public import LeanPool.PFR
-public import LeanPool.PFR.AddCombi.BSG
-public import LeanPool.PFR.AddCombi.Convolution.Finite.Defs
-public import LeanPool.PFR.AddCombi.Convolution.Finite.Order
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.GroupWithZero.Indicator
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Notation.Indicator
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.GroupWithZero.Indicator
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.Ring.NNRat
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi
-public import LeanPool.PFR.AddCombi.Mathlib.Combinatorics.Additive.Energy
-public import LeanPool.PFR.AddCombi.Mathlib.Data.Finset.Density
-public import LeanPool.PFR.ApproxHomPFR
-public import LeanPool.PFR.BoundingMutual
-public import LeanPool.PFR.Endgame
-public import LeanPool.PFR.EntropyPFR
-public import LeanPool.PFR.Fibring
-public import LeanPool.PFR.FirstEstimate
-public import LeanPool.PFR.ForMathlib.AffineSpaceDim
-public import LeanPool.PFR.ForMathlib.Entropy.Group
-public import LeanPool.PFR.ForMathlib.Entropy.Kernel.Group
-public import LeanPool.PFR.ForMathlib.Entropy.Kernel.RuzsaDist
-public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
-public import LeanPool.PFR.ForMathlib.Entropy.RuzsaSetDist
-public import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
-public import LeanPool.PFR.ForMathlib.FourVariables
-public import LeanPool.PFR.ForMathlib.ThreeVariables
-public import LeanPool.PFR.HomPFR
-public import LeanPool.PFR.HundredPercent
-public import LeanPool.PFR.ImprovedPFR
-public import LeanPool.PFR.Kullback
-public import LeanPool.PFR.Main
-public import LeanPool.PFR.Mathlib.Algebra.BigOperators.Fin
-public import LeanPool.PFR.Mathlib.Algebra.Group.Action.Pointwise.Set.Basic
-public import LeanPool.PFR.Mathlib.Data.Fin.Basic
-public import LeanPool.PFR.Mathlib.Data.Finset.Basic
-public import LeanPool.PFR.Mathlib.LinearAlgebra.Basis.VectorSpace
-public import LeanPool.PFR.Mathlib.LinearAlgebra.Dimension.Finrank
-public import LeanPool.PFR.Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
-public import LeanPool.PFR.Mathlib.LinearAlgebra.Quotient.Basic
-public import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
-public import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-public import LeanPool.PFR.Mathlib.Order.Interval.Finset.Defs
-public import LeanPool.PFR.Mathlib.Order.Interval.Finset.Fin
-public import LeanPool.PFR.MoreRuzsaDist
-public import LeanPool.PFR.MultiTauFunctional
-public import LeanPool.PFR.RhoFunctional
-public import LeanPool.PFR.SecondEstimate
-public import LeanPool.PFR.Solution
-public import LeanPool.PFR.TauFunctional
-public import LeanPool.PFR.TorsionEndgame
-public import LeanPool.PFR.WeakPFR
-public import LeanPool.PLAcceleratedNesterovLean
-public import LeanPool.PLAcceleratedNesterovLean.Convergence
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step2
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Core
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.ConvergenceHelpers
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Algebraic
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalArgument
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.HessianBound
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step3
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.MainTheoremInternal
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.NesterovConvergence
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction
-public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
-public import LeanPool.PLAcceleratedNesterovLean.Core
-public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
-public import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
-public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
-public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
-public import LeanPool.PLAcceleratedNesterovLean.MainTheorem
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Bridge
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.BridgeDefs
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.GradAlign
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Basics
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.IFTProof
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.PLImpliesMB
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Derivative
-public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.IFT
-public import LeanPool.PartialCombinatoryAlgebras
-public import LeanPool.PartialCombinatoryAlgebras.Basic
-public import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
-public import LeanPool.PartialCombinatoryAlgebras.FreeCombinatoryAlgebra
-public import LeanPool.PartialCombinatoryAlgebras.GraphModel
-public import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
-public import LeanPool.PartialCombinatoryAlgebras.Programming
-public import LeanPool.PartialRegularity
-public import LeanPool.PartialRegularity.Extension
-public import LeanPool.PebblingLean
-public import LeanPool.PebblingLean.Basic
-public import LeanPool.PebblingLean.Concentration
-public import LeanPool.PebblingLean.Delivery
-public import LeanPool.PebblingLean.Examples
-public import LeanPool.PebblingLean.FiniteProbability
-public import LeanPool.PebblingLean.GraphIso
-public import LeanPool.PebblingLean.Hypercube
-public import LeanPool.PebblingLean.HypercubePath
-public import LeanPool.PebblingLean.HypercubeProduct
-public import LeanPool.PebblingLean.LowerBound
-public import LeanPool.PebblingLean.Paper
-public import LeanPool.PebblingLean.Product
-public import LeanPool.PebblingLean.UpperBound
-public import LeanPool.PebblingLean.UpperBoundDelivery
-public import LeanPool.PebblingLean.UpperBoundLoss
-public import LeanPool.PebblingLean.UpperBoundParameters
-public import LeanPool.PebblingLean.UpperBoundProbability
-public import LeanPool.PebblingLean.UpperBoundRecurrence
-public import LeanPool.PebblingLean.Weight
-public import LeanPool.PentagonalNumberTheorem
-public import LeanPool.PentagonalNumberTheorem.Complex
-public import LeanPool.PentagonalNumberTheorem.Generic
-public import LeanPool.PentagonalNumberTheorem.Old
-public import LeanPool.PentagonalNumberTheorem.Partition
-public import LeanPool.PentagonalNumberTheorem.PowerSeries
-public import LeanPool.PermanentFormulaLowerBound
-public import LeanPool.PhaseRetrieval
-public import LeanPool.PhaseRetrieval.Constant
-public import LeanPool.PhaseRetrieval.Constant.Internal.AnnulusLocalEstimate
-public import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
-public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
-public import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
-public import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
-public import LeanPool.PhaseRetrieval.Constant.Internal.LeakageEstimate
-public import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
-public import LeanPool.PhaseRetrieval.Constant.Internal.Local
-public import LeanPool.PhaseRetrieval.Constant.Internal.LocalCircleEstimate
-public import LeanPool.PhaseRetrieval.Constant.Internal.LocalCore
-public import LeanPool.PhaseRetrieval.Constant.Internal.LocalHelpers
-public import LeanPool.PhaseRetrieval.Constant.Internal.MainTheorem
-public import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
-public import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
-public import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
-public import LeanPool.PhaseRetrieval.DimdPoly
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Auxiliary
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.CoefficientLimitRigidity
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ExactModulusRecovery
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseCircleEstimate
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.ImportedAnalyticInputs
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.BlockLocalization
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.Definitions
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.DegreeBookkeeping
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ImportedAnalyticInputs
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductAnnulusCircle
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.BasisLocalization
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ImportedAnalyticInputs
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ModulusRigidity
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.OrthogonalCoercivity
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.OrthogonalReduction.OrthogonalReduction
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.PhaseStability
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ProductAnnulusLocalization
-public import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
-public import LeanPool.PoincareThreeBody
-public import LeanPool.PoincareThreeBody.ActionFactorization
-public import LeanPool.PoincareThreeBody.ActionPoisson
-public import LeanPool.PoincareThreeBody.AlignedAverageBlowup
-public import LeanPool.PoincareThreeBody.Analytic
-public import LeanPool.PoincareThreeBody.AnalyticCompactParameterIntegral
-public import LeanPool.PoincareThreeBody.AnalyticDensity
-public import LeanPool.PoincareThreeBody.AnalyticMinors
-public import LeanPool.PoincareThreeBody.AnalyticNormalization
-public import LeanPool.PoincareThreeBody.AnalyticParameterIntegral
-public import LeanPool.PoincareThreeBody.Averaging
-public import LeanPool.PoincareThreeBody.CertifiedPoincareSet
-public import LeanPool.PoincareThreeBody.CoefficientNormalization
-public import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
-public import LeanPool.PoincareThreeBody.CollisionBandObstruction
-public import LeanPool.PoincareThreeBody.CollisionIntegralBlowup
-public import LeanPool.PoincareThreeBody.Core
-public import LeanPool.PoincareThreeBody.Delaunay
-public import LeanPool.PoincareThreeBody.DelaunayActions
-public import LeanPool.PoincareThreeBody.DelaunayAnchorChart
-public import LeanPool.PoincareThreeBody.DelaunayChart
-public import LeanPool.PoincareThreeBody.DelaunayFlow
-public import LeanPool.PoincareThreeBody.DelaunaySection
-public import LeanPool.PoincareThreeBody.DenseResonantObstruction
-public import LeanPool.PoincareThreeBody.DifferentialDependence
-public import LeanPool.PoincareThreeBody.DisturbingAverageAnalytic
-public import LeanPool.PoincareThreeBody.DisturbingCertificate
-public import LeanPool.PoincareThreeBody.DisturbingFunction
-public import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
-public import LeanPool.PoincareThreeBody.DisturbingRegularBound
-public import LeanPool.PoincareThreeBody.EnergyLeafObstruction
-public import LeanPool.PoincareThreeBody.GeneratingFunction
-public import LeanPool.PoincareThreeBody.GlobalEnergySection
-public import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
-public import LeanPool.PoincareThreeBody.HomologicalEquation
-public import LeanPool.PoincareThreeBody.IrrationalTorusFlow
-public import LeanPool.PoincareThreeBody.JointBallFiberSeries
-public import LeanPool.PoincareThreeBody.JointEccentricAnomaly
-public import LeanPool.PoincareThreeBody.JointSlabIntegral
-public import LeanPool.PoincareThreeBody.KeplerFlow
-public import LeanPool.PoincareThreeBody.KeplerHamiltonian
-public import LeanPool.PoincareThreeBody.KeplerOrbit
-public import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
-public import LeanPool.PoincareThreeBody.LeadingObstruction
-public import LeanPool.PoincareThreeBody.LocalEnergyLeaf
-public import LeanPool.PoincareThreeBody.MixedPartials
-public import LeanPool.PoincareThreeBody.NormalizationClosure
-public import LeanPool.PoincareThreeBody.NormalizationInduction
-public import LeanPool.PoincareThreeBody.OneTwoResonance
-public import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
-public import LeanPool.PoincareThreeBody.ParameterDomainTopology
-public import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
-public import LeanPool.PoincareThreeBody.Perturbation
-public import LeanPool.PoincareThreeBody.PoincareSet
-public import LeanPool.PoincareThreeBody.PoissonNormalization
-public import LeanPool.PoincareThreeBody.Polar
-public import LeanPool.PoincareThreeBody.Resonance
-public import LeanPool.PoincareThreeBody.ResonantActionObstruction
-public import LeanPool.PoincareThreeBody.ResonantAverageSeparation
-public import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
-public import LeanPool.PoincareThreeBody.ResonantOrbit
-public import LeanPool.PoincareThreeBody.RotatingEllipse
-public import LeanPool.PoincareThreeBody.SafeAverageAnalytic
-public import LeanPool.PoincareThreeBody.SafeCollisionPhase
-public import LeanPool.PoincareThreeBody.ValidatedQuadrature
-public import LeanPool.PointwiseBirkhoff
-public import LeanPool.PointwiseBirkhoff.Main
-public import LeanPool.PolyaEnumerationTheorem
-public import LeanPool.PolyaEnumerationTheorem.Basic
-public import LeanPool.PolyaEnumerationTheorem.Concrete
-public import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
-public import LeanPool.PolyaEnumerationTheorem.ReductionToFin
-public import LeanPool.PolyaEnumerationTheorem.StirlingFirstKindSum
-public import LeanPool.Polylean
-public import LeanPool.Polylean.Complexes
-public import LeanPool.Polylean.Complexes.Constructions.UniversalCover
-public import LeanPool.Polylean.Complexes.GraphPaths
-public import LeanPool.Polylean.Complexes.Structures.Category
-public import LeanPool.Polylean.Complexes.Structures.FreeGroupoid
-public import LeanPool.Polylean.Complexes.Structures.Groupoid
-public import LeanPool.Polylean.Complexes.Structures.Invertegory
-public import LeanPool.Polylean.Complexes.Structures.Quiver
-public import LeanPool.Polylean.Complexes.Structures.TwoComplex
-public import LeanPool.Polylean.ConjInvLength
-public import LeanPool.Polylean.ConjInvLength.Length
-public import LeanPool.Polylean.ConjInvLength.LengthBound
-public import LeanPool.Polylean.ConjInvLength.LengthNode
-public import LeanPool.Polylean.ConjInvLength.MemoLength
-public import LeanPool.Polylean.ConjInvLength.ProvedBound
-public import LeanPool.Polylean.ConjInvLength.WordTree
-public import LeanPool.Polylean.Polymath
-public import LeanPool.Polylean.UnitConjecture
-public import LeanPool.Polylean.UnitConjecture.AddFreeGroup
-public import LeanPool.Polylean.UnitConjecture.Cocycle
-public import LeanPool.Polylean.UnitConjecture.EnumDecide
-public import LeanPool.Polylean.UnitConjecture.FreeModule
-public import LeanPool.Polylean.UnitConjecture.GardamGroup
-public import LeanPool.Polylean.UnitConjecture.GardamTheorem
-public import LeanPool.Polylean.UnitConjecture.GroupRing
-public import LeanPool.Polylean.UnitConjecture.MetabelianGroup
-public import LeanPool.Polylean.UnitConjecture.Tactics
-public import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
-public import LeanPool.Polylean.UnitConjecture.Tactics.ReduceGoal
-public import LeanPool.Polylean.UnitConjecture.TorsionFree
-public import LeanPool.PolynomialMethodRestrictedSums
-public import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
-public import LeanPool.PolynomialMethodRestrictedSums.CauchyDavenportTheorem
-public import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
-public import LeanPool.PolynomialMethodRestrictedSums.DiasDaSilvaHamidoune
-public import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
-public import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
-public import LeanPool.Polytopes
-public import LeanPool.Polytopes.Cutspace
-public import LeanPool.Polytopes.Halfspace
-public import LeanPool.Polytopes.MainTheorem
-public import LeanPool.Polytopes.Polar
-public import LeanPool.Polytopes.Polytope
-public import LeanPool.Polytopes.Pre
-public import LeanPool.PumpingCfg
-public import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
-public import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
-public import LeanPool.PumpingCfg.ChomskyNormalForm.EmptyElimination
-public import LeanPool.PumpingCfg.ChomskyNormalForm.LengthRestriction
-public import LeanPool.PumpingCfg.ChomskyNormalForm.TerminalRestriction
-public import LeanPool.PumpingCfg.ChomskyNormalForm.Translation
-public import LeanPool.PumpingCfg.ChomskyNormalForm.UnitElimination
-public import LeanPool.PumpingCfg.ParseTree
-public import LeanPool.PumpingCfg.Pumping
-public import LeanPool.PumpingCfg.ToMathlib
-public import LeanPool.PumpingCfg.Utils
-public import LeanPool.PythagoreanPolynomialParametrization
-public import LeanPool.PythagoreanPolynomialParametrization.Basic
-public import LeanPool.PythagoreanPolynomialParametrization.Explanatory
-public import LeanPool.PythagoreanPolynomialParametrization.IntegerValued
-public import LeanPool.PythagoreanPolynomialParametrization.Main
-public import LeanPool.PythagoreanPolynomialParametrization.Obstructions
-public import LeanPool.PythagoreanPolynomialParametrization.Positive
-public import LeanPool.PythagoreanPolynomialParametrization.SourceLemmas
-public import LeanPool.QuadraticIterates
-public import LeanPool.QuadraticIterates.ArchMath1992
-public import LeanPool.QuadraticIterates.ArchMath1992.DegreeCriterion
-public import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
-public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
-public import LeanPool.QuadraticIterates.ArchMath1992.Main
-public import LeanPool.QuadraticIterates.ArchMath1992.Sequences
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Eval
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.EvenComp
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Roots
-public import LeanPool.QuadraticIterates.Mathlib.Algebra.Squares
-public import LeanPool.QuadraticIterates.Mathlib.Data.Int.DvdSequence
-public import LeanPool.QuadraticIterates.Mathlib.Data.Multiset
-public import LeanPool.QuadraticIterates.Mathlib.Data.Nat
-public import LeanPool.QuadraticIterates.Mathlib.Data.ZMod
-public import LeanPool.QuadraticIterates.Mathlib.FieldTheory.Multiquadratic
-public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
-public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup
-public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduct
-public import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
-public import LeanPool.QuadraticIterates.Mathlib.RingTheory.MoebiusFactor
-public import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
-public import LeanPool.QuasiBorelSpaces
-public import LeanPool.QuasiBorelSpaces.Basic
-public import LeanPool.QuasiBorelSpaces.Chain
-public import LeanPool.QuasiBorelSpaces.Cont
-public import LeanPool.QuasiBorelSpaces.Defs
-public import LeanPool.QuasiBorelSpaces.ENNReal
-public import LeanPool.QuasiBorelSpaces.Finset
-public import LeanPool.QuasiBorelSpaces.FlatReal
-public import LeanPool.QuasiBorelSpaces.Functor
-public import LeanPool.QuasiBorelSpaces.Hom
-public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
-public import LeanPool.QuasiBorelSpaces.Lift
-public import LeanPool.QuasiBorelSpaces.List
-public import LeanPool.QuasiBorelSpaces.List.Encoding
-public import LeanPool.QuasiBorelSpaces.MeasureTheory
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Instances
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.List
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace
-public import LeanPool.QuasiBorelSpaces.MeasureTheory.Sum
-public import LeanPool.QuasiBorelSpaces.Multiset
-public import LeanPool.QuasiBorelSpaces.Nat
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Const
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Option
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sigma
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sum
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Fix
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Option
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma
-public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sum
-public import LeanPool.QuasiBorelSpaces.OmegaHom
-public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-public import LeanPool.QuasiBorelSpaces.Option
-public import LeanPool.QuasiBorelSpaces.Option.Instances
-public import LeanPool.QuasiBorelSpaces.Pi
-public import LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
-public import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
-public import LeanPool.QuasiBorelSpaces.Prod
-public import LeanPool.QuasiBorelSpaces.Prop
-public import LeanPool.QuasiBorelSpaces.Quotient
-public import LeanPool.QuasiBorelSpaces.Rose
-public import LeanPool.QuasiBorelSpaces.Rose.Encoding
-public import LeanPool.QuasiBorelSpaces.RoseTree
-public import LeanPool.QuasiBorelSpaces.RoseTree.Basic
-public import LeanPool.QuasiBorelSpaces.RoseTree.Defs
-public import LeanPool.QuasiBorelSpaces.SeparatesPoints
-public import LeanPool.QuasiBorelSpaces.Sigma
-public import LeanPool.QuasiBorelSpaces.Subtype
-public import LeanPool.QuasiBorelSpaces.Sum
-public import LeanPool.QuasiBorelSpaces.UnitInterval
-public import LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd
-public import LeanPool.Rado
-public import LeanPool.Rado.Complex.Dirichlet
-public import LeanPool.Rado.Complex.PlanarConnected
-public import LeanPool.Rado.Complex.Poisson
-public import LeanPool.Rado.Complex.SubMean
-public import LeanPool.Rado.Main
-public import LeanPool.Rado.Surface.Assembly
-public import LeanPool.Rado.Surface.Barriers
-public import LeanPool.Rado.Surface.Charts
-public import LeanPool.Rado.Surface.Germs
-public import LeanPool.Rado.Surface.Harmonic
-public import LeanPool.Rado.Surface.HolomorphicCompat
-public import LeanPool.Rado.Surface.Perron
-public import LeanPool.Rado.Topology.PoincareVolterra
-public import LeanPool.Rado.Topology.SecondCountable
-public import LeanPool.RamanujanNagell
-public import LeanPool.RamanujanNagell.Basic
-public import LeanPool.RamanujanNagell.Helpers
-public import LeanPool.RamanujanTauMissesPrimes
-public import LeanPool.RamanujanTauMissesPrimes.Solution
-public import LeanPool.Redhill
-public import LeanPool.Redhill.BB94
-public import LeanPool.Redhill.Common.Conjectures
-public import LeanPool.Redhill.Common.MaxAbs
-public import LeanPool.Redhill.Common.PairwiseCoprime
-public import LeanPool.Redhill.Common.PrimeChain
-public import LeanPool.Redhill.Common.Quality
-public import LeanPool.Redhill.Common.SubsumCondition
-public import LeanPool.Redhill.Common.VWPair
-public import LeanPool.Redhill.General.Coprime
-public import LeanPool.Redhill.General.Defs
-public import LeanPool.Redhill.General.Main
-public import LeanPool.Redhill.General.Subsum
-public import LeanPool.Redhill.KonyaginPrelude
-public import LeanPool.Redhill.Odd.Defs
-public import LeanPool.Redhill.Odd.Main
-public import LeanPool.Redhill.Odd.Pell
-public import LeanPool.Redhill.Odd.Subsum
-public import LeanPool.Redhill.ToMathlib.NatAbs
-public import LeanPool.Redhill.ToMathlib.NatSumProd
-public import LeanPool.RellichKondrachov
-public import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H2
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.ArzelaAscoli
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Compactness
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.FrechetKolmogorov
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Kernels
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.TranslationIntegral
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2CompactnessCriterion
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Rellich
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Translation
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimate
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateH1
-public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H2
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global
-public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
-public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
-public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv
-public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
-public import LeanPool.RellichKondrachov.MeasureTheory.Measure.HausdorffVolume
-public import LeanPool.RiemannMappingTheorem
-public import LeanPool.RiemannMappingTheorem.Cindex
-public import LeanPool.RiemannMappingTheorem.Defs
-public import LeanPool.RiemannMappingTheorem.DerivInj
-public import LeanPool.RiemannMappingTheorem.Etape2
-public import LeanPool.RiemannMappingTheorem.HasSqrt
-public import LeanPool.RiemannMappingTheorem.Hurwitz
-public import LeanPool.RiemannMappingTheorem.Main
-public import LeanPool.RiemannMappingTheorem.Montel
-public import LeanPool.RiemannMappingTheorem.Spaces
-public import LeanPool.RiemannMappingTheorem.ToMathlib
-public import LeanPool.RiemannMappingTheorem.Uniform
-public import LeanPool.RiemannRochFunctionFields
-public import LeanPool.RiemannRochFunctionFields.AdeleSpace.Basic
-public import LeanPool.RiemannRochFunctionFields.AdeleSpace.FilterChain
-public import LeanPool.RiemannRochFunctionFields.Basic
-public import LeanPool.RiemannRochFunctionFields.CoordinateFree.AdeleSpace
-public import LeanPool.RiemannRochFunctionFields.CoordinateFree.Divisor
-public import LeanPool.RiemannRochFunctionFields.CoordinateFree.EllipticCurve
-public import LeanPool.RiemannRochFunctionFields.CoordinateFree.RiemannRoch
-public import LeanPool.RiemannRochFunctionFields.CoordinateFree.WeilDifferential
-public import LeanPool.RiemannRochFunctionFields.Divisor
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.ConcreteRegression
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.DegreeOneDictionary
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusCounting
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusOne
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Infinity
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Instances
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.PicTorsorCore
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.PlaceDictionary
-public import LeanPool.RiemannRochFunctionFields.FunctionField.Divisor
-public import LeanPool.RiemannRochFunctionFields.FundamentalIdentity
-public import LeanPool.RiemannRochFunctionFields.Genus
-public import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
-public import LeanPool.RiemannRochFunctionFields.Genus.Basic
-public import LeanPool.RiemannRochFunctionFields.Genus.Polar
-public import LeanPool.RiemannRochFunctionFields.Genus.Ramification
-public import LeanPool.RiemannRochFunctionFields.LinearKneser
-public import LeanPool.RiemannRochFunctionFields.LocalResidue
-public import LeanPool.RiemannRochFunctionFields.Place
-public import LeanPool.RiemannRochFunctionFields.PlaceEquiv
-public import LeanPool.RiemannRochFunctionFields.RRspace.Basic
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Basic
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Regression
-public import LeanPool.RiemannRochFunctionFields.SeparableRelNorm
-public import LeanPool.RiemannRochFunctionFields.WeilDifferential
-public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
-public import LeanPool.RlTheoryInLean
-public import LeanPool.RlTheoryInLean.Analysis
-public import LeanPool.RlTheoryInLean.Analysis.Normed
-public import LeanPool.RlTheoryInLean.Analysis.Normed.Group
-public import LeanPool.RlTheoryInLean.Analysis.Normed.Group.Basic
-public import LeanPool.RlTheoryInLean.Data
-public import LeanPool.RlTheoryInLean.Data.Matrix
-public import LeanPool.RlTheoryInLean.Data.Matrix.Mul
-public import LeanPool.RlTheoryInLean.Data.Matrix.PosDef
-public import LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
-public import LeanPool.RlTheoryInLean.Defs
-public import LeanPool.RlTheoryInLean.MeasureTheory
-public import LeanPool.RlTheoryInLean.MeasureTheory.Function
-public import LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation
-public import LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation.Basic
-public import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space
-public import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
-public import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace
-public import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
-public import LeanPool.RlTheoryInLean.MeasureTheory.Measure
-public import LeanPool.RlTheoryInLean.MeasureTheory.Measure.GiryMonad
-public import LeanPool.RlTheoryInLean.MeasureTheory.Measure.Prod
-public import LeanPool.RlTheoryInLean.Order
-public import LeanPool.RlTheoryInLean.Order.Filter
-public import LeanPool.RlTheoryInLean.Order.Filter.Basic
-public import LeanPool.RlTheoryInLean.Probability
-public import LeanPool.RlTheoryInLean.Probability.Kernel
-public import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
-public import LeanPool.RlTheoryInLean.Probability.Kernel.Composition
-public import LeanPool.RlTheoryInLean.Probability.Kernel.Composition.MapComap
-public import LeanPool.RlTheoryInLean.Probability.MarkovChain
-public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
-public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite
-public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite.Defs
-public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
-public import LeanPool.RlTheoryInLean.StochasticApproximation
-public import LeanPool.RlTheoryInLean.StochasticApproximation.DiscreteGronwall
-public import LeanPool.RootSystem
-public import LeanPool.RootSystem.An
-public import LeanPool.RootSystem.BCn
-public import LeanPool.RungeKuttaOrderConditions
-public import LeanPool.RungeKuttaOrderConditions.ButcherOrder
-public import LeanPool.Rupert
-public import LeanPool.Rupert.Affine
-public import LeanPool.Rupert.Attr
-public import LeanPool.Rupert.Basic
-public import LeanPool.Rupert.Convex
-public import LeanPool.Rupert.Cube
-public import LeanPool.Rupert.Equivalences.AffineRupertEquivRupertSet
-public import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
-public import LeanPool.Rupert.Equivalences.RupertEquivRupertSet
-public import LeanPool.Rupert.Equivalences.Util
-public import LeanPool.Rupert.FinCases
-public import LeanPool.Rupert.Icosahedron
-public import LeanPool.Rupert.MatrixSimps
-public import LeanPool.Rupert.Quaternion
-public import LeanPool.Rupert.Set
-public import LeanPool.Rupert.SnubCube
-public import LeanPool.Rupert.Square
-public import LeanPool.Rupert.Tetrahedron
-public import LeanPool.Rupert.TriakisTetrahedron
-public import LeanPool.Sabidussi
-public import LeanPool.Sabidussi.Color
-public import LeanPool.Sabidussi.CyclicWord
-public import LeanPool.Sabidussi.LocalPattern
-public import LeanPool.Sabidussi.LoopGraphBridge
-public import LeanPool.Sabidussi.LoopMultigraph
-public import LeanPool.Sabidussi.OddBalance
-public import LeanPool.Sabidussi.OrdinaryCircuit
-public import LeanPool.Sabidussi.Parity
-public import LeanPool.Sabidussi.Statement
-public import LeanPool.SardMoreira
-public import LeanPool.SardMoreira.Chart
-public import LeanPool.SardMoreira.ChartEstimates
-public import LeanPool.SardMoreira.ContDiff
-public import LeanPool.SardMoreira.ContDiffMoreiraHolder
-public import LeanPool.SardMoreira.ContinuousMultilinearMap
-public import LeanPool.SardMoreira.ImplicitFunction
-public import LeanPool.SardMoreira.LebesgueDensity
-public import LeanPool.SardMoreira.LinearAlgebra
-public import LeanPool.SardMoreira.LocalEstimates
-public import LeanPool.SardMoreira.MainTheorem
-public import LeanPool.SardMoreira.MeasureBallSemicontinuous
-public import LeanPool.SardMoreira.MeasureComap
-public import LeanPool.SardMoreira.MeasureNNReal
-public import LeanPool.SardMoreira.NormedSpace
-public import LeanPool.SardMoreira.OuterMeasureDeriv
-public import LeanPool.SardMoreira.ToMathlib
-public import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
-public import LeanPool.SardMoreira.ToMathlib.PR31960
-public import LeanPool.SardMoreira.ToMathlib.PR32186
-public import LeanPool.SardMoreira.ToMathlib.PR32986
-public import LeanPool.SardMoreira.ToMathlib.PR32993
-public import LeanPool.SardMoreira.ToMathlib.PR33029
-public import LeanPool.SardMoreira.ToMathlib.PR33114
-public import LeanPool.SardMoreira.Topology
-public import LeanPool.SardMoreira.UnifDoublingCover
-public import LeanPool.SardMoreira.Unused
-public import LeanPool.SardMoreira.UpperLowerSemicontinuous
-public import LeanPool.SardMoreira.WithRPowDist
-public import LeanPool.SelbergSieve4
-public import LeanPool.SelbergSieve4.Applications
-public import LeanPool.SelbergSieve4.Applications.BrunTitchmarsh
-public import LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
-public import LeanPool.SelbergSieve4.AuxResults
-public import LeanPool.SelbergSieve4.ForArithmeticFunction
-public import LeanPool.SelbergSieve4.ForMathlib
-public import LeanPool.SelbergSieve4.ForMathlib.Basic
-public import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
-public import LeanPool.SelbergSieve4.MainResults
-public import LeanPool.SelbergSieve4.Selberg
-public import LeanPool.SelbergSieve4.SieveLemmas
-public import LeanPool.SelbergSieve4.Tactic
-public import LeanPool.SelbergSieve4.Tactic.AesopDiv
-public import LeanPool.SelbergSieve4.Tactic.AesopInit
-public import LeanPool.SelbergSieve4.Tactic.Multiplicativity
-public import LeanPool.SelbergSieve4.UpperBoundSieve
-public import LeanPool.SemicircleCheck
-public import LeanPool.SemicircleCheck.CatalanRecurrence
-public import LeanPool.SemicircleCheck.Census
-public import LeanPool.SemicircleCheck.EvenCard
-public import LeanPool.SemicircleCheck.FinRotateLemmas
-public import LeanPool.SemicircleCheck.GenusNoncrossing
-public import LeanPool.SemicircleCheck.RotationArithmetic
-public import LeanPool.SemicircleCheck.ShiftTwoEquiv
-public import LeanPool.SemicircleLaw
-public import LeanPool.SemicircleLaw.SemicircleDistribution
-public import LeanPool.Sensitivity
-public import LeanPool.Sensitivity.Basic
-public import LeanPool.Sensitivity.Consequences
-public import LeanPool.Sensitivity.Defs
-public import LeanPool.Sensitivity.Huang
-public import LeanPool.Sensitivity.HuangBridge
-public import LeanPool.Sensitivity.Main
-public import LeanPool.Sensitivity.Multilinear
-public import LeanPool.Sensitivity.Parity
-public import LeanPool.Sensitivity.Subcube
-public import LeanPool.SetTheory
-public import LeanPool.SetTheory.Basic
-public import LeanPool.SetTheory.ElementaryEmbedding
-public import LeanPool.SetTheory.KunenInconsistency
-public import LeanPool.SetTheory.Omega
-public import LeanPool.SetTheory.OrderTheory
-public import LeanPool.SetTheory.Ordinals
-public import LeanPool.SetTheory.Realize
-public import LeanPool.SetTheory.RealizeBuilders
-public import LeanPool.SetTheory.RealizeCore
-public import LeanPool.SetTheory.SimpAttr
-public import LeanPool.Shannon1948Formalization
-public import LeanPool.Shannon1948Formalization.Entropy
-public import LeanPool.Shannon1948Formalization.Entropy.Approx
-public import LeanPool.Shannon1948Formalization.Entropy.Converse
-public import LeanPool.Shannon1948Formalization.Entropy.Core
-public import LeanPool.Shannon1948Formalization.Entropy.Final
-public import LeanPool.Shannon1948Formalization.Entropy.Gibbs
-public import LeanPool.Shannon1948Formalization.Entropy.Joint
-public import LeanPool.Shannon1948Formalization.Entropy.Properties
-public import LeanPool.Shannon1948Formalization.Entropy.Rational
-public import LeanPool.Shannon1948Formalization.Entropy.Uniform
-public import LeanPool.SingularModuli
-public import LeanPool.SingularModuli.QuadraticOrder.Basic
-public import LeanPool.SingularModuli.QuadraticOrder.CanonicalForm
-public import LeanPool.SingularModuli.QuadraticOrder.Discriminant
-public import LeanPool.SingularModuli.QuadraticOrder.Norm
-public import LeanPool.SingularModuli.QuadraticOrder.Prime
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
-public import LeanPool.SingularModuli.QuadraticOrder.Prime.Split
-public import LeanPool.SingularModuli.QuadraticOrder.RootCounting
-public import LeanPool.SingularModuli.QuadraticOrder.Verification
-public import LeanPool.SpecialNumbers
-public import LeanPool.SpecialNumbers.Euclidian
-public import LeanPool.SpecialNumbers.Eulerian
-public import LeanPool.SpecialNumbers.Sylvester
-public import LeanPool.SpectralPositivity
-public import LeanPool.SpectralPositivity.Matrix.MMatrixInverse
-public import LeanPool.SpectralPositivity.Matrix.MetzlerExp
-public import LeanPool.SpectralPositivity.Matrix.NonnegPower
-public import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
-public import LeanPool.SpectralPositivity.Operator.Jentzsch
-public import LeanPool.SpectralPositivity.Operator.JentzschProof
-public import LeanPool.SpectralPositivity.Operator.KernelPositivity
-public import LeanPool.SpectralPositivity.Operator.SpectralRadius
-public import LeanPool.SpherePacking
-public import LeanPool.SpherePacking.Conclusion
-public import LeanPool.SpherePacking.Foundations
-public import LeanPool.SpherePacking.GammaAnalysis
-public import LeanPool.SpherePacking.HarmonicAnalysis
-public import LeanPool.SpherePacking.MellinAnalysis
-public import LeanPool.SpherePacking.PackingBound
-public import LeanPool.SpherePacking.RadialConstruction
-public import LeanPool.SpherePacking.SaddleAnalysis
-public import LeanPool.SteinhausThreeGap
-public import LeanPool.SteinhausThreeGap.Basic
-public import LeanPool.SumsThreeSquares
-public import LeanPool.SumsThreeSquares.MinkowskiConvex
-public import LeanPool.SumsThreeSquares.SumThreeSquares
-public import LeanPool.Sundogcert
-public import LeanPool.Sundogcert.CertWall
-public import LeanPool.Sundogcert.Certificate
-public import LeanPool.Sundogcert.CheckCost
-public import LeanPool.Sundogcert.ClauseGadget
-public import LeanPool.Sundogcert.DecodingNPHard
-public import LeanPool.Sundogcert.Degradation
-public import LeanPool.Sundogcert.Instance
-public import LeanPool.Sundogcert.Looseness
-public import LeanPool.Sundogcert.MatchingNPHard
-public import LeanPool.Sundogcert.RSCertificate
-public import LeanPool.Sundogcert.SATNPHard
-public import LeanPool.Sundogcert.SATReduction
-public import LeanPool.Sundogcert.SATReductionForward
-public import LeanPool.Sundogcert.SATReductionIncidence
-public import LeanPool.Sundogcert.SATReductionMain
-public import LeanPool.Sundogcert.SATReductionReverse
-public import LeanPool.Sundogcert.Scaling
-public import LeanPool.Sundogcert.ThreeDMReindex
-public import LeanPool.Sundogcert.VarWheel
-public import LeanPool.SyntheticEuclid4
-public import LeanPool.SyntheticEuclid4.Axioms
-public import LeanPool.SyntheticEuclid4.PermTactics
-public import LeanPool.SyntheticEuclid4.SyntheticEuclid4
-public import LeanPool.SyntheticEuclid4.Tactics
-public import LeanPool.ThreeGap
-public import LeanPool.ThreeGap.ChevallierCount
-public import LeanPool.ThreeGap.ChevallierGapBound
-public import LeanPool.ThreeGap.DeltaCost
-public import LeanPool.ThreeGap.EuclideanAngle
-public import LeanPool.ThreeGap.EuclideanDefect
-public import LeanPool.ThreeGap.EuclideanFiveDistanceSharp
-public import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
-public import LeanPool.ThreeGap.EuclideanGrowth
-public import LeanPool.ThreeGap.EuclideanGrowthFive
-public import LeanPool.ThreeGap.EuclideanGrowthFour
-public import LeanPool.ThreeGap.EuclideanNN
-public import LeanPool.ThreeGap.EuclideanPacking
-public import LeanPool.ThreeGap.EuclideanRecords
-public import LeanPool.ThreeGap.FiveDistance
-public import LeanPool.ThreeGap.FiveDistanceHM
-public import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
-public import LeanPool.ThreeGap.LinftyThreeTorusNine
-public import LeanPool.ThreeGap.ModTwoGrowth
-public import LeanPool.ThreeGap.SimultaneousApprox
-public import LeanPool.ThreeGap.SimultaneousDirichlet
-public import LeanPool.ThreeGap.SupNormGrowth
-public import LeanPool.ThreeGap.TorusReduction
-public import LeanPool.Turan3
-public import LeanPool.Turan3.Turans3rdProof
-public import LeanPool.TwoColoringOneRound
-public import LeanPool.TwoColoringOneRound.API
-public import LeanPool.TwoColoringOneRound.Definitions
-public import LeanPool.TwoColoringOneRound.LowerBound
-public import LeanPool.TwoColoringOneRound.LowerBound.Certificate
-public import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
-public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-public import LeanPool.TwoColoringOneRound.LowerBound.Defs
-public import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
-public import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0Int
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock0
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock1
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock2
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock4
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock5
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock6
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntGoal
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSi
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiInt
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars0to3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars12to15
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars16to19
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars20to22
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars4to7
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars8to11
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars0to3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars12to15
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars16to19
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars20to22
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars4to7
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars8to11
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars0to3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars12to15
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars16to19
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars20to22
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars4to7
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars8to11
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars0to3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars12to15
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars16to19
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars20to22
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars4to7
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars8to11
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars0to3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars12to15
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars16to19
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars20to22
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars4to7
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars8to11
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars0to3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars12to15
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars16to19
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars20to22
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars4to7
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars8to11
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars0to3
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars12to15
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars16to19
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars20to22
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars4to7
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars8to11
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntGoal
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Interface
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuLinear
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuWitness
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
-public import LeanPool.TwoColoringOneRound.LowerBound.N1000000ZData
-public import LeanPool.TwoColoringOneRound.LowerBound.N9
-public import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
-public import LeanPool.TwoColoringOneRound.LowerBound.Sanity
-public import LeanPool.TwoColoringOneRound.LowerBound.UpperBound
-public import LeanPool.TwoColoringOneRound.MainResults
-public import LeanPool.TwoColoringOneRound.Reduction
-public import LeanPool.TwoColoringOneRound.SimpleBounds
-public import LeanPool.TwoColoringOneRound.UpperBound
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Basic
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Regions
-public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
-public import LeanPool.UlmsTheorem
-public import LeanPool.UlmsTheorem.Basic
-public import LeanPool.UlmsTheorem.PGroups.Basic
-public import LeanPool.UlmsTheorem.PGroups.Defs
-public import LeanPool.UlmsTheorem.PGroups.Heights
-public import LeanPool.UlmsTheorem.PGroups.Morphisms
-public import LeanPool.UlmsTheorem.PGroups.Socle
-public import LeanPool.UlmsTheorem.PGroups.Subgroups
-public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
-public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
-public import LeanPool.UlmsTheorem.Regression
-public import LeanPool.UlmsTheorem.Ulm.Classification
-public import LeanPool.UlmsTheorem.Ulm.Extension
-public import LeanPool.UlmsTheorem.Ulm.Invariance
-public import LeanPool.UlmsTheorem.Ulm.Pure
-public import LeanPool.UlmsTheorem.Ulm.Theorem
-public import LeanPool.UnconditionalSchauderBasis
-public import LeanPool.VirasoroProject
-public import LeanPool.VirasoroProject.CentralChargeCalc
-public import LeanPool.VirasoroProject.CentralExtension
-public import LeanPool.VirasoroProject.Commutator
-public import LeanPool.VirasoroProject.CyclicTripleSum
-public import LeanPool.VirasoroProject.FockSpace
-public import LeanPool.VirasoroProject.FockSpaceSugawara
-public import LeanPool.VirasoroProject.HeisenbergAlgebra
-public import LeanPool.VirasoroProject.IndexTri
-public import LeanPool.VirasoroProject.IsCentralExtension
-public import LeanPool.VirasoroProject.LieAlgebraModuleUEA
-public import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
-public import LeanPool.VirasoroProject.LieCohomologySmallDegree
-public import LeanPool.VirasoroProject.LieVerma
-public import LeanPool.VirasoroProject.SectionSES
-public import LeanPool.VirasoroProject.Sugawara
-public import LeanPool.VirasoroProject.ToMathlib
-public import LeanPool.VirasoroProject.ToMathlib.Algebra
-public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie
-public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
-public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Basic
-public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra
-public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis
-public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
-public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
-public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp
-public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp.Supported
-public import LeanPool.VirasoroProject.ToMathlib.Topology
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.ConstMulAction
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum.Basic
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
-public import LeanPool.VirasoroProject.ToMathlib.Topology.Order
-public import LeanPool.VirasoroProject.VermaModule
-public import LeanPool.VirasoroProject.VirasoroAlgebra
-public import LeanPool.VirasoroProject.VirasoroCocycle
-public import LeanPool.VirasoroProject.VirasoroVerma
-public import LeanPool.VirasoroProject.WittAlgebra
-public import LeanPool.VirasoroProject.WittAlgebraCohomology
-public import LeanPool.Vlasov
-public import LeanPool.Vlasov.Base
-public import LeanPool.Vlasov.Base.Geometry
-public import LeanPool.Vlasov.Basic
-public import LeanPool.Vlasov.ForMathlib
-public import LeanPool.Vlasov.ForMathlib.PicardLindelof
-public import LeanPool.Vlasov.OT
-public import LeanPool.Vlasov.OT.CharacteristicFlow
-public import LeanPool.Vlasov.OT.Coupling
-public import LeanPool.Vlasov.OT.Wasserstein
-public import LeanPool.Vlasov.OT.WeakToLagrangian
-public import LeanPool.Vlasov.OT.WellPosedness
-public import LeanPool.Wallace
-public import LeanPool.Wallace.BlockFilters
-public import LeanPool.Wallace.BlockLimit
-public import LeanPool.Wallace.BoundedIndependentMap
-public import LeanPool.Wallace.CoefficientTransfiniteExtension
-public import LeanPool.Wallace.ConcreteClosure
-public import LeanPool.Wallace.ConcreteData
-public import LeanPool.Wallace.ConcreteFusionRun
-public import LeanPool.Wallace.ConcreteLocalSetup
-public import LeanPool.Wallace.CountableClosure
-public import LeanPool.Wallace.CountableDisjointization
-public import LeanPool.Wallace.FiniteCombinatorics
-public import LeanPool.Wallace.FullTopology
-public import LeanPool.Wallace.FullTopologyMain
-public import LeanPool.Wallace.FusionLimit
-public import LeanPool.Wallace.FusionSchedule
-public import LeanPool.Wallace.FusionStage
-public import LeanPool.Wallace.GeneralMain
-public import LeanPool.Wallace.GlobalAssembly
-public import LeanPool.Wallace.InitialCharacter
-public import LeanPool.Wallace.LocalEnumeration
-public import LeanPool.Wallace.LocalFusion
-public import LeanPool.Wallace.MathlibFoundations
-public import LeanPool.Wallace.NontrivialSequences
-public import LeanPool.Wallace.PackageTransport
-public import LeanPool.Wallace.RationalAssembly
-public import LeanPool.Wallace.RationalClosure
-public import LeanPool.Wallace.RationalData
-public import LeanPool.Wallace.RationalFusionRun
-public import LeanPool.Wallace.RationalLocalSetup
-public import LeanPool.Wallace.RationalTransfiniteExtension
-public import LeanPool.Wallace.RationalTriangularPreprocess
-public import LeanPool.Wallace.RealMain
-public import LeanPool.Wallace.Result
-public import LeanPool.Wallace.SeparationInterface
-public import LeanPool.Wallace.TorsionFreeCoordinate
-public import LeanPool.Wallace.TransfiniteExtension
-public import LeanPool.Wallace.TriangularPreprocess
-public import LeanPool.Wallace.TychonoffWallace
-public import LeanPool.Wallace.UniformKronecker
-public import LeanPool.WhiteheadTheorem
-public import LeanPool.WhiteheadTheorem.Auxiliary
-public import LeanPool.WhiteheadTheorem.Basic
-public import LeanPool.WhiteheadTheorem.CWComplex.Basic
-public import LeanPool.WhiteheadTheorem.CWComplex.IProd.Def
-public import LeanPool.WhiteheadTheorem.CWComplex.IProd.Iso
-public import LeanPool.WhiteheadTheorem.Compressible.CWComplex
-public import LeanPool.WhiteheadTheorem.Compressible.Defs
-public import LeanPool.WhiteheadTheorem.Compressible.Disk
-public import LeanPool.WhiteheadTheorem.Compressible.WeakEquiv
-public import LeanPool.WhiteheadTheorem.Defs
-public import LeanPool.WhiteheadTheorem.Exponential
-public import LeanPool.WhiteheadTheorem.HEP.Cofibration
-public import LeanPool.WhiteheadTheorem.HEP.Cube
-public import LeanPool.WhiteheadTheorem.HEP.CubeJar
-public import LeanPool.WhiteheadTheorem.HEP.Retract
-public import LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt
-public import LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Algebra
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
-public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq
-public import LeanPool.WhiteheadTheorem.Shapes.Cube
-public import LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap
-public import LeanPool.WhiteheadTheorem.Shapes.Disk
-public import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
-public import LeanPool.WhiteheadTheorem.Shapes.Jar
-public import LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
-public import LeanPool.WhiteheadTheorem.Shapes.Maps
-public import LeanPool.WhiteheadTheorem.Shapes.Pushout
-public import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
-public import LeanPool.ZFLean
-public import LeanPool.ZFLean.Basic
-public import LeanPool.ZFLean.Booleans
-public import LeanPool.ZFLean.Embeddings
-public import LeanPool.ZFLean.Functions
-public import LeanPool.ZFLean.Integers
-public import LeanPool.ZFLean.Isomorphisms
-public import LeanPool.ZFLean.IsomorphismsFunsToPowRel
-public import LeanPool.ZFLean.IsomorphismsZFNatIso
-public import LeanPool.ZFLean.Naturals
-public import LeanPool.ZFLean.Rationals
-public import LeanPool.ZFLean.Sum
-public import LeanPool.ZFLean.Tactics
-public import LeanPool.Zeta3Irrational
-public import LeanPool.Zeta3Irrational.Basic
-public import LeanPool.Zeta3Irrational.Bound
-public import LeanPool.Zeta3Irrational.Chebyshev
-public import LeanPool.Zeta3Irrational.D
-public import LeanPool.Zeta3Irrational.Equality
-public import LeanPool.Zeta3Irrational.Integral
-public import LeanPool.Zeta3Irrational.LegendrePoly
-public import LeanPool.Zeta3Irrational.LinearForm
-public import LeanPool.ZetaH123
-public import LeanPool.ZetaH123.H1
-public import LeanPool.ZetaH123.H2
-public import LeanPool.ZetaH123.H3
-public import LeanPool.ZetaH123.Lem41
-public import LeanPool.ZetaZeros
-public import LeanPool.ZetaZeros.Defs
-public import LeanPool.ZetaZeros.Hilbert.AlphaExpansion
-public import LeanPool.ZetaZeros.Hilbert.Basis
-public import LeanPool.ZetaZeros.Hilbert.Defs
-public import LeanPool.ZetaZeros.Hilbert.Dimensions
-public import LeanPool.ZetaZeros.Hilbert.FIdentity
-public import LeanPool.ZetaZeros.Hilbert.InnerReal
-public import LeanPool.ZetaZeros.Hilbert.InnerRealL2
-public import LeanPool.ZetaZeros.Hilbert.Integrals
-public import LeanPool.ZetaZeros.Hilbert.L2
-public import LeanPool.ZetaZeros.Hilbert.Subspaces
-public import LeanPool.ZetaZeros.Hilbert.Symmetry
-public import LeanPool.ZetaZeros.Hilbert.SymmetryL2
-public import LeanPool.ZetaZeros.Main
-public import LeanPool.ZetaZeros.Meta.Attr
-public import LeanPool.ZetaZeros.MontgomeryTaylor.AffineKernel
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Basic
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Evaluation
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Integrability
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Reduction
-public import LeanPool.ZetaZeros.MontgomeryTaylor.TestFunction
-public import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
-public import LeanPool.ZetaZeros.Zeta.Asymptotics
-public import LeanPool.ZetaZeros.Zeta.Basic
-public import LeanPool.ZetaZeros.Zeta.Cutoff
-public import LeanPool.ZetaZeros.Zeta.Defs
-public import LeanPool.ZetaZeros.Zeta.Finite
-public import LeanPool.ZetaZeros.Zeta.Kernel
-public import LeanPool.ZetaZeros.Zeta.Mass
-public import LeanPool.ZetaZeros.Zeta.OrderConj
-public import LeanPool.ZetaZeros.Zeta.Proportion
-public import LeanPool.ZetaZeros.Zeta.Transfer
-public import LeanPool.ZhangYeungInequality
-public import LeanPool.ZhangYeungInequality.CopyLemma
-public import LeanPool.ZhangYeungInequality.Delta
-public import LeanPool.ZhangYeungInequality.EntropyRegion
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.ConditionalIndependence
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.Basic
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.MutualInfo
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Measure
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.ConditionalProbability
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Pair
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Uniform
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Card
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Insert
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Constructions.Pi
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Countable
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Dirac
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.IdentDistrib
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Kernel.IndepFun
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Kernel.Composition.Comp
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Kernel.Disintegration
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
-public import LeanPool.ZhangYeungInequality.Prelude
-public import LeanPool.ZhangYeungInequality.Test
-public import LeanPool.ZhangYeungInequality.Test.CopyLemma
-public import LeanPool.ZhangYeungInequality.Test.Delta
-public import LeanPool.ZhangYeungInequality.Test.EntropyRegion
-public import LeanPool.ZhangYeungInequality.Test.Theorem2
-public import LeanPool.ZhangYeungInequality.Test.Theorem3
-public import LeanPool.ZhangYeungInequality.Test.Theorem4
-public import LeanPool.ZhangYeungInequality.Test.Theorem5
-public import LeanPool.ZhangYeungInequality.Theorem2
-public import LeanPool.ZhangYeungInequality.Theorem3
-public import LeanPool.ZhangYeungInequality.Theorem4
-public import LeanPool.ZhangYeungInequality.Theorem5
+import LeanPool.ABCExceptions
+import LeanPool.ABCExceptions.ForMathlib
+import LeanPool.ABCExceptions.ForMathlib.Misc
+import LeanPool.ABCExceptions.ForMathlib.RingTheory
+import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+import LeanPool.ABCExceptions.Section2
+import LeanPool.ABCExceptions.Section4
+import LeanPool.AFormalizationOfBorelDeterminacyInLean
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Choquet
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Meager
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InfLists
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Player
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringLim
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.PreLift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.QualityAliases
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.BodyFunctor
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.LenTreeHom
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.PointedTrees
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeBody
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeExtensions
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeLim
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
+import LeanPool.AgreeToDisagree
+import LeanPool.AgreeToDisagree.AgreeToDisagree
+import LeanPool.AgreeToDisagree.AgreeToDisagreeBeliefs
+import LeanPool.AharoniKorman
+import LeanPool.AharoniKorman.Counterexample
+import LeanPool.AharoniKorman.ForMathlib
+import LeanPool.AharoniKorman.ForMathlib.Misc
+import LeanPool.AndersonConjecture
+import LeanPool.AndersonConjecture.AdicKerEval
+import LeanPool.AndersonConjecture.AdicLocal
+import LeanPool.AndersonConjecture.AdicNoetherian
+import LeanPool.AndersonConjecture.Basic
+import LeanPool.AndersonConjecture.CompleteDomain
+import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+import LeanPool.AndersonConjecture.CompleteDomain.Domain
+import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+import LeanPool.AndersonConjecture.Jensen
+import LeanPool.AndersonConjecture.Jensen.Adjoin
+import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+import LeanPool.AndersonConjecture.Jensen.Adjoin.FromPrime
+import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
+import LeanPool.AndersonConjecture.Jensen.Application
+import LeanPool.AndersonConjecture.Jensen.Avoidance
+import LeanPool.AndersonConjecture.Jensen.CloseUp
+import LeanPool.AndersonConjecture.Jensen.CloseUp.AvoidanceStep
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
+import LeanPool.AndersonConjecture.Jensen.CloseUp.CloseUp
+import LeanPool.AndersonConjecture.Jensen.CloseUp.CoprimeSplit
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Factor
+import LeanPool.AndersonConjecture.Jensen.CloseUp.FactorDivisibility
+import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
+import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
+import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionStep
+import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
+import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+import LeanPool.AndersonConjecture.Jensen.CombinedStep
+import LeanPool.AndersonConjecture.Jensen.Construction
+import LeanPool.AndersonConjecture.Jensen.Construction.ChainHelpers
+import LeanPool.AndersonConjecture.Jensen.Construction.Construction
+import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
+import LeanPool.AndersonConjecture.Jensen.Construction.Transfinite
+import LeanPool.AndersonConjecture.Jensen.Defs
+import LeanPool.AndersonConjecture.Jensen.Jensen
+import LeanPool.AndersonConjecture.Jensen.KrullDomain
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.HeightBound
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.KrullDomain
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.UFDConstruction
+import LeanPool.AndersonConjecture.Jensen.NSubring
+import LeanPool.AndersonConjecture.Jensen.TransfiniteUnion
+import LeanPool.AndersonConjecture.Main
+import LeanPool.AndersonConjecture.QuasiCompleteRing
+import LeanPool.AndersonConjecture.QuasiCompleteRing.Complete
+import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
+import LeanPool.Apportionment
+import LeanPool.Apportionment.Basic
+import LeanPool.Apportionment.PlausibleInstances
+import LeanPool.Apportionment.Utils
+import LeanPool.ArchonFirstProofResults
+import LeanPool.ArchonFirstProofResults.FirstProof4
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.BoxPlusRealRoots
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Continuity
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Defs
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Density
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.HarmonicBound
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.InvPhiN
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Obreschkoff
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.ObreschkoffTransport
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.PhiN
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.RPoly
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.RealRoots
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Residue
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.RootContinuity
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.SignSquarefree
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.Transport
+import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary.TransportDecomp
+import LeanPool.ArchonFirstProofResults.FirstProof4.Problem4
+import LeanPool.ArchonFirstProofResults.FirstProof6
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.BarrierPotential
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ColoringFramework
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.DynamicColoring
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LaplacianBasics
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LoewnerPullback
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.OneSidedBarrier
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ResolventBound
+import LeanPool.ArchonFirstProofResults.FirstProof6.Problem6
+import LeanPool.ArtinWedderburn
+import LeanPool.ArtinWedderburn.ArtinWedderburnTheorem
+import LeanPool.ArtinWedderburn.Auxiliary
+import LeanPool.ArtinWedderburn.CornerCornerLemma
+import LeanPool.ArtinWedderburn.CornerRing
+import LeanPool.ArtinWedderburn.IdealProd
+import LeanPool.ArtinWedderburn.Idempotents
+import LeanPool.ArtinWedderburn.MatrixUnits
+import LeanPool.ArtinWedderburn.MinIdeals
+import LeanPool.ArtinWedderburn.NiceIdeals
+import LeanPool.ArtinWedderburn.NonUnitalToUnital
+import LeanPool.ArtinWedderburn.PrimeRing
+import LeanPool.ArtinWedderburn.SetProd
+import LeanPool.BannaiBannaiStanton
+import LeanPool.BannaiBannaiStanton.BoundOnDistanceSet
+import LeanPool.Basic
+import LeanPool.Biswal
+import LeanPool.Biswal.Theorem1
+import LeanPool.Biswal.Theorem23
+import LeanPool.BollobasNikiforov
+import LeanPool.BollobasNikiforov.Basic.Graph
+import LeanPool.BollobasNikiforov.Basic.Inner
+import LeanPool.BollobasNikiforov.Basic.Spectrum
+import LeanPool.BollobasNikiforov.CP.Basic
+import LeanPool.BollobasNikiforov.CP.Closed
+import LeanPool.BollobasNikiforov.Definition
+import LeanPool.BollobasNikiforov.Kernel.Bilinear
+import LeanPool.BollobasNikiforov.Kernel.Data
+import LeanPool.BollobasNikiforov.Kernel.Main
+import LeanPool.BollobasNikiforov.Kernel.N
+import LeanPool.BollobasNikiforov.Kernel.SM
+import LeanPool.BollobasNikiforov.Kernel.Signs
+import LeanPool.BollobasNikiforov.M.Basic
+import LeanPool.BollobasNikiforov.M.Config
+import LeanPool.BollobasNikiforov.M.Elim
+import LeanPool.BollobasNikiforov.M.GammaZero
+import LeanPool.BollobasNikiforov.M.HalfPlane
+import LeanPool.BollobasNikiforov.M.Main
+import LeanPool.BollobasNikiforov.M.Schur
+import LeanPool.BollobasNikiforov.MS.Basic
+import LeanPool.BollobasNikiforov.Main
+import LeanPool.BollobasNikiforov.Spectral.Conic
+import LeanPool.BollobasNikiforov.Spectral.Gram
+import LeanPool.BollobasNikiforov.Spectral.Interlace
+import LeanPool.BollobasNikiforov.Spectral.Perron
+import LeanPool.BollobasNikiforov.Spectral.Weighted
+import LeanPool.BollobasNikiforov.TN.Basic
+import LeanPool.BollobasNikiforov.TN.Convex
+import LeanPool.BollobasNikiforov.TN.Truncated
+import LeanPool.BooleanIsoperimetry
+import LeanPool.BooleanIsoperimetry.Cascade
+import LeanPool.BooleanIsoperimetry.CoherentGap
+import LeanPool.BooleanIsoperimetry.Compression
+import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
+import LeanPool.BooleanIsoperimetry.ConwayGuyHeight
+import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
+import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
+import LeanPool.BooleanIsoperimetry.Cube
+import LeanPool.BooleanIsoperimetry.Harper
+import LeanPool.BooleanIsoperimetry.KruskalKatona
+import LeanPool.BooleanIsoperimetry.LayerWindows
+import LeanPool.BooleanIsoperimetry.Macaulay
+import LeanPool.BooleanIsoperimetry.MacaulayMin
+import LeanPool.BooleanIsoperimetry.SetFamilyShadow
+import LeanPool.BooleanIsoperimetry.Shadow
+import LeanPool.BooleanIsoperimetry.SimplicialCompression
+import LeanPool.BrauerGroupNew
+import LeanPool.BrauerGroupNew.AbsoluteIsoH2
+import LeanPool.BrauerGroupNew.AlgClosedUnion
+import LeanPool.BrauerGroupNew.Azumaya.Basic
+import LeanPool.BrauerGroupNew.Azumaya.Mul
+import LeanPool.BrauerGroupNew.BrauerGroup
+import LeanPool.BrauerGroupNew.BrauerOverR
+import LeanPool.BrauerGroupNew.CentralSimple
+import LeanPool.BrauerGroupNew.Centralizer
+import LeanPool.BrauerGroupNew.CrossProductAlgebra
+import LeanPool.BrauerGroupNew.DoubleCentralizer
+import LeanPool.BrauerGroupNew.Examples.ShortComplex.LeftHomologyMapData
+import LeanPool.BrauerGroupNew.ExtendScalar
+import LeanPool.BrauerGroupNew.FieldCat
+import LeanPool.BrauerGroupNew.FiniteField
+import LeanPool.BrauerGroupNew.FrobeniusTheorem
+import LeanPool.BrauerGroupNew.IsoSecond
+import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+import LeanPool.BrauerGroupNew.Mathlib
+import LeanPool.BrauerGroupNew.Mathlib.Algebra
+import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra
+import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Equiv
+import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra
+import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
+import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed
+import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Lattice
+import LeanPool.BrauerGroupNew.Mathlib.Data
+import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp
+import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.Defs
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.Charpoly
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span
+import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span.Basic
+import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory
+import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological
+import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological.GroupCohomology
+import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Defs
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.MatrixAlgebra
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubring
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubring.Defs
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring.Basic
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring.Defs
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TensorProduct
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TensorProduct.Basic
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Basic
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Lattice
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.MatrixCenterEquiv
+import LeanPool.BrauerGroupNew.MatrixEquivTensor
+import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+import LeanPool.BrauerGroupNew.Morita.TensorProduct
+import LeanPool.BrauerGroupNew.MoritaEquivalence
+import LeanPool.BrauerGroupNew.RelativeBrauer
+import LeanPool.BrauerGroupNew.SkolemNoether
+import LeanPool.BrauerGroupNew.SplittingOfCSA
+import LeanPool.BrauerGroupNew.Subfield
+import LeanPool.BrauerGroupNew.Subfield.Defs
+import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
+import LeanPool.BrauerGroupNew.Subfield.Separable
+import LeanPool.BrauerGroupNew.Subfield.Splitting
+import LeanPool.BrauerGroupNew.Subfield.Subfield
+import LeanPool.BrauerGroupNew.ToSecond
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
+import LeanPool.BrauerGroupNew.Wedderburn
+import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import LeanPool.Brouwer
+import LeanPool.Brouwer.Brouwer
+import LeanPool.Brouwer.BrouwerProduct
+import LeanPool.Brouwer.Nash
+import LeanPool.Brouwer.Primitive
+import LeanPool.Brouwer.Scarf
+import LeanPool.Brouwer.ScarfPath
+import LeanPool.Brouwer.Simplex
+import LeanPool.BruhatTits
+import LeanPool.BruhatTits.Cartan
+import LeanPool.BruhatTits.Cartan.Existence
+import LeanPool.BruhatTits.Cartan.Uniqueness
+import LeanPool.BruhatTits.Graph
+import LeanPool.BruhatTits.Graph.Edges
+import LeanPool.BruhatTits.Graph.Graph
+import LeanPool.BruhatTits.Graph.GroupAction
+import LeanPool.BruhatTits.Graph.Orientation
+import LeanPool.BruhatTits.Graph.Regular
+import LeanPool.BruhatTits.Graph.Tree
+import LeanPool.BruhatTits.Graph.Vertices
+import LeanPool.BruhatTits.Harmonic
+import LeanPool.BruhatTits.Harmonic.Application
+import LeanPool.BruhatTits.Harmonic.Basic
+import LeanPool.BruhatTits.Lattice
+import LeanPool.BruhatTits.Lattice.Basic
+import LeanPool.BruhatTits.Lattice.Construction
+import LeanPool.BruhatTits.Lattice.Distance
+import LeanPool.BruhatTits.Lattice.Quotient
+import LeanPool.BruhatTits.Lattice.Transvect
+import LeanPool.BruhatTits.Utils
+import LeanPool.BruhatTits.Utils.GLSubmoduleAction
+import LeanPool.BruhatTits.Utils.GraphAction
+import LeanPool.BruhatTits.Utils.LinearAlgebra
+import LeanPool.BruhatTits.Utils.List
+import LeanPool.BruhatTits.Utils.Matrix
+import LeanPool.BruhatTits.Utils.Misc
+import LeanPool.BruhatTits.Utils.Order
+import LeanPool.BruhatTits.Utils.RingHom
+import LeanPool.BruhatTits.Utils.Subring
+import LeanPool.BruhatTits.Utils.ValuationRings
+import LeanPool.Burkholder
+import LeanPool.Burkholder.Majorants
+import LeanPool.Burkholder.Majorants.Definitions
+import LeanPool.Burkholder.Majorants.MajorantPEq2
+import LeanPool.Burkholder.Majorants.MajorantPG2
+import LeanPool.Burkholder.Majorants.MajorantPL2
+import LeanPool.Burkholder.MartingaleTransforms
+import LeanPool.CencovPetz
+import LeanPool.CencovPetz.Basic
+import LeanPool.CencovPetz.CencovFinite
+import LeanPool.CencovPetz.CencovSplitPoint
+import LeanPool.CencovPetz.ContinuousExtension
+import LeanPool.CencovPetz.FisherContinuity
+import LeanPool.CencovPetz.LeftInverseIsometry
+import LeanPool.CencovPetz.MarkovMorphism
+import LeanPool.CencovPetz.MonotoneMetric
+import LeanPool.CencovPetz.PermutationInvariance
+import LeanPool.CencovPetz.PermutationInvariantBilinForm
+import LeanPool.CencovPetz.RationalDensity
+import LeanPool.CencovPetz.RationalPoint
+import LeanPool.CencovPetz.Replication
+import LeanPool.CencovPetz.ReplicationInvariance
+import LeanPool.CencovPetz.Simplex
+import LeanPool.CencovPetz.SimplexTopology
+import LeanPool.CencovPetz.Splitting
+import LeanPool.CencovPetz.SplittingInvariance
+import LeanPool.CencovPetz.SplittingUniform
+import LeanPool.CencovPetz.SufficientStatistic
+import LeanPool.CencovPetz.Uniform
+import LeanPool.CencovPetz.UniformScalarConstant
+import LeanPool.CencovPetz.UniformScalarMultiple
+import LeanPool.CencovPetz.UniformSimplex
+import LeanPool.ChannelCapacity
+import LeanPool.ChannelCapacity.Basic
+import LeanPool.ChannelCapacity.Capacity
+import LeanPool.ChannelCapacity.ChainRule
+import LeanPool.ChannelCapacity.Counterexample
+import LeanPool.ChannelCapacity.Discharged
+import LeanPool.ChannelCapacity.DischargedExample
+import LeanPool.ChannelCapacity.Finite
+import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+import LeanPool.ChannelCapacity.NonDegeneracy
+import LeanPool.ChannelCapacity.StrictConcavity
+import LeanPool.Chudnovsky
+import LeanPool.Chudnovsky.Basic
+import LeanPool.Chudnovsky.Chudnovsky
+import LeanPool.Chudnovsky.Clausen
+import LeanPool.Chudnovsky.Coefficients
+import LeanPool.Chudnovsky.ComplexMult
+import LeanPool.Chudnovsky.DivisionValues
+import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.Fourier
+import LeanPool.Chudnovsky.Kummer
+import LeanPool.Chudnovsky.Lattices
+import LeanPool.Chudnovsky.Liouville
+import LeanPool.Chudnovsky.MainTheorem
+import LeanPool.Chudnovsky.Numerics
+import LeanPool.Chudnovsky.PicardFuchs
+import LeanPool.Chudnovsky.Quasiperiods
+import LeanPool.Chudnovsky.Ramanujan
+import LeanPool.Chudnovsky.SigmaZeta
+import LeanPool.Chudnovsky.SingularModuli
+import LeanPool.Chudnovsky.SingularModuli.CMRelations
+import LeanPool.Chudnovsky.SingularModuli.CosetOrbit
+import LeanPool.Chudnovsky.SingularModuli.FormReduction
+import LeanPool.Chudnovsky.SingularModuli.JFunction
+import LeanPool.Chudnovsky.SingularModuli.Kronecker
+import LeanPool.Chudnovsky.SingularModuli.MasserA1
+import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
+import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
+import LeanPool.Chudnovsky.SingularModuli.Rationality
+import LeanPool.Chudnovsky.SingularModuli.Valence
+import LeanPool.Chudnovsky.WeierstrassMore
+import LeanPool.CircuitComplexity
+import LeanPool.CircuitComplexity.AC0
+import LeanPool.CircuitComplexity.AC0.Defs
+import LeanPool.CircuitComplexity.AON
+import LeanPool.CircuitComplexity.AON.Defs
+import LeanPool.CircuitComplexity.Basic
+import LeanPool.CircuitComplexity.Digraph.Defs
+import LeanPool.CircuitComplexity.EssentialInput
+import LeanPool.CircuitComplexity.Internal.AON
+import LeanPool.CircuitComplexity.Internal.Bridge
+import LeanPool.CircuitComplexity.Internal.CircDesc
+import LeanPool.CircuitComplexity.Internal.LowerBound
+import LeanPool.CircuitComplexity.Internal.NF
+import LeanPool.CircuitComplexity.Internal.Nondeterminism
+import LeanPool.CircuitComplexity.Internal.Schnorr
+import LeanPool.CircuitComplexity.Internal.ShannonUpper
+import LeanPool.CircuitComplexity.Internal.Simulation
+import LeanPool.CircuitComplexity.Internal.Valiant
+import LeanPool.CircuitComplexity.LowerBound
+import LeanPool.CircuitComplexity.NF
+import LeanPool.CircuitComplexity.NF.Defs
+import LeanPool.CircuitComplexity.Nondeterminism
+import LeanPool.CircuitComplexity.Nondeterminism.Defs
+import LeanPool.CircuitComplexity.Schnorr
+import LeanPool.CircuitComplexity.Shannon
+import LeanPool.CircuitComplexity.Valiant
+import LeanPool.CircuitComplexity.XOR
+import LeanPool.Circuitlib
+import LeanPool.Circuitlib.Circuit.Basic
+import LeanPool.Circuitlib.Circuit.Belnap.Basic
+import LeanPool.Circuitlib.Circuit.Belnap.Gate
+import LeanPool.Circuitlib.Circuit.Belnap.Level
+import LeanPool.Circuitlib.Circuit.Category.Basic
+import LeanPool.Circuitlib.Circuit.Category.Combinational
+import LeanPool.Circuitlib.Circuit.Category.Sequential
+import LeanPool.Circuitlib.Circuit.Combinational
+import LeanPool.Circuitlib.Circuit.Gate
+import LeanPool.Circuitlib.Circuit.Wires
+import LeanPool.ClassificationOfSurfaces
+import LeanPool.ClassificationOfSurfaces.API
+import LeanPool.ClassificationOfSurfaces.Basic
+import LeanPool.ClassificationOfSurfaces.CanonicalCoordinates
+import LeanPool.ClassificationOfSurfaces.CanonicalGeneratorMaps
+import LeanPool.ClassificationOfSurfaces.CanonicalPairings
+import LeanPool.ClassificationOfSurfaces.CanonicalWords
+import LeanPool.ClassificationOfSurfaces.CellComplex
+import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
+import LeanPool.ClassificationOfSurfaces.DiskSquare
+import LeanPool.ClassificationOfSurfaces.EvalStatement
+import LeanPool.ClassificationOfSurfaces.Examples
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonicalRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicCrosscap
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicDerivedRewrites
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicDyck
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicFaceMerge
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoveRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalizationResult
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1Realization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2DegenerateRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicReduction
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicSphereRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicTerminalNormalization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicTriangulation
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicUnorientedRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReduction
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReductionCore
+import LeanPool.ClassificationOfSurfaces.GeometricTriangulationRealization
+import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
+import LeanPool.ClassificationOfSurfaces.LeanEval.RepresentativeSanity
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveControlledApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanAffine
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanComplex
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenComplex
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenCover
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTileComplex
+import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
+import LeanPool.ClassificationOfSurfaces.Moise.AmbientHomeomorph
+import LeanPool.ClassificationOfSurfaces.Moise.Anchors
+import LeanPool.ClassificationOfSurfaces.Moise.BoundaryInvariant
+import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
+import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
+import LeanPool.ClassificationOfSurfaces.Moise.ChartExtraction
+import LeanPool.ClassificationOfSurfaces.Moise.ChartInduction
+import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
+import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
+import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
+import LeanPool.ClassificationOfSurfaces.Moise.Countermodels
+import LeanPool.ClassificationOfSurfaces.Moise.DualConnectivity
+import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
+import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
+import LeanPool.ClassificationOfSurfaces.Moise.FacewiseComparison
+import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
+import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
+import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
+import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
+import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
+import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
+import LeanPool.ClassificationOfSurfaces.Moise.GraphRefinement
+import LeanPool.ClassificationOfSurfaces.Moise.GraphSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.HalfPlanePolygon
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseCellwiseExtension
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseGraphApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceFilling
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphModel
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteCellwiseExtension
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceBoundary
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceExtension
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceFilling
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphPL
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFinitePLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteSidePreservation
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
+import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
+import LeanPool.ClassificationOfSurfaces.Moise.OpenMidpointComplex
+import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.PLMoves
+import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
+import LeanPool.ClassificationOfSurfaces.Moise.PlaneCycle
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalCrosscut
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
+import LeanPool.ClassificationOfSurfaces.Moise.PolygonalSchoenflies
+import LeanPool.ClassificationOfSurfaces.Moise.PuncturedSurface
+import LeanPool.ClassificationOfSurfaces.Moise.RelativeSynchronizedArrangement
+import LeanPool.ClassificationOfSurfaces.Moise.ThinKiteMove
+import LeanPool.ClassificationOfSurfaces.NormalForm
+import LeanPool.ClassificationOfSurfaces.P2DegenerateDisk
+import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
+import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
+import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
+import LeanPool.ClassificationOfSurfaces.Representatives
+import LeanPool.ClassificationOfSurfaces.SignedPresentation
+import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
+import LeanPool.ClassificationOfSurfaces.SphereHemisphere
+import LeanPool.ClassificationOfSurfaces.SphereQuotientHomeomorph
+import LeanPool.ClassificationOfSurfaces.StrongVertexStar
+import LeanPool.ClassificationOfSurfaces.Surface
+import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
+import LeanPool.ClassificationOfSurfaces.TriangleCell
+import LeanPool.ClassificationOfSurfaces.Triangulation
+import LeanPool.ClassificationOfSurfaces.WeightedCircle
+import LeanPool.Clawristotle
+import LeanPool.Clawristotle.CoulombConcreteTheorem42
+import LeanPool.Clawristotle.CoulombFlux
+import LeanPool.Clawristotle.CoulombFluxBound
+import LeanPool.Clawristotle.CoulombFluxConv
+import LeanPool.Clawristotle.CoulombFluxDiff
+import LeanPool.Clawristotle.CoulombForceTransport
+import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.CoulombNonvacuous
+import LeanPool.Clawristotle.CoulombPSD
+import LeanPool.Clawristotle.CoulombPSDHelpers
+import LeanPool.Clawristotle.CoulombSpatialTransport
+import LeanPool.Clawristotle.Defs
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.IteratedDerivHelpers
+import LeanPool.Clawristotle.LogBoundHelpers
+import LeanPool.Clawristotle.NewtonianPotential
+import LeanPool.Clawristotle.SchwartzDecayDefs
+import LeanPool.Clawristotle.Section2
+import LeanPool.Clawristotle.Section3
+import LeanPool.Clawristotle.Section3Helpers
+import LeanPool.Clawristotle.Section3Helpers2
+import LeanPool.Clawristotle.Section4
+import LeanPool.Clawristotle.Section5
+import LeanPool.Clawristotle.Section6
+import LeanPool.Clawristotle.Section7
+import LeanPool.Clawristotle.Section8
+import LeanPool.Clawristotle.Theorem42
+import LeanPool.Clawristotle.TorusDefs
+import LeanPool.Clawristotle.TorusInstance
+import LeanPool.Clawristotle.TorusIntegration
+import LeanPool.Clawristotle.VMLInputDerive
+import LeanPool.Clawristotle.VMLStructures
+import LeanPool.Clawristotle.VelocityDecayInstance
+import LeanPool.CommonNeighbourConjecture
+import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
+import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.DeletedModule
+import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.FrobeniusGroup
+import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.GeneralConstruction
+import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Irreducible
+import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Main
+import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems
+import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Definitions
+import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Internal
+import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.ProofAliases
+import LeanPool.CommonNeighbourConjecture.Saxl.Affine
+import LeanPool.CommonNeighbourConjecture.Saxl.Basic
+import LeanPool.CommonNeighbourConjecture.Saxl.Generalized
+import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
+import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Defs
+import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Irreducible
+import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Symmetric
+import LeanPool.CompactSpectral
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactOperatorOrthonormal
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Basic
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.CutoffProjector
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralTheorem
+import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
+import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
+import LeanPool.CompactnessAndDegeneracy
+import LeanPool.CompactnessAndDegeneracy.Compactness
+import LeanPool.CompactnessAndDegeneracy.Degeneracy
+import LeanPool.CompositionAlgebras
+import LeanPool.CompositionAlgebras.Composition.CayleyDickson
+import LeanPool.CompositionAlgebras.Composition.Classification
+import LeanPool.CompositionAlgebras.Composition.Defs
+import LeanPool.CompositionAlgebras.Composition.Doubling
+import LeanPool.CompositionAlgebras.Composition.Hurwitz
+import LeanPool.CompositionAlgebras.Composition.Instances
+import LeanPool.CompositionAlgebras.Composition.Isomorphisms
+import LeanPool.CompositionAlgebras.OctonionModule
+import LeanPool.CompositionAlgebras.OctonionNucleus
+import LeanPool.CompositionAlgebras.OctonionTrace
+import LeanPool.CompositionAlgebras.Octonions
+import LeanPool.Computability
+import LeanPool.Computability.ArithHierarchy
+import LeanPool.Computability.AutGrp
+import LeanPool.Computability.Encoding
+import LeanPool.Computability.Jump
+import LeanPool.Computability.Oracle
+import LeanPool.Computability.TuringDegree
+import LeanPool.ComputableReal
+import LeanPool.ComputableReal.AuxLemmas
+import LeanPool.ComputableReal.ComputableRSeq
+import LeanPool.ComputableReal.ComputableReal
+import LeanPool.ComputableReal.IsComputable
+import LeanPool.ComputableReal.IsComputableC
+import LeanPool.ComputableReal.SpecialFunctions
+import LeanPool.ComputableReal.SpecialFunctions.Basic
+import LeanPool.ComputableReal.SpecialFunctions.Exp
+import LeanPool.ComputableReal.SpecialFunctions.Pi
+import LeanPool.ComputableReal.SpecialFunctions.Sqrt
+import LeanPool.ConnesKreimer
+import LeanPool.ConnesKreimer.Coassoc
+import LeanPool.ConnesKreimer.Core
+import LeanPool.ConnesKreimer.PowerSeriesLogMul
+import LeanPool.ConnesRigidity
+import LeanPool.ConnesRigidity.Construction
+import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+import LeanPool.ConnesRigidity.Construction.PaperActions
+import LeanPool.ConnesRigidity.Construction.SquareSpan
+import LeanPool.ConnesRigidity.Core
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificate
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard0
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard1
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard2
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard3
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard4
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard5
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard6
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelDetector
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ElementaryGeneration
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtension
+import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.ArithmeticSymplectic
+import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.BooleanPolynomial
+import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.BinaryPontryaginDual
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProduct
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductTransport
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FactorWitness
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FinitePropertyT
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalizedHaar
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PositiveSpectralMeasure
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.Supremum
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.ValuedSpectralMeasure
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PropertyTTransfer
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectFubini
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectGeneratorTransport
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralCriterion
+import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralDetection
+import LeanPool.ConnesRigidity.Main
+import LeanPool.ConnesRigidity.Paper.Section3
+import LeanPool.ConnesRigidity.Paper.Section3.CrossedAction
+import LeanPool.ConnesRigidity.Paper.Section3.CrossedHaar
+import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
+import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacy
+import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyAlgebra
+import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyCoordinates
+import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyFirst
+import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyQuadratic
+import LeanPool.ConnesRigidity.Paper.Section3.DualActions
+import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
+import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
+import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
+import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
+import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
+import LeanPool.ConnesRigidity.Paper.Section3.FactorClosure
+import LeanPool.ConnesRigidity.Paper.Section3.FactorIsomorphism
+import LeanPool.ConnesRigidity.Paper.Section3.Fourier
+import LeanPool.ConnesRigidity.Paper.Section3.FourierAction
+import LeanPool.ConnesRigidity.Paper.Section3.FourierCoordinates
+import LeanPool.ConnesRigidity.Paper.Section3.GroupFactor
+import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
+import LeanPool.ConnesRigidity.Paper.Section3.GroupVacuum
+import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
+import LeanPool.ConnesRigidity.Paper.Section4
+import LeanPool.ConnesRigidity.Paper.Section4.AChartDetectorMeasure
+import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
+import LeanPool.ConnesRigidity.Paper.Section4.ChartDetectorMeasure
+import LeanPool.ConnesRigidity.Paper.Section4.ChartMeasure
+import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
+import LeanPool.ConnesRigidity.Paper.Section4.ChartSpan
+import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
+import LeanPool.ConnesRigidity.Paper.Section4.FiniteExtensions
+import LeanPool.ConnesRigidity.Paper.Section4.FullDetectorMeasure
+import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
+import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetector
+import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
+import LeanPool.ConnesRigidity.Paper.Section4.SpectralFiniteDetection
+import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
+import LeanPool.ConnesRigidity.Paper.Section4.SplitExtensions
+import LeanPool.ConnesRigidity.Paper.Section5
+import LeanPool.ConnesRigidity.Paper.Section5.ICC
+import LeanPool.ConnesRigidity.Paper.Section5.ICCOrbits
+import LeanPool.ConnesRigidity.Paper.Section6
+import LeanPool.ConnesRigidity.Paper.Section6.Characteristic
+import LeanPool.ConnesRigidity.Paper.Section6.CharacteristicTransport
+import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimple
+import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimpleTransport
+import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
+import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismEmbedding
+import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismProofs
+import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismTransport
+import LeanPool.ConnesRigidity.Paper.Section6.QuotientModuleTransport
+import LeanPool.ConnesRigidity.Paper.Section7
+import LeanPool.ConnesRigidity.Paper.Section7.TheoremACompletion
+import LeanPool.ConnesRigidity.Porting.CoreTransfer
+import LeanPool.CramerWold
+import LeanPool.CriticalPortraits
+import LeanPool.CriticalPortraits.Census
+import LeanPool.CriticalPortraits.Core
+import LeanPool.CriticalPortraits.CycleLemma
+import LeanPool.CriticalPortraits.Denominator
+import LeanPool.CriticalPortraits.Forward
+import LeanPool.CriticalPortraits.Injectivity
+import LeanPool.CriticalPortraits.Portraits
+import LeanPool.CriticalPortraits.Surjectivity
+import LeanPool.CutAndProject
+import LeanPool.CutAndProject.Basic
+import LeanPool.CutAndProject.Irrational
+import LeanPool.DeadEnds
+import LeanPool.DeadEnds.Basic
+import LeanPool.DeadEnds.CRT
+import LeanPool.DeadEnds.Counting
+import LeanPool.DeadEnds.CountingBlocks
+import LeanPool.DeadEnds.InclusionExclusion
+import LeanPool.DeadEnds.PrimeTail
+import LeanPool.DeadEnds.RelevantPrimes
+import LeanPool.DeadEnds.Solution
+import LeanPool.DeadEnds.TailEstimates
+import LeanPool.DemazureOperatorsLean
+import LeanPool.DemazureOperatorsLean.Demazure
+import LeanPool.DemazureOperatorsLean.DemazureAux
+import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
+import LeanPool.DemazureOperatorsLean.DemazureRelations
+import LeanPool.DemazureOperatorsLean.Matsumoto
+import LeanPool.DemazureOperatorsLean.StrongExchange
+import LeanPool.DemazureProduct
+import LeanPool.DemazureProduct.AspPerm
+import LeanPool.DemazureProduct.Avoiding321
+import LeanPool.DemazureProduct.InvSet
+import LeanPool.DemazureProduct.ReducedProducts
+import LeanPool.DemazureProduct.Reduction
+import LeanPool.DemazureProduct.SlipFace
+import LeanPool.DemazureProduct.Submodular
+import LeanPool.DemazureProduct.Tableaux
+import LeanPool.DemazureProduct.Transpositions
+import LeanPool.DemazureProduct.Utils
+import LeanPool.DemazureProduct.Valley
+import LeanPool.Desargues
+import LeanPool.Desargues.Basic
+import LeanPool.Desargues.Morphism
+import LeanPool.Desargues.PV
+import LeanPool.Desargues.Structure
+import LeanPool.DirectedTopologyLean4
+import LeanPool.DirectedTopologyLean4.Constructions
+import LeanPool.DirectedTopologyLean4.CoverLemma
+import LeanPool.DirectedTopologyLean4.DTop
+import LeanPool.DirectedTopologyLean4.DihomotopyCover
+import LeanPool.DirectedTopologyLean4.DihomotopyFlip
+import LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
+import LeanPool.DirectedTopologyLean4.Dipath
+import LeanPool.DirectedTopologyLean4.DipathSubtype
+import LeanPool.DirectedTopologyLean4.DirectedHomotopy
+import LeanPool.DirectedTopologyLean4.DirectedMap
+import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
+import LeanPool.DirectedTopologyLean4.DirectedSpace
+import LeanPool.DirectedTopologyLean4.DirectedUnitInterval
+import LeanPool.DirectedTopologyLean4.DirectedVanKampen
+import LeanPool.DirectedTopologyLean4.Fraction
+import LeanPool.DirectedTopologyLean4.FractionEqualities
+import LeanPool.DirectedTopologyLean4.FundamentalCategory
+import LeanPool.DirectedTopologyLean4.Interpolate
+import LeanPool.DirectedTopologyLean4.MonotonePath
+import LeanPool.DirectedTopologyLean4.MorphismAux
+import LeanPool.DirectedTopologyLean4.PathCover
+import LeanPool.DirectedTopologyLean4.PushoutAlternative
+import LeanPool.DirectedTopologyLean4.SplitDihomotopy
+import LeanPool.DirectedTopologyLean4.SplitPath
+import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
+import LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
+import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
+import LeanPool.DirectedTopologyLean4.StretchPath
+import LeanPool.DirectedTopologyLean4.TransRefl
+import LeanPool.DirectedTopologyLean4.UnitIntervalAux
+import LeanPool.DistanceGeometry
+import LeanPool.DistanceGeometry.CayleyMengerVolume
+import LeanPool.DistanceGeometry.Defs
+import LeanPool.DistanceGeometry.Schoenberg
+import LeanPool.DistanceGeometry.SchoenbergHard
+import LeanPool.DistanceGeometry.Trilateration
+import LeanPool.DomainTheory
+import LeanPool.DomainTheory.Constructive
+import LeanPool.DomainTheory.ContinuousLattice.Constructions
+import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaceTower
+import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
+import LeanPool.DomainTheory.ContinuousLattice.Injective
+import LeanPool.DomainTheory.ContinuousLattice.InverseLimits
+import LeanPool.DomainTheory.ContinuousLattice.MilnerCorrection
+import LeanPool.DomainTheory.ContinuousLattice.ScottMaps
+import LeanPool.DomainTheory.ContinuousLattice.Specialization
+import LeanPool.DomainTheory.ContinuousLattice.Theorem212
+import LeanPool.DomainTheory.ContinuousLattice.WayBelow
+import LeanPool.DomainTheory.InfoSys
+import LeanPool.DomainTheory.Neighborhood.Approximable
+import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+import LeanPool.DomainTheory.Neighborhood.Basic
+import LeanPool.DomainTheory.Neighborhood.Definition610
+import LeanPool.DomainTheory.Neighborhood.Definition613
+import LeanPool.DomainTheory.Neighborhood.Definition63
+import LeanPool.DomainTheory.Neighborhood.Definition68
+import LeanPool.DomainTheory.Neighborhood.Definition71
+import LeanPool.DomainTheory.Neighborhood.Definition72
+import LeanPool.DomainTheory.Neighborhood.Example12
+import LeanPool.DomainTheory.Neighborhood.Example13
+import LeanPool.DomainTheory.Neighborhood.Example14
+import LeanPool.DomainTheory.Neighborhood.Example15
+import LeanPool.DomainTheory.Neighborhood.Example23
+import LeanPool.DomainTheory.Neighborhood.Example24
+import LeanPool.DomainTheory.Neighborhood.Example43
+import LeanPool.DomainTheory.Neighborhood.Example44
+import LeanPool.DomainTheory.Neighborhood.Example61
+import LeanPool.DomainTheory.Neighborhood.Example62
+import LeanPool.DomainTheory.Neighborhood.Example62A
+import LeanPool.DomainTheory.Neighborhood.Example62C
+import LeanPool.DomainTheory.Neighborhood.Example62Regular
+import LeanPool.DomainTheory.Neighborhood.ExampleB
+import LeanPool.DomainTheory.Neighborhood.Exercise112
+import LeanPool.DomainTheory.Neighborhood.Exercise113
+import LeanPool.DomainTheory.Neighborhood.Exercise114
+import LeanPool.DomainTheory.Neighborhood.Exercise115
+import LeanPool.DomainTheory.Neighborhood.Exercise116
+import LeanPool.DomainTheory.Neighborhood.Exercise117
+import LeanPool.DomainTheory.Neighborhood.Exercise118
+import LeanPool.DomainTheory.Neighborhood.Exercise119
+import LeanPool.DomainTheory.Neighborhood.Exercise120
+import LeanPool.DomainTheory.Neighborhood.Exercise121
+import LeanPool.DomainTheory.Neighborhood.Exercise122
+import LeanPool.DomainTheory.Neighborhood.Exercise123
+import LeanPool.DomainTheory.Neighborhood.Exercise124
+import LeanPool.DomainTheory.Neighborhood.Exercise125
+import LeanPool.DomainTheory.Neighborhood.Exercise126
+import LeanPool.DomainTheory.Neighborhood.Exercise127
+import LeanPool.DomainTheory.Neighborhood.Exercise213
+import LeanPool.DomainTheory.Neighborhood.Exercise214
+import LeanPool.DomainTheory.Neighborhood.Exercise215
+import LeanPool.DomainTheory.Neighborhood.Exercise216
+import LeanPool.DomainTheory.Neighborhood.Exercise218
+import LeanPool.DomainTheory.Neighborhood.Exercise220
+import LeanPool.DomainTheory.Neighborhood.Exercise221
+import LeanPool.DomainTheory.Neighborhood.Exercise222
+import LeanPool.DomainTheory.Neighborhood.Exercise314
+import LeanPool.DomainTheory.Neighborhood.Exercise315
+import LeanPool.DomainTheory.Neighborhood.Exercise316
+import LeanPool.DomainTheory.Neighborhood.Exercise317
+import LeanPool.DomainTheory.Neighborhood.Exercise318
+import LeanPool.DomainTheory.Neighborhood.Exercise319
+import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+import LeanPool.DomainTheory.Neighborhood.Exercise321
+import LeanPool.DomainTheory.Neighborhood.Exercise322
+import LeanPool.DomainTheory.Neighborhood.Exercise323
+import LeanPool.DomainTheory.Neighborhood.Exercise324
+import LeanPool.DomainTheory.Neighborhood.Exercise324Distrib
+import LeanPool.DomainTheory.Neighborhood.Exercise324Iter
+import LeanPool.DomainTheory.Neighborhood.Exercise325
+import LeanPool.DomainTheory.Neighborhood.Exercise326
+import LeanPool.DomainTheory.Neighborhood.Exercise326Sum
+import LeanPool.DomainTheory.Neighborhood.Exercise327
+import LeanPool.DomainTheory.Neighborhood.Exercise328
+import LeanPool.DomainTheory.Neighborhood.Exercise407
+import LeanPool.DomainTheory.Neighborhood.Exercise408
+import LeanPool.DomainTheory.Neighborhood.Exercise409
+import LeanPool.DomainTheory.Neighborhood.Exercise410
+import LeanPool.DomainTheory.Neighborhood.Exercise411
+import LeanPool.DomainTheory.Neighborhood.Exercise412
+import LeanPool.DomainTheory.Neighborhood.Exercise413
+import LeanPool.DomainTheory.Neighborhood.Exercise414
+import LeanPool.DomainTheory.Neighborhood.Exercise415
+import LeanPool.DomainTheory.Neighborhood.Exercise416
+import LeanPool.DomainTheory.Neighborhood.Exercise417
+import LeanPool.DomainTheory.Neighborhood.Exercise418
+import LeanPool.DomainTheory.Neighborhood.Exercise419
+import LeanPool.DomainTheory.Neighborhood.Exercise420
+import LeanPool.DomainTheory.Neighborhood.Exercise421
+import LeanPool.DomainTheory.Neighborhood.Exercise422
+import LeanPool.DomainTheory.Neighborhood.Exercise423
+import LeanPool.DomainTheory.Neighborhood.Exercise424
+import LeanPool.DomainTheory.Neighborhood.Exercise425
+import LeanPool.DomainTheory.Neighborhood.Exercise507
+import LeanPool.DomainTheory.Neighborhood.Exercise508
+import LeanPool.DomainTheory.Neighborhood.Exercise509
+import LeanPool.DomainTheory.Neighborhood.Exercise510
+import LeanPool.DomainTheory.Neighborhood.Exercise511
+import LeanPool.DomainTheory.Neighborhood.Exercise512
+import LeanPool.DomainTheory.Neighborhood.Exercise513
+import LeanPool.DomainTheory.Neighborhood.Exercise514
+import LeanPool.DomainTheory.Neighborhood.Exercise515
+import LeanPool.DomainTheory.Neighborhood.Exercise516
+import LeanPool.DomainTheory.Neighborhood.Exercise516Overlap
+import LeanPool.DomainTheory.Neighborhood.Exercise516ThueMorse
+import LeanPool.DomainTheory.Neighborhood.Exercise617
+import LeanPool.DomainTheory.Neighborhood.Exercise617Gen
+import LeanPool.DomainTheory.Neighborhood.Exercise618
+import LeanPool.DomainTheory.Neighborhood.Exercise619
+import LeanPool.DomainTheory.Neighborhood.Exercise619PartB
+import LeanPool.DomainTheory.Neighborhood.Exercise621
+import LeanPool.DomainTheory.Neighborhood.Exercise622
+import LeanPool.DomainTheory.Neighborhood.Exercise623
+import LeanPool.DomainTheory.Neighborhood.Exercise624
+import LeanPool.DomainTheory.Neighborhood.Exercise625
+import LeanPool.DomainTheory.Neighborhood.Exercise626
+import LeanPool.DomainTheory.Neighborhood.Exercise627
+import LeanPool.DomainTheory.Neighborhood.Exercise628
+import LeanPool.DomainTheory.Neighborhood.Exercise629
+import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+import LeanPool.DomainTheory.Neighborhood.Lemma615
+import LeanPool.DomainTheory.Neighborhood.Product
+import LeanPool.DomainTheory.Neighborhood.Proposition53
+import LeanPool.DomainTheory.Neighborhood.Proposition54
+import LeanPool.DomainTheory.Neighborhood.Proposition611
+import LeanPool.DomainTheory.Neighborhood.Proposition612
+import LeanPool.DomainTheory.Neighborhood.Proposition66
+import LeanPool.DomainTheory.Neighborhood.Proposition67
+import LeanPool.DomainTheory.Neighborhood.Proposition77
+import LeanPool.DomainTheory.Neighborhood.Recursive
+import LeanPool.DomainTheory.Neighborhood.Table55
+import LeanPool.DomainTheory.Neighborhood.Theorem110
+import LeanPool.DomainTheory.Neighborhood.Theorem111
+import LeanPool.DomainTheory.Neighborhood.Theorem41
+import LeanPool.DomainTheory.Neighborhood.Theorem46
+import LeanPool.DomainTheory.Neighborhood.Theorem51
+import LeanPool.DomainTheory.Neighborhood.Theorem52
+import LeanPool.DomainTheory.Neighborhood.Theorem56
+import LeanPool.DomainTheory.Neighborhood.Theorem56Full
+import LeanPool.DomainTheory.Neighborhood.Theorem614
+import LeanPool.DomainTheory.Neighborhood.Theorem616
+import LeanPool.DomainTheory.Neighborhood.Theorem69
+import LeanPool.DomainTheory.Neighborhood.Theorem74
+import LeanPool.DomainTheory.Neighborhood.Theorem75
+import LeanPool.DomainTheory.Neighborhood.Theorem76
+import LeanPool.Duality
+import LeanPool.Duality.Common
+import LeanPool.Duality.ExtendedFields
+import LeanPool.Duality.FarkasBartl
+import LeanPool.Duality.FarkasBasic
+import LeanPool.Duality.FarkasSpecial
+import LeanPool.Duality.LinearProgramming
+import LeanPool.Duality.LinearProgrammingB
+import LeanPool.EcTateLean
+import LeanPool.EcTateLean.Algebra.CharP.Basic
+import LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas
+import LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes
+import LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker
+import LeanPool.EcTateLean.Algebra.EllipticCurve.Model
+import LeanPool.EcTateLean.Algebra.Ring.Basic
+import LeanPool.EcTateLean.FieldTheory.PerfectClosure
+import LeanPool.EcTateLean.Init.Data.Int.Lemmas
+import LeanPool.Egrs75
+import LeanPool.Egrs75.AddBranch
+import LeanPool.Egrs75.BadPrefixRoute
+import LeanPool.Egrs75.CentralBinomialDigits
+import LeanPool.Egrs75.ClearingHigh
+import LeanPool.Egrs75.ConditionThreeWindow
+import LeanPool.Egrs75.Defs
+import LeanPool.Egrs75.DigitAtToolkit
+import LeanPool.Egrs75.DigitVector
+import LeanPool.Egrs75.Instances
+import LeanPool.Egrs75.KummerValuation
+import LeanPool.Egrs75.LeafInduction
+import LeanPool.Egrs75.LogIrrationality
+import LeanPool.Egrs75.MoveDigits
+import LeanPool.Egrs75.MuFinish
+import LeanPool.Egrs75.Reduction
+import LeanPool.Egrs75.RoundUp
+import LeanPool.Egrs75.SeedWindow
+import LeanPool.Egrs75.SubtractBranch
+import LeanPool.EhrhartVolumeInequality
+import LeanPool.EhrhartVolumeInequality.Convergence
+import LeanPool.EhrhartVolumeInequality.Convexity
+import LeanPool.EhrhartVolumeInequality.Foundations
+import LeanPool.EhrhartVolumeInequality.FourierAnalysis
+import LeanPool.EhrhartVolumeInequality.Regularization
+import LeanPool.EhrhartVolumeInequality.Resolvent
+import LeanPool.EhrhartVolumeInequality.Variation
+import LeanPool.Erdos1196
+import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.FirstEntryRowTerm
+import LeanPool.Erdos1196.FormalConjecturesErdos1196
+import LeanPool.Erdos1196.HitMass
+import LeanPool.Erdos1196.Main
+import LeanPool.Erdos1196.Markov
+import LeanPool.Erdos1196.Normalization
+import LeanPool.Erdos1196.NormalizationCore
+import LeanPool.Erdos1196.NormalizationSmallPrime
+import LeanPool.Erdos1196.Preliminaries
+import LeanPool.Erdos1196.PreliminariesMertens
+import LeanPool.Erdos1196.PreliminariesTailAux
+import LeanPool.Erdos1196.PrimitiveWeight
+import LeanPool.Erdos132ConvexK3
+import LeanPool.Erdos132ConvexK3.Assembly
+import LeanPool.Erdos132ConvexK3.Basic
+import LeanPool.Erdos132ConvexK3.CoordinatedMajorants
+import LeanPool.Erdos132ConvexK3.Geometry
+import LeanPool.Erdos132ConvexK3.GlobalAssembly
+import LeanPool.Erdos132ConvexK3.GlobalClosure
+import LeanPool.Erdos132ConvexK3.GlobalReduction
+import LeanPool.Erdos132ConvexK3.Lens
+import LeanPool.Erdos132ConvexK3.MajorantArcNesting
+import LeanPool.Erdos132ConvexK3.Majorants
+import LeanPool.Erdos132ConvexK3.MetricDichotomy
+import LeanPool.Erdos132ConvexK3.Penultimate
+import LeanPool.Erdos132ConvexK3.RegressionWitnesses
+import LeanPool.Erdos132ConvexK3.ResidualBounds
+import LeanPool.Erdos132ConvexK3.TailClosure
+import LeanPool.Erdos132ConvexK3.TerminalCage
+import LeanPool.Erdos132ConvexK3.TerminalColorClosure
+import LeanPool.Erdos132ConvexK3.UseSite
+import LeanPool.Erdos132ConvexK3.Witnesses
+import LeanPool.Erdos132ConvexK3.WordClosures
+import LeanPool.Erdos132N14
+import LeanPool.Erdos132N14.Basic
+import LeanPool.Erdos132N14.DiameterDescent
+import LeanPool.Erdos132N14.HopfPannwitz
+import LeanPool.Erdos132N14.HopfPannwitzGeometry
+import LeanPool.Erdos132N14.Main
+import LeanPool.Erdos132N14.PublishedInputs
+import LeanPool.Erdos132N14.RegularTridecagon
+import LeanPool.Erdos132ThreeChain
+import LeanPool.Erdos132ThreeChain.Basic
+import LeanPool.Erdos132ThreeChain.CaroWei
+import LeanPool.Erdos132ThreeChain.FivePoints
+import LeanPool.Erdos132ThreeChain.FourPoints
+import LeanPool.Erdos132ThreeChain.HopfPannwitz
+import LeanPool.Erdos132ThreeChain.Plane
+import LeanPool.Erdos132ThreeChain.PowerThree
+import LeanPool.Erdos132ThreeChain.Statement
+import LeanPool.Erdos132ThreeChain.Support
+import LeanPool.Erdos132ThreeChain.Witnesses
+import LeanPool.Erdos137
+import LeanPool.Erdos137.AxiomAudit
+import LeanPool.Erdos137.Base
+import LeanPool.Erdos137.BlockFramework
+import LeanPool.Erdos137.CombinedSplice
+import LeanPool.Erdos137.Finiteness
+import LeanPool.Erdos137.JointFiniteness
+import LeanPool.Erdos137.QuarticCrude
+import LeanPool.Erdos137.RefinedOverlap
+import LeanPool.Erdos137.RoughPartStructure
+import LeanPool.Erdos137.SexticCrude
+import LeanPool.Erdos137.SmoothRefinement
+import LeanPool.Erdos137.SpliceFiniteness
+import LeanPool.Erdos137.SquarefreeCapacity
+import LeanPool.Erdos137.TaoPoint
+import LeanPool.Erdos346
+import LeanPool.Erdos346.LimitExistsVariant
+import LeanPool.Erdos367
+import LeanPool.Erdos367.Core139
+import LeanPool.Erdos367.Core4027
+import LeanPool.Erdos367.GeneralKUpperBound
+import LeanPool.Erdos367.K3AbcUpperBound
+import LeanPool.Erdos367.PellLimsup
+import LeanPool.Erdos367.RFullLowerBound
+import LeanPool.Erdos403
+import LeanPool.Erdos403.Basic
+import LeanPool.Erdos403.FactBase
+import LeanPool.Erdos403.Sharp
+import LeanPool.Erdos81PaperIContrib
+import LeanPool.Erdos81PaperIContrib.FarkasLP
+import LeanPool.Erdos81PaperIContrib.FgConeClosed
+import LeanPool.Erdos81PaperIIContrib
+import LeanPool.Erdos81PaperIIContrib.Chordal
+import LeanPool.Erdos81PaperIIIContrib
+import LeanPool.Erdos81PaperIIIContrib.SimpleGraph
+import LeanPool.Erdos81PaperIIIContrib.SumZeroTriangles
+import LeanPool.Erdos865
+import LeanPool.Erdos865.Defs
+import LeanPool.Erdos865.FoldedAux
+import LeanPool.Erdos865.FoldedMain
+import LeanPool.Erdos865.Folding
+import LeanPool.Erdos865.Main
+import LeanPool.Erdos865.Sharpness
+import LeanPool.Erdos865.UpperBound
+import LeanPool.Erdos97ConvexOctagon
+import LeanPool.Erdos97ConvexOctagon.Basic
+import LeanPool.Erdos97ConvexOctagon.CayleyMenger
+import LeanPool.Erdos97ConvexOctagon.Certificates
+import LeanPool.Erdos97ConvexOctagon.Classification
+import LeanPool.Erdos97ConvexOctagon.CodeStateExactness
+import LeanPool.Erdos97ConvexOctagon.CoverageBranches
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificate
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCoverSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCoverTypes
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers00
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers01
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers02
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers03
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers04
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers05
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers06
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers07
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers08
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers09
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers10
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers11
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers12
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers13
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers14
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers15
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers16
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers17
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers18
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers19
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers20
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers21
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData00
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData02
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData03
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData04
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData05
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData06
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData07
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData08
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData09
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData10
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData11
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData12
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData13
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData14
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData15
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts00
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts01
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts02
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts03
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts04
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts05
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts06
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts07
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummarySoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryValidity
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts00
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts01
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts02
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts03
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts04
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts05
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts06
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts07
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts08
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts09
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts10
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts11
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts12
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts13
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts14
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts15
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts16
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts17
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts18
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts19
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts20
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts21
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts22
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts23
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts24
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts25
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts26
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts27
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts28
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts29
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts30
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts31
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts32
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts33
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts34
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts35
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts36
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts37
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts38
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts39
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts40
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts41
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts42
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts43
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts44
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts45
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts46
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts47
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts48
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts49
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts50
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts51
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts52
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts53
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts54
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts55
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts56
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts57
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts58
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts59
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts60
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts61
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts62
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts63
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts64
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts65
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts66
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts67
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts68
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts69
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts70
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts71
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts72
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts73
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts74
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts75
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts76
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts77
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts78
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts79
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts80
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts81
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts82
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts83
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts84
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts85
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts86
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts87
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts88
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts89
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts90
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts91
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts92
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts93
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateLookup
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateManifest
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateNodeSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSemanticSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateValidity
+import LeanPool.Erdos97ConvexOctagon.CoverageData00
+import LeanPool.Erdos97ConvexOctagon.CoverageData01
+import LeanPool.Erdos97ConvexOctagon.CoverageData02
+import LeanPool.Erdos97ConvexOctagon.CoverageData03
+import LeanPool.Erdos97ConvexOctagon.CoverageData04
+import LeanPool.Erdos97ConvexOctagon.CoverageData05
+import LeanPool.Erdos97ConvexOctagon.CoverageData06
+import LeanPool.Erdos97ConvexOctagon.CoverageData07
+import LeanPool.Erdos97ConvexOctagon.CoverageData08
+import LeanPool.Erdos97ConvexOctagon.CoverageData09
+import LeanPool.Erdos97ConvexOctagon.CoverageData10
+import LeanPool.Erdos97ConvexOctagon.CoverageData11
+import LeanPool.Erdos97ConvexOctagon.CoverageData12
+import LeanPool.Erdos97ConvexOctagon.CoverageData13
+import LeanPool.Erdos97ConvexOctagon.CoverageData14
+import LeanPool.Erdos97ConvexOctagon.CoverageData15
+import LeanPool.Erdos97ConvexOctagon.CoverageData16
+import LeanPool.Erdos97ConvexOctagon.CoverageData17
+import LeanPool.Erdos97ConvexOctagon.CoverageData18
+import LeanPool.Erdos97ConvexOctagon.CoverageData19
+import LeanPool.Erdos97ConvexOctagon.CoverageData20
+import LeanPool.Erdos97ConvexOctagon.CoverageData21
+import LeanPool.Erdos97ConvexOctagon.CoverageData22
+import LeanPool.Erdos97ConvexOctagon.CoverageData23
+import LeanPool.Erdos97ConvexOctagon.CoverageData24
+import LeanPool.Erdos97ConvexOctagon.CoverageData25
+import LeanPool.Erdos97ConvexOctagon.CoverageData26
+import LeanPool.Erdos97ConvexOctagon.CoverageData27
+import LeanPool.Erdos97ConvexOctagon.CoverageData28
+import LeanPool.Erdos97ConvexOctagon.CoverageData29
+import LeanPool.Erdos97ConvexOctagon.CoverageData30
+import LeanPool.Erdos97ConvexOctagon.CoverageData31
+import LeanPool.Erdos97ConvexOctagon.CoverageDataTypes
+import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMaskSoundness
+import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData00
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData01
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData02
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData03
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData04
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData05
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData06
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData07
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData08
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData09
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData10
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData11
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData12
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData13
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData14
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData15
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData16
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData17
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData18
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData19
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData20
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData21
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData22
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData23
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData24
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData25
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData26
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData27
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData28
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData29
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData30
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData31
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryDataTypes
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
+import LeanPool.Erdos97ConvexOctagon.CycleStrip
+import LeanPool.Erdos97ConvexOctagon.EquidistantFour
+import LeanPool.Erdos97ConvexOctagon.FiniteModel
+import LeanPool.Erdos97ConvexOctagon.GeometryReduction
+import LeanPool.Erdos97ConvexOctagon.Gram
+import LeanPool.Erdos97ConvexOctagon.Incidence
+import LeanPool.Erdos97ConvexOctagon.Main
+import LeanPool.Erdos97ConvexOctagon.Obstructions
+import LeanPool.Erdos97ConvexOctagon.PackedCertificates
+import LeanPool.Erdos97ConvexOctagon.PairCompatibility
+import LeanPool.Erdos97ConvexOctagon.PairStateExactness
+import LeanPool.Erdos97ConvexOctagon.Pentagon
+import LeanPool.Erdos97ConvexOctagon.Radius
+import LeanPool.Erdos97ConvexOctagon.Relabelling
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra00
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra01
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra02
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra03
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra04
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra05
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra06
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra07
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra08
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra09
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra10
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra11
+import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra12
+import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
+import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
+import LeanPool.Erdos97ConvexOctagon.RowMasks
+import LeanPool.Erdos97ConvexOctagon.RowSymmetry
+import LeanPool.ErdosMoser
+import LeanPool.ErdosMoser.Basic
+import LeanPool.ErdosMoser.Bounds
+import LeanPool.ErdosMoser.DiscreteVariance
+import LeanPool.ErdosMoser.SubsetSums
+import LeanPool.ErdosTuzaValtr
+import LeanPool.ErdosTuzaValtr.All
+import LeanPool.ErdosTuzaValtr.Config.Default
+import LeanPool.ErdosTuzaValtr.Config.Defs
+import LeanPool.ErdosTuzaValtr.Config.Lemmas
+import LeanPool.ErdosTuzaValtr.Config.Mirror
+import LeanPool.ErdosTuzaValtr.Etv.AlphaBeta
+import LeanPool.ErdosTuzaValtr.Etv.Default
+import LeanPool.ErdosTuzaValtr.Etv.Defs
+import LeanPool.ErdosTuzaValtr.Etv.Label
+import LeanPool.ErdosTuzaValtr.Etv.Mirror
+import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
+import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
+import LeanPool.ErdosTuzaValtr.Lib.List.Default
+import LeanPool.ErdosTuzaValtr.Lib.List.Defs
+import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+import LeanPool.ErdosTuzaValtr.Main.CapCup
+import LeanPool.ErdosTuzaValtr.Main.Defs
+import LeanPool.ErdosTuzaValtr.Main.InductionStep
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.Default
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
+import LeanPool.ErdosTuzaValtr.Main.Main
+import LeanPool.EventStructures
+import LeanPool.EventStructures.Basic
+import LeanPool.EventStructures.Computation
+import LeanPool.EventStructures.Configuration
+import LeanPool.EventStructures.FinitePoset
+import LeanPool.EventStructures.Log
+import LeanPool.EventStructures.Path
+import LeanPool.EventStructures.Replay
+import LeanPool.EventStructures.Rollback
+import LeanPool.EventStructures.Trace
+import LeanPool.FactorizationSystems
+import LeanPool.FactorizationSystems.Basic
+import LeanPool.FactorizationSystems.Characterization
+import LeanPool.FactorizationSystems.Examples
+import LeanPool.FactorizationSystems.OrthogonalComplements
+import LeanPool.FactorizationSystems.Orthogonality
+import LeanPool.Feige
+import LeanPool.Feige.AugmentedLatentSupport
+import LeanPool.Feige.AugmentedParameterization
+import LeanPool.Feige.AugmentedTwoPointKernel
+import LeanPool.Feige.BooleanChain
+import LeanPool.Feige.BoundaryNull
+import LeanPool.Feige.Calibration
+import LeanPool.Feige.ChainCalibration
+import LeanPool.Feige.ChainFromBoolean
+import LeanPool.Feige.ChainInsertion
+import LeanPool.Feige.ChainMeasure
+import LeanPool.Feige.ConditionalMainTheorem
+import LeanPool.Feige.ConditionalProductKernel
+import LeanPool.Feige.ConditionalTwoPointCalibration
+import LeanPool.Feige.Constants
+import LeanPool.Feige.ConvolutionLogConcave
+import LeanPool.Feige.FiniteSignedExp
+import LeanPool.Feige.GeometryBridge
+import LeanPool.Feige.Grunbaum.Definitions
+import LeanPool.Feige.Grunbaum.FinalBridge
+import LeanPool.Feige.Grunbaum.Main
+import LeanPool.Feige.Grunbaum.ProbabilityCore
+import LeanPool.Feige.Grunbaum.Sharpness
+import LeanPool.Feige.Grunbaum.SimplexCentroidCoordinates
+import LeanPool.Feige.Grunbaum.StrictBoundaryBridge
+import LeanPool.Feige.Grunbaum.TruncationConcavity
+import LeanPool.Feige.GrunbaumImport
+import LeanPool.Feige.GrunbaumSimplexProperty
+import LeanPool.Feige.GrunbaumWeightedForm
+import LeanPool.Feige.HighSetLaw
+import LeanPool.Feige.IndependentCalibrationAssembly
+import LeanPool.Feige.InsertionAlgebra
+import LeanPool.Feige.InsertionAnalyticAssembly
+import LeanPool.Feige.InsertionCommonDensity
+import LeanPool.Feige.InsertionCommonLaw
+import LeanPool.Feige.InsertionEdgeRealization
+import LeanPool.Feige.InsertionExpectation
+import LeanPool.Feige.InsertionK
+import LeanPool.Feige.InsertionLastCoordinateLaw
+import LeanPool.Feige.InsertionTerminalLaw
+import LeanPool.Feige.KContinuity
+import LeanPool.Feige.KStatistic
+import LeanPool.Feige.KernelAveraging
+import LeanPool.Feige.Lemma43
+import LeanPool.Feige.Lemma43ArbitraryBase
+import LeanPool.Feige.Lemma43Complete
+import LeanPool.Feige.Lemma43Density
+import LeanPool.Feige.Lemma43Endpoints
+import LeanPool.Feige.Lemma43FiniteSigned
+import LeanPool.Feige.Lemma43Insertion
+import LeanPool.Feige.Lemma43Relations
+import LeanPool.Feige.LikelihoodRatio
+import LeanPool.Feige.MainTheorem
+import LeanPool.Feige.MarginalLaw
+import LeanPool.Feige.MeanOneAugmentedMixture
+import LeanPool.Feige.MeanOneReduction
+import LeanPool.Feige.MeasurableTwoPointKernel
+import LeanPool.Feige.MixtureCalibration
+import LeanPool.Feige.NNRealExponentialLaw
+import LeanPool.Feige.NormalizedExponential
+import LeanPool.Feige.NormalizedExponentialProbability
+import LeanPool.Feige.OneSidedDensity
+import LeanPool.Feige.OrderedTwoPointInduction
+import LeanPool.Feige.PaperAssembly
+import LeanPool.Feige.ProductSplit
+import LeanPool.Feige.ProductTwoPointKernel
+import LeanPool.Feige.RecursiveLatentProbability
+import LeanPool.Feige.Reduction
+import LeanPool.Feige.Sharpness
+import LeanPool.Feige.SignedExpLaw
+import LeanPool.Feige.SimplexExponentialIdentification
+import LeanPool.Feige.SimplexExponentialLaw
+import LeanPool.Feige.SimplexGeometry
+import LeanPool.Feige.SimplexMeasure
+import LeanPool.Feige.SteinIdentity
+import LeanPool.Feige.StrictLocalInsertion
+import LeanPool.Feige.TransferAlgebra
+import LeanPool.Feige.TransferProbability
+import LeanPool.Feige.TransferProbability23
+import LeanPool.Feige.TransferStein
+import LeanPool.Feige.TransferTestFunctions
+import LeanPool.Feige.TranslationTP2
+import LeanPool.Feige.TwoPoint
+import LeanPool.Feige.TwoPointBoundary
+import LeanPool.Feige.TwoPointInduction
+import LeanPool.Feige.TwoPointMixture
+import LeanPool.Feige.TwoPointProductLaw
+import LeanPool.Feige.TwoPointReindex
+import LeanPool.Feige.VlassisThomas.Main
+import LeanPool.FelConjecture
+import LeanPool.FelConjecture.Solution
+import LeanPool.Fineqs
+import LeanPool.Fineqs.Main
+import LeanPool.FiniteGraphFundamentalGroup
+import LeanPool.FiniteGraphFundamentalGroup.Consequences
+import LeanPool.FiniteGraphFundamentalGroup.Cover
+import LeanPool.FiniteGraphFundamentalGroup.Proof
+import LeanPool.FiniteGraphFundamentalGroup.Realization
+import LeanPool.FiniteGraphFundamentalGroup.TopologicalComparison
+import LeanPool.FiniteGraphFundamentalGroup.TopologicalCover
+import LeanPool.FiniteGraphFundamentalGroup.TreeContraction
+import LeanPool.FiveEighthsTheorem
+import LeanPool.FiveEighthsTheorem.Basic
+import LeanPool.Flean
+import LeanPool.Flean.Basic
+import LeanPool.Flean.FloatCfg
+import LeanPool.Flean.FloatRep
+import LeanPool.Flean.IntRounding
+import LeanPool.Flean.LogRules
+import LeanPool.Flean.Rounding
+import LeanPool.Flean.Subnorm
+import LeanPool.FltRegular
+import LeanPool.FltRegular.CaseI.Statement
+import LeanPool.FltRegular.CaseII.AuxLemmas
+import LeanPool.FltRegular.CaseII.InductionStep
+import LeanPool.FltRegular.CaseII.Statement
+import LeanPool.FltRegular.FltRegular
+import LeanPool.FltRegular.MayAssume.Lemmas
+import LeanPool.FltRegular.NumberTheory.Cyclotomic.CaseI
+import LeanPool.FltRegular.NumberTheory.Cyclotomic.CyclRat
+import LeanPool.FltRegular.NumberTheory.Cyclotomic.MoreLemmas
+import LeanPool.FltRegular.NumberTheory.Cyclotomic.UnitLemmas
+import LeanPool.FltRegular.NumberTheory.CyclotomicRing
+import LeanPool.FltRegular.NumberTheory.Hilbert92
+import LeanPool.FltRegular.NumberTheory.Hilbert94
+import LeanPool.FltRegular.NumberTheory.KummersLemma.Field
+import LeanPool.FltRegular.NumberTheory.KummersLemma.KummersLemma
+import LeanPool.FltRegular.NumberTheory.RegularPrimes
+import LeanPool.FltRegular.NumberTheory.SystemOfUnits
+import LeanPool.FltRegular.NumberTheory.Unramified
+import LeanPool.FoZfc
+import LeanPool.FoZfc.Axioms
+import LeanPool.FoZfc.Basic
+import LeanPool.FoZfc.BoundedFormulaOps
+import LeanPool.FoZfc.FixedSnoc
+import LeanPool.FoZfc.Replacement
+import LeanPool.FoZfc.Tostring
+import LeanPool.FormalLearningTheory
+import LeanPool.FormalLearningTheory.Basic
+import LeanPool.FormalLearningTheory.Bridge
+import LeanPool.FormalLearningTheory.Complexity
+import LeanPool.FormalLearningTheory.Complexity.Amalgamation
+import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
+import LeanPool.FormalLearningTheory.Complexity.Compression
+import LeanPool.FormalLearningTheory.Complexity.DualVC
+import LeanPool.FormalLearningTheory.Complexity.FiniteSupportUC
+import LeanPool.FormalLearningTheory.Complexity.GameInfra
+import LeanPool.FormalLearningTheory.Complexity.Generalization
+import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
+import LeanPool.FormalLearningTheory.Complexity.Generalization.Tail
+import LeanPool.FormalLearningTheory.Complexity.GeneralizationResults
+import LeanPool.FormalLearningTheory.Complexity.Interpolation
+import LeanPool.FormalLearningTheory.Complexity.Littlestone
+import LeanPool.FormalLearningTheory.Complexity.Measurability
+import LeanPool.FormalLearningTheory.Complexity.MindChange
+import LeanPool.FormalLearningTheory.Complexity.Ordinal
+import LeanPool.FormalLearningTheory.Complexity.Rademacher
+import LeanPool.FormalLearningTheory.Complexity.Structures
+import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+import LeanPool.FormalLearningTheory.Complexity.VCDimension
+import LeanPool.FormalLearningTheory.Computation
+import LeanPool.FormalLearningTheory.Criterion
+import LeanPool.FormalLearningTheory.Criterion.Extended
+import LeanPool.FormalLearningTheory.Criterion.Gold
+import LeanPool.FormalLearningTheory.Criterion.Online
+import LeanPool.FormalLearningTheory.Criterion.PAC
+import LeanPool.FormalLearningTheory.Data
+import LeanPool.FormalLearningTheory.Learner
+import LeanPool.FormalLearningTheory.Learner.Active
+import LeanPool.FormalLearningTheory.Learner.Bayesian
+import LeanPool.FormalLearningTheory.Learner.Closure
+import LeanPool.FormalLearningTheory.Learner.Core
+import LeanPool.FormalLearningTheory.Learner.Monad
+import LeanPool.FormalLearningTheory.Learner.Properties
+import LeanPool.FormalLearningTheory.Learner.VersionSpace
+import LeanPool.FormalLearningTheory.Process
+import LeanPool.FormalLearningTheory.PureMath.AnalyticMeasurability
+import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
+import LeanPool.FormalLearningTheory.PureMath.BinaryMatrix
+import LeanPool.FormalLearningTheory.PureMath.ChoquetCapacity
+import LeanPool.FormalLearningTheory.PureMath.Concentration
+import LeanPool.FormalLearningTheory.PureMath.Exchangeability
+import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
+import LeanPool.FormalLearningTheory.PureMath.KLDivergence
+import LeanPool.FormalLearningTheory.PureMath.ReaderMonad
+import LeanPool.FormalLearningTheory.Theorem
+import LeanPool.FormalLearningTheory.Theorem.BorelAnalyticSeparation
+import LeanPool.FormalLearningTheory.Theorem.Extended
+import LeanPool.FormalLearningTheory.Theorem.Gold
+import LeanPool.FormalLearningTheory.Theorem.Online
+import LeanPool.FormalLearningTheory.Theorem.PAC
+import LeanPool.FormalLearningTheory.Theorem.PACBayes
+import LeanPool.FormalLearningTheory.Theorem.Separation
+import LeanPool.FormalizationOfBoundedArithmetic
+import LeanPool.FormalizationOfBoundedArithmetic.Algebra
+import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
+import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
+import LeanPool.FormalizationOfBoundedArithmetic.Complexity
+import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
+import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
+import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
+import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
+import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
+import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
+import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+import LeanPool.FormalizationOfBoundedArithmetic.Order
+import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.Semantics
+import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+import LeanPool.FormalizationOfBoundedArithmetic.Syntax
+import LeanPool.FormalizationOfBoundedArithmetic.V0
+import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddAssoc
+import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
+import LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
+import LeanPool.ForwardEuler
+import LeanPool.ForwardEuler.Main
+import LeanPool.FriezePatterns
+import LeanPool.FriezePatterns.Chapter1
+import LeanPool.FriezePatterns.Chapter2
+import LeanPool.FriezePatterns.Chapter3
+import LeanPool.FrontierMathOpenHypergraphs
+import LeanPool.FrontierMathOpenHypergraphs.Basic
+import LeanPool.FrontierMathOpenHypergraphs.Lubell
+import LeanPool.FrontierMathOpenHypergraphs.Substitution
+import LeanPool.FrontierMathOpenHypergraphs.Uniform
+import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameBoosters
+import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
+import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameExact
+import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameResidues
+import LeanPool.FrontierMathOpenHypergraphs.Uniform.Frames
+import LeanPool.FundamentalInequality
+import LeanPool.GKPCarry
+import LeanPool.GKPCarry.BadCarryCounting
+import LeanPool.GKPCarry.BadCarryLanguage
+import LeanPool.GKPCarry.BinaryReduction
+import LeanPool.GKPCarry.CarryArithmetic
+import LeanPool.GKPCarry.Definitions
+import LeanPool.GKPCarry.DensityOne
+import LeanPool.GKPCarry.FiniteRange
+import LeanPool.GKPCarry.FiniteRangeCorollary
+import LeanPool.GKPCarry.GKPCharacterization
+import LeanPool.GKPCarry.InfiniteSieve
+import LeanPool.GKPCarry.InfiniteSlices
+import LeanPool.GKPCarry.Kummer
+import LeanPool.GKPCarry.ModularPrefix
+import LeanPool.GKPCarry.PowerResidues
+import LeanPool.GKPCarry.Statement
+import LeanPool.GKPCarry.UnitCarryCounting
+import LeanPool.GrothendieckVanishing
+import LeanPool.GrothendieckVanishing.ClosedImmersion
+import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
+import LeanPool.GrothendieckVanishing.CohomologyAPI
+import LeanPool.GrothendieckVanishing.ConstantSheafFlasque
+import LeanPool.GrothendieckVanishing.FinitelyGeneratedVanishing
+import LeanPool.GrothendieckVanishing.FlasqueVanishing
+import LeanPool.GrothendieckVanishing.GeneratedSubsheaf
+import LeanPool.GrothendieckVanishing.GrothendieckVanishing
+import LeanPool.GrothendieckVanishing.GrothendieckVanishingOverview
+import LeanPool.GrothendieckVanishing.IrreducibleStep
+import LeanPool.GrothendieckVanishing.PresheafFilteredColimit
+import LeanPool.GrothendieckVanishing.PresheafFilteredColimitCore
+import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
+import LeanPool.GrothendieckVanishing.TopologicalKrullDim
+import LeanPool.GrothendieckVanishing.ZeroOutside
+import LeanPool.HSDInteriorPointLP
+import LeanPool.HSDInteriorPointLP.FixedYTMTheory
+import LeanPool.HSDInteriorPointLP.GeneratedConvergence
+import LeanPool.HSDInteriorPointLP.LocalNeighborhoodEstimates
+import LeanPool.HSDInteriorPointLP.NewtonSystem
+import LeanPool.HSDInteriorPointLP.PrimalDualData
+import LeanPool.HadwigerNelsonBounds
+import LeanPool.HadwigerNelsonBounds.Basic
+import LeanPool.HadwigerNelsonBounds.IsbellColoring
+import LeanPool.HadwigerNelsonBounds.LatticeSeparation
+import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
+import LeanPool.HadwigerNelsonBounds.PartsCertificate
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData0
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData1
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData2
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData3
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData4
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData5
+import LeanPool.HadwigerNelsonBounds.PartsCertificateData6
+import LeanPool.HadwigerNelsonBounds.PartsCoordinates
+import LeanPool.HadwigerNelsonBounds.PartsFirstStage
+import LeanPool.HadwigerNelsonBounds.PartsGadgetCases
+import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
+import LeanPool.HadwigerNelsonBounds.PartsGadgetData
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification0
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification1
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification2
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification3
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbedding
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbeddingCore
+import LeanPool.HadwigerNelsonBounds.PartsGadgetForcedPair
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData0
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData1
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData2
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData3
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData4
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData5
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData6
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification0
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification1
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification2
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification3
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification4
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification5
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification6
+import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification7
+import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData
+import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData0
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry0
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry1
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry2
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry3
+import LeanPool.HadwigerNelsonBounds.PartsGadgetVerification
+import LeanPool.HadwigerNelsonBounds.PartsGeometry
+import LeanPool.HadwigerNelsonBounds.PartsPermutationData0
+import LeanPool.HadwigerNelsonBounds.PartsPermutationData1
+import LeanPool.HadwigerNelsonBounds.PartsPermutationData2
+import LeanPool.HadwigerNelsonBounds.PartsPermutationData3
+import LeanPool.HadwigerNelsonBounds.PartsPermutationData4
+import LeanPool.HadwigerNelsonBounds.PartsPermutationData5
+import LeanPool.HadwigerNelsonBounds.PartsPermutations
+import LeanPool.HadwigerNelsonBounds.PartsPlaneGeometry
+import LeanPool.HadwigerNelsonBounds.PartsRootDecision
+import LeanPool.HadwigerNelsonBounds.PartsRootDecisionCore
+import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData0
+import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData1
+import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData2
+import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData3
+import LeanPool.HadwigerNelsonBounds.PartsSpindle
+import LeanPool.HadwigerNelsonBounds.Voronoi
+import LeanPool.HadwigerNelsonBounds.VoronoiQuadratic
+import LeanPool.HansonWright
+import LeanPool.HansonWright.MeasureTheory.Integral.LayerCake
+import LeanPool.HansonWright.Probability.Concentration.Bernstein
+import LeanPool.HansonWright.Probability.Concentration.Chernoff
+import LeanPool.HansonWright.Probability.Concentration.HansonWright
+import LeanPool.HansonWright.Probability.Moments.Cumulant
+import LeanPool.HansonWright.Probability.Moments.Exponential
+import LeanPool.HansonWright.Probability.Process.FiniteMaximum
+import LeanPool.HansonWright.Probability.Process.SubGaussian
+import LeanPool.Incompleteness
+import LeanPool.Incompleteness.Arith.D1
+import LeanPool.Incompleteness.Arith.D3
+import LeanPool.Incompleteness.Arith.DC
+import LeanPool.Incompleteness.Arith.First
+import LeanPool.Incompleteness.Arith.FormalizedArithmetic
+import LeanPool.Incompleteness.Arith.Second
+import LeanPool.Incompleteness.Arith.Theory
+import LeanPool.Incompleteness.Arithmetization.Basic.IOpen
+import LeanPool.Incompleteness.Arithmetization.Basic.Ind
+import LeanPool.Incompleteness.Arithmetization.Basic.PeanoMinus
+import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
+import LeanPool.Incompleteness.Arithmetization.Definability.Boldface
+import LeanPool.Incompleteness.Arithmetization.Definability.BoundedBoldface
+import LeanPool.Incompleteness.Arithmetization.Definability.Hierarchy
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Bit
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Basic
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Coding
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Fixpoint
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.PRF
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Seq
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Vec
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.CodedTheory
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Coding
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Basic
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Functions
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Iteration
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Typed
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Language
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Derivation
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Thy
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Typed
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Basic
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Functions
+import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Typed
+import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Exp
+import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Log
+import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.PPow2
+import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Pow2
+import LeanPool.Incompleteness.Arithmetization.Vorspiel.ExistsUnique
+import LeanPool.Incompleteness.Arithmetization.Vorspiel.Graph
+import LeanPool.Incompleteness.Arithmetization.Vorspiel.Lemmata
+import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
+import LeanPool.Incompleteness.DC.Basic
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Basic
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Hierarchy
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Representation
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.StrictHierarchy
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Theory
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.BinderNotation
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Calculus2
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Coding
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Eq
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Operator
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Elementary
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Semantics
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Formula
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Coding
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.SearchTree
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.SubLanguage
+import LeanPool.Incompleteness.Foundation.FirstOrder.Order.Le
+import LeanPool.Incompleteness.Foundation.FirstOrder.Ultraproduct
+import LeanPool.Incompleteness.Foundation.IntProp.Formula
+import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Basic
+import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Int
+import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.WellKnown
+import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Basic
+import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Basic
+import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Classical
+import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Soundness
+import LeanPool.Incompleteness.Foundation.IntProp.Substitution
+import LeanPool.Incompleteness.Foundation.Logic.Axioms
+import LeanPool.Incompleteness.Foundation.Logic.Calculus
+import LeanPool.Incompleteness.Foundation.Logic.Disjunctive
+import LeanPool.Incompleteness.Foundation.Logic.Entailment
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Basic
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Lukasiewicz
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
+import LeanPool.Incompleteness.Foundation.Logic.Predicate.Language
+import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
+import LeanPool.Incompleteness.Foundation.Logic.Predicate.Rew
+import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
+import LeanPool.Incompleteness.Foundation.Logic.Semantics
+import LeanPool.Incompleteness.Foundation.Modal.Axioms
+import LeanPool.Incompleteness.Foundation.Modal.Complement
+import LeanPool.Incompleteness.Foundation.Modal.ComplementClosedConsistentFinset
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.GL
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K4
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K5
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.KD
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.KP
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.KT
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.KTc
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.S5
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.Triv
+import LeanPool.Incompleteness.Foundation.Modal.Formula
+import LeanPool.Incompleteness.Foundation.Modal.Geachean
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Geach
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Unprovability
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.S5Grz
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+import LeanPool.Incompleteness.Foundation.Modal.IntProp
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomDot3
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomGrz
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomVer
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Closure
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Filteration
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Completeness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.MDP
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Soundness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Tree
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitation
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Completeness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Soundness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K4
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K45
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K5
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB4
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB5
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD4
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD45
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD5
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KDB
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT4B
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KTB
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot2
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot3
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S5
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Triv
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Ver
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.KHIncompleteness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Preservation
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.SimpleExtension
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Tree
+import LeanPool.Incompleteness.Foundation.Modal.Logic.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Logic.WellKnown
+import LeanPool.Incompleteness.Foundation.Modal.LogicSymbol
+import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
+import LeanPool.Incompleteness.Foundation.Modal.Subformulas
+import LeanPool.Incompleteness.Foundation.Modal.Substitution
+import LeanPool.Incompleteness.Foundation.Vorspiel.Arith
+import LeanPool.Incompleteness.Foundation.Vorspiel.BinaryRelations
+import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
+import LeanPool.Incompleteness.Foundation.Vorspiel.Collection
+import LeanPool.Incompleteness.Foundation.Vorspiel.ExistsUnique
+import LeanPool.Incompleteness.Foundation.Vorspiel.NotationClass
+import LeanPool.Incompleteness.Foundation.Vorspiel.Order
+import LeanPool.Incompleteness.Foundation.Vorspiel.RelItr
+import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+import LeanPool.Incompleteness.ProvabilityLogic.Basic
+import LeanPool.Incompleteness.ToFoundation.Basic
+import LeanPool.InfinitaryLogic
+import LeanPool.InfinitaryLogic.Admissible.Family
+import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
+import LeanPool.InfinitaryLogic.Admissible.HF
+import LeanPool.InfinitaryLogic.Combinatorics.EndHomogeneousErdosRado
+import LeanPool.InfinitaryLogic.Combinatorics.FiniteArityErdosRadoInduction
+import LeanPool.InfinitaryLogic.Combinatorics.PairErdosRadoGeneral
+import LeanPool.InfinitaryLogic.Conditional.GandyHarrington
+import LeanPool.InfinitaryLogic.Conditional.MorleyHanfSchemaDischarge
+import LeanPool.InfinitaryLogic.Conditional.MorleyHanfTransfer
+import LeanPool.InfinitaryLogic.Conditional.SilverCategoryRoute
+import LeanPool.InfinitaryLogic.Descriptive.AnalyticTree
+import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
+import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
+import LeanPool.InfinitaryLogic.Descriptive.FiniteCarrier
+import LeanPool.InfinitaryLogic.Descriptive.G0Dichotomy
+import LeanPool.InfinitaryLogic.Descriptive.G0Fusion
+import LeanPool.InfinitaryLogic.Descriptive.GSGraph
+import LeanPool.InfinitaryLogic.Descriptive.InvariantMeasurableSpace
+import LeanPool.InfinitaryLogic.Descriptive.IsomorphismBorel
+import LeanPool.InfinitaryLogic.Descriptive.KuratowskiUlam
+import LeanPool.InfinitaryLogic.Descriptive.LogicAction
+import LeanPool.InfinitaryLogic.Descriptive.LopezEscobar
+import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
+import LeanPool.InfinitaryLogic.Descriptive.Measurable
+import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
+import LeanPool.InfinitaryLogic.Descriptive.Mycielski
+import LeanPool.InfinitaryLogic.Descriptive.PerfectAntichain
+import LeanPool.InfinitaryLogic.Descriptive.Polish
+import LeanPool.InfinitaryLogic.Descriptive.QueryCode
+import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
+import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
+import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
+import LeanPool.InfinitaryLogic.Descriptive.Topology
+import LeanPool.InfinitaryLogic.Descriptive.WellOrderBridge
+import LeanPool.InfinitaryLogic.Descriptive.WellOrderClass
+import LeanPool.InfinitaryLogic.Descriptive.WellOrderNonBorel
+import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+import LeanPool.InfinitaryLogic.Karp.PotentialIso
+import LeanPool.InfinitaryLogic.Lomega1omega.CountableIndex
+import LeanPool.InfinitaryLogic.Lomega1omega.Depth
+import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+import LeanPool.InfinitaryLogic.Lomega1omega.FirstOrderImage
+import LeanPool.InfinitaryLogic.Lomega1omega.Fragment
+import LeanPool.InfinitaryLogic.Lomega1omega.InfiniteAxiom
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
+import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
+import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.IndexCoding
+import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
+import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Semantics
+import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
+import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
+import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+import LeanPool.InfinitaryLogic.Methods.ConstantSurgery
+import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
+import LeanPool.InfinitaryLogic.Methods.EM.Indiscernible
+import LeanPool.InfinitaryLogic.Methods.EM.Realization
+import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
+import LeanPool.InfinitaryLogic.Methods.EM.Template
+import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
+import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTermModel
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.Henkin.ModelExistence
+import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
+import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveExistence
+import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPair
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairCompletion
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairModel
+import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
+import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantGeneralization
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigArbitrary
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigRelational
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSeparation
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
+import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
+import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonArbitrary
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonClosures
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonInseparability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedCP
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelational
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelationalize
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRootGate
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRelational
+import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRootGate
+import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInseparability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
+import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
+import LeanPool.InfinitaryLogic.Methods.Interpolation.TermGraph
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+import LeanPool.InfinitaryLogic.Methods.LocalColimit
+import LeanPool.InfinitaryLogic.Methods.LocalEMCardinality
+import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
+import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+import LeanPool.InfinitaryLogic.Methods.LocalEMEquivariance
+import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
+import LeanPool.InfinitaryLogic.Methods.LocalEMSmall
+import LeanPool.InfinitaryLogic.Methods.LocalEMSmallModel
+import LeanPool.InfinitaryLogic.Methods.LocalEMSupport
+import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
+import LeanPool.InfinitaryLogic.Methods.LocalEMTruth
+import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
+import LeanPool.InfinitaryLogic.Methods.LocalEMTupleOrbit
+import LeanPool.InfinitaryLogic.Methods.LocalSkolem
+import LeanPool.InfinitaryLogic.Methods.LocalSkolemUniversal
+import LeanPool.InfinitaryLogic.Methods.LocalTower
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Disjoint
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.FunctionalTheta
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCMem
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCSentence
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Separation
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.SharedDecoder
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.TaggedGlue
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
+import LeanPool.InfinitaryLogic.Methods.MarkerStage
+import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
+import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
+import LeanPool.InfinitaryLogic.Methods.SchemaOmegaWitness
+import LeanPool.InfinitaryLogic.Methods.SchemaTermModel
+import LeanPool.InfinitaryLogic.Methods.SchemaTermTruth
+import LeanPool.InfinitaryLogic.Methods.SkolemClosure
+import LeanPool.InfinitaryLogic.Methods.SkolemColimit
+import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
+import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
+import LeanPool.InfinitaryLogic.Methods.UniformCollapse
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.BaseMember
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.ClosureFields
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.CofinalFiber
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.Constants
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapInsertion
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.SymbolCountability
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.Undefinability
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.WOConsistency
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
+import LeanPool.InfinitaryLogic.ModelTheory.AElementary
+import LeanPool.InfinitaryLogic.ModelTheory.ArbitraryStabilization
+import LeanPool.InfinitaryLogic.ModelTheory.CountableCompanion
+import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
+import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
+import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.BethLadder
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderBound
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderSyntax
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.VonNeumannModel
+import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+import LeanPool.InfinitaryLogic.ModelTheory.MorleyCounting
+import LeanPool.InfinitaryLogic.ModelTheory.MorleyHanf
+import LeanPool.InfinitaryLogic.ModelTheory.PCClass
+import LeanPool.InfinitaryLogic.ModelTheory.ScottCompletion
+import LeanPool.InfinitaryLogic.ModelTheory.TypeIsolation
+import LeanPool.InfinitaryLogic.ModelTheory.TypePreservingBF
+import LeanPool.InfinitaryLogic.OrdinalUtil
+import LeanPool.InfinitaryLogic.Scott.AtomicDiagram
+import LeanPool.InfinitaryLogic.Scott.BackAndForth
+import LeanPool.InfinitaryLogic.Scott.Formula
+import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
+import LeanPool.InfinitaryLogic.Scott.Height.Defs
+import LeanPool.InfinitaryLogic.Scott.Rank
+import LeanPool.InfinitaryLogic.Scott.RefinementCount
+import LeanPool.InfinitaryLogic.Scott.Sentence
+import LeanPool.InfinitaryLogic.Util
+import LeanPool.IsTranscendentalPi
+import LeanPool.IsTranscendentalPi.AnalyticEstimates
+import LeanPool.IsTranscendentalPi.CalculusOnPoly
+import LeanPool.IsTranscendentalPi.ComplexExponential
+import LeanPool.IsTranscendentalPi.IncrementalDerivatives
+import LeanPool.IsTranscendentalPi.Main
+import LeanPool.IsTranscendentalPi.NivenPolynomials
+import LeanPool.IsTranscendentalPi.ScaledAuxiliaryPolynomial
+import LeanPool.IsTranscendentalPi.SubsetSumPolynomial
+import LeanPool.IsTranscendentalPi.SymmetricPolynomials
+import LeanPool.IsoGraph
+import LeanPool.IsoGraph.Canon.Algorithm
+import LeanPool.IsoGraph.Canon.Autos
+import LeanPool.IsoGraph.Canon.Branch
+import LeanPool.IsoGraph.Canon.Correct
+import LeanPool.IsoGraph.Canon.Dominate
+import LeanPool.IsoGraph.Canon.Equivariance
+import LeanPool.IsoGraph.Canon.Jump
+import LeanPool.IsoGraph.Canon.Leaves
+import LeanPool.IsoGraph.Canon.Monotone
+import LeanPool.IsoGraph.Canon.Node
+import LeanPool.IsoGraph.Canon.Optimal
+import LeanPool.IsoGraph.Canon.Orbits
+import LeanPool.IsoGraph.Canon.Paths
+import LeanPool.IsoGraph.Canon.Pinned
+import LeanPool.IsoGraph.Canon.Progress
+import LeanPool.IsoGraph.Canon.Search
+import LeanPool.IsoGraph.Canon.Spec
+import LeanPool.IsoGraph.ForMathlib.Array
+import LeanPool.IsoGraph.ForMathlib.Bits
+import LeanPool.Isoperimetric
+import LeanPool.Isoperimetric.Basic
+import LeanPool.Isoperimetric.BrunnMinkowski
+import LeanPool.Isoperimetric.Isoperimetric
+import LeanPool.Isoperimetric.PrekopaLeindler
+import LeanPool.JacobianDiffgeo
+import LeanPool.JacobianDiffgeo.Abel
+import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+import LeanPool.JacobianDiffgeo.Abel.ChartSupported
+import LeanPool.JacobianDiffgeo.Abel.DolbeaultBridge
+import LeanPool.JacobianDiffgeo.Abel.LinkData
+import LeanPool.JacobianDiffgeo.Abel.LogPiece
+import LeanPool.JacobianDiffgeo.Abel.Loops
+import LeanPool.JacobianDiffgeo.Abel.OfCurveInj
+import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
+import LeanPool.JacobianDiffgeo.Abel.Sufficiency
+import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
+import LeanPool.JacobianDiffgeo.Abel.WeakToMero
+import LeanPool.JacobianDiffgeo.AbelWeak
+import LeanPool.JacobianDiffgeo.AbelWeak.ChainAssembly
+import LeanPool.JacobianDiffgeo.AbelWeak.GeneralChain
+import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
+import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
+import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
+import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+import LeanPool.JacobianDiffgeo.CanonicalForms
+import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
+import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
+import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
+import LeanPool.JacobianDiffgeo.CanonicalForms.OrdRes
+import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+import LeanPool.JacobianDiffgeo.Cech
+import LeanPool.JacobianDiffgeo.Cech.Cochains
+import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Cech.Covers
+import LeanPool.JacobianDiffgeo.Cech.H0
+import LeanPool.JacobianDiffgeo.Cech.Injectivity
+import LeanPool.JacobianDiffgeo.Cech.Refinement
+import LeanPool.JacobianDiffgeo.Cech.SixTerm
+import LeanPool.JacobianDiffgeo.Cech.Skyscraper
+import LeanPool.JacobianDiffgeo.Cech.Window
+import LeanPool.JacobianDiffgeo.Cech.WindowRank
+import LeanPool.JacobianDiffgeo.CechCount
+import LeanPool.JacobianDiffgeo.CechCount.Count
+import LeanPool.JacobianDiffgeo.CechCount.Final
+import LeanPool.JacobianDiffgeo.CechCount.Mul
+import LeanPool.JacobianDiffgeo.CechCount.Surjective
+import LeanPool.JacobianDiffgeo.Challenge
+import LeanPool.JacobianDiffgeo.Dbar
+import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
+import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
+import LeanPool.JacobianDiffgeo.Dbar.Form01
+import LeanPool.JacobianDiffgeo.Dbar.Operator
+import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
+import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
+import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
+import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+import LeanPool.JacobianDiffgeo.DolbeaultComparison
+import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
+import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
+import LeanPool.JacobianDiffgeo.Finiteness
+import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
+import LeanPool.JacobianDiffgeo.Finiteness.Chain
+import LeanPool.JacobianDiffgeo.Finiteness.Chi
+import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
+import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
+import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
+import LeanPool.JacobianDiffgeo.FormTrace
+import LeanPool.JacobianDiffgeo.FormTrace.PairForm
+import LeanPool.JacobianDiffgeo.FormTrace.ResidueTraceCompat
+import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
+import LeanPool.JacobianDiffgeo.Forms
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Forms.Basic
+import LeanPool.JacobianDiffgeo.Forms.Coeffs
+import LeanPool.JacobianDiffgeo.Forms.Finiteness
+import LeanPool.JacobianDiffgeo.Forms.Genus
+import LeanPool.JacobianDiffgeo.Forms.MDifferential
+import LeanPool.JacobianDiffgeo.Forms.Montel
+import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
+import LeanPool.JacobianDiffgeo.GenusSphereHeadline
+import LeanPool.JacobianDiffgeo.GenusSphereHeadline.Basic
+import LeanPool.JacobianDiffgeo.H1Genus
+import LeanPool.JacobianDiffgeo.H1Genus.Basic
+import LeanPool.JacobianDiffgeo.Init
+import LeanPool.JacobianDiffgeo.JacFunctorial
+import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
+import LeanPool.JacobianDiffgeo.JacFunctorial.ChallengeLaws
+import LeanPool.JacobianDiffgeo.JacFunctorial.Density
+import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
+import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
+import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
+import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
+import LeanPool.JacobianDiffgeo.JacFunctorial.TraceCoeff
+import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
+import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
+import LeanPool.JacobianDiffgeo.JacobianConstruction
+import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+import LeanPool.JacobianDiffgeo.JacobianConstruction.ChartedSpaceKitV
+import LeanPool.JacobianDiffgeo.JacobianConstruction.Functorial
+import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+import LeanPool.JacobianDiffgeo.JacobianConstruction.Torus
+import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
+import LeanPool.JacobianDiffgeo.LaurentTail
+import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.LaurentTail.RiemannRoch
+import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
+import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+import LeanPool.JacobianDiffgeo.LocalMultiplicity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+import LeanPool.JacobianDiffgeo.MappingDegree
+import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import LeanPool.JacobianDiffgeo.MappingDegree.Covering
+import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
+import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
+import LeanPool.JacobianDiffgeo.Meromorphic
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
+import LeanPool.JacobianDiffgeo.Meromorphic.Field
+import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
+import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import LeanPool.JacobianDiffgeo.Meromorphic.LinSysMulEquiv
+import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+import LeanPool.JacobianDiffgeo.MeromorphicTrace
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
+import LeanPool.JacobianDiffgeo.Monodromy
+import LeanPool.JacobianDiffgeo.Monodromy.LogContinuation
+import LeanPool.JacobianDiffgeo.Monodromy.OpenLocus
+import LeanPool.JacobianDiffgeo.Path
+import LeanPool.JacobianDiffgeo.Path.Bridge
+import LeanPool.JacobianDiffgeo.Path.Chain
+import LeanPool.JacobianDiffgeo.Path.Continuation
+import LeanPool.JacobianDiffgeo.Path.HomotopySquare
+import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
+import LeanPool.JacobianDiffgeo.Path.Periods
+import LeanPool.JacobianDiffgeo.Path.Perturb
+import LeanPool.JacobianDiffgeo.Path.Planar
+import LeanPool.JacobianDiffgeo.PeriodLattice
+import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
+import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
+import LeanPool.JacobianDiffgeo.PeriodLattice.FullRank
+import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
+import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
+import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
+import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
+import LeanPool.JacobianDiffgeo.PlanarStokes
+import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
+import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import LeanPool.JacobianDiffgeo.ProjectiveLine
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+import LeanPool.JacobianDiffgeo.ProjectiveLine.GenusZero
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Inversion
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
+import LeanPool.JacobianDiffgeo.ProperDegree
+import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+import LeanPool.JacobianDiffgeo.ProperDegree.DivisorDegreeZero
+import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
+import LeanPool.JacobianDiffgeo.ResidueCalculus
+import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
+import LeanPool.JacobianDiffgeo.ResidueCalculus.GermFunctionals
+import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
+import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
+import LeanPool.JacobianDiffgeo.ResidueCalculus.MittagLeffler
+import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
+import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+import LeanPool.JacobianDiffgeo.ResidueCalculus.TaylorCoeff
+import LeanPool.JacobianDiffgeo.ResidueTheorem
+import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
+import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
+import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
+import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
+import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
+import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+import LeanPool.JacobianDiffgeo.RiemannRoch
+import LeanPool.JacobianDiffgeo.RiemannRoch.Basic
+import LeanPool.JacobianDiffgeo.SerrePairing
+import LeanPool.JacobianDiffgeo.SerrePairing.Duality
+import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
+import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
+import LeanPool.JacobianDiffgeo.SphereTopology
+import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
+import LeanPool.JacobianDiffgeo.SphereTopology.Headline
+import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
+import LeanPool.JacobianDiffgeo.Surface
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import LeanPool.JacobianDiffgeo.Surface.InverseFunction
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import LeanPool.JacobianDiffgeo.TailDuality
+import LeanPool.JacobianDiffgeo.TailDuality.ChiLedger
+import LeanPool.JacobianDiffgeo.TailDuality.Counting
+import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import LeanPool.JacobianDiffgeo.TailDuality.Pairing
+import LeanPool.JacobianDiffgeo.TailDuality.TailOps
+import LeanPool.JohnsonLindenstraussLean
+import LeanPool.JohnsonLindenstraussLean.ChiSquared
+import LeanPool.JohnsonLindenstraussLean.EndToEnd
+import LeanPool.JohnsonLindenstraussLean.GaussianTail
+import LeanPool.JohnsonLindenstraussLean.InnerProduct
+import LeanPool.JohnsonLindenstraussLean.Lemma
+import LeanPool.JohnsonLindenstraussLean.NormPreservation
+import LeanPool.JohnsonLindenstraussLean.Projection
+import LeanPool.JohnsonLindenstraussLean.QJL
+import LeanPool.JohnsonLindenstraussLean.QJLDistortion
+import LeanPool.JohnsonLindenstraussLean.Rotation
+import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+import LeanPool.JohnsonLindenstraussLean.Verify
+import LeanPool.KahnKalai
+import LeanPool.KahnKalai.Basic
+import LeanPool.KahnKalai.Cost
+import LeanPool.KahnKalai.Covering
+import LeanPool.KahnKalai.DoubleCount
+import LeanPool.KahnKalai.Numeric
+import LeanPool.KahnKalai.ParkPham
+import LeanPool.KaltonRoberts
+import LeanPool.KaltonRoberts.Collections
+import LeanPool.KaltonRoberts.Defs
+import LeanPool.KaltonRoberts.DualCert
+import LeanPool.KaltonRoberts.EpsilonRecombination
+import LeanPool.KaltonRoberts.Intersections
+import LeanPool.KaltonRoberts.Lemmas
+import LeanPool.KaltonRoberts.LogBounds
+import LeanPool.KaltonRoberts.MainTheorem
+import LeanPool.KaltonRoberts.Numerical
+import LeanPool.KaltonRoberts.PhiAnalysis
+import LeanPool.KaltonRoberts.PhiDeriv
+import LeanPool.KaltonRoberts.Pipeline
+import LeanPool.KaltonRoberts.PipelineEps
+import LeanPool.KaltonRoberts.Pippenger
+import LeanPool.KaltonRoberts.PippengerProof
+import LeanPool.KaltonRoberts.Recombination
+import LeanPool.KaltonRoberts.UniformRecombination
+import LeanPool.KasamiCyclicAdditive
+import LeanPool.KasamiCyclicAdditive.Assembly.CoefficientReduction
+import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
+import LeanPool.KasamiCyclicAdditive.Assembly.GeometricChain
+import LeanPool.KasamiCyclicAdditive.Assembly.Normalization
+import LeanPool.KasamiCyclicAdditive.Assembly.Reduction
+import LeanPool.KasamiCyclicAdditive.Counting.Average
+import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+import LeanPool.KasamiCyclicAdditive.Geometry.BaseChange
+import LeanPool.KasamiCyclicAdditive.Geometry.Descent.Arithmetic
+import LeanPool.KasamiCyclicAdditive.Geometry.EvenCase
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Chart
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Curve
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Frobenius
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Infinity
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Quotient
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
+import LeanPool.KasamiCyclicAdditive.Geometry.FrobeniusAnnihilator
+import LeanPool.KasamiCyclicAdditive.Geometry.IsogenyFactor
+import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
+import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
+import LeanPool.KasamiCyclicAdditive.MCM.CharacterArithmetic
+import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
+import LeanPool.KasamiCyclicAdditive.MCM.DicksonPhase
+import LeanPool.KasamiCyclicAdditive.MCM.Fourier
+import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
+import LeanPool.KasamiCyclicAdditive.MCM.HalfSize
+import LeanPool.KasamiCyclicAdditive.MCM.Halfspace
+import LeanPool.KasamiCyclicAdditive.MCM.Permutation
+import LeanPool.KasamiCyclicAdditive.MCM.PhaseFormula
+import LeanPool.KasamiCyclicAdditive.Main
+import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
+import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
+import LeanPool.KasamiCyclicAdditive.Phase.PowerMap
+import LeanPool.KasamiCyclicAdditive.Phase.RootCount
+import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteAverage
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteCharacterCriterion
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import LeanPool.KasamiCyclicAdditive.Prelude
+import LeanPool.KasamiCyclicAdditive.Statement.CoefficientForm
+import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+import LeanPool.KasamiCyclicAdditive.Statement.ParameterReduction
+import LeanPool.Koethe
+import LeanPool.Koethe.Counterexample
+import LeanPool.Koethe.Disproof
+import LeanPool.Koethe.Linearization.Basic
+import LeanPool.Koethe.Linearization.Nil
+import LeanPool.Koethe.Linearization.Pencil
+import LeanPool.Koethe.MaskSequence.Basic
+import LeanPool.Koethe.MaskSequence.Chain
+import LeanPool.Koethe.MaskSequence.Universal
+import LeanPool.Koethe.Mortality.Degree
+import LeanPool.Koethe.Mortality.FormalWord
+import LeanPool.Koethe.Mortality.Homogeneous
+import LeanPool.Koethe.Mortality.Mask
+import LeanPool.Koethe.Mortality.MaskMortality
+import LeanPool.Koethe.Mortality.Minors
+import LeanPool.Koethe.MultiProjective
+import LeanPool.Koethe.Pencil
+import LeanPool.Koethe.ShiftWitness.Band
+import LeanPool.Koethe.ShiftWitness.Eigenvector
+import LeanPool.Koethe.ShiftWitness.Endpoint
+import LeanPool.Koethe.ShiftWitness.Witness
+import LeanPool.KrafftSieve
+import LeanPool.KrafftSieve.Basic
+import LeanPool.KrafftSieve.Defs
+import LeanPool.KrafftSieve.MainTheorem
+import LeanPool.KrafftSieve.OptimalWeights
+import LeanPool.KrafftSieve.SelbergWeights
+import LeanPool.KrafftSieve.ThirdHarmonic
+import LeanPool.KrafftSieve.Variance
+import LeanPool.Kuramoto
+import LeanPool.Kuramoto.Connections
+import LeanPool.Kuramoto.Contraction
+import LeanPool.Kuramoto.Frontier
+import LeanPool.Kuramoto.GradientFlow
+import LeanPool.Kuramoto.Hebbian
+import LeanPool.Kuramoto.OrderParameter
+import LeanPool.Kuramoto.Weighted
+import LeanPool.Kuramoto.WitnessGeometry
+import LeanPool.LatticeTriangle
+import LeanPool.LatticeTriangle.Solution
+import LeanPool.Lean4GlCoalgebras
+import LeanPool.Lean4GlCoalgebras.General.Completeness
+import LeanPool.Lean4GlCoalgebras.General.Game
+import LeanPool.Lean4GlCoalgebras.General.Proof
+import LeanPool.Lean4GlCoalgebras.General.Soundness
+import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolants
+import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolation
+import LeanPool.Lean4GlCoalgebras.Interpolation.PartialInterpolation
+import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
+import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+import LeanPool.Lean4GlCoalgebras.Logic.Syntax
+import LeanPool.Lean4GlCoalgebras.Pdl.Game
+import LeanPool.Lean4GlCoalgebras.Split.Completeness
+import LeanPool.Lean4GlCoalgebras.Split.CutProof
+import LeanPool.Lean4GlCoalgebras.Split.Game
+import LeanPool.Lean4GlCoalgebras.Split.Proof
+import LeanPool.Lean4GlCoalgebras.Split.ProofTransformations
+import LeanPool.Lean4GlCoalgebras.Split.Soundness
+import LeanPool.Lean4Itree
+import LeanPool.Lean4Itree.ITree
+import LeanPool.Lean4Itree.ITree.Basic
+import LeanPool.Lean4Itree.ITree.EffectAlgebra
+import LeanPool.Lean4Itree.ITree.Monad
+import LeanPool.Lean4Itree.ITree.Utils
+import LeanPool.Lean4Itree.Paco
+import LeanPool.Lean4Itree.Paco.Paco
+import LeanPool.Lean4Itree.Paco.PacoDefs
+import LeanPool.Lean4Itree.Paco.PacoTactics
+import LeanPool.LeanBooleanfun
+import LeanPool.LeanBooleanfun.Arrow
+import LeanPool.LeanBooleanfun.AuxLemmas
+import LeanPool.LeanBooleanfun.Basic
+import LeanPool.LeanBooleanfun.BooleanValued
+import LeanPool.LeanBooleanfun.ToMathlib
+import LeanPool.LeanBooleanfun.ToMathlib.Finset
+import LeanPool.LeanComplexAnalysis
+import LeanPool.LeanComplexAnalysis.Harmonic
+import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
+import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral2
+import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegralCircleAverage
+import LeanPool.LeanComplexAnalysis.Harmonic.Positive
+import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HarnackIneq
+import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszRepresentations
+import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszUnique
+import LeanPool.LeanComplexAnalysis.UnivalentFunctions
+import LeanPool.LeanComplexAnalysis.UnivalentFunctions.ClassS
+import LeanPool.LeanModelChecking
+import LeanPool.LeanModelChecking.ABW
+import LeanPool.LeanModelChecking.ABWNBW
+import LeanPool.LeanModelChecking.LTLNBWResult
+import LeanPool.LeanModelChecking.LTLNBWStatement
+import LeanPool.LeanModelChecking.LTLNNF
+import LeanPool.LeanModelChecking.NNFABW
+import LeanPool.LeanModelChecking.SafetyLivenessDecomposition
+import LeanPool.LeanModularForms
+import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+import LeanPool.LeanModularForms.ContourIntegral.PVSplit
+import LeanPool.LeanModularForms.ContourIntegral.SegmentFTC
+import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+import LeanPool.LeanModularForms.ForMathlib.AtImInfty
+import LeanPool.LeanModularForms.ForMathlib.Bounds
+import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgroupsCopy
+import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
+import LeanPool.LeanModularForms.ForMathlib.FunctionsBoundedAtInfty
+import LeanPool.LeanModularForms.ForMathlib.Hassumunifon
+import LeanPool.LeanModularForms.ForMathlib.Identities
+import LeanPool.LeanModularForms.ForMathlib.Instances
+import LeanPool.LeanModularForms.ForMathlib.IsBoundedAtImInfty
+import LeanPool.LeanModularForms.ForMathlib.LevelOne
+import LeanPool.LeanModularForms.ForMathlib.Petersson
+import LeanPool.LeanModularForms.ForMathlib.QExpansion
+import LeanPool.LeanModularForms.ForMathlib.SlashActions
+import LeanPool.LeanModularForms.ForMathlib.UpperHalfPlane
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Bridges
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CurveAvoidance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Cycle
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.GeneralizedResidueTheorem
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.DixonProof
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Meromorphic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.MathlibBridge
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.ParametricDiff
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.LogDerivFTC
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.GammaAnalysis
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.RemainderAnalysis
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.SingularAnnulus
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.StepBounds
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.UniformStepBound
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PiecewiseCurveAPI
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.BoundaryVanishing
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CPVExistence
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CutoffInfrastructure
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.HigherOrderAssembly
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing.CPVHelpers
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheorem
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MathlibBridge
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeasureHelpers
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicLaurent
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV.DominatedConvergence
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurve
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurveLemma
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.CrossingAnalysis
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Decomposition
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativity
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Basic
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Commutativity
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Module
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Multiplication
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.CongruenceIndex
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.Degree
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.HeckeAction
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.HeckeModularForm
+import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.Basic
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.PolynomialRing
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.SLnTransvection
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
+import LeanPool.LeanModularForms.Modularforms.AtImInfty
+import LeanPool.LeanModularForms.Modularforms.BigO
+import LeanPool.LeanModularForms.Modularforms.Cauchylems
+import LeanPool.LeanModularForms.Modularforms.ClogArgLems
+import LeanPool.LeanModularForms.Modularforms.Cotangent
+import LeanPool.LeanModularForms.Modularforms.Csqrt
+import LeanPool.LeanModularForms.Modularforms.Delta
+import LeanPool.LeanModularForms.Modularforms.Derivative
+import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
+import LeanPool.LeanModularForms.Modularforms.E2
+import LeanPool.LeanModularForms.Modularforms.Eisenstein
+import LeanPool.LeanModularForms.Modularforms.EisensteinAsymptotics
+import LeanPool.LeanModularForms.Modularforms.Eisensteinqexpansions
+import LeanPool.LeanModularForms.Modularforms.Equivs
+import LeanPool.LeanModularForms.Modularforms.Eta
+import LeanPool.LeanModularForms.Modularforms.EtaCleanup
+import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import LeanPool.LeanModularForms.Modularforms.ForMathlibFunctionsBoundedAtInfty
+import LeanPool.LeanModularForms.Modularforms.ForMathlibSlashActions
+import LeanPool.LeanModularForms.Modularforms.ForMathlibUpperHalfPlane
+import LeanPool.LeanModularForms.Modularforms.Generators
+import LeanPool.LeanModularForms.Modularforms.Generators.Defs
+import LeanPool.LeanModularForms.Modularforms.Generators.Injectivity
+import LeanPool.LeanModularForms.Modularforms.Generators.Surjectivity
+import LeanPool.LeanModularForms.Modularforms.IccIcoLems
+import LeanPool.LeanModularForms.Modularforms.IsCuspForm
+import LeanPool.LeanModularForms.Modularforms.Iteratedderivs
+import LeanPool.LeanModularForms.Modularforms.JacobiTheta
+import LeanPool.LeanModularForms.Modularforms.LimunderLems
+import LeanPool.LeanModularForms.Modularforms.LogDerivLems
+import LeanPool.LeanModularForms.Modularforms.MDifferentiableFunProp
+import LeanPool.LeanModularForms.Modularforms.MultipliableLems
+import LeanPool.LeanModularForms.Modularforms.PhiTransform
+import LeanPool.LeanModularForms.Modularforms.QExpansion
+import LeanPool.LeanModularForms.Modularforms.QExpansionLems
+import LeanPool.LeanModularForms.Modularforms.RamanujanIdentities
+import LeanPool.LeanModularForms.Modularforms.ResToImagAxis
+import LeanPool.LeanModularForms.Modularforms.RiemannZetalems
+import LeanPool.LeanModularForms.Modularforms.SerreDerivativeSlash
+import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+import LeanPool.LeanModularForms.Modularforms.SummableLems
+import LeanPool.LeanModularForms.Modularforms.Tendstolems
+import LeanPool.LeanModularForms.Modularforms.ThetaDerivIdentities
+import LeanPool.LeanModularForms.Modularforms.TsumderivWithin
+import LeanPool.LeanModularForms.Modularforms.Uniformcts
+import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
+import LeanPool.LeanModularForms.SpherePacking.CuspDecay
+import LeanPool.LeanModularForms.SpherePacking.PhiHolomorphic
+import LeanPool.LeanModularForms.SpherePacking.ViazovskaMagicFunction
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.Framework
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.LeftEdge
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArc
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArcHelpers
+import LeanPool.LeanModularForms.ValenceFormula.CoreIdentity
+import LeanPool.LeanModularForms.ValenceFormula.Definitions
+import LeanPool.LeanModularForms.ValenceFormula.InteriorWinding
+import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Basic
+import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.EndpointCorner
+import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Main
+import LeanPool.LeanModularForms.ValenceFormula.OrbitPairing
+import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+import LeanPool.LeanModularForms.ValenceFormula.PVChain
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.ArcContribution
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly.ResidueSide
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.ResidueSideInfra
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.Seg5CuspIntegral
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.AngleAnalysis
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDerivBounds
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDiff
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheorem
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheoremBound
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheoremDerivCont
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonSlope
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.RadialHomotopy
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingBase
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingProof
+import LeanPool.LeanModularForms.ValenceFormula.TextbookExistence
+import LeanPool.LeanModularForms.ValenceFormula.TextbookForm
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+import LeanPool.LeanPolyABC
+import LeanPool.LeanPolyABC.All
+import LeanPool.LeanPolyABC.Corollaries.Davenport
+import LeanPool.LeanPolyABC.Corollaries.FltCatalan
+import LeanPool.LeanPolyABC.Corollaries.NoParametrization
+import LeanPool.LeanPolyABC.Lib.DivRadical
+import LeanPool.LeanPolyABC.Lib.Max3
+import LeanPool.LeanPolyABC.Lib.Radical
+import LeanPool.LeanPolyABC.Lib.Wronskian
+import LeanPool.LeanPolyABC.MasonStothers
+import LeanPool.LeanQuantumAlg
+import LeanPool.LeanQuantumAlg.Algorithms
+import LeanPool.LeanQuantumAlg.Algorithms.AmplitudeEstimation
+import LeanPool.LeanQuantumAlg.Algorithms.BernsteinVazirani
+import LeanPool.LeanQuantumAlg.Algorithms.DeutschJozsa
+import LeanPool.LeanQuantumAlg.Algorithms.GHZ
+import LeanPool.LeanQuantumAlg.Algorithms.Grover
+import LeanPool.LeanQuantumAlg.Algorithms.OrderFinding
+import LeanPool.LeanQuantumAlg.Algorithms.QPE
+import LeanPool.LeanQuantumAlg.Algorithms.Simon
+import LeanPool.LeanQuantumAlg.Algorithms.SuperdenseCoding
+import LeanPool.LeanQuantumAlg.Algorithms.Teleportation
+import LeanPool.LeanQuantumAlg.Core
+import LeanPool.LeanQuantumAlg.Core.Components
+import LeanPool.LeanQuantumAlg.Core.Components.Control
+import LeanPool.LeanQuantumAlg.Core.Components.Gates
+import LeanPool.LeanQuantumAlg.Core.Components.Kets
+import LeanPool.LeanQuantumAlg.Core.Components.Oracle
+import LeanPool.LeanQuantumAlg.Core.Cost
+import LeanPool.LeanQuantumAlg.Core.Gate
+import LeanPool.LeanQuantumAlg.Core.Measurement
+import LeanPool.LeanQuantumAlg.Core.State
+import LeanPool.LeanQuantumAlg.Core.Tensor
+import LeanPool.LeanQuantumAlg.Init
+import LeanPool.LeanQuantumAlg.Primitives
+import LeanPool.LeanQuantumAlg.Primitives.AmplitudeAmplification
+import LeanPool.LeanQuantumAlg.Primitives.BellPair
+import LeanPool.LeanQuantumAlg.Primitives.ControlledTransform
+import LeanPool.LeanQuantumAlg.Primitives.HadamardTest
+import LeanPool.LeanQuantumAlg.Primitives.LCU
+import LeanPool.LeanQuantumAlg.Primitives.ParameterShift
+import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
+import LeanPool.LeanQuantumAlg.Primitives.QFT
+import LeanPool.LeanQuantumAlg.Primitives.QKernel
+import LeanPool.LeanQuantumAlg.Primitives.QKernel.Advantage
+import LeanPool.LeanQuantumAlg.Primitives.QKernel.Concentration
+import LeanPool.LeanQuantumAlg.Primitives.QKernel.DiscreteLogConcept
+import LeanPool.LeanQuantumAlg.Primitives.QKernel.Expressivity
+import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fidelity
+import LeanPool.LeanQuantumAlg.Primitives.QKernel.Fourier
+import LeanPool.LeanQuantumAlg.Primitives.QNN
+import LeanPool.LeanQuantumAlg.Primitives.QNN.DynamicalLieAlgebra
+import LeanPool.LeanQuantumAlg.Primitives.QNN.FullDLABasis
+import LeanPool.LeanQuantumAlg.Primitives.QNN.LieAlgebraicBP
+import LeanPool.LeanQuantumAlg.Primitives.QNN.Overparametrization
+import LeanPool.LeanQuantumAlg.Primitives.QNN.PauliPropagation
+import LeanPool.LeanQuantumAlg.Primitives.QNN.Trainability
+import LeanPool.LeanQuantumAlg.Primitives.QNN.VarianceFormula
+import LeanPool.LeanQuantumAlg.Primitives.QSP
+import LeanPool.LeanQuantumAlg.Primitives.QSP.Chebyshev
+import LeanPool.LeanQuantumAlg.Primitives.QSP.Fourier
+import LeanPool.LeanQuantumAlg.Primitives.SwapTest
+import LeanPool.LeanQuantumAlg.Primitives.WalshHadamard
+import LeanPool.LeanQuantumAlg.Util
+import LeanPool.LeanQuantumAlg.Util.Complex
+import LeanPool.LeanQuantumAlg.Util.Concentration
+import LeanPool.LeanQuantumAlg.Util.FinPow
+import LeanPool.LeanQuantumAlg.Util.HilbertSchmidt
+import LeanPool.LeanQuantumAlg.Util.Polynomial
+import LeanPool.LeanQuantumAlg.Util.TrigPolynomial
+import LeanPool.LeanStationaryHarmonicMaps
+import LeanPool.LeanStationaryHarmonicMaps.Examples.StationaryMonotonicity
+import LeanPool.LeanStationaryHarmonicMaps.Examples.UseMainTheorem
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.API
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BallIntegralAC
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Basic
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryBasics
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryFromRadial
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.CenterTranslation
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuclidean
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityFinal
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityRoutes
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.PrimitiveCutoffs
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialCutoffs
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIdentity
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIntegrability
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialMeasure
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusFormulas
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedDerivative
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedRepresentation
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeights
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevWitness
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationarityBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryMap
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import LeanPool.LehmerE10
+import LeanPool.LehmerE10.CoxeterE8
+import LeanPool.LehmerE10.CyclotomicKill
+import LeanPool.LehmerE10.Defs
+import LeanPool.LehmerE10.Ergodic
+import LeanPool.LehmerE10.Kronecker
+import LeanPool.LehmerE10.Mahler
+import LeanPool.LehmerE10.Main
+import LeanPool.LehmerE10.SalemSymmetry
+import LeanPool.LehmerE10.TraceQuintic
+import LeanPool.LehmerE10.UnitCircleFactors
+import LeanPool.Lentil
+import LeanPool.Lentil.Basic
+import LeanPool.Lentil.Expr
+import LeanPool.Lentil.Foldable
+import LeanPool.Lentil.Gadgets.TheoremDeriving
+import LeanPool.Lentil.Gadgets.TheoremLifting
+import LeanPool.Lentil.ProofMode.Basic
+import LeanPool.Lentil.ProofMode.Display
+import LeanPool.Lentil.ProofMode.Location
+import LeanPool.Lentil.ProofMode.Tactics
+import LeanPool.Lentil.ProofMode.Tactics.Apply
+import LeanPool.Lentil.ProofMode.Tactics.Assumption
+import LeanPool.Lentil.ProofMode.Tactics.CheckGoalForm
+import LeanPool.Lentil.ProofMode.Tactics.Clear
+import LeanPool.Lentil.ProofMode.Tactics.CoalesceToPTL
+import LeanPool.Lentil.ProofMode.Tactics.Contradiction
+import LeanPool.Lentil.ProofMode.Tactics.Exists
+import LeanPool.Lentil.ProofMode.Tactics.Exit
+import LeanPool.Lentil.ProofMode.Tactics.Have
+import LeanPool.Lentil.ProofMode.Tactics.Intro
+import LeanPool.Lentil.ProofMode.Tactics.LeftRight
+import LeanPool.Lentil.ProofMode.Tactics.ModalityMisc
+import LeanPool.Lentil.ProofMode.Tactics.Monotone
+import LeanPool.Lentil.ProofMode.Tactics.Normalize
+import LeanPool.Lentil.ProofMode.Tactics.PurePred
+import LeanPool.Lentil.ProofMode.Tactics.RCases
+import LeanPool.Lentil.ProofMode.Tactics.Rename
+import LeanPool.Lentil.ProofMode.Tactics.Revert
+import LeanPool.Lentil.ProofMode.Tactics.Rewrite
+import LeanPool.Lentil.ProofMode.Tactics.Simp
+import LeanPool.Lentil.ProofMode.Tactics.Specialize
+import LeanPool.Lentil.ProofMode.Tactics.SplitAnds
+import LeanPool.Lentil.ProofMode.Tactics.Start
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Rules.BigOp
+import LeanPool.Lentil.Rules.LeadsTo
+import LeanPool.Lentil.Rules.StatePred
+import LeanPool.Lentil.Rules.WF
+import LeanPool.Lentil.Tactics.Basic
+import LeanPool.Lentil.Tactics.FiniteWindow
+import LeanPool.Lentil.Util
+import LeanPool.Lentil.Utils.MetaUtil
+import LeanPool.Lentil.Utils.MiscLemmas
+import LeanPool.Lentil.Utils.SyntaxUtil
+import LeanPool.LocalComplexGeometry
+import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
+import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
+import LeanPool.LocalComplexGeometry.Analytic.ConstantRankLinear
+import LeanPool.LocalComplexGeometry.Analytic.LevelSet
+import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
+import LeanPool.LocalComplexGeometry.Analytic.Rank
+import LeanPool.LocalComplexGeometry.Analytic.Regularization
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.AnalyticSeries
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.EdgeCases
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Examples
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Germs
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalSum
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
+import LeanPool.LocalComplexGeometry.FiniteProjection.Main
+import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
+import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+import LeanPool.LocalComplexGeometry.Germs.Basic
+import LeanPool.LocalComplexGeometry.Germs.Coordinates
+import LeanPool.LocalComplexGeometry.Germs.Representatives
+import LeanPool.LocalComplexGeometry.Germs.Ring
+import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+import LeanPool.LocalComplexGeometry.Nullstellensatz.Coordinates
+import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
+import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisionRepresentatives
+import LeanPool.LocalComplexGeometry.Nullstellensatz.FiberCancellation
+import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
+import LeanPool.LocalComplexGeometry.Nullstellensatz.IdealRepresentatives
+import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
+import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
+import LeanPool.LocalComplexGeometry.Nullstellensatz.OneVariable
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialRepresentativeOperations
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrime
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeCancellation
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeInduction
+import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
+import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
+import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
+import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+import LeanPool.LocalComplexGeometry.Palomar
+import LeanPool.LocalComplexGeometry.WPTBridge.Division
+import LeanPool.LocalComplexGeometry.WPTBridge.DivisionCore
+import LeanPool.LocalComplexGeometry.WPTBridge.DivisionUniqueness
+import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
+import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+import LeanPool.LongGapsBetweenPrimes
+import LeanPool.LongGapsBetweenPrimes.Main
+import LeanPool.LowDimSolvClassification
+import LeanPool.LowDimSolvClassification.Classification1
+import LeanPool.LowDimSolvClassification.Classification2
+import LeanPool.LowDimSolvClassification.Classification3
+import LeanPool.LowDimSolvClassification.GeneralResults
+import LeanPool.LowDimSolvClassification.InstancesConstructions
+import LeanPool.LowDimSolvClassification.InstancesLowDim
+import LeanPool.LowDimSolvClassification.LemmasDim3
+import LeanPool.LowDimSolvClassification.QuotientSolvable
+import LeanPool.LowDimSolvClassification.Semidirect
+import LeanPool.LowDimSolvClassification.Tactics
+import LeanPool.MRiscX
+import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+import LeanPool.MRiscX.AbstractSyntax.Instr
+import LeanPool.MRiscX.AbstractSyntax.MState
+import LeanPool.MRiscX.AbstractSyntax.Map
+import LeanPool.MRiscX.Basic
+import LeanPool.MRiscX.Delab.DelabCode
+import LeanPool.MRiscX.Delab.DelabHoare
+import LeanPool.MRiscX.Elab.CodeElaborator
+import LeanPool.MRiscX.Elab.HandleExpr
+import LeanPool.MRiscX.Elab.HandleNumOrIdent
+import LeanPool.MRiscX.Elab.HoareElaborator
+import LeanPool.MRiscX.Examples.Examples
+import LeanPool.MRiscX.Examples.OtpProof
+import LeanPool.MRiscX.Examples.SingleProofsOTP
+import LeanPool.MRiscX.Examples.SpecAutomation
+import LeanPool.MRiscX.Hoare.EvalLabelInHoare
+import LeanPool.MRiscX.Hoare.HoareAssignmentElab
+import LeanPool.MRiscX.Hoare.HoareCore
+import LeanPool.MRiscX.Hoare.HoareRules
+import LeanPool.MRiscX.Hoare.HoareTheory
+import LeanPool.MRiscX.Parser.AssemblySyntax
+import LeanPool.MRiscX.Parser.HoareSyntax
+import LeanPool.MRiscX.Semantics.MsTheory
+import LeanPool.MRiscX.Semantics.Run
+import LeanPool.MRiscX.Semantics.Specification
+import LeanPool.MRiscX.Tactics.ApplySpec
+import LeanPool.MRiscX.Tactics.CodeProofTactics
+import LeanPool.MRiscX.Tactics.GeneralCustomTactics
+import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+import LeanPool.MRiscX.Tactics.SpecificationTactics
+import LeanPool.MRiscX.Tactics.SplitLastSeq
+import LeanPool.MRiscX.Tactics.TacticUtil
+import LeanPool.MRiscX.Util.BasicTheorems
+import LeanPool.MatchingLogic
+import LeanPool.MatchingLogic.Applicative
+import LeanPool.MatchingLogic.Boxes
+import LeanPool.MatchingLogic.BoxesControl
+import LeanPool.MatchingLogic.Completeness
+import LeanPool.MatchingLogic.Composite
+import LeanPool.MatchingLogic.Core
+import LeanPool.MatchingLogic.Definedness
+import LeanPool.MatchingLogic.DoubleCover
+import LeanPool.MatchingLogic.EntryIII.All
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.AlphaFreshWitnessed
+import LeanPool.MatchingLogic.EntryIII.CanonicalChoice
+import LeanPool.MatchingLogic.EntryIII.CanonicalConstruction
+import LeanPool.MatchingLogic.EntryIII.CanonicalCore
+import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
+import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
+import LeanPool.MatchingLogic.EntryIII.Compactness
+import LeanPool.MatchingLogic.EntryIII.Completion
+import LeanPool.MatchingLogic.EntryIII.Conclusion
+import LeanPool.MatchingLogic.EntryIII.Countertheory
+import LeanPool.MatchingLogic.EntryIII.EmbeddingSemantics
+import LeanPool.MatchingLogic.EntryIII.FiniteReduction
+import LeanPool.MatchingLogic.EntryIII.Fresh
+import LeanPool.MatchingLogic.EntryIII.FreshWitnessElim
+import LeanPool.MatchingLogic.EntryIII.Generated
+import LeanPool.MatchingLogic.EntryIII.Injection
+import LeanPool.MatchingLogic.EntryIII.Lindenbaum
+import LeanPool.MatchingLogic.EntryIII.LocalTheory
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+import LeanPool.MatchingLogic.EntryIII.ModelExistence
+import LeanPool.MatchingLogic.EntryIII.Regression
+import LeanPool.MatchingLogic.EntryIII.Renaming
+import LeanPool.MatchingLogic.EntryIII.SignatureReduction
+import LeanPool.MatchingLogic.EntryIII.SignatureRestriction
+import LeanPool.MatchingLogic.EntryIII.SymbolSupport
+import LeanPool.MatchingLogic.EntryIII.Truth
+import LeanPool.MatchingLogic.EntryIII.WitnessElim
+import LeanPool.MatchingLogic.EntryIII.WitnessPush
+import LeanPool.MatchingLogic.EntryIII.WitnessSupply
+import LeanPool.MatchingLogic.EntryIII.Witnessed
+import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
+import LeanPool.MatchingLogic.EntryPoints
+import LeanPool.MatchingLogic.Independence
+import LeanPool.MatchingLogic.Locality
+import LeanPool.MatchingLogic.Localization
+import LeanPool.MatchingLogic.Necessity
+import LeanPool.MatchingLogic.ProofSystem
+import LeanPool.MatchingLogic.Sanity
+import LeanPool.MatchingLogic.Semantics
+import LeanPool.MatchingLogic.SetVariables
+import LeanPool.MatchingLogic.Sorted
+import LeanPool.MatchingLogic.SortedProof
+import LeanPool.MatchingLogic.Soundness
+import LeanPool.MinModulusUniqueMultisetSum
+import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
+import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
+import LeanPool.MisereGames
+import LeanPool.MisereGames.AugmentedForm
+import LeanPool.MisereGames.AugmentedForm.Lift
+import LeanPool.MisereGames.AugmentedForm.Short
+import LeanPool.MisereGames.Form
+import LeanPool.MisereGames.Form.Adjoint
+import LeanPool.MisereGames.Form.Birthday
+import LeanPool.MisereGames.Form.Classes
+import LeanPool.MisereGames.Form.Misere.Adjoint
+import LeanPool.MisereGames.Form.Misere.Outcome
+import LeanPool.MisereGames.Form.Short
+import LeanPool.MisereGames.GameForm
+import LeanPool.MisereGames.GameForm.Birthday
+import LeanPool.MisereGames.GameForm.Special
+import LeanPool.MisereGames.GameGraph
+import LeanPool.MisereGames.Literature.OnSumsOfPFreeFormsUnderMiserePlay
+import LeanPool.MisereGames.Mathlib.NatOrdinal
+import LeanPool.MisereGames.Mathlib.SimpleGraph
+import LeanPool.MisereGames.Mathlib.Small
+import LeanPool.MisereGames.Misere.Ambient
+import LeanPool.MisereGames.Misere.Blocking
+import LeanPool.MisereGames.Misere.Closures
+import LeanPool.MisereGames.Misere.Comparison
+import LeanPool.MisereGames.Misere.DeadEnding
+import LeanPool.MisereGames.Misere.Hereditary.MaintenanceProviso
+import LeanPool.MisereGames.Misere.IntegerInvertible
+import LeanPool.MisereGames.Misere.LiftIncomparable
+import LeanPool.MisereGames.Misere.NonInvertible
+import LeanPool.MisereGames.Misere.Normal
+import LeanPool.MisereGames.Misere.OutcomeStable
+import LeanPool.MisereGames.Misere.OutcomeStable.PropertyX
+import LeanPool.MisereGames.Misere.PFree
+import LeanPool.MisereGames.Misere.PFreeBlocking
+import LeanPool.MisereGames.Misere.PFreeDeadEnding
+import LeanPool.MisereGames.Misere.Preservation
+import LeanPool.MisereGames.Misere.Quotients
+import LeanPool.MisereGames.Misere.Separation
+import LeanPool.MisereGames.Misere.ShortIncomparable
+import LeanPool.MisereGames.Misere.Stride
+import LeanPool.MisereGames.Misere.TippingPoints
+import LeanPool.MisereGames.Misere.Universe
+import LeanPool.MisereGames.OfSets
+import LeanPool.MisereGames.Outcome
+import LeanPool.MisereGames.Player
+import LeanPool.MisereGames.Ruleset
+import LeanPool.MisereGames.Ruleset.Hackenbush
+import LeanPool.MisereGames.Ruleset.Push
+import LeanPool.MisereGames.Ruleset.Shove
+import LeanPool.MisereGames.Ruleset.Strip
+import LeanPool.MisereGames.Tactic.DocAlias
+import LeanPool.Monlib4
+import LeanPool.Monlib4.LinearAlgebra
+import LeanPool.Monlib4.LinearAlgebra.Coalgebra
+import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
+import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
+import LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite
+import LeanPool.Monlib4.LinearAlgebra.DirectSumFromTo
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.InnerAut
+import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
+import LeanPool.Monlib4.LinearAlgebra.Ips
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
+import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
+import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
+import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
+import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
+import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
+import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
+import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
+import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+import LeanPool.Monlib4.LinearAlgebra.Ips.Strict
+import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.Ips.Vn
+import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
+import LeanPool.Monlib4.LinearAlgebra.IsReal
+import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
+import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+import LeanPool.Monlib4.LinearAlgebra.Matrix
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
+import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
+import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
+import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
+import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
+import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
+import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+import LeanPool.Monlib4.LinearAlgebra.MyBimodule
+import LeanPool.Monlib4.LinearAlgebra.MySpec
+import LeanPool.Monlib4.LinearAlgebra.Nacgor
+import LeanPool.Monlib4.LinearAlgebra.OfNorm
+import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
+import LeanPool.Monlib4.LinearAlgebra.PiStarOrderedRing
+import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.PhiMap
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.QIso
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMulTensor
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
+import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
+import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+import LeanPool.Monlib4.Monlib
+import LeanPool.Monlib4.Other
+import LeanPool.Monlib4.Other.Sonia
+import LeanPool.Monlib4.Preq
+import LeanPool.Monlib4.Preq.Complex
+import LeanPool.Monlib4.Preq.Dite
+import LeanPool.Monlib4.Preq.Equiv
+import LeanPool.Monlib4.Preq.Finset
+import LeanPool.Monlib4.Preq.Ites
+import LeanPool.Monlib4.Preq.RCLikeLe
+import LeanPool.Monlib4.Preq.Set
+import LeanPool.Monlib4.Preq.StarAlgEquiv
+import LeanPool.Monlib4.QuantumGraph
+import LeanPool.Monlib4.QuantumGraph.Basic
+import LeanPool.Monlib4.QuantumGraph.Degree
+import LeanPool.Monlib4.QuantumGraph.Example
+import LeanPool.Monlib4.QuantumGraph.Grad
+import LeanPool.Monlib4.QuantumGraph.Iso
+import LeanPool.Monlib4.QuantumGraph.Matrix
+import LeanPool.Monlib4.QuantumGraph.Nontracial
+import LeanPool.Monlib4.QuantumGraph.OfClassicalGraph
+import LeanPool.Monlib4.QuantumGraph.PiMat
+import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
+import LeanPool.Monlib4.QuantumGraph.QamA
+import LeanPool.Monlib4.QuantumGraph.QamAExample
+import LeanPool.Monlib4.QuantumGraph.ToProjections
+import LeanPool.Monlib4.RepTheory
+import LeanPool.Monlib4.RepTheory.AutMat
+import LeanPool.Monsky
+import LeanPool.Monsky.Appendix
+import LeanPool.Monsky.BasicDefinitions
+import LeanPool.Monsky.MainStatement
+import LeanPool.Monsky.Miscellaneous
+import LeanPool.Monsky.MonskyEven
+import LeanPool.Monsky.RainbowTriangles
+import LeanPool.Monsky.SegmentCounting
+import LeanPool.Monsky.SegmentTriangle
+import LeanPool.Monsky.SimplexBasic
+import LeanPool.Monsky.Square
+import LeanPool.Monsky.TriangleCorollary
+import LeanPool.MoserLatticeColorings
+import LeanPool.MoserLatticeColorings.Basic
+import LeanPool.MoserLatticeColorings.Ring
+import LeanPool.MulticolorTriangleRamsey
+import LeanPool.NashWilliams
+import LeanPool.NashWilliams.Combinatorics
+import LeanPool.NashWilliams.Combinatorics.Front
+import LeanPool.NashWilliams.Combinatorics.Front.Defs
+import LeanPool.NashWilliams.Combinatorics.Front.NashWilliams
+import LeanPool.NashWilliams.Combinatorics.Front.Rank
+import LeanPool.NashWilliams.Combinatorics.Front.Ray
+import LeanPool.NashWilliams.Combinatorics.Front.Shrink
+import LeanPool.NashWilliams.Combinatorics.Ramsey
+import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
+import LeanPool.NashWilliams.Data
+import LeanPool.NashWilliams.Data.Fintype
+import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
+import LeanPool.NashWilliams.Data.Nat
+import LeanPool.NashWilliams.Data.Nat.Nth
+import LeanPool.NashWilliams.Order
+import LeanPool.NashWilliams.Order.TwoBQO
+import LeanPool.NashWilliams.Order.WellQuasiOrder
+import LeanPool.NashWilliams.Order.WellQuasiOrder.Basic
+import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
+import LeanPool.Neukirch
+import LeanPool.Neukirch.ExtensionOfDedekindDomains
+import LeanPool.Neukirch.HilbertRamificationTheory
+import LeanPool.OSforGFF
+import LeanPool.OSforGFF.Bochner
+import LeanPool.OSforGFF.Bochner.FejerPD
+import LeanPool.OSforGFF.Bochner.Main
+import LeanPool.OSforGFF.Bochner.PositiveDefinite
+import LeanPool.OSforGFF.Bochner.Sazonov
+import LeanPool.OSforGFF.Covariance
+import LeanPool.OSforGFF.Covariance.Momentum
+import LeanPool.OSforGFF.Covariance.Parseval
+import LeanPool.OSforGFF.Covariance.Position
+import LeanPool.OSforGFF.Covariance.RealForm
+import LeanPool.OSforGFF.GaussianField
+import LeanPool.OSforGFF.GaussianField.Nuclear
+import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
+import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
+import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearTensorProduct
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.Basis1D
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteFunctions
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteTensorProduct
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.ParametricCalculus
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
+import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzSlicing
+import LeanPool.OSforGFF.General
+import LeanPool.OSforGFF.General.BesselFunction
+import LeanPool.OSforGFF.General.FourierTransforms
+import LeanPool.OSforGFF.General.FrobeniusPositivity
+import LeanPool.OSforGFF.General.FunctionalAnalysis
+import LeanPool.OSforGFF.General.GaussianRBF
+import LeanPool.OSforGFF.General.HadamardExp
+import LeanPool.OSforGFF.General.L2TimeIntegral
+import LeanPool.OSforGFF.General.LaplaceIntegral
+import LeanPool.OSforGFF.General.PositiveDefinite
+import LeanPool.OSforGFF.General.QuantitativeDecay
+import LeanPool.OSforGFF.General.SchurProduct
+import LeanPool.OSforGFF.General.SchwartzTranslationDecay
+import LeanPool.OSforGFF.KolmogorovExtension4
+import LeanPool.OSforGFF.KolmogorovExtension4.AuxLemmas
+import LeanPool.OSforGFF.KolmogorovExtension4.CompactSystem
+import LeanPool.OSforGFF.KolmogorovExtension4.KolmogorovExtension
+import LeanPool.OSforGFF.KolmogorovExtension4.RegularContent
+import LeanPool.OSforGFF.KolmogorovExtension4.Semiring
+import LeanPool.OSforGFF.Measure
+import LeanPool.OSforGFF.Measure.Construct
+import LeanPool.OSforGFF.Measure.GaussianFreeField
+import LeanPool.OSforGFF.Measure.IsGaussian
+import LeanPool.OSforGFF.Measure.Minlos
+import LeanPool.OSforGFF.Measure.MinlosAnalytic
+import LeanPool.OSforGFF.Measure.NuclearSpace
+import LeanPool.OSforGFF.Minlos
+import LeanPool.OSforGFF.Minlos.FinDimMarginals
+import LeanPool.OSforGFF.Minlos.Main
+import LeanPool.OSforGFF.Minlos.MeasurableModification
+import LeanPool.OSforGFF.Minlos.MinlosConcentration
+import LeanPool.OSforGFF.Minlos.NuclearSpace
+import LeanPool.OSforGFF.Minlos.PietschBridge
+import LeanPool.OSforGFF.Minlos.ProjectiveFamily
+import LeanPool.OSforGFF.Minlos.SazonovTightness
+import LeanPool.OSforGFF.OS
+import LeanPool.OSforGFF.OS.Axioms
+import LeanPool.OSforGFF.OS.Master
+import LeanPool.OSforGFF.OS.NonTrivial
+import LeanPool.OSforGFF.OS.OS0Analyticity
+import LeanPool.OSforGFF.OS.OS1Regularity
+import LeanPool.OSforGFF.OS.OS2Invariance
+import LeanPool.OSforGFF.OS.OS3CovarianceRP
+import LeanPool.OSforGFF.OS.OS3MixedRep
+import LeanPool.OSforGFF.OS.OS3MixedRepInfra
+import LeanPool.OSforGFF.OS.OS3ReflectionPositivity
+import LeanPool.OSforGFF.OS.OS4Clustering
+import LeanPool.OSforGFF.OS.OS4Ergodicity
+import LeanPool.OSforGFF.OS.OS4MGF
+import LeanPool.OSforGFF.Schwinger
+import LeanPool.OSforGFF.Schwinger.Defs
+import LeanPool.OSforGFF.Schwinger.GaussianMoments
+import LeanPool.OSforGFF.Schwinger.TwoPoint
+import LeanPool.OSforGFF.Spacetime
+import LeanPool.OSforGFF.Spacetime.Basic
+import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+import LeanPool.OSforGFF.Spacetime.Decomposition
+import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
+import LeanPool.OSforGFF.Spacetime.Euclidean
+import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
+import LeanPool.OSforGFF.Spacetime.ProdIntegrable
+import LeanPool.OSforGFF.Spacetime.TimeTranslation
+import LeanPool.OSforGFF.Spacetime.Tonelli
+import LeanPool.OddPrimeValuationDistribution
+import LeanPool.OddPrimeValuationDistribution.CarryArithmetic
+import LeanPool.OddPrimeValuationDistribution.CarryPolynomial
+import LeanPool.OddPrimeValuationDistribution.GeneratingFunction
+import LeanPool.OddPrimeValuationDistribution.Kummer
+import LeanPool.OddPrimeValuationDistribution.LowValuations
+import LeanPool.OddPrimeValuationDistribution.ValuationBlocks
+import LeanPool.Odlyzko
+import LeanPool.Odlyzko.CompletedZeta.ClassRepresentatives
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenter
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredContinuation
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredHolomorphy
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredReflection
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredRepresentative
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaIntegral
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaPoisson
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaRadial
+import LeanPool.Odlyzko.CompletedZeta.ConeGaussianIntegral
+import LeanPool.Odlyzko.CompletedZeta.ConeGaussianInterchange
+import LeanPool.Odlyzko.CompletedZeta.ConeGaussianRadial
+import LeanPool.Odlyzko.CompletedZeta.Defs
+import LeanPool.Odlyzko.CompletedZeta.FractionalShapeTheta
+import LeanPool.Odlyzko.CompletedZeta.FunctionalEquation
+import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
+import LeanPool.Odlyzko.CompletedZeta.FundamentalConeSeries
+import LeanPool.Odlyzko.CompletedZeta.GammaFactor
+import LeanPool.Odlyzko.CompletedZeta.IdealElementDecomposition
+import LeanPool.Odlyzko.CompletedZeta.IdealThetaUnfolding
+import LeanPool.Odlyzko.CompletedZeta.LogarithmicMellinHalfIntegral
+import LeanPool.Odlyzko.CompletedZeta.RadialKernelFormula
+import LeanPool.Odlyzko.CompletedZeta.RightHalfPlane
+import LeanPool.Odlyzko.CompletedZeta.ShapeMellinTranslation
+import LeanPool.Odlyzko.CompletedZeta.ShapeThetaPeriodicity
+import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
+import LeanPool.Odlyzko.CompletedZeta.TraceDualClass
+import LeanPool.Odlyzko.CompletedZeta.UnitAveragedGaussian
+import LeanPool.Odlyzko.CompletedZeta.UnitDecomposition
+import LeanPool.Odlyzko.CompletedZeta.UnitFundamentalDomain
+import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadial
+import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadialIntegral
+import LeanPool.Odlyzko.CompletedZeta.UnitSlabTranslation
+import LeanPool.Odlyzko.CompletedZeta.VerticalGrowth
+import LeanPool.Odlyzko.CompletedZeta.VerticalLowerBound
+import LeanPool.Odlyzko.DedekindZeta.Coefficients
+import LeanPool.Odlyzko.DedekindZeta.Convergence
+import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
+import LeanPool.Odlyzko.DedekindZeta.IdealPrimeFactorization
+import LeanPool.Odlyzko.DedekindZeta.IdealSeries
+import LeanPool.Odlyzko.DedekindZeta.LocalFactor
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealFactor
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
+import LeanPool.Odlyzko.DedekindZeta.PrimePowerExpansion
+import LeanPool.Odlyzko.ECanonicalDecomposition
+import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaCenterLogBound
+import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaRectangle
+import LeanPool.Odlyzko.ExplicitFormula.FiniteSetAvoidance
+import LeanPool.Odlyzko.ExplicitFormula.GaussDigammaEqDigamma
+import LeanPool.Odlyzko.ExplicitFormula.PoitouEstimate
+import LeanPool.Odlyzko.ExplicitFormula.PoitouTransform
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouContourLimit
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouQuadraticDecay
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedPrimePowerSeriesIntegral
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartar
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartarTransform
+import LeanPool.Odlyzko.ExplicitFormula.TartarPoitouTransform
+import LeanPool.Odlyzko.ExplicitFormula.WeightedDiskArgumentPrinciple
+import LeanPool.Odlyzko.ExplicitFormula.WeightedRectangleArgumentPrinciple
+import LeanPool.Odlyzko.ExplicitFormula.ZeroFreeRectangles
+import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.LogDerivativeResidue
+import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.RectangleIntegral
+import LeanPool.Odlyzko.Numerics.Degree
+import LeanPool.Odlyzko.Numerics.Integrability
+import LeanPool.Odlyzko.Numerics.IntegralTail
+import LeanPool.Odlyzko.Numerics.Tail
+import LeanPool.Odlyzko.Reduction
+import LeanPool.Odlyzko.TestFunction.Amplitude
+import LeanPool.Odlyzko.TestFunction.Basic
+import LeanPool.Odlyzko.TestFunction.Bounds
+import LeanPool.Odlyzko.TestFunction.ComplexFourier
+import LeanPool.Odlyzko.TestFunction.Fourier
+import LeanPool.Odlyzko.TestFunction.Quadratic
+import LeanPool.Odlyzko.TestFunction.TartarDerivativeBounds
+import LeanPool.Odlyzko.TestFunction.TaylorBound
+import LeanPool.Odlyzko.Theta.PoissonSummation
+import LeanPool.Odlyzko.Theta.TraceDualIdeal
+import LeanPool.Odlyzko.Theta.TraceDualLattice
+import LeanPool.OrderPQ
+import LeanPool.OrderPQ.Basic
+import LeanPool.OrderPQ.IsCyclic
+import LeanPool.OrderPQ.Main
+import LeanPool.OrderPQ.MonoidHom
+import LeanPool.OrderPQ.MulZMod
+import LeanPool.OrderPQ.PrimeOrder
+import LeanPool.OrderPQ.SemidirectProduct
+import LeanPool.OrderPQ.TorsionBy
+import LeanPool.PCFTheory
+import LeanPool.PCFTheory.Background
+import LeanPool.PCFTheory.Background.Club
+import LeanPool.PCFTheory.Background.Cofinality
+import LeanPool.PCFTheory.Background.Ordinal
+import LeanPool.PCFTheory.Background.Topology
+import LeanPool.PCFTheory.ClubGuessing
+import LeanPool.PFR
+import LeanPool.PFR.AddCombi.BSG
+import LeanPool.PFR.AddCombi.Convolution.Finite.Defs
+import LeanPool.PFR.AddCombi.Convolution.Finite.Order
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.GroupWithZero.Indicator
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Notation.Indicator
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.GroupWithZero.Indicator
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.Ring.NNRat
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi
+import LeanPool.PFR.AddCombi.Mathlib.Combinatorics.Additive.Energy
+import LeanPool.PFR.AddCombi.Mathlib.Data.Finset.Density
+import LeanPool.PFR.ApproxHomPFR
+import LeanPool.PFR.BoundingMutual
+import LeanPool.PFR.Endgame
+import LeanPool.PFR.EntropyPFR
+import LeanPool.PFR.Fibring
+import LeanPool.PFR.FirstEstimate
+import LeanPool.PFR.ForMathlib.AffineSpaceDim
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.Entropy.Kernel.Group
+import LeanPool.PFR.ForMathlib.Entropy.Kernel.RuzsaDist
+import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
+import LeanPool.PFR.ForMathlib.Entropy.RuzsaSetDist
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.ForMathlib.FourVariables
+import LeanPool.PFR.ForMathlib.ThreeVariables
+import LeanPool.PFR.HomPFR
+import LeanPool.PFR.HundredPercent
+import LeanPool.PFR.ImprovedPFR
+import LeanPool.PFR.Kullback
+import LeanPool.PFR.Main
+import LeanPool.PFR.Mathlib.Algebra.BigOperators.Fin
+import LeanPool.PFR.Mathlib.Algebra.Group.Action.Pointwise.Set.Basic
+import LeanPool.PFR.Mathlib.Data.Fin.Basic
+import LeanPool.PFR.Mathlib.Data.Finset.Basic
+import LeanPool.PFR.Mathlib.LinearAlgebra.Basis.VectorSpace
+import LeanPool.PFR.Mathlib.LinearAlgebra.Dimension.Finrank
+import LeanPool.PFR.Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
+import LeanPool.PFR.Mathlib.LinearAlgebra.Quotient.Basic
+import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
+import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.PFR.Mathlib.Order.Interval.Finset.Defs
+import LeanPool.PFR.Mathlib.Order.Interval.Finset.Fin
+import LeanPool.PFR.MoreRuzsaDist
+import LeanPool.PFR.MultiTauFunctional
+import LeanPool.PFR.RhoFunctional
+import LeanPool.PFR.SecondEstimate
+import LeanPool.PFR.Solution
+import LeanPool.PFR.TauFunctional
+import LeanPool.PFR.TorsionEndgame
+import LeanPool.PFR.WeakPFR
+import LeanPool.PLAcceleratedNesterovLean
+import LeanPool.PLAcceleratedNesterovLean.Convergence
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step2
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Core
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
+import LeanPool.PLAcceleratedNesterovLean.Convergence.ConvergenceHelpers
+import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb
+import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Algebraic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
+import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalArgument
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.HessianBound
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step3
+import LeanPool.PLAcceleratedNesterovLean.Convergence.MainTheoremInternal
+import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError
+import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.NesterovConvergence
+import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
+import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction
+import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
+import LeanPool.PLAcceleratedNesterovLean.Core
+import LeanPool.PLAcceleratedNesterovLean.Core.Defs
+import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
+import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+import LeanPool.PLAcceleratedNesterovLean.MainTheorem
+import LeanPool.PLAcceleratedNesterovLean.MorseBott
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.Bridge
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.BridgeDefs
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.GradAlign
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Basics
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.IFTProof
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.PLImpliesMB
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Derivative
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.IFT
+import LeanPool.PartialCombinatoryAlgebras
+import LeanPool.PartialCombinatoryAlgebras.Basic
+import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
+import LeanPool.PartialCombinatoryAlgebras.FreeCombinatoryAlgebra
+import LeanPool.PartialCombinatoryAlgebras.GraphModel
+import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
+import LeanPool.PartialCombinatoryAlgebras.Programming
+import LeanPool.PartialRegularity
+import LeanPool.PartialRegularity.Extension
+import LeanPool.PebblingLean
+import LeanPool.PebblingLean.Basic
+import LeanPool.PebblingLean.Concentration
+import LeanPool.PebblingLean.Delivery
+import LeanPool.PebblingLean.Examples
+import LeanPool.PebblingLean.FiniteProbability
+import LeanPool.PebblingLean.GraphIso
+import LeanPool.PebblingLean.Hypercube
+import LeanPool.PebblingLean.HypercubePath
+import LeanPool.PebblingLean.HypercubeProduct
+import LeanPool.PebblingLean.LowerBound
+import LeanPool.PebblingLean.Paper
+import LeanPool.PebblingLean.Product
+import LeanPool.PebblingLean.UpperBound
+import LeanPool.PebblingLean.UpperBoundDelivery
+import LeanPool.PebblingLean.UpperBoundLoss
+import LeanPool.PebblingLean.UpperBoundParameters
+import LeanPool.PebblingLean.UpperBoundProbability
+import LeanPool.PebblingLean.UpperBoundRecurrence
+import LeanPool.PebblingLean.Weight
+import LeanPool.PentagonalNumberTheorem
+import LeanPool.PentagonalNumberTheorem.Complex
+import LeanPool.PentagonalNumberTheorem.Generic
+import LeanPool.PentagonalNumberTheorem.Old
+import LeanPool.PentagonalNumberTheorem.Partition
+import LeanPool.PentagonalNumberTheorem.PowerSeries
+import LeanPool.PermanentFormulaLowerBound
+import LeanPool.PhaseRetrieval
+import LeanPool.PhaseRetrieval.Constant
+import LeanPool.PhaseRetrieval.Constant.Internal.AnnulusLocalEstimate
+import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
+import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
+import LeanPool.PhaseRetrieval.Constant.Internal.LeakageEstimate
+import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
+import LeanPool.PhaseRetrieval.Constant.Internal.Local
+import LeanPool.PhaseRetrieval.Constant.Internal.LocalCircleEstimate
+import LeanPool.PhaseRetrieval.Constant.Internal.LocalCore
+import LeanPool.PhaseRetrieval.Constant.Internal.LocalHelpers
+import LeanPool.PhaseRetrieval.Constant.Internal.MainTheorem
+import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
+import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
+import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
+import LeanPool.PhaseRetrieval.DimdPoly
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Auxiliary
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.CoefficientLimitRigidity
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.ExactModulusRecovery
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseCircleEstimate
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.ImportedAnalyticInputs
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.BlockLocalization
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.Definitions
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.DegreeBookkeeping
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ImportedAnalyticInputs
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductAnnulusCircle
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.BasisLocalization
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ImportedAnalyticInputs
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ModulusRigidity
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.OrthogonalCoercivity
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.OrthogonalReduction.OrthogonalReduction
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.PhaseStability
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.ProductAnnulusLocalization
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+import LeanPool.PoincareThreeBody
+import LeanPool.PoincareThreeBody.ActionFactorization
+import LeanPool.PoincareThreeBody.ActionPoisson
+import LeanPool.PoincareThreeBody.AlignedAverageBlowup
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.AnalyticCompactParameterIntegral
+import LeanPool.PoincareThreeBody.AnalyticDensity
+import LeanPool.PoincareThreeBody.AnalyticMinors
+import LeanPool.PoincareThreeBody.AnalyticNormalization
+import LeanPool.PoincareThreeBody.AnalyticParameterIntegral
+import LeanPool.PoincareThreeBody.Averaging
+import LeanPool.PoincareThreeBody.CertifiedPoincareSet
+import LeanPool.PoincareThreeBody.CoefficientNormalization
+import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
+import LeanPool.PoincareThreeBody.CollisionBandObstruction
+import LeanPool.PoincareThreeBody.CollisionIntegralBlowup
+import LeanPool.PoincareThreeBody.Core
+import LeanPool.PoincareThreeBody.Delaunay
+import LeanPool.PoincareThreeBody.DelaunayActions
+import LeanPool.PoincareThreeBody.DelaunayAnchorChart
+import LeanPool.PoincareThreeBody.DelaunayChart
+import LeanPool.PoincareThreeBody.DelaunayFlow
+import LeanPool.PoincareThreeBody.DelaunaySection
+import LeanPool.PoincareThreeBody.DenseResonantObstruction
+import LeanPool.PoincareThreeBody.DifferentialDependence
+import LeanPool.PoincareThreeBody.DisturbingAverageAnalytic
+import LeanPool.PoincareThreeBody.DisturbingCertificate
+import LeanPool.PoincareThreeBody.DisturbingFunction
+import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
+import LeanPool.PoincareThreeBody.DisturbingRegularBound
+import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+import LeanPool.PoincareThreeBody.GeneratingFunction
+import LeanPool.PoincareThreeBody.GlobalEnergySection
+import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
+import LeanPool.PoincareThreeBody.HomologicalEquation
+import LeanPool.PoincareThreeBody.IrrationalTorusFlow
+import LeanPool.PoincareThreeBody.JointBallFiberSeries
+import LeanPool.PoincareThreeBody.JointEccentricAnomaly
+import LeanPool.PoincareThreeBody.JointSlabIntegral
+import LeanPool.PoincareThreeBody.KeplerFlow
+import LeanPool.PoincareThreeBody.KeplerHamiltonian
+import LeanPool.PoincareThreeBody.KeplerOrbit
+import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
+import LeanPool.PoincareThreeBody.LeadingObstruction
+import LeanPool.PoincareThreeBody.LocalEnergyLeaf
+import LeanPool.PoincareThreeBody.MixedPartials
+import LeanPool.PoincareThreeBody.NormalizationClosure
+import LeanPool.PoincareThreeBody.NormalizationInduction
+import LeanPool.PoincareThreeBody.OneTwoResonance
+import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
+import LeanPool.PoincareThreeBody.ParameterDomainTopology
+import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
+import LeanPool.PoincareThreeBody.Perturbation
+import LeanPool.PoincareThreeBody.PoincareSet
+import LeanPool.PoincareThreeBody.PoissonNormalization
+import LeanPool.PoincareThreeBody.Polar
+import LeanPool.PoincareThreeBody.Resonance
+import LeanPool.PoincareThreeBody.ResonantActionObstruction
+import LeanPool.PoincareThreeBody.ResonantAverageSeparation
+import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
+import LeanPool.PoincareThreeBody.ResonantOrbit
+import LeanPool.PoincareThreeBody.RotatingEllipse
+import LeanPool.PoincareThreeBody.SafeAverageAnalytic
+import LeanPool.PoincareThreeBody.SafeCollisionPhase
+import LeanPool.PoincareThreeBody.ValidatedQuadrature
+import LeanPool.PointwiseBirkhoff
+import LeanPool.PointwiseBirkhoff.Main
+import LeanPool.PolyaEnumerationTheorem
+import LeanPool.PolyaEnumerationTheorem.Basic
+import LeanPool.PolyaEnumerationTheorem.Concrete
+import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
+import LeanPool.PolyaEnumerationTheorem.ReductionToFin
+import LeanPool.PolyaEnumerationTheorem.StirlingFirstKindSum
+import LeanPool.Polylean
+import LeanPool.Polylean.Complexes
+import LeanPool.Polylean.Complexes.Constructions.UniversalCover
+import LeanPool.Polylean.Complexes.GraphPaths
+import LeanPool.Polylean.Complexes.Structures.Category
+import LeanPool.Polylean.Complexes.Structures.FreeGroupoid
+import LeanPool.Polylean.Complexes.Structures.Groupoid
+import LeanPool.Polylean.Complexes.Structures.Invertegory
+import LeanPool.Polylean.Complexes.Structures.Quiver
+import LeanPool.Polylean.Complexes.Structures.TwoComplex
+import LeanPool.Polylean.ConjInvLength
+import LeanPool.Polylean.ConjInvLength.Length
+import LeanPool.Polylean.ConjInvLength.LengthBound
+import LeanPool.Polylean.ConjInvLength.LengthNode
+import LeanPool.Polylean.ConjInvLength.MemoLength
+import LeanPool.Polylean.ConjInvLength.ProvedBound
+import LeanPool.Polylean.ConjInvLength.WordTree
+import LeanPool.Polylean.Polymath
+import LeanPool.Polylean.UnitConjecture
+import LeanPool.Polylean.UnitConjecture.AddFreeGroup
+import LeanPool.Polylean.UnitConjecture.Cocycle
+import LeanPool.Polylean.UnitConjecture.EnumDecide
+import LeanPool.Polylean.UnitConjecture.FreeModule
+import LeanPool.Polylean.UnitConjecture.GardamGroup
+import LeanPool.Polylean.UnitConjecture.GardamTheorem
+import LeanPool.Polylean.UnitConjecture.GroupRing
+import LeanPool.Polylean.UnitConjecture.MetabelianGroup
+import LeanPool.Polylean.UnitConjecture.Tactics
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import LeanPool.Polylean.UnitConjecture.Tactics.ReduceGoal
+import LeanPool.Polylean.UnitConjecture.TorsionFree
+import LeanPool.PolynomialMethodRestrictedSums
+import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+import LeanPool.PolynomialMethodRestrictedSums.CauchyDavenportTheorem
+import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
+import LeanPool.PolynomialMethodRestrictedSums.DiasDaSilvaHamidoune
+import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+import LeanPool.Polytopes
+import LeanPool.Polytopes.Cutspace
+import LeanPool.Polytopes.Halfspace
+import LeanPool.Polytopes.MainTheorem
+import LeanPool.Polytopes.Polar
+import LeanPool.Polytopes.Polytope
+import LeanPool.Polytopes.Pre
+import LeanPool.PumpingCfg
+import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
+import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
+import LeanPool.PumpingCfg.ChomskyNormalForm.EmptyElimination
+import LeanPool.PumpingCfg.ChomskyNormalForm.LengthRestriction
+import LeanPool.PumpingCfg.ChomskyNormalForm.TerminalRestriction
+import LeanPool.PumpingCfg.ChomskyNormalForm.Translation
+import LeanPool.PumpingCfg.ChomskyNormalForm.UnitElimination
+import LeanPool.PumpingCfg.ParseTree
+import LeanPool.PumpingCfg.Pumping
+import LeanPool.PumpingCfg.ToMathlib
+import LeanPool.PumpingCfg.Utils
+import LeanPool.PythagoreanPolynomialParametrization
+import LeanPool.PythagoreanPolynomialParametrization.Basic
+import LeanPool.PythagoreanPolynomialParametrization.Explanatory
+import LeanPool.PythagoreanPolynomialParametrization.IntegerValued
+import LeanPool.PythagoreanPolynomialParametrization.Main
+import LeanPool.PythagoreanPolynomialParametrization.Obstructions
+import LeanPool.PythagoreanPolynomialParametrization.Positive
+import LeanPool.PythagoreanPolynomialParametrization.SourceLemmas
+import LeanPool.QuadraticIterates
+import LeanPool.QuadraticIterates.ArchMath1992
+import LeanPool.QuadraticIterates.ArchMath1992.DegreeCriterion
+import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
+import LeanPool.QuadraticIterates.ArchMath1992.Iterates
+import LeanPool.QuadraticIterates.ArchMath1992.Main
+import LeanPool.QuadraticIterates.ArchMath1992.Sequences
+import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Eval
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.EvenComp
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Roots
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Squares
+import LeanPool.QuadraticIterates.Mathlib.Data.Int.DvdSequence
+import LeanPool.QuadraticIterates.Mathlib.Data.Multiset
+import LeanPool.QuadraticIterates.Mathlib.Data.Nat
+import LeanPool.QuadraticIterates.Mathlib.Data.ZMod
+import LeanPool.QuadraticIterates.Mathlib.FieldTheory.Multiquadratic
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduct
+import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
+import LeanPool.QuadraticIterates.Mathlib.RingTheory.MoebiusFactor
+import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
+import LeanPool.QuasiBorelSpaces
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Chain
+import LeanPool.QuasiBorelSpaces.Cont
+import LeanPool.QuasiBorelSpaces.Defs
+import LeanPool.QuasiBorelSpaces.ENNReal
+import LeanPool.QuasiBorelSpaces.Finset
+import LeanPool.QuasiBorelSpaces.FlatReal
+import LeanPool.QuasiBorelSpaces.Functor
+import LeanPool.QuasiBorelSpaces.Hom
+import LeanPool.QuasiBorelSpaces.IsHomDiagonal
+import LeanPool.QuasiBorelSpaces.Lift
+import LeanPool.QuasiBorelSpaces.List
+import LeanPool.QuasiBorelSpaces.List.Encoding
+import LeanPool.QuasiBorelSpaces.MeasureTheory
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Instances
+import LeanPool.QuasiBorelSpaces.MeasureTheory.List
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
+import LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
+import LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace
+import LeanPool.QuasiBorelSpaces.MeasureTheory.Sum
+import LeanPool.QuasiBorelSpaces.Multiset
+import LeanPool.QuasiBorelSpaces.Nat
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Const
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Option
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sigma
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sum
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Fix
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Option
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma
+import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sum
+import LeanPool.QuasiBorelSpaces.OmegaHom
+import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+import LeanPool.QuasiBorelSpaces.Option
+import LeanPool.QuasiBorelSpaces.Option.Instances
+import LeanPool.QuasiBorelSpaces.Pi
+import LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
+import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
+import LeanPool.QuasiBorelSpaces.Prod
+import LeanPool.QuasiBorelSpaces.Prop
+import LeanPool.QuasiBorelSpaces.Quotient
+import LeanPool.QuasiBorelSpaces.Rose
+import LeanPool.QuasiBorelSpaces.Rose.Encoding
+import LeanPool.QuasiBorelSpaces.RoseTree
+import LeanPool.QuasiBorelSpaces.RoseTree.Basic
+import LeanPool.QuasiBorelSpaces.RoseTree.Defs
+import LeanPool.QuasiBorelSpaces.SeparatesPoints
+import LeanPool.QuasiBorelSpaces.Sigma
+import LeanPool.QuasiBorelSpaces.Subtype
+import LeanPool.QuasiBorelSpaces.Sum
+import LeanPool.QuasiBorelSpaces.UnitInterval
+import LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd
+import LeanPool.Rado
+import LeanPool.Rado.Complex.Dirichlet
+import LeanPool.Rado.Complex.PlanarConnected
+import LeanPool.Rado.Complex.Poisson
+import LeanPool.Rado.Complex.SubMean
+import LeanPool.Rado.Main
+import LeanPool.Rado.Surface.Assembly
+import LeanPool.Rado.Surface.Barriers
+import LeanPool.Rado.Surface.Charts
+import LeanPool.Rado.Surface.Germs
+import LeanPool.Rado.Surface.Harmonic
+import LeanPool.Rado.Surface.HolomorphicCompat
+import LeanPool.Rado.Surface.Perron
+import LeanPool.Rado.Topology.PoincareVolterra
+import LeanPool.Rado.Topology.SecondCountable
+import LeanPool.RamanujanNagell
+import LeanPool.RamanujanNagell.Basic
+import LeanPool.RamanujanNagell.Helpers
+import LeanPool.RamanujanTauMissesPrimes
+import LeanPool.RamanujanTauMissesPrimes.Solution
+import LeanPool.Redhill
+import LeanPool.Redhill.BB94
+import LeanPool.Redhill.Common.Conjectures
+import LeanPool.Redhill.Common.MaxAbs
+import LeanPool.Redhill.Common.PairwiseCoprime
+import LeanPool.Redhill.Common.PrimeChain
+import LeanPool.Redhill.Common.Quality
+import LeanPool.Redhill.Common.SubsumCondition
+import LeanPool.Redhill.Common.VWPair
+import LeanPool.Redhill.General.Coprime
+import LeanPool.Redhill.General.Defs
+import LeanPool.Redhill.General.Main
+import LeanPool.Redhill.General.Subsum
+import LeanPool.Redhill.KonyaginPrelude
+import LeanPool.Redhill.Odd.Defs
+import LeanPool.Redhill.Odd.Main
+import LeanPool.Redhill.Odd.Pell
+import LeanPool.Redhill.Odd.Subsum
+import LeanPool.Redhill.ToMathlib.NatAbs
+import LeanPool.Redhill.ToMathlib.NatSumProd
+import LeanPool.RellichKondrachov
+import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H2
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.ArzelaAscoli
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Compactness
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.FrechetKolmogorov
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Kernels
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.TranslationIntegral
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2CompactnessCriterion
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Rellich
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Translation
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimate
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateH1
+import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H2
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global
+import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
+import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
+import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv
+import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
+import LeanPool.RellichKondrachov.MeasureTheory.Measure.HausdorffVolume
+import LeanPool.RiemannMappingTheorem
+import LeanPool.RiemannMappingTheorem.Cindex
+import LeanPool.RiemannMappingTheorem.Defs
+import LeanPool.RiemannMappingTheorem.DerivInj
+import LeanPool.RiemannMappingTheorem.Etape2
+import LeanPool.RiemannMappingTheorem.HasSqrt
+import LeanPool.RiemannMappingTheorem.Hurwitz
+import LeanPool.RiemannMappingTheorem.Main
+import LeanPool.RiemannMappingTheorem.Montel
+import LeanPool.RiemannMappingTheorem.Spaces
+import LeanPool.RiemannMappingTheorem.ToMathlib
+import LeanPool.RiemannMappingTheorem.Uniform
+import LeanPool.RiemannRochFunctionFields
+import LeanPool.RiemannRochFunctionFields.AdeleSpace.Basic
+import LeanPool.RiemannRochFunctionFields.AdeleSpace.FilterChain
+import LeanPool.RiemannRochFunctionFields.Basic
+import LeanPool.RiemannRochFunctionFields.CoordinateFree.AdeleSpace
+import LeanPool.RiemannRochFunctionFields.CoordinateFree.Divisor
+import LeanPool.RiemannRochFunctionFields.CoordinateFree.EllipticCurve
+import LeanPool.RiemannRochFunctionFields.CoordinateFree.RiemannRoch
+import LeanPool.RiemannRochFunctionFields.CoordinateFree.WeilDifferential
+import LeanPool.RiemannRochFunctionFields.Divisor
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.ConcreteRegression
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.DegreeOneDictionary
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusCounting
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusOne
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Infinity
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Instances
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.PicTorsorCore
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.PlaceDictionary
+import LeanPool.RiemannRochFunctionFields.FunctionField.Divisor
+import LeanPool.RiemannRochFunctionFields.FundamentalIdentity
+import LeanPool.RiemannRochFunctionFields.Genus
+import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
+import LeanPool.RiemannRochFunctionFields.Genus.Basic
+import LeanPool.RiemannRochFunctionFields.Genus.Polar
+import LeanPool.RiemannRochFunctionFields.Genus.Ramification
+import LeanPool.RiemannRochFunctionFields.LinearKneser
+import LeanPool.RiemannRochFunctionFields.LocalResidue
+import LeanPool.RiemannRochFunctionFields.Place
+import LeanPool.RiemannRochFunctionFields.PlaceEquiv
+import LeanPool.RiemannRochFunctionFields.RRspace.Basic
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Basic
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Regression
+import LeanPool.RiemannRochFunctionFields.SeparableRelNorm
+import LeanPool.RiemannRochFunctionFields.WeilDifferential
+import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import LeanPool.RlTheoryInLean
+import LeanPool.RlTheoryInLean.Analysis
+import LeanPool.RlTheoryInLean.Analysis.Normed
+import LeanPool.RlTheoryInLean.Analysis.Normed.Group
+import LeanPool.RlTheoryInLean.Analysis.Normed.Group.Basic
+import LeanPool.RlTheoryInLean.Data
+import LeanPool.RlTheoryInLean.Data.Matrix
+import LeanPool.RlTheoryInLean.Data.Matrix.Mul
+import LeanPool.RlTheoryInLean.Data.Matrix.PosDef
+import LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
+import LeanPool.RlTheoryInLean.Defs
+import LeanPool.RlTheoryInLean.MeasureTheory
+import LeanPool.RlTheoryInLean.MeasureTheory.Function
+import LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation
+import LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation.Basic
+import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space
+import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
+import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace
+import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
+import LeanPool.RlTheoryInLean.MeasureTheory.Measure
+import LeanPool.RlTheoryInLean.MeasureTheory.Measure.GiryMonad
+import LeanPool.RlTheoryInLean.MeasureTheory.Measure.Prod
+import LeanPool.RlTheoryInLean.Order
+import LeanPool.RlTheoryInLean.Order.Filter
+import LeanPool.RlTheoryInLean.Order.Filter.Basic
+import LeanPool.RlTheoryInLean.Probability
+import LeanPool.RlTheoryInLean.Probability.Kernel
+import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
+import LeanPool.RlTheoryInLean.Probability.Kernel.Composition
+import LeanPool.RlTheoryInLean.Probability.Kernel.Composition.MapComap
+import LeanPool.RlTheoryInLean.Probability.MarkovChain
+import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
+import LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite
+import LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite.Defs
+import LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
+import LeanPool.RlTheoryInLean.StochasticApproximation
+import LeanPool.RlTheoryInLean.StochasticApproximation.DiscreteGronwall
+import LeanPool.RootSystem
+import LeanPool.RootSystem.An
+import LeanPool.RootSystem.BCn
+import LeanPool.RungeKuttaOrderConditions
+import LeanPool.RungeKuttaOrderConditions.ButcherOrder
+import LeanPool.Rupert
+import LeanPool.Rupert.Affine
+import LeanPool.Rupert.Attr
+import LeanPool.Rupert.Basic
+import LeanPool.Rupert.Convex
+import LeanPool.Rupert.Cube
+import LeanPool.Rupert.Equivalences.AffineRupertEquivRupertSet
+import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
+import LeanPool.Rupert.Equivalences.RupertEquivRupertSet
+import LeanPool.Rupert.Equivalences.Util
+import LeanPool.Rupert.FinCases
+import LeanPool.Rupert.Icosahedron
+import LeanPool.Rupert.MatrixSimps
+import LeanPool.Rupert.Quaternion
+import LeanPool.Rupert.Set
+import LeanPool.Rupert.SnubCube
+import LeanPool.Rupert.Square
+import LeanPool.Rupert.Tetrahedron
+import LeanPool.Rupert.TriakisTetrahedron
+import LeanPool.Sabidussi
+import LeanPool.Sabidussi.Color
+import LeanPool.Sabidussi.CyclicWord
+import LeanPool.Sabidussi.LocalPattern
+import LeanPool.Sabidussi.LoopGraphBridge
+import LeanPool.Sabidussi.LoopMultigraph
+import LeanPool.Sabidussi.OddBalance
+import LeanPool.Sabidussi.OrdinaryCircuit
+import LeanPool.Sabidussi.Parity
+import LeanPool.Sabidussi.Statement
+import LeanPool.SardMoreira
+import LeanPool.SardMoreira.Chart
+import LeanPool.SardMoreira.ChartEstimates
+import LeanPool.SardMoreira.ContDiff
+import LeanPool.SardMoreira.ContDiffMoreiraHolder
+import LeanPool.SardMoreira.ContinuousMultilinearMap
+import LeanPool.SardMoreira.ImplicitFunction
+import LeanPool.SardMoreira.LebesgueDensity
+import LeanPool.SardMoreira.LinearAlgebra
+import LeanPool.SardMoreira.LocalEstimates
+import LeanPool.SardMoreira.MainTheorem
+import LeanPool.SardMoreira.MeasureBallSemicontinuous
+import LeanPool.SardMoreira.MeasureComap
+import LeanPool.SardMoreira.MeasureNNReal
+import LeanPool.SardMoreira.NormedSpace
+import LeanPool.SardMoreira.OuterMeasureDeriv
+import LeanPool.SardMoreira.ToMathlib
+import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+import LeanPool.SardMoreira.ToMathlib.PR31960
+import LeanPool.SardMoreira.ToMathlib.PR32186
+import LeanPool.SardMoreira.ToMathlib.PR32986
+import LeanPool.SardMoreira.ToMathlib.PR32993
+import LeanPool.SardMoreira.ToMathlib.PR33029
+import LeanPool.SardMoreira.ToMathlib.PR33114
+import LeanPool.SardMoreira.Topology
+import LeanPool.SardMoreira.UnifDoublingCover
+import LeanPool.SardMoreira.Unused
+import LeanPool.SardMoreira.UpperLowerSemicontinuous
+import LeanPool.SardMoreira.WithRPowDist
+import LeanPool.SelbergSieve4
+import LeanPool.SelbergSieve4.Applications
+import LeanPool.SelbergSieve4.Applications.BrunTitchmarsh
+import LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
+import LeanPool.SelbergSieve4.AuxResults
+import LeanPool.SelbergSieve4.ForArithmeticFunction
+import LeanPool.SelbergSieve4.ForMathlib
+import LeanPool.SelbergSieve4.ForMathlib.Basic
+import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
+import LeanPool.SelbergSieve4.MainResults
+import LeanPool.SelbergSieve4.Selberg
+import LeanPool.SelbergSieve4.SieveLemmas
+import LeanPool.SelbergSieve4.Tactic
+import LeanPool.SelbergSieve4.Tactic.AesopDiv
+import LeanPool.SelbergSieve4.Tactic.AesopInit
+import LeanPool.SelbergSieve4.Tactic.Multiplicativity
+import LeanPool.SelbergSieve4.UpperBoundSieve
+import LeanPool.SemicircleCheck
+import LeanPool.SemicircleCheck.CatalanRecurrence
+import LeanPool.SemicircleCheck.Census
+import LeanPool.SemicircleCheck.EvenCard
+import LeanPool.SemicircleCheck.FinRotateLemmas
+import LeanPool.SemicircleCheck.GenusNoncrossing
+import LeanPool.SemicircleCheck.RotationArithmetic
+import LeanPool.SemicircleCheck.ShiftTwoEquiv
+import LeanPool.SemicircleLaw
+import LeanPool.SemicircleLaw.SemicircleDistribution
+import LeanPool.Sensitivity
+import LeanPool.Sensitivity.Basic
+import LeanPool.Sensitivity.Consequences
+import LeanPool.Sensitivity.Defs
+import LeanPool.Sensitivity.Huang
+import LeanPool.Sensitivity.HuangBridge
+import LeanPool.Sensitivity.Main
+import LeanPool.Sensitivity.Multilinear
+import LeanPool.Sensitivity.Parity
+import LeanPool.Sensitivity.Subcube
+import LeanPool.SetTheory
+import LeanPool.SetTheory.Basic
+import LeanPool.SetTheory.ElementaryEmbedding
+import LeanPool.SetTheory.KunenInconsistency
+import LeanPool.SetTheory.Omega
+import LeanPool.SetTheory.OrderTheory
+import LeanPool.SetTheory.Ordinals
+import LeanPool.SetTheory.Realize
+import LeanPool.SetTheory.RealizeBuilders
+import LeanPool.SetTheory.RealizeCore
+import LeanPool.SetTheory.SimpAttr
+import LeanPool.Shannon1948Formalization
+import LeanPool.Shannon1948Formalization.Entropy
+import LeanPool.Shannon1948Formalization.Entropy.Approx
+import LeanPool.Shannon1948Formalization.Entropy.Converse
+import LeanPool.Shannon1948Formalization.Entropy.Core
+import LeanPool.Shannon1948Formalization.Entropy.Final
+import LeanPool.Shannon1948Formalization.Entropy.Gibbs
+import LeanPool.Shannon1948Formalization.Entropy.Joint
+import LeanPool.Shannon1948Formalization.Entropy.Properties
+import LeanPool.Shannon1948Formalization.Entropy.Rational
+import LeanPool.Shannon1948Formalization.Entropy.Uniform
+import LeanPool.SingularModuli
+import LeanPool.SingularModuli.QuadraticOrder.Basic
+import LeanPool.SingularModuli.QuadraticOrder.CanonicalForm
+import LeanPool.SingularModuli.QuadraticOrder.Discriminant
+import LeanPool.SingularModuli.QuadraticOrder.Norm
+import LeanPool.SingularModuli.QuadraticOrder.Prime
+import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
+import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
+import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
+import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
+import LeanPool.SingularModuli.QuadraticOrder.Prime.Split
+import LeanPool.SingularModuli.QuadraticOrder.RootCounting
+import LeanPool.SingularModuli.QuadraticOrder.Verification
+import LeanPool.SpecialNumbers
+import LeanPool.SpecialNumbers.Euclidian
+import LeanPool.SpecialNumbers.Eulerian
+import LeanPool.SpecialNumbers.Sylvester
+import LeanPool.SpectralPositivity
+import LeanPool.SpectralPositivity.Matrix.MMatrixInverse
+import LeanPool.SpectralPositivity.Matrix.MetzlerExp
+import LeanPool.SpectralPositivity.Matrix.NonnegPower
+import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
+import LeanPool.SpectralPositivity.Operator.Jentzsch
+import LeanPool.SpectralPositivity.Operator.JentzschProof
+import LeanPool.SpectralPositivity.Operator.KernelPositivity
+import LeanPool.SpectralPositivity.Operator.SpectralRadius
+import LeanPool.SpherePacking
+import LeanPool.SpherePacking.Conclusion
+import LeanPool.SpherePacking.Foundations
+import LeanPool.SpherePacking.GammaAnalysis
+import LeanPool.SpherePacking.HarmonicAnalysis
+import LeanPool.SpherePacking.MellinAnalysis
+import LeanPool.SpherePacking.PackingBound
+import LeanPool.SpherePacking.RadialConstruction
+import LeanPool.SpherePacking.SaddleAnalysis
+import LeanPool.SteinhausThreeGap
+import LeanPool.SteinhausThreeGap.Basic
+import LeanPool.SumsThreeSquares
+import LeanPool.SumsThreeSquares.MinkowskiConvex
+import LeanPool.SumsThreeSquares.SumThreeSquares
+import LeanPool.Sundogcert
+import LeanPool.Sundogcert.CertWall
+import LeanPool.Sundogcert.Certificate
+import LeanPool.Sundogcert.CheckCost
+import LeanPool.Sundogcert.ClauseGadget
+import LeanPool.Sundogcert.DecodingNPHard
+import LeanPool.Sundogcert.Degradation
+import LeanPool.Sundogcert.Instance
+import LeanPool.Sundogcert.Looseness
+import LeanPool.Sundogcert.MatchingNPHard
+import LeanPool.Sundogcert.RSCertificate
+import LeanPool.Sundogcert.SATNPHard
+import LeanPool.Sundogcert.SATReduction
+import LeanPool.Sundogcert.SATReductionForward
+import LeanPool.Sundogcert.SATReductionIncidence
+import LeanPool.Sundogcert.SATReductionMain
+import LeanPool.Sundogcert.SATReductionReverse
+import LeanPool.Sundogcert.Scaling
+import LeanPool.Sundogcert.ThreeDMReindex
+import LeanPool.Sundogcert.VarWheel
+import LeanPool.SyntheticEuclid4
+import LeanPool.SyntheticEuclid4.Axioms
+import LeanPool.SyntheticEuclid4.PermTactics
+import LeanPool.SyntheticEuclid4.SyntheticEuclid4
+import LeanPool.SyntheticEuclid4.Tactics
+import LeanPool.ThreeGap
+import LeanPool.ThreeGap.ChevallierCount
+import LeanPool.ThreeGap.ChevallierGapBound
+import LeanPool.ThreeGap.DeltaCost
+import LeanPool.ThreeGap.EuclideanAngle
+import LeanPool.ThreeGap.EuclideanDefect
+import LeanPool.ThreeGap.EuclideanFiveDistanceSharp
+import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
+import LeanPool.ThreeGap.EuclideanGrowth
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import LeanPool.ThreeGap.EuclideanGrowthFour
+import LeanPool.ThreeGap.EuclideanNN
+import LeanPool.ThreeGap.EuclideanPacking
+import LeanPool.ThreeGap.EuclideanRecords
+import LeanPool.ThreeGap.FiveDistance
+import LeanPool.ThreeGap.FiveDistanceHM
+import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
+import LeanPool.ThreeGap.LinftyThreeTorusNine
+import LeanPool.ThreeGap.ModTwoGrowth
+import LeanPool.ThreeGap.SimultaneousApprox
+import LeanPool.ThreeGap.SimultaneousDirichlet
+import LeanPool.ThreeGap.SupNormGrowth
+import LeanPool.ThreeGap.TorusReduction
+import LeanPool.Turan3
+import LeanPool.Turan3.Turans3rdProof
+import LeanPool.TwoColoringOneRound
+import LeanPool.TwoColoringOneRound.API
+import LeanPool.TwoColoringOneRound.Definitions
+import LeanPool.TwoColoringOneRound.LowerBound
+import LeanPool.TwoColoringOneRound.LowerBound.Certificate
+import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
+import LeanPool.TwoColoringOneRound.LowerBound.Correlation
+import LeanPool.TwoColoringOneRound.LowerBound.Defs
+import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
+import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0Int
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock0
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock1
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock2
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock4
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock5
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntBlock6
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0IntGoal
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSi
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiInt
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars0to3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars12to15
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars16to19
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars20to22
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars4to7
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0Vars8to11
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars0to3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars12to15
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars16to19
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars20to22
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars4to7
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1Vars8to11
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars0to3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars12to15
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars16to19
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars20to22
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars4to7
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2Vars8to11
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars0to3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars12to15
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars16to19
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars20to22
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars4to7
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock3Vars8to11
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars0to3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars12to15
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars16to19
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars20to22
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars4to7
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4Vars8to11
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars0to3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars12to15
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars16to19
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars20to22
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars4to7
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5Vars8to11
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars0to3
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars12to15
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars16to19
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars20to22
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars4to7
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6Vars8to11
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntGoal
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Interface
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuLinear
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuWitness
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000ZData
+import LeanPool.TwoColoringOneRound.LowerBound.N9
+import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
+import LeanPool.TwoColoringOneRound.LowerBound.Sanity
+import LeanPool.TwoColoringOneRound.LowerBound.UpperBound
+import LeanPool.TwoColoringOneRound.MainResults
+import LeanPool.TwoColoringOneRound.Reduction
+import LeanPool.TwoColoringOneRound.SimpleBounds
+import LeanPool.TwoColoringOneRound.UpperBound
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Basic
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Regions
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
+import LeanPool.UlmsTheorem
+import LeanPool.UlmsTheorem.Basic
+import LeanPool.UlmsTheorem.PGroups.Basic
+import LeanPool.UlmsTheorem.PGroups.Defs
+import LeanPool.UlmsTheorem.PGroups.Heights
+import LeanPool.UlmsTheorem.PGroups.Morphisms
+import LeanPool.UlmsTheorem.PGroups.Socle
+import LeanPool.UlmsTheorem.PGroups.Subgroups
+import LeanPool.UlmsTheorem.PGroups.UlmInvariants
+import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
+import LeanPool.UlmsTheorem.Regression
+import LeanPool.UlmsTheorem.Ulm.Classification
+import LeanPool.UlmsTheorem.Ulm.Extension
+import LeanPool.UlmsTheorem.Ulm.Invariance
+import LeanPool.UlmsTheorem.Ulm.Pure
+import LeanPool.UlmsTheorem.Ulm.Theorem
+import LeanPool.UnconditionalSchauderBasis
+import LeanPool.VirasoroProject
+import LeanPool.VirasoroProject.CentralChargeCalc
+import LeanPool.VirasoroProject.CentralExtension
+import LeanPool.VirasoroProject.Commutator
+import LeanPool.VirasoroProject.CyclicTripleSum
+import LeanPool.VirasoroProject.FockSpace
+import LeanPool.VirasoroProject.FockSpaceSugawara
+import LeanPool.VirasoroProject.HeisenbergAlgebra
+import LeanPool.VirasoroProject.IndexTri
+import LeanPool.VirasoroProject.IsCentralExtension
+import LeanPool.VirasoroProject.LieAlgebraModuleUEA
+import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
+import LeanPool.VirasoroProject.LieCohomologySmallDegree
+import LeanPool.VirasoroProject.LieVerma
+import LeanPool.VirasoroProject.SectionSES
+import LeanPool.VirasoroProject.Sugawara
+import LeanPool.VirasoroProject.ToMathlib
+import LeanPool.VirasoroProject.ToMathlib.Algebra
+import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie
+import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
+import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Basic
+import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra
+import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis
+import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
+import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
+import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp
+import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp.Supported
+import LeanPool.VirasoroProject.ToMathlib.Topology
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.ConstMulAction
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum.Basic
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
+import LeanPool.VirasoroProject.ToMathlib.Topology.Order
+import LeanPool.VirasoroProject.VermaModule
+import LeanPool.VirasoroProject.VirasoroAlgebra
+import LeanPool.VirasoroProject.VirasoroCocycle
+import LeanPool.VirasoroProject.VirasoroVerma
+import LeanPool.VirasoroProject.WittAlgebra
+import LeanPool.VirasoroProject.WittAlgebraCohomology
+import LeanPool.Vlasov
+import LeanPool.Vlasov.Base
+import LeanPool.Vlasov.Base.Geometry
+import LeanPool.Vlasov.Basic
+import LeanPool.Vlasov.ForMathlib
+import LeanPool.Vlasov.ForMathlib.PicardLindelof
+import LeanPool.Vlasov.OT
+import LeanPool.Vlasov.OT.CharacteristicFlow
+import LeanPool.Vlasov.OT.Coupling
+import LeanPool.Vlasov.OT.Wasserstein
+import LeanPool.Vlasov.OT.WeakToLagrangian
+import LeanPool.Vlasov.OT.WellPosedness
+import LeanPool.Wallace
+import LeanPool.Wallace.BlockFilters
+import LeanPool.Wallace.BlockLimit
+import LeanPool.Wallace.BoundedIndependentMap
+import LeanPool.Wallace.CoefficientTransfiniteExtension
+import LeanPool.Wallace.ConcreteClosure
+import LeanPool.Wallace.ConcreteData
+import LeanPool.Wallace.ConcreteFusionRun
+import LeanPool.Wallace.ConcreteLocalSetup
+import LeanPool.Wallace.CountableClosure
+import LeanPool.Wallace.CountableDisjointization
+import LeanPool.Wallace.FiniteCombinatorics
+import LeanPool.Wallace.FullTopology
+import LeanPool.Wallace.FullTopologyMain
+import LeanPool.Wallace.FusionLimit
+import LeanPool.Wallace.FusionSchedule
+import LeanPool.Wallace.FusionStage
+import LeanPool.Wallace.GeneralMain
+import LeanPool.Wallace.GlobalAssembly
+import LeanPool.Wallace.InitialCharacter
+import LeanPool.Wallace.LocalEnumeration
+import LeanPool.Wallace.LocalFusion
+import LeanPool.Wallace.MathlibFoundations
+import LeanPool.Wallace.NontrivialSequences
+import LeanPool.Wallace.PackageTransport
+import LeanPool.Wallace.RationalAssembly
+import LeanPool.Wallace.RationalClosure
+import LeanPool.Wallace.RationalData
+import LeanPool.Wallace.RationalFusionRun
+import LeanPool.Wallace.RationalLocalSetup
+import LeanPool.Wallace.RationalTransfiniteExtension
+import LeanPool.Wallace.RationalTriangularPreprocess
+import LeanPool.Wallace.RealMain
+import LeanPool.Wallace.Result
+import LeanPool.Wallace.SeparationInterface
+import LeanPool.Wallace.TorsionFreeCoordinate
+import LeanPool.Wallace.TransfiniteExtension
+import LeanPool.Wallace.TriangularPreprocess
+import LeanPool.Wallace.TychonoffWallace
+import LeanPool.Wallace.UniformKronecker
+import LeanPool.WhiteheadTheorem
+import LeanPool.WhiteheadTheorem.Auxiliary
+import LeanPool.WhiteheadTheorem.Basic
+import LeanPool.WhiteheadTheorem.CWComplex.Basic
+import LeanPool.WhiteheadTheorem.CWComplex.IProd.Def
+import LeanPool.WhiteheadTheorem.CWComplex.IProd.Iso
+import LeanPool.WhiteheadTheorem.Compressible.CWComplex
+import LeanPool.WhiteheadTheorem.Compressible.Defs
+import LeanPool.WhiteheadTheorem.Compressible.Disk
+import LeanPool.WhiteheadTheorem.Compressible.WeakEquiv
+import LeanPool.WhiteheadTheorem.Defs
+import LeanPool.WhiteheadTheorem.Exponential
+import LeanPool.WhiteheadTheorem.HEP.Cofibration
+import LeanPool.WhiteheadTheorem.HEP.Cube
+import LeanPool.WhiteheadTheorem.HEP.CubeJar
+import LeanPool.WhiteheadTheorem.HEP.Retract
+import LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt
+import LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
+import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Algebra
+import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression
+import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
+import LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq
+import LeanPool.WhiteheadTheorem.Shapes.Cube
+import LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap
+import LeanPool.WhiteheadTheorem.Shapes.Disk
+import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
+import LeanPool.WhiteheadTheorem.Shapes.Jar
+import LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
+import LeanPool.WhiteheadTheorem.Shapes.Maps
+import LeanPool.WhiteheadTheorem.Shapes.Pushout
+import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
+import LeanPool.ZFLean
+import LeanPool.ZFLean.Basic
+import LeanPool.ZFLean.Booleans
+import LeanPool.ZFLean.Embeddings
+import LeanPool.ZFLean.Functions
+import LeanPool.ZFLean.Integers
+import LeanPool.ZFLean.Isomorphisms
+import LeanPool.ZFLean.IsomorphismsFunsToPowRel
+import LeanPool.ZFLean.IsomorphismsZFNatIso
+import LeanPool.ZFLean.Naturals
+import LeanPool.ZFLean.Rationals
+import LeanPool.ZFLean.Sum
+import LeanPool.ZFLean.Tactics
+import LeanPool.Zeta3Irrational
+import LeanPool.Zeta3Irrational.Basic
+import LeanPool.Zeta3Irrational.Bound
+import LeanPool.Zeta3Irrational.Chebyshev
+import LeanPool.Zeta3Irrational.D
+import LeanPool.Zeta3Irrational.Equality
+import LeanPool.Zeta3Irrational.Integral
+import LeanPool.Zeta3Irrational.LegendrePoly
+import LeanPool.Zeta3Irrational.LinearForm
+import LeanPool.ZetaH123
+import LeanPool.ZetaH123.H1
+import LeanPool.ZetaH123.H2
+import LeanPool.ZetaH123.H3
+import LeanPool.ZetaH123.Lem41
+import LeanPool.ZetaZeros
+import LeanPool.ZetaZeros.Defs
+import LeanPool.ZetaZeros.Hilbert.AlphaExpansion
+import LeanPool.ZetaZeros.Hilbert.Basis
+import LeanPool.ZetaZeros.Hilbert.Defs
+import LeanPool.ZetaZeros.Hilbert.Dimensions
+import LeanPool.ZetaZeros.Hilbert.FIdentity
+import LeanPool.ZetaZeros.Hilbert.InnerReal
+import LeanPool.ZetaZeros.Hilbert.InnerRealL2
+import LeanPool.ZetaZeros.Hilbert.Integrals
+import LeanPool.ZetaZeros.Hilbert.L2
+import LeanPool.ZetaZeros.Hilbert.Subspaces
+import LeanPool.ZetaZeros.Hilbert.Symmetry
+import LeanPool.ZetaZeros.Hilbert.SymmetryL2
+import LeanPool.ZetaZeros.Main
+import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.MontgomeryTaylor.AffineKernel
+import LeanPool.ZetaZeros.MontgomeryTaylor.Basic
+import LeanPool.ZetaZeros.MontgomeryTaylor.Evaluation
+import LeanPool.ZetaZeros.MontgomeryTaylor.Integrability
+import LeanPool.ZetaZeros.MontgomeryTaylor.Reduction
+import LeanPool.ZetaZeros.MontgomeryTaylor.TestFunction
+import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
+import LeanPool.ZetaZeros.Zeta.Asymptotics
+import LeanPool.ZetaZeros.Zeta.Basic
+import LeanPool.ZetaZeros.Zeta.Cutoff
+import LeanPool.ZetaZeros.Zeta.Defs
+import LeanPool.ZetaZeros.Zeta.Finite
+import LeanPool.ZetaZeros.Zeta.Kernel
+import LeanPool.ZetaZeros.Zeta.Mass
+import LeanPool.ZetaZeros.Zeta.OrderConj
+import LeanPool.ZetaZeros.Zeta.Proportion
+import LeanPool.ZetaZeros.Zeta.Transfer
+import LeanPool.ZhangYeungInequality
+import LeanPool.ZhangYeungInequality.CopyLemma
+import LeanPool.ZhangYeungInequality.Delta
+import LeanPool.ZhangYeungInequality.EntropyRegion
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.ConditionalIndependence
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.Basic
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.MutualInfo
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Measure
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Pair
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Uniform
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Card
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Insert
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Constructions.Pi
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Countable
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Dirac
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.IdentDistrib
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Kernel.IndepFun
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Kernel.Composition.Comp
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Kernel.Disintegration
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
+import LeanPool.ZhangYeungInequality.Prelude
+import LeanPool.ZhangYeungInequality.Test
+import LeanPool.ZhangYeungInequality.Test.CopyLemma
+import LeanPool.ZhangYeungInequality.Test.Delta
+import LeanPool.ZhangYeungInequality.Test.EntropyRegion
+import LeanPool.ZhangYeungInequality.Test.Theorem2
+import LeanPool.ZhangYeungInequality.Test.Theorem3
+import LeanPool.ZhangYeungInequality.Test.Theorem4
+import LeanPool.ZhangYeungInequality.Test.Theorem5
+import LeanPool.ZhangYeungInequality.Theorem2
+import LeanPool.ZhangYeungInequality.Theorem3
+import LeanPool.ZhangYeungInequality.Theorem4
+import LeanPool.ZhangYeungInequality.Theorem5
