@@ -3,8 +3,9 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.ProofAliases
+public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.ProofAliases
 
 /-!
 # Main theorem
@@ -12,6 +13,8 @@ import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.ProofAliases
 The complete reader-facing interface: the four non-Mathlib definitions needed
 to read the result, followed by one theorem.
 -/
+
+@[expose] public section
 
 namespace SaxlCounterexamples.MainTheorems
 

@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
 
 /-!
 # meromorphic-trace: the argument principle and the fibre trace of functions (namespace `RS.MTrace`)
@@ -79,3 +80,5 @@ API summary (see `docs/design/meromorphic-trace.md`). Standing surface hypothese
 * **laurent-tails (CC8)**: no direct edge (per the design, nothing here is laurent-tails-facing
   beyond what `residue-calculus`/`form-trace-tower` already mediate).
 -/
+
+@[expose] public section

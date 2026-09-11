@@ -3,23 +3,27 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import Lean.Elab.Tactic.Basic
-import LeanPool.MRiscX.AbstractSyntax.Instr
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import LeanPool.MRiscX.Semantics.Specification
-import LeanPool.MRiscX.Elab.HandleNumOrIdent
-import LeanPool.MRiscX.Elab.HandleExpr
-import LeanPool.MRiscX.Tactics.TacticUtil
-import LeanPool.MRiscX.Tactics.GeneralCustomTactics
-import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+module
 
-import Mathlib.Data.Set.Basic
+public import Lean.Elab.Tactic.Basic
+public import LeanPool.MRiscX.AbstractSyntax.Instr
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public import LeanPool.MRiscX.Semantics.Specification
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+public import LeanPool.MRiscX.Elab.HandleExpr
+public import LeanPool.MRiscX.Tactics.TacticUtil
+public import LeanPool.MRiscX.Tactics.GeneralCustomTactics
+public import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+
+public import Mathlib.Data.Set.Basic
 
 /-!
 # ApplySpec
 
 This module provides the tactic applying per-instruction specifications.
 -/
+
+@[expose] public section
 
 open Lean Meta Elab Parser Tactic Syntax Term
 

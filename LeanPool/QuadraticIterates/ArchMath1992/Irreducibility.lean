@@ -3,9 +3,11 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import LeanPool.QuadraticIterates.ArchMath1992.Iterates
-import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Eval
-import LeanPool.QuadraticIterates.Mathlib.Data.Multiset
+module
+
+public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
+public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Eval
+public import LeanPool.QuadraticIterates.Mathlib.Data.Multiset
 
 /-!
 # Irreducibility of the iterates over `ℚ`
@@ -19,6 +21,8 @@ no `c_n` is a square when `-a` is not one, every `f_n` is irreducible (Corollary
 Part of the formalization of M. Stoll, *Galois groups over ℚ of some iterated polynomials*,
 Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 -/
+
+@[expose] public section
 
 open Polynomial
 

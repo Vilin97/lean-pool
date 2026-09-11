@@ -3,14 +3,15 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import LeanPool.OSforGFF.Measure.GaussianFreeField
-import LeanPool.OSforGFF.OS.OS3ReflectionPositivity
-import LeanPool.OSforGFF.OS.OS0Analyticity
-import LeanPool.OSforGFF.OS.OS1Regularity
-import LeanPool.OSforGFF.OS.OS2Invariance
-import LeanPool.OSforGFF.OS.OS4Clustering
-import LeanPool.OSforGFF.OS.OS4Ergodicity
+public import LeanPool.OSforGFF.Measure.GaussianFreeField
+public import LeanPool.OSforGFF.OS.OS3ReflectionPositivity
+public import LeanPool.OSforGFF.OS.OS0Analyticity
+public import LeanPool.OSforGFF.OS.OS1Regularity
+public import LeanPool.OSforGFF.OS.OS2Invariance
+public import LeanPool.OSforGFF.OS.OS4Clustering
+public import LeanPool.OSforGFF.OS.OS4Ergodicity
 
 /-!
 # Master Theorem
@@ -27,6 +28,8 @@ Assembles OS0–OS4 into `gaussianFreeField_satisfies_all_OS_axioms`:
 
 Unconditional theorem: only requires m > 0.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -7,11 +7,15 @@ Authors: Utensil Song
 
 Coordinate formulas used by the Zhou fiber-shear conjugacy. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyFirst
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyFirst
 
 /-!
 The dual action conjugacy coordinates component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualActionConjugacyCoordinates

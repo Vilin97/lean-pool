@@ -3,13 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
-import Mathlib.Analysis.Convex.GaugeRescale
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.Analysis.LocallyConvex.WithSeminorms
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Topology.Algebra.Module.LocallyConvex
-import Mathlib.Topology.Homotopy.Lifting
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
+public import Mathlib.Analysis.Convex.GaugeRescale
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.Analysis.LocallyConvex.WithSeminorms
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.Topology.Algebra.Module.LocallyConvex
+public import Mathlib.Topology.Homotopy.Lifting
 
 /-!
 # The disk has no retraction onto its boundary
@@ -19,6 +21,8 @@ covering map `Circle.exp : ℝ → S¹`: a map from the contractible closed disk
 lifts to `ℝ`, whereas its restriction to the boundary cannot be the identity because the
 standard boundary loop has lifts whose endpoints differ by `2π`.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

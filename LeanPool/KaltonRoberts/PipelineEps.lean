@@ -13,14 +13,18 @@ then concludes the exact `C₂` bound via `∀ ε > 0, M ≤ C₂ + ε ⟹ M ≤
 
 **Reference**: Section 5 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Pipeline
-import LeanPool.KaltonRoberts.EpsilonRecombination
+module
+
+public import LeanPool.KaltonRoberts.Pipeline
+public import LeanPool.KaltonRoberts.EpsilonRecombination
 
 /-!
 # Epsilon pipeline
 
 Spine theorems with epsilon-loss recombination and the final exact `C₂` bound.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

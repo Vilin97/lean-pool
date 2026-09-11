@@ -10,18 +10,22 @@ proves the compact-dual character basis used by the spatial implementation;
 the crossed-product generator calculation is kept in the factor layer.
 Paper: §3.
 -/
-import Mathlib.Analysis.Fourier.Notation
-import Mathlib.MeasureTheory.Function.ContinuousMapDense
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Group.Integral
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.TotallySplit
-import Mathlib.Topology.Metrizable.Urysohn
-import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
+module
+
+public import Mathlib.Analysis.Fourier.Notation
+public import Mathlib.MeasureTheory.Function.ContinuousMapDense
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Group.Integral
+public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.RingTheory.TotallySplit
+public import Mathlib.Topology.Metrizable.Urysohn
+public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
 
 /-!
 The fourier component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFourier

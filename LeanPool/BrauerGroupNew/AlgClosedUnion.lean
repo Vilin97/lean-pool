@@ -3,9 +3,11 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.RingTheory.Flat.Basic
-import Mathlib.RingTheory.TensorProduct.Free
+module
+
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.TensorProduct.Free
 
 /-!
 # Tensor products over algebraic closures
@@ -13,6 +15,8 @@ import Mathlib.RingTheory.TensorProduct.Free
 This file ports auxiliary results about finite intermediate fields inside an algebraic
 closure and tensor products over their directed union.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

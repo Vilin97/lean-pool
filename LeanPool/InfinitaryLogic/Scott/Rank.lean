@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.Sentence
-import LeanPool.InfinitaryLogic.Scott.RefinementCount
-import Mathlib.SetTheory.Cardinal.Regular
+module
+
+public import LeanPool.InfinitaryLogic.Scott.Sentence
+public import LeanPool.InfinitaryLogic.Scott.RefinementCount
+public import Mathlib.SetTheory.Cardinal.Regular
 /-!
 # Scott Rank
 
@@ -27,6 +29,8 @@ We define Scott rank as sup {elementRank a + 1 : a ∈ M}, where elementRank a i
 least ordinal α such that any tuple extending with a is determined by its α-type.
 This is equivalent to the stabilization ordinal approach but more compositional.
 -/
+
+@[expose] public section
 
 universe u v w
 

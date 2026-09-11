@@ -6,8 +6,12 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 
 /- Semantic invariance under injective variable embeddings is implemented by
 the shared renaming stack.  This module remains as its source-compatible import. -/
-import LeanPool.MatchingLogic.EntryIII.Injection
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Injection
 
 /-!
 # MatchingLogic.EntryIII.EmbeddingSemantics
 -/
+
+@[expose] public section

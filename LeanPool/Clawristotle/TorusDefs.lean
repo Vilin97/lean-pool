@@ -3,9 +3,11 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+module
+
+public import LeanPool.Clawristotle.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 /-!
 # Torus Type Definitions and Differential Operators
@@ -14,6 +16,8 @@ Defines the 3-torus T^3 = (R/Z)^3, the projection `torusMk`, the periodic lift,
 and differential operators (`torusGradX`, `torusDivX`, `torusCurlX`) via the
 periodic lift. The `FlatTorus3` instance is assembled in `TorusInstance.lean`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real Filter
 

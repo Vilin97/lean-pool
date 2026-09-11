@@ -3,20 +3,24 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Probability.ProbabilityMassFunction.Basic
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.MeasurableSpace.Defs
-import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+module
 
-import LeanPool.RlTheoryInLean.Defs
-import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
-import LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
-import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
+public import Mathlib.Probability.ProbabilityMassFunction.Basic
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.MeasureTheory.MeasurableSpace.Defs
+public import Mathlib.Probability.Kernel.Composition.IntegralCompProd
+
+public import LeanPool.RlTheoryInLean.Defs
+public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
+public import LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
+public import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite.Defs
 -/
+
+@[expose] public section
 
 open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function StochasticMatrix Filter

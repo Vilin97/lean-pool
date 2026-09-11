@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
-import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata
-import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
-import Mathlib.Order.BourbakiWitt
+module
+
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
+public import Mathlib.Order.BourbakiWitt
 
 /-!
 # Krull domain construction: UFD proof
@@ -18,6 +20,8 @@ from the product y_1 * y_2 is a UFD
 Nagata's criterion then
 gives that S itself is a UFD.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Polar
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.Polar
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Ring
 
 /-!
 # Algebraic foundations of the planar Delaunay generating function
@@ -16,6 +17,8 @@ Hamilton–Jacobi equation has two turning radii. This file verifies their sum, 
 factorization of the squared radial momentum. These identities underlie the square root integrated
 in the Delaunay generating function.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

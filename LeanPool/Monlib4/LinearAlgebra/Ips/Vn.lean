@@ -3,12 +3,14 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
-import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
-import Mathlib.Analysis.VonNeumannAlgebra.Basic
-import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
+public import Mathlib.Analysis.VonNeumannAlgebra.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
 
 /-!
 
@@ -17,6 +19,8 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
 This file contains two simple results about von Neumann algebras.
 
 -/
+
+@[expose] public section
 
 
 namespace VonNeumannAlgebra

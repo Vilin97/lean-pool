@@ -3,8 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
 
 /-!
 # Edge cases of classical complex Weierstrass preparation
@@ -12,6 +13,8 @@ import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
 The degree-zero case is independent of analytic division: the distinguished
 polynomial is `1`, so the original analytic germ is the unit.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

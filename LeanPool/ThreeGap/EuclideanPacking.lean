@@ -3,9 +3,10 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
-import Mathlib.Data.Fin.Tuple.Sort
+public import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
+public import Mathlib.Data.Fin.Tuple.Sort
 
 /-!
 # Planar packing: at most 5 vectors pairwise more than 60° apart
@@ -32,6 +33,8 @@ This is the `K = 5` packing count (`g₂ ≤ 6`); the sharp `≤ 4` (`g₂ ≤ 5
 argument.
 Axiom-clean; elementary.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.EuclideanPacking
 

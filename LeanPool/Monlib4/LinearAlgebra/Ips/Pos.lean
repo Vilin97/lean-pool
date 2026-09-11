@@ -3,13 +3,15 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
-import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-import LeanPool.Monlib4.LinearAlgebra.End
-import Mathlib.Analysis.InnerProductSpace.Positive
-import LeanPool.Monlib4.Preq.RCLikeLe
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+public import LeanPool.Monlib4.LinearAlgebra.End
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 
@@ -26,6 +28,8 @@ for linear maps:
   then for any `S : E →ₗ[𝕜] F`, we have `S.comp (T.comp S.adjoint)` is also positive.
 
 -/
+
+@[expose] public section
 
 open InnerProductSpace RCLike
 

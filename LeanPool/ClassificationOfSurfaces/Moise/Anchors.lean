@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 
 /-!
 # Positive anchors for the Moise plane structures
@@ -25,6 +27,8 @@ family intersect in the hull of the shared vertices.  The only genuinely geometr
 affine independence of the three vertices, proved from non-collinearity by coordinate
 computation.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,9 +3,11 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import LeanPool.Computability.TuringDegree
-import Mathlib.GroupTheory.Perm.Basic
-import Mathlib.Order.Hom.Basic
+module
+
+public import LeanPool.Computability.TuringDegree
+public import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Order.Hom.Basic
 
 /-!
 # Automorphism Group of the Turing Degrees
@@ -13,6 +15,8 @@ import Mathlib.Order.Hom.Basic
 This file sets up the automorphism group of the Turing degrees as the group of order
 isomorphisms of `TuringDegree`.
 -/
+
+@[expose] public section
 
 namespace Computability
 

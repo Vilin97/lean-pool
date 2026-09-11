@@ -3,11 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Covariance.RealForm
-import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Covariance.RealForm
+public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-!
 # Nontriviality of the Gaussian Free Field
@@ -47,6 +48,8 @@ Injectivity of T follows from:
 - Glimm–Jaffe, *Quantum Physics*, §6.1 (nondegeneracy of the free field)
 - Reed–Simon, *Methods of Modern Mathematical Physics* II, §IX.8
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex QFT
 open scoped Real BigOperators SchwartzMap

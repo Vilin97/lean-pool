@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanComplex
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanComplex
 
 /-!
 # The locally finite adaptive fan triangulation
@@ -13,6 +15,8 @@ in Rado's induction.  Its global vertex type contains exactly the geometric vert
 in a fan face.  This no-junk representation is what lets compactness turn local finiteness into a
 finite intrinsic triangulation.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

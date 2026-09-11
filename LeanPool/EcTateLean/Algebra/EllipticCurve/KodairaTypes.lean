@@ -3,14 +3,17 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.Basic
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes`.
 -/
+
+@[expose] public section
 
 -- For imperfect residue fields of characteristic 2 or 3 there are new types:
 -- Z1, Z2, X1, X2, Y1, Y2, Y3, K n (n ≥ 2), K' n (even n ≥ 2), T n (n ≥ 1)

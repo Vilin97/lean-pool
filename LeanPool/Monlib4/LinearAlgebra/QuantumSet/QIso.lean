@@ -3,14 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.QuantumSet.QIso
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.QIso`.
 -/
+
+@[expose] public section
 
 local notation "lT" => LinearMap.lTensor
 local notation "rT" => LinearMap.rTensor

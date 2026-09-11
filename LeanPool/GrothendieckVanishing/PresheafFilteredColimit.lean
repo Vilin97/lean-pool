@@ -3,8 +3,9 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.PresheafFilteredColimitCore
+public import LeanPool.GrothendieckVanishing.PresheafFilteredColimitCore
 
 /-!
 # Degree-one and higher filtered-colimit comparisons
@@ -13,6 +14,8 @@ The degree-`1` and higher comparison arguments showing that sheaf cohomology com
 with filtered colimits on Noetherian spaces, building on the presheaf-boundary and
 successor-stage infrastructure in `PresheafFilteredColimitCore`.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.AElementary
-import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
-import Mathlib.ModelTheory.Substructures
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.AElementary
+public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+public import Mathlib.ModelTheory.Substructures
 
 /-!
 # Genuine downward Löwenheim–Skolem for fragments (issue #13 unit 5)
@@ -32,6 +34,8 @@ compared therefore start in three different universes, so every bound is stated 
 `Cardinal.lift` into `max u v w`. `exists_aElementary_substructure_of_eq_univ` is the
 same-universe form, where those lifts are identities.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

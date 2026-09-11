@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData
-import LeanPool.HadwigerNelsonBounds.PartsPermutations
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData
+public import LeanPool.HadwigerNelsonBounds.PartsPermutations
 
 /-!
 # The Parts obstruction to a monochromatic sqrt-three triangle
@@ -14,6 +15,8 @@ This module expands the 36 normalized coloring trees through the six exact
 root symmetries and the remaining color swap. The resulting 432 certificates
 cover every proper normalized coloring of the 13-vertex 2-Golomb root.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

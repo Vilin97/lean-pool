@@ -3,7 +3,9 @@ Copyright (c) 2026 Paul Mure, Joonhyup Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Mure, Joonhyup Lee
 -/
-import LeanPool.Lean4Itree.ITree.Monad
+module
+
+public import LeanPool.Lean4Itree.ITree.Monad
 
 /-!
 # Effect algebra for interaction trees
@@ -14,6 +16,8 @@ and sum effects (`VoidE`, `SumE`), the `MonadIter` class of iterable monads, the
 `iter` iteration combinator, and the `interp` interpretation of an `ITree`
 against an effect handler into an arbitrary iterable monad.
 -/
+
+@[expose] public section
 
 namespace Lean4Itree
 

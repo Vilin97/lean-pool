@@ -3,19 +3,20 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Group.PUnit
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.NormNum
-import LeanPool.CriticalPortraits.CycleLemma  -- the cycle lemma (Raney, sum=1), PROVED sorry-free
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Group.PUnit
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.NormNum
+public import LeanPool.CriticalPortraits.CycleLemma  -- the cycle lemma (Raney, sum=1), PROVED sorry-free
 
 /-!
 # Core definitions + the count numerator (Mathlib)
@@ -26,6 +27,8 @@ is **level-canonical** iff `#{i ∈ S : level i ≤ j} ≤ j` for all `j < d`.
 Proved here (sorry-free): the count **numerator** `#{(d−1)-subsets of Z_N} = C(N, d−1)`, via
 Mathlib's `Fintype.card_finset_len` + `ZMod.card`.
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits
 

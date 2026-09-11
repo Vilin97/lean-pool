@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
 
 /-!
 # Analytic quotient and remainder coefficient sequences
@@ -16,6 +17,8 @@ depend analytically on the base variables.  At the base origin, exact order
 forces the remainder to vanish and the quotient to have constant coefficient
 one.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped ENNReal NNReal Topology

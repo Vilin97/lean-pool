@@ -3,13 +3,15 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Nat.Log
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.IntervalCases
-import LeanPool.CircuitComplexity.Basic
+module
+
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.IntervalCases
+public import LeanPool.CircuitComplexity.Basic
 
 /-! # Internal: Circuit Descriptors and Shannon Counting Bound
 
@@ -18,6 +20,8 @@ arguments, and proves the Shannon lower bound for this model. The public
 theorem `shannon_lower_bound_circuit` (which speaks in terms of `Circuit`)
 is in `Circ.Internal.Bridge`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Andrej Bauer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrej Bauer
 -/
-import Mathlib.Tactic.NthRewrite
-import Mathlib.Data.Part
-import LeanPool.PartialCombinatoryAlgebras.Basic
-import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
+module
+
+public import Mathlib.Tactic.NthRewrite
+public import Mathlib.Data.Part
+public import LeanPool.PartialCombinatoryAlgebras.Basic
+public import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
 
 /-!
 # Total combinatory algebras
@@ -14,6 +16,8 @@ import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
 A total combinatory structure on a type `A`, and the fact that any total
 combinatory algebra induces a partial combinatory algebra on the same type.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

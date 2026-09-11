@@ -3,13 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
-import LeanPool.Incompleteness.Foundation.Vorspiel.Arith
-import Mathlib.Computability.Halting
-import Mathlib.Computability.Primrec.List
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
+public import LeanPool.Incompleteness.Foundation.Vorspiel.Arith
+public import Mathlib.Computability.Halting
+public import Mathlib.Computability.Primrec.List
 
 /-! # Representation -/
+
+@[expose] public section
 
 namespace Part
 

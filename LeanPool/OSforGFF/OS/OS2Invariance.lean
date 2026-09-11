@@ -3,12 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Measure.IsGaussian
-import LeanPool.OSforGFF.Covariance.Position
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.Measure.GaussianFreeField
+public import LeanPool.OSforGFF.Measure.IsGaussian
+public import LeanPool.OSforGFF.Covariance.Position
+public import LeanPool.OSforGFF.Spacetime.Euclidean
+public import LeanPool.OSforGFF.Measure.GaussianFreeField
 /-!
 # OS2 — Euclidean Invariance
 
@@ -25,6 +25,8 @@ Hence S(Ef) = ∫∫ f*(x) C(x,y) f(y) dx dy = S(f).
 - `freeCovarianceℂ_bilinear_euclidean_invariant`
 - `CovarianceEuclideanInvariantℂ_μ_GFF`
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Real Filter
 open scoped Real BigOperators

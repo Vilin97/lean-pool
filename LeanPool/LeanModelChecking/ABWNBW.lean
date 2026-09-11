@@ -3,11 +3,13 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Data.Set.Operations
-import Mathlib.Order.KonigLemma
+module
 
-import LeanPool.LeanModelChecking.LTLNBWStatement
-import LeanPool.LeanModelChecking.ABW
+public import Mathlib.Data.Set.Operations
+public import Mathlib.Order.KonigLemma
+
+public import LeanPool.LeanModelChecking.LTLNBWStatement
+public import LeanPool.LeanModelChecking.ABW
 
 /-!
 # From alternating to nondeterministic Büchi automata
@@ -17,6 +19,8 @@ a nondeterministic Büchi automaton (`NBW`) accepting the same language, via the
 Miyano–Hayashi breakpoint construction (`ABW.toNBW`), and prove
 `ABW.toNBW.lang_eq`.
 -/
+
+@[expose] public section
 
 namespace LeanModelChecking
 

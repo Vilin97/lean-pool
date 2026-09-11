@@ -3,19 +3,20 @@ Copyright (c) 2026 Dirk Kunert. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dirk Kunert
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.Floor.Defs
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Int.CardIntervalMod
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.ZMod.Basic
-import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.Floor.Defs
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.Int.CardIntervalMod
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Period lengths of rational cut-and-project gap sequences
@@ -39,6 +40,8 @@ hypotheses; the identification of the residue model with the sorted lattice
 projections is not formalised here. The irrational-slope case
 (`LeanPool.CutAndProject.Irrational`) is built from the lattice directly.
 -/
+
+@[expose] public section
 
 open Nat
 

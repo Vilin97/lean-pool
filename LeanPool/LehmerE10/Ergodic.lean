@@ -3,9 +3,10 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Main
-import LeanPool.LehmerE10.CyclotomicKill
+public import LeanPool.LehmerE10.Main
+public import LeanPool.LehmerE10.CyclotomicKill
 
 /-!
 # the E₁₀ Coxeter element as an ERGODIC toral automorphism.
@@ -26,6 +27,8 @@ via Ornstein's theorem (ergodic compact-group automorphism ≅ Bernoulli shift, 
 the moduli space of these automorphisms is uncountable or countable by the same dichotomy.  This
 lemma records the *ergodicity* half — provable now — not the entropy value.
 -/
+
+@[expose] public section
 
 open Polynomial
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini
 -/
+module
 
-import LeanPool.Erdos81PaperIContrib.FarkasLP
-import LeanPool.Erdos81PaperIContrib.FgConeClosed
+public import LeanPool.Erdos81PaperIContrib.FarkasLP
+public import LeanPool.Erdos81PaperIContrib.FgConeClosed
 
 /-!
 # Finitely generated cones and finite LP duality
@@ -17,6 +18,8 @@ Main declarations: `LeanPool.Erdos81PaperIContrib.fg_cone_isClosed`
 Tags: convex-geometry, linear-programming, duality, farkas-lemma
 MSC: 52A20, 90C05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

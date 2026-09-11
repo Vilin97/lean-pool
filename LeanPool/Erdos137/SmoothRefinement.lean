@@ -3,8 +3,9 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.JointFiniteness
+public import LeanPool.Erdos137.JointFiniteness
 
 /-!
 # Erdős Problem #137: the smooth-part radical refinement and the sharpened threshold (g = 3)
@@ -31,6 +32,8 @@ The smooth-refined master inequality `master_ineq` is the `g = 3` instance of th
 `n^k · L^3 ≤ (k^{2k})^3 · P^6`. The `BlockRadLB` hypothesis is the `g = 3` instance of `BlockRadLBg`
 (via `blockRadLB_iff`).
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

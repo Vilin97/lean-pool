@@ -3,14 +3,18 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.QuantumGraph.Basic
-import LeanPool.Monlib4.QuantumGraph.Degree
+module
+
+public import LeanPool.Monlib4.QuantumGraph.Basic
+public import LeanPool.Monlib4.QuantumGraph.Degree
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Grad
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Grad`.
 -/
+
+@[expose] public section
 
 variable {B : Type*} [starAlgebra B] [QuantumSet B]
 

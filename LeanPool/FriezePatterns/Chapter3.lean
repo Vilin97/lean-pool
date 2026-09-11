@@ -3,19 +3,22 @@ Copyright (c) 2026 Antoine de Saint-Germain. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
+module
 
-import LeanPool.FriezePatterns.Chapter1
-import LeanPool.FriezePatterns.Chapter2
-import Mathlib.Data.Nat.ModEq
-import Mathlib.Data.Rat.Defs
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
+public import LeanPool.FriezePatterns.Chapter1
+public import LeanPool.FriezePatterns.Chapter2
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Data.Rat.Defs
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Push
 
 /-!
 # LeanPool.FriezePatterns.Chapter3
 
 Imported Lean Pool material for `LeanPool.FriezePatterns.Chapter3`.
 -/
+
+@[expose] public section
 
 
 /-- An *arithmetic frieze pattern* of height `n`: a rational-valued frieze pattern with all

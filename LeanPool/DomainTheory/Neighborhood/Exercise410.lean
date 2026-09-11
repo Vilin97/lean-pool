@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Theorem41
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
 
 /-!
 # Exercise 4.10 (Scott 1981, PRG-19, Lecture IV) — the relativized domain `Dₐ`
@@ -47,6 +48,8 @@ All constructions are **choice-free**; equalities of `Element`/maps use the
 project's permitted
 `Element.ext`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

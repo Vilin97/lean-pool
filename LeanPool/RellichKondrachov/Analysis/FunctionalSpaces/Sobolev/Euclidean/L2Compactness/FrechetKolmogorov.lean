@@ -3,10 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
-import Mathlib.Topology.UniformSpace.Cauchy
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
+public import Mathlib.Topology.UniformSpace.Cauchy
 
 /-!
 # `L²` compactness criterion: Fréchet–Kolmogorov (Euclidean, compact support case)
@@ -35,6 +36,8 @@ compact support (modeled as `Lp ℝ 2 (volume.restrict K)` and embedded into `L�
 
 Tracking: Beads `lean-103.5.2.26.5.3.2.2.3`.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

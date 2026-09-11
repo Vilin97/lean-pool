@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.OrdinalUtil
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
-import LeanPool.InfinitaryLogic.Scott.BackAndForth
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.OrdinalUtil
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+public import LeanPool.InfinitaryLogic.Scott.BackAndForth
+public import Mathlib.SetTheory.Cardinal.Aleph
 /-!
 # BFEquiv is Borel on the Pair Space
 
@@ -30,6 +32,8 @@ Direct transfinite induction on `α` matching `BFEquiv`'s definition:
 - **Successor β**: IH ∧ (∀ m, ∃ n', IH on snoc) ∧ (∀ n', ∃ m, IH on snoc).
 - **Limit β**: `⋂_{γ < β} IH` — countable intersection (since `β < ω₁`).
 -/
+
+@[expose] public section
 
 universe u v
 

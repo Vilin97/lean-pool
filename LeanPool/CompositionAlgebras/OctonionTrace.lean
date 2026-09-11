@@ -3,7 +3,9 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Octonions
+module
+
+public import LeanPool.CompositionAlgebras.Octonions
 
 /-!
 # The octonionic trace form
@@ -47,6 +49,8 @@ maxHeartbeats` is needed anywhere in this file.
 `octIp_conj_cyc` and `octIp_conj_cyc'`, which is the form the trace form on hermitian
 octonionic matrices is built over.
 -/
+
+@[expose] public section
 
 namespace Octonion
 

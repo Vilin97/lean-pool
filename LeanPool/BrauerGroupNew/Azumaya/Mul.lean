@@ -3,18 +3,21 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Azumaya.Basic
-import Mathlib.Algebra.Azumaya.Matrix
-import Mathlib.Algebra.Module.CharacterModule
-import Mathlib.LinearAlgebra.Contraction
-import Mathlib.LinearAlgebra.TensorProduct.Opposite
+public import LeanPool.BrauerGroupNew.Azumaya.Basic
+public import Mathlib.Algebra.Azumaya.Matrix
+public import Mathlib.Algebra.Module.CharacterModule
+public import Mathlib.LinearAlgebra.Contraction
+public import Mathlib.LinearAlgebra.TensorProduct.Opposite
 
 /-!
 # LeanPool.BrauerGroupNew.Azumaya.Mul
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Azumaya.Mul`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

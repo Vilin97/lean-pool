@@ -3,8 +3,9 @@ Copyright (c) 2026 Abdullah Uyu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abdullah Uyu
 -/
+module
 
-import Mathlib.Data.Set.Card
+public import Mathlib.Data.Set.Card
 
 /-!
 # Basic projective geometry
@@ -12,6 +13,8 @@ import Mathlib.Data.Set.Card
 Defines the projective-geometry axioms, the line operator, and central
 projection between lines in an axiomatic projective geometry.
 -/
+
+@[expose] public section
 
 open Set
 

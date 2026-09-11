@@ -3,8 +3,9 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
 
 /-!
 # Nuclear Schauder Basis for S(ℝ, ℝ) — 1D Case
@@ -18,6 +19,8 @@ needed for a `DyninMityaginSpace` instance:
 All three are proved from theorems in `HermiteFunctions.lean` and
 `SchwartzHermiteExpansion.lean`. No axioms.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real SchwartzMap
 

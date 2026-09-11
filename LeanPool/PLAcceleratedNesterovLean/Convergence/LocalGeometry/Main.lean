@@ -3,13 +3,14 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.HessianBound
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Bridge
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.HessianBound
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Bridge
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
 
 /-!
@@ -23,6 +24,8 @@ neighborhood U₊ of m⋆ with U₊ ⊂⊂ U, and ε > 0 with ε ≤ √(μ'/η)
 (c) Strong aiming: ⟨∇f(x), x - π(x)⟩ ≥ f(x) - f⋆ + (μ'/2)‖x - π(x)‖²
 (d) Hessian lower bound: D²f(x) ≽ -εI
 -/
+
+@[expose] public section
 
 noncomputable section
 

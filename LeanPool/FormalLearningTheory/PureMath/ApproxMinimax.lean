@@ -3,11 +3,13 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.PureMath.KLDivergence
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.Order.Floor.Defs
+module
+
+public import LeanPool.FormalLearningTheory.PureMath.KLDivergence
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Algebra.Order.Floor.Defs
 
 /-!
 # Approximate Minimax for Finite Boolean Games
@@ -35,6 +37,8 @@ utilities, payoff analysis, covering arguments, and MWU potential bounds.
 
 - Arora, Hazan, Kale, "The Multiplicative Weights Update Method", ToC 8(1), 2012
 -/
+
+@[expose] public section
 
 open Finset
 

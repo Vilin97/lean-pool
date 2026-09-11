@@ -3,9 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.CloseUp.CoprimeSplit
-import LeanPool.AndersonConjecture.Jensen.CloseUp.Factor
-import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
+module
+
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.CoprimeSplit
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.Factor
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
 
 /-!
 # Heitmann's Lemma 4 — Closing Up Finitely Generated Ideals
@@ -15,6 +17,8 @@ of R, construct an A-extension S with c ∈ IS. The proof uses
 induction on generator count with GCD complexity as a
 well-founded measure (Heitmann, 1993, Lemma 4).
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.FinCases
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Tactic.FinCases
 
 /-!
 # Exercise 1.19 (Scott 1981, PRG-19, §1) — positive neighbourhood systems
@@ -36,6 +37,8 @@ with
 
 Everything is `[propext, Quot.sound]`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise119
 

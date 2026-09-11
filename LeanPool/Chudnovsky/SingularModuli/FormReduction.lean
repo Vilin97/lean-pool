@@ -3,9 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
-import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
+public import LeanPool.Chudnovsky.Basic
 
 /-!
 # Reduction of binary quadratic forms of discriminant `−163` (Phase C, Track 3)
@@ -28,6 +29,8 @@ The bridge from these form-level facts to the statement *"every CM point of disc
 `−163` is `Γ`-equivalent to `τ₁₆₃`"* additionally needs the `SL₂`-action on `ℍ` matched
 with `BQF.act`; that analytic bookkeeping is deferred (see the closing `TODO`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

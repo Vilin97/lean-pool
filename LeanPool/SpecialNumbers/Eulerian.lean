@@ -3,9 +3,11 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
-import Mathlib.Algebra.GroupWithZero.Nat
-import Mathlib.Algebra.NeZero
-import Mathlib.Data.Nat.Choose.Sum
+module
+
+public import Mathlib.Algebra.GroupWithZero.Nat
+public import Mathlib.Algebra.NeZero
+public import Mathlib.Data.Nat.Choose.Sum
 
 /-!
 # Eulerian Numbers
@@ -22,6 +24,8 @@ the permutations of $\{1,2,\ldots,n\}$ with $k$ ascents — is not formalized he
 
 * [Concrete Mathematics][knuth1989concrete]
 -/
+
+@[expose] public section
 
 namespace SpecialNumbers
 

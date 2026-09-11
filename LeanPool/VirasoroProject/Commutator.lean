@@ -3,8 +3,10 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.EuclideanDomain.Field
+module
+
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.EuclideanDomain.Field
 
 /-!
 # Commutators of linear maps
@@ -17,6 +19,8 @@ This file defines commutators of linear operators, and proves a few useful prope
 * `LinearMap.commutatorBilin`: The commutator `[⬝,⬝]` as a bilinear map on the space of linear maps.
 
 -/
+
+@[expose] public section
 
 namespace LinearMap
 

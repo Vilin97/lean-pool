@@ -3,10 +3,11 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Basic
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Tactic.Ring
+public import LeanPool.ZFLean.Basic
+public import Mathlib.Algebra.Ring.Defs
+public import Mathlib.Tactic.Ring
 
 /-! # ZFC Natural numbers
 
@@ -23,6 +24,8 @@ The file also includes the definition of the `ZFNat` type for ZF natural numbers
 various properties and usual arithmetic operations on natural numbers.
 
 -/
+
+@[expose] public section
 
 universe u
 

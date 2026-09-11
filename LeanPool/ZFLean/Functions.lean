@@ -3,16 +3,19 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Rationals
-import LeanPool.ZFLean.Booleans
-import LeanPool.ZFLean.Tactics
+public import LeanPool.ZFLean.Rationals
+public import LeanPool.ZFLean.Booleans
+public import LeanPool.ZFLean.Tactics
 
 /-!
 # LeanPool.ZFLean.Functions
 
 Imported Lean Pool material for `LeanPool.ZFLean.Functions`.
 -/
+
+@[expose] public section
 
 namespace ZFSet
 

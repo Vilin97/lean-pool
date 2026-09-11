@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
+public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
 
 /-!
 # Kronecker's unit-leading-coefficient lemma for the diagonal modular polynomial (Phase C, B7)
@@ -40,6 +41,8 @@ uniqueness of limits (`atImInfty.NeBot`) forces `d = 2m` and `leadingCoeff = −
 Everything downstream of `±1` is `isIntegral_of_kronecker`; `isIntegral_j_of_cm` composes the two
 so that only the CM relation `j τ = f m i τ` and the defining identity `hPhi` are needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

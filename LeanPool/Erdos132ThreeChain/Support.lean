@@ -3,12 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132ThreeChain.FivePoints
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Finset.Prod
+public import LeanPool.Erdos132ThreeChain.FivePoints
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Finset.Prod
 
 /-!
 # From five labelled points to five-element sets
@@ -18,6 +19,8 @@ removes both conveniences: `no_five_chain_finset` takes any five-element set of 
 whose pairwise squared distances lie in a geometric 3-chain, selects a shortest edge inside it,
 and rescales the chain so that the shortest edge has squared length exactly the new base.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

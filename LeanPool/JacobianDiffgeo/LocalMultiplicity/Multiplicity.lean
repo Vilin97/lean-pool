@@ -7,10 +7,12 @@ Authors: Rado Kirov
 /-
 Blueprint unit: local-multiplicity (CC4). The multiplicity definition and its basic API.
 -/
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.Meromorphic.Order
+module
+
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Meromorphic.Order
 
 /-!
 # Local multiplicity of a holomorphic map (CC4)
@@ -26,6 +28,8 @@ import Mathlib.Analysis.Meromorphic.Order
 * Isolated fibres: `RS.eventually_ne`, `RS.exists_nhds_fiber_eq_singleton`.
 * CC3 compatibility: `RS.meromorphicOrderAt_chart_sub`, `RS.meromorphicOrderAt_chart_of_eq_zero`.
 -/
+
+@[expose] public section
 
 open Filter Set OpenPartialHomeomorph
 open scoped ContDiff Manifold Topology

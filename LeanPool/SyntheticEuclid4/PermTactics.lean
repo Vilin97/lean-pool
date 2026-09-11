@@ -3,7 +3,9 @@ Copyright (c) 2026 André Hernandez-Espiet, Vladimir Sedlacek. All rights reserv
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
-import LeanPool.SyntheticEuclid4.Tactics
+module
+
+public import LeanPool.SyntheticEuclid4.Tactics
 
 /-!
 The permutation tactics `perm`, `perma`, and `linperm` for the symmetric area
@@ -11,6 +13,8 @@ and angle relations, along with the helper `splitAll` and `push_contra`
 tactics. These normalize the point arguments of the geometric primitives using
 the symmetry lemmas from `Tactics`.
 -/
+
+@[expose] public section
 
 open SyntheticEuclid4
 open IncidenceGeometry

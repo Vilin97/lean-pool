@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
 
 /-!
 # Finite line-arrangement subdivisions of plane graphs
@@ -14,6 +16,8 @@ connector segments between edges).  The line arrangement of that auxiliary chain
 source edge.  Keeping only arrangement faces subordinate to an original face produces an honest
 subdivision of the graph.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

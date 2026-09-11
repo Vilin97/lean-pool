@@ -3,11 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData0
-import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData1
-import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData2
-import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData3
+public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData0
+public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData1
+public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData2
+public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData3
 
 /-!
 # Complete normalized root dispatch
@@ -15,6 +16,8 @@ import LeanPool.HadwigerNelsonBounds.PartsRootDecisionData3
 The 1,023-node trie has 432 leaves, one for each proper normalized coloring of
 the 13-vertex 2-Golomb root. Every leaf names a separately checked Parts tree.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
 
 /-!
 # GL₂ Hecke Algebra: Definitions for Theorem 3.24
@@ -22,6 +23,8 @@ structural lemmas for Shimura's Theorem 3.24.
 
 * Shimura, Theorem 3.24
 -/
+
+@[expose] public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset HeckeRing.GLn
 

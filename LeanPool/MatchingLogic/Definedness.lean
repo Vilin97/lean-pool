@@ -33,11 +33,15 @@ DESIGN RULINGS:
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.EntryPoints
+module
+
+public import LeanPool.MatchingLogic.EntryPoints
 
 /-!
 # MatchingLogic.Definedness
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

@@ -3,17 +3,17 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.OS.Axioms
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.General.HadamardExp
-import LeanPool.OSforGFF.Covariance.RealForm
-import LeanPool.OSforGFF.OS.OS3CovarianceRP
-import LeanPool.OSforGFF.Measure.IsGaussian
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
+public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
+public import LeanPool.OSforGFF.OS.Axioms
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.General.HadamardExp
+public import LeanPool.OSforGFF.Covariance.RealForm
+public import LeanPool.OSforGFF.OS.OS3CovarianceRP
+public import LeanPool.OSforGFF.Measure.IsGaussian
 
 /-!
 # OS3 — Reflection Positivity for the GFF
@@ -42,6 +42,8 @@ exponential PSD theorem.
 - `gaussianFreeField_OS3_real`: `os3ReflectionPositivityReal (muGFF m)`
 - `gaussianFreeField_OS3`: `os3ReflectionPositivity (muGFF m)`  (complex)
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Matrix
 open scoped Real InnerProductSpace BigOperators

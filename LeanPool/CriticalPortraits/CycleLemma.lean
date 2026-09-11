@@ -3,11 +3,12 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
 
 /-!
 # The cycle lemma (Raney / Dvoretzky–Motzkin), sum = 1 case — PROVED
@@ -20,6 +21,8 @@ partial sums `Q k = ∑_{j<k} a j` (so `Q (k+n) = Q k + 1`). A shift `i` is *goo
 `Q i < Q t` for all `t ∈ (i, i+n)`; the unique good `i ∈ [0,n)` is the **last** argmin of `Q`
 over `[0,n)`. The count `#level-canonical = C(N,d-1)/d` will follow (`a_k = 1 - (level counts)`).
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits.Cycle
 

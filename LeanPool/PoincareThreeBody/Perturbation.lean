@@ -3,12 +3,13 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Analytic
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.Analytic
+public import Mathlib.Analysis.Calculus.Deriv.Inv
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Ring
 
 /-!
 # First mass perturbation of the planar Hamiltonian
@@ -17,6 +18,8 @@ This file differentiates the rotating-frame Hamiltonian with respect to the mass
 Kepler limit. The resulting disturbing function is the explicit input to Poincaré's first
 homological equation.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

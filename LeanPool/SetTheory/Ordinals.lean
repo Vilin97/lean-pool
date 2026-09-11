@@ -3,8 +3,10 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import LeanPool.SetTheory.Basic
-import LeanPool.SetTheory.OrderTheory
+module
+
+public import LeanPool.SetTheory.Basic
+public import LeanPool.SetTheory.OrderTheory
 
 /-!
 # Ordinals in models of ZF
@@ -12,6 +14,8 @@ import LeanPool.SetTheory.OrderTheory
 This module develops the theory of ordinals inside a von Neumann model of ZF, including
 their order structure and the correspondence with Mathlib's `Ordinal` type.
 -/
+
+@[expose] public section
 
 noncomputable section
 

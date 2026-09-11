@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SchemaTermModel
+module
+
+public import LeanPool.InfinitaryLogic.Methods.SchemaTermModel
 /-!
 # Layer 7b, checkpoint 5b-3: the restricted schema truth lemma
 
@@ -19,6 +21,8 @@ arbitrary constant interpretation `σ : ℕ → M` (the shape a Marker certifica
 proof is the same contrapositive Hilbert-choice argument — `localSkolem_funMap_spec` needs no
 tuple-shape hypothesis, so nothing about `σ` is used beyond interpreting the argument terms.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -3,17 +3,20 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.CrossProductAlgebra
-import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Defs
-import LeanPool.BrauerGroupNew.Subfield.Splitting
-import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
+public import LeanPool.BrauerGroupNew.CrossProductAlgebra
+public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Defs
+public import LeanPool.BrauerGroupNew.Subfield.Splitting
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 
 /-!
 # LeanPool.BrauerGroupNew.ToSecond
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.ToSecond`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

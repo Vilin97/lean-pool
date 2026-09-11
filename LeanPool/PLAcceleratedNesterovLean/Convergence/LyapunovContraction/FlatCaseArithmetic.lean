@@ -3,10 +3,11 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.FieldSimp
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.FieldSimp
 
 /-!
 # Flat-Case Lyapunov Contraction: Arithmetic Core
@@ -32,6 +33,8 @@ After cancellations the remaining coefficients are all ≤ 0:
   • PVsq:      ((1-a)·εη − 3a − a²)/2 ≤ 0  (since εη ≤ a)
   • PperpVsq:  (1-a)·(εη − a)/2 ≤ 0          (since εη ≤ a)
 -/
+
+@[expose] public section
 
 
 namespace PLAcceleratedNesterovLean

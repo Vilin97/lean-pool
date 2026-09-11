@@ -12,12 +12,16 @@ the stronger fresh-witness invariant delivered by the Henkin construction,
 the source's universal symbol interpretation, and the local consistency fact
 needed to start the simultaneous argument-theory extension.
 -/
-import LeanPool.MatchingLogic.EntryIII.Witnessed
-import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Witnessed
+public import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.CanonicalCore
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

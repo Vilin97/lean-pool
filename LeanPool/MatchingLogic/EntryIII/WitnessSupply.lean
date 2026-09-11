@@ -3,14 +3,17 @@ Copyright (c) 2026 Aurélien Eveil. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
+module
 
-import LeanPool.MatchingLogic.EntryIII.Witnessed
-import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
-import Mathlib.Data.Set.Finite.Basic
+public import LeanPool.MatchingLogic.EntryIII.Witnessed
+public import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
+public import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # MatchingLogic.EntryIII.WitnessSupply
 -/
+
+@[expose] public section
 
 /-!
 The variable-supply hypothesis separating ordinary and fresh witnessedness.

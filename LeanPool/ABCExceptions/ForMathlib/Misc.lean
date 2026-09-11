@@ -3,17 +3,20 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.Ring.Nat
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.Algebra.Order.Interval.Finset.SuccPred
-import Mathlib.Data.Nat.SuccPred
-import Mathlib.Data.Finset.Powerset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.Ring.Nat
+public import Mathlib.Order.Interval.Finset.Nat
+public import Mathlib.Algebra.Order.Interval.Finset.SuccPred
+public import Mathlib.Data.Nat.SuccPred
+public import Mathlib.Data.Finset.Powerset
 
 /-!
 # LeanPool.ABCExceptions.ForMathlib.Misc
 -/
+
+@[expose] public section
 
 noncomputable section
 

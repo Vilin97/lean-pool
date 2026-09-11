@@ -3,9 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
-import LeanPool.AndersonConjecture.Jensen.Construction.Transfinite
-import LeanPool.AndersonConjecture.Jensen.Defs
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
+public import LeanPool.AndersonConjecture.Jensen.Construction.Transfinite
+public import LeanPool.AndersonConjecture.Jensen.Defs
 
 /-!
 # The Main Transfinite Construction
@@ -15,6 +17,8 @@ Heitmann's Proposition 1 (surjectivity onto T/M² and ideal
 contraction), yielding a Noetherian local domain with prescribed
 completion (Jensen, 2006, Corollary 2.4).
 -/
+
+@[expose] public section
 
 universe u
 

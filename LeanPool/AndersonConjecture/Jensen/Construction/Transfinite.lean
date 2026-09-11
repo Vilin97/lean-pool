@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Construction.ChainHelpers
-import Mathlib.RingTheory.Regular.RegularSequence
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Construction.ChainHelpers
+public import Mathlib.RingTheory.Regular.RegularSequence
 
 /-!
 # Transfinite Construction
@@ -16,6 +18,8 @@ is caught and one more element of T/M^2 is covered.
 Jensen, "Completions of UFDs with semi-local formal fibers",
 2006, Theorem 2.2.
 -/
+
+@[expose] public section
 
 universe u
 

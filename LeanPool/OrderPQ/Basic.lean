@@ -3,14 +3,17 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
+module
 
-import Mathlib.GroupTheory.Sylow
-import LeanPool.OrderPQ.MulZMod
-import LeanPool.OrderPQ.SemidirectProduct
+public import Mathlib.GroupTheory.Sylow
+public import LeanPool.OrderPQ.MulZMod
+public import LeanPool.OrderPQ.SemidirectProduct
 
 /-!
 # LeanPool.OrderPQ.Basic
 -/
+
+@[expose] public section
 
 attribute [local implicit_reducible]
   MulZMod instMulMulZMod instMulOneClassMulZMod instGroupMulZMod

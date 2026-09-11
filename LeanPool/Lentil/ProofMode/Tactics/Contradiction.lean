@@ -3,8 +3,12 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Tactics.Revert
-import LeanPool.Lentil.ProofMode.Tactics.Specialize
+module
+
+public import LeanPool.Lentil.ProofMode.Tactics.Revert
+public import LeanPool.Lentil.ProofMode.Tactics.Specialize
+
+@[expose] public section
 
 namespace TLA.ProofMode
 

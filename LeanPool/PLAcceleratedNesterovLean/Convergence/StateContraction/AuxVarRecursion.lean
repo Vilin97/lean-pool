@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
 
 /-!
 # Auxiliary Variable Recursion for Arbitrary States
@@ -17,6 +18,8 @@ state-based analogue of `auxVar_recursion` from AuxVar.lean.
 Key identity: u' = ((1-a)·P⊥v + √μ'·e - √η·P⊥g) + √μ'·ξ
 where u' = auxVarOfState at step(s), and all quantities are computed from s.
 -/
+
+@[expose] public section
 
 noncomputable section
 

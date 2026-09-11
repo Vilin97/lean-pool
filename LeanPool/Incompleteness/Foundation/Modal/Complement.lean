@@ -3,11 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Formula
-import LeanPool.Incompleteness.Foundation.Modal.Subformulas
+public import LeanPool.Incompleteness.Foundation.Modal.Formula
+public import LeanPool.Incompleteness.Foundation.Modal.Subformulas
 
 /-! # Complement -/
+
+@[expose] public section
 
 
 

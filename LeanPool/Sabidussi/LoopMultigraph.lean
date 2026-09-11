@@ -3,13 +3,15 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import LeanPool.Sabidussi.Color
-import LeanPool.Sabidussi.Statement
-import Mathlib.Data.Fin.Rev
-import Mathlib.Logic.Equiv.Fin.Rotate
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finite.Set
-import Mathlib.Data.Fintype.Sets
+module
+
+public import LeanPool.Sabidussi.Color
+public import LeanPool.Sabidussi.Statement
+public import Mathlib.Data.Fin.Rev
+public import Mathlib.Logic.Equiv.Fin.Rotate
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finite.Set
+public import Mathlib.Data.Fintype.Sets
 
 /-!
 # Finite endpoint multigraphs with loops
@@ -18,6 +20,8 @@ Edges are labelled objects with two numbered half-edges.  The endpoints may coin
 are represented without quotienting or special cases.  Degree and parity always count half-edge
 incidences; consequently a loop contributes two incidences at its vertex.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 

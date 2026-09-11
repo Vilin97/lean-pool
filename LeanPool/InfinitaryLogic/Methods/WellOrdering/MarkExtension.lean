@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
-import Mathlib.Order.Interval.Finset.Fin
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
+public import Mathlib.Order.Interval.Finset.Fin
 
 /-!
 # Marking extension: the range-based constant split (issue #12, commit 4b part 2)
@@ -29,6 +31,8 @@ like Henkin constants, as ordinary auxiliary constants with no rank insertion).
   mentioned, by `mark_cover`), so remainder realization transports by the repointing
   invariant.  Already-marked rationals need only downward closure.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

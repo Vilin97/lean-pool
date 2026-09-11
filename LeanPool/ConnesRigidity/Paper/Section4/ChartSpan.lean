@@ -3,13 +3,17 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
-import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
-import LeanPool.ConnesRigidity.Construction.SquareSpan
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
+public import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
+public import LeanPool.ConnesRigidity.Construction.SquareSpan
 
 /-!
 Finite chart span and exhaustion for Zhou's §4 detector. Paper: §4.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperChartSpan

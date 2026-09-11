@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapInsertion
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.CofinalFiber
-import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
-import Mathlib.Algebra.Order.Ring.Unbundled.Rat
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapInsertion
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.CofinalFiber
+public import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
+public import Mathlib.Algebra.Order.Ring.Unbundled.Rat
 
 /-!
 # The semantic gap condition (*) and the member predicate (issue #12, commit 4a)
@@ -31,6 +33,8 @@ chain/gap conditions.
 universe containment (the kernel's `GenU`, whose seed already holds every constant relation
 atom — in particular all of `Bφ`'s diagram), and (*) at every countable ordinal.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

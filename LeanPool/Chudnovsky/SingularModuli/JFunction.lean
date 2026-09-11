@@ -3,9 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
-import LeanPool.Chudnovsky.Ramanujan
+public import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
+public import LeanPool.Chudnovsky.Ramanujan
 
 /-!
 # The `j`-function: definition, invariance, analyticity, q-expansion (Phase C, chunk B1)
@@ -46,6 +47,8 @@ and `qExpansion_coeff_unique` — no analytic estimate at all. (The η-product s
 harmlessly, in the *boundedness* of `j·q` at the cusp, via
 `tendsto_atImInfty_tprod_one_sub_eta_q_pow`.)
 -/
+
+@[expose] public section
 
 noncomputable section
 

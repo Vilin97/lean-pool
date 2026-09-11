@@ -3,8 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Optimal
+public import LeanPool.IsoGraph.Canon.Optimal
 
 /-!
 # The search meets its specification
@@ -25,6 +26,8 @@ search returns does not depend on how the vertices were named: `canonical_cert_r
 That is exactly what `Spec.LabellingInvariant` needs, once `certOf_get` is used to read the
 adjacency matrix back out of the packed certificate (`canonical_get`).
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

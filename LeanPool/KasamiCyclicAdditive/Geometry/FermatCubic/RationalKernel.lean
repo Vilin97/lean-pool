@@ -3,9 +3,10 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
 
 /-!
 # The rational kernel of `1 + π^k` on the Fermat cubic over `𝔽₂`
@@ -53,6 +54,8 @@ bijective, on the finite group `E(K)` — is exactly the triviality of the ratio
 in `rational_kernel_odd`, combined with the standard fact that a group homomorphism with trivial
 kernel is injective; the group law on `E` itself is not developed here.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open scoped Real

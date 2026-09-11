@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.OddPrimeValuationDistribution.LowValuations
+public import LeanPool.OddPrimeValuationDistribution.LowValuations
 
 /-!
 # Exact odd-prime distributions of central-binomial valuations
@@ -16,3 +17,5 @@ Main declarations: `OddPrimeValuationDistribution.oddPrimeValuationGeneratingSer
 Tags: central-binomial-coefficients, p-adic-valuations, digit-carries, generating-functions
 MSC: 11A63, 11B65
 -/
+
+@[expose] public section

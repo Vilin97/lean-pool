@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
 
 /-!
 # PV Infrastructure: Singular Annulus Bounds
@@ -19,6 +20,8 @@ bound used in the dyadic PV convergence proof.
 * `singular_annulus_lin_integral_zero` — linearized annular integral vanishes
 * `singular_annulus_bound_explicit` — epsilon-independent bound on singular integral
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

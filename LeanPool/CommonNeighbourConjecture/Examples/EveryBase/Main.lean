@@ -3,10 +3,11 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Irreducible
-import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.GeneralConstruction
-import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Irreducible
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Irreducible
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.GeneralConstruction
+public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Irreducible
 
 /-!
 # Counterexamples at every base size
@@ -14,6 +15,8 @@ import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Irreducible
 This module instantiates the abstract obstruction construction with the affine
 Frobenius groups and their deleted binary permutation modules.
 -/
+
+@[expose] public section
 
 noncomputable section
 

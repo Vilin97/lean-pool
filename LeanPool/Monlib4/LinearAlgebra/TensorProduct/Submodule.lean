@@ -3,20 +3,23 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
-import Mathlib.LinearAlgebra.TensorProduct.Finiteness
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
-import Mathlib.LinearAlgebra.TensorProduct.RightExactness
-import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
+public import Mathlib.LinearAlgebra.TensorProduct.Finiteness
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import Mathlib.LinearAlgebra.TensorProduct.RightExactness
+public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

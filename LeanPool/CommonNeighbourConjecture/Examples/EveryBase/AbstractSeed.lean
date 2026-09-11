@@ -3,13 +3,14 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.Algebra.Module.ZMod
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fintype.Card
-import LeanPool.CommonNeighbourConjecture.Saxl.Affine
-import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
-import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Symmetric
+public import Mathlib.Algebra.Module.ZMod
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Fintype.Card
+public import LeanPool.CommonNeighbourConjecture.Saxl.Affine
+public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
+public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Symmetric
 
 /-!
 # Abstract data for counterexamples at every base size
@@ -23,6 +24,8 @@ Faithfulness and irreducibility are intentionally absent from
 `EveryBaseSeed`: they are used only later to prove primitivity and are not
 needed for the obstruction.
 -/
+
+@[expose] public section
 
 namespace SaxlCounterexamples.EveryBase
 

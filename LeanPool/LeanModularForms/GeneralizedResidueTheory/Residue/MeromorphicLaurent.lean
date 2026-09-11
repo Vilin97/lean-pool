@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy
 
 /-!
 # Convex-Domain Contour Vanishing for Meromorphic Functions
@@ -28,6 +29,8 @@ These are now thin wrappers around:
 * Hungerbuhler-Wasem, arXiv:1808.00997v2, Theorem 3.3
 * Mathlib `MeromorphicAt`, `meromorphicOrderAt`
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

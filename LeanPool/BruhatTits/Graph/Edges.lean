@@ -3,10 +3,12 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Graph.Vertices
-import LeanPool.BruhatTits.Lattice.Quotient
-import LeanPool.BruhatTits.Utils.GLSubmoduleAction
-import LeanPool.BruhatTits.Utils.List
+module
+
+public import LeanPool.BruhatTits.Graph.Vertices
+public import LeanPool.BruhatTits.Lattice.Quotient
+public import LeanPool.BruhatTits.Utils.GLSubmoduleAction
+public import LeanPool.BruhatTits.Utils.List
 
 /-!
 # The edges of the Bruhat-Tits graph
@@ -36,6 +38,8 @@ sense of `inv`, is one.
   chain by the action of `GL₂(K)`.
 
 -/
+
+@[expose] public section
 
 open Module
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Basic
 
 /-!
 # On-Curve PV: Endpoint and Corner CPV
@@ -12,6 +13,8 @@ import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Basic
 Cauchy principal value existence at the endpoint `1/2 + H*I` and corner `-1/2 + H*I`
 of the fundamental domain boundary `fdBoundaryH H`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

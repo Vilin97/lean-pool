@@ -3,8 +3,9 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Main
+public import LeanPool.KasamiCyclicAdditive.Main
 
 /-!
 # Carlet's Kasami cyclic-additive conjecture
@@ -16,3 +17,5 @@ Main declarations: `KasamiCyclicAdditive.carlet_kasami_cyclic_additive_literatur
 Tags: finite-fields, coding-theory, APN-functions, difference-sets, character-sums
 MSC: 11T06, 11T71, 94A60
 -/
+
+@[expose] public section

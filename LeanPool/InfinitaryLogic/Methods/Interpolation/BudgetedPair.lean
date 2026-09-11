@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.ConstantSurgery
-import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantGeneralization
-import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+module
+
+public import LeanPool.InfinitaryLogic.Methods.ConstantSurgery
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantGeneralization
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
 /-!
 # The budgeted labelled pair (issue #15, side-labelled restart)
 
@@ -51,6 +53,8 @@ adaptation:
 Stern's model-theoretic forcing proof is identified as the semantic dual, but its exact invariant is
 **unverified** — the paper has not been read.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

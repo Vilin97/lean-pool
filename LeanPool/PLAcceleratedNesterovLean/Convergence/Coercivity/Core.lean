@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
 
 /-!
 # Coercivity Core Bound
@@ -12,6 +13,8 @@ import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
 Proves that `(1 - a)² * (V² + μ' * E²) ≤ 60 * Ln` by resolving coupled
 norm inequalities from the Nesterov accelerated gradient descent analysis.
 -/
+
+@[expose] public section
 
 noncomputable section
 

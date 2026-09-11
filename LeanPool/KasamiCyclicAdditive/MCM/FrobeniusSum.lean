@@ -3,9 +3,10 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
 
 /-!
 # Elementary Frobenius-sum infrastructure
@@ -51,6 +52,8 @@ frobSum_one --------------+
                      contradiction
 ```
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive
 

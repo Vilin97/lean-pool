@@ -3,10 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
 
 /-! # Sharded flat coverage-certificate data -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

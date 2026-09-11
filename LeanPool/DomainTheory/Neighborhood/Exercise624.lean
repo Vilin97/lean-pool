@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise619PartB
+public import LeanPool.DomainTheory.Neighborhood.Exercise619PartB
 
 /-!
 # Exercise 6.24 (Scott 1981, PRG-19, §6) — a **double fixed point** for a system
@@ -78,6 +79,8 @@ of the simultaneous Theorem 6.14, which then yields the required isomorphisms
 
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

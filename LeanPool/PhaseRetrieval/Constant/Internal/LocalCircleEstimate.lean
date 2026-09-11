@@ -13,10 +13,14 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Public API:
   - `local_circle_estimate` (Theorem 3.1)
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
-import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+public import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
 
 /-! # LocalCircleEstimate -/
+
+@[expose] public section
 
 
 open MeasureTheory Complex Real Finset

@@ -3,15 +3,18 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import Mathlib.Data.Fintype.Defs
-import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolants
-import LeanPool.Lean4GlCoalgebras.Split.ProofTransformations
+public import Mathlib.Data.Fintype.Defs
+public import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolants
+public import LeanPool.Lean4GlCoalgebras.Split.ProofTransformations
 
 /-! # Partial Left Interpolation Proofs
 
 All of the left and right partial interpolation proofs, split apart based on rule application. These
 are split apart since otherwise the file runs very slow. -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

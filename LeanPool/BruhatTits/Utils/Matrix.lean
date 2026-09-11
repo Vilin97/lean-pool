@@ -3,17 +3,21 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Utils.RingHom
-import LeanPool.BruhatTits.Utils.Subring
-import Mathlib.LinearAlgebra.Matrix.Transvection
-import Mathlib.RingTheory.Valuation.ValuationRing
-import Mathlib.LinearAlgebra.Matrix.IsDiag
-import Mathlib.LinearAlgebra.Matrix.Swap
-import Mathlib.LinearAlgebra.Matrix.Block
+module
+
+public import LeanPool.BruhatTits.Utils.RingHom
+public import LeanPool.BruhatTits.Utils.Subring
+public import Mathlib.LinearAlgebra.Matrix.Transvection
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import Mathlib.LinearAlgebra.Matrix.IsDiag
+public import Mathlib.LinearAlgebra.Matrix.Swap
+public import Mathlib.LinearAlgebra.Matrix.Block
 
 /-!
 # LeanPool.BruhatTits.Utils.Matrix
 -/
+
+@[expose] public section
 
 open Module
 

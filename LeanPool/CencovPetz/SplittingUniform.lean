@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.Splitting
-import LeanPool.CencovPetz.UniformSimplex
+module
+
+public import LeanPool.CencovPetz.Splitting
+public import LeanPool.CencovPetz.UniformSimplex
 
 
 /-!
@@ -20,6 +22,8 @@ This is one of the standard reduction steps in finite Čencov/Chentsov uniquenes
 
 - `CencovPetz.MarkovMorphism.split_pushforward_eq_uniform_of_apply_eq_div_card`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

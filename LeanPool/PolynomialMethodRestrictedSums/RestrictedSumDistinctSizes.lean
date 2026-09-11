@@ -3,22 +3,23 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Common
-import Aesop
-import Mathlib.Combinatorics.Nullstellensatz
-import Mathlib.RingTheory.Int.Basic
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Nat.Prime.Factorial
-import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
-import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Zify
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Set
+public import Mathlib.Tactic.Common
+public import Aesop
+public import Mathlib.Combinatorics.Nullstellensatz
+public import Mathlib.RingTheory.Int.Basic
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Data.Nat.Prime.Factorial
+public import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+public import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
 
 /-!
 # Restricted sums of sets with distinct sizes
@@ -27,6 +28,8 @@ The Alon-Nathanson-Ruzsa lower bound `restricted_sum_distinct_sizes` on the
 set of sums `a 0 + ... + a k` with `a i ∈ A i` pairwise distinct, when the
 sets `A i` have distinct sizes.
 -/
+
+@[expose] public section
 
 open MvPolynomial
 

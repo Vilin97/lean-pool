@@ -3,8 +3,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.Isomorphisms
-import LeanPool.CompositionAlgebras.Composition.Hurwitz
+module
+
+public import LeanPool.CompositionAlgebras.Composition.Isomorphisms
+public import LeanPool.CompositionAlgebras.Composition.Hurwitz
 
 /-!
 # Hurwitz's theorem, classification form
@@ -47,6 +49,8 @@ proof is what makes that true, and it is not repeated.
 
 This file carries `hurwitz_classification`, the headline theorem of the development.
 -/
+
+@[expose] public section
 
 open scoped Quaternion
 

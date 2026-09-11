@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
 
 /-!
 # Finite PL models for intrinsic graph replacements
@@ -13,6 +15,8 @@ This file turns the topological polygonal paths constructed in
 of the middle PL segment model between its two last-exit parameters.  Marking those parameters
 in the source arrangement makes the closed subsegment an exact finite subcomplex.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

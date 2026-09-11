@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
 
 /-!
 # Common subdivisions of finite plane triangle meshes
@@ -12,6 +14,8 @@ The finite common-refinement theorem used in Moise Chapter 5.  To make a source 
 subordinate to a target mesh with the same support, cut it by every barycentric-coordinate
 hyperplane of every target triangle.  The resulting chambers lie in target triangles.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

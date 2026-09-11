@@ -3,13 +3,15 @@ Copyright (c) 2026 Ricky Cipollini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ricky Cipollini
 -/
-import LeanPool.Erdos865.Defs
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombinationPrime
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Erdos865.Defs
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombinationPrime
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
 
 /-!
 # The four sets `T₁,…,T₄` and their pairwise intersections
@@ -18,6 +20,8 @@ Supporting material for the folded additive lemma: the images `T₁,…,T₄` of
 `ZMod m`, their cardinalities, and the pairwise-intersection bounds culminating in the
 four-set union bound `case2_bound`.
 -/
+
+@[expose] public section
 
 open Finset
 

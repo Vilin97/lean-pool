@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Data.Nat.Find
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Nat.Find
 
 /-!
 # Exercise 1.12 (Scott 1981, PRG-19, §1) — the final-segment system on `ℕ`
@@ -37,6 +38,8 @@ a finite `fin n`
   of indices in `x` is bounded — `Nat.find` over a `¬`-predicate); everything else
   is constructive.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise112
 

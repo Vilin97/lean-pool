@@ -3,25 +3,28 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+public import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

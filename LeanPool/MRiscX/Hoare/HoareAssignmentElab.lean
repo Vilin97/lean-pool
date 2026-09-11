@@ -3,15 +3,19 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import Lean
-import LeanPool.MRiscX.Elab.HandleNumOrIdent
-import LeanPool.MRiscX.Parser.HoareSyntax
+module
+
+public import Lean
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+public import LeanPool.MRiscX.Parser.HoareSyntax
 
 /-!
 # HoareAssignmentElab
 
 This module provides elaboration of MRiscX Hoare assignment chains.
 -/
+
+@[expose] public section
 open Lean Elab
 
 /-- The total number of nodes in a syntax tree, an upper bound on its depth. -/

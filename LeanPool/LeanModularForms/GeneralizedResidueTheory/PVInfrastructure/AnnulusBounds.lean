@@ -3,10 +3,11 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.GammaAnalysis
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.RemainderAnalysis
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.StepBounds
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.GammaAnalysis
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.RemainderAnalysis
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.StepBounds
 
 /-!
 # PV Infrastructure: Annulus Bounds
@@ -24,6 +25,8 @@ crossing points, used in the dyadic PV convergence proof.
 * `singular_annulus_bound_explicit` — epsilon-independent
     bound on singular annulus integral
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

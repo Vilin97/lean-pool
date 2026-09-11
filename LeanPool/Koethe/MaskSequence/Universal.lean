@@ -3,7 +3,9 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import LeanPool.Koethe.MaskSequence.Chain
+module
+
+public import LeanPool.Koethe.MaskSequence.Chain
 
 /-!
 # Universal mortal sequences from abstract mask mortality
@@ -15,6 +17,8 @@ and absorption by zero.  There are no algebraic-geometric hypotheses beyond
 the abstract mortality assumption, and no assertion about the density of an
 infinite union of masks.
 -/
+
+@[expose] public section
 
 noncomputable section
 

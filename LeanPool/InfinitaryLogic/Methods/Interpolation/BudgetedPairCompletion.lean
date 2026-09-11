@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPair
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPair
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
 /-!
 # Completing the budgeted labelled pair (issue #15)
 
@@ -25,6 +27,8 @@ ripple outward.
 * Finite constant support is accepted for `r₂` rather than for the labelled right root `r₂.not`, and
   converted locally — the interpolation consumer holds the former.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

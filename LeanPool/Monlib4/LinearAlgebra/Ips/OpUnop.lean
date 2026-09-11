@@ -3,11 +3,13 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.LinearAlgebra.TensorProduct.Basic
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Data.Opposite
-import Mathlib.Algebra.Star.Basic
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
+module
+
+public import Mathlib.LinearAlgebra.TensorProduct.Basic
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Data.Opposite
+public import Mathlib.Algebra.Star.Basic
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
 
 /-!
 
@@ -20,6 +22,8 @@ We also define `ten_swap`, the linear automorphism on `A ⊗[R] Aᵐᵒᵖ` that
 swaps the tensor factors while keeping the `ᵒᵖ` in place.
 
 -/
+
+@[expose] public section
 
 
 variable {R A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A]

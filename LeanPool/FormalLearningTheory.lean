@@ -3,8 +3,9 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
+module
 
-import LeanPool.FormalLearningTheory.Theorem
+public import LeanPool.FormalLearningTheory.Theorem
 
 /-!
 # Formal Learning Theory Kernel
@@ -16,6 +17,8 @@ Main declarations: `fundamental_theorem`, `littlestone_characterization`, `pac_n
 Tags: learning-theory, probability, combinatorics, online-learning
 MSC: 68Q32, 68T05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

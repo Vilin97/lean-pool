@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly.ResidueSide
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Assembly.ResidueSide
 
 /-!
 # PV Chain: Residue Side and Modular Side
@@ -16,6 +17,8 @@ to the generalized winding number sum and the modular transformation.
 The key identity `pv_chain_identity` follows by uniqueness of limits:
 both sides are limits of the same ε-truncated integral, so they are equal.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

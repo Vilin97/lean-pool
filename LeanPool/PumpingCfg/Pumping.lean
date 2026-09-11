@@ -3,11 +3,12 @@ Copyright (c) 2026 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
+module
 
-import LeanPool.PumpingCfg.ChomskyNormalForm.Translation
-import LeanPool.PumpingCfg.Utils
-import LeanPool.PumpingCfg.ParseTree
-import Mathlib.Data.Set.Card
+public import LeanPool.PumpingCfg.ChomskyNormalForm.Translation
+public import LeanPool.PumpingCfg.Utils
+public import LeanPool.PumpingCfg.ParseTree
+public import Mathlib.Data.Set.Card
 
 /-!
 # Pumping Lemma for Context-Free Grammars
@@ -22,6 +23,8 @@ This file contains the proof of the pumping lemma for context-free grammars
    Languages, and Computation (3rd Edition). Addison-Wesley Longman Publishing Co., Inc., USA.]
    [Hopcroft et al. 2006]
 -/
+
+@[expose] public section
 
 theorem pidgeonhole {α β : Type*} {A : Finset α} {B : Finset β} {f : A → B}
     (hf : f.Injective) : A.card ≤ B.card := by

@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
-import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
+public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
 /-!
 # Exact cardinality of the local EM carrier (issue #11 unit 5)
 
@@ -24,6 +26,8 @@ embedding travels WITH the code, expansion is a total function (`LocatedTermCode
 * **Exact cardinality** (`mk_carrier`): `mk ctx.Carrier = max ℵ₀ (mk J)` for infinite `J`,
   countable base language, injective deep sequence.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

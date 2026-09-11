@@ -3,20 +3,24 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
-import Mathlib.Algebra.Group.Subgroup.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+module
+
+public import Mathlib.Algebra.Group.Subgroup.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
 /-!
 # LeanPool.OrderPQ.TorsionBy
 -/
+
+@[expose] public section
 
 variable {α : Type*} [CommGroup α]
 

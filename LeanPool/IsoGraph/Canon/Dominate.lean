@@ -3,8 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Leaves
+public import LeanPool.IsoGraph.Canon.Leaves
 
 /-!
 # Domination bookkeeping for the optimality proof
@@ -21,6 +22,8 @@ dominated by the incumbent, and about moving a subtree along an automorphism.
 * `partEquiv_inv`, `subR_inv` — an automorphism fixing a node carries the leaves below the child
   `γ w` onto the leaves below the child `w`, so the two children are interchangeable.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

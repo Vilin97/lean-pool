@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
 
 /-!
 # Exercise 5.10 (Scott 1981, PRG-19, §5) — the smash product and the strict
@@ -67,6 +68,8 @@ enters only the `smashCurryEquiv` *proof*, through the genuinely-classical `X =
 Δ₀?` / `Y = Δ₁?`
 boundary case analysis.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise510
 

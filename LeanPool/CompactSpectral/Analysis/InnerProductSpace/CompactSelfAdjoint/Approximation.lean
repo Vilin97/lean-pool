@@ -3,11 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-import Mathlib.Algebra.Module.Submodule.Invariant
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Basic
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.CutoffProjector
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+public import Mathlib.Algebra.Module.Submodule.Invariant
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Basic
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.CutoffProjector
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
 
 /-!
 # Compact self-adjoint operators: large-eigenspace approximation in operator norm
@@ -18,6 +20,8 @@ For a compact self-adjoint operator `T` and `ε > 0`, the “large-eigenvalue”
 * `T ∘ largeEigenspaceProjector T ε` has finite-dimensional range, and
 * `‖T - T ∘ largeEigenspaceProjector T ε‖ ≤ ε`.
 -/
+
+@[expose] public section
 
 namespace CompactSelfAdjoint
 

@@ -3,10 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsCoordinates
+public import LeanPool.HadwigerNelsonBounds.PartsCoordinates
 
 /-! Exact vertex permutation 2 for the Parts root stabilizer. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

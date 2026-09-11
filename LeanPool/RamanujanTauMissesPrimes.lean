@@ -3,8 +3,9 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
+module
 
-import LeanPool.RamanujanTauMissesPrimes.Solution
+public import LeanPool.RamanujanTauMissesPrimes.Solution
 
 /-!
 # ABC implies that Ramanujan's tau function misses almost all primes
@@ -16,6 +17,8 @@ Main declarations: `main_theorem`, `reduction_lemma`, `abc_bound_E2`, `abc_bound
 Tags: number-theory, modular-forms
 MSC: 11F30, 11N05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

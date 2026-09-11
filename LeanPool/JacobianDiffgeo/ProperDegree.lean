@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
-import LeanPool.JacobianDiffgeo.ProperDegree.DivisorDegreeZero
-import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
+public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+public import LeanPool.JacobianDiffgeo.ProperDegree.DivisorDegreeZero
+public import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
 
 /-!
 # proper-map-degree: the challenge degree, `deg(div f) = 0`, and the genus-0 finisher
@@ -52,3 +53,5 @@ directly for its forward direction (recommend the orchestrator add `proper-map-d
 unit's `Builds on:` list, per the design doc's non-blocking flag); final assembly consumes
 `_root_.ContMDiff.degree` and friends verbatim.
 -/
+
+@[expose] public section

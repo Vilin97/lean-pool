@@ -3,10 +3,12 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
-import LeanPool.ZFLean.Naturals
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Algebra.Order.Group.Defs
-import Mathlib.SetTheory.Cardinal.SchroederBernstein
+module
+
+public import LeanPool.ZFLean.Naturals
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Algebra.Order.Group.Defs
+public import Mathlib.SetTheory.Cardinal.SchroederBernstein
 /-! # ZFC Integers
 This file provides a construction of the integers in ZFC based on the construction of natural
 numbers. It follows the usual construction of integers as equivalence classes of pairs of natural
@@ -16,6 +18,8 @@ in a commutative ring structure.
 Finally, we show that that the `ZFInt` type is isomorphic to the type of elements contained in
 `ZFSet.Int` type using the Schröder-Bernstein theorem.
 -/
+
+@[expose] public section
 universe u
 
 namespace ZFSet

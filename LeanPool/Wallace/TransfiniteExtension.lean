@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.CoefficientTransfiniteExtension
-import LeanPool.Wallace.TriangularPreprocess
+public import LeanPool.Wallace.CoefficientTransfiniteExtension
+public import LeanPool.Wallace.TriangularPreprocess
 
 /-!
 # Transfinite extension of an integer-valued local character
@@ -13,6 +14,8 @@ import LeanPool.Wallace.TriangularPreprocess
 This file specializes the coefficient-parametric Wallace recursion to the free Abelian group.
 An integer coordinate character is uniquely determined by its value at one.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

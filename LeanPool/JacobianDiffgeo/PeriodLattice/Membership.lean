@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
 
 /-!
 # `periodSubgroup` membership (Forster §21.2)
@@ -20,6 +21,8 @@ element must come from a SINGLE based loop, not merely from the closure abstract
 Main declarations: `RS.periodRange X`, `RS.periodSubgroup_eq_periodRange`,
 `RS.mem_periodSubgroup_iff`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

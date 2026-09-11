@@ -3,16 +3,18 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.Algebra.Defs
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Notation.Pi.Defs
-import Mathlib.Algebra.Polynomial.Basic
-import Mathlib.Data.Countable.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Matrix.Mul
-import Mathlib.LinearAlgebra.Matrix.Defs
-import Mathlib.Tactic.TypeStar
+module
+
+public import Mathlib.Algebra.Algebra.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Notation.Pi.Defs
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.Data.Countable.Basic
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.LinearAlgebra.Matrix.Defs
+public import Mathlib.Tactic.TypeStar
 /-!
 # Pencils, periodic masks and mortality
 
@@ -25,6 +27,8 @@ matrix-mortality property proved in `LeanPool.Koethe.Mortality.MaskMortality`, a
 `UniversalMortalSequence` is the target of the construction in
 `LeanPool.Koethe.MaskSequence.Universal`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

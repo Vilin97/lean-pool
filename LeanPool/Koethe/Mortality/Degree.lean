@@ -3,9 +3,11 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Pencil
-import LeanPool.Koethe.Mortality.Minors
+module
+
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.Pencil
+public import LeanPool.Koethe.Mortality.Minors
 
 /-!
 # The one-row parameter-degree bound
@@ -15,6 +17,8 @@ of the first factor and minors of the remaining factors.  Repeated rows
 make the latter minors zero.  Thus a single parameter row contributes at
 most one to the degree per factor, not the size of the minor.
 -/
+
+@[expose] public section
 
 noncomputable section
 

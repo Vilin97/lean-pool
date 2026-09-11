@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
-import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
-import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
+public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
+public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
 
 /-!
 # The pullback map on Jacobians (jacobian-functoriality §8, pullback half)
@@ -20,6 +21,8 @@ via `RS.periodVector_traceForm_mem`, after conjugating the loop to a regular bas
 **`Jacobian.pullback`** via `Jacobian.inducedHom` (same-universe convention, see
 `PeriodMaps.lean`'s universe warning).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Module

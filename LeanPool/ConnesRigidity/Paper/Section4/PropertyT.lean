@@ -5,15 +5,19 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ElementaryGeneration
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PropertyTTransfer
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FinitePropertyT
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ElementaryGeneration
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PropertyTTransfer
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FinitePropertyT
 
 /-!
 Property-(T) transfer for Zhou §4 on the concrete tensor-kernel groups.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperPropertyT

@@ -3,15 +3,17 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Data.Matrix.Basis
-import LeanPool.Monlib4.Preq.Dite
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.Trace
+public import Mathlib.Data.Matrix.Basis
+public import LeanPool.Monlib4.Preq.Dite
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+public import Mathlib.LinearAlgebra.Matrix.Kronecker
+public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
 
 /-!
 
@@ -23,6 +25,8 @@ import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
  The direct sum in these files are sort of misleading.
 
 -/
+
+@[expose] public section
 
 
 open scoped BigOperators

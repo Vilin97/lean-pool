@@ -3,17 +3,18 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
+module
 
-import LeanPool.LowDimSolvClassification.Classification1
-import LeanPool.LowDimSolvClassification.Classification2
-import LeanPool.LowDimSolvClassification.Classification3
-import LeanPool.LowDimSolvClassification.GeneralResults
-import LeanPool.LowDimSolvClassification.InstancesConstructions
-import LeanPool.LowDimSolvClassification.InstancesLowDim
-import LeanPool.LowDimSolvClassification.LemmasDim3
-import LeanPool.LowDimSolvClassification.QuotientSolvable
-import LeanPool.LowDimSolvClassification.Semidirect
-import LeanPool.LowDimSolvClassification.Tactics
+public import LeanPool.LowDimSolvClassification.Classification1
+public import LeanPool.LowDimSolvClassification.Classification2
+public import LeanPool.LowDimSolvClassification.Classification3
+public import LeanPool.LowDimSolvClassification.GeneralResults
+public import LeanPool.LowDimSolvClassification.InstancesConstructions
+public import LeanPool.LowDimSolvClassification.InstancesLowDim
+public import LeanPool.LowDimSolvClassification.LemmasDim3
+public import LeanPool.LowDimSolvClassification.QuotientSolvable
+public import LeanPool.LowDimSolvClassification.Semidirect
+public import LeanPool.LowDimSolvClassification.Tactics
 
 /-!
 # Classification of low-dimensional solvable Lie algebras
@@ -25,6 +26,8 @@ Main declarations: `LieAlgebra.Dim3.classification`
 Tags: lie-algebras, solvable, classification
 MSC: 17B30
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -10,11 +10,15 @@ These are not part of the paper; they exist so that a wrong definition cannot
 pass unnoticed. Each one
 would FAIL if the corresponding clause of Section 2 were mis-encoded.
 -/
-import LeanPool.MatchingLogic.Core
+module
+
+public import LeanPool.MatchingLogic.Core
 
 /-!
 # MatchingLogic.Sanity
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 namespace Model

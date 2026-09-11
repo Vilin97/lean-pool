@@ -3,11 +3,12 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.MainTheorem
-import LeanPool.Chudnovsky.Numerics
-import LeanPool.Chudnovsky.SingularModuli
-import LeanPool.Chudnovsky.ComplexMult
+public import LeanPool.Chudnovsky.MainTheorem
+public import LeanPool.Chudnovsky.Numerics
+public import LeanPool.Chudnovsky.SingularModuli
+public import LeanPool.Chudnovsky.ComplexMult
 
 /-!
 # The coefficients at `τ₁₆₃` (Milla, ch. 10)
@@ -27,6 +28,8 @@ verified numerics (`Numerics.lean`) and the integrality/rationality inputs of Ph
 rational is an integer, and an integer within distance `< 1/2` of a certified numerical
 approximation is determined exactly.
 -/
+
+@[expose] public section
 
 noncomputable section
 

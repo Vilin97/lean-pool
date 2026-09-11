@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
-import LeanPool.ClassificationOfSurfaces.WeightedCircle
-import Mathlib.Analysis.Convex.GaugeRescale
+module
+
+public import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
+public import LeanPool.ClassificationOfSurfaces.WeightedCircle
+public import Mathlib.Analysis.Convex.GaugeRescale
 
 /-!
 # A square model for polygon cells
@@ -15,6 +17,8 @@ square is treated as a convex disk.  Its boundary is parameterized explicitly by
 projection of the Euclidean circle, and an arbitrary homeomorphism from the circle to the
 frontier of a bounded convex disk is extended across `PolygonCell`.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

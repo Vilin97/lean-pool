@@ -3,11 +3,15 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
 
 /-!
 Finite detector sets for the raw Zhou split extensions. Paper: §4.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperSpectralFiniteDetection

@@ -3,25 +3,28 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Probability.Kernel.Composition.MeasureComp
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.MeasureTheory.MeasurableSpace.Defs
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
-import Mathlib.Probability.CDF
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.Order.CompleteSublattice
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
+public import Mathlib.Probability.Kernel.Composition.MeasureComp
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
+public import Mathlib.MeasureTheory.MeasurableSpace.Defs
+public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+public import Mathlib.Probability.CDF
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.Order.CompleteSublattice
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
+public import Mathlib.Analysis.SpecialFunctions.Sigmoid
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure`.
 -/
+
+@[expose] public section
 
 
 namespace MeasureTheory

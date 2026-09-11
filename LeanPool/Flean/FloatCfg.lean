@@ -3,7 +3,9 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import Mathlib.Data.Rat.Defs
+module
+
+public import Mathlib.Data.Rat.Defs
 
 /-!
 # Floating-Point Configuration
@@ -12,6 +14,8 @@ This module defines `FloatCfg`, the precision and exponent-range parameters that
 describe a floating-point format, along with the available `RoundingMode`s and a
 `Rounding` typeclass selecting the mode in scope.
 -/
+
+@[expose] public section
 
 /-- A floating-point format: a precision `prec` and an exponent range
 `[emin, emax]`. -/

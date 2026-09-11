@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
-import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
 
 /-!
 # Exercise 2.16 (Scott 1981, PRG-19, §2) — the prefixing map `x ↦ σx` is
@@ -29,6 +30,8 @@ i.e. "the prefixed input cone `σX` is at least as sharp as `Y`." We package it 
 map satisfying `f(1x)=true`, `f(01x)=false`, `f(00x)=f(x)` — is an
 equational-uniqueness statement
 left to a later pass.) Constructive (`#print axioms ⊆ {propext, Quot.sound}`). -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise216
 

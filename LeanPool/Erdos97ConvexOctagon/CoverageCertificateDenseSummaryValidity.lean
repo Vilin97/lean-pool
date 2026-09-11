@@ -3,17 +3,20 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts00
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts01
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts02
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts03
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts04
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts05
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts06
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts07
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts00
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts01
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts02
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts03
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts04
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts05
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts06
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts07
 
 /-! # Global validity of dense certificate summaries -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

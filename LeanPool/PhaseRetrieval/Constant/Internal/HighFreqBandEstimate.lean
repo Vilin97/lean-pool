@@ -14,14 +14,18 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Public API:
   - `high_freq_band_estimate` (Theorem 4.1)
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
-import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
-import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
-import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
-import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
-import Mathlib.Analysis.Real.Pi.Bounds
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+public import LeanPool.PhaseRetrieval.Constant.Internal.SafeSquare
+public import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
+public import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
+public import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
+public import Mathlib.Analysis.Real.Pi.Bounds
 
 /-! # HighFreqBandEstimate -/
+
+@[expose] public section
 
 
 open MeasureTheory Complex Real Finset

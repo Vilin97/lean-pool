@@ -3,7 +3,9 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.Local
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.Local
 
 /-!
 # Showcase
@@ -18,6 +20,8 @@ which kills the constant term and lets the core theorem `LocalFockSPR_of_small_n
 apply to the centered polynomial. The phase-aligned conclusion is then obtained
 by the wrapper in `LocalHelpers.lean`.
 -/
+
+@[expose] public section
 
 open FockSPR MeasureTheory Complex Real Polynomial
 

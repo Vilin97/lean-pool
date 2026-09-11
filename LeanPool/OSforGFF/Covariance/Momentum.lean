@@ -3,28 +3,28 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Factorial.DoubleFactorial
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Probability.Moments.IntegrableExpMul
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.SpecialFunctions.Bernstein
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+public import Mathlib.Data.Nat.Factorial.DoubleFactorial
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Probability.Moments.IntegrableExpMul
 
 -- Import our basic definitions
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.General.FunctionalAnalysis
-import LeanPool.OSforGFF.General.BesselFunction
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.Euclidean
+public import LeanPool.OSforGFF.General.FunctionalAnalysis
+public import LeanPool.OSforGFF.General.BesselFunction
 
 /-!
 # Momentum Space Propagator for Gaussian Free Field
@@ -47,6 +47,8 @@ via Fourier transform.
 - `freePropagator_smooth`, `freePropagator_complex_smooth`: Smoothness results
 - `freePropagator_pos`, `freePropagator_bounded`: Propagator is positive and bounded
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Real Filter
 open TopologicalSpace

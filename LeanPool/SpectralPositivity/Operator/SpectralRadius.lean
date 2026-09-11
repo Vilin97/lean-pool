@@ -3,12 +3,13 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.SpectralPositivity.Operator.JentzschProof
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Analysis.Normed.Algebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import LeanPool.SpectralPositivity.Operator.JentzschProof
+public import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import Mathlib.Analysis.Normed.Algebra.Spectrum
+public import Mathlib.Analysis.CStarAlgebra.Spectrum
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
 
 /-!
 # Spectral Radius Equals Norm for Self-Adjoint Operators
@@ -41,6 +42,8 @@ spectral radius.
 - Reed–Simon I, Theorem VI.6
 - Simon, *Trace Ideals*, Ch. 2
 -/
+
+@[expose] public section
 
 noncomputable section
 

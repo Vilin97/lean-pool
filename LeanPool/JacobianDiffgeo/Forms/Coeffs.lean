@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms.Basic
-import Mathlib.Geometry.Manifold.MFDeriv.Atlas
-import Mathlib.Geometry.Manifold.MFDeriv.Tangent
-import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+public import LeanPool.JacobianDiffgeo.Forms.Basic
+public import Mathlib.Geometry.Manifold.MFDeriv.Atlas
+public import Mathlib.Geometry.Manifold.MFDeriv.Tangent
+public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
 
 /-!
 # The chart-coefficient API for holomorphic 1-forms (CC1)
@@ -29,6 +30,8 @@ Main results:
 
 All downstream units interact with 1-forms exclusively through this API.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Bundle
 open Set

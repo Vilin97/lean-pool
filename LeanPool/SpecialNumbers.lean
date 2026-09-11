@@ -3,10 +3,11 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
+module
 
-import LeanPool.SpecialNumbers.Eulerian
-import LeanPool.SpecialNumbers.Euclidian
-import LeanPool.SpecialNumbers.Sylvester
+public import LeanPool.SpecialNumbers.Eulerian
+public import LeanPool.SpecialNumbers.Euclidian
+public import LeanPool.SpecialNumbers.Sylvester
 
 /-!
 # Special Numbers
@@ -18,6 +19,8 @@ Main declarations: `SpecialNumbers.sylvester`, `SpecialNumbers.eulerian`, `Speci
 Tags: number-theory, combinatorics, integer-sequences
 MSC: 11B73, 11B83
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

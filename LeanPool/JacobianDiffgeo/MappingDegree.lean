@@ -3,14 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.MappingDegree.Basics
-import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
-import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
-import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
-import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
-import LeanPool.JacobianDiffgeo.MappingDegree.Degree
-import LeanPool.JacobianDiffgeo.MappingDegree.Covering
+public import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+public import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
+public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
+public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+public import LeanPool.JacobianDiffgeo.MappingDegree.Covering
 
 /-!
 # mapping-degree: the mapping degree of a holomorphic map between compact Riemann surfaces
@@ -52,3 +53,5 @@ zeros-minus-poles identity; meromorphic-trace/form-trace-tower consume the whole
 structure; paths-and-integrals/abel-weak consume `branchLocus_finite` and
 `isCoveringMapOn_compl_branchLocus`.
 -/
+
+@[expose] public section

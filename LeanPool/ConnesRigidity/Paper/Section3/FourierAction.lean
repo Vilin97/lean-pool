@@ -10,13 +10,17 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: specialized the generic Fourier conjugacy block to Zhou's
 kernel and local Fourier unitary. Paper: §3. See the upstream PORT_MAP.md.
 -/
-import Mathlib.MeasureTheory.Function.Holder
-import LeanPool.ConnesRigidity.Porting.CoreTransfer
-import LeanPool.ConnesRigidity.Paper.Section3.Fourier
+module
+
+public import Mathlib.MeasureTheory.Function.Holder
+public import LeanPool.ConnesRigidity.Porting.CoreTransfer
+public import LeanPool.ConnesRigidity.Paper.Section3.Fourier
 
 /-!
 The fourier action component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFourierAction

@@ -12,11 +12,15 @@ constant and a unary symbol, and use an explicit two-point model to rule out
 easy completeness escapes.  They also instantiate the result at an ambient
 signature whose symbol type is not assumed countable.
 -/
-import LeanPool.MatchingLogic.EntryIII.Conclusion
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Conclusion
 
 /-!
 # MatchingLogic.EntryIII.Regression
 -/
+
+@[expose] public section
 
 namespace MatchingLogic.EntryIIIRegression
 

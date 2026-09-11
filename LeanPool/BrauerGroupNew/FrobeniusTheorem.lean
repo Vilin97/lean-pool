@@ -3,18 +3,21 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
-import LeanPool.BrauerGroupNew.Subfield.Subfield
-import Mathlib.Algebra.QuaternionBasis
-import Mathlib.Analysis.Quaternion
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
+public import LeanPool.BrauerGroupNew.Subfield.Subfield
+public import Mathlib.Algebra.QuaternionBasis
+public import Mathlib.Analysis.Quaternion
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # LeanPool.BrauerGroupNew.FrobeniusTheorem
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.FrobeniusTheorem`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

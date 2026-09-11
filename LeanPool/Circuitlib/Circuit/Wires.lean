@@ -3,9 +3,10 @@ Copyright (c) 2026 Matt Hunzinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
+module
 
-import Mathlib.Data.Nat.Notation
-import Mathlib.Order.Defs.PartialOrder
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Order.Defs.PartialOrder
 
 /-! # Wires
 
@@ -14,6 +15,8 @@ import Mathlib.Order.Defs.PartialOrder
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
+
+@[expose] public section
 
 namespace Circuit
 

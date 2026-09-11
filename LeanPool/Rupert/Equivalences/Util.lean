@@ -3,16 +3,19 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import LeanPool.Rupert.Basic
-import LeanPool.Rupert.Set
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import LeanPool.Rupert.Basic
+public import LeanPool.Rupert.Set
 
 /-!
 # LeanPool.Rupert.Equivalences.Util
 
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.Util`.
 -/
+
+@[expose] public section
 open Pointwise
 open Matrix
 

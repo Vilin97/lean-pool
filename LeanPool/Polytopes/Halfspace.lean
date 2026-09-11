@@ -3,15 +3,18 @@ Copyright (c) 2026 Jun Kwon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jun Kwon
 -/
+module
 
-import Mathlib.Analysis.Convex.Independent
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.Analysis.Normed.Module.HahnBanach
-import LeanPool.Polytopes.Pre
+public import Mathlib.Analysis.Convex.Independent
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+public import LeanPool.Polytopes.Pre
 
 /-!
 Halfspaces in inner product spaces and their basic geometric operations.
 -/
+
+@[expose] public section
 
 open Pointwise
 

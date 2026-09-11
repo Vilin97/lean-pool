@@ -3,11 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Entailment
-import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
+public import LeanPool.Incompleteness.Foundation.Logic.Entailment
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
 
 /-! # Supplemental -/
+
+@[expose] public section
 
 
 namespace LO

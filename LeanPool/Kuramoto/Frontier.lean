@@ -3,18 +3,19 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.ODE.ExistUnique
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Data.Nat.Nth
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import LeanPool.Kuramoto.Weighted
-import LeanPool.Kuramoto.Contraction
-import LeanPool.Kuramoto.OrderParameter
-import LeanPool.Kuramoto.GradientFlow
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.ODE.ExistUnique
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Data.Nat.Nth
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.Kuramoto.Weighted
+public import LeanPool.Kuramoto.Contraction
+public import LeanPool.Kuramoto.OrderParameter
+public import LeanPool.Kuramoto.GradientFlow
 
 /-!
 # Kuramoto Frontier: ODE Solutions, Lyapunov Stability, and Synchronisation
@@ -29,6 +30,8 @@ This file extends the Kuramoto oscillator library with results on:
 We build on the algebraic identities proved in `Weighted.lean`, `Contraction.lean`,
 and `GradientFlow.lean`.
 -/
+
+@[expose] public section
 
 open Real Finset
 

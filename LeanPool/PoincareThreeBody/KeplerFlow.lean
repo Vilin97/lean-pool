@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
-import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Tactic.FinCases
+public import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Tactic.FinCases
 
 /-!
 # The resonant ellipse as a Hamiltonian flow line
@@ -15,6 +16,8 @@ This file assembles the four scalar Kepler equations into a derivative of the fu
 curve and provides the chain-rule interface used to differentiate a candidate first integral along
 that curve.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

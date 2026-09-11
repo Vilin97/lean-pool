@@ -3,7 +3,9 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
+module
+
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
 
 /-!
 # Close-up: divisibility sub-cases
@@ -13,6 +15,8 @@ construction where a common prime factor p of the generators
 s' divides either the distinguished generator a or the witness
 c. Dividing out p reduces the GCD complexity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

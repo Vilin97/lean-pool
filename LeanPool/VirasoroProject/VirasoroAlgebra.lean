@@ -3,9 +3,11 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.IsCentralExtension
-import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
-import LeanPool.VirasoroProject.VirasoroCocycle
+module
+
+public import LeanPool.VirasoroProject.IsCentralExtension
+public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
+public import LeanPool.VirasoroProject.VirasoroCocycle
 
 /-!
 # The Virasoro algebra
@@ -43,6 +45,8 @@ would also be possible.)
 Virasoro algebra
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

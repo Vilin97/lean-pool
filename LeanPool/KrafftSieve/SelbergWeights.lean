@@ -13,8 +13,9 @@ Mathlib version: 8f9d9cff6bd728b17a24e163c9402775d9e6a365
 To cite Aristotle, tag @Aristotle-Harmonic on GitHub PRs/issues, and add as co-author to commits:
 Co-authored-by: Aristotle (Harmonic) <aristotle-harmonic@harmonic.fun>
 -/
+module
 
-import LeanPool.KrafftSieve.Basic
+public import LeanPool.KrafftSieve.Basic
 
 
 /-!
@@ -23,6 +24,8 @@ import LeanPool.KrafftSieve.Basic
 This module defines the permitted residue classes $localInterval$ and the global surviving set $A$,
 as well as the indicator function $f(x)$ for survivors in the Krafft Sieve.
 -/
+
+@[expose] public section
 
 namespace KrafftSieve
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H2
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H2
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2`
@@ -20,6 +21,8 @@ This extends `RellichKondrachov.Geometry.Manifold.Sobolev.Localization` by showi
 
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.localize_mem_C2c`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

@@ -3,12 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Preservation
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
+public import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Preservation
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
 
 /-! # Tree -/
+
+@[expose] public section
 
 namespace LO
 namespace Modal

@@ -3,14 +3,15 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.Definitions
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
-import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
-import Mathlib.Logic.Equiv.Set
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+public import LeanPool.TwoColoringOneRound.Definitions
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
+public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Final
+public import Mathlib.Logic.Equiv.Set
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
 /-!
 # Reduction: local rules → finite coloring bound
@@ -29,6 +30,8 @@ We use the already-formalized certified bound at `n = 1_000_000` to conclude
 already-formalized explicit construction to
 conclude `p ≤ 0.24118` for some `ClassicalAlgorithm`.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

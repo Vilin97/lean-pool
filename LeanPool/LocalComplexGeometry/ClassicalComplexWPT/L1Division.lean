@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Analysis.Analytic.Constructions
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
+public import Mathlib.Analysis.SpecificLimits.Normed
+public import Mathlib.Analysis.Analytic.Constructions
 
 /-!
 # Division in weighted `ℓ¹` sequence algebras
@@ -15,6 +16,8 @@ This file constructs bounded shifts, convolution division by a small tail,
 and the specialized one-variable quotient and remainder operators used in
 complex-analytic Weierstrass preparation.
 -/
+
+@[expose] public section
 
 open Finset
 open scoped ENNReal NNReal Topology

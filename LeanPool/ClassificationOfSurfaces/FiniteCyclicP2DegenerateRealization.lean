@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
-import LeanPool.ClassificationOfSurfaces.P2DegenerateDisk
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
+public import LeanPool.ClassificationOfSurfaces.P2DegenerateDisk
 
 /-!
 # Polygonal realization of one-sided-degenerate Gallier--Xu P2
@@ -13,6 +15,8 @@ This file lifts the local monogon--polygon disk theorem to finite cyclic present
 positive base case has an empty left cut word and a nonempty right cut word.  Reversal and child
 swap transport that case to every ordinary-valid one-sided-degenerate cut.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

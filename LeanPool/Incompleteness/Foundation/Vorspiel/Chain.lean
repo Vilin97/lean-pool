@@ -3,13 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Fintype.List
-import Mathlib.Data.List.Chain
-import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Fintype.List
+public import Mathlib.Data.List.Chain
+public import Mathlib.Data.Set.Finite.Basic
 
 /-! # Chain -/
+
+@[expose] public section
 
 
 namespace List

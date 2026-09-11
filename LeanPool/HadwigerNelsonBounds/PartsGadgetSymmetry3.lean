@@ -3,10 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetData
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetData
 
 /-! Generated central-inversion checks, group 3. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

@@ -11,11 +11,15 @@ Coordinates, boxes, and word-indexed reachability
 Definitions are written by the coordinating session from the paper; the statements below were pinned
 before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.Semantics
+module
+
+public import LeanPool.MatchingLogic.Semantics
 
 /-!
 # MatchingLogic.Boxes
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

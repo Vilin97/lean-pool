@@ -3,11 +3,15 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Topology.Order
+module
+
+public import Mathlib.Topology.Order
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.Topology.Order
 -/
+
+@[expose] public section
 
 section
 

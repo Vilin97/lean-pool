@@ -3,20 +3,20 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-
-import LeanPool.OSforGFF.Bochner.PositiveDefinite
-import LeanPool.OSforGFF.Bochner.FejerPD
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.MeasureTheory.Measure.TightNormed
-import Mathlib.MeasureTheory.Measure.IntegralCharFun
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import LeanPool.OSforGFF.Bochner.FejerPD
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.Fourier.Inversion
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+public import Mathlib.MeasureTheory.Measure.Prokhorov
+public import Mathlib.MeasureTheory.Measure.TightNormed
+public import Mathlib.MeasureTheory.Measure.IntegralCharFun
 
 /-!
 # Bochner's Theorem
@@ -66,6 +66,8 @@ avoiding the Riesz-Markov-Kakutani theorem entirely:
 - W. Rudin, *Fourier Analysis on Groups*, Wiley (1962), Theorem 1.4.3
 - G.B. Folland, *A Course in Abstract Harmonic Analysis*, CRC Press (2016), §4.2
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Filter Topology
 open scoped Real InnerProductSpace FourierTransform

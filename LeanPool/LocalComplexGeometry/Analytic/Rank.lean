@@ -3,13 +3,14 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
-import LeanPool.LocalComplexGeometry.Germs.Basic
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
+public import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
 
 /-!
 # Complex rank in finite-dimensional coordinate spaces
@@ -19,6 +20,8 @@ standard rank-`r` coordinate map from `ℂⁿ` to `ℂᵐ`.  The latter is a tot
 definition for arbitrary `n`, `m`, and `r`; its rank is exactly `r` when
 `r ≤ n` and `r ≤ m`.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

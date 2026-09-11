@@ -3,16 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Prop
-import LeanPool.QuasiBorelSpaces.Sigma
-import LeanPool.QuasiBorelSpaces.Sum
+public import LeanPool.QuasiBorelSpaces.Prop
+public import LeanPool.QuasiBorelSpaces.Sigma
+public import LeanPool.QuasiBorelSpaces.Sum
 
 /-!
 # LeanPool.QuasiBorelSpaces.SeparatesPoints
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.SeparatesPoints`.
 -/
+
+@[expose] public section
 
 variable
   {A : Type*} [QuasiBorelSpace A]

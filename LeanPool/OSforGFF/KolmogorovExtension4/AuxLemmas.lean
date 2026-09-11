@@ -3,14 +3,17 @@ Copyright (c) 2026 Rémy Degenne, Peter Pfaffelhuber. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Peter Pfaffelhuber
 -/
+module
 
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.MeasureTheory.MeasurableSpace.Defs
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.MeasureTheory.MeasurableSpace.Defs
 
 /-!
 
 THIS FILE IS NOT USED FOR THE MAIN RESULT
 -/
+
+@[expose] public section
 
 open Finset Set Filter
 

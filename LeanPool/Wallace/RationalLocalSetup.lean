@@ -3,11 +3,12 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.RationalClosure
-import LeanPool.Wallace.CountableDisjointization
-import LeanPool.Wallace.FusionSchedule
-import LeanPool.Wallace.BoundedIndependentMap
+public import LeanPool.Wallace.RationalClosure
+public import LeanPool.Wallace.CountableDisjointization
+public import LeanPool.Wallace.FusionSchedule
+public import LeanPool.Wallace.BoundedIndependentMap
 
 /-!
 # The countable block schedule around one rational vector
@@ -16,6 +17,8 @@ Relevant codes are countable.  Their almost-disjoint labels are disjointized, so
 has at most one active code, and its shifted prepared terms form the finite independent set
 used by the fusion.
 -/
+
+@[expose] public section
 
 open Set
 

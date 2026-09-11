@@ -3,9 +3,11 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import Mathlib.Algebra.Order.Ring.GeomSum
-import Mathlib.Data.Nat.Digits.Defs
-import Mathlib.Tactic.IntervalCases
+module
+
+public import Mathlib.Algebra.Order.Ring.GeomSum
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Tactic.IntervalCases
 
 /-!
 # Boolean cube basics
@@ -14,6 +16,8 @@ This file defines Boolean-cube vertices, Hamming distance, closed neighborhoods,
 simplicial order, initial segments, slicing maps, and the Harper boundary
 function `H`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

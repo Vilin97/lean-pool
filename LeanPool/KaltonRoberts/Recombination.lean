@@ -12,7 +12,9 @@ from the companion paper.
 
 **Reference**: Lemma 3.2 in Section 3 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.Defs
 
 /-!
 # One-sided recombination
@@ -20,6 +22,8 @@ import LeanPool.KaltonRoberts.Defs
 Witness-level one-sided recombination theorem for approximate additive
 functions.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

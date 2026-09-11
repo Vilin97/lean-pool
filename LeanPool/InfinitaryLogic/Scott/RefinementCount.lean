@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.OrdinalUtil
-import LeanPool.InfinitaryLogic.Scott.Sentence
+module
+
+public import LeanPool.InfinitaryLogic.OrdinalUtil
+public import LeanPool.InfinitaryLogic.Scott.Sentence
 /-!
 # Proof of CountableRefinementHypothesis
 
@@ -29,6 +31,8 @@ The proof uses the "constant chain" argument:
 
 - `countableRefinementHypothesis` : `CountableRefinementHypothesis L`
 -/
+
+@[expose] public section
 
 universe u v w
 

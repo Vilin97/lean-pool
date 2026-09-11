@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIntegrability
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIntegrability
 
 /-!
 # Weak radial stationarity identity
@@ -12,6 +14,8 @@ This module turns weak stationarity tested against radial vector fields into
 the weak radial integral identity, with integrability side conditions supplied
 by `RadialIntegrability`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,17 +3,20 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.Nat
-import LeanPool.QuasiBorelSpaces.Pi
-import LeanPool.QuasiBorelSpaces.Subtype
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.Nat
+public import LeanPool.QuasiBorelSpaces.Pi
+public import LeanPool.QuasiBorelSpaces.Subtype
 
 /-!
 # LeanPool.QuasiBorelSpaces.Functor
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Functor`.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace
 

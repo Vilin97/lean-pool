@@ -3,9 +3,10 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Node
-import LeanPool.IsoGraph.ForMathlib.Array
+public import LeanPool.IsoGraph.Canon.Node
+public import LeanPool.IsoGraph.ForMathlib.Array
 
 /-!
 # Refinement splits cells, so the search terminates with a leaf in hand
@@ -21,6 +22,8 @@ has depth at most `n`, and the fuel is enough (`dfsNode_best`).  The other thing
 the *first* child of a node is never orbit-pruned, which holds because the orbit mark starts out
 empty and is only refreshed when an automorphism has been found — which happens only at a leaf.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

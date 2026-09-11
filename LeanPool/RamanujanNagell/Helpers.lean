@@ -3,21 +3,22 @@ Copyright (c) 2026 Barinder S. Banwait. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Barinder S. Banwait
 -/
+module
 
-import Mathlib.Algebra.QuadraticAlgebra.Basic
-import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
-import Mathlib.Algebra.Order.Round
-import Mathlib.Data.Rat.Floor
-import Mathlib.RingTheory.PrincipalIdealDomain
-import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.NumberTheory.Multiplicity
-import Mathlib.RingTheory.Polynomial.Basic
-import Mathlib.RingTheory.Int.Basic
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Polyrith
+public import Mathlib.Algebra.QuadraticAlgebra.Basic
+public import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
+public import Mathlib.Algebra.Order.Round
+public import Mathlib.Data.Rat.Floor
+public import Mathlib.RingTheory.PrincipalIdealDomain
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.NumberTheory.Multiplicity
+public import Mathlib.RingTheory.Polynomial.Basic
+public import Mathlib.RingTheory.Int.Basic
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Polyrith
 
 /-!
 # Algebraic infrastructure for `R = QuadraticAlgebra ℤ (-2) 1 = ℤ[(1+√-7)/2]`
@@ -32,6 +33,8 @@ rather than through `𝓞 K` where `K = QuadraticAlgebra ℚ (-2) 1`. The payoff
 * `EuclideanDomain R → IsPrincipalIdealRing R → UniqueFactorizationMonoid R`
   replaces the discriminant / class-number-1 detour through Dirichlet.
 -/
+
+@[expose] public section
 
 namespace RamanujanNagell
 

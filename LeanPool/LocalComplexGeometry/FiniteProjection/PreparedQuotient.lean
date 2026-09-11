@@ -3,12 +3,13 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
-import Mathlib.LinearAlgebra.Isomorphisms
-import Mathlib.LinearAlgebra.Quotient.Basic
-import Mathlib.LinearAlgebra.StdBasis
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+public import Mathlib.LinearAlgebra.Isomorphisms
+public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.LinearAlgebra.StdBasis
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # The finite-free quotient by a prepared polynomial
@@ -18,6 +19,8 @@ the quotient by a prepared polynomial with its vector of `d` coefficients.
 Transporting the standard function-space basis gives the classes of
 `1, w, ..., w^(d-1)`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

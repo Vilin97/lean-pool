@@ -3,7 +3,9 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import Mathlib.Order.Basic
+module
+
+public import Mathlib.Order.Basic
 
 /-!
 # Event structures
@@ -13,6 +15,8 @@ partial order and an irreflexive, symmetric binary conflict relation, together
 with the derived consistency, concurrency, minimal-conflict and past/future
 notions used throughout the development, and decidability data for events.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

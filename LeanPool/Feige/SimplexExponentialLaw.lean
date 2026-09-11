@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.NormalizedExponentialProbability
-import LeanPool.Feige.GeometryBridge
+module
+
+public import LeanPool.Feige.NormalizedExponentialProbability
+public import LeanPool.Feige.GeometryBridge
 
 /-!
 # Uniform simplex law from normalized exponentials
@@ -13,6 +15,8 @@ This module identifies the factorial-density simplex measure obtained by
 the normalized-exponential calculation with the project's existing uniform
 simplex probability measure.
 -/
+
+@[expose] public section
 
 open scoped ENNReal
 open MeasureTheory Set

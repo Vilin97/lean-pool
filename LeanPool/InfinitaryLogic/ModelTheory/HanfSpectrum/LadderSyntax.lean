@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.CountableIndex
-import Mathlib.SetTheory.Ordinal.Arithmetic
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.CountableIndex
+public import Mathlib.SetTheory.Ordinal.Arithmetic
 
 /-!
 # The beth-ladder syntax (Marker, Exercise 5.3)
@@ -32,6 +34,8 @@ equivalent to the six named clause predicates bundled in `IsLadderModel` — dow
 (the `α = 0` powerset model, the general upper-bound induction) work with those predicates and
 never unfold binders, `ciInf`/`ciSup`, or valuation bookkeeping again.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

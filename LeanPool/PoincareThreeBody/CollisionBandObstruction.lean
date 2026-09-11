@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.ResonantAverageSeparation
+public import LeanPool.PoincareThreeBody.ResonantAverageSeparation
 
 /-!
 # The leading obstruction on collision-band resonances
@@ -12,6 +13,8 @@ import LeanPool.PoincareThreeBody.ResonantAverageSeparation
 Fiberwise density in eccentricity propagates each collision-band resonant obstruction from the
 nondegenerate eccentricities to every admissible eccentricity at that resonance.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

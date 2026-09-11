@@ -3,13 +3,16 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Topology.Order.LowerUpperTopology
-import Mathlib.Topology.Semicontinuity.Basic
+public import Mathlib.Topology.Order.LowerUpperTopology
+public import Mathlib.Topology.Semicontinuity.Basic
 
 /-!
 # LeanPool.SardMoreira.UpperLowerSemicontinuous
 -/
+
+@[expose] public section
 
 open Set Filter Function TopologicalSpace
 

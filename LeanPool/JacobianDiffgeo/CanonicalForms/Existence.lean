@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
-import LeanPool.JacobianDiffgeo.Finiteness.Chi
-import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
+public import LeanPool.JacobianDiffgeo.Finiteness.Chi
+public import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # D9: existence of a nonconstant meromorphic function and a nonzero meromorphic 1-form
@@ -50,6 +51,8 @@ plan flagged as "the ONLY file gated on finiteness-and-chi" can finally be writt
   `OneDimensional.lean` since they have no finiteness dependence, need a witness `θ₀ ≠ 0` to be
   instantiated at all; D9 supplies it).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

@@ -3,10 +3,11 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.FiniteCombinatorics
-import LeanPool.Wallace.UniformKronecker
-import Mathlib.Data.Finset.Lattice.Basic
+public import LeanPool.Wallace.FiniteCombinatorics
+public import LeanPool.Wallace.UniformKronecker
+public import Mathlib.Data.Finset.Lattice.Basic
 
 /-!
 # One finite character-fusion stage
@@ -14,6 +15,8 @@ import Mathlib.Data.Finset.Lattice.Basic
 This module turns the bounded-deletion conclusion into the exact short-relation compatibility
 required by the uniform Kronecker lemma.  It is the finite algebraic heart of one fusion stage.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

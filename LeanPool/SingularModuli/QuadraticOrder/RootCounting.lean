@@ -3,10 +3,11 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import Mathlib.NumberTheory.LegendreSymbol.Basic
-import Mathlib.RingTheory.Multiplicity
-import Mathlib.RingTheory.ZMod.UnitsCyclic
+public import Mathlib.NumberTheory.LegendreSymbol.Basic
+public import Mathlib.RingTheory.Multiplicity
+public import Mathlib.RingTheory.ZMod.UnitsCyclic
 
 /-!
 # Layer 3: Root Counting for Quadratic Congruences
@@ -14,6 +15,8 @@ import Mathlib.RingTheory.ZMod.UnitsCyclic
 This file counts solutions to `x² ≡ c (mod p^n)` for prime powers `p^n`.
 These are the "analytic inputs" for the ideal-counting theorems (Layer 4).
 -/
+
+@[expose] public section
 
 namespace QuadraticOrder
 

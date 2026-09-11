@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.API
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.API
 
 /-!
 # Minimal use of the public monotonicity API
@@ -12,6 +14,8 @@ This file is intentionally small: it checks that an external caller can import
 the public API and apply both the witness-style stationary Sobolev monotonicity
 formula/theorem and the older componentwise convenience wrappers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

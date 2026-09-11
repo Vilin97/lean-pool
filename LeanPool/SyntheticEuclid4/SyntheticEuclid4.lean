@@ -3,14 +3,18 @@ Copyright (c) 2026 André Hernandez-Espiet, Vladimir Sedlacek. All rights reserv
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
-import LeanPool.SyntheticEuclid4.PermTactics
-import Mathlib.Tactic.WLOG
+module
+
+public import LeanPool.SyntheticEuclid4.PermTactics
+public import Mathlib.Tactic.WLOG
 
 /-!
 # Synthetic Geometry, Euclid's Elements Book I using Avigad Axioms
 In this file we prove the Pythagorean theorem (Euclid I.47) using Avigad's axioms for synthetic
 geometry.
 -/
+
+@[expose] public section
 
 namespace SyntheticEuclid4
 

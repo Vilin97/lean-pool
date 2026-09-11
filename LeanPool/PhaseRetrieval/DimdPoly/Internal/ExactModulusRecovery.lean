@@ -3,20 +3,24 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import Mathlib.Analysis.Calculus.Deriv.Star
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.Fourier.LpSpace
-import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.Probability.Distributions.Gaussian.Real
-import Mathlib.Probability.Moments.ComplexMGF
-import Mathlib.RingTheory.Polynomial.Hermite.Basic
-import Mathlib.Topology.Algebra.Module.Cardinality
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Star
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.Fourier.LpSpace
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import Mathlib.Probability.Moments.ComplexMGF
+public import Mathlib.RingTheory.Polynomial.Hermite.Basic
+public import Mathlib.Topology.Algebra.Module.Cardinality
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
 
 /-! # ExactModulusRecovery -/
+
+@[expose] public section
 
 
 noncomputable section

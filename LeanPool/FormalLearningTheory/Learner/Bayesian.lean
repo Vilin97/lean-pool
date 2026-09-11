@@ -3,7 +3,9 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Learner.Core
+module
+
+public import LeanPool.FormalLearningTheory.Learner.Core
 
 /-!
 # Bayesian Inference and Learners
@@ -12,6 +14,8 @@ BayesianInference bundles prior, likelihood, and posterior computation.
 BayesianLearner extends BatchLearner with Bayesian inference machinery.
 GibbsPosterior adds temperature for PAC-Bayes optimization.
 -/
+
+@[expose] public section
 
 universe u v
 

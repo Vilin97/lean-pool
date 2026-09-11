@@ -7,7 +7,9 @@ Authors: Ho Boon Suan
 /-
 # Derivative computations for the Phi function
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.Defs
 
 /-!
 # Derivative computations for the Phi function
@@ -15,6 +17,8 @@ import LeanPool.KaltonRoberts.Defs
 First and second derivative computations for the entropy expressions defining
 the Phi functions.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

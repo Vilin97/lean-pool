@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
 
 /-!
 # Non-differentiability at partition points and derivative continuity
@@ -12,6 +13,8 @@ import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
 Proves the homotopy is not differentiable at t ∈ {1, 3, 4} (left/right derivatives
 differ) and that the per-segment derivatives are continuous.
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

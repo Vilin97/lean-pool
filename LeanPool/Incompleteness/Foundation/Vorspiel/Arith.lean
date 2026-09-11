@@ -3,15 +3,18 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
-import Mathlib.Computability.Halting
-import Mathlib.Computability.PartrecBasis
-import Mathlib.Data.Nat.ModEq
-import Mathlib.Data.List.FinRange
-import Mathlib.Logic.Godel.GodelBetaFunction
+public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+public import Mathlib.Computability.Halting
+public import Mathlib.Computability.PartrecBasis
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Data.List.FinRange
+public import Mathlib.Logic.Godel.GodelBetaFunction
 
 /-! # Arith -/
+
+@[expose] public section
 
 
 open Mathlib List.Vector Part

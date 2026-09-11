@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.MathlibFoundations
-import Mathlib.Topology.Instances.AddCircle.Real
+public import LeanPool.Wallace.MathlibFoundations
+public import Mathlib.Topology.Instances.AddCircle.Real
 
 /-!
 # Coefficient-parametric transfinite character extension
@@ -15,6 +16,8 @@ The coefficient-specific input is an additive character on one coordinate whose 
 a prescribed circle element. The integer specialization uses scalar multiplication; the rational
 specialization obtains the character from Baer's extension theorem.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

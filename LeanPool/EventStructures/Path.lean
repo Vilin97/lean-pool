@@ -3,12 +3,14 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import LeanPool.EventStructures.Basic
-import LeanPool.EventStructures.Configuration
-import LeanPool.EventStructures.Trace
-import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.Data.Setoid.Basic
-import Mathlib.Data.Nat.Find
+module
+
+public import LeanPool.EventStructures.Basic
+public import LeanPool.EventStructures.Configuration
+public import LeanPool.EventStructures.Trace
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.Data.Setoid.Basic
+public import Mathlib.Data.Nat.Find
 
 /-!
 # Paths in the configuration graph
@@ -18,6 +20,8 @@ structure, their composition, traces and lengths, the minimal path length, the
 quotient of paths by trace equivalence (asynchronous paths), and the resulting
 (synchronous and asynchronous) path categories.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

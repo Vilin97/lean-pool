@@ -3,14 +3,17 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 variable {α β γ : Type*} {a : α} {m n : ℕ}

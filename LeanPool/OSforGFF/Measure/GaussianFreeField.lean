@@ -3,24 +3,24 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Analytic.Constructions
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
 
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-import Mathlib.LinearAlgebra.BilinearMap
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.OS.Axioms
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Schwinger.Defs
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.OS.Axioms
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Spacetime.Euclidean
+public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
+public import LeanPool.OSforGFF.Schwinger.Defs
 
 /-!
 # Gaussian Free Field Assembly
@@ -31,6 +31,8 @@ Defines muGFF m as a ProbabilityMeasure and proves two OS axioms for general Gau
   (the primary OS0 proof via Hartogs is in `OS.os0Analyticity`)
 - OS2 (Euclidean invariance): Z[gf] = Z[f] when covariance is E(4)-invariant
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex
 open TopologicalSpace SchwartzMap

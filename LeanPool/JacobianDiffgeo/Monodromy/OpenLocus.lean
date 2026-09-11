@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path
-import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import LeanPool.JacobianDiffgeo.Path
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
 
 /-!
 # `monodromy`: the open pole/zero-free locus as a Riemann surface
@@ -25,6 +26,8 @@ Main declarations:
 * `RS.Monodromy.Path.liftOpenLocus` — lift a path of `X` whose range avoids the bad set to a path
   in the open locus; `RS.Monodromy.Path.liftOpenLocus_extend` recovers `γ.extend` pointwise.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open TopologicalSpace Set

@@ -3,16 +3,17 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.PiStarOrderedRing
-import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
-import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-import LeanPool.Monlib4.Preq.Complex
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
-import Mathlib.Analysis.InnerProductSpace.Basic
+public import LeanPool.Monlib4.LinearAlgebra.PiStarOrderedRing
+public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
+public import LeanPool.Monlib4.LinearAlgebra.InnerAut
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import LeanPool.Monlib4.Preq.Complex
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
+public import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Matrix algebras as star ordered rings
@@ -22,6 +23,8 @@ This file keeps the upstream monlib4 API around matrix positivity and the
 order and `StarOrderedRing` instance, so this file restores the Monlib-facing
 negative definiteness definitions, spectral criteria, and compatibility names.
 -/
+
+@[expose] public section
 
 namespace Matrix
 

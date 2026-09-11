@@ -14,7 +14,9 @@ recombination pipeline (Sections 3–5).
 
 **Reference**: Lemma 2.3 and Section 5 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.Defs
 
 /-!
 # Weighted finite collections and certificate mass decomposition
@@ -22,6 +24,8 @@ import LeanPool.KaltonRoberts.Defs
 Weighted collections and the positive/negative mass decomposition of a dual
 certificate for the low-frequency construction and recombination pipeline.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

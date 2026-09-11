@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic.Field
-import Mathlib.Topology.LocallyFinsupp
+public import LeanPool.JacobianDiffgeo.Meromorphic.Field
+public import Mathlib.Topology.LocallyFinsupp
 
 /-!
 # Divisors (CC2) and the divisor map `divisor : ℳ X → Divisor X` (CC3)
@@ -23,6 +24,8 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.6,
   effectivity (`divisor_nonneg_iff`), compactness finiteness (`finite_support_divisor`,
   `finite_setOf_ord_neg/pos`, `eventually_ord_eq_zero`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

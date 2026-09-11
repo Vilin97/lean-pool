@@ -3,9 +3,11 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.IsComputable
-import Mathlib.Data.Real.Sign
-import Mathlib.Data.Real.ConjExponents
+module
+
+public import LeanPool.ComputableReal.IsComputable
+public import Mathlib.Data.Real.Sign
+public import Mathlib.Data.Real.ConjExponents
 
 /-!
 # `IsComputable` instances for basic real operations
@@ -15,6 +17,8 @@ This file provides `IsComputable` instances for scientific literals, `dite`/`ite
 under the basic operations on real numbers. The instances that branch on a comparison
 (`Real.sign`, `max`, `min`, `abs`) inherit its classical sign test and are `noncomputable`.
 -/
+
+@[expose] public section
 
 namespace IsComputable
 

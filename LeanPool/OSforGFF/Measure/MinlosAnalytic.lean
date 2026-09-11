@@ -3,23 +3,23 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Analysis.LocallyConvex.Basic
+public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Topology.Algebra.Algebra
+public import Mathlib.Topology.Basic
+public import Mathlib.Order.Filter.Basic
+public import Mathlib.Topology.Constructions
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.LocallyConvex.Basic
-import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Topology.Algebra.Algebra
-import Mathlib.Topology.Basic
-import Mathlib.Order.Filter.Basic
-import Mathlib.Topology.Constructions
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Measure.Minlos
-import Mathlib.MeasureTheory.Measure.Map
-import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Measure.Minlos
+public import Mathlib.MeasureTheory.Measure.Map
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 
 /-!
 # Minlos Analyticity — Symmetry and Moments for Gaussian Measures
@@ -29,6 +29,8 @@ This file provides infrastructure for Gaussian measures constructed via Minlos' 
 - `negMap`, `integral_neg_invariance`: Symmetry under sign flip (uses Minlos uniqueness)
 - `moment_zero_from_realCF`: Zero mean from characteristic functional symmetry
 -/
+
+@[expose] public section
 
 open TopologicalSpace MeasureTheory Complex Filter
 

@@ -3,14 +3,17 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression
+public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Compression
 
 /-!
 # LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq`.
 -/
+
+@[expose] public section
 
 open scoped unitInterval Topology Topology.Homotopy
 open ContinuousMap

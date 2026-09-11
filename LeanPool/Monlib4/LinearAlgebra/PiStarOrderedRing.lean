@@ -3,17 +3,21 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Order.Star.Basic
-import Mathlib.Algebra.Group.Subgroup.Basic
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Algebra.Star.Pi
-import Mathlib.Data.Complex.Basic
+module
+
+public import Mathlib.Algebra.Order.Star.Basic
+public import Mathlib.Algebra.Group.Subgroup.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Algebra.Star.Pi
+public import Mathlib.Data.Complex.Basic
 
 /-!
   # pi.star_ordered_ring
 
   This file contains the definition of `pi.star_ordered_ring`.
 -/
+
+@[expose] public section
 
 /-- Coordinate projection of a set of dependent functions along `Pi.single`. -/
 def Set.ofPi {ι : Type _} {B : ι → Type _} [DecidableEq ι] [∀ i, Zero (B i)] (s : Set (∀ i, B i)) :

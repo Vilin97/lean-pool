@@ -3,13 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.FunProp
-import Mathlib.Tactic.Linarith
-import Mathlib.Topology.Separation.Hausdorff
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.FunProp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # Resonant covectors in two degrees of freedom
@@ -19,6 +20,8 @@ a resonant action, both the unperturbed frequency and the differential of the le
 of a putative first integral annihilate the same nonzero resonance vector. In two dimensions, the
 two covectors must therefore be linearly dependent.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

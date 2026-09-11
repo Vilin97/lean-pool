@@ -3,15 +3,18 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.ComplementClosedConsistentFinset
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomGrz
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
+public import LeanPool.Incompleteness.Foundation.Modal.ComplementClosedConsistentFinset
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomGrz
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Grz
 
 /-! # Soundness -/
+
+@[expose] public section
 
 
 namespace LO

@@ -3,8 +3,9 @@ Copyright (c) 2026 KitaKen1. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KitaKen1
 -/
+module
 
-import LeanPool.Erdos346.LimitExistsVariant
+public import LeanPool.Erdos346.LimitExistsVariant
 
 /-!
 # Erdős Problem 346: Ratio Limit Forces the Golden Ratio
@@ -16,3 +17,5 @@ Main declarations: `Erdos346.intended_problem_if_limit_exists`
 Tags: number-theory, golden-ratio, erdos-problems
 MSC: 11B05, 11J70
 -/
+
+@[expose] public section

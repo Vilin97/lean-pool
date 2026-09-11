@@ -3,8 +3,10 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.VMLStructures
-import LeanPool.Clawristotle.FlatTorus3Lemmas
+module
+
+public import LeanPool.Clawristotle.VMLStructures
+public import LeanPool.Clawristotle.FlatTorus3Lemmas
 
 /-!
 # Bulk Velocity Vanishes (Section 6)
@@ -12,6 +14,8 @@ import LeanPool.Clawristotle.FlatTorus3Lemmas
 Proves that the drift velocity u_inf = 0 using Ampere's law, Stokes' theorem
 on the torus, and positivity of the charge density.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

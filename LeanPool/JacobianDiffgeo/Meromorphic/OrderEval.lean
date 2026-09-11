@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
-import Mathlib.Analysis.Meromorphic.NormalForm
+public import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
+public import Mathlib.Analysis.Meromorphic.NormalForm
 
 /-!
 # Order, canonical value, and `holoRepr` on germ classes (CC3, D3/D5)
@@ -21,6 +22,8 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.4,
   `holoRepr_contMDiffAt` shows it is honestly holomorphic wherever `0 ≤ ord`; `mk_holoRepr` shows
   it recovers `φ` as a class. This is the rigidified normal form the blueprint needs for Čech.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

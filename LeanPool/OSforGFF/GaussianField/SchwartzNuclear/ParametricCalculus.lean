@@ -3,10 +3,11 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
-import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+public import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
 # Parametric Calculus
@@ -22,6 +23,8 @@ not yet available in Mathlib. Used as building blocks in the SchwartzNuclear pro
   function is integrated against another Schwartz function along a smooth parametric embedding,
   the result is C^∞ and derivatives commute with the integral.
 -/
+
+@[expose] public section
 
 open MeasureTheory SchwartzMap
 open scoped ContDiff

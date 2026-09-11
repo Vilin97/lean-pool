@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
-import LeanPool.JacobianDiffgeo.ResidueCalculus
+public import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
+public import LeanPool.JacobianDiffgeo.ResidueCalculus
 
 /-!
 # `MFormData.ord`/`resAt` (D4), chart-invariance, and `divisor` (D6) — data layer
@@ -27,6 +28,8 @@ order,
 * `MFormData.divisor`/`MFormData.degree` (D6): local finiteness is connectedness-free, mirroring
   `MeroGermOn.divisorOn`'s proof exactly.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

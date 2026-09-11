@@ -3,10 +3,12 @@ Copyright (c) 2024 Kei Tsukamoto. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kei Tsukamoto, Kazumi Kasaura, Naoto Onda, Yuma Mizuno, Sho Sonoda
 -/
-import Mathlib.Probability.Moments.Tilted
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.MeasureTheory.Measure.Tilted
+module
+
+public import Mathlib.Probability.Moments.Tilted
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.MeasureTheory.Measure.Tilted
 
 /-!
 # Derivatives of Moment and Cumulant Generating Functions
@@ -25,6 +27,8 @@ This module extends Mathlib's existing moment-generating and tilted-measure defi
 * `ProbabilityTheory.cgf_deriv_one`: first derivative of the cumulant generating function.
 * `ProbabilityTheory.cgf_deriv_two`: second derivative of the cumulant generating function.
 -/
+
+@[expose] public section
 
 namespace LeanPool
 

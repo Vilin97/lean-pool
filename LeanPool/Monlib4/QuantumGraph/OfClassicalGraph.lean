@@ -3,16 +3,20 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
-import LeanPool.Monlib4.QuantumGraph.Basic
-import LeanPool.Monlib4.QuantumGraph.Example
-import LeanPool.Monlib4.QuantumGraph.Grad
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
+public import LeanPool.Monlib4.QuantumGraph.Basic
+public import LeanPool.Monlib4.QuantumGraph.Example
+public import LeanPool.Monlib4.QuantumGraph.Grad
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.OfClassicalGraph
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.OfClassicalGraph`.
 -/
+
+@[expose] public section
 
 noncomputable instance {n : Type*} :
   starAlgebra (PiQ (fun _ : n => ℂ)) :=

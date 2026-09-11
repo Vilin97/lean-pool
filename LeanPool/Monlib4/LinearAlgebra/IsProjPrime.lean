@@ -3,8 +3,9 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 
 /-!
  # is_proj'
@@ -12,6 +13,8 @@ import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 This file contains the definition of `linear_map.is_proj'` and lemmas relating to it, which is
 essentially `linear_map.is_proj` but as a linear map from `E` to `U`.
 -/
+
+@[expose] public section
 
 section
 

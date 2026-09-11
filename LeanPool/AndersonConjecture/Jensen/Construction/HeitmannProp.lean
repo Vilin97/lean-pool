@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.AdicCompletion.RingHom
-import Mathlib.RingTheory.Ideal.Height
-import Mathlib.RingTheory.Regular.RegularSequence
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.RingTheory.AdicCompletion.RingHom
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Regular.RegularSequence
 
 /-!
 # Heitmann's Proposition 1
@@ -18,6 +20,8 @@ depth T >= 2, associated primes of T have height at most 1.
 
 Heitmann, "Characterization of completions of UFDs", 1993, Prop. 1.
 -/
+
+@[expose] public section
 
 universe u
 

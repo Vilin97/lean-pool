@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path.Continuation
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
 
 /-!
 # Homotopy invariance: the 2D grid argument (CC6)
@@ -22,6 +23,8 @@ Main declarations:
 * `RS.pathIntegral_congr_homotopic`, `RS.pathIntegralQ`, `RS.pathIntegral_congr_freeHomotopic`,
   `RS.pathIntegral_eq_of_simplyConnected`, `RS.period_eq_zero_of_homotopic_refl`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter

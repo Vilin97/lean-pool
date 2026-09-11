@@ -30,13 +30,17 @@ Representation rulings (fixed before any proof was written):
   structural recursor.
 * Denotations are `Set M`, i.e. `M → Prop`, classically.
 -/
-import Mathlib.Data.Set.Basic
-import Mathlib.Data.Set.Lattice
-import Mathlib.Logic.Function.Basic
+module
+
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Set.Lattice
+public import Mathlib.Logic.Function.Basic
 
 /-!
 # MatchingLogic.Core
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

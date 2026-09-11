@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.AnalyticCompactParameterIntegral
-import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
+public import LeanPool.PoincareThreeBody.AnalyticCompactParameterIntegral
+public import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
 
 /-!
 # Analytic eccentricity dependence of the resonant disturbing average
@@ -13,6 +14,8 @@ import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
 The joint analyticity of the disturbing function and compact parameter-integral theorem imply
 that averaging over one resonant period preserves real analyticity in eccentricity.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Tactic.Linarith
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Witness geometry
@@ -14,6 +15,8 @@ A direct force-magnitude form of the one-dimensional barrier-asymmetry claim: at
 distances from the minimum, different quadratic curvatures give different restoring-force
 magnitudes.
 -/
+
+@[expose] public section
 
 open Real
 

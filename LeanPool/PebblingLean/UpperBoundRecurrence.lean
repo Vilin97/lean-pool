@@ -3,9 +3,10 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import LeanPool.PebblingLean.HypercubeProduct
-import LeanPool.PebblingLean.UpperBoundProbability
+public import LeanPool.PebblingLean.HypercubeProduct
+public import LeanPool.PebblingLean.UpperBoundProbability
 
 /-!
 # Recurrence bridge for the upper bound
@@ -15,6 +16,8 @@ deterministic product recursion.  It is still parameterized by the numerical
 annulus estimates; once those are instantiated, this theorem is the formal
 recursion step used in the upper bound.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

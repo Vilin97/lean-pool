@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Constant generalization: the `∀`-twin of `genEx`, and countable-conjunction bounds
 
@@ -32,6 +34,8 @@ the members.
 Nothing here is specific to Malitz interpolation (issue #15) or to end extensions (issue #16); both
 consume it.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

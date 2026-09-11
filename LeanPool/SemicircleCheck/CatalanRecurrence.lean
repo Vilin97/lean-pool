@@ -3,11 +3,12 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import LeanPool.SemicircleCheck.FinRotateLemmas
-import LeanPool.SemicircleCheck.RotationArithmetic
-import LeanPool.SemicircleCheck.GenusNoncrossing
-import LeanPool.SemicircleCheck.EvenCard
+public import LeanPool.SemicircleCheck.FinRotateLemmas
+public import LeanPool.SemicircleCheck.RotationArithmetic
+public import LeanPool.SemicircleCheck.GenusNoncrossing
+public import LeanPool.SemicircleCheck.EvenCard
 
 /-!
   THE CATALAN SCALPEL
@@ -27,6 +28,8 @@ import LeanPool.SemicircleCheck.EvenCard
   3. Parity theorem: p(0) is always odd for noncrossing p
   4. catalanEquiv: NoncrossingPairing(n+1) ≃ Σ k, NCP(k) × NCP(n-k)
 -/
+
+@[expose] public section
 
 open Equiv Equiv.Perm Fintype
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import Mathlib.Algebra.Notation.Indicator
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.Topology.Algebra.InfiniteSum.Real
+module
+
+public import Mathlib.Algebra.Notation.Indicator
+public import Mathlib.NumberTheory.Chebyshev
+public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
 /-!
 # Basic definitions for primitive sets above `x`
@@ -25,6 +27,8 @@ and `μ_x`, and the abstract Markov-layer interface used for the visit-probabili
 * `initialDistribution`
 * `MarkovLayer`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators
 

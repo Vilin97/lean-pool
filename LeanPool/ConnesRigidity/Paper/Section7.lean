@@ -5,7 +5,9 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Paper.Section7.TheoremACompletion
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section7.TheoremACompletion
 
 /-!
 # Zhou §7: completion of Theorem A
@@ -13,3 +15,5 @@ import LeanPool.ConnesRigidity.Paper.Section7.TheoremACompletion
 This facade exposes the assembled paper endpoint relative to the cited EJZK
 property-(T) input.
 -/
+
+@[expose] public section

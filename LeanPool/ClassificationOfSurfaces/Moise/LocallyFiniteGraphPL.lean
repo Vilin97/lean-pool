@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphApproximation
 
 /-!
 # Finite PL models for locally finite graph replacements
@@ -14,6 +16,8 @@ and adds the two radial spokes. The resulting finite plane complex has exactly t
 replacement edge as support. It is the edge-level input for assembling polygonal face
 boundaries in a common arrangement.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

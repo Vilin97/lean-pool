@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Product
-import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+public import LeanPool.DomainTheory.Neighborhood.Product
+public import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
 
 /-!
 # Example 6.1 (Scott 1981, PRG-19, §6) — the tree algebra `D^§` and the domain
@@ -48,6 +49,8 @@ We use the project's `+` (`sum`, Exercise 3.18) and `×` (`prod`, Definition 3.1
 All *data* is
 choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

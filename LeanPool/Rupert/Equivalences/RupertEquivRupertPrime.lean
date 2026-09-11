@@ -3,14 +3,17 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import LeanPool.Rupert.Equivalences.Util
+public import LeanPool.Rupert.Equivalences.Util
 
 /-!
 # LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
 
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.RupertEquivRupertPrime`.
 -/
+
+@[expose] public section
 open Matrix
 
 theorem rupert'_imp_rupert {ι : Type} (v : ι → ℝ³) : IsRupert' v → IsRupert v := by

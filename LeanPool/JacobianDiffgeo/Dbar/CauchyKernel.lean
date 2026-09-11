@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Analysis.Calculus.ContDiff.Convolution
-import Mathlib.Analysis.SpecialFunctions.PolarCoord
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.Analysis.Calculus.ContDiff.Convolution
+public import Mathlib.Analysis.SpecialFunctions.PolarCoord
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
 
 /-!
 # The Cauchy kernel, the Cauchy transform, and Cauchy–Pompeiu (Forster 13.1)
@@ -22,6 +23,8 @@ polar coordinates + 1-D FTC in the radial and angular directions (design §5): t
 derivative package handles "differentiate under the integral", and the polar substitution makes
 the kernel singularity cancel exactly.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric Set Complex
 open scoped Convolution ContDiff

@@ -3,15 +3,18 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Basic
-import LeanPool.Redhill.Common.MaxAbs
-import LeanPool.Redhill.General.Defs
-import LeanPool.Redhill.ToMathlib.NatAbs
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import LeanPool.Redhill.Common.MaxAbs
+public import LeanPool.Redhill.General.Defs
+public import LeanPool.Redhill.ToMathlib.NatAbs
 
 /-!
 # Subsum condition for the general case
 -/
+
+@[expose] public section
 
 namespace GeneralCase
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.Polish
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.Polish
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
 /-!
 # Standard Borel Structure on the Model Class
 
@@ -17,6 +19,8 @@ inherits `StandardBorelSpace` as a measurable subspace of the structure space.
   topology making it clopen).
 - `modelsOf_standardBorel`: The subtype `↥(ModelsOf φ)` is standard Borel.
 -/
+
+@[expose] public section
 
 universe u v
 

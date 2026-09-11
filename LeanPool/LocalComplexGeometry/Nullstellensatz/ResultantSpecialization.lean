@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
-import Mathlib.FieldTheory.Separable
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
 
 /-!
 # Specializing fixed-degree resultants
@@ -16,6 +17,8 @@ polynomial families with analytic coefficients.  The fixed Sylvester sizes
 are part of every definition, so specialization remains valid even when a
 fiber drops degree.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

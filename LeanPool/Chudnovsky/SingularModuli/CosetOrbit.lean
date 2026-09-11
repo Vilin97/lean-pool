@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.JFunction
+public import LeanPool.Chudnovsky.SingularModuli.JFunction
 
 /-!
 # The `m`-isogeny coset orbit of `j` (Phase C, chunk B2)
@@ -51,6 +52,8 @@ with `c n = jqInt.coeff n ∈ ℤ` the integer `j`-coefficients. The `b`-depende
 `ζ^{bn}`, which is what powers the root-of-unity averaging of `ModularPolynomialQ.lean`'s
 `(B3)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

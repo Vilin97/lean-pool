@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
 /-!
 # Equivariance of the local EM quotient (the issue #11 spike)
 
@@ -33,6 +35,8 @@ targeted expanded-language equivariance (`carrierEquiv_funMap` under the renamed
 `structureBase`, and the semantic endpoint `realize_carrierEquiv`: every base-language
 infinitary formula is invariant under the induced automorphism.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

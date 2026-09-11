@@ -3,10 +3,14 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean.Meta.Tactic.Generalize
-import Lean.Meta.CollectFVars
-import Lean.Elab.Tactic.Config
-import LeanPool.Lentil.ProofMode.Basic
+module
+
+public import Lean.Meta.Tactic.Generalize
+public import Lean.Meta.CollectFVars
+public import Lean.Elab.Tactic.Config
+public import LeanPool.Lentil.ProofMode.Basic
+
+@[expose] public section
 
 namespace TLA.ProofMode
 

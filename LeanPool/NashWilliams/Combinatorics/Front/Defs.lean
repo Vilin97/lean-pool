@@ -3,7 +3,9 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Data.Nat.Nth
+module
+
+public import LeanPool.NashWilliams.Data.Nat.Nth
 
 /-!
 # Nash-Williams Fronts
@@ -45,6 +47,8 @@ sorting and its API rebuilt from scratch. We therefore encode a finite subset by
 increasing enumeration (a sorted `List ℕ`) and bridge to `Finset ℕ` only at the boundary with
 `Finset`-based (e.g. Ramsey) statements, via `Finset.sort` / `List.toFinset`.
 -/
+
+@[expose] public section
 
 open Set List
 

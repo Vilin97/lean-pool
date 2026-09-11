@@ -3,15 +3,16 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LpSpace.Complete
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv
+public import Mathlib.MeasureTheory.Function.LpSpace.Complete
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport`
@@ -26,6 +27,8 @@ compactness proof.
   localized to the fixed compact support `FiniteChartData.rhoSupportImage`.
 - `rhoSupportImage_measurable`: measurability of the fixed support set.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

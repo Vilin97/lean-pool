@@ -3,11 +3,15 @@ Copyright (c) 2026 Dan Clemens Posch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Clemens Posch
 -/
-import LeanPool.KahnKalai.DoubleCount
+module
+
+public import LeanPool.KahnKalai.DoubleCount
 
 /-!
 Tran–Vu Theorem 2.3: the covering theorem.
 -/
+
+@[expose] public section
 
 open Finset
 

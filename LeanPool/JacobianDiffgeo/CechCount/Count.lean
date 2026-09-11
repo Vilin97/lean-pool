@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CechCount.Surjective
-import LeanPool.JacobianDiffgeo.Finiteness
-import LeanPool.JacobianDiffgeo.RiemannRoch
-import LeanPool.JacobianDiffgeo.ProperDegree
-import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.CechCount.Surjective
+public import LeanPool.JacobianDiffgeo.Finiteness
+public import LeanPool.JacobianDiffgeo.RiemannRoch
+public import LeanPool.JacobianDiffgeo.ProperDegree
+public import LeanPool.JacobianDiffgeo.CanonicalForms
 
 /-!
 # The Čech count: `dim H¹(𝒪_X) ≤ genus X` (cechcount unit, Forster 17.9/17.16)
@@ -32,6 +33,8 @@ hence injective — forcing `ξ = 0`. Contradiction; so `h⁰¹ ≤ g`.
 
 Exports: `RS.cechCount` (= `RS.finrank_H1_zero_le_genus`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

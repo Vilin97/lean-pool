@@ -3,11 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
-import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathlib.GroupTheory.Commensurable
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Basic
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+public import Mathlib.GroupTheory.Commensurable
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Basic
 
 /-!
 # GL_n HeckePair
@@ -29,6 +30,8 @@ This is the foundation for the Hecke ring of GL_n following Shimura §3.2.
 * `SLnZ_le_posDetInt` — `SL_n(ℤ) ⊆ Δ`
 * `posDetInt_le_commensurator` — `Δ ⊆ commensurator(SL_n(ℤ))`
 -/
+
+@[expose] public section
 
 open Matrix Subgroup.Commensurable Pointwise Matrix.SpecialLinearGroup
 

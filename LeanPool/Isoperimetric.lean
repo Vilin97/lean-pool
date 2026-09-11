@@ -3,11 +3,12 @@ Copyright (c) 2026 Jonathan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Ho
 -/
+module
 
-import LeanPool.Isoperimetric.Basic
-import LeanPool.Isoperimetric.BrunnMinkowski
-import LeanPool.Isoperimetric.Isoperimetric
-import LeanPool.Isoperimetric.PrekopaLeindler
+public import LeanPool.Isoperimetric.Basic
+public import LeanPool.Isoperimetric.BrunnMinkowski
+public import LeanPool.Isoperimetric.Isoperimetric
+public import LeanPool.Isoperimetric.PrekopaLeindler
 
 /-!
 # Prekopa-Leindler, Brunn-Minkowski, and the isoperimetric inequality
@@ -19,6 +20,8 @@ Main declarations: `prekopa_leindler`, `brunn_minkowski`, `isoperimetric_inequal
 Tags: measure-theory, geometric-inequalities
 MSC: 28A75, 52A40, 49Q20
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

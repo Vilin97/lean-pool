@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageBranches
+public import LeanPool.Erdos97ConvexOctagon.CoverageBranches
 
 /-!
 # Exhaustive normalized-incidence classification
@@ -13,6 +14,8 @@ The 35 possible first rows reduce to seven symmetry orbits.  A kernel-audited
 finite search excludes every completion of those canonical rows using checked
 geometric obstruction witnesses.
 -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

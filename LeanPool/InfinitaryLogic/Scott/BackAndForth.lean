@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.AtomicDiagram
-import Mathlib.SetTheory.Ordinal.Arithmetic
+module
+
+public import LeanPool.InfinitaryLogic.Scott.AtomicDiagram
+public import Mathlib.SetTheory.Ordinal.Arithmetic
 
 /-!
 # Back-and-Forth Equivalence
@@ -93,6 +95,8 @@ which does NOT imply isomorphism. Potential counterexamples in relational langua
 equivalence relations with matching finite-class structure but different arrangements of
 infinite classes.
 -/
+
+@[expose] public section
 
 universe u v w w'
 

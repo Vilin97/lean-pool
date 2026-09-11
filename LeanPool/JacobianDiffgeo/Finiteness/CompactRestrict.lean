@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
-import LeanPool.JacobianDiffgeo.Forms.Montel
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
+public import LeanPool.JacobianDiffgeo.Forms.Montel
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 
 /-!
 # Montel compactness of `restrictCLM` (`finiteness-and-chi`)
@@ -26,6 +27,8 @@ single-chart lemma lives here; the cocycle-level assembly is proved in `Chain.le
 after the relevant definitions, by `IsCompactOperator.comp_clm`/`.clm_comp` composed with this
 lemma (per §6.3 step 5) — no mathematical content moves, only the file boundary.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric

@@ -9,12 +9,16 @@ Fourier covariance for the actual Zhou quotient actions. The algebraic action
 is transported from the kernel to its compact dual and then to the coordinate
 Haar model. Paper: §§3--4.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
-import LeanPool.ConnesRigidity.Paper.Section3.FourierCoordinates
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
+public import LeanPool.ConnesRigidity.Paper.Section3.FourierCoordinates
 
 /-!
 The quotient action component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperQuotientAction

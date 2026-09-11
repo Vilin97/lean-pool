@@ -3,8 +3,9 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import LeanPool.UlmsTheorem.Ulm.Extension
+public import LeanPool.UlmsTheorem.Ulm.Extension
 
 /-!
 # Classification machinery for countable reduced abelian p-groups
@@ -13,6 +14,8 @@ This module contains the hard-direction interface for Ulm's theorem:
 the back-and-forth construction on finite partial isomorphisms and the final
 isomorphism-from-invariants statement.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

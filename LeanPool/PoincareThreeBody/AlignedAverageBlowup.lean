@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DisturbingRegularBound
+public import LeanPool.PoincareThreeBody.DisturbingRegularBound
 
 /-!
 # Blow-up of the collision-aligned disturbing average
@@ -12,6 +13,8 @@ import LeanPool.PoincareThreeBody.DisturbingRegularBound
 Combining the logarithmic singular estimate with the uniform regular bound gives an explicit
 upper bound on the aligned disturbing average.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

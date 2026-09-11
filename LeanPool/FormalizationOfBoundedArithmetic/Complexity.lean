@@ -3,19 +3,22 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Mathlib.ModelTheory.Complexity
-import Mathlib.ModelTheory.Syntax
+public import Mathlib.ModelTheory.Complexity
+public import Mathlib.ModelTheory.Syntax
 
-import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-import LeanPool.FormalizationOfBoundedArithmetic.Order
-import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
-import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
-import LeanPool.FormalizationOfBoundedArithmetic.Register
+public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
+public import LeanPool.FormalizationOfBoundedArithmetic.Order
+public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
+public import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
+public import LeanPool.FormalizationOfBoundedArithmetic.Register
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Complexity
 -/
+
+@[expose] public section
 
 open FirstOrder Language
 

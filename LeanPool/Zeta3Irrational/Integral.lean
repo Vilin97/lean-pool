@@ -3,24 +3,27 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import Mathlib.Analysis.Normed.Field.Instances
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Topology.Algebra.Module.ModuleTopology
-import Mathlib.Data.Finset.Attr
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Continuity
-import Mathlib.Tactic.Finiteness.Attr
-import Mathlib.Tactic.SetLike
-import Mathlib.Util.CompileInductive
+public import Mathlib.Analysis.Normed.Field.Instances
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+public import Mathlib.Data.Finset.Attr
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Continuity
+public import Mathlib.Tactic.Finiteness.Attr
+public import Mathlib.Tactic.SetLike
+public import Mathlib.Util.CompileInductive
 
 /-!
 # LeanPool.Zeta3Irrational.Integral
 -/
+
+@[expose] public section
 
 namespace LeanPool.Zeta3Irrational
 

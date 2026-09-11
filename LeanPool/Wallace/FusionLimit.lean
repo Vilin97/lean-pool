@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import Mathlib.Analysis.Normed.Group.AddCircle
-import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.Normed.Group.AddCircle
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Pointwise limits of character fusions
@@ -15,6 +16,8 @@ element is eventually protected, so its values form a Cauchy sequence.  This fil
 complete metric argument: the pointwise limit is again a homomorphism, and a geometric bound on
 a tail gives an explicit bound from the first point of that tail to the limit.
 -/
+
+@[expose] public section
 
 open Filter Topology
 open scoped ENNReal

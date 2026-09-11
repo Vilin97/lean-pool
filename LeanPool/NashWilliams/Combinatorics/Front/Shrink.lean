@@ -3,7 +3,9 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Combinatorics.Front.Rank
+module
+
+public import LeanPool.NashWilliams.Combinatorics.Front.Rank
 
 /-!
 # Restricting a front to an infinite subset
@@ -26,6 +28,8 @@ formalized here.)
 
 * `Front.shrink_isFront` : `shrink F (M ∘ E)` is a front on `M ∘ E`.
 -/
+
+@[expose] public section
 
 open Set List
 

@@ -3,14 +3,16 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Algebra.Bilinear
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.RingTheory.TensorProduct.Basic
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.LinearAlgebra.End
-import LeanPool.Monlib4.Preq.Finset
-import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+module
+
+public import Mathlib.Algebra.Algebra.Bilinear
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+public import LeanPool.Monlib4.LinearAlgebra.End
+public import LeanPool.Monlib4.Preq.Finset
+public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
 
 /-!
 # (A-A)-Bimodules
@@ -18,6 +20,8 @@ import LeanPool.Monlib4.LinearAlgebra.LmulRmul
 We define (A-A)-bimodules, where A is a commutative semiring, and show basic
 properties of them.
 -/
+
+@[expose] public section
 
 
 variable {R H₁ H₂ : Type _} [CommSemiring R] [Semiring H₁] [Semiring H₂] [Algebra R H₁]

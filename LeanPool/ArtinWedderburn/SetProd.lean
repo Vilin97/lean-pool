@@ -3,12 +3,14 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Data.Set.Basic
-import Mathlib.RingTheory.Ideal.Defs
-import Mathlib.Tactic.NoncommRing
-import Mathlib.RingTheory.TwoSidedIdeal.Operations
-import LeanPool.ArtinWedderburn.IdealProd
+module
+
+public import Mathlib.Algebra.Ring.Basic
+public import Mathlib.Data.Set.Basic
+public import Mathlib.RingTheory.Ideal.Defs
+public import Mathlib.Tactic.NoncommRing
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+public import LeanPool.ArtinWedderburn.IdealProd
 
 /-!
 # Left and right multiplication sets
@@ -17,6 +19,8 @@ Provides `leftMul a = Ra`, `rightMul a = aR`, the `leftIdealOfElement` construct
 the consequence that `aRb = 0` collapses these auxiliary sets to zero. Used by the prime ring
 characterisation.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

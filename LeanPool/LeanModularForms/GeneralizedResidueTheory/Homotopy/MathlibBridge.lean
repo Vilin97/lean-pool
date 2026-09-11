@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
 
 /-!
 # Bridge to Mathlib Circle Integrals
@@ -34,6 +35,8 @@ which in turn equals `(2πi)⁻¹ * circleIntegral (· - w)⁻¹ c R`.
     with `R > 0`, the generalized winding number of `circleMap c R` around `w`
     equals 1, via mathlib's `integral_sub_inv_of_mem_ball`
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

@@ -3,9 +3,10 @@ Copyright (c) 2026 YnirPaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: YnirPaz
 -/
+module
 
-import LeanPool.PCFTheory.Background.Cofinality
-import LeanPool.PCFTheory.Background.Topology
+public import LeanPool.PCFTheory.Background.Cofinality
+public import LeanPool.PCFTheory.Background.Topology
 
 /-!
 # Club and stationary sets
@@ -23,6 +24,8 @@ This file sets up the basic theory of clubs (closed and unbounded sets) and stat
 
 * `isClub_sInter`: The intersection of fewer than `o.cof` clubs in `o` is a club in `o`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

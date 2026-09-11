@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.DemazureProduct.Utils
-import LeanPool.DemazureProduct.SlipFace
-import Mathlib.Data.Int.LeastGreatest
-import Mathlib.Data.Set.Card
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.DemazureProduct.Utils
+public import LeanPool.DemazureProduct.SlipFace
+public import Mathlib.Data.Int.LeastGreatest
+public import Mathlib.Data.Set.Card
+public import Mathlib.Tactic.Ring
 
 /-!
 # Almost-sign-preserving permutations
@@ -20,6 +22,8 @@ the set of submodular slipfaces is established. This corresponds roughly to Sect
 bounded-difference material from Section 7, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 

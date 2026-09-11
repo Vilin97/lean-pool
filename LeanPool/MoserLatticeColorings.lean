@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.MoserLatticeColorings.Ring
+public import LeanPool.MoserLatticeColorings.Ring
 
 /-!
 # Geometric Four-Colorings of the Moser Lattice and Ring
@@ -16,3 +17,5 @@ Main declarations: `LeanPool.MoserLatticeColorings.MoserRing.both_colorings_are_
 Tags: combinatorics, graph-coloring, discrete-geometry, unit-distance-graphs, moser-lattice
 MSC: 05C15
 -/
+
+@[expose] public section

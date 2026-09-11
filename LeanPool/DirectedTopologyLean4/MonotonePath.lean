@@ -3,12 +3,16 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import Mathlib.Topology.Connected.PathConnected
-import Mathlib.Topology.Homotopy.Basic
+module
+
+public import Mathlib.Topology.Connected.PathConnected
+public import Mathlib.Topology.Homotopy.Basic
 
 /-!
 # LeanPool.DirectedTopologyLean4.MonotonePath
 -/
+
+@[expose] public section
 
 /-
   This file contains lemmas about monotone paths in a preordered topological space

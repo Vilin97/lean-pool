@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.InsertionAnalyticAssembly
-import LeanPool.Feige.InsertionLastCoordinateLaw
+module
+
+public import LeanPool.Feige.InsertionAnalyticAssembly
+public import LeanPool.Feige.InsertionLastCoordinateLaw
 
 /-!
 # Realizing the genuine edges of an insertion chain
@@ -15,6 +17,8 @@ the positive shift by the new low-side scale, and the negative shift by the
 new high-side scale.  This identifies every nonterminal edge with the
 finite signed-exponential instance of the local transfer step.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

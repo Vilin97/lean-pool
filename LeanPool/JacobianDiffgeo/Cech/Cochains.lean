@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Covers
-import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.Cech.Covers
+public import LeanPool.JacobianDiffgeo.Meromorphic
 
 /-!
 # Čech cochains, coboundary maps, `Z¹`/`B¹`/`H¹(𝒰,D)` (CC8, D5/D6)
@@ -19,6 +20,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.2).
 * `C0`/`C1`/`C2` (full-product cochains, D5), `d0`/`d1` (coboundary), `d1_comp_d0`.
 * `Z1`/`B1`/`H1Cover` — the cover-level Čech `H¹(𝒰,D)`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
 
 /-!
 # Relative polygonal boundary maps for intrinsic faces
@@ -15,6 +17,8 @@ two neighboring face extensions will have literally the same boundary values on 
 edge.  The construction below is topological; the finite conforming subdivision which certifies
 that it is PL is kept as a separate obligation.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

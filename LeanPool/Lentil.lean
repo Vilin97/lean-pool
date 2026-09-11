@@ -3,15 +3,17 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.Rules.Basic
-import LeanPool.Lentil.Rules.BigOp
-import LeanPool.Lentil.Rules.LeadsTo
-import LeanPool.Lentil.Rules.StatePred
-import LeanPool.Lentil.Rules.WF
-import LeanPool.Lentil.ProofMode.Tactics
-import LeanPool.Lentil.ProofMode.Display
-import LeanPool.Lentil.Tactics.Basic
-import LeanPool.Lentil.Tactics.FiniteWindow
+module
+
+public import LeanPool.Lentil.Rules.Basic
+public import LeanPool.Lentil.Rules.BigOp
+public import LeanPool.Lentil.Rules.LeadsTo
+public import LeanPool.Lentil.Rules.StatePred
+public import LeanPool.Lentil.Rules.WF
+public import LeanPool.Lentil.ProofMode.Tactics
+public import LeanPool.Lentil.ProofMode.Display
+public import LeanPool.Lentil.Tactics.Basic
+public import LeanPool.Lentil.Tactics.FiniteWindow
 
 /-!
 # Lentil: Temporal Logic of Actions in Lean 4
@@ -23,6 +25,8 @@ Main declarations: `TLA.always`, `TLA.eventually`, `TLA.always_induction`, `TLA.
 Tags: temporal-logic, tla, formal-verification, proof-mode
 MSC: 03B44, 68Q60
 -/
+
+@[expose] public section
 
 /-!
 # Lentil: Temporal Logic of Actions (TLA) in Lean 4

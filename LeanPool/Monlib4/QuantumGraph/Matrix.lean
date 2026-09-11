@@ -3,13 +3,17 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
+module
+
+public import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Matrix
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Matrix`.
 -/
+
+@[expose] public section
 
 open scoped Functional MatrixOrder ComplexOrder TensorProduct Matrix
 

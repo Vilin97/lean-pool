@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SchemaOmegaWitness
-import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-import LeanPool.InfinitaryLogic.Methods.MarkerStage
+module
+
+public import LeanPool.InfinitaryLogic.Methods.SchemaOmegaWitness
+public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+public import LeanPool.InfinitaryLogic.Methods.MarkerStage
 /-!
 # Layer 7b, checkpoint 1: the countable schema sentence universe
 
@@ -34,6 +36,8 @@ enumerable); `schemaSentenceUniverse_nonempty` supplies the base point the enume
 No completion, Zorn, term model, or `realizeWith` bridge appears here — this checkpoint only
 pins the countable substrate.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 Carles Marín. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Carles Marín
 -/
+module
 
-import Mathlib.RingTheory.PowerSeries.Log
-import Mathlib.RingTheory.PowerSeries.Derivative
-import Mathlib.RingTheory.PowerSeries.Exp
-import Mathlib.RingTheory.PowerSeries.Inverse
+public import Mathlib.RingTheory.PowerSeries.Log
+public import Mathlib.RingTheory.PowerSeries.Derivative
+public import Mathlib.RingTheory.PowerSeries.Exp
+public import Mathlib.RingTheory.PowerSeries.Inverse
 
 /-!
 # Power-series logarithm lemmas
@@ -15,6 +16,8 @@ import Mathlib.RingTheory.PowerSeries.Inverse
 This module proves the power-series logarithm additivity and coefficient identities used to
 transport the Connes-Kreimer Eulerian idempotent calculation to convolution algebras.
 -/
+
+@[expose] public section
 
 namespace PowerSeries
 

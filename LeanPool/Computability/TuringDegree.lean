@@ -3,11 +3,13 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import LeanPool.Computability.Oracle
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.NormNum
-import Aesop
-import Mathlib.Computability.Halting
+module
+
+public import LeanPool.Computability.Oracle
+public import Mathlib.Tactic.Cases
+public import Mathlib.Tactic.NormNum
+public import Aesop
+public import Mathlib.Computability.Halting
 
 /-!
 # Turing Reducibility and Turing Degrees
@@ -43,6 +45,8 @@ Turing reducibility. This gives a concrete representation of degrees as equivale
 
 Computability, Turing Degrees, Reducibility, Equivalence Relation
 -/
+
+@[expose] public section
 
 
 namespace Computability

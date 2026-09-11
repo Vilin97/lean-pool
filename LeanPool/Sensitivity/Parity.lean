@@ -3,13 +3,15 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.Sensitivity.Defs
-import LeanPool.Sensitivity.Multilinear
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Nat.Choose.Sum
+module
+
+public import LeanPool.Sensitivity.Defs
+public import LeanPool.Sensitivity.Multilinear
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Nat.Choose.Sum
 
 /-!
 # Parity Function and the Imbalance Lemma
@@ -27,6 +29,8 @@ must have a "majority" parity-sign class strictly larger than `2^{n-1}`.
 * `LeanPoolSensitivity.fullDegree_imbalance` — if `f` has full multilinear
   degree, one parity-sign class has more than `2^{n-1}` vertices.
 -/
+
+@[expose] public section
 
 namespace LeanPoolSensitivity
 

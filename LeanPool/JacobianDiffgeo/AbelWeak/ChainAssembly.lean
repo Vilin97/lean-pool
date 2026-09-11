@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
-import LeanPool.JacobianDiffgeo.Path
-import LeanPool.JacobianDiffgeo.PlanarStokes
+public import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
+public import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.PlanarStokes
 
 /-!
 # Chain assembly (`abel-weak-solutions`, §7)
@@ -36,6 +37,8 @@ across a holomorphic chart transition via mathlib's removable-singularity theore
 induction gluing `SingleChart` pieces at every interior breakpoint via a fully general
 order-additive `IsWeakSolutionAt.mul`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set Filter Topology

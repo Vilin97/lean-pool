@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.TermGraph
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.TermGraph
 /-!
 # Relationalization of formulas (Craig Layer 3, Unit 4)
 
@@ -33,6 +35,8 @@ lifted variable embedding `ctxLiftEmb` (no term relabeling of built formulas).
   algebraic. `functionsIn_relationalizeFormula` is `∅` (the graph language is relational).
 * The nested-formula pilot `R(f(g(x), h(c)))`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

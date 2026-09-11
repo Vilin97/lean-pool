@@ -5,14 +5,18 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Construction.PaperActions
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActions
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
 
 /-!
 ICC transfer for Zhou §5. Since the acting group is
 `SL₃(R) × Sp₄(F₂)`, the proof uses the paper's three-case criterion on the
 concrete product quotient.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperICC

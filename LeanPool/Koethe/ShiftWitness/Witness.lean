@@ -3,9 +3,11 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.ShiftWitness.Eigenvector
-import LeanPool.Koethe.ShiftWitness.Endpoint
+module
+
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.ShiftWitness.Eigenvector
+public import LeanPool.Koethe.ShiftWitness.Endpoint
 
 /-!
 # Downstream witness from a universal mortal sequence
@@ -19,6 +21,8 @@ The witness ring is the unitization over `k` of the positive shift algebra,
 and its nil ideal is the kernel of the scalar projection. The universe of the
 existential witness is exactly the universe of the ground field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

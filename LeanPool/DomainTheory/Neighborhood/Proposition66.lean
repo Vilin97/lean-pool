@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition63
+public import LeanPool.DomainTheory.Neighborhood.Definition63
 
 /-!
 # Lecture VI — Proposition 6.6 (Scott 1981, PRG-19): initial algebras are uniquely
@@ -26,6 +27,8 @@ realising it is the only one (`iso_hom_unique`).
 
 Choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

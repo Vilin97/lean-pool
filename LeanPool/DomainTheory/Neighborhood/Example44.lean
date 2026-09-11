@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example23
-import LeanPool.DomainTheory.Neighborhood.Theorem41
+public import LeanPool.DomainTheory.Neighborhood.Example23
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
 
 /-!
 # Example 4.4 (Scott 1981, PRG-19, §4) — the domain `C` of binary sequences
@@ -50,6 +51,8 @@ The data constructions (`C`, `consMap`) are **choice-free** (`#print axioms ⊆
 {propext,
 Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Example44
 

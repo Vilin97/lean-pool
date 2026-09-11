@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.LinkData
-import LeanPool.JacobianDiffgeo.Abel.Sufficiency
-import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.Abel.LinkData
+public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
+public import LeanPool.JacobianDiffgeo.Path
 
 /-!
 # abel-theorem: the weak-solution-upgrade discharge (design §4.1 steps 5-7, assembled)
@@ -37,6 +38,8 @@ design §4.1 steps 5-7 discharged, gated ONLY on `serre-duality-tails`'s single 
 external fact (the same gate as `DolbeaultBridge.lean`; the weak-solution hypotheses of the
 `WeakSolutionUpgrade` shapes are simply not needed: the construction builds its own pieces).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory Filter Topology

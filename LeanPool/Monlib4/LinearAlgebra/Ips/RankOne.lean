@@ -3,9 +3,11 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+public import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
 
 /-!
 
@@ -15,6 +17,8 @@ This defines the rank one operator $| x \rangle\langle y |$ for continuous linea
   (see `rank_one`) and linear maps (see `rank_one_lm`).
 
 -/
+
+@[expose] public section
 
 
 section rankOne

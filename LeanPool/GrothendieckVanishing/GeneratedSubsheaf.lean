@@ -3,8 +3,9 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.ZeroOutside
 
 /-!
 # Generated subsheaves via coproduct images
@@ -22,6 +23,8 @@ sections.
 * `TopCat.Presheaf.allSectionMap` — the canonical coproduct map from all
   `zeroOutsideInt` generators of `F`, together with its `Epi` instance.
 -/
+
+@[expose] public section
 
 universe u
 

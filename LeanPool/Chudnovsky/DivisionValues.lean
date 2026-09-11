@@ -3,10 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Quasiperiods
-import Mathlib.Analysis.Meromorphic.TrailingCoefficient
-import Mathlib.NumberTheory.Real.Irrational
+public import LeanPool.Chudnovsky.Quasiperiods
+public import Mathlib.Analysis.Meromorphic.TrailingCoefficient
+public import Mathlib.NumberTheory.Real.Irrational
 
 /-!
 # Division values (Milla, Appendix A)
@@ -26,6 +27,8 @@ recursion, Baker's factorization `thmbaker`
 (`m²·∏_{u ∈ DIV(m)} (x − ℘(u)) = P_m(x)² · (4(x³ − h₂x − h₃))^{[m even]}`) and the
 structure lemmas `propindu`, from which the two theorems below follow.
 -/
+
+@[expose] public section
 
 open scoped Topology
 

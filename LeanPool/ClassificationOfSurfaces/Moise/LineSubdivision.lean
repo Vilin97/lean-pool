@@ -3,11 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-import Mathlib.Analysis.Convex.Segment
-import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
-import Mathlib.LinearAlgebra.AffineSpace.Combination
-import Mathlib.Order.Fin.Finset
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
+public import Mathlib.Analysis.Convex.Segment
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+public import Mathlib.LinearAlgebra.AffineSpace.Combination
+public import Mathlib.Order.Fin.Finset
 
 /-!
 # Subdividing finite plane complexes by affine lines
@@ -16,6 +18,8 @@ Moise Chapter 2 cuts a polygonal region by the finitely many lines containing it
 file develops that construction from its local primitive: when an affine functional has opposite
 signs at the endpoints of an edge, its zero gives the new subdivision vertex on that edge.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,13 +3,15 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.TwoPointMixture
-import Mathlib.Probability.Kernel.Basic
-import Mathlib.Probability.Kernel.Composition.MeasureComp
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Measure.WithDensity
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
-import Mathlib.MeasureTheory.Integral.Lebesgue.Map
+module
+
+public import LeanPool.Feige.TwoPointMixture
+public import Mathlib.Probability.Kernel.Basic
+public import Mathlib.Probability.Kernel.Composition.MeasureComp
+public import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Measure.WithDensity
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Map
 
 /-!
 # A measurable kernel of mean-one two-point laws
@@ -17,6 +19,8 @@ import Mathlib.MeasureTheory.Integral.Lebesgue.Map
 This file supplies the measurable-kernel interface needed to condition on
 the latent two-point parameters in the proof of Theorem 2.1.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 

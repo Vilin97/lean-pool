@@ -3,16 +3,18 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
-import LeanPool.HansonWright.Probability.Concentration.Bernstein
-import LeanPool.HansonWright.Probability.Process.SubGaussian
-import LeanPool.HansonWright.Probability.Moments.Exponential
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.InnerProductSpace.SingularValues
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
-import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+module
+
+public import LeanPool.HansonWright.Probability.Concentration.Bernstein
+public import LeanPool.HansonWright.Probability.Process.SubGaussian
+public import LeanPool.HansonWright.Probability.Moments.Exponential
+public import Mathlib.Analysis.CStarAlgebra.Matrix
+public import Mathlib.Analysis.InnerProductSpace.SingularValues
+public import Mathlib.Analysis.InnerProductSpace.Trace
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 
 /-!
 # Hanson-Wright Inequality
@@ -46,6 +48,8 @@ two-scale Chernoff bound.
 * `HansonWright.hanson_wright_inequality_hdp`: HDP-style Hanson-Wright tail bound
   using the maximum coordinate least global-MGF sub-Gaussian scale.
 -/
+
+@[expose] public section
 
 namespace LeanPool
 

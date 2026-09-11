@@ -3,9 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
-import LeanPool.AndersonConjecture.Jensen.CloseUp.CloseUp
-import LeanPool.AndersonConjecture.Jensen.TransfiniteUnion
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.CloseUp
+public import LeanPool.AndersonConjecture.Jensen.TransfiniteUnion
 
 /-!
 # Combined Construction Step
@@ -14,6 +16,8 @@ Given an N-subring R, produce an A-extension S lifting a given
 element of T/M² and meeting a given nonzero prime, while closing
 all finitely generated ideals (Heitmann, 1993, Lemma 7).
 -/
+
+@[expose] public section
 
 noncomputable section
 

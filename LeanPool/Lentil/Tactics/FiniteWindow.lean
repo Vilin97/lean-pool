@@ -3,8 +3,12 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
-import LeanPool.Lentil.Tactics.Basic
+module
+
+public import Lean
+public import LeanPool.Lentil.Tactics.Basic
+
+@[expose] public section
 
 open Lean
 

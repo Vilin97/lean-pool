@@ -3,14 +3,17 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.Theorem2
+public import LeanPool.ZhangYeungInequality.Theorem2
 
 /-!
 # LeanPool.ZhangYeungInequality.Test.Theorem2
 
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Test.Theorem2`.
 -/
+
+@[expose] public section
 
 namespace ZhangYeungTest
 

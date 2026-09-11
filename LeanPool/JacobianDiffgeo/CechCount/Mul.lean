@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech
+public import LeanPool.JacobianDiffgeo.Cech
 
 /-!
 # Multiplication on Čech `H¹` by global meromorphic functions (cechcount unit)
@@ -29,6 +30,8 @@ action level by level, mirroring `Colimit.lean`'s `H1Incl` construction verbatim
 `Surjective.lean` (next file) combines these with `H1Incl_surjective` into the Forster 17.8
 epimorphism statement `mulH1_surjective`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module

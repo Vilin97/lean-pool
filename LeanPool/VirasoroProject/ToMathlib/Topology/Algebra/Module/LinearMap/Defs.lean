@@ -3,13 +3,17 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.Algebra.Module.LinearMap.Defs
-import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
+module
+
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
 -/
+
+@[expose] public section
 
 section
 

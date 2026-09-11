@@ -3,11 +3,12 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
-import LeanPool.KasamiCyclicAdditive.MCM.Halfspace
-import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
+public import LeanPool.KasamiCyclicAdditive.MCM.Halfspace
+public import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
 
 /-!
 # The MCM Fourier/Dickson reduction
@@ -26,6 +27,8 @@ identities
 For the complementary case of a nonprincipal cubic `χ` and odd `k`, the MCM map
 is invisible to `χ`: `χ(M_k s) = χ(s)`.
 -/
+
+@[expose] public section
 
 open Finset Polynomial
 

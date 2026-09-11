@@ -3,7 +3,9 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.DemazureProduct.Reduction
+module
+
+public import LeanPool.DemazureProduct.Reduction
 
 /-!
 # Transpositions
@@ -14,6 +16,8 @@ $\triangleleft$. Its main purpose is to prove Theorem 8.7 from
 Theorem A and the theorem labeled `thm:resL`, which describe the special case of $\sigma_S$ for
 $S = \{n\}$ a singleton.
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 

@@ -3,13 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic
-import LeanPool.JacobianDiffgeo.Surface.Bridges
-import Mathlib.Topology.Sets.Opens
-import Mathlib.Topology.ContinuousMap.Bounded.Normed
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Analysis.Complex.CauchyIntegral
+public import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.Surface.Bridges
+public import Mathlib.Topology.Sets.Opens
+public import Mathlib.Topology.ContinuousMap.Bounded.Normed
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # `BddHoloOn`: bounded-holomorphic Banach spaces, and the germ bridges (`finiteness-and-chi`)
@@ -32,6 +33,8 @@ D5 (Čech/Banach interface localized here): all germ-vs-function traffic goes th
 three named maps; the Banach files (`Chain.lean`, `CompactRestrict.lean`) never touch
 `MeroGermOn` internals directly, and the germ files never touch `→ᵇ` internals.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric

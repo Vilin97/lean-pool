@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
-import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
-import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
-import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
-import Mathlib.GroupTheory.Perm.Basic
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
+public import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
+public import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
+public import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+public import Mathlib.GroupTheory.Perm.Basic
 /-!
 # Finite-Carrier Counting via Permutation Orbits
 
@@ -28,6 +30,8 @@ gives a counting dichotomy for all countable models.
 - `counting_fin_models_dichotomy`: Per-tier counting dichotomy.
 - `allCodedIsoClasses_dichotomy`: Combined counting dichotomy for all countable models.
 -/
+
+@[expose] public section
 
 universe u v
 

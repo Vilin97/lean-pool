@@ -3,8 +3,10 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Algebra.Ring.MinimalAxioms
+module
+
+public import Mathlib.Algebra.Ring.Basic
+public import Mathlib.Algebra.Ring.MinimalAxioms
 
 /-!
 # Promoting a non-unital ring with a unit element to a unital ring
@@ -12,6 +14,8 @@ import Mathlib.Algebra.Ring.MinimalAxioms
 If a non-unital ring `R` has an element `e` that is both a left and a right
 identity, then `R` admits a (unital) ring structure with `1 = e`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

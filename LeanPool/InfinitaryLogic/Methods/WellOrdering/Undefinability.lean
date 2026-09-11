@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
 /-!
 # Undefinability of well-ordering (issue #12, step 6 layer 3)
 
@@ -26,6 +28,8 @@ The witness structure interprets **every** binary relation symbol as the ordinal
 every other arity as empty — this avoids deciding equality against the distinguished symbol
 `lt`, which a general language does not support.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

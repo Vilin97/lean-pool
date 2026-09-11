@@ -3,17 +3,20 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import Mathlib.Data.List.Chain
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Setoid.Basic
-import LeanPool.Lean4GlCoalgebras.Logic.Syntax
+public import Mathlib.Data.List.Chain
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Setoid.Basic
+public import LeanPool.Lean4GlCoalgebras.Logic.Syntax
 
 /-! ## Defining GL-split proof systems.
 
 Here we define the GL-split-proof system along with finitization and basic properties. We use the
 namespace Split to distinguish from our general GL-proofs.
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

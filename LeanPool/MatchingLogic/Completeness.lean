@@ -16,11 +16,15 @@ dependence stays visible in the statement and `#print axioms` stays meaningful.
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.ProofSystem
+module
+
+public import LeanPool.MatchingLogic.ProofSystem
 
 /-!
 # MatchingLogic.Completeness
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

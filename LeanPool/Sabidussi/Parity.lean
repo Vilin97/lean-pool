@@ -3,7 +3,9 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import LeanPool.Sabidussi.Color
+module
+
+public import LeanPool.Sabidussi.Color
 
 /-!
 # Parity algebra for the four-colour argument
@@ -12,6 +14,8 @@ This file records the two finite characteristic-two calculations used after the 
 have been balanced: polarization of the quadratic form along an ordered word, and recovery of
 the parity of all four colour classes from its linear and quadratic moments.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 

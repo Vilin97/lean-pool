@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.CarryArithmetic
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.IntervalCases
+module
+
+public import LeanPool.GKPCarry.CarryArithmetic
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Tactic.IntervalCases
 
 /-!
 # The regular language of deficient ternary carries
@@ -15,6 +17,8 @@ doubling creates fewer than two carries.  Its language is classified as three
 explicit digit patterns.  This turns the remaining GKP power-of-two condition
 into an exact regular-language avoidance statement.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.RingTheory.Noetherian.Basic
-import Mathlib.RingTheory.PrincipalIdealDomain
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.Noetherian.Basic
+public import Mathlib.RingTheory.PrincipalIdealDomain
 
 /-!
 # Constant germs and the residue field
@@ -15,6 +16,8 @@ import Mathlib.RingTheory.PrincipalIdealDomain
 This file packages the constant inclusion, identifies the residue field with
 `ℂ`, and supplies the zero-dimensional base case used by Rückert induction.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

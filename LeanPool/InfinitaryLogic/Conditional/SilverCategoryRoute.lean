@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.Mycielski
-import LeanPool.InfinitaryLogic.Descriptive.KuratowskiUlam
-import LeanPool.InfinitaryLogic.Descriptive.GSGraph
-import LeanPool.InfinitaryLogic.Descriptive.G0Fusion
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.Mycielski
+public import LeanPool.InfinitaryLogic.Descriptive.KuratowskiUlam
+public import LeanPool.InfinitaryLogic.Descriptive.GSGraph
+public import LeanPool.InfinitaryLogic.Descriptive.G0Fusion
 /-!
 # Silver via the classical category route (Miller): interface layer
 
@@ -58,6 +60,8 @@ for this route; it remains the assembly point for the closed case (`silver_core_
   Borel with uncountable quotient — proved below as `gSGraphHomHypothesis_holds`, so the
   whole chain through `gandy_harrington_of_gSGraphHom` is unconditional.
 -/
+
+@[expose] public section
 
 universe u
 

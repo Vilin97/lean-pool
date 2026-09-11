@@ -3,7 +3,9 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import LeanPool.IsTranscendentalPi.CalculusOnPoly
+module
+
+public import LeanPool.IsTranscendentalPi.CalculusOnPoly
 
 /-!
 # Niven polynomials
@@ -11,6 +13,8 @@ import LeanPool.IsTranscendentalPi.CalculusOnPoly
 The auxiliary polynomials `Fₚ = Xᵖ⁻¹ Tᵖ` and basic facts about their degree, used
 to build the integer that drives the contradiction in Niven's proof.
 -/
+
+@[expose] public section
 
 open Polynomial
 open Complex

@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Tactic.Set
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Tactic.Set
 
 /-!
 # Lecture II (§2) — approximable mappings: Definitions 2.1, 2.2 and Theorems
@@ -62,6 +63,8 @@ Quot.sound}`); the only
 classical lemma is `ext_of_toElementMap`, which decides neighbourhood membership
 by `by_cases`
 (`Classical.em`). -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

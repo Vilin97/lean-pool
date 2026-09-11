@@ -3,15 +3,18 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import LeanPool.Rupert.Attr
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.Rupert.Attr
 
 /-!
 # LeanPool.Rupert.MatrixSimps
 
 Imported Lean Pool material for `LeanPool.Rupert.MatrixSimps`.
 -/
+
+@[expose] public section
 
 attribute [matrix_simps] Matrix.cons_dotProduct even_two Even.neg_pow neg_mul Nat.reduceAdd
             sub_neg_eq_add mul_neg neg_neg Fin.isValue Matrix.cons_mulVec

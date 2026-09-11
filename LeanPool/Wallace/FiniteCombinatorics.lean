@@ -3,10 +3,11 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import Mathlib.Analysis.Normed.Field.Lemmas
-import Mathlib.NumberTheory.NumberField.Basic
-import Mathlib.Tactic.DeriveFintype
+public import Mathlib.Analysis.Normed.Field.Lemmas
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.Tactic.DeriveFintype
 
 /-!
 # Finite combinatorics used in the Wallace construction
@@ -22,6 +23,8 @@ current paper:
 The paper writes integer bounds as `|c| ≤ M`.  We use `Int.natAbs c ≤ M`, which is
 definitionally the corresponding natural-number inequality.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Set

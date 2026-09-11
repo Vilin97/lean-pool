@@ -3,11 +3,12 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.Analysis.LocallyConvex.WithSeminorms
-import Mathlib.Topology.Algebra.Module.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
+public import Mathlib.Analysis.LocallyConvex.WithSeminorms
+public import Mathlib.Topology.Algebra.Module.Basic
 
 /-!
 # Dynin-Mityagin Space Typeclass
@@ -30,6 +31,8 @@ not just Schwartz spaces.
 - Dynin, Mityagin, "Criterion for nuclearity in terms of approximative dimension"
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. 3-4
 -/
+
+@[expose] public section
 
 noncomputable section
 

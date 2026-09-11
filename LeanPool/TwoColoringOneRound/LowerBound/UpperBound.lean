@@ -3,23 +3,24 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Data.Fintype.CardEmbedding
-import Mathlib.Data.Fintype.Sum
-import Mathlib.RingTheory.Polynomial.Pochhammer
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
-import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
+public import Mathlib.Data.Fintype.CardEmbedding
+public import Mathlib.Data.Fintype.Sum
+public import Mathlib.RingTheory.Polynomial.Pochhammer
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
+public import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
 
 /-!
 ## Upper bounds (explicit colorings)
@@ -35,6 +36,8 @@ The coloring used here is the simple rounding-based local rule from the report:
 * round each symbol `a : Fin n` to a bit `r(a)` depending on whether `a < n/2`;
 * apply a fixed local rule `g` to the rounded bits.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

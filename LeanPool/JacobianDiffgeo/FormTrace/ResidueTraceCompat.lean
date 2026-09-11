@@ -8,12 +8,14 @@ Authors: Rado Kirov
 Blueprint unit: form-trace-tower. `resAtP1` (D4) and residue-trace compatibility (task item 3,
 Miranda Lemma 3.2 globalized).
 -/
-import LeanPool.JacobianDiffgeo.FormTrace.PairForm
-import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
-import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
-import LeanPool.JacobianDiffgeo.MappingDegree.Degree
-import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+module
+
+public import LeanPool.JacobianDiffgeo.FormTrace.PairForm
+public import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
 
 /-!
 # Residue-trace compatibility (`form-trace-tower`, file 3/6)
@@ -43,6 +45,8 @@ EXPLICIT hypothesis `hcal` (satisfied by any stack built via `exists_fiberStack`
 * `trace_const_mul_pullback`, `trace_pullback_eq_degree_smul` — the projection-formula facts
   (task item 5, §4.6), NOT gated on the calibration issue at all (pure value/finsum identities).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Filter Topology Metric Function Set

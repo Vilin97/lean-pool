@@ -3,12 +3,14 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import LeanPool.EventStructures.Configuration
-import LeanPool.EventStructures.Path
-import LeanPool.EventStructures.FinitePoset
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Card
+module
+
+public import LeanPool.EventStructures.Configuration
+public import LeanPool.EventStructures.Path
+public import LeanPool.EventStructures.FinitePoset
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Set.Card
 
 /-!
 # Rollback
@@ -19,6 +21,8 @@ sub-configuration omitting the chosen event. It shows the canonical rollback
 and causal safety, and—given a finite representation—correctness (the original
 configuration is reachable from the rollback) and minimality.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

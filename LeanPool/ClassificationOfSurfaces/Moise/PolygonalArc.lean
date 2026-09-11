@@ -3,11 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
-import Mathlib.Algebra.Order.Floor.Semiring
-import Mathlib.Combinatorics.SimpleGraph.Paths
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
+public import Mathlib.Algebra.Order.Floor.Semiring
+public import Mathlib.Combinatorics.SimpleGraph.Paths
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 
 /-!
 # Polygonal arcs from broken lines
@@ -18,6 +20,8 @@ triangle by the supporting lines of those segments, and by two coordinate lines 
 chain vertex, turns all crossings and all chain vertices into vertices of one finite triangle
 mesh.  A simple graph path in the resulting one-skeleton is then a loop-free polygonal arc.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

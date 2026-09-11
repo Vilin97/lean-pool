@@ -3,22 +3,25 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.MeasureTheory.Measure.Restrict
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
-import LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace
+public import Mathlib.Analysis.SpecialFunctions.Sigmoid
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
+public import Mathlib.MeasureTheory.Measure.Restrict
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization`.
 -/
+
+@[expose] public section
 
 
 open scoped unitInterval

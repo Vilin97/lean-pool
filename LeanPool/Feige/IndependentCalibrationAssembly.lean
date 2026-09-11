@@ -3,11 +3,13 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.AugmentedLatentSupport
-import LeanPool.Feige.MarginalLaw
-import LeanPool.Feige.MixtureCalibration
-import LeanPool.Feige.RecursiveLatentProbability
-import LeanPool.Feige.Calibration
+module
+
+public import LeanPool.Feige.AugmentedLatentSupport
+public import LeanPool.Feige.MarginalLaw
+public import LeanPool.Feige.MixtureCalibration
+public import LeanPool.Feige.RecursiveLatentProbability
+public import LeanPool.Feige.Calibration
 
 /-!
 # Assembly of calibration for independent variables
@@ -16,6 +18,8 @@ Independent nonnegative variables are first normalized to mean one.  Their
 joint law is then the product of their marginal laws, which is represented
 by the augmented latent mixture and averaged using the two-point bound.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 

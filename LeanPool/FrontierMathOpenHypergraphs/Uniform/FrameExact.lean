@@ -3,12 +3,15 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
 
 /-!
 # Exact small-frame validations
 -/
+
+@[expose] public section
 
 namespace HypergraphLowerBound
 

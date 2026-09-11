@@ -3,7 +3,9 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.Doubling
+module
+
+public import LeanPool.CompositionAlgebras.Composition.Doubling
 
 
 /-!
@@ -53,6 +55,8 @@ Substrate for the classification. The headline declaration is the instance
 `CD.instCompositionAlgebra`; the classification itself is
 `Composition/Classification.lean`.
 -/
+
+@[expose] public section
 
 namespace CompositionAlgebra
 

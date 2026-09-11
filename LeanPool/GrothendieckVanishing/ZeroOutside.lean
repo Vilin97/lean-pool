@@ -3,8 +3,9 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.CohomologyAPI
+public import LeanPool.GrothendieckVanishing.CohomologyAPI
 
 /-!
 # Extension-by-zero presheaf and sheaf machinery
@@ -34,6 +35,8 @@ finitely-generated subsheaf reduction in the Grothendieck vanishing proof.
 * `stalk_zeroOutsideInt_eq_zsmul_generator` — stalks on `U` are integer multiples of the
   canonical germ.
 -/
+
+@[expose] public section
 
 universe u
 

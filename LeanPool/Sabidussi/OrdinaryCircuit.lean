@@ -3,10 +3,12 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import LeanPool.Sabidussi.LoopGraphBridge
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Matrix.ToLin
+module
+
+public import LeanPool.Sabidussi.LoopGraphBridge
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
 # Ordinary circuits in endpoint multigraphs
@@ -16,6 +18,8 @@ the usual graph-theoretic notion of a circuit.  Connectivity below is phrased di
 of chains of incident labelled edges; in particular it does not mention parity or minimality.
 Loops and parallel edges need no exceptional representation.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 namespace LoopMultigraph

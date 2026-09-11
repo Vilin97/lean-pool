@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
 
 /-!
 # `Field (ℳ X)` and pointwise inverse (CC3, proof plan §6.2)
@@ -16,6 +17,8 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.5)
 * On a connected surface, the meromorphic identity dichotomy (`CodiscreteBridge`) classifies the
   zero class (`Mero.ord_eq_top_iff`) and gives `mul_inv_cancel₀`, assembling `Field (ℳ X)`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

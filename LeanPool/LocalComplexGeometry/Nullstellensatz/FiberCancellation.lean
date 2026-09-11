@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
 
 /-!
 # Removing the exceptional fibers
@@ -16,6 +17,8 @@ pointwise step: fiber rigidity makes every lower-degree coefficient zero on
 the good locus, so multiplying by the bad factor extends the conclusion over
 the exceptional locus as well.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

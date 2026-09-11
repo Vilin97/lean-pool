@@ -5,12 +5,16 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Core
-import LeanPool.ConnesRigidity.Paper.Section7
+module
+
+public import LeanPool.ConnesRigidity.Core
+public import LeanPool.ConnesRigidity.Paper.Section7
 
 /-!
 Completion boundary for Zhou's Theorem A.
 -/
+
+@[expose] public section
 
 namespace Connes
 

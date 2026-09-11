@@ -3,10 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
-import LeanPool.ClassificationOfSurfaces.Triangulation
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Data.Fintype.Fin
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
+public import LeanPool.ClassificationOfSurfaces.Triangulation
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Data.Fintype.Fin
 
 /-!
 # Finite cyclic presentations of triangulations
@@ -16,6 +18,8 @@ Each oriented triangle boundary is transported to a cyclic word of signed finite
 Incidence validity and dual connectivity then pass to the resulting
 `FiniteCyclicPresentation`.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

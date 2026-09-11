@@ -3,18 +3,22 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
-import Aesop
-import LeanPool.SelbergSieve4.Tactic.AesopInit
-import Mathlib.Data.Nat.Basic
-import Mathlib.NumberTheory.ArithmeticFunction.Defs
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+module
+
+public import Aesop
+public import LeanPool.SelbergSieve4.Tactic.AesopInit
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.NumberTheory.ArithmeticFunction.Defs
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 
 /-!
 # LeanPool.SelbergSieve4.Tactic.AesopDiv
 -/
+
+@[expose] public section
 
 namespace Sieve
 open Finset

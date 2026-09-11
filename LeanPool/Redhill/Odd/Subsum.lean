@@ -3,16 +3,19 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Tactic.Zify
-import LeanPool.Redhill.Common.MaxAbs
-import LeanPool.Redhill.Odd.Defs
-import LeanPool.Redhill.ToMathlib.NatAbs
-import LeanPool.Redhill.ToMathlib.NatSumProd
+public import Mathlib.Tactic.Zify
+public import LeanPool.Redhill.Common.MaxAbs
+public import LeanPool.Redhill.Odd.Defs
+public import LeanPool.Redhill.ToMathlib.NatAbs
+public import LeanPool.Redhill.ToMathlib.NatSumProd
 
 /-!
 # Subsum condition for the odd case
 -/
+
+@[expose] public section
 
 namespace OddCase
 

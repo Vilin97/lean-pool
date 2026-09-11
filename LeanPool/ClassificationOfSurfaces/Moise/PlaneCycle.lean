@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
 
 /-!
 # Polygonal circles from cycles in finite plane complexes
@@ -12,6 +14,8 @@ A simple graph cycle in the one-skeleton of a finite plane complex is automatica
 polygonal circle.  The exact segment-intersection axioms follow from the complex's face-to-face
 law and the fact that a simple cycle has no repeated cyclic vertex.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Core
-import Mathlib.Analysis.Normed.Module.Connected
+public import LeanPool.PoincareThreeBody.Core
+public import Mathlib.Analysis.Normed.Module.Connected
 
 /-!
 # Topology of the collision-free parameter domain
@@ -15,6 +16,8 @@ A shear `u = x + μ` makes the two moving primaries into the fixed punctures `(0
 twice-punctured plane, and the unrestricted momentum plane.  This proves that the full domain is
 path-connected whenever the mass interval is nonempty.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

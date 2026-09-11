@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Transport of codes along equivalences (generic `StructureSpaceOn` API)
 
@@ -17,6 +19,8 @@ These were previously private in `Descriptive/FiniteCarrier.lean`; they are not
 finite-specific and are the transport layer the López–Escobar converse (issue #10) consumes,
 so they live here at the `StructureSpaceOn` level.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

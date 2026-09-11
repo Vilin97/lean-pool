@@ -3,14 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacobianConstruction.ChartedSpaceKitV
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Torus
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
-import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
-import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Functorial
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.ChartedSpaceKitV
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Torus
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Functorial
 
 /-!
 # jacobian-construction (CC9): the `Jacobian` type, its scaffolding, and `ofCurve`
@@ -82,3 +83,5 @@ holomorphic map", which no unit in the 30-unit blueprint currently owns; natural
 abel-theorem, since it already needs period-naturality for its two-point argument, or a
 final-assembly addendum).
 -/
+
+@[expose] public section

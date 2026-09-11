@@ -3,18 +3,21 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import Mathlib.Algebra.GCDMonoid.Finset
-import Mathlib.Algebra.GCDMonoid.Nat
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Data.Nat.Choose.Factorization
-import Mathlib.Data.Nat.Factorization.LCM
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Algebra.GCDMonoid.Finset
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Data.Nat.Choose.Factorization
+public import Mathlib.Data.Nat.Factorization.LCM
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.NumberTheory.PrimeCounting
 
 /-!
 # LeanPool.Zeta3Irrational.D
 -/
+
+@[expose] public section
 
 namespace LeanPool.Zeta3Irrational
 

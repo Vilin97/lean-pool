@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Finiteness.Chain
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+public import LeanPool.JacobianDiffgeo.Finiteness.Chain
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
 
 /-!
 # The norm-bounded trade (`finiteness-and-chi`, gated file 1/3)
@@ -23,6 +24,8 @@ step 5). This is the first of the three files that were blocked on the cech `Col
 * `classMap`/`classMap_tradeDiff_eq_zero`/`classMap_surjective`: the Čech class map and its two
   Schwartz-consumer properties.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech

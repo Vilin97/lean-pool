@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Data.Set.Basic
-import Mathlib.Order.Monotone.Basic
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Order.Monotone.Basic
 
 /-!
 # Exercise 4.14 (Scott 1981, PRG-19, Lecture IV) — `P A` has a maximum fixed point
@@ -41,6 +42,8 @@ Both constructions use **only monotonicity** and the complete-lattice structure 
 `P A`; they are
 entirely **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise414
 

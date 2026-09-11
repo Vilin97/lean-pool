@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.RingTheory.KrullDimension.Regular
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.LinearAlgebra.AffineSpace.Combination
-import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+module
+
+public import Mathlib.RingTheory.KrullDimension.Regular
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.LinearAlgebra.AffineSpace.Combination
+public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
 
 /-!
 # The Complete Local Domain T = C[[x,y,z]]/(x^2-yz)
@@ -16,6 +18,8 @@ main counterexample. T is the quotient of C[[x,y,z]] by the
 ideal (x^2-yz). It is a two-dimensional Noetherian complete local
 domain with a height-one prime Q = (x,y) that is not principal.
 -/
+
+@[expose] public section
 
 noncomputable section
 

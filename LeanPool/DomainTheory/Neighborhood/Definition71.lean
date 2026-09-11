@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import LeanPool.DomainTheory.Neighborhood.Exercise315
-import LeanPool.DomainTheory.Neighborhood.Recursive
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import LeanPool.DomainTheory.Neighborhood.Exercise315
+public import LeanPool.DomainTheory.Neighborhood.Recursive
 
 /-!
 # Definition 7.1 (Scott 1981, PRG-19, §7) — computable presentations / effectively
@@ -74,6 +75,8 @@ A neighbourhood system is *effectively given* when it admits such a presentation
 inhabitant
 (`unitSys_isEffectivelyGiven`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

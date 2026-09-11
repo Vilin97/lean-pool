@@ -5,15 +5,19 @@ Authors: Jineon Baek
 -/
 
 -- Mirror configuration
-import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
-import LeanPool.ErdosTuzaValtr.Lib.List.Default
-import LeanPool.ErdosTuzaValtr.Config.Defs
+module
+
+public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
+public import LeanPool.ErdosTuzaValtr.Lib.List.Default
+public import LeanPool.ErdosTuzaValtr.Config.Defs
 
 /-!
 # LeanPool.ErdosTuzaValtr.Config.Mirror
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Config.Mirror`.
 -/
+
+@[expose] public section
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 

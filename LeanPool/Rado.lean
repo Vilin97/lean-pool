@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.Rado.Main
+public import LeanPool.Rado.Main
 
 /-!
 # Radó's theorem for Riemann surfaces
@@ -16,3 +17,5 @@ Main declarations: `rado_riemannSurface`
 Tags: riemann-surfaces, second-countability, harmonic-functions, perron-method
 MSC: 30F15, 30F20, 54D65
 -/
+
+@[expose] public section

@@ -3,9 +3,11 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
-import LeanPool.Clawristotle.FlatTorus3Lemmas
-import LeanPool.Clawristotle.Section3
+module
+
+public import LeanPool.Clawristotle.Defs
+public import LeanPool.Clawristotle.FlatTorus3Lemmas
+public import LeanPool.Clawristotle.Section3
 
 /-!
 # Transport Constraints (Section 4)
@@ -14,6 +16,8 @@ Derives that steady states are local Maxwellians: from the transport equation
 and D(f) = 0 at each spatial point, applies Corollary 1 to conclude f(x, .) is
 Maxwellian for each x.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

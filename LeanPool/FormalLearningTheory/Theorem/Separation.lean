@@ -3,17 +3,19 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Criterion.PAC
-import LeanPool.FormalLearningTheory.Criterion.Online
-import LeanPool.FormalLearningTheory.Criterion.Gold
-import LeanPool.FormalLearningTheory.Criterion.Extended
-import LeanPool.FormalLearningTheory.Complexity.Structures
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.Complexity.Symmetrization
-import LeanPool.FormalLearningTheory.Complexity.Measurability
-import LeanPool.FormalLearningTheory.Theorem.Online
-import LeanPool.FormalLearningTheory.PureMath.Concentration
-import Mathlib.Probability.Moments.Variance
+module
+
+public import LeanPool.FormalLearningTheory.Criterion.PAC
+public import LeanPool.FormalLearningTheory.Criterion.Online
+public import LeanPool.FormalLearningTheory.Criterion.Gold
+public import LeanPool.FormalLearningTheory.Criterion.Extended
+public import LeanPool.FormalLearningTheory.Complexity.Structures
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+public import LeanPool.FormalLearningTheory.Complexity.Measurability
+public import LeanPool.FormalLearningTheory.Theorem.Online
+public import LeanPool.FormalLearningTheory.PureMath.Concentration
+public import Mathlib.Probability.Moments.Variance
 
 /-!
 # Separation Theorems
@@ -21,6 +23,8 @@ import Mathlib.Probability.Moments.Variance
 These prove that the paradigms are genuinely different —
 the criteria do NOT imply each other.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

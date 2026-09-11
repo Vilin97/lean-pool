@@ -3,14 +3,15 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
-import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
-import Mathlib.Analysis.LocallyConvex.WithSeminorms
-import Mathlib.Analysis.PSeries
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.Algebra.InfiniteSum.Ring
+public import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
+public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
+public import Mathlib.Analysis.LocallyConvex.WithSeminorms
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Topology.Algebra.InfiniteSum.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import Mathlib.Topology.Algebra.InfiniteSum.Ring
 
 /-!
 # Nuclear Tensor Product via Köthe Sequence Spaces
@@ -37,6 +38,8 @@ The tensor product s(ℕ) ⊗̂ s(ℕ) ≅ s(ℕ²) ≅ s(ℕ) via Cantor pairin
 - Dynin, Mityagin, "Criterion for nuclearity in terms of approximative dimension"
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4
 -/
+
+@[expose] public section
 
 noncomputable section
 

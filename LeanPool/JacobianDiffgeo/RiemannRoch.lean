@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.RiemannRoch.Basic
+public import LeanPool.JacobianDiffgeo.RiemannRoch.Basic
 
 /-!
 # riemann-roch (#28): Riemann–Roch (namespace `RS`)
@@ -35,3 +36,5 @@ and Serre-duality export bank; no new mathematics, no reference to `T D`/`pairT`
 * **genus-zero-headline (#30)**: consumes `riemann_inequality` (forward direction: genus `0` ⇒
   `l(single P 1) ≥ 2`, extracting a function with a single simple pole).
 -/
+
+@[expose] public section

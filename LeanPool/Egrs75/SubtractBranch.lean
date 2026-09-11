@@ -3,14 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import LeanPool.Egrs75.DigitVector
-import LeanPool.Egrs75.DigitAtToolkit
-import Mathlib.Data.Nat.Digits.Lemmas
-import Mathlib.Data.List.GetD
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import LeanPool.Egrs75.LeafInduction
+public import LeanPool.Egrs75.DigitVector
+public import LeanPool.Egrs75.DigitAtToolkit
+public import Mathlib.Data.Nat.Digits.Lemmas
+public import Mathlib.Data.List.GetD
 
 /-!
 EGRS75 two-prime ALIGN leaf — LOW case, PRIMITIVE P3 (SUBTRACT branch).
@@ -71,6 +72,8 @@ no circularity.  Reuses the proven base-`p` safety adder `RepairDV.lowDigits_dis
 and the high/low base-`q` machinery; does NOT modify any existing clean file.  Formalizes
 the KNOWN 1975 theorem; three primes is Erdős #376 (OPEN) — not attempted.
 -/
+
+@[expose] public section
 
 namespace Egrs75.ClearingP3
 

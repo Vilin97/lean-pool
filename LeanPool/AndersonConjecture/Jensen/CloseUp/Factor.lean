@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.CloseUp.FactorDivisibility
-import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionStep
+module
+
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.FactorDivisibility
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionStep
 
 /-!
 # Close-up: factor theorem
@@ -13,6 +15,8 @@ Combines the divisibility, intersection, and no-common-factor
 sub-cases into the main factor theorem for the close-up
 induction (Heitmann, Lemma 4, case n >= 3).
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -8,13 +8,17 @@ Authors: Utensil Song
 Concrete Zhou group-factor Hilbert models.  The carrier is the semidirect
 product from §2 and the base is the Fourier crossed-product model from §3.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectFubini
-import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
-import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectFubini
+public import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
+public import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
 
 /-!
 The group factor component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperGroupFactor

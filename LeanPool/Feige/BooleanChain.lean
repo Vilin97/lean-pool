@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.Data.Fintype.Fin
-import Mathlib.Data.Finset.Card
-import Mathlib.GroupTheory.Perm.Basic
+module
+
+public import Mathlib.Data.Fintype.Fin
+public import Mathlib.Data.Finset.Card
+public import Mathlib.GroupTheory.Perm.Basic
 
 /-!
 # Maximal chains in the Boolean lattice
@@ -16,6 +18,8 @@ first `j` elements in that order.  The lemmas below expose both the ranked
 chain structure and the exact one-element insertion step needed by the mass
 transport argument.
 -/
+
+@[expose] public section
 
 open Finset
 

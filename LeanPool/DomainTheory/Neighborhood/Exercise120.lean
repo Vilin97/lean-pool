@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Tactic.Tauto
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Tactic.Tauto
 
 /-!
 # Exercise 1.20 (Scott 1981, PRG-19, §1) — the power system `𝒟' = {↑X}`
@@ -36,6 +37,8 @@ Note the variance: `X ↦ ↑X` is inclusion-**preserving** (`upSet_subset_iff`)
 unlike Def 1.7's
 `principal`. Everything is `[propext, Quot.sound]`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

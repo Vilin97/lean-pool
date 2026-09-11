@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ChartExtraction
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartExtraction
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.Analysis.Normed.Module.Ball.Homeomorph
 
 /-!
 # Punctured surface charts
@@ -19,6 +21,8 @@ These local results are the input for proving that a connected surface remains c
 deleting a finite set.  That theorem, in turn, rules out multiple dual components in a completed
 surface triangulation.
 -/
+
+@[expose] public section
 
 open Set Topology
 

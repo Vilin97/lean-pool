@@ -3,9 +3,10 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Main
-import Mathlib.Analysis.Polynomial.MahlerMeasure
+public import LeanPool.LehmerE10.Main
+public import Mathlib.Analysis.Polynomial.MahlerMeasure
 
 /-!
 # the Mahler measure of Lehmer's polynomial, in Mathlib's own API.
@@ -31,6 +32,8 @@ Together with `coxeterE8_*` facts (finite case) this locates E₁₀ precisely: 
 series crosses from torsion (spectrum on the unit circle) to a Salem element exactly at
 rank 10, and the crossing value is Lehmer's number.
 -/
+
+@[expose] public section
 
 open Polynomial
 

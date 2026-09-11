@@ -3,9 +3,11 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.SpecialFunctions.Sqrt
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+module
+
+public import LeanPool.ComputableReal.SpecialFunctions.Sqrt
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
 # Verified rational bounds for pi
@@ -16,6 +18,8 @@ Rational lower and upper bounds for `Real.pi` are derived from the
 go through the `noncomputable` square-root sequences, so `Pi` and the derived
 bounds `piLb`/`piUb` are `noncomputable` Lean terms.
 -/
+
+@[expose] public section
 
 open scoped QInterval
 

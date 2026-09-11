@@ -3,13 +3,14 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.ENNReal
-import LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
-import LeanPool.QuasiBorelSpaces.SeparatesPoints
-import LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd
-import LeanPool.QuasiBorelSpaces.IsHomDiagonal
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
+public import LeanPool.QuasiBorelSpaces.ENNReal
+public import LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
+public import LeanPool.QuasiBorelSpaces.SeparatesPoints
+public import LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd
+public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
 
 /-!
 # Probability Measures over Quasi-Borel Spaces
@@ -18,6 +19,8 @@ This file defines probability measures over quasi-borel spaces.
 
 See [HeunenKSY17], Section V-D.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped unitInterval

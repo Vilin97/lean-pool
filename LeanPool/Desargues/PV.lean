@@ -3,13 +3,14 @@ Copyright (c) 2026 Abdullah Uyu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abdullah Uyu
 -/
+module
 
-import Mathlib.LinearAlgebra.Projectivization.Basic
-import Mathlib.LinearAlgebra.Projectivization.Independence
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import LeanPool.Desargues.Basic
+public import Mathlib.LinearAlgebra.Projectivization.Basic
+public import Mathlib.LinearAlgebra.Projectivization.Independence
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import LeanPool.Desargues.Basic
 
 /-!
 # Projectivizations as projective geometries
@@ -17,6 +18,8 @@ import LeanPool.Desargues.Basic
 Proves that Mathlib projectivizations satisfy the projective-geometry axioms
 for the dependence-based collinearity relation.
 -/
+
+@[expose] public section
 
 open Finset Set Submodule FiniteDimensional Projectivization
 open scoped LinearAlgebra.Projectivization

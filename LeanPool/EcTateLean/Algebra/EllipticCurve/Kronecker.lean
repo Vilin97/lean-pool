@@ -3,19 +3,22 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import Mathlib.Data.Int.Basic
-import Mathlib.Data.Nat.Basic
-import Mathlib.Logic.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Data.Nat.Order.Lemmas
-import Mathlib.Data.Nat.ModEq
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Logic.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Data.Nat.Order.Lemmas
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker`.
 -/
+
+@[expose] public section
 
 open Nat
 

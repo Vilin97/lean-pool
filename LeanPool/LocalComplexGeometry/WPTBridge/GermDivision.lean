@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Coordinates
-import LeanPool.LocalComplexGeometry.WPTBridge.DivisionUniqueness
-import Mathlib.RingTheory.Ideal.Operations
-import Mathlib.RingTheory.Ideal.Span
+public import LeanPool.LocalComplexGeometry.Germs.Coordinates
+public import LeanPool.LocalComplexGeometry.WPTBridge.DivisionUniqueness
+public import Mathlib.RingTheory.Ideal.Operations
+public import Mathlib.RingTheory.Ideal.Span
 
 /-!
 # Weierstrass division on holomorphic germs
@@ -17,6 +18,8 @@ canonical operation on the standard germ ring.  A fixed family `a` represents
 the coefficients of the prepared divisor; its coefficients are analytic and
 vanish at the origin.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

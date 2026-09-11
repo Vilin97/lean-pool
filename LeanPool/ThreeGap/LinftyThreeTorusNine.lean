@@ -3,8 +3,10 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.SimultaneousDirichlet
-import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
+module
+
+public import LeanPool.ThreeGap.SimultaneousDirichlet
+public import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
 
 /-!
 # The `L∞` three-torus bound `g_∞ ≤ 2^d+1` is **sharp** for `d = 3`: nine distances attained
@@ -31,6 +33,8 @@ Same dynamics-free, integer-exact route as `LinftyRecords.sharp_attained` (`d = 
 three
 coordinates; everything is exact modular arithmetic — no square roots.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.LinftyRecords3
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
 /-!
 # The shared-symbol decoder (issue #10, Unit 5a)
 
@@ -25,6 +27,8 @@ Contents:
 * `realize_sharedToBase` — **the semantic square**: for every graph code `d`, a shared
   sentence holds in the sublanguage reduct of `d` iff its decoding holds in `codeReduct d`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

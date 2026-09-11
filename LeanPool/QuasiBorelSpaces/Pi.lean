@@ -3,10 +3,11 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Prod
-import LeanPool.QuasiBorelSpaces.Defs
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import LeanPool.QuasiBorelSpaces.Prod
+public import LeanPool.QuasiBorelSpaces.Defs
+public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
 
 
 /-!
@@ -17,6 +18,8 @@ This file defines small products of quasi-borel spaces by giving a
 
 See [HeunenKSY17], Proposition 16.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace.Pi
 

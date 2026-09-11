@@ -3,10 +3,11 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
 
 /-!
 # The Walsh and average formulas from half-size alone
@@ -21,6 +22,8 @@ direct double-counting — including the diagonal `x = y = z` contribution — f
 the average.  Both are proved for an arbitrary `Δ : Finset K` and then
 specialized to `derivativeImage k K`.
 -/
+
+@[expose] public section
 
 open Finset
 

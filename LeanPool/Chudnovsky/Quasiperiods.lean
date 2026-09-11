@@ -3,9 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.WeierstrassMore
-import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
+public import LeanPool.Chudnovsky.WeierstrassMore
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
 
 /-!
 # Quasiperiods and the Legendre relation
@@ -25,6 +26,8 @@ Statements from chapter 2 of Milla (arXiv:1809.00533v6, file `070_Quasiperiods.t
 
 All statements in this file are fully proved.
 -/
+
+@[expose] public section
 
 noncomputable section
 

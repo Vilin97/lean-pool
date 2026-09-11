@@ -3,8 +3,9 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.Prelude
+public import LeanPool.ZhangYeungInequality.Prelude
 
 /-!
 # The Zhang-Yeung delta quantity
@@ -91,6 +92,8 @@ for this module.
 
 Shannon entropy, mutual information, non-Shannon information inequality, Zhang-Yeung
 -/
+
+@[expose] public section
 
 namespace ZhangYeung
 

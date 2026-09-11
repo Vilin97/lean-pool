@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
-import Mathlib.Topology.Instances.AddCircle.Real
+module
+
+public import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
+public import Mathlib.Topology.Instances.AddCircle.Real
 
 /-!
 # Weighted subdivisions of the circle
@@ -14,6 +16,8 @@ which sends the `i`th unit interval to an interval of length equal to the `i`th 
 packages that map as a homeomorphism of intervals and, after identifying endpoints, as a
 homeomorphism of circles.  It is the geometric core of Gallier--Xu P1 edge subdivision.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

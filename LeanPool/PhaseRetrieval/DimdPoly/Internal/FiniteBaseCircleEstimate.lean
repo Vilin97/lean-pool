@@ -3,13 +3,17 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import Mathlib.Algebra.Order.Chebyshev
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Order.Interval.Set.Union
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
-import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+module
+
+public import Mathlib.Algebra.Order.Chebyshev
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Mathlib.Order.Interval.Set.Union
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
+public import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
 
 /-! # FiniteBaseCircleEstimate -/
+
+@[expose] public section
 
 
 noncomputable section

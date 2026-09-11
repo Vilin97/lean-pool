@@ -3,8 +3,9 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Chart
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Chart
 
 /-!
 # The points at infinity of the Fermat cubic and the diagonal translation formula
@@ -21,6 +22,8 @@ The main result is the diagonal translation formula:
 (w,t) + P_a = (a*w, a^{-1}*t)          (a^{-1} = a^2).
 ```
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

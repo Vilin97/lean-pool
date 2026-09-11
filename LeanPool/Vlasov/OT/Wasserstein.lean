@@ -3,10 +3,12 @@ Copyright (c) 2026 Joseph K. Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph K. Miller
 -/
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
-import Mathlib.Topology.ContinuousMap.Bounded.Basic
+module
+
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
+public import Mathlib.Topology.ContinuousMap.Bounded.Basic
 
 /-! # Wasserstein-1 distance via Kantorovich–Rubinstein duality (cost-generic)
 
@@ -16,6 +18,8 @@ The optimal-transport core, all generic over the underlying (pseudo)metric space
 truncated-metric variant `wassersteinBar` (Wbar), and their property lemmas
 (symmetry, triangle, non-expansion under 1-Lipschitz pushforward, KR-dual lower
 bound, finiteness under finite first moments). -/
+
+@[expose] public section
 
 open MeasureTheory
 

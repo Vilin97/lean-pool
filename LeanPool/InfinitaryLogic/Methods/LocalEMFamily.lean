@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalColimit
-import LeanPool.InfinitaryLogic.Methods.LocalEMSupport
-import Mathlib.ModelTheory.Encoding
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalColimit
+public import LeanPool.InfinitaryLogic.Methods.LocalEMSupport
+public import Mathlib.ModelTheory.Encoding
 
 /-!
 # The countable local atom/deForm family `ΓEMlocal`
@@ -43,6 +45,8 @@ The GENERIC semantic (realize) bridges live in `LocalEMContext.lean`; the old
 `skolemColim`-specific ones remain in `EMTermModel.lean`. This file is deliberately purely
 syntactic.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

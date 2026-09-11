@@ -3,8 +3,10 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Mortality.Mask
+module
+
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.Mortality.Mask
 
 /-!
 # Mask mortality for one-row pencils over an algebraically closed field
@@ -18,6 +20,8 @@ Every connector hole is independently enumerated, all chosen vectors lie
 in the constant field, and all products are in the forward word convention
 of `KoethePencilDefs`.  No nilness or countability hypothesis is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

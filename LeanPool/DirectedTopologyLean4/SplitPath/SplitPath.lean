@@ -3,12 +3,16 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.Interpolate
-import LeanPool.DirectedTopologyLean4.UnitIntervalAux
+module
+
+public import LeanPool.DirectedTopologyLean4.Interpolate
+public import LeanPool.DirectedTopologyLean4.UnitIntervalAux
 
 /-!
 # LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
 -/
+
+@[expose] public section
 
 /- This file contains definitions for splitting a path `γ : Path x y` at some point `T : I`
   yielding two different paths:

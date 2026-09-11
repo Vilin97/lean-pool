@@ -3,9 +3,10 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
+module
 
-import LeanPool.LeanComplexAnalysis.Harmonic
-import LeanPool.LeanComplexAnalysis.UnivalentFunctions
+public import LeanPool.LeanComplexAnalysis.Harmonic
+public import LeanPool.LeanComplexAnalysis.UnivalentFunctions
 
 /-!
 # Formalized Complex Analysis in Lean
@@ -17,6 +18,8 @@ Main declarations: `LeanPool.LeanComplexAnalysis.harnack_ineq`
 Tags: complex-analysis, harmonic-functions, poisson-integral, univalent-functions
 MSC: 30A99, 31A05, 30C55
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

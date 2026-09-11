@@ -3,10 +3,11 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.Looseness
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.Data.Fintype.Fin
+public import LeanPool.Sundogcert.Looseness
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.Data.Fintype.Fin
 
 /-!
   Sundogcert/Degradation.lean — the DEGRADATION CURVE of the column-weight bound vs density.
@@ -32,6 +33,8 @@ import Mathlib.Data.Fintype.Fin
                     PROVEN density; and the SAME-CODE fact (band invertible ⟹ ker equivalence ⟹
                     Safe-equivalence for all c), reusing the Looseness invertibility approach.
 -/
+
+@[expose] public section
 
 open Matrix
 

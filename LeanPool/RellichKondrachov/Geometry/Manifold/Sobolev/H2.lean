@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.H2`
@@ -28,6 +29,8 @@ where `μᵢ` is the pushforward chart measure (`chartMeasure`) and the graph ma
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.C2`
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h2`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

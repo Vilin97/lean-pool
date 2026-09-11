@@ -3,18 +3,22 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.QuantumGraph.Basic
-import LeanPool.Monlib4.QuantumGraph.Example
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
-import LeanPool.Monlib4.RepTheory.AutMat
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.LinearAlgebra.TensorProduct.Finiteness
+module
+
+public import LeanPool.Monlib4.QuantumGraph.Basic
+public import LeanPool.Monlib4.QuantumGraph.Example
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
+public import LeanPool.Monlib4.RepTheory.AutMat
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+public import Mathlib.LinearAlgebra.TensorProduct.Finiteness
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.PiMat
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.PiMat`.
 -/
+
+@[expose] public section
 
 variable {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
   [Π i, Fintype (p i)] [Π i, DecidableEq (p i)]

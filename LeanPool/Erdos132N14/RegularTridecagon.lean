@@ -3,14 +3,16 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132N14.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.RingTheory.RootsOfUnity.Complex
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Lean.Elab.Tactic.Omega
+module
+
+public import LeanPool.Erdos132N14.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.RingTheory.RootsOfUnity.Complex
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Lean.Elab.Tactic.Omega
 
 /-!
 # The three classified thirteen-point templates
@@ -21,6 +23,8 @@ distance moments are derived from those coordinates. The centered dodecagon
 and centered regular hexagram are also given by explicit complex coordinates;
 their high-multiplicity classes are checked inside Lean.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132N14
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 /-!
 # Base-symbol occurrence projections (neutral layer)
 
@@ -19,6 +21,8 @@ extracted from `PairedInsepFamily.lean` so that the polarity-refined development
 the boundary now matches the proof architecture.  Declaration names and namespaces are unchanged,
 so no compatibility shims are needed.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

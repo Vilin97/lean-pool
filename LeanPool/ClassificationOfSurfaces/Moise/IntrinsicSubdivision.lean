@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
 
 /-!
 # Plane subdivisions as intrinsic subdivisions
@@ -15,6 +17,8 @@ complex is regarded as the intrinsic complex of its maximal triangles, and a geo
 subdivision induces a faithful intrinsic subdivision through the barycentric realization
 homeomorphisms.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

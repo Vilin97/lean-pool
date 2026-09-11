@@ -3,11 +3,12 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.PicardFuchs
-import LeanPool.Chudnovsky.Estimates
-import LeanPool.Chudnovsky.Ramanujan
-import Mathlib.Analysis.InnerProductSpace.Calculus
+public import LeanPool.Chudnovsky.PicardFuchs
+public import LeanPool.Chudnovsky.Estimates
+public import LeanPool.Chudnovsky.Ramanujan
+public import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Kummer's solution of the Picard–Fuchs equation
@@ -49,6 +50,8 @@ what chapter 9 consumes after the PLAN A7 reformulation. TODO: if the final asse
 `MainTheorem.lean` turns out to need the literal `Δ^(1/12)` statement (it uses `ωtilde₁ = Δ^(1/12)`
 only through `F` and `dF/dJ`), add it here with an explicit principal-branch bookkeeping.
 -/
+
+@[expose] public section
 
 noncomputable section
 

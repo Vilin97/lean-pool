@@ -3,9 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
-import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
-import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
 
 /-!
 # Close-up: avoidance step
@@ -16,6 +18,8 @@ common prime factor of the elements of s' divides both a and c,
 one obtains the required A-extension by applying prime avoidance
 (Heitmann, Lemma 4).
 -/
+
+@[expose] public section
 
 noncomputable section
 

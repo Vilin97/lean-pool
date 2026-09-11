@@ -3,10 +3,12 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Complex.Norm
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Complex.BigOperators
+module
+
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Data.Complex.BigOperators
 
 /-!
 
@@ -15,6 +17,8 @@ import Mathlib.Data.Complex.BigOperators
 This file contains some basic lemmas about complex numbers.
 
 -/
+
+@[expose] public section
 
 
 open scoped ComplexConjugate BigOperators

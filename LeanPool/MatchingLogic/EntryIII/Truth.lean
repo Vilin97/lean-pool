@@ -12,13 +12,17 @@ is otherwise complete and proceeds by strong induction on the name-insensitive
 pattern complexity, which is essential because total capture-avoiding
 substitution preserves that complexity without being a structural subterm.
 -/
-import LeanPool.MatchingLogic.EntryIII.Completion
-import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Completion
+public import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # MatchingLogic.EntryIII.Truth
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

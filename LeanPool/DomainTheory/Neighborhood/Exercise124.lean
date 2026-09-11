@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Order.Zorn
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Order.Zorn
 
 /-!
 # Exercise 1.24 (Scott 1981, PRG-19, §1) — every partial element extends to a
@@ -39,6 +40,8 @@ legitimately uses
 `Classical.choice` through `zorn_le_nonempty_Ici₀`. The `chainUnion`
 *construction* is choice-free
 (`[propext, Quot.sound]`). -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

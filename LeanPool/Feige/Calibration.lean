@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.Real
-import Mathlib.Probability.Independence.Basic
+module
+
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Real
+public import Mathlib.Probability.Independence.Basic
 
 /-!
 # Exact calibration interfaces
@@ -13,6 +15,8 @@ import Mathlib.Probability.Independence.Basic
 This file contains the probability/calibration interfaces shared by the
 Vlassis--Thomas theorem and the reduction to Feige's inequality.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

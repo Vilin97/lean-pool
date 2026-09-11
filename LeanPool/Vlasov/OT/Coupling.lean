@@ -3,12 +3,14 @@ Copyright (c) 2026 Joseph K. Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph K. Miller
 -/
-import Mathlib.Analysis.Convex.Cone.InnerDual
-import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
-import Mathlib.Probability.Kernel.Composition.MeasureComp
-import Mathlib.Probability.Kernel.Disintegration.StandardBorel
-import Mathlib.Topology.MetricSpace.Sequences
-import LeanPool.Vlasov.OT.Wasserstein
+module
+
+public import Mathlib.Analysis.Convex.Cone.InnerDual
+public import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+public import Mathlib.Probability.Kernel.Composition.MeasureComp
+public import Mathlib.Probability.Kernel.Disintegration.StandardBorel
+public import Mathlib.Topology.MetricSpace.Sequences
+public import LeanPool.Vlasov.OT.Wasserstein
 
 /-!
 # Coupling-based Wasserstein-1 distance
@@ -27,6 +29,8 @@ characteristic flows.
 
 See `formalize/DESIGN.md` (in the source repository) for the overall design choices.
 -/
+
+@[expose] public section
 
 /-
 The contents of this file — `IsCoupling`, `wasserstein1Coupling`, both

@@ -3,13 +3,14 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.SATReductionForward
-import LeanPool.Sundogcert.SATReductionReverse
-import LeanPool.Sundogcert.SATReduction
-import LeanPool.Sundogcert.ThreeDMReindex
-import LeanPool.Sundogcert.MatchingNPHard
-import LeanPool.Sundogcert.DecodingNPHard
+public import LeanPool.Sundogcert.SATReductionForward
+public import LeanPool.Sundogcert.SATReductionReverse
+public import LeanPool.Sundogcert.SATReduction
+public import LeanPool.Sundogcert.ThreeDMReindex
+public import LeanPool.Sundogcert.MatchingNPHard
+public import LeanPool.Sundogcert.DecodingNPHard
 
 /-!
   Sundogcert/SATReductionMain.lean — MILESTONE 9 (CAPSTONE) of the `3SAT ≤ 3DM` marathon: the
@@ -52,6 +53,8 @@ import LeanPool.Sundogcert.DecodingNPHard
   Axiom-clean (no `sorryAx`, no `Lean.ofReduceBool`, no `native_decide`).  Expect
   `[propext, Classical.choice, Quot.sound]` on each audited result.
 -/
+
+@[expose] public section
 
 open Sundog.SATReduction Sundog.SATNPHard Sundog.SATReductionForward
 open Sundog.SATReductionReverse Sundog.ThreeDMReindex Sundog.MatchingNPHard

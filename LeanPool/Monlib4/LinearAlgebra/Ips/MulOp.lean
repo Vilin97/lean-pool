@@ -3,13 +3,15 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Data.Opposite
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.MulOpposite
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
+module
+
+public import Mathlib.Data.Opposite
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.InnerProductSpace.MulOpposite
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
 
 /-!
 
@@ -19,6 +21,8 @@ This file contains the construction of the basis of an opposite space; and the c
 opposite inner product space.
 
 -/
+
+@[expose] public section
 
 
 open Module

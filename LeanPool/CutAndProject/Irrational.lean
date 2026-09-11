@@ -3,16 +3,17 @@ Copyright (c) 2026 Dirk Kunert. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dirk Kunert
 -/
+module
 
-import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Order.Interval.Set.Defs
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
+public import Mathlib.NumberTheory.Real.Irrational
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Order.Interval.Set.Defs
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
 
 /-!
 # Aperiodicity of the projected gap sequence for irrational slopes
@@ -31,6 +32,8 @@ The proof has three steps:
      that preserves `W ∩ s(ℤ²)`; Kronecker density on `ℝ` rules
      this out, forcing `v = 0` and contradicting Step 2.
 -/
+
+@[expose] public section
 
 open Set Function
 

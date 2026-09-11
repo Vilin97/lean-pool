@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
 
 /-!
 # Weighted radial representation
@@ -12,6 +14,8 @@ This module upgrades the simple-function radial Radon-Nikodym representation
 to the measurable, essentially bounded radius weights used by the weak
 monotonicity argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,12 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import Mathlib.Data.Nat.Digits.Lemmas
-import Mathlib.Data.List.GetD
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import LeanPool.Egrs75.LeafInduction
+public import Mathlib.Data.Nat.Digits.Lemmas
+public import Mathlib.Data.List.GetD
 
 /-!
 EGRS75 repair step — route "paperfaithful".
@@ -45,6 +46,8 @@ no circularity. This formalizes the KNOWN 1975 theorem; it is not an open proble
 
 Imports only kernel-clean material; does NOT modify any existing clean file.
 -/
+
+@[expose] public section
 
 namespace Egrs75.RepairPaperfaithful
 

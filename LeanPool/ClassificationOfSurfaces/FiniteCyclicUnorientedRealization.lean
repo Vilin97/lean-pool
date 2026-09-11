@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
-import Mathlib.Data.Fin.Rev
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
+public import Mathlib.Data.Fin.Rev
 
 /-!
 # Polygonal realization under independently reoriented faces
@@ -19,6 +21,8 @@ orientation-sensitive `IsSurfaceValid` predicate. When both endpoints are ordina
 does preserve their faithful polygonal realizations. This is the exact extra comparison needed by
 the cross-cap pseudo-rewrite, whose common P2 refinement reads one of its two faces backwards.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.DemazureProduct.AspPerm
-import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.Order.Interval.Set.Infinite
+module
+
+public import LeanPool.DemazureProduct.AspPerm
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Order.Interval.Set.Infinite
 
 /-!
 # Inversion sets
@@ -14,6 +16,8 @@ This file gives a characterization of the inversion set of ASP permutations.
 It corresponds to Theorem 2.13 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 

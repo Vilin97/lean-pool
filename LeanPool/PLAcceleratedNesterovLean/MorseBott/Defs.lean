@@ -3,14 +3,15 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.Calculus.ContDiff.Defs
-import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
-import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
-import Mathlib.Topology.Order.LocalExtr
-import Mathlib.Topology.MetricSpace.HausdorffDistance
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+public import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
+public import Mathlib.Topology.Order.LocalExtr
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
 Copyright (c) 2025. All rights reserved.
@@ -33,6 +34,8 @@ Formalization of definitions from:
 - `hessianKer`          : kernel of the Hessian
 - `IsMuMB`              : μ-Morse–Bott property
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Submodule
 

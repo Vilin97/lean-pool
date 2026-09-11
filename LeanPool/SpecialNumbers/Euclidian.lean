@@ -3,10 +3,12 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Topology.Order.MonotoneConvergence
+module
+
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Euclid Numbers
@@ -32,6 +34,8 @@ the notation from [knuth1989concrete].
 * [Concrete Mathematics][knuth1989concrete]
 * [The On-Line Encyclopedia of Integer Sequences][oeis]
 -/
+
+@[expose] public section
 
 namespace SpecialNumbers
 

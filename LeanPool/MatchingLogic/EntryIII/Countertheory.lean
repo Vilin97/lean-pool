@@ -11,12 +11,16 @@ This isolates the remaining canonical-model obligation: it is enough to build
 a pointed model for every locally consistent finite-list theory.  The reduction
 itself is purely propositional plus the already pinned finite semantic bridge.
 -/
-import LeanPool.MatchingLogic.EntryIII.LocalTheory
-import LeanPool.MatchingLogic.EntryIII.FiniteReduction
+module
+
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
+public import LeanPool.MatchingLogic.EntryIII.FiniteReduction
 
 /-!
 # MatchingLogic.EntryIII.Countertheory
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

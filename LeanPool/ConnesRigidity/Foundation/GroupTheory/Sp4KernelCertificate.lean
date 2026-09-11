@@ -9,14 +9,16 @@ Kernel-checked finite certificate for the Sp₄(F₂) normal-subgroup argument i
 Zhou §6. The exhaustive Boolean matrix search is isolated here from the
 conceptual action and transvection lemmas.
 -/
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard0
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard1
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard2
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard3
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard4
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard5
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard6
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
+module
+
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard0
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard1
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard2
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard3
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard4
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard5
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard6
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
 
 /-!
 # Kernel-checked `Sp₄(𝔽₂)` normal-subgroup certificate
@@ -24,6 +26,8 @@ import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
 The 65,536 Boolean matrices are checked in independent shards so Lake can
 compile the certificate in parallel. The public theorem is unchanged.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Sp4

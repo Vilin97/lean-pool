@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.Order.Hom.Basic
-import Mathlib.Order.Fin.Basic
+module
+
+public import Mathlib.Order.Hom.Basic
+public import Mathlib.Order.Fin.Basic
 
 /-!
 # Highly order-transitive linear orders
@@ -19,6 +21,8 @@ any other, which is what collapses tuple types to finitely describable orbit dat
 This file supplies the consumer-shaped definition. Existence results via ordered fields are in
 `HighlyTransitiveField.lean` and `HighlyTransitiveExistence.lean`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

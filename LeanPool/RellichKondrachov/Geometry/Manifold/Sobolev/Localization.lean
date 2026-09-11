@@ -3,12 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.Geometry.Manifold.Algebra.Monoid
-import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
+public import Mathlib.Geometry.Manifold.Algebra.Monoid
+public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+public import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.Localization`
@@ -26,6 +27,8 @@ on the model space `E`, obtained by pulling back `ρ_i • f` along the extended
 For compact manifolds, the resulting function has compact support and is `C^1` (hence belongs to
 the Euclidean `C1c` submodule used in the Euclidean Sobolev baseline).
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

@@ -13,14 +13,18 @@ partial `substVar`, guarded by `CaptureFree`.  This additive module alpha-rename
 binders named `y`, then applies `substVar`, and proves that the result has the
 source operation's proof-theoretic and semantic properties.
 -/
-import LeanPool.MatchingLogic.EntryIII.Alpha
-import LeanPool.MatchingLogic.EntryIII.LocalTheory
-import LeanPool.MatchingLogic.Soundness
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Alpha
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
+public import LeanPool.MatchingLogic.Soundness
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # MatchingLogic.EntryIII.CaptureAvoiding
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

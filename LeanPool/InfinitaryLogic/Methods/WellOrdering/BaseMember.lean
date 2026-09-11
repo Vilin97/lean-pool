@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
 /-!
 # The initial member: `Bφ ∈ P` (issue #12, the mathematical starting gate)
 
@@ -22,6 +24,8 @@ This separately certifies that the strengthened terminal/bottom-margin invariant
 `(α+1)`-chain per level — exactly Marker's hypothesis, off by the harmless successor — is all
 that is consumed.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

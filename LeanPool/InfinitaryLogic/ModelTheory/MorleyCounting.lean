@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
-import LeanPool.InfinitaryLogic.Descriptive.FiniteCarrier
-import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
+public import LeanPool.InfinitaryLogic.Descriptive.FiniteCarrier
+public import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
 /-!
 # Morley's Counting Theorem via Scott-Height Stratification
 
@@ -27,6 +29,8 @@ each α, the iso classes with height ≤ α inject into BFEquiv_α classes, givi
 - `morley_counting`: Morley counting theorem for all countable models, parametrized
   by `SilverBurgessDichotomy` (proved in this repository).
 -/
+
+@[expose] public section
 
 universe u v
 

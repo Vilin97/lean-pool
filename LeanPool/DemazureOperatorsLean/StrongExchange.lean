@@ -3,14 +3,17 @@ Copyright (c) 2026 Óscar Álvarez Sánchez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Óscar Álvarez Sánchez
 -/
+module
 
-import Mathlib.GroupTheory.Coxeter.Inversion
-import Mathlib.Algebra.Group.NatPowAssoc
-import Init.Data.List.Lemmas
+public import Mathlib.GroupTheory.Coxeter.Inversion
+public import Mathlib.Algebra.Group.NatPowAssoc
+public import Init.Data.List.Lemmas
 
 /-!
 # LeanPool.DemazureOperatorsLean.StrongExchange
 -/
+
+@[expose] public section
 
 namespace CoxeterSystem
 noncomputable section

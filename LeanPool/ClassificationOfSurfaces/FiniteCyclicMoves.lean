@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
 
 /-!
 # Finite cyclic move closures
@@ -23,6 +25,8 @@ move chain, which may pass through the exceptional empty-word sphere where
 `MoveEquivalent` is also provided as the purely syntactic equivalence closure. A common
 subdivision implies move equivalence, but no converse or confluence theorem is asserted here.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

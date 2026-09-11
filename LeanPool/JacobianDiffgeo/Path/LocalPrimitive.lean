@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms.Coeffs
-import LeanPool.JacobianDiffgeo.Forms.Analyticity
-import LeanPool.JacobianDiffgeo.Path.Planar
-import Mathlib.Topology.LocallyConstant.Basic
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import LeanPool.JacobianDiffgeo.Path.Planar
+public import Mathlib.Topology.LocallyConstant.Basic
 
 /-!
 # `IsPrimitiveAlongMap`: primitives of a 1-form along a continuous map (CC6)
@@ -31,6 +32,8 @@ Main declarations:
   into a single chart-ball; the reusable "cell primitive" atom for the 1D chain induction
   (`Continuation.lean`) and the 2D grid (`HomotopySquare.lean`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open IsManifold Metric Set Filter

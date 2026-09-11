@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
 
 /-!
 Copyright (c) 2025. All rights reserved.
@@ -37,6 +38,8 @@ Combining these two gives μ-MB.
 - Rebjock & Boumal, "Fast convergence to non-isolated minima: four equivalent
   conditions for C² functions", Corollary 2.17.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric
 

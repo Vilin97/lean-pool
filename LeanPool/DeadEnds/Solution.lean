@@ -3,18 +3,21 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang. All 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
+module
 
-import LeanPool.DeadEnds.Basic
-import LeanPool.DeadEnds.CRT
-import LeanPool.DeadEnds.Counting
-import LeanPool.DeadEnds.CountingBlocks
-import LeanPool.DeadEnds.PrimeTail
-import LeanPool.DeadEnds.RelevantPrimes
-import LeanPool.DeadEnds.TailEstimates
-import LeanPool.DeadEnds.InclusionExclusion
+public import LeanPool.DeadEnds.Basic
+public import LeanPool.DeadEnds.CRT
+public import LeanPool.DeadEnds.Counting
+public import LeanPool.DeadEnds.CountingBlocks
+public import LeanPool.DeadEnds.PrimeTail
+public import LeanPool.DeadEnds.RelevantPrimes
+public import LeanPool.DeadEnds.TailEstimates
+public import LeanPool.DeadEnds.InclusionExclusion
 
 /-!
 # LeanPool.DeadEnds.Solution
 
 Imported Lean Pool material for `LeanPool.DeadEnds.Solution`.
 -/
+
+@[expose] public section

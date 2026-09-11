@@ -3,21 +3,24 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.AlgClosedUnion
-import LeanPool.BrauerGroupNew.ExtendScalar
-import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
-import Mathlib.Algebra.BrauerGroup.Defs
-import Mathlib.Algebra.Central.Matrix
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.RingTheory.SimpleRing.Matrix
+public import LeanPool.BrauerGroupNew.AlgClosedUnion
+public import LeanPool.BrauerGroupNew.ExtendScalar
+public import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+public import Mathlib.Algebra.BrauerGroup.Defs
+public import Mathlib.Algebra.Central.Matrix
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # Splitting central simple algebras
 
 This file ports the upstream splitting-field infrastructure for central simple algebras.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

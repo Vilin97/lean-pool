@@ -3,13 +3,14 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.Minlos.ProjectiveFamily
-import LeanPool.OSforGFF.Minlos.MinlosConcentration
-import Mathlib.Topology.Bases
-import Mathlib.Topology.ExtendFrom
-import Mathlib.Data.Finsupp.Basic
-import Mathlib.Data.Finsupp.Encodable
+public import LeanPool.OSforGFF.Minlos.ProjectiveFamily
+public import LeanPool.OSforGFF.Minlos.MinlosConcentration
+public import Mathlib.Topology.Bases
+public import Mathlib.Topology.ExtendFrom
+public import Mathlib.Data.Finsupp.Basic
+public import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # Measurable Modification for Minlos' Theorem
@@ -44,6 +45,8 @@ P : (E → ℝ) → WeakDual ℝ E that agrees with the identity on "good paths"
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3
 - Minlos, "Generalized random processes and their extension to measures" (1959)
 -/
+
+@[expose] public section
 
 open BigOperators MeasureTheory Complex TopologicalSpace Finsupp
 

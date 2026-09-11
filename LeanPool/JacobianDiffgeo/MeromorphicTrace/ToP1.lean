@@ -8,8 +8,10 @@ Authors: Rado Kirov
 Blueprint unit: meromorphic-trace. The `toP1` bridge: meromorphic function → holomorphic map to
 `ℙ¹`, file 1 of the design's 6-file plan.
 -/
-import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
+module
+
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
 
 /-!
 # `toP1`: the `f`-to-`ℙ¹` bridge (meromorphic-trace, cluster 1)
@@ -33,6 +35,8 @@ surface hypotheses throughout (`CONVENTIONS.md`).
 * `toP1_not_const` (D3): an everywhere-meromorphic, not-codiscretely-constant `f` induces a
   nonconstant `toP1 f`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Filter Set Function Topology

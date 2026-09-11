@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.TailClosure
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.TailClosure
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Terminal-color closure at the maximal-gap use site
@@ -14,6 +16,8 @@ This file formalizes Sections 6--8 of the project's internal multi-agent proof d
 It closes the three terminal-color obligations left after `TailClosure.lean`:
 `(1,2)-d₁`, `(2,1)-d₁`, and `(2,1)-d₂`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

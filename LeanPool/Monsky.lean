@@ -3,18 +3,19 @@ Copyright (c) 2026 Dhyan Aranha and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyan Aranha, contributors
 -/
+module
 
-import LeanPool.Monsky.Appendix
-import LeanPool.Monsky.RainbowTriangles
-import LeanPool.Monsky.TriangleCorollary
-import LeanPool.Monsky.BasicDefinitions
-import LeanPool.Monsky.MainStatement
-import LeanPool.Monsky.Miscellaneous
-import LeanPool.Monsky.MonskyEven
-import LeanPool.Monsky.SegmentCounting
-import LeanPool.Monsky.SegmentTriangle
-import LeanPool.Monsky.SimplexBasic
-import LeanPool.Monsky.Square
+public import LeanPool.Monsky.Appendix
+public import LeanPool.Monsky.RainbowTriangles
+public import LeanPool.Monsky.TriangleCorollary
+public import LeanPool.Monsky.BasicDefinitions
+public import LeanPool.Monsky.MainStatement
+public import LeanPool.Monsky.Miscellaneous
+public import LeanPool.Monsky.MonskyEven
+public import LeanPool.Monsky.SegmentCounting
+public import LeanPool.Monsky.SegmentTriangle
+public import LeanPool.Monsky.SimplexBasic
+public import LeanPool.Monsky.Square
 
 /-!
 # Monsky's Theorem
@@ -26,6 +27,8 @@ Main declarations: `LeanPool.Monsky.monsky_theorem`
 Tags: geometry, combinatorics, measure-theory
 MSC: 52C20, 05B45
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

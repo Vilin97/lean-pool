@@ -3,11 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
-import Mathlib.Algebra.GCDMonoid.Basic
+public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
+public import Mathlib.Algebra.GCDMonoid.Basic
 
 /-! # Lemmata -/
+
+@[expose] public section
 
 
 namespace LO

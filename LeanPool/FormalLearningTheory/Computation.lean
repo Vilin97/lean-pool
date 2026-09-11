@@ -3,13 +3,15 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import Mathlib.Computability.TuringMachine.StackTuringMachine
-import Mathlib.Computability.Primrec.List
-import Mathlib.Computability.Partrec
-import Mathlib.Computability.PartrecCode
-import Mathlib.Computability.Encoding
-import Mathlib.SetTheory.Ordinal.Arithmetic
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import Mathlib.Computability.TuringMachine.StackTuringMachine
+public import Mathlib.Computability.Primrec.List
+public import Mathlib.Computability.Partrec
+public import Mathlib.Computability.PartrecCode
+public import Mathlib.Computability.Encoding
+public import Mathlib.SetTheory.Ordinal.Arithmetic
 
 /-!
 # Computation and Formal Language Theory
@@ -21,6 +23,8 @@ Computability-theoretic substrate for Gold-style learning theory. Contains:
 - Information-theoretic primitives (Kolmogorov complexity, MDL, MML, SRM)
 - Execution traces for program synthesis
 -/
+
+@[expose] public section
 
 universe u v
 

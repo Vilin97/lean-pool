@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
-import LeanPool.JacobianDiffgeo.JacobianConstruction
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
+public import LeanPool.JacobianDiffgeo.JacobianConstruction
 
 /-!
 # Period-space plumbing and the pushforward map (jacobian-functoriality §8, pushforward half)
@@ -22,6 +23,8 @@ LEDGER for the pullback-direction gap: `Form1.trace`'s branch-point analyticity 
 trace–path-integral relation are not completed, so `pullbackT`/`Jacobian.pullback`/
 `pushforward_pullback` cannot be assembled here).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Module

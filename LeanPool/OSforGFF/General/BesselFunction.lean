@@ -3,12 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.OSforGFF.Spacetime.Euclidean
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Modified Bessel Function K₁
@@ -39,6 +40,8 @@ The cosh integral representation is particularly useful because:
 For the massive scalar field in 4D Euclidean space, the exact formula is:
   C(x,y) = (m / (4π² |x-y|)) · K₁(m |x-y|)
 -/
+
+@[expose] public section
 
 open MeasureTheory Set Filter Asymptotics Real
 

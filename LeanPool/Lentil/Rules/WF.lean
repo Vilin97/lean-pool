@@ -3,12 +3,16 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.Rules.Basic
-import LeanPool.Lentil.Gadgets.TheoremDeriving
-import LeanPool.Lentil.ProofMode.Tactics
-import LeanPool.Lentil.ProofMode.Display
+module
+
+public import LeanPool.Lentil.Rules.Basic
+public import LeanPool.Lentil.Gadgets.TheoremDeriving
+public import LeanPool.Lentil.ProofMode.Tactics
+public import LeanPool.Lentil.ProofMode.Display
 
 /-! Theorems about weak-fairness. -/
+
+@[expose] public section
 
 open Classical
 

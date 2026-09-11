@@ -3,9 +3,10 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
 
 /-!
 # Tensor Products of Quantum Sets
@@ -13,6 +14,8 @@ import LeanPool.Monlib4.LinearAlgebra.TensorProduct.OrthonormalBasis
 This file restores the upstream tensor-product quantum-set instance and the
 fourfold tensor-shuffle lemmas used by later quantum-graph files.
 -/
+
+@[expose] public section
 
 variable {A : Type*} [ha : starAlgebra A]
   {B : Type*} [hb : starAlgebra B]

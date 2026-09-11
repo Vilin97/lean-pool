@@ -3,10 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.CencovSplitPoint
-import LeanPool.CencovPetz.ContinuousExtension
-import LeanPool.CencovPetz.FisherContinuity
-import LeanPool.CencovPetz.RationalDensity
+module
+
+public import LeanPool.CencovPetz.CencovSplitPoint
+public import LeanPool.CencovPetz.ContinuousExtension
+public import LeanPool.CencovPetz.FisherContinuity
+public import LeanPool.CencovPetz.RationalDensity
 
 
 /-!
@@ -26,6 +28,8 @@ multiple of Fisher.
 
 - `CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_continuous`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

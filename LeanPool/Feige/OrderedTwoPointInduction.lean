@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ProductSplit
+module
+
+public import LeanPool.Feige.ProductSplit
 
 /-!
 # Constructing a dominating chain for ordered two-point systems
@@ -13,6 +15,8 @@ Its sole input is the local insertion theorem.  The product law is split at
 the last coordinate, the induction hypothesis constructs a chain on the old
 coordinates, and one insertion of the new coordinate completes the step.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

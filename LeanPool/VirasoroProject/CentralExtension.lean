@@ -3,7 +3,9 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.LieCohomologySmallDegree
+module
+
+public import LeanPool.VirasoroProject.LieCohomologySmallDegree
 
 /-!
 # Central extensions of Lie algebras defined by 2-cocycles
@@ -34,6 +36,8 @@ property (characteristic predicate) of central extensions is `IsCentralExtension
 Lie algebra, central extension, 2-cocycle
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

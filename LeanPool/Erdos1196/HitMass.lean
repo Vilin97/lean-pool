@@ -3,8 +3,10 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.Markov
-import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
+module
+
+public import LeanPool.Erdos1196.Markov
+public import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
 
 /-!
 # Hit mass and final reductions
@@ -34,6 +36,8 @@ paths in the multiplicative chain can meet `A` at most once.
 * `visitMass_le_of_bounds`
 * `PrimitiveSet.summable_indicator_visitProbability_and_tsum_le_one_of_visitMass_le_one`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators
 

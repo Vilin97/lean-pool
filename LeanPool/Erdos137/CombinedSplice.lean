@@ -3,9 +3,10 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.SpliceFiniteness
-import LeanPool.Erdos137.SquarefreeCapacity
+public import LeanPool.Erdos137.SpliceFiniteness
+public import LeanPool.Erdos137.SquarefreeCapacity
 
 /-!
 # Erdős Problem #137: the combined four-range splice
@@ -32,6 +33,8 @@ BHP, Pandey, Mertens, or abc. This is the four-range analogue of
 `abstract_splice_no_counterexamples`, with the new squarefree-count range slotted between the prime
 range and the high range.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

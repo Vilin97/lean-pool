@@ -12,15 +12,19 @@ by a finite countertheory.  This avoids a countability assumption on the
 ambient symbol type.  The result over `Nat` is then transported to every
 countably infinite element-variable type.
 -/
-import LeanPool.MatchingLogic.EntryIII.CanonicalConstruction
-import LeanPool.MatchingLogic.EntryIII.ModelExistence
-import LeanPool.MatchingLogic.EntryIII.SignatureReduction
-import LeanPool.MatchingLogic.EntryIII.Renaming
-import LeanPool.MatchingLogic.EntryPoints
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CanonicalConstruction
+public import LeanPool.MatchingLogic.EntryIII.ModelExistence
+public import LeanPool.MatchingLogic.EntryIII.SignatureReduction
+public import LeanPool.MatchingLogic.EntryIII.Renaming
+public import LeanPool.MatchingLogic.EntryPoints
 
 /-!
 # MatchingLogic.EntryIII.Conclusion
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

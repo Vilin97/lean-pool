@@ -7,13 +7,17 @@ Authors: Utensil Song
 
 Concrete coefficient proof for the Zhou square-span boundary. Paper: §2.
 -/
-import Mathlib.Algebra.Algebra.ZMod
-import Mathlib.Algebra.Polynomial.Basis
-import LeanPool.ConnesRigidity.Construction.PaperActions
+module
+
+public import Mathlib.Algebra.Algebra.ZMod
+public import Mathlib.Algebra.Polynomial.Basis
+public import LeanPool.ConnesRigidity.Construction.PaperActions
 
 /-!
 The square span component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Construction

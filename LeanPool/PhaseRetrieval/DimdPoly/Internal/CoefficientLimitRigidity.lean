@@ -3,11 +3,15 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import Mathlib.Topology.MetricSpace.Sequences
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.ExactModulusRecovery
+module
+
+public import Mathlib.Topology.MetricSpace.Sequences
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ExactModulusRecovery
 
 /-! # CoefficientLimitRigidity -/
+
+@[expose] public section
 
 
 open scoped BigOperators

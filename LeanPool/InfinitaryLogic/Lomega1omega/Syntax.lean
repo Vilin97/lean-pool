@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
-import Mathlib.Logic.Encodable.Basic
+module
+
+public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
+public import Mathlib.Logic.Encodable.Basic
 
 /-!
 # Lω₁ω Syntax — compatibility facade over the fixed-carrier syntax
@@ -38,6 +40,8 @@ redeclared. `BoundedFormulaInf.verum` plays the role of the old `top` and is def
 to it
 (`not falsum` reduces to `imp falsum falsum`).
 -/
+
+@[expose] public section
 
 universe u v u'
 

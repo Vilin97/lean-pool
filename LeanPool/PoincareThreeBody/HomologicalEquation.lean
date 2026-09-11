@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Perturbation
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.Perturbation
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Tactic.Ring
 
 /-!
 # The first homological equation
@@ -16,6 +17,8 @@ Poisson-commute for all nearby parameter values, differentiating at the Kepler l
 of the two cross brackets.  The hypotheses expose precisely the mixed derivatives which must later
 be obtained from joint analyticity.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

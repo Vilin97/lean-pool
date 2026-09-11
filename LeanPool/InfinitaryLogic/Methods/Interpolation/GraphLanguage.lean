@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # Relationalization of a language: the graph language and its structures (Craig Layer 3, Unit 1)
 
@@ -29,6 +31,8 @@ computation.
 * `baseRelSym`/`graphRelSym` σ-embeddings, their injectivity and cross-disjointness;
 * `relSym` and the intersection identity `relSym_inter`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

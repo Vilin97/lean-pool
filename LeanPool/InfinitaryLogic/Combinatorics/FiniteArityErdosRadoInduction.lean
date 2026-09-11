@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Combinatorics.EndHomogeneousErdosRado
+module
+
+public import LeanPool.InfinitaryLogic.Combinatorics.EndHomogeneousErdosRado
 /-!
 # Finite-arity Erdős–Rado: the induction scaffold
 
@@ -38,6 +40,8 @@ outputs a suborder of size `succ (finiteERBound κ (n+1))` — ample source for 
 At `κ = ℶ₁` every level sits below `ℶ_{ω₁}` (`finiteERBound_le_beth_omega1`): each ladder step
 `succ ∘ (2 ^ ·)` is absorbed by two beth steps (`finiteERBound_beth_one_le`).
 -/
+
+@[expose] public section
 
 open FirstOrder.Combinatorics.PairERGen
 open FirstOrder.Combinatorics.EndHomogER

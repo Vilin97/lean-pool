@@ -3,9 +3,11 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.EuclideanRecords
-import LeanPool.ThreeGap.EuclideanNN
-import LeanPool.ThreeGap.EuclideanGrowthFour
+module
+
+public import LeanPool.ThreeGap.EuclideanRecords
+public import LeanPool.ThreeGap.EuclideanNN
+public import LeanPool.ThreeGap.EuclideanGrowthFour
 
 /-!
 # The sharp Euclidean five-distance theorem `g₂ ≤ 5`
@@ -19,6 +21,8 @@ replacing `2 qₙ ≤ qₙ₊₅`; feeding it through Chevallier's count (`cheva
 4`)
 yields `≤ 4 + 1 = 5` distances. Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.EuclideanRecords
 

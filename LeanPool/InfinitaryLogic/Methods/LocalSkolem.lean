@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SkolemClosure
+module
+
+public import LeanPool.InfinitaryLogic.Methods.SkolemClosure
 /-!
 # Local (family-restricted) Skolem language `localSkolem`
 
@@ -22,6 +24,8 @@ re-base the EM term model (keeping `skolemColim` as exploratory infrastructure).
 This file builds the language, its Hilbert-choice structure, and its countability. The mutually
 recursive language/closure tower is a later chunk.
 -/
+
+@[expose] public section
 
 universe u v w
 

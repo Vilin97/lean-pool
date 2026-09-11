@@ -3,9 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
-import Mathlib.Analysis.Real.Pi.Bounds
+public import LeanPool.Chudnovsky.Basic
+public import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Certified numeric facts for the Chudnovsky formula (Phase D1)
@@ -30,6 +31,8 @@ Every digit string below has been verified by exact rational arithmetic
   (checked by squaring the rational endpoints: `lo² < 163 < hi²`)
 * `e^{-π√163} = 3.80898093700765233822623151647 80054376196293193806…e-18`
 -/
+
+@[expose] public section
 
 noncomputable section
 

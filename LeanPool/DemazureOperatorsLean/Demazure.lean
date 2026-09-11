@@ -3,26 +3,29 @@ Copyright (c) 2026 Óscar Álvarez Sánchez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Óscar Álvarez Sánchez
 -/
+module
 
-import Mathlib.Data.Set.Lattice
-import Mathlib.Data.Set.Function
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Init.System.IO
+public import Mathlib.Data.Set.Lattice
+public import Mathlib.Data.Set.Function
+public import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Init.System.IO
 
-import Mathlib.Data.Complex.Basic
+public import Mathlib.Data.Complex.Basic
 
-import Mathlib.Algebra.Polynomial.Basic
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.Algebra.MvPolynomial.CommRing
-import Mathlib.Algebra.MvPolynomial.Rename
-import Mathlib.Algebra.MvPolynomial.Polynomial
-import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.CommRing
+public import Mathlib.Algebra.MvPolynomial.Rename
+public import Mathlib.Algebra.MvPolynomial.Polynomial
+public import Mathlib.RingTheory.MvPolynomial.Basic
 
-import Mathlib.Data.Finsupp.Defs
+public import Mathlib.Data.Finsupp.Defs
 
 /-!
 # LeanPool.DemazureOperatorsLean.Demazure
 -/
+
+@[expose] public section
 
 noncomputable section
 open MvPolynomial

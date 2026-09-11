@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.Topology.MetricSpace.CantorScheme
-import Mathlib.Topology.GDelta.Basic
-import Mathlib.Topology.Baire.Lemmas
-import Mathlib.Topology.Baire.CompleteMetrizable
+module
+
+public import Mathlib.Topology.MetricSpace.CantorScheme
+public import Mathlib.Topology.GDelta.Basic
+public import Mathlib.Topology.Baire.Lemmas
+public import Mathlib.Topology.Baire.CompleteMetrizable
 
 /-!
 # Mycielski's theorem for Cantor space
@@ -48,6 +50,8 @@ uniformity is definitionally the product uniformity (see the warning on `PiNat.m
 since `Bool` has a `UniformSpace` instance, the plain `PiNat.metricSpace` would create a
 second, non-defeq uniform structure).
 -/
+
+@[expose] public section
 
 open Set PiNat Filter Topology
 

@@ -3,7 +3,9 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.QuantumGraph.ToProjections
+module
+
+public import LeanPool.Monlib4.QuantumGraph.ToProjections
 
 /-!
 
@@ -12,6 +14,8 @@ import LeanPool.Monlib4.QuantumGraph.ToProjections
 This file defines the single-edged quantum graph, and proves that it is a `QAM`.
 
 -/
+
+@[expose] public section
 
 
 variable {n : Type _} [Fintype n] [DecidableEq n]

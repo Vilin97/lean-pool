@@ -3,13 +3,17 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.Rules.WF
-import LeanPool.Lentil.Tactics.FiniteWindow
+module
+
+public import LeanPool.Lentil.Rules.WF
+public import LeanPool.Lentil.Tactics.FiniteWindow
 
 /-! Theorems specialized for state predicates.
     Their premises are typically pure Lean propositions involving
     states before/after an action, instead of being in the form of
     `|-tla-`. -/
+
+@[expose] public section
 
 open Classical
 

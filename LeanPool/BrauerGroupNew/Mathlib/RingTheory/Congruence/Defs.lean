@@ -3,14 +3,17 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.RingTheory.Congruence.Defs
+public import Mathlib.RingTheory.Congruence.Defs
 
 /-!
 # Ring congruence induction compatibility
 
 This file restores the upstream eliminator name used by the Brauer group port.
 -/
+
+@[expose] public section
 
 namespace RingCon
 

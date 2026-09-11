@@ -3,12 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Coding
-import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Typed
-import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Coding
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Typed
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
 
 /-! # CodedTheory -/
+
+@[expose] public section
 
 
 namespace LO

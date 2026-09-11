@@ -3,12 +3,15 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Data.Int.Order.Basic
+public import Mathlib.Data.Int.Order.Basic
 
 /-!
 # Lemmas on `Int.natAbs`
 -/
+
+@[expose] public section
 
 
 lemma Int.sub_le_add_natAbs {a b : ℤ} : a.natAbs - b.natAbs ≤ (a + b).natAbs := by lia

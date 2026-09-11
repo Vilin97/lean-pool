@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.FunctionalTheta
-import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
-import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
-import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.FunctionalTheta
+public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
+public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
 /-!
 # Assembly and graph translation: the PC sentence (issue #10, Unit 2b)
 
@@ -29,6 +31,8 @@ Acceptance gates (audit v2, Unit 2b):
 * the support lemmas discharge the `occurrence_intersection_base` hypotheses directly, and
   `pcSentence_relationsIn_inter` is the two-presentation intersection bound.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

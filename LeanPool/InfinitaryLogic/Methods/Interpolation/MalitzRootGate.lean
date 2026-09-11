@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
-import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # The Malitz root gate (issue #15)
 
@@ -17,6 +19,8 @@ Nothing here is new semantics.  The entailment transport is the existing reduct 
 universality is the class-preservation lemma proved alongside `stripConsts` itself.  This file is
 composition only.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

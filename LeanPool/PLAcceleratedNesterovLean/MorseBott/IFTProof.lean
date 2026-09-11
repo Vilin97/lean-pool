@@ -3,15 +3,16 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Topology.Order.Compact
-import Mathlib.Analysis.Calculus.Implicit
-import Mathlib.Analysis.Calculus.ImplicitContDiff
-import Mathlib.Analysis.InnerProductSpace.Dual
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Topology.Order.Compact
+public import Mathlib.Analysis.Calculus.Implicit
+public import Mathlib.Analysis.Calculus.ImplicitContDiff
+public import Mathlib.Analysis.InnerProductSpace.Dual
 
 /-!
 # Implicit Function Theorem Application
@@ -19,6 +20,8 @@ import Mathlib.Analysis.InnerProductSpace.Dual
 Proves `ift_gives_graph`: under Hessian coercivity on the normal space,
 the critical set near x₀ is locally a C¹ graph over ker(Hess f(x₀)).
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Submodule Asymptotics
 

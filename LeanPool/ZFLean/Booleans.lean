@@ -3,8 +3,9 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Basic
+public import LeanPool.ZFLean.Basic
 
 /-!
 # Boolean algebra on `ZFSet`
@@ -21,6 +22,8 @@ It defines the following operations:
 - `ofBool` : conversion from `Bool` to `ZFBool`
 
 -/
+
+@[expose] public section
 
 noncomputable section
 

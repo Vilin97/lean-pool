@@ -3,13 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Delaunay
-import LeanPool.PoincareThreeBody.Perturbation
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.Delaunay
+public import LeanPool.PoincareThreeBody.Perturbation
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Ring
 
 /-!
 # Polar canonical coordinates for the rotating Kepler limit
@@ -18,6 +19,8 @@ This file defines the standard canonical polar-coordinate map and verifies direc
 the zero-mass Cartesian Hamiltonian to the rotating Kepler Hamiltonian. This is the first coordinate
 change on the route to Delaunay action-angle variables.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

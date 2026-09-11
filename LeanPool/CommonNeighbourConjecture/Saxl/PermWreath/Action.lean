@@ -3,8 +3,9 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Defs
+public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Defs
 
 /-!
 # The product action of a permutation wreath product
@@ -13,6 +14,8 @@ For `g = (f, q)` the action on `ι → Δ` is
 
 `(g • x) i = f i • x (q⁻¹ • i)`.
 -/
+
+@[expose] public section
 
 namespace Saxl
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.RingTheory.Ideal.Quotient.Noetherian
-import LeanPool.AndersonConjecture.AdicKerEval
+module
+
+public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+public import LeanPool.AndersonConjecture.AdicKerEval
 
 /-!
 # Adic Completion of a Noetherian Local Ring is Noetherian
@@ -15,6 +17,8 @@ isomorphic to R / M^n for each n, and that the completion is
 M-adically complete, so the Noetherian property lifts by
 successive approximation (Atiyah--Macdonald, Prop. 10.11).
 -/
+
+@[expose] public section
 
 open AdicCompletion
 

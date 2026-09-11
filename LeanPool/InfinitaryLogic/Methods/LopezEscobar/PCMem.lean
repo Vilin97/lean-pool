@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.PCClass
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.PCClass
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
 /-!
 # The López–Escobar PC-class interface (issue #10, Unit 4 commit 1)
 
@@ -13,6 +15,8 @@ relational), and the code compatibility theorem tying the abstract `PCMem` on `�
 membership in `codeReduct '' ModelsOf Θ`.  This freezes the PC-class interface independently
 of López–Escobar's tree machinery.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

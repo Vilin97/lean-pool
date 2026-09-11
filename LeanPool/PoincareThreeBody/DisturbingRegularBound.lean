@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.CollisionIntegralBlowup
+public import LeanPool.PoincareThreeBody.CollisionIntegralBlowup
 
 /-!
 # Uniform control of the regular disturbing terms near collision
@@ -12,6 +13,8 @@ import LeanPool.PoincareThreeBody.CollisionIntegralBlowup
 The two nonsingular terms in the first mass perturbation stay uniformly bounded as an interior
 resonant ellipse approaches its apoapsis collision boundary.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

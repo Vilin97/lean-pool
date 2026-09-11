@@ -3,8 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Learner.Core
-import LeanPool.FormalLearningTheory.Complexity.Generalization
+module
+
+public import LeanPool.FormalLearningTheory.Learner.Core
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
 
 /-!
 # Closure of Measurable Learners under Combiners and Selection
@@ -16,6 +18,8 @@ The algebra of `MeasurableBatchLearner`s is closed under:
 - countable selection (`concatLearner`)
 
 -/
+
+@[expose] public section
 
 universe u
 

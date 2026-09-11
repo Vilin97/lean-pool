@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import Mathlib.SetTheory.Cardinal.Ordinal
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+public import Mathlib.SetTheory.Cardinal.Ordinal
+public import Mathlib.SetTheory.Cardinal.Aleph
 /-!
 # Hanf Numbers
 
@@ -34,6 +36,8 @@ arbitrary language — is proved in `Conditional/MorleyHanfSchemaDischarge.lean`
 - [KK04], §1.6
 - [Mar16], §5
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.DemazureProduct.Valley
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Int.Interval
+module
+
+public import LeanPool.DemazureProduct.Valley
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Int.Interval
 
 /-!
 # Slipfaces
@@ -15,6 +17,8 @@ This file defines slipface functions and develops their basic properties, includ
 Section 3, with some essential-set material from Section 7.1, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 

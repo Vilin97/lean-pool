@@ -3,7 +3,9 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.Defs
+module
+
+public import LeanPool.CompositionAlgebras.Composition.Defs
 
 
 /-!
@@ -50,6 +52,8 @@ The named results are the four listed above plus their inputs: `cstar_mul_mul`
 
 Substrate for the two Hurwitz theorems. It states neither of them.
 -/
+
+@[expose] public section
 
 namespace CompositionAlgebra
 

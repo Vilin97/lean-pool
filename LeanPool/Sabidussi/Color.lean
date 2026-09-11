@@ -3,14 +3,16 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.SplitIfs
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic.Abel
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.SplitIfs
 
 /-!
 # The four colours used in the Sabidussi proof
@@ -18,6 +20,8 @@ import Mathlib.Tactic.SplitIfs
 This file contains the elementary algebra over `F₂²` used by the proof. We use an explicit
 product so that the three admissible local frames can be given by concrete formulas.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 

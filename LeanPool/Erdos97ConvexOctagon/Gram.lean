@@ -3,12 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.Basic
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+public import LeanPool.Erdos97ConvexOctagon.Basic
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 
 /-! # Erdős 97 convex-octagon formalization: Gram -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

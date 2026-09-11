@@ -3,12 +3,13 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.Basis1D
-import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearTensorProduct
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzSlicing
-import Mathlib.Algebra.Order.Chebyshev
-import Mathlib.MeasureTheory.Integral.Pi
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.Basis1D
+public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearTensorProduct
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzSlicing
+public import Mathlib.Algebra.Order.Chebyshev
+public import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Nuclear Space Instance for Schwartz Space via Sequence Space Isomorphism
@@ -35,6 +36,8 @@ the continuous linear equivalence.
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. 3-4
 - Thangavelu, "Lectures on Hermite and Laguerre Expansions", Ch. 1
 -/
+
+@[expose] public section
 
 noncomputable section
 

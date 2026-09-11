@@ -3,12 +3,13 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.RationalTriangularPreprocess
-import Mathlib.GroupTheory.DivisibleHull
-import Mathlib.GroupTheory.OreLocalization.Cardinality
-import Mathlib.LinearAlgebra.Basis.SMul
-import Mathlib.LinearAlgebra.Dimension.Free
+public import LeanPool.Wallace.RationalTriangularPreprocess
+public import Mathlib.GroupTheory.DivisibleHull
+public import Mathlib.GroupTheory.OreLocalization.Cardinality
+public import Mathlib.LinearAlgebra.Basis.SMul
+public import Mathlib.LinearAlgebra.Dimension.Free
 
 /-!
 # Coordinatizing continuum-sized torsion-free Abelian groups
@@ -17,6 +18,8 @@ This file formalizes the coordinatization lemma used in Section 2 of the paper. 
 Abelian group of cardinality continuum embeds in the rational direct sum of continuum rank in a
 way whose image contains every standard basis vector.
 -/
+
+@[expose] public section
 
 open Cardinal Module
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
-import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
+public import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
 
 /-!
 # One-dimensionality over `ℳ(X)` (D8) and the canonical divisor `K` (D10)
@@ -32,6 +33,8 @@ finiteness dependence.
 Hypothesis note: D8 needs only `[T1Space X] [ConnectedSpace X]` (the design listed an extra
 `[T2Space X]`, which is not required — the dichotomy and `Mero.ord_ne_top` are `T1`-level).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

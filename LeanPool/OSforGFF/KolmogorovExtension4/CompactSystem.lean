@@ -3,16 +3,19 @@ Copyright (c) 2026 Rémy Degenne, Peter Pfaffelhuber. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Peter Pfaffelhuber
 -/
+module
 
-import Mathlib.MeasureTheory.Constructions.ClosedCompactCylinders
-import Mathlib.Topology.Compactness.CompactSystem
-import Mathlib.Topology.IsClosedRestrict
+public import Mathlib.MeasureTheory.Constructions.ClosedCompactCylinders
+public import Mathlib.Topology.Compactness.CompactSystem
+public import Mathlib.Topology.IsClosedRestrict
 
 /-!
 # Compact Systems
 
 Auxiliary compact-system lemmas for the Kolmogorov extension construction.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 

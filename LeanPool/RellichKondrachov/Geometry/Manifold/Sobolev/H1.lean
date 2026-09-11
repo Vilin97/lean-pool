@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.H1`
@@ -24,6 +25,8 @@ Given `d : FiniteChartData` and a finite measure `μ` on `M`, we:
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.C1`
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h1`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

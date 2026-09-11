@@ -3,8 +3,11 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import LeanPool.Polylean.Complexes.Structures.FreeGroupoid
+public import LeanPool.Polylean.Complexes.Structures.FreeGroupoid
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

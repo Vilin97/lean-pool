@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.ActionFactorization
-import LeanPool.PoincareThreeBody.DisturbingFunction
-import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
+public import LeanPool.PoincareThreeBody.ActionFactorization
+public import LeanPool.PoincareThreeBody.DisturbingFunction
+public import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
 
 /-!
 # The resonant action form of the first homological obstruction
@@ -15,6 +16,8 @@ This file connects the exact first homological equation to the derivative of Poi
 disturbing average.  The bridge is the pointwise factorization of the leading differential through
 the physical Delaunay action map.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -3,17 +3,19 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Criterion.PAC
-import LeanPool.FormalLearningTheory.Criterion.Extended
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
-import LeanPool.FormalLearningTheory.Complexity.Ordinal
-import LeanPool.FormalLearningTheory.Theorem.Online
-import LeanPool.FormalLearningTheory.Theorem.Separation
-import LeanPool.FormalLearningTheory.Complexity.Structures
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.Learner.Active
-import Mathlib.Data.Nat.Pairing
-import Mathlib.MeasureTheory.Measure.Prod
+module
+
+public import LeanPool.FormalLearningTheory.Criterion.PAC
+public import LeanPool.FormalLearningTheory.Criterion.Extended
+public import LeanPool.FormalLearningTheory.Complexity.VCDimension
+public import LeanPool.FormalLearningTheory.Complexity.Ordinal
+public import LeanPool.FormalLearningTheory.Theorem.Online
+public import LeanPool.FormalLearningTheory.Theorem.Separation
+public import LeanPool.FormalLearningTheory.Complexity.Structures
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Learner.Active
+public import Mathlib.Data.Nat.Pairing
+public import Mathlib.MeasureTheory.Measure.Prod
 
 /-!
 # Extended Theorems
@@ -21,6 +23,8 @@ import Mathlib.MeasureTheory.Measure.Prod
 Advice reduction, meta-learning lower-bound infrastructure, and separation
 results for compression and SQ dimension.
 -/
+
+@[expose] public section
 
 universe u v
 

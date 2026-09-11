@@ -8,12 +8,16 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 The ordinary witnessed condition does not collapse to fresh witnessedness on
 raw named syntax, even for maximal locally consistent sets.
 -/
-import LeanPool.MatchingLogic.EntryIII.MCSAlpha
-import LeanPool.MatchingLogic.EntryIII.Witnessed
+module
+
+public import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+public import LeanPool.MatchingLogic.EntryIII.Witnessed
 
 /-!
 # MatchingLogic.EntryIII.WitnessedCollapse
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

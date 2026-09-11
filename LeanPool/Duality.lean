@@ -3,14 +3,15 @@ Copyright (c) 2026 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak
 -/
+module
 
-import LeanPool.Duality.Common
-import LeanPool.Duality.ExtendedFields
-import LeanPool.Duality.FarkasBartl
-import LeanPool.Duality.FarkasBasic
-import LeanPool.Duality.FarkasSpecial
-import LeanPool.Duality.LinearProgramming
-import LeanPool.Duality.LinearProgrammingB
+public import LeanPool.Duality.Common
+public import LeanPool.Duality.ExtendedFields
+public import LeanPool.Duality.FarkasBartl
+public import LeanPool.Duality.FarkasBasic
+public import LeanPool.Duality.FarkasSpecial
+public import LeanPool.Duality.LinearProgramming
+public import LeanPool.Duality.LinearProgrammingB
 
 /-!
 # Duality theory in linear optimization and its extensions
@@ -22,6 +23,8 @@ Main declarations: `extendedFarkas`, `StandardLP.strongDuality`
 Tags: linear-programming, optimization, farkas-lemma
 MSC: 90C05, 90C46
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

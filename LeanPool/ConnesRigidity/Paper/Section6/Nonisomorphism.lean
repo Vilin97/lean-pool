@@ -5,15 +5,19 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
-import Mathlib.RingTheory.SimpleModule.Basic
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
+public import Mathlib.RingTheory.SimpleModule.Basic
 
 /-!
 Nonisomorphism foundations for Zhou §6. The quotient representations and
 semisimplicity predicates are the concrete `k[Sp₄(F₂)]` modules attached to
 the two actions from §2.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperNonisomorphism

@@ -3,11 +3,12 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.Defs
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Submanifold
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
 
 /-!
 # Embedded Manifold Geometry
@@ -28,6 +29,8 @@ structure.
   a general tubular neighborhood can be refined to a metric tubular
   sub-neighborhood.
 -/
+
+@[expose] public section
 
 noncomputable section
 

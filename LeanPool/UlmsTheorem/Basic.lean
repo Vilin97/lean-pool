@@ -3,11 +3,12 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import Mathlib.Algebra.Group.Subgroup.Defs
-import Mathlib.Algebra.Group.Subgroup.Lattice
-import Mathlib.Algebra.Module.NatInt
-import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.Algebra.Module.NatInt
+public import Mathlib.Data.Nat.Prime.Defs
 
 /-!
 # Basic imports and shared notation
@@ -33,6 +34,8 @@ Throughout we work with additive abelian groups.
 - `ulmInvariant p α G` : dim_{ℤ/pℤ} (P_α / P_{α+1}) where `P_α = G[p] ∩ p^α G`
 - `ulmLength p G` : least α with p^α G = 0  (for reduced groups)
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

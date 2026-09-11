@@ -3,8 +3,9 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import LeanPool.UlmsTheorem.PGroups.UlmInvariants
+public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
 
 /-!
 # Invariance of Ulm data under isomorphism
@@ -13,6 +14,8 @@ This module contains the easy direction of Ulm's theorem: isomorphisms preserve
 both the Ulm filtration and the classical `P_α / P_{α+1}` quotients, hence the
 Ulm invariants.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

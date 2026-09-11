@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Topology.Inseparable
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Topology.Inseparable
 
 /-!
 # Exercise 1.22 (Scott 1981, PRG-19, §1) — the topology on `|𝒟|`
@@ -55,6 +56,8 @@ partial order, recoverable from the topology by (iii)); the open-ended limit-poi
 questions of the
 exercise need Definition 1.7 (`↑X`) and are deferred.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import Mathlib.Data.Rat.Defs
-import Mathlib.Data.Rat.Floor
-import Mathlib.Tactic.Positivity.Core
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Qify
-import Mathlib.Algebra.Order.Interval.Set.Group
+module
+
+public import Mathlib.Data.Rat.Defs
+public import Mathlib.Data.Rat.Floor
+public import Mathlib.Tactic.Positivity.Core
+public import Mathlib.Tactic.Zify
+public import Mathlib.Tactic.Qify
+public import Mathlib.Algebra.Order.Interval.Set.Group
 
 /-!
 # Integer Rounding Functions
@@ -18,6 +20,8 @@ This module collects the integer-valued rounding primitives (`round0`,
 mantissa, together with their basic correctness properties such as round-to-even
 behaviour on half-integers.
 -/
+
+@[expose] public section
 
 /-- An integer-valued rounding rule taking a sign bit and a rational mantissa. -/
 abbrev IntRounder := Bool → ℚ → ℕ

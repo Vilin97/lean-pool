@@ -3,10 +3,11 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Statement.Definitions
-import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
 
 /-!
 # Frobenius transport between complementary parameters
@@ -21,6 +22,8 @@ the derivative parameter `b = 0`), and the packaging of the half-size fact into
 the derivative-image half-size equation at both `k` and the complementary
 parameter `n - k`.
 -/
+
+@[expose] public section
 
 open Finset
 

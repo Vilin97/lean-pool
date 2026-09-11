@@ -3,14 +3,18 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Criterion.Gold
-import LeanPool.FormalLearningTheory.Complexity.MindChange
+module
+
+public import LeanPool.FormalLearningTheory.Criterion.Gold
+public import LeanPool.FormalLearningTheory.Complexity.MindChange
 
 /-!
 # Gold's Theorem and Mind Change Characterization
 
 The foundational results of inductive inference theory.
 -/
+
+@[expose] public section
 
 universe u v
 

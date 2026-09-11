@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Set.Basic
 
 /-!
 # Scott Information Systems
@@ -42,6 +43,8 @@ This is the **1982** presentation; the development is kept choice-free
 (constructive),
 matching Scott's emphasis on the constructive nature of the definitions.
 -/
+
+@[expose] public section
 
 /-- A Scott information system on a type of tokens `α`, following Scott's
 Definition 2.1

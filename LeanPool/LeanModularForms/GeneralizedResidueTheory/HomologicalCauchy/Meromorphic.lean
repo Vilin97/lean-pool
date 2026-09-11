@@ -3,11 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.DixonProof
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CPVExistence
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.DixonProof
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CPVExistence
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
 
 /-!
 # Meromorphic Contour Integral Vanishing (Null-Homologous)
@@ -27,6 +28,8 @@ zero residues vanish along null-homologous curves.
 * `pv_res_tendsto_of_immersion_nullHomologous` --
   PV residue sum convergence for null-homologous curves
 -/
+
+@[expose] public section
 
 open Complex Set Filter Topology MeasureTheory intervalIntegral
 

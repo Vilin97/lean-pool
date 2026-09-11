@@ -3,10 +3,12 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.MultiProjective
-import LeanPool.Koethe.Pencil
+module
+
+public import Mathlib.Tactic.Convert
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.MultiProjective
+public import LeanPool.Koethe.Pencil
 
 /-!
 # Coefficientwise multihomogeneity for matrix words
@@ -15,6 +17,8 @@ The central parameter is a univariate polynomial variable.  Its coefficient
 ring is a multivariate polynomial ring whose variables are grouped into
 independent triples.  The zero polynomial is homogeneous of every degree.
 -/
+
+@[expose] public section
 
 noncomputable section
 

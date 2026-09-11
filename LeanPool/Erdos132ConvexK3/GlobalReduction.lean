@@ -3,16 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Basic
-import LeanPool.Erdos132ConvexK3.Majorants
-import LeanPool.Erdos132ConvexK3.RegressionWitnesses
-import Lean.Elab.Tactic.Omega
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Tauto
+module
+
+public import LeanPool.Erdos132ConvexK3.Basic
+public import LeanPool.Erdos132ConvexK3.Majorants
+public import LeanPool.Erdos132ConvexK3.RegressionWitnesses
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Tactic.Abel
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Tauto
 
 /-!
 # Global ErLV reduction interface
@@ -27,6 +29,8 @@ retreats `i` by one polygon side and a right cover advances `j` by one side.
 The number of such moves is therefore exactly the side-count convention used
 by `K3Majorant.leftMoves/rightMoves`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

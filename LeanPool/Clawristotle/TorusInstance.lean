@@ -3,8 +3,10 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.TorusIntegration
-import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
+module
+
+public import LeanPool.Clawristotle.TorusIntegration
+public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 
 /-!
 # FlatTorus3 Instance for T^3
@@ -13,6 +15,8 @@ Proves the remaining `FlatTorus3` axioms (Laplacian maximum principle, Killing
 implies harmonic, curl-div implies harmonic) and assembles the full `FlatTorus3`
 instance on `Fin 3 -> AddCircle 1`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real Filter
 

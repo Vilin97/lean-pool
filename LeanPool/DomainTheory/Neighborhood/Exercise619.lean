@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example62
-import LeanPool.DomainTheory.Neighborhood.Product
+public import LeanPool.DomainTheory.Neighborhood.Example62
+public import LeanPool.DomainTheory.Neighborhood.Product
 
 /-!
 # Exercise 6.19 (Scott 1981, PRG-19, §6) — sum and product on the category of
@@ -49,6 +50,8 @@ continuous on maps, monotone and continuous on domains) is **Part B**, deferred.
 
 Everything here is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

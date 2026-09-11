@@ -3,9 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.Rationality
-import LeanPool.Chudnovsky.SingularModuli.Kronecker
+public import LeanPool.Chudnovsky.SingularModuli.Rationality
+public import LeanPool.Chudnovsky.SingularModuli.Kronecker
 
 /-!
 # Masser's Theorem A1 at `τ₁₆₃`: rationality of `s₂` (Phase C, statement 3)
@@ -53,6 +54,8 @@ Everything, unconditionally:
 
 The top-level deliverable is `masser_s₂_rational : ∃ r : ℚ, s₂ τ₁₆₃ = r`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.GKPCarry.DensityOne
-import LeanPool.GKPCarry.FiniteRangeCorollary
+public import LeanPool.GKPCarry.DensityOne
+public import LeanPool.GKPCarry.FiniteRangeCorollary
 
 /-!
 # Density-One GKP Divisibility and Its Carry-Language Characterization
@@ -17,3 +18,5 @@ Main declarations: `GKPCarry.tendsto_gkpSuccessProportion_one`
 Tags: number-theory, finite-automata, asymptotic-density
 MSC: 11A63, 11B65, 68Q45
 -/
+
+@[expose] public section

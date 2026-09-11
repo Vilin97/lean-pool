@@ -3,13 +3,17 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import LeanPool.RiemannMappingTheorem.Cindex
+module
+
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
+public import LeanPool.RiemannMappingTheorem.Cindex
 
 /-!
 # LeanPool.RiemannMappingTheorem.ToMathlib
 -/
+
+@[expose] public section
 
 open intervalIntegral Real MeasureTheory Filter Topology Set Metric Interval
 

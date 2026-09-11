@@ -3,14 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Data.Matrix.Basic
+public import Mathlib.Data.Matrix.Basic
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat`.
 -/
+
+@[expose] public section
 
 /-- Square matrices over `R` indexed by `n`. -/
 abbrev Mat (R n : Type*) := Matrix n n R

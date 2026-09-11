@@ -3,12 +3,15 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import LeanPool.Zeta3Irrational.Integral
+public import LeanPool.Zeta3Irrational.Integral
 
 /-!
 # LeanPool.Zeta3Irrational.Equality
 -/
+
+@[expose] public section
 
 namespace LeanPool.Zeta3Irrational
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.Core
+public import LeanPool.CriticalPortraits.Core
 
 /-!
 # The `/d` denominator: `#level-canonical = C(N, d-1)/d` (all d), Mathlib, sorry-free.
@@ -18,6 +19,8 @@ the cycle-lemma bridge (`∃!` canonical rotation index per `(d-1)`-subset), ass
 bijection `{(d-1)-subsets} ≃ {canonical} × Fin d` (uniqueness of the canonical index supplies
 freeness for free), giving `card = #canonical * d`.
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits
 

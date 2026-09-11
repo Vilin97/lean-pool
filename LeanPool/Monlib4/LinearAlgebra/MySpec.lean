@@ -3,13 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.End
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.End
 
 /-!
  # One lemma of the spectrum of a linear map
 
  This file just proves that the spectrum of a linear map is commutative.
 -/
+
+@[expose] public section
 
 
 theorem isUnit_comm (K E : Type _) [DivisionRing K] [AddCommGroup E] [Module K E]

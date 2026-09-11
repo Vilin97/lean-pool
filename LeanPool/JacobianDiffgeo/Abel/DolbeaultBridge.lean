@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.Loops
-import LeanPool.JacobianDiffgeo.TailDuality
-import LeanPool.JacobianDiffgeo.LaurentTail
-import LeanPool.JacobianDiffgeo.DolbeaultComparison
-import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.Abel.Loops
+public import LeanPool.JacobianDiffgeo.TailDuality
+public import LeanPool.JacobianDiffgeo.LaurentTail
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison
+public import LeanPool.JacobianDiffgeo.CanonicalForms
 
 /-!
 # abel-theorem: the Dolbeault-upgrade bridge, RESTATED at the tail level (design §4.3 D3)
@@ -65,6 +66,8 @@ PROVEN vanishing pairing against a basis (design §4.3's own "step 5", `abel-wea
 explicitly does not build this global object) is independent, substantial new analytic content,
 not an external blocker — flagged precisely in `Sufficiency.lean`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

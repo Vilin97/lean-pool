@@ -3,11 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.Modularforms.AtImInfty
-import LeanPool.LeanModularForms.Modularforms.Eisenstein
-import LeanPool.LeanModularForms.ForMathlib.QExpansion
-import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
+public import LeanPool.LeanModularForms.Modularforms.AtImInfty
+public import LeanPool.LeanModularForms.Modularforms.Eisenstein
+public import LeanPool.LeanModularForms.ForMathlib.QExpansion
+public import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
 
 /-!
 # Cusp decay for Eisenstein series and the Viazovska integrand
@@ -38,6 +39,8 @@ The proof chain is:
 6. `E2*E4 - E6 -> 1*1 - 1 = 0`, so the numerator of `phi0` vanishes
 7. Combined with `Delta = Theta(exp(-2*pi*Im))`, `phi0` is bounded
 -/
+
+@[expose] public section
 
 open Complex Set Filter Topology MeasureTheory ModularFormClass
 

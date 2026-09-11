@@ -3,9 +3,10 @@ Copyright (c) 2026 Jose Fonollosa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jose Fonollosa
 -/
+module
 
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.RingTheory.PicardGroup
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Elementary abelian 2-groups attain the optimal bound
@@ -16,6 +17,8 @@ the all-ones multiset — then `n - 1 ≤ k`
 (`elementaryAbelianTwoGroups_optimal`). This is the optimality half of
 the elementary-abelian case of the minimum-modulus problem.
 -/
+
+@[expose] public section
 
 namespace MinModulus
 

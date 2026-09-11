@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.TriangularPreprocess
-import Mathlib.SetTheory.Cardinal.Rat
+public import LeanPool.Wallace.TriangularPreprocess
+public import Mathlib.SetTheory.Cardinal.Rat
 
 /-!
 # Triangular preprocessing for the rational direct sum
@@ -17,6 +18,8 @@ independence selector from `Wallace.TriangularPreprocess`.
 
 No topology or character is assumed.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Cardinal

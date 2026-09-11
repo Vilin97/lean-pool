@@ -3,20 +3,22 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
-import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
-import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
-import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.Preq.Finset
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
+public import LeanPool.Monlib4.LinearAlgebra.InnerAut
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
+public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
+public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
+public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+public import LeanPool.Monlib4.Preq.Finset
 
 /-!
 
@@ -26,6 +28,8 @@ This file contains some results on the Hilbert space on finite-dimensional C*-al
   (so just a direct sum of matrix algebras over ℂ).
 
 -/
+
+@[expose] public section
 
 
 variable {n : Type _} [Fintype n]

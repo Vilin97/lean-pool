@@ -3,13 +3,16 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
 
 /-! ## Fixed-Point Theorem for Box and Diamond Formulas
 
 Here we prove the fixed-point theorem for formulas of form `□φ` and `◇φ`.
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

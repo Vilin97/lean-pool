@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
+public import LeanPool.LeanModularForms.HeckeRIngs.GL2.MultiplicationTable
 
 /-!
 # Degree formulas for GL₂ Hecke operators
@@ -22,6 +23,8 @@ Shimura Theorem 3.24, identities 6 and 7: degree formulas for the GL₂ Hecke al
 
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, Theorem 3.24
 -/
+
+@[expose] public section
 
 open HeckeRing HeckeRing.GLn HeckeRing.GL2
 open scoped ArithmeticFunction.sigma

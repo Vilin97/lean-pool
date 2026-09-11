@@ -3,8 +3,9 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.SpectralPositivity.Operator.JentzschProof
+public import LeanPool.SpectralPositivity.Operator.JentzschProof
 
 /-!
 # Jentzsch's Theorem — Clean API
@@ -30,3 +31,5 @@ generalized from L²(ℝⁿ) to L²(Ω, volume) for any MeasureSpace Ω.
 
 - Reed-Simon IV, Theorems XIII.43–44
 -/
+
+@[expose] public section

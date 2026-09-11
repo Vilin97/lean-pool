@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceFilling
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceFilling
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
 
 /-!
 # Cellwise assembly of intrinsic PL face fillings
@@ -15,6 +17,8 @@ intrinsic face.  This file transports them back to the canonical barycentric rea
 glues the finite family.  Coherence is proved from the common global one-skeleton replacement;
 it is not stored as an extra compatibility assumption.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,10 +3,11 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Algebra.Order.Group.Nat
-import LeanPool.PebblingLean.Hypercube
-import LeanPool.PebblingLean.Product
+public import Mathlib.Algebra.Order.Group.Nat
+public import LeanPool.PebblingLean.Hypercube
+public import LeanPool.PebblingLean.Product
 
 /-!
 # Upper-bound scaffolding
@@ -15,6 +16,8 @@ This file records the definitions and elementary lemmas used by the
 probabilistic high-demand part of the upper bound.  The probabilistic estimates
 themselves are not asserted here; they will be formalized as separate lemmas.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

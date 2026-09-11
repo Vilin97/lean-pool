@@ -3,8 +3,10 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
-import LeanPool.NashWilliams.Data.Nat.Nth
+module
+
+public import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
+public import LeanPool.NashWilliams.Data.Nat.Nth
 
 /-!
 # The infinite Ramsey theorem
@@ -35,6 +37,8 @@ The proof here is direct and self-contained. `Front.ramsey_seq_of_nashWilliams`,
 instantiating the Nash-Williams theorem at the uniform front `[M]^k`. Both are kept, and neither
 file imports the other: they share only the generic helpers in `NashWilliams.Data`.
 -/
+
+@[expose] public section
 
 open Set
 

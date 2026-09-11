@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!
 # Measurable Structure on the Structure Space
@@ -18,6 +20,8 @@ sets (sets determined by a single relation query) are measurable.
 - `StructureSpace.instMeasurableSpace`: `MeasurableSpace` instance on `StructureSpace L`.
 - `measurableSet_relHolds`: The set of codes where a given relation query holds is measurable.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
-import Mathlib.SetTheory.Cardinal.Continuum
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
+public import Mathlib.SetTheory.Cardinal.Continuum
 /-!
 # Conditional Counting Dichotomy for Models
 
@@ -28,6 +30,8 @@ The isomorphism relation `isoSetoid` this file counts is defined in
   any Lω₁ω sentence with bounded Scott height, the number of isomorphism classes
   among coded ℕ-models is either ≤ ℵ₀ or exactly 2^ℵ₀.
 -/
+
+@[expose] public section
 
 universe u v w
 

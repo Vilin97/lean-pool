@@ -3,11 +3,13 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Data.Int.Star
-import Mathlib.Data.Sign.Defs
-import Mathlib.Order.CompletePartialOrder
+module
+
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.Data.Int.Star
+public import Mathlib.Data.Sign.Defs
+public import Mathlib.Order.CompletePartialOrder
 
 /-!
 # An auxiliary tri-partition of indices
@@ -20,6 +22,8 @@ the triangular decompositions of both the Virasoro algebra and the Heisenberg al
 * `indexTri`: A partition of `Option ℤ` into three parts.
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

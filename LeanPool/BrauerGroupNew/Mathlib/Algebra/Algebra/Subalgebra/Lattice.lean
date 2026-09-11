@@ -3,8 +3,9 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
 
 /-!
 # LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Lattice
@@ -12,6 +13,8 @@ import Mathlib.Algebra.Algebra.Subalgebra.Lattice
 Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Lattice`.
 -/
+
+@[expose] public section
 
 variable {R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
 

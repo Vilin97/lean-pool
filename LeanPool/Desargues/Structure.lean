@@ -3,8 +3,9 @@ Copyright (c) 2026 Abdullah Uyu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abdullah Uyu
 -/
+module
 
-import LeanPool.Desargues.Basic
+public import LeanPool.Desargues.Basic
 
 /-!
 # Subspaces and subgeometries
@@ -12,6 +13,8 @@ import LeanPool.Desargues.Basic
 Defines subspaces of an axiomatic projective geometry and the induced
 projective subgeometry structure on a closed subset.
 -/
+
+@[expose] public section
 
 open Set
 open Basic

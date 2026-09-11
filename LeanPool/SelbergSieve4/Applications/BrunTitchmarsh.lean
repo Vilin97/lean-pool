@@ -3,20 +3,24 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
-import Mathlib.NumberTheory.Primorial
-import Mathlib.NumberTheory.PrimeCounting
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Data.Set.Card
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Order.Interval.Finset.SuccPred
-import LeanPool.SelbergSieve4.Selberg
-import LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
+module
+
+public import Mathlib.NumberTheory.Primorial
+public import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Analysis.Asymptotics.Lemmas
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Data.Set.Card
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Order.Interval.Finset.SuccPred
+public import LeanPool.SelbergSieve4.Selberg
+public import LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
 
 /-!
 # LeanPool.SelbergSieve4.Applications.BrunTitchmarsh
 -/
+
+@[expose] public section
 
 open PrimeUpperBound
 open scoped Nat ArithmeticFunction.zeta ArithmeticFunction.Moebius ArithmeticFunction.omega

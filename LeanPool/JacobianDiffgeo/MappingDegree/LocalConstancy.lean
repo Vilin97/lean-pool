@@ -7,9 +7,11 @@ Authors: Rado Kirov
 /-
 Blueprint unit: mapping-degree. Local constancy of `fiberMultSum` (heart, part 2).
 -/
-import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
-import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
-import Mathlib.Topology.LocallyConstant.Basic
+module
+
+public import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+public import Mathlib.Topology.LocallyConstant.Basic
 
 /-!
 # Local constancy of `fiberMultSum` (heart, part 2)
@@ -27,6 +29,8 @@ connected `Y` — the well-definedness theorem for `degree`.
 * `RS.fiberMultSum_const` — THE well-definedness theorem: `fiberMultSum F` is the same at every
   `y : Y` (needs `[ConnectedSpace Y]`).
 -/
+
+@[expose] public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

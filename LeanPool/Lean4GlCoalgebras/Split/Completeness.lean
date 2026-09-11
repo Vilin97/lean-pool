@@ -3,15 +3,18 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import LeanPool.Lean4GlCoalgebras.Split.Soundness
-import LeanPool.Lean4GlCoalgebras.Split.Game
+public import LeanPool.Lean4GlCoalgebras.Split.Soundness
+public import LeanPool.Lean4GlCoalgebras.Split.Game
 
 /-! ## Prover winning the GL-split game builds a GL-split proof.
 
 If Prover has a winning strategy in the game starting from `Γ`, then there is a proof
 of `Γ`, proven in `prover_win_builds_proof`; all other definitions and proofs in this
 file are helpers. -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

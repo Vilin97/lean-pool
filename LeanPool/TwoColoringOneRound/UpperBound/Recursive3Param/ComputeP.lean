@@ -3,10 +3,11 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Basic
-import Mathlib.MeasureTheory.Integral.Marginal
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Basic
+public import Mathlib.MeasureTheory.Integral.Marginal
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
 /-!
 Computation of `ClassicalAlgorithm.p` for `recursive3ParamAlg`.
@@ -15,6 +16,8 @@ This file will prove that the 3-parameter recursive cutoff algorithm from
 `Distributed2Coloring/UpperBound/Recursive3Param.lean` satisfies
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

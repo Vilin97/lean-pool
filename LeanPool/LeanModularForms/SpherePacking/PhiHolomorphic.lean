@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.Modularforms.EtaCleanup
+public import LeanPool.LeanModularForms.Modularforms.EtaCleanup
 
 /-!
 # Holomorphicity of E₂ and φ₀ on the upper half-plane
@@ -13,6 +14,8 @@ E₂ is holomorphic because `E₂ = (πI/12)⁻¹ · logDeriv(η)` where η is
 the Dedekind eta function. Since η is holomorphic and nonvanishing on ℍ,
 `logDeriv(η)` is holomorphic, hence E₂ is holomorphic.
 -/
+
+@[expose] public section
 
 open UpperHalfPlane Set Filter Topology Function
 open scoped Real

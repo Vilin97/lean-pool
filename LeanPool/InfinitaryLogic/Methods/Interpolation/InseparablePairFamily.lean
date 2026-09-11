@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 /-!
 # The finite inseparable-pair consistency family and its structural lemmas (issue #8, commit 4a)
 
@@ -30,6 +32,8 @@ The two moving parts are:
 * the family-level closures (`insepFamily_*`), which additionally track `GenU`-membership (via the
   `GeneratedUniverse` reachability lemmas) and finiteness (via `Set.Finite.insert`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

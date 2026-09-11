@@ -3,11 +3,13 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
-import Mathlib.FieldTheory.RatFunc.Basic
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.ShiftWitness.Band
+module
+
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Mathlib.FieldTheory.RatFunc.Basic
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.ShiftWitness.Band
 
 /-!
 # The rational-function eigenvector of the backward shifts
@@ -16,6 +18,8 @@ Nonzero edge triples give nonzero degree-at-most-two polynomials. Their images
 in `RatFunc k` are invertible. Reciprocal prefix products produce a genuine
 (non-finitely-supported) eigenvector on the full function space.
 -/
+
+@[expose] public section
 
 noncomputable section
 

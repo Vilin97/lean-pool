@@ -3,20 +3,24 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
-import Mathlib.NumberTheory.ArithmeticFunction.Defs
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-import Mathlib.NumberTheory.ArithmeticFunction.Zeta
-import LeanPool.SelbergSieve4.Selberg
-import LeanPool.SelbergSieve4.SieveLemmas
-import LeanPool.SelbergSieve4.Applications.BrunTitchmarsh
-import Mathlib.NumberTheory.PrimeCounting
-import Mathlib.Analysis.Asymptotics.Lemmas
+module
+
+public import Mathlib.NumberTheory.ArithmeticFunction.Defs
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+public import LeanPool.SelbergSieve4.Selberg
+public import LeanPool.SelbergSieve4.SieveLemmas
+public import LeanPool.SelbergSieve4.Applications.BrunTitchmarsh
+public import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Analysis.Asymptotics.Lemmas
 
 /-!
 # LeanPool.SelbergSieve4.MainResults
 -/
+
+@[expose] public section
 
 open scoped BigOperators ArithmeticFunction.zeta ArithmeticFunction.Moebius ArithmeticFunction.omega
   Sieve Nat Nat.Prime

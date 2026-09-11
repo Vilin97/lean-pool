@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
 
 /-!
 # The Radó crossing weld and chart induction
@@ -11,6 +13,8 @@ import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
 This file completes the chart-induction framework developed in `ChartInductionCore`. It constructs
 the crossing weld, packages the one-chart induction step, and assembles the final triangulation.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 

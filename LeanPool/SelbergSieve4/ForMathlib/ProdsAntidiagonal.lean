@@ -3,12 +3,15 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
+module
 
-import Mathlib.Algebra.Order.Antidiag.Nat
+public import Mathlib.Algebra.Order.Antidiag.Nat
 
 /-!
 # LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction.omega
 

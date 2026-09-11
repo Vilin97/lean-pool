@@ -3,8 +3,10 @@ Copyright (c) 2026 Jonathan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Ho
 -/
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
-import LeanPool.Isoperimetric.BrunnMinkowski
+module
+
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+public import LeanPool.Isoperimetric.BrunnMinkowski
 
 /-!
 # The isoperimetric inequality
@@ -14,6 +16,8 @@ and an `ε`-ball yields the standard form of the isoperimetric inequality
 relating `volume A`, the volume of the unit ball, and the volume of the
 `ε`-thickening of `A`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped Pointwise

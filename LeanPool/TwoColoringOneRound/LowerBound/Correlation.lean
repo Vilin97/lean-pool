@@ -3,13 +3,16 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import Mathlib.Data.Finite.Perm
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import Mathlib.Data.Finite.Perm
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.Correlation
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

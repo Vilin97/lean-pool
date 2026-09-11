@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
-import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
-import LeanPool.JacobianDiffgeo.FormTrace
-import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
+public import LeanPool.JacobianDiffgeo.FormTrace
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
 
 /-!
 # residue-theorem: the general-`X` reduction and THE residue theorem
@@ -48,6 +49,8 @@ duplicate the ~90-line proof or require importing residue-theorem back into cano
 (a cycle); canonical-forms is the clean home, so this file now imports it from there instead
 (`import Jacobian.CanonicalForms.Existence`, above) — the call site below is unchanged.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Function

@@ -3,8 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
 
 /-!
 # Construction of the prepared-prime certificate
@@ -12,6 +13,8 @@ import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
 This file constructs the finite pointwise certificate from generic-fibre data
 and closes the prepared-prime induction step.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

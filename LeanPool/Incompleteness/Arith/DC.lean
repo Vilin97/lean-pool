@@ -3,12 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arith.First
-import LeanPool.Incompleteness.Arith.Second
-import LeanPool.Incompleteness.DC.Basic
+public import LeanPool.Incompleteness.Arith.First
+public import LeanPool.Incompleteness.Arith.Second
+public import LeanPool.Incompleteness.DC.Basic
 
 /-! # DC -/
+
+@[expose] public section
 
 
 noncomputable section «lp_nc_section_1»

@@ -3,13 +3,14 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Finiteness
-import LeanPool.Erdos137.Base
-import LeanPool.Erdos137.BlockFramework
-import LeanPool.Erdos137.JointFiniteness
-import LeanPool.Erdos137.SmoothRefinement
-import LeanPool.Erdos137.TaoPoint
+public import LeanPool.Erdos137.Finiteness
+public import LeanPool.Erdos137.Base
+public import LeanPool.Erdos137.BlockFramework
+public import LeanPool.Erdos137.JointFiniteness
+public import LeanPool.Erdos137.SmoothRefinement
+public import LeanPool.Erdos137.TaoPoint
 
 /-!
 # Erdős Problem #137: the honest `g = 5` per-`k` bound and the abstract splice machine
@@ -67,6 +68,8 @@ faithful instantiation would carry a finite-exception clause.
   Erdős #137 and
   abc remain open.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

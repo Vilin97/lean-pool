@@ -3,11 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
-import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
 
 /-!
 # Residue-Side Infrastructure for the PV Chain
@@ -24,6 +25,8 @@ Infrastructure lemmas needed to apply `generalizedResidueTheorem'` to
 * `residueSimplePole_logDeriv_eq_order` — residue = order at zeros
 * `residueSimplePole_logDeriv_eq_zero_at_nonzero` — residue = 0 at non-zeros
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

@@ -3,22 +3,26 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
-import Mathlib.Analysis.Distribution.TemperedDistribution
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
-import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-import Mathlib.Probability.Distributions.Gaussian.Real
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
-import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
+module
+
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import Mathlib.Analysis.Distribution.TemperedDistribution
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.Fourier.Inversion
+public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Basic
+public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
+public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+public import Mathlib.Probability.Distributions.Gaussian.Real
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
+public import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
 
 /-! # ImportedAnalyticInputs -/
+
+@[expose] public section
 
 
 noncomputable section

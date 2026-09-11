@@ -3,7 +3,9 @@ Copyright (c) 2026 Ricky Cipollini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ricky Cipollini
 -/
-import LeanPool.Erdos865.Folding
+module
+
+public import LeanPool.Erdos865.Folding
 
 /-!
 # The even-`N` upper bound (Erdős 865, §4)
@@ -11,6 +13,8 @@ import LeanPool.Erdos865.Folding
 Strong induction on `N` proving `even_bound`: every triple-free `A ⊆ [1, 2e]` satisfies the
 `5/8` counting bound, split into the cases `even_bound_case1` and `even_bound_case2`.
 -/
+
+@[expose] public section
 
 open Finset
 

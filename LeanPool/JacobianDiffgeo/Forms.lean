@@ -3,15 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms.Basic
-import LeanPool.JacobianDiffgeo.Forms.Coeffs
-import LeanPool.JacobianDiffgeo.Forms.Analyticity
-import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
-import LeanPool.JacobianDiffgeo.Forms.MDifferential
-import LeanPool.JacobianDiffgeo.Forms.Montel
-import LeanPool.JacobianDiffgeo.Forms.Finiteness
-import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Forms.Basic
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
+public import LeanPool.JacobianDiffgeo.Forms.MDifferential
+public import LeanPool.JacobianDiffgeo.Forms.Montel
+public import LeanPool.JacobianDiffgeo.Forms.Finiteness
+public import LeanPool.JacobianDiffgeo.Forms.Genus
 
 /-!
 # holomorphic-forms (CC1): holomorphic 1-forms and `genus`
@@ -54,3 +55,5 @@ API summary (see `docs/design/holomorphic-forms.md`):
 Downstream units use `coeffIn`/`coeffAt` and the lemmas above — never raw bundle internals
 (`Form1` is `abbrev`-only plumbing).
 -/
+
+@[expose] public section

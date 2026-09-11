@@ -3,8 +3,9 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.NontrivialSequences
+public import LeanPool.Wallace.NontrivialSequences
 
 /-!
 # Full topological consequences of the character construction
@@ -18,6 +19,8 @@ The initial topology of such a package is Hausdorff, is a group topology, is cou
 and has no non-eventually-constant convergent sequences.  Its canonical induced uniformity is
 totally bounded, which is the uniform formulation of precompactness used here.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

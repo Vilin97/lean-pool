@@ -3,13 +3,17 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-import LeanPool.Feige.Grunbaum.Definitions
-import LeanPool.Isoperimetric.BrunnMinkowski
-import Mathlib.Analysis.Convex.Function
+module
+
+public import LeanPool.Feige.Grunbaum.Definitions
+public import LeanPool.Isoperimetric.BrunnMinkowski
+public import Mathlib.Analysis.Convex.Function
 
 /-!
 # Concavity of truncated-volume roots
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped Pointwise

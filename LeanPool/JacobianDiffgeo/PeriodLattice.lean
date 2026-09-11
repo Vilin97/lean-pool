@@ -3,14 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
-import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
-import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
-import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
-import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
-import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
-import LeanPool.JacobianDiffgeo.PeriodLattice.FullRank
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
+public import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
+public import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
+public import LeanPool.JacobianDiffgeo.PeriodLattice.FullRank
 
 /-!
 # period-lattice-rank: the period lattice is discrete and spans (Forster §21.1–21.4)
@@ -108,3 +109,5 @@ leaf apart from final assembly), except that `periodSubgroup_topologicalClosure_
 direct interest to `abel-theorem`'s `ofCurve_inj`/`ofCurve_eq_of_path` consumers, who want to strip
 `.topologicalClosure` from `Jac₀`'s defining quotient once discreteness is unconditional.
 -/
+
+@[expose] public section

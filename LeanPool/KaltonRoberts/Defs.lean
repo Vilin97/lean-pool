@@ -10,40 +10,44 @@ Authors: Ho Boon Suan
 This file contains the core definitions used throughout the formalization of
 the companion paper.
 -/
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Combinatorics.Hall.Basic
-import Mathlib.Data.Fintype.Perm
-import Mathlib.Data.Nat.Choose.Cast
-import Mathlib.Order.BooleanSubalgebra
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Choose
-import Mathlib.Tactic.CongrExclamation
-import Mathlib.Tactic.Continuity
-import Mathlib.Tactic.Contrapose
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Qify
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Aesop
+module
+
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Analysis.Convex.Combination
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.Analysis.LocallyConvex.Separation
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Combinatorics.Hall.Basic
+public import Mathlib.Data.Fintype.Perm
+public import Mathlib.Data.Nat.Choose.Cast
+public import Mathlib.Order.BooleanSubalgebra
+public import Mathlib.Tactic.Cases
+public import Mathlib.Tactic.Choose
+public import Mathlib.Tactic.CongrExclamation
+public import Mathlib.Tactic.Continuity
+public import Mathlib.Tactic.Contrapose
+public import Mathlib.Tactic.Convert
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Qify
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Zify
+public import Aesop
 
 /-!
 # Definitions for the Kalton-Roberts formalization
 
 Core definitions used throughout the formalization of the companion paper.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

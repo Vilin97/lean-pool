@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # Utility Lemmas
@@ -11,6 +13,8 @@ import Mathlib.Data.Fin.VecNotation
 Small lemmas about `Empty.elim`, `Fin.elim0`, `Fin.snoc`, and `Fin.append` that are used
 across the infinitary logic library but not (yet) in Mathlib.
 -/
+
+@[expose] public section
 
 universe u v
 

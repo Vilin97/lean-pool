@@ -3,8 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Learner.Core
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import LeanPool.FormalLearningTheory.Learner.Core
 
 /-!
 # Online Learning Criteria
@@ -12,6 +14,8 @@ import LeanPool.FormalLearningTheory.Learner.Core
 Mistake-bounded learning, online learnability, and regret bounds.
 Characterized by Littlestone dimension.
 -/
+
+@[expose] public section
 
 universe u v
 

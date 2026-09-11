@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path.Chain
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
+public import LeanPool.JacobianDiffgeo.Path.Chain
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
 
 /-!
 # Perturbing a path off a finite set (CC6)
@@ -22,6 +23,8 @@ Main declarations:
   any path (loop) with endpoints (basepoint) off a finite set `S` is homotopic rel endpoints to
   one avoiding `S` entirely.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter

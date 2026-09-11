@@ -3,23 +3,23 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.SpecialFunctions.Bernstein
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+public import Mathlib.Data.Nat.Factorial.DoubleFactorial
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Data.Complex.Basic
 
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Factorial.DoubleFactorial
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Data.Complex.Basic
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Covariance.Position
-import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-import LeanPool.OSforGFF.Covariance.Momentum
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
+public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
+public import LeanPool.OSforGFF.Covariance.Position
+public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+public import LeanPool.OSforGFF.Covariance.Momentum
 
 /-!
 # Real Covariance Form and Square Root Propagator Embedding
@@ -34,6 +34,8 @@ square root propagator embedding theorem.
 - `freeCovarianceFormR_continuous`: Continuity of the quadratic form f ↦ C(f,f)
 - `freeCovarianceFormR_pos`: Positivity of the quadratic form
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Matrix
 open scoped Real InnerProductSpace BigOperators ComplexConjugate

@@ -3,22 +3,24 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
-import LeanPool.Brouwer.ScarfPath
-import Mathlib.Data.PNat.Basic
-import Mathlib.Order.PiLex
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Order.Filter.AtTopBot.Archimedean
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.Topology.MetricSpace.Sequences
-import Mathlib.Topology.MetricSpace.Lipschitz
-import Mathlib.Topology.Sequences
-import Mathlib.Topology.Algebra.Order.Field
-import Mathlib.Analysis.Normed.Group.Constructions
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+module
+
+public import LeanPool.Brouwer.ScarfPath
+public import Mathlib.Data.PNat.Basic
+public import Mathlib.Order.PiLex
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.Order.Filter.AtTopBot.Archimedean
+public import Mathlib.Analysis.Convex.StdSimplex
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.Topology.MetricSpace.Sequences
+public import Mathlib.Topology.MetricSpace.Lipschitz
+public import Mathlib.Topology.Sequences
+public import Mathlib.Topology.Algebra.Order.Field
+public import Mathlib.Analysis.Normed.Group.Constructions
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Brouwer's fixed-point theorem on a simplex
@@ -29,6 +31,8 @@ points of the scaled simplex carries an `IndexedLOrder`; applying Scarf's lemma 
 finer and finer subdivisions and passing to a convergent subsequence of the
 resulting colorful points produces a fixed point.
 -/
+
+@[expose] public section
 
 attribute [local instance] Classical.propDecidable
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
+module
+
+public import LeanPool.Clawristotle.Defs
 
 /-!
 # Lorentz Force Component Bound
@@ -12,6 +14,8 @@ Proves `lorentz_component_bound`: each component of the Lorentz force (E + v x B
 is bounded by C * (1 + ||v||). Used by `CoulombSpatialTransport` for bounding
 spatial transport integrands.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

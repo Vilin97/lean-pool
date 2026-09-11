@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition71
-import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.Definition71
+public import LeanPool.DomainTheory.Neighborhood.Approximable
 
 /-!
 # Definition 7.2 (Scott 1981, PRG-19, §7) — computable maps and computable
@@ -69,6 +70,8 @@ Everything here is `⊆ {propext, Quot.sound}` (choice-free): it is built only f
 the choice-free
 deciders of Definition 7.1 and the choice-free r.e. layer of `Recursive.lean`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

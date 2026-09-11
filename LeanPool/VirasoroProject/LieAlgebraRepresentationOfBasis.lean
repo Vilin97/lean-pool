@@ -3,9 +3,11 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import LeanPool.VirasoroProject.Commutator
-import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Basic
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import LeanPool.VirasoroProject.Commutator
+public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Basic
 
 /-!
 # Constructing representations of Lie algebras from operators corresponding to a basis
@@ -21,6 +23,8 @@ constructions.)
   brackets of the basis elements, construct a representation of `𝓰` on the vector space `V`.
 
 -/
+
+@[expose] public section
 
 
 namespace LieAlgebra

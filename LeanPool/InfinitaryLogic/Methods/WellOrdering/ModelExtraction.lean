@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.WOConsistency
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.WOConsistency
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
 /-!
 # Model extraction from the completed well-ordering set (issue #12, step 5)
 
@@ -17,6 +19,8 @@ quotient term model (the relational-core collapse of closed terms to constants),
 `[Countable (Σ l, L.Relations l)]` by the fair enumeration.  Removing both restrictions is
 the later transport step, not done here.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

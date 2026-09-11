@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Topology.Compactification.OnePoint.Basic
-import Mathlib.Analysis.Normed.Field.Lemmas
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Topology.Compactification.OnePoint.Basic
+public import Mathlib.Analysis.Normed.Field.Lemmas
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Inversion on the Riemann sphere (CC5)
@@ -22,6 +23,8 @@ Main declarations: `inversion`, `inversion_involutive`, `inversion_eq_infty_iff`
 `tendsto_coe_cocompact`, `tendsto_coe_inv_nhdsNE_zero`, `continuous_inversion`,
 `inversionHomeomorph`.
 -/
+
+@[expose] public section
 
 open scoped OnePoint
 open Set Filter Topology OnePoint

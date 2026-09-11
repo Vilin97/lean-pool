@@ -3,10 +3,12 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Data.ENat.Lattice
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
-import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
+module
+
+public import Mathlib.Data.ENat.Lattice
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
 
 /-!
 # Unique factorization lemmas
@@ -14,6 +16,8 @@ import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
 Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of some iterated
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
+
+@[expose] public section
 
 open UniqueFactorizationMonoid in
 /-- If `σ` is a multiplicative automorphism of a normalization UFD and `σ p` is associated to

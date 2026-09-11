@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global`
@@ -13,6 +14,8 @@ import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRie
 Finite-atlas assembly: turn the per-chart compactness result into compactness of the global
 `H¹ → L²` map for the Riemannian volume measure.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

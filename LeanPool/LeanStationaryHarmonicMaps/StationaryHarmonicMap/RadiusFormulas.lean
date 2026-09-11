@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BallIntegralAC
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BallIntegralAC
 
 /-!
 # Weak radius formula constructors
@@ -11,6 +13,8 @@ import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BallIntegralAC
 This module constructs the weak radius integration and one-dimensional calculus
 packages from local L2, coarea, and annulus inputs.
 -/
+
+@[expose] public section
 
 noncomputable section
 

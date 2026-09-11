@@ -3,12 +3,13 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Logic.Equiv.Defs
-import LeanPool.IsoGraph.Canon.Algorithm
-import LeanPool.IsoGraph.Canon.Equivariance
-import LeanPool.IsoGraph.Canon.Correct
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Logic.Equiv.Defs
+public import LeanPool.IsoGraph.Canon.Algorithm
+public import LeanPool.IsoGraph.Canon.Equivariance
+public import LeanPool.IsoGraph.Canon.Correct
 
 /-!
 # From the canonical labelling algorithm to permutations, and its specification
@@ -37,6 +38,8 @@ Write `relabel σ adj` for `adj` with its vertices renamed along `σ`.  Two stat
   to the quotient.  On raw arrays the same statement is `LabellingInvariant`, which
   `IsoGraph/Canon/Correct.lean` obtains from the soundness and optimality of the search.
 -/
+
+@[expose] public section
 
 namespace IsoGraph.Canon
 

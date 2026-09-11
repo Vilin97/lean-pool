@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
-import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
-import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
+public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
 
 /-!
 # Specializing denominator-cleared generic divisibility
@@ -18,6 +19,8 @@ prime's local zero set that error disappears.  Away from the explicit
 denominator, every root of the lifted minimal polynomial is therefore a root
 of the certified divisible polynomial.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Dbar.Operator
+public import LeanPool.JacobianDiffgeo.Dbar.Operator
 
 /-!
 # `DbarGlueData`: the Mittag-Leffler-style gluing atom
@@ -20,6 +21,8 @@ chart-subordinate cover determine a UNIQUE global `Form01` solving `dbaru_i = ω
 * `DbarGlueData.form`: the glued `(0,1)`-form (via `Form01.ofCoeffs`/`Form01CoeffData`).
 * `DbarGlueData.isDbarOn_form`, `DbarGlueData.form_unique`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold TopologicalSpace

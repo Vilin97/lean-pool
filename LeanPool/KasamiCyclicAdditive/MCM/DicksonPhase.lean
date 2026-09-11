@@ -3,9 +3,10 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
 
 /-!
 # Dickson value sum for every odd normalized parameter
@@ -14,6 +15,8 @@ Removes the residual `3 ∤ h` restriction from `sum_dickson_eq_cubic`: for
 every odd `k` coprime to `n`, `D_(2^k+1)` and `D_3` have equal sums against any
 function on `GF(2^n)`, even at the odd-dimensional bad residue `k ≡ 3 (mod 6)`.
 -/
+
+@[expose] public section
 
 open Finset Polynomial
 

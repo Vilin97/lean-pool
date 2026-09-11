@@ -3,11 +3,13 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Logic.Equiv.Fin.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Use
-import LeanPool.Koethe.Pencil
+module
+
+public import Mathlib.Logic.Equiv.Fin.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Use
+public import LeanPool.Koethe.Pencil
 
 /-!
 # Sparse periodic masks
@@ -21,6 +23,8 @@ has length `l`, repeating the old mask `4*l+1` times before installing the word
 preserves this invariant.  Thus no limiting density or geometric-series
 calculation is needed.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -7,11 +7,15 @@ Authors: Utensil Song
 
 Quadratic covariance on Zhou's symmetric tensor carrier. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyAlgebra
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyAlgebra
 
 /-!
 The dual action conjugacy quadratic component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualActionConjugacyQuadratic

@@ -3,39 +3,41 @@ Copyright (c) 2026 Dhyan Aranha and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyan Aranha, contributors
 -/
+module
 
-
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
-import Mathlib.Order.Basic
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Dynamics.Ergodic.MeasurePreserving
-import LeanPool.Monsky.BasicDefinitions
-import LeanPool.Monsky.SimplexBasic
-import LeanPool.Monsky.SegmentTriangle
-import LeanPool.Monsky.Square
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Zify
+public import Mathlib.Tactic.Lift
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Tactic.Abel
+public import Mathlib.Order.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
+public import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.Dynamics.Ergodic.MeasurePreserving
+public import LeanPool.Monsky.BasicDefinitions
+public import LeanPool.Monsky.SimplexBasic
+public import LeanPool.Monsky.SegmentTriangle
+public import LeanPool.Monsky.Square
 
 /-!
 # LeanPool.Monsky.TriangleCorollary
 
 Imported Lean Pool material for `LeanPool.Monsky.TriangleCorollary`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Monsky
 

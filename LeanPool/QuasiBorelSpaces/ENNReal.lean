@@ -3,17 +3,20 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Basic
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-import LeanPool.QuasiBorelSpaces.Defs
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import LeanPool.QuasiBorelSpaces.Basic
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
+public import LeanPool.QuasiBorelSpaces.Defs
+public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
 
 /-!
 # LeanPool.QuasiBorelSpaces.ENNReal
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.ENNReal`.
 -/
+
+@[expose] public section
 
 
 namespace QuasiBorelSpace.ENNReal

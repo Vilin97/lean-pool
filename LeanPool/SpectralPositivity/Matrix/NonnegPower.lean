@@ -3,9 +3,10 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.Data.Real.Basic
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Mathlib.Data.Real.Basic
 
 /-!
 # Nonneg Matrix Powers and Positivity
@@ -26,6 +27,8 @@ blocks for the Metzler matrix exponential theorem (in MetzlerExp.lean).
 
 - Berman and Plemmons, *Nonnegative Matrices*, SIAM, 1994
 -/
+
+@[expose] public section
 
 open Matrix BigOperators Finset
 

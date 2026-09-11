@@ -10,13 +10,17 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the semidirect-product coordinate unitary and changed
 imports and namespace. Paper: §3. See the upstream PORT_MAP.md.
 -/
-import Mathlib.GroupTheory.SemidirectProduct
-import Mathlib.Topology.Separation.CompletelyRegular
-import LeanPool.ConnesRigidity.Porting.CoreTransfer
+module
+
+public import Mathlib.GroupTheory.SemidirectProduct
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import LeanPool.ConnesRigidity.Porting.CoreTransfer
 
 /-!
 The semidirect fubini component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace SemidirectFubini

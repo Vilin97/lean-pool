@@ -3,7 +3,9 @@ Copyright (c) 2026 André Hernandez-Espiet, Vladimir Sedlacek. All rights reserv
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
-import LeanPool.SyntheticEuclid4.SyntheticEuclid4
+module
+
+public import LeanPool.SyntheticEuclid4.SyntheticEuclid4
 
 /-!
 # Synthetic Euclidean geometry: Euclid's Elements Book I
@@ -15,6 +17,8 @@ Main declarations: `SyntheticEuclid4.pythagoras`, `SyntheticEuclid4.pythagoras_c
 Tags: euclidean-geometry, synthetic-geometry, pythagorean-theorem
 MSC: 51M04
 -/
+
+@[expose] public section
 
 /-!
 A formalization of Book I of Euclid's *Elements* in Lean 4, built on Avigad,

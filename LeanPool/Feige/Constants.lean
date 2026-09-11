@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
-import Mathlib.Topology.Instances.ENNReal.Lemmas
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
+public import Mathlib.Topology.Instances.ENNReal.Lemmas
 
 /-!
 # The sharp finite-dimensional constant
@@ -16,6 +18,8 @@ This file records the elementary real-analysis facts about
 which is the `δ = 1` value of the second branch in (1.1).  The
 probability-theoretic proof is kept in later modules.
 -/
+
+@[expose] public section
 
 namespace Feige
 

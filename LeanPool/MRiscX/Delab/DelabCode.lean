@@ -3,16 +3,20 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import LeanPool.MRiscX.Parser.AssemblySyntax
-import LeanPool.MRiscX.Elab.CodeElaborator
-import LeanPool.MRiscX.AbstractSyntax.Instr
+module
+
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public import LeanPool.MRiscX.Parser.AssemblySyntax
+public import LeanPool.MRiscX.Elab.CodeElaborator
+public import LeanPool.MRiscX.AbstractSyntax.Instr
 
 /-!
 # DelabCode
 
 This module provides delaborators rendering MRiscX `Code` back to assembly syntax.
 -/
+
+@[expose] public section
 open Lean PrettyPrinter Delaborator SubExpr Expr Nat
 
 /-

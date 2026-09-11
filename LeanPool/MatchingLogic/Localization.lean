@@ -18,11 +18,15 @@ semantically, directly from Lemma 4, and that is the route taken here -- so
 this file needs no proof system.  Lemma 5 itself belongs with the proof system
 and is not in this file.
 -/
-import LeanPool.MatchingLogic.Boxes
+module
+
+public import LeanPool.MatchingLogic.Boxes
 
 /-!
 # MatchingLogic.Localization
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

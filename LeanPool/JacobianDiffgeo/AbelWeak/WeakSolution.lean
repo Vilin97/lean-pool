@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-import Mathlib.Analysis.Calculus.ContDiff.Operations
-import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import LeanPool.JacobianDiffgeo.Surface.RealSmooth
 
 /-!
 # Weak solutions (`abel-weak-solutions`, D1 / Forster §20.1, §20.1's Lemma-20.1 multiplicativity)
@@ -27,6 +28,8 @@ to a weak solution of `D₁ + D₂`") as a `Finset`-indexed product over `ι` pa
 two-point pairs — the degenerate, already-disjoint case `abel-theorem`'s own 21.4(a)
 construction sets up (no general chain/homology bookkeeping needed).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Filter Topology Set

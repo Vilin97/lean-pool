@@ -3,28 +3,31 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import Mathlib.Logic.Function.Basic
-import Mathlib.Data.Set.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
+public import Mathlib.Logic.Function.Basic
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Zify
+public import Mathlib.Tactic.Lift
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Tactic.Abel
 
 
 /-!
 TODO: Use `Pointed` (the category of pointed types) in Mathlib.
 -/
+
+@[expose] public section
 
 
 /- A pointed map from `(X, x₀)` to `(Y, y₀)` is a function `f : X → Y` such that `f x₀ = y₀`. -/

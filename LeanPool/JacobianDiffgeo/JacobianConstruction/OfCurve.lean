@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
 
 /-!
 # `ofCurve`, well-definedness, `ofCurve_self`, `ofCurve_contMDiff` (CC9, §8)
@@ -25,6 +26,8 @@ near `x₀` (`hkey`); reading this through the Jacobian's own chart (the same lo
 lattice-shift computation as `Torus.contMDiff_add_torus`/`ULift.contMDiff_uliftUp`) makes the
 chart composite affine in `g (e z)`, hence analytic.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Convex Topology
 open IsManifold Metric Set Filter

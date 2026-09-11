@@ -3,13 +3,16 @@ Copyright (c) 2026 Óscar Álvarez Sánchez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Óscar Álvarez Sánchez
 -/
+module
 
-import LeanPool.DemazureOperatorsLean.Demazure
-import LeanPool.DemazureOperatorsLean.DemazureAux
+public import LeanPool.DemazureOperatorsLean.Demazure
+public import LeanPool.DemazureOperatorsLean.DemazureAux
 
 /-!
 # LeanPool.DemazureOperatorsLean.DemazureAuxRelations
 -/
+
+@[expose] public section
 
 noncomputable section
 namespace Demazure

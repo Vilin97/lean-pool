@@ -28,11 +28,15 @@ come apart.
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.Composite
+module
+
+public import LeanPool.MatchingLogic.Composite
 
 /-!
 # MatchingLogic.Independence
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

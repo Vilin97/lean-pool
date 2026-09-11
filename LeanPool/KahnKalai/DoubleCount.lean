@@ -3,12 +3,16 @@ Copyright (c) 2026 Dan Clemens Posch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Clemens Posch
 -/
-import LeanPool.KahnKalai.Cost
-import LeanPool.KahnKalai.Numeric
+module
+
+public import LeanPool.KahnKalai.Cost
+public import LeanPool.KahnKalai.Numeric
 
 /-!
 Tran–Vu Lemma 2.4 (double counting of large minimals `G_W`).
 -/
+
+@[expose] public section
 
 open Finset
 

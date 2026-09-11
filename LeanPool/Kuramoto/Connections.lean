@@ -3,9 +3,10 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
-import LeanPool.Kuramoto.Weighted
-import LeanPool.Kuramoto.Hebbian
+public import LeanPool.Kuramoto.Weighted
+public import LeanPool.Kuramoto.Hebbian
 
 /-!
 # Connections between the models
@@ -13,6 +14,8 @@ import LeanPool.Kuramoto.Hebbian
 Relations between the weighted Kuramoto potential and the Hebbian Lyapunov function: with
 zero weight regularisation they coincide, and the Hebbian penalty is convex in each weight.
 -/
+
+@[expose] public section
 
 open Real Finset
 

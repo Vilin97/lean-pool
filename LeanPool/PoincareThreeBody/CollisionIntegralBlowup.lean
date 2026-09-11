@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Logarithmic growth near a resonant collision
@@ -13,6 +14,8 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 This file develops the real-variable estimate showing that the averaged Newtonian singularity
 becomes unbounded when an aligned apoapsis approaches the unit primary.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

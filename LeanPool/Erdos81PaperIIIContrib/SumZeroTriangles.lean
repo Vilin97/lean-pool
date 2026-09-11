@@ -3,18 +3,19 @@ Copyright (c) 2026 Aristotle contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle
 -/
+module
 
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Sym
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Sym.Sym2
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Sym
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Data.Sym.Sym2
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Order
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
 
 /-!
 # The sum-zero triple system: a near-perfect triangle packing of a complete graph
@@ -56,6 +57,8 @@ Edges are modelled as elements of `Sym2 V`, and edge sets as `Finset (Sym2 V)`; 
 edge sets.
 
 -/
+
+@[expose] public section
 
 open Finset
 

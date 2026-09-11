@@ -3,13 +3,14 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import Mathlib.Algebra.Group.Finsupp
-import Mathlib.Algebra.Group.Units.Defs
-import Mathlib.Data.Real.Basic
-import Mathlib.Order.Filter.Ultrafilter.Basic
-import Mathlib.Topology.Algebra.Group.Basic
-import Mathlib.Topology.Compactness.CountablyCompact
+public import Mathlib.Algebra.Group.Finsupp
+public import Mathlib.Algebra.Group.Units.Defs
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Order.Filter.Ultrafilter.Basic
+public import Mathlib.Topology.Algebra.Group.Basic
+public import Mathlib.Topology.Compactness.CountablyCompact
 
 /-!
 # The Wallace semigroup deduction
@@ -24,6 +25,8 @@ compact, cancellative on both sides, a topological semigroup, and not a group.
 
 Every declaration in this file is proved from its explicitly stated hypotheses.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

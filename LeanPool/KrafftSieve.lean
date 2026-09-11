@@ -3,14 +3,15 @@ Copyright (c) 2026 Fernando Portela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fernando Portela
 -/
+module
 
-import LeanPool.KrafftSieve.Defs
-import LeanPool.KrafftSieve.Basic
-import LeanPool.KrafftSieve.ThirdHarmonic
-import LeanPool.KrafftSieve.Variance
-import LeanPool.KrafftSieve.SelbergWeights
-import LeanPool.KrafftSieve.OptimalWeights
-import LeanPool.KrafftSieve.MainTheorem
+public import LeanPool.KrafftSieve.Defs
+public import LeanPool.KrafftSieve.Basic
+public import LeanPool.KrafftSieve.ThirdHarmonic
+public import LeanPool.KrafftSieve.Variance
+public import LeanPool.KrafftSieve.SelbergWeights
+public import LeanPool.KrafftSieve.OptimalWeights
+public import LeanPool.KrafftSieve.MainTheorem
 
 /-!
 # A Conditional Sieve Criterion for Twin Primes via Krafft Geometry
@@ -22,6 +23,8 @@ Main declarations: `KrafftSieve.mu_min_lt_one_implies_tpc`
 Tags: analytic-number-theory, sieve-theory, twin-primes, optimization
 MSC: 11N05, 11N35
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,14 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import LeanPool.Egrs75.DigitVector
-import LeanPool.Egrs75.DigitAtToolkit
-import Mathlib.Algebra.Order.Ring.GeomSum
-import Mathlib.Algebra.BigOperators.Intervals
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import LeanPool.Egrs75.LeafInduction
+public import LeanPool.Egrs75.DigitVector
+public import LeanPool.Egrs75.DigitAtToolkit
+public import Mathlib.Algebra.Order.Ring.GeomSum
+public import Mathlib.Algebra.BigOperators.Intervals
 
 /-!
 EGRS75 LOW-case clearing — PRIMITIVE P4: condition-(3) window producer (2026-06-08).
@@ -54,6 +55,8 @@ HONESTY: real verified Lean.  No `native_decide`, no bogus `axiom`, no circulari
 Reuses (does not reprove) the imported base-`q` digit machinery.  Formalizes the KNOWN
 theorem EGRS75 (1975).  Three primes is Erdős #376 (OPEN) — not attempted.
 -/
+
+@[expose] public section
 
 namespace Egrs75.P4
 

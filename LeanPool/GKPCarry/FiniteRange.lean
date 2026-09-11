@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.ModularPrefix
+module
+
+public import LeanPool.GKPCarry.ModularPrefix
 
 /-!
 # Kernel-checked bounded C3 certificate
@@ -14,6 +16,8 @@ by multiplication by four, so only the first power is computed from scratch.
 Their soundness is transported through proved modular exponentiation and ternary
 prefix lemmas, yielding the headline carry theorem at the end of this file.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

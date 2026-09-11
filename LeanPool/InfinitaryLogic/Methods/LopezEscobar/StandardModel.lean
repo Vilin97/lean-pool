@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCSentence
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCSentence
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
 /-!
 # The standard functional model and the forward presentation (issue #10, Unit 3a)
 
@@ -20,6 +22,8 @@ expansion** on `ℕ` built from a base code `c` and a branch `g`:
 Forward acceptance gate (`subset_pcClass`): `c ∈ B → ∃ d, codeReduct d = c ∧
 d ∈ ModelsOf (pcSentence side T)` — **without** `IsomorphismInvariant`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

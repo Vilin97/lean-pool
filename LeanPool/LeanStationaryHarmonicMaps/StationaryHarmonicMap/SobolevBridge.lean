@@ -3,8 +3,10 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
 
 /-!
 # Sobolev bridge for stationary Sobolev map monotonicity
@@ -16,6 +18,8 @@ interfaces.  The radial monotonicity proof is already frozen in
 that their preferred Sobolev assumptions imply `WeakStationaryMapIn`, then call
 that theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

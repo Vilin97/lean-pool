@@ -3,27 +3,28 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Combinatorics.Nullstellensatz
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Polyrith
-import Mathlib.Tactic.Common
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.Algebra.MvPolynomial.CommRing
-import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.Algebra.MvPolynomial.Variables
-import Mathlib.Algebra.MvPolynomial.Equiv
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Finsupp.Multiset
-import Mathlib.Data.Finsupp.Notation
-import Mathlib.Data.Multiset.Basic
-import Mathlib.Tactic.Set
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Combinatorics.Nullstellensatz
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Polyrith
+public import Mathlib.Tactic.Common
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.CommRing
+public import Mathlib.Algebra.MvPolynomial.Degrees
+public import Mathlib.Algebra.MvPolynomial.Variables
+public import Mathlib.Algebra.MvPolynomial.Equiv
+public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.Finsupp.Multiset
+public import Mathlib.Data.Finsupp.Notation
+public import Mathlib.Data.Multiset.Basic
+public import Mathlib.Tactic.Set
 
 /-!
 # The Alon-Nathanson-Ruzsa polynomial method
@@ -33,6 +34,8 @@ polynomials, the vanishing-coefficient lemma on product grids, and the main
 theorem `ANR_polynomial_method` giving a non-vanishing-coefficient criterion
 for lower-bounding restricted sumsets.
 -/
+
+@[expose] public section
 
 open scoped Finset
 

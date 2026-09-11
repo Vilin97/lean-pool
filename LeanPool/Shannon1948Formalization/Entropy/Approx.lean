@@ -3,8 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy.Rational
+public import LeanPool.Shannon1948Formalization.Entropy.Rational
 
 /-!
 # Shannon.Entropy.Approx
@@ -15,6 +16,8 @@ Constructs floor-count rational approximants `approxProb p N` and proves
 their convergence to `p`. This is the bridge from the rational formula to the
 full real-probability formula.
 -/
+
+@[expose] public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

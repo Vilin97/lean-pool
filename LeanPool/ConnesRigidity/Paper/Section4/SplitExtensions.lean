@@ -9,12 +9,16 @@ Action-indexed split-extension presentations for Zhou §4. These expose the
 semidirect-product inclusion, quotient, section, and conjugation used by the
 spectral criterion; they do not prove the paper-specific spectral input.
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtension
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtension
 
 /-!
 The split extensions component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperSplitExtensions

@@ -3,10 +3,14 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
-import Batteries.Util.ExtendedBinder
-import LeanPool.Lentil.Util
-import LeanPool.Lentil.Foldable
+module
+
+public import Lean
+public import Batteries.Util.ExtendedBinder
+public import LeanPool.Lentil.Util
+public import LeanPool.Lentil.Foldable
+
+@[expose] public section
 
 open Lean LentilLib
 

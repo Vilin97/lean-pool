@@ -3,16 +3,20 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Analysis.Matrix.Spectrum
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
+module
+
+public import Mathlib.Analysis.Matrix.Spectrum
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
+public import LeanPool.Monlib4.LinearAlgebra.InnerAut
 
 /-!
 # Matrix Spectra
 
 Spectral helpers for Hermitian and almost-Hermitian matrices.
 -/
+
+@[expose] public section
 
 instance multisetCoe {α β : Type _} [Coe α β] : Coe (Multiset α) (Multiset β)
     where coe s := s.map (Coe.coe : α → β)

@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.IdealRepresentatives
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.IdealRepresentatives
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
 
 /-!
 # Specializing polynomial identities modulo an analytic ideal
@@ -16,6 +17,8 @@ ideal says that every coefficient difference belongs to that ideal.  A finite
 fixed-degree family of chosen representatives therefore specializes to equal
 complex polynomials on the ideal's local zero set, on one common neighborhood.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

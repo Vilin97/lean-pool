@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.SingularAnnulus
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.AnnulusBounds
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.SingularAnnulus
 
 /-!
 # PV Infrastructure: Uniform Step Bound
@@ -19,6 +20,8 @@ annulus bound into a single epsilon-independent estimate.
 * `pv_step_bound_ratio_two_uniform` — uniform step bound
     with epsilon-independent constant
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Constants
-import LeanPool.Feige.SimplexGeometry
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+module
+
+public import LeanPool.Feige.Constants
+public import LeanPool.Feige.SimplexGeometry
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 /-!
 # Uniform measure and halfspace statistic on the simplex
@@ -15,6 +17,8 @@ measure.  It also isolates the `α = 0` centroid-halfspace statement used in
 the `δ = 1` specialization of §2.2.  Everything after that geometric input,
 including the strict-boundary/complement step, is proved here.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory ProbabilityTheory Set

@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
-import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
+public import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
 /-!
 # Isomorphism is Borel under Bounded Scott Height
 
@@ -17,6 +19,8 @@ This file proves that isomorphism restricted to models of a sentence is Borel
   height ≤ α < ω₁, then the set of isomorphic pairs within ModelsOf(φ) × ModelsOf(φ)
   is measurable.
 -/
+
+@[expose] public section
 
 universe u v
 

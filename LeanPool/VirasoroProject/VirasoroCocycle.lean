@@ -3,14 +3,16 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Azumaya.Basic
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Data.Int.Star
-import Mathlib.GroupTheory.MonoidLocalization.Basic
-import Mathlib.LinearAlgebra.Dual.Lemmas
-import LeanPool.VirasoroProject.LieCohomologySmallDegree
-import LeanPool.VirasoroProject.WittAlgebra
+module
+
+public import Mathlib.Algebra.Azumaya.Basic
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.Data.Int.Star
+public import Mathlib.GroupTheory.MonoidLocalization.Basic
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import LeanPool.VirasoroProject.LieCohomologySmallDegree
+public import LeanPool.VirasoroProject.WittAlgebra
 /-!
 # The Virasoro 2-cocycle of the Witt algebra
 
@@ -36,6 +38,8 @@ Witt algebra in degree two does not vanish.
 Witt algebra, Virasoro algebra, Lie algebra cohomology
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

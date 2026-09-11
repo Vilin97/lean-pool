@@ -3,9 +3,9 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.Basic
 
 /-!
 # Time Translation Operators
@@ -39,6 +39,8 @@ This is used to prove `continuous_timeTranslationSchwartz`, which establishes
 that time translation acts continuously on Schwartz space (a standard textbook fact
 from Reed-Simon V.3 and Hörmander Ch. 7).
 -/
+
+@[expose] public section
 
 open MeasureTheory Real
 open TopologicalSpace

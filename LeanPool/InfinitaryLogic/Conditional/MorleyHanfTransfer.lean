@@ -3,16 +3,18 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.Hanf
-import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
-import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Nat.Nth
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Lattice
-import Mathlib.Order.Hom.Basic
-import Mathlib.Order.WellFounded
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
+public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Nat.Nth
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Set.Lattice
+public import Mathlib.Order.Hom.Basic
+public import Mathlib.Order.WellFounded
+public import Mathlib.SetTheory.Cardinal.Aleph
 /-!
 # Morley-Hanf Transfer Hypothesis (Conditional)
 
@@ -32,6 +34,8 @@ Both are placed in `Conditional/` to make the external dependency visible.
 - [Mar16], §5
 - [KK04], §1.6
 -/
+
+@[expose] public section
 
 universe u v
 

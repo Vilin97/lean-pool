@@ -3,6 +3,7 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
+module
 
 /-!
 # Reader Selection Monad
@@ -14,7 +15,7 @@ The three monad laws hold definitionally (by `rfl`).
 
 This structure underlies MeasurableBatchLearner composition in the learning
 theory layer, but the monad itself is pure mathematics with zero dependencies.
--/
+-/@[expose] public section
 
 universe u v w
 

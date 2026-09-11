@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.GrunbaumSimplexProperty
-import LeanPool.Feige.PaperAssembly
+module
+
+public import LeanPool.Feige.GrunbaumSimplexProperty
+public import LeanPool.Feige.PaperAssembly
 
 /-!
 # The unit-slack case of the sharp Feige main theorem
@@ -12,6 +14,8 @@ import LeanPool.Feige.PaperAssembly
 All probabilistic, analytic, and geometric inputs for the `δ = 1`
 specialization of Theorem 1.1 are discharged here.
 -/
+
+@[expose] public section
 
 namespace Feige
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.RingTheory.NonUnitalSubring.Defs
-import Mathlib.Algebra.Ring.Equiv
-import LeanPool.ArtinWedderburn.CornerRing
-import LeanPool.ArtinWedderburn.Idempotents
+module
+
+public import Mathlib.Algebra.Ring.Basic
+public import Mathlib.RingTheory.NonUnitalSubring.Defs
+public import Mathlib.Algebra.Ring.Equiv
+public import LeanPool.ArtinWedderburn.CornerRing
+public import LeanPool.ArtinWedderburn.Idempotents
 
 /-!
 # Iterated corner rings
@@ -16,6 +18,8 @@ If `e : R` is idempotent and `f ∈ CornerSubring idem_e` is idempotent, then th
 corner subring of `f` inside `eRe` agrees (as a ring) with the corner subring of
 `f` viewed in `R`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

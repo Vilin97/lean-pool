@@ -3,12 +3,16 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.LinearAlgebra.TensorProduct.Associator
-import Mathlib.Algebra.Algebra.Bilinear
+module
+
+public import Mathlib.LinearAlgebra.TensorProduct.Associator
+public import Mathlib.Algebra.Algebra.Bilinear
 
 /-!
 # Strict tensor product (wip)
 -/
+
+@[expose] public section
 
 
 variable {R E F G : Type _} [CommSemiring R] [AddCommGroup E] [AddCommGroup F] [AddCommGroup G]

@@ -3,38 +3,39 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.CentralSimple
-import LeanPool.BrauerGroupNew.Centralizer
-import LeanPool.BrauerGroupNew.CrossProductAlgebra
-import LeanPool.BrauerGroupNew.ExtendScalar
-import LeanPool.BrauerGroupNew.Azumaya.Basic
-import LeanPool.BrauerGroupNew.Azumaya.Mul
-import LeanPool.BrauerGroupNew.Examples.ShortComplex.LeftHomologyMapData
-import LeanPool.BrauerGroupNew.FieldCat
-import LeanPool.BrauerGroupNew.AlgClosedUnion
-import LeanPool.BrauerGroupNew.FiniteField
-import LeanPool.BrauerGroupNew.BrauerGroup
-import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
-import LeanPool.BrauerGroupNew.MatrixCenterEquiv
-import LeanPool.BrauerGroupNew.MatrixEquivTensor
-import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
-import LeanPool.BrauerGroupNew.Morita.TensorProduct
-import LeanPool.BrauerGroupNew.MoritaEquivalence
-import LeanPool.BrauerGroupNew.SplittingOfCSA
-import LeanPool.BrauerGroupNew.TwoSidedIdeal
-import LeanPool.BrauerGroupNew.Wedderburn
-import LeanPool.BrauerGroupNew.ZeroSevenFourE
-import LeanPool.BrauerGroupNew.RelativeBrauer
-import LeanPool.BrauerGroupNew.SkolemNoether
-import LeanPool.BrauerGroupNew.ToSecond
-import LeanPool.BrauerGroupNew.IsoSecond
-import LeanPool.BrauerGroupNew.AbsoluteIsoH2
-import LeanPool.BrauerGroupNew.DoubleCentralizer
-import LeanPool.BrauerGroupNew.FrobeniusTheorem
-import LeanPool.BrauerGroupNew.BrauerOverR
-import LeanPool.BrauerGroupNew.Mathlib
-import LeanPool.BrauerGroupNew.Subfield
+public import LeanPool.BrauerGroupNew.CentralSimple
+public import LeanPool.BrauerGroupNew.Centralizer
+public import LeanPool.BrauerGroupNew.CrossProductAlgebra
+public import LeanPool.BrauerGroupNew.ExtendScalar
+public import LeanPool.BrauerGroupNew.Azumaya.Basic
+public import LeanPool.BrauerGroupNew.Azumaya.Mul
+public import LeanPool.BrauerGroupNew.Examples.ShortComplex.LeftHomologyMapData
+public import LeanPool.BrauerGroupNew.FieldCat
+public import LeanPool.BrauerGroupNew.AlgClosedUnion
+public import LeanPool.BrauerGroupNew.FiniteField
+public import LeanPool.BrauerGroupNew.BrauerGroup
+public import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+public import LeanPool.BrauerGroupNew.MatrixCenterEquiv
+public import LeanPool.BrauerGroupNew.MatrixEquivTensor
+public import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+public import LeanPool.BrauerGroupNew.Morita.TensorProduct
+public import LeanPool.BrauerGroupNew.MoritaEquivalence
+public import LeanPool.BrauerGroupNew.SplittingOfCSA
+public import LeanPool.BrauerGroupNew.TwoSidedIdeal
+public import LeanPool.BrauerGroupNew.Wedderburn
+public import LeanPool.BrauerGroupNew.ZeroSevenFourE
+public import LeanPool.BrauerGroupNew.RelativeBrauer
+public import LeanPool.BrauerGroupNew.SkolemNoether
+public import LeanPool.BrauerGroupNew.ToSecond
+public import LeanPool.BrauerGroupNew.IsoSecond
+public import LeanPool.BrauerGroupNew.AbsoluteIsoH2
+public import LeanPool.BrauerGroupNew.DoubleCentralizer
+public import LeanPool.BrauerGroupNew.FrobeniusTheorem
+public import LeanPool.BrauerGroupNew.BrauerOverR
+public import LeanPool.BrauerGroupNew.Mathlib
+public import LeanPool.BrauerGroupNew.Subfield
 
 /-!
 # Brauer Group Core
@@ -46,3 +47,5 @@ Main declarations: `BrauerGroup.BruaerGroup`, `BrauerGroupHom.Br`, `WedderburnAr
 Tags: algebra, ring-theory, central-simple-algebras, brauer-groups
 MSC: 16K20, 16K50, 16S35
 -/
+
+@[expose] public section

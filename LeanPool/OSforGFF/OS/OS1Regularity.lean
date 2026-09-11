@@ -3,15 +3,15 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.OS.Axioms
-import LeanPool.OSforGFF.Covariance.Position
-import LeanPool.OSforGFF.Covariance.Momentum
-import LeanPool.OSforGFF.Covariance.RealForm
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Measure.IsGaussian
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.OS.Axioms
+public import LeanPool.OSforGFF.Covariance.Position
+public import LeanPool.OSforGFF.Covariance.Momentum
+public import LeanPool.OSforGFF.Covariance.RealForm
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Measure.IsGaussian
 
 /-!
 # OS1 — Regularity (Exponential Bounds)
@@ -32,6 +32,8 @@ the Bessel K₁ asymptotics: (m/4π²|x|)K₁(m|x|) is locally integrable in 4D.
 
 - `gaussianFreeField_satisfies_OS1_revised`
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex BigOperators SchwartzMap Real QFT
 open scoped MeasureTheory ENNReal

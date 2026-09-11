@@ -3,10 +3,11 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
-import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
+public import LeanPool.Monlib4.LinearAlgebra.InnerAut
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
 
 /-!
 # Real powers of positive definite matrices
@@ -15,6 +16,8 @@ This file restores the upstream monlib4 API for real powers of positive
 semidefinite and positive definite matrices.  The definitions are stated in
 terms of the current Mathlib Hermitian spectral theorem.
 -/
+
+@[expose] public section
 
 namespace Matrix
 

@@ -3,20 +3,23 @@ Copyright (c) 2026 Ivan Kobe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Kobe
 -/
+module
 
-import LeanPool.FactorizationSystems.Examples
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Cospan
-import Mathlib.CategoryTheory.Limits.Types.Pullbacks
-import Mathlib.CategoryTheory.Limits.IsLimit
-import Mathlib.CategoryTheory.Iso
-import Mathlib.CategoryTheory.Types.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
+public import LeanPool.FactorizationSystems.Examples
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Cospan
+public import Mathlib.CategoryTheory.Limits.Types.Pullbacks
+public import Mathlib.CategoryTheory.Limits.IsLimit
+public import Mathlib.CategoryTheory.Iso
+public import Mathlib.CategoryTheory.Types.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 
 /-!
 # LeanPool.FactorizationSystems.Orthogonality
 -/
+
+@[expose] public section
 
 /-
 Given two morphisms l: A ⟶ B and r: X ⟶ Y in a category C, we say that l is left orthogonal to r

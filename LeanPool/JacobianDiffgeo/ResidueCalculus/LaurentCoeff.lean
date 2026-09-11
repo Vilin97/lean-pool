@@ -7,8 +7,10 @@ Authors: Rado Kirov
 /-
 Blueprint unit: residue-calculus. Laurent coefficients of planar meromorphic germs.
 -/
-import LeanPool.JacobianDiffgeo.ResidueCalculus.TaylorCoeff
-import Mathlib.Analysis.Meromorphic.TrailingCoefficient
+module
+
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.TaylorCoeff
+public import Mathlib.Analysis.Meromorphic.TrailingCoefficient
 
 /-!
 # Laurent coefficients at a point (residue-calculus)
@@ -28,6 +30,8 @@ Main exports:
 * `RS.laurentCoeffAt_zpow_monomial`, `RS.laurentCoeffAt_zpow_mul` — monomials and shift;
 * `RS.forall_neg_laurentCoeffAt_eq_zero_iff` — vanishing tail ↔ analytic-after-repair.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function
 

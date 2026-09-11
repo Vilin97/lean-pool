@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.CloseUp.AvoidanceStep
-import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
+module
+
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.AvoidanceStep
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
 
 /-!
 # Close-up: intersection theorems
@@ -16,6 +18,8 @@ the close-up
 is obtained by passing to an A-extension where the intersection
 has been resolved.
 -/
+
+@[expose] public section
 
 noncomputable section
 

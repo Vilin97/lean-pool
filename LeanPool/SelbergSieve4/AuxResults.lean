@@ -3,27 +3,31 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.NumberTheory.ArithmeticFunction.Defs
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-import Mathlib.NumberTheory.ArithmeticFunction.Zeta
-import LeanPool.SelbergSieve4.ForMathlib
-import LeanPool.SelbergSieve4.ForArithmeticFunction
-import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
-import Mathlib.Analysis.SpecialFunctions.NonIntegrable
-import Mathlib.Data.Nat.Prime.Basic
-import LeanPool.SelbergSieve4.Tactic.Multiplicativity
+module
+
+public import Mathlib.Analysis.Asymptotics.Lemmas
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SumIntegralComparisons
+public import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.NumberTheory.ArithmeticFunction.Defs
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+public import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+public import LeanPool.SelbergSieve4.ForMathlib
+public import LeanPool.SelbergSieve4.ForArithmeticFunction
+public import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
+public import Mathlib.Analysis.SpecialFunctions.NonIntegrable
+public import Mathlib.Data.Nat.Prime.Basic
+public import LeanPool.SelbergSieve4.Tactic.Multiplicativity
 
 /-!
 # LeanPool.SelbergSieve4.AuxResults
 -/
+
+@[expose] public section
 
 --import SelbergSieve.AesopDiv
 noncomputable section

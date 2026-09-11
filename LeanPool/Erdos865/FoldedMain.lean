@@ -3,7 +3,9 @@ Copyright (c) 2026 Ricky Cipollini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ricky Cipollini
 -/
-import LeanPool.Erdos865.FoldedAux
+module
+
+public import LeanPool.Erdos865.FoldedAux
 
 /-!
 # The folded additive lemma
@@ -12,6 +14,8 @@ Monotonicity of the sum sets, the reflection `-B = {m - b}` and its effect on
 `lowSums`/`highSums`/`collisions`, and the inductive `core_step` that proves the folded
 additive lemma `folded_additive`.
 -/
+
+@[expose] public section
 
 open Finset
 

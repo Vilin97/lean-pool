@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Bridges: `ContMDiff` over `𝓘(ℂ)` ↔ chart-local `ContDiff`/`AnalyticAt`
@@ -27,6 +28,8 @@ manifold smoothness/holomorphy into planar statements about the chart composites
 * chart-invariance `contMDiffAt_iff_analyticAt_of_mem_source` and the set version
   `contMDiffOn_iff_analyticOnNhd_of_subset_source`: holomorphy may be read in ANY atlas chart.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

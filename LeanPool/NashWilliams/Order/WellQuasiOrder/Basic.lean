@@ -3,8 +3,10 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import Mathlib.Order.WellQuasiOrder
-import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
+module
+
+public import Mathlib.Order.WellQuasiOrder
+public import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
 
 /-!
 # Perfect/bad dichotomy and monotone subsequences in a well-quasi-order
@@ -25,6 +27,8 @@ The second result answers a question of Leo Shine on the Mathlib Zulip: the mono
 property of a WQO does not need the preorder (in particular transitivity) hypothesis carried by
 the current Mathlib `WellQuasiOrdered.exists_monotone_subseq`.
 -/
+
+@[expose] public section
 
 open Set
 

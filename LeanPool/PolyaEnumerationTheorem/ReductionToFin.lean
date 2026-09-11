@@ -3,8 +3,10 @@ Copyright (c) 2026 Luka Opravš. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luka Opravš
 -/
-import Mathlib.Data.FinEnum
-import LeanPool.PolyaEnumerationTheorem.Basic
+module
+
+public import Mathlib.Data.FinEnum
+public import LeanPool.PolyaEnumerationTheorem.Basic
 
 /-!
 # Reduction to `Fin`
@@ -14,6 +16,8 @@ under the group action of `G` on `X` is equal to the number of distinct coloring
 colors in `Y` under the induced group action of `G` on `Fin n`. This allows us to use `Fin n`
 instead of more complex types when working with numbers of distinct colorings.
 -/
+
+@[expose] public section
 
 universe u v w
 

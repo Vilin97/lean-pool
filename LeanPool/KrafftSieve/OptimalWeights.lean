@@ -13,10 +13,11 @@ Mathlib version: 8f9d9cff6bd728b17a24e163c9402775d9e6a365
 To cite Aristotle, tag @Aristotle-Harmonic on GitHub PRs/issues, and add as co-author to commits:
 Co-authored-by: Aristotle (Harmonic) <aristotle-harmonic@harmonic.fun>
 -/
+module
 
-import LeanPool.KrafftSieve.SelbergWeights
-import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
-import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.KrafftSieve.SelbergWeights
+public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 
 /-!
@@ -25,6 +26,8 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 This module constructs the truly multidimensional optimal weights $\lambda$ for the Krafft Sieve
 and explores the properties of the resulting polynomial $P(x)$ and weight $W_\lambda(x)$.
 -/
+
+@[expose] public section
 
 namespace KrafftSieve
 

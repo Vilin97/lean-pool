@@ -3,14 +3,14 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Probability.Distributions.Gaussian.Fernique
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Schwinger.Defs
-import LeanPool.OSforGFF.Measure.Minlos
-import LeanPool.OSforGFF.Covariance.RealForm
-import LeanPool.OSforGFF.Measure.MinlosAnalytic
+public import Mathlib.Probability.Distributions.Gaussian.Fernique
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Schwinger.Defs
+public import LeanPool.OSforGFF.Measure.Minlos
+public import LeanPool.OSforGFF.Covariance.RealForm
+public import LeanPool.OSforGFF.Measure.MinlosAnalytic
 
 /-!
 # GFF Measure Construction via Minlos Theorem
@@ -33,6 +33,8 @@ then using Mathlib's `memLp_id_gaussianReal`.
 - `isGaussianGJ`: characteristic functional Z[J] = exp(−½⟨J,CJ⟩)
 - `constructGaussianMeasureMinlosFree`: the GFF measure for mass m > 0
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex QFT ProbabilityTheory
 open TopologicalSpace SchwartzMap

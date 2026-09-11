@@ -12,12 +12,16 @@ symbols it uses, obtains a pointed model there, and extends that model with
 empty interpretations for every other ambient symbol.  This file verifies that
 bridge for the raw syntax and semantics in the base development.
 -/
-import LeanPool.MatchingLogic.EntryIII.Countertheory
-import LeanPool.MatchingLogic.EntryIII.SignatureRestriction
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Countertheory
+public import LeanPool.MatchingLogic.EntryIII.SignatureRestriction
 
 /-!
 # MatchingLogic.EntryIII.SignatureReduction
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

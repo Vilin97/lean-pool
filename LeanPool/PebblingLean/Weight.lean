@@ -3,15 +3,16 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Data.Rat.BigOperators
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import LeanPool.PebblingLean.Basic
+public import Mathlib.Data.Rat.BigOperators
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import LeanPool.PebblingLean.Basic
 
 /-!
 # Weight functions
@@ -19,6 +20,8 @@ import LeanPool.PebblingLean.Basic
 The lower-bound argument is organized around the standard pebbling weight
 function: a pebble at distance `d` from a target contributes `2^{-d}`.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

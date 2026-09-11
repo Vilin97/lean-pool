@@ -3,17 +3,20 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import Mathlib.Data.Fintype.Defs
-import Mathlib.Data.Sigma.Lex
-import LeanPool.Lean4GlCoalgebras.Split.Proof
-import LeanPool.Lean4GlCoalgebras.Split.CutProof
+public import Mathlib.Data.Fintype.Defs
+public import Mathlib.Data.Sigma.Lex
+public import LeanPool.Lean4GlCoalgebras.Split.Proof
+public import LeanPool.Lean4GlCoalgebras.Split.CutProof
 
 /-! ## Defining GL-ext+pre proof system.
 
 Here we define the GL-ext+pre system. This system is different from the paper, where we build in
 how we connect non-axiomatic leaf nodes into `RuleApp` directly.
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

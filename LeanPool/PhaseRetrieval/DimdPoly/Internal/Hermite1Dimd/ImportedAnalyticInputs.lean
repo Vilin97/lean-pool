@@ -3,13 +3,17 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.Definitions
-import Mathlib.MeasureTheory.Integral.Pi
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ImportedAnalyticInputs
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.BasisLocalization
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.Definitions
+public import Mathlib.MeasureTheory.Integral.Pi
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ImportedAnalyticInputs
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.BasisLocalization
 
 /-! # ImportedAnalyticInputs -/
+
+@[expose] public section
 
 
 

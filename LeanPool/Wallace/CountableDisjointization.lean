@@ -3,8 +3,9 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.BlockFilters
+public import LeanPool.Wallace.BlockFilters
 
 /-!
 # Disjointizing a countable almost-disjoint family
@@ -13,6 +14,8 @@ The block fusion uses a countable subfamily of the fixed almost-disjoint family.
 orders any countable index type by an injection into `ℕ` and applies the standard predecessor
 deletion.  Each label loses only finitely many points.
 -/
+
+@[expose] public section
 
 open Set
 

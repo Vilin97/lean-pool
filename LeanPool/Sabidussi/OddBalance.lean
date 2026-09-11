@@ -3,9 +3,11 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Logic.Equiv.Prod
+module
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Logic.Equiv.Prod
 
 /-!
 # The odd balancing theorem
@@ -16,6 +18,8 @@ obstruction at any vertex is odd, and in particular nonzero. The proof counts fr
 modulo two, expands the count over choices of partner vertices, and cancels the non-covering and
 derangement contributions in pairs.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset

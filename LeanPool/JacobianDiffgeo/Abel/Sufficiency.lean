@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.WeakToMero
-import LeanPool.JacobianDiffgeo.Abel.DolbeaultBridge
+public import LeanPool.JacobianDiffgeo.Abel.WeakToMero
+public import LeanPool.JacobianDiffgeo.Abel.DolbeaultBridge
 
 /-!
 # abel-theorem: the sufficiency direction (`docs/design/abel-theorem.md` §4.1 D1, §2.1)
@@ -59,6 +60,8 @@ zero` to get `u`, then run the (sketched, tractable) step-7 argument.
 The **easy/necessity direction** (§2.2, "`∃F` with one simple pole `⟹` `genus X = 0`") is fully
 built, no admitted steps: `genus_eq_zero_of_exists_simple_pole` (`WeakToMero.lean`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

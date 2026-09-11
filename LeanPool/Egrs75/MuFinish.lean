@@ -3,19 +3,20 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import LeanPool.Egrs75.DigitVector
-import LeanPool.Egrs75.DigitAtToolkit
-import LeanPool.Egrs75.AddBranch
-import LeanPool.Egrs75.SubtractBranch
-import LeanPool.Egrs75.ConditionThreeWindow
-import LeanPool.Egrs75.MoveDigits
-import LeanPool.Egrs75.SeedWindow
-import LeanPool.Egrs75.Reduction
-import Mathlib.Data.Nat.Digits.Lemmas
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import LeanPool.Egrs75.LeafInduction
+public import LeanPool.Egrs75.DigitVector
+public import LeanPool.Egrs75.DigitAtToolkit
+public import LeanPool.Egrs75.AddBranch
+public import LeanPool.Egrs75.SubtractBranch
+public import LeanPool.Egrs75.ConditionThreeWindow
+public import LeanPool.Egrs75.MoveDigits
+public import LeanPool.Egrs75.SeedWindow
+public import LeanPool.Egrs75.Reduction
+public import Mathlib.Data.Nat.Digits.Lemmas
 
 /-!
 EGRS75 two-prime — the μ-MEASURE CLOSURE (2026-06-12).
@@ -65,6 +66,8 @@ infinitely many n with p ∤ C(2n,n) and q ∤ C(2n,n) for distinct odd primes p
 NOT an open-problem solve: the r ≥ 3 generalization is Erdős #376 (OPEN) and is
 not attempted.  Recon: ~/Knowledge/Construct/recon/erdos_376.md.
 -/
+
+@[expose] public section
 
 namespace Egrs75.MuFinish
 

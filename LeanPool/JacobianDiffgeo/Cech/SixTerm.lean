@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Skyscraper
-import LeanPool.JacobianDiffgeo.Cech.WindowRank
+public import LeanPool.JacobianDiffgeo.Cech.Skyscraper
+public import LeanPool.JacobianDiffgeo.Cech.WindowRank
 
 /-!
 # The six-term skyscraper fragment (CC8, D7, proof plan §6.9(c)-(g))
@@ -38,6 +39,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.7, §6.9).
   `H1Incl_surjective` below, this completes the six-term fragment
   `0 → L(D) → L(D') → Window D D' → H¹(D) → H¹(D') → 0`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter TopologicalSpace RS.Cech

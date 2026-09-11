@@ -3,17 +3,18 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.MySpec
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.RepTheory.AutMat
-import Mathlib.Algebra.Star.Pi
-import Mathlib.Algebra.Star.UnitaryStarAlgAut
-import Mathlib.Analysis.Matrix.Order
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import Mathlib.LinearAlgebra.UnitaryGroup
+public import LeanPool.Monlib4.LinearAlgebra.MySpec
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.IsAlmostHermitian
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+public import LeanPool.Monlib4.RepTheory.AutMat
+public import Mathlib.Algebra.Star.Pi
+public import Mathlib.Algebra.Star.UnitaryStarAlgAut
+public import Mathlib.Analysis.Matrix.Order
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Mathlib.LinearAlgebra.UnitaryGroup
 
 /-!
 # Inner Automorphisms
@@ -24,6 +25,8 @@ available as `Unitary.conjStarAlgAut`; the declarations here keep monlib4's
 names for the matrix-algebra specialization and its trace, spectrum, and
 Hermitian-preservation lemmas.
 -/
+
+@[expose] public section
 
 open scoped ComplexOrder
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.ComputableReal
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Tactic.Peel
+module
+
+public import LeanPool.ComputableReal.ComputableReal
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Tactic.Peel
 
 /-!
 # The `IsComputable` typeclass
@@ -19,6 +21,8 @@ Since a `ComputableℝSeq` is an arbitrary function `ℕ → ℚInterval` (with 
 rather than recursive data, this is not computability in the computable-analysis sense, and the
 comparison instances below are classical (`noncomputable`, via sign information on the limit).
 -/
+
+@[expose] public section
 
 /-- Type class stating that `x : ℝ` carries a `ComputableℝSeq`: an explicit sequence of rational
 interval approximations converging to `x`. Like `Decidable`, it carries data with it, and

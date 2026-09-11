@@ -3,7 +3,9 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.FiveDistanceHM
+module
+
+public import LeanPool.ThreeGap.FiveDistanceHM
 
 /-!
 # The sharp Euclidean growth inequality `2 qₙ ≤ qₙ₊₄` (`K = 4`) via Haynes–Marklof Theorem 8
@@ -18,6 +20,8 @@ shortest record `r(qₙ₊₄)` cannot lie in the open cone of two others, becau
 `‖r(qₙ₊₄) − vⱼ − vₖ‖ < ‖vₖ‖` (`FiveDistanceHM.cone_exclusion`) while the best-approximation property
 (`hbest`, the index difference lies in `(0, qₖ)`) forces `‖r(qₙ₊₄) − vⱼ − vₖ‖ > ‖vₖ‖`. Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimApprox
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
-import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
+public import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
 
 /-!
 # Coherent polygonal boundary maps for locally finite faces
@@ -15,6 +17,8 @@ frontier.  Since a shared abstract edge is represented by the same source-suppor
 resulting boundary maps agree literally on overlaps.  This is the compatibility needed before
 applying polygonal Schoenflies face by face.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

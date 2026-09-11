@@ -3,17 +3,19 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Data.Fintype.Defs
-import Mathlib.Data.Matrix.Mul
-import Mathlib.Data.Nat.Notation
-import Mathlib.LinearAlgebra.Matrix.Defs
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Ring.Defs
+public import Mathlib.Data.Fintype.Defs
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.LinearAlgebra.Matrix.Defs
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Tactic.Ring
 /-!
 # Determinantal rank and sandwich compression
 
@@ -21,6 +23,8 @@ The mortality proof uses vanishing minors as a natural-number rank bound.
 This avoids choosing bases for exterior powers.  All matrix products in this
 file are ordinary products over a commutative scalar ring.
 -/
+
+@[expose] public section
 
 noncomputable section
 

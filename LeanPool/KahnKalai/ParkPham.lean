@@ -3,13 +3,17 @@ Copyright (c) 2026 Dan Clemens Posch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Clemens Posch
 -/
-import LeanPool.KahnKalai.Covering
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import LeanPool.KahnKalai.Covering
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 Tran–Vu Remark 2.5: binomial mixture of level fractions plus a `2^{-X}` Markov
 tail, yielding Park–Pham from the covering theorem.
 -/
+
+@[expose] public section
 
 open Finset
 

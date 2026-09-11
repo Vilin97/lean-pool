@@ -3,12 +3,13 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.MoritaEquivalence
-import LeanPool.BrauerGroupNew.Wedderburn
-import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
-import Mathlib.Algebra.Category.ModuleCat.Products
-import Mathlib.RingTheory.LittleWedderburn
+public import LeanPool.BrauerGroupNew.MoritaEquivalence
+public import LeanPool.BrauerGroupNew.Wedderburn
+public import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
+public import Mathlib.Algebra.Category.ModuleCat.Products
+public import Mathlib.RingTheory.LittleWedderburn
 
 /-!
 # The Stacks Project tag 074E
@@ -16,6 +17,8 @@ import Mathlib.RingTheory.LittleWedderburn
 This file ports the upstream Wedderburn-Artin uniqueness arguments used by the Brauer group
 development.
 -/
+
+@[expose] public section
 
 open CategoryTheory DirectSum
 

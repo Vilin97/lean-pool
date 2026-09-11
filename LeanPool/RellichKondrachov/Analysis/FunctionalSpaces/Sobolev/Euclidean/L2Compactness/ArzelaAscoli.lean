@@ -3,12 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Compactness
-import Mathlib.Analysis.Normed.Group.Bounded
-import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Compactness
+public import Mathlib.Analysis.Normed.Group.Bounded
+public import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # `L²` compactness criterion: Arzelà–Ascoli for the smoothing operator (Euclidean)
@@ -25,6 +26,8 @@ Fréchet–Kolmogorov / Riesz–Kolmogorov approach to Euclidean Rellich–Kondr
 
 Tracking: Beads `lean-103.5.2.26.5.3.2.2.1.1`.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

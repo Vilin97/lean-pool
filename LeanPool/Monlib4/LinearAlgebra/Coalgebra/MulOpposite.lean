@@ -3,17 +3,20 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
-import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
-import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
-import Mathlib.LinearAlgebra.TensorProduct.Opposite
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
+public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
+public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
+public import Mathlib.LinearAlgebra.TensorProduct.Opposite
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

@@ -13,12 +13,16 @@ countermodel into a *global* one.
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.DoubleCover
-import LeanPool.MatchingLogic.Localization
+module
+
+public import LeanPool.MatchingLogic.DoubleCover
+public import LeanPool.MatchingLogic.Localization
 
 /-!
 # MatchingLogic.Composite
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

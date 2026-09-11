@@ -3,9 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.Scaling
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import LeanPool.Sundogcert.Scaling
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
   Sundogcert/Looseness.lean — the BASIS-DEPENDENCE / looseness demonstration.
@@ -31,6 +32,8 @@ import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
                     all-ones body has true min coset
                     weight `m` YET `colWeightLb (denseScheme m) = 0`.  Anti-scaling-law: gap = m.
 -/
+
+@[expose] public section
 
 open Matrix
 

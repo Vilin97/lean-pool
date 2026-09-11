@@ -8,9 +8,11 @@ Authors: Rado Kirov
 Blueprint unit: mapping-degree. The mapping degree, positivity/bounds, degree-1 ⇒ homeomorphism,
 and the (statement-bank) multiplicativity of degree under composition.
 -/
-import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
-import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
-import Mathlib.Topology.Homeomorph.Lemmas
+module
+
+public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalConstancy
+public import Mathlib.Topology.Homeomorph.Lemmas
 
 /-!
 # The mapping degree
@@ -26,6 +28,8 @@ import Mathlib.Topology.Homeomorph.Lemmas
 * `RS.degree_comp` — degree of a composition is multiplicative (needs the extra instance
   `[CompactSpace Y]`, the only statement in the unit that does).
 -/
+
+@[expose] public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

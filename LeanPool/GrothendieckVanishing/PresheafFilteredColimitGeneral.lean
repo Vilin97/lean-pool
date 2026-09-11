@@ -3,8 +3,9 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.CohomologyAPI
+public import LeanPool.GrothendieckVanishing.CohomologyAPI
 
 /-!
 # General filtered-colimit infrastructure for presheaves
@@ -13,6 +14,8 @@ Presheaf-level filtered-colimit helpers that do not require Noetherian hypothese
 finite-cover separation, eventual vanishing, compatible representative extraction, and
 finite-subcover gluing in cocone points.
 -/
+
+@[expose] public section
 
 universe u
 

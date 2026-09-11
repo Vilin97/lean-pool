@@ -3,8 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Equivariance
+public import LeanPool.IsoGraph.Canon.Equivariance
 
 /-!
 # The search tree, and what the search is looking for
@@ -25,6 +26,8 @@ The bridge from the algorithm to the specification — that the search's winner 
 largest key, i.e. that none of the three pruning rules ever discards it — is `dfsNode_dom` of
 `IsoGraph/Canon/Optimal.lean`; the two are joined in `IsoGraph/Canon/Correct.lean`.
 -/
+
+@[expose] public section
 
 
 namespace IsoGraph

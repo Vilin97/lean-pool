@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
-import LeanPool.LocalComplexGeometry.Germs.Ring
-import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
-import Mathlib.RingTheory.Finiteness.Ideal
+public import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
+public import LeanPool.LocalComplexGeometry.Germs.Ring
+public import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+public import Mathlib.RingTheory.Finiteness.Ideal
 
 /-!
 # Rückert's basis theorem
@@ -17,6 +18,8 @@ is made regular in the last variable, Weierstrass preparation replaces it by
 an associated distinguished polynomial, and Weierstrass division maps the
 ideal into a finite lower-dimensional remainder module.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

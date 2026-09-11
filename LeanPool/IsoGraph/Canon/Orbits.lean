@@ -3,8 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Node
+public import LeanPool.IsoGraph.Canon.Node
 
 /-!
 # Orbit closure
@@ -20,6 +21,8 @@ generators, in the form
 Instantiated with `P w := "the subtree below the child w is dominated"` and combined with
 `Autos.reach_child_auto`, this says that skipping a marked child loses no leaf key.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

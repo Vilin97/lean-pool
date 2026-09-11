@@ -3,14 +3,15 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Analysis.Meromorphic.Order
-import Mathlib.NumberTheory.Modular
-import Mathlib.NumberTheory.ModularForms.Basic
-import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
-import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
-import Mathlib.NumberTheory.ModularForms.QExpansion
-import Mathlib.RingTheory.PowerSeries.Order
+public import Mathlib.Analysis.Meromorphic.Order
+public import Mathlib.NumberTheory.Modular
+public import Mathlib.NumberTheory.ModularForms.Basic
+public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
+public import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
+public import Mathlib.NumberTheory.ModularForms.QExpansion
+public import Mathlib.RingTheory.PowerSeries.Order
 
 /-!
 # Valence Formula Definitions
@@ -20,6 +21,8 @@ orbifold coefficients, the order of vanishing, and the canonical fundamental dom
 
 We use `ModularGroup.fd` (notation `𝒟`) from mathlib for the standard fundamental domain.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular

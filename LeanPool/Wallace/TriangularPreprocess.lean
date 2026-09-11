@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.MathlibFoundations
-import LeanPool.Wallace.FiniteCombinatorics
+public import LeanPool.Wallace.MathlibFoundations
+public import LeanPool.Wallace.FiniteCombinatorics
 
 /-!
 # Triangular coding and block preprocessing
@@ -16,6 +17,8 @@ injective sequences in the corresponding free Abelian group are coded, and their
 assigned distinct indices strictly above every coordinate in the sequence.  The second half of
 the file constructs a genuine subsequence whose prescribed finite blocks are bounded-independent.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Cardinal

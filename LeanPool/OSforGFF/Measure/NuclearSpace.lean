@@ -3,12 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback
 -/
+module
 
-import LeanPool.OSforGFF.Minlos.NuclearSpace
-import LeanPool.OSforGFF.Minlos.PietschBridge
-import LeanPool.OSforGFF.Minlos.Main
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
-import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
+public import LeanPool.OSforGFF.Minlos.PietschBridge
+public import LeanPool.OSforGFF.Minlos.Main
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
+public import LeanPool.OSforGFF.GaussianField.Nuclear.NuclearSpace
 
 /-!
 # Nuclear Space Infrastructure for Schwartz Space
@@ -28,6 +29,8 @@ the bochner library (Minlos theorem).
 - Trèves, "Topological Vector Spaces", Ch. 50-51
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. 3-4
 -/
+
+@[expose] public section
 
 /-! ### WithSeminorms reindexing
 

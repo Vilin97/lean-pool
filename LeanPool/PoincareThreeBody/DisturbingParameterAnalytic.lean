@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DisturbingFunction
-import LeanPool.PoincareThreeBody.JointEccentricAnomaly
+public import LeanPool.PoincareThreeBody.DisturbingFunction
+public import LeanPool.PoincareThreeBody.JointEccentricAnomaly
 
 /-!
 # Analytic eccentricity dependence of the disturbing function
@@ -14,6 +15,8 @@ Away from collisions, the Newtonian disturbing function along a fixed point of a
 is real analytic in eccentricity.  This is the pointwise analytic input for the subsequent
 parameter-integral argument.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

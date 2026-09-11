@@ -3,16 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.List
-import LeanPool.QuasiBorelSpaces.Quotient
-import LeanPool.QuasiBorelSpaces.IsHomDiagonal
+public import LeanPool.QuasiBorelSpaces.List
+public import LeanPool.QuasiBorelSpaces.Quotient
+public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
 
 /-!
 # LeanPool.QuasiBorelSpaces.Multiset
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Multiset`.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace.Multiset
 

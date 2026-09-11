@@ -3,9 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.NF.Defs
-import LeanPool.CircuitComplexity.Internal.NF
-import LeanPool.CircuitComplexity.XOR
+module
+
+public import LeanPool.CircuitComplexity.NF.Defs
+public import LeanPool.CircuitComplexity.Internal.NF
+public import LeanPool.CircuitComplexity.XOR
 
 /-! # Normal Forms: CNF/DNF Lower Bound for XOR
 
@@ -30,6 +32,8 @@ De Morgan duality (`CNF.neg`).
 * `DNF.xorBool_complexity_lb` — any DNF computing XOR has `≥ 2^{N-1}` terms
 * `CNF.xorBool_complexity_lb` — any CNF computing XOR has `≥ 2^{N-1}` clauses
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

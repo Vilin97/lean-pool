@@ -3,11 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.RotatingEllipse
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.RotatingEllipse
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Ring
 
 /-!
 # Periodic Kepler ellipses at rational Delaunay resonances
@@ -16,6 +17,8 @@ At the action `I₁³ = p / q`, the inertial ellipse makes `q` revolutions while
 frame makes `p` revolutions during the common period `2πp`. This file constructs that orbit and
 proves its periodicity exactly.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

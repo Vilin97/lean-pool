@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
-import LeanPool.JacobianDiffgeo.Cech.Cochains
+public import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
+public import LeanPool.JacobianDiffgeo.Cech.Cochains
 
 /-!
 # `ShrinkChain`: Forster's four-level shrinking chain (`finiteness-and-chi`)
@@ -46,6 +47,8 @@ not built here): the two `IsCompactOperator` assembly lemmas of design §4.4
 (`isCompactOperator_resZ_UV`, `isCompactOperator_tradeCompact`) — see the end-of-file note.
 Nothing here uses the forbidden tactic.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech

@@ -3,8 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy.Core
+public import LeanPool.Shannon1948Formalization.Entropy.Core
 
 /-!
 # Shannon.Entropy.Uniform
@@ -16,6 +17,8 @@ Main outputs:
 - logarithmic characterization `Apos H n = K H * log n`;
 - positivity of the scale factor `K`.
 -/
+
+@[expose] public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

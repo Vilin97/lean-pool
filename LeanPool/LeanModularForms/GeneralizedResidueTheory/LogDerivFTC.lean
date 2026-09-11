@@ -3,25 +3,26 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.Complex.AbsMax
-import Mathlib.Analysis.Complex.Periodic
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.Asymptotics.Defs
-import Mathlib.Analysis.Meromorphic.NormalForm
-import Mathlib.MeasureTheory.Integral.CircleIntegral
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.RingTheory.LaurentSeries
-import Mathlib.Topology.Homotopy.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Analysis.Complex.AbsMax
+public import Mathlib.Analysis.Complex.Periodic
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.Asymptotics.Defs
+public import Mathlib.Analysis.Meromorphic.NormalForm
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.RingTheory.LaurentSeries
+public import Mathlib.Topology.Homotopy.Basic
 
 /-!
 # FTC for Log-Derivative Integrals
@@ -39,6 +40,8 @@ generalizing the specific computations used in winding number calculations.
 * `ftc_log_piece` - combined integrability + FTC when f and g agree a.e. (generalizes
   Common.lean version)
 -/
+
+@[expose] public section
 
 open Set MeasureTheory Complex
 open scoped Interval

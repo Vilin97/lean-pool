@@ -3,8 +3,9 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Prelude
 
 /-!
 # Shared Frobenius and power-of-two arithmetic
@@ -20,6 +21,8 @@ vice versa.
 * `two_pow_mod_three`, `two_pow_mod_three_of_odd`, `two_pow_mod_nine`,
   `two_pow_two_mul_sub_one`: elementary arithmetic of `2 ^ k`.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicTriangulation
-import LeanPool.ClassificationOfSurfaces.StrongVertexStar
-import LeanPool.ClassificationOfSurfaces.TriangleCell
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicTriangulation
+public import LeanPool.ClassificationOfSurfaces.StrongVertexStar
+public import LeanPool.ClassificationOfSurfaces.TriangleCell
 
 /-!
 # Faithful polygonal realization of a geometric triangulation
@@ -15,6 +17,8 @@ The local map in this file identifies each three-sided polygon cell with the cor
 barycentric face.  Its side formula uses the cyclic face order exactly, so adjacent face maps
 agree under the signed occurrence pairing.
 -/
+
+@[expose] public section
 
 open Set Topology
 

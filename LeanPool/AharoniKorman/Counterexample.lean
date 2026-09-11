@@ -3,16 +3,17 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Algebra.Order.Field.Rat
-import Mathlib.Algebra.Order.Star.Basic
-import Mathlib.Data.Countable.Basic
-import Mathlib.Data.Setoid.Partition
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Order.Interval.Set.Infinite
+public import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.Algebra.Order.Field.Rat
+public import Mathlib.Algebra.Order.Star.Basic
+public import Mathlib.Data.Countable.Basic
+public import Mathlib.Data.Setoid.Partition
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import Mathlib.Order.Interval.Set.Infinite
 
-import LeanPool.AharoniKorman.ForMathlib.Misc
+public import LeanPool.AharoniKorman.ForMathlib.Misc
 
 /-!
 # Disproof of the Aharoni–Korman conjecture
@@ -70,6 +71,8 @@ aim of reaching a contradiction (as then, no such partition can exist). We may f
 * But as `f` maps each element of `S \ (C ∩ level n)` to `level (n - 1) ∪ level n ∪ level (n + 1)`,
   we have a contradiction (`no_spinalMap`), and therefore show that no spinal map exists.
 -/
+
+@[expose] public section
 
 attribute [aesop 2 simp] Set.subset_def Finset.subset_iff
 

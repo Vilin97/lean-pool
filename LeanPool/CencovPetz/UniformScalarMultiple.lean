@@ -3,7 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.PermutationInvariantBilinForm
+module
+
+public import LeanPool.CencovPetz.PermutationInvariantBilinForm
 
 
 /-!
@@ -16,6 +18,8 @@ This is an algebraic step in the finite Čencov/Chentsov uniqueness proof: permu
 plus the `dij` relations imply that (at the uniform point) the metric is determined by a single
 scalar.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
-import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
-import LeanPool.JacobianDiffgeo.Path.Chain
+public import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
+public import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
+public import LeanPool.JacobianDiffgeo.Path.Chain
 
 /-!
 # The general multi-chart `exists_weakSolutionOfPair`
@@ -34,6 +35,8 @@ THREE points (`M 0`, `M m`, `M (m+1)`, with the possible coincidences `M 0 = M m
 (a weak solution of nonzero order genuinely vanishes at its own point, contradicting the `= 1`
 off-`U` value if `P ∉ U`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set Filter Topology

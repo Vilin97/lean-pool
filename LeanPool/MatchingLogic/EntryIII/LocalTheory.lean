@@ -12,11 +12,15 @@ substitution-normalisation argument.  It transcribes Definitions 67--68 and
 Proposition 69 of Chen--Rosu's technical report using the repository's pinned
 right-associated finite-list conjunction `conj`.
 -/
-import LeanPool.MatchingLogic.ProofSystem
+module
+
+public import LeanPool.MatchingLogic.ProofSystem
 
 /-!
 # MatchingLogic.EntryIII.LocalTheory
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

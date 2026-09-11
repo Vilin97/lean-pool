@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Triangulation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Triangulation
 
 /-!
 # Fixed-vertex stars in a surface triangulation
@@ -13,6 +15,8 @@ punctured surface chart inside the open barycentric star of a vertex.  If the fi
 had two adjacency components, their finite closed face unions would separate that punctured
 chart.
 -/
+
+@[expose] public section
 
 open Set Topology
 open scoped Manifold

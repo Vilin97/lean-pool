@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.LeftInverseIsometry
-import LeanPool.CencovPetz.Splitting
+module
+
+public import LeanPool.CencovPetz.LeftInverseIsometry
+public import LeanPool.CencovPetz.Splitting
 
 
 /-!
@@ -14,6 +16,8 @@ For a monotone metric family (Čencov setting), fiberwise splitting maps `α →
 isometries: they have a deterministic left inverse (merge), so monotonicity holds in both
 directions.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

@@ -3,15 +3,18 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import Mathlib.Data.Int.Basic
-import Mathlib.Tactic.Common
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Tactic.Common
 
 /-!
 # LeanPool.EcTateLean.Init.Data.Int.Lemmas
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Init.Data.Int.Lemmas`.
 -/
+
+@[expose] public section
 
 lemma mod_neg_right (m k : Int) : m % (-k) = m % k := by simp
 lemma div_neg_right (m k : Int) : m / (-k) = -(m / k) := by simp

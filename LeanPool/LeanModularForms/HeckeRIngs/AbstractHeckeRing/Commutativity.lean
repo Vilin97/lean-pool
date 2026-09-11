@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
 
 /-!
 # Hecke Rings: Commutativity via Anti-Involution
@@ -13,6 +14,8 @@ Shimura Proposition 3.8: if an arithmetic group pair admits an anti-automorphism
 `ι : G →* Gᵐᵒᵖ` that preserves H and Δ and fixes every double coset, then the
 Hecke ring `𝕋 P ℤ` is commutative.
 -/
+
+@[expose] public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable Finsupp
 

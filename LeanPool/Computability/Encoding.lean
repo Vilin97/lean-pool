@@ -3,15 +3,17 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import LeanPool.Computability.TuringDegree
-import Mathlib.Data.Option.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Logic.Denumerable
-import Mathlib.Logic.Encodable.Basic
-import Mathlib.Data.Nat.PSub
-import Mathlib.Data.PFun
-import Mathlib.Data.Part
-import Mathlib.Tactic.Cases
+module
+
+public import LeanPool.Computability.TuringDegree
+public import Mathlib.Data.Option.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Logic.Denumerable
+public import Mathlib.Logic.Encodable.Basic
+public import Mathlib.Data.Nat.PSub
+public import Mathlib.Data.PFun
+public import Mathlib.Data.Part
+public import Mathlib.Tactic.Cases
 
 
 /-!
@@ -20,6 +22,8 @@ import Mathlib.Tactic.Cases
 This file provides an encoding for oracle partial recursive functions and a definition of the
 universal partial recursive function relative to an oracle, along with a proof that it is universal.
 -/
+
+@[expose] public section
 
 open Denumerable Encodable
 

@@ -3,29 +3,31 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Tactics.Apply
-import LeanPool.Lentil.ProofMode.Tactics.Assumption
-import LeanPool.Lentil.ProofMode.Tactics.CheckGoalForm
-import LeanPool.Lentil.ProofMode.Tactics.Clear
-import LeanPool.Lentil.ProofMode.Tactics.Contradiction
-import LeanPool.Lentil.ProofMode.Tactics.CoalesceToPTL
-import LeanPool.Lentil.ProofMode.Tactics.Exists
-import LeanPool.Lentil.ProofMode.Tactics.Exit
-import LeanPool.Lentil.ProofMode.Tactics.Have
-import LeanPool.Lentil.ProofMode.Tactics.Intro
-import LeanPool.Lentil.ProofMode.Tactics.LeftRight
-import LeanPool.Lentil.ProofMode.Tactics.ModalityMisc
-import LeanPool.Lentil.ProofMode.Tactics.Monotone
-import LeanPool.Lentil.ProofMode.Tactics.Normalize
-import LeanPool.Lentil.ProofMode.Tactics.PurePred
-import LeanPool.Lentil.ProofMode.Tactics.RCases
-import LeanPool.Lentil.ProofMode.Tactics.Rename
-import LeanPool.Lentil.ProofMode.Tactics.Revert
-import LeanPool.Lentil.ProofMode.Tactics.Rewrite
-import LeanPool.Lentil.ProofMode.Tactics.Simp
-import LeanPool.Lentil.ProofMode.Tactics.Specialize
-import LeanPool.Lentil.ProofMode.Tactics.SplitAnds
-import LeanPool.Lentil.ProofMode.Tactics.Start
+module
+
+public import LeanPool.Lentil.ProofMode.Tactics.Apply
+public import LeanPool.Lentil.ProofMode.Tactics.Assumption
+public import LeanPool.Lentil.ProofMode.Tactics.CheckGoalForm
+public import LeanPool.Lentil.ProofMode.Tactics.Clear
+public import LeanPool.Lentil.ProofMode.Tactics.Contradiction
+public import LeanPool.Lentil.ProofMode.Tactics.CoalesceToPTL
+public import LeanPool.Lentil.ProofMode.Tactics.Exists
+public import LeanPool.Lentil.ProofMode.Tactics.Exit
+public import LeanPool.Lentil.ProofMode.Tactics.Have
+public import LeanPool.Lentil.ProofMode.Tactics.Intro
+public import LeanPool.Lentil.ProofMode.Tactics.LeftRight
+public import LeanPool.Lentil.ProofMode.Tactics.ModalityMisc
+public import LeanPool.Lentil.ProofMode.Tactics.Monotone
+public import LeanPool.Lentil.ProofMode.Tactics.Normalize
+public import LeanPool.Lentil.ProofMode.Tactics.PurePred
+public import LeanPool.Lentil.ProofMode.Tactics.RCases
+public import LeanPool.Lentil.ProofMode.Tactics.Rename
+public import LeanPool.Lentil.ProofMode.Tactics.Revert
+public import LeanPool.Lentil.ProofMode.Tactics.Rewrite
+public import LeanPool.Lentil.ProofMode.Tactics.Simp
+public import LeanPool.Lentil.ProofMode.Tactics.Specialize
+public import LeanPool.Lentil.ProofMode.Tactics.SplitAnds
+public import LeanPool.Lentil.ProofMode.Tactics.Start
 
 /-
 NOTE: On the soundness theorems corresponding to these tactics:

@@ -3,18 +3,21 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.Exponential
-import LeanPool.WhiteheadTheorem.Shapes.Maps
-import Mathlib.Topology.Category.TopCat.Limits.Basic
-import Mathlib.Topology.Homotopy.Basic
-import Mathlib.CategoryTheory.LiftingProperties.Limits
+public import LeanPool.WhiteheadTheorem.Exponential
+public import LeanPool.WhiteheadTheorem.Shapes.Maps
+public import Mathlib.Topology.Category.TopCat.Limits.Basic
+public import Mathlib.Topology.Homotopy.Basic
+public import Mathlib.CategoryTheory.LiftingProperties.Limits
 
 /-!
 # LeanPool.WhiteheadTheorem.Compressible.Defs
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Compressible.Defs`.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory unitInterval

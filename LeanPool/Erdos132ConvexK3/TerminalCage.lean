@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.ResidualBounds
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.ResidualBounds
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Terminal d2-cage
@@ -15,6 +17,8 @@ are unsquared here because the edge--diagonal inequalities are additive.
 The finite branch counts are kept explicit, so the equality and `q=d₃`
 boundaries cannot disappear inside prose.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

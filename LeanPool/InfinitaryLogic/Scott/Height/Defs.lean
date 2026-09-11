@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Karp.PotentialIso
-import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
-import LeanPool.InfinitaryLogic.Scott.Formula
-import LeanPool.InfinitaryLogic.Scott.Rank
-import LeanPool.InfinitaryLogic.Scott.RefinementCount
+module
+
+public import LeanPool.InfinitaryLogic.Karp.PotentialIso
+public import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+public import LeanPool.InfinitaryLogic.Scott.Formula
+public import LeanPool.InfinitaryLogic.Scott.Rank
+public import LeanPool.InfinitaryLogic.Scott.RefinementCount
 /-!
 # Scott Height: Definition and Core Properties
 
@@ -24,6 +26,8 @@ formula analysis stabilizes for all tuples simultaneously.
 - `scottHeight_stabilizesCompletely`: At Scott height, all tuple sizes have stabilized.
 - `scottHeight_eq_of_equiv`: Scott height is invariant under L-isomorphism.
 -/
+
+@[expose] public section
 
 universe u v w
 

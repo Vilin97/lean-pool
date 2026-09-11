@@ -3,12 +3,13 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Core
-import Mathlib.Analysis.Analytic.Binomial
-import Mathlib.Analysis.Analytic.Linear
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.FunProp
+public import LeanPool.PoincareThreeBody.Core
+public import Mathlib.Analysis.Analytic.Binomial
+public import Mathlib.Analysis.Analytic.Linear
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.FunProp
 
 /-!
 # Analyticity of the Newtonian potential away from collision
@@ -17,6 +18,8 @@ Mathlib provides the real binomial series at one but does not package the result
 analyticity of arbitrary real powers on the positive half-line. We establish that bridge and apply
 it to the inverse square roots in the restricted three-body potential.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

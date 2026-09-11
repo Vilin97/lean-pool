@@ -3,7 +3,9 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.Markov
+module
+
+public import LeanPool.Erdos1196.Markov
 
 /-!
 # Rewriting the primitive weight using visit probabilities
@@ -17,6 +19,8 @@ summable hit series to the logarithmic-series bound.
 
 * `summable_indicatorLogSeries_and_tsum_le_of_hitMass`
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

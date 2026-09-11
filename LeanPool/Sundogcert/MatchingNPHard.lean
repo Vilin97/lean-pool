@@ -3,8 +3,9 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.DecodingNPHard
+public import LeanPool.Sundogcert.DecodingNPHard
 
 /-!
   Sundogcert/MatchingNPHard.lean — the KARP-LAYER EXTENSION of the formalized hardness chain:
@@ -41,6 +42,8 @@ import LeanPool.Sundogcert.DecodingNPHard
   relabeling).  A small but composable, de-risking step toward the genuine gadget reduction
   `3SAT ≤ 3DM` that would discharge 3DM's hardness internally.
 -/
+
+@[expose] public section
 
 open Finset
 

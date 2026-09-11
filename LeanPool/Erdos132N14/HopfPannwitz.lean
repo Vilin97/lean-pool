@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132N14.HopfPannwitzGeometry
-import Mathlib.Data.Finset.Max
+module
+
+public import LeanPool.Erdos132N14.HopfPannwitzGeometry
+public import Mathlib.Data.Finset.Max
 
 /-!
 # The planar diameter bound
@@ -14,6 +16,8 @@ planar set has at most as many diameter pairs as points.  Every diameter edge
 is assigned to a clockwise-extreme endpoint, and the signed-area lemmas show
 that no endpoint can receive two different edges.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132N14
 

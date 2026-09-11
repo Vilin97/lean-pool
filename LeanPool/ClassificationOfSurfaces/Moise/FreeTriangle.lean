@@ -3,11 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
-import Mathlib.Analysis.Normed.Affine.AddTorsorBases
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.Order.Interval.Set.Infinite
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
+public import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.Order.Interval.Set.Infinite
 
 /-!
 # Free triangles in finite planar meshes
@@ -16,6 +18,8 @@ This file formalizes Moise Chapter 3, Theorem 3 in the form needed by the polygo
 Schoenflies induction.  A finite planar triangle mesh with infinite frontier has an edge incident
 to exactly one triangle, hence a free triangle that can be removed by a supported ambient move.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

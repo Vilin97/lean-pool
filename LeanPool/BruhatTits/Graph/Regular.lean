@@ -3,9 +3,11 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import Mathlib.LinearAlgebra.Projectivization.Cardinality
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import LeanPool.BruhatTits.Graph.Tree
+module
+
+public import Mathlib.LinearAlgebra.Projectivization.Cardinality
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import LeanPool.BruhatTits.Graph.Tree
 
 /-!
 # Proof that the Bruhat-Tits tree is regular
@@ -21,6 +23,8 @@ vertex has the same finite number of neighbours. Furthermore we show that this n
 - `BruhatTits.btgraph_regular` : The Bruhat-Tits Tree is `q + 1`-regular, where `q` is the
   cardinality of `R ⧸ 𝓂 R`.
 -/
+
+@[expose] public section
 
 open Module
 

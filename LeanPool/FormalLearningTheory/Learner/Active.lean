@@ -3,7 +3,9 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Learner.Core
+module
+
+public import LeanPool.FormalLearningTheory.Learner.Core
 
 /-!
 # Active Learning, Teachers, and Meta-Learning
@@ -12,6 +14,8 @@ Active learners query oracles. Teachers present data strategically.
 Meta-learners learn to learn. Also includes synthesizers and verifiers
 for the CEGIS paradigm.
 -/
+
+@[expose] public section
 
 universe u v
 

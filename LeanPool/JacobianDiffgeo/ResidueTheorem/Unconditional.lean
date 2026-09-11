@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
-import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
 
 /-!
 # The unconditional residue theorem (D9 gate now open)
@@ -29,6 +30,8 @@ by discharging `hex` with `RS.exists_nonconstant_mero` — each a one-line corol
 * `RS.residueTheorem (θ : MForm X) {S : Finset X} (hS : ...) : ∑ x ∈ S, θ.resAt x = 0` —
   the `Finset`-flexible unconditional corollary.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

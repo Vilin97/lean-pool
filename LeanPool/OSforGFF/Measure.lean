@@ -3,16 +3,19 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Measure.GaussianFreeField
-import LeanPool.OSforGFF.Measure.IsGaussian
-import LeanPool.OSforGFF.Measure.Minlos
-import LeanPool.OSforGFF.Measure.MinlosAnalytic
-import LeanPool.OSforGFF.Measure.NuclearSpace
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Measure.GaussianFreeField
+public import LeanPool.OSforGFF.Measure.IsGaussian
+public import LeanPool.OSforGFF.Measure.Minlos
+public import LeanPool.OSforGFF.Measure.MinlosAnalytic
+public import LeanPool.OSforGFF.Measure.NuclearSpace
 
 /-!
 # `LeanPool.OSforGFF.Measure` index
 
 Import aggregator for the `Measure` directory.
 -/
+
+@[expose] public section

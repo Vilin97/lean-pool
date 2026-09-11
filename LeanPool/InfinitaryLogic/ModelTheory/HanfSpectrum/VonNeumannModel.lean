@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
-import Mathlib.SetTheory.ZFC.VonNeumann
-import Mathlib.SetTheory.ZFC.Cardinal
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
+public import Mathlib.SetTheory.ZFC.VonNeumann
+public import Mathlib.SetTheory.ZFC.Cardinal
 
 /-!
 # The von Neumann ladder model
@@ -23,6 +25,8 @@ predicate `U_i` is membership in `ladderLevel (idxVal i)`, and `E` is `∈`. Out
 The upper-bound half (every ladder model has size `≤ ℶ_{α+1}`) is `LadderBound.lean`; the
 per-stage endpoint and the supremum assembly are `BethLadder.lean`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

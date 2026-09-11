@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.RingTheory.Localization.Ideal
-import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
+module
+
+public import Mathlib.RingTheory.Localization.Ideal
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
 
 /-!
 # Localisation of a UFD at one element
@@ -15,6 +17,8 @@ associate to y become units in the localisation
 the remaining
 irreducibles stay prime.
 -/
+
+@[expose] public section
 
 noncomputable section
 

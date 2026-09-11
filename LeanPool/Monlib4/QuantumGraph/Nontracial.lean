@@ -3,23 +3,27 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
-import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-import LeanPool.Monlib4.LinearAlgebra.IsReal
-import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
-import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-import LeanPool.Monlib4.LinearAlgebra.LmulRmul
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
+public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
+public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
 
 /-!
  # Quantum graphs: quantum adjacency matrices
 
  This file defines the quantum adjacency matrix of a quantum graph.
 -/
+
+@[expose] public section
 
 
 variable {n p : Type _} [Fintype n] [Fintype p] [DecidableEq n] [DecidableEq p]

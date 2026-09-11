@@ -3,16 +3,17 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
-import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
-import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
-import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
-import LeanPool.JacobianDiffgeo.Meromorphic.Field
-import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
-import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
-import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
-import LeanPool.JacobianDiffgeo.Meromorphic.LinSysMulEquiv
+public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+public import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+public import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import LeanPool.JacobianDiffgeo.Meromorphic.Field
+public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+public import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinSysMulEquiv
 
 /-!
 # meromorphic-and-divisors (CC2/CC3): junk-free `ℳ(X)`, divisors, `L(D)` (namespace `RS`)
@@ -54,3 +55,5 @@ API summary (see `docs/design/meromorphic-and-divisors.md`):
 Every export listed in the design doc §4.1–§4.7 and the six hard proof plans (§6.1–§6.7,
 including gluing) is proved; zero sorries.
 -/
+
+@[expose] public section

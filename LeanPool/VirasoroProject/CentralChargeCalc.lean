@@ -3,12 +3,14 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.EuclideanDomain.Field
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Field.Lemmas
-import Mathlib.Data.Int.Star
-import Mathlib.RingTheory.Henselian
+module
+
+public import Mathlib.Algebra.EuclideanDomain.Field
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.Normed.Field.Lemmas
+public import Mathlib.Data.Int.Star
+public import Mathlib.RingTheory.Henselian
 
 /-!
 # Central charge calculations for Sugawara constructions
@@ -41,6 +43,8 @@ in various Sugawara constructions. The calculations make use of "discrete integr
 central charge, Sugawara construction
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

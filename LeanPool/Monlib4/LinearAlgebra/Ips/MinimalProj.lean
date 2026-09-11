@@ -3,16 +3,18 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
-import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
-import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
-import LeanPool.Monlib4.RepTheory.AutMat
-import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
-import Mathlib.Analysis.InnerProductSpace.Orthogonal
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
+public import LeanPool.Monlib4.RepTheory.AutMat
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+public import LeanPool.Monlib4.LinearAlgebra.IsProjPrime
+public import Mathlib.Analysis.InnerProductSpace.Orthogonal
 
 /-!
 
@@ -54,6 +56,8 @@ we finally have (i) if and only if (iv) for idempotent self-adjoint operators on
   (see `is_positive.is_nonneg`)
 
 -/
+
+@[expose] public section
 
 open Module.End
 

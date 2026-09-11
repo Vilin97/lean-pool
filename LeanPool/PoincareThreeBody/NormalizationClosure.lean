@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.NormalizationInduction
+public import LeanPool.PoincareThreeBody.NormalizationInduction
 
 /-!
 # Closing the normalization induction from one step
@@ -14,6 +15,8 @@ theorem.  Once every jointly analytic first integral can be normalized once—pr
 analyticity and the first-integral equation—classical choice and primitive recursion construct all
 orders automatically.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

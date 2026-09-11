@@ -3,7 +3,9 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.EuclideanFiveDistanceSharp
+module
+
+public import LeanPool.ThreeGap.EuclideanFiveDistanceSharp
 
 /-!
 # Toward arithmetic sharpness of `g₂ ≤ 5`: five distances are attained (dynamics-free route)
@@ -52,6 +54,8 @@ with record minima at `d = 1, 7, 8, 10, 11` (values `73 > 68 > 61 > 50 > 17`). T
 
 `five_le_card_image_of_strictAnti_chain` below is the foundational R3 step (axiom-clean).
 -/
+
+@[expose] public section
 
 namespace ThreeGap.EuclideanRecords
 

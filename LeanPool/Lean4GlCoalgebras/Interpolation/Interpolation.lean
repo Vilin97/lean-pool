@@ -3,13 +3,16 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import LeanPool.Lean4GlCoalgebras.Interpolation.PartialInterpolation
+public import LeanPool.Lean4GlCoalgebras.Interpolation.PartialInterpolation
 
 /-! ## Interpolation
 
 We use everything we have proven so far to show that GL has interpolation!
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

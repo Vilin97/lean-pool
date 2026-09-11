@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Topology.MetricSpace.HausdorffDistance
-import Mathlib.Topology.Order.Compact
+module
+
+public import Mathlib.Topology.MetricSpace.HausdorffDistance
+public import Mathlib.Topology.Order.Compact
 
 /-!
 # Gluing a vanishing approximation across an open frontier
@@ -14,6 +16,8 @@ replacement is controlled by a tolerance which tends to zero at the frontier, so
 continuously with the unchanged map outside the open set.  This file isolates that analytic
 argument from the later complex bookkeeping.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

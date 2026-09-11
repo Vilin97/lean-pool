@@ -3,13 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Basic
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Convex.StrictConvexSpace
-import Mathlib.Analysis.InnerProductSpace.Convex
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Erdos132ConvexK3.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Convex.StrictConvexSpace
+public import Mathlib.Analysis.InnerProductSpace.Convex
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
 
 /-!
 # Geometric inputs for the convex three-distance argument
@@ -18,6 +20,8 @@ This file proves the strict edge--diagonal inequality, its diameter and
 red--blue consequences, chord half-plane separation, and same-half-plane
 uniqueness for two-circle intersections.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

@@ -3,21 +3,24 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
-import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-import LeanPool.Monlib4.Preq.RCLikeLe
-import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-import Mathlib.Analysis.Normed.Module.Dual
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Convex.Extreme
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+public import LeanPool.Monlib4.Preq.RCLikeLe
+public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
+public import Mathlib.Analysis.Normed.Module.Dual
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Convex.Extreme
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.OfNorm
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.OfNorm`.
 -/
+
+@[expose] public section
 
 open scoped ComplexOrder
 

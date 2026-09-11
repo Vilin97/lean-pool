@@ -3,8 +3,9 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
+module
 
-import LeanPool.SelbergSieve4.MainResults
+public import LeanPool.SelbergSieve4.MainResults
 
 /-!
 # Selberg Sieve
@@ -16,3 +17,5 @@ Main declarations: `fundamental_theorem_simple`, `primeCounting_isBigO_atTop`, `
 Tags: number-theory, analytic-number-theory, sieve-theory, prime-counting
 MSC: 11N35, 11N05, 11N13
 -/
+
+@[expose] public section

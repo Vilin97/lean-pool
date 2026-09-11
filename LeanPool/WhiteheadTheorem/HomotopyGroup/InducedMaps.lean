@@ -3,18 +3,21 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
-import Mathlib.Algebra.Category.Grp.Basic
-import Mathlib.CategoryTheory.Category.Pointed
-import Mathlib.CategoryTheory.Comma.Over.Basic
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
+public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
+public import Mathlib.Algebra.Category.Grp.Basic
+public import Mathlib.CategoryTheory.Category.Pointed
+public import Mathlib.CategoryTheory.Comma.Over.Basic
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
 
 /-!
 # LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps`.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory

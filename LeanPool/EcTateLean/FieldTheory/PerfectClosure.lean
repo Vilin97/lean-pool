@@ -3,18 +3,21 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Algebra.CharP.Basic
-import Mathlib.Tactic.Common
+public import Mathlib.Algebra.Ring.Basic
+public import Mathlib.Algebra.CharP.Basic
+public import Mathlib.Tactic.Common
 
-import Mathlib.FieldTheory.PerfectClosure
+public import Mathlib.FieldTheory.PerfectClosure
 
 /-!
 # LeanPool.EcTateLean.FieldTheory.PerfectClosure
 
 Imported Lean Pool material for `LeanPool.EcTateLean.FieldTheory.PerfectClosure`.
 -/
+
+@[expose] public section
 
 namespace ECTate
 /-- A perfect ring is one where raising to the power of the ring characteristic is a bijection

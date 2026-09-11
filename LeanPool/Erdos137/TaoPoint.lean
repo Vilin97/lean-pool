@@ -3,9 +3,10 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Finiteness
-import LeanPool.Erdos137.JointFiniteness
+public import LeanPool.Erdos137.Finiteness
+public import LeanPool.Erdos137.JointFiniteness
 
 /-!
 # Erdős Problem #137: the elementary structure of a "very bad interval"
@@ -41,6 +42,8 @@ relation extraction that is Tao's next step is likewise not formalized.
 * `prime_term_gt_length_not_powerful` / `prime_in_block_not_powerful` : a prime that is a block
   factor and exceeds the block length prevents powerfulness.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import LeanPool.Sabidussi.LocalPattern
-import LeanPool.Sabidussi.OddBalance
-import LeanPool.Sabidussi.Parity
-import Mathlib.Data.Finset.Sort
-import Mathlib.Logic.Equiv.Fin.Rotate
-import Mathlib.Order.Interval.Finset.Fin
+module
+
+public import LeanPool.Sabidussi.LocalPattern
+public import LeanPool.Sabidussi.OddBalance
+public import LeanPool.Sabidussi.Parity
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Logic.Equiv.Fin.Rotate
+public import Mathlib.Order.Interval.Finset.Fin
 
 /-!
 # The cyclic-word four-colouring lemma
@@ -18,6 +20,8 @@ the transition between the preceding and the current gap.  If every letter occur
 the local patterns from `LocalPattern` and the odd balancing theorem produce colours on the gaps
 such that adjacent gaps have different colours and every colour occurs evenly at each letter.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 namespace CyclicWord

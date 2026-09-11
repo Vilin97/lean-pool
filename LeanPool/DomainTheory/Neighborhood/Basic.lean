@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Data.Set.Basic
-import Mathlib.Order.Hom.Basic
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Order.Hom.Basic
 
 /-!
 # Neighborhood systems (Scott 1981, PRG-19, §1) — foundations
@@ -46,6 +47,8 @@ basic theory avoids maximal-filter existence (Zorn/choice). Every theorem here
 depends only
 on `propext`/`Quot.sound` (no `Classical.choice`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

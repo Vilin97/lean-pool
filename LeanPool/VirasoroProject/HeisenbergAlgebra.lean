@@ -3,10 +3,12 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.LinearAlgebra.Basis.Bilinear
-import LeanPool.VirasoroProject.IsCentralExtension
-import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
-import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
+module
+
+public import Mathlib.LinearAlgebra.Basis.Bilinear
+public import LeanPool.VirasoroProject.IsCentralExtension
+public import LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
+public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
 
 /-!
 # Heisenberg algebra
@@ -42,6 +44,8 @@ dimensional vector space would also be possible.)
 Heisenberg algebra
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

@@ -3,11 +3,13 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Algebra.Bilinear
-import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.LinearAlgebra.Nacgor
-import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+module
+
+public import Mathlib.Algebra.Algebra.Bilinear
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+public import LeanPool.Monlib4.LinearAlgebra.Nacgor
+public import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
 
 /-!
 
@@ -16,6 +18,8 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
 this defines the multiplication map $M_{n\times n} \to M_n$
 
 -/
+
+@[expose] public section
 
 
 open Matrix

@@ -3,12 +3,14 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
-import LeanPool.Monlib4.Preq.RCLikeLe
-import LeanPool.Monlib4.LinearAlgebra.IsReal
-import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
-import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
+public import LeanPool.Monlib4.Preq.RCLikeLe
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
+public import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
 
 /-!
 
@@ -25,6 +27,8 @@ This file contains results for linear functionals on the set of $n \times n$ mat
 - `module.dual.is_faithful_pos_map_iff_is_inner`
 
 -/
+
+@[expose] public section
 
 
 open scoped Matrix BigOperators

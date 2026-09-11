@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.Basic
 
 /-!
 # The Weierstrass σ- and ζ-functions
@@ -22,6 +23,8 @@ of a basic first year approach* (arXiv:1809.00533v6, file `060_ElliptFunct.tex`)
 
 All nontrivial proofs are `sorry`-ed for now; this file pins the statements.
 -/
+
+@[expose] public section
 
 noncomputable section
 

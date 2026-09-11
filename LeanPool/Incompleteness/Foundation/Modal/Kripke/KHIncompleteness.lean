@@ -3,12 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
-import Mathlib.Order.Interval.Finset.Nat
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import Mathlib.Order.Interval.Finset.Nat
 
 /-! # KHIncompleteness -/
+
+@[expose] public section
 
 
 namespace LO

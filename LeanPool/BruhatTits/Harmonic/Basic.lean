@@ -3,12 +3,14 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Combinatorics.SimpleGraph.Metric
-import LeanPool.BruhatTits.Utils.GraphAction
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Basic
+public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Metric
+public import LeanPool.BruhatTits.Utils.GraphAction
 
 /-!
 # Definition and Surjectivity of Laplacian
@@ -18,6 +20,8 @@ We show that if `X` is a tree, with the property that each vertex has at least t
 finitely many neighbours, then the Laplacian is surjective.
 
 -/
+
+@[expose] public section
 
 open Module
 

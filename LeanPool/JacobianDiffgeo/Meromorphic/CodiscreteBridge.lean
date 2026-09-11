@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
-import LeanPool.JacobianDiffgeo.Surface.Identity
-import Mathlib.Topology.DiscreteSubset
+public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+public import LeanPool.JacobianDiffgeo.Surface.Identity
+public import Mathlib.Topology.DiscreteSubset
 
 /-!
 # The codiscrete ⇄ punctured-neighborhood bridge (D2) and the identity dichotomy
@@ -24,6 +25,8 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.2,
   on a connected surface, and its corollary `MeromorphicOnX.codiscrete_setOf_ne_zero` — feeds
   `Field (ℳ X)` and `divisor` well-definedness.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

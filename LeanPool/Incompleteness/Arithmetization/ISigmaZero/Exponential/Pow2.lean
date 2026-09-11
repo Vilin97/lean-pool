@@ -3,10 +3,13 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.Basic.IOpen
+public import LeanPool.Incompleteness.Arithmetization.Basic.IOpen
 
 /-! # Pow2 -/
+
+@[expose] public section
 
 
 noncomputable section «lp_nc_section_1»

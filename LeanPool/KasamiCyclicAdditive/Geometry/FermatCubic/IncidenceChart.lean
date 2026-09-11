@@ -3,8 +3,9 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Infinity
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Infinity
 
 /-!
 # Validity of the affine Fermat-incidence chart
@@ -23,6 +24,8 @@ characteristic two (algebraic closedness is nowhere needed), `E` is the Fermat c
 The Frobenius-twist hypothesis is stated as `pi^n Q = Q + C` with `C = ptInf c` a point at infinity;
 the three points at infinity are the three points of `K0 = ker (1+pi)`, cf. `neg_ptInf`.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

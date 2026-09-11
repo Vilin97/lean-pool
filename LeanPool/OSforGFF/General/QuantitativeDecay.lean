@@ -3,16 +3,16 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.Probability.Moments.IntegrableExpMul
-import LeanPool.OSforGFF.General.SchwartzTranslationDecay
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.Probability.Moments.IntegrableExpMul
+public import LeanPool.OSforGFF.General.SchwartzTranslationDecay
 
 /-!
 # Quantitative Decay for Schwartz Bilinear Forms
@@ -43,6 +43,8 @@ for any α > 0.
 - Reed-Simon Vol. II, Ch. X (decay of correlations)
 - Glimm-Jaffe "Quantum Physics" Sec. 6.2 (clustering bounds)
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex SchwartzMap Filter Set Function Metric
 open scoped Real Topology

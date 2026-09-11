@@ -3,10 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
-import Mathlib.Analysis.Convolution
-import Mathlib.Topology.Algebra.Support
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
+public import Mathlib.Analysis.Convolution
+public import Mathlib.Topology.Algebra.Support
 
 /-!
 # `L²` compactness criterion: smoothing setup (Euclidean)
@@ -21,6 +22,8 @@ Fréchet–Kolmogorov / Riesz–Kolmogorov approach to Euclidean Rellich–Kondr
 - `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.smoothL2`:
   a smoothing operator obtained by convolution with a compactly supported continuous kernel `ψ`.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

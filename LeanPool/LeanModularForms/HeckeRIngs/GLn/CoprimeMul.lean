@@ -3,12 +3,13 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.SLnTransvection
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.SLnTransvection
 
 /-!
 # Coprime Product and Scalar Multiplication in the Hecke Ring
@@ -26,6 +27,8 @@ Scalar double cosets T(c,...,c) act by scaling.
 
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2
 -/
+
+@[expose] public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset Matrix.SpecialLinearGroup
 

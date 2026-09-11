@@ -3,9 +3,10 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
-import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
+public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
+public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
 
 /-!
 # Rewriting Entailment
@@ -26,6 +27,8 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 `LO.FirstOrder.Rew.hom`.
 
 -/
+
+@[expose] public section
 
 namespace LO
 

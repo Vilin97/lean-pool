@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.ModelTheory.Semantics
-import Mathlib.Data.Finset.Sort
-import Mathlib.Order.Interval.Finset.Fin
+module
+
+public import Mathlib.ModelTheory.Semantics
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Order.Interval.Finset.Fin
 
 /-!
 # Shared generic support for the EM term-model constructions
@@ -21,6 +23,8 @@ Language-independent lemmas consumed by BOTH the original `skolemColim`-based EM
   finite `J`-support, in increasing order) with its inverse/monotonicity lemmas against
   `Finset.orderEmbOfFin`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

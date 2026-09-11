@@ -3,11 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.KeplerOrbit
-import LeanPool.PoincareThreeBody.Perturbation
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.KeplerOrbit
+public import LeanPool.PoincareThreeBody.Perturbation
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Ring
 
 /-!
 # Elliptic Kepler positions in the rotating frame
@@ -17,6 +18,8 @@ Rotating it through minus the physical time gives the position used in the circu
 three-body Hamiltonian. This file verifies the radius and distance identities needed to restrict
 the first mass perturbation to a resonant Kepler orbit.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

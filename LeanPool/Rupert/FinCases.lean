@@ -3,16 +3,19 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.FinCases
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Tactic.FinCases
 
 /-!
 # LeanPool.Rupert.FinCases
 
 Imported Lean Pool material for `LeanPool.Rupert.FinCases`.
 -/
+
+@[expose] public section
 
 /--
 Lemma for helping with goals such as

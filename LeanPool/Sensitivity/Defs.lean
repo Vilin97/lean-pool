@@ -3,10 +3,12 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import Mathlib.Data.Fin.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Finset.Lattice.Fold
+module
+
+public import Mathlib.Data.Fin.Basic
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Finset.Lattice.Fold
 
 /-!
 # Boolean Function Definitions
@@ -27,6 +29,8 @@ including bit flips, sensitivity, and local sensitivity.
 * `LeanPoolSensitivity.flipCoords` — flip all bits inside a finite set of
   coordinates simultaneously.
 -/
+
+@[expose] public section
 
 namespace LeanPoolSensitivity
 

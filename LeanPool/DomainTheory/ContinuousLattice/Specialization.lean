@@ -3,12 +3,13 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.ContinuousLattice.WayBelow
-import Mathlib.Topology.Inseparable
-import Mathlib.Topology.Separation.Basic
-import Mathlib.Topology.Order.ScottTopology
-import Mathlib.Order.DirSupClosed
+public import LeanPool.DomainTheory.ContinuousLattice.WayBelow
+public import Mathlib.Topology.Inseparable
+public import Mathlib.Topology.Separation.Basic
+public import Mathlib.Topology.Order.ScottTopology
+public import Mathlib.Order.DirSupClosed
 
 /-!
 # Specialization order and Scott topology (Scott 1972, §2 opening)
@@ -21,6 +22,8 @@ split into its two directions; the convergence-to-below direction is the
 mathematically
 heavier half and is recorded as `proposition_2_1_of_le`.
 -/
+
+@[expose] public section
 
 namespace Domain.ContinuousLattice
 

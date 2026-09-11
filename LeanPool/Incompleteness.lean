@@ -3,17 +3,18 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arith.FormalizedArithmetic
-import LeanPool.Incompleteness.Arith.Theory
-import LeanPool.Incompleteness.Arith.D1
-import LeanPool.Incompleteness.Arith.D3
-import LeanPool.Incompleteness.Arith.First
-import LeanPool.Incompleteness.Arith.Second
-import LeanPool.Incompleteness.Arith.DC
-import LeanPool.Incompleteness.DC.Basic
+public import LeanPool.Incompleteness.Arith.FormalizedArithmetic
+public import LeanPool.Incompleteness.Arith.Theory
+public import LeanPool.Incompleteness.Arith.D1
+public import LeanPool.Incompleteness.Arith.D3
+public import LeanPool.Incompleteness.Arith.First
+public import LeanPool.Incompleteness.Arith.Second
+public import LeanPool.Incompleteness.Arith.DC
+public import LeanPool.Incompleteness.DC.Basic
 
-import LeanPool.Incompleteness.ProvabilityLogic.Basic
+public import LeanPool.Incompleteness.ProvabilityLogic.Basic
 
 /-!
 # Gödel's First and Second Incompleteness Theorems
@@ -25,6 +26,8 @@ Main declarations: `LeanPool.Incompleteness.goedelFirst`, `LeanPool.Incompletene
 Tags: incompleteness, provability, first-order-arithmetic, mathematical-logic
 MSC: 03F40, 03F30
 -/
+
+@[expose] public section
 
 namespace LeanPool.Incompleteness
 

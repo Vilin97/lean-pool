@@ -3,16 +3,19 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import Mathlib.Topology.UnitInterval
-import Mathlib.Topology.CompactOpen
-import Mathlib.Topology.Category.TopCat.Basic
+public import Mathlib.Topology.UnitInterval
+public import Mathlib.Topology.CompactOpen
+public import Mathlib.Topology.Category.TopCat.Basic
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.Maps
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Maps`.
 -/
+
+@[expose] public section
 -- import Mathlib.Topology.Category.TopCat.Limits.Basic
 
 open scoped Topology unitInterval CategoryTheory

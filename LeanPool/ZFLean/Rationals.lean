@@ -3,14 +3,17 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Integers
+public import LeanPool.ZFLean.Integers
 
 /-! # ZFC Rational Numbers
 
 This file defines the rational numbers in ZFC, based on the integers and using the `ZFInt` type.
 
 -/
+
+@[expose] public section
 
 namespace ZFSet
 /-- Imported ZFLean declaration. -/

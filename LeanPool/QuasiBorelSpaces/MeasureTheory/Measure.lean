@@ -3,16 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Probability.Kernel.MeasurableLIntegral
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
-import Mathlib.Probability.Kernel.Defs
+public import Mathlib.Probability.Kernel.MeasurableLIntegral
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
+public import Mathlib.Probability.Kernel.Defs
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Measure`.
 -/
+
+@[expose] public section
 
 
 namespace MeasureTheory.Measure

@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.InsertionAlgebra
-import LeanPool.Feige.Lemma43ArbitraryBase
-import LeanPool.Feige.Lemma43FiniteSigned
+module
+
+public import LeanPool.Feige.InsertionAlgebra
+public import LeanPool.Feige.Lemma43ArbitraryBase
+public import LeanPool.Feige.Lemma43FiniteSigned
 
 /-!
 # The local transfer result in the insertion-sequence interface
@@ -15,6 +17,8 @@ laws, while the chain-insertion step consumes four numerical sequences along
 an old Boolean chain.  This file records the exact, purely algebraic
 interface between those two presentations.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

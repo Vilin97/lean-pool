@@ -3,16 +3,17 @@ Copyright (c) 2026 KitaKen1. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KitaKen1
 -/
+module
 
-import Mathlib.Algebra.Order.Star.Basic
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Analysis.Normed.Ring.Basic
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.NumberTheory.Real.GoldenRatio
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Order.Star.Basic
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.Analysis.Normed.Ring.Basic
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.NumberTheory.Real.GoldenRatio
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Erdős Problem 346, limit-exists interpretation
@@ -47,6 +48,8 @@ The Lean formalization and accompanying writeup were prepared with assistance
 from Codex and ChatGPT.  The final mathematical claims and public presentation
 remain the author's responsibility.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Topology goldenRatio
 open Filter Set

@@ -3,13 +3,17 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import LeanPool.RiemannMappingTheorem.Uniform
-import LeanPool.RiemannMappingTheorem.Cindex
+module
+
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import LeanPool.RiemannMappingTheorem.Uniform
+public import LeanPool.RiemannMappingTheorem.Cindex
 
 /-!
 # LeanPool.RiemannMappingTheorem.Hurwitz
 -/
+
+@[expose] public section
 
 open Filter Topology Set Metric Uniformity
 

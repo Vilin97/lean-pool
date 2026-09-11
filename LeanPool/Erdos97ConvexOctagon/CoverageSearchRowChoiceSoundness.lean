@@ -3,11 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
-import LeanPool.Erdos97ConvexOctagon.RowMasks
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
+public import LeanPool.Erdos97ConvexOctagon.RowMasks
 
 /-! # Soundness and completeness of lightweight legal-row search data -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import Mathlib.Order.BoundedOrder.Basic
-import Mathlib.Topology.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpace
-import Mathlib.Data.Finset.Basic
+module
+
+public import Mathlib.Order.BoundedOrder.Basic
+public import Mathlib.Topology.Basic
+public import Mathlib.MeasureTheory.Measure.MeasureSpace
+public import Mathlib.Data.Finset.Basic
 
 /-!
 # Basic Types for Formal Learning Theory
@@ -19,6 +21,8 @@ Alternative definitions for ConceptClass and InductiveBias are provided as
 commented-out variants for different proof contexts (decidable, RE, measurable,
 multiclass, Bayesian).
 -/
+
+@[expose] public section
 
 universe u v
 

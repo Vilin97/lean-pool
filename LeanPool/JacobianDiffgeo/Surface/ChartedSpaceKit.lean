@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Geometry.Manifold.IsManifold.Basic
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Charted-space kit: build `ChartedSpace ℂ Z` + `IsManifold 𝓘(ℂ) ω Z` from a chart family
@@ -24,6 +25,8 @@ Toolkit for projective-line (CC5: two charts on `OnePoint ℂ`) and jacobian-con
 
 This file is standalone (it does not assume a pre-existing surface).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set

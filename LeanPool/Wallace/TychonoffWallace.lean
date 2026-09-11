@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.FullTopologyMain
-import Mathlib.Topology.Separation.CompletelyRegular
+public import LeanPool.Wallace.FullTopologyMain
+public import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 # The commutative Tychonoff Wallace semigroup
@@ -14,6 +15,8 @@ The original Wallace interface records Hausdorffness, countable compactness, can
 noninvertible element.  The paper's printed corollary also says that the witness is commutative
 and Tychonoff.  This module makes both properties part of the public proposition.
 -/
+
+@[expose] public section
 
 namespace Wallace
 

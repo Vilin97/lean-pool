@@ -3,11 +3,13 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import Mathlib.Probability.Moments.SubGaussian
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Calculus.DerivativeTest
-import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+module
+
+public import Mathlib.Probability.Moments.SubGaussian
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.DerivativeTest
+public import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
 
 /-!
 # Gaussian tail analysis: the centered folded normal is 1-sub-Gaussian
@@ -30,6 +32,8 @@ The route is:
   `−2√(2/π)`, with the far-negative tail handled by the trivial bound `exp(t·|x|) ≤ 1`).
 * `foldedNormal_subgaussian`: assembling the above into `HasSubgaussianMGF (|·| − √(2/π)) 1`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real Filter Set
 open scoped ENNReal NNReal Topology

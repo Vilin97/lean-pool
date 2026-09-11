@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SkolemColimit
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Methods.SkolemColimit
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # Staged set-closure (generic core for the Skolem-closed family `Γ*`)
 
@@ -18,6 +20,8 @@ The concrete formula `stepOne` (subformulas / components / Skolem witnesses / re
 `skolemColim L` is layered on top in a later chunk; `Γ*` will be `setClosure` of that step applied
 to the lifted EM starting family.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

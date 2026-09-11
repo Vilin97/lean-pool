@@ -3,8 +3,12 @@ Copyright (c) 2026 Paul Mure, Joonhyup Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Mure, Joonhyup Lee
 -/
-import Lean.Meta
-import Lean.Elab
+module
+
+public import Lean.Meta
+public import Lean.Elab
+
+@[expose] public section
 
 namespace Lean.Order.CompleteLattice
 

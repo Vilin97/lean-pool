@@ -3,31 +3,34 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

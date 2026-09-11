@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ConditionalProductKernel
-import LeanPool.Feige.TwoPoint
+module
+
+public import LeanPool.Feige.ConditionalProductKernel
+public import LeanPool.Feige.TwoPoint
 
 /-!
 # Two-point parameters for augmented latent coordinates
@@ -13,6 +15,8 @@ The atom-at-one branch is represented by the harmless degenerate
 parametrization `γ = 0`, `β = 1`.  A genuine support pair `(x,y)` is
 represented by `γ = 1-x`, `β = y-1`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

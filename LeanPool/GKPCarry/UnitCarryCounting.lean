@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.BadCarryCounting
-import LeanPool.GKPCarry.PowerResidues
+module
+
+public import LeanPool.GKPCarry.BadCarryCounting
+public import LeanPool.GKPCarry.PowerResidues
 
 /-!
 # Counting deficient-carry ternary units
@@ -14,6 +16,8 @@ significant ternary digit is nonzero. This file refines the full-word automaton
 count to that unit slice. Among unit words of length `n + 3`, exactly
 `(n + 9) * 2 ^ n` create fewer than two doubling carries.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

@@ -3,12 +3,14 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.QuantumGraph.Basic
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
-import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
+module
+
+public import LeanPool.Monlib4.QuantumGraph.Basic
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
 
 /-!
   # Basic examples on quantum adjacency matrices
@@ -16,6 +18,8 @@ import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
   This file contains elementary examples of quantum adjacency matrices,
     such as the complete graph and the trivial graph.
 -/
+
+@[expose] public section
 
 
 -- import quantum_graph.basic

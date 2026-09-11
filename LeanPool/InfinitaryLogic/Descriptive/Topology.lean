@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.Measurable
-import Mathlib.Topology.Clopen
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.Measurable
+public import Mathlib.Topology.Clopen
 
 /-!
 # Product Topology on the Structure Space
@@ -18,6 +20,8 @@ with `Bool` discrete) and proves that cylinder sets are clopen.
 - `isClopen_relHolds`: The set `{c | c q = true}` is clopen for each query `q`.
 - `isOpen_relHolds`, `isClosed_relHolds`: Components of the clopen result.
 -/
+
+@[expose] public section
 
 universe u v
 

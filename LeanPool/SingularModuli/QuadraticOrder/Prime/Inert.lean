@@ -3,8 +3,9 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
 
 /-!
 # Prime classification, part 3: the inert case
@@ -22,6 +23,8 @@ remains prime in `O_d` exactly when the Legendre symbol `(d/p) = -1`.
 `IsField` across `quadraticOrderModPEquivPolyModQuot` (see `QuotientIso.lean`)
 rather than via the thesis's direct index computation in `ℤ/pᵏ[x]/g(x)`.
 -/
+
+@[expose] public section
 
 open Polynomial
 

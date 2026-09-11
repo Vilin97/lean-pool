@@ -3,15 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Finset.Card
-import Mathlib.Tactic.NormNum
-import Lean.Elab.Tactic.Omega
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Tactic.NormNum
+public import Lean.Elab.Tactic.Omega
 
 /-! # Erdős 97 convex-octagon formalization: Incidence -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

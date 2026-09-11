@@ -11,12 +11,16 @@ The source silently computes modulo alpha equivalence.  Sequentially
 instantiating the nested existentials produced by Lemma 80 therefore requires
 an explicit normalization theorem for total capture-avoiding substitution.
 -/
-import LeanPool.MatchingLogic.EntryIII.WitnessPush
-import LeanPool.MatchingLogic.EntryIII.FreshWitnessElim
+module
+
+public import LeanPool.MatchingLogic.EntryIII.WitnessPush
+public import LeanPool.MatchingLogic.EntryIII.FreshWitnessElim
 
 /-!
 # MatchingLogic.EntryIII.WitnessElim
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

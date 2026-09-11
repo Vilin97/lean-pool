@@ -3,12 +3,16 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.FundamentalCategory
-import LeanPool.DirectedTopologyLean4.DihomotopyFlip
+module
+
+public import LeanPool.DirectedTopologyLean4.FundamentalCategory
+public import LeanPool.DirectedTopologyLean4.DihomotopyFlip
 
 /-!
 # LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
 -/
+
+@[expose] public section
 
 /-
   This file contains the construction of the following statement:

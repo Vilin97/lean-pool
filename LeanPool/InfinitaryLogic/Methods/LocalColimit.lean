@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalTower
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalTower
 /-!
 # The countable local colimit language `L_Γ` (`localColim`) and its cocone
 
@@ -35,6 +37,8 @@ the staged families.
 Next chunks (not here): the local atom/deForm seed and its countability, then the `EMContext`
 re-base over `localColim`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

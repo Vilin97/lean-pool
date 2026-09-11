@@ -3,8 +3,9 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.Monlib
+public import LeanPool.Monlib4.Monlib
 
 /-!
 # Monlib4 Operator-Algebra and Quantum-Set Core
@@ -16,6 +17,8 @@ Main declarations: `Matrix.aut_mat_inner`, `QuantumSet`, `schurMul`, `QuantumGra
 Tags: linear-algebra, operator-algebras, quantum-sets, quantum-graphs, representation-theory
 MSC: 15A69, 16W20
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

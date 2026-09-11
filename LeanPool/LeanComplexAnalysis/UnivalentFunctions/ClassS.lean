@@ -3,16 +3,18 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Defs
-import Mathlib.Analysis.Calculus.DSlope
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.Complex.RemovableSingularity
-import Mathlib.Tactic.LinearCombination
+module
+
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.Analysis.Calculus.DSlope
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Analysis.Complex.RemovableSingularity
+public import Mathlib.Tactic.LinearCombination
 
 /-!
 # Univalent Function Classes: classS and classSigma
@@ -27,6 +29,8 @@ univalent functions on the exterior of the closed unit disk with the expansion
 
 - If `f` is in `classS`, then `g(z) = 1/f(1/z)` is in `classSigma`; `inv_f_inv_in_Sigma`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanComplexAnalysis
 

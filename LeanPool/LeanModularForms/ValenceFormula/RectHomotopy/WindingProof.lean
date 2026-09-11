@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingBase
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingBase
 
 /-!
 # Winding number computation
@@ -19,6 +20,8 @@ using FTC with lifted angle functions and S1 curve comparisons.
 * `winding_fdPolygon_eq_neg_one` — general case for all interior points
 * `winding_fdPolygon_eq_circleParamCW` — matches circleParamCW winding
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology MeasureTheory
 

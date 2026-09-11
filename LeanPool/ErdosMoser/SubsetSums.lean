@@ -3,13 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.ErdosMoser.DiscreteVariance
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+public import LeanPool.ErdosMoser.DiscreteVariance
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
 
 /-!
 # Variance of distinct subset sums
@@ -18,6 +19,8 @@ This file proves the first and second moment identities for subset sums and
 combines them with the discrete variance bound to obtain Leo Moser's exact
 finite sum-of-squares inequality.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ErdosMoser
 

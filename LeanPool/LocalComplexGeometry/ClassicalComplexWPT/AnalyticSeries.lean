@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
-import Mathlib.Analysis.Analytic.ChangeOrigin
-import Mathlib.Analysis.Analytic.Uniqueness
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
+public import Mathlib.Analysis.Analytic.ChangeOrigin
+public import Mathlib.Analysis.Analytic.Uniqueness
 
 /-!
 # Moving Taylor coefficients
@@ -16,6 +17,8 @@ series at the ambient origin to Taylor coefficients at the moving centers
 `(z, 0)`.  In particular, every coefficient in the distinguished variable is
 an analytic function of `z`, with all radii controlled by the original series.
 -/
+
+@[expose] public section
 
 
 namespace ClassicalComplexWPT

@@ -3,9 +3,11 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Algebra.Bilinear
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
+module
+
+public import Mathlib.Algebra.Algebra.Bilinear
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
 
 /-!
 # lmul and rmul
@@ -14,6 +16,8 @@ The left and right multiplication maps, copied from `LinearMap.mulLeft` and
 `LinearMap.mulRight` but defined as linear maps.
 
 -/
+
+@[expose] public section
 
 
 section

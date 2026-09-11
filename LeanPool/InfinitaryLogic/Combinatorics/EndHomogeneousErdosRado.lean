@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Combinatorics.PairErdosRadoGeneral
+module
+
+public import LeanPool.InfinitaryLogic.Combinatorics.PairErdosRadoGeneral
 /-!
 # End-homogeneous Erdős–Rado: the arity-general EHMR engine (ER hard chunk 2a)
 
@@ -54,6 +56,8 @@ feeding `c'` to the arity-`(n+1)` inductive hypothesis homogenizes `G` outright.
 - **Headline**: `exists_endHomogeneous` (concrete source), `exists_endHomogeneous_of_large`
   (abstract well-ordered source); **regression**: `pairER_from_endHomogeneous`.
 -/
+
+@[expose] public section
 
 universe u
 

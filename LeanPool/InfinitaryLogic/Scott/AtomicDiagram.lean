@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # Atomic Diagrams for Relational Languages
 
@@ -22,6 +24,8 @@ These are the building blocks for Scott formulas.
 We restrict to relational languages (`L.IsRelational`) so that the atomic diagram of a finite
 tuple is determined by equality and relation holding information.
 -/
+
+@[expose] public section
 
 universe u v w w'
 

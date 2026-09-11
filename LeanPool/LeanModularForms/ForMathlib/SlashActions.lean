@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Analysis.CStarAlgebra.Classes
-import Mathlib.NumberTheory.ModularForms.SlashActions
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.ModularForms.SlashActions
 
 
 /- This is from the Sphere Pack project, so might not actually be for mathlib.-/
@@ -13,6 +14,8 @@ import Mathlib.NumberTheory.ModularForms.SlashActions
 -- Maybe this belongs in NumberTheory/ModularForms/SlashActions.lean, next to ModularForm.mul_slash
 
 /-! # SlashActions -/
+
+@[expose] public section
 
 
 local notation "GL(" n ", " R ")" "⁺" => @Matrix.GLPos (Fin n) R (instDecidableEqFin n)

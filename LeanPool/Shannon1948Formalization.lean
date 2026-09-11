@@ -3,8 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy
+public import LeanPool.Shannon1948Formalization.Entropy
 
 /-!
 # Shannon Entropy Characterization
@@ -16,6 +17,8 @@ Main declarations: `LeanPool.Shannon1948Formalization.entropyNat_unique`
 Tags: information-theory, entropy, probability
 MSC: 94A17, 60C05
 -/
+
+@[expose] public section
 
 /-!
 # Shannon

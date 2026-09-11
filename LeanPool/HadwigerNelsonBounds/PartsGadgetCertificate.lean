@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetData
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetData
 
 /-!
 # A sound checker for the second-stage Parts gadget
@@ -13,6 +14,8 @@ The finite constraint system has unit-edge inequalities and non-monochromatic
 sqrt-three triples.  Unary stretches of its coloring trees are stored as
 forced stems, exactly as in the first-stage Parts certificate.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

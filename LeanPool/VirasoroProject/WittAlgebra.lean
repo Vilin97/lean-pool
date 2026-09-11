@@ -3,10 +3,12 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.LinearAlgebra.Basis.Bilinear
-import LeanPool.VirasoroProject.CyclicTripleSum
-import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.LinearAlgebra.Basis.Bilinear
+public import LeanPool.VirasoroProject.CyclicTripleSum
+public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
 
 /-!
 # Witt algebra
@@ -43,6 +45,8 @@ differential geometry to be added to Lean.)
 Witt algebra
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

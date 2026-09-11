@@ -3,9 +3,10 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
-import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
 
 /-!
 # Prime classification, part 5: the split case
@@ -28,6 +29,8 @@ composition of the inert and ramified iffs with the trichotomy
 of the quotient `O/(p) ≅ 𝔽ₚ × 𝔽ₚ` is the Lean-idiomatic restatement of the
 thesis's "p factors as two distinct primes".
 -/
+
+@[expose] public section
 
 namespace QuadraticOrder
 

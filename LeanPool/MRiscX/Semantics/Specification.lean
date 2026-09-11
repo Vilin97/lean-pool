@@ -3,17 +3,21 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Semantics.MsTheory
-import LeanPool.MRiscX.Tactics.SpecificationTactics
-import LeanPool.MRiscX.Elab.HoareElaborator
-import LeanPool.MRiscX.Elab.CodeElaborator
-import LeanPool.MRiscX.Delab.DelabHoare
+module
+
+public import LeanPool.MRiscX.Semantics.MsTheory
+public import LeanPool.MRiscX.Tactics.SpecificationTactics
+public import LeanPool.MRiscX.Elab.HoareElaborator
+public import LeanPool.MRiscX.Elab.CodeElaborator
+public import LeanPool.MRiscX.Delab.DelabHoare
 
 /-!
 # Specification
 
 This module provides the per-instruction Hoare specifications.
 -/
+
+@[expose] public section
 open Lean Elab Tactic
 
 /-

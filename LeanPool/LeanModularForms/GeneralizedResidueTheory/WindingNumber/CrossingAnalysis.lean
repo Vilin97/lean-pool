@@ -3,12 +3,13 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-import Mathlib.Analysis.Calculus.FDeriv.Extend
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+public import Mathlib.Analysis.Calculus.FDeriv.Extend
 
 /-!
 # Winding Number: Crossing Analysis
@@ -24,6 +25,8 @@ Contains the core monotonicity, cutoff boundary, and direction convergence lemma
 * `crossing_ratio_tendsto` — direction convergence as ε → 0
 * `tendsto_exp_cutoff_integral_crossing` — exp(R(ε)) → exp(-iα)
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

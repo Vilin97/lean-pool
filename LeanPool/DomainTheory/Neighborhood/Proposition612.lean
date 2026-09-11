@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition610
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Definition610
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
 
 /-!
 # Lecture VI — Proposition 6.12 (Scott 1981, PRG-19): a subdomain yields a
@@ -51,6 +52,8 @@ The element-wise descriptions Scott records are `Subsystem.toElementMap_inj` and
 
 Everything here is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

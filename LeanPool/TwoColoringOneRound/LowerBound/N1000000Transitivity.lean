@@ -3,20 +3,23 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

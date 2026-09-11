@@ -3,14 +3,17 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+public import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
 
 /-!
 # LeanPool.BrauerGroupNew.Morita.TensorProduct
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Morita.TensorProduct`.
 -/
+
+@[expose] public section
 
 universe u v w
 

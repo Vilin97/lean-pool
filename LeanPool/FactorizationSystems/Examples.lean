@@ -3,19 +3,22 @@ Copyright (c) 2026 Ivan Kobe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Kobe
 -/
+module
 
-import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.CategoryTheory.Comma.Over.Basic
-import Mathlib.CategoryTheory.ConcreteCategory.Basic
-import Mathlib.CategoryTheory.MorphismProperty.Composition
-import Mathlib.CategoryTheory.MorphismProperty.Basic
-import Mathlib.CategoryTheory.Types.Epimorphisms
-import Mathlib.CategoryTheory.Types.Monomorphisms
-import LeanPool.FactorizationSystems.Basic
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.CategoryTheory.Comma.Over.Basic
+public import Mathlib.CategoryTheory.ConcreteCategory.Basic
+public import Mathlib.CategoryTheory.MorphismProperty.Composition
+public import Mathlib.CategoryTheory.MorphismProperty.Basic
+public import Mathlib.CategoryTheory.Types.Epimorphisms
+public import Mathlib.CategoryTheory.Types.Monomorphisms
+public import LeanPool.FactorizationSystems.Basic
 
 /-!
 # LeanPool.FactorizationSystems.Examples
 -/
+
+@[expose] public section
 
 namespace CategoryTheory
 universe u v

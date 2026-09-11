@@ -3,12 +3,13 @@ Copyright (c) 2026 Antoine du Fresne von Hohenesche. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine du Fresne von Hohenesche
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Matrix.BilinearForm
-import Mathlib.RingTheory.MvPolynomial.Basic
-import Mathlib.Data.Sym.Card
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Mathlib.LinearAlgebra.Matrix.BilinearForm
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.Data.Sym.Card
 
 /-!
 # The Bannai-Bannai-Stanton bound on distance sets
@@ -17,6 +18,8 @@ Formalizes the Bannai-Bannai-Stanton theorem bounding the size of a distance
 set `S` in `ℝ^d` with `s` distinct distances by `Nat.choose (d + s) s`, following
 the short proof of Petrov and Pohoata via the Croot-Lev-Pach lemma.
 -/
+
+@[expose] public section
 
 open MvPolynomial
 

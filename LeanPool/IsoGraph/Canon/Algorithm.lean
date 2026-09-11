@@ -3,6 +3,7 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
 /-!
 # Canonical labelling of finite graphs (a compact "mini-nauty")
@@ -53,7 +54,7 @@ Two prunings make this fast:
 
 Note that hash collisions can only *weaken* pruning: an invariant path is used solely as the first
 component of a total order on leaves, and any isomorphism-invariant function works there.
--/
+-/@[expose] public section
 
 namespace IsoGraph
 namespace Canon

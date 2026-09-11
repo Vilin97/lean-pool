@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.IrrationalTorusFlow
-import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
+public import LeanPool.PoincareThreeBody.IrrationalTorusFlow
+public import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
 
 /-!
 # The lifted planar Delaunay chart
@@ -14,6 +15,8 @@ This file packages the position and canonical rotating-frame momentum as a funct
 action, eccentricity, mean anomaly, and rotating periapsis angle.  The angles are initially lifted
 to real numbers; periodicity will allow the chart to descend to the angle torus.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

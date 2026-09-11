@@ -43,11 +43,15 @@ DESIGN DECISIONS, fixed before any proof was written:
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.Composite
+module
+
+public import LeanPool.MatchingLogic.Composite
 
 /-!
 # MatchingLogic.ProofSystem
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

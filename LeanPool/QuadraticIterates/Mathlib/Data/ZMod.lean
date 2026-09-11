@@ -3,8 +3,10 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Data.ZMod.Units
+module
+
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Data.ZMod.Units
 
 /-!
 # `ZMod` lemmas
@@ -12,6 +14,8 @@ import Mathlib.Data.ZMod.Units
 Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of some iterated
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
+
+@[expose] public section
 
 /-- If `m ∣ a + b`, then `b ≡ -a mod m`. -/
 lemma ZMod.intCast_eq_neg_intCast_of_dvd_add {a b : ℤ} {m : ℕ} (h : (m : ℤ) ∣ a + b) :

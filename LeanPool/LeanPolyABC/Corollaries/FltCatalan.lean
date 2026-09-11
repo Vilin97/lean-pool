@@ -3,19 +3,22 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Mathlib.Algebra.CharP.Defs
-import Mathlib.Algebra.EuclideanDomain.Defs
-import Mathlib.RingTheory.MvPowerSeries.Basic
-import Mathlib.Algebra.Polynomial.Expand
-import Mathlib.Algebra.Polynomial.Coeff
-import Mathlib.Logic.Lemmas
-import LeanPool.LeanPolyABC.MasonStothers
-import Mathlib.RingTheory.Coprime.Basic
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Algebra.EuclideanDomain.Defs
+public import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Mathlib.Algebra.Polynomial.Expand
+public import Mathlib.Algebra.Polynomial.Coeff
+public import Mathlib.Logic.Lemmas
+public import LeanPool.LeanPolyABC.MasonStothers
+public import Mathlib.RingTheory.Coprime.Basic
 
 /-!
 # LeanPool.LeanPolyABC.Corollaries.FltCatalan
 -/
+
+@[expose] public section
 
 noncomputable section
 

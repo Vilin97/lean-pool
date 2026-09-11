@@ -3,21 +3,24 @@ Copyright (c) 2026 Ivan Kobe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Kobe
 -/
+module
 
-import Mathlib.CategoryTheory.MorphismProperty.Basic
-import Mathlib.CategoryTheory.Comma.Arrow
-import Mathlib.CategoryTheory.Limits.HasLimits
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
-import Mathlib.CategoryTheory.Limits.Comma
+public import Mathlib.CategoryTheory.MorphismProperty.Basic
+public import Mathlib.CategoryTheory.Comma.Arrow
+public import Mathlib.CategoryTheory.Limits.HasLimits
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
+public import Mathlib.CategoryTheory.Limits.Comma
 
-import LeanPool.FactorizationSystems.Basic
-import LeanPool.FactorizationSystems.Orthogonality
-import LeanPool.FactorizationSystems.OrthogonalComplements
+public import LeanPool.FactorizationSystems.Basic
+public import LeanPool.FactorizationSystems.Orthogonality
+public import LeanPool.FactorizationSystems.OrthogonalComplements
 
 /-!
 # LeanPool.FactorizationSystems.Characterization
 -/
+
+@[expose] public section
 
 namespace CategoryTheory
 universe u v

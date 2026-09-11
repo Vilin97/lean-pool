@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Set.Basic
 
 /-!
 # Lecture IV (§4) — Definition 4.5 and Theorem 4.6: models of Peano's Axioms
@@ -57,6 +58,8 @@ functional-and-total relation pulls `Classical.choice`, exactly as a
 Dedekind/recursion theorem
 must.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

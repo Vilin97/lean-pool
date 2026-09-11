@@ -3,7 +3,9 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Learner.Core
+module
+
+public import LeanPool.FormalLearningTheory.Learner.Core
 
 /-!
 # Version Space Learner: Measurable Selection via Countable Enumeration
@@ -33,6 +35,8 @@ Measurability follows from `measurable_to_countable'` (Mathlib).
 - Kuratowski-Ryll-Nardzewski: measurable selection (NOT in Mathlib  -  motivates
   the countable restriction)
 -/
+
+@[expose] public section
 
 universe u
 

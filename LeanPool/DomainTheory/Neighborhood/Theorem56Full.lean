@@ -3,13 +3,14 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example43
-import LeanPool.DomainTheory.Neighborhood.Exercise326
-import LeanPool.DomainTheory.Neighborhood.Exercise511
-import LeanPool.DomainTheory.Neighborhood.Theorem41
-import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
-import Mathlib.Computability.PartrecBasis
+public import LeanPool.DomainTheory.Neighborhood.Example43
+public import LeanPool.DomainTheory.Neighborhood.Exercise326
+public import LeanPool.DomainTheory.Neighborhood.Exercise511
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
+public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+public import Mathlib.Computability.PartrecBasis
 
 /-!
 # Theorem 5.6 (Scott 1981, PRG-19, §5) — the FULL closure: partial recursive ⟹
@@ -38,6 +39,8 @@ makes composition and
 minimisation compose. The capstone is `partrec_lamDef` and the 1-ary corollary
 `partrec_one`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Theorem56Full
 

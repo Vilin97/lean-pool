@@ -3,14 +3,16 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.Algebra.Field.Defs
-import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.Algebra.Ring.Idempotent
-import LeanPool.ArtinWedderburn.PrimeRing
-import LeanPool.ArtinWedderburn.CornerRing
-import LeanPool.ArtinWedderburn.Idempotents
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import Mathlib.RingTheory.Artinian.Ring
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.RingTheory.SimpleRing.Basic
+public import Mathlib.Algebra.Ring.Idempotent
+public import LeanPool.ArtinWedderburn.PrimeRing
+public import LeanPool.ArtinWedderburn.CornerRing
+public import LeanPool.ArtinWedderburn.Idempotents
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # Matrix units and the matrix-ring representation
@@ -20,6 +22,8 @@ corner subring of `e₀₀`. This file packages the class `hasMatrixUnits`, the
 construction of matrix units from `OrtIdemDiv`, and the explicit ring
 isomorphism `R ≃+* Matrix (Fin n) (Fin n) (e₀₀ R e₀₀)`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

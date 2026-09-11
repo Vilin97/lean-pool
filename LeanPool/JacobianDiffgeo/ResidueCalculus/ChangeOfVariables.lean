@@ -7,8 +7,10 @@ Authors: Rado Kirov
 /-
 Blueprint unit: residue-calculus. Chart invariance of the residue of a 1-form integrand.
 -/
-import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-import Mathlib.Analysis.Calculus.Deriv.Inverse
+module
+
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+public import Mathlib.Analysis.Calculus.Deriv.Inverse
 
 /-!
 # Change of variables for residues (residue-calculus)
@@ -21,6 +23,8 @@ residue of `f` at `z₀`. This is what makes `Res_p(ω)` on a Riemann surface ch
 Main export: `RS.resAt_comp_mul_deriv`, and the `=ᶠ`-robust corollary
 `RS.resAt_comp_mul_deriv_of_eventuallyEq`.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function
 

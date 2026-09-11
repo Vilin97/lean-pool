@@ -12,11 +12,15 @@ boundary lemma.  Keeping the zero-arity case explicit is important: the
 paper's definition says that a constant is interpreted by the worlds which
 contain that constant, and no argument-world construction may be smuggled in.
 -/
-import LeanPool.MatchingLogic.EntryIII.CanonicalCore
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CanonicalCore
 
 /-!
 # MatchingLogic.EntryIII.CanonicalExistence
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

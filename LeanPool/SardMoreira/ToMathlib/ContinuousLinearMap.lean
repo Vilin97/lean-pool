@@ -3,35 +3,38 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Normed.Operator.Basic
-import Mathlib.Analysis.Normed.Operator.Mul
-import Mathlib.Analysis.Normed.Operator.NNNorm
-import Mathlib.Analysis.Normed.Operator.NormedSpace
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Idempotent
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Quotient
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.RestrictScalars
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+public import Mathlib.Analysis.Normed.Operator.Basic
+public import Mathlib.Analysis.Normed.Operator.Mul
+public import Mathlib.Analysis.Normed.Operator.NNNorm
+public import Mathlib.Analysis.Normed.Operator.NormedSpace
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Analysis.Asymptotics.Lemmas
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Idempotent
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Quotient
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.RestrictScalars
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
 /-!
 # Auxiliary theorems about `ContinuousLinearMap`
 
 Mostly about `ContinuousLinearMap.IsInvertible` and `ContinuousLinearMap.inverse`.
 -/
+
+@[expose] public section
 
 open Filter Function Asymptotics Topology
 

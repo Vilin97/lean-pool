@@ -3,12 +3,15 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Algebra.Polynomial.Derivative
 
 /-!
 # LeanPool.LeanPolyABC.Lib.Wronskian
 -/
+
+@[expose] public section
 
 noncomputable section
 

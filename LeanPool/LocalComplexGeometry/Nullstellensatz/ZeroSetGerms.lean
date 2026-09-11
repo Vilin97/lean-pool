@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Basic
-import Mathlib.RingTheory.Noetherian.Basic
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.RingTheory.Noetherian.Basic
 
 /-!
 # Local zero-set germs and vanishing ideals
@@ -14,6 +15,8 @@ Zero sets are predicate-valued germs.  This avoids evaluating an abstract
 function germ at points away from the base point.  Only finite intersections
 are used; arbitrary intersections would not have a uniform neighborhood.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

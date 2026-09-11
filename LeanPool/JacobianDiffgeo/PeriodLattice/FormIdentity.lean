@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
-import Mathlib.Analysis.Analytic.Uniqueness
+public import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
+public import Mathlib.Analysis.Analytic.Uniqueness
 
 /-!
 # Identity theorem for 1-form coefficients (§6.4)
@@ -17,6 +18,8 @@ whole neighborhood, `η = 0` identically. Needed by `Nondegeneracy.lean`'s maxim
 
 Main declaration: `RS.form1_eq_zero_of_eventually_coeffIn_zero`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology Metric IsManifold

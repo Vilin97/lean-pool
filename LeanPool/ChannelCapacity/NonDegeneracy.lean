@@ -3,7 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.ChannelCapacity.Basic
+module
+
+public import LeanPool.ChannelCapacity.Basic
 
 /-!
 # ChannelCapacity.NonDegeneracy
@@ -14,6 +16,8 @@ Correct non-degeneracy conditions for uniqueness in the prior variable.
 - `Kernel.InjectivePriorPushforward`
 - `Kernel.RowSeparating`
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

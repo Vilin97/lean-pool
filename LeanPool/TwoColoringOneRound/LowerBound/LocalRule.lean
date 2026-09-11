@@ -3,13 +3,16 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.LocalRule
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

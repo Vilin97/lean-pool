@@ -3,15 +3,19 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Hoare.HoareCore
-import LeanPool.MRiscX.Parser.HoareSyntax
-import LeanPool.MRiscX.Elab.HandleNumOrIdent
+module
+
+public import LeanPool.MRiscX.Hoare.HoareCore
+public import LeanPool.MRiscX.Parser.HoareSyntax
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
 
 /-!
 # DelabHoare
 
 This module provides delaborators for MRiscX Hoare triples.
 -/
+
+@[expose] public section
 open Lean PrettyPrinter SubExpr Expr Nat Elab
 
 /-

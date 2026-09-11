@@ -3,16 +3,19 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
+module
 
-import Lean.Elab.Tactic.Basic
-import LeanPool.MRiscX.Elab.HandleExpr
-import LeanPool.MRiscX.Hoare.HoareCore
+public import Lean.Elab.Tactic.Basic
+public import LeanPool.MRiscX.Elab.HandleExpr
+public import LeanPool.MRiscX.Hoare.HoareCore
 
 /-!
 # HelpCodeProofTactics
 
 This module provides auxiliary helpers for the MRiscX code-proof tactics.
 -/
+
+@[expose] public section
 
 open Lean Elab Parser Tactic RCases
 

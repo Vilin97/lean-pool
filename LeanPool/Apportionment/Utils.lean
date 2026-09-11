@@ -3,22 +3,24 @@ Copyright (c) 2026 Michał Dobranowski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Dobranowski
 -/
-import Mathlib.Algebra.Order.BigOperators.Group.List
-import Mathlib.Data.Nat.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Algebra.Order.BigOperators.Group.List
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Zify
+public import Mathlib.Tactic.Lift
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Tactic.Abel
 
 /-!
 # Utils
@@ -26,6 +28,8 @@ import Mathlib.Tactic.Abel
 Utility lemmas for the Apportionment library: a positivity criterion for the sum of a
 vector of natural numbers, and a closed form for the sum of a length-four vector.
 -/
+
+@[expose] public section
 
 /-- A vector of natural numbers has positive sum iff at least one component is positive. -/
 lemma sum_pos_iff_exists_pos {n : ℕ} {v : Vector ℕ n} :

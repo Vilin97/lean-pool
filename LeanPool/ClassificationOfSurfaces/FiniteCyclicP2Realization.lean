@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.DiskSquare
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
+module
+
+public import LeanPool.ClassificationOfSurfaces.DiskSquare
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
 
 /-!
 # Polygonal realization of Gallier--Xu P2
@@ -15,6 +17,8 @@ oriented cut and supplies an exact selected-face homeomorphism.  It is deliberat
 terms of the existing `P2Cut` data, so the presentation-level quotient comparison can use the
 same side indices and no second formulation of P2 is introduced.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

@@ -3,16 +3,18 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.Complexity.Rademacher
-import LeanPool.FormalLearningTheory.PureMath.Exchangeability
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.Moments.SubGaussian
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Complexity.Rademacher
+public import LeanPool.FormalLearningTheory.PureMath.Exchangeability
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Probability.Moments.SubGaussian
 
 /-!
 # Symmetrization and Ghost Sample Infrastructure
@@ -42,6 +44,8 @@ All theorems use the STANDARD Approach A (exchangeability + permutation) for T3,
 NOT the relaxed iid Rademacher approach. This is the structurally correct argument
 that avoids introducing unnecessary independence assumptions.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,19 +3,20 @@ Copyright (c) 2026 Rodrigo Gutierrez, Yves Jäckle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rodrigo Gutierrez, Yves Jäckle
 -/
+module
 
-import Mathlib.Combinatorics.SimpleGraph.Clique
-import Mathlib.Combinatorics.SimpleGraph.DegreeSum
-import Mathlib.Data.Sym.Card
-import Mathlib.Data.NNReal.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-import Mathlib.Tactic.WLOG
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
+public import Mathlib.Combinatorics.SimpleGraph.Clique
+public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+public import Mathlib.Data.Sym.Card
+public import Mathlib.Data.NNReal.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+public import Mathlib.Tactic.WLOG
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Convert
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Push
 
 /-!
 # Turán's theorem (the "Book" weighting proof)
@@ -28,6 +29,8 @@ upper bound `(1/2)(1 - 1/(p-1)) n²` on the number of edges.
 
 All declarations live in the `Turan3` namespace.
 -/
+
+@[expose] public section
 
 namespace Turan3
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import LeanPool.JohnsonLindenstraussLean.QJL
-import LeanPool.JohnsonLindenstraussLean.GaussianTail
-import Mathlib.Probability.Moments.Variance
-import Mathlib.Probability.Moments.SubGaussian
+module
+
+public import LeanPool.JohnsonLindenstraussLean.QJL
+public import LeanPool.JohnsonLindenstraussLean.GaussianTail
+public import Mathlib.Probability.Moments.Variance
+public import Mathlib.Probability.Moments.SubGaussian
 
 /-!
 # QJL distortion / concentration bound
@@ -29,6 +31,8 @@ normalized inner product `⟪key/‖key‖, q⟫` with high probability. It is b
    `P(|qjlEstimator − ⟪key/‖key‖,q⟫| ≥ ε) ≤ (π/2)‖q‖² / (m·ε²)`,
    so `m = O(‖q‖²/(ε²δ))` sign-bits suffice for additive error `ε` with probability `1−δ`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal RealInnerProductSpace

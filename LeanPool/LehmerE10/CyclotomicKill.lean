@@ -3,11 +3,12 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Kronecker
-import Mathlib.RingTheory.Polynomial.Cyclotomic.Eval
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathlib.FieldTheory.Minpoly.Field
+public import LeanPool.LehmerE10.Kronecker
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Eval
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+public import Mathlib.FieldTheory.Minpoly.Field
 
 /-!
 # no cyclotomic polynomial divides Lehmer's polynomial, and the
@@ -23,6 +24,8 @@ integer matrix annihilated by `L` has characteristic polynomial `L` (over ℚ), 
 Cayley–Hamilton + minimal-polynomial divisibility + degree count.
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
+
+@[expose] public section
 
 namespace LehmerE10
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.SimplexExponentialLaw
-import LeanPool.Feige.NNRealExponentialLaw
+module
+
+public import LeanPool.Feige.SimplexExponentialLaw
+public import LeanPool.Feige.NNRealExponentialLaw
 
 /-!
 # Event bridge for the exponential and simplex statistics
@@ -13,6 +15,8 @@ This file records the deterministic normalization identity between the
 simplex statistic in (2.1) and the internal exponential representation, in
 the `NNReal` coordinate model used by `expProductMeasure`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory ProbabilityTheory

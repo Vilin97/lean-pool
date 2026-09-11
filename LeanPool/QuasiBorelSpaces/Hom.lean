@@ -3,9 +3,10 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Prod
-import LeanPool.QuasiBorelSpaces.Defs
+public import LeanPool.QuasiBorelSpaces.Prod
+public import LeanPool.QuasiBorelSpaces.Defs
 
 
 /-!
@@ -15,6 +16,8 @@ This file defines the exponential object in the category of quasi-borel spaces.
 
 See [HeunenKSY17], Proposition 18.
 -/
+
+@[expose] public section
 
 open QuasiBorelSpace
 

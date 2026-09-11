@@ -3,17 +3,20 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.IsHomDiagonal
-import LeanPool.QuasiBorelSpaces.Nat
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Option
-import LeanPool.QuasiBorelSpaces.Sum
+public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
+public import LeanPool.QuasiBorelSpaces.Nat
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Option
+public import LeanPool.QuasiBorelSpaces.Sum
 
 /-!
 # LeanPool.QuasiBorelSpaces.Option
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Option`.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace.Option
 

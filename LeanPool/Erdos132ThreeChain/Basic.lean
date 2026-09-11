@@ -3,11 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Planar squared distances and geometric 3-chains
@@ -24,6 +25,8 @@ Everything is deliberately self-contained and coordinate-based: `Point` is `ℝ 
 `sqDist` is the explicit sum of two squares, so that every planarity identity used later
 (Heron, the anchored Gram determinant) is provable by `ring` from coordinates.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

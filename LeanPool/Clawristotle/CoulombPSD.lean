@@ -3,7 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.CoulombPSDHelpers
+module
+
+public import LeanPool.Clawristotle.CoulombPSDHelpers
 
 /-!
 # PSD Integrability and Fubini Symmetrization for Coulomb
@@ -12,6 +14,8 @@ Inner and outer integrability of the PSD integrand, and the Fubini
 symmetrization needed for the H-theorem entropy dissipation identity.
 Depends on continuity and pointwise bounds from CoulombPSDHelpers.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

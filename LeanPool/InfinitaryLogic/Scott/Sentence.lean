@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.Formula
-import LeanPool.InfinitaryLogic.Karp.PotentialIso
-import Mathlib.ModelTheory.PartialEquiv
-import Mathlib.SetTheory.Cardinal.Regular
+module
+
+public import LeanPool.InfinitaryLogic.Scott.Formula
+public import LeanPool.InfinitaryLogic.Karp.PotentialIso
+public import Mathlib.ModelTheory.PartialEquiv
+public import Mathlib.SetTheory.Cardinal.Regular
 /-!
 # Scott Sentences
 
@@ -30,6 +32,8 @@ The proof proceeds by showing:
    (using mathlib's `equiv_between_cg`).
 3. The Scott formula at the stabilization ordinal captures exactly this.
 -/
+
+@[expose] public section
 
 universe u v w u'
 

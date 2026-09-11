@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicCrosscap
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2DegenerateRealization
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCrosscap
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2DegenerateRealization
 
 /-!
 # Stable closure for Gallier--Xu normalization chains
@@ -23,6 +25,8 @@ The equivalence closure composes these seams, and its realization theorem needs 
 intermediate validity arguments. This is the stable target for the remaining derived
 normalization chains.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

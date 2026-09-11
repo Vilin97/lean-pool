@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.ContinuousLattice.Constructions
-import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
-import Mathlib.Order.GaloisConnection.Basic
+public import LeanPool.DomainTheory.ContinuousLattice.Constructions
+public import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
+public import Mathlib.Order.GaloisConnection.Basic
 
 /-!
 # Inverse limits of continuous lattices (Scott 1972, §4)
@@ -43,6 +44,8 @@ Prop 2.10a it is a continuous lattice. This is exactly the retraction Scott buil
 via injectivity,
 obtained here as the adjoint of the inclusion.
 -/
+
+@[expose] public section
 
 namespace Domain.ContinuousLattice
 

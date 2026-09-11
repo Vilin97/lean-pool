@@ -6,9 +6,11 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 
 
 -- Import our functional analysis utilities
-import LeanPool.OSforGFF.General.FunctionalAnalysis
+module
+
+public import LeanPool.OSforGFF.General.FunctionalAnalysis
 -- Bochner library provides the cylinder σ-algebra MeasurableSpace instance on WeakDual
-import LeanPool.OSforGFF.Minlos.NuclearSpace
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
 
 /-!
 # Basic Definitions
@@ -21,6 +23,8 @@ Core type definitions for the formalization:
 - `distributionPairing` / `distributionPairingℂReal` = ⟨ω, f⟩ pairings
 - `GJGeneratingFunctional` = Z[J] = ∫ exp(i⟨ω, J⟩) dμ(ω)
 -/
+
+@[expose] public section
 
 /-- Spacetime dimension. Currently set to 4 (Euclidean ℝ⁴).
     Changing this value requires corresponding changes throughout the project;

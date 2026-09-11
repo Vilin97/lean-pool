@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.GeneralMain
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import LeanPool.Wallace.GeneralMain
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # The rational proposition on the additive group of real numbers
@@ -14,6 +15,8 @@ The paper writes `ℚ^(𝔠) ≅ ℝ`.  This module formalizes that algebraic id
 rational Hamel dimension of `ℝ`, then transports the fully constructed character package rather
 than merely asserting that a suitable topology can be transferred.
 -/
+
+@[expose] public section
 
 open Cardinal Module
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Andrej Bauer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrej Bauer
 -/
-import LeanPool.PartialCombinatoryAlgebras.Basic
-import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
+module
+
+public import LeanPool.PartialCombinatoryAlgebras.Basic
+public import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
 
 /-! ## Programming with PCAs
 
@@ -27,6 +29,8 @@ import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
   are omitted in this v4.30 port — they remain expressible in terms of the
   combinators themselves.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

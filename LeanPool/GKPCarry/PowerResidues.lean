@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.RingTheory.ZMod.UnitsCyclic
+module
+
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.RingTheory.ZMod.UnitsCyclic
 
 /-!
 # Powers of two modulo powers of three
@@ -14,6 +16,8 @@ of three. At level `n`, its order modulo `3 ^ (n + 1)` is exactly
 `2 * 3 ^ n`. Thus one complete period of exponents is equivalent to the full
 unit group.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

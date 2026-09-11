@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ConvolutionLogConcave
-import LeanPool.Feige.LikelihoodRatio
+module
+
+public import LeanPool.Feige.ConvolutionLogConcave
+public import LeanPool.Feige.LikelihoodRatio
 
 /-!
 # Translation TP2 and convolution
@@ -13,6 +15,8 @@ This file proves the one-dimensional total-positivity statement behind
 preservation of log-concavity under convolution.  It is adapted to the
 existing `LikelihoodRatio.densityConvolution` definition.
 -/
+
+@[expose] public section
 
 open scoped ENNReal
 open MeasureTheory

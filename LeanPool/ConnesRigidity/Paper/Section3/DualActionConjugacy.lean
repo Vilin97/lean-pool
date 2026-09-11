@@ -7,12 +7,16 @@ Authors: Utensil Song
 
 The Zhou fiber shear conjugates the two dual actions. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyCoordinates
-import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyQuadratic
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyCoordinates
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyQuadratic
 
 /-!
 The dual action conjugacy component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualActionConjugacy

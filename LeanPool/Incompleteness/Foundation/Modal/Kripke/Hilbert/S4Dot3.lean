@@ -3,11 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomDot3
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomDot3
 
 /-! # S4Dot3 -/
+
+@[expose] public section
 
 
 namespace LO

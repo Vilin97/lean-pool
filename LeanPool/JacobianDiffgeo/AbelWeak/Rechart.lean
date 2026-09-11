@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
-import Mathlib.Analysis.Analytic.IsolatedZeros
+public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+public import Mathlib.Analysis.Analytic.IsolatedZeros
 
 /-!
 # Rechart: `IsWeakSolutionAt` is chart-independent, and general order-additive multiplication
@@ -34,6 +35,8 @@ uniformly for every `k1, k2` (no case split needed: `Function.update`'s value
 `ψ (e a) * φ (e a) * (0 : ℂ) ^ (k1 + k2)` matches BOTH the cancelling case, `= ψ (e a) * φ (e a)`
 when `k1 + k2 = 0`, AND the generic case, `= 0`, matching what the naive product already gives).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Filter Topology Set

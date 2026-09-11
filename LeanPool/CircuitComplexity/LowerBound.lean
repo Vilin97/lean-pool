@@ -3,8 +3,10 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.EssentialInput
-import LeanPool.CircuitComplexity.Internal.LowerBound
+module
+
+public import LeanPool.CircuitComplexity.EssentialInput
+public import LeanPool.CircuitComplexity.Internal.LowerBound
 
 /-! # Gate Elimination Lower Bound
 
@@ -41,6 +43,8 @@ And its corollary for functions that depend on all inputs:
         (hall : ∀ i : Fin N, IsEssentialInput f i) :
         N ≤ k * c.size
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

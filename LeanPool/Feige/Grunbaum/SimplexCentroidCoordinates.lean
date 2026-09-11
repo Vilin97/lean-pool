@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Grunbaum.Sharpness
+module
+
+public import LeanPool.Feige.Grunbaum.Sharpness
 
 /-!
 # Coordinates of the standard-simplex centroid
@@ -12,6 +14,8 @@ Coordinate permutations preserve both Euclidean volume and the standard
 simplex.  Hence all centroid coordinates agree; their value follows from
 the already computed coordinate sum.
 -/
+
+@[expose] public section
 
 noncomputable section
 

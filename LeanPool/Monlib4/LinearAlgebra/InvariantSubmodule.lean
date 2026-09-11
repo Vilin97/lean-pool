@@ -3,17 +3,20 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Data.Complex.Basic
-import Mathlib.LinearAlgebra.Projection
-import Mathlib.LinearAlgebra.TensorProduct.Basic
-import Mathlib.Topology.Algebra.StarSubalgebra
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.LinearAlgebra.Projection
+public import Mathlib.LinearAlgebra.TensorProduct.Basic
+public import Mathlib.Topology.Algebra.StarSubalgebra
 
 /-!
 # Invariant submodules
 
 This file defines and proves basic results on invariant submodules.
 -/
+
+@[expose] public section
 
 namespace Submodule
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
-import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+public import LeanPool.JacobianDiffgeo.Path
 
 /-!
 # Path-integral naturality (jacobian-functoriality §4)
@@ -14,6 +15,8 @@ Unit: jacobian-functoriality. `IsPrimitiveAlongMap.pullback_comp` (a general reu
 primitive of `η` along `f ∘ K` pulls back to a primitive of `Form1.pullback f hf η` along `K`)
 and its corollary `pathIntegral_pullback` (naturality of `pathIntegral` under pullback).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open Set Filter IsManifold

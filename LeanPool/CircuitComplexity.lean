@@ -3,17 +3,19 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Basic
-import LeanPool.CircuitComplexity.NF
-import LeanPool.CircuitComplexity.AON
-import LeanPool.CircuitComplexity.XOR
-import LeanPool.CircuitComplexity.EssentialInput
-import LeanPool.CircuitComplexity.Shannon
-import LeanPool.CircuitComplexity.LowerBound
-import LeanPool.CircuitComplexity.Schnorr
-import LeanPool.CircuitComplexity.AC0
-import LeanPool.CircuitComplexity.Nondeterminism
-import LeanPool.CircuitComplexity.Valiant
+module
+
+public import LeanPool.CircuitComplexity.Basic
+public import LeanPool.CircuitComplexity.NF
+public import LeanPool.CircuitComplexity.AON
+public import LeanPool.CircuitComplexity.XOR
+public import LeanPool.CircuitComplexity.EssentialInput
+public import LeanPool.CircuitComplexity.Shannon
+public import LeanPool.CircuitComplexity.LowerBound
+public import LeanPool.CircuitComplexity.Schnorr
+public import LeanPool.CircuitComplexity.AC0
+public import LeanPool.CircuitComplexity.Nondeterminism
+public import LeanPool.CircuitComplexity.Valiant
 
 /-!
 # Circuit Complexity in Lean 4
@@ -25,6 +27,8 @@ Main declarations: `CircuitComplexity.shannon_lower_bound_circuit`
 Tags: circuit-complexity, boolean-functions, lower-bounds, shannon-bound, parity
 MSC: 68Q06, 94C11
 -/
+
+@[expose] public section
 
 /-!
 # Circuit Complexity

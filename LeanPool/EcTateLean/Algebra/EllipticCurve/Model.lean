@@ -3,20 +3,23 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import LeanPool.EcTateLean.Algebra.Ring.Basic
-import Mathlib.Algebra.CharP.Basic
-import LeanPool.EcTateLean.FieldTheory.PerfectClosure
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Common
+public import LeanPool.EcTateLean.Algebra.Ring.Basic
+public import Mathlib.Algebra.CharP.Basic
+public import LeanPool.EcTateLean.FieldTheory.PerfectClosure
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Common
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.Model
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.Model`.
 -/
+
+@[expose] public section
 -- import Aesop
 
 

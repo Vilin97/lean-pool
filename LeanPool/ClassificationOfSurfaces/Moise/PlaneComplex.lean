@@ -3,13 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Analysis.Convex.Between
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.Normed.Affine.AddTorsor
-import Mathlib.LinearAlgebra.AffineSpace.Independent
-import Mathlib.Topology.LocallyFinite
-import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
+module
+
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Analysis.Convex.Between
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.Normed.Affine.AddTorsor
+public import Mathlib.LinearAlgebra.AffineSpace.Independent
+public import Mathlib.Topology.LocallyFinite
+public import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
 
 /-!
 # Finite simplicial complexes in the plane
@@ -28,6 +30,8 @@ overlap in an open region).
 it is affine on every face of some subdivision.  A generic continuous map is *not* PL on any
 complex with a 2-face, in contrast to the vacuous `IsPLOnSimplexes` this replaces.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

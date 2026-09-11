@@ -3,13 +3,14 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
 -- import LeanPool.Monlib4.LinearAlgebra.MyIps.Nontracial
-import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
 
 /-!
 # Symmetry Maps for Quantum Sets
@@ -17,6 +18,8 @@ import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
 This file restores the upstream symmetry map on linear maps between quantum
 sets, together with its interaction with modular automorphisms and `Psi`.
 -/
+
+@[expose] public section
 
 /-- The symmetry map sends a linear map to the adjoint of its real conjugate. -/
 @[simps]

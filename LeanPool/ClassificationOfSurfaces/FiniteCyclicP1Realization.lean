@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
-import LeanPool.ClassificationOfSurfaces.WeightedCircle
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
+public import LeanPool.ClassificationOfSurfaces.WeightedCircle
 
 /-!
 # Polygonal realization of Gallier--Xu P1
@@ -13,6 +15,8 @@ The boundary of every source face is assigned weight two at occurrences of the s
 and weight one everywhere else.  `WeightedCircle` turns those weights into the exact boundary
 homeomorphism required by P1, and radial extension gives the corresponding disk homeomorphism.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

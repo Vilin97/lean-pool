@@ -3,8 +3,9 @@ Copyright (c) 2026 Barinder S. Banwait. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Barinder S. Banwait, Xinze Li
 -/
+module
 
-import LeanPool.RamanujanNagell.Helpers
+public import LeanPool.RamanujanNagell.Helpers
 
 /-!
 # The Ramanujan-Nagell equation
@@ -14,6 +15,8 @@ domain (see `Helpers.lean`); in particular it is a PID and a UFD. The proof
 below uses these facts together with `units_pm_one`, `theta_irreducible`,
 `theta'_irreducible`, and the UFD scaffolding `ufd_power_association`.
 -/
+
+@[expose] public section
 
 namespace RamanujanNagell
 

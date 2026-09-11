@@ -3,11 +3,13 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Common
+module
+
+public import Mathlib.Analysis.Convex.StdSimplex
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Common
 
 /-!
 # Mixed strategies on the standard simplex
@@ -17,6 +19,8 @@ records the basic arithmetic facts about pure strategies and weighted sums used
 when reasoning about mixed strategies, including the key inequality
 `wsum_magic_ineq` relating a weighted sum to a uniform bound.
 -/
+
+@[expose] public section
 
 /- We use `MixedStrategy` to denote a mixed strategy over a finite type. -/
 

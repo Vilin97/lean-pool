@@ -3,11 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import Mathlib.Data.Nat.Digits.Lemmas
-import Mathlib.Order.Preorder.Finite
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import Mathlib.Data.Nat.Digits.Lemmas
+public import Mathlib.Order.Preorder.Finite
 
 /-!
 EGRS75 two-prime ALIGN leaf — route "induction": isolate the single irreducible
@@ -72,6 +73,8 @@ clean files are NOT modified.  This formalizes the KNOWN theorem EGRS75
 (Math. Comp. 1975, Thm 2 / Bloom–Croot Thm 2); three primes is Erdős #376, OPEN —
 not attempted here.
 -/
+
+@[expose] public section
 
 namespace Egrs75.LeafInduction
 

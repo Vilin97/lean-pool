@@ -3,12 +3,13 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.BridgeDefs
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.PLImpliesMB
-import Mathlib.Analysis.Calculus.Gradient.Basic
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.NormalHessianBound
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.BridgeDefs
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.PLImpliesMB
+public import Mathlib.Analysis.Calculus.Gradient.Basic
 
 /-!
 Copyright (c) 2025. All rights reserved.
@@ -45,6 +46,8 @@ setting used by PLAcceleratedNesterovLeans (where `E d := EuclideanSpace ℝ (Fi
 - PLAcceleratedNesterovLeans: `PLAcceleratedNesterovLean/Core/Defs.lean`,
   `PLAcceleratedNesterovLean/Convergence/LocalGeometry/Main.lean`
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Submodule InnerProductSpace Set
 

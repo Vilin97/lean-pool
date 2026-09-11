@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Coordinates
-import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+public import LeanPool.LocalComplexGeometry.Germs.Coordinates
+public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
 
 /-!
 # Coordinate pullback of local set germs
@@ -15,6 +16,8 @@ The analytic Nullstellensatz is invariant under invertible complex-linear
 coordinates.  This file records that invariance at the predicate-germ level,
 without evaluating abstract function germs away from the origin.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

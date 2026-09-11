@@ -3,17 +3,20 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Calculus.DiffContOnCl
-import Mathlib.Analysis.Calculus.LineDeriv.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import LeanPool.SardMoreira.LebesgueDensity
-import LeanPool.SardMoreira.ContDiff
-import LeanPool.SardMoreira.ToMathlib.PR32186
+public import Mathlib.Analysis.Calculus.DiffContOnCl
+public import Mathlib.Analysis.Calculus.LineDeriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.SardMoreira.LebesgueDensity
+public import LeanPool.SardMoreira.ContDiff
+public import LeanPool.SardMoreira.ToMathlib.PR32186
 
 /-!
 # LeanPool.SardMoreira.LocalEstimates
 -/
+
+@[expose] public section
 
 open scoped Topology NNReal ENNReal unitInterval
 open Asymptotics Filter MeasureTheory AffineMap Set Metric

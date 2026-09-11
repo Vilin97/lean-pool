@@ -3,12 +3,13 @@ Copyright (c) 2026 Daniel Smania. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Smania
 -/
+module
 
-import Mathlib.Probability.Martingale.Basic
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import LeanPool.Burkholder.Majorants
+public import Mathlib.Probability.Martingale.Basic
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import LeanPool.Burkholder.Majorants
 
 /-!
 # Martingale transforms and the Lp Burkholder inequality
@@ -16,6 +17,8 @@ import LeanPool.Burkholder.Majorants
 Defines the discrete martingale transform and proves the sharp `Lp` Burkholder
 inequality for martingale transforms by a predictable multiplier bounded by `1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

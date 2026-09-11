@@ -3,7 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.Simplex
+module
+
+public import LeanPool.CencovPetz.Simplex
 
 
 /-!
@@ -28,6 +30,8 @@ needed for the Čencov/Chentsov uniqueness story.
 - `CencovPetz.fisherBilin_pushforward_le_of_markovMorphism`: Fisher monotonicity under a
   Markov morphism.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

@@ -3,21 +3,24 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.Topology.Covering.Basic
-import Mathlib.Topology.Homotopy.Lifting
-import Mathlib.GroupTheory.FreeGroup.Reduce
-import LeanPool.FiniteGraphFundamentalGroup.Cover
-import LeanPool.FiniteGraphFundamentalGroup.Realization
-import LeanPool.FiniteGraphFundamentalGroup.TopologicalCover
-import LeanPool.FiniteGraphFundamentalGroup.TreeContraction
-import LeanPool.FiniteGraphFundamentalGroup.Consequences
+public import Mathlib.Topology.Covering.Basic
+public import Mathlib.Topology.Homotopy.Lifting
+public import Mathlib.GroupTheory.FreeGroup.Reduce
+public import LeanPool.FiniteGraphFundamentalGroup.Cover
+public import LeanPool.FiniteGraphFundamentalGroup.Realization
+public import LeanPool.FiniteGraphFundamentalGroup.TopologicalCover
+public import LeanPool.FiniteGraphFundamentalGroup.TreeContraction
+public import LeanPool.FiniteGraphFundamentalGroup.Consequences
 
 /-!
 # Comparison of combinatorial and topological fundamental groups
 
 This module identifies the free-groupoid computation with the fundamental group of the realization.
 -/
+
+@[expose] public section
 
 attribute [local implicit_reducible]
   Quiver.Symmetrify Quiver.FreeGroupoid Quiver.FreeGroupoid.of IsFreeGroupoid.Generators

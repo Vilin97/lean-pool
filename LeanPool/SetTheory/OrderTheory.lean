@@ -3,7 +3,9 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import Mathlib.Order.ConditionallyCompleteLattice.Basic
+module
+
+public import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-!
 # Order-theoretic preliminaries
@@ -11,6 +13,8 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 This module collects order-theoretic lemmas about infima and suprema in conditionally
 complete lattices, in particular closure under bounded infima and suprema.
 -/
+
+@[expose] public section
 
 open Function OrderDual Set
 

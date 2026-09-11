@@ -3,9 +3,10 @@ Copyright (c) 2026 Axiom Math. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Axiom Math, Kenny Lau
 -/
+module
 
-import LeanPool.ZetaZeros.Main
-import LeanPool.ZetaZeros.Hilbert.InnerReal
+public import LeanPool.ZetaZeros.Main
+public import LeanPool.ZetaZeros.Hilbert.InnerReal
 
 /-!
 # Simple zeros of the Riemann zeta function
@@ -17,3 +18,5 @@ Main declarations: `ZetaZeros.simple_proportion_d4`
 Tags: analytic-number-theory, riemann-zeta-function, critical-line, simple-zeros, pair-correlation
 MSC: 11M06, 11M26
 -/
+
+@[expose] public section

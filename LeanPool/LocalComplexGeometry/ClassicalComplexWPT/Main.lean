@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
 
 /-!
 # Classical complex-analytic Weierstrass preparation
@@ -13,6 +14,8 @@ import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
 This module assembles the general analytic existence construction and its full
 germ uniqueness theorem into the exact independently frozen public result.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

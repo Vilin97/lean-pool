@@ -3,14 +3,18 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Parser.AssemblySyntax
-import Lean
+module
+
+public import LeanPool.MRiscX.Parser.AssemblySyntax
+public import Lean
 
 /-!
 # HandleNumOrIdent
 
 This module provides elaboration helpers for numeric/identifier operands.
 -/
+
+@[expose] public section
 open Nat Lean PrettyPrinter Expr Meta Elab
 
 /-

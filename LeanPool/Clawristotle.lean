@@ -3,10 +3,11 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
+module
 
-import LeanPool.Clawristotle.Theorem42
-import LeanPool.Clawristotle.CoulombConcreteTheorem42
-import LeanPool.Clawristotle.CoulombNonvacuous
+public import LeanPool.Clawristotle.Theorem42
+public import LeanPool.Clawristotle.CoulombConcreteTheorem42
+public import LeanPool.Clawristotle.CoulombNonvacuous
 
 /-!
 # Clawristotle: Vlasov-Maxwell-Landau steady-state classification
@@ -18,6 +19,8 @@ Main declarations: `VML.Theorem42`, `VML.CoulombConcreteTheorem42`
 Tags: pde, kinetic-theory, mathematical-physics
 MSC: 35Q83, 82C40, 35Q61
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

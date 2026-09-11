@@ -3,8 +3,10 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.CayleyDickson
-import LeanPool.CompositionAlgebras.Composition.Instances
+module
+
+public import LeanPool.CompositionAlgebras.Composition.CayleyDickson
+public import LeanPool.CompositionAlgebras.Composition.Instances
 
 
 /-!
@@ -60,6 +62,8 @@ correspondence, and nothing downstream depends on which one is used.
 Substrate for the classification: it supplies the three base identifications the
 doubling chain is renamed along.
 -/
+
+@[expose] public section
 
 open CompositionAlgebra
 open scoped Quaternion

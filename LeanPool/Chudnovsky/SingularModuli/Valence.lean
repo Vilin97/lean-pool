@@ -3,12 +3,13 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.JFunction
-import LeanPool.Chudnovsky.Fourier
-import LeanPool.Chudnovsky.DivisionValues
-import Mathlib.Analysis.Complex.OpenMapping
-import LeanPool.Chudnovsky.Estimates
+public import LeanPool.Chudnovsky.SingularModuli.JFunction
+public import LeanPool.Chudnovsky.Fourier
+public import LeanPool.Chudnovsky.DivisionValues
+public import Mathlib.Analysis.Complex.OpenMapping
+public import LeanPool.Chudnovsky.Estimates
 
 /-!
 # Valence theory of the `j`-function (Phase C, Track 2, §4.3)
@@ -55,6 +56,8 @@ Elliptic Functions, and the Modular Group" development is the design blueprint (
 Both halves of the §4.3 valence theory (`j_injective_mod_Γ` and `j_surjective`) are now
 `sorry`-free.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # López-Escobar, the easy direction
 
@@ -23,6 +25,8 @@ route through Craig interpolation and PC-separation — is **proved**: `lopez_es
 (`Methods/LopezEscobar/Separation.lean`), packaged with this direction as `lopezEscobar_iff`
 in `Descriptive/LopezEscobar.lean`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

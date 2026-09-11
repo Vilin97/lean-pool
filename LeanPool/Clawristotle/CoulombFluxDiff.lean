@@ -3,7 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.CoulombFluxConv
+module
+
+public import LeanPool.Clawristotle.CoulombFluxConv
 
 /-!
 # Flux Derivative Decay and IBP Integrability for Coulomb
@@ -12,6 +14,8 @@ Proves the Coulomb flux derivative has Schwartz-class decay (from the convolutio
 decomposition) and the IBP integrability condition for the flux derivative times log f.
 Depends on differentiability and decomposition results from CoulombFluxConv.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

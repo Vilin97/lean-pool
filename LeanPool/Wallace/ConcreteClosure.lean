@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.ConcreteData
-import LeanPool.Wallace.CountableClosure
+public import LeanPool.Wallace.ConcreteData
+public import LeanPool.Wallace.CountableClosure
 
 /-!
 # Concrete countable dependency closures
@@ -15,6 +16,8 @@ whose fresh code coordinate has entered the closure.  The resulting coordinate s
 countable, contains the support of `x`, and has exactly the closure property required by the
 transfinite character extension.
 -/
+
+@[expose] public section
 
 open Set
 

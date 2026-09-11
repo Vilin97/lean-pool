@@ -3,10 +3,12 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import Mathlib.Order.BoundedOrder.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Set.Card
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import Mathlib.Order.BoundedOrder.Basic
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Set.Card
 
 /-!
 # VC Dimension and Shattering
@@ -14,6 +16,8 @@ import Mathlib.Data.Set.Card
 The foundational complexity measure for PAC learning.
 Bridges to Mathlib's `Finset.vcDim` via `Bridge.lean`.
 -/
+
+@[expose] public section
 
 universe u v
 

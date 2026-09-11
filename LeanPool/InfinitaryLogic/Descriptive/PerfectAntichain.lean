@@ -3,12 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.Topology.DerivedSet
-import Mathlib.Topology.MetricSpace.CantorScheme
-import Mathlib.Topology.MetricSpace.Perfect
-import Mathlib.Topology.MetricSpace.Polish
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.SetTheory.Cardinal.Continuum
+module
+
+public import Mathlib.Topology.DerivedSet
+public import Mathlib.Topology.MetricSpace.CantorScheme
+public import Mathlib.Topology.MetricSpace.Perfect
+public import Mathlib.Topology.MetricSpace.Polish
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.SetTheory.Cardinal.Continuum
 
 /-!
 # Perfect and Cantor antichains, and thinness
@@ -42,6 +44,8 @@ Cantor injection) or nothing beyond `TopologicalSpace`.  In particular
 through `mk_eq_continuum`, which is what lets it drop second countability — it only ever needed
 the lower bound.
 -/
+
+@[expose] public section
 
 open Cardinal Set
 

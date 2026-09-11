@@ -9,13 +9,17 @@ Concrete Haar-action inputs for Zhou's dual-coordinate crossed products.
 The topology is the transported compact-dual topology already developed in
 the paper-facing layer. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
-import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
-import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
+public import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
+public import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
 
 /-!
 The crossed action component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperCrossedAction

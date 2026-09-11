@@ -3,8 +3,10 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import LeanPool.JohnsonLindenstraussLean.NormPreservation
-import LeanPool.JohnsonLindenstraussLean.Projection
+module
+
+public import LeanPool.JohnsonLindenstraussLean.NormPreservation
+public import LeanPool.JohnsonLindenstraussLean.Projection
 
 /-!
 # The Johnson–Lindenstrauss embedding-existence theorem
@@ -23,6 +25,8 @@ vector `Q a - Q b` (Gaussian rotation invariance turns each into the chi-squared
 and `hcard` is the union-bound counting condition implied by
 `k ≥ ⌈8 · log n / (ε² − ε³)⌉`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 

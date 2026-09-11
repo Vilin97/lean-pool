@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReduction
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReduction
 
 /-!
 # Terminal finite-cyclic word normalization
@@ -13,6 +15,8 @@ Boundary loops are commuted behind the closed-surface blocks, handles are conver
 when a crosscap is present, and the resulting ordered word is signed-relabelled to the single
 project-owned `NormalForm.canonicalPresentation`.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

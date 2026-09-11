@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.BadCarryLanguage
+module
+
+public import LeanPool.GKPCarry.BadCarryLanguage
 
 /-!
 # A regular-language characterization of the GKP conjecture
@@ -16,6 +18,8 @@ explicit regular language by nonexceptional powers of two.
 
 This equivalence is a reduction of the open conjecture, not a proof of it.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

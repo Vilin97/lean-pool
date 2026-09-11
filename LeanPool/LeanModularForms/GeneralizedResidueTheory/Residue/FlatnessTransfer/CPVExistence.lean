@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.HigherOrderAssembly
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.HigherOrderAssembly
 
 /-!
 # CPV Existence for Inverse along Piecewise C¹ Immersions
@@ -18,6 +19,8 @@ null-homologous residue theorems.
 * `cpv_exists_inv_sub_of_closed_unique`: CPV of `(z-z₀)⁻¹` exists for closed curves
   with a unique crossing through `z₀`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

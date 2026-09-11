@@ -5,35 +5,39 @@ Authors: ruplet
 -/
 
 -- for a quick demo, jump straight to `theorem add_assoc`
-import Mathlib.Tactic.Core
-import Mathlib.Logic.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import Mathlib.ModelTheory.Basic
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Complexity
-import Mathlib.ModelTheory.Semantics
+module
 
-import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
-import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
-import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-import LeanPool.FormalizationOfBoundedArithmetic.Semantics
-import LeanPool.FormalizationOfBoundedArithmetic.Complexity
-import LeanPool.FormalizationOfBoundedArithmetic.Order
-import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
-import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+public import Mathlib.Tactic.Core
+public import Mathlib.Logic.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import Mathlib.ModelTheory.Basic
+public import Mathlib.ModelTheory.Syntax
+public import Mathlib.ModelTheory.Complexity
+public import Mathlib.ModelTheory.Semantics
+
+public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
+public import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
+public import LeanPool.FormalizationOfBoundedArithmetic.Syntax
+public import LeanPool.FormalizationOfBoundedArithmetic.Semantics
+public import LeanPool.FormalizationOfBoundedArithmetic.Complexity
+public import LeanPool.FormalizationOfBoundedArithmetic.Order
+public import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
+public import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.IOPEN
 -/
+
+@[expose] public section
 
 open FirstOrder Language BoundedFormula
 

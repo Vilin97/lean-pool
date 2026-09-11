@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DelaunayChart
-import LeanPool.PoincareThreeBody.KeplerHamiltonian
+public import LeanPool.PoincareThreeBody.DelaunayChart
+public import LeanPool.PoincareThreeBody.KeplerHamiltonian
 
 /-!
 # Physical realization of the planar Delaunay actions
@@ -15,6 +16,8 @@ Cartesian angular momentum, while the first action is determined by the negative
 energy.  Consequently the physical mass-zero Hamiltonian pulls back to the displayed Delaunay
 Hamiltonian.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

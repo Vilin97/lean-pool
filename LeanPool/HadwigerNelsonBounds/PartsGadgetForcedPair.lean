@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetVerification
-import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetVerification
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
 
 /-!
 # The forced pair in the second-stage Parts gadget
@@ -14,6 +15,8 @@ The checked finite constraints force the opposite radius-two vertices 5 and 31
 to have the same color.  Color renamings and central inversion reduce every
 case to the independently checked normalized trees.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

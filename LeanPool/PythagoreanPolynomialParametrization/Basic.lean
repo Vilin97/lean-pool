@@ -3,27 +3,30 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.Funext
-import Mathlib.Algebra.MvPolynomial.Monad
-import Mathlib.NumberTheory.PythagoreanTriples
-import Mathlib.NumberTheory.SumFourSquares
-import Mathlib.RingTheory.Binomial
-import Mathlib.RingTheory.MvPolynomial.Basic
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.MvPolynomial.Funext
+public import Mathlib.Algebra.MvPolynomial.Monad
+public import Mathlib.NumberTheory.PythagoreanTriples
+public import Mathlib.NumberTheory.SumFourSquares
+public import Mathlib.RingTheory.Binomial
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.NormNum.Prime
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-! # Basic definitions for Pythagorean polynomial parametrizations
 
 This file contains the shared definitions used by the Frisch--Vaserstein
 formalization setup.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

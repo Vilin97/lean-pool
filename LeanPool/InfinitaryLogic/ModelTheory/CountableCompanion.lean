@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.TypeIsolation
-import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.TypeIsolation
+public import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
 /-!
 # The controlling fragment and the countable companion (issue #17 chunk 2)
 
@@ -18,6 +20,8 @@ theorem (#13) yields the countable companion `N ≺_A M`.
 Still language-general (countable function symbols only — relationality first enters at the
 BF/Scott packaging boundary, per the frozen audit).
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms
-import LeanPool.JacobianDiffgeo.LocalMultiplicity
+public import LeanPool.JacobianDiffgeo.Forms
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity
 
 /-!
 # `Density.lean` — the reusable "dense ⟹ everywhere" closing lemma (jacobian-functoriality §5)
@@ -29,6 +30,8 @@ hypothesis `coeffAt x η = coeffAt x η'` cancels it, reducing the comparison to
 (image of the dense hypothesis set), hence equal there by a direct filter/uniqueness-of-limits
 argument (`tendsto_nhds_unique_of_eventuallyEq`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter IsManifold

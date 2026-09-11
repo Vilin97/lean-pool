@@ -3,9 +3,11 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Mortality.Degree
-import LeanPool.Koethe.Mortality.Homogeneous
+module
+
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.Mortality.Degree
+public import LeanPool.Koethe.Mortality.Homogeneous
 
 /-!
 # Formal letters, specialization, and one scalar minor equation
@@ -14,6 +16,8 @@ A formal letter is either a fixed vector or an independently indexed hole.
 The common-zero theorem is applied to the coefficients of a single pivot
 minor.  Its equation count is the full word length plus one.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,16 +3,20 @@ Copyright (c) 2026 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak
 -/
-import Mathlib.Algebra.Order.Module.Defs
-import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-import Mathlib.Algebra.Module.Pi
-import Mathlib.Tactic.Abel
-import LeanPool.Duality.Common
+module
+
+public import Mathlib.Algebra.Order.Module.Defs
+public import Mathlib.Algebra.Module.LinearMap.Basic
+public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Tactic.Abel
+public import LeanPool.Duality.Common
 
 /-!
 # LeanPool.Duality.FarkasBartl
 -/
+
+@[expose] public section
 
 private def withoutLastMap {m : ℕ} {R W : Type*} [Semiring R] [AddCommMonoid W] [Module R W]
     (A : W →ₗ[R] Fin m.succ → R) :

@@ -3,11 +3,12 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-import LeanPool.QuasiBorelSpaces.Prod
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
+public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import LeanPool.QuasiBorelSpaces.Prod
 
 /-!
 # Exponentials for ω-quasi-borel spaces
@@ -16,6 +17,8 @@ This file defines the function space `OmegaQuasiBorelHom X Y` (written
 `X →ω𝒒 Y`) of Scott-continuous QBS morphisms. It proves that this space is
 itself an ωQBS.
 -/
+
+@[expose] public section
 
 open QuasiBorelSpace
 open OmegaQuasiBorelSpace

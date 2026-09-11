@@ -3,15 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
-import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
-import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
-import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
-import LeanPool.Erdos97ConvexOctagon.RowMasks
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
+public import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
+public import LeanPool.Erdos97ConvexOctagon.RowMasks
 
 /-! # Flat local checker for coverage certificates -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

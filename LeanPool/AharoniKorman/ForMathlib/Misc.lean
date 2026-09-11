@@ -3,9 +3,10 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import Mathlib.Order.Preorder.Chain
-import Mathlib.Order.WellFoundedSet
+public import Mathlib.Order.Preorder.Chain
+public import Mathlib.Order.WellFoundedSet
 
 /-!
 # Results for mathlib
@@ -13,6 +14,8 @@ import Mathlib.Order.WellFoundedSet
 A collection of results for the disproof of the Aharoni–Korman conjecture which should be in
 mathlib.
 -/
+
+@[expose] public section
 
 namespace LeanPool.AharoniKorman
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.SetTheory.Cardinal.Aleph
-import Mathlib.SetTheory.Ordinal.Basic
-import Mathlib.SetTheory.Ordinal.Rank
-import Mathlib.SetTheory.Ordinal.Family
+module
+
+public import Mathlib.SetTheory.Cardinal.Aleph
+public import Mathlib.SetTheory.Ordinal.Basic
+public import Mathlib.SetTheory.Ordinal.Rank
+public import Mathlib.SetTheory.Ordinal.Family
 
 /-!
 # Small ordinal facts
@@ -19,6 +21,8 @@ Both shapes of the countability statement are provided: `Set.Countable (Set.Iio 
 `Countable` *instance* on the coercion, since consumers need one or the other and converting
 at each site is noise.
 -/
+
+@[expose] public section
 
 universe u
 

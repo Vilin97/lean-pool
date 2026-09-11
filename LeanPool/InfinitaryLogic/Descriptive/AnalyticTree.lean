@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.QueryCode
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.QueryCode
 /-!
 # The analytic tree normal form (issue #10, Unit 0b)
 
@@ -22,6 +24,8 @@ index, so the chosen points converge to `(queryCode c, g)`, continuity gives
 `queryCode (f g) = queryCode c`, and injectivity of the query code finishes.  The empty
 analytic set is served by the branchless tree.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

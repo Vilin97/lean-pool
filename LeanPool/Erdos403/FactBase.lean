@@ -3,11 +3,12 @@ Copyright (c) 2026 Trevor Morris. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Trevor Morris
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Nat.SuccPred
-import Mathlib.Order.Interval.Finset.Nat
-import LeanPool.Erdos403.Basic
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Nat.SuccPred
+public import Mathlib.Order.Interval.Finset.Nat
+public import LeanPool.Erdos403.Basic
 
 /-!
 # The factorial number system (for Erdős #403)
@@ -25,6 +26,8 @@ This file builds the infrastructure the sharp endgame needs:
 (The general reconstruction lemmas `n = ∑ dᵢ·i!`, unused by the final proof, live in
 `Erdos403.Superseded`.)
 -/
+
+@[expose] public section
 
 namespace Erdos403
 

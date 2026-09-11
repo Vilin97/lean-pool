@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Topology.ShrinkingLemma
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Topology.GDelta.MetrizableSpace
+public import Mathlib.Topology.ShrinkingLemma
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import Mathlib.Topology.GDelta.MetrizableSpace
 
 /-!
 # Finite smooth partitions of unity on planar open sets (`Jacobian/Dbar/PlanarPoU.lean`)
@@ -24,6 +25,8 @@ sum. This is risk item R5 of the design; the from-scratch route (rather than reu
 not the plain functions with prescribed exact `support` needed here) was confirmed as the right
 call by an upstream investigation of the manifold `PartitionOfUnity` API.
 -/
+
+@[expose] public section
 
 noncomputable section
 

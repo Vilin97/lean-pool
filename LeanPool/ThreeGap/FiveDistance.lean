@@ -3,10 +3,12 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.EuclideanAngle
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Data.Fin.Tuple.Sort
-import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
+module
+
+public import LeanPool.ThreeGap.EuclideanAngle
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Data.Fin.Tuple.Sort
+public import Mathlib.Geometry.Euclidean.Angle.Oriented.Basic
 
 /-!
 # The sharp Euclidean five-distance theorem `g₂ ≤ 5` — Haynes–Marklof Theorem 8 core
@@ -20,6 +22,8 @@ This composes with the already-proven `EuclideanAngle.norm_sub_lt_max_of_angle_l
 and
 `EuclideanAngle.angle_ge_pi_div_three_of_norm_sub_gt` (the record-angle bound).
 -/
+
+@[expose] public section
 
 namespace ThreeGap.FiveDistance
 

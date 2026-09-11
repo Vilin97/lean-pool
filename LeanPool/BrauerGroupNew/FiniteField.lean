@@ -3,14 +3,18 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
-import LeanPool.BrauerGroupNew.BrauerGroup
-import Mathlib.RingTheory.LittleWedderburn
+module
+
+public import LeanPool.BrauerGroupNew.BrauerGroup
+public import Mathlib.RingTheory.LittleWedderburn
 
 /-!
 # Brauer groups over finite fields
 
 This file proves that the Brauer group of a finite field is trivial.
 -/
+
+@[expose] public section
 
 variable (K : Type*) [Field K] [Finite K]
 

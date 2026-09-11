@@ -3,10 +3,11 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.CWComplex.IProd.Iso
-import LeanPool.WhiteheadTheorem.HEP.Cofibration
-import LeanPool.WhiteheadTheorem.Compressible.Defs
+public import LeanPool.WhiteheadTheorem.CWComplex.IProd.Iso
+public import LeanPool.WhiteheadTheorem.HEP.Cofibration
+public import LeanPool.WhiteheadTheorem.Compressible.Defs
 
 /-!
 This file proves that if a map is compressible with respect to
@@ -18,6 +19,8 @@ This is the theorem `IsCompressible.relCWComplex_of_diskBoundaryIncl`.
 
 Some proofs are similar to the ones in `Mathlib.CategoryTheory.LiftingProperties.Limits`
 -/
+
+@[expose] public section
 
 
 open CategoryTheory unitInterval

@@ -3,21 +3,24 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.Defs
-import LeanPool.WhiteheadTheorem.Exponential
-import LeanPool.WhiteheadTheorem.Shapes.Maps
-import LeanPool.WhiteheadTheorem.Shapes.Pushout
-import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
-import Mathlib.Topology.Homotopy.Equiv
-import Mathlib.Topology.Category.TopCat.Limits.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
+public import LeanPool.WhiteheadTheorem.Defs
+public import LeanPool.WhiteheadTheorem.Exponential
+public import LeanPool.WhiteheadTheorem.Shapes.Maps
+public import LeanPool.WhiteheadTheorem.Shapes.Pushout
+public import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
+public import Mathlib.Topology.Homotopy.Equiv
+public import Mathlib.Topology.Category.TopCat.Limits.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.MappingCylinder`.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 open scoped unitInterval ContinuousMap

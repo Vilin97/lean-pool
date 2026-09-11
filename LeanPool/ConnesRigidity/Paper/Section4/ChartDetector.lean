@@ -3,13 +3,17 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import Mathlib.LinearAlgebra.CrossProduct
-import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.BooleanPolynomial
-import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
+module
+
+public import Mathlib.LinearAlgebra.CrossProduct
+public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.BooleanPolynomial
+public import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
 
 /-!
 Algebraic finite-chart detector spine for Zhou's §4. Paper: §4.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperChartDetector

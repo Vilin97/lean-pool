@@ -3,12 +3,15 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Mathlib.Algebra.Group.Defs
+public import Mathlib.Algebra.Group.Defs
 
 /-!
 # LeanPool.Polylean.ConjInvLength.LengthBound
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 /-- The four generators used for words in the conjugation-invariant length example. -/

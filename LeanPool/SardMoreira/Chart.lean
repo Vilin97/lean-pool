@@ -3,18 +3,21 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.Implicit
-import Mathlib.Analysis.LocallyConvex.HahnBanach
-import Mathlib.Analysis.Normed.Module.HahnBanach
-import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-import LeanPool.SardMoreira.ImplicitFunction
-import LeanPool.SardMoreira.LocalEstimates
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+public import Mathlib.Analysis.Calculus.Implicit
+public import Mathlib.Analysis.LocallyConvex.HahnBanach
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
+public import LeanPool.SardMoreira.ImplicitFunction
+public import LeanPool.SardMoreira.LocalEstimates
 
 /-!
 # LeanPool.SardMoreira.Chart
 -/
+
+@[expose] public section
 
 noncomputable section
 

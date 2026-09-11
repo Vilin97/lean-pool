@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicFaceMerge
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicFaceMerge
 
 /-!
 # Canonical output of finite-cyclic normalization
@@ -13,6 +15,8 @@ This file fixes the output type of the Gallier--Xu recursion before that recursi
 A result lands only at the existing `NormalForm.canonicalPresentation`; it cannot introduce a
 second project-owned spelling of the Eval representatives.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

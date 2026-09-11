@@ -3,8 +3,10 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.SimultaneousDirichlet
-import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
+module
+
+public import LeanPool.ThreeGap.SimultaneousDirichlet
+public import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
 
 /-!
 # Arithmetic sharpness of the `L∞` five-distance theorem `g_∞ ≤ 5` on `𝕋²` (dynamics-free)
@@ -39,6 +41,8 @@ comparison is between *integers*, and the rational→irrational transport gap is
 (`five_le_card_image_of_strictAnti_chain`, `inf_lt_inf`) and the integer minimum (`sq_residue_le`)
 are reused verbatim from the Euclidean development.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.LinftyRecords
 

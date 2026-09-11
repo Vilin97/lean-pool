@@ -3,12 +3,13 @@ Copyright (c) 2026 Carles Marín. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Carles Marín
 -/
+module
 
-import Mathlib.Data.Rat.Defs
-import Mathlib.Data.List.Basic
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
+public import Mathlib.Data.Rat.Defs
+public import Mathlib.Data.List.Basic
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.Ring
 
 /-!
 # Certified Runge-Kutta Order Conditions
@@ -19,6 +20,8 @@ the density `γ`, and the elementary weight `Φ(A,b)`, proves the finite-catalog
 keystone for order conditions, and verifies Euler, Heun, RK4, Dormand-Prince,
 and Gauss-Legendre certificates.
 -/
+
+@[expose] public section
 
 namespace RungeKuttaOrderConditions
 

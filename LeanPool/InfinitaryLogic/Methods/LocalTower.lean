@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalSkolem
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalSkolem
 /-!
 # The countable local Skolem tower `Llocal` / `Γlocal`
 
@@ -31,6 +33,8 @@ this chunk** is that every stage is countable — both the language's symbol typ
 `localSkolem` was introduced to fix). The local colimit, its cocone inclusions, and the transported
 countability live in `LocalColimit.lean`; here we stop at the tower and its stagewise countability.
 -/
+
+@[expose] public section
 
 universe u v w
 

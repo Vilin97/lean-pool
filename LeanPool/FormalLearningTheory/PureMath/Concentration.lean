@@ -3,11 +3,13 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import Mathlib.MeasureTheory.Measure.MeasureSpace
-import Mathlib.Probability.Independence.Basic
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Probability.Moments.Variance
+module
+
+public import Mathlib.MeasureTheory.Measure.MeasureSpace
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Probability.Moments.Variance
 
 /-!
 # Concentration Inequalities
@@ -29,6 +31,8 @@ No learning-theory types.
 
 - Boucheron, Lugosi, Massart, "Concentration Inequalities", Chapter 2
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

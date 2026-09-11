@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Surface.Bridges
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
-import Mathlib.Geometry.Manifold.MFDeriv.Basic
+public import LeanPool.JacobianDiffgeo.Surface.Bridges
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+public import Mathlib.Geometry.Manifold.MFDeriv.Basic
 
 /-!
 # Holomorphic inverse function theorem on surfaces
@@ -25,6 +26,8 @@ Unit: surfaces-and-charts (`docs/design/surfaces-and-charts.md` §3.5; Forster 2
 The planar input is mathlib's analytic inverse function theorem
 (`AnalyticAt.analyticAt_localInverse`, `HasStrictFDerivAt.toOpenPartialHomeomorph`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

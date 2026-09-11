@@ -3,19 +3,20 @@ Copyright (c) 2026 Daniel Smania. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Smania
 -/
+module
 
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Analysis.Convex.SpecificFunctions.Pow
-import Mathlib.Analysis.InnerProductSpace.NormPow
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
+public import Mathlib.Analysis.InnerProductSpace.NormPow
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 
 /-!
@@ -24,6 +25,8 @@ import Mathlib.Tactic.Ring
 Defines the conjugate exponent `q`, `pStar`, the Burkholder expression `v`, and
 the sector parameters used to build the majorant.
 -/
+
+@[expose] public section
 
 noncomputable section
 

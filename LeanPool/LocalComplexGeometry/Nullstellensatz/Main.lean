@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrime
-import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrime
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
 
 /-!
 # Rückert's local analytic Nullstellensatz
@@ -14,6 +15,8 @@ The prepared-prime argument supplies the prime zero-set theorem in every
 dimension.  This module exposes its unconditional ideal-theoretic and
 representative-level consequences.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

@@ -3,16 +3,19 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.Algebra.Ring.Regular
-import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
-import LeanPool.LeanPolyABC.Lib.Radical
-import LeanPool.LeanPolyABC.Lib.Wronskian
+public import Mathlib.Algebra.Polynomial.FieldDivision
+public import Mathlib.Algebra.Ring.Regular
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
+public import LeanPool.LeanPolyABC.Lib.Radical
+public import LeanPool.LeanPolyABC.Lib.Wronskian
 
 /-!
 # LeanPool.LeanPolyABC.Lib.DivRadical
 -/
+
+@[expose] public section
 
 /-
 On `a.divRadical = a / radical a`. The purpose of this file is to prove our "main lemma" that

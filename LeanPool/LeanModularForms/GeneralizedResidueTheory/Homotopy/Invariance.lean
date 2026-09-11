@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.ParametricDiff
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.ParametricDiff
 
 /-!
 # Homotopy Invariance of Winding Numbers
@@ -24,6 +25,8 @@ smooth), plus the classical winding number formula for curves avoiding a point.
 * `contourIntegral_eq_of_homotopic` — contour integrals equal under
     homotopy for holomorphic integrands
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

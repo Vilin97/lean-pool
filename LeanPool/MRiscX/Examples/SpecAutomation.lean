@@ -3,8 +3,10 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Basic
-import LeanPool.MRiscX.Tactics.ApplySpec
+module
+
+public import LeanPool.MRiscX.Basic
+public import LeanPool.MRiscX.Tactics.ApplySpec
 
 /-!
 # SpecAutomation
@@ -14,6 +16,8 @@ This module exercises the automatic specification application (`applySpec''` and
 each branch of the instruction-dispatch in `Tactics/ApplySpec.lean` is covered by a
 proved Hoare triple.
 -/
+
+@[expose] public section
 
 /-
 Store via the inferred specification (`specification_StoreWordImmediate`).

@@ -3,10 +3,11 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import Mathlib.Topology.NoetherianSpace
-import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
-import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
+public import Mathlib.Topology.NoetherianSpace
+public import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
+public import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
 
 /-!
 # Noetherian filtered-colimit infrastructure for sheaf cohomology
@@ -19,6 +20,8 @@ Noetherian spaces:
 * successor-stage dimension shifts and presheaf-boundary comparison maps used in the
   degree-`n+1` colimit comparison.
 -/
+
+@[expose] public section
 
 universe u
 

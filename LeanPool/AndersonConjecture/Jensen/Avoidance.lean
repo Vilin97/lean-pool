@@ -3,12 +3,14 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.AdicCompletion.Basic
-import Mathlib.RingTheory.Filtration
-import Mathlib.RingTheory.Ideal.Quotient.Noetherian
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.Filtration
+public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 
 /-!
 # Prime Avoidance in Complete Local Rings
@@ -20,6 +22,8 @@ the uncountable case uses a cardinality argument.
 
 Heitmann, "Characterization of completions of UFDs", 1993, Lemmas 2--3.
 -/
+
+@[expose] public section
 
 noncomputable section
 

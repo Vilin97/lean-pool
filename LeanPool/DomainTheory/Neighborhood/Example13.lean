@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.FinCases
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Tactic.FinCases
 
 /-!
 # Example 1.3 (Scott 1981, PRG-19, §1)
@@ -23,6 +24,8 @@ chain
 This is a concrete finite computation (`fin_cases`/`simp`); footprint
 `[propext, Classical.choice, Quot.sound]` — same as Example 1.2.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Example13
 

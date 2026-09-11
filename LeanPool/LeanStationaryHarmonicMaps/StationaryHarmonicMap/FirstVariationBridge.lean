@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
 
 /-!
 # First-variation bridge
@@ -15,6 +17,8 @@ stationary Sobolev map hypothesis, even though the formula only depends on
 `Du`.  Vector-field variations use the same bundled compactly supported `C¹`
 test-function interface as the distributional weak-gradient bridge.
 -/
+
+@[expose] public section
 
 noncomputable section
 

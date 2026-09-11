@@ -3,14 +3,16 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import Mathlib.Data.Fin.Rev
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Prod
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Fintype.Sets
-import Mathlib.Logic.Equiv.Fin.Rotate
-import Mathlib.Logic.Relation
+module
+
+public import Mathlib.Data.Fin.Rev
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Prod
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Data.Fintype.Sets
+public import Mathlib.Logic.Equiv.Fin.Rotate
+public import Mathlib.Logic.Relation
 
 /-!
 # Trusted statement layer for Sabidussi compatibility
@@ -19,6 +21,8 @@ This module contains only the public data and predicates occurring in the headli
 the trusted import boundary for `leanprover/comparator`; proof modules build on it, but it does not
 import them.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 

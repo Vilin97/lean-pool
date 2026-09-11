@@ -3,14 +3,18 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section6.Characteristic
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificate
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section6.Characteristic
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificate
 
 /-!
 This file proves the concrete characteristic-kernel transport needed by the
 Zhou-shaped nonisomorphism argument. It is independently written from the
 cited public mathematical source.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperCharacteristicTransport

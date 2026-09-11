@@ -3,12 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.ErdosMoser.Basic
-import Mathlib.Data.Finset.Sort
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+public import LeanPool.ErdosMoser.Basic
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
 
 /-!
 # A sharp variance bound for distinct natural numbers
@@ -18,6 +19,8 @@ a finite set of natural numbers. The proof enumerates the set increasingly,
 compares all pairwise differences with those of an initial interval, and
 evaluates the resulting quadratic sum.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ErdosMoser
 

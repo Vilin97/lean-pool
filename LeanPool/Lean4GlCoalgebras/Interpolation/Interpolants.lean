@@ -3,15 +3,18 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import Mathlib.Data.Fintype.Defs
-import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
-import LeanPool.Lean4GlCoalgebras.Split.Completeness
+public import Mathlib.Data.Fintype.Defs
+public import LeanPool.Lean4GlCoalgebras.Logic.FixedPointTheorem
+public import LeanPool.Lean4GlCoalgebras.Split.Completeness
 
 /-! ## Finding interpolants
 
 Here we show that given a finite GL-split proof, we can always find suitable interpolants.
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

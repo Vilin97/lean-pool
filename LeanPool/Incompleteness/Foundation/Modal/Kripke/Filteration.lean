@@ -3,12 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import Mathlib.Data.Set.Finite.Powerset
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Closure
-import LeanPool.Incompleteness.Foundation.Modal.Subformulas
+public import Mathlib.Data.Set.Finite.Powerset
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Closure
+public import LeanPool.Incompleteness.Foundation.Modal.Subformulas
 
 /-! # Filteration -/
+
+@[expose] public section
 
 universe u v
 

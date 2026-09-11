@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ElementaryMove
 
 /-!
 # Transporting the elementary move to a thin kite
@@ -13,6 +15,8 @@ Schoenflies induction.  This file transports it piecewise-affinely to a kite who
 upper margins are an arbitrary positive `δ`.  The two halves of the outer kite form a
 two-triangle mesh, so the transport is supplied by the canonical realization homeomorphism.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

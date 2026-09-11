@@ -3,9 +3,11 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Computation
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import LeanPool.FormalLearningTheory.Data
+public import LeanPool.FormalLearningTheory.Computation
 
 /-!
 # Core Learner Types
@@ -22,6 +24,8 @@ different:
 This is intentional: a common parent would erase the structural properties
 that make each paradigm's theorems non-trivial.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import LeanPool.PythagoreanPolynomialParametrization.Main
+public import LeanPool.PythagoreanPolynomialParametrization.Main
 
 /-!
 # Polynomial parametrizations of Pythagorean triples
@@ -16,3 +17,5 @@ Main declarations: `LeanPool.PythagoreanPolynomialParametrization.exists_int_val
 Tags: number-theory, pythagorean-triples, integer-valued-polynomials
 MSC: 11D09, 11D85, 13F20
 -/
+
+@[expose] public section

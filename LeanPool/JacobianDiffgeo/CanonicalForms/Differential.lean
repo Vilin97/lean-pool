@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
 
 /-!
 # `ofForm1`, the `ℳ(X)`-module structure, `d`, `dlog` (D7), data + quotient layers
@@ -36,6 +37,8 @@ Quotient layer (`MForm`, the honest 1-form type):
 * `MForm.ord_smul_mero : (h • Θ).ord x = h.ord x + Θ.ord x` (the D10/D11 divisor dictionary's
   pointwise engine).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

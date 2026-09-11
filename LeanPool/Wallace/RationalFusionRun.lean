@@ -3,10 +3,11 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.RationalLocalSetup
-import LeanPool.Wallace.LocalFusion
-import LeanPool.Wallace.LocalEnumeration
+public import LeanPool.Wallace.RationalLocalSetup
+public import LeanPool.Wallace.LocalFusion
+public import LeanPool.Wallace.LocalEnumeration
 
 /-!
 # The unconditional local fusion for the rational direct sum
@@ -15,6 +16,8 @@ For each nonzero rational vector this module instantiates the generic fusion rec
 prepared local blocks, proves the density bound for deleted positions, and packages the
 resulting separating, locally admissible character.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

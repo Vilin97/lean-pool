@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
 /-!
 # Paired inseparability: the cross-coordinate gates (issue #8, commit 4c — risky core)
 
@@ -38,6 +40,8 @@ The full paired family (`Sent₁`/`Sent₂` predicates, `PairedInsepFamilyMem`, 
 closures, the `ConsistencyPropertyEqOn` instance over the union, and the `{r₁, r₂}` Henkin
 endpoint yielding `M ⊨ r₁ ∧ ¬ M ⊨ r₂`) is assembled on top of these gates in the next tranche.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

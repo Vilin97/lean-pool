@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
-import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
+module
+
+public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
+public import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
 /-!
 # Tail-indiscernibility: the eventually-form EM adapter
 
@@ -40,6 +42,8 @@ weakens the EM interface accordingly:
 The downstream consumer is `hasArbLargeModels_of_tail_extraction` in
 `InfinitaryLogic/Conditional/MorleyHanfTransfer.lean`.
 -/
+
+@[expose] public section
 
 universe u v
 

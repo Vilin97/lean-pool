@@ -3,9 +3,11 @@ Copyright (c) 2026 Axiom Math contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: AgreeToDisagree contributors
 -/
-import Mathlib.Data.Setoid.Partition
-import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
-import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
+module
+
+public import Mathlib.Data.Setoid.Partition
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+public import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 
 /-!
 # Aumann's agreement theorem
@@ -13,6 +15,8 @@ import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 This file develops information partitions and conditional probabilities needed
 for Aumann's agreement theorem.
 -/
+
+@[expose] public section
 
 namespace AgreeToDisagree
 

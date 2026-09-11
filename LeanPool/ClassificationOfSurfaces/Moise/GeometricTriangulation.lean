@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.Topology.Homeomorph.Lemmas
-import Mathlib.Topology.Separation.Hausdorff
+module
+
+public import Mathlib.Analysis.Convex.StdSimplex
+public import Mathlib.Topology.Homeomorph.Lemmas
+public import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # Geometric triangulations
@@ -28,6 +30,8 @@ Semantic anchors (see `Moise/Countermodels.lean` and the Definition Faithfulness
 * positive example: the standard 2-simplex triangulates itself;
 * non-example: `ℝ` and `ℚ` admit no geometric triangulation (they are not compact).
 -/
+
+@[expose] public section
 
 /-- A finite closed cover of a preconnected set has a connected intersection graph.
 

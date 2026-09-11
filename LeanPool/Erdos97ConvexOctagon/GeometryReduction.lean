@@ -3,14 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.Basic
-import LeanPool.Erdos97ConvexOctagon.Incidence
-import Mathlib.Analysis.Convex.Between
-import Mathlib.Analysis.Convex.Independent
-import Mathlib.Geometry.Euclidean.PerpBisector
+public import LeanPool.Erdos97ConvexOctagon.Basic
+public import LeanPool.Erdos97ConvexOctagon.Incidence
+public import Mathlib.Analysis.Convex.Between
+public import Mathlib.Analysis.Convex.Independent
+public import Mathlib.Geometry.Euclidean.PerpBisector
 
 /-! # Erdős 97 convex-octagon formalization: Geometry Reduction -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

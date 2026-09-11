@@ -7,11 +7,15 @@ Authors: Utensil Song
 
 Concrete Zhou action instances on the paper kernel. Paper: §§2--4.
 -/
-import LeanPool.ConnesRigidity.Construction.SquareSpan
+module
+
+public import LeanPool.ConnesRigidity.Construction.SquareSpan
 
 /-!
 The paper action instances component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Construction

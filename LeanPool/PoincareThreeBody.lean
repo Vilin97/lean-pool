@@ -3,54 +3,55 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Analytic
-import LeanPool.PoincareThreeBody.AnalyticNormalization
-import LeanPool.PoincareThreeBody.AnalyticMinors
-import LeanPool.PoincareThreeBody.ActionFactorization
-import LeanPool.PoincareThreeBody.ActionPoisson
-import LeanPool.PoincareThreeBody.Averaging
-import LeanPool.PoincareThreeBody.Core
-import LeanPool.PoincareThreeBody.CoefficientNormalization
-import LeanPool.PoincareThreeBody.CertifiedPoincareSet
-import LeanPool.PoincareThreeBody.Delaunay
-import LeanPool.PoincareThreeBody.DelaunayActions
-import LeanPool.PoincareThreeBody.DelaunayAnchorChart
-import LeanPool.PoincareThreeBody.DelaunayChart
-import LeanPool.PoincareThreeBody.DelaunayFlow
-import LeanPool.PoincareThreeBody.DelaunaySection
-import LeanPool.PoincareThreeBody.DenseResonantObstruction
-import LeanPool.PoincareThreeBody.DifferentialDependence
-import LeanPool.PoincareThreeBody.DisturbingCertificate
-import LeanPool.PoincareThreeBody.DisturbingFunction
-import LeanPool.PoincareThreeBody.EnergyLeafObstruction
-import LeanPool.PoincareThreeBody.GeneratingFunction
-import LeanPool.PoincareThreeBody.GlobalEnergySection
-import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
-import LeanPool.PoincareThreeBody.HomologicalEquation
-import LeanPool.PoincareThreeBody.IrrationalTorusFlow
-import LeanPool.PoincareThreeBody.KeplerOrbit
-import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
-import LeanPool.PoincareThreeBody.KeplerFlow
-import LeanPool.PoincareThreeBody.KeplerHamiltonian
-import LeanPool.PoincareThreeBody.LeadingObstruction
-import LeanPool.PoincareThreeBody.LocalEnergyLeaf
-import LeanPool.PoincareThreeBody.MixedPartials
-import LeanPool.PoincareThreeBody.NormalizationInduction
-import LeanPool.PoincareThreeBody.NormalizationClosure
-import LeanPool.PoincareThreeBody.OneTwoResonance
-import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
-import LeanPool.PoincareThreeBody.ParameterDomainTopology
-import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
-import LeanPool.PoincareThreeBody.Perturbation
-import LeanPool.PoincareThreeBody.PoincareSet
-import LeanPool.PoincareThreeBody.PoissonNormalization
-import LeanPool.PoincareThreeBody.Polar
-import LeanPool.PoincareThreeBody.Resonance
-import LeanPool.PoincareThreeBody.ResonantActionObstruction
-import LeanPool.PoincareThreeBody.ResonantOrbit
-import LeanPool.PoincareThreeBody.RotatingEllipse
-import LeanPool.PoincareThreeBody.ValidatedQuadrature
+public import LeanPool.PoincareThreeBody.Analytic
+public import LeanPool.PoincareThreeBody.AnalyticNormalization
+public import LeanPool.PoincareThreeBody.AnalyticMinors
+public import LeanPool.PoincareThreeBody.ActionFactorization
+public import LeanPool.PoincareThreeBody.ActionPoisson
+public import LeanPool.PoincareThreeBody.Averaging
+public import LeanPool.PoincareThreeBody.Core
+public import LeanPool.PoincareThreeBody.CoefficientNormalization
+public import LeanPool.PoincareThreeBody.CertifiedPoincareSet
+public import LeanPool.PoincareThreeBody.Delaunay
+public import LeanPool.PoincareThreeBody.DelaunayActions
+public import LeanPool.PoincareThreeBody.DelaunayAnchorChart
+public import LeanPool.PoincareThreeBody.DelaunayChart
+public import LeanPool.PoincareThreeBody.DelaunayFlow
+public import LeanPool.PoincareThreeBody.DelaunaySection
+public import LeanPool.PoincareThreeBody.DenseResonantObstruction
+public import LeanPool.PoincareThreeBody.DifferentialDependence
+public import LeanPool.PoincareThreeBody.DisturbingCertificate
+public import LeanPool.PoincareThreeBody.DisturbingFunction
+public import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+public import LeanPool.PoincareThreeBody.GeneratingFunction
+public import LeanPool.PoincareThreeBody.GlobalEnergySection
+public import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
+public import LeanPool.PoincareThreeBody.HomologicalEquation
+public import LeanPool.PoincareThreeBody.IrrationalTorusFlow
+public import LeanPool.PoincareThreeBody.KeplerOrbit
+public import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
+public import LeanPool.PoincareThreeBody.KeplerFlow
+public import LeanPool.PoincareThreeBody.KeplerHamiltonian
+public import LeanPool.PoincareThreeBody.LeadingObstruction
+public import LeanPool.PoincareThreeBody.LocalEnergyLeaf
+public import LeanPool.PoincareThreeBody.MixedPartials
+public import LeanPool.PoincareThreeBody.NormalizationInduction
+public import LeanPool.PoincareThreeBody.NormalizationClosure
+public import LeanPool.PoincareThreeBody.OneTwoResonance
+public import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
+public import LeanPool.PoincareThreeBody.ParameterDomainTopology
+public import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
+public import LeanPool.PoincareThreeBody.Perturbation
+public import LeanPool.PoincareThreeBody.PoincareSet
+public import LeanPool.PoincareThreeBody.PoissonNormalization
+public import LeanPool.PoincareThreeBody.Polar
+public import LeanPool.PoincareThreeBody.Resonance
+public import LeanPool.PoincareThreeBody.ResonantActionObstruction
+public import LeanPool.PoincareThreeBody.ResonantOrbit
+public import LeanPool.PoincareThreeBody.RotatingEllipse
+public import LeanPool.PoincareThreeBody.ValidatedQuadrature
 
 /-!
 # Poincaré's Nonintegrability Theorem for the Restricted Three-Body Problem
@@ -62,6 +63,8 @@ Main declarations: `LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
 Tags: dynamical-systems, celestial-mechanics, hamiltonian-systems, nonintegrability
 MSC: 70F07, 37J30, 37J40
 -/
+
+@[expose] public section
 
 /-!
 # Poincaré's theorem for the planar restricted three-body problem

@@ -3,8 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+module
+
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
 
 /-!
 # Exchangeability and Double-Sample Infrastructure
@@ -27,6 +29,8 @@ valid splits, and split measures. No learning-theory types.
 - Shalev-Shwartz & Ben-David, "Understanding Machine Learning", Chapter 4 / 6
 - Kakade & Tewari, Lecture 19: Symmetrization
 -/
+
+@[expose] public section
 
 universe u
 

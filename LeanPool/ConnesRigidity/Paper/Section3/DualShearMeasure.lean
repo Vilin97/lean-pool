@@ -10,11 +10,15 @@ splits the actual compact dual into its two kernel summands, applies the
 fiber-translation theorem to the product Haar measure, and transports the
 result back to Zhou's coordinates. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
 
 /-!
 The dual shear measure component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualShearMeasure

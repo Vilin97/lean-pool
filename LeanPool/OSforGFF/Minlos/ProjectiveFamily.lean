@@ -3,9 +3,10 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.Minlos.FinDimMarginals
-import LeanPool.OSforGFF.KolmogorovExtension4.KolmogorovExtension
+public import LeanPool.OSforGFF.Minlos.FinDimMarginals
+public import LeanPool.OSforGFF.KolmogorovExtension4.KolmogorovExtension
 
 /-!
 # Bridge: Bochner Marginals → Projective Measure Family
@@ -19,6 +20,8 @@ by `Finset E`), enabling application of the Kolmogorov extension theorem.
 - `marginalFamily` — for each `J : Finset E`, a probability measure on `∀ j : J, ℝ`
 - `marginalFamily_isProjective` — the family is projective (consistent under restriction)
 -/
+
+@[expose] public section
 
 open BigOperators MeasureTheory Complex
 

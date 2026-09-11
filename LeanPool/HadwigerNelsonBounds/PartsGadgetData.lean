@@ -3,10 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
+public import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
 
 /-! Generated exact combinatorics for the finite second-stage Parts gadget. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

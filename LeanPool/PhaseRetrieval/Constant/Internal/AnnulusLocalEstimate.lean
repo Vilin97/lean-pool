@@ -13,11 +13,15 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Public API:
   - `annulus_local_estimate` (Theorem 6.1)
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
-import LeanPool.PhaseRetrieval.Constant.Internal.LocalCircleEstimate
-import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
+public import LeanPool.PhaseRetrieval.Constant.Internal.LocalCircleEstimate
+public import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
 
 /-! # AnnulusLocalEstimate -/
+
+@[expose] public section
 
 
 open MeasureTheory Complex Real Finset

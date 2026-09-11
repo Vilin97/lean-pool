@@ -3,17 +3,20 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
-import Mathlib.GroupTheory.GroupAction.Quotient
+public import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+public import Mathlib.GroupTheory.GroupAction.Quotient
 
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

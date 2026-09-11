@@ -3,16 +3,18 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
-import LeanPool.JohnsonLindenstraussLean.ChiSquared
-import LeanPool.JohnsonLindenstraussLean.Projection
-import LeanPool.JohnsonLindenstraussLean.NormPreservation
-import LeanPool.JohnsonLindenstraussLean.Rotation
-import LeanPool.JohnsonLindenstraussLean.Lemma
-import LeanPool.JohnsonLindenstraussLean.EndToEnd
-import LeanPool.JohnsonLindenstraussLean.InnerProduct
-import LeanPool.JohnsonLindenstraussLean.QJL
-import LeanPool.JohnsonLindenstraussLean.QJLDistortion
+module
+
+public import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+public import LeanPool.JohnsonLindenstraussLean.ChiSquared
+public import LeanPool.JohnsonLindenstraussLean.Projection
+public import LeanPool.JohnsonLindenstraussLean.NormPreservation
+public import LeanPool.JohnsonLindenstraussLean.Rotation
+public import LeanPool.JohnsonLindenstraussLean.Lemma
+public import LeanPool.JohnsonLindenstraussLean.EndToEnd
+public import LeanPool.JohnsonLindenstraussLean.InnerProduct
+public import LeanPool.JohnsonLindenstraussLean.QJL
+public import LeanPool.JohnsonLindenstraussLean.QJLDistortion
 
 /-!
 # Verification: sanity instantiations and axiom audit
@@ -22,6 +24,8 @@ results, plus `#print axioms` commands confirming the development depends only o
 mathlib's standard axioms (`propext`, `Classical.choice`, `Quot.sound`) — i.e. it is
 genuinely `sorry`-free.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped RealInnerProductSpace

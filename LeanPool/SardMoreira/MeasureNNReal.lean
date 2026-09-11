@@ -3,13 +3,16 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import LeanPool.SardMoreira.MeasureComap
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import LeanPool.SardMoreira.MeasureComap
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 
 /-!
 # LeanPool.SardMoreira.MeasureNNReal
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal Set.Notation Pointwise
 open MeasureTheory Filter Set Function Metric Topology

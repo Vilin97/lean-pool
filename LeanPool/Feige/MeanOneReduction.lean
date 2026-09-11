@@ -3,15 +3,19 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.KStatistic
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Probability.Independence.Basic
+module
+
+public import LeanPool.Feige.KStatistic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Probability.Independence.Basic
 
 /-!
 # Reduction from means at most one to means exactly one
 
 This is the final mean-normalization reduction in the proof of Theorem 2.1.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set Filter
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Topology.Order.MonotoneConvergence
-import Mathlib.Topology.Instances.Discrete
+module
 
-import LeanPool.LeanModelChecking.LTLNNF
-import LeanPool.LeanModelChecking.ABW
+public import Mathlib.Topology.Order.MonotoneConvergence
+public import Mathlib.Topology.Instances.Discrete
+
+public import LeanPool.LeanModelChecking.LTLNNF
+public import LeanPool.LeanModelChecking.ABW
 
 /-!
 # From NNF formulas to alternating Büchi automata
@@ -15,6 +17,8 @@ import LeanPool.LeanModelChecking.ABW
 We construct, for every negation normal form formula, an alternating Büchi
 automaton (`ABW`) accepting the same language, establishing `exists_ABW_lang_for_LTL`.
 -/
+
+@[expose] public section
 
 namespace LeanModelChecking
 

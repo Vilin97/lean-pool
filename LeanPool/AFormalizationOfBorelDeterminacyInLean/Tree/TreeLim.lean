@@ -3,16 +3,19 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.CategoryTheory.Adjunction.Limits
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
+public import Mathlib.CategoryTheory.Adjunction.Limits
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeLim
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace Descriptive.Tree

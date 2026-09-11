@@ -3,15 +3,17 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.AlgebraicCard
-import Mathlib.Algebra.Field.ULift
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Mortality.MaskMortality
-import LeanPool.Koethe.MaskSequence.Universal
-import LeanPool.Koethe.Linearization.Nil
-import LeanPool.Koethe.ShiftWitness.Witness
+module
+
+public import Mathlib.Algebra.AlgebraicCard
+public import Mathlib.Algebra.Field.ULift
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.Mortality.MaskMortality
+public import LeanPool.Koethe.MaskSequence.Universal
+public import LeanPool.Koethe.Linearization.Nil
+public import LeanPool.Koethe.ShiftWitness.Witness
 
 /-!
 # The counterexample: a nil ideal with a non-nilpotent `2 × 2` matrix
@@ -24,6 +26,8 @@ This file assembles the whole development. The scalar-linearization theorem
 in an arbitrary universe, a nil two-sided ideal `I ⊆ R`, and a matrix in `M_2(I)` that is
 not nilpotent.
 -/
+
+@[expose] public section
 
 noncomputable section
 

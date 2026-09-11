@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
-import LeanPool.ClassificationOfSurfaces.Representatives
+module
+
+public import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
+public import LeanPool.ClassificationOfSurfaces.Representatives
 
 /-!
 # Hemisphere maps for the two-monogon sphere
@@ -17,6 +19,8 @@ The two possible directed sphere identifications are classified explicitly. The 
 continuous facewise map on the polygonal pre-realization respects every raw gluing generator.
 `SphereQuotientHomeomorph` descends this map and proves that it is a homeomorphism.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

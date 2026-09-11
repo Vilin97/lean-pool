@@ -3,12 +3,15 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+public import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 -/
+
+@[expose] public section
 
 attribute [delta0_simps]
   Sum.elim_inl

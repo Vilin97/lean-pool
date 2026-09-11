@@ -11,13 +11,17 @@ Modifications: extracted the generic crossed-product Hilbert model, removed
 paper-specific instances, and changed local vocabulary. Paper: §3. See
 the upstream PORT_MAP.md.
 -/
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.MeasureTheory.Function.L2Space
-import LeanPool.ConnesRigidity.Core
+module
+
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.MeasureTheory.Function.L2Space
+public import LeanPool.ConnesRigidity.Core
 
 /-!
 The crossed product component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace CrossedProduct

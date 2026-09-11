@@ -3,14 +3,17 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import LeanPool.PythagoreanPolynomialParametrization.IntegerValued
+public import LeanPool.PythagoreanPolynomialParametrization.IntegerValued
 
 /-! # Positive Pythagorean triples and 16-parameter variant
 
 This file contains the positive-triple remark and the unrestricted 16-parameter
 substitution obtained from the four-square theorem.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

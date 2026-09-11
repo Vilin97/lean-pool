@@ -3,14 +3,17 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import LeanPool.PythagoreanPolynomialParametrization.SourceLemmas
+public import LeanPool.PythagoreanPolynomialParametrization.SourceLemmas
 
 /-! # Integer-valued parametrization of all Pythagorean triples
 
 This file contains the explicit four-variable integer-valued polynomial triple from
 Frisch and Vaserstein's main theorem.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

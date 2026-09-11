@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalization
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalization
 
 /-!
 # Derived Gallier--Xu word rewrites
@@ -17,6 +19,8 @@ normalization proof.  It starts with proof-producing infrastructure for one-face
 
 These lemmas keep intermediate validity witnesses out of the public derived-chain APIs.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

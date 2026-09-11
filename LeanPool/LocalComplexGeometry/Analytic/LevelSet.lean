@@ -3,8 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
+public import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
 
 /-!
 # Regular holomorphic level sets
@@ -15,6 +16,8 @@ dimension `n - m`.  Besides the analytic parameter map, the interface exposes
 an analytic ambient fiber-coordinate map and eventual two-sided inverse laws,
 so the conclusion is stronger than a dimension count.
 -/
+
+@[expose] public section
 
 
 open Filter

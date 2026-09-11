@@ -3,12 +3,14 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Reduction
-import Mathlib.MeasureTheory.Measure.Real
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.ProbabilityMassFunction.Integrals
-import Mathlib.Probability.Distributions.Uniform
+module
+
+public import LeanPool.Feige.Reduction
+public import Mathlib.MeasureTheory.Measure.Real
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Probability.ProbabilityMassFunction.Integrals
+public import Mathlib.Probability.Distributions.Uniform
 
 /-!
 # The fixed-dimensional extremal example
@@ -18,6 +20,8 @@ sample space is `(Fin n → Fin (n + 1))`, with its uniform law.  Coordinate
 `i` is `n + 1` when the `i`th digit is zero, and is zero otherwise.  Thus
 every coordinate has the two-point law used in the proof outline.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory Set

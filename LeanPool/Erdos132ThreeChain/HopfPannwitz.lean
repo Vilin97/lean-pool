@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132ThreeChain.Plane
-import LeanPool.Erdos132ThreeChain.CaroWei
+public import LeanPool.Erdos132ThreeChain.Plane
+public import LeanPool.Erdos132ThreeChain.CaroWei
 
 /-!
 # The Hopf--Pannwitz diameter bound
@@ -32,6 +33,8 @@ maximality of `D` into the strict inequality `Z < X + Y`.  A partner `w` of the 
 satisfies `⟪B, w - v⟫ = |w - v|² / 2` while `⟪A, w - v⟫` and `⟪C, w - v⟫` are at least that, so
 pairing Cramer's identity with `w - v` forces `|w - v|² ≤ 0`, i.e. `w = v`.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

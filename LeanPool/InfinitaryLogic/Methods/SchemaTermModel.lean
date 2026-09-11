@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+module
+
+public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
 /-!
 # Layer 7b checkpoint 5a: the schema term-model substrate
 
@@ -26,6 +28,8 @@ and the shared body-extraction engine `exists_body_of_subset`; the exported sema
 sequence `schemaSeq` (the classes of the `d`-constants). No `iSup`, `all`, or truth lemma here —
 that is checkpoint 5b.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

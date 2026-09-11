@@ -3,12 +3,13 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
-import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-import LeanPool.KasamiCyclicAdditive.Statement.CoefficientForm
-import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Statement.CoefficientForm
+public import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
 /-!
 # Normalization and Frobenius coefficient transport
 
@@ -25,6 +26,8 @@ incorrect stronger claim that `slopeTripleCount k ρ = slopeTripleCount (n-k) ρ
 at the *same* slope: Frobenius acts on the coefficients, hence on the slope,
 as well.
 -/
+
+@[expose] public section
 
 open Finset
 

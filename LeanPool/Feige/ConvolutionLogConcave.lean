@@ -3,10 +3,12 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.OneSidedDensity
-import Mathlib.Analysis.LConvolution
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.WithDensity
+module
+
+public import LeanPool.Feige.OneSidedDensity
+public import Mathlib.Analysis.LConvolution
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.MeasureTheory.Measure.WithDensity
 
 /-!
 # Nonnegative density convolution
@@ -18,6 +20,8 @@ one-dimensional closure is proved by the TP2/Cauchy--Binet argument in
 `Feige.TranslationTP2` and instantiated for the insertion common laws in
 `Feige.FiniteSignedExp`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped ENNReal

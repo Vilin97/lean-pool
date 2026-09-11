@@ -3,12 +3,14 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Learner
-import LeanPool.FormalLearningTheory.Criterion
-import LeanPool.FormalLearningTheory.Complexity
-import LeanPool.FormalLearningTheory.Computation
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import LeanPool.FormalLearningTheory.Data
+public import LeanPool.FormalLearningTheory.Learner
+public import LeanPool.FormalLearningTheory.Criterion
+public import LeanPool.FormalLearningTheory.Complexity
+public import LeanPool.FormalLearningTheory.Computation
 
 /-!
 # Processes and Applications
@@ -21,6 +23,8 @@ Concrete learning processes, algorithms, and scope boundaries:
 - Scope boundaries (bandits, RL, quantum - markers only)
 - Granger causality (causal inference connection)
 -/
+
+@[expose] public section
 
 universe u v
 

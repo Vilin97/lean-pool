@@ -3,9 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Basic
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Data.Fintype.BigOperators
+module
+
+public import LeanPool.CircuitComplexity.Basic
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Data.Fintype.BigOperators
 
 /-! # Nondeterministic Quantification of Boolean Functions
 
@@ -31,6 +33,8 @@ guesses the first `k` input bits.
 * `forallQuantify_eq_not_existQuantify_not` — De Morgan duality
 * `existQuantify_mono` — monotonicity under pointwise implication
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

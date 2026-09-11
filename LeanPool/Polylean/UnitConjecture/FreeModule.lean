@@ -3,9 +3,10 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Algebra.Group.Defs
+public import Mathlib.Algebra.Ring.Basic
+public import Mathlib.Algebra.Group.Defs
 
 /-!
 # Free modules
@@ -24,6 +25,8 @@ The free module (`FreeModule`) is then defined as the corresponding quotient of 
 We also give an alternative description via moves, which is more convenient for universal
 properties.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

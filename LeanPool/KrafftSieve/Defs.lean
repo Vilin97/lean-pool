@@ -13,45 +13,46 @@ Mathlib version: 8f9d9cff6bd728b17a24e163c9402775d9e6a365
 To cite Aristotle, tag @Aristotle-Harmonic on GitHub PRs/issues, and add as co-author to commits:
 Co-authored-by: Aristotle (Harmonic) <aristotle-harmonic@harmonic.fun>
 -/
+module
 
-import Mathlib.Algebra.Group.Pointwise.Finset.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
-import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Nat.Nth
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.ZMod.QuotientRing
-import Mathlib.NumberTheory.ArithmeticFunction.Defs
-import Mathlib.NumberTheory.Bertrand
-import Mathlib.NumberTheory.PrimeCounting
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Check
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Constructor
-import Mathlib.Tactic.Eval
-import Mathlib.Tactic.Ext
-import Mathlib.Tactic.Generalize
-import Mathlib.Tactic.HaveI
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.NormNum.Prime
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.SimpRw
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Tauto
-import Mathlib.Tactic.Trace
-import Mathlib.Tactic.TypeStar
-import Mathlib.Tactic.Use
-import Mathlib.Tactic.Variable
+public import Mathlib.Algebra.Group.Pointwise.Finset.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Complex.Log
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Data.Nat.Nth
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.ZMod.QuotientRing
+public import Mathlib.NumberTheory.ArithmeticFunction.Defs
+public import Mathlib.NumberTheory.Bertrand
+public import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Tactic.Cases
+public import Mathlib.Tactic.Check
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Constructor
+public import Mathlib.Tactic.Eval
+public import Mathlib.Tactic.Ext
+public import Mathlib.Tactic.Generalize
+public import Mathlib.Tactic.HaveI
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.NormNum.LegendreSymbol
+public import Mathlib.Tactic.NormNum.Prime
+public import Mathlib.Tactic.NormNum.RealSqrt
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.SimpRw
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Tauto
+public import Mathlib.Tactic.Trace
+public import Mathlib.Tactic.TypeStar
+public import Mathlib.Tactic.Use
+public import Mathlib.Tactic.Variable
 
 
 /-!
@@ -64,6 +65,8 @@ This module establishes the foundational definitions for the sieve:
 - $g_i, c$: Local and global hit counters.
 - $sum1, sum2$: Weighted sums over the interval.
 -/
+
+@[expose] public section
 
 namespace KrafftSieve
 

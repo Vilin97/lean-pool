@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
-import Mathlib.Topology.Homeomorph.Lemmas
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
+public import Mathlib.Topology.Homeomorph.Lemmas
 
 /-!
 # Polygonal realization under signed presentation isomorphism
@@ -18,6 +20,8 @@ The resulting homeomorphism of polygonal pre-realizations transports both the el
 generators and their equivalence closures. It therefore descends to a homeomorphism of the faithful
 polygonal quotients.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

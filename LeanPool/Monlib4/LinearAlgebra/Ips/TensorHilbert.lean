@@ -3,8 +3,10 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Analysis.InnerProductSpace.TensorProduct
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+module
+
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 
 /-!
 
@@ -14,6 +16,8 @@ Compatibility lemmas for Monlib's tensor-product inner-product API. The core
 inner product space structure now lives in Mathlib.
 
 -/
+
+@[expose] public section
 
 open scoped TensorProduct BigOperators
 

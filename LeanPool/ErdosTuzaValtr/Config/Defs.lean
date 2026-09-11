@@ -3,17 +3,20 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Data.List.Basic
-import Mathlib.Data.Finset.Basic
-import LeanPool.ErdosTuzaValtr.Lib.List.Default
-import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
+public import Mathlib.Data.List.Basic
+public import Mathlib.Data.Finset.Basic
+public import LeanPool.ErdosTuzaValtr.Lib.List.Default
+public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
 
 /-!
 # LeanPool.ErdosTuzaValtr.Config.Defs
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Config.Defs`.
 -/
+
+@[expose] public section
 
 
 /-- A configuration: a decidable ternary "cup" relation on a linearly ordered type. -/

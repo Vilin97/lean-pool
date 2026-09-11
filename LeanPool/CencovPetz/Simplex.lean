@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
 
 
 /-!
@@ -28,6 +30,8 @@ This is groundwork for the finite/discrete Čencov (Chentsov) uniqueness story.
 - `CencovPetz.fisherBilin_comm`: symmetry of the Fisher bilinear form.
 - `CencovPetz.fisherBilin_pos`: positive-definiteness on nonzero tangent vectors.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

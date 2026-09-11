@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
-import Mathlib.Analysis.Analytic.Order
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
+public import Mathlib.Analysis.Analytic.Order
 
 /-!
 # Exact order in the distinguished variable
@@ -14,6 +15,8 @@ This file connects the public derivative-based order condition to elementary
 properties of the distinguished-variable slice.  The deeper comparison with
 analytic order is developed separately from these edge-case lemmas.
 -/
+
+@[expose] public section
 
 open scoped Topology
 

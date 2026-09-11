@@ -3,11 +3,13 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Data.FunLike.Fintype
+module
 
-import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
-import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Roots
-import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduct
+public import Mathlib.Data.FunLike.Fintype
+
+public import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
+public import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.Roots
+public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduct
 
 /-!
 # The relative degree `[K_{n+1} : K_n]`
@@ -21,6 +23,8 @@ Lemma 1.5 (`kummer_extension_criterion`) then says which rationals stay non-squa
 Part of the formalization of M. Stoll, *Galois groups over ℚ of some iterated polynomials*,
 Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 -/
+
+@[expose] public section
 
 open Polynomial
 

@@ -17,11 +17,15 @@ independently by two lanes in different model families against that same pinned
 statement.  The proof below is the in-house one.  `locality` is byte-identical
 to the pinned form; only the proof body was supplied.
 -/
-import LeanPool.MatchingLogic.Core
+module
+
+public import LeanPool.MatchingLogic.Core
 
 /-!
 # MatchingLogic.Locality
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

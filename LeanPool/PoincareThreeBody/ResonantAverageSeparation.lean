@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.SafeAverageAnalytic
-import LeanPool.PoincareThreeBody.PoincareSet
+public import LeanPool.PoincareThreeBody.SafeAverageAnalytic
+public import LeanPool.PoincareThreeBody.PoincareSet
 
 /-!
 # Separation of resonant disturbing averages in the collision band
@@ -13,6 +14,8 @@ import LeanPool.PoincareThreeBody.PoincareSet
 The safe average stays finite at the boundary, while the aligned average tends to negative
 infinity.  Hence the two orientation phases separate at an admissible eccentricity.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

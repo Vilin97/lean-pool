@@ -3,8 +3,9 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.Core
+public import LeanPool.CriticalPortraits.Core
 
 /-!
 # Geometric foundation: the critical-portrait model on `ZMod (d*m)`.
@@ -30,6 +31,8 @@ API proved here (sorry-free, native_decide-free, real kernel proofs):
 Positions/level/fiber/`LevelCanonical` are reused from `CriticalPortraits.Core`.  The forward goal
 `LevelCanonical (T P)` is a LATER brick (3b) and is deliberately NOT stated here.
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path
-import LeanPool.JacobianDiffgeo.Forms
-import Mathlib.Geometry.Manifold.Complex
-import Mathlib.Analysis.Convex.PathConnected
+public import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.Forms
+public import Mathlib.Geometry.Manifold.Complex
+public import Mathlib.Analysis.Convex.PathConnected
 
 /-!
 # The genus-0 engine: simply connected ⇒ every `Form1` has a global primitive (CC-sphere-topology)
@@ -28,6 +29,8 @@ Main declarations:
 * `RS.SphereTopology.form1_eq_zero_of_simplyConnectedSpace`, the `Subsingleton (Form1 X)`
   instance, and the headline `RS.SphereTopology.genus_eq_zero_of_simplyConnectedSpace`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold RS Metric

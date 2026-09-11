@@ -3,8 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Search
+public import LeanPool.IsoGraph.Canon.Search
 
 /-!
 # Harvested automorphisms, and how they act on the search tree
@@ -24,6 +25,8 @@ The bridge between the two is `ofOracle_congr`: an automorphism `γ` of `G` sati
 `Graph.ofOracle n (f ∘ γ) = Graph.ofOracle n f`, which turns every equivariance lemma of
 `IsoGraph.Canon.Equivariance` into a statement about the action of `Aut G` on the tree.
 -/
+
+@[expose] public section
 
 
 namespace IsoGraph

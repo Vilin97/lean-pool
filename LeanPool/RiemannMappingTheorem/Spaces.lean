@@ -3,13 +3,17 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Analysis.Complex.OpenMapping
-import LeanPool.RiemannMappingTheorem.Defs
+module
+
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Analysis.Complex.OpenMapping
+public import LeanPool.RiemannMappingTheorem.Defs
 
 /-!
 # LeanPool.RiemannMappingTheorem.Spaces
 -/
+
+@[expose] public section
 
 open Topology Filter Set Function UniformConvergence Metric
 

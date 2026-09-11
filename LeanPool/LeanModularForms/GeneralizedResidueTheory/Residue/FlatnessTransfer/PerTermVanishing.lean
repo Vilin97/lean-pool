@@ -3,10 +3,11 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.BoundaryVanishing
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CutoffInfrastructure
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.BoundaryVanishing
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CutoffInfrastructure
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
 
 /-!
 # Per-Term PV Vanishing and CPV Helpers
@@ -21,6 +22,8 @@ integrals, multi-point CPV, holomorphic CPV vanishing, and assembly helpers.
 * `holomorphic_cpv_tendsto_zero_on_convex`: holomorphic CPV → 0 on convex domains
 * `tendsto_cpv_of_continuousOn_zero_integral`: CPV → 0 for continuous functions with zero integral
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

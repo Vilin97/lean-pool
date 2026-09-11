@@ -3,14 +3,17 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
 
-import LeanPool.LeanPolyABC.Corollaries.FltCatalan
+public import LeanPool.LeanPolyABC.Corollaries.FltCatalan
 
 /-!
 # LeanPool.LeanPolyABC.Corollaries.NoParametrization
 -/
+
+@[expose] public section
 
 noncomputable section
 

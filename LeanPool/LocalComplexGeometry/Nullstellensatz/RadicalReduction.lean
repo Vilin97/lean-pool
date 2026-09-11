@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
 
 /-!
 # Reduction of the analytic Nullstellensatz to prime ideals
@@ -16,6 +17,8 @@ isolates that assertion as `PrimeZeroSetProperty` and proves that it suffices
 for the radical theorem, the finite-family representative-level theorem, and
 the arbitrary-ideal zero-set equality.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

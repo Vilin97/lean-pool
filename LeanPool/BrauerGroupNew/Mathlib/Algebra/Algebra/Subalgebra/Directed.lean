@@ -3,8 +3,9 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.Algebra.Algebra.Subalgebra.Directed
+public import Mathlib.Algebra.Algebra.Subalgebra.Directed
 
 /-!
 # LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed
@@ -12,6 +13,8 @@ import Mathlib.Algebra.Algebra.Subalgebra.Directed
 Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed`.
 -/
+
+@[expose] public section
 
 namespace Subalgebra
 variable {R A ι : Type*} [CommSemiring R] [Semiring A] [Algebra R A] {K : ι → Subalgebra R A}

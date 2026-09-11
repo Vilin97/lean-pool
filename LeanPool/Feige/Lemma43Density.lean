@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Lemma43
-import Mathlib.MeasureTheory.Integral.Lebesgue.Map
+module
+
+public import LeanPool.Feige.Lemma43
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Map
 
 /-!
 # Density identification for the local transfer step
@@ -12,6 +14,8 @@ import Mathlib.MeasureTheory.Integral.Lebesgue.Map
 This file connects the pushforward laws `zPlusLaw` and `zMinusLaw` to the
 convolution densities `LikelihoodRatio.fPlus` and `fMinus`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

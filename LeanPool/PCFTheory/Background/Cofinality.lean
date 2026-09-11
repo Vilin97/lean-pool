@@ -3,9 +3,10 @@ Copyright (c) 2026 YnirPaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: YnirPaz
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
-import LeanPool.PCFTheory.Background.Ordinal
+public import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
+public import LeanPool.PCFTheory.Background.Ordinal
 
 /-!
 # Cofinality results for indexed suprema
@@ -13,6 +14,8 @@ import LeanPool.PCFTheory.Background.Ordinal
 A more general universe version of `iSup_lt_ord_lift` and a related corollary
 phrased in terms of `Iio`.
 -/
+
+@[expose] public section
 
 universe u v
 

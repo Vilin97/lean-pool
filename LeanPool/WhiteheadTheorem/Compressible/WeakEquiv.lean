@@ -3,9 +3,10 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.Compressible.Disk
-import LeanPool.WhiteheadTheorem.Compressible.CWComplex
+public import LeanPool.WhiteheadTheorem.Compressible.Disk
+public import LeanPool.WhiteheadTheorem.Compressible.CWComplex
 
 /-!
 This file proves that if `B` and `Y` are CW-complexes
@@ -19,6 +20,8 @@ hence the definition `TopCat.LiftStructUpToRelHomotopy` can be weakened (?)
 ## References
 * T. tom Dieck, *Algebraic topology*. Theorem 8.4.3.
 -/
+
+@[expose] public section
 
 
 universe u

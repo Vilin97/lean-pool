@@ -3,10 +3,12 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.Spectrum
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Symm
 
 /-!
 # Finite-dimensional inner product spaces
@@ -20,6 +22,8 @@ and `↥P _` for the extended orthogonal projection `orthogonal_projection' _`.
 
 We let $V$ be an inner product space over $\mathbb{k}$.
 -/
+
+@[expose] public section
 
 
 variable {V 𝕜 : Type _} [RCLike 𝕜] [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]

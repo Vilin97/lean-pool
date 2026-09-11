@@ -3,9 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.AON.Defs
-import LeanPool.CircuitComplexity.Internal.CircDesc
-import LeanPool.CircuitComplexity.Internal.Schnorr
+module
+
+public import LeanPool.CircuitComplexity.AON.Defs
+public import LeanPool.CircuitComplexity.Internal.CircDesc
+public import LeanPool.CircuitComplexity.Internal.Schnorr
 
 /-! # Internal: Bridge from CircDesc to Circuit Model
 
@@ -17,6 +19,8 @@ The public theorems `shannon_lower_bound_circuit` and
 `schnorr_lower_bound_circuit` are accessible through `Circ.Shannon` and
 `Circ.Schnorr` respectively.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

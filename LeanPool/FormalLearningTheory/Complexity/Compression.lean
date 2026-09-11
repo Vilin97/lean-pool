@@ -3,13 +3,15 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.DualVC
-import LeanPool.FormalLearningTheory.Complexity.Structures
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.Complexity.FiniteSupportUC
-import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
-import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
-import LeanPool.FormalLearningTheory.PureMath.BinaryMatrix
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.DualVC
+public import LeanPool.FormalLearningTheory.Complexity.Structures
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Complexity.FiniteSupportUC
+public import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
+public import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
+public import LeanPool.FormalLearningTheory.PureMath.BinaryMatrix
 
 /-!
 # Moran-Yehudayoff Compression Theorem
@@ -34,6 +36,8 @@ The forward theorem is pure and combinatorial. It uses FinitePMF, Finset,
 and finite games — no MeasureTheory.Measure, IsProbabilityMeasure, Measure.dirac,
 or MeasurableSpace hypotheses.
 -/
+
+@[expose] public section
 
 open Finset
 noncomputable section

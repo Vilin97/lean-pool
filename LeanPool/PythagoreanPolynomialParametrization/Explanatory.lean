@@ -3,14 +3,17 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import LeanPool.PythagoreanPolynomialParametrization.Basic
+public import LeanPool.PythagoreanPolynomialParametrization.Basic
 
 /-! # Explanatory and cited source statements
 
 This file records source-level material from Frisch--Vaserstein that is not used by
 the main parametrization proof.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

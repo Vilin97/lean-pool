@@ -7,10 +7,12 @@ Authors: Rado Kirov
 /-
 Blueprint unit: residue-calculus. Taylor-coefficient extractor via iterated `dslope`.
 -/
-import Mathlib.Analysis.Analytic.IsolatedZeros
-import Mathlib.Analysis.Calculus.DSlope
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Complex.Basic
+module
+
+public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.Calculus.DSlope
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Taylor coefficients via iterated difference quotients (residue-calculus)
@@ -25,6 +27,8 @@ Main exports:
 * `RS.taylorCoeffAt_sub_pow_mul`, `RS.taylorCoeffAt_monomial` — the monomial shift workhorse;
 * `RS.AnalyticAt.exists_taylor_remainder` — exact, pointwise Taylor remainder factorization.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function
 

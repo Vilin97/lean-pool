@@ -3,8 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
+module
 
-import LeanPool.Feige.MainTheorem
+public import LeanPool.Feige.MainTheorem
 
 /-!
 # Feige's sharp unit-slack inequality
@@ -16,6 +17,8 @@ Main declarations: `Feige.sharp_unit_slack_feige_complete`
 Tags: probability, concentration-inequalities, convex-geometry, sharp-constants
 MSC: 60E15, 52A20
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

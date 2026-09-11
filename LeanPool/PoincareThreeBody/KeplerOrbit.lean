@@ -3,15 +3,16 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.GeneratingFunction
-import Mathlib.Analysis.Calculus.Deriv.Inverse
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.GeneratingFunction
+public import Mathlib.Analysis.Calculus.Deriv.Inverse
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Ring
 
 /-!
 # Elliptic Kepler orbits in eccentric anomaly
@@ -20,6 +21,8 @@ This file gives the real elliptic Kepler orbit attached to Delaunay action `I₁
 `e`. It verifies the radius, radial momentum, and energy formulas directly. The mean anomaly is the
 first Delaunay angle along the unperturbed flow.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

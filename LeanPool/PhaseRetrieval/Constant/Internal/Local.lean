@@ -21,9 +21,13 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
     `∫_ℂ |w (1 + p(z)) − 1|² exp(−‖z‖²) dm(z)
       ≤ 23003² ∫_ℂ ||1 + p(z)| − 1|² exp(−‖z‖²) dm(z)`.
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.LocalHelpers
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.LocalHelpers
 
 /-! # Local -/
+
+@[expose] public section
 
 
 open FockSPR MeasureTheory Complex Real Polynomial

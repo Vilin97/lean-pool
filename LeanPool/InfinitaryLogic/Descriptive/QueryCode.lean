@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.Polish
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.Polish
 /-!
 # The query-code closed embedding (issue #10, Unit 0a)
 
@@ -25,6 +27,8 @@ embedding's range.  The four gates, plus the capstone:
 This is the stop/go gate's first half; the analytic tree normal form (Unit 0b) builds the
 cylinder tree in `(ℕ → Bool) × (ℕ → ℕ)` on top of it.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

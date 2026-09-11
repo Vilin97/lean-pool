@@ -3,11 +3,12 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.Minlos.SazonovTightness
-import LeanPool.OSforGFF.Minlos.NuclearSpace
-import LeanPool.OSforGFF.Minlos.PietschBridge
-import Mathlib.Data.Finsupp.Encodable
+public import LeanPool.OSforGFF.Minlos.SazonovTightness
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
+public import LeanPool.OSforGFF.Minlos.PietschBridge
+public import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # Minlos Concentration Bound
@@ -39,6 +40,8 @@ nuclear cylindrical measures. `minlos_concentration` is a convenience wrapper.
 - Bogachev, "Gaussian Measures", Ch. 2-3
 - Trèves, "Topological Vector Spaces", Ch. 50-51
 -/
+
+@[expose] public section
 
 open BigOperators MeasureTheory Complex TopologicalSpace Finsupp
 

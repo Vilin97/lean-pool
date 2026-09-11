@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-import Mathlib.Topology.Compactification.OnePoint.Sphere
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+public import Mathlib.Topology.Compactification.OnePoint.Sphere
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # The challenge bridge: `ℙ¹ ≃ₜ` the unit 2-sphere (CC5)
@@ -21,6 +22,8 @@ space) and `ι := Fin 3` gives exactly the sphere model used by the challenge's
 `homeoSphere` has no closed-form pointwise description (mathlib's construction selects a
 `ContinuousLinearEquiv` via `Nonempty.some`); no consumer needs one (see design §3.4).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 

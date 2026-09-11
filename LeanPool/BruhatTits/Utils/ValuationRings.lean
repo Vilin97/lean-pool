@@ -3,13 +3,17 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Utils.Misc
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import Mathlib.RingTheory.Valuation.ValuationRing
+module
+
+public import LeanPool.BruhatTits.Utils.Misc
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Valuation.ValuationRing
 
 /-!
 # LeanPool.BruhatTits.Utils.ValuationRings
 -/
+
+@[expose] public section
 
 open Module
 

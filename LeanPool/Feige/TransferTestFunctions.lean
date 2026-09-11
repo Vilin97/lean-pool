@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.SteinIdentity
+module
+
+public import LeanPool.Feige.SteinIdentity
 
 /-!
 # Test functions for the exponential transfer identity
@@ -13,6 +15,8 @@ identity.  They are written with `max` and `min`; for positive `c,d` this is
 equivalent to the corresponding indicator notation and makes global
 continuity transparent.
 -/
+
+@[expose] public section
 
 open Real Set Filter Topology MeasureTheory
 

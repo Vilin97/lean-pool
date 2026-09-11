@@ -13,12 +13,16 @@ raw named syntax instead.  This additive layer supplies the first missing
 bridge: transport of syntax, contexts, derivations, semantics, and strong local
 completeness along an equivalence of variable types.
 -/
-import LeanPool.MatchingLogic.ProofSystem
-import Mathlib.Logic.Denumerable
+module
+
+public import LeanPool.MatchingLogic.ProofSystem
+public import Mathlib.Logic.Denumerable
 
 /-!
 # MatchingLogic.EntryIII.Renaming
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

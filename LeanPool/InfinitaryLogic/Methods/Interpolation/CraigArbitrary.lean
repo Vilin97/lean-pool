@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
-import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
 /-!
 # Craig interpolation for `L_ω₁ω` over an arbitrary language (Craig Layer 3, Unit 7a)
 
@@ -28,6 +30,8 @@ assembly of the relationalization layer over the relational core:
 `craig_pcSeparation` is the arbitrary-language PC-separation wrapper (the relational
 `craig_pcSeparation_relational` stays, in the exact form issue #10 consumes).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

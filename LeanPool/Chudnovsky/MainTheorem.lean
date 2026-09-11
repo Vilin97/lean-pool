@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Kummer
+public import LeanPool.Chudnovsky.Kummer
 
 /-!
 # The Main Theorem (Milla, ch. 9)
@@ -30,6 +31,8 @@ estimates), and the principal square root of `w²` is `w` on the right half-plan
 (`Complex.sq_cpow_two_inv`).  The connectedness workhorse `sq_eq_on_preconnected_eq`
 originally planned for this step (PLAN A8) is kept for reference/reuse.
 -/
+
+@[expose] public section
 
 noncomputable section
 

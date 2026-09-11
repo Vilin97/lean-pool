@@ -13,7 +13,9 @@ separation theorem.
 
 **Reference**: Lemma 2.1 in Section 2 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.Defs
 
 /-!
 # Dual certificate existence
@@ -21,6 +23,8 @@ import LeanPool.KaltonRoberts.Defs
 Existence of a dual certificate for best `l∞` approximation from the additive
 subspace, using geometric Hahn-Banach separation.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

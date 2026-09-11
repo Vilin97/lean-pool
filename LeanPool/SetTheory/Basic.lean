@@ -3,8 +3,10 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import LeanPool.SetTheory.Realize
-import Mathlib.SetTheory.ZFC.VonNeumann
+module
+
+public import LeanPool.SetTheory.Realize
+public import Mathlib.SetTheory.ZFC.VonNeumann
 
 /-!
 # Basic theory of models of ZF set theory
@@ -13,6 +15,8 @@ This module develops the order-theoretic and membership structure on models of Z
 including the von Neumann hierarchy and foundational lemmas used throughout the Kunen
 inconsistency development.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
-import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
-import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.StandardModel
+public import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
 /-!
 # Reconstruction and the code-class equality (issue #10, Unit 3b)
 
@@ -18,6 +20,8 @@ sentence, read a branch off it, and land the base reduct back in `B` — **the o
 * `pcClass_eq` (needs invariance) — the code-class equality
   `codeReduct '' ModelsOf (pcSentence side T) = B`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

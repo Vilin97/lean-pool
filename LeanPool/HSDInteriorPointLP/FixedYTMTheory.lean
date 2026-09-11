@@ -3,8 +3,9 @@ Copyright (c) 2026 Makoto Yamashita. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Makoto Yamashita
 -/
+module
 
-import LeanPool.HSDInteriorPointLP.LocalNeighborhoodEstimates
+public import LeanPool.HSDInteriorPointLP.LocalNeighborhoodEstimates
 
 /-!
 # Fixed YTM convergence ingredients
@@ -19,6 +20,8 @@ That older interface was removed because the generated-algorithm interface in
 `GeneratedConvergence.lean` constructs the iterates recursively and makes the
 algorithm dependency clearer.
 -/
+
+@[expose] public section
 noncomputable section
 
 open scoped BigOperators

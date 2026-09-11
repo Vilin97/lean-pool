@@ -3,12 +3,13 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Local Geometry Step 2: Fiber Integration for Quadratic Growth and Strong Aiming
@@ -25,6 +26,8 @@ Since U₊ is fiber-saturated, m + te ∈ U₊ for t ∈ [0,1].
   ⟨∇f(x), e⟩ - (f(x) - f⋆) = φ'(1) - (φ(1) - φ(0)) = ∫₀¹ t φ''(t) dt ≥ (μ'/2)‖e‖²
   So ⟨∇f(x), e⟩ ≥ f(x) - f⋆ + (μ'/2)‖e‖²
 -/
+
+@[expose] public section
 
 noncomputable section
 

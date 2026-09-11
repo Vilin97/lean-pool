@@ -3,7 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.SchwartzDecayDefs
+module
+
+public import LeanPool.Clawristotle.SchwartzDecayDefs
 
 /-!
 # Coulomb Kernel Definition and Schwartz Helpers
@@ -11,6 +13,8 @@ import LeanPool.Clawristotle.SchwartzDecayDefs
 Defines `coulombKernel` (Psi(r) = r^{-3} for r > 0) and proves basic properties:
 strict positivity, Schwartz uniform bounds, and `inv_norm_schwartz_integrable`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

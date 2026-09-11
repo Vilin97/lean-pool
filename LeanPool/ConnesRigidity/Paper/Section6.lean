@@ -5,7 +5,9 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimpleTransport
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimpleTransport
 
 /-!
 # Zhou §6: non-isomorphism
@@ -13,3 +15,5 @@ import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimpleTransport
 The section endpoint combines characteristic-kernel transport with the
 concrete nonsplit module obstruction.
 -/
+
+@[expose] public section

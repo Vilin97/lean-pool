@@ -3,7 +3,9 @@ Copyright (c) 2026 Luka Opravš. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luka Opravš
 -/
-import LeanPool.PolyaEnumerationTheorem.Concrete
+module
+
+public import LeanPool.PolyaEnumerationTheorem.Concrete
 
 /-!
 ## Stirling numbers of the first kind
@@ -14,6 +16,8 @@ set with a given number of cycles.
 For additional information, refer to
 <https://en.wikipedia.org/wiki/Stirling_numbers_of_the_first_kind>.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PolyaEnumerationTheorem
 

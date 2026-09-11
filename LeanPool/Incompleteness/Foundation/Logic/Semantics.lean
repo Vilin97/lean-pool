@@ -3,8 +3,9 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
+public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
 
 /-!
 # Basic definitions and properties of semantics-related notions
@@ -21,6 +22,8 @@ Also provides 𝓜 characterization of compactness.
 * `𝓜 ⊧* T`: a proposition that states that `𝓜` satisfies each formulae in a set `T`.
 
 -/
+
+@[expose] public section
 
 namespace LO
 

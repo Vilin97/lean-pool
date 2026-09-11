@@ -3,9 +3,10 @@ Copyright (c) 2023 Hu Yongle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hu Yongle
 -/
+module
 
-import LeanPool.Neukirch.ExtensionOfDedekindDomains
-import LeanPool.Neukirch.HilbertRamificationTheory
+public import LeanPool.Neukirch.ExtensionOfDedekindDomains
+public import LeanPool.Neukirch.HilbertRamificationTheory
 
 /-!
 # Neukirch's Algebraic Number Theory: Hilbert ramification theory
@@ -17,6 +18,8 @@ Main declarations: `NumberField.ramificationIdx_mul_inertiaDegOfIsGalois`
 Tags: number-theory, algebraic-number-theory, ramification, galois-theory
 MSC: 11R32, 11S15, 13B25
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

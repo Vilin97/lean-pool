@@ -3,12 +3,15 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

@@ -3,17 +3,20 @@ Copyright (c) 2026 Bhavik Mehta, Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Arend Mellendijk
 -/
+module
 
-import Mathlib.Algebra.GCDMonoid.Nat
-import Mathlib.Algebra.Squarefree.Basic
-import Mathlib.Data.Nat.PrimeFin
-import Mathlib.RingTheory.Coprime.Lemmas
-import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.Algebra.Squarefree.Basic
+public import Mathlib.Data.Nat.PrimeFin
+public import Mathlib.RingTheory.Coprime.Lemmas
+public import Mathlib.RingTheory.Radical.NatInt
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
 
 /-!
 # LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
 -/
+
+@[expose] public section
 
 namespace UniqueFactorizationMonoid
 

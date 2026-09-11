@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
 
 /-!
 # Lyapunov Contraction Step 3: Algebraic Assembly Lemmas
@@ -40,6 +41,8 @@ is bounded by (1-a) times the corresponding component of L_n.
 **Step C**: Since (1-a) + (a/2) = (1-a/2), the perturbation is absorbed:
   L_{n+1} ≤ (1-a) L_n + perturbation ≤ (1-a/2) L_n.
 -/
+
+@[expose] public section
 
 noncomputable section
 

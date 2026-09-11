@@ -14,19 +14,23 @@ The proof reduces to two cases (q ≤ q₀ and q ≥ q₀), applies mixed-inters
 constructions and two rounds of expander recombination in each case, and balances
 the resulting inequalities to obtain the bounds C₁ and C₂.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.Numerical
-import LeanPool.KaltonRoberts.Lemmas
-import LeanPool.KaltonRoberts.Collections
-import LeanPool.KaltonRoberts.Pipeline
-import LeanPool.KaltonRoberts.PipelineEps
-import LeanPool.KaltonRoberts.EpsilonRecombination
+module
+
+public import LeanPool.KaltonRoberts.Defs
+public import LeanPool.KaltonRoberts.Numerical
+public import LeanPool.KaltonRoberts.Lemmas
+public import LeanPool.KaltonRoberts.Collections
+public import LeanPool.KaltonRoberts.Pipeline
+public import LeanPool.KaltonRoberts.PipelineEps
+public import LeanPool.KaltonRoberts.EpsilonRecombination
 
 /-!
 # Main theorem: the Kalton-Roberts upper bound
 
 The final proof that the Kalton-Roberts constant is less than `9919 / 500`.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

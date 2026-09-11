@@ -3,8 +3,9 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import LeanPool.ErdosTuzaValtr.All
+public import LeanPool.ErdosTuzaValtr.All
 
 /-!
 # The Erdős–Tuza–Valtr conjecture
@@ -16,6 +17,8 @@ Main declarations: `ErdosTuzaValtr.main`, `Config.main_lemma`
 Tags: combinatorics, discrete-geometry, convex-geometry, ramsey-theory
 MSC: 52C10, 05D10
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

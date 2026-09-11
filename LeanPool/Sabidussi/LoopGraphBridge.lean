@@ -3,8 +3,10 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import LeanPool.Sabidussi.LoopMultigraph
-import LeanPool.Sabidussi.CyclicWord
+module
+
+public import LeanPool.Sabidussi.LoopMultigraph
+public import LeanPool.Sabidussi.CyclicWord
 
 /-!
 # From a cyclic word back to a loop-capable endpoint multigraph
@@ -13,6 +15,8 @@ The letters are transition vertices and the gaps are labelled edge objects.  Cyc
 zero denotes the preceding gap, while Euler-tour side zero denotes the current departing
 half-edge; the bridge therefore precomposes occurrence sides with `Fin.rev`.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 namespace LoopMultigraph

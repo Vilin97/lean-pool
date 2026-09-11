@@ -3,9 +3,10 @@ Copyright (c) 2026 Tetsuya Ishiu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tetsuya Ishiu
 -/
+module
 
-import LeanPool.FoZfc.Basic
-import LeanPool.FoZfc.BoundedFormulaOps
+public import LeanPool.FoZfc.Basic
+public import LeanPool.FoZfc.BoundedFormulaOps
 
 /-!
 # To string for LZFC.Term and LZFC.BoundedFormula
@@ -14,6 +15,8 @@ Converts terms and bounded formulas in the language `LZFC` to readable
 strings, with two flavors (with and without depth information).
 
 -/
+
+@[expose] public section
 
 open FirstOrder
 open FirstOrder.Language

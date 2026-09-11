@@ -3,8 +3,9 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.EuclideanRecords
+public import LeanPool.ThreeGap.EuclideanRecords
 
 /-!
 # The Euclidean isometry reduction: `gapVal` is the Euclidean nearest-neighbour distance
@@ -20,6 +21,8 @@ so
 it is stated here generically for any symmetric `c : ℤ → ℝ` and instantiated at the Euclidean defect
 `c = deltaN (euclNorm 2) α` (symmetric by `deltaN_neg`). Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.EuclideanRecords
 

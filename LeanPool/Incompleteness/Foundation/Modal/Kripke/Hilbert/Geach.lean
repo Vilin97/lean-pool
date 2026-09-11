@@ -3,12 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Geach
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Geach
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Geach -/
+
+@[expose] public section
 
 
 namespace LO

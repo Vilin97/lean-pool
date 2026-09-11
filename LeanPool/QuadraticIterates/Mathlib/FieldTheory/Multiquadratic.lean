@@ -3,29 +3,31 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.Module.ZMod
-import Mathlib.FieldTheory.Galois.Basic
-import Mathlib.FieldTheory.Perfect
-import Mathlib.FieldTheory.Relrank
-import Mathlib.GroupTheory.QuotientGroup.Basic
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.Span.Defs
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
-import Mathlib.Tactic.ComputeDegree
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+module
 
-import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
-import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Module.ZMod
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.FieldTheory.Perfect
+public import Mathlib.FieldTheory.Relrank
+public import Mathlib.GroupTheory.QuotientGroup.Basic
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.Span.Defs
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+public import Mathlib.Tactic.ComputeDegree
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Order
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+
+public import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
+public import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup
 
 /-!
 # Multiquadratic field extensions
@@ -37,6 +39,8 @@ realized as the kernel of a linear map to `Lˣ/(Lˣ)²`; descent of squares alon
 Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of some iterated
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
+
+@[expose] public section
 
 /-- Adjoining a single square root `x` (with `x² ∈ L`) to a field `L` gives degree at most `2`. -/
 theorem finrank_adjoin_sq_le {L : Type*} [Field L] {E : Type*} [Field E] [Algebra L E]

@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.ExampleB
-import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
 
 /-!
 # Example 6.2 (Scott 1981, PRG-19, §6) — the generalisation `A ≅ Aⁿ + Aⁿ`
@@ -55,6 +56,8 @@ aside (eventually-periodic trees ↔ regular events) are formalised in
 
 All *data* is choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

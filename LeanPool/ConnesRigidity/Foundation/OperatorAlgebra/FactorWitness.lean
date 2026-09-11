@@ -10,11 +10,15 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: renamed and generalized the spatial witness while preserving
 the spatial-to-tracial argument. Paper: §3. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.Supremum
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.Projection.Supremum
 
 /-!
 The factor witness component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace FactorWitness

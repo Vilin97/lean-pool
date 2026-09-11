@@ -3,7 +3,9 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
-import Mathlib.Analysis.Complex.Harmonic.Analytic
+module
+
+public import Mathlib.Analysis.Complex.Harmonic.Analytic
 
 /-!
 # The Poisson Integral Formula on the Unit Disc
@@ -46,6 +48,8 @@ The proof follows from the
 
 harmonic function, Poisson integral, analytic function, unit disc
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanComplexAnalysis
 

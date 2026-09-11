@@ -10,12 +10,16 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Scaffolding notes:
   - `Localization/basis_localization.md`
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ModulusRigidity
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
-import Mathlib.Analysis.SpecialFunctions.Pochhammer
-import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.ModulusRigidity
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
+public import Mathlib.Analysis.SpecialFunctions.Pochhammer
+public import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
 
 /-! # BasisLocalization -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset

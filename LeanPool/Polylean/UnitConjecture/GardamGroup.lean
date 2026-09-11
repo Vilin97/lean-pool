@@ -3,24 +3,25 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import Mathlib.Algebra.Group.Prod
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Data.Int.Basic
-import Mathlib.Data.Fin.Basic
-import LeanPool.Polylean.UnitConjecture.MetabelianGroup
-import LeanPool.Polylean.UnitConjecture.AddFreeGroup
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import Mathlib.Algebra.Group.Prod
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Algebra.Group.Hom.Basic
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Data.Fin.Basic
+public import LeanPool.Polylean.UnitConjecture.MetabelianGroup
+public import LeanPool.Polylean.UnitConjecture.AddFreeGroup
 
 /-!
 ## The construction of the group `P`
@@ -30,6 +31,8 @@ We construct the group `P` (the *Promislow* or *Hantzsche–Wendt* group) as a M
 This is done via the cocycle construction, using the explicit action and cocycle described in
 Section 3.1 of Giles Gardam's paper (https: //arxiv.org/abs/2102.11818).
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.Sensitivity.Defs
-import LeanPool.Sensitivity.Multilinear
-import LeanPool.Sensitivity.Subcube
-import LeanPool.Sensitivity.Parity
-import LeanPool.Sensitivity.HuangBridge
+module
+
+public import LeanPool.Sensitivity.Defs
+public import LeanPool.Sensitivity.Multilinear
+public import LeanPool.Sensitivity.Subcube
+public import LeanPool.Sensitivity.Parity
+public import LeanPool.Sensitivity.HuangBridge
 
 /-!
 # The Sensitivity Theorem
@@ -31,6 +33,8 @@ lemma with the Huang hypercube lemma imported from `Mathlib`'s
 5. Lift this lower bound on the local sensitivity of the restriction back to
    `f` itself.
 -/
+
+@[expose] public section
 
 namespace LeanPoolSensitivity
 

@@ -3,15 +3,18 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame.BorelDet.Zero

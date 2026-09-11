@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.KStatistic
-import Mathlib.MeasureTheory.Integral.Indicator
-import Mathlib.Topology.Instances.ENNReal.Lemmas
+module
+
+public import LeanPool.Feige.KStatistic
+public import Mathlib.MeasureTheory.Integral.Indicator
+public import Mathlib.Topology.Instances.ENNReal.Lemmas
 
 /-!
 # Continuity core for the Dirichlet statistic
@@ -16,6 +18,8 @@ the moving halfspace stabilizes away from its boundary, and consequently
 that `dirichletK` is sequentially continuous at every parameter whose
 boundary hyperplane has zero product-exponential measure.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Filter MeasureTheory ProbabilityTheory Set Topology

@@ -10,11 +10,15 @@ crossed-product construction is reduced to the kernel, quotient, and vacuum
 transport equations used by the regular factor.
 Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
 
 /-!
 The semidirect generator transport component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace SemidirectGeneratorTransport

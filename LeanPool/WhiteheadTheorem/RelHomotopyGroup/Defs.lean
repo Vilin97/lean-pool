@@ -3,16 +3,19 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.Shapes.Cube
-import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Algebra   -- IsPointedMap
-import Mathlib.Topology.Homotopy.HomotopyGroup
+public import LeanPool.WhiteheadTheorem.Shapes.Cube
+public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Algebra   -- IsPointedMap
+public import Mathlib.Topology.Homotopy.HomotopyGroup
 
 /-!
 # LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs`.
 -/
+
+@[expose] public section
 
 open scoped unitInterval Topology Topology.Homotopy
 

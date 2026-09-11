@@ -3,12 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
 
-import Mathlib.Analysis.Complex.Tietze
-import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Geometry.Manifold.IsManifold.InteriorBoundary
-import Mathlib.MeasureTheory.Function.Jacobian
-import Mathlib.Topology.ContinuousMap.StoneWeierstrass
+public import Mathlib.Analysis.Complex.Tietze
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import Mathlib.Geometry.Manifold.IsManifold.InteriorBoundary
+public import Mathlib.MeasureTheory.Function.Jacobian
+public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 
 /-!
 # Invariance of domain
@@ -44,6 +45,8 @@ Stone-Weierstrass approximation, and a measure-theoretic perturbation argument.
 * Terry Tao, "Brouwer's fixed point and invariance of domain theorems, and Hilbert's fifth
   problem", 2011.
 -/
+
+@[expose] public section
 
 
 namespace LeanEval.Topology.ClassificationOfSurfaces.InvarianceOfDomain

@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
-import LeanPool.JacobianDiffgeo.Forms.Montel
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Topology.Sequences
+public import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
+public import LeanPool.JacobianDiffgeo.Forms.Montel
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.Topology.Sequences
 
 /-!
 # Finite-dimensionality of the space of holomorphic 1-forms (CC1, design §2.6)
@@ -31,6 +32,8 @@ Main declarations:
 * `RS.GoodCover.isClosed_ball_inter_range` — the unit ball of the image is closed.
 * `instance : FiniteDimensional ℂ (Form1 X)` (compact T2 `X`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Bundle Topology
 open Set Filter IsManifold

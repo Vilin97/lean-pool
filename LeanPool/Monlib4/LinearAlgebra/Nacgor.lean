@@ -3,9 +3,11 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.Analysis.Normed.Lp.PiLp
-import Mathlib.Analysis.InnerProductSpace.Basic
+module
+
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.Analysis.Normed.Lp.PiLp
+public import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
  # Normed additive commutative groups of rings
@@ -13,6 +15,8 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 This file contains the `NormedAddCommGroupOfRing` class, which bundles the
 ring structure together with the normed additive commutative group structure.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

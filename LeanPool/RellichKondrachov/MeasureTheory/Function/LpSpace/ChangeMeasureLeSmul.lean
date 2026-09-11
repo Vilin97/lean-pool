@@ -3,11 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
-import Mathlib.MeasureTheory.Measure.AbsolutelyContinuous
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.MeasureTheory.Measure.AbsolutelyContinuous
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!
 # `RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul`
@@ -23,6 +24,8 @@ equivalence between `Lp` spaces, and compactness of operators can be transported
 
 Tracking: Beads `lean-103.5.2.26.5.3.3.1`.
 -/
+
+@[expose] public section
 
 namespace MeasureTheory
 

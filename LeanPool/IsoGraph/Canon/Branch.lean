@@ -3,9 +3,10 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Dominate
-import LeanPool.IsoGraph.ForMathlib.Array
+public import LeanPool.IsoGraph.Canon.Dominate
+public import LeanPool.IsoGraph.ForMathlib.Array
 
 /-!
 # The running invariants of the optimality induction
@@ -26,6 +27,8 @@ the bookkeeping for the third and hardest one, backjumping.
 * `leaf_abort_dom` — the payoff: the backjump a leaf update requests never skips a leaf that is
   not already dominated.  This is `jump_sound` fed by `Jmp`.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

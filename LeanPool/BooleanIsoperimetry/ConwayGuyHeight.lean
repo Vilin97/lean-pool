@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
+public import Mathlib.Tactic.Linarith
 
 /-!
 # The Conway--Guy triangular-block identity
@@ -12,6 +14,8 @@ import Mathlib.Tactic.Linarith
 This file derives the height identity used by every Conway--Guy principal
 relation directly from the published difference recurrence.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

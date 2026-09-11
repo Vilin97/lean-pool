@@ -7,8 +7,10 @@ Authors: Rado Kirov
 /-
 Blueprint unit: residue-calculus. The circle-integral / residue bridge.
 -/
-import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-import Mathlib.Analysis.Complex.CauchyIntegral
+module
+
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+public import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # The circle-integral bridge (residue-calculus)
@@ -20,6 +22,8 @@ The one honest integration atom this unit budgets for: `∮_{C(z₀,R)} f = 2πi
 Main exports: `RS.circleIntegral_eq_two_pi_I_mul_resAt`,
 `RS.MeromorphicAt.eventually_circleIntegral_eq_two_pi_I_mul_resAt`.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function Real Complex
 

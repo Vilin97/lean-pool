@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
 /-!
 # Fair enumeration for a fragment-relative consistency property (issue #8 tranche 2, commit 3)
 
@@ -20,6 +22,8 @@ to be in `C.sets` (Finding 1) — only that each closure target cohabits a later
 The remaining piece (the `HenkinComplete Sstar` acceptance theorem) is the per-field limit proof;
 it consumes `request_fires_after` plus per-request "what `process` adds" facts.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

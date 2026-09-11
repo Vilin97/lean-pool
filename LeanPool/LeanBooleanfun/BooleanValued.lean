@@ -3,7 +3,9 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
-import LeanPool.LeanBooleanfun.Basic
+module
+
+public import LeanPool.LeanBooleanfun.Basic
 
 /-!
 # Boolean valued functions
@@ -16,6 +18,8 @@ and proves some basic properties specific to Boolean-valued functions.
 * `eq_character_of_fourier_weight_one_eq_one`, used in the proof of Arrow's theorem
 * `almost_character` -- a theorem on BLR linearity testing
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,15 +3,18 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.Combinatorics.Quiver.Covering
-import LeanPool.FiniteGraphFundamentalGroup.Proof
+public import Mathlib.Combinatorics.Quiver.Covering
+public import LeanPool.FiniteGraphFundamentalGroup.Proof
 
 /-!
 # The path-lifting graph cover
 
 This module constructs the standard combinatorial unfolding of a rooted quiver.
 -/
+
+@[expose] public section
 
 open CategoryTheory Quiver
 

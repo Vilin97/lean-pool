@@ -3,15 +3,18 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

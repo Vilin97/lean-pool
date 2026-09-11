@@ -3,15 +3,16 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Main
-import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
-import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Main
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 
 /-!
@@ -29,6 +30,8 @@ State-based version of `LocalArgument.lean`. The conclusion provides gen bootstr
 ∃ δ > 0, ∀ s₀ near m⋆ with small Lyapunov →
   iterates stay in Ω ∧ Lyapunov decays geometrically with `nesterovSeqGen`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

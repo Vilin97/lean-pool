@@ -3,8 +3,10 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import LeanPool.BooleanIsoperimetry.SimplicialCompression
-import LeanPool.BooleanIsoperimetry.LayerWindows
+module
+
+public import LeanPool.BooleanIsoperimetry.SimplicialCompression
+public import LeanPool.BooleanIsoperimetry.LayerWindows
 
 /-!
 # Frankl-Furedi compression layer
@@ -13,6 +15,8 @@ This file formalizes paired compression and terminalization infrastructure for
 families in the Boolean cube, connecting compressed families to canonical
 simplicial initial segments.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open scoped FinsetFamily

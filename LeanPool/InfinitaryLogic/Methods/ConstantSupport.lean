@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
-import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-import Mathlib.Data.Set.Finite.Lattice
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
+public import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+public import Mathlib.Data.Set.Finite.Lattice
 
 /-!
 # The constant-support calculus for a constant expansion `L[[J]]` (issue #8 kernel step 2)
@@ -28,6 +30,8 @@ freshness arguments must CARRY a finite support rather than compute one). Craig 
   base language, with `mapLanguage (lhomWithConstants)` as left inverse and occurrence
   transport (the `A = ∅` root gate of the interpolation argument).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

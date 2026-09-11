@@ -3,8 +3,9 @@ Copyright (c) 2026 Abdullah Uyu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abdullah Uyu
 -/
+module
 
-import LeanPool.Desargues.Basic
+public import LeanPool.Desargues.Basic
 
 /-!
 # Morphisms of projective geometries
@@ -12,6 +13,8 @@ import LeanPool.Desargues.Basic
 Defines isomorphisms of projective geometries as bijections preserving the
 collinearity relation.
 -/
+
+@[expose] public section
 
 open Basic
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
-import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
 
 /-!
 # Lecture IV (§4) — fixed points and recursion: Theorems 4.1 and 4.2
@@ -52,6 +53,8 @@ All *data* constructions (`iterMap`, `fixElement`, `iterElem`, `fixMap`) are
 pulls
 `Classical.choice` only through the project's `ext_of_toElementMap`, as permitted.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

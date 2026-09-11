@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
+module
+
+public import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
 
 /-!
 # Sanity checks for the Lean-Eval representatives
@@ -13,6 +15,8 @@ small project-owned consequences without changing those trusted definitions. In 
 radius is constant across every generating identification, so it descends to both quotient
 families and distinguishes the disk center from its boundary.
 -/
+
+@[expose] public section
 
 namespace Complex
 

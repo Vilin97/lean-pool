@@ -14,17 +14,21 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   - `safe_square`         (Theorem 2.1)
   - `nonneg_safe_square`  (Theorem 2.2)
 -/
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.NatFactorial
-import Mathlib.Tactic.NormNum.Parity
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum.BigOperators
+public import Mathlib.Tactic.NormNum.NatFactorial
+public import Mathlib.Tactic.NormNum.Parity
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-! # SafeSquare -/
+
+@[expose] public section
 
 
 open Real

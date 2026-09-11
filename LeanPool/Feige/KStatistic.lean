@@ -3,11 +3,13 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Real
-import Mathlib.Probability.Distributions.Exponential
+module
+
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Real
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Real
+public import Mathlib.Probability.Distributions.Exponential
 
 /-!
 # An exponential representation of the Dirichlet statistic
@@ -21,6 +23,8 @@ The coordinate indexed by `none` is `E₀`; `some i` is `Eᵢ`.  We put the
 exponentials on `ℝ≥0`, so their nonnegativity is encoded by the type and the
 coordinatewise antitonicity of `K` is a pointwise set inclusion.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 

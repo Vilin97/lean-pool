@@ -7,9 +7,11 @@ Authors: Rado Kirov
 /-
 Blueprint unit: residue-calculus. Mittag-Leffler principal-part data (Forster §17.1-17.2).
 -/
-import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-import Mathlib.Data.Finsupp.Basic
-import Mathlib.Analysis.Meromorphic.Basic
+module
+
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
+public import Mathlib.Data.Finsupp.Basic
+public import Mathlib.Analysis.Meromorphic.Basic
 
 /-!
 # Mittag-Leffler principal-part distributions (residue-calculus)
@@ -32,6 +34,8 @@ Main exports: `RS.PrincipalPartData`, `RS.PrincipalPartData.Realizes`,
 **Semi-frozen** (per the design doc): laurent-tails' designer may extend, not change, this
 interface.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function
 

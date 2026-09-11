@@ -10,12 +10,16 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   This file collects small reusable lemmas that are convenient to prove
   once and reuse downstream.
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.Analysis.Normed.Group.Bounded
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
+public import Mathlib.Order.Interval.Finset.Nat
+public import Mathlib.Analysis.Normed.Group.Bounded
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 /-! # MissingMathlib -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset Filter

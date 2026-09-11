@@ -3,11 +3,13 @@ Copyright (c) 2026 Joseph K. Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph K. Miller
 -/
-import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
-import Mathlib.Analysis.Convolution
-import LeanPool.Vlasov.OT.CharacteristicFlow
+module
+
+public import Mathlib.Analysis.Calculus.BumpFunction.Convolution
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+public import Mathlib.Analysis.Convolution
+public import LeanPool.Vlasov.OT.CharacteristicFlow
 
 /-!
 # Weak ⟹ Lagrangian: every weak Vlasov solution is transported by its characteristic flow
@@ -76,6 +78,8 @@ Assembly (C4):
 
 Universal (non-`_On`) form via window-gluing is a deferred follow-on (C5).
 -/
+
+@[expose] public section
 
 namespace Vlasov
 

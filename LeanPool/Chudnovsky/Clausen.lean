@@ -3,10 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
-import Mathlib.Analysis.Analytic.OfScalars
-import Mathlib.Analysis.SpecialFunctions.OrdinaryHypergeometric
+public import LeanPool.Chudnovsky.Basic
+public import Mathlib.Analysis.Analytic.OfScalars
+public import Mathlib.Analysis.SpecialFunctions.OrdinaryHypergeometric
 
 /-!
 # Clausen's formula and the hypergeometric differential equations
@@ -39,6 +40,8 @@ This file covers chapter 6 of Milla's proof of the Chudnovsky formula (arXiv:180
 * `Chudnovsky.hyp2F1_sq_eq_tsum` : the representation
   `(₂F₁(1/12, 5/12; 1; z))² = ∑ (6n)!/((3n)!(n!)³) · zⁿ/12^(3n)` (paper Thm. `darst`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

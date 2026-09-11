@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.MoserLatticeColorings.Basic
+public import LeanPool.MoserLatticeColorings.Basic
 
 /-!
 # Extension to the Moser ring
@@ -20,6 +21,8 @@ Moser ring is four-colorable. This rules out Moser-ring-only searches for a
 six-chromatic witness, but it does not determine the chromatic number of the
 plane.
 -/
+
+@[expose] public section
 
 namespace LeanPool.MoserLatticeColorings
 

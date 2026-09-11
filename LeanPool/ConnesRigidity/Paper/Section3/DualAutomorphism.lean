@@ -5,7 +5,9 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
 
 /-!
 # Dual automorphisms of Zhou's compact kernel
@@ -14,6 +16,8 @@ This file packages the dual of a discrete automorphism of the concrete kernel
 and proves continuity and Haar preservation. It is the common §3 input for
 the crossed-action conjugacy and the §4 spectral detector.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualAutomorphism

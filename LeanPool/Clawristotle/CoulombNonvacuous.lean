@@ -3,7 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.CoulombConcreteTheorem42
+module
+
+public import LeanPool.Clawristotle.CoulombConcreteTheorem42
 
 /-!
 # Non-vacuousness of the Coulomb Concrete Theorem
@@ -16,6 +18,8 @@ Also provides helper lemmas about the equilibrium Maxwellian:
 - `equilibriumMaxwellian_schwartz_decay`: Schwartz-class decay
 - `equilibriumMaxwellian_log_bound`: polynomial log growth
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

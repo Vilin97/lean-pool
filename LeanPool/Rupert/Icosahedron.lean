@@ -3,19 +3,22 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import Mathlib.NumberTheory.Real.GoldenRatio
-import LeanPool.Rupert.Basic
-import LeanPool.Rupert.Convex
-import LeanPool.Rupert.MatrixSimps
-import LeanPool.Rupert.Quaternion
-import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
+public import Mathlib.NumberTheory.Real.GoldenRatio
+public import LeanPool.Rupert.Basic
+public import LeanPool.Rupert.Convex
+public import LeanPool.Rupert.MatrixSimps
+public import LeanPool.Rupert.Quaternion
+public import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
 
 /-!
 # LeanPool.Rupert.Icosahedron
 
 Imported Lean Pool material for `LeanPool.Rupert.Icosahedron`.
 -/
+
+@[expose] public section
 
 namespace Icosahedron
 

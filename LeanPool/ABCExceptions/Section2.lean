@@ -3,20 +3,23 @@ Copyright (c) 2026 Bhavik Mehta, Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Arend Mellendijk
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Data.Nat.GCD.BigOperators
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Data.Nat.GCD.BigOperators
+public import Mathlib.Data.Nat.Squarefree
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Order.CompletePartialOrder
 
-import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+public import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
 
 /-!
 # LeanPool.ABCExceptions.Section2
 -/
+
+@[expose] public section
 
 open Finset UniqueFactorizationMonoid
 

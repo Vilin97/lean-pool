@@ -3,13 +3,15 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Data.Complex.Basic
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import Mathlib.Tactic.Common
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
+module
+
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Mathlib.LinearAlgebra.Matrix.Kronecker
+public import Mathlib.Tactic.Common
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
 
 /-!
  # Almost Hermitian Matrices
@@ -18,6 +20,8 @@ import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
 
  We say a matrix `x` is `is_almost_hermitian` if there exists some scalar `α ∈ ℂ`.
 -/
+
+@[expose] public section
 
 
 namespace Matrix

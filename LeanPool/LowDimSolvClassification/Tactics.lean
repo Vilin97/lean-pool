@@ -3,16 +3,20 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth, the LieLean team
 -/
-import Lean.Meta.Tactic.NormCast
-import Mathlib.Algebra.Algebra.Tower
-import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-import Mathlib.Tactic.Ring
-import Mathlib.Util.AtomM
-import Mathlib.Algebra.Lie.Basic
+module
+
+public import Lean.Meta.Tactic.NormCast
+public import Mathlib.Algebra.Algebra.Tower
+public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+public import Mathlib.Tactic.Ring
+public import Mathlib.Util.AtomM
+public import Mathlib.Algebra.Lie.Basic
 
 /-!
 # LeanPool.LowDimSolvClassification.Tactics
 -/
+
+@[expose] public section
 
 open Lean hiding Module
 open Meta Elab Qq Mathlib.Tactic List

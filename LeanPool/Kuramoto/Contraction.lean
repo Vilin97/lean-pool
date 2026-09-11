@@ -3,9 +3,10 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import LeanPool.Kuramoto.GradientFlow
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import LeanPool.Kuramoto.GradientFlow
 
 /-!
 # Pairwise contraction
@@ -13,6 +14,8 @@ import LeanPool.Kuramoto.GradientFlow
 The relative velocity of two oscillators and the resulting pairwise contraction: when the
 phase gap lies in `(0, π)` and the coupling is positive, the gap is contracting.
 -/
+
+@[expose] public section
 
 open Real Finset
 

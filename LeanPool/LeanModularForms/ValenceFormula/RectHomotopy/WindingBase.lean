@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.AngleAnalysis
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.CurveAvoidance
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.AngleAnalysis
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CurveAvoidance
 
 /-!
 # Winding number base lemmas
@@ -22,6 +23,8 @@ computation for the fundamental domain boundary.
 * `continuousOn_arg_w` — arg of translated curve is continuous away from tL
 * `tendsto_arg_w_left`, `tendsto_arg_w_right` — limits of arg at tL from left/right
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

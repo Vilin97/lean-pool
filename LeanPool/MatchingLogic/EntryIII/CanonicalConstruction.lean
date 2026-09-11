@@ -5,13 +5,17 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
 
 /- The recursive simultaneous stage construction for Theorem 73. -/
-import LeanPool.MatchingLogic.EntryIII.CanonicalChoice
-import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
-import LeanPool.MatchingLogic.EntryIII.WitnessElim
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CanonicalChoice
+public import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
+public import LeanPool.MatchingLogic.EntryIII.WitnessElim
 
 /-!
 # MatchingLogic.EntryIII.CanonicalConstruction
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

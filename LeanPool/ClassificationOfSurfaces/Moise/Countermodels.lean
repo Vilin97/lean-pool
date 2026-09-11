@@ -3,11 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.Anchors
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseCellwiseExtension
-import LeanPool.ClassificationOfSurfaces.Moise.ChartInduction
-import LeanPool.ClassificationOfSurfaces.CellComplex
-import Mathlib.Topology.Instances.Rat
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.Anchors
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseCellwiseExtension
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartInduction
+public import LeanPool.ClassificationOfSurfaces.CellComplex
+public import Mathlib.Topology.Instances.Rat
 
 /-!
 # Countermodels and semantic anchors
@@ -33,6 +35,8 @@ Contents:
 * a record of the vacuity failure of the retiring `SurfaceTriangulable` predicate, kept as
   documentation of why `GeometricTriangulation` replaces it.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,19 +3,22 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
-import Mathlib.Topology.Connected.PathConnected
-import Mathlib.Topology.Constructions
-import Mathlib.Topology.Order
-import LeanPool.FiniteGraphFundamentalGroup.Proof
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
+public import Mathlib.Topology.Connected.PathConnected
+public import Mathlib.Topology.Constructions
+public import Mathlib.Topology.Order
+public import LeanPool.FiniteGraphFundamentalGroup.Proof
 
 /-!
 # Geometric realization of a finite quiver
 
 This module realizes vertices discretely and every directed edge as a separate interval cell.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver

@@ -3,9 +3,10 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import Mathlib.NumberTheory.MulChar.Lemmas
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import Mathlib.NumberTheory.MulChar.Lemmas
 
 /-!
 # Arithmetic for the exceptional MCM character case
@@ -15,6 +16,8 @@ Thus a multiplicative character on `GF(2^n)` killed by `2^k+1` is automatically
 cubic. This is the exceptional branch complementary to the generic Dickson
 permutation argument.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive
 

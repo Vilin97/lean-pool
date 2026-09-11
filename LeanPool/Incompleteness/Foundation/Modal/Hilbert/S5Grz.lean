@@ -3,13 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.S5
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.KTc
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.Triv
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.S5
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KTc
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Triv
 
 /-! # S5Grz -/
+
+@[expose] public section
 
 
 namespace LO

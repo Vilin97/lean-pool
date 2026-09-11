@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.JointSlabIntegral
+public import LeanPool.PoincareThreeBody.JointSlabIntegral
 
 /-!
 # Analyticity under integration over a compact time set
@@ -13,6 +14,8 @@ A finite subcover of the compact time set reduces the result to the one-slab the
 inclusion-exclusion for the finite cover, so no explicit partition or ordering of its members is
 needed.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

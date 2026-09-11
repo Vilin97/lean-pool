@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 /-!
 # The quotient term model and its atomic semantics (issue #8, commit 5a)
 
@@ -34,6 +36,8 @@ constant-specialized equality and congruence laws.
 **These atomic biconditionals are legitimate** — they follow from the quotient definition, atomic
 congruence, and `C0` alone. There is no `M ⊨ φ ↔ φ ∈ S` for arbitrary `φ`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

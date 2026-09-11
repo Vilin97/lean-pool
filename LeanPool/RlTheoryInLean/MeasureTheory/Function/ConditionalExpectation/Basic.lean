@@ -3,22 +3,26 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.Defs
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-import Mathlib.Order.Filter.Basic
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Real
-import Mathlib.Probability.Kernel.Condexp
-import Mathlib.Analysis.Convex.Integral
+module
 
-import LeanPool.RlTheoryInLean.Defs
-import LeanPool.RlTheoryInLean.Order.Filter.Basic
-import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.Order.Filter.Basic
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Real
+public import Mathlib.Probability.Kernel.Condexp
+public import Mathlib.Analysis.Convex.Integral
+
+public import LeanPool.RlTheoryInLean.Defs
+public import LeanPool.RlTheoryInLean.Order.Filter.Basic
+public import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
 
 /-!
 # LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation.Basic
 -/
+
+@[expose] public section
 
 open Filter ProbabilityTheory
 open scoped RealInnerProductSpace

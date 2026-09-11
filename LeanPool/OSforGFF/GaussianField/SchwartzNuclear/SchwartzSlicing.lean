@@ -3,9 +3,10 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.ParametricCalculus
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.ParametricCalculus
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
 
 /-!
 # Schwartz Function Slicing and Partial Hermite Coefficients
@@ -35,6 +36,8 @@ constructions used in the multi-dimensional Hermite expansion proof.
 - `schwartz_slice_partial_pointwise_bound` — pointwise bound via chain rule + CLM norms
 - `schwartz_slice_partial_seminorm_bound` — seminorm bound for scalarized slices
 -/
+
+@[expose] public section
 
 open MeasureTheory Real SchwartzMap Measure
 open scoped ContDiff

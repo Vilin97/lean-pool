@@ -3,14 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
-import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
-import LeanPool.JacobianDiffgeo.Abel
-import LeanPool.JacobianDiffgeo.CanonicalForms
-import LeanPool.JacobianDiffgeo.ResidueTheorem
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+public import LeanPool.JacobianDiffgeo.PeriodLattice.GenericPoints
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
+public import LeanPool.JacobianDiffgeo.Abel
+public import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.ResidueTheorem
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
 
 /-!
 # Discreteness of the period subgroup (Forster 21.4(a)+(b))
@@ -27,6 +28,8 @@ discharges automatically once that unit's sibling pass proves it unconditionally
 Main declarations: `RS.exists_isolating_nhds_periodSubgroup`, `RS.discreteTopology_periodSubgroup`,
 `RS.periodSubgroup_topologicalClosure_eq`, `RS.discreteTopology_periodSubgroup_topologicalClosure`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold  Topology
 open Set Filter Metric IsManifold

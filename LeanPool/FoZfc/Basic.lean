@@ -3,12 +3,13 @@ Copyright (c) 2026 Tetsuya Ishiu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tetsuya Ishiu
 -/
+module
 
-import Mathlib.Data.Set.Basic
-import Mathlib.ModelTheory.Basic
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Semantics
-import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Data.Set.Basic
+public import Mathlib.ModelTheory.Basic
+public import Mathlib.ModelTheory.Syntax
+public import Mathlib.ModelTheory.Semantics
+public import Mathlib.Data.Fin.Tuple.Basic
 
 /-!
 # The Basics of First Order Language of ZFC set theory
@@ -40,6 +41,8 @@ import Mathlib.Data.Fin.Tuple.Basic
   They prove the relationship between the internal and external expressions.
 
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 open FirstOrder.Language

@@ -3,20 +3,21 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.Bochner.Sazonov
-import LeanPool.OSforGFF.Bochner.PositiveDefinite
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-import Mathlib.MeasureTheory.Measure.Tight
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Function.SpecialFunctions.RCLike
+public import LeanPool.OSforGFF.Bochner.Sazonov
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+public import Mathlib.MeasureTheory.Measure.Tight
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Analysis.InnerProductSpace.Trace
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.MeasureTheory.Function.SpecialFunctions.RCLike
 
 /-! # Sazonov Tightness
 
@@ -35,6 +36,8 @@ spectral decomposition, and Chebyshev inequalities.
 - `sazonov_tight_marginals`: Sazonov CF continuity implies tight marginals
 - `sazonov_tight_marginals_apply`: Explicit tightness bound via Gaussian averaging
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Filter Topology Set InnerProductSpace Function
 open scoped Real FourierTransform

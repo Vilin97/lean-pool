@@ -3,8 +3,9 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Prelude
 
 /-!
 # Dickson permutation lemmas
@@ -24,6 +25,8 @@ arithmetic instances for the exponents `2^k - 1` and `(2^k+1)/3`, and the
 consequence that `D_(3h)` and `D_3` have the same value distribution whenever
 `D_h` is a permutation.
 -/
+
+@[expose] public section
 
 open Polynomial
 

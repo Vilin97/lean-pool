@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTileComplex
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTileComplex
 
 /-!
 # Conforming fan maps on adaptive midpoint tiles
@@ -13,6 +15,8 @@ successive boundary vertices to the positive barycentric center gives a locally 
 of parametrized triangles in the open subpolyhedron.  This file constructs those maps before
 proving the global face-to-face intersection theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

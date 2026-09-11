@@ -3,13 +3,17 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
-import LeanPool.OrderPQ.PrimeOrder
-import Mathlib.Data.ZMod.Aut
-import Mathlib.RingTheory.ZMod.UnitsCyclic
+module
+
+public import LeanPool.OrderPQ.PrimeOrder
+public import Mathlib.Data.ZMod.Aut
+public import Mathlib.RingTheory.ZMod.UnitsCyclic
 
 /-!
 # LeanPool.OrderPQ.MulZMod
 -/
+
+@[expose] public section
 
 section MulZMod
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
 
 /-!
 # Multiplication linear equivalence for `L(D)` (design §6.7, closing the documented gap)
@@ -13,6 +14,8 @@ Unit: meromorphic-and-divisors. `linSysMulEquiv`: for `φ ≠ 0` on a connected 
 multiplication by `φ` is a `ℂ`-linear equivalence `L(D) ≃ₗ L(D - divisor φ)` (Miranda V.3.11
 vocabulary; riemann-roch's lattice tool).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

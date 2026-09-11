@@ -3,10 +3,11 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
-import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
-import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
 
 /-!
 # Winding Number Weight at i
@@ -19,6 +20,8 @@ around the point i.
 * `pv_integral_at_i_tendsto` — PV integral converges to -iπ
 * `gWN_fdBoundary_H_at_i` — gWN = -1/2 at i
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.Result
-import Mathlib.Analysis.Normed.Group.AddCircle
+public import LeanPool.Wallace.Result
+public import Mathlib.Analysis.Normed.Group.AddCircle
 
 /-!
 # Minimal construction interface for the Wallace counterexample
@@ -18,6 +19,8 @@ precisely that output.
 No topology on the free Abelian group and no compactness conclusion is stored in
 `SeparationPackage`; both are derived below from its algebraic and filter-theoretic fields.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

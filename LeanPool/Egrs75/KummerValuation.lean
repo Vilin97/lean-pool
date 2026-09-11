@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 Kummer bridge for the Concrete Mathematics GKP conjecture.
@@ -14,6 +15,8 @@ GKP attack. Earlier versions imported these lemmas from the retired
 Erdos117 squarefree-central-binomial scaffold. Keeping them here makes the
 ConcreteMath module self-contained around its actual open target.
 -/
+
+@[expose] public section
 
 namespace Egrs75.ConcreteMath
 

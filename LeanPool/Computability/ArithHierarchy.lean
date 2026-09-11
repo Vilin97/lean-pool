@@ -3,7 +3,9 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import LeanPool.Computability.Jump
+module
+
+public import LeanPool.Computability.Jump
 
 /-!
 # The Arithmetical Hierarchy
@@ -11,6 +13,8 @@ import LeanPool.Computability.Jump
 This file develops the iterated jump operator, the sets `∅⁽ⁿ⁾`, and the levels `Σ⁰ₙ`, `Π⁰ₙ`,
 `Δ⁰ₙ` of the arithmetical hierarchy relative to oracle computability.
 -/
+
+@[expose] public section
 
 namespace Computability
 

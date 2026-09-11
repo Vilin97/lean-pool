@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
-import Mathlib.Topology.Order.OrderClosed
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
+public import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateH1`
@@ -17,6 +18,8 @@ Extend Euclidean `L²` translation estimates from `C¹_c` to the closure-based E
 - `norm_translateL2_sub_h1ToL2_le`: for `u ∈ H¹`, `‖τ_a u - u‖₂ ≤ ‖a‖ · ‖∇u‖₂`, where `∇u` is the
   `L²(E)` component in our `H¹ ⊆ L² × L²(E)` model.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

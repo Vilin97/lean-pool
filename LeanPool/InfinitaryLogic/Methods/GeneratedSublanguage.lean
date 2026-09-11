@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
-import Mathlib.Data.Set.Countable
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
+public import Mathlib.Data.Set.Countable
 
 /-!
 # The function-generated sublanguage of an `L_{ω₁ω}` formula
@@ -22,6 +24,8 @@ the full language.
 
 Pure syntax + set-countability; no EM, no local stack, no `Conditional/`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

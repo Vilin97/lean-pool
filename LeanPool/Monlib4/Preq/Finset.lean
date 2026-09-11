@@ -3,10 +3,12 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Group.Defs
-import Mathlib.Data.Finset.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Data.Fintype.Prod
+module
+
+public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Data.Fintype.Prod
 
 /-!
 
@@ -15,6 +17,8 @@ import Mathlib.Data.Fintype.Prod
 In this file we provide some elementary results for summations
 
 -/
+
+@[expose] public section
 
 
 namespace Finset

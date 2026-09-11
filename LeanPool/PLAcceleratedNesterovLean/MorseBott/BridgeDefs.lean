@@ -3,10 +3,11 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Dual
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.InnerProductSpace.Dual
 
 /-!
 # Shared definitions for external theorem compatibility
@@ -14,6 +15,8 @@ import Mathlib.Analysis.InnerProductSpace.Dual
 These mirror definitions from the source project so external theorems can be
 stated and proved using the same types.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric InnerProductSpace
 

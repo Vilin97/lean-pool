@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise407
-import LeanPool.DomainTheory.Neighborhood.Exercise410
+public import LeanPool.DomainTheory.Neighborhood.Exercise407
+public import LeanPool.DomainTheory.Neighborhood.Exercise410
 
 /-!
 # Exercise 4.11 (Scott 1981, PRG-19, Lecture IV) — Plotkin's uniqueness of `fix`
@@ -45,6 +46,8 @@ uniqueness proof uses only
 the project's permitted `Element.ext`; the inclusion data `inclMap` is
 **choice-free**.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

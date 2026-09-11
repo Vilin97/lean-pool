@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
+module
+
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
 
 /-!
 # Compact self-adjoint operators: spectral theorem (Hilbert basis of eigenvectors)
@@ -19,6 +21,8 @@ Hilbert space.
 - `exists_hilbertBasis_hasEigenvector_of_isCompactOperator_of_isSelfAdjoint`:
   a compact self-adjoint operator admits a `HilbertBasis` consisting of eigenvectors.
 -/
+
+@[expose] public section
 
 namespace CompactSelfAdjoint
 

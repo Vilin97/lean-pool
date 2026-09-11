@@ -8,8 +8,12 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 Compatibility import for the injective variable-renaming API, whose shared
 implementation lives with the bijective specialization in `Renaming`.
 -/
-import LeanPool.MatchingLogic.EntryIII.Renaming
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Renaming
 
 /-!
 # MatchingLogic.EntryIII.Injection
 -/
+
+@[expose] public section

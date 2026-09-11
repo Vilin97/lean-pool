@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.CentralBinomialDigits
-import Mathlib.Data.Set.Finite.Basic
+public import LeanPool.Egrs75.CentralBinomialDigits
+public import Mathlib.Data.Set.Finite.Basic
 
 /-!
 EGRS75 two-prime infinitude — strategy + defs scaffold.
@@ -33,6 +34,8 @@ Recon / context: MATH CONTEXT block in the run prompt; #376 recon at
   ~/Knowledge/Construct/recon/erdos_376.md
 DO NOT reprove Kummer — reuse the imports below.
 -/
+
+@[expose] public section
 
 namespace Egrs75
 

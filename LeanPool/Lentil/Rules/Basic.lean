@@ -3,11 +3,15 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.Basic
-import LeanPool.Lentil.Tactics.Basic
-import LeanPool.Lentil.Gadgets.TheoremLifting
+module
+
+public import LeanPool.Lentil.Basic
+public import LeanPool.Lentil.Tactics.Basic
+public import LeanPool.Lentil.Gadgets.TheoremLifting
 
 /-! Basic theorems about TLA. -/
+
+@[expose] public section
 
 open Classical LentilLib
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise621
-import LeanPool.DomainTheory.Neighborhood.Lemma615
+public import LeanPool.DomainTheory.Neighborhood.Exercise621
+public import LeanPool.DomainTheory.Neighborhood.Lemma615
 
 /-!
 # Exercise 6.27 (Scott 1981, PRG-19, §6) — which subsystem relations hold
@@ -47,6 +48,8 @@ All parts are **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`) except
 genuinely-undecidable test
 `X = Δ₀` over an arbitrary system and so depends on `Classical.choice`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

@@ -3,11 +3,15 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.FundamentalCategory
+module
+
+public import LeanPool.DirectedTopologyLean4.FundamentalCategory
 
 /-!
 # LeanPool.DirectedTopologyLean4.DipathSubtype
 -/
+
+@[expose] public section
 
 /-
   This file contains properties of dipaths contained in directed subspaces of a directed space.

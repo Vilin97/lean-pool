@@ -3,7 +3,9 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.NSubring
+module
+
+public import LeanPool.AndersonConjecture.Jensen.NSubring
 
 /-!
 # Close-up: base case
@@ -14,6 +16,8 @@ an A-extension R, one produces a new A-extension containing
 a/p for suitable primes p. The divisibility case follows by
 induction on the UFD factorisation in R.
 -/
+
+@[expose] public section
 
 noncomputable section
 

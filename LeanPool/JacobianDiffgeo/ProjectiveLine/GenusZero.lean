@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-import LeanPool.JacobianDiffgeo.Forms
-import Mathlib.Analysis.Complex.Liouville
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+public import LeanPool.JacobianDiffgeo.Forms
+public import Mathlib.Analysis.Complex.Liouville
 
 /-!
 # `genus (OnePoint ℂ) = 0` (CC5)
@@ -17,6 +18,8 @@ related by `f z = -(z ^ 2)⁻¹ * g z⁻¹` for `z ≠ 0`. Since `g` is bounded 
 decays to `0` at infinity, hence vanishes identically by Liouville; the same transition rule then
 forces `g ≡ 0`. So there are no nonzero holomorphic 1-forms on `ℙ¹` — the sphere has genus 0.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint

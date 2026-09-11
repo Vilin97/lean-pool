@@ -3,18 +3,22 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.DirectSum.Module
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Prod
-import Mathlib.RingTheory.TensorProduct.Basic
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.LinearAlgebra.DirectSumFromTo
+module
+
+public import Mathlib.Algebra.DirectSum.Module
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+public import LeanPool.Monlib4.LinearAlgebra.DirectSumFromTo
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.PiDirectSum
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.PiDirectSum`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

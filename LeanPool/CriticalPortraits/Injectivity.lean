@@ -3,8 +3,9 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.Forward
+public import LeanPool.CriticalPortraits.Forward
 
 /-!
 # INJECTIVITY of `T` (Brick 4).
@@ -37,6 +38,8 @@ separation (`column_sep_with_gap` / `column_sep_geom_dir`).  Everything is axiom
   • Stage 2 (component recovery): `hostSet_forced` from `predIn_forced`.
   • The assembly `T_inj` / `T_injOn`.
 -/
+
+@[expose] public section
 
 open Finset
 open scoped BigOperators

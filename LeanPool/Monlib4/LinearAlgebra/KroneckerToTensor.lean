@@ -3,11 +3,13 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.RingTheory.MatrixAlgebra
-import Mathlib.LinearAlgebra.TensorProduct.Matrix
-import Mathlib.LinearAlgebra.TensorProduct.Finiteness
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
+module
+
+public import Mathlib.RingTheory.MatrixAlgebra
+public import Mathlib.LinearAlgebra.TensorProduct.Matrix
+public import Mathlib.LinearAlgebra.TensorProduct.Finiteness
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
 
 /-!
 # Kronecker product to the tensor product
@@ -16,6 +18,8 @@ This file contains the definition of `tensorToKronecker` and
 `kroneckerToTensor`, the algebra equivalences between `⊗ₜ` and `⊗ₖ`.
 
 -/
+
+@[expose] public section
 
 
 open scoped TensorProduct BigOperators Kronecker

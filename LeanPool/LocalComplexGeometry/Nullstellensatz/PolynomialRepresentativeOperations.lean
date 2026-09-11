@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
-import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
 
 /-!
 # Concrete polynomial representatives
@@ -15,6 +16,8 @@ This file relates the generic fixed-degree representative API to the two
 polynomial shapes occurring in Weierstrass division and records independence
 of an inessential larger degree bound.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

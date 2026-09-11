@@ -3,13 +3,17 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.Dipath
-import LeanPool.DirectedTopologyLean4.DTop
-import LeanPool.DirectedTopologyLean4.UnitIntervalAux
+module
+
+public import LeanPool.DirectedTopologyLean4.Dipath
+public import LeanPool.DirectedTopologyLean4.DTop
+public import LeanPool.DirectedTopologyLean4.UnitIntervalAux
 
 /-!
 # LeanPool.DirectedTopologyLean4.StretchPath
 -/
+
+@[expose] public section
 
 /-
   This file contains definitions about stretching a (directed) path in `I` in two ways:

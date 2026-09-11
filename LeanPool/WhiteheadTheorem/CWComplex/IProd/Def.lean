@@ -5,20 +5,24 @@ Authors: Jiazhen Xia
 -/
 
 -- import WhiteheadTheorem.Shapes.Cube
-import LeanPool.WhiteheadTheorem.CWComplex.Basic
-import LeanPool.WhiteheadTheorem.Auxiliary
-import LeanPool.WhiteheadTheorem.Exponential
-import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
-import LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap
-import LeanPool.WhiteheadTheorem.Shapes.Maps
-import LeanPool.WhiteheadTheorem.Shapes.Pushout
-import Mathlib.CategoryTheory.Comma.Arrow
+module
+
+public import LeanPool.WhiteheadTheorem.CWComplex.Basic
+public import LeanPool.WhiteheadTheorem.Auxiliary
+public import LeanPool.WhiteheadTheorem.Exponential
+public import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
+public import LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap
+public import LeanPool.WhiteheadTheorem.Shapes.Maps
+public import LeanPool.WhiteheadTheorem.Shapes.Pushout
+public import Mathlib.CategoryTheory.Comma.Arrow
 
 /-!
 For every CW-complex `X`, this file constructs a relative CW-complex `X.IProd`
 homeomorphic to `I × X`, where `I` is the unit interval.
 The $(-1)$-skeleton of `X.IProd` is homeomorphic to `{0, 1} × X`.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory unitInterval TopCat

@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.Sufficiency
-import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
+public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
+public import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
 
 /-!
 # abel-theorem: the gated `ofCurve_inj` and final-assembly discharge (§4.4 D4)
@@ -24,6 +25,8 @@ introduced in this file). `ofCurve_inj` is a one-line wrapper, discharged uncond
 moment `period-lattice-rank` registers `instance : DiscreteTopology (RS.periodSubgroup X)` AND
 `WeakSolutionUpgrade X` is proved (see `Sufficiency.lean` for the precise remaining roadmap).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

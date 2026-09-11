@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
 
 /-!
 # Using the main theorem directly
@@ -13,6 +15,8 @@ This example imports only `MainTheorem.lean`.  A caller supplies a
 formula and the monotonicity inequality for the weak energy density associated
 with the package's displayed weak gradient.
 -/
+
+@[expose] public section
 
 noncomputable section
 

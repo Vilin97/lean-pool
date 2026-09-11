@@ -3,9 +3,11 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.VectorMeasure.WithDensity
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+public import Mathlib.MeasureTheory.VectorMeasure.WithDensity
 
 /-!
 # Basic definitions for stationary harmonic maps
@@ -15,6 +17,8 @@ throughout the monotonicity-formula development: the vector-measure pushforward
 computation behind the coarea/radial representation, together with the ambient
 Sobolev setup on which the later files build.
 -/
+
+@[expose] public section
 
 noncomputable section
 

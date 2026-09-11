@@ -3,8 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
 
 /-!
 # Uniform locality of prepared roots
@@ -14,6 +15,8 @@ distinguished point as the base tends to the origin.  This is the locality
 bridge which allows ambient germ identities to be applied simultaneously to
 every root of a nearby specialized fiber.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

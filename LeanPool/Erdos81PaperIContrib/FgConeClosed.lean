@@ -3,13 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini
 -/
+module
 
-import Mathlib.Analysis.Convex.Cone.Dual
-import Mathlib.Geometry.Convex.Cone.Simplicial
-import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.Convex.Cone.Dual
+public import Mathlib.Geometry.Convex.Cone.Simplicial
+public import Mathlib.LinearAlgebra.Dimension.Constructions
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
 
 /-!
 
@@ -34,6 +35,8 @@ inner product; they are ported here to an arbitrary real normed space `E`
 (`[NormedAddCommGroup E] [NormedSpace ℝ E]`), which is the natural Mathlib generality.
 
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

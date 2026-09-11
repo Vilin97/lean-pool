@@ -3,13 +3,16 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Mathlib.ModelTheory.Semantics
-import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
+public import Mathlib.ModelTheory.Semantics
+public import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
 -/
+
+@[expose] public section
 
 open FirstOrder FirstOrder.Language
 

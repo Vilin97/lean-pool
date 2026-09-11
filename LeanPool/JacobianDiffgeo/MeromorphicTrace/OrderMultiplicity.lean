@@ -8,8 +8,10 @@ Authors: Rado Kirov
 Blueprint unit: meromorphic-trace. Order↔multiplicity bridges (zero and pole cases), file 2 of
 the design's 6-file plan.
 -/
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+module
+
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.ToP1
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
 
 /-!
 # Order↔multiplicity bridges (meromorphic-trace, cluster 1)
@@ -39,6 +41,8 @@ this lemma as a non-essential "cheap corollary... even though we do not need it 
 `form-trace-tower`'s glue; nothing in this unit's own proof obligations needs it, so it is simply
 dropped rather than patched into a different (correct) statement under the same name.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Filter Set Function Topology

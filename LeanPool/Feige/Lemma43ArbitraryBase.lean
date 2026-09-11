@@ -3,12 +3,16 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Lemma43Complete
-import LeanPool.Feige.Lemma43Endpoints
+module
+
+public import LeanPool.Feige.Lemma43Complete
+public import LeanPool.Feige.Lemma43Endpoints
 
 /-!
 # Local transfer identity for an arbitrary base law
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

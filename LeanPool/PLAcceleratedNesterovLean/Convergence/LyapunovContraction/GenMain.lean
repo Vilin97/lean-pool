@@ -3,15 +3,16 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step3
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
-import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step3
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
 
 
 /-!
@@ -20,6 +21,8 @@ import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRec
 Generalization of `lyapunov_contraction` (Main.lean) to arbitrary `NesterovState`,
 supporting nonzero initial velocity. Used by `GenLocalArgument.lean`.
 -/
+
+@[expose] public section
 
 
 noncomputable section

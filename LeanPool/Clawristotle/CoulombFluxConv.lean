@@ -3,8 +3,10 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.CoulombFlux
-import Mathlib.Analysis.Calculus.ParametricIntegral
+module
+
+public import LeanPool.Clawristotle.CoulombFlux
+public import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
 # Coulomb Entry Convolution: Differentiability and Bounds
@@ -13,6 +15,8 @@ Establishes that partial derivatives of functions with C² decay are C² decay,
 Coulomb kernel entry convolutions are differentiable with uniform derivative bounds,
 and the full Coulomb flux component is differentiable with a decomposition formula.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

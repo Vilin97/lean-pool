@@ -3,10 +3,11 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Order.Filter.Finite
-import LeanPool.Redhill.Common.PairwiseCoprime
-import LeanPool.Redhill.General.Defs
+public import Mathlib.Order.Filter.Finite
+public import LeanPool.Redhill.Common.PairwiseCoprime
+public import LeanPool.Redhill.General.Defs
 
 /-!
 # Coprimality proof for the general case
@@ -16,6 +17,8 @@ In the paper it is claimed in the proof of coprimality of `a₃` and `a₄` over
 they have no common factor". This is not always true even with the paper's definition of `y`,
 but can be made so by adding 101 to the factors of `y`.
 -/
+
+@[expose] public section
 
 namespace GeneralCase
 

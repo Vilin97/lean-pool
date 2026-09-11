@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.JointBallFiberSeries
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.PoincareThreeBody.JointBallFiberSeries
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 /-!
 # Integrating a joint analytic power series over a time slab
@@ -13,6 +14,8 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 This file turns the uniform fiber series supplied by a joint analytic ball into a power series
 for its parameter integral over any closed time interval contained in a smaller slab.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

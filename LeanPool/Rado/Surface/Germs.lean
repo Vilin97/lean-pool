@@ -3,8 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Surface.Harmonic
-import Mathlib.Analysis.Complex.OpenMapping
+module
+
+public import LeanPool.Rado.Surface.Harmonic
+public import Mathlib.Analysis.Complex.OpenMapping
 
 /-!
 # Conjugate germs and the étale space
@@ -19,6 +21,8 @@ evaluation map is continuous with **discrete fibers** (isolated zeros; a
 constant germ would force `u` to be constant), and every connected component
 projects onto all of a connected base.
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneCycle
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneCycle
 
 /-!
 # Polygonal boundaries of intrinsic two-simplexes
@@ -15,6 +17,8 @@ one common plane complex.  This file enumerates only the one-dimensional arrange
 actually carry those three edges, resolves all their segments simultaneously, and extracts the
 resulting simple polygonal cycle.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

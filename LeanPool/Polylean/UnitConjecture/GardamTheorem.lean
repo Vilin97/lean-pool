@@ -3,11 +3,12 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Mathlib.Algebra.Field.Basic
-import Mathlib.Data.ZMod.Defs
-import LeanPool.Polylean.UnitConjecture.TorsionFree
-import LeanPool.Polylean.UnitConjecture.GroupRing
+public import Mathlib.Algebra.Field.Basic
+public import Mathlib.Data.ZMod.Defs
+public import LeanPool.Polylean.UnitConjecture.TorsionFree
+public import LeanPool.Polylean.UnitConjecture.GroupRing
 
 /-!
 
@@ -17,6 +18,8 @@ The proof of the theorem `𝔽₂[P]` has non-trivial units. Together with the m
 result of `TorsionFree` -- that `P` is torsion-free, this completes the formal
 proof of Gardam's theorem that Kaplansky's Unit Conjecture is false.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

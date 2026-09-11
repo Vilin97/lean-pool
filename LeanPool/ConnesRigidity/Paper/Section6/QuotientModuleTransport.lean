@@ -3,14 +3,18 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section6.CharacteristicTransport
-import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section6.CharacteristicTransport
+public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC
 
 /-!
 This file proves the concrete quotient and module transport in Zhou's
 Section 6 argument. It uses public project statements only.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperCharacteristicTransport

@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.Definitions
-import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+public import LeanPool.LeanModularForms.ValenceFormula.Definitions
+public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
 
 /-!
 # Orbit Pairing Lemmas for the Valence Formula
@@ -19,6 +20,8 @@ pairing left/right vertical and arc contributions.
 * `sum_ord_rightVert_eq_sum_ord_leftVert`: Orders on right vertical edge equal orders on left.
 * `sum_ord_rightArc_eq_sum_ord_leftArc`: Orders on right arc equal orders on left arc.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular

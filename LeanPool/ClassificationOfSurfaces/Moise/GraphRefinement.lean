@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.GraphSubdivision
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.GraphSubdivision
 
 /-!
 # Finite marked refinements of plane graphs
@@ -12,6 +14,8 @@ This file enlarges the edge arrangement of a finite plane graph by finitely many
 points.  When the marks lie in the graph support, the subordinate arrangement is a subdivision
 of the graph and every mark is a vertex of that subdivision.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

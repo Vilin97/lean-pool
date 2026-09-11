@@ -3,9 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
-import LeanPool.AndersonConjecture.Jensen.Construction.Construction
-import Mathlib.Algebra.CharP.Algebra
+module
+
+public import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+public import LeanPool.AndersonConjecture.Jensen.Construction.Construction
+public import Mathlib.Algebra.CharP.Algebra
 
 /-!
 # Jensen's Theorem on Completions of UFDs
@@ -14,6 +16,8 @@ Under suitable hypotheses on a complete local domain T, one
 constructs a local UFD A whose adic completion is T and whose
 generic formal fiber is trivial (Jensen, 2006, Corollary 2.4).
 -/
+
+@[expose] public section
 
 noncomputable section
 

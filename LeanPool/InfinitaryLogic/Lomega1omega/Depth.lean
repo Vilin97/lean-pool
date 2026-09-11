@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
-import Mathlib.SetTheory.Ordinal.Family
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+public import Mathlib.SetTheory.Ordinal.Family
 
 /-!
 # Ordinal-valued depth of `Lω₁ω` formulas
@@ -17,6 +19,8 @@ serves both).  `sizeOf` is inadequate: `sizeOf (φs k)` is unbounded while
 structural subterm.  `depth` uses `Ordinal.iSup` at the countable connectives and is preserved
 by `castLE`, `relabel`, `openBounds`, and `subst`, with strict decrease into every connective.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.Analysis.Convex.Visible
-import Mathlib.Analysis.Normed.Affine.AddTorsorBases
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Topology.MetricSpace.Thickening
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.Analysis.Convex.Visible
+public import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.Topology.MetricSpace.Thickening
 
 /-!
 # The Jordan curve theorem for polygons
@@ -24,6 +26,8 @@ R²").  Only the **polygonal** case is stated: this is what the triangulation th
 with adjacent segments meeting exactly at their shared vertex and non-adjacent segments disjoint.
 A junk witness cannot satisfy these fields: they force the carrier to be a topological circle.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,15 +3,16 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.CycleLemma
-import LeanPool.CriticalPortraits.Core
-import LeanPool.CriticalPortraits.Denominator
-import LeanPool.CriticalPortraits.Portraits
-import LeanPool.CriticalPortraits.Forward
-import LeanPool.CriticalPortraits.Injectivity
-import LeanPool.CriticalPortraits.Surjectivity
-import LeanPool.CriticalPortraits.Census
+public import LeanPool.CriticalPortraits.CycleLemma
+public import LeanPool.CriticalPortraits.Core
+public import LeanPool.CriticalPortraits.Denominator
+public import LeanPool.CriticalPortraits.Portraits
+public import LeanPool.CriticalPortraits.Forward
+public import LeanPool.CriticalPortraits.Injectivity
+public import LeanPool.CriticalPortraits.Surjectivity
+public import LeanPool.CriticalPortraits.Census
 
 /-!
 # Counting Critical Portraits
@@ -23,6 +24,8 @@ Main declarations: `CriticalPortraits.card_portraits`, `CriticalPortraits.Cycle.
 Tags: combinatorics, cycle-lemma, critical-portraits, enumeration
 MSC: 05A15, 37F20
 -/
+
+@[expose] public section
 
 /-!
 # Full all-`d` proof of `census = C(N,d−1)/d` (Mathlib)

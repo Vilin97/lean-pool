@@ -9,14 +9,18 @@ Copyright (c) 2024 Yunzhou Xie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie
 -/
-import Mathlib.Algebra.Category.Ring.Basic
-import Mathlib.Algebra.EuclideanDomain.Field
-import Mathlib.Algebra.Ring.CompTypeclasses
-import Mathlib.Combinatorics.Quiver.ReflQuiver
+module
+
+public import Mathlib.Algebra.Category.Ring.Basic
+public import Mathlib.Algebra.EuclideanDomain.Field
+public import Mathlib.Algebra.Ring.CompTypeclasses
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
 
 /-!
 # Category instances for `Field`.
 -/
+
+@[expose] public section
 
 universe u v
 

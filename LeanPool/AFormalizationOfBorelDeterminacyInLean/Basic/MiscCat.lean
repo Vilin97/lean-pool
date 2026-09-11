@@ -3,19 +3,22 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.CategoryTheory.Limits.Final
-import Mathlib.CategoryTheory.Limits.Types.Coproducts
-import Mathlib.CategoryTheory.ConcreteCategory.Elementwise
-import Mathlib.CategoryTheory.ConcreteCategory.EpiMono
-import Mathlib.CategoryTheory.Category.Preorder
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+public import Mathlib.CategoryTheory.Limits.Final
+public import Mathlib.CategoryTheory.Limits.Types.Coproducts
+public import Mathlib.CategoryTheory.ConcreteCategory.Elementwise
+public import Mathlib.CategoryTheory.ConcreteCategory.EpiMono
+public import Mathlib.CategoryTheory.Category.Preorder
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory

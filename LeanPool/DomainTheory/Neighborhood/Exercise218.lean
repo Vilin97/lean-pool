@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example24
-import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+public import LeanPool.DomainTheory.Neighborhood.Example24
+public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
 
 /-!
 # Exercise 2.18 (Scott 1981, PRG-19, §2) — the "spacing" map `h : 𝔹 → 𝔹`
@@ -43,6 +44,8 @@ to `⊥` (the first
 
 Choice-free (`#print axioms ⊆ {propext, Quot.sound}`): everything is decidable
 list surgery. -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise218
 

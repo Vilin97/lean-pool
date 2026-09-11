@@ -3,16 +3,18 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-import LeanPool.Feige.Grunbaum.Definitions
-import Mathlib.Analysis.Convex.Measure
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Feige.Grunbaum.Definitions
+public import Mathlib.Analysis.Convex.Measure
+public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.Layercake
+public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Sharpness of Grünbaum's centroid halfspace constant
@@ -22,6 +24,8 @@ centroid halfspace.  It computes the relevant centroid coordinate by the
 layer-cake formula and proves that every universal project-level lower bound
 is at most `grunbaumConstant`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

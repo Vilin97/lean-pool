@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Analytic.Regularization
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
+public import LeanPool.LocalComplexGeometry.Analytic.Regularization
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
 
 /-!
 # Regularized Weierstrass preparation for holomorphic germs
@@ -15,6 +16,8 @@ Weierstrass preparation theorem.  It records the coordinate pullback as an
 equality of raw function germs, so downstream commutative-algebra arguments do
 not depend on a hidden choice of representative.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

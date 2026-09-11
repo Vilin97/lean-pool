@@ -3,8 +3,9 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Curve
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Curve
 
 /-!
 # The Hessian addition formulas for the Fermat cubic in characteristic two
@@ -23,6 +24,8 @@ Ny = w1^2*t2 + w2^2*t1
 This file records the three polynomial identities behind the formula; they are all
 consequences of the two Fermat equations and of `2 = 0`.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

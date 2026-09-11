@@ -3,9 +3,11 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpace
-import Mathlib.Probability.ProbabilityMassFunction.Basic
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import Mathlib.MeasureTheory.Measure.MeasureSpace
+public import Mathlib.Probability.ProbabilityMassFunction.Basic
 
 /-!
 # Data Presentations
@@ -22,6 +24,8 @@ without losing the structural properties that theorems depend on.
 Also includes query-learning interfaces (MembershipOracle, EquivalenceOracle),
 noisy data, and advice.
 -/
+
+@[expose] public section
 
 universe u v
 

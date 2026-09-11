@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
-import LeanPool.JacobianDiffgeo.Dbar.Form01
+public import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
+public import LeanPool.JacobianDiffgeo.Dbar.Form01
 
 /-!
 # The intrinsic `dbar` operator and `IsDbarOn` (`Jacobian/Dbar/Operator.lean`)
@@ -29,6 +30,8 @@ representative; `IsDbarAt`/`IsDbarOn` are the chart-free (evaluated-at-centers) 
 predicates (D7); `exists_dbar_solution_chart_ball` transports Forster 13.2 (`SolveDisk.lean`)
 through a chart.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold

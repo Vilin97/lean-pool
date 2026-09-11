@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.EdgeCases
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.EdgeCases
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 
 /-!
 # Audited examples for the public statement
@@ -14,6 +15,8 @@ These examples exercise the derivative convention, coefficient indexing,
 monicity, genuine parameter dependence, nonconstant units, and the `n = 0`
 and `d = 0` semantics of the public interface.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Topology
 

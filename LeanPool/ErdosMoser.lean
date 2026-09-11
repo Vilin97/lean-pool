@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.ErdosMoser.Bounds
+public import LeanPool.ErdosMoser.Bounds
 
 /-!
 # Leo Moser's finite distinct-subset-sums inequality
@@ -16,6 +17,8 @@ Main declarations: `LeanPool.ErdosMoser.leoMoserVarianceBound`
 Tags: additive-combinatorics, number-theory, distinct-subset-sums, erdos-problems
 MSC: 11B13, 11B75
 -/
+
+@[expose] public section
 
 /-!
 Guy's 1982 account states the exact finite sum-of-squares inequality as

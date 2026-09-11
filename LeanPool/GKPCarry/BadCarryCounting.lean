@@ -3,12 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.BadCarryLanguage
-import Lean.Elab.Tactic.Omega
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Vector
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.GKPCarry.BadCarryLanguage
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Vector
+public import Mathlib.Tactic.Ring
 
 /-!
 # Counting deficient-carry ternary words
@@ -18,6 +20,8 @@ length `m ≥ 2`, precisely `(m + 5) * 2 ^ (m - 2)` create fewer than two carrie
 when doubled.  The theorem below uses the subtraction-free parameterization
 `m = n + 2`.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

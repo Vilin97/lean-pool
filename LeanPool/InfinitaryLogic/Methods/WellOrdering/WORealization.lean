@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
-import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
-import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
+public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
 /-!
 # Realization helpers for the closure fields (issue #12, commit 4b part 1)
 
@@ -28,6 +30,8 @@ The shared semantic tools the fifteen closure fields consume, isolated per revie
   `not_mem_baseDiagram_elim`, `sentenceJConsts_ratLtAtom`, `not_ne_self`,
   `lift_eq_falsum_reflect`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

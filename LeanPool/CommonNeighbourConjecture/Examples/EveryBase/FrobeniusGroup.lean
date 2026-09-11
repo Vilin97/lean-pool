@@ -3,11 +3,12 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.Algebra.Group.Subgroup.Even
-import Mathlib.FieldTheory.Finite.GaloisField
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
-import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
+public import Mathlib.Algebra.Group.Subgroup.Even
+public import Mathlib.FieldTheory.Finite.GaloisField
+public import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
 
 /-!
 # The odd affine Frobenius groups used by the every-base-size construction
@@ -22,6 +23,8 @@ The deleted permutation module and its irreducibility are deliberately kept in
 the later files of the construction.  Here we prove the elementary finite-field
 facts and the two-point support calculation needed there.
 -/
+
+@[expose] public section
 
 namespace SaxlCounterexamples.EveryBase
 

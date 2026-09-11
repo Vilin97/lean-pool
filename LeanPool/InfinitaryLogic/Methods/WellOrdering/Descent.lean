@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
-import Mathlib.Algebra.Order.Ring.Rat
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+public import Mathlib.Algebra.Order.Ring.Rat
 
 /-!
 # Generic relation lemmas for the boundedness corollaries (issue #12, step 6 layer 1)
@@ -21,6 +23,8 @@ model extraction involved:
   a structure whose interpreted relation is well-founded (via `WellFounded.has_min`; no
   strict-order hypotheses, so `RelEmbedding.natGT` is deliberately not used).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

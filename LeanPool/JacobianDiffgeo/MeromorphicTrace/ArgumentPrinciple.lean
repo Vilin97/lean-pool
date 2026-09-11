@@ -7,8 +7,10 @@ Authors: Rado Kirov
 /-
 Blueprint unit: meromorphic-trace. THE argument principle, file 3 of the design's 6-file plan.
 -/
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
-import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+module
+
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
+public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
 
 /-!
 # The argument principle (meromorphic-trace, cluster 1)
@@ -29,6 +31,8 @@ own well-definedness engine) — **not** via the residue theorem/Stokes (deliber
 design's routing warning; `proper-map-degree` needs the counting route, not a general-Stokes
 route).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Filter Set Function Topology

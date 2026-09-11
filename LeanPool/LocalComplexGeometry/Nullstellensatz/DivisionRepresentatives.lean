@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Representatives
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
-import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+public import LeanPool.LocalComplexGeometry.Germs.Representatives
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
+public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
 
 /-!
 # Representatives of canonical Weierstrass division
@@ -16,6 +17,8 @@ ambient neighborhood after choosing analytic representatives.  Uniform
 prepared-root locality then specializes it simultaneously at every root of a
 nearby prepared fiber.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

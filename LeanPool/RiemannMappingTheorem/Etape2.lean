@@ -3,13 +3,17 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathlib.Analysis.Complex.Schwarz
-import LeanPool.RiemannMappingTheorem.Defs
-import LeanPool.RiemannMappingTheorem.ToMathlib
+module
+
+public import Mathlib.Analysis.Complex.Schwarz
+public import LeanPool.RiemannMappingTheorem.Defs
+public import LeanPool.RiemannMappingTheorem.ToMathlib
 
 /-!
 # LeanPool.RiemannMappingTheorem.Etape2
 -/
+
+@[expose] public section
 
 open Complex ComplexConjugate Set Metric Topology Filter
 

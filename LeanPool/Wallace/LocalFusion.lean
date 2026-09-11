@@ -3,16 +3,17 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.ConcreteLocalSetup
-import LeanPool.Wallace.BlockLimit
-import LeanPool.Wallace.GlobalAssembly
-import LeanPool.Wallace.FusionSchedule
-import LeanPool.Wallace.FusionStage
-import LeanPool.Wallace.FusionLimit
-import LeanPool.Wallace.InitialCharacter
-import Mathlib.Data.Finset.Lattice.Basic
-import Mathlib.Data.Finset.SDiff
+public import LeanPool.Wallace.ConcreteLocalSetup
+public import LeanPool.Wallace.BlockLimit
+public import LeanPool.Wallace.GlobalAssembly
+public import LeanPool.Wallace.FusionSchedule
+public import LeanPool.Wallace.FusionStage
+public import LeanPool.Wallace.FusionLimit
+public import LeanPool.Wallace.InitialCharacter
+public import Mathlib.Data.Finset.Lattice.Basic
+public import Mathlib.Data.Finset.SDiff
 
 /-!
 # A local character-fusion core
@@ -29,6 +30,8 @@ character and derive:
 
 The second half of the file carries out the scheduling induction for the concrete Wallace data.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

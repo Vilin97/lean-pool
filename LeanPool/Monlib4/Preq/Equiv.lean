@@ -3,16 +3,19 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import Mathlib.Data.Matrix.PEquiv
-import Mathlib.LinearAlgebra.UnitaryGroup
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+public import Mathlib.Data.Matrix.PEquiv
+public import Mathlib.LinearAlgebra.UnitaryGroup
 
 /-!
 # LeanPool.Monlib4.Preq.Equiv
 
 Imported Lean Pool material for `LeanPool.Monlib4.Preq.Equiv`.
 -/
+
+@[expose] public section
 
 theorem Equiv.Perm.ToPequiv.toMatrix_mem_unitaryGroup {n : Type _} [DecidableEq n]
     [Fintype n] {𝕜 : Type _} [CommRing 𝕜] [StarRing 𝕜] (σ : Equiv.Perm n) :

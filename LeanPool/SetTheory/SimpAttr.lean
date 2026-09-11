@@ -3,7 +3,9 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import Lean
+module
+
+public import Lean
 
 /-!
 # Simp attributes for the ZF realization machinery
@@ -11,6 +13,8 @@ import Lean
 This module registers the custom `simp` attributes used to drive the formula-realization
 and elementary-embedding automation in the rest of the development.
 -/
+
+@[expose] public section
 
 /-- Simp set for unfolding `Formula.Realize` of the generated ZF formulas. -/
 register_simp_attr realize_simps

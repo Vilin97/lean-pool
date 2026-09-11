@@ -3,15 +3,18 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Calculus.Implicit
-import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-import LeanPool.SardMoreira.ContDiffMoreiraHolder
-import LeanPool.SardMoreira.LinearAlgebra
+public import Mathlib.Analysis.Calculus.Implicit
+public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
+public import LeanPool.SardMoreira.ContDiffMoreiraHolder
+public import LeanPool.SardMoreira.LinearAlgebra
 
 /-!
 # LeanPool.SardMoreira.ImplicitFunction
 -/
+
+@[expose] public section
 
 noncomputable section
 

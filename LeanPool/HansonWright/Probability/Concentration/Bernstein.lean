@@ -3,9 +3,11 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu, Kazuki Uesugi
 -/
-import LeanPool.HansonWright.Probability.Concentration.Chernoff
-import LeanPool.HansonWright.Probability.Moments.Cumulant
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import LeanPool.HansonWright.Probability.Concentration.Chernoff
+public import LeanPool.HansonWright.Probability.Moments.Cumulant
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Scalar Bernstein Inequality
@@ -28,6 +30,8 @@ real random variables.
 * `bernstein_inequality`: `[Fintype]` convenience wrapper.
 
 -/
+
+@[expose] public section
 
 namespace LeanPool
 

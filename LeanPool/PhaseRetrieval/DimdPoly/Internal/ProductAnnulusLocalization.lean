@@ -3,10 +3,14 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.BlockLocalization
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.BlockLocalization
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
 
 /-! # ProductAnnulusLocalization -/
+
+@[expose] public section
 
 
 open MeasureTheory

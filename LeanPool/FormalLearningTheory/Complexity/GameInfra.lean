@@ -3,14 +3,16 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Criterion.Online
+module
+
+public import LeanPool.FormalLearningTheory.Criterion.Online
 -- Removed: import LeanPool.FormalLearningTheory.Complexity.Littlestone
 -- Γ₁₉: branch-wise isShattered wrong + trees must be complete (balanced).
 -- Corrected: depth-indexed complete trees + path-wise shattering.
-import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
 -- Path B (Γ₂₁): WithBot (WithTop ℕ) for LittlestoneDim
 -- Required for CompleteLattice instance and ConditionallyCompleteLinearOrderBot ℕ
-import Mathlib.Order.Lattice.Nat
+public import Mathlib.Order.Lattice.Nat
 
 /-!
 # Game-Theoretic Infrastructure for Online Learning
@@ -26,6 +28,8 @@ Definitions and interface lemmas for the online learning game:
 
 Characterization theorems live in `FLT_Proofs.Theorem.Online`.
 -/
+
+@[expose] public section
 
 -- ============================================================
 -- CORRECTED DEFINITIONS: Depth-indexed complete Littlestone trees

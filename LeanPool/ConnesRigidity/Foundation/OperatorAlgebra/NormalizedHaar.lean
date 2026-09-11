@@ -11,11 +11,15 @@ Modifications: generalized the compact additive Haar lemmas from the paper
 carriers to arbitrary compact groups and updated simplification proofs. Paper:
 §3. See the upstream PORT_MAP.md.
 -/
-import Mathlib.MeasureTheory.Measure.Haar.Basic
+module
+
+public import Mathlib.MeasureTheory.Measure.Haar.Basic
 
 /-!
 The normalized haar component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace NormalizedHaar

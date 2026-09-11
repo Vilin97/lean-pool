@@ -3,21 +3,24 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.SetTheory.Cardinal.Continuum
-import Mathlib.Order.CompleteSublattice
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Zify
-import Aesop
-import Lean.Elab.Tactic.Omega
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+public import Mathlib.SetTheory.Cardinal.Continuum
+public import Mathlib.Order.CompleteSublattice
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Zify
+public import Aesop
+public import Lean.Elab.Tactic.Omega
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 attribute [simp_lengths]

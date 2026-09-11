@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
 
 /-!
 # Midpoint subdivision of an intrinsic two-complex
@@ -14,6 +16,8 @@ then divided into its three corner triangles and its central triangle.  Since ed
 indexed by the old edge itself, the construction is automatically coherent across adjacent
 faces.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

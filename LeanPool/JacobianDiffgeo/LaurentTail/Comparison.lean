@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
 
 /-!
 # The comparison `H1Tail D ≃ₗ Cech.H1 D` (laurent-tails, design §4.3/§5)
@@ -55,6 +56,8 @@ accumulating ~25 `have`/`set` steps hits a severe elaboration performance wall r
 (each against an explicit `variable`/`include` list) — mirroring how `tailToH1_alpha`'s own
 helpers (`alphaPatch`/`mlSumCochain`/…) were already structured — restores normal compile times.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

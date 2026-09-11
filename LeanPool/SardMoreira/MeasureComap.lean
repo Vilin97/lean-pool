@@ -3,13 +3,16 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 
 /-!
 # LeanPool.SardMoreira.MeasureComap
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal Set.Notation Pointwise
 open MeasureTheory Filter Set Function Metric Topology

@@ -3,12 +3,13 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.Calculus.Deriv.Slope
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # PV Infrastructure: Gamma Analysis
@@ -25,6 +26,8 @@ used in the dyadic PV limit proof for principal value convergence.
 * `no_return_of_inj_continuous` — γ bounded away from γ(t₀)
     outside nbhd
 -/
+
+@[expose] public section
 
 open Complex Set Filter Topology
 open scoped Real

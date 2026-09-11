@@ -3,10 +3,11 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
+module
 
-import LeanPool.Erdos81PaperIIIContrib.SumZeroTriangles
-import Mathlib.Combinatorics.SimpleGraph.Clique
-import Mathlib.Combinatorics.SimpleGraph.Finite
+public import LeanPool.Erdos81PaperIIIContrib.SumZeroTriangles
+public import Mathlib.Combinatorics.SimpleGraph.Clique
+public import Mathlib.Combinatorics.SimpleGraph.Finite
 
 /-!
 # Simple graph interface for the sum-zero triangle packing
@@ -16,6 +17,8 @@ This file translates the finite edge-set formulation of the sum-zero constructio
 providing graph-valued triangles, their union, and a complete-graph corollary stated using graph
 disjointness and degree.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.KeplerFlow
-import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Prod
-import Mathlib.Tactic.FinCases
+public import LeanPool.PoincareThreeBody.KeplerFlow
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+public import Mathlib.Analysis.Calculus.FDeriv.Prod
+public import Mathlib.Tactic.FinCases
 
 /-!
 # Differential of the rotating Kepler Hamiltonian
@@ -16,6 +17,8 @@ We compute the Fréchet derivative of the mass-zero Hamiltonian and identify its
 field with `rotatingKeplerVectorField`.  Consequently, a Poisson bracket with the Kepler
 Hamiltonian is exactly differentiation along a Kepler flow line.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

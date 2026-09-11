@@ -3,17 +3,19 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Analysis.Complex.Cardinality
-import Mathlib.Data.Finsupp.Encodable
-import Mathlib.Order.BourbakiWitt
-import Mathlib.RingTheory.AdicCompletion.Noetherian
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.MvPowerSeries.Rename
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.PowerSeries.Ideal
-import LeanPool.AndersonConjecture.CompleteDomain.Domain
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.Analysis.Complex.Cardinality
+public import Mathlib.Data.Finsupp.Encodable
+public import Mathlib.Order.BourbakiWitt
+public import Mathlib.RingTheory.AdicCompletion.Noetherian
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+public import Mathlib.RingTheory.MvPowerSeries.Rename
+public import Mathlib.RingTheory.PicardGroup
+public import Mathlib.RingTheory.PowerSeries.Ideal
+public import LeanPool.AndersonConjecture.CompleteDomain.Domain
 
 /-!
 # The Complete Domain T -- Local Ring Properties
@@ -21,6 +23,8 @@ import LeanPool.AndersonConjecture.CompleteDomain.Domain
 T = C[[x,y,z]]/(x^2 - yz) is a Noetherian complete local domain
 whose residue field has the cardinality of C.
 -/
+
+@[expose] public section
 
 noncomputable section
 

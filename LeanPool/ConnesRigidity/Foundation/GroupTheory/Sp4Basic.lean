@@ -8,9 +8,11 @@ Authors: Utensil Song
 Conceptual finite proofs for the natural Sp₄(F₂) action in Zhou §§2 and 6.
 Mathlib supplies the symplectic-matrix carrier and its standard module action.
 -/
-import Mathlib.Algebra.CharP.Pi
-import Mathlib.Algebra.Field.ZMod
-import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
+module
+
+public import Mathlib.Algebra.CharP.Pi
+public import Mathlib.Algebra.Field.ZMod
+public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
 
 /-!
 # The natural `Sp₄(𝔽₂)` action
@@ -19,6 +21,8 @@ This module gives the conceptual finite proof that `Sp₄(𝔽₂)` acts
 transitively on nonzero vectors. It realizes the action with symplectic
 transvections and keeps the exhaustive normal-subgroup certificate separate.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Sp4

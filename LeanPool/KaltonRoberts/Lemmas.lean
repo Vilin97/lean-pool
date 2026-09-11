@@ -10,14 +10,18 @@ Authors: Ho Boon Suan
 This file formalizes the mathematical lemmas from Sections 1–4 of
 the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.DualCert
+module
+
+public import LeanPool.KaltonRoberts.Defs
+public import LeanPool.KaltonRoberts.DualCert
 
 /-!
 # Key lemmas from the Kalton-Roberts paper
 
 Mathematical lemmas from Sections 1-4 of the companion paper.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

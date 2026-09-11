@@ -7,7 +7,9 @@ Authors: Rado Kirov
 /-
 Blueprint unit: mapping-degree. Ramification and branch loci are finite; regular values.
 -/
-import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+module
+
+public import LeanPool.JacobianDiffgeo.MappingDegree.Basics
 
 /-!
 # Ramification locus, branch locus, regular values
@@ -21,6 +23,8 @@ import LeanPool.JacobianDiffgeo.MappingDegree.Basics
   `RS.setOf_isRegularValue_mem_cofinite`, density `RS.dense_setOf_isRegularValue`, and
   existence `RS.exists_isRegularValue`.
 -/
+
+@[expose] public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

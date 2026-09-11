@@ -3,11 +3,12 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Fintype.Sigma
-import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
   Sundogcert/SATNPHard.lean — MILESTONE 1 of the `3SAT ≤ 3DM` marathon.
@@ -41,6 +42,8 @@ import Mathlib.Data.Fin.VecNotation
   reduction (variable wheel, clause gadget, garbage) landing on `Sundog.MatchingNPHard.ThreeDM`,
   and its correctness, is the work to come — milestones 2+ of `3SAT ≤ 3DM ≤ X3C ≤ Decodes`.
 -/
+
+@[expose] public section
 
 namespace Sundog.SATNPHard
 

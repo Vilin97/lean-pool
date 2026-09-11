@@ -10,9 +10,13 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Scaffolding notes:
   - `Rigidity/modulus_rigidity.md`
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
 
 /-! # ModulusRigidity -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset

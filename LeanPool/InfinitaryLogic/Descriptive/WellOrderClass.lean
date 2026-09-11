@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
-import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
+public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
 /-!
 # The coded class of countable well-orders (issue #33, step 1)
 
@@ -23,6 +25,8 @@ The comparison structures are the arbitrary-language ones already built for
 `wellOrdering_undefinable` (`ordinalStructureFull`), transported to the carrier `ℕ` by the
 generic code-transport API.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

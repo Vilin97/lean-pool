@@ -3,25 +3,28 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData00
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData02
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData03
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData04
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData05
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData06
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData07
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData08
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData09
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData10
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData11
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData12
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData13
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData14
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData15
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData00
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData02
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData03
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData04
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData05
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData06
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData07
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData08
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData09
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData10
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData11
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData12
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData13
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData14
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData15
 
 /-! # Exhaustive fixed-branch coverage-certificate manifest -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

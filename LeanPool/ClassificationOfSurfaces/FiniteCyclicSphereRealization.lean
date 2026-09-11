@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
-import LeanPool.ClassificationOfSurfaces.SphereQuotientHomeomorph
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
+public import LeanPool.ClassificationOfSurfaces.SphereQuotientHomeomorph
 
 /-!
 # The canonical finite-cyclic sphere realization
@@ -14,6 +16,8 @@ This file compares the finite-cyclic two-monogon presentation with the existing 
 two-monogon presentation and transports the already established sphere homeomorphism across that
 comparison.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

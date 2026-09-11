@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
-import Mathlib.RingTheory.HahnSeries.Lex
-import Mathlib.RingTheory.HahnSeries.Summable
-import Mathlib.SetTheory.Cardinal.Subfield
-import Mathlib.Data.Finsupp.Lex
+module
+
+public import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveField
+public import Mathlib.RingTheory.HahnSeries.Lex
+public import Mathlib.RingTheory.HahnSeries.Summable
+public import Mathlib.SetTheory.Cardinal.Subfield
+public import Mathlib.Data.Finsupp.Lex
 
 /-!
 # Highly order-transitive orders of every infinite cardinality (issue #11 unit 6b)
@@ -26,6 +28,8 @@ structure, and unit 6a (`HighlyOrderTransitive.of_field`) makes it highly order-
 Implementation note: `Mathlib.RingTheory.HahnSeries.Summable` must be imported explicitly —
 the lexicographic Hahn import alone does not load the field instance.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

@@ -3,13 +3,15 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
-import LeanPool.InfinitaryLogic.Lomega1omega.Depth
-import LeanPool.InfinitaryLogic.Scott.Formula
-import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
-import Mathlib.Order.Zorn
-import Mathlib.Data.Fintype.Quotient
-import Mathlib.ModelTheory.Encoding
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
+public import LeanPool.InfinitaryLogic.Lomega1omega.Depth
+public import LeanPool.InfinitaryLogic.Scott.Formula
+public import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+public import Mathlib.Order.Zorn
+public import Mathlib.Data.Fintype.Quotient
+public import Mathlib.ModelTheory.Encoding
 
 /-!
 # Henkin Construction
@@ -36,6 +38,8 @@ existence theorem for Lω₁ω. The construction proceeds in several stages:
 - [Mar16], §4.1
 - [Kei71]
 -/
+
+@[expose] public section
 
 universe u v
 

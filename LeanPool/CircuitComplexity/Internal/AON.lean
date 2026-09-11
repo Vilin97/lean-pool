@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.AON.Defs
+module
+
+public import LeanPool.CircuitComplexity.AON.Defs
 
 /-! # Internal: AND/OR/NOT Completeness Proof
 
@@ -11,6 +13,8 @@ This internal module proves functional completeness of `Basis.unboundedAON`
 via DNF (disjunctive normal form) construction. The basis definitions are
 in `Circ.AON.Defs`; this module is re-exported through `Circ.AON`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import LeanPool.IsTranscendentalPi.ComplexExponential
+module
+
+public import LeanPool.IsTranscendentalPi.ComplexExponential
 
 /-!
 # Calculus on polynomials
@@ -11,6 +13,8 @@ import LeanPool.IsTranscendentalPi.ComplexExponential
 The integral `∫₀¹ x · exp(-(t · x)) · T(t · x) dt` and the polynomial `∑ᵢ T⁽ⁱ⁾`,
 together with the calculus identities relating them for Niven's argument.
 -/
+
+@[expose] public section
 
 open Polynomial
 open Complex

@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.RationalData
-import LeanPool.Wallace.CountableClosure
+public import LeanPool.Wallace.RationalData
+public import LeanPool.Wallace.CountableClosure
 
 /-!
 # Countable dependency closures for the rational direct sum
@@ -13,6 +14,8 @@ import LeanPool.Wallace.CountableClosure
 Starting from the finite support of a vector, close under the supports of every prepared
 sequence whose code coordinate has entered the set.
 -/
+
+@[expose] public section
 
 open Set
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.MajorantArcNesting
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.MajorantArcNesting
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Coordinated ErLV majorants
@@ -15,6 +17,8 @@ witnesses carry actual strict-cover paths, and the two paths are selected
 jointly to minimize the moves made by their facing endpoints.  The finite
 minimum exists.  The remaining exchange statement is isolated exactly.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

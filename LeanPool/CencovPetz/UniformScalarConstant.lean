@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.ReplicationInvariance
-import LeanPool.CencovPetz.UniformScalarMultiple
+module
+
+public import LeanPool.CencovPetz.ReplicationInvariance
+public import LeanPool.CencovPetz.UniformScalarMultiple
 
 
 /-!
@@ -24,6 +26,8 @@ pointwise scalar multiple with a scalar depending on the point.
 - `CencovPetz.MonotoneMetricFamily.uniformScalar_eq_of_mul`
 - `CencovPetz.MonotoneMetricFamily.uniformScalar_eq_uniformScalar_two`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

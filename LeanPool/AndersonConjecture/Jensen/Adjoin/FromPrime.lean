@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
-import LeanPool.AndersonConjecture.Jensen.Avoidance
-import Mathlib.Data.Finsupp.Encodable
-import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
+public import LeanPool.AndersonConjecture.Jensen.Avoidance
+public import Mathlib.Data.Finsupp.Encodable
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
 
 /-!
 # Adjoining from a Prime Ideal
@@ -18,6 +20,8 @@ q meets S nontrivially.
 Jensen, "Completions of UFDs with semi-local formal fibers",
 2006, Lemma 2.1 (case P = (0)).
 -/
+
+@[expose] public section
 
 noncomputable section
 

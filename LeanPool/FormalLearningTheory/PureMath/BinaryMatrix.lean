@@ -3,11 +3,12 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
+module
 
-import Mathlib.Combinatorics.SetFamily.Shatter
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Combinatorics.SetFamily.Shatter
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # Binary Matrix VC Dimension and Sauer-Shelah
@@ -15,6 +16,8 @@ import Mathlib.Data.Fintype.EquivFin
 Pure combinatorics: VC dimension on binary matrices, bridged to Mathlib's
 `Finset.Shatters` infrastructure. No learning theory types.
 -/
+
+@[expose] public section
 
 open Finset
 

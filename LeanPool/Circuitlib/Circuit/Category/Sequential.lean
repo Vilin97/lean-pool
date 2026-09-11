@@ -3,9 +3,10 @@ Copyright (c) 2026 Matt Hunzinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
+module
 
-import LeanPool.Circuitlib.Circuit.Category.Combinational
-import Mathlib.Data.Stream.Init
+public import LeanPool.Circuitlib.Circuit.Category.Combinational
+public import Mathlib.Data.Stream.Init
 
 /-! # Sequential circuit category
 
@@ -14,6 +15,8 @@ import Mathlib.Data.Stream.Init
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
+
+@[expose] public section
 
 namespace Circuit
 

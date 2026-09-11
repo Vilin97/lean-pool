@@ -3,8 +3,9 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import LeanPool.UlmsTheorem.PGroups.Heights
+public import LeanPool.UlmsTheorem.PGroups.Heights
 
 /-!
 # Reduced abelian p-groups: legacy compatibility import
@@ -19,6 +20,8 @@ It now re-exports the reorganized `PGroups` layer:
 Existing imports of `Lib.PGroups.Defs` therefore continue to work while the
 library is migrated to the new layout.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

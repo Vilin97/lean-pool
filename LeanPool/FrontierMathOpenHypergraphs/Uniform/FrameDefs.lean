@@ -3,25 +3,28 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Fin
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Nat.Bitwise
-import Mathlib.Data.Nat.Pairing
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import LeanPool.FrontierMathOpenHypergraphs.Substitution
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Fintype.Fin
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Data.Nat.Bitwise
+public import Mathlib.Data.Nat.Pairing
+public import Mathlib.Data.Finset.Powerset
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import LeanPool.FrontierMathOpenHypergraphs.Substitution
 
 /-!
 # The uniform 26/25 factor and the finite bootstrap
 -/
+
+@[expose] public section
 
 namespace HypergraphLowerBound
 

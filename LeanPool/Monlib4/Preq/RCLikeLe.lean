@@ -3,13 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Analysis.RCLike.Basic
+module
+
+public import Mathlib.Analysis.RCLike.Basic
 
 /-!
  # Extra lemmas on RCLike
 
  This file contains extra lemmas on `RCLike`.
 -/
+
+@[expose] public section
 
 namespace RCLike
 

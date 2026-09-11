@@ -3,12 +3,14 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.Algebra.Field.Defs
-import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.Algebra.Ring.Idempotent
-import Mathlib.RingTheory.TwoSidedIdeal.Operations
-import Mathlib.Algebra.Group.Submonoid.Basic
+module
+
+public import Mathlib.RingTheory.Artinian.Ring
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.RingTheory.SimpleRing.Basic
+public import Mathlib.Algebra.Ring.Idempotent
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+public import Mathlib.Algebra.Group.Submonoid.Basic
 
 /-!
 # Products of ideals and the auxiliary set `bothMul`
@@ -17,6 +19,8 @@ Sets up `bothMul a b = aRb`, the algebra `IdealProd.ringSubsetProdIdeal`, and
 the monoid structure on `TwoSidedIdeal R` used throughout the
 Artin–Wedderburn development.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

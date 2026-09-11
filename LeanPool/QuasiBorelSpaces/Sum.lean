@@ -3,13 +3,14 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.Lift
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sum
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-import LeanPool.QuasiBorelSpaces.Prop
-import LeanPool.QuasiBorelSpaces.Sigma
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.Lift
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sum
+public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import LeanPool.QuasiBorelSpaces.Prop
+public import LeanPool.QuasiBorelSpaces.Sigma
 
 /-!
 # Binary Coproducts of Quasi-Borel Spaces
@@ -19,6 +20,8 @@ This file defines binary coproducts of quasi-borel spaces by giving a
 
 See [HeunenKSY17], Proposition 17.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace.Sum
 

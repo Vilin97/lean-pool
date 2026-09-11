@@ -3,9 +3,10 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
+module
 
-import LeanPool.Brouwer.Nash
-import LeanPool.Brouwer.Primitive
+public import LeanPool.Brouwer.Nash
+public import LeanPool.Brouwer.Primitive
 
 /-!
 # Existence of Nash equilibria via Brouwer's fixed-point theorem
@@ -17,3 +18,5 @@ Main declarations: `ExistsNashEq`, `Brouwer`, `Brouwer_Product`, `IndexedLOrder.
 Tags: game-theory, nash-equilibrium, brouwer-fixed-point, scarf-lemma, simplex
 MSC: 91A06, 91A10, 47H10
 -/
+
+@[expose] public section

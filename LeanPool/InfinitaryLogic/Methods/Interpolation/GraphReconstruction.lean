@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
-import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
 /-!
 # Reconstructing functions from a model of the graph axioms (Craig Layer 3, Unit 5b)
 
@@ -19,6 +21,8 @@ semantics. The consumer-shaped capstone `realize_relationalize_reconstruct` foll
 occurrence-aware congruence `realize_congr_symbolsIn`, the exact occurrence identity
 `relationsIn_relationalizeFormula`, and Unit 4's `realize_relationalizeFormula`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path.Chain
-import Mathlib.Topology.Order.ProjIcc
+public import LeanPool.JacobianDiffgeo.Path.Chain
+public import Mathlib.Topology.Order.ProjIcc
 
 /-!
 # Existence, `pathIntegral`, path algebra and linearity (CC6)
@@ -20,6 +21,8 @@ Main declarations:
 * `RS.pathIntegral_refl/symm/trans/reparam/cast`.
 * `RS.pathIntegral_add/smul/zero_form`, `RS.pathIntegralₗ`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter

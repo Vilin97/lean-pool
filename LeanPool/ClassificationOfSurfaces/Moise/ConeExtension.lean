@@ -3,14 +3,16 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
-import Mathlib.Analysis.Convex.Between
-import Mathlib.Analysis.Convex.Join
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Analysis.Convex.Gauge
-import Mathlib.Analysis.Normed.Affine.AddTorsorBases
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.Topology.Separation.Connected
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
+public import Mathlib.Analysis.Convex.Between
+public import Mathlib.Analysis.Convex.Join
+public import Mathlib.Analysis.Convex.Topology
+public import Mathlib.Analysis.Convex.Gauge
+public import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+public import Mathlib.LinearAlgebra.Basis.Basic
+public import Mathlib.Topology.Separation.Connected
 
 /-!
 # Coning a subdivided triangle boundary
@@ -20,6 +22,8 @@ that radial segments from an interior point of a convex set meet only as dictate
 endpoints on the frontier.  It is the face-to-face lemma behind the cone extension of a PL map
 on a triangle boundary.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise413
-import LeanPool.DomainTheory.Neighborhood.Exercise415
+public import LeanPool.DomainTheory.Neighborhood.Exercise413
+public import LeanPool.DomainTheory.Neighborhood.Exercise415
 
 /-!
 # Exercise 4.16 (Scott 1981, PRG-19, Lecture IV) — the *optimal* fixed point
@@ -36,6 +37,8 @@ The data (`optimalFix`) is **choice-free**; only the *appeal to* Exercise 4.15 f
 the supply of
 maximal fixed points is classical.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

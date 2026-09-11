@@ -3,15 +3,16 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
-import LeanPool.QuasiBorelSpaces.Prop
-import LeanPool.QuasiBorelSpaces.Subtype
-import Mathlib.Data.Sigma.Order
-import LeanPool.QuasiBorelSpaces.Defs
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma
-import LeanPool.QuasiBorelSpaces.Prod
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
+public import LeanPool.QuasiBorelSpaces.Prop
+public import LeanPool.QuasiBorelSpaces.Subtype
+public import Mathlib.Data.Sigma.Order
+public import LeanPool.QuasiBorelSpaces.Defs
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma
+public import LeanPool.QuasiBorelSpaces.Prod
 
 
 /-!
@@ -22,6 +23,8 @@ This file defines small coproducts of quasi-borel spaces by giving a
 
 See [HeunenKSY17], Proposition 17.
 -/
+
+@[expose] public section
 
 open scoped MeasureTheory
 

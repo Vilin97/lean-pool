@@ -5,11 +5,13 @@ Authors: Utensil Song
 -/
 /-
 -/
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.GroupTheory.SemidirectProduct
-import Mathlib.SetTheory.Cardinal.Free
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
+module
+
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.GroupTheory.SemidirectProduct
+public import Mathlib.SetTheory.Cardinal.Free
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
 
 /-!
 Zhou's construction of the two groups in §2. The concrete tensor kernel,
@@ -17,6 +19,8 @@ retraction, acting group, and semidirect-product boundary follow the paper.
 This file contains no declaration block recorded as a code transfer; its
 public code dependencies are attributed in their defining modules.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Construction

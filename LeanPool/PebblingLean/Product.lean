@@ -3,9 +3,10 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import LeanPool.PebblingLean.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import LeanPool.PebblingLean.Basic
 
 /-!
 # Product constructions
@@ -14,6 +15,8 @@ This file begins the deterministic part of the upper-bound proof.  The main
 result here is the slice simulation lemma: a pebbling sequence in one factor of
 a Cartesian product can be executed inside a fixed slice of the product.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

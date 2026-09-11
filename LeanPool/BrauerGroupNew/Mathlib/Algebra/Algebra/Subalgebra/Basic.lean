@@ -3,14 +3,17 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
 
 /-!
 # LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic`.
 -/
+
+@[expose] public section
 
 namespace Subalgebra
 variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A] {L S T U : Subalgebra R A}

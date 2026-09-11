@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenComplex
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenComplex
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphApproximation
 
 /-!
 # Finite marked-edge fans on intrinsic two-complexes
@@ -15,6 +17,8 @@ subcomplex.  They must be ordered once on each global abstract edge: ordering in
 the two incident face charts can introduce incompatible auxiliary points.  This file supplies
 that global finite edge order and its consecutive intervals.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

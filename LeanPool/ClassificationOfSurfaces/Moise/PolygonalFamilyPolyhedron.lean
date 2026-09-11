@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
-import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
+public import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
 
 /-!
 # Finite unions of polygonal disks
@@ -15,6 +17,8 @@ common boundary segments.  This file instead cuts one enclosing triangle by ever
 the family and retains precisely the chambers lying inside at least one polygon.  The resulting
 single triangle mesh has support equal to the union.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

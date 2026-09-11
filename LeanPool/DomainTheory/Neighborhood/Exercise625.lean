@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Proposition612
+public import LeanPool.DomainTheory.Neighborhood.Proposition612
 
 /-!
 # Lecture VI — Exercise 6.25 (Scott 1981, PRG-19): the Galois connection of a
@@ -61,6 +62,8 @@ Everything here is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`): 
 Exercises 1.18/1.27 are the only constructions used and are themselves
 choice-free.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

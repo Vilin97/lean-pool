@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Averaging
-import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
-import LeanPool.PoincareThreeBody.KeplerHamiltonian
+public import LeanPool.PoincareThreeBody.Averaging
+public import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
+public import LeanPool.PoincareThreeBody.KeplerHamiltonian
 
 /-!
 # The first homological equation on a resonant Kepler orbit
@@ -15,6 +16,8 @@ This file restricts the homological equation forced by the exact challenge hypot
 periodic Kepler flow.  Its first term becomes a time derivative, so its integral over one resonant
 period vanishes.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

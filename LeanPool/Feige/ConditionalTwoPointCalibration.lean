@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.AugmentedParameterization
-import LeanPool.Feige.TwoPointProductLaw
+module
+
+public import LeanPool.Feige.AugmentedParameterization
+public import LeanPool.Feige.TwoPointProductLaw
 
 /-!
 # Conditional calibration of augmented two-point products
@@ -14,6 +16,8 @@ Once it is available (including boundary values `γᵢ = 0`), the actual
 conditional product law selected by any admissible augmented latent vector
 inherits the same rejection bound.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

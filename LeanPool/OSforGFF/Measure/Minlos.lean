@@ -3,27 +3,27 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import LeanPool.OSforGFF.General.PositiveDefinite
-import LeanPool.OSforGFF.General.GaussianRBF
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Analysis.LocallyConvex.Basic
-import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import LeanPool.OSforGFF.Measure.NuclearSpace
-import Mathlib.Data.Matrix.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Analysis.InnerProductSpace.EuclideanDist
-import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import LeanPool.OSforGFF.General.PositiveDefinite
+public import LeanPool.OSforGFF.General.GaussianRBF
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Analysis.LocallyConvex.Basic
+public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import LeanPool.OSforGFF.Measure.NuclearSpace
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Analysis.InnerProductSpace.EuclideanDist
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 -- Bochner library imports for proven Minlos theorem
-import LeanPool.OSforGFF.Minlos.Main
-import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import LeanPool.OSforGFF.Minlos.Main
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
 
 /-!
 # Minlos Theorem and Gaussian Measure Construction
@@ -43,6 +43,8 @@ the proven Minlos theorem.
 - `minlos_gaussian_construction`: Minlos + Gaussian CF → probability measure
 - `gaussian_measure_symmetry`: covariance-preserving maps induce measure symmetries
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Matrix TopologicalSpace
 open BigOperators

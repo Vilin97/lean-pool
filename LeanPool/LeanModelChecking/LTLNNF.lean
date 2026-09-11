@@ -3,12 +3,14 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Data.Set.Basic
-import Mathlib.Data.Set.Operations
-import Mathlib.Data.Set.Insert
-import Mathlib.Order.SetNotation
+module
 
-import LeanPool.LeanModelChecking.LTLNBWStatement
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Set.Operations
+public import Mathlib.Data.Set.Insert
+public import Mathlib.Order.SetNotation
+
+public import LeanPool.LeanModelChecking.LTLNBWStatement
 
 /-!
 # Negation normal form for Linear Temporal Logic
@@ -17,6 +19,8 @@ We define negation normal form (NNF) formulas, their language, and a translation
 `LTL.toNNF` from `LTL` formulas to equivalent NNF formulas. The main result
 `LTL.exists_equiv_nnf` shows every `LTL` formula has an equivalent NNF formula.
 -/
+
+@[expose] public section
 
 namespace LeanModelChecking
 

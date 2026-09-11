@@ -3,21 +3,22 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Data.Fintype.CardEmbedding
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Logic.Equiv.Fin.Rotate
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import Mathlib.Data.Fintype.CardEmbedding
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Logic.Equiv.Fin.Rotate
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
 
 /-!
 ## Warm-up: `n = 9` gives `> 20%`
@@ -30,6 +31,8 @@ This file proves a small “warm-up” theorem matching the report:
 
 All proofs are kernel-checked (no `native_decide`).
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

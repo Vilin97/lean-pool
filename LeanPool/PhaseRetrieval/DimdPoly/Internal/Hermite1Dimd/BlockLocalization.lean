@@ -3,17 +3,21 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.SetTheory.Cardinal.NatCard
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Int.Interval
-import Mathlib.Data.Pi.Interval
-import Mathlib.Order.Filter.AtTopBot.Finset
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.SetTheory.Cardinal.NatCard
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Data.Pi.Interval
+public import Mathlib.Order.Filter.AtTopBot.Finset
 
 /-! # BlockLocalization -/
+
+@[expose] public section
 
 
 

@@ -3,14 +3,16 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Learner.Core
-import LeanPool.FormalLearningTheory.Learner.Bayesian
-import LeanPool.FormalLearningTheory.Criterion.PAC
-import LeanPool.FormalLearningTheory.Criterion.Gold
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import LeanPool.FormalLearningTheory.Data
+public import LeanPool.FormalLearningTheory.Learner.Core
+public import LeanPool.FormalLearningTheory.Learner.Bayesian
+public import LeanPool.FormalLearningTheory.Criterion.PAC
+public import LeanPool.FormalLearningTheory.Criterion.Gold
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Extended and Cross-Paradigm Criteria
@@ -18,6 +20,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 EX under drift, universal learning, Bayesian criteria (posterior consistency,
 PAC-Bayes, information-theoretic bounds).
 -/
+
+@[expose] public section
 
 universe u v
 

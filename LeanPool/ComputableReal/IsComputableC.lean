@@ -3,9 +3,11 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.IsComputable
-import LeanPool.ComputableReal.SpecialFunctions.Sqrt
-import Mathlib.Analysis.InnerProductSpace.Basic
+module
+
+public import LeanPool.ComputableReal.IsComputable
+public import LeanPool.ComputableReal.SpecialFunctions.Sqrt
+public import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Interval approximations for complex numbers
@@ -16,6 +18,8 @@ product. This also provides `DecidableEq` and (with `ComplexOrder`) `Decidable` 
 instances; like their real counterparts, these comparison instances are classical and
 `noncomputable`.
 -/
+
+@[expose] public section
 
 /-- Type class stating that `x : ℂ` has a `ComputableℝSeq` for its real and imaginary parts.
 Note that we can't define this as `IsComputable x.re` + `IsComputable x.im`, because then

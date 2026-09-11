@@ -3,16 +3,19 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
-import Mathlib.CategoryTheory.Filtered.Connected
-import Mathlib.CategoryTheory.Limits.Constructions.EventuallyConstant
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+public import Mathlib.CategoryTheory.Filtered.Connected
+public import Mathlib.CategoryTheory.Limits.Constructions.EventuallyConstant
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory

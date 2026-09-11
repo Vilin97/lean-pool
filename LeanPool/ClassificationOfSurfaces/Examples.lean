@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
-import LeanPool.ClassificationOfSurfaces.NormalForm
+module
+
+public import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
+public import LeanPool.ClassificationOfSurfaces.NormalForm
 
 /-!
 # Standard combinatorial examples
@@ -13,6 +15,8 @@ This file names the small surfaces we should keep as regression tests while the 
 The examples are concrete one-face boundary-word presentations in the shared `SurfaceCellComplex`
 API. Their topology is supplied by the faithful polygonal quotient layer.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

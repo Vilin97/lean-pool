@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms
-import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.Forms
+public import LeanPool.JacobianDiffgeo.Meromorphic
 
 /-!
 # `MFormData X`: raw chart-coefficient families for meromorphic 1-forms (D1–D3, data layer)
@@ -37,6 +38,8 @@ Main declarations:
   `chartAt`
   in `Differential.lean`), offered for future covering-family constructions (e.g. laurent-tails).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold

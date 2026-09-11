@@ -3,15 +3,18 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import LeanPool.UlmsTheorem.Ulm.Classification
-import LeanPool.UlmsTheorem.Ulm.Invariance
+public import LeanPool.UlmsTheorem.Ulm.Classification
+public import LeanPool.UlmsTheorem.Ulm.Invariance
 
 /-!
 # Ulm's theorem
 
 Public entry point for the Ulm-theorem track of the project.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

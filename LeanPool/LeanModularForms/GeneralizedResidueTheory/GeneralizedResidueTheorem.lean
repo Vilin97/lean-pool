@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer
 
 /-!
 # Generalized Residue Theorem -- Public API
@@ -25,6 +26,8 @@ All proofs delegate to the machinery in `HomologicalCauchy.lean` and
 * Hungerbuhler-Wasem, *The generalized residue theorem*, arXiv:1808.00997v2,
   Theorem 3.3.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.OddPrimeValuationDistribution.GeneratingFunction
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.OddPrimeValuationDistribution.GeneratingFunction
+public import Mathlib.Tactic.Ring
 
 /-!
 # Closed low-valuation counts for every odd prime
@@ -13,6 +15,8 @@ The full distribution specializes to compact formulas at valuations zero and
 one.  These are arithmetic counts on the complete block below `p ^ k`, not
 asymptotic estimates.
 -/
+
+@[expose] public section
 
 namespace OddPrimeValuationDistribution
 

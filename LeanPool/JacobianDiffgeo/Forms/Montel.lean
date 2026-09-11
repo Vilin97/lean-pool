@@ -3,13 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
-import Mathlib.Topology.ContinuousMap.Compact
-import Mathlib.Topology.MetricSpace.Equicontinuity
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Topology.MetricSpace.Thickening
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
+public import Mathlib.Topology.ContinuousMap.Compact
+public import Mathlib.Topology.MetricSpace.Equicontinuity
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Topology.MetricSpace.Thickening
 
 /-!
 # Planar Montel theorem (holomorphic-forms unit)
@@ -26,6 +27,8 @@ Main declarations:
 * `RS.isCompact_closure_montelFamily` — the closure of `montelFamily Ω K C` is compact in
   `C(K, ℂ)` (Cauchy estimate ⇒ equicontinuity ⇒ Arzelà–Ascoli).
 -/
+
+@[expose] public section
 
 namespace RS
 

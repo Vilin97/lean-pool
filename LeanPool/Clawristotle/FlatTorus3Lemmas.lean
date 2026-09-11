@@ -3,7 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
+module
+
+public import LeanPool.Clawristotle.Defs
 
 /-!
 # Derived Lemmas for the FlatTorus3 Typeclass
@@ -12,6 +14,8 @@ Lemmas derived from the `FlatTorus3` axioms: spatial multiplication, gradient va
 chain rules for log, integration by parts consequences, Laplacian sign at extrema,
 and Maxwellian parameter regularity.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

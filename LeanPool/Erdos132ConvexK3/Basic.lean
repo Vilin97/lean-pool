@@ -3,12 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.List.FinRange
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Basic
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.List.FinRange
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
 
 /-!
 # The convex three-largest-distance graph
@@ -20,6 +22,8 @@ this keeps the rational campaign witnesses kernel-reducible.
 The open Erdős 132 conjecture is not asserted here.  Recon:
 `~/Knowledge/Construct/recon/erdos_132.md`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

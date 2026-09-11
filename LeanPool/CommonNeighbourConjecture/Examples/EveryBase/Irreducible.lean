@@ -3,11 +3,12 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.LinearAlgebra.Projection
-import Mathlib.RepresentationTheory.Maschke
-import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.DeletedModule
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.LinearAlgebra.Projection
+public import Mathlib.RepresentationTheory.Maschke
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.DeletedModule
 
 /-!
 # Irreducibility of the odd deleted modules
@@ -19,6 +20,8 @@ vanishes on the deleted module, leaving `a I + b A`, where `A` is the Paley
 adjacency operator.  A two-point vector proves that neither `A` nor `I + A`
 is idempotent.  Maschke's theorem then proves irreducibility.
 -/
+
+@[expose] public section
 
 noncomputable section
 

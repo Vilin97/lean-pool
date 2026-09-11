@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
+public import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
 
 /-!
 # The truncation map `α_D` and `H¹Tail(D)` (laurent-tails, design §2 D3, §4.2)
@@ -20,6 +21,8 @@ Unit: laurent-tails (`docs/design/laurent-tails.md`).
 * `H1Tail D := T D ⧸ range(alphaL D)`: Miranda's own definition of `H¹(D)` (the comparison to
   `Cech.H1 D` is `Comparison.lean`'s job).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.TailDuality.Pairing
-import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
-import LeanPool.JacobianDiffgeo.Finiteness
+public import LeanPool.JacobianDiffgeo.TailDuality.Pairing
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+public import LeanPool.JacobianDiffgeo.Finiteness
 
 /-!
 # `nuPairDual`/Miranda Lemma 3.4: the counting step (serre-duality-tails)
@@ -23,6 +24,8 @@ Unit: serre-duality-tails (`docs/design/serre-duality-tails.md` §6 P5, addendum
 * `nuPairDual`/`two_l_le_h1T_of_injective`: the pair-map dimension count.
 * `exists_mul_functional_eq`: **MIRANDA LEMMA 3.4**.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

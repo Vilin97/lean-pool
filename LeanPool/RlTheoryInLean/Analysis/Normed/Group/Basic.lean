@@ -3,12 +3,16 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.Algebra.Order.Ring.Basic
+module
+
+public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Analysis.Normed.Group.Basic
 -/
+
+@[expose] public section
 
 variable {E : Type*} [SeminormedAddGroup E]
 

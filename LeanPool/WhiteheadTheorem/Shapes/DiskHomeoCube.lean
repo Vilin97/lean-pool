@@ -5,19 +5,23 @@ Authors: Jiazhen Xia
 -/
 
 -- import Mathlib.Topology.CWComplex
-import LeanPool.WhiteheadTheorem.Auxiliary
-import LeanPool.WhiteheadTheorem.Shapes.Disk
-import LeanPool.WhiteheadTheorem.Shapes.Cube
-import Mathlib.Topology.Homotopy.HomotopyGroup
-import Mathlib.Topology.Category.TopCat.Limits.Basic
-import Mathlib.CategoryTheory.Comma.Arrow
-import Mathlib.Analysis.InnerProductSpace.PiL2
+module
+
+public import LeanPool.WhiteheadTheorem.Auxiliary
+public import LeanPool.WhiteheadTheorem.Shapes.Disk
+public import LeanPool.WhiteheadTheorem.Shapes.Cube
+public import Mathlib.Topology.Homotopy.HomotopyGroup
+public import Mathlib.Topology.Category.TopCat.Limits.Basic
+public import Mathlib.CategoryTheory.Comma.Arrow
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube`.
 -/
+
+@[expose] public section
 
 
 open scoped Topology TopCat ENNReal unitInterval

@@ -7,12 +7,16 @@ Authors: Utensil Song
 
 Algebraic identification of Zhou's actual dual coordinates. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-import LeanPool.ConnesRigidity.Paper.Section3.FactorIsomorphism
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Paper.Section3.FactorIsomorphism
 
 /-!
 The dual coordinates component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualCoordinates

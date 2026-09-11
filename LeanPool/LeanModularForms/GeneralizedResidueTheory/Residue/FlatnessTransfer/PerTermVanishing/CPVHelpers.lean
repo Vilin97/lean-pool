@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
 
 /-!
 # Per-Term PV Vanishing: CPV Helpers and Assembly
@@ -22,6 +23,8 @@ per-term vanishing into the complete higher-order cancellation.
 * `residueAt_sub_residueSum_eq_zero` — residue of f minus residue sum vanishes
 * `cpv_tendsto_zero_of_add_decomposition` — final assembly
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

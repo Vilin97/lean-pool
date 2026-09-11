@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.BlockFilters
-import LeanPool.Wallace.RationalTransfiniteExtension
+public import LeanPool.Wallace.BlockFilters
+public import LeanPool.Wallace.RationalTransfiniteExtension
 
 /-!
 # Concrete triangular data for the rational direct sum
@@ -13,6 +14,8 @@ import LeanPool.Wallace.RationalTransfiniteExtension
 This module chooses, uniformly for every coded injective rational sequence, its prepared
 subsequence and its free block-density ultrafilter.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

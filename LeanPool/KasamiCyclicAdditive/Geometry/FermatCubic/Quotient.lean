@@ -3,9 +3,10 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
 
 /-!
 # Explicit quotient coordinates on the Fermat cubic
@@ -21,6 +22,8 @@ Frobenius endomorphism, or algebraic closure is involved.  Note the direction �
 `w` and `z` are produced in `K` first, and `W`, `T` are only cube roots
 chosen afterwards.
 -/
+
+@[expose] public section
 
 open KasamiCyclicAdditive.FermatCubic
 

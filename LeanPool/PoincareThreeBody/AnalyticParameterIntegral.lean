@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 
 /-!
 # Integrating a uniformly controlled analytic power series
@@ -15,6 +16,8 @@ This file provides the power-series core of analyticity under a parameter integr
 compactness argument used later supplies a common radius and the summable integral bound on the
 coefficients.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

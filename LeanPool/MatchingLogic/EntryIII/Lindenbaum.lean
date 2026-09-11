@@ -12,12 +12,16 @@ every locally consistent set lies in a maximal locally consistent set.  It does
 not claim witnessedness, which is the genuinely fresh-variable-dependent part
 of TR Lemma 71.
 -/
-import LeanPool.MatchingLogic.EntryIII.LocalTheory
-import Mathlib.Order.Zorn
+module
+
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
+public import Mathlib.Order.Zorn
 
 /-!
 # MatchingLogic.EntryIII.Lindenbaum
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

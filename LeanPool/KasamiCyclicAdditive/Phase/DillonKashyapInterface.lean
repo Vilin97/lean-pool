@@ -3,10 +3,11 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Statement.Definitions
-import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
 
 /-!
 # The Dillon--Kashyap phase formula, as a hypothesis
@@ -24,6 +25,8 @@ difference sets with Singer parameters*, Australas. J. Combin. 55 (2013),
 difference set as the complement of this same `Δ`; the sign convention here is
 therefore opposite to theirs.
 -/
+
+@[expose] public section
 
 open Finset
 

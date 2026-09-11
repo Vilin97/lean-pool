@@ -3,8 +3,9 @@ Copyright (c) 2026 Dan Clemens Posch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Clemens Posch
 -/
+module
 
-import LeanPool.KahnKalai.ParkPham
+public import LeanPool.KahnKalai.ParkPham
 
 /-!
 # Kahn–Kalai expectation-threshold theorem
@@ -16,6 +17,8 @@ Main declarations: `KahnKalai.covering_theorem`, `KahnKalai.park_pham`
 Tags: probabilistic-combinatorics, random-structures, threshold-phenomena, set-systems
 MSC: 05C80, 60C05
 -/
+
+@[expose] public section
 
 namespace KahnKalai
 

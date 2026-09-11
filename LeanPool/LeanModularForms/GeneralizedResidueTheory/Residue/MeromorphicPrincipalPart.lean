@@ -3,13 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
 -- Note: Does NOT import FlatnessTransfer to avoid circular dependencies.
 -- The zpow FTC lemmas used here are reproved locally.
-import Mathlib.Analysis.Meromorphic.NormalForm
-import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import Mathlib.Analysis.Meromorphic.NormalForm
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 /-!
 # Meromorphic Laurent Principal Parts
@@ -48,6 +49,8 @@ of pp = 0.
 
 * Mathlib `MeromorphicAt`, `meromorphicOrderAt`
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

@@ -3,18 +3,19 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import LeanPool.OSforGFF.General.PositiveDefinite
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Analysis.Matrix.Order
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import Mathlib.Analysis.Complex.Order
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Mul
-import LeanPool.OSforGFF.General.HadamardExp
+public import LeanPool.OSforGFF.General.PositiveDefinite
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Analysis.Matrix.Order
+public import Mathlib.LinearAlgebra.Matrix.Kronecker
+public import Mathlib.Analysis.Complex.Order
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.Data.Matrix.Mul
+public import LeanPool.OSforGFF.General.HadamardExp
 
 /-!
 # Gaussian RBF Kernel is Positive Definite
@@ -26,6 +27,8 @@ definiteness via the Hadamard series in `HadamardExp.lean`; (3) the Gaussian ker
 `exp(-‖x - y‖² / 2) = exp(-‖x‖² / 2) · exp(-‖y‖² / 2) · exp(⟨x, y⟩)`, reducing from
 the RBF to the inner product kernel.
 -/
+
+@[expose] public section
 
 open Complex BigOperators Real InnerProductSpace Matrix
 

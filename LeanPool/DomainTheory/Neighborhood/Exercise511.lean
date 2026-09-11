@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise316
-import LeanPool.DomainTheory.Neighborhood.Theorem41
+public import LeanPool.DomainTheory.Neighborhood.Exercise316
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
 
 /-!
 # Exercise 5.11 (Scott 1981, PRG-19, §5) — `D^∞` as stacks; stack combinators
@@ -48,6 +49,8 @@ The only classical input is what is inherited from `iterProdIso` / `fixMap` and
 the project's
 `Element.ext` machinery.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise511
 

@@ -3,16 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.Modularforms.Tendstolems
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Analysis.Convex.PathConnected
-import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
-import Mathlib.Topology.Separation.CompletelyRegular
+public import LeanPool.LeanModularForms.Modularforms.Tendstolems
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Analysis.Convex.PathConnected
+public import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
+public import Mathlib.Topology.Separation.CompletelyRegular
 
 /-! # LogDerivLems -/
+
+@[expose] public section
 
 
 

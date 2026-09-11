@@ -3,10 +3,11 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.CategoryTheory.Groupoid.FreeGroupoid
-import Mathlib.CategoryTheory.Endomorphism
-import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
+public import Mathlib.CategoryTheory.Groupoid.FreeGroupoid
+public import Mathlib.CategoryTheory.Endomorphism
+public import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
 
 /-!
 # The spanning-tree computation for finite quivers
@@ -15,6 +16,8 @@ This file builds the combinatorial fundamental group of a finite weakly connecte
 Mathlib's free groupoid and identifies a basis indexed by the edges outside a geodesic spanning
 tree.
 -/
+
+@[expose] public section
 
 attribute [local implicit_reducible]
   Quiver.Symmetrify IsFreeGroupoid.Generators

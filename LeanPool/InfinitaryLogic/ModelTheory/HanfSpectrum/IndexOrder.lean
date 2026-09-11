@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderSyntax
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderSyntax
+public import Mathlib.SetTheory.Cardinal.Aleph
 
 /-!
 # The ordinal interpretation of the ladder index order
@@ -20,6 +22,8 @@ use to interpret indices as ordinals:
 * `countable_index_of_lt_omega1` — the `[Countable (Index α)]` hypothesis of the sentence,
   discharged for every `α < ω₁`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

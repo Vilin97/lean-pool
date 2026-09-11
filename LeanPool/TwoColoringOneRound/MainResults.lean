@@ -3,9 +3,10 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.Definitions
-import LeanPool.TwoColoringOneRound.Reduction
+public import LeanPool.TwoColoringOneRound.Definitions
+public import LeanPool.TwoColoringOneRound.Reduction
 
 /-!
 # Distributed2Coloring: Main results
@@ -16,6 +17,8 @@ This file collects the public-facing theorems connecting:
 
 We also package these bounds as statements about an infimum `p⋆` over all measurable local rules.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

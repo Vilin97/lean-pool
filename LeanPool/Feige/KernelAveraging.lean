@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ConditionalProductKernel
-import Mathlib.MeasureTheory.Measure.Real
+module
+
+public import LeanPool.Feige.ConditionalProductKernel
+public import Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # Averaging conditional probability bounds
@@ -13,6 +15,8 @@ This file records the elementary final step used after the latent
 two-point decomposition: an almost-everywhere event bound for the
 conditional Markov kernel survives averaging over a probability law.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

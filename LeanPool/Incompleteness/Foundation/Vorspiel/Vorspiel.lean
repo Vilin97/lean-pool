@@ -3,24 +3,27 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Fin.Basic
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Preimage
-import Mathlib.Data.Finset.Sort
-import Mathlib.Order.Filter.Ultrafilter.Defs
-import Mathlib.Logic.Encodable.Basic
-import Mathlib.Computability.Primrec.List
-import Mathlib.Computability.Partrec
-import Mathlib.Data.List.GetD
-import Mathlib.Data.Set.Finite.Range
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.TautoSet
+public import Mathlib.Data.Vector.Basic
+public import Mathlib.Data.Fin.Basic
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Finset.Preimage
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Order.Filter.Ultrafilter.Defs
+public import Mathlib.Logic.Encodable.Basic
+public import Mathlib.Computability.Primrec.List
+public import Mathlib.Computability.Partrec
+public import Mathlib.Data.List.GetD
+public import Mathlib.Data.Set.Finite.Range
+public import Mathlib.Tactic.Cases
+public import Mathlib.Tactic.TautoSet
 
 /-! # Vorspiel -/
+
+@[expose] public section
 
 
 namespace Nat

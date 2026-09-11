@@ -3,9 +3,10 @@ Copyright (c) 2026 Matt Hunzinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
+module
 
-import LeanPool.Circuitlib.Circuit.Combinational
-import LeanPool.Circuitlib.Circuit.Category.Sequential
+public import LeanPool.Circuitlib.Circuit.Combinational
+public import LeanPool.Circuitlib.Circuit.Category.Sequential
 
 /-!
 # circuitlib: a circuit verification library for Lean 4
@@ -17,3 +18,5 @@ Main declarations: `Circuit.SequentialCircuitCategory.instSymmetricCategory`
 Tags: circuits, hardware, category-theory, combinational, sequential
 MSC: 18M05, 68Q60, 94C11
 -/
+
+@[expose] public section

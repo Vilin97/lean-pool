@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
 
 
 /-!
@@ -16,6 +17,8 @@ These establish the key perturbation bounds:
 2. MVT bound: ‖P(y-x) - (π y - π x)‖ ≤ ε₁·‖y-x‖
 3. Kills-normal bound: ‖P en‖ ≤ ε₁·‖en‖
 -/
+
+@[expose] public section
 
 noncomputable section
 

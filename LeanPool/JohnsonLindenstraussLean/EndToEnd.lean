@@ -3,8 +3,10 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import LeanPool.JohnsonLindenstraussLean.Rotation
-import LeanPool.JohnsonLindenstraussLean.Lemma
+module
+
+public import LeanPool.JohnsonLindenstraussLean.Rotation
+public import LeanPool.JohnsonLindenstraussLean.Lemma
 
 /-!
 # The end-to-end Gaussian Johnson–Lindenstrauss theorem
@@ -28,6 +30,8 @@ The proof combines:
 * `johnson_lindenstrauss` (`JL.Lemma`): the abstract probabilistic-method union bound, which
   is kept as a standalone lemma.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import LeanPool.UlmsTheorem.PGroups.Basic
+public import LeanPool.UlmsTheorem.PGroups.Basic
 
 /-!
 # Subgroup-level algebra for reduced abelian p-groups
@@ -13,6 +14,8 @@ This file contains the basic subgroup constructions used throughout the
 development: the natural-number powers `pPow` and the image-of-multiplication
 construction `pImage`.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

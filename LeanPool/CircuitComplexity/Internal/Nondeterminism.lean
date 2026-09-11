@@ -3,8 +3,10 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Nondeterminism.Defs
-import LeanPool.CircuitComplexity.Internal.ShannonUpper
+module
+
+public import LeanPool.CircuitComplexity.Nondeterminism.Defs
+public import LeanPool.CircuitComplexity.Internal.ShannonUpper
 
 /-! # Internal: Nondeterministic Quantification Circuit Constructions
 
@@ -34,6 +36,8 @@ In all cases, the gate count is preserved.
 The OR of two Boolean functions has circuit complexity bounded by the sum
 of their complexities plus one, using `ShannonUpper.binopCircuit`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

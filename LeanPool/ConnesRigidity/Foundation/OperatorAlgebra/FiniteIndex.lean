@@ -10,11 +10,15 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted finite-index induction into a small namespace and
 adapted imports and local group vocabulary. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Core
+module
+
+public import LeanPool.ConnesRigidity.Core
 
 /-!
 The finite index component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace OpenAIPort

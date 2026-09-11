@@ -3,13 +3,16 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.Hausdorff
-import LeanPool.SardMoreira.Chart
+public import Mathlib.MeasureTheory.Measure.Hausdorff
+public import LeanPool.SardMoreira.Chart
 
 /-!
 # LeanPool.SardMoreira.ChartEstimates
 -/
+
+@[expose] public section
 
 open scoped unitInterval Topology NNReal
 open Asymptotics Filter Set Metric Function MeasureTheory Measure

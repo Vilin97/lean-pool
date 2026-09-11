@@ -3,7 +3,9 @@ Copyright (c) 2026 Jonathan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Ho
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Basic supremum and `rpow` lemmas for `ENNReal`
@@ -12,6 +14,8 @@ This file collects auxiliary lemmas about suprema, indexed suprema, and real
 powers of `ENNReal`-valued functions used throughout the formalization of the
 Prékopa–Leindler, Brunn–Minkowski, and isoperimetric inequalities.
 -/
+
+@[expose] public section
 
 /-- The sum of two bounded indexed suprema in `ENNReal` equals the
 indexed supremum of the pointwise sums. -/

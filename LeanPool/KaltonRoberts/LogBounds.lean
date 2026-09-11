@@ -14,8 +14,10 @@ Each log bound is proved using the atanh series:
 The decomposition is `log(z) = e * log(2) + log(y)` where `z = 2^e * y`
 with `1 ≤ y ≤ 2`, and `t = (y-1)/(y+1)`.
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Complex.ExponentialBounds
+module
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Log bounds for Phi endpoint proofs
@@ -23,6 +25,8 @@ import Mathlib.Analysis.Complex.ExponentialBounds
 Numerical logarithm bounds proved via the atanh series and exact rational
 estimates.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

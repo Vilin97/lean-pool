@@ -3,15 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.LinearAlgebra.TensorProduct.Matrix
-import Mathlib.LinearAlgebra.Trace
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.LinearAlgebra.UnitaryGroup
-import Mathlib.Analysis.RCLike.Basic
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
-import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+module
+
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import Mathlib.LinearAlgebra.TensorProduct.Matrix
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Mathlib.Analysis.Matrix.Spectrum
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Mathlib.Analysis.RCLike.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
 
 /-!
 # Matrix basics
@@ -19,6 +21,8 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
 Basic matrix lemmas used by the monlib4 automorphism-of-matrix-algebras
 formalization.
 -/
+
+@[expose] public section
 
 namespace Matrix
 

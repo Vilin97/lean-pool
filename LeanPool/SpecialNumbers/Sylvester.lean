@@ -3,7 +3,9 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Sylvester sequence
@@ -28,6 +30,8 @@ We follow the presentantion from [Wikipedia](https://en.wikipedia.org/wiki/Sylve
 * <https://en.wikipedia.org/wiki/Sylvester%27s_sequence>
 * [The On-Line Encyclopedia of Integer Sequences][oeis]
 -/
+
+@[expose] public section
 
 open Nat
 

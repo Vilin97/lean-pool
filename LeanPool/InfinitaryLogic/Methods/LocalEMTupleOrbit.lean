@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
-import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
+public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
 /-!
 # Tuple codes and orbit classification (issue #11 unit 3b)
 
@@ -24,6 +26,8 @@ invariant under changing representatives, and need not be: distinguishing equiva
 only creates more codes, and countability plus "same code ⇒ same orbit" is all the
 countably-many-types argument consumes.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

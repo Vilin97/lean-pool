@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.FinCases
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Tactic.FinCases
 
 /-!
 # Example 1.2 (Scott 1981, PRG-19, §1)
@@ -20,6 +21,8 @@ its domain elements (Definition 1.6): there are exactly three filters, and exact
 one
 partial element — the bottom filter `{Δ}`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Example12
 

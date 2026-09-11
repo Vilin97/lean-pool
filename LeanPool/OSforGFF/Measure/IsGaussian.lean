@@ -3,10 +3,10 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.OS.OS0Analyticity
-import LeanPool.OSforGFF.Schwinger.GaussianMoments
+public import LeanPool.OSforGFF.OS.OS0Analyticity
+public import LeanPool.OSforGFF.Schwinger.GaussianMoments
 
 /-!
 # Gaussianity Verification
@@ -26,6 +26,8 @@ interchange, not because of OS0-specific infrastructure.
 - `gff_two_point_equals_covarianceℂ_free`: S₂(f,g) = freeCovarianceℂ(f,g)
 - `isGaussianGJ_gaussianFreeField_free`: the free GFF is Gaussian
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex QFT
 

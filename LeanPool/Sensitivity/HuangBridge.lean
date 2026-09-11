@@ -3,9 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.Sensitivity.Defs
-import Archive.Sensitivity
-import Mathlib.Data.Fintype.Pi
+module
+
+public import LeanPool.Sensitivity.Defs
+public import Archive.Sensitivity
+public import Mathlib.Data.Fintype.Pi
 
 /-!
 # Bridge to Mathlib's Huang Theorem
@@ -20,6 +22,8 @@ The Mathlib formalisation in `Archive.Sensitivity` originated in the
 project, a community formalisation of Huang's proof carried out shortly after
 the original paper appeared in 2019.
 -/
+
+@[expose] public section
 
 namespace LeanPoolSensitivity
 

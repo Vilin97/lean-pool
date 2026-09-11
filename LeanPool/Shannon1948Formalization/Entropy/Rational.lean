@@ -3,8 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy.Uniform
+public import LeanPool.Shannon1948Formalization.Entropy.Uniform
 
 /-!
 # Shannon.Entropy.Rational
@@ -16,6 +17,8 @@ This module derives the entropy formula for distributions of the form
 It also includes a worked decomposition corresponding to Shannon's
 `(1/2, 1/3, 1/6)` narrative.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Shannon1948Formalization
 

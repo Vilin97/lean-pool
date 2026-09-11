@@ -3,9 +3,13 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.Rules.Basic
+module
+
+public import LeanPool.Lentil.Rules.Basic
 
 /-! Theorems about big operators (e.g., `⋀`, `⋁`). -/
+
+@[expose] public section
 
 open Classical LentilLib
 

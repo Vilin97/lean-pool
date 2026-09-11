@@ -3,10 +3,11 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Topology.Order.IntermediateValue
-import Mathlib.Topology.Algebra.Polynomial
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import Mathlib.Topology.Order.IntermediateValue
+public import Mathlib.Topology.Algebra.Polynomial
 
 /-!
 # locating the roots of Lehmer's polynomial via its trace quintic.
@@ -19,6 +20,8 @@ reciprocal pair `{λ, 1/λ}` off it — therefore reduces to "`q` has 4 real roo
 carried out here.
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
+
+@[expose] public section
 
 namespace LehmerE10
 

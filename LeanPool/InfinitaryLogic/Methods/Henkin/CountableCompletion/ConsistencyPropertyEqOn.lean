@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 /-!
 # The fragment-relative consistency property and Henkin completion (issue #8 tranche 2, commit 2)
 
@@ -23,6 +25,8 @@ Deliberately absent (per the audit, §5–§6b): no `extension`, no `chain_closu
 no general `C6` (a countable `U` cannot close under arbitrary substitution templates), and **no
 finiteness** — finiteness belongs to the inseparable-pair instance (commit 4).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Geometry.Manifold.IsManifold.Basic
+module
+
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
 
 /-!
 # `C^1` compatibility over `ℂ` is holomorphic compatibility
@@ -40,6 +42,8 @@ no analytic content. And because `1 ≤ ω`, assuming `1` is the *weaker* hypoth
 proving Radó's theorem from it is strictly stronger than proving it from `ω`; by
 `isManifold_omega_of_one` the two hypotheses are in fact equivalent here.
 -/
+
+@[expose] public section
 
 open scoped Manifold ContDiff
 open Set

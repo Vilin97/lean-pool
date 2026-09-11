@@ -3,15 +3,16 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, contributors
 -/
+module
 
-import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Equiv
-import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid
-import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.Defs
-import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span.Basic
-import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic
-import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Lattice
-import LeanPool.BrauerGroupNew.Subfield.Splitting
-import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
+public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Equiv
+public import LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid
+public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.Span.Basic
+public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.Congruence.Basic
+public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Lattice
+public import LeanPool.BrauerGroupNew.Subfield.Splitting
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 
 /-!
 # Cross product algebra
@@ -23,6 +24,8 @@ This file constructs the cross product algebra associated to a 2-cocycle of a fi
 
 * [*Advanced Algebra*]
 -/
+
+@[expose] public section
 
 open groupCohomology Function Module
 

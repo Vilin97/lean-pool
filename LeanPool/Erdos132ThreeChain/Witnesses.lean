@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132ThreeChain.Basic
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.Erdos132ThreeChain.Basic
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Witnesses for the chain configurations
@@ -16,6 +17,8 @@ rhombus made of two equilateral triangles glued along an edge (five short edges 
 one) and the equilateral triangle together with its centroid (three short edges and three long
 ones).  Both have all six squared distances inside the adjacent pair `{1, 3}`.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

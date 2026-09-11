@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132N14.PublishedInputs
+module
+
+public import LeanPool.Erdos132N14.PublishedInputs
 
 /-!
 # Pair budget and endpoint deletion at fourteen points
@@ -13,6 +15,8 @@ derives the exact multiplicity profile `(1, 15, 15, 15, 15, 15, 15)`.
 It then deletes one endpoint of the unique pair in the first class and proves
 that the realized-distance set is exactly the old set with that class erased.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132N14
 

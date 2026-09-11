@@ -3,10 +3,12 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
-import Mathlib.Analysis.Calculus.Monotone
-import Mathlib.Probability.Moments.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import Mathlib.Analysis.Calculus.Monotone
+public import Mathlib.Probability.Moments.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Chernoff Bounds
@@ -22,6 +24,8 @@ This module introduces no new definitions.
 * `chernoff_bound_cgf`: a tail bound expressed through the cumulant generating function.
 * `chernoff_bound_subGaussian`: the optimized sub-Gaussian specialization.
 -/
+
+@[expose] public section
 
 namespace LeanPool
 

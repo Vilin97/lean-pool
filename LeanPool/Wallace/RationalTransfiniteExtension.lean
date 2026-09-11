@@ -3,10 +3,11 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.CoefficientTransfiniteExtension
-import LeanPool.Wallace.RationalTriangularPreprocess
-import Mathlib.Algebra.Category.Grp.Injective
+public import LeanPool.Wallace.CoefficientTransfiniteExtension
+public import LeanPool.Wallace.RationalTriangularPreprocess
+public import Mathlib.Algebra.Category.Grp.Injective
 
 /-!
 # Transfinite extension for the rational direct sum
@@ -15,6 +16,8 @@ This file supplies the coefficient-specific input to the shared transfinite recu
 extension theorem extends the integer character with prescribed value at one to a character on
 each rational coordinate.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

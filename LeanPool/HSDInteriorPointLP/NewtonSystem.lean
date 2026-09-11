@@ -3,8 +3,9 @@ Copyright (c) 2026 Makoto Yamashita. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Makoto Yamashita
 -/
+module
 
-import LeanPool.HSDInteriorPointLP.PrimalDualData
+public import LeanPool.HSDInteriorPointLP.PrimalDualData
 
 /-!
 # Newton-system layer
@@ -22,6 +23,8 @@ Lean-reading hints for beginners:
 * `simpa [defs] using h` means: simplify the goal and the type of `h` using
   `defs`, then close the goal by `h`.
 -/
+
+@[expose] public section
 noncomputable section
 
 open scoped BigOperators

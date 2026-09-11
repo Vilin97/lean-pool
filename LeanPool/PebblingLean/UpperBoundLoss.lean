@@ -3,10 +3,11 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
-import LeanPool.PebblingLean.UpperBoundRecurrence
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.Analysis.SpecialFunctions.Exp
+public import LeanPool.PebblingLean.UpperBoundRecurrence
 
 /-!
 # Loss bookkeeping for the recursive upper bound
@@ -19,6 +20,8 @@ This file formalizes that bookkeeping abstractly.  It does not choose the final
 parameters yet; instead, it proves the deterministic theorem that a bounded
 finite loss sum gives a uniform normalized-cost bound.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

@@ -8,9 +8,11 @@ Authors: Rado Kirov
 Blueprint unit: form-trace-tower. Pair-form residues `resAtX F h x` (D2) and their
 chart-invariance (task item 1).
 -/
-import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+module
+
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
 
 /-!
 # Pair-form residues (`form-trace-tower`, file 1/6)
@@ -44,6 +46,8 @@ than assumed away (see `ResidueTraceCompat.lean`).
   computed in ANY maximal-atlas chart at `x`, target chart held fixed at `chartAt ℂ (F x)`.
 * Basic algebra: `resAtX_congr`, `resAtX_add`, `resAtX_const_mul`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Filter Topology Metric Function Set

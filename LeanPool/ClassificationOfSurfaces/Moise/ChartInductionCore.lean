@@ -3,22 +3,24 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Topology.Metrizable.Urysohn
-import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
-import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanAffine
-import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveControlledApproximation
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
-import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
-import LeanPool.ClassificationOfSurfaces.Moise.RelativeSynchronizedArrangement
+module
+
+public import Mathlib.Topology.Metrizable.Urysohn
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
+public import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanAffine
+public import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveControlledApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
+public import LeanPool.ClassificationOfSurfaces.Moise.RelativeSynchronizedArrangement
 
 /-!
 # The Radó chart induction
@@ -43,6 +45,8 @@ This file provides the honest objects for that induction:
   complete one-chart step;
 * `moise_triangulation_of_boundaries` — the finite induction and final geometric realization.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 

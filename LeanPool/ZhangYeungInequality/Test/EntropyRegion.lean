@@ -3,15 +3,18 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.EntropyRegion
-import LeanPool.ZhangYeungInequality.Theorem4
+public import LeanPool.ZhangYeungInequality.EntropyRegion
+public import LeanPool.ZhangYeungInequality.Theorem4
 
 /-!
 # LeanPool.ZhangYeungInequality.Test.EntropyRegion
 
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Test.EntropyRegion`.
 -/
+
+@[expose] public section
 
 namespace ZhangYeungTest
 

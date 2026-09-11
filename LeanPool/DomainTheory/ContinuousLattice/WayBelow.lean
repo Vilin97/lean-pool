@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Order.CompleteLattice.Basic
-import Mathlib.Order.UpperLower.Basic
-import Mathlib.Order.Directed
+public import Mathlib.Order.CompleteLattice.Basic
+public import Mathlib.Order.UpperLower.Basic
+public import Mathlib.Order.Directed
 
 /-!
 # The induced (Scott) topology and the way-below relation (Scott 1972, §2)
@@ -41,6 +42,8 @@ Proposition 2.2 (vi) and (vii) fall straight out of the open-set axioms.
 
 This is the classical/topological version of the theory, so we reason classically.
 -/
+
+@[expose] public section
 
 namespace Domain.ContinuousLattice
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # Fragments of `L_{ω₁ω}`
 
@@ -16,6 +18,8 @@ countable fragments to have countable languages), formation closure under counta
 connectives (destroys countability), syntactic substitution closure (subsumed by semantic
 parameters), and formal-negation closure (an NNF concern, #14).
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

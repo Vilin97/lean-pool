@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
-import Mathlib.Data.Fin.SuccPred
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+public import Mathlib.Data.Fin.SuccPred
 
 /-!
 # The four-case gap insertion engine (issue #12, risky engine 2)
@@ -19,6 +21,8 @@ The inserted rank is `α` at slot `0` and `rank (s-1) + α` otherwise (`insertGa
 margin obligation is ordinal-rank arithmetic, and the four cases collapse into a single
 `Fin.succAbove` case analysis.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

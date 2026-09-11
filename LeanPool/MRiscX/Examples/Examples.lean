@@ -3,12 +3,16 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Basic
-import LeanPool.MRiscX.Tactics.ApplySpec
+module
+
+public import LeanPool.MRiscX.Basic
+public import LeanPool.MRiscX.Tactics.ApplySpec
 
 /-!
 New Code Proofs
 -/
+
+@[expose] public section
 
 attribute [local implicit_reducible] Registers Memory
 

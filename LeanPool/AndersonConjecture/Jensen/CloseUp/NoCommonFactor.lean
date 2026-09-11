@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
-import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
 
 /-!
 # Close-up: no common factor
@@ -15,6 +17,8 @@ is that the ideal of the generators s' cannot be contained in
 any associated prime of height at most one, so the avoidance
 step applies directly.
 -/
+
+@[expose] public section
 
 noncomputable section
 

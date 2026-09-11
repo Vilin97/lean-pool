@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Data.Set.Finite.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # Exercise 1.16 (Scott 1981, PRG-19, §1) — cofinite subsets of `ℕ`
@@ -36,6 +37,8 @@ classification lemmas are not choice-free; the *constructions* (`ofExcluded`,
 `cofiniteSystem`)
 are `[propext, Quot.sound]`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

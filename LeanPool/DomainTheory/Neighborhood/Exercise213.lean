@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
-import LeanPool.DomainTheory.Neighborhood.Exercise122
+public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+public import LeanPool.DomainTheory.Neighborhood.Exercise122
 
 /-!
 # Exercise 2.13 (Scott 1981, PRG-19, §2) — approximable maps **are** the
@@ -50,6 +51,8 @@ and continuous functions `|𝒟₀| → |𝒟₁|` as the same thing.
 Choice-free apart from the `ofMono`/Exercise-2.9 ingredients (whose uniqueness
 companions are the
 only classical pieces). -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

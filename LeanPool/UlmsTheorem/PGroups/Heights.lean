@@ -3,10 +3,11 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import Mathlib.Data.ENat.Lattice
-import Mathlib.Tactic.Cases
-import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
+public import Mathlib.Data.ENat.Lattice
+public import Mathlib.Tactic.Cases
+public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 
 /-!
 # Reducedness and height theory
@@ -14,6 +15,8 @@ import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 This file contains the reducedness predicate used in the project and the
 basic finite `p`-height calculus.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

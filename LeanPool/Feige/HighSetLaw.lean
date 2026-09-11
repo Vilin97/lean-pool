@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.TwoPointInduction
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.ProbabilityMassFunction.Constructions
+module
+
+public import LeanPool.Feige.TwoPointInduction
+public import Mathlib.Probability.Independence.Basic
+public import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
 /-!
 # The discrete law of the high set
@@ -16,6 +18,8 @@ probability of the rejection event with `twoPointRejectionMass`, so the
 finite two-point calibration result can be stated directly as a probability
 bound.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators ENNReal

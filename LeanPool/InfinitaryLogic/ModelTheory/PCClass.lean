@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-import Mathlib.ModelTheory.LanguageMap
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+public import Mathlib.ModelTheory.LanguageMap
 
 /-!
 # The abstract PC-class membership predicate (issue #10, Unit 4)
@@ -17,6 +19,8 @@ is existence of a *same-carrier* expansion, enforced here by `LHom.IsExpansionOn
 Deliberately language-generic and free of any nonemptiness assumption; the López–Escobar
 specialization (`baseGraphEmb`, code compatibility) lives in `Methods/LopezEscobar/PCMem.lean`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

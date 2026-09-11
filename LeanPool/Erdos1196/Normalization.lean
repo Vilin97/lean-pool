@@ -3,8 +3,10 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.NormalizationCore
-import LeanPool.Erdos1196.NormalizationSmallPrime
+module
+
+public import LeanPool.Erdos1196.NormalizationCore
+public import LeanPool.Erdos1196.NormalizationSmallPrime
 
 /-!
 # First-entry bounds for the normalization constant
@@ -16,6 +18,8 @@ proving the final estimate for the first-entry contribution to `B_x`.
 
 * `normalizationFirstEntryPart_estimate`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators Topology
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.InformationTheory.KullbackLeibler.Basic
-import Mathlib.MeasureTheory.Measure.DiracProba
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Probability.Kernel.Composition.MeasureComp
-import Mathlib.Probability.Kernel.Composition.MeasureCompProd
-import Mathlib.Topology.Instances.ENNReal.Lemmas
+module
+
+public import Mathlib.InformationTheory.KullbackLeibler.Basic
+public import Mathlib.MeasureTheory.Measure.DiracProba
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Probability.Kernel.Composition.MeasureComp
+public import Mathlib.Probability.Kernel.Composition.MeasureCompProd
+public import Mathlib.Topology.Instances.ENNReal.Lemmas
 
 /-!
 # ChannelCapacity.Basic
@@ -30,6 +32,8 @@ has the corresponding affine structure on measures, but not yet on the subtype o
 measures, so this file provides the subtype-level wrapper needed by the strict-concavity and finite
 uniqueness arguments.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

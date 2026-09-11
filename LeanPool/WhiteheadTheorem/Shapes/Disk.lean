@@ -3,15 +3,18 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import Mathlib.Topology.Category.TopCat.Limits.Basic
-import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Topology.Category.TopCat.Limits.Basic
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.Disk
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Disk`.
 -/
+
+@[expose] public section
 
 
 namespace TopCat

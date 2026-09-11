@@ -3,10 +3,11 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import Mathlib.Analysis.SpecificLimits.Basic
-import LeanPool.Wallace.FiniteCombinatorics
-import LeanPool.Wallace.UniformKronecker
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import LeanPool.Wallace.FiniteCombinatorics
+public import LeanPool.Wallace.UniformKronecker
 
 /-!
 # A concrete schedule for the Wallace fusion
@@ -21,6 +22,8 @@ blocks, `protectedBound l` bounds the finite set whose character values must be 
 makes the discarded proportion tend to zero.  The errors form a geometric series of total mass
 `1 / 32`, leaving a large margin around an initial character value of `1 / 2`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

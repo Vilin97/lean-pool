@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Lemma615
-import LeanPool.DomainTheory.Neighborhood.Proposition612
-import Mathlib.Data.Fintype.Powerset
+public import LeanPool.DomainTheory.Neighborhood.Lemma615
+public import LeanPool.DomainTheory.Neighborhood.Proposition612
+public import Mathlib.Data.Fintype.Powerset
 
 /-!
 # Exercise 6.28 (Scott 1981, PRG-19, §6) — Plotkin's finite
@@ -67,6 +68,8 @@ Everything is **choice-free at the relational core** (`projElementEmbedding`,
 genuinely
 unavoidable, as it extracts a `Fintype` from `Finite` and a surjection's section.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

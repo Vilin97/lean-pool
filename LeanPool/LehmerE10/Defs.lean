@@ -3,9 +3,10 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathlib.LinearAlgebra.Matrix.Notation
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+public import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!
 # the objects of the claim.
@@ -15,6 +16,8 @@ the hyperbolic Kac–Moody root system E₁₀, its simple reflections acting on
 lattice in the basis of simple roots, and a Coxeter element as the product of the
 ten simple reflections.
 -/
+
+@[expose] public section
 
 open Polynomial
 

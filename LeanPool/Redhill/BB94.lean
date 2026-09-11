@@ -3,14 +3,17 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.RingTheory.Radical.NatInt
-import LeanPool.Redhill.Common.Conjectures
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.RingTheory.Radical.NatInt
+public import LeanPool.Redhill.Common.Conjectures
 
 /-!
 # Browkin and Brzeziński's 1994 result
 -/
+
+@[expose] public section
 
 
 namespace BB94

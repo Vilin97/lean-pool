@@ -10,9 +10,11 @@ Authors: Ho Boon Suan
 This file provides the analytic tools needed to prove `Phi_neg_Eᵢ` for each
 row of the expander table. All theorems are fully proved.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.PhiDeriv
-import LeanPool.KaltonRoberts.LogBounds
+module
+
+public import LeanPool.KaltonRoberts.Defs
+public import LeanPool.KaltonRoberts.PhiDeriv
+public import LeanPool.KaltonRoberts.LogBounds
 
 /-!
 # Phi function analysis
@@ -20,6 +22,8 @@ import LeanPool.KaltonRoberts.LogBounds
 Convexity, endpoint bounds, and interval-negativity proofs for the Phi
 functions used in the expander table.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

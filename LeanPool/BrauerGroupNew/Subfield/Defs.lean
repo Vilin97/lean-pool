@@ -3,14 +3,17 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed
+public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed
 
 /-!
 # LeanPool.BrauerGroupNew.Subfield.Defs
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Defs`.
 -/
+
+@[expose] public section
 
 open Function TensorProduct MulOpposite
 

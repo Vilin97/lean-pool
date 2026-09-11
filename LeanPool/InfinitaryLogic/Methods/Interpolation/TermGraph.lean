@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
-import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Term graphs: relationalizing a term's value (Craig Layer 3, Unit 3)
 
@@ -41,6 +43,8 @@ are ever needed.
   (`functionsIn_termGraph`, the language is relational).
 - The nested-term pilot `f(g(x), h(c))` (genuinely nested, includes a `0`-ary application).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

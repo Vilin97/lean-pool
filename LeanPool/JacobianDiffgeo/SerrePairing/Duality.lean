@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
-import Mathlib.LinearAlgebra.Dual.Lemmas
-import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+public import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 
 /-!
 # The injectivity core and the generic dimension inequality (serre-duality-cech, §2 D4–D5)
@@ -33,6 +34,8 @@ is now instance-free and `Module.finrank` needs no topology, so both theorems he
 `[T1Space X] [ConnectedSpace X]` (for `MForm.ord_ne_top`/`Nonempty X`) — dropped per
 `CONVENTIONS.md`'s "drop hypotheses lemmas don't need, when free to do so".
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

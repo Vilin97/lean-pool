@@ -3,7 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
+module
+
+public import LeanPool.Clawristotle.Defs
 
 /-!
 # VML Data Structures
@@ -13,6 +15,8 @@ Defines the core data structures for the VML steady state problem:
 - `VMLEquilibrium`: the equilibrium configuration
 - `VMLInput`: minimal physical input for the steady state problem
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

@@ -3,17 +3,18 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
-import LeanPool.LocalComplexGeometry.Germs.Ring
-import Mathlib.Algebra.CharP.Algebra
-import Mathlib.FieldTheory.Perfect
-import Mathlib.LinearAlgebra.Dimension.Localization
-import Mathlib.RingTheory.Algebraic.Integral
-import Mathlib.RingTheory.Finiteness.Quotient
-import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
-import Mathlib.RingTheory.Localization.Integral
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
+public import LeanPool.LocalComplexGeometry.Germs.Ring
+public import Mathlib.Algebra.CharP.Algebra
+public import Mathlib.FieldTheory.Perfect
+public import Mathlib.LinearAlgebra.Dimension.Localization
+public import Mathlib.RingTheory.Algebraic.Integral
+public import Mathlib.RingTheory.Finiteness.Quotient
+public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
+public import Mathlib.RingTheory.Localization.Integral
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
 
 /-!
 # The generic fibre of a prepared prime quotient
@@ -26,6 +27,8 @@ finite extension, in which the last-coordinate class has a nonzero separable
 minimal polynomial.  The last section clears all coefficients of that
 minimal polynomial back to the contracted quotient.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

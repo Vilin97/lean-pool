@@ -3,17 +3,20 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.Topology.Covering.Basic
-import Mathlib.Topology.Homotopy.Lifting
-import LeanPool.FiniteGraphFundamentalGroup.Cover
-import LeanPool.FiniteGraphFundamentalGroup.Realization
+public import Mathlib.Topology.Covering.Basic
+public import Mathlib.Topology.Homotopy.Lifting
+public import LeanPool.FiniteGraphFundamentalGroup.Cover
+public import LeanPool.FiniteGraphFundamentalGroup.Realization
 
 /-!
 # Local charts and topological graph covers
 
 This module verifies the local topology needed to realize the combinatorial path-lifting cover.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver

@@ -3,11 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.ErdosMoser.SubsetSums
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
+public import LeanPool.ErdosMoser.SubsetSums
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
 
 /-!
 # Finite lower bounds for the largest element
@@ -15,6 +16,8 @@ import Mathlib.Tactic.NormNum
 This file derives direct and square-root forms of the largest-element bound
 from Leo Moser's exact sum-of-squares inequality.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ErdosMoser
 

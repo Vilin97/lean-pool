@@ -3,11 +3,13 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.SimplexGeometry
-import LeanPool.Feige.Grunbaum.Main
-import LeanPool.Feige.Grunbaum.Sharpness
-import LeanPool.Feige.Grunbaum.SimplexCentroidCoordinates
-import LeanPool.Feige.Grunbaum.StrictBoundaryBridge
+module
+
+public import LeanPool.Feige.SimplexGeometry
+public import LeanPool.Feige.Grunbaum.Main
+public import LeanPool.Feige.Grunbaum.Sharpness
+public import LeanPool.Feige.Grunbaum.SimplexCentroidCoordinates
+public import LeanPool.Feige.Grunbaum.StrictBoundaryBridge
 
 /-!
 # Basic interface to the Grünbaum formalization
@@ -16,6 +18,8 @@ This file registers the first, purely measure-theoretic part of the bridge
 between the coordinate-function model used by `Feige` and Mathlib's
 `EuclideanSpace` model used by `Grunbaum`.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory
 

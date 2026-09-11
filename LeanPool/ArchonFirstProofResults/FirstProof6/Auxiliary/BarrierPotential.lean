@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Algebra.Order.Star.Real
+module
+
+public import Mathlib.Analysis.Matrix.PosDef
+public import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Barrier Potential
@@ -26,6 +28,8 @@ unitary conjugation, and the Neumann-Loewner trace bound.
 - `Problem6.barrier_rearrange`: algebraic rearrangement lemma
 - `Problem6.eigenvalue_le_trace_of_posSemidef`: eigenvalue-trace bound
 -/
+
+@[expose] public section
 
 open Finset Matrix BigOperators
 

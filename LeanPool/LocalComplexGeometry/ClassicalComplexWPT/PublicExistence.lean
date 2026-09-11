@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
 
 /-!
 # Public existence from analytic sequence preparation
@@ -16,6 +17,8 @@ This file reconstructs the public analytic unit and distinguished polynomial
 from the normalized `ℓ¹(ℕ)` quotient/remainder supplied by
 `PreparationSequences`.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -3,11 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 EGRS75 two-prime crux — route `mathlib-api`: the equidistribution INPUT.
@@ -55,6 +56,8 @@ No fakes: no `native_decide`, no bogus axiom, no circular hypothesis.
 DO NOT frame this as solving an open Erdős problem: this formalises EGRS75
 (Math. Comp. 1975, Theorem 1/2), a KNOWN theorem. Three primes is Erdős #376 (open).
 -/
+
+@[expose] public section
 
 namespace Egrs75.MathlibAPI
 

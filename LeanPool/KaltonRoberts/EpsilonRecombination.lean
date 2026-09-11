@@ -19,9 +19,11 @@ an additive `|J| · M / N` error in the average deficit, which can be made
 
 **Reference**: Lemma 3.2 in Section 3 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.Collections
-import LeanPool.KaltonRoberts.UniformRecombination
+module
+
+public import LeanPool.KaltonRoberts.Defs
+public import LeanPool.KaltonRoberts.Collections
+public import LeanPool.KaltonRoberts.UniformRecombination
 
 /-!
 # Epsilon-loss recombination theorems
@@ -29,6 +31,8 @@ import LeanPool.KaltonRoberts.UniformRecombination
 Bridge from arbitrary real-weighted collections to finite-uniform
 recombination, with an epsilon loss in the recombination inequality.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

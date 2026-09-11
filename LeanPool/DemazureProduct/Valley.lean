@@ -3,10 +3,12 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Int.Basic
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Tactic.Linarith
+module
+
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Valleys
@@ -18,6 +20,8 @@ to package some elementary arguments that are needed about such functions. In pa
 to keep track of the set where the minimum value is achieved, and some facts about how this set
 changes when the valley is modified in simple ways.
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 

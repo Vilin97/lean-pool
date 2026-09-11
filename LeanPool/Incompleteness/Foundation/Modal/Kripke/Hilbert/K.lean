@@ -3,14 +3,17 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Filteration
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Filteration
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
 
 /-! # K -/
+
+@[expose] public section
 
 
 namespace LO

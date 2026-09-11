@@ -3,16 +3,19 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.DoubleCentralizer
-import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
-import LeanPool.BrauerGroupNew.Subfield.Defs
+public import LeanPool.BrauerGroupNew.DoubleCentralizer
+public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import LeanPool.BrauerGroupNew.Subfield.Defs
 
 /-!
 # LeanPool.BrauerGroupNew.Subfield.Subfield
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Subfield`.
 -/
+
+@[expose] public section
 
 universe u
 

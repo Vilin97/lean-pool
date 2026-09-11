@@ -3,16 +3,18 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Digraph.Defs
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Nat.Bitwise
-import Mathlib.Data.Nat.Log
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.CircuitComplexity.Digraph.Defs
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Data.Nat.Bitwise
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Tactic.Ring
 
 /-! # Internal helpers for Valiant's Depth Reduction Lemma
 
@@ -24,6 +26,8 @@ This file defines the canonical labeling and collects the canonical
 labeling argument, the edge partition by first-differing bit, the
 averaging step, and the relabeling-after-removal bound.
 -/
+
+@[expose] public section
 
 namespace Digraph
 

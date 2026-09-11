@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.TransferTestFunctions
-import LeanPool.Feige.TransferProbability
+module
+
+public import LeanPool.Feige.TransferTestFunctions
+public import LeanPool.Feige.TransferProbability
 
 /-!
 # Measure-level transfer Stein identities
@@ -13,6 +15,8 @@ This file lifts the fixed-`y` identities to an arbitrary law for `Y`.
 The outer integrability assumptions are stated explicitly, making the
 result usable independently of how the law of `Y` is presented.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 

@@ -3,17 +3,18 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Covers
-import LeanPool.JacobianDiffgeo.Cech.Cochains
-import LeanPool.JacobianDiffgeo.Cech.H0
-import LeanPool.JacobianDiffgeo.Cech.Refinement
-import LeanPool.JacobianDiffgeo.Cech.Colimit
-import LeanPool.JacobianDiffgeo.Cech.Injectivity
-import LeanPool.JacobianDiffgeo.Cech.Window
-import LeanPool.JacobianDiffgeo.Cech.WindowRank
-import LeanPool.JacobianDiffgeo.Cech.Skyscraper
-import LeanPool.JacobianDiffgeo.Cech.SixTerm
+public import LeanPool.JacobianDiffgeo.Cech.Covers
+public import LeanPool.JacobianDiffgeo.Cech.Cochains
+public import LeanPool.JacobianDiffgeo.Cech.H0
+public import LeanPool.JacobianDiffgeo.Cech.Refinement
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+public import LeanPool.JacobianDiffgeo.Cech.Injectivity
+public import LeanPool.JacobianDiffgeo.Cech.Window
+public import LeanPool.JacobianDiffgeo.Cech.WindowRank
+public import LeanPool.JacobianDiffgeo.Cech.Skyscraper
+public import LeanPool.JacobianDiffgeo.Cech.SixTerm
 
 /-!
 # cech-cohomology (CC8): `H¹(D)` as a directed colimit over finite covers (namespace `RS.Cech`)
@@ -58,3 +59,5 @@ The unit is **complete**: every export above (including Forster 12.4 injectivity
 dimension counts, and the full six-term fragment, all previously deferred) is proved with zero
 sorries.
 -/
+
+@[expose] public section

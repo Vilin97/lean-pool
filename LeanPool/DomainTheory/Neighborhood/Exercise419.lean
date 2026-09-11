@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example44
-import LeanPool.DomainTheory.Neighborhood.Exercise326
+public import LeanPool.DomainTheory.Neighborhood.Example44
+public import LeanPool.DomainTheory.Neighborhood.Exercise326
 
 /-!
 # Exercise 4.19 (Scott 1981, PRG-19, Lecture IV) — verifying Example 4.4
@@ -56,6 +57,8 @@ The `liftC` *data* is **choice-free**; the truth-domain tests inherit
 structurally from `T` (Example 1.2), exactly as `Example23.parityMap` and
 `Example43.zeroMap` do.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise419
 

@@ -3,23 +3,23 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Schwinger.Defs
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Measure.IsGaussian
-import LeanPool.OSforGFF.Measure.GaussianFreeField -- For gaussian_satisfies_OS2
-import LeanPool.OSforGFF.OS.OS2Invariance -- For CovarianceEuclideanInvariantℂ_μ_GFF
-import LeanPool.OSforGFF.Covariance.Position  -- For freeCovarianceℂ_bilinear_symm
-import LeanPool.OSforGFF.Covariance.Momentum
-import LeanPool.OSforGFF.OS.Axioms
-import LeanPool.OSforGFF.General.FunctionalAnalysis
-import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-import LeanPool.OSforGFF.General.QuantitativeDecay
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Schwinger.Defs
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Measure.IsGaussian
+public import LeanPool.OSforGFF.Measure.GaussianFreeField -- For gaussian_satisfies_OS2
+public import LeanPool.OSforGFF.OS.OS2Invariance -- For CovarianceEuclideanInvariantℂ_μ_GFF
+public import LeanPool.OSforGFF.Covariance.Position  -- For freeCovarianceℂ_bilinear_symm
+public import LeanPool.OSforGFF.Covariance.Momentum
+public import LeanPool.OSforGFF.OS.Axioms
+public import LeanPool.OSforGFF.General.FunctionalAnalysis
+public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+public import LeanPool.OSforGFF.General.QuantitativeDecay
   -- For schwartz_bilinear_translation_decay_polynomial_proof
-import LeanPool.OSforGFF.Spacetime.TimeTranslation  -- For time translation on distributions
-import LeanPool.OSforGFF.OS.OS4MGF  -- For shared OS4 infrastructure (no sorries)
+public import LeanPool.OSforGFF.Spacetime.TimeTranslation  -- For time translation on distributions
+public import LeanPool.OSforGFF.OS.OS4MGF  -- For shared OS4 infrastructure (no sorries)
 
 /-!
 # OS4 — Polynomial Clustering
@@ -41,6 +41,8 @@ The proof follows Steps 1–6 of §4.4.5:
 
 - `gaussianFreeField_satisfies_OS4`
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex
 open scoped Real BigOperators SchwartzMap

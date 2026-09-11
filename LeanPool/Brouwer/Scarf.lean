@@ -3,29 +3,31 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
-import Mathlib.Order.Defs.LinearOrder
-import Mathlib.Order.MinMax
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Image
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Tauto
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Choose
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Contrapose
-import Mathlib.Tactic.Bound
+module
+
+public import Mathlib.Order.Defs.LinearOrder
+public import Mathlib.Order.MinMax
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Image
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Tauto
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Cases
+public import Mathlib.Tactic.Choose
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Contrapose
+public import Mathlib.Tactic.Bound
 
 /-!
 # Scarf's combinatorial lemma
@@ -37,6 +39,8 @@ machinery used in the parity (door-counting) argument that culminates in
 `IndexedLOrder.Scarf`: every coloring of a finite indexed linear order admits a
 colorful room.
 -/
+
+@[expose] public section
 
 section fiberlemma
 

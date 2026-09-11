@@ -3,12 +3,16 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.Dipath
-import LeanPool.DirectedTopologyLean4.DTop
+module
+
+public import LeanPool.DirectedTopologyLean4.Dipath
+public import LeanPool.DirectedTopologyLean4.DTop
 
 /-!
 # LeanPool.DirectedTopologyLean4.Interpolate
 -/
+
+@[expose] public section
 
 /-
   This file contains definitions about interpolating points in the directed unit interval

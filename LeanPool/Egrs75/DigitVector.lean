@@ -3,13 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import Mathlib.Data.Nat.Digits.Lemmas
-import Mathlib.Data.List.Count
-import Mathlib.Data.List.GetD
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import LeanPool.Egrs75.LeafInduction
+public import Mathlib.Data.Nat.Digits.Lemmas
+public import Mathlib.Data.List.Count
+public import Mathlib.Data.List.GetD
 
 /-!
 EGRS75 two-prime ALIGN leaf — route `digitvector`: the carry-controlled repair step.
@@ -40,6 +41,8 @@ run summary.  No `native_decide`, no bogus `axiom`, no `implemented_by`, no circ
 hypothesis.  Formalizes the KNOWN theorem EGRS75 (Math. Comp. 29 (1975), the repair
 Lemma p.84, case `κ₁ = κ₂ = 1/2`).  Three primes is Erdős #376 (OPEN); not attempted.
 -/
+
+@[expose] public section
 
 namespace Egrs75.RepairDV
 

@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
-import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
-import LeanPool.JacobianDiffgeo.Cech.SixTerm
+public import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
+public import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
+public import LeanPool.JacobianDiffgeo.Cech.SixTerm
 
 /-!
 # `FiniteDimensional ℂ (H1 D)` for all `D` (`finiteness-and-chi`, gated file 2/3)
@@ -23,6 +24,8 @@ Unit: finiteness-and-chi (`docs/design/finiteness-and-chi.md` §6.4/§6.5, §7).
 * `finiteDimensional_H1`: `FiniteDimensional ℂ (H1 D)` for ALL `D` (§7, decision D2 — via
   cech's six-term skyscraper fragment, NOT twisted norms).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech

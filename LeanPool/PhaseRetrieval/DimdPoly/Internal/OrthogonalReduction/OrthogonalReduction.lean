@@ -3,12 +3,16 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.ImportedAnalyticInputs
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.ImportedAnalyticInputs
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! # OrthogonalReduction -/
+
+@[expose] public section
 
 
 noncomputable section

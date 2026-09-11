@@ -10,11 +10,15 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the generic transvection conjugacy lemmas and
 specialized the later ICC endpoint locally. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
+module
+
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
 
 /-!
 # Special-linear conjugacy and ICC for Zhou §5
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace SpecialLinear

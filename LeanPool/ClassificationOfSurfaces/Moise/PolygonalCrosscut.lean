@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
-import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
+public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
 
 /-!
 # Polygonal crosscuts
@@ -14,6 +16,8 @@ endpoints form three polygons.  When the third arc is a chord inside the first p
 polygons containing the chord lie inside the first polygon.  This is the cutting lemma used in
 the free-triangle induction of Chapter 3.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

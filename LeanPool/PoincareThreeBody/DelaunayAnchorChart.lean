@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.GlobalEnergySection
-import LeanPool.PoincareThreeBody.ActionFactorization
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+public import LeanPool.PoincareThreeBody.GlobalEnergySection
+public import LeanPool.PoincareThreeBody.ActionFactorization
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
 
 /-!
 # A local Delaunay chart at the rational elliptic anchor
@@ -15,6 +16,8 @@ We combine the two Delaunay actions, eccentric anomaly, and apsidal orientation 
 four-dimensional chart.  Its derivative at the rational anchor is nonsingular, so its image
 contains a phase-space neighborhood of the anchor.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

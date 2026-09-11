@@ -3,9 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
 
-import LeanPool.ArchonFirstProofResults.FirstProof4
-import LeanPool.ArchonFirstProofResults.FirstProof6
+public import LeanPool.ArchonFirstProofResults.FirstProof4
+public import LeanPool.ArchonFirstProofResults.FirstProof6
 
 /-!
 # Archon-FirstProof-Results
@@ -17,6 +18,8 @@ Main declarations: `Problem4.harmonic_mean_inequality_full`, `Problem6.exists_ep
 Tags: polynomials, analysis, combinatorics, linear-algebra, graph-theory
 MSC: 26D15, 05C50, 15A42
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,16 +3,17 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Topology.Sets.Opens
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Topology.Separation.Basic
-import Mathlib.Topology.OpenPartialHomeomorph.Basic
-import Mathlib.Geometry.Manifold.ChartedSpace
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Logic.Equiv.Fin.Basic
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Order.Directed
+public import Mathlib.Topology.Sets.Opens
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Topology.Separation.Basic
+public import Mathlib.Topology.OpenPartialHomeomorph.Basic
+public import Mathlib.Geometry.Manifold.ChartedSpace
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Logic.Equiv.Fin.Basic
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Order.Directed
 
 /-!
 # Finite covers and their refinement preorder (CC8, D2/D3/D4)
@@ -27,6 +28,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.1, D2–D4, proof pl
   `exists_good_refinement_closure`).
 * `FinCover.IsAdapted`: adapted covers (Miranda IX Ex. 3.6), `exists_adapted_refinement`.
 -/
+
+@[expose] public section
 
 open Set Filter Topology TopologicalSpace
 

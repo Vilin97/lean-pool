@@ -9,12 +9,15 @@ This file contains the concrete algebraic characteristic-subgroup input for
 the Zhou-shaped construction. The proof is independently written from the
 paper's cited public mathematical argument in Section 6.
 -/
+module
 
-import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
 
 /-!
 The characteristic component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperCharacteristic

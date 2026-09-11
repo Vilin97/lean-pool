@@ -18,10 +18,12 @@ the companion paper. It provides:
 **Reference**: Section 4 and the table in Section 5 of
 the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.Numerical
-import LeanPool.KaltonRoberts.PhiAnalysis
-import LeanPool.KaltonRoberts.PippengerProof
+module
+
+public import LeanPool.KaltonRoberts.Defs
+public import LeanPool.KaltonRoberts.Numerical
+public import LeanPool.KaltonRoberts.PhiAnalysis
+public import LeanPool.KaltonRoberts.PippengerProof
 
 /-!
 # Pippenger expander construction
@@ -29,6 +31,8 @@ import LeanPool.KaltonRoberts.PippengerProof
 Row certificates and row-specific constructions for the probabilistic expander
 argument used in the Kalton-Roberts bound.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

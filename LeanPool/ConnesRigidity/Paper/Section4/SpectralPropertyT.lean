@@ -9,15 +9,19 @@ The action-indexed positive scalar spectral bridge for Zhou §4. The analytic
 spectral measures are constructed by joint functional calculus, so the only
 paper-specific input is finite spectral detection. Paper: §4.
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
-import LeanPool.ConnesRigidity.Paper.Section4.SplitExtensions
-import LeanPool.ConnesRigidity.Paper.Section4.FiniteExtensions
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PositiveSpectralMeasure
-import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
+public import LeanPool.ConnesRigidity.Paper.Section4.SplitExtensions
+public import LeanPool.ConnesRigidity.Paper.Section4.FiniteExtensions
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PositiveSpectralMeasure
+public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
 
 /-!
 The spectral property t component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperSpectralPropertyT

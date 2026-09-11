@@ -3,14 +3,15 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.LinearAlgebra.Matrix.Notation
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Basic
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.LinearAlgebra.Matrix.Notation
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # The planar circular restricted three-body Hamiltonian
@@ -19,6 +20,8 @@ This file gives the exact definitions occurring in the Poincaré nonintegrabilit
 establishes their elementary structural properties. It deliberately does not import the challenge
 module: the solution and challenge environments must remain separately exportable for comparator.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

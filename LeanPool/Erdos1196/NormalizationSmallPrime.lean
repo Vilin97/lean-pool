@@ -3,8 +3,10 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.NormalizationCore
-import Mathlib.Order.Filter.AtTopBot.Field
+module
+
+public import LeanPool.Erdos1196.NormalizationCore
+public import Mathlib.Order.Filter.AtTopBot.Field
 
 /-!
 # Small-prime bounds for the normalization constant
@@ -17,6 +19,8 @@ Its main theorem shows that this part is summable and contributes only `O(1 / lo
 
 * `summable_normalizationSmallPrimePart_and_tsum_le`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators Topology
 

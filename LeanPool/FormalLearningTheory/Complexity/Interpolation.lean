@@ -3,7 +3,9 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
 
 /-!
 # Interpolation of Concept Classes — Measurability Descent
@@ -30,6 +32,8 @@ not stay at the Borel level.
 - Krapp & Wirth (2024, arXiv:2410.10243)
 - BorelAnalyticBridge.lean (this kernel)
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
 
 /-!
 # Polygon slope analysis and derivative bounds
@@ -16,6 +17,8 @@ non-differentiability at partition points `{1,2,3,4}`, and global derivative bou
 * `fdPolygon_not_differentiableAt_partition` — left/right slopes differ
 * `fdPolygon_deriv_bounded` — `∃ M, ∀ t ∈ Icc 0 5, ‖deriv fdPolygon t‖ ≤ M`
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

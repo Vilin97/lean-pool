@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Coordinates
-import Mathlib.Analysis.Analytic.Order
-import Mathlib.Order.Filter.Finite
+public import LeanPool.LocalComplexGeometry.Germs.Coordinates
+public import Mathlib.Analysis.Analytic.Order
+public import Mathlib.Order.Filter.Finite
 
 /-!
 # The local analytic Nullstellensatz in one complex variable
@@ -18,6 +19,8 @@ vanishing bounds a power of every germ vanishing at the origin.  Finally, if
 all generators are zero germs, the common-zero hypothesis forces the target
 to be the zero germ.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

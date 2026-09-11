@@ -3,8 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.Measurability
-import LeanPool.FormalLearningTheory.PureMath.AnalyticMeasurability
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Measurability
+public import LeanPool.FormalLearningTheory.PureMath.AnalyticMeasurability
 
 /-!
 # Borel-Analytic Bridge for Statistical Learning Theory
@@ -33,6 +35,8 @@ but KrappWirthWellBehaved fails. See Theorem/BorelAnalyticSeparation.lean.
 - Krapp & Wirth (2024, arXiv:2410.10243): MeasurableSet conditions for FTSL
 - This kernel: NullMeasurableSet weakening discovered during Lean4 formalization
 -/
+
+@[expose] public section
 
 universe u
 

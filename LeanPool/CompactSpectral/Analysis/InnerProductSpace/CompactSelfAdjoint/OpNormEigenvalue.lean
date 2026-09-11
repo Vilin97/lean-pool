@@ -3,10 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Normed.Operator.NNNorm
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Operator.NNNorm
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
 
 /-!
 # Compact self-adjoint operators: an eigenvalue at the operator norm
@@ -18,6 +20,8 @@ This file provides two Hilbert-space facts about compact operators:
 
 These are used downstream to turn “no eigenvalues above `ε`” into an operator-norm estimate.
 -/
+
+@[expose] public section
 
 namespace CompactSelfAdjoint
 

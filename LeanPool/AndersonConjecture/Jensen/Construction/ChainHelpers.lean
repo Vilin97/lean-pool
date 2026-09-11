@@ -3,7 +3,9 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.CombinedStep
+module
+
+public import LeanPool.AndersonConjecture.Jensen.CombinedStep
 
 /-!
 # Chain Helpers for the Transfinite Construction
@@ -15,6 +17,8 @@ construction of UFDs with prescribed completions.
 Jensen, "Completions of UFDs with semi-local formal fibers",
 2006, Theorem 2.2.
 -/
+
+@[expose] public section
 
 universe u
 

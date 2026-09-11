@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.SetTheory.Cardinal.Aleph
-import Mathlib.SetTheory.Cardinal.Pigeonhole
-import Mathlib.SetTheory.Cardinal.Regular
-import Mathlib.Order.InitialSeg
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import Mathlib.SetTheory.Cardinal.Aleph
+public import Mathlib.SetTheory.Cardinal.Pigeonhole
+public import Mathlib.SetTheory.Cardinal.Regular
+public import Mathlib.Order.InitialSeg
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # Pair Erdős–Rado, parameterized by the color bound `κ`
@@ -33,6 +35,8 @@ This file develops the canonical partition tree and extracts a live node of leng
   forces a live node of length `≥ (succ κ).ord`.
 - **Consumer interface**: `exists_live_node_ge`.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
-import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
-import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
-import LeanPool.JacobianDiffgeo.LaurentTail.RiemannRoch
+public import LeanPool.JacobianDiffgeo.LaurentTail.TailSpace
+public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+public import LeanPool.JacobianDiffgeo.LaurentTail.RiemannRoch
 
 /-!
 # laurent-tails: Miranda's Laurent-tail calculus for `H¹(D)` (namespace `RS.LaurentTail`)
@@ -76,3 +77,5 @@ dimension-counting endgame). `mulTail`/`mulTailEquiv` are deliberately not built
 `TailSpace.lean`'s note above); `serre-duality-tails`'s own `mulInto` supersedes them, already
 accounted for in that unit's design. `firstFormRR`/`g0` remain gated on `H1Tail.equiv` too.
 -/
+
+@[expose] public section

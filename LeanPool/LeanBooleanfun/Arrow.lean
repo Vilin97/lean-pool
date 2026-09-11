@@ -3,8 +3,10 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
-import LeanPool.LeanBooleanfun.BooleanValued
-import LeanPool.LeanBooleanfun.ToMathlib.Finset
+module
+
+public import LeanPool.LeanBooleanfun.BooleanValued
+public import LeanPool.LeanBooleanfun.ToMathlib.Finset
 
 /-!
 # Arrow's theorem
@@ -27,6 +29,8 @@ This is mainly facilitated by introducing an auxiliary linear operator, see `_Tn
   theorem*][kalai2002]
 * [R. O'Donnell, *Analysis of Boolean functions*][odonnell2014]
 -/
+
+@[expose] public section
 
 noncomputable section
 

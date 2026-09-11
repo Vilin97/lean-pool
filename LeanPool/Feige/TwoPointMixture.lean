@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
+module
+
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
+public import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 
 /-!
 # Algebraic core of the two-point mixture lemma
@@ -13,6 +15,8 @@ This file develops the two-point mixture decomposition used in the proof of
 Theorem 2.1.  It isolates the equality of the lower and upper first moments
 and constructs the mean-one two-point law `Q_{x,y}`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

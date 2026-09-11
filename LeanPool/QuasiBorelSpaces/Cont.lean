@@ -3,14 +3,17 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.OmegaHom
+public import LeanPool.QuasiBorelSpaces.OmegaHom
 
 /-!
 # LeanPool.QuasiBorelSpaces.Cont
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Cont`.
 -/
+
+@[expose] public section
 
 open QuasiBorelSpace
 open OmegaCompletePartialOrder

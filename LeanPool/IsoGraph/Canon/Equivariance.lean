@@ -3,13 +3,14 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Algorithm
-import Mathlib.Data.Finset.Card
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Tactic.Push
-import LeanPool.IsoGraph.ForMathlib.Array
-import LeanPool.IsoGraph.ForMathlib.Bits
+public import LeanPool.IsoGraph.Canon.Algorithm
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Tactic.Push
+public import LeanPool.IsoGraph.ForMathlib.Array
+public import LeanPool.IsoGraph.ForMathlib.Bits
 
 /-!
 # Equivariance of the pieces of the canonical labelling
@@ -43,6 +44,8 @@ Each piece of the search respects `≈`:
   (`certOf_of_partEquiv`, via `certOf_relabel`), with `discrete_of_targetCell_none` supplying
   the discreteness at the leaves.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

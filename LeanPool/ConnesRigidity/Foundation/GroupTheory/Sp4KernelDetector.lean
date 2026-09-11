@@ -9,7 +9,9 @@ Kernel-checked finite certificate for the Sp₄(F₂) normal-subgroup argument i
 Zhou §6. The exhaustive Boolean matrix search is isolated here from the
 conceptual action and transvection lemmas.
 -/
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
+module
+
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
 
 /-!
 # Kernel-checked `Sp₄(𝔽₂)` normal-subgroup certificate
@@ -19,6 +21,8 @@ the finite symplectic factor has no nontrivial normal abelian subgroup. The
 search is split into kernel-checked chunks and decoded back to Mathlib's
 symplectic-matrix carrier for the public theorem used in Zhou §6.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Sp4

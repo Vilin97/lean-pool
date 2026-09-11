@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Germs
-import Mathlib.Topology.Germ
-import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Germs
+public import Mathlib.Topology.Germ
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 
 /-!
 # Holomorphic function germs at the origin
@@ -16,6 +17,8 @@ neighbourhood-function germs which have an analytic representative.  It uses
 the same `Filter.Germ` model and `AnalyticAt` predicate as the pinned WPT
 project.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

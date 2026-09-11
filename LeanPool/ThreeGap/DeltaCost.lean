@@ -3,9 +3,10 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.ChevallierCount
-import LeanPool.ThreeGap.SupNormGrowth
+public import LeanPool.ThreeGap.ChevallierCount
+public import LeanPool.ThreeGap.SupNormGrowth
 
 /-!
 # The sup-norm defect cost: growth of its record denominators is *unconditional*
@@ -38,6 +39,8 @@ distance), handled separately.
 
 Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.DeltaCost
 

@@ -3,14 +3,17 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.PreLift
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.PreLift
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame.BorelDet.One

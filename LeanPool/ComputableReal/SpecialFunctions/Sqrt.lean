@@ -3,10 +3,12 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.IsComputable
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.NumberTheory.Real.GoldenRatio
+module
+
+public import LeanPool.ComputableReal.IsComputable
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.NumberTheory.Real.GoldenRatio
 
 /-!
 # Verified rational bounds for square roots
@@ -17,6 +19,8 @@ This yields an `IsComputable` instance for `Real.sqrt` and the golden ratio cons
 functions are executable; the packaged sequence mentions `Real.sqrt` itself as its reference
 value, so `sqrt` and the instances are `noncomputable` Lean terms.
 -/
+
+@[expose] public section
 
 namespace ComputableℝSeq
 

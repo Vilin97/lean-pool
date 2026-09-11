@@ -3,12 +3,13 @@ Copyright (c) 2026 Alexey Milovanov and Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov, Egor Lyfar
 -/
+module
 
-import LeanPool.BooleanIsoperimetry.CoherentGap
-import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
-import LeanPool.BooleanIsoperimetry.Harper
-import LeanPool.BooleanIsoperimetry.MacaulayMin
-import LeanPool.BooleanIsoperimetry.SetFamilyShadow
+public import LeanPool.BooleanIsoperimetry.CoherentGap
+public import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
+public import LeanPool.BooleanIsoperimetry.Harper
+public import LeanPool.BooleanIsoperimetry.MacaulayMin
+public import LeanPool.BooleanIsoperimetry.SetFamilyShadow
 
 /-!
 # Boolean Isoperimetry and Conway--Guy Coherent Gaps
@@ -20,6 +21,8 @@ Main declarations: `BooleanIsoperimetry.harper_theorem`, `BooleanIsoperimetry.co
 Tags: additive-combinatorics, isoperimetry, boolean-cube, subset-sums, coherent-orders
 MSC: 05D05, 05C35
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

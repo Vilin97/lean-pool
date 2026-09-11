@@ -3,11 +3,12 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Rat.Cast.Order
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Rat.Cast.Order
 
 /-!
 # Exercise 1.17 (Scott 1981, PRG-19, §1) — rational open intervals on `ℝ`
@@ -37,6 +38,8 @@ The constructions are `[propext, Quot.sound]`; injectivity uses `exists_rat_btwn
 (Archimedean,
 classical).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

@@ -3,32 +3,36 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import Mathlib.Analysis.Fourier.ZMod
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.NumberTheory.Divisors
-import Mathlib.Data.Nat.Totient
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Set.Card.Arithmetic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Data.ZMod.Coprime
+module
+
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import Mathlib.Analysis.Fourier.ZMod
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecificLimits.Basic
+public import Mathlib.NumberTheory.Divisors
+public import Mathlib.Data.Nat.Totient
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Data.Set.Card.Arithmetic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import Mathlib.Analysis.Complex.ExponentialBounds
+public import Mathlib.Data.ZMod.Coprime
 
 /-!
 # LeanPool.LatticeTriangle.Solution
 -/
+
+@[expose] public section
 
 /-- The largest prime factor of `n`, or `0` if `n` has no prime factors (i.e. `n ≤ 1`). -/
 def largestPrimeFactor (n : ℕ) : ℕ :=

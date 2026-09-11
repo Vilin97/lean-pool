@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRecursion
 
 /-!
 # Auxiliary Variable Recursion for Lyapunov Contraction
@@ -12,6 +13,8 @@ import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.AuxVarRec
 The sequence-indexed recursion is the zero-velocity sequence specialization of
 the state-based one-step identity `auxVarOfState_step`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

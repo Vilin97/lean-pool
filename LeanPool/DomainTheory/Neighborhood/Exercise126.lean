@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.RingTheory.Ideal.Span
-import Mathlib.Tactic.Ring
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.RingTheory.Ideal.Span
+public import Mathlib.Tactic.Ring
 
 /-!
 # Exercise 1.26 (Scott 1981, PRG-19, §1) — ideals of a commutative ring
@@ -40,6 +41,8 @@ claim). The token
 Constructive (`[propext, Quot.sound]`): the round trips are equational, the only
 inputs being
 mathlib's `Ideal.span` API. -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

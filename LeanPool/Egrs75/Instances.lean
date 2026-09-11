@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.MuFinish
-import Mathlib.Tactic.NormNum.Prime
+public import LeanPool.Egrs75.MuFinish
+public import Mathlib.Tactic.NormNum.Prime
 
 /-!
 EGRS75 two-prime closure — NO-VACUITY SMOKE PROBE (2026-06-12).
@@ -15,6 +16,8 @@ smallest odd-prime pairs.  Purpose: machine-check that the hypotheses are
 satisfiable (no hidden vacuity) and that the closure is usable downstream.
 All three MUST be kernel-clean.
 -/
+
+@[expose] public section
 
 namespace Egrs75.SmokeProbe
 

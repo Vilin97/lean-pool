@@ -3,12 +3,13 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Coordinates
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
-import Mathlib.Analysis.Analytic.Uniqueness
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import LeanPool.LocalComplexGeometry.Germs.Coordinates
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
+public import Mathlib.Analysis.Analytic.Uniqueness
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Regularizing a nonzero analytic germ
@@ -18,6 +19,8 @@ some complex line.  Extending that line to coordinates makes the germ regular
 in the last variable.  This is the coordinate-change input required before
 Weierstrass preparation can be applied in Rückert's arguments.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped ENNReal Topology

@@ -3,10 +3,14 @@ Copyright (c) 2026 Paul Mure, Joonhyup Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Mure, Joonhyup Lee
 -/
-import Mathlib.Data.QPF.Univariate.Basic
-import Mathlib.Data.Vector3
+module
+
+public import Mathlib.Data.QPF.Univariate.Basic
+public import Mathlib.Data.Vector3
 
 /-! # ----------------------------------------------------------------------- -/
+
+@[expose] public section
 /-! # --------------------Start Vector3 Utilities---------------------------- -/
 /-! # ----------------------------------------------------------------------- -/
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
 /-!
 # Signed quantifier *occurrence* (issue #15, budget gate 1)
 
@@ -25,6 +27,8 @@ flips, `iSup`/`iInf` preserve and are not quantifiers, and `all` is a *universal
 positive sign only.  Nothing here mentions interpolation; the set-level versions at the end are what
 the separator budgets are stated against.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

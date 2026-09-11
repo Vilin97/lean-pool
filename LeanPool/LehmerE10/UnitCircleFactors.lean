@@ -3,9 +3,10 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.CyclotomicKill
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+public import LeanPool.LehmerE10.CyclotomicKill
+public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 
 /-!
 # no factor of Lehmer's polynomial lives on the unit circle.
@@ -22,6 +23,8 @@ Contents:
   • `two_le_self_add_inv` — the AM–GM inequality used above.
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
+
+@[expose] public section
 
 namespace LehmerE10
 

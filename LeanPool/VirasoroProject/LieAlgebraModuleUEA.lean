@@ -3,10 +3,12 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Lie.UniversalEnveloping
-import Mathlib.GroupTheory.GroupAction.Ring
-import Mathlib.Order.CompletePartialOrder
-import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
+module
+
+public import Mathlib.Algebra.Lie.UniversalEnveloping
+public import Mathlib.GroupTheory.GroupAction.Ring
+public import Mathlib.Order.CompletePartialOrder
+public import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
 
 /-!
 # Modules over the universal enveloping algebra of a Lie algebra
@@ -62,6 +64,8 @@ universal enveloping algebra `𝓤 𝕜 𝓰` consists of two directions:
 Lie algebra, universal enveloping algebra
 
 -/
+
+@[expose] public section
 
 
 -- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it is needed to view the

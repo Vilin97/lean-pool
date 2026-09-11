@@ -7,11 +7,15 @@ Authors: Utensil Song
 
 The first-coordinate formula for Zhou's contragredient action. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyAlgebra
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacyAlgebra
 
 /-!
 The dual action conjugacy first component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualActionConjugacyFirst

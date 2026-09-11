@@ -3,11 +3,12 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Nat.Find
-import Mathlib.Order.Monotone.Basic
-import Mathlib.Tactic.Linarith
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Nat.Find
+public import Mathlib.Order.Monotone.Basic
+public import Mathlib.Tactic.Linarith
 
 /-!
 # The combinatorial core of the higher-dimensional three-distance bound (Shutov / Chevallier)
@@ -37,6 +38,8 @@ and the growth inequality) are the substantial geometric pieces still to formali
 
 Axiom-clean; elementary.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.Chevallier
 

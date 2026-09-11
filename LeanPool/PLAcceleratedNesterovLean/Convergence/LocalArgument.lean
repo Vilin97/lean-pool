@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
-import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
 
 /-!
 # Local Convergence Argument
@@ -15,6 +16,8 @@ The zero-velocity result in this file is a specialization of
 initial-energy neighborhood and converts the generalized state sequence back
 to `nesterovSeq`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
-import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
 
 /-!
 # Single-Crossing Winding Number Framework
@@ -43,6 +44,8 @@ The `SingleCrossingData` structure bundles the 8 obligations of
 `pv_tendsto_of_crossing_limit` together with a target limit value,
 making it easy to instantiate for each geometric case.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 

@@ -3,18 +3,19 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import Mathlib.Data.Matrix.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.Data.Finset.Basic
-import Mathlib.LinearAlgebra.Matrix.Diagonal
-import Mathlib.LinearAlgebra.Matrix.Orthogonal
-import Mathlib.LinearAlgebra.UnitaryGroup
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Data.Matrix.Mul
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.Matrix.Order
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Analysis.Matrix.Spectrum
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.LinearAlgebra.Matrix.Diagonal
+public import Mathlib.LinearAlgebra.Matrix.Orthogonal
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.Matrix.Order
 
 /-!
 # Frobenius Positivity
@@ -24,6 +25,8 @@ inner product `⟪G, B⟫ = ∑ j l, G j l * B j l` is strictly positive. The pr
 `B = U D Uᵀ` via the spectral theorem, conjugates `G` to `H = Uᵀ G U` (which remains PSD and
 nonzero), and reduces to `⟪G, B⟫ = tr(H D) = ∑ i, λᵢ Hᵢᵢ > 0`.
 -/
+
+@[expose] public section
 
 open Matrix
 

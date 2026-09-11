@@ -3,13 +3,17 @@ Copyright (c) 2026 Luka Opravš. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luka Opravš
 -/
-import LeanPool.PolyaEnumerationTheorem.ReductionToFin
-import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
-import Mathlib.GroupTheory.SpecificGroups.Dihedral
+module
+
+public import LeanPool.PolyaEnumerationTheorem.ReductionToFin
+public import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
+public import Mathlib.GroupTheory.SpecificGroups.Dihedral
 
 /-!
 # Numbers of distinct colorings for some concrete examples
 -/
+
+@[expose] public section
 
 universe u v
 

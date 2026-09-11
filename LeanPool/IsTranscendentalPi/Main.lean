@@ -3,10 +3,12 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import Mathlib.Analysis.Complex.IsIntegral
-import LeanPool.IsTranscendentalPi.AnalyticEstimates
-import LeanPool.IsTranscendentalPi.ScaledAuxiliaryPolynomial
-import LeanPool.IsTranscendentalPi.SymmetricPolynomials
+module
+
+public import Mathlib.Analysis.Complex.IsIntegral
+public import LeanPool.IsTranscendentalPi.AnalyticEstimates
+public import LeanPool.IsTranscendentalPi.ScaledAuxiliaryPolynomial
+public import LeanPool.IsTranscendentalPi.SymmetricPolynomials
 
 /-!
 # Transcendence of `π`
@@ -15,6 +17,8 @@ The main theorem: the complex number `π` (and hence the real number `π`) is
 transcendental over `ℚ`, assembling the analytic and algebraic estimates of the
 preceding modules into Niven's contradiction argument.
 -/
+
+@[expose] public section
 
 open Polynomial
 

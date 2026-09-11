@@ -3,8 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Complex.Poisson
-import Mathlib.Analysis.Complex.Harmonic.MeanValue
+module
+
+public import LeanPool.Rado.Complex.Poisson
+public import Mathlib.Analysis.Complex.Harmonic.MeanValue
 
 /-!
 # The Dirichlet problem on a disk
@@ -36,6 +38,8 @@ used by Perron's method:
 
 Here "harmonic" is Mathlib's `InnerProductSpace.HarmonicOnNhd`.
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex
 

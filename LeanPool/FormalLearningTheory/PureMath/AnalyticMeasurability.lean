@@ -3,9 +3,11 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.PureMath.ChoquetCapacity
-import Mathlib.MeasureTheory.Measure.NullMeasurable
-import Mathlib.MeasureTheory.Measure.Real
+module
+
+public import LeanPool.FormalLearningTheory.PureMath.ChoquetCapacity
+public import Mathlib.MeasureTheory.Measure.NullMeasurable
+public import Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # Analytic Sets are NullMeasurableSet
@@ -18,6 +20,8 @@ This file is independent of learning theory and is a candidate for contribution 
 - `AnalyticSet.exists_isCompact_measureReal_gt`: inner approximation for analytic sets
 - `analyticSet_nullMeasurableSet`: analytic sets are null-measurable for finite Borel measures
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Complex.Trigonometric
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Trigonometric
 
 /-!
 # Kuramoto order parameter
@@ -14,6 +15,8 @@ The Kuramoto order parameter for `N` oscillators with phases `θ : Fin N → ℝ
 Each oscillator contributes a unit phasor `exp (i θ_k)`, and the main result is the
 bound `‖R‖ ≤ 1` where `R = (∑_k exp (i θ_k)) / N`.
 -/
+
+@[expose] public section
 
 open Complex Finset
 

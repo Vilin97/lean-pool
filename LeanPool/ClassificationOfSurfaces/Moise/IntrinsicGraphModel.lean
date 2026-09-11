@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
-import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
+public import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
 
 /-!
 # A conforming plane model of an intrinsic replacement graph
@@ -16,6 +18,8 @@ turns all replacement edges into one plane graph complex.  The original embeddin
 transferred to that plane complex and the ordinary plane one-skeleton approximation theorem can
 be applied at an arbitrary tolerance.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

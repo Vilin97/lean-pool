@@ -3,7 +3,9 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import LeanPool.SetTheory.ElementaryEmbedding
+module
+
+public import LeanPool.SetTheory.ElementaryEmbedding
 
 /-!
 # The Kunen inconsistency theorem
@@ -11,6 +13,8 @@ import LeanPool.SetTheory.ElementaryEmbedding
 This module proves the Kunen inconsistency theorem: there is no nontrivial elementary
 embedding of the universe of sets into itself.
 -/
+
+@[expose] public section
 
 noncomputable section
 

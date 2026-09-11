@@ -3,14 +3,15 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.Basic
-import Mathlib.LinearAlgebra.Matrix.Transvection
-import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.RingTheory.PrincipalIdealDomain
-import Mathlib.Algebra.EuclideanDomain.Int
-import Mathlib.LinearAlgebra.Matrix.Basis
-import Mathlib.LinearAlgebra.Determinant
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Basic
+public import Mathlib.LinearAlgebra.Matrix.Transvection
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.PrincipalIdealDomain
+public import Mathlib.Algebra.EuclideanDomain.Int
+public import Mathlib.LinearAlgebra.Matrix.Basis
+public import Mathlib.LinearAlgebra.Determinant
 
 /-!
 # Diagonal Coset Representatives for GL_n Hecke Ring
@@ -37,6 +38,8 @@ representative (elementary divisor theorem / Smith normal form).
 
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2
 -/
+
+@[expose] public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing Matrix.SpecialLinearGroup
 

@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path.Continuation
-import LeanPool.JacobianDiffgeo.Forms.MDifferential
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+public import LeanPool.JacobianDiffgeo.Forms.MDifferential
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The bridge to honest integrals (CC6)
@@ -24,6 +25,8 @@ Main declarations:
 * `RS.pathIntegral_eq_intervalIntegral` — the single-chart bridge.
 * `RS.pathIntegral_mdifferential` — FTC along a continuous path for `d f`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open IsManifold Metric Set Filter MeasureTheory

@@ -9,15 +9,19 @@ Copyright (c) 2024 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
-import LeanPool.BrauerGroupNew.SkolemNoether
-import Mathlib.RingTheory.SimpleRing.Field
+module
+
+public import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+public import LeanPool.BrauerGroupNew.SkolemNoether
+public import Mathlib.RingTheory.SimpleRing.Field
 
 /-!
 # LeanPool.BrauerGroupNew.DoubleCentralizer
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.DoubleCentralizer`.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,15 +3,16 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import LeanPool.EcTateLean.Algebra.CharP.Basic
-import LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas
-import LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes
-import LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker
-import LeanPool.EcTateLean.Algebra.EllipticCurve.Model
-import LeanPool.EcTateLean.Algebra.Ring.Basic
-import LeanPool.EcTateLean.FieldTheory.PerfectClosure
-import LeanPool.EcTateLean.Init.Data.Int.Lemmas
+public import LeanPool.EcTateLean.Algebra.CharP.Basic
+public import LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas
+public import LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes
+public import LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker
+public import LeanPool.EcTateLean.Algebra.EllipticCurve.Model
+public import LeanPool.EcTateLean.Algebra.Ring.Basic
+public import LeanPool.EcTateLean.FieldTheory.PerfectClosure
+public import LeanPool.EcTateLean.Init.Data.Int.Lemmas
 
 /-!
 # Weierstrass models and singular points for Tate's algorithm
@@ -23,6 +24,8 @@ Main declarations: `Model`, `Model.Field.isSingularPoint_singularPoint`
 Tags: number-theory, elliptic-curves, algebraic-geometry
 MSC: 11G05, 11G07, 14H52
 -/
+
+@[expose] public section
 
 /-!
 This is the foundational layer of the `ec-tate-lean` formalization of Tate's

@@ -3,8 +3,9 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import Mathlib.RingTheory.AdjoinRoot
+public import Mathlib.RingTheory.AdjoinRoot
 
 /-!
 # The quadratic order `O_d` — definition and power basis
@@ -33,6 +34,8 @@ introduced only where it is actually needed (see `Discriminant.lean`). For
 `d ≢ 0, 1 (mod 4)` the object is still a well-defined quadratic `ℤ`-algebra but
 no longer matches the order of discriminant `d`.
 -/
+
+@[expose] public section
 
 open scoped Polynomial
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.IndexTri
-import LeanPool.VirasoroProject.LieVerma
-import LeanPool.VirasoroProject.VirasoroAlgebra
+module
+
+public import LeanPool.VirasoroProject.IndexTri
+public import LeanPool.VirasoroProject.LieVerma
+public import LeanPool.VirasoroProject.VirasoroAlgebra
 
 /-!
 # Verma modules for the Virasoro algebra
@@ -47,6 +49,8 @@ This file defines Verma modules used in Lie algebra representation theory.
 Virasoro algebra, Verma module
 
 -/
+
+@[expose] public section
 
 
 namespace VirasoroProject

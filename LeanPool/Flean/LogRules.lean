@@ -3,17 +3,21 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import Mathlib.Data.Rat.Defs
-import Mathlib.Data.Rat.Floor
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Data.Int.Log
-import LeanPool.Flean.FloatCfg
+module
+
+public import Mathlib.Data.Rat.Defs
+public import Mathlib.Data.Rat.Floor
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Data.Int.Log
+public import LeanPool.Flean.FloatCfg
 
 /-!
 # Logarithmic Properties of Scientific Notation for Floating-Point
 This module proves facts in ℚ about the sizes and properties of
 values like x * b^e where x is in [1, b) and e is an integer.
 -/
+
+@[expose] public section
 
 variable {C : FloatCfg}
 

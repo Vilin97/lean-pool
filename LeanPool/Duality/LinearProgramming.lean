@@ -3,12 +3,16 @@ Copyright (c) 2026 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak
 -/
-import Mathlib.Tactic.Linarith
-import LeanPool.Duality.FarkasSpecial
+module
+
+public import Mathlib.Tactic.Linarith
+public import LeanPool.Duality.FarkasSpecial
 
 /-!
 # LeanPool.Duality.LinearProgramming
 -/
+
+@[expose] public section
 
 /-- Linear program over `F∞` in the standard form (i.e.,
     a system of linear inequalities with nonnegative variables).

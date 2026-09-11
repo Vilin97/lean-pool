@@ -3,18 +3,22 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.QuantumGraph.Nontracial
-import LeanPool.Monlib4.QuantumGraph.Iso
-import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-import LeanPool.Monlib4.QuantumGraph.QamA
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
+module
+
+public import LeanPool.Monlib4.QuantumGraph.Nontracial
+public import LeanPool.Monlib4.QuantumGraph.Iso
+public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.QuantumGraph.QamA
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Spectra
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.QamAExample
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.QamAExample`.
 -/
+
+@[expose] public section
 
 section
 

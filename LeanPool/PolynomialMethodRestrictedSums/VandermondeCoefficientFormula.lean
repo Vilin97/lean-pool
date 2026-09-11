@@ -3,34 +3,35 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Combinatorics.Nullstellensatz
-import Mathlib.Data.Nat.Cast.Field
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Zify
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.Algebra.MvPolynomial.CommRing
-import Mathlib.Algebra.MvPolynomial.Degrees
-import Mathlib.Algebra.MvPolynomial.Variables
-import Mathlib.Algebra.MvPolynomial.Equiv
-import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
-import Mathlib.Algebra.MvPolynomial.Monad
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Finsupp.Multiset
-import Mathlib.Data.Finsupp.Notation
-import Mathlib.Data.Multiset.Basic
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Vandermonde
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.Combinatorics.Enumerative.DoubleCounting
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Data.Pi.Interval
+public import Mathlib.Combinatorics.Nullstellensatz
+public import Mathlib.Data.Nat.Cast.Field
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Zify
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.CommRing
+public import Mathlib.Algebra.MvPolynomial.Degrees
+public import Mathlib.Algebra.MvPolynomial.Variables
+public import Mathlib.Algebra.MvPolynomial.Equiv
+public import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+public import Mathlib.Algebra.MvPolynomial.Monad
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.Finsupp.Multiset
+public import Mathlib.Data.Finsupp.Notation
+public import Mathlib.Data.Multiset.Basic
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Vandermonde
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.Combinatorics.Enumerative.DoubleCounting
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Nat.Choose.Multinomial
+public import Mathlib.Data.Pi.Interval
 
 /-!
 # The Vandermonde coefficient formula
@@ -39,6 +40,8 @@ Lemma 3.1 of Alon-Nathanson-Ruzsa: a closed form for the coefficient of
 `∏ i, X i ^ c i` in `(X 0 + ⋯ + X k) ^ m * ∏_{i > j} (X i - X j)`,
 culminating in `Vandermonde_coefficient_formula`.
 -/
+
+@[expose] public section
 
 open MvPolynomial
 open Finset

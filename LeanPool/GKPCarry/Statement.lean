@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import Mathlib.Data.Nat.Choose.Central
+module
+
+public import Mathlib.Data.Nat.Choose.Central
 
 /-!
 # The Graham--Knuth--Patashnik central-binomial conjecture
@@ -11,6 +13,8 @@ import Mathlib.Data.Nat.Choose.Central
 This file records the conjecture from Exercise 5.112 of *Concrete Mathematics*
 and its restriction to powers of two.  The conjecture itself remains open.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

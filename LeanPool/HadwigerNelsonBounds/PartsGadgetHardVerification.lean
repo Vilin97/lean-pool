@@ -3,17 +3,20 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification0
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification1
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification2
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification3
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification4
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification5
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification6
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification7
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification0
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification1
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification2
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification3
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification4
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification5
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification6
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification7
 
 /-! Aggregated kernel and routing checks for the hard normalized cases. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

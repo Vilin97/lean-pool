@@ -3,8 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Monotone
+public import LeanPool.IsoGraph.Canon.Monotone
 
 /-!
 # Where the search records its leaves
@@ -20,6 +21,8 @@ which leaf is *best*.
   call returns.  Instantiating `P` differently at each use turns this one lemma into the running
   invariant "the incumbent's path does not go down a branch we have not explored yet".
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

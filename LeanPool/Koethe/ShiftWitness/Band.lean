@@ -3,15 +3,17 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.Module.LinearMap.End
-import Mathlib.Algebra.Module.Pi
-import Mathlib.Algebra.Polynomial.Coeff
-import Mathlib.Data.Fintype.Defs
-import Mathlib.Data.Matrix.Diagonal
-import Mathlib.Data.Nat.Notation
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Pencil
+module
+
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.Module.LinearMap.End
+public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.Polynomial.Coeff
+public import Mathlib.Data.Fintype.Defs
+public import Mathlib.Data.Matrix.Diagonal
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.Ring
+public import LeanPool.Koethe.Pencil
 
 /-!
 # Backward shifts and exact polynomial mortality
@@ -19,6 +21,8 @@ import LeanPool.Koethe.Pencil
 The coefficientwise band identity below retains the pencil's independent formal
 variable. It does not deduce polynomial nilpotence from one specialization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

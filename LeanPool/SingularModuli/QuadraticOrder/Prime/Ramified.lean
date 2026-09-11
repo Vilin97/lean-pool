@@ -3,8 +3,9 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
 
 /-!
 # Prime classification, part 4: the ramified case
@@ -30,6 +31,8 @@ reverse direction reduces to *squarefreeness of `polyMod d p`* and transports
 `IsReduced` across `quadraticOrderModPEquivPolyModQuot`, in place of the
 thesis's hand computation. Mathematically the same as Prop 3.2.1.
 -/
+
+@[expose] public section
 
 open Polynomial
 

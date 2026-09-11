@@ -3,20 +3,21 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Factorization.Defs
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Zify
-import Aesop
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Nat.Factorization.Defs
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Zify
+public import Aesop
 
 /-!
 # The r = 3 case of the "13/9 theorem" (Erdős #367 r-full extension)
@@ -37,6 +38,8 @@ The construction fixes a prime `s ≠ 3`, a "seed" `t₀` with `1 ≤ t₀ ≤ s
 The "prime supply" (the existence of infinitely many suitable pairs `(s, t₀)`) is kept as a
 hypothesis and is *not* part of this development.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

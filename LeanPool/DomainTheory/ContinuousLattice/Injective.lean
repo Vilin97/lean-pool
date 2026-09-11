@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Topology.ContinuousMap.T0Sierpinski
-import Mathlib.Topology.ContinuousMap.Basic
-import Mathlib.Topology.Sets.Opens
+public import Mathlib.Topology.ContinuousMap.T0Sierpinski
+public import Mathlib.Topology.ContinuousMap.Basic
+public import Mathlib.Topology.Sets.Opens
 
 /-!
 # Injective spaces (Scott 1972, §1)
@@ -25,6 +26,8 @@ theorem) that every `T₀`-space embeds in a power of the Sierpiński space.
 * `proposition_1_2` … `proposition_1_5` — Scott's Propositions 1.2–1.5.
 * `corollary_1_6`, `corollary_1_7` — Scott's Corollaries 1.6 and 1.7.
 -/
+
+@[expose] public section
 
 /-- Scott's two-point Sierpiński space 𝕆: `Prop` with the Sierpiński topology. -/
 abbrev Sierpinski := Prop

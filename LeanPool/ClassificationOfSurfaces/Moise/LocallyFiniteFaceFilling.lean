@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceExtension
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceExtension
 
 /-!
 # PL fillings of locally finite polygonal face boundaries
@@ -12,6 +14,8 @@ The globally coherent graph replacement gives every maximal face a PL map from t
 triangular frontier onto a simple polygonal circle. Polygonal Schoenflies fills that map by a
 finite PL homeomorphism without changing its shared-edge boundary values.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

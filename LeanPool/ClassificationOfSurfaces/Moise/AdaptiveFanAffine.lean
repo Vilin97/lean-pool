@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
 
 /-!
 # Affine standard-coordinate formulas for adaptive fan faces
@@ -16,6 +18,8 @@ barycentric coordinates is one affine function of the standard planar face coord
 relative Radó weld uses this formula after composing with the inverse-affine pieces of retained
 polygonal filling certificates.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

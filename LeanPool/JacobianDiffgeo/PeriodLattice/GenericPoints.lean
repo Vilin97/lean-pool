@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
-import LeanPool.JacobianDiffgeo.Path.Perturb
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.Data.Fintype.EquivFin
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Membership
+public import LeanPool.JacobianDiffgeo.Path.Perturb
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # Generic points (Forster §21.3)
@@ -22,6 +23,8 @@ nonzero holomorphic form is nonzero off any finite set (openness of the nonvanis
 Main declarations: `RS.isOpen_coeffAt_ne_zero`, `RS.exists_coeffAt_ne_zero_notMem`,
 `RS.exists_genericPoints`, `RS.det_genericMatrix_ne_zero`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

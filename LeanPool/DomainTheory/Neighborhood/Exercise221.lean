@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
-import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
 
 /-!
 # Exercise 2.21 (Scott 1981, PRG-19) — the system `𝒞`, total finite sequences,
@@ -55,6 +56,8 @@ This is the "strong left-to-right bias" Scott describes: `y` is consulted only
 after `x` is known to
 have terminated.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise221
 

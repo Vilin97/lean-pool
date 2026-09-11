@@ -3,21 +3,22 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import Mathlib.NumberTheory.LSeries.PrimesInAP
-import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
-import Mathlib.NumberTheory.Zsqrtd.Basic
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Zify
-import Aesop
+public import Mathlib.NumberTheory.LSeries.PrimesInAP
+public import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
+public import Mathlib.NumberTheory.Zsqrtd.Basic
+public import Mathlib.Tactic.Convert
+public import Mathlib.Tactic.Cases
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Zify
+public import Aesop
 
 /-!
 # Erdős Problem #367: Consecutive Powerful Parts
@@ -41,6 +42,8 @@ All lemmas and theorems are fully proved with no `sorry` statements.
 `#print axioms erdos367` shows only the three standard axioms:
 `propext`, `Classical.choice`, `Quot.sound`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

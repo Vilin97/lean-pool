@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise516
-import Mathlib.Data.Nat.Bits
-import Mathlib.Tactic.Ring
+public import LeanPool.DomainTheory.Neighborhood.Exercise516
+public import Mathlib.Data.Nat.Bits
+public import Mathlib.Tactic.Ring
 
 /-!
 # Exercise 5.16 follow-up (Scott 1981, PRG-19, Lecture V) — the Thue–Morse
@@ -56,6 +57,8 @@ uniqueness lemmas. Overlap-freeness (property (b)) is a self-contained
 word-combinatorics theorem and
 lives in its own module.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise516
 

@@ -3,10 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData0
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetMiddleData0
 
 /-! Aggregation of the generated `Middle` certificate. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

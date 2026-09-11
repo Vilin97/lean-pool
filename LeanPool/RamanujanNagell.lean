@@ -3,9 +3,10 @@ Copyright (c) 2026 Barinder S. Banwait. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Barinder S. Banwait, Xinze Li
 -/
+module
 
-import LeanPool.RamanujanNagell.Basic
-import LeanPool.RamanujanNagell.Helpers
+public import LeanPool.RamanujanNagell.Basic
+public import LeanPool.RamanujanNagell.Helpers
 
 /-!
 # The Ramanujan-Nagell theorem
@@ -17,6 +18,8 @@ Main declarations: `ramanujanNagellExact`
 Tags: number-theory, diophantine-equations, quadratic-integers
 MSC: 11D61, 11D45, 11R11
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

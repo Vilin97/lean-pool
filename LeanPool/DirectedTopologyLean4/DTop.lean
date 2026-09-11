@@ -3,13 +3,17 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.Constructions
-import Mathlib.CategoryTheory.ConcreteCategory.Basic
-import Mathlib.CategoryTheory.Elementwise
+module
+
+public import LeanPool.DirectedTopologyLean4.Constructions
+public import Mathlib.CategoryTheory.ConcreteCategory.Basic
+public import Mathlib.CategoryTheory.Elementwise
 
 /-!
 # LeanPool.DirectedTopologyLean4.DTop
 -/
+
+@[expose] public section
 
 /-
   This file contains the definition of `dTopCat`, the category of directed spaces.

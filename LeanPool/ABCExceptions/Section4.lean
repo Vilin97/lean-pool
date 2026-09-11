@@ -3,11 +3,12 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.NormNum.BigOperators
-import LeanPool.ABCExceptions.ForMathlib.Misc
+public import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Tactic.NormNum.BigOperators
+public import LeanPool.ABCExceptions.ForMathlib.Misc
 
 /-!
 # Section 4
@@ -17,6 +18,8 @@ Currently, we formalise section 4.3 onwards, taking as assumptions the bounds in
 parts of the paper.
 
 -/
+
+@[expose] public section
 
 noncomputable section
 

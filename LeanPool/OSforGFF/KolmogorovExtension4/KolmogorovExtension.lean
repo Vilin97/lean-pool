@@ -3,17 +3,20 @@ Copyright (c) 2026 Rémy Degenne, Peter Pfaffelhuber. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Peter Pfaffelhuber
 -/
+module
 
-import LeanPool.OSforGFF.KolmogorovExtension4.RegularContent
-import Mathlib.MeasureTheory.Constructions.ProjectiveFamilyContent
-import Mathlib.MeasureTheory.Measure.RegularityCompacts
-import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
+public import LeanPool.OSforGFF.KolmogorovExtension4.RegularContent
+public import Mathlib.MeasureTheory.Constructions.ProjectiveFamilyContent
+public import Mathlib.MeasureTheory.Measure.RegularityCompacts
+public import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
 
 /-!
 # Kolmogorov Extension
 
 Auxiliary statements for constructing measures from projective finite-dimensional marginals.
 -/
+
+@[expose] public section
 
 open Set
 

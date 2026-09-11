@@ -3,10 +3,11 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.Certificate
-import Mathlib.Algebra.Field.ZMod          -- Field (ZMod 2) via Fact (Nat.Prime 2)
-import Mathlib.LinearAlgebra.Matrix.Notation -- !![; ] matrix literal notation
+public import LeanPool.Sundogcert.Certificate
+public import Mathlib.Algebra.Field.ZMod          -- Field (ZMod 2) via Fact (Nat.Prime 2)
+public import Mathlib.LinearAlgebra.Matrix.Notation -- !![; ] matrix literal notation
 
 /-!
   Sundogcert/Instance.lean — the concrete executable ZMod 2 instance.
@@ -21,6 +22,8 @@ import Mathlib.LinearAlgebra.Matrix.Notation -- !![; ] matrix literal notation
   (see Certificate.lean). This instance demonstrates the bound's SOUNDNESS and its τ>0 reach,
   NOT general tightness.
 -/
+
+@[expose] public section
 
 open Matrix
 

@@ -3,16 +3,19 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
-import Mathlib.MeasureTheory.Measure.OpenPos
-import Mathlib.Topology.Order.LowerUpperTopology
+public import Mathlib.Analysis.Normed.Order.Lattice
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
+public import Mathlib.MeasureTheory.Measure.OpenPos
+public import Mathlib.Topology.Order.LowerUpperTopology
 
 /-!
 # LeanPool.SardMoreira.MeasureBallSemicontinuous
 -/
+
+@[expose] public section
 
 open MeasureTheory Topology Filter Set Metric
 open scoped NNReal

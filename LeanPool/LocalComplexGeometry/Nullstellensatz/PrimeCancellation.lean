@@ -3,8 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
 
 /-!
 # Cancellation on a prime analytic zero set
@@ -14,6 +15,8 @@ the contracted prime.  If `D * c` vanishes on that prime's local zero set,
 the lower-dimensional prime theorem puts the product in the prime, and
 primality cancels `D`.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

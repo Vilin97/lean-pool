@@ -3,11 +3,12 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Theorem69
-import LeanPool.DomainTheory.Neighborhood.Proposition67
-import LeanPool.DomainTheory.Neighborhood.Lemma615
-import LeanPool.DomainTheory.Neighborhood.Exercise408
+public import LeanPool.DomainTheory.Neighborhood.Theorem69
+public import LeanPool.DomainTheory.Neighborhood.Proposition67
+public import LeanPool.DomainTheory.Neighborhood.Lemma615
+public import LeanPool.DomainTheory.Neighborhood.Exercise408
 
 /-!
 # Lecture VI — Theorem 6.16 (Scott 1981, PRG-19): an initial algebra embeds in
@@ -52,6 +53,8 @@ approximant chains `H`, `G`, `K` (for `h`, `g`, `k`) and the ladder identity `H 
 `I_E` is a fixed
 point. Lemma 6.15 (`trianglelefteq_of_projectionPair`) then closes `D ⊴ E`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

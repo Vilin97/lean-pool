@@ -3,10 +3,11 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.Certificate
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.LinearAlgebra.Matrix.Notation
+public import LeanPool.Sundogcert.Certificate
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!
   Sundogcert/Scaling.lean — the [2m, m] projection-code SCALING family.
@@ -26,6 +27,8 @@ import Mathlib.LinearAlgebra.Matrix.Notation
   bound is loose (it divides by the GLOBAL worst column weight; see Certificate.lean). This
   family demonstrates SOUNDNESS and linear-in-n τ reach, NOT general tightness.
 -/
+
+@[expose] public section
 
 open Matrix
 

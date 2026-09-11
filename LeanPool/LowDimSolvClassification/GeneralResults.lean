@@ -3,22 +3,26 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
-import Mathlib.LinearAlgebra.LinearIndependent.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.Dimension.DivisionRing
-import Mathlib.Algebra.Lie.Basic
-import Mathlib.Algebra.Lie.Solvable
-import Mathlib.Algebra.Lie.Derivation.Basic
-import Mathlib.Algebra.Lie.AdjointAction.Derivation
-import Mathlib.Algebra.Lie.Submodule
-import Mathlib.Algebra.Lie.Ideal
-import Mathlib.Algebra.Lie.Nilpotent
+module
+
+public import Mathlib.LinearAlgebra.LinearIndependent.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.Dimension.DivisionRing
+public import Mathlib.Algebra.Lie.Basic
+public import Mathlib.Algebra.Lie.Solvable
+public import Mathlib.Algebra.Lie.Derivation.Basic
+public import Mathlib.Algebra.Lie.AdjointAction.Derivation
+public import Mathlib.Algebra.Lie.Submodule
+public import Mathlib.Algebra.Lie.Ideal
+public import Mathlib.Algebra.Lie.Nilpotent
 
 /-!
 # LeanPool.LowDimSolvClassification.GeneralResults
 -/
+
+@[expose] public section
 
 ---possible generalizations to commutative rings instead of fields
 

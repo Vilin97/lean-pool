@@ -3,10 +3,12 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import Mathlib.ModelTheory.ElementaryMaps
-import Mathlib.ModelTheory.Semantics
-import Mathlib.Tactic.FinCases
-import LeanPool.SetTheory.SimpAttr
+module
+
+public import Mathlib.ModelTheory.ElementaryMaps
+public import Mathlib.ModelTheory.Semantics
+public import Mathlib.Tactic.FinCases
+public import LeanPool.SetTheory.SimpAttr
 
 /-!
 # Realization machinery for the ZF first-order language
@@ -15,6 +17,8 @@ This module sets up the first-order language `𝓛ZF` of ZF set theory with a si
 membership relation, together with notation and metaprogramming infrastructure for
 building and realizing bounded formulas in models of ZF.
 -/
+
+@[expose] public section
 
 open Lean Parser Elab Term Meta Qq Std FirstOrder.Language
 

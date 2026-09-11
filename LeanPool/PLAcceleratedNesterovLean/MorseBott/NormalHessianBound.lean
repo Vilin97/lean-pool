@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
-import Mathlib.Analysis.InnerProductSpace.Dual
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
+public import Mathlib.Analysis.InnerProductSpace.Dual
 
 /-!
 Copyright (c) 2025. All rights reserved.
@@ -37,6 +38,8 @@ These are equal for C² functions because:
 - Rebjock & Boumal, Corollary 2.17
 - PLMB/HessianPL.lean: `hessian_coercive_on_orthogonal_of_MuPL_impl`
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Submodule InnerProductSpace
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 Tetsuya Ishiu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tetsuya Ishiu
 -/
+module
 
-import Init.Data.Fin.Basic
-import Mathlib.Data.Set.Basic
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Data.Fin.VecNotation
+public import Init.Data.Fin.Basic
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # The version of Fin.snoc for the fixed type.
@@ -27,6 +28,8 @@ import Mathlib.Data.Fin.VecNotation
 - Many theorems that make simp work better are proved.
 
 -/
+
+@[expose] public section
 
 universe u
 

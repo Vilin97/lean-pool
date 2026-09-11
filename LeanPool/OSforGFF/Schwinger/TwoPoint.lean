@@ -3,10 +3,10 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Schwinger.Defs
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Schwinger.Defs
 
 /-!
 ## Schwinger Two-Point Function
@@ -20,6 +20,8 @@ For mollifiers φ_ε (smooth, nonnegative, integral 1, support shrinking to 0):
 
 For the GFF with covariance kernel C, this equals C(x) by `double_mollifier_convergence`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped MeasureTheory

@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
-import Mathlib.Geometry.Manifold.Complex
+public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
+public import Mathlib.Geometry.Manifold.Complex
 
 /-!
 # The linear system `L(D)` and `l(D)` (CC3, D4)
@@ -28,6 +29,8 @@ Deviation from the design doc's listing (noted honestly): `linSysMulEquiv` (the 
 bookkeeping for the two-sided bound is more delicate than the time budget allowed; see the
 final report for the precise missing step. Everything else in §4.7 is proved.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

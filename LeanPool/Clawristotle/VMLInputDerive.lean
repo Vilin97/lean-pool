@@ -3,13 +3,15 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.VMLStructures
-import LeanPool.Clawristotle.Section3
-import LeanPool.Clawristotle.Section4
-import LeanPool.Clawristotle.Section5
-import LeanPool.Clawristotle.Section6
-import LeanPool.Clawristotle.Section7
-import LeanPool.Clawristotle.Section8
+module
+
+public import LeanPool.Clawristotle.VMLStructures
+public import LeanPool.Clawristotle.Section3
+public import LeanPool.Clawristotle.Section4
+public import LeanPool.Clawristotle.Section5
+public import LeanPool.Clawristotle.Section6
+public import LeanPool.Clawristotle.Section7
+public import LeanPool.Clawristotle.Section8
 
 /-!
 # Deriving VMLInput from Concrete Hypotheses
@@ -18,6 +20,8 @@ Constructs a `VMLInput` from a `VMLSteadyState` and `VelocityDecayConditions`,
 then applies the abstract proof chain (Sections 2-8) to derive the main theorem
 `ConcreteTheorem42` with minimal physical hypotheses.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

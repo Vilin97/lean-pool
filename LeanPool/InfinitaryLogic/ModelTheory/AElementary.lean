@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Fragment
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Fragment
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # A-elementarity and the fragment Tarski–Vaught criterion (issue #13 unit 4)
 
@@ -17,6 +19,8 @@ sentence/theory transport. The fragment-relative **Tarski–Vaught criterion**
 universals to full A-elementarity — witnesses are ELEMENTS (semantic parameters), so no
 syntactic substitution enters the induction.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

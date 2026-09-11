@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Multiplication
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Multiplication
 
 /-!
 # Hecke Rings: Module Action
@@ -12,6 +13,8 @@ import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Multiplication
 The module action of `𝕋 P ℤ` on `HeckeModule P ℤ` (formal sums of left cosets) and the faithfulness
 theorem `eq_of_smul_eq_smul_𝕋`.
 -/
+
+@[expose] public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.CountableCompanion
-import LeanPool.InfinitaryLogic.Scott.BackAndForth
-import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.CountableCompanion
+public import LeanPool.InfinitaryLogic.Scott.BackAndForth
+public import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
 /-!
 # The type-preserving back-and-forth (issue #17 chunk 3)
 
@@ -24,6 +26,8 @@ two extensions is `BFEquiv` at EVERY ordinal — one `limitRecOn` induction whos
 `TypeAgree.sameAtomicType` (atomic indices are realizations of atomic `L_{ω₁ω}`-formulas, and
 the substructure inclusion reflects them).
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.IrreducibleStep
+public import LeanPool.GrothendieckVanishing.IrreducibleStep
 
 /-!
 # Grothendieck's vanishing theorem
@@ -22,6 +23,8 @@ of dimension `n` and any sheaf `F` of abelian groups on `X`, `Hⁱ(X, F) = 0` fo
 The dimension-zero base case is proved here; the positive-dimensional irreducible step
 lives in `IrreducibleStep.lean`.
 -/
+
+@[expose] public section
 
 universe u
 

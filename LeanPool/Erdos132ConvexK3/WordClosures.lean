@@ -3,13 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.TerminalCage
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Erdos132ConvexK3.TerminalCage
+public import Lean.Elab.Tactic.Omega
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
 
 /-!
 # Raw geometric exceptional-word closures
@@ -19,6 +21,8 @@ Realization records contain only labelled vertices, distance classes, strict
 quadrilateral and half-plane facts, and pointwise arc partitions.  All degree
 and cardinality bounds are conclusions of the theorems below.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

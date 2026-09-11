@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityFinal
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityFinal
 
 /-!
 # Packaged monotonicity routes
@@ -15,6 +17,8 @@ These declarations are internal scaffolding for the proof architecture.  User
 code should normally import `MainTheorem.lean` or `API.lean` instead of relying
 on a particular route theorem in this file.
 -/
+
+@[expose] public section
 
 noncomputable section
 

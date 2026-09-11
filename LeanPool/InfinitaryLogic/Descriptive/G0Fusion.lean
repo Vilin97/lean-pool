@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.GSGraph
-import LeanPool.InfinitaryLogic.Descriptive.G0Dichotomy
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.GSGraph
+public import LeanPool.InfinitaryLogic.Descriptive.G0Dichotomy
+public import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Fusion for the `G₀`-dichotomy: level objects and edge bookkeeping
@@ -37,6 +39,8 @@ tower (`exists_fusionStage_zero`, `exists_fusionStage_succ`, `fusionTower`) and 
 extraction `exists_gsGraph_hom` — the classical `G₀`-dichotomy construction completing
 Silver's theorem.
 -/
+
+@[expose] public section
 
 open Set Function MeasureTheory
 

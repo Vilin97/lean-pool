@@ -3,16 +3,19 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
-import Mathlib.Combinatorics.Quiver.Arborescence
-import LeanPool.FiniteGraphFundamentalGroup.Realization
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+public import Mathlib.Combinatorics.Quiver.Arborescence
+public import LeanPool.FiniteGraphFundamentalGroup.Realization
 
 /-!
 # Contraction of a directed tree realization
 
 This module constructs cellwise contraction data from the unique paths in an arborescence.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver

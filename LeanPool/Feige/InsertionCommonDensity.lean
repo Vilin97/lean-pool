@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.FiniteSignedExp
+module
+
+public import LeanPool.Feige.FiniteSignedExp
 
 /-!
 # Common densities on insertion edges
@@ -13,6 +15,8 @@ scaled exponential and every unchanged high coordinate contributes a
 negative scaled exponential.  This file packages those factors and applies
 the finite-convolution TP2 theorem to the common part of any genuine edge.
 -/
+
+@[expose] public section
 
 namespace Feige
 namespace LikelihoodRatio

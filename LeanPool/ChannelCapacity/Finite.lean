@@ -3,15 +3,17 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.ChannelCapacity.Capacity
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
-import Mathlib.MeasureTheory.Measure.Count
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.Probability.ProbabilityMassFunction.Basic
-import Mathlib.Topology.ContinuousMap.Bounded.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+module
+
+public import LeanPool.ChannelCapacity.Capacity
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
+public import Mathlib.MeasureTheory.Measure.Count
+public import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
+public import Mathlib.MeasureTheory.Measure.Prokhorov
+public import Mathlib.Probability.ProbabilityMassFunction.Basic
+public import Mathlib.Topology.ContinuousMap.Bounded.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 
 /-!
 # ChannelCapacity.Finite
@@ -23,6 +25,8 @@ Shannon entropy gives an explicit formula for mutual information, so continuity 
 concavity can be proved internally without passing abstract topology or semicontinuity hypotheses
 through the public theorem statement.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

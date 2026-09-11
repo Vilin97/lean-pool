@@ -3,13 +3,16 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Algebra.GCDMonoid.Finset
-import Mathlib.RingTheory.Coprime.Lemmas
+public import Mathlib.Algebra.GCDMonoid.Finset
+public import Mathlib.RingTheory.Coprime.Lemmas
 
 /-!
 # Pairwise coprimality
 -/
+
+@[expose] public section
 
 
 /-- A predicate stating that the given tuple's numbers are pairwise coprime. -/

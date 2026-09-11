@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Avoidance
-import LeanPool.AndersonConjecture.Jensen.KrullDomain.HeightBound
-import Mathlib.Data.Finsupp.Encodable
-import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Avoidance
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.HeightBound
+public import Mathlib.Data.Finsupp.Encodable
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
 
 /-!
 # Krull Domain Intersection for Two-Generator Close-Up
@@ -15,6 +17,8 @@ Given coprime y₁, y₂ in an N-subring R and c ∈ (y₁,y₂)T ∩ R,
 construct an A-extension S with c ∈ (y₁,y₂)S via the intersection
 Rbar = R[x₁, y₂⁻¹] ∩ R[x₂, y₁⁻¹] where c = x₁y₁ + x₂y₂.
 -/
+
+@[expose] public section
 
 noncomputable section
 

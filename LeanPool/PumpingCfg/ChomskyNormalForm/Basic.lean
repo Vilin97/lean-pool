@@ -3,8 +3,10 @@ Copyright (c) 2024 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
-import Mathlib.Computability.ContextFreeGrammar
-import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
+module
+
+public import Mathlib.Computability.ContextFreeGrammar
+public import LeanPool.PumpingCfg.ChomskyNormalForm.ContextFreeGrammarExtras
 
 /-!
 # Chomsky Normal Form Grammars
@@ -20,6 +22,8 @@ pair of nonterminals.
 ## Main theorems
 * `Language.toCFG_correct`: `g.toCFG` generates the same language a a context-free grammar `g`.
 -/
+
+@[expose] public section
 
 universe uT uN
 

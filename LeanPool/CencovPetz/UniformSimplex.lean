@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.Simplex
-import LeanPool.CencovPetz.Uniform
+module
+
+public import LeanPool.CencovPetz.Simplex
+public import LeanPool.CencovPetz.Uniform
 
 
 /-!
@@ -12,6 +14,8 @@ import LeanPool.CencovPetz.Uniform
 
 Package the uniform distribution on a finite type as a point of the open simplex.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

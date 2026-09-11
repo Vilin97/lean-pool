@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Data.Nat.Sqrt
-import Mathlib.Data.Nat.Pairing
-import Mathlib.Computability.Partrec
+public import Mathlib.Data.Nat.Sqrt
+public import Mathlib.Data.Nat.Pairing
+public import Mathlib.Computability.Partrec
 
 /-!
 # A choice-free recursion theory for Lecture VII (Scott 1981, PRG-19)
@@ -47,6 +48,8 @@ pairing round-trips (`unpair_pair'`, `pair_unpair'`) choice-free here.
 
 Everything in this file is `⊆ {propext, Quot.sound}`.
 -/
+
+@[expose] public section
 
 namespace Domain.Recursive
 

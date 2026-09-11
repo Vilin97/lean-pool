@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
 
 /-!
 # Lyapunov Contraction Step 2: Normal Terms and Perturbation Absorption
@@ -22,6 +23,8 @@ f(x') - (1-a)(f(x')-f(x)) - a(f(x')-f⋆) = (1-a)(f(x)-f⋆)
 Since u_{n+1} = w_n + √μ' ξ_n:
   ½‖u_{n+1}‖² = ½‖w_n‖² + √μ'⟨w_n, ξ_n⟩ + (μ'/2)‖ξ_n‖²
 -/
+
+@[expose] public section
 
 noncomputable section
 

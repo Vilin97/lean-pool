@@ -3,12 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.MeasureTheory.Integral.CircleAverage
-import Mathlib.Topology.MetricSpace.ProperSpace.Lemmas
-import Mathlib.Topology.Order.Compact
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
+module
+
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.MeasureTheory.Integral.CircleAverage
+public import Mathlib.Topology.MetricSpace.ProperSpace.Lemmas
+public import Mathlib.Topology.Order.Compact
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Positivity
 
 /-!
 # Sub-mean-value functions on `ℂ` and maximum principles
@@ -24,6 +26,8 @@ the strong maximum principle on connected opens, and the boundary comparison
 principle on bounded opens. All are elementary consequences of the circle
 average inequality and a clopen argument.
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory Real
 

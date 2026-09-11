@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
-import Mathlib.FieldTheory.Separable
+public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+public import Mathlib.FieldTheory.Separable
 
 /-!
 # Polynomial rigidity on simple finite fibers
@@ -16,6 +17,8 @@ vanishes at every root of a separable monic polynomial of degree `d` is zero.
 This file packages that fact for the coefficient-vector convention used by
 Weierstrass division.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

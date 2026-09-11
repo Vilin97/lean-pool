@@ -3,8 +3,9 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.Injectivity
+public import LeanPool.CriticalPortraits.Injectivity
 
 /-!
 # Surjectivity of `T` via the balance forest `β` (Part II of the bijection).
@@ -41,6 +42,8 @@ NOW FULLY PROVED (no remaining `sorry`):
   `beta_portrait`, `T_surjOn`) is therefore complete: SURJECTIVITY of `T` (all `d`) is proved.
   Axioms: `{propext, Classical.choice, Quot.sound}` (no `sorryAx`, no `native_decide`).
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits
 

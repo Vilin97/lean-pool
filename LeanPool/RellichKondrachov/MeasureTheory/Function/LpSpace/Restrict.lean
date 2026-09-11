@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!
 # `RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict`
@@ -28,6 +29,8 @@ given by extension-by-zero (via `Set.indicator`).
 - `MeasureTheory.Lp.extendByZeroₗ`
 - `MeasureTheory.Lp.extendByZeroₗᵢ`
 -/
+
+@[expose] public section
 
 namespace MeasureTheory
 

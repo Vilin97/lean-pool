@@ -3,8 +3,10 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+module
+
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 
 /-!
 # Core Definitions for the Vlasov-Maxwell-Landau System
@@ -14,6 +16,8 @@ structure, and the `FlatTorus3` typeclass. Also provides `@[simp]` unfolding lem
 small auxiliary lemmas about the definitions. Derived FlatTorus3 lemmas are in
 `FlatTorus3Lemmas.lean`.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

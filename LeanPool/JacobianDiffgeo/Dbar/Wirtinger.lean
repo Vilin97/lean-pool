@@ -3,15 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
-import Mathlib.Analysis.Calculus.FDeriv.Add
-import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.FDeriv.Congr
-import Mathlib.Analysis.Calculus.ContDiff.Defs
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Topology.Algebra.Support
+public import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
+public import Mathlib.Analysis.Calculus.FDeriv.Add
+public import Mathlib.Analysis.Calculus.FDeriv.Mul
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+public import Mathlib.Analysis.Calculus.FDeriv.Congr
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.Complex.CauchyIntegral
+public import Mathlib.Topology.Algebra.Support
 
 /-!
 # Wirtinger derivatives and the Cauchy–Riemann bridge
@@ -31,6 +32,8 @@ project imports, no manifold variables, so downstream planar consumers (`planar-
 * Regularity of the operator: `contDiffOn_wirtingerDbar`, `continuous_wirtingerDbar`,
   `hasCompactSupport_wirtingerDbar`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff
 

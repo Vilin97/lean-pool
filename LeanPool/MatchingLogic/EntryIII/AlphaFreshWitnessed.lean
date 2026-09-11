@@ -8,14 +8,18 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 Whether the gap between ordinary and fresh witnessedness survives the
 proof-theoretic alpha bridge.
 -/
-import LeanPool.MatchingLogic.EntryIII.Conclusion
-import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic.FinCases
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Conclusion
+public import LeanPool.MatchingLogic.EntryIII.WitnessedCollapse
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Tactic.FinCases
 
 /-!
 # MatchingLogic.EntryIII.AlphaFreshWitnessed
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

@@ -3,20 +3,21 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
+module
 
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.Data.Int.CardIntervalMod
-import Mathlib.Data.Nat.ChineseRemainder
-import Mathlib.Data.ZMod.QuotientRing
-import Mathlib.NumberTheory.Bertrand
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.NumberTheory.EulerProduct.Basic
-import Mathlib.NumberTheory.Harmonic.Bounds
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Analysis.PSeries
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.Data.Int.CardIntervalMod
+public import Mathlib.Data.Nat.ChineseRemainder
+public import Mathlib.Data.ZMod.QuotientRing
+public import Mathlib.NumberTheory.Bertrand
+public import Mathlib.NumberTheory.Chebyshev
+public import Mathlib.NumberTheory.EulerProduct.Basic
+public import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-!
 # Improved Long Gaps Between Primes
@@ -32,6 +33,8 @@ The main results are `short_translates` (Proposition 1.2) and
 `long_gap_theorem` (Theorem 1.1). The proof uses weak Mertens estimates,
 κ = 1/8, and a larger fixed constant in the auxiliary smoothness cutoff.
 -/
+
+@[expose] public section
 
 namespace LongGapsBetweenPrimes
 noncomputable section

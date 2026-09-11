@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoveRealization
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoveRealization
 
 /-!
 # The Gallier--Xu Dyck rewrite
@@ -18,6 +20,8 @@ presentations. The isomorphism exchanges the retained copy of `a` with the fresh
 reverses the former. The side words `U`, `V`, and `X` must not use `a`; this is exactly the
 side-condition available when the displayed two darts are the two occurrences of an inner edge.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

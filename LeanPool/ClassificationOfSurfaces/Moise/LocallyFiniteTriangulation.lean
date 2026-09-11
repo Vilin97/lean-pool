@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
-import Mathlib.Topology.Compactness.LocallyFinite
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
+public import Mathlib.Topology.Compactness.LocallyFinite
 
 /-!
 # Locally finite triangle complexes
@@ -25,6 +27,8 @@ Hausdorff space, local finiteness makes the face type finite; the no-junk-vertic
 makes the vertex type finite, and finite closed pasting produces the required homeomorphism from
 the canonical barycentric realization.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

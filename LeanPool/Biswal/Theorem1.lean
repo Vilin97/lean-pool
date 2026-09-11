@@ -3,27 +3,28 @@ Copyright (c) 2026 jjaassoonn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jjaassoonn
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
-import Mathlib.Data.Int.Star
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Polynomial.HilbertPoly
-import Mathlib.RingTheory.PowerSeries.Inverse
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Topology.Algebra.Polynomial
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
+public import Mathlib.Data.Int.Star
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.Polynomial.HilbertPoly
+public import Mathlib.RingTheory.PowerSeries.Inverse
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Topology.Algebra.Polynomial
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Push
+public import Mathlib.Tactic.Ring
 
 /-!
 # Positivity of generating-function coefficients (Theorem 1)
@@ -33,6 +34,8 @@ paper: the coefficients of the generating function attached to a partition are
 eventually positive, built from a Chebyshev-type polynomial recurrence and a
 Dyck-path model.
 -/
+
+@[expose] public section
 
 namespace Biswal.Theorem1
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Statement.Definitions
-import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
-import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
+public import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
 
 /-!
 # The MCM half-space packet
@@ -26,6 +27,8 @@ and `M_k(s) = T_k(s)^(2^k+1) / s^(2^k)` for the MCM map, the main identities are
   character, and has half the elements of `K`;
 * consequently sums over `Δ` are half-space sums weighted by `1 + ψ(s)`.
 -/
+
+@[expose] public section
 
 open Finset
 

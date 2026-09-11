@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseGraphApproximation
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseGraphApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
 
 /-!
 # Cellwise extension of a close intrinsic graph approximation
@@ -14,6 +16,8 @@ This file applies polygonal Schoenflies face by face to the arbitrarily close gr
 from `IntrinsicCloseGraphApproximation`.  The proofs parallel the first intrinsic cellwise
 construction, but the boundary map is now the second, metrically controlled graph replacement.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,8 +3,10 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevBridge
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevBridge
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
 
 /-!
 # Stationarity bridge for the monotonicity theorem
@@ -15,6 +17,8 @@ Its first-variation field is now the paper-facing
 compactly supported `C¹` tests. It bridges to the custom `WeakStationaryIn Du Ω`
 interface used by the proved monotonicity theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

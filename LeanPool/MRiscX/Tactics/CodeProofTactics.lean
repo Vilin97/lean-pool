@@ -3,23 +3,26 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
+module
 
-import Lean.Elab.Tactic.Basic
-import LeanPool.MRiscX.AbstractSyntax.Map
-import LeanPool.MRiscX.Semantics.MsTheory
-import LeanPool.MRiscX.Util.BasicTheorems
-import LeanPool.MRiscX.Hoare.HoareCore
-import LeanPool.MRiscX.Tactics.SplitLastSeq
-import LeanPool.MRiscX.Tactics.ApplySpec
-import LeanPool.MRiscX.Tactics.GeneralCustomTactics
+public import Lean.Elab.Tactic.Basic
+public import LeanPool.MRiscX.AbstractSyntax.Map
+public import LeanPool.MRiscX.Semantics.MsTheory
+public import LeanPool.MRiscX.Util.BasicTheorems
+public import LeanPool.MRiscX.Hoare.HoareCore
+public import LeanPool.MRiscX.Tactics.SplitLastSeq
+public import LeanPool.MRiscX.Tactics.ApplySpec
+public import LeanPool.MRiscX.Tactics.GeneralCustomTactics
 
-import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+public import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 
 /-!
 # CodeProofTactics
 
 This module provides tactics for discharging MRiscX code-proof goals.
 -/
+
+@[expose] public section
 
 open Lean Meta Elab Parser Tactic RCases
 

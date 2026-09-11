@@ -3,13 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
-import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
-import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
-import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.Framework
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+public import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+public import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.Framework
 
 /-!
 # Generalized Winding Number at Right Edge Points
@@ -17,6 +18,8 @@ import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.Framework
 Proves `generalizedWindingNumber' (fdBoundaryH H) 0 5 s = -1/2` for points `s`
 on the right vertical edge of the fundamental domain (`s.re = 1/2`, `√3/2 < s.im < H`).
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm

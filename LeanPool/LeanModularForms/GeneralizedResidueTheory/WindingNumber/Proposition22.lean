@@ -3,16 +3,17 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Analysis.Calculus.Deriv.Inverse
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.FDeriv.Linear
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Analysis.Calculus.Deriv.Inverse
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.MeanValue
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+public import Mathlib.Analysis.Calculus.FDeriv.Linear
 
 /-!
 # Proposition 2.2: Finite Crossings and Isolated Crossing Intervals
@@ -33,6 +34,8 @@ are isolated. At partition points, one-sided derivative limits are nonzero, whic
 also gives isolation on each side via strict monotonicity of a real projection.
 The crossing set is closed and has no accumulation points, hence finite by compactness.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

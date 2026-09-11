@@ -3,12 +3,15 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.FiniteCombinatorics
+public import LeanPool.Wallace.FiniteCombinatorics
 
 /-!
 # Transport of bounded independence through injective homomorphisms
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

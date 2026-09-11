@@ -3,7 +3,9 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import LeanPool.SetTheory.Ordinals
+module
+
+public import LeanPool.SetTheory.Ordinals
 
 /-!
 # The first infinite ordinal in models of ZF
@@ -11,6 +13,8 @@ import LeanPool.SetTheory.Ordinals
 This module develops the theory of `ω` and the natural numbers inside a von Neumann model
 of ZF, providing the infinitary tools needed for the Kunen inconsistency argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 

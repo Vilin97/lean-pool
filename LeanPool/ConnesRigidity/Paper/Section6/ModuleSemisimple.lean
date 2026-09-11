@@ -9,14 +9,18 @@ Concrete semisimplicity of the first quotient module in Zhou §6.
 The proof decomposes the actual action into the tensor summand and the
 trivial `C` summand, rather than treating the paper input as an opaque field.
 -/
-import Mathlib.Data.FunLike.Fintype
-import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.RingTheory.PicardGroup
-import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
+module
+
+public import Mathlib.Data.FunLike.Fintype
+public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+public import Mathlib.RingTheory.PicardGroup
+public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
 
 /-!
 The module semisimple component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperModuleSemisimple

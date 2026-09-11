@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.KrullDomain.UFDConstruction
-import Mathlib.Algebra.Polynomial.Cardinal
-import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
-import Mathlib.RingTheory.SimpleRing.Principal
+module
+
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.UFDConstruction
+public import Mathlib.Algebra.Polynomial.Cardinal
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.SimpleRing.Principal
 
 /-!
 # Krull domain intersection construction
@@ -17,6 +19,8 @@ the intersection is a Noetherian UFD whose primes have height
 at most one in T, using well-founded descent on heights and the
 mod-principal transcendence argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 

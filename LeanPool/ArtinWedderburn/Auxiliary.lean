@@ -3,12 +3,14 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.Algebra.Field.Defs
-import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.Algebra.Ring.Idempotent
-import Mathlib.RingTheory.NonUnitalSubring.Defs
-import Mathlib.Tactic.NoncommRing
+module
+
+public import Mathlib.RingTheory.Artinian.Ring
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.RingTheory.SimpleRing.Basic
+public import Mathlib.Algebra.Ring.Idempotent
+public import Mathlib.RingTheory.NonUnitalSubring.Defs
+public import Mathlib.Tactic.NoncommRing
 
 /-!
 # Division subrings and division rings
@@ -17,6 +19,8 @@ Defines `IsDivisionSubring` and `IsDivisionRing`, supplies the conversion to
 Mathlib's `DivisionRing`, and shows that an isomorphism of rings transports the
 division-ring property.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

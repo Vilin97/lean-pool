@@ -3,14 +3,15 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
-import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughInjectives
-import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Sheaf
-import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
-import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
-import Mathlib.Topology.Sheaves.Skyscraper
-import LeanPool.GrothendieckVanishing.ClosedImmersion
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
+public import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughInjectives
+public import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Sheaf
+public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
+public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
+public import Mathlib.Topology.Sheaves.Skyscraper
+public import LeanPool.GrothendieckVanishing.ClosedImmersion
 
 /-!
 # Sheaf Cohomology API
@@ -60,6 +61,8 @@ calculations internal so downstream files never need to unfold `Sheaf.H` directl
 * `sheafH_dimension_shift_X₃_of_locallySurjective`: reverse dimension shift for locally
   surjective morphisms
 -/
+
+@[expose] public section
 
 universe w' w v u
 

@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Surface.Bridges
-import LeanPool.JacobianDiffgeo.Surface.RealSmooth
-import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
-import LeanPool.JacobianDiffgeo.Surface.Identity
-import LeanPool.JacobianDiffgeo.Surface.InverseFunction
+public import LeanPool.JacobianDiffgeo.Surface.Bridges
+public import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+public import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
+public import LeanPool.JacobianDiffgeo.Surface.Identity
+public import LeanPool.JacobianDiffgeo.Surface.InverseFunction
 
 /-!
 # surfaces-and-charts: foundation unit for Riemann surfaces (namespace `RS`)
@@ -36,3 +37,5 @@ API summary (see `docs/design/surfaces-and-charts.md`):
   (+ `_of_mfderiv_ne_zero`, `mfderiv_ne_zero_iff_deriv_ne_zero`,
   `map_nhds_eq_of_deriv_ne_zero`).
 -/
+
+@[expose] public section

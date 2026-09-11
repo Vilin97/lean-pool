@@ -3,9 +3,11 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.DemazureProduct.AspPerm
-import LeanPool.DemazureProduct.Valley
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+module
+
+public import LeanPool.DemazureProduct.AspPerm
+public import LeanPool.DemazureProduct.Valley
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # Submodular slipfaces
@@ -15,6 +17,8 @@ uses this to define the operations $\star$, $\triangleleft$, and $\triangleright
 It corresponds roughly to Section 4 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 

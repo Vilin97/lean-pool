@@ -3,8 +3,10 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.NewtonianPotential
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
+module
+
+public import LeanPool.Clawristotle.NewtonianPotential
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-!
 # Flux Integrability and Measurability Helpers for Coulomb
@@ -12,6 +14,8 @@ import Mathlib.MeasureTheory.SpecificCodomains.Pi
 Proves integrability of the Landau collision flux, Schwartz partial decay,
 and AEStronglyMeasurability of flux components for the Coulomb kernel.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

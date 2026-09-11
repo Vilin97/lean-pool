@@ -3,10 +3,11 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
 
 /-!
 # Frobenius as a group endomorphism of the Fermat cubic, and its kernel
@@ -34,6 +35,8 @@ module provides.
 at infinity `ptInf a`, or an affine Fermat point `pt w t`.  This is what lets
 the two charts of `FermatCubic` be used exhaustively.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.PointFrobenius
 

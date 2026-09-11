@@ -3,23 +3,24 @@ Copyright (c) 2026 Daniel Smania. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Smania
 -/
+module
 
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Analysis.Convex.SpecificFunctions.Pow
-import Mathlib.Analysis.InnerProductSpace.NormPow
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import LeanPool.Burkholder.Majorants.Definitions
-import LeanPool.Burkholder.Majorants.MajorantPL2
-import LeanPool.Burkholder.Majorants.MajorantPG2
-import LeanPool.Burkholder.Majorants.MajorantPEq2
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Analysis.Convex.Deriv
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
+public import Mathlib.Analysis.InnerProductSpace.NormPow
+public import Mathlib.Analysis.MeanInequalities
+public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.Ring
+public import LeanPool.Burkholder.Majorants.Definitions
+public import LeanPool.Burkholder.Majorants.MajorantPL2
+public import LeanPool.Burkholder.Majorants.MajorantPG2
+public import LeanPool.Burkholder.Majorants.MajorantPEq2
 
 /-!
 # Burkholder majorants: existence of the special function
@@ -27,6 +28,8 @@ import LeanPool.Burkholder.Majorants.MajorantPEq2
 Assembles the regime-by-regime constructions into the existence of a Burkholder
 majorant for every exponent `p > 1`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

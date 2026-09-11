@@ -3,7 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.ComputableRSeq
+module
+
+public import LeanPool.ComputableReal.ComputableRSeq
 
 /-!
 # The quotient field of interval-Cauchy sequences
@@ -14,6 +16,8 @@ field, and linear order structures. The ring operations are executable interval
 arithmetic; inversion and the comparison `Decidable` instances go through the
 classical `ComputableℝSeq.sign` and are `noncomputable`.
 -/
+
+@[expose] public section
 
 /-- Computable reals, defined as the quotient of ComputableℝSeq sequences -- sequences with
   Cauchy sequences of lower and upper bounds that converge to the same value -- by the equivalence

@@ -3,9 +3,10 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import Mathlib.Data.Fin.Basic
-import Mathlib.GroupTheory.Perm.Basic
+public import Mathlib.Data.Fin.Basic
+public import Mathlib.GroupTheory.Perm.Basic
 
 /-!
   CANONICAL DELETION OF THE BOUNDARY PAIR
@@ -25,6 +26,8 @@ import Mathlib.GroupTheory.Perm.Basic
   The full deleteAdjacent is then:
     rotate to (0,1) → contractZeroOne → rotate back (if needed)
 -/
+
+@[expose] public section
 
 namespace SemicircleCore
 

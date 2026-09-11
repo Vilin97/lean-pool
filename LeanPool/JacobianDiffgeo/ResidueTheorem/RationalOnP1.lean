@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-import Mathlib.MeasureTheory.Integral.CircleAverage
+public import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
+public import Mathlib.MeasureTheory.Integral.CircleAverage
 
 /-!
 # residue-theorem: the `ℙ¹` base case — atoms (file 1/1, PARTIAL DELIVERY)
@@ -76,6 +77,8 @@ notes for the next attempt; none of it is included here as code because it was w
 now-known-insufficient `Differentiable ℂ R_mid` hypothesis and would need re-threading through
 whichever fix is chosen.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Real Complex MeasureTheory

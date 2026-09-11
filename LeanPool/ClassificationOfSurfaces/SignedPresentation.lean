@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CellComplex
-import Mathlib.Data.Fintype.EquivFin
+module
+
+public import LeanPool.ClassificationOfSurfaces.CellComplex
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # Finite signed-dart presentations
@@ -18,6 +20,8 @@ The construction uses only `Dart`, `inv`, finiteness, and the involution laws. I
 does not trust the stored vertex endpoints. This is the combinatorial input needed before cyclic
 boundary-word moves can be stated independently of a presentation's original edge names.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

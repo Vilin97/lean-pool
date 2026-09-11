@@ -3,10 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.LogIrrationality
-import Mathlib.NumberTheory.DiophantineApproximation.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.Egrs75.LogIrrationality
+public import Mathlib.NumberTheory.DiophantineApproximation.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 EGRS75 two-prime — THE DIOPHANTINE SEED (paper condition (2)), 2026-06-12.
@@ -38,6 +39,8 @@ No `native_decide`, no `axiom`, no `sorry`.  Formalizes part of the KNOWN
 theorem EGRS75 (1975); three primes is Erdős #376 (OPEN) — not attempted.
 Recon: ~/Knowledge/Construct/recon/erdos_376.md.
 -/
+
+@[expose] public section
 
 namespace Egrs75.SeedWindow
 

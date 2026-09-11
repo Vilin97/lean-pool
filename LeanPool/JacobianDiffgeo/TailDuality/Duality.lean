@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.TailDuality.Counting
+public import LeanPool.JacobianDiffgeo.TailDuality.Counting
 
 /-!
 # Miranda Lemma 3.6, the surjectivity endgame, and Serre duality (serre-duality-tails)
@@ -29,6 +30,8 @@ facts proved elementarily (no Čech `H1`/cochain machinery: `H1Tail D` being a l
 `alphaL D`, not a colimit, makes both a DFinsupp/Submodule bookkeeping argument). See that file's
 own docstring for the full account. riemann-roch (#28) now consumes `chiT`'s own ledger directly.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

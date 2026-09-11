@@ -3,14 +3,18 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import Lean
+module
+
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public import Lean
 
 /-!
 # HandleExpr
 
 This module provides helpers reflecting Lean `Expr`s into MRiscX data.
 -/
+
+@[expose] public section
 open Lean Meta Elab
 
 /-

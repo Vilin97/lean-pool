@@ -3,16 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Probability.CDF
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-import Mathlib.MeasureTheory.Constructions.UnitInterval
+public import Mathlib.Probability.CDF
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile`.
 -/
+
+@[expose] public section
 
 
 namespace MeasureTheory

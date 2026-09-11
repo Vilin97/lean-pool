@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness`
@@ -20,6 +21,8 @@ Finiteness properties of `riemannianVolumeMeasure`.
 - `RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure_isFiniteMeasure`:
   on a compact manifold, the total volume is finite.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

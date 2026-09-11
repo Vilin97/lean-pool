@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
-import LeanPool.LocalComplexGeometry.FiniteProjection.Main
-import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
-import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
+public import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
+public import LeanPool.LocalComplexGeometry.FiniteProjection.Main
+public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
 
 /-!
 # Palomar-facing theorem surface
@@ -17,6 +18,8 @@ elementary definition of a holomorphic germ.  The implementation-specific
 coordinate, quotient-basis, and local-biholomorphism structures remain in the
 proof development and are eliminated from the public statement surface.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

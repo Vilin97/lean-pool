@@ -3,14 +3,17 @@ Copyright (c) 2026 Fernando Portela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fernando Portela, Google DeepMind
 -/
+module
 
-import LeanPool.KrafftSieve.OptimalWeights
+public import LeanPool.KrafftSieve.OptimalWeights
 
 
 /-!
 # Main Theorem
 
 -/
+
+@[expose] public section
 
 namespace KrafftSieve
 

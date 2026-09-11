@@ -3,16 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Data.Sigma.Order
-import Mathlib.Order.OmegaCompletePartialOrder
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sigma
+public import Mathlib.Data.Sigma.Order
+public import Mathlib.Order.OmegaCompletePartialOrder
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sigma
 
 /-!
 # LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma`.
 -/
+
+@[expose] public section
 
 
 namespace OmegaCompletePartialOrder.Sigma

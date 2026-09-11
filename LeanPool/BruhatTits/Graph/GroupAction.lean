@@ -3,8 +3,10 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Graph.Graph
-import LeanPool.BruhatTits.Utils.GraphAction
+module
+
+public import LeanPool.BruhatTits.Graph.Graph
+public import LeanPool.BruhatTits.Utils.GraphAction
 
 /-!
 # Group actions on the Bruhat-Tits graph
@@ -23,6 +25,8 @@ In this file we equip the Bruhat-Tits graph with group actions of `GL₂(K)` and
   the subgroup of `GL₂(R)` that is upper triangular modulo `ϖ ^ n`.
 
 -/
+
+@[expose] public section
 
 open Module
 

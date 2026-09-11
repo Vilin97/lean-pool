@@ -8,11 +8,15 @@ Authors: ruplet
 -- ∀ {X Y : str}, X + Y = Y + X
 -- However, the proof was done using leanstral and is very verbose
 -- Please see V0.lean for the manually written foundations.
-import LeanPool.FormalizationOfBoundedArithmetic.V0
+module
+
+public import LeanPool.FormalizationOfBoundedArithmetic.V0
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
 -/
+
+@[expose] public section
 
 variable {num str : Type} [M : V0ExtModel num str]
 open FirstOrder Language

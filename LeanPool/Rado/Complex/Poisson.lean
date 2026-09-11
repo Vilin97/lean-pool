@@ -3,9 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Complex.SubMean
-import Mathlib.Analysis.Complex.Poisson
-import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
+module
+
+public import LeanPool.Rado.Complex.SubMean
+public import Mathlib.Analysis.Complex.Poisson
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 
 /-!
 # Existence for the Dirichlet problem on a disk
@@ -36,6 +38,8 @@ Mathlib anchors (pinned commit `905b9581`):
   (`Mathlib/Analysis/InnerProductSpace/Harmonic/`,
   `Mathlib/Analysis/Complex/Harmonic/`).
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Real
 

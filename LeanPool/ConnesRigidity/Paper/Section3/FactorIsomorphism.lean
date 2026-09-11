@@ -5,12 +5,16 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
 
 /-!
 Algebraic part of Zhou §3 for the concrete tensor kernel, including the
 quadratic fiber shear and its characteristic-two involutivity.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFactorIsomorphism

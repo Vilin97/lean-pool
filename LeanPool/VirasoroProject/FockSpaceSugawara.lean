@@ -3,9 +3,11 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.FockSpace
-import LeanPool.VirasoroProject.Sugawara
-import LeanPool.VirasoroProject.VirasoroVerma
+module
+
+public import LeanPool.VirasoroProject.FockSpace
+public import LeanPool.VirasoroProject.Sugawara
+public import LeanPool.VirasoroProject.VirasoroVerma
 
 /-!
 # Sugawara construction applied to the charged Fock space
@@ -42,6 +44,8 @@ construction.
 Heisenberg algebra, Fock space, Virasoro algebra, Sugawara construction
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

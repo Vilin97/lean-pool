@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
-import Mathlib.Data.Set.Image
+public import LeanPool.DomainTheory.Neighborhood.Approximable
+public import Mathlib.Data.Set.Image
 
 /-!
 # Lecture II (§2) — Exercises 2.8–2.12 and 2.19 (the algebra of approximable
@@ -42,6 +43,8 @@ the two
 `eq_of_…`/uniqueness lemmas decide membership by `by_cases` and are therefore
 classical, exactly like
 `ext_of_toElementMap`. -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.TailDuality.TailOps
-import LeanPool.JacobianDiffgeo.TailDuality.Pairing
-import LeanPool.JacobianDiffgeo.TailDuality.Counting
-import LeanPool.JacobianDiffgeo.TailDuality.Duality
-import LeanPool.JacobianDiffgeo.TailDuality.ChiLedger
+public import LeanPool.JacobianDiffgeo.TailDuality.TailOps
+public import LeanPool.JacobianDiffgeo.TailDuality.Pairing
+public import LeanPool.JacobianDiffgeo.TailDuality.Counting
+public import LeanPool.JacobianDiffgeo.TailDuality.Duality
+public import LeanPool.JacobianDiffgeo.TailDuality.ChiLedger
 
 /-!
 # serre-duality-tails: Serre duality via Laurent tails (Miranda VI.3) (namespace `RS.TailDuality`)
@@ -97,3 +98,5 @@ a finite-dimensional space).
   restating at the tail level (through `H1Tail`, not `Cech.H1`) or needs to accept the
   conditional equivalence as a hypothesis.
 -/
+
+@[expose] public section

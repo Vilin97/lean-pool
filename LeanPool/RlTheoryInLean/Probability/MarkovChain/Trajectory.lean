@@ -3,24 +3,28 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Probability.ConditionalProbability
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
-import Mathlib.Probability.Kernel.Defs
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Order.Interval.Finset.Defs
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.Probability.Process.Filtration
-import Mathlib.Topology.Bornology.Basic
+module
 
-import LeanPool.RlTheoryInLean.Defs
-import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
-import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
-import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.Probability.ConditionalProbability
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+public import Mathlib.Probability.Kernel.Defs
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Order.Interval.Finset.Defs
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.Probability.Process.Filtration
+public import Mathlib.Topology.Bornology.Basic
+
+public import LeanPool.RlTheoryInLean.Defs
+public import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
+public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
+public import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
 
 /-!
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
 -/
+
+@[expose] public section
 
 open RLTheory
 open MeasureTheory MeasureTheory.Measure Filtration

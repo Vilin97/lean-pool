@@ -3,12 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.OS.Axioms
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.OS.Axioms
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 
 /-!
 # OS0 — Analyticity of the Generating Functional
@@ -42,6 +42,8 @@ L(t) = Z[f_re + t·f_im] and R(t) = exp(-½ Q(t)), show L = R on ℝ (from
 
 - `gaussianFreeField_satisfies_OS0`
 -/
+
+@[expose] public section
 
 noncomputable section
 

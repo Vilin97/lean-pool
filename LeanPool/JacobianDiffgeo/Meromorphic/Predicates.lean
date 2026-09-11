@@ -3,13 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Analysis.Meromorphic.Basic
-import Mathlib.Analysis.Meromorphic.Order
-import Mathlib.Analysis.Meromorphic.IsolatedZeros
-import LeanPool.JacobianDiffgeo.Surface.Bridges
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+public import Mathlib.Analysis.Meromorphic.Basic
+public import Mathlib.Analysis.Meromorphic.Order
+public import Mathlib.Analysis.Meromorphic.IsolatedZeros
+public import LeanPool.JacobianDiffgeo.Surface.Bridges
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
 
 /-!
 # Meromorphic predicates and orders on a Riemann surface (CC3, chart layer)
@@ -26,6 +27,8 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.1)
   statement about `f` near `x` to a statement about the chart composite near `chartAt ℂ x x`
   (and back); every other transport lemma in this file is a one-line specialization of it.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

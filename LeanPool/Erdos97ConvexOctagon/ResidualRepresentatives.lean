@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.Radius
+public import LeanPool.Erdos97ConvexOctagon.Radius
 
 /-! # Thirteen explicit candidate incidence representatives
 
@@ -12,6 +13,8 @@ The word “residual” is a historical label from exploratory computation. This
 module defines the systems exactly but makes no claim that they exhaust all
 normalized, balanced, pair-sparse incidence systems.
 -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

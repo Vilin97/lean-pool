@@ -3,39 +3,40 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Basic
-import LeanPool.QuasiBorelSpaces.Chain
-import LeanPool.QuasiBorelSpaces.Cont
-import LeanPool.QuasiBorelSpaces.Defs
-import LeanPool.QuasiBorelSpaces.ENNReal
-import LeanPool.QuasiBorelSpaces.Finset
-import LeanPool.QuasiBorelSpaces.FlatReal
-import LeanPool.QuasiBorelSpaces.Functor
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.IsHomDiagonal
-import LeanPool.QuasiBorelSpaces.Lift
-import LeanPool.QuasiBorelSpaces.List
-import LeanPool.QuasiBorelSpaces.MeasureTheory
-import LeanPool.QuasiBorelSpaces.Multiset
-import LeanPool.QuasiBorelSpaces.Nat
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder
-import LeanPool.QuasiBorelSpaces.OmegaHom
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-import LeanPool.QuasiBorelSpaces.Option
-import LeanPool.QuasiBorelSpaces.Pi
-import LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
-import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
-import LeanPool.QuasiBorelSpaces.Prod
-import LeanPool.QuasiBorelSpaces.Prop
-import LeanPool.QuasiBorelSpaces.Quotient
-import LeanPool.QuasiBorelSpaces.Rose
-import LeanPool.QuasiBorelSpaces.RoseTree
-import LeanPool.QuasiBorelSpaces.SeparatesPoints
-import LeanPool.QuasiBorelSpaces.Sigma
-import LeanPool.QuasiBorelSpaces.Subtype
-import LeanPool.QuasiBorelSpaces.Sum
-import LeanPool.QuasiBorelSpaces.UnitInterval
+public import LeanPool.QuasiBorelSpaces.Basic
+public import LeanPool.QuasiBorelSpaces.Chain
+public import LeanPool.QuasiBorelSpaces.Cont
+public import LeanPool.QuasiBorelSpaces.Defs
+public import LeanPool.QuasiBorelSpaces.ENNReal
+public import LeanPool.QuasiBorelSpaces.Finset
+public import LeanPool.QuasiBorelSpaces.FlatReal
+public import LeanPool.QuasiBorelSpaces.Functor
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.IsHomDiagonal
+public import LeanPool.QuasiBorelSpaces.Lift
+public import LeanPool.QuasiBorelSpaces.List
+public import LeanPool.QuasiBorelSpaces.MeasureTheory
+public import LeanPool.QuasiBorelSpaces.Multiset
+public import LeanPool.QuasiBorelSpaces.Nat
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder
+public import LeanPool.QuasiBorelSpaces.OmegaHom
+public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import LeanPool.QuasiBorelSpaces.Option
+public import LeanPool.QuasiBorelSpaces.Pi
+public import LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
+public import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
+public import LeanPool.QuasiBorelSpaces.Prod
+public import LeanPool.QuasiBorelSpaces.Prop
+public import LeanPool.QuasiBorelSpaces.Quotient
+public import LeanPool.QuasiBorelSpaces.Rose
+public import LeanPool.QuasiBorelSpaces.RoseTree
+public import LeanPool.QuasiBorelSpaces.SeparatesPoints
+public import LeanPool.QuasiBorelSpaces.Sigma
+public import LeanPool.QuasiBorelSpaces.Subtype
+public import LeanPool.QuasiBorelSpaces.Sum
+public import LeanPool.QuasiBorelSpaces.UnitInterval
 
 /-!
 # Quasi-Borel Spaces
@@ -47,6 +48,8 @@ Main declarations: `QuasiBorelSpace`, `OmegaQuasiBorelSpace`, `QuasiBorelSpace.P
 Tags: probability, category-theory, measure-theory, denotational-semantics
 MSC: 60A05, 18C50, 68Q55
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

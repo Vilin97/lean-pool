@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
-import LeanPool.InfinitaryLogic.Lomega1omega.CountableIndex
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+public import LeanPool.InfinitaryLogic.Lomega1omega.CountableIndex
 /-!
 # Realized-type isolators (issue #17 chunk 1)
 
@@ -24,6 +26,8 @@ relation symbols, no relationality assumption. The characterization:
 
   `realize_isolatingFormula_iff : χ_p.Realize Empty.elim a ↔ infinitaryType M a = p`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

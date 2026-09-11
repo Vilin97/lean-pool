@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import Mathlib.Topology.Path
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import Mathlib.Topology.Path
 
 /-!
 # Bridge coercions from PiecewiseC1Curve to mathlib Path / ContinuousMap
@@ -13,6 +14,8 @@ import Mathlib.Topology.Path
 We provide `PiecewiseC1Curve.toPath` and `PiecewiseC1Curve.toContinuousMap` that
 rescale the domain `[a,b]` to the unit interval `[0,1]` via `iccHomeoI`.
 -/
+
+@[expose] public section
 
 open Complex Set Topology unitInterval
 

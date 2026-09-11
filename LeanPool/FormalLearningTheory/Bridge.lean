@@ -3,14 +3,16 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Learner
-import LeanPool.FormalLearningTheory.Criterion
-import LeanPool.FormalLearningTheory.Complexity
-import LeanPool.FormalLearningTheory.Computation
-import Mathlib.Combinatorics.SetFamily.Shatter
-import Mathlib.Data.ENat.Lattice
+module
+
+public import LeanPool.FormalLearningTheory.Basic
+public import LeanPool.FormalLearningTheory.Data
+public import LeanPool.FormalLearningTheory.Learner
+public import LeanPool.FormalLearningTheory.Criterion
+public import LeanPool.FormalLearningTheory.Complexity
+public import LeanPool.FormalLearningTheory.Computation
+public import Mathlib.Combinatorics.SetFamily.Shatter
+public import Mathlib.Data.ENat.Lattice
 
 /-!
 # Bridge Types: Connecting to Mathlib and Across Paradigms
@@ -28,6 +30,8 @@ paradigm-specific types:
 | B₆ | WithTop ℕ | Ordinal | Embedding (ℕ∞ ↪ Ordinal) |
 | B₇ | BatchLearner ↔ GoldLearner | Cross-paradigm | No common parent (BP₁) |
 -/
+
+@[expose] public section
 
 universe u v
 

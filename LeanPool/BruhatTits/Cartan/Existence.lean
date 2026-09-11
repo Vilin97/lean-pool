@@ -3,13 +3,15 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Utils.RingHom
-import LeanPool.BruhatTits.Utils.Matrix
-import LeanPool.BruhatTits.Utils.Misc
-import LeanPool.BruhatTits.Utils.ValuationRings
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.IsDiag
-import Mathlib.LinearAlgebra.Matrix.Transvection
+module
+
+public import LeanPool.BruhatTits.Utils.RingHom
+public import LeanPool.BruhatTits.Utils.Matrix
+public import LeanPool.BruhatTits.Utils.Misc
+public import LeanPool.BruhatTits.Utils.ValuationRings
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.Matrix.IsDiag
+public import Mathlib.LinearAlgebra.Matrix.Transvection
 
 /-!
 
@@ -33,6 +35,8 @@ Only from line 628 onwards we specialize to DVRs.
 This is inspired by the file https://leanprover-community.github.io/mathlib4_docs/Mathlib/LinearAlgebra/Matrix/Transvection.html.
 
 -/
+
+@[expose] public section
 
 open Module
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
 
 /-!
 # dolbeault-comparison: Leray's theorem and the Dolbeault comparison (namespaces `RS`, `RS.Cech`,
@@ -42,3 +43,5 @@ API summary (see `docs/design/dolbeault-comparison.md`). Zero sorries throughout
 No Weyl lemma, no elliptic regularity, no harmonic theory anywhere: the only PDE fact ever
 consumed is dbar-solvability's `exists_dbar_solution_chart_ball`/disk acyclicity.
 -/
+
+@[expose] public section

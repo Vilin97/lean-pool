@@ -3,8 +3,10 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.Algebra.NonUnitalSubalgebra
-import LeanPool.Koethe.Linearization.Pencil
+module
+
+public import Mathlib.Algebra.Algebra.NonUnitalSubalgebra
+public import LeanPool.Koethe.Linearization.Pencil
 
 /-!
 # Nilness of the positive algebra from nilness of all root-row pencils
@@ -19,6 +21,8 @@ adding scalar/identity edges: besides linearizing `x`, it proves that left
 multiplication by `x` preserves linearizability. At a generator this is the
 `prepend` construction; the multiplication step is then composition.
 -/
+
+@[expose] public section
 
 noncomputable section
 

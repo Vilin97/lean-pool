@@ -3,13 +3,15 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Data.Finite.Prod
-import Mathlib.Data.Fintype.Powerset
+module
 
-import LeanPool.LeanModelChecking.LTLNBWStatement
-import LeanPool.LeanModelChecking.LTLNNF
-import LeanPool.LeanModelChecking.NNFABW
-import LeanPool.LeanModelChecking.ABWNBW
+public import Mathlib.Data.Finite.Prod
+public import Mathlib.Data.Fintype.Powerset
+
+public import LeanPool.LeanModelChecking.LTLNBWStatement
+public import LeanPool.LeanModelChecking.LTLNNF
+public import LeanPool.LeanModelChecking.NNFABW
+public import LeanPool.LeanModelChecking.ABWNBW
 
 /-!
 # Every LTL formula has an equivalent finite-state Büchi automaton
@@ -21,6 +23,8 @@ from the construction: the alternating automaton's states are subformulas of
 the (negation normal form of the) input formula, and the Miyano–Hayashi
 breakpoint construction squares that state space to pairs of subsets.
 -/
+
+@[expose] public section
 
 namespace LeanModelChecking
 

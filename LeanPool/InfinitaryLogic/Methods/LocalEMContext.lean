@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
-import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
-import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Order.Filter.Finite
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
+public import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
+public import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
+public import Mathlib.Order.Filter.AtTopBot.Basic
+public import Mathlib.Order.Filter.Finite
 
 /-!
 # The local EM context, layer 1: deep interpretation and realize bridges
@@ -45,6 +47,8 @@ file stays EM-free.
 Next layers (subsequent chunks): the `skolemNeedSymbol` witness-term transport and the
 family-membership-carrying restricted truth lemma.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

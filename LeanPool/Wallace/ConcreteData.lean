@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.BlockFilters
-import LeanPool.Wallace.TransfiniteExtension
+public import LeanPool.Wallace.BlockFilters
+public import LeanPool.Wallace.TransfiniteExtension
 
 /-!
 # Concrete triangular data and block-density ultrafilters
@@ -19,6 +20,8 @@ free block-density ultrafilter for every code.
 The choices here are entirely set-theoretic.  No topology on the free group and no character is
 assumed.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

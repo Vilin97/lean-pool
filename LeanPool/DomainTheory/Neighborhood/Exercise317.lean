@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example23
-import LeanPool.DomainTheory.Neighborhood.Exercise316
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Example23
+public import LeanPool.DomainTheory.Neighborhood.Exercise316
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
 
 /-!
 # Exercise 3.17 (Scott 1981, PRG-19, §3) — `B` is a retract of `T^∞`
@@ -42,6 +43,8 @@ non-empty. `f ∘ g ⊑ I_{T^∞}` (`fg_le_id`) holds because re-encoding a deco
 element can only lose
 the post-gap information. Hence `f` is one-one (`f_injective`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise317
 

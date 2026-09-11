@@ -3,28 +3,31 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import Mathlib.Data.Matrix.Basic
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.Ring.RingNF
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Polyrith
+public import Mathlib.Data.Matrix.Basic
+public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

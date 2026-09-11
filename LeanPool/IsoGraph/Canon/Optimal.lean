@@ -3,9 +3,10 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Branch
-import LeanPool.IsoGraph.Canon.Orbits
+public import LeanPool.IsoGraph.Canon.Branch
+public import LeanPool.IsoGraph.Canon.Orbits
 
 /-!
 # The search misses nothing
@@ -35,6 +36,8 @@ The other pieces:
 * `stopDepth` measures how far down the returning state actually vouches for: the whole subtree if
   it returned normally, only the part above the backjump target if it asked to jump.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

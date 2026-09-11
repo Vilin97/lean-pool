@@ -3,12 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import LeanPool.InfinitaryLogic.Lomega1omega.FirstOrderImage
-import Mathlib.ModelTheory.Satisfiability
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Fintype.EquivFin
+module
+
+public import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+public import LeanPool.InfinitaryLogic.Lomega1omega.FirstOrderImage
+public import Mathlib.ModelTheory.Satisfiability
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # The HF fragment (issue #18)
@@ -36,6 +38,8 @@ returns Mathlib's canonical model in `Type (max u v)`.  The compatibility theore
 **Not built on the legacy structures.**  `AdmissibleFragmentCore.hf := Set.univ` is a quarantined
 placeholder; nothing here uses it, and nothing here may be proved from it.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

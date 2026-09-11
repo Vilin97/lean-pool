@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
-import LeanPool.InfinitaryLogic.Methods.LocalEMSmall
-import LeanPool.InfinitaryLogic.Methods.LocalEMCardinality
-import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveExistence
-import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+module
+
+public import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
+public import LeanPool.InfinitaryLogic.Methods.LocalEMSmall
+public import LeanPool.InfinitaryLogic.Methods.LocalEMCardinality
+public import LeanPool.InfinitaryLogic.Methods.HighlyTransitiveExistence
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
 /-!
 # Small models of every infinite size: the countable-symbol core (issue #11 unit 7a)
 
@@ -26,6 +28,8 @@ mixin-satisfying intermediate that itself realizes `φ` and carries the pairwise
 realized types (`lomega1omegaSmall` on the `localColim` reduct, descended to the seed language
 by `Lomega1omegaSmall.of_expansion`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

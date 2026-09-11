@@ -3,13 +3,16 @@ Copyright (c) 2026 Óscar Álvarez Sánchez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Óscar Álvarez Sánchez
 -/
+module
 
-import LeanPool.DemazureOperatorsLean.StrongExchange
-import Init.Data.List.Erase
+public import LeanPool.DemazureOperatorsLean.StrongExchange
+public import Init.Data.List.Erase
 
 /-!
 # LeanPool.DemazureOperatorsLean.Matsumoto
 -/
+
+@[expose] public section
 
 namespace CoxeterSystem
 noncomputable section

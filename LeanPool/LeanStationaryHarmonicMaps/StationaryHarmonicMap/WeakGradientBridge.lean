@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
 
 /-!
 # Weak-gradient bridge
@@ -13,6 +15,8 @@ distributional name.  The test functions are bundled with their `C¹`, compact
 support, and support-in-domain data, so future mathlib distribution/test-function
 work has a single interface to refine.
 -/
+
+@[expose] public section
 
 noncomputable section
 

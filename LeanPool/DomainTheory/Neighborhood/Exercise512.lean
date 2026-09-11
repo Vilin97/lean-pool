@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Theorem41
-import LeanPool.DomainTheory.Neighborhood.Exercise326
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
+public import LeanPool.DomainTheory.Neighborhood.Exercise326
 
 /-!
 # Exercise 5.12 (Scott 1981, PRG-19, §5) — the `while` combinator
@@ -54,6 +55,8 @@ Everything is choice-free in spirit; the only classical input is inherited from
 `cond`/`T`
 (Example 1.2) and the project's `Element.ext` / `ext_of_toElementMap` machinery.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise512
 

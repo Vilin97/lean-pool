@@ -3,10 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
-import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
-import Mathlib.Analysis.Meromorphic.NormalForm
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
+public import Mathlib.Analysis.Meromorphic.NormalForm
 
 /-!
 # residue-theorem: the `ℙ¹` base case, assembled
@@ -35,6 +36,8 @@ key honesty input making the `∞`-chart congruences legitimate for a RAW repres
 `coeffAt_infty_eq` (the two-chart `compat` identity, valid POINTWISE on `ℂ \ {0}`), which also
 forces `R` to be honestly analytic near `∞`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Real Complex MeasureTheory

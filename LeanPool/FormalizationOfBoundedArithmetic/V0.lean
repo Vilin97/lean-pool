@@ -18,26 +18,29 @@ Authors: ruplet
 --    long term, this will be necessary. For now, this is probably weeks
 --    of work which we can skip until making sure that we'll get to any
 --    interesting result at all
+module
 
-import Lean.Elab.Command
+public import Lean.Elab.Command
 
-import Mathlib.ModelTheory.Basic
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Complexity
-import Mathlib.Tactic.SimpRw
+public import Mathlib.ModelTheory.Basic
+public import Mathlib.ModelTheory.Syntax
+public import Mathlib.ModelTheory.Complexity
+public import Mathlib.Tactic.SimpRw
 
-import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
-import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
-import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
-import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-import LeanPool.FormalizationOfBoundedArithmetic.Complexity
-import LeanPool.FormalizationOfBoundedArithmetic.Algebra
-import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
-import LeanPool.FormalizationOfBoundedArithmetic.Register
+public import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
+public import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
+public import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
+public import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
+public import LeanPool.FormalizationOfBoundedArithmetic.Complexity
+public import LeanPool.FormalizationOfBoundedArithmetic.Algebra
+public import LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
+public import LeanPool.FormalizationOfBoundedArithmetic.Register
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.V0
 -/
+
+@[expose] public section
 
 open FirstOrder Language
 open HasTypesIs

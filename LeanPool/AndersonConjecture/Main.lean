@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Jensen
-import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
+module
+
+public import LeanPool.AndersonConjecture.Jensen.Jensen
+public import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
 
 /-!
 # Main Theorem: WQC Does Not Imply QC
@@ -15,6 +17,8 @@ with completion T = ℂ[[x,y,z]]/(x²-yz)
 Anderson's theorems
 reduce the problem to a quotient that fails weak quasi-completeness.
 -/
+
+@[expose] public section
 
 noncomputable section
 

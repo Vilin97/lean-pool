@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Geometry
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Erdos132ConvexK3.Geometry
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
 
 /-!
 # The shared-diameter lens
@@ -19,6 +21,8 @@ The P5-1 correction is explicit in the theorem statement: the lower point
 `P = (X,Y)` must satisfy `|Ps|² ≤ d₁²`.  Convexity supplies `Y < 0`, but it
 does not by itself supply `0 < X < 2c`; the diameter bound does.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.Defs
-import LeanPool.CompositionAlgebras.OctonionModule
-import Mathlib.Algebra.Quaternion
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+module
+
+public import LeanPool.CompositionAlgebras.Composition.Defs
+public import LeanPool.CompositionAlgebras.OctonionModule
+public import Mathlib.Algebra.Quaternion
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 
 /-!
@@ -48,6 +50,8 @@ They are assembled here from the distributivity and unit lemmas already proved t
 
 Substrate, and the non-vacuity witness for `Composition/Defs.lean`'s class.
 -/
+
+@[expose] public section
 
 noncomputable section
 

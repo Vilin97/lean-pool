@@ -3,8 +3,9 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.GroupTheory.SemidirectProduct
+public import Mathlib.GroupTheory.SemidirectProduct
 
 /-!
 # Permutation wreath products
@@ -17,6 +18,8 @@ reindexing, so that
 
 Unlike `RegularWreathProduct`, the action of `Q` on `ι` need not be regular.
 -/
+
+@[expose] public section
 
 namespace Saxl
 

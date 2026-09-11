@@ -3,20 +3,23 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel
-import Mathlib.Algebra.Algebra.Hom
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.RingTheory.SimpleRing.Defs
-import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
-import Mathlib.RingTheory.TwoSidedIdeal.Operations
+public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Kernel
+public import Mathlib.Algebra.Algebra.Hom
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.RingTheory.SimpleRing.Defs
+public import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
 
 /-!
 # LeanPool.BrauerGroupNew.TwoSidedIdeal
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.TwoSidedIdeal`.
 -/
+
+@[expose] public section
 
 variable {M : Type*} [AddCommMonoid M] (r : AddCon M) {ι : Type*} (s : Finset ι)
 variable {R : Type*} [Ring R] (t : TwoSidedIdeal R)

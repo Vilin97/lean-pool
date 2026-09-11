@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Clausen
+public import LeanPool.Chudnovsky.Clausen
 
 /-!
 # The Picard–Fuchs differential equation
@@ -28,6 +29,8 @@ which bypasses the Picard–Fuchs equation entirely and proves the chapter-8 out
 `SatisfiesPicardFuchs` is used downstream (by `Kummer.lean`); the paper's chapter-7 existence
 theorem for the periods is not needed on the main chain and is omitted here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

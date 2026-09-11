@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
-import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
+public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
 
 /-!
 # On-Curve Capture Lemmas
@@ -21,6 +22,8 @@ point is captured by one of the singular sets `sArcOfS S` or `sVertOfS S`.
 * `oncurve_seg4_capture` — seg4 points (t ∈ (3,4)) land in `sVertOfS S` via T-periodicity
 * `oncurve_full_capture` — full assembly for all t ∈ [0,5]
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

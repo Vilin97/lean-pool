@@ -21,11 +21,15 @@ copy only would break Lemma 11 at `ψ = σ`.  The uniform clause below reproduce
 this automatically: the unmixedness condition `∀ j, (A j).2 = p.2` is vacuous
 when the arity is `0`, so both copies are populated.
 -/
-import LeanPool.MatchingLogic.Locality
+module
+
+public import LeanPool.MatchingLogic.Locality
 
 /-!
 # MatchingLogic.DoubleCover
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.PermutationInvariance
-import LeanPool.CencovPetz.UniformSimplex
+module
+
+public import LeanPool.CencovPetz.PermutationInvariance
+public import LeanPool.CencovPetz.UniformSimplex
 
 
 /-!
@@ -15,6 +17,8 @@ permutations (equivalences) of the underlying finite type.
 
 This is a technical step towards the finite Čencov uniqueness theorem.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

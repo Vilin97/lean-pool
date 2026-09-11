@@ -3,14 +3,14 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.Topology.Algebra.Module.Multilinear.Basic
+public import Mathlib.Analysis.Complex.OperatorNorm
 
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Topology.Algebra.Module.Multilinear.Basic
-import Mathlib.Analysis.Complex.OperatorNorm
-
-import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.Basic
 
 /-!
 ## Complex Test Function Linearity
@@ -35,6 +35,8 @@ and their pairings with field configurations.
 These results are essential for proving bilinearity of Schwinger functions
 and other quantum field theory constructions.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory
 

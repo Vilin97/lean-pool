@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Table55
+public import LeanPool.DomainTheory.Neighborhood.Table55
 
 /-!
 # Lecture V (§5) — Theorem 5.1 (Scott 1981, PRG-19)
@@ -43,6 +44,8 @@ subterms `σᵢ` are already approximable.
 This module collects the five closure facts as concrete lemmas; everything is
 **choice-free**.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

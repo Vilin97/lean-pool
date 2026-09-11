@@ -3,11 +3,12 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.IFT
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.InnerProductSpace.Calculus
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.IFT
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 Copyright (c) 2025. All rights reserved.
@@ -18,6 +19,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Proof that `fderiv ℝ π m = V.starProjection` at each `m ∈ S`, and
 the main theorem assembling all 10 properties of the projection.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric NNReal
 

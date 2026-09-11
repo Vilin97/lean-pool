@@ -8,11 +8,15 @@ Authors: Utensil Song
 The acting-group generators of the two concrete Zhou crossed-product models.
 Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.GroupFactor
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.GroupFactor
 
 /-!
 The group quotient component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperGroupQuotient

@@ -3,13 +3,17 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import Lean
+module
+
+public import Lean
 
 /-!
 # TacticUtil
 
 This module provides small utilities shared by the MRiscX tactics.
 -/
+
+@[expose] public section
 open Lean Meta
 
 /-- Find the type of the local hypothesis named `n` in `ctx`, if present. -/

@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+module
+
+public import Mathlib.Analysis.Convex.StdSimplex
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-!
 # The full-dimensional model of the standard simplex
@@ -19,6 +21,8 @@ This file records the elementary geometry needed to state the simplex
 halfspace argument: the simplex, its centroid, and the value at that centroid
 of the linear functional determined by a coefficient vector.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 

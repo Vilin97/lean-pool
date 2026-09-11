@@ -3,9 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.MatchingNPHard
-import Mathlib.Data.Fintype.EquivFin
+public import LeanPool.Sundogcert.MatchingNPHard
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
   Sundogcert/ThreeDMReindex.lean — MILESTONE 5 of the `3SAT ≤ 3DM` marathon: the GENERIC
@@ -39,6 +40,8 @@ import Mathlib.Data.Fintype.EquivFin
 
   Axiom-clean (`decide`/`native_decide` never used).  Expect the standard classical trio.
 -/
+
+@[expose] public section
 
 open Finset
 open Sundog.MatchingNPHard

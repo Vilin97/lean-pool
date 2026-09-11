@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
-import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
-import Mathlib.LinearAlgebra.Dual.Lemmas
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Nondegeneracy
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # Full rank and the `IsZLattice` discharge (Forster 21.4(c) shell, §6.6)
@@ -26,6 +27,8 @@ The `IsZLattice` instance-shaped discharge is gated exactly as `Discreteness.lea
 Main declarations: `RS.span_real_periodSubgroup`, `RS.isZLattice_periodSubgroup_topologicalClosure`,
 `RS.finrank_int_periodSubgroup`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

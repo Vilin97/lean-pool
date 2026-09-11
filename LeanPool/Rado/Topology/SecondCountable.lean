@@ -3,9 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import Mathlib.Topology.Bases
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Topology.LocalAtTarget
+module
+
+public import Mathlib.Topology.Bases
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Topology.LocalAtTarget
 
 /-!
 # Second-countability helpers
@@ -22,6 +24,8 @@ Point-set topology preliminaries for the Poincaré–Volterra lemma
 
 All statements are pure topology, independent of the rest of the development.
 -/
+
+@[expose] public section
 
 open Set Topology
 

@@ -3,10 +3,11 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.CopyLemma
-import LeanPool.ZhangYeungInequality.Delta
-import LeanPool.ZhangYeungInequality.Prelude
+public import LeanPool.ZhangYeungInequality.CopyLemma
+public import LeanPool.ZhangYeungInequality.Delta
+public import LeanPool.ZhangYeungInequality.Prelude
 
 /-!
 # The Zhang-Yeung inequality (Theorem 3)
@@ -85,6 +86,8 @@ Shannon entropy, mutual information, non-Shannon information inequality, Zhang-Y
 data
 processing
 -/
+
+@[expose] public section
 
 namespace ZhangYeung
 

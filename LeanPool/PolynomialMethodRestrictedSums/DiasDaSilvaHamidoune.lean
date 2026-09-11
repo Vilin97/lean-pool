@@ -3,15 +3,16 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Common
-import Aesop
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
-import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Set
+public import Mathlib.Tactic.Common
+public import Aesop
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.Nat.Choose.Basic
+public import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+public import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
 
 
 /-!
@@ -23,6 +24,8 @@ sums of `s` distinct elements of a subset of `ZMod p`.
 The main theorem of this file was originally proved by Aristotle
 (Lean v4.24.0, project request uuid 7257b62c-6371-4fa8-a5b5-ea19029f0f1f).
 -/
+
+@[expose] public section
 
 open MvPolynomial
 

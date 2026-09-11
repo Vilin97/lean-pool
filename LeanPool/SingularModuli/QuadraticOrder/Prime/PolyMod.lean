@@ -3,17 +3,18 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Basic
-import Mathlib.Algebra.QuadraticDiscriminant
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.ZMod.QuotientRing
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.NumberTheory.LegendreSymbol.Basic
-import Mathlib.Algebra.Polynomial.SpecificDegree
-import Mathlib.Algebra.Polynomial.RingDivision
-import Mathlib.Algebra.Squarefree.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+public import LeanPool.SingularModuli.QuadraticOrder.Basic
+public import Mathlib.Algebra.QuadraticDiscriminant
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.ZMod.QuotientRing
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.NumberTheory.LegendreSymbol.Basic
+public import Mathlib.Algebra.Polynomial.SpecificDegree
+public import Mathlib.Algebra.Polynomial.RingDivision
+public import Mathlib.Algebra.Squarefree.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 
 /-!
 # Prime classification, part 1: the reduced polynomial `polyMod d p`
@@ -43,6 +44,8 @@ iso), `Inert.lean`, `Split.lean`, and `Ramified.lean`.
 **Note.** This file also carries the shared Mathlib import block for the whole
 `Prime/` directory; the other `Prime/*` files import this one and inherit it.
 -/
+
+@[expose] public section
 
 open Polynomial
 

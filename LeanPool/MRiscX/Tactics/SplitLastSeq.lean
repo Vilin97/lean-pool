@@ -3,20 +3,24 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import Lean.Elab.Tactic.Basic
-import LeanPool.MRiscX.Hoare.HoareCore
-import LeanPool.MRiscX.AbstractSyntax.Instr
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import LeanPool.MRiscX.Elab.HandleNumOrIdent
-import LeanPool.MRiscX.Elab.HandleExpr
-import LeanPool.MRiscX.Tactics.TacticUtil
-import Mathlib.Data.Set.Basic
+module
+
+public import Lean.Elab.Tactic.Basic
+public import LeanPool.MRiscX.Hoare.HoareCore
+public import LeanPool.MRiscX.AbstractSyntax.Instr
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+public import LeanPool.MRiscX.Elab.HandleExpr
+public import LeanPool.MRiscX.Tactics.TacticUtil
+public import Mathlib.Data.Set.Basic
 
 /-!
 # SplitLastSeq
 
 This module provides a tactic splitting the last instruction off a code sequence.
 -/
+
+@[expose] public section
 open Lean Meta Elab Parser Tactic
 
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.GraphRefinement
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.GraphRefinement
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
 
 /-!
 # Simultaneous polygonalization of finite embedded plane graphs
@@ -14,6 +16,8 @@ chooses the disjoint circular regions around graph vertices from Moise's Figure 
 constructions trim each embedded edge at the last exits from those regions and polygonalize the
 remaining pairwise-disjoint compact arcs.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

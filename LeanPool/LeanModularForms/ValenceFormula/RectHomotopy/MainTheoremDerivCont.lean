@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
 
 /-!
 # Derivative continuity for the homotopy on partition pieces
@@ -13,6 +14,8 @@ Proves that the t-derivative of `fdBoundaryToPolygonHomotopy` is continuous
 on each partition piece `(p₁, p₂) × [0, 1]`, where `(p₁, p₂)` avoids the
 partition points `{1, 2, 3, 4}`.
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

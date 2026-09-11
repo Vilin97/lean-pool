@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.ConcreteFusionRun
-import LeanPool.Wallace.FullTopology
+public import LeanPool.Wallace.ConcreteFusionRun
+public import LeanPool.Wallace.FullTopology
 
 /-!
 # The full free-Abelian group theorem
@@ -13,6 +14,8 @@ import LeanPool.Wallace.FullTopology
 This module applies the unconditional fusion construction to the generic topological results in
 `Wallace.FullTopology`.  The resulting theorem has no hypotheses.
 -/
+
+@[expose] public section
 
 namespace Wallace
 

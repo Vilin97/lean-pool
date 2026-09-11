@@ -3,17 +3,20 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.MatrixEquivTensor
-import LeanPool.BrauerGroupNew.RelativeBrauer
-import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
-import LeanPool.BrauerGroupNew.Subfield.Subfield
+public import LeanPool.BrauerGroupNew.MatrixEquivTensor
+public import LeanPool.BrauerGroupNew.RelativeBrauer
+public import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
+public import LeanPool.BrauerGroupNew.Subfield.Subfield
 
 /-!
 # LeanPool.BrauerGroupNew.Subfield.Splitting
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Splitting`.
 -/
+
+@[expose] public section
 
 universe u
 

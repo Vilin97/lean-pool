@@ -3,8 +3,10 @@ Copyright (c) 2026 Andrej Bauer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrej Bauer
 -/
-import Mathlib.Data.Finset.Basic
-import LeanPool.PartialCombinatoryAlgebras.Basic
+module
+
+public import Mathlib.Data.Finset.Basic
+public import LeanPool.PartialCombinatoryAlgebras.Basic
 
 /-!
 # Partial combinatory algebras
@@ -28,6 +30,8 @@ Following our strategy, `K` and `S` are again partial elements on the carrier se
 with a separate claim that they are total.
 
 -/
+
+@[expose] public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

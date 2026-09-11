@@ -3,18 +3,21 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Tactic.Ring.RingNF
-import LeanPool.ErdosTuzaValtr.Config.Default
-import LeanPool.ErdosTuzaValtr.Etv.Default
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Tactic.Ring.RingNF
+public import LeanPool.ErdosTuzaValtr.Config.Default
+public import LeanPool.ErdosTuzaValtr.Etv.Default
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.CapCup
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Main.CapCup`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

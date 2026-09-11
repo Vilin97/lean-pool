@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReductionCore
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReductionCore
 
 /-!
 # Marked finite cyclic word reduction
@@ -12,6 +14,8 @@ This file completes the recursive reduction developed in
 `FiniteCyclicWordReductionCore`, carrying the marked normalization state through terminal block
 normalization and the connected-presentation result.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

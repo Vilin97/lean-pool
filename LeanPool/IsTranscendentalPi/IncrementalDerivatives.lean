@@ -3,9 +3,11 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.Deriv.Polynomial
-import Mathlib.Algebra.Polynomial.FieldDivision
+module
+
+public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Polynomial
+public import Mathlib.Algebra.Polynomial.FieldDivision
 
 /-!
 # Incremental derivatives
@@ -13,6 +15,8 @@ import Mathlib.Algebra.Polynomial.FieldDivision
 Differentiability and derivative formulas for the maps `t ↦ f⁽ᵏ⁾(t · x)` and their
 finite sums, used to differentiate the exponential factors in Niven's argument.
 -/
+
+@[expose] public section
 
 open Polynomial
 open Complex

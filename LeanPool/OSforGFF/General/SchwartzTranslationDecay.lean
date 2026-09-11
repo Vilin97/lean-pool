@@ -3,17 +3,17 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Analysis.Convolution
-import Mathlib.Topology.ContinuousMap.ZeroAtInfty
-import Mathlib.Topology.Order.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.Group.Integral
-import Mathlib.Analysis.Normed.Operator.Mul -- For ContinuousLinearMap.mul
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Analysis.Convolution
+public import Mathlib.Topology.ContinuousMap.ZeroAtInfty
+public import Mathlib.Topology.Order.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.MeasureTheory.Group.Integral
+public import Mathlib.Analysis.Normed.Operator.Mul -- For ContinuousLinearMap.mul
 
 /-!
 # Schwartz Bilinear Translation Decay
@@ -44,6 +44,8 @@ Apply this pattern three times:
 - Glimm-Jaffe "Quantum Physics" Ch. 6 (clustering)
 - Reed-Simon Vol. II, Ch. X (decay of correlations)
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex SchwartzMap Filter Convolution Set Function Metric
 open scoped Real Topology Pointwise

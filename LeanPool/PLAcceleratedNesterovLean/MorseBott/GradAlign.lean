@@ -3,14 +3,15 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.InnerProductSpace.Dual
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+public import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.InnerProductSpace.Dual
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import Mathlib.Analysis.Calculus.Deriv.Add
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 /-!
 # Gradient Alignment Lemma
@@ -18,6 +19,8 @@ import Mathlib.Analysis.Calculus.LocalExtr.Basic
 Under μ-PŁ at a local min x₀, proves `fderiv(x) = 0 ↔ fderiv(x)|_{T⊥} = 0`
 for x near x₀. Uses Taylor remainder bounds and a Hessian perturbation argument.
 -/
+
+@[expose] public section
 
 open Filter Topology InnerProductSpace Submodule Set
 

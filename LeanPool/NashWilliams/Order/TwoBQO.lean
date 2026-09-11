@@ -3,12 +3,14 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import Mathlib.SetTheory.Ordinal.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
-import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
+module
+
+public import Mathlib.SetTheory.Ordinal.Basic
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Push
+public import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
+public import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
 
 /-!
 # 2-better-quasi-orders (2-BQO)
@@ -47,6 +49,8 @@ embedding relation (`TwoBQO.embedForAll_wqo`).
 * `TwoBQO.dom_twoBQO`: the domination order on subsets of a 2-BQO is WQO.
 * `TwoBQO.embedForAll_wqo`: `EmbedForAll r` is WQO on `ℕ → Q` whenever `r` is 2-BQO on `Q`.
 -/
+
+@[expose] public section
 
 open Set Preorder
 

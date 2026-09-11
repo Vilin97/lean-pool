@@ -3,8 +3,10 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Basic
+module
+
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Basic
 
 /-!
 # Euclidean coordinate interface
@@ -14,6 +16,8 @@ This file is the local boundary between the project and mathlib's concrete
 (Fin n)`, but downstream files should prefer the wrappers here over direct
 calls to `EuclideanSpace.*`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

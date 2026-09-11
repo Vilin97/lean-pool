@@ -3,16 +3,20 @@ Copyright (c) 2026 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak
 -/
-import Mathlib.Algebra.Order.Sum
-import Mathlib.Algebra.Order.Group.PosPart
-import Mathlib.LinearAlgebra.Matrix.DotProduct
-import Mathlib.Data.Matrix.ColumnRowPartitioned
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import LeanPool.Duality.FarkasBartl
+module
+
+public import Mathlib.Algebra.Order.Sum
+public import Mathlib.Algebra.Order.Group.PosPart
+public import Mathlib.LinearAlgebra.Matrix.DotProduct
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import LeanPool.Duality.FarkasBartl
 
 /-!
 # LeanPool.Duality.FarkasBasic
 -/
+
+@[expose] public section
 
 /- Let's move from linear maps to matrices, which give more familiar
 (albeit less general) formulations of the theorems of alternative. -/

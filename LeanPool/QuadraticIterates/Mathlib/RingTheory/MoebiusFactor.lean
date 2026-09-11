@@ -3,18 +3,20 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.RingTheory.Localization.Integer
-import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
-import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
-import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Push
+module
 
-import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
-import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.Localization.Integer
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
+public import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.Push
+
+public import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
+public import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
 
 /-!
 # Integrality of Möbius factors of strong divisibility sequences
@@ -27,6 +29,8 @@ its image in any fraction field is the Möbius formula.
 Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of some iterated
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction.Moebius
 open UniqueFactorizationMonoid ArithmeticFunction

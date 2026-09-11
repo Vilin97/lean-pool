@@ -3,19 +3,22 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.MeasureTheory.Measure.DiracProba
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-import LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure
-import LeanPool.QuasiBorelSpaces.Prop
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
+public import Mathlib.MeasureTheory.Measure.DiracProba
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.ProbabilityMeasure
+public import LeanPool.QuasiBorelSpaces.Prop
 
 /-!
 # LeanPool.QuasiBorelSpaces.PreProbabilityMeasure
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.PreProbabilityMeasure`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open scoped unitInterval

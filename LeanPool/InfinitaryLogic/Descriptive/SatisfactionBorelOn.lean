@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.Polish
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.Polish
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # Generic Satisfaction Measurability for Carrier-Parametric Structure Spaces
 
@@ -24,6 +26,8 @@ This file proves that satisfaction of Lω₁ω formulas is measurable on
   measurable on `StructureSpaceOn L α`.
 - `modelsOfOn_measurableSet`: Satisfaction of any Lω₁ω sentence is measurable.
 -/
+
+@[expose] public section
 
 universe u v u'
 

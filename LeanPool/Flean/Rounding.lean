@@ -3,19 +3,21 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import Mathlib.Data.Rat.Defs
-import Mathlib.Data.Rat.Floor
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Data.Int.Log
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.WLOG
-import Mathlib.Tactic.Tauto
-import LeanPool.Flean.FloatRep
-import LeanPool.Flean.FloatCfg
-import LeanPool.Flean.LogRules
-import LeanPool.Flean.IntRounding
+module
+
+public import Mathlib.Data.Rat.Defs
+public import Mathlib.Data.Rat.Floor
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Data.Int.Log
+public import Mathlib.Tactic.Positivity
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.WLOG
+public import Mathlib.Tactic.Tauto
+public import LeanPool.Flean.FloatRep
+public import LeanPool.Flean.FloatCfg
+public import LeanPool.Flean.LogRules
+public import LeanPool.Flean.IntRounding
 
 /-!
 # Rounding Rationals to Floating-Point Representations
@@ -25,6 +27,8 @@ rounding maps from rationals to representations under an `IntRounder`, and the
 correctness and error-bound results (such as `roundf_close`) controlling the
 distance between a rational and its rounded floating-point value.
 -/
+
+@[expose] public section
 
 variable {C : FloatCfg}
 

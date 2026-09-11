@@ -3,10 +3,11 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import Mathlib.RingTheory.Coprime.Lemmas
-import LeanPool.UlmsTheorem.PGroups.Socle
-import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
+public import Mathlib.RingTheory.Coprime.Lemmas
+public import LeanPool.UlmsTheorem.PGroups.Socle
+public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 
 /-!
 # Pure subgroups and height-preserving partial maps
@@ -14,6 +15,8 @@ import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 This file contains the basic hard-direction infrastructure for Ulm's theorem:
 ordinal height, p-order, purity, and height-preserving maps on subgroups.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

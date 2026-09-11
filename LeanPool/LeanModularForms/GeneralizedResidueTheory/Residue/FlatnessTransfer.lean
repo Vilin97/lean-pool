@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy
 
 /-!
 # Generalized Residue Theorem (Theorem 3.3) -- Convex Domain Corollary
@@ -21,6 +22,8 @@ built from `conditionsAB_imply_higherOrderCancel_nh` and
 * `generalizedResidueTheorem_3_3`: the generalized residue theorem with
   conditions (A')+(B), convex domain.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

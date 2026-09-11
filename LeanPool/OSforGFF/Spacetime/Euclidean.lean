@@ -3,9 +3,9 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.Basic
 
 /-!
 # Euclidean Group E(4) and Its Actions
@@ -17,6 +17,8 @@ Key properties: measure preservation (d⁴(E⁻¹x) = d⁴x), temperate growth o
 pullbacks (needed for Schwartz space), and continuity of all actions.
 Foundation for the OS2 axiom.
 -/
+
+@[expose] public section
 
 open MeasureTheory NNReal ENNReal
 open TopologicalSpace Measure

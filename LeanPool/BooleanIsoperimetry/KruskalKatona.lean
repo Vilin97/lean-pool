@@ -3,8 +3,10 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import Mathlib.Combinatorics.SetFamily.KruskalKatona
-import LeanPool.BooleanIsoperimetry.Macaulay
+module
+
+public import Mathlib.Combinatorics.SetFamily.KruskalKatona
+public import LeanPool.BooleanIsoperimetry.Macaulay
 
 /-!
 # Kruskal-Katona upper-shadow core
@@ -12,6 +14,8 @@ import LeanPool.BooleanIsoperimetry.Macaulay
 This file proves the set-family upper-shadow minimization theorem used by the
 Boolean-isoperimetry argument.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open scoped FinsetFamily

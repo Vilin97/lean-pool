@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Internal.AON
+module
+
+public import LeanPool.CircuitComplexity.Internal.AON
 
 /-! # Internal: Completeness of fan-in-2 AND/OR
 
@@ -27,6 +29,8 @@ The new circuit's internal gates consist of chains for all original internal
 gates followed by chains for all original output gates. The new output gates
 are trivial passthroughs reading the last wire of each output chain.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

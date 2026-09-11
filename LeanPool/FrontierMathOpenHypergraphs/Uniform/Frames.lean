@@ -3,14 +3,17 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameExact
-import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameBoosters
-import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameResidues
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameExact
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameBoosters
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameResidues
 
 /-!
 # Finite frame bank
 -/
+
+@[expose] public section
 
 namespace HypergraphLowerBound
 

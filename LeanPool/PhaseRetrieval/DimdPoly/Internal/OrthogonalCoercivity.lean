@@ -3,11 +3,15 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.CoefficientLimitRigidity
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.ProductAnnulusLocalization
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.FiniteBaseAnnulusEstimate
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.CoefficientLimitRigidity
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ProductAnnulusLocalization
 
 /-! # OrthogonalCoercivity -/
+
+@[expose] public section
 
 
 open MeasureTheory Complex

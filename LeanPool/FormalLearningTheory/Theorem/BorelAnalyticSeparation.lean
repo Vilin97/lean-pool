@@ -3,8 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
-import LeanPool.FormalLearningTheory.Complexity.Generalization
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.BorelAnalyticBridge
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
 
 /-!
 # Borel-Analytic Separation: Counterexample Chain
@@ -21,6 +23,8 @@ KrappWirthWellBehaved (MeasurableSet/Borel).
 - `planarWitnessEvent_not_measurable`: the planar witness is NOT Borel
 - `singleton_badEvent_not_measurable`: the sample-space bad event is NOT Borel
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

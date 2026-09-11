@@ -3,10 +3,11 @@ Copyright (c) 2026 Bhavik Mehta, Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Arend Mellendijk
 -/
+module
 
-import LeanPool.ABCExceptions.ForMathlib
-import LeanPool.ABCExceptions.Section2
-import LeanPool.ABCExceptions.Section4
+public import LeanPool.ABCExceptions.ForMathlib
+public import LeanPool.ABCExceptions.Section2
+public import LeanPool.ABCExceptions.Section4
 
 /-!
 # Exceptional Set in the abc Conjecture
@@ -18,6 +19,8 @@ Main declarations: `abcConjecture_iff_countTriples`, `thm_4_point_3`
 Tags: number-theory, analytic-number-theory, abc-conjecture
 MSC: 11D75, 11N37
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
-import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
+public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Semantics
 /-!
 # Lω₁ω Semantics — compatibility facade over the fixed-carrier semantics
 
@@ -37,6 +39,8 @@ The gates at the end certify by `Iff.rfl` — no rewriting, no casts — that ea
 Mathlib semantics, and that the historical `Fin.elim0` spellings of the arity-0 cases still
 agree with Mathlib's `default`.
 -/
+
+@[expose] public section
 
 universe u v w u'
 

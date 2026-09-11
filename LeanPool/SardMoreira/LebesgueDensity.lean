@@ -3,27 +3,30 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import LeanPool.SardMoreira.UpperLowerSemicontinuous
-import LeanPool.SardMoreira.NormedSpace
-import LeanPool.SardMoreira.MeasureComap
-import LeanPool.SardMoreira.MeasureBallSemicontinuous
-import LeanPool.SardMoreira.Topology
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Covering.Besicovitch
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Topology.EMetricSpace.Paracompact
-import Mathlib.Topology.Separation.CompletelyRegular
-import Mathlib.Dynamics.Ergodic.Action.Regular
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-import Mathlib.MeasureTheory.Measure.Haar.Unique
+public import LeanPool.SardMoreira.UpperLowerSemicontinuous
+public import LeanPool.SardMoreira.NormedSpace
+public import LeanPool.SardMoreira.MeasureComap
+public import LeanPool.SardMoreira.MeasureBallSemicontinuous
+public import LeanPool.SardMoreira.Topology
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
+public import Mathlib.MeasureTheory.Covering.Besicovitch
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Topology.EMetricSpace.Paracompact
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import Mathlib.Dynamics.Ergodic.Action.Regular
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
+public import Mathlib.MeasureTheory.Measure.Haar.Unique
 
 /-!
 # LeanPool.SardMoreira.LebesgueDensity
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal Set.Notation Pointwise
 open MeasureTheory Filter Set Function Metric Topology

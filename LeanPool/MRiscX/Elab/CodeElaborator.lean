@@ -3,18 +3,22 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Parser.AssemblySyntax
-import LeanPool.MRiscX.AbstractSyntax.Map
-import LeanPool.MRiscX.AbstractSyntax.Instr
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import LeanPool.MRiscX.Elab.HandleNumOrIdent
-import Lean
+module
+
+public import LeanPool.MRiscX.Parser.AssemblySyntax
+public import LeanPool.MRiscX.AbstractSyntax.Map
+public import LeanPool.MRiscX.AbstractSyntax.Instr
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public import LeanPool.MRiscX.Elab.HandleNumOrIdent
+public import Lean
 
 /-!
 # CodeElaborator
 
 This module provides the elaborator turning MRiscX assembly syntax into `Code`.
 -/
+
+@[expose] public section
 open Lean.Elab Command Term
 open Nat
 open Lean Lean.Expr Lean.Meta Lean.Parser

@@ -3,9 +3,11 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Combinatorics.Front.Ray
-import LeanPool.NashWilliams.Combinatorics.Front.Shrink
-import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
+module
+
+public import LeanPool.NashWilliams.Combinatorics.Front.Ray
+public import LeanPool.NashWilliams.Combinatorics.Front.Shrink
+public import LeanPool.NashWilliams.Data.Fintype.Pigeonhole
 
 /-!
 # The Nash-Williams theorem
@@ -36,6 +38,8 @@ theorem. It is deliberately kept alongside the direct iterated-pigeonhole proof 
 import that one. The only lemmas the two developments share are the generic helpers in
 `NashWilliams.Data`.
 -/
+
+@[expose] public section
 
 open Set List
 

@@ -3,20 +3,21 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import Mathlib.Algebra.Category.Grp.Injective
-import Mathlib.Algebra.Group.Subgroup.Ker
-import Mathlib.Algebra.Module.CharacterModule
-import Mathlib.Analysis.Fourier.AddCircleMulti
-import Mathlib.Analysis.Normed.Group.AddCircle
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
-import Mathlib.MeasureTheory.Measure.Haar.Basic
-import Mathlib.Topology.Algebra.Group.ClosedSubgroup
-import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
-import Mathlib.Topology.MetricSpace.Closeds
-import Mathlib.Topology.MetricSpace.UniformConvergence
-import Mathlib.Topology.Sets.VietorisTopology
+public import Mathlib.Algebra.Category.Grp.Injective
+public import Mathlib.Algebra.Group.Subgroup.Ker
+public import Mathlib.Algebra.Module.CharacterModule
+public import Mathlib.Analysis.Fourier.AddCircleMulti
+public import Mathlib.Analysis.Normed.Group.AddCircle
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
+public import Mathlib.MeasureTheory.Measure.Haar.Basic
+public import Mathlib.Topology.Algebra.Group.ClosedSubgroup
+public import Mathlib.Topology.ContinuousMap.Bounded.ArzelaAscoli
+public import Mathlib.Topology.MetricSpace.Closeds
+public import Mathlib.Topology.MetricSpace.UniformConvergence
+public import Mathlib.Topology.Sets.VietorisTopology
 
 /-!
 # Algebraic foundations for the uniform Kronecker lemma
@@ -24,6 +25,8 @@ import Mathlib.Topology.Sets.VietorisTopology
 This file isolates the exact (non-quantitative) character-extension argument used in the paper.
 The remaining quantitative statement is developed on top of these declarations.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

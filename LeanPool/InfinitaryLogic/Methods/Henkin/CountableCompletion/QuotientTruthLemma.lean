@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTermModel
-import LeanPool.InfinitaryLogic.Methods.ConstantInstances
-import LeanPool.InfinitaryLogic.Lomega1omega.Depth
-import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTermModel
+public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+public import LeanPool.InfinitaryLogic.Lomega1omega.Depth
+public import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # The forward truth lemma for the quotient term model (issue #8, commit 5b)
 
@@ -42,6 +44,8 @@ the shape of the legacy `Methods/Henkin/Construction.lean` truth lemma: from `(a
 `all body`; recursion on that sentence plus `realize_instConst_qmodel` and surjectivity of `qmk`
 discharges the universal (dually for the negated universal via `neg_all_witness`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

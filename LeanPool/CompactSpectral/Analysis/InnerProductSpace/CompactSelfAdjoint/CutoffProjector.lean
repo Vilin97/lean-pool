@@ -3,12 +3,14 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-import Mathlib.Algebra.Module.Submodule.Invariant
-import Mathlib.Analysis.InnerProductSpace.Semisimple
-import Mathlib.Data.Fintype.Lattice
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+public import Mathlib.Algebra.Module.Submodule.Invariant
+public import Mathlib.Analysis.InnerProductSpace.Semisimple
+public import Mathlib.Data.Fintype.Lattice
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
 
 /-!
 # Compact self-adjoint operators: large-eigenspace cutoff projectors
@@ -31,6 +33,8 @@ enable spectral iteration by compressing to invariant orthogonal complements.
 - `CompactSelfAdjoint.range_largeEigenspaceProjector`
 - `CompactSelfAdjoint.largeEigenspaceProjector_comp`
 -/
+
+@[expose] public section
 
 namespace CompactSelfAdjoint
 

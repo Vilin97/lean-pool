@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.Loops
-import LeanPool.JacobianDiffgeo.Dbar
-import LeanPool.JacobianDiffgeo.Meromorphic
-import LeanPool.JacobianDiffgeo.ProperDegree
-import LeanPool.JacobianDiffgeo.SphereTopology
+public import LeanPool.JacobianDiffgeo.Abel.Loops
+public import LeanPool.JacobianDiffgeo.Dbar
+public import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.ProperDegree
+public import LeanPool.JacobianDiffgeo.SphereTopology
 
 /-!
 # abel-theorem: the CR-converse promotion (`docs/design/abel-theorem.md` §4.2 D2, §2.1 step 7)
@@ -28,6 +29,8 @@ Unit: abel-theorem. Namespace `RS.Abel`. Two deliverables:
   `RS.SphereTopology.genus_eq_zero_of_homeo_sphere` (`sphere-topology`). `form-trace-tower` is not
   imported anywhere in this unit, matching the design's finding (§2.2).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

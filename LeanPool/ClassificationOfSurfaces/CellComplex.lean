@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Triangulation
-import Mathlib.Data.Fintype.Sigma
-import Mathlib.Data.List.Rotate
+module
+
+public import LeanPool.ClassificationOfSurfaces.Triangulation
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Data.List.Rotate
 
 /-!
 # Finite surface cell complexes
@@ -14,6 +16,8 @@ This file owns the shared combinatorial API between the topological triangulatio
 Gallier-Xu normal-form route. The definitions are still intentionally light, but the public names
 and theorem boundaries match the Moise/PL blueprint.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

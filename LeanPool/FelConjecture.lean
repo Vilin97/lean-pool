@@ -3,8 +3,9 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
+module
 
-import LeanPool.FelConjecture.Solution
+public import LeanPool.FelConjecture.Solution
 
 /-!
 # Fel's Conjecture on Syzygies of Numerical Semigroups
@@ -16,6 +17,8 @@ Main declarations: `fels_conjecture`
 Tags: number-theory, combinatorics, polynomials
 MSC: 20M14, 13D02
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

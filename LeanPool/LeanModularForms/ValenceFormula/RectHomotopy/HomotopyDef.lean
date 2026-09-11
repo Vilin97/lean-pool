@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
-import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+public import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
 
 /-!
 # Homotopy infrastructure for FD boundary → polygon deformation
@@ -19,6 +20,8 @@ continuity and matching at breakpoints, and establishes the main results:
 * `fdBoundaryToPolygon_homotopy_avoids_interior`
 * `circleAround` and `polygonToCircleHomotopy`
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter
 

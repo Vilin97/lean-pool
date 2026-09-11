@@ -3,8 +3,9 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
 
 /-!
 # The affine Fermat chart and the Hessian addition formula
@@ -19,6 +20,8 @@ model `fer`.  The main results are
 * `three_torsion_pt_iff`: an affine Fermat point is `3`-torsion iff one of its coordinates
   vanishes.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Graph.Orientation
-import LeanPool.BruhatTits.Graph.Regular
-import LeanPool.BruhatTits.Harmonic.Basic
+module
+
+public import LeanPool.BruhatTits.Graph.Orientation
+public import LeanPool.BruhatTits.Graph.Regular
+public import LeanPool.BruhatTits.Harmonic.Basic
 
 /-!
 # Surjectivity of the Bruhat-Tits Laplacian
@@ -13,6 +15,8 @@ import LeanPool.BruhatTits.Harmonic.Basic
 In this file we show that the Laplacian of the Bruhat-Tits tree is surjective.
 
 -/
+
+@[expose] public section
 
 open Module
 

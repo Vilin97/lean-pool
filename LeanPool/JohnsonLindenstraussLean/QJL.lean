@@ -3,8 +3,10 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import Mathlib.Data.Real.Sign
-import LeanPool.JohnsonLindenstraussLean.Rotation
+module
+
+public import Mathlib.Data.Real.Sign
+public import LeanPool.JohnsonLindenstraussLean.Rotation
 
 /-!
 # Quantized Johnson–Lindenstrauss (QJL): unbiasedness of the 1-bit estimator
@@ -30,6 +32,8 @@ one-bit key quantization. It is built in three increasing layers:
    over an `m × d` i.i.d. standard-Gaussian sketch is *unbiased* for the normalized inner
    product: `E[estimator] = ⟪key/‖key‖, q⟫`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal RealInnerProductSpace

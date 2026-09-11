@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.Coordinates
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
-import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.Coordinates
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
+public import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
 
 /-!
 # Reduction of the prime theorem to prepared coordinates
@@ -17,6 +18,8 @@ coordinate change that germ is associated to a positive-degree prepared
 polynomial.  Coordinate invariance then reduces the prime zero-set theorem to
 the prepared-prime step isolated below.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

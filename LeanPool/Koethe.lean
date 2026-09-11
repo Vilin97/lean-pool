@@ -3,8 +3,9 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
+module
 
-import LeanPool.Koethe.Disproof
+public import LeanPool.Koethe.Disproof
 
 /-!
 # Disproof of the Köthe conjecture (Krempa's matrix form)
@@ -16,6 +17,8 @@ Main declarations: `Koethe.KotherConjecture.variants.general_matrix.disproof`
 Tags: ring-theory, nil-ideals, koethe-conjecture, counterexample, matrix-rings
 MSC: 16N40, 16S50
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

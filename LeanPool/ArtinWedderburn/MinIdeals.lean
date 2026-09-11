@@ -3,9 +3,11 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import LeanPool.ArtinWedderburn.SetProd
-import LeanPool.ArtinWedderburn.CornerRing
-import LeanPool.ArtinWedderburn.Auxiliary
+module
+
+public import LeanPool.ArtinWedderburn.SetProd
+public import LeanPool.ArtinWedderburn.CornerRing
+public import LeanPool.ArtinWedderburn.Auxiliary
 
 /-!
 # Minimal left ideals and idempotents
@@ -14,6 +16,8 @@ For a minimal (atom) left ideal `I` with `I * I ≠ 0`, this file extracts an
 idempotent generator `e` of `I` and shows that the corner subring `eRe` is a
 division subring.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

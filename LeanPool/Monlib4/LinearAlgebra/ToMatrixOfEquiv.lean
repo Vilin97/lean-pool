@@ -3,15 +3,16 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Algebra.Algebra.Equiv
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.RCLike.Basic
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
-import LeanPool.Monlib4.Preq.StarAlgEquiv
+public import Mathlib.Algebra.Algebra.Equiv
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Analysis.RCLike.Basic
+public import LeanPool.Monlib4.LinearAlgebra.InnerAut
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
+public import LeanPool.Monlib4.Preq.StarAlgEquiv
 
 /-!
 # Linear equivalence conjugation compatibility
@@ -19,6 +20,8 @@ import LeanPool.Monlib4.Preq.StarAlgEquiv
 Mathlib's `LinearEquiv.conjAlgEquiv` is the current version of the upstream
 `LinearEquiv.innerConj` construction used by the Monlib4 `IncludeBlock` slice.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Matrix Module.End InnerProductSpace

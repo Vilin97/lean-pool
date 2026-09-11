@@ -3,11 +3,15 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
-import LeanPool.OrderPQ.IsCyclic
+module
+
+public import LeanPool.OrderPQ.IsCyclic
 
 /-!
 # LeanPool.OrderPQ.PrimeOrder
 -/
+
+@[expose] public section
 
 lemma ne_iff_eq_of_or_and_ne {α : Type*} {a b c : α} (h1 : a = b ∨ a = c) (h2 : b ≠ c) :
     a ≠ b ↔ a = c :=

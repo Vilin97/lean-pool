@@ -3,7 +3,9 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.CenterTranslation
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.CenterTranslation
 
 /-!
 # Stationary Sobolev map monotonicity
@@ -17,6 +19,8 @@ The current proved endpoint is
 modules should discharge its `WeakStationaryMapIn` hypothesis and then call this
 theorem, rather than reopening the radial monotonicity proof chain.
 -/
+
+@[expose] public section
 
 noncomputable section
 

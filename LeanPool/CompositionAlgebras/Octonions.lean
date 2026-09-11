@@ -3,9 +3,11 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Data.Real.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.Tactic.NormNum
+module
+
+public import Mathlib.Data.Real.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.Tactic.NormNum
 
 
 /-!
@@ -51,6 +53,8 @@ dropped axiom. The other two remain unstated.
 * Baez, "The Octonions," Bull. AMS 39 (2002), arXiv:math/0105155
 * Hurwitz, "Uber die Composition der quadratischen Formen von beliebig vielen Variablen," 1898
 -/
+
+@[expose] public section
 
 noncomputable section
 

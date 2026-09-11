@@ -3,10 +3,11 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
-import Mathlib.GroupTheory.Index
-import Mathlib.Data.ZMod.Units
+public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
+public import Mathlib.GroupTheory.Index
+public import Mathlib.Data.ZMod.Units
 
 /-!
 # Index of Congruence Subgroups
@@ -23,6 +24,8 @@ Computes the index `[SL₂(ℤ) : Γ₀(pᵏ)] = pᵏ⁻¹(p + 1)` for prime `p`
 
 * Shimura, Theorem 3.24
 -/
+
+@[expose] public section
 
 open Matrix.SpecialLinearGroup Matrix ModularGroup CongruenceSubgroup
 

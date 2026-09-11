@@ -3,7 +3,9 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import LeanPool.BooleanIsoperimetry.Cube
+module
+
+public import LeanPool.BooleanIsoperimetry.Cube
 
 /-!
 # Simplicial coordinate compression
@@ -11,6 +13,8 @@ import LeanPool.BooleanIsoperimetry.Cube
 This file defines coordinate up/down compression operations on Boolean-cube
 families and proves basic neighborhood monotonicity and slice-pair facts.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset

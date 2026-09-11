@@ -3,8 +3,10 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.CoulombKernel
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+module
+
+public import LeanPool.Clawristotle.CoulombKernel
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-!
 # Newtonian Potential Bounds and Inverse-Norm Integrability
@@ -13,6 +15,8 @@ Proves `coulomb_landauMatrix_entry_le` (|A(z)_{ij}| <= ||z||^{-1}) and local
 integrability of ||z||^{-1} against Schwartz functions, the key estimates for
 handling the Coulomb singularity in collision integrals.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

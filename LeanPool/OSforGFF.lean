@@ -3,17 +3,18 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import LeanPool.OSforGFF.Bochner
-import LeanPool.OSforGFF.Covariance
-import LeanPool.OSforGFF.GaussianField
-import LeanPool.OSforGFF.General
-import LeanPool.OSforGFF.KolmogorovExtension4
-import LeanPool.OSforGFF.Measure
-import LeanPool.OSforGFF.Minlos
-import LeanPool.OSforGFF.OS
-import LeanPool.OSforGFF.Schwinger
-import LeanPool.OSforGFF.Spacetime
+public import LeanPool.OSforGFF.Bochner
+public import LeanPool.OSforGFF.Covariance
+public import LeanPool.OSforGFF.GaussianField
+public import LeanPool.OSforGFF.General
+public import LeanPool.OSforGFF.KolmogorovExtension4
+public import LeanPool.OSforGFF.Measure
+public import LeanPool.OSforGFF.Minlos
+public import LeanPool.OSforGFF.OS
+public import LeanPool.OSforGFF.Schwinger
+public import LeanPool.OSforGFF.Spacetime
 
 /-!
 # Osterwalder-Schrader Axioms for the Gaussian Free Field
@@ -25,3 +26,5 @@ Main declarations: `OSforGFF.gaussianFreeField_satisfies_all_OS_axioms`
 Tags: analysis, measure-theory, probability, mathematical-physics
 MSC: 81T08, 60G15, 46G12
 -/
+
+@[expose] public section

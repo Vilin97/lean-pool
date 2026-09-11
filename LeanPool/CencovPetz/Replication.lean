@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.MarkovMorphism
-import LeanPool.CencovPetz.UniformSimplex
+module
+
+public import LeanPool.CencovPetz.MarkovMorphism
+public import LeanPool.CencovPetz.UniformSimplex
 
 
 /-!
@@ -12,6 +14,8 @@ import LeanPool.CencovPetz.UniformSimplex
 
 Replication Markov morphisms `α → α × Fin m` that split each outcome into `m` copies uniformly.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

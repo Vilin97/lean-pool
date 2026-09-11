@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1`
@@ -25,6 +26,8 @@ arbitrary measure `μ`. Compactness results are proven elsewhere.
 - `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.h1OnMeasure`
 - `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.h1OnToL2Measure`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

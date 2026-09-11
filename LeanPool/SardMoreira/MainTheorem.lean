@@ -3,23 +3,26 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.Implicit
-import Mathlib.Topology.MetricSpace.HausdorffDimension
-import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-import LeanPool.SardMoreira.ContDiffMoreiraHolder
-import LeanPool.SardMoreira.ImplicitFunction
-import LeanPool.SardMoreira.LinearAlgebra
-import LeanPool.SardMoreira.ChartEstimates
-import LeanPool.SardMoreira.WithRPowDist
-import LeanPool.SardMoreira.OuterMeasureDeriv
-import LeanPool.SardMoreira.ToMathlib.PR33029
-import LeanPool.SardMoreira.ToMathlib.PR32993
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+public import Mathlib.Analysis.Calculus.Implicit
+public import Mathlib.Topology.MetricSpace.HausdorffDimension
+public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
+public import LeanPool.SardMoreira.ContDiffMoreiraHolder
+public import LeanPool.SardMoreira.ImplicitFunction
+public import LeanPool.SardMoreira.LinearAlgebra
+public import LeanPool.SardMoreira.ChartEstimates
+public import LeanPool.SardMoreira.WithRPowDist
+public import LeanPool.SardMoreira.OuterMeasureDeriv
+public import LeanPool.SardMoreira.ToMathlib.PR33029
+public import LeanPool.SardMoreira.ToMathlib.PR32993
 
 /-!
 # LeanPool.SardMoreira.MainTheorem
 -/
+
+@[expose] public section
 
 open scoped unitInterval NNReal Topology ENNReal Pointwise
 open MeasureTheory Measure Metric

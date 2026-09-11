@@ -3,12 +3,13 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
-import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
-import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
 
 /-!
 # Retuned Nesterov Convergence
@@ -32,6 +33,8 @@ The main specialization sets μ' = μ·(1−θ), η = 1/L, and chooses
   state positions `xₖ`; explicit retuning parameter `θ`, `ρ = rhoOfTheta`;
   local specialized theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

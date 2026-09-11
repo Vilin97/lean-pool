@@ -3,8 +3,9 @@ Copyright (c) 2026 Makoto Yamashita. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Makoto Yamashita
 -/
+module
 
-import LeanPool.HSDInteriorPointLP.NewtonSystem
+public import LeanPool.HSDInteriorPointLP.NewtonSystem
 
 /-!
 # Fixed local neighborhood estimates
@@ -24,6 +25,8 @@ Lean-reading hints for beginners:
 * `ring` proves polynomial identities such as rearrangements of sums/products.
 * `field_simp` clears denominators after you provide nonzero-denominator proofs.
 -/
+
+@[expose] public section
 noncomputable section
 
 open scoped BigOperators

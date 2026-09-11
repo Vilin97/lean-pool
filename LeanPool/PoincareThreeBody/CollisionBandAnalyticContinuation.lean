@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.CollisionBandObstruction
-import Mathlib.Analysis.Analytic.Uniqueness
+public import LeanPool.PoincareThreeBody.CollisionBandObstruction
+public import Mathlib.Analysis.Analytic.Uniqueness
 
 /-!
 # Analytic continuation from the collision band
@@ -14,6 +15,8 @@ For each fixed eccentricity, the leading wedge is analytic in the first action. 
 the nonempty collision band therefore extends to the entire connected interior first-action
 interval.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

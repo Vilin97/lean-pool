@@ -3,13 +3,17 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
-import Mathlib.Algebra.Lie.Solvable
-import Mathlib.Algebra.Lie.Quotient
-import Mathlib.Algebra.Lie.Nilpotent
+module
+
+public import Mathlib.Algebra.Lie.Solvable
+public import Mathlib.Algebra.Lie.Quotient
+public import Mathlib.Algebra.Lie.Nilpotent
 
 /-!
 # LeanPool.LowDimSolvClassification.QuotientSolvable
 -/
+
+@[expose] public section
 
 namespace LieIdeal
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.SetTheory.Cardinal.Regular
+module
+
+public import Mathlib.SetTheory.Cardinal.Regular
 
 /-!
 # The `ω₁` cofinal-fiber engine (issue #12, risky engine 1)
@@ -20,6 +22,8 @@ recurs unboundedly, and downward closure of the gap witness (`GapWitness.mono`) 
 Proof: if every fiber were bounded, the supremum of countably many bounds would bound all of
 `ω₁` — contradicting the regularity of `ℵ₁` (via `Ordinal.iSup_lt_omega_one`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

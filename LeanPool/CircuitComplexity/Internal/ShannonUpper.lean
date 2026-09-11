@@ -3,14 +3,16 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.AON.Defs
-import Mathlib.Data.Nat.Log
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Positivity
+module
+
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.Positivity
 
 /-! # Internal: Shannon Upper Bound Construction
 
@@ -32,6 +34,8 @@ Build shared minterm trees for both variable groups, a pattern library
 for column functions, AND/OR combining layers. Total ≤ `18 · 2^N / N`
 gates for `N ≥ 16`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

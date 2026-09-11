@@ -3,11 +3,13 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.Complexity.Symmetrization
-import LeanPool.FormalLearningTheory.PureMath.KLDivergence
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Generalization
+public import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+public import LeanPool.FormalLearningTheory.PureMath.KLDivergence
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # PAC-Bayes Bounds
@@ -28,6 +30,8 @@ plus a complexity term involving KL(Q‖P).
 - McAllester, "PAC-Bayesian Model Averaging", COLT 1999
 - McAllester, "Simplified PAC-Bayesian Margin Bounds", COLT 2003
 -/
+
+@[expose] public section
 
 universe u
 

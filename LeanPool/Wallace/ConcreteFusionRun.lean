@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.LocalEnumeration
-import LeanPool.Wallace.LocalFusion
+public import LeanPool.Wallace.LocalEnumeration
+public import LeanPool.Wallace.LocalFusion
 
 /-!
 # The unconditional concrete local fusion
@@ -14,6 +15,8 @@ For each nonzero vector this module instantiates the generic scheduling recursio
 prepared local blocks.  It then converts the bounded deletion at every stage into a
 block-density certificate for every relevant code.  No marker sequence is used.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

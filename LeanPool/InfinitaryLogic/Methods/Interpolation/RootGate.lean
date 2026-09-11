@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
 /-!
 # The semantic root gate (issue #8 tranche 1.5 item 2)
 
@@ -19,6 +21,8 @@ turns that *syntactic* left inverse into the *semantic* bridge the argument need
   `L`-entailments. This makes "`InsepAt ∅` yields no base interpolant" a theorem, not a
   documented future composition.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

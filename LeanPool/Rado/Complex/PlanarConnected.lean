@@ -3,13 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.Analysis.Complex.Convex
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import Mathlib.Topology.Instances.Complex
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Analysis.Normed.Module.Connected
+public import Mathlib.Analysis.Complex.Convex
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.Topology.Instances.Complex
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
 
 /-!
 # Planar connectivity for the standard configuration
@@ -22,6 +24,8 @@ connected, Anghel–Stan proof of Theorem 7, Step 0a of `Rado/PLAN.md`).
 Also provided: the annuli `1 ≤ |z ∓ 4| ≤ 2` sit inside `B(0, 8)`, and related
 trivial inclusions used when instantiating the configuration in a chart.
 -/
+
+@[expose] public section
 
 open Set Metric Complex
 

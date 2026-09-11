@@ -3,18 +3,21 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Data.Fintype.CardEmbedding
+public import Mathlib.Data.Fintype.CardEmbedding
 
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskAtFacts
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

@@ -3,14 +3,15 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.LeftEdge
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArc
-import LeanPool.LeanModularForms.ValenceFormula.InteriorWinding
-import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
-import LeanPool.LeanModularForms.ValenceFormula.PVChain
-import LeanPool.LeanModularForms.ValenceFormula.WindingWeights
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.LeftEdge
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.RightEdge
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Winding.UnitArc
+public import LeanPool.LeanModularForms.ValenceFormula.InteriorWinding
+public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain
+public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights
 
 /-!
 # Core Identity for the Valence Formula
@@ -21,6 +22,8 @@ The orbit-sum valence formula applied to the canonical zero set `s₀`.
 
 * `valence_formula_orbit_sum` — orbit-sum with boundary weight hypothesis
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

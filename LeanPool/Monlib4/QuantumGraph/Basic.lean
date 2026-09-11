@@ -3,24 +3,28 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
-import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
-import LeanPool.Monlib4.LinearAlgebra.MyBimodule
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.PhiMap
-import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
-import Mathlib.LinearAlgebra.TensorProduct.Opposite
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
+public import LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
+public import LeanPool.Monlib4.LinearAlgebra.MyBimodule
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.PhiMap
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
+public import Mathlib.LinearAlgebra.TensorProduct.Opposite
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Basic
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Basic`.
 -/
+
+@[expose] public section
 
 local notation x " ⊗ₘ " y => TensorProduct.map x y
 

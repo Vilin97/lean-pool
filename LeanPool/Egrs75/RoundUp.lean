@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import Mathlib.Data.Nat.Digits.Lemmas
+public import LeanPool.Egrs75.Defs
+public import Mathlib.Data.Nat.Digits.Lemmas
 
 /-!
 EGRS75 — the single-base density "Fact" (kernel-clean).
@@ -35,6 +36,8 @@ NOTE: this Fact does NOT by itself prove the two-prime crux — it is the single
 low-digit number in both bases is the EGRS Diophantine "iterative digit repair"
 step (their eq. (2) + the repair Lemma), which is the genuine remaining gap.
 -/
+
+@[expose] public section
 
 namespace Egrs75.RoundUp
 

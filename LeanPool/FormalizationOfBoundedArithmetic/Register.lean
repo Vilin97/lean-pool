@@ -6,12 +6,16 @@ Authors: ruplet
 
 -- only here we register simp attributes
 -- details: https://leanprover-community.github.io/mathlib4_docs/Mathlib/Tactic/Attr/Core.html
-import Lean
+module
+
+public import Lean
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Register
 
 Imported Lean Pool material for `LeanPool.FormalizationOfBoundedArithmetic.Register`.
 -/
+
+@[expose] public section
 /-- Simp set used by the bounded-arithmetic import for formula normalization. -/
 register_simp_attr delta0_simps

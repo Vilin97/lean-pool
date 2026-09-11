@@ -3,7 +3,9 @@ Copyright (c) 2026 Joseph K. Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph K. Miller
 -/
-import LeanPool.Vlasov.OT.CharacteristicFlow
+module
+
+public import LeanPool.Vlasov.OT.CharacteristicFlow
 
 /-!
 # Well-posedness ladder for the Vlasov equation + Dobrushin stability
@@ -30,6 +32,8 @@ development:
 
 See `formalize/DESIGN.md` (in the source repository) for the overall design.
 -/
+
+@[expose] public section
 
 namespace Vlasov
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
-import LeanPool.InfinitaryLogic.Descriptive.QueryCode
-import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
+public import LeanPool.InfinitaryLogic.Descriptive.QueryCode
+public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
 /-!
 # The functional Θ: syntax and semantics (issue #10, Unit 2a)
 
@@ -32,6 +34,8 @@ numeral map); `fBit_eq_queryCode` (clauses 1–4 identify the `f`-bit sequence *
 with `queryCode` of the base-reduct code `pulledCode`); the tree pinning as an **iff**
 (`realize_treeDiagram`); and the bundled `functionalTheta T`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

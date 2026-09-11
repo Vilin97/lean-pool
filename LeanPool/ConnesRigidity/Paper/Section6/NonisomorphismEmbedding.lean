@@ -9,12 +9,16 @@ Concrete §6 embedding of Zhou's nonsplit finite correction into the full
 second kernel. This closes the semisimplicity obstruction for every quotient
 automorphism. Paper: §6.
 -/
-import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismProofs
-import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismProofs
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
 
 /-!
 The nonisomorphism embedding component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperNonisomorphism

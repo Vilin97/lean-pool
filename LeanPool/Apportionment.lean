@@ -3,9 +3,10 @@ Copyright (c) 2026 Michał Dobranowski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Dobranowski
 -/
+module
 
-import LeanPool.Apportionment.Basic
-import LeanPool.Apportionment.PlausibleInstances
+public import LeanPool.Apportionment.Basic
+public import LeanPool.Apportionment.PlausibleInstances
 
 /-!
 # Apportionmentlib
@@ -17,6 +18,8 @@ Main declarations: `Apportionment.balinski_young`
 Tags: social-choice-theory, combinatorics
 MSC: 91B12, 91B14
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

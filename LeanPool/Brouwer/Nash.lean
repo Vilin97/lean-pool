@@ -3,8 +3,10 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
-import LeanPool.Brouwer.BrouwerProduct
-import LeanPool.Brouwer.Simplex
+module
+
+public import LeanPool.Brouwer.BrouwerProduct
+public import LeanPool.Brouwer.Simplex
 
 /-!
 # Existence of mixed Nash equilibria
@@ -15,6 +17,8 @@ correspondence is turned into a continuous self-map of the product of strategy
 simplices, and `ExistsNashEq` derives the existence of a mixed Nash equilibrium in
 every finite game from Brouwer's fixed-point theorem on a product of simplices.
 -/
+
+@[expose] public section
 
 attribute [local instance] Classical.propDecidable
 open BigOperators

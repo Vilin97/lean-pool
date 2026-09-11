@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.EM.Realization
+module
+
+public import LeanPool.InfinitaryLogic.Methods.EM.Realization
 /-!
 # EM Realization: the compactness-oracle layer
 
@@ -18,6 +20,8 @@ The oracle is genuinely an *assumption* — full `Lω₁ω` compactness for `L[[
 general.  `Realization.lean`'s model-input endpoints are the honest residual beneath it: they
 take the model itself, and the oracle factors through them.
 -/
+
+@[expose] public section
 
 universe u v w
 

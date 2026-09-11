@@ -3,8 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H2`
@@ -17,6 +18,8 @@ Hessian, and define `H²` as the topological closure of the range inside an ambi
 
 No Rellich/elliptic regularity theorems are proved here; this file is purely definitional/API.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

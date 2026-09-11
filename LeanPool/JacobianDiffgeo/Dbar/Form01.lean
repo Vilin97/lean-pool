@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Surface
-import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import LeanPool.JacobianDiffgeo.Surface
+public import LeanPool.JacobianDiffgeo.Forms.Analyticity
 
 /-!
 # `Form01 X`: smooth `(0,1)`-forms as chart-coefficient families (`Jacobian/Dbar/Form01.lean`)
@@ -25,6 +26,8 @@ transition rule `coeff_y = conj (deriv τ) * (coeff_x ∘ τ)`. This mirrors the
 reserved token in the ambient `ContDiff` scope's regularity level and cannot be reused as an
 ordinary identifier.)
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold

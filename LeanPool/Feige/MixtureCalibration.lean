@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ConditionalTwoPointCalibration
-import LeanPool.Feige.KernelAveraging
+module
+
+public import LeanPool.Feige.ConditionalTwoPointCalibration
+public import LeanPool.Feige.KernelAveraging
 
 /-!
 # Calibration after latent mixing
@@ -13,6 +15,8 @@ This is the measure-theoretic averaging step in the proof of Theorem 2.1.
 It is kept separate from the construction of the latent law: any probability
 measure on augmented parameters that is almost surely admissible can be used.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

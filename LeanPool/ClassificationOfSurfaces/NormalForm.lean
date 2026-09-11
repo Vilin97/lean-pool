@@ -3,9 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonicalRealization
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicSphereRealization
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicTerminalNormalization
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonicalRealization
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSphereRealization
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicTerminalNormalization
 
 /-!
 # Faithful normal-form classification
@@ -14,6 +16,8 @@ This file composes the Gallier--Xu normalization of a valid connected finite-cyc
 with the exact realization homeomorphisms for the three canonical endpoints.  Every type in this
 chain is a faithful polygonal quotient.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

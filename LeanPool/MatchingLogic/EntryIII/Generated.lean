@@ -14,12 +14,16 @@ their symbol arguments.  Generating paths retain the source's explicit list of
 symbol/position pairs, and their contexts fill every sibling position with
 `top`, exactly as in Definition 76.
 -/
-import LeanPool.MatchingLogic.EntryIII.CanonicalCore
-import Mathlib.Logic.Relation
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CanonicalCore
+public import Mathlib.Logic.Relation
 
 /-!
 # MatchingLogic.EntryIII.Generated
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

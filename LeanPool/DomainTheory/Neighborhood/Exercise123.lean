@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
 
 /-!
 # Exercise 1.23 (Scott 1981, PRG-19, §1) — the greedy total element of a countable
@@ -43,6 +44,8 @@ maximal: any `W`
   the prefix, contradicting `z`'s closure under intersection.
 
 The construction is `[propext, Quot.sound]` given the supplied `DecidablePred`. -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

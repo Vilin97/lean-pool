@@ -3,10 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
 
-import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
-import LeanPool.AndersonConjecture.Jensen.Adjoin.FromPrime
-import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
+public import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+public import LeanPool.AndersonConjecture.Jensen.Adjoin.FromPrime
+public import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
 
 /-!
 # Adjoining Elements to N-subrings
@@ -14,3 +15,5 @@ import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
 Index file for the `LeanPool.AndersonConjecture.Jensen.Adjoin` directory:
 adjoining elements to N-subrings (Loepp, Jensen, Heitmann).
 -/
+
+@[expose] public section

@@ -3,12 +3,15 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
+module
 
-import LeanPool.OrderPQ.Basic
+public import LeanPool.OrderPQ.Basic
 
 /-!
 # LeanPool.OrderPQ.Main
 -/
+
+@[expose] public section
 
 attribute [local implicit_reducible]
   MulZMod instMulMulZMod instMulOneClassMulZMod instGroupMulZMod

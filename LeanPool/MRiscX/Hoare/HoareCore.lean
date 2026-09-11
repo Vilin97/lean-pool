@@ -3,13 +3,15 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.AbstractSyntax.MState
-import LeanPool.MRiscX.Semantics.Run
-import LeanPool.MRiscX.Hoare.EvalLabelInHoare
-import LeanPool.MRiscX.Hoare.HoareAssignmentElab
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import Mathlib.Data.Set.Basic
-import Mathlib.Data.Set.BooleanAlgebra
+module
+
+public import LeanPool.MRiscX.AbstractSyntax.MState
+public import LeanPool.MRiscX.Semantics.Run
+public import LeanPool.MRiscX.Hoare.EvalLabelInHoare
+public import LeanPool.MRiscX.Hoare.HoareAssignmentElab
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+public import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Set.BooleanAlgebra
 
 
 /-!
@@ -32,6 +34,8 @@ assertions, we define Hoare triples, which make claims about the
 state before and after the execution of a command.
 This can be used to perform a structured proof later.
 -/
+
+@[expose] public section
 /-- An assertion is a predicate on machine states. -/
 abbrev Assertion : Type := MState → Prop
 

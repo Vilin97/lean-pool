@@ -3,21 +3,22 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Topology.EMetricSpace.Lipschitz
-import Mathlib.Topology.MetricSpace.Lipschitz
-import Mathlib.Topology.MetricSpace.Thickening
-import Mathlib.Topology.Connected.Basic
-import Mathlib.Topology.Compactness.Compact
-import Mathlib.Geometry.Manifold.IsManifold.Basic
-import Mathlib.Geometry.Manifold.ChartedSpace
-import Mathlib.Geometry.Manifold.ContMDiff.Defs
-import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-import Mathlib.Geometry.Manifold.SmoothEmbedding
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Topology.EMetricSpace.Lipschitz
+public import Mathlib.Topology.MetricSpace.Lipschitz
+public import Mathlib.Topology.MetricSpace.Thickening
+public import Mathlib.Topology.Connected.Basic
+public import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import Mathlib.Geometry.Manifold.ChartedSpace
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
+public import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
+public import Mathlib.Geometry.Manifold.SmoothEmbedding
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
 # Definitions for Nesterov Acceleration under a Local Polyak-Łojasiewicz Condition
@@ -25,6 +26,8 @@ import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 Core definitions: ambient space, optimization concepts (argmin, PL condition, L-smoothness),
 tubular neighborhoods, first-order algorithm model, convergence rate, and manifold setup.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,15 +3,16 @@ Copyright (c) 2026 Antoine de Saint Germain, Ambrose Tang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint Germain, Ambrose Tang
 -/
+module
 
-import Mathlib.Order.Interval.Finset.Fin
-import Mathlib.LinearAlgebra.RootSystem.Defs
-import Mathlib.Tactic.Ext
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Aesop
-import Mathlib.LinearAlgebra.RootSystem.Reduced
+public import Mathlib.Order.Interval.Finset.Fin
+public import Mathlib.LinearAlgebra.RootSystem.Defs
+public import Mathlib.Tactic.Ext
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Aesop
+public import Mathlib.LinearAlgebra.RootSystem.Reduced
 
 /-!
 # Type-Aₙ root systems
@@ -19,6 +20,8 @@ import Mathlib.LinearAlgebra.RootSystem.Reduced
 Explicit construction of the type-`Aₙ` root pairing on the weight lattice `Fin n → ℤ`,
 exhibited as a crystallographic, reduced Mathlib `RootPairing`.
 -/
+
+@[expose] public section
 
 namespace An
 

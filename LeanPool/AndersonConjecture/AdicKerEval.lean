@@ -3,9 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
-import Mathlib.RingTheory.PicardGroup
+module
+
+public import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+public import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Kernel of the Evaluation Map on Adic Completions
@@ -16,6 +18,8 @@ to R/M^n must lie in the n-th power of the extended maximal ideal.
 This uses the short exact sequence relating the completion to
 successive quotients.
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 open AdicCompletion

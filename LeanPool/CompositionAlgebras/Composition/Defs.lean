@@ -3,11 +3,13 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.LinearAlgebra.BilinearMap
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Module
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Module
 
 
 /-!
@@ -55,6 +57,8 @@ Everything below is derived from the four class fields alone.
 
 Substrate for the two Hurwitz theorems. It states neither of them.
 -/
+
+@[expose] public section
 
 universe u
 

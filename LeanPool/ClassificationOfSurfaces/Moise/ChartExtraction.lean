@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-import LeanPool.ClassificationOfSurfaces.Moise.BoundaryInvariant
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
+public import LeanPool.ClassificationOfSurfaces.Moise.BoundaryInvariant
 
 /-!
 # Extraction of Moise charts from the mathlib atlas
@@ -23,6 +25,8 @@ half-ball lies in the chart image, giving a half-disk chart).  C0 invariance of 
 boundary-faithfulness: manifold-boundary points in the chart land on the frontier of the extended
 target, hence on the model edge line.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 open Topology

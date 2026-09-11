@@ -3,19 +3,20 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import Mathlib.Analysis.Convex.DoublyStochasticMatrix
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Logic.Equiv.Fin.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
+public import Mathlib.Analysis.Convex.DoublyStochasticMatrix
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.EquivFin
+public import Mathlib.Logic.Equiv.Fin.Basic
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Positivity
 /-!
 # Shannon.Entropy.Core
 
@@ -33,6 +34,8 @@ Global roadmap (matching Shannon Appendix 2):
 3. Real case: floor-count rational approximants `approxProb p N` converge to `p`;
    continuity upgrades the rational formula to all real probabilities.
 -/
+
+@[expose] public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

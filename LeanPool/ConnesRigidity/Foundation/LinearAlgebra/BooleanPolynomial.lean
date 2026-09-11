@@ -3,12 +3,14 @@ Copyright (c) 2026 Utensil Song, OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song, OpenAI
 -/
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.Module.Pi
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Ring.RingNF
+module
+
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.Order.Ring.Star
+public import Mathlib.Tactic.Abel
+public import Mathlib.Tactic.LinearCombination
+public import Mathlib.Tactic.Ring.RingNF
 
 /-!
 Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
@@ -17,6 +19,8 @@ Modifications: renamed the elementary `ZMod 2` helper and placed it in the
 local Boolean-polynomial namespace. The remaining finite-coordinate support
 and weight development is local. See the upstream PORT_MAP.md.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace BooleanPolynomial

@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
-import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
-import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
+public import LeanPool.LocalComplexGeometry.Geometry.FiniteProjection
+public import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # Finite projection for analytic hypersurface germs
@@ -15,6 +16,8 @@ import Mathlib.RingTheory.Ideal.Quotient.Operations
 This module exposes the frozen algebraic predicate and combines the prepared
 quotient power basis with the genuine local proper finite-projection theorem.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

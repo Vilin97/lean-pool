@@ -3,33 +3,34 @@ Copyright (c) 2026 Weiyi Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Weiyi Wang
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Ring.NegOnePow
-import Mathlib.Combinatorics.Enumerative.Partition.Basic
-import Mathlib.Data.Set.Card
-import Mathlib.Data.List.Basic
-import Mathlib.Data.List.Forall2
-import Mathlib.Data.List.Range
-import Mathlib.Data.List.Sort
-import Mathlib.Data.PNat.Interval
-import Mathlib.RingTheory.PowerSeries.Basic
-import Mathlib.RingTheory.PowerSeries.WellKnown
-import Mathlib.RingTheory.PowerSeries.PiTopology
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Ring.NegOnePow
+public import Mathlib.Combinatorics.Enumerative.Partition.Basic
+public import Mathlib.Data.Set.Card
+public import Mathlib.Data.List.Basic
+public import Mathlib.Data.List.Forall2
+public import Mathlib.Data.List.Range
+public import Mathlib.Data.List.Sort
+public import Mathlib.Data.PNat.Interval
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Mathlib.RingTheory.PowerSeries.WellKnown
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+public import Mathlib.Tactic.Common
+public import Mathlib.Tactic.Linarith
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.GCongr
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.IntervalCases
+public import Mathlib.Tactic.SplitIfs
+public import Mathlib.Tactic.Zify
+public import Mathlib.Tactic.Lift
+public import Mathlib.Tactic.Bound
+public import Mathlib.Tactic.Measurability
+public import Mathlib.Tactic.Abel
 
 /-!
 
@@ -45,6 +46,8 @@ following Franklin's bijective proof presented on the wikipedia page. This long 
 is obsolete by the shorter ones in `PowerSeries.lean` and `Complex.lean`, but I keep
 it here to show case how a combinatorial proof can be done.
 -/
+
+@[expose] public section
 
 open scoped PowerSeries.WithPiTopology
 

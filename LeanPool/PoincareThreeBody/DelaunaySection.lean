@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DelaunayActions
-import LeanPool.PoincareThreeBody.DelaunayFlow
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import LeanPool.PoincareThreeBody.DelaunayActions
+public import LeanPool.PoincareThreeBody.DelaunayFlow
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # An analytic periapsis section of the planar Delaunay action map
@@ -17,6 +18,8 @@ Cartesian phase point depending analytically on `(L,G)`.  This section is a righ
 physical action map and supplies the action-space representative of the leading candidate
 integral.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

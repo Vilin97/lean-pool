@@ -3,27 +3,27 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Factorial.DoubleFactorial
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.SpecialFunctions.Bernstein
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+public import Mathlib.Data.Nat.Factorial.DoubleFactorial
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 
 -- Import our basic definitions
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Schwinger.Defs
-import LeanPool.OSforGFF.General.FunctionalAnalysis
-import LeanPool.OSforGFF.Covariance.Momentum
-import LeanPool.OSforGFF.Covariance.Parseval
+public import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.Euclidean
+public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
+public import LeanPool.OSforGFF.Schwinger.Defs
+public import LeanPool.OSforGFF.General.FunctionalAnalysis
+public import LeanPool.OSforGFF.Covariance.Momentum
+public import LeanPool.OSforGFF.Covariance.Parseval
 
 /-!
 # Position-Space Free Covariance
@@ -41,6 +41,8 @@ C(x,y) = ∫₀^∞ e^{−sm²} H(s,|x−y|) ds via the heat kernel.
 - `freeCovariance_euclidean_invariant`: Euclidean invariance of the covariance
 - `covariance_timeReflection_invariant`: Time reflection invariance
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Real Filter
 open TopologicalSpace

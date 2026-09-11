@@ -3,9 +3,10 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.Normed.Module.Completion
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.Normed.Module.Completion
 
 /-!
 # Displacement is at most the integral of the speed
@@ -13,6 +14,8 @@ import Mathlib.Analysis.Normed.Module.Completion
 In this file we prove several version of the following fact:
 the displacement (`dist (f a) (f b)`) is at most the integral of `‖deriv f‖` over `[a, b]`.
 -/
+
+@[expose] public section
 
 
 

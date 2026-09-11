@@ -3,13 +3,14 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.Analysis.Fourier.Inversion
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
 
 /-!
 ## Functional Analysis for AQFT
@@ -60,6 +61,8 @@ focusing on integrability, Schwartz function properties, and L² embeddings.
 - `norm_exp_I_mul_real`, `norm_exp_neg_I_mul_real`: ‖exp(±i·r)‖ = 1
 - `sub_const_hasTemperateGrowth`: Translation has temperate growth
 -/
+
+@[expose] public section
 
 open MeasureTheory NNReal ENNReal Complex
 open TopologicalSpace Measure

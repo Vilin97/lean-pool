@@ -3,10 +3,11 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.ClosedImmersion
-import LeanPool.GrothendieckVanishing.CohomologyAPI
-import LeanPool.GrothendieckVanishing.FlasqueVanishing
+public import LeanPool.GrothendieckVanishing.ClosedImmersion
+public import LeanPool.GrothendieckVanishing.CohomologyAPI
+public import LeanPool.GrothendieckVanishing.FlasqueVanishing
 
 /-!
 # Closed-immersion cohomology
@@ -24,6 +25,8 @@ The closed-inclusion stalk, exactness, and adjunction-unit short exact sequence 
 in `ClosedImmersion.lean`. LES-facing `Sheaf.H` wrappers come from `CohomologyAPI.lean`,
 and the flasque infrastructure from `FlasqueVanishing.lean`.
 -/
+
+@[expose] public section
 
 universe u
 

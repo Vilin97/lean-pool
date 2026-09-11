@@ -3,14 +3,17 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import LeanPool.Lean4GlCoalgebras.General.Game
-import LeanPool.Lean4GlCoalgebras.General.Soundness
+public import LeanPool.Lean4GlCoalgebras.General.Game
+public import LeanPool.Lean4GlCoalgebras.General.Soundness
 
 /-! ## Prover winning the GL-game builds a GL-proof.
 
 If Prover has a winning strategy in the game starting from `Γ`, then there is a proof of `Γ`,
 proven in `prover_win_builds_proof`, all other definitions and proofs in this file are helpers. -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

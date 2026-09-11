@@ -3,15 +3,16 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Sensitivity.Defs
-import LeanPool.Sensitivity.Basic
-import LeanPool.Sensitivity.Multilinear
-import LeanPool.Sensitivity.Subcube
-import LeanPool.Sensitivity.Parity
-import LeanPool.Sensitivity.HuangBridge
-import LeanPool.Sensitivity.Main
-import LeanPool.Sensitivity.Consequences
+public import LeanPool.Sensitivity.Defs
+public import LeanPool.Sensitivity.Basic
+public import LeanPool.Sensitivity.Multilinear
+public import LeanPool.Sensitivity.Subcube
+public import LeanPool.Sensitivity.Parity
+public import LeanPool.Sensitivity.HuangBridge
+public import LeanPool.Sensitivity.Main
+public import LeanPool.Sensitivity.Consequences
 
 /-!
 # Sensitivity Conjecture: sqrt(deg) <= sensitivity
@@ -23,6 +24,8 @@ Main declarations: `LeanPoolSensitivity.sensitivity_ge_sqrt_degree`
 Tags: combinatorics, boolean-functions, computational-complexity
 MSC: 06E30, 68Q17
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

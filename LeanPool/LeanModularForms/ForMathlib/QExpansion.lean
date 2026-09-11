@@ -3,15 +3,16 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Analysis.Complex.TaylorSeries
-import Mathlib.Analysis.Complex.UpperHalfPlane.Exp
-import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
-import Mathlib.NumberTheory.ModularForms.Basic
-import Mathlib.NumberTheory.ModularForms.Identities
-import Mathlib.NumberTheory.ModularForms.QExpansion
-import LeanPool.LeanModularForms.ForMathlib.Identities
-import Mathlib.RingTheory.PowerSeries.Basic
+public import Mathlib.Analysis.Complex.TaylorSeries
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Exp
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
+public import Mathlib.NumberTheory.ModularForms.Basic
+public import Mathlib.NumberTheory.ModularForms.Identities
+public import Mathlib.NumberTheory.ModularForms.QExpansion
+public import LeanPool.LeanModularForms.ForMathlib.Identities
+public import Mathlib.RingTheory.PowerSeries.Basic
 
 /-!
 # q-expansions of modular forms (project-local extensions)
@@ -22,6 +23,8 @@ The bulk of the original `ForMathlib/QExpansion.lean` file has been upstreamed i
 variants that are parameterised by `Γ.width ∣ h` rather than `h ∈ Γ.strictPeriods`, which
 the rest of the project still uses.
 -/
+
+@[expose] public section
 
 open scoped Real NNReal MatrixGroups CongruenceSubgroup
 

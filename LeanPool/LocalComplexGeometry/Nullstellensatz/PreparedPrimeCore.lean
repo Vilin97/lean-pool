@@ -3,18 +3,19 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
-import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
-import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisionRepresentatives
-import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialRepresentativeOperations
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeCancellation
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeInduction
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisionRepresentatives
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialFibers
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialRepresentativeOperations
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeCancellation
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeInduction
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedRootLocality
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialSpecialization
 
 /-!
 # The prepared-prime geometric step
@@ -24,6 +25,8 @@ prepared fibres.  The small certificate below deliberately records only the
 finite pointwise information used by the geometric argument.  Its fields are
 later furnished by denominator-cleared minimal-polynomial identities.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

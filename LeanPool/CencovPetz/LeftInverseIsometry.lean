@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.MarkovMorphism
-import LeanPool.CencovPetz.MonotoneMetric
-import Mathlib.LinearAlgebra.BilinearForm.Properties
+module
+
+public import LeanPool.CencovPetz.MarkovMorphism
+public import LeanPool.CencovPetz.MonotoneMetric
+public import Mathlib.LinearAlgebra.BilinearForm.Properties
 
 
 /-!
@@ -20,6 +22,8 @@ is an isometry for the metric family.
 
 This is the abstract lemma behind permutation invariance and replication invariance.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

@@ -15,12 +15,16 @@ removes one of the two black boxes from Corollary 15.
 
 Statement pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.ProofSystem
-import LeanPool.MatchingLogic.Sanity
+module
+
+public import LeanPool.MatchingLogic.ProofSystem
+public import LeanPool.MatchingLogic.Sanity
 
 /-!
 # MatchingLogic.Soundness
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

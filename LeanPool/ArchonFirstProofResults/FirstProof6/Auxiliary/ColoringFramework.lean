@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.LinearAlgebra.Matrix.PosDef
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Combinatorics.SimpleGraph.Basic
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Coloring Framework
@@ -26,6 +28,8 @@ and `barrier_parameter_bound`.
 - `Problem6.coloring_iterate`: k-step coloring iteration
 - `Problem6.barrier_parameter_bound`: final parameter bound
 -/
+
+@[expose] public section
 
 open Finset Matrix BigOperators
 

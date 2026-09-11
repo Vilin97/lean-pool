@@ -3,14 +3,17 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame

@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonInseparability
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonInseparability
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
 /-!
 # The polarity side bound and the one-sided closures (issue #14, Unit 3)
 
@@ -42,6 +44,8 @@ projections this file consumes now live in the neutral
 `Methods/Interpolation/BaseOccurrenceProjections.lean`, whose own cone stops at the generated
 universe.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

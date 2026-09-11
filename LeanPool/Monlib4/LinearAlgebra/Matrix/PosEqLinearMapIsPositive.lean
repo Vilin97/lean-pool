@@ -3,22 +3,26 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import LeanPool.Monlib4.LinearAlgebra.End
-import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
-import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import LeanPool.Monlib4.Preq.Ites
-import LeanPool.Monlib4.Preq.RCLikeLe
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import Mathlib.Analysis.Matrix.Order
+public import Mathlib.Analysis.Matrix.PosDef
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import LeanPool.Monlib4.LinearAlgebra.End
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+public import LeanPool.Monlib4.Preq.Ites
+public import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 # Positivity of matrices and linear maps
 
 Compatibility wrappers for the part of Monlib's matrix-positive API now covered by Mathlib.
 -/
+
+@[expose] public section
 
 namespace Matrix
 

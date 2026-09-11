@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
 
 /-!
 # Theorem 1.10 (Scott 1981, PRG-19, §1) — the element-token system `{[X]}`
@@ -39,6 +40,8 @@ Everything is constructive (`[propext, Quot.sound]`): `[X]`-membership is just
 `x.mem X`, and the
 filter laws mirror the constructive proofs for `principal`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

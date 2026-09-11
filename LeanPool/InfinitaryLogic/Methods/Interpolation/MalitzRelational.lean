@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRootGate
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairModel
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRootGate
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairModel
 /-!
 # Malitz interpolation, countable relational core (issue #15)
 
@@ -25,6 +27,8 @@ quantifier permission is therefore unusable, which is what `isUniversal_of_budge
 converts into universality of the separator.  This is the sense in which the labelled budget "pays
 for" the interpolant's class.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

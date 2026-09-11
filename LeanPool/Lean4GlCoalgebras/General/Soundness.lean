@@ -3,15 +3,18 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import Mathlib.Data.Finset.Basic
-import Mathlib.Order.CompleteLattice.Basic
-import Mathlib.Order.FixedPoints
-import Mathlib.Data.Set.Lattice
-import LeanPool.Lean4GlCoalgebras.Logic.Semantics
-import LeanPool.Lean4GlCoalgebras.General.Proof
+public import Mathlib.Data.Finset.Basic
+public import Mathlib.Order.CompleteLattice.Basic
+public import Mathlib.Order.FixedPoints
+public import Mathlib.Data.Set.Lattice
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+public import LeanPool.Lean4GlCoalgebras.General.Proof
 
 /-! ## Soundness of GL-proof system. -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

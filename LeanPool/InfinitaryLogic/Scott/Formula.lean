@@ -3,10 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.BackAndForth
-import LeanPool.InfinitaryLogic.Util
-import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.Scott.BackAndForth
+public import LeanPool.InfinitaryLogic.Util
+public import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
+public import Mathlib.SetTheory.Cardinal.Aleph
 
 /-!
 # Scott Formulas
@@ -37,6 +39,8 @@ The key technical challenge is handling the variable binding correctly. When we 
 a formula φ(x₀,...,xₙ) with n+1 free variables and want to existentially quantify
 over the last variable, we use `relabel` to move it into a bound position.
 -/
+
+@[expose] public section
 
 universe u v w w'
 

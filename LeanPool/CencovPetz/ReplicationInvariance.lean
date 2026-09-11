@@ -3,8 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.LeftInverseIsometry
-import LeanPool.CencovPetz.Replication
+module
+
+public import LeanPool.CencovPetz.LeftInverseIsometry
+public import LeanPool.CencovPetz.Replication
 
 
 /-!
@@ -13,6 +15,8 @@ import LeanPool.CencovPetz.Replication
 For a monotone metric family (Čencov setting), replication maps `α → α × Fin m` are isometries:
 they have a deterministic left inverse (coarsening), so monotonicity holds in both directions.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

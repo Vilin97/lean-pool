@@ -3,8 +3,10 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Lattice.Distance
-import LeanPool.BruhatTits.Lattice.Construction
+module
+
+public import LeanPool.BruhatTits.Lattice.Distance
+public import LeanPool.BruhatTits.Lattice.Construction
 
 /-!
 # Definition of vertices
@@ -27,6 +29,8 @@ is later used to define the edge relations on the Bruhat-Tits graph (see `Bruhat
   deduce that the Bruhat-Tits graph is connected.
 
 -/
+
+@[expose] public section
 
 open Module
 

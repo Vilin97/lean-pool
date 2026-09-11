@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
 /-!
 # Back-translation from the graph language (Craig Layer 3, Unit 6)
 
@@ -29,6 +31,8 @@ graph axioms, choice, or reconstruction enters.
 * `realize_backTranslate_relationalize` — acceptance corollary: back-translating a
   relationalization is semantically the original formula (no syntactic identity claimed).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

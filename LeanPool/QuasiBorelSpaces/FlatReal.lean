@@ -3,18 +3,21 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
+public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+public import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 
 /-!
 # LeanPool.QuasiBorelSpaces.FlatReal
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.FlatReal`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open MeasureSpace

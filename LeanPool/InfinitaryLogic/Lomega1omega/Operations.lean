@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-import LeanPool.InfinitaryLogic.Util
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+public import LeanPool.InfinitaryLogic.Util
 /-!
 # Operations on Lω₁ω Formulas
 
@@ -23,6 +25,8 @@ These are the ω-facing operations, defined over `BoundedFormulaInf ℕ`. An ope
 sense at an arbitrary branching carrier belongs upstream on `BoundedFormulaInf`; `IndexCoding`
 handles transport between carriers.
 -/
+
+@[expose] public section
 
 universe u v u'
 

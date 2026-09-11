@@ -3,16 +3,19 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.Data.Set.Subset
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeBody
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
+public import Mathlib.Data.Set.Subset
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeBody
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame

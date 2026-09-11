@@ -3,9 +3,10 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 
 /-!
 This file will host the Lean-level encoding of the exact rational certificate and the
@@ -17,6 +18,8 @@ Planned approach (to be implemented):
 * prove dual feasibility and evaluate the dual objective exactly,
 * translate the resulting edge-correlation bound into a monochromatic-edge bound.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

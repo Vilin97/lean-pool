@@ -3,11 +3,13 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Int.Basic
-import Mathlib.Data.Int.Interval
-import Mathlib.Tactic.Linarith
+module
+
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Int.Basic
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Tactic.Linarith
 
 /-!
 # Auxiliary utilities
@@ -15,6 +17,8 @@ import Mathlib.Tactic.Linarith
 This file contains small helper lemmas. These are all generic -- they are not specific to this
 repository's main objects, so they are collected separately here.
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 

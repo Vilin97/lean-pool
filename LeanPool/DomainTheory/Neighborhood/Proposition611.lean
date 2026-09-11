@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition610
-import LeanPool.DomainTheory.Neighborhood.Exercise222
+public import LeanPool.DomainTheory.Neighborhood.Definition610
+public import LeanPool.DomainTheory.Neighborhood.Exercise222
 
 /-!
 # Lecture VI — Proposition 6.11 (Scott 1981, PRG-19): the subsystems of `E` form a
@@ -68,6 +69,8 @@ exercise, which
 picks witnesses of non-emptiness and uses finite-set induction), exactly as
 Exercise 3.27 does.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Proposition611
 

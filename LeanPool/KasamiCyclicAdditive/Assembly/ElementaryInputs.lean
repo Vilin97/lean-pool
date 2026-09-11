@@ -3,10 +3,11 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
 
 /-!
 # Elementary inputs
@@ -19,6 +20,8 @@ Three bookkeeping inputs the assembled theorem needs:
 * the admissible-slope finset is nonempty as soon as `|K| > 2`.
 
 -/
+
+@[expose] public section
 
 open Finset
 

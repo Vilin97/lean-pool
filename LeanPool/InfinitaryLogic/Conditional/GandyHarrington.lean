@@ -3,13 +3,15 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Conditional.SilverCategoryRoute
-import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
-import LeanPool.InfinitaryLogic.Descriptive.PerfectAntichain
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.Topology.MetricSpace.CantorScheme
-import Mathlib.Topology.MetricSpace.Perfect
-import Mathlib.Topology.MetricSpace.Polish
+module
+
+public import LeanPool.InfinitaryLogic.Conditional.SilverCategoryRoute
+public import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
+public import LeanPool.InfinitaryLogic.Descriptive.PerfectAntichain
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.Topology.MetricSpace.CantorScheme
+public import Mathlib.Topology.MetricSpace.Perfect
+public import Mathlib.Topology.MetricSpace.Polish
 /-!
 # Silver's Theorem for Borel Equivalence Relations
 
@@ -33,6 +35,8 @@ map `x ↦ [x]` into the Effros–Borel space is Borel), so "potentially closed 
 the hard core of Silver is exactly the non-smooth relations — the `G₀`-dichotomy content of
 the category route.
 -/
+
+@[expose] public section
 
 universe u v
 

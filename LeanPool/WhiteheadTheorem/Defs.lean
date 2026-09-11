@@ -3,14 +3,17 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
+public import LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
 
 /-!
 # LeanPool.WhiteheadTheorem.Defs
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Defs`.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory

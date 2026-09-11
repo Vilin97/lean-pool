@@ -3,8 +3,9 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Finiteness
+public import LeanPool.Erdos137.Finiteness
 
 /-!
 # Erdős Problem #137: shared `g`-independent base layer
@@ -28,6 +29,8 @@ Two groups of helpers live here:
 None of these mentions any block length `g` (or the concrete `B`/`W`/`overlap` of a route), so they
 are proved once here and reused verbatim downstream.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

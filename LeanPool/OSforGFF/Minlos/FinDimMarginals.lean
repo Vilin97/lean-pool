@@ -3,8 +3,9 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.Bochner.Main
+public import LeanPool.OSforGFF.Bochner.Main
 
 /-!
 # Finite-Dimensional Marginals for Minlos' Theorem
@@ -24,6 +25,8 @@ measure μ_F on ℝⁿ.
 - `marginalCF_normalized` — marginalCF(0) = 1
 - `marginal_measure_exists` — Bochner gives a probability measure with matching CF
 -/
+
+@[expose] public section
 
 open BigOperators MeasureTheory Complex
 

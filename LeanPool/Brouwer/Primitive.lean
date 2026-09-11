@@ -3,7 +3,9 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
-import LeanPool.Brouwer.Brouwer
+module
+
+public import LeanPool.Brouwer.Brouwer
 
 /-!
 # Primitive sets and the slack-vector form of Scarf's lemma
@@ -13,6 +15,8 @@ sets over the enlarged good set `T ⊕ I`, the "slack-vector" language of Scarf'
 algorithm. It relates the room/door combinatorics developed in `Scarf` to this
 primitive-set picture used by the path-following termination argument.
 -/
+
+@[expose] public section
 
 attribute [local instance] Classical.propDecidable
 open Finset

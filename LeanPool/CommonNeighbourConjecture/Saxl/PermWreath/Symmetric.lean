@@ -3,9 +3,10 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.Data.Fintype.Card
-import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.GroupTheory.GroupAction.Basic
 
 /-!
 # Words for a full symmetric top group
@@ -13,6 +14,8 @@ import Mathlib.GroupTheory.GroupAction.Basic
 Only the distinguishing-word facts used by the every-base construction are
 included here.
 -/
+
+@[expose] public section
 
 namespace Saxl
 

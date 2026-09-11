@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCMem
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCMem
 /-!
 # Tagged-expansion gluing (issue #10, Unit 4 commit 2)
 
@@ -16,6 +18,8 @@ agrees with `Sl` on the left sentence's occurrence set and with `Sr` on the righ
 Endpoint (`pcMem_glue`): `PCMem ψleft M ∧ PCMem ψright M → ∃ S, Realize ψleft M ∧ Realize ψright M`,
 the realizations using `S`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

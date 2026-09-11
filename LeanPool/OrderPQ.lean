@@ -3,15 +3,16 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
+module
 
-import LeanPool.OrderPQ.Basic
-import LeanPool.OrderPQ.IsCyclic
-import LeanPool.OrderPQ.Main
-import LeanPool.OrderPQ.MonoidHom
-import LeanPool.OrderPQ.MulZMod
-import LeanPool.OrderPQ.PrimeOrder
-import LeanPool.OrderPQ.SemidirectProduct
-import LeanPool.OrderPQ.TorsionBy
+public import LeanPool.OrderPQ.Basic
+public import LeanPool.OrderPQ.IsCyclic
+public import LeanPool.OrderPQ.Main
+public import LeanPool.OrderPQ.MonoidHom
+public import LeanPool.OrderPQ.MulZMod
+public import LeanPool.OrderPQ.PrimeOrder
+public import LeanPool.OrderPQ.SemidirectProduct
+public import LeanPool.OrderPQ.TorsionBy
 
 /-!
 # Classification of groups of order p * q
@@ -23,6 +24,8 @@ Main declarations: `OrderPQ.exists_card_eq_prime_mul_prime_and_not_isCyclic_iff`
 Tags: group-theory, finite-groups, semidirect-products
 MSC: 20D20, 20E22, 20D60
 -/
+
+@[expose] public section
 
 /-!
 ## Provenance and scope

@@ -3,15 +3,18 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.BrauerGroup
-import LeanPool.BrauerGroupNew.ZeroSevenFourE
+public import LeanPool.BrauerGroupNew.BrauerGroup
+public import LeanPool.BrauerGroupNew.ZeroSevenFourE
 
 /-!
 # LeanPool.BrauerGroupNew.SkolemNoether
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.SkolemNoether`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

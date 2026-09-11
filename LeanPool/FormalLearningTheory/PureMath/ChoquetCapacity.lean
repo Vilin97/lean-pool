@@ -3,13 +3,15 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
-import Mathlib.MeasureTheory.Measure.Regular
-import Mathlib.MeasureTheory.Measure.RegularityCompacts
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.Order.ConditionallyCompleteLattice.Basic
-import Mathlib.Topology.Sequences
-import Mathlib.Topology.Metrizable.Basic
+module
+
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import Mathlib.MeasureTheory.Measure.Regular
+public import Mathlib.MeasureTheory.Measure.RegularityCompacts
+public import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+public import Mathlib.Order.ConditionallyCompleteLattice.Basic
+public import Mathlib.Topology.Sequences
+public import Mathlib.Topology.Metrizable.Basic
 
 /-!
 # Choquet Capacity Theory
@@ -31,6 +33,8 @@ This file is independent of learning theory and is a candidate for contribution 
 - Choquet, "Theory of capacities", Annales de l'Institut Fourier, 1954
 - Kechris, "Classical Descriptive Set Theory", Theorem 30.13
 -/
+
+@[expose] public section
 
 universe u
 

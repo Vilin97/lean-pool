@@ -3,12 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Inversion
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
-import LeanPool.JacobianDiffgeo.ProjectiveLine.GenusZero
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Inversion
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Holomorphy
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.GenusZero
 
 /-!
 # projective-line (CC5): the Riemann sphere `ℙ¹ := OnePoint ℂ`
@@ -43,6 +44,8 @@ instances), mapping-degree/meromorphic-trace (the chart API + `inversionDiffeomo
 basepoints), meromorphic-and-divisors (`contMDiffAt_of_pole` + `ContMDiffAt.onePointCoe` as the
 two atoms for the future `ℳ.toP1` bridge, junk-value contract `coeChart ∞ = 0`).
 -/
+
+@[expose] public section
 
 /-- The Riemann sphere, as the one-point compactification of `ℂ`. -/
 scoped[RS.P1] notation "ℙ¹" => OnePoint ℂ

@@ -3,9 +3,10 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Prelude
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
 
 /-!
 # From slope form to the original coefficient form
@@ -22,6 +23,8 @@ equation at slope `ρ = v₂/v₁`.
 this module; `coefficient_form_nat_of_slope_form` is what carries the assembled
 slope theorem back to the coefficient form of the original conjecture.
 -/
+
+@[expose] public section
 
 open Finset
 

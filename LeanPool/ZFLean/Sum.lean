@@ -3,17 +3,20 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Basic
-import LeanPool.ZFLean.Booleans
-import LeanPool.ZFLean.Integers
-import LeanPool.ZFLean.Functions
+public import LeanPool.ZFLean.Basic
+public import LeanPool.ZFLean.Booleans
+public import LeanPool.ZFLean.Integers
+public import LeanPool.ZFLean.Functions
 
 /-!
 # LeanPool.ZFLean.Sum
 
 Imported Lean Pool material for `LeanPool.ZFLean.Sum`.
 -/
+
+@[expose] public section
 
 universe u v
 

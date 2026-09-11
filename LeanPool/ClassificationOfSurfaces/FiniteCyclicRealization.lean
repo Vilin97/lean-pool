@@ -3,10 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
-import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Data.Fintype.Fin
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
+public import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Data.Fintype.Fin
 
 /-!
 # Polygonal realization of finite cyclic presentations
@@ -24,6 +26,8 @@ parameter.
 legacy cell-complex predicate. It therefore supplies the complete occurrence-pairing certificate
 needed by this construction.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

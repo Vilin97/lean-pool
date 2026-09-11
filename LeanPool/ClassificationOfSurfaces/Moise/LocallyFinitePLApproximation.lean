@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteCellwiseExtension
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteCellwiseExtension
 
 /-!
 # Quantitative locally finite PL approximation
@@ -12,6 +14,8 @@ This file records the facewise metric control used in Moise Chapter 6, Theorem 3
 deliberately pointwise: on a noncompact open complex no uniform positive tolerance exists, but a
 strongly positive tolerance has a positive lower bound on every compact face.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

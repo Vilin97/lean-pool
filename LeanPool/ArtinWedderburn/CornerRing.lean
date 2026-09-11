@@ -3,16 +3,18 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.Algebra.Field.Defs
-import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.Algebra.Ring.Idempotent
-import Mathlib.Algebra.Ring.MinimalAxioms
-import Mathlib.RingTheory.Ideal.Span
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-import LeanPool.ArtinWedderburn.PrimeRing
-import LeanPool.ArtinWedderburn.NonUnitalToUnital
-import LeanPool.ArtinWedderburn.Auxiliary
+module
+
+public import Mathlib.RingTheory.Artinian.Ring
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.RingTheory.SimpleRing.Basic
+public import Mathlib.Algebra.Ring.Idempotent
+public import Mathlib.Algebra.Ring.MinimalAxioms
+public import Mathlib.RingTheory.Ideal.Span
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+public import LeanPool.ArtinWedderburn.PrimeRing
+public import LeanPool.ArtinWedderburn.NonUnitalToUnital
+public import LeanPool.ArtinWedderburn.Auxiliary
 
 /-!
 # Corner subrings `eRe`
@@ -23,6 +25,8 @@ subring of `R` consisting of elements of the form `e * x * e`. It becomes a
 artinianness, primality, lifts and pushes of ideals, and isomorphisms between
 corner subrings of equal idempotents.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathlib.Tactic.Common
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Basic
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+public import Mathlib.Tactic.Common
 /-!
 # Definition of Graph Action
 
@@ -18,6 +20,8 @@ on the vertices of `X` that preserves the adjacency relation.
 We show that a graph action induces an action on the edges.
 
 -/
+
+@[expose] public section
 
 open Module
 

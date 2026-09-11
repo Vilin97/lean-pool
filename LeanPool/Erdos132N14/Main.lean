@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132N14.DiameterDescent
+module
+
+public import LeanPool.Erdos132N14.DiameterDescent
 
 /-!
 # Conditional fourteen-point theorem for Erdős Problem 132
@@ -18,6 +20,8 @@ The result is conditional on the two interfaces in `PublishedInputs.lean`.
 The planar diameter bound is proved internally. It does not settle Erdős
 Problem 132 in general.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132N14
 

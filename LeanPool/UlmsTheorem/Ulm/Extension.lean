@@ -3,11 +3,12 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import Mathlib.GroupTheory.FiniteAbelian.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import LeanPool.UlmsTheorem.PGroups.UlmInvariants
-import LeanPool.UlmsTheorem.Ulm.Pure
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
+public import LeanPool.UlmsTheorem.Ulm.Pure
 
 /-!
 # Extension lemmas for Ulm's theorem
@@ -16,6 +17,8 @@ This file contains the one-generator extension interface used in the hard
 direction of Ulm's theorem, formulated against the classical invariants
 `dim_{ℤ/pℤ}(P_α / P_{α+1})`.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

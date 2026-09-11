@@ -3,16 +3,20 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Pi
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances`.
 -/
+
+@[expose] public section
 -- import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
 
 variable {n : Type*} [Fintype n] [DecidableEq n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
