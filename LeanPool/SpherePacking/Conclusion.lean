@@ -1796,17 +1796,6 @@ open scoped FourierTransform Real Topology
 
 namespace SpherePacking.Alternative
 
-private structure IsUnrestrictedAdmissible {d : ℕ} (f : Schwartz d) : Prop where
-  real_valued : IsRealValued f
-  fourier_real_valued : IsRealValued (𝓕 f : Schwartz d)
-  fourier_zero_pos : 0 < fourierReal f 0
-  fourier_nonneg : ∀ x, 0 ≤ fourierReal f x
-  eventually_nonpos : ∀ x : Ambient d, 1 ≤ ‖x‖ → (f x).re ≤ 0
-
-end SpherePacking.Alternative
-
-namespace SpherePacking.Alternative
-
 private theorem quotient_eq_of_origin_and_fourier_origin
     {d : ℕ} {f g : Schwartz d}
     (horigin : g 0 = f 0)
@@ -1814,9 +1803,9 @@ private theorem quotient_eq_of_origin_and_fourier_origin
     quotient g = quotient f := by
   simp only [quotient, horigin, hfourier]
 
-private theorem IsUnrestrictedAdmissible.radialAdmissible_of_average_data
+private theorem radialAdmissible_of_average_data
     {d : ℕ} {f g : Schwartz d}
-    (hf : IsUnrestrictedAdmissible f)
+    (hf_zero : 0 < fourierReal f 0)
     (hreal : IsRealValued g)
     (hradial : IsRadial g)
     (hfourier_zero : fourierReal g 0 = fourierReal f 0)
@@ -1826,7 +1815,7 @@ private theorem IsUnrestrictedAdmissible.radialAdmissible_of_average_data
   real_valued := hreal
   radial := hradial
   fourier_real_valued := hradial.fourier_realValued hreal
-  fourier_zero_pos := hfourier_zero.symm ▸ hf.fourier_zero_pos
+  fourier_zero_pos := hfourier_zero.symm ▸ hf_zero
   fourier_nonneg := hfourier_nonneg
   eventually_nonpos := hexterior
 
@@ -1855,19 +1844,22 @@ private theorem radialSymmetrizationAverage_fourier_zero
   unfold fourierReal
   rw [hfourier 0, radialSymmetrizationAverage_zero]
 
-private theorem IsUnrestrictedAdmissible.radialAdmissible_of_radialSymmetrizationAverage
+private theorem radialAdmissible_of_radialSymmetrizationAverage
     {d : ℕ} {f g : Schwartz d}
-    (hf : IsUnrestrictedAdmissible f)
+    (hf_real : IsRealValued f)
+    (hf_zero : 0 < fourierReal f 0)
+    (hf_nonneg : ∀ x : Ambient d, 0 ≤ fourierReal f x)
+    (hf_nonpos : ∀ x : Ambient d, 1 ≤ ‖x‖ → (f x).re ≤ 0)
     (haverage : ∀ x : Ambient d,
       g x = radialSymmetrizationAverage f x)
     (hfourier : ∀ x : Ambient d,
       (𝓕 g : Schwartz d) x =
         radialSymmetrizationAverage (𝓕 f : Schwartz d) x) :
     IsAdmissible g := by
-  apply hf.radialAdmissible_of_average_data
+  apply radialAdmissible_of_average_data hf_zero
   · intro x
     rw [haverage x]
-    exact radialSymmetrizationAverage_im_eq_zero hf.real_valued x
+    exact radialSymmetrizationAverage_im_eq_zero hf_real x
   · exact radial_of_radialSymmetrizationAverage haverage
   · exact radialSymmetrizationAverage_fourier_zero hfourier
   · intro x
@@ -1875,11 +1867,11 @@ private theorem IsUnrestrictedAdmissible.radialAdmissible_of_radialSymmetrizatio
     rw [hfourier x]
     apply radialSymmetrizationAverage_nonneg_of_nonneg
     intro y
-    exact hf.fourier_nonneg y
+    exact hf_nonneg y
   · intro x hx
     rw [haverage x]
     exact radialSymmetrizationAverage_nonpos_of_one_le_norm
-      hf.eventually_nonpos hx
+      hf_nonpos hx
 
 private theorem quotient_eq_of_radialSymmetrizationAverage
     {d : ℕ} {f g : Schwartz d}
@@ -1910,11 +1902,14 @@ private theorem radialSymmetrization_fourier_average_apply_for_admissibility
     _ = radialSymmetrizationAverage (𝓕 f : Schwartz d) x :=
       fourier_radialSymmetrizationAverage f x
 
-private theorem IsUnrestrictedAdmissible.radialSymmetrization_admissible
+private theorem radialSymmetrization_admissible
     {d : ℕ} {f : Schwartz d}
-    (hf : IsUnrestrictedAdmissible f) :
+    (hf_real : IsRealValued f)
+    (hf_zero : 0 < fourierReal f 0)
+    (hf_nonneg : ∀ x : Ambient d, 0 ≤ fourierReal f x)
+    (hf_nonpos : ∀ x : Ambient d, 1 ≤ ‖x‖ → (f x).re ≤ 0) :
     IsAdmissible (radialSymmetrization f) := by
-  exact hf.radialAdmissible_of_radialSymmetrizationAverage
+  exact radialAdmissible_of_radialSymmetrizationAverage hf_real hf_zero hf_nonneg hf_nonpos
     (radialSymmetrization_apply f)
     (radialSymmetrization_fourier_average_apply_for_admissibility f)
 
@@ -1936,19 +1931,11 @@ open scoped FourierTransform SchwartzMap Topology
 
 namespace PackingBounds
 
-private theorem FullAdmissible.toAlternative {d : ℕ} (f : FullAdmissible d) :
-    SpherePacking.Alternative.IsUnrestrictedAdmissible f.function where
-  real_valued := f.real
-  fourier_real_valued := f.fourier_real
-  fourier_zero_pos := f.fourier_zero_pos
-  fourier_nonneg := f.fourier_nonneg
-  eventually_nonpos := f.outside_nonpos
-
 private noncomputable def FullAdmissible.radialization {d : ℕ} (f : FullAdmissible d) :
     CohnElkies.Admissible d :=
-  let hf := f.toAlternative
   let g := SpherePacking.Alternative.radialSymmetrization f.function
-  let hg := hf.radialSymmetrization_admissible
+  let hg := SpherePacking.Alternative.radialSymmetrization_admissible (f := f.function)
+    f.real f.fourier_zero_pos f.fourier_nonneg f.outside_nonpos
   { function := g
     real := hg.real_valued
     radial := hg.radial
