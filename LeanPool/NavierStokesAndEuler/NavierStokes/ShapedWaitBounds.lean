@@ -27,6 +27,19 @@ open Set Filter MeasureTheory
 open scoped Topology ContDiff
 open OutgoingSchedule OutgoingTail NaturalAxisData OutgoingEntranceCone
 
+/-- Combine initial and source bounds under one nonnegative affine envelope. -/
+theorem affine_envelope_bound {initial source initialScale sourceScale energy time : ℝ}
+    (hInitial : initial ≤ initialScale * energy) (hSource : source ≤ sourceScale * energy)
+    (hInitialScale : 0 ≤ initialScale) (hSourceScale : 0 ≤ sourceScale)
+    (hEnergy : 0 ≤ energy) (hTime : 0 ≤ time) :
+    initial + time * source ≤ (initialScale + sourceScale) * (1 + time) * energy := by
+  calc
+    _ ≤ initialScale * energy + time * (sourceScale * energy) :=
+      add_le_add hInitial (mul_le_mul_of_nonneg_left hSource hTime)
+    _ ≤ _ := by
+      nlinarith only [mul_nonneg hSourceScale hEnergy,
+        mul_nonneg hTime (mul_nonneg hInitialScale hEnergy)]
+
 theorem linearLag_neg (r b : ℝ → ℝ) (q₀ y : ℝ) :
     linearLag r (fun t => -b t) (-q₀) y = -linearLag r b q₀ y := by
   unfold linearLag OutgoingSchedule.primitive
@@ -583,11 +596,8 @@ theorem axialLag_hold_ratio_bound (v : TailData) {η t : ℝ}
     linarith
   have hinside : initialAxialBound v.core.P v.core.m + t * (pressureSourceBound * E₀ ^ 2) ≤
       axialWaitConstant v.core.P v.core.m * (1 + t) * E₀ := by
-    have hm := mul_le_mul_of_nonneg_left hsecond ht
-    have hc1 := div_pos hA hEmin
-    have hc2 := mul_pos hC (initialEnergyUpper_pos v.core.P_pos v.core.m)
-    unfold axialWaitConstant
-    nlinarith [mul_nonneg ht hc1.le, mul_nonneg ht hc2.le, mul_pos hc2 hE₀]
+    exact affine_envelope_bound hfirst hsecond (div_pos hA hEmin).le
+      (mul_pos hC (initialEnergyUpper_pos v.core.P_pos v.core.m)).le hE₀.le ht
   have hN := axialLag_hold_bound v hh1 hη ht htw
   have hex : Real.exp (-(1 / 2 - v.core.lam) * t) * Real.exp (-(1 / 2 + v.core.lam) * t) =
       Real.exp (-t) := by rw [← Real.exp_add]; congr 1; ring
@@ -1139,10 +1149,8 @@ theorem normalize_hold_bound (c : Parameters) {η t A z : ℝ} (hη : |η| ≤ 1
   have hinside : A + t * (pressureSourceBound * E₀ ^ 2) ≤
       (A / initialEnergyLower c.P c.m + pressureSourceBound * initialEnergyUpper c.P c.m) * (1 + t)
           * E₀ := by
-    have hm := mul_le_mul_of_nonneg_left hsecond ht
-    have hc1 := div_nonneg hA hEmin.le
-    have hc2 := mul_pos hC (initialEnergyUpper_pos c.P_pos c.m)
-    linarith [mul_nonneg (mul_nonneg ht hc1) hE₀.le, mul_pos hc2 hE₀]
+    exact affine_envelope_bound hfirst hsecond (div_nonneg hA hEmin.le)
+      (mul_pos hC (initialEnergyUpper_pos c.P_pos c.m)).le hE₀.le ht
   have hex : Real.exp (-(1 / 2 - c.lam) * t) * Real.exp (-(1 / 2 + c.lam) * t) = Real.exp (-t) := by
     rw [← Real.exp_add]
     congr 1
