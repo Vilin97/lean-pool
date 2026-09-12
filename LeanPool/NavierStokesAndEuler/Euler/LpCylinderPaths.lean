@@ -78,8 +78,8 @@ def includePath : C(K,Supported period V S hS) →L[ℝ] C(K,CylinderL2 period V
 
 /-- Projection of each ordinary L² value to the fixed supported subspace. -/
 def projectPath : C(K,CylinderL2 period V) →L[ℝ] C(K,Supported period V S hS) :=
-  (projection (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
-      hS)).compLeftContinuous ℝ K
+  (projection (V := V) (liftMeasure period) (spatialSet period S)
+    (spatialSet_measurable period S hS)).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem includePath_apply (f : C(K, Supported period V S hS)) (t : K) :
@@ -143,7 +143,7 @@ theorem translatedForcing_eq_intoLarger (S₀ : Set Space) (hS₀ : MeasurableSe
     (f : C(K, Supported period V S₀ hS₀)) (a : LiftTangent)
     (ha : shiftedSet a.1 S₀ ⊆ S) :
     translatedForcing period S hS (includePath period S₀ hS₀ f) a =
-      (EulerLpCylinderTranslation.intoLarger period a S₀ S hS₀ hS
+      (EulerLpCylinderTranslation.intoLarger (V := V) period a S₀ S hS₀ hS
           ha).toContinuousLinearMap.compLeftContinuous ℝ K f := by
   apply ContinuousMap.ext
   intro t
