@@ -10,7 +10,6 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.FuturePressureBounds
 public import LeanPool.NavierStokesAndEuler.NavierStokes.OutgoingHistories
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ConeAlgebra
 import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Actual outgoing histories through the axial drop
@@ -29,6 +28,17 @@ namespace NavierStokes.OutgoingEntranceCone
 open Set Filter MeasureTheory
 open scoped Topology ContDiff
 open OutgoingSchedule OutgoingTail NaturalAxisData
+
+theorem integral_exp_mul_real {a : ℝ} (ha : a ≠ 0) (y : ℝ) :
+    (∫ t in (0 : ℝ)..y, Real.exp (a * t)) = (Real.exp (a * y) - 1) / a := by
+  have hd : ∀ t, HasDerivAt (fun x => Real.exp (a * x) / a) (Real.exp (a * t)) t := by
+    intro t
+    convert! (((hasDerivAt_id t).const_mul a).exp).div_const a using 1
+    simp only [id_eq]
+    field_simp
+  have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => hd t)
+    ((Real.continuous_exp.comp (continuous_const.mul continuous_id)).intervalIntegrable 0 y)
+  simpa only [mul_zero, Real.exp_zero, sub_div] using hi
 
 /-- Exponential averaging with the actual incoming history at clock zero. -/
 noncomputable def historyAverage (b : ℝ → ℝ) (b₀ y : ℝ) : ℝ :=
@@ -55,11 +65,13 @@ theorem historyAverage_contDiff {b : ℝ → ℝ} (hb : ContDiff ℝ ∞ b) (b�
 theorem historyAverage_constant {b : ℝ → ℝ} {b₀ y : ℝ}
     (hb : ∀ t ∈ uIcc (0 : ℝ) y, b t = b₀) : historyAverage b b₀ y = b₀ := by
   rw [historyAverage_formula]
+  have hexp : (∫ t in (0 : ℝ)..y, Real.exp t) = Real.exp y - 1 := by
+    simpa only [one_mul, div_one] using integral_exp_mul_real (a := 1) one_ne_zero y
   have he : (∫ t in (0 : ℝ)..y, Real.exp t * b t) = (Real.exp y - 1) * b₀ := by
     calc
       _ = ∫ t in (0 : ℝ)..y, Real.exp t * b₀ :=
         intervalIntegral.integral_congr (fun t ht => by rw [hb t ht])
-      _ = _ := by rw [intervalIntegral.integral_mul_const, integral_exp]; simp
+      _ = _ := by rw [intervalIntegral.integral_mul_const, hexp]
   rw [he]
   have hx : Real.exp (-y) * Real.exp y = 1 := by rw [← Real.exp_add]; simp
   calc
@@ -81,8 +93,9 @@ theorem historyAverage_le {b : ℝ → ℝ} (hbc : Continuous b) {b₀ K y : ℝ
     ((Real.continuous_exp.fun_mul hbc).intervalIntegrable 0 y)
     ((Real.continuous_exp.fun_mul continuous_const).intervalIntegrable 0 y)
     (fun t ht => mul_le_mul_of_nonneg_left (hb t ht) (Real.exp_pos _).le)
-  rw [intervalIntegral.integral_mul_const, integral_exp] at hi
-  simp only [Real.exp_zero] at hi
+  have hexp : (∫ t in (0 : ℝ)..y, Real.exp t) = Real.exp y - 1 := by
+    simpa only [one_mul, div_one] using integral_exp_mul_real (a := 1) one_ne_zero y
+  rw [intervalIntegral.integral_mul_const, hexp] at hi
   rw [historyAverage_formula]
   have he : Real.exp (-y) * Real.exp y = 1 := by rw [← Real.exp_add]; simp
   calc
@@ -296,9 +309,11 @@ theorem angularSource_ideal (c : Parameters) (h η : ℝ) {y : ℝ} (hy : y ≤ 
 theorem idealAngularLag_is_incoming_integral (h η : ℝ) :
     (∫ t in Iic (0 : ℝ), Real.exp ((8 / 5 : ℝ) * t) * idealAngularSource h η) =
       idealAngularLag h η := by
-  rw [integral_mul_const, integral_exp_mul_Iic (by norm_num : (0 : ℝ) < 8 / 5)]
-  simp [idealAngularLag]
-  ring
+  calc
+    _ = idealAngularSource h η / (8 / 5) :=
+      (OutgoingHistories.exponential_past (idealAngularSource h η) (8 / 5)
+        (by norm_num) (fun t _ => mul_comm _ _)).2
+    _ = _ := rfl
 
 theorem natural_L_bounds {h η : ℝ} (hh : 0 ≤ h) (hh1 : h ≤ 1 / 100) (hη : |η| ≤ 1) :
     49 / 50 ≤ L h η ∧ L h η ≤ 1 := by
@@ -651,17 +666,6 @@ theorem angular_square_lower (c : Parameters) {y η : ℝ} (hy : 0 ≤ y)
     (clockEnergy_pos c y).le
   simpa only [angular, clockEnergy, mul_pow, div_eq_mul_inv, one_mul, mul_comm, mul_left_comm,
       mul_assoc] using hm
-
-theorem integral_exp_mul_real {a : ℝ} (ha : a ≠ 0) (y : ℝ) :
-    (∫ t in (0 : ℝ)..y, Real.exp (a * t)) = (Real.exp (a * y) - 1) / a := by
-  have hd : ∀ t, HasDerivAt (fun x => Real.exp (a * x) / a) (Real.exp (a * t)) t := by
-    intro t
-    convert! (((hasDerivAt_id t).const_mul a).exp).div_const a using 1
-    simp only [id_eq]
-    field_simp
-  have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => hd t)
-    ((Real.continuous_exp.comp (continuous_const.mul continuous_id)).intervalIntegrable 0 y)
-  simpa only [mul_zero, Real.exp_zero, sub_div] using hi
 
 theorem clockEnergy_ideal (c : Parameters) {y : ℝ} (hy : y ≤ 0) :
     clockEnergy c y = c.P ^ 2 * Real.exp ((1 / 5 : ℝ) * y) := by
