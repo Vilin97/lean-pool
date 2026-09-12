@@ -9,6 +9,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionDifference
 public import LeanPool.NavierStokesAndEuler.Euler.EulerCorrectionEquation
 import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
 
+import Mathlib.Analysis.Calculus.Deriv.Add
+
 /-! The exact viscosity-difference equation of two genuine nonlinear mild corrections. -/
 
 section

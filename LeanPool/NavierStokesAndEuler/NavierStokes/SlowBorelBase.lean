@@ -15,6 +15,8 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalJetBounds
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+
 /-!
 # Constructing the slow asymptotic base from smooth coefficient data
 

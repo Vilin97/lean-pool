@@ -12,6 +12,9 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricEnergyEvolution
 import LeanPool.NavierStokesAndEuler.Euler.WeightedRootLimit
 import Mathlib.Algebra.Order.Star.Real
 
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+
 /-! Actual Gevrey-weighted cylinder energy with signed radius derivative and no zero-norm
 differentiation. -/
 

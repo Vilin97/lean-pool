@@ -12,6 +12,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevSpace
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
 import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
 
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-! The actual Gaussian cylinder heat semigroup on the complete Sobolev scale. -/
 
 section

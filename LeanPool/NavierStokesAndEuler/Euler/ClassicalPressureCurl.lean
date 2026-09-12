@@ -11,6 +11,8 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedCurl
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
 import Mathlib.Algebra.Order.Star.Real
 
+import Mathlib.Analysis.Calculus.FDeriv.Mul
+
 /-! Classical lifted closedness of actual smooth representatives of the closed L² gradient space. -/
 
 @[expose] public section

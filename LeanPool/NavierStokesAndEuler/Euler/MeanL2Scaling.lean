@@ -10,6 +10,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanMollifierLimit
 import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicScaling
 import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
 
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
 /-! Actual dilation identities for L² fields and weak harmonic scalar functions. -/
 
 @[expose] public section

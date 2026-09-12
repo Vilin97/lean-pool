@@ -12,6 +12,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevBlocks
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentative
 import LeanPool.NavierStokesAndEuler.Euler.IsometricActionCalculus
 
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-!
 # Genuine cylinder Sobolev jets and smooth representatives from mixed L² orbits
 

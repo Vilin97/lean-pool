@@ -8,6 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.EulerCorrectionEquation
 
+import Mathlib.Analysis.Calculus.Deriv.Add
+
 /-! Adding the actual correction removes a genuine approximate-solution residual. -/
 
 @[expose] public section

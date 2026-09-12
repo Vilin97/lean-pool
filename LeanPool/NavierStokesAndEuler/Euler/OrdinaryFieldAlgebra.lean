@@ -11,6 +11,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-! Genuine smooth L² sums, scalar products, and ordinary advection. -/
 
 @[expose] public section

@@ -36,6 +36,8 @@ project source is altered and no extension or closed-side regularity is assumed.
 
 @[expose] public section
 
+attribute [local instance] FiniteDimensional.hasContDiffBump
+
 noncomputable section
 
 open Set Filter
@@ -915,6 +917,8 @@ end
 end
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 noncomputable section
 

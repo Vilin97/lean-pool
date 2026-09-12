@@ -11,6 +11,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinarySmoothWords
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 
+import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.Analysis.Calculus.Deriv.Add
+
 /-! Strong time differentiation of every actual ordinary L² word,
 derived from the pointwise evolution and continuous L² spatial jets. -/
 

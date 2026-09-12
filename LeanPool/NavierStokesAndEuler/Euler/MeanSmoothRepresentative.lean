@@ -13,6 +13,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricTransport
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
 import Mathlib.Analysis.Calculus.ContDiff.Comp
 
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-! Genuine smooth ordinary-space representatives reconstructed from smooth L² translation orbits.
 -/
 

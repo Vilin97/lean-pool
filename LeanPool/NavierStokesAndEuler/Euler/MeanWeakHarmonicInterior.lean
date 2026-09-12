@@ -13,6 +13,8 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicComponents
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicLaplacian
 
+import Mathlib.Analysis.Calculus.ContDiff.Convolution
+
 /-! The proved harmonic interior bound for the actual weak L² solution. -/
 
 section

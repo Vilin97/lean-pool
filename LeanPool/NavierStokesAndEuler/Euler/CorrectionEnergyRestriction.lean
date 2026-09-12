@@ -21,6 +21,9 @@ import LeanPool.NavierStokesAndEuler.Euler.WeightedRootLimit
 import LeanPool.NavierStokesAndEuler.Euler.SobolevViscousEnergy
 import Mathlib.Algebra.Order.Star.Real
 
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+
 /-! Related estimates used together by the same construction modules. -/
 
 section

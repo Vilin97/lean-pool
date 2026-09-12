@@ -18,6 +18,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatTotal
 public import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatDerivative
 import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
 
+import Mathlib.Analysis.Calculus.Deriv.Slope
+public import Mathlib.LinearAlgebra.AffineSpace.Slope
+
 /-! A bounded actual Laplacian evaluation and the genuine heat generator on finite Sobolev data. -/
 
 section

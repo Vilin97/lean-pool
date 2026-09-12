@@ -12,6 +12,8 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 import Mathlib.Algebra.Order.Star.Real
 
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-! Dissipation of the genuine cylinder Laplacian in a variable positive metric. -/
 
 @[expose] public section

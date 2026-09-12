@@ -15,6 +15,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderReflection
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
 
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-! Odd parity of the actual common correction and pressure assembled from finite genuine solutions.
 -/
 

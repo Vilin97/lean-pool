@@ -10,6 +10,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatGenerator
 public import LeanPool.NavierStokesAndEuler.Euler.VolterraConvolution
 import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatKernel
 
+import Mathlib.Analysis.Calculus.ParametricIntegral
+
 /-! Differentiation of the actual heat Duhamel integral in L² from finite Sobolev forcing. -/
 
 @[expose] public section

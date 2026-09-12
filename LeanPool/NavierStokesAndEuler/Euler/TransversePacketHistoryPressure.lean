@@ -13,6 +13,8 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
 import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarAverage
 import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarRepresentative
 
+import Mathlib.Analysis.InnerProductSpace.Calculus
+
 /-!
 # The actual normalized scalar pressure for the transverse history
 

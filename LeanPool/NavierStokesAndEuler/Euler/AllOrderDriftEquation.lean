@@ -10,6 +10,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftCorrection
 public import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftPressure
 public import LeanPool.NavierStokesAndEuler.Euler.CorrectionResidualCancellation
 
+import Mathlib.Analysis.Calculus.Deriv.Add
+
 /-!
 # Actual residual cancellation for the constructed all-order correction
 

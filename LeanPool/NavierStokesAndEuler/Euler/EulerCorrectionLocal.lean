@@ -16,6 +16,8 @@ import Mathlib.Analysis.Calculus.Deriv.Slope
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.RCLike.Basic
 
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-! A genuine local divergence-free viscous correction for the transformed Euler equation. -/
 
 section

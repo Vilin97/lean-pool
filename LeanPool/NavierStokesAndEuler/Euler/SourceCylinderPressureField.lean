@@ -21,6 +21,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderCoefficients
 import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRegularForward
 
+import Mathlib.Analysis.InnerProductSpace.Calculus
+
 /-!
 # The actual normalized pressure in the transverse forward equation
 

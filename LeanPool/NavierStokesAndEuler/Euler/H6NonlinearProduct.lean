@@ -11,6 +11,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.JetProductBounds
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 
+import Mathlib.Analysis.Calculus.FDeriv.Mul
+
 /-! Fixed H⁶ algebra estimates at every external derivative order, for actual nonlinear fields. -/
 
 @[expose] public section

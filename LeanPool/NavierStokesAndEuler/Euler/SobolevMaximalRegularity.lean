@@ -23,6 +23,8 @@ import Mathlib.Analysis.Normed.Order.Lattice
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
+import Mathlib.Analysis.InnerProductSpace.Calculus
+
 /-! Genuine all-finite-order maximal regularity for actual viscous cylinder mild solutions. -/
 
 section

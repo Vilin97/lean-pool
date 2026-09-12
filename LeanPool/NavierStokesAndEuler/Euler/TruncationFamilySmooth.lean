@@ -9,6 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteEnergyTruncation
 import Mathlib.Algebra.Order.Star.Real
 
+import Mathlib.Analysis.Calculus.ContDiff.WithLp
+
 /-!
 # Time dependence of the radial truncation
 

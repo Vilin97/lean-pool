@@ -17,6 +17,9 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
 import Mathlib.Analysis.Calculus.Deriv.Prod
 
+import Mathlib.Analysis.Calculus.Deriv.Slope
+import Mathlib.Analysis.Calculus.Deriv.Mul
+
 /-! Actual pointwise multiplication on the complete cylinder Sobolev spaces Hq, q≥6. -/
 
 section

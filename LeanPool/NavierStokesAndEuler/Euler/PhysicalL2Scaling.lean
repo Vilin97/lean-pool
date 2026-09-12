@@ -14,6 +14,8 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+
 /-! The physical dilation f(x) ↦ ell*f(x/ell), including actual spatial
 derivatives and their genuine Banach-valued L² norms. -/
 

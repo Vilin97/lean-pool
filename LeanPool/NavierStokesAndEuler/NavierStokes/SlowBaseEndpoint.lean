@@ -25,6 +25,8 @@ correction is a separate construction.
 
 @[expose] public section
 
+attribute [local instance] FiniteDimensional.hasContDiffBump
+
 
 namespace NavierStokes.SlowBaseEndpoint
 

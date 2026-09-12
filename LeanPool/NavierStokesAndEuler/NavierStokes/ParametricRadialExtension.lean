@@ -11,6 +11,8 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeGluing
 import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricEvenDescent
 import Mathlib.Analysis.Calculus.TangentCone.Prod
 
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+
 /-!
 # Joint smooth extension of even radial profiles
 
@@ -24,6 +26,8 @@ values.  No constant continuation at negative `X` is differentiated.
 -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 
 noncomputable section

@@ -11,6 +11,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTranspor
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
+import Mathlib.Analysis.SpecialFunctions.Sqrt
+
 /-! Removal of square-root regularization in actual finite metric-energy integral inequalities. -/
 
 @[expose] public section

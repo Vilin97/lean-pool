@@ -9,6 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.LowerTransportSource
 public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
 
+import Mathlib.Data.Nat.Choose.Cast
+
 /-! Actual unshifted Gevrey product and lower-pressure estimates with constants independent of
 truncation. -/
 
