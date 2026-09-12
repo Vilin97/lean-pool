@@ -1206,9 +1206,8 @@ theorem local_profile_change (P : Patch) (b A G : ℝ) (c : Coeff) (U E : ℝ �
     profileChangeDensity U E (fun y => A * u P c y) (fun y => A * e P c y) x =
       physicalDensity P b A G c x := by
   by_cases hx : x ∈ Ioo P.left P.right
-  · ext i
-    fin_cases i <;> dsimp only [profileChangeDensity, physicalDensity, physicalU, physicalE] <;>
-      simp only [hU x hx, hE x hx] <;> ring_nf
+  · simp only [profileChangeDensity, physicalDensity, physicalU, physicalE,
+      hU x hx, hE x hx, mul_add]
   · rw [physicalDensity_zero_outside P b A G c hx]
     ext i
     fin_cases i <;> simp [profileChangeDensity, u_zero_outside P c hx, e_zero_outside P c hx]
