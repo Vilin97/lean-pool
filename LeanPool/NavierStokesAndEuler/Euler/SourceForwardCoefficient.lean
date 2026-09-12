@@ -85,7 +85,8 @@ local instance instBoundedFieldGramInverse12 : NormedAlgebra ℝ (α →ᵇ U �
 
 /-- The literal positive Gram coefficient field. -/
 def gramField (Q : α →ᵇ U →L[ℝ] E) : α →ᵇ U →L[ℝ] U :=
-  compositionMap (adjointMap Q) Q
+  compositionMap (α := α) (U := U) (E := E) (F := U)
+    (adjointMap (α := α) (U := U) (E := E) Q) Q
 
 @[simp] theorem gramField_apply (Q : α →ᵇ U →L[ℝ] E) (x : α) : gramField Q x = gram (Q x) := rfl
 
@@ -160,7 +161,8 @@ local instance instBoundedFieldGramInverse16 : NormedSpace ℝ (C(K,α →ᵇ U 
 
 /-- The Gram field as an actual uniform time path. -/
 def gramPath (Qp : C(K, α →ᵇ U →L[ℝ] E)) : C(K,α →ᵇ U →L[ℝ] U) :=
-  pathCompositionMap (pathAdjointMap Qp) Qp
+  pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := U)
+    (pathAdjointMap (α := α) (K := K) (U := U) (E := E) Qp) Qp
 
 @[simp] theorem gramPath_apply (Qp : C(K, α →ᵇ U →L[ℝ] E)) (t : K) : gramPath Qp t = gramField (Qp
     t) := rfl
@@ -318,8 +320,9 @@ theorem gramPath_bound (Q : P → C(K, α →ᵇ U →L[ℝ] E)) (hQ : ContDiff 
   have h := pathComposition_bound (fun y => pathAdjointMap (Q y)) Q hAdj hQ
     R C C hR hC hC 0 0 hAdjBound hbQ n x
   have he : 3*C*C = 3*C^2 := by ring
-  have hfun : (fun y => gramPath (Q y)) = (fun y => pathCompositionMap (pathAdjointMap (Q y)) (Q
-      y)) := rfl
+  have hfun : (fun y => gramPath (Q y)) = (fun y =>
+      pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := U)
+        (pathAdjointMap (α := α) (K := K) (U := U) (E := E) (Q y)) (Q y)) := rfl
   exact (congrArg (fun g : P → C(K,α →ᵇ U →L[ℝ] U) => ‖iteratedFDeriv ℝ n g x‖) hfun).trans_le
     (by simpa only [Nat.add_zero,he] using h)
 
@@ -503,10 +506,15 @@ synthesis. -/
 local instance instBoundedFieldForwardGenerator18 : NormedSpace ℝ (C(K,α →ᵇ U →L[ℝ] U)) :=
     inferInstance
 
+/-- Cache the pointwise distributive scalar action on bounded operator paths. -/
+local instance instForwardPathDistribSMul : DistribSMul ℝ C(K, α →ᵇ U →L[ℝ] U) :=
+  inferInstance
+
 /-- The actual projected-forcing coefficient field. -/
 def leftInversePath (c : ℝ) (hc : 0 < c) (Q : C(K, α →ᵇ U →L[ℝ] E))
     (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q t x v‖ ^ 2) : C(K,α →ᵇ E →L[ℝ] U) :=
-  pathCompositionMap (inversePath c hc Q hQ) (pathAdjointMap Q)
+  pathCompositionMap (α := α) (K := K) (U := E) (E := U) (F := U)
+    (inversePath c hc Q hQ) (pathAdjointMap (α := α) (K := K) (U := U) (E := E) Q)
 
 /-- The actual ordinary coefficient in source equation (12). -/
 def generatorPath (c : ℝ) (hc : 0 < c) (Q Q₁ : C(K, α →ᵇ U →L[ℝ] E))
@@ -574,7 +582,8 @@ theorem generatorPath_bound (n : ℕ) (x : P) :
   have hrad : 0 ≤ 4*Ri := by positivity
   have hbQ₁' (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ j Q₁ y‖ ≤ C₁*majorant (4*Ri) 0 j :=
     (hbQ₁ j y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc (4*Ri) hRc hbase 0 j) hC₁)
-  let A := fun y => pathCompositionMap (leftInversePath c hc (Q y) (hQ y)) (Q₁ y)
+  let A := fun y => pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := U)
+    (leftInversePath c hc (Q y) (hQ y)) (Q₁ y)
   have hAr : ContDiff ℝ ∞ A := pathComposition_contDiff _ Q₁
     (leftInversePath_contDiff c hc Q hQ hQr) hQ₁r
   have hAb : ‖iteratedFDeriv ℝ n A x‖ ≤ (3*(3*Ri*C₀)*C₁)*majorant (4*Ri) 0 n :=
@@ -582,7 +591,7 @@ theorem generatorPath_bound (n : ℕ) (x : P) :
       (4*Ri) (3*Ri*C₀) C₁ hrad (by positivity) hC₁ 0 0
       (leftInversePath_bound Q c hc hQ hQr Rc C₀ Ri hRc hC₀ hRi hbQ) hbQ₁' n x
   change ‖iteratedFDeriv ℝ n (fun y => (-2 : ℝ) • A y) x‖ ≤ _
-  rw [iteratedFDeriv_const_smul_apply' (hAr.contDiffAt.of_le (by simp)),norm_smul]
+  simp only [iteratedFDeriv_const_smul_apply' (hAr.contDiffAt.of_le (by simp)), norm_smul]
   norm_num only [norm_neg,Real.norm_ofNat]
   exact (mul_le_mul_of_nonneg_left hAb (by norm_num : (0 : ℝ) ≤ 2)).trans_eq (by ring)
 
