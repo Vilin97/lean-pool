@@ -593,12 +593,12 @@ private theorem isEndpointPolynomialPair_of_endpointCertificate_zero
   refine ⟨by nlinarith [hsL], by nlinarith [hsU], hBL, hBU, ?_, ?_, ?_, ?_,
     hbalance', hgram', ?_, ?_, ?_⟩
   · exact hsigns.1
-  · convert hsigns.2.1 using 1 ; ring
-  · convert hsigns.2.2.1 using 1 ; ring
-  · convert hsigns.2.2.2.1 using 1 ; ring
+  · convert hsigns.2.1 using 1; ring
+  · convert hsigns.2.2.1 using 1; ring
+  · convert hsigns.2.2.2.1 using 1; ring
   · exact hsigns.2.2.2.2.1
-  · convert hsigns.2.2.2.2.2.1 using 1 ; ring
-  · convert hsigns.2.2.2.2.2.2 using 1 ; ring
+  · convert hsigns.2.2.2.2.2.1 using 1; ring
+  · convert hsigns.2.2.2.2.2.2 using 1; ring
 
 /-- There exists an endpoint polynomial pair in the stated strict rational box. -/
 theorem exists_isEndpointPolynomialPair : ∃ c B : ℝ, IsEndpointPolynomialPair c B := by
