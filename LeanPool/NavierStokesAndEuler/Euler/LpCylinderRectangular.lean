@@ -173,8 +173,10 @@ theorem supportedPath_hasDerivWithinAt
       HasDerivWithinAt (fun s => extendPath T hT A s x)
         (extendPath T hT A' t x) (Icc (0 : ℝ) T) t)
     (t : Icc (0 : ℝ) T) :
-    HasDerivWithinAt (extendPath T hT (supportedPathMap μ S hS A))
-      (supportedPathMap μ S hS A' t) (Icc (0 : ℝ) T) t := by
+    HasDerivWithinAt
+      (extendPath T hT (supportedPathMap (K := Icc (0 : ℝ) T) (E := E) (F := F) μ S hS A))
+      (supportedPathMap (K := Icc (0 : ℝ) T) (E := E) (F := F) μ S hS A' t)
+      (Icc (0 : ℝ) T) t := by
   have hfield := EulerBoundedFieldTimeDerivative.hasDerivWithinAt T hT A A' hpoint t t.property
   have hlinear : HasFDerivAt
       (fun B : α →ᵇ E →L[ℝ] F => supportedMap μ S hS B)
@@ -400,8 +402,9 @@ theorem fullOperator_translation (a : LiftTangent) (A : Space →ᵇ E →L[ℝ]
 /-- The exact mixed-translation identity holds in the uniform continuous-path space. -/
 theorem fullMultiplier_translation (a : LiftTangent) (A : C(K, Space →ᵇ E →L[ℝ] F))
     (u : C(K, CylinderL2 period E)) :
-    fullMultiplierMap period (translateCoefficientPath A a.1) (pathTranslate period a u) =
-      pathTranslate period a (fullMultiplierMap period A u) := by
+    fullMultiplierMap (K := K) (E := E) (F := F) period
+        (translateCoefficientPath A a.1) (pathTranslate period a u) =
+      pathTranslate period a (fullMultiplierMap (K := K) (E := E) (F := F) period A u) := by
   apply ContinuousMap.ext
   intro t
   exact fullOperator_translation period a (A t) (u t)
@@ -506,12 +509,14 @@ def supportedMultiplierMap : C(K,Space →ᵇ E →L[ℝ] F) →L[ℝ]
 
 @[simp] theorem supportedMultiplierMap_apply (A : C(K, Space →ᵇ E →L[ℝ] F))
     (u : C(K, Supported period E S hS)) (t : K) :
-    supportedMultiplierMap period S hS A u t = supportedOperatorMap period S hS (A t) (u t) := rfl
+    supportedMultiplierMap (K := K) (E := E) (F := F) period S hS A u t =
+      supportedOperatorMap period S hS (A t) (u t) := rfl
 
 /-- Inclusion identifies the supported product with the actual full-cylinder product. -/
 theorem include_supportedMultiplier (A : C(K, Space →ᵇ E →L[ℝ] F))
     (u : C(K, Supported period E S hS)) :
-    includePath period S hS (supportedMultiplierMap period S hS A u) =
-      fullMultiplierMap period A (includePath period S hS u) := rfl
+    includePath period S hS
+        (supportedMultiplierMap (K := K) (E := E) (F := F) period S hS A u) =
+      fullMultiplierMap (K := K) (E := E) (F := F) period A (includePath period S hS u) := rfl
 
 end EulerLpCylinderRectangular
