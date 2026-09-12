@@ -8,6 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeat
 import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-! Jointly continuous positive-time heat kernels with an explicit integrable parabolic bound. -/
 
