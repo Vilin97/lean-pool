@@ -2615,6 +2615,20 @@ private theorem normalized_axial_bound {E u R a b c S Seta P Peta M F Ks Kp Kpe 
   rw [abs_mul, abs_of_nonneg hE]
   exact mul_le_mul_of_nonneg_left hs hE
 
+private theorem history_coefficient_bounds {h eta : ℝ}
+    (hh : 0 ≤ h) (hhhalf : h ≤ 1 / 2) (heta : |eta| ≤ 1) :
+    |4 * h * eta| ≤ 2 ∧ |4 * (1 / 2 + h) * eta| ≤ 4 := by
+  have hproduct := mul_le_mul hhhalf heta (abs_nonneg eta)
+    (by norm_num : (0 : ℝ) ≤ 1 / 2)
+  have hsum : 0 ≤ 1 / 2 + h := by linarith
+  have hsumproduct := mul_le_mul (show 1 / 2 + h ≤ 1 by linarith) heta
+    (abs_nonneg eta) zero_le_one
+  constructor
+  · rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 4), abs_of_nonneg hh]
+    linarith
+  · rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 4), abs_of_nonneg hsum]
+    linarith
+
 /-- Axial error constant, constructed using `energyConstant`. -/
 noncomputable def axialErrorConstant (P m : ℝ) : ℝ := energyConstant P m *
   (24 * averageConstant P m * forceConstant P m +
@@ -2647,16 +2661,7 @@ theorem axialHistoryError_bound (w : ResetWitness d K)
   have hS := PulseEnergyHistory.pulse_history_bounds w ha hwait hsmall heta hamp hamp' hy hy'
   have hP := pulse_pressure_bounds w heta hy hy'
   have hcoef := geometric_coefficient_bounds d.h_pos.le d.h_lt_half.le heta
-  have ha' : |4 * d.h * eta| ≤ 2 := by
-    rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 4), abs_of_pos d.h_pos]
-    have h := mul_le_mul d.h_lt_half.le heta (abs_nonneg eta) (by norm_num : (0 : ℝ) ≤ 1 / 2)
-    linarith
-  have hc' : |4 * (1 / 2 + d.h) * eta| ≤ 4 := by
-    rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 4),
-      abs_of_pos (by linarith [d.h_pos] : 0 < 1 / 2 + d.h)]
-    have h := mul_le_mul (show 1 / 2 + d.h ≤ 1 by
-        linarith [d.h_lt_half]) heta (abs_nonneg eta) zero_le_one
-    linarith
+  obtain ⟨ha', hc'⟩ := history_coefficient_bounds d.h_pos.le d.h_lt_half.le heta
   have hw' : |(1 - W d amp p) / E w p| ≤ 4 * averageConstant d.core.P d.core.m := by
     rw [abs_div, abs_of_pos hE]
     exact (div_le_iff₀ hE).mpr hW
