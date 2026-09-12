@@ -48,6 +48,12 @@ variable {S E V F G W : Type*}
   [NormedAddCommGroup G] [NormedSpace ℝ G]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
 
+/-- Taking adjoints preserves the norm of an operator difference. -/
+theorem norm_adjoint_sub (A B : S →L[ℝ] E) :
+    ‖A.adjoint - B.adjoint‖ = ‖A - B‖ := by
+  simpa only [dist_eq_norm] using
+    (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := S) (F := E)).dist_map A B
+
 theorem norm_comp_sub_le (A B : F →L[ℝ] G) (C D : W →L[ℝ] F) :
     ‖A.comp C - B.comp D‖ ≤ ‖A - B‖ * ‖C‖ + ‖B‖ * ‖C - D‖ := by
   have he : A.comp C - B.comp D = (A - B).comp C + B.comp (C - D) := by
@@ -73,7 +79,7 @@ theorem correctionOperator_norm_le (D : S →L[ℝ] E) (R : S →L[ℝ] S) (A : 
   have ha0 := (norm_nonneg A).trans ha
   have hDA : ‖D.adjoint.comp A‖ ≤ d * a := by
     apply (opNorm_comp_le _ _).trans
-    rw [LinearIsometryEquiv.norm_map]
+    simp only [LinearIsometryEquiv.norm_map]
     exact mul_le_mul hd ha (norm_nonneg _) hd0
   have hRDA : ‖R.comp (D.adjoint.comp A)‖ ≤ r * (d * a) :=
     (opNorm_comp_le _ _).trans (mul_le_mul hr hDA (norm_nonneg _) hr0)
@@ -96,13 +102,12 @@ theorem correctionOperator_sub_norm_le
   have hδa0 := (norm_nonneg (A-A')).trans hδa
   have hDA : ‖D.adjoint.comp A‖ ≤ d * a := by
     apply (opNorm_comp_le _ _).trans
-    rw [LinearIsometryEquiv.norm_map]
+    simp only [LinearIsometryEquiv.norm_map]
     exact mul_le_mul hd ha (norm_nonneg _) hd0
   have hDAδ : ‖D.adjoint.comp A - D'.adjoint.comp A'‖ ≤ δd * a + d * δa := by
     apply (norm_comp_sub_le _ _ _ _).trans
-    have hh : ‖D.adjoint - D'.adjoint‖ = ‖D-D'‖ := by
-      rw [← map_sub, LinearIsometryEquiv.norm_map]
-    rw [hh, LinearIsometryEquiv.norm_map]
+    have hh : ‖D.adjoint - D'.adjoint‖ = ‖D-D'‖ := norm_adjoint_sub D D'
+    simp only [hh, LinearIsometryEquiv.norm_map]
     exact add_le_add (mul_le_mul hδd ha (norm_nonneg _) hδd0)
       (mul_le_mul hd' hδa (norm_nonneg _) hd0)
   have hRDA : ‖R.comp (D.adjoint.comp A)‖ ≤ r * (d * a) :=
@@ -162,9 +167,7 @@ theorem formOperator_sub_norm_le
     (hd : ‖D‖ ≤ d) (hd' : ‖D'‖ ≤ d) (ha : ‖A‖ ≤ a) (ha' : ‖A'‖ ≤ a)
     (hδd : ‖D - D'‖ ≤ δd) (hδa : ‖A - A'‖ ≤ δa) :
     ‖formOperator D A - formOperator D' A'‖ ≤ 2 * d * a * δd + d ^ 2 * δa := by
-  have had : ‖D.adjoint-D'.adjoint‖ ≤ δd := by
-    rw [← map_sub, LinearIsometryEquiv.norm_map]
-    exact hδd
+  have had : ‖D.adjoint-D'.adjoint‖ ≤ δd := (norm_adjoint_sub D D').trans_le hδd
   have h := correctionOperator_sub_norm_le D.adjoint D'.adjoint A A'
     (ContinuousLinearMap.id ℝ S) (ContinuousLinearMap.id ℝ S) d a 1 δd δa 0
     (by simpa only [LinearIsometryEquiv.norm_map] using hd)
@@ -341,21 +344,6 @@ theorem fixedAffineEndpoint_sub_norm_le (d a r : ℝ)
       P P₁ G hP hp hG d a r hD hD' hA hA' hr hr')
     (energyOperator_sub_norm_le T hT H G)
     (affineTrial_sub_norm_le T hT Q Q₁ P P₁)
-  have he : EulerCoerciveEndpointBounds.endpointOperator
-      (fixedFrameDerivative T hT Q Q₁)
-      (fixedInverse T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
-      (energyOperator T hT H) (affineTrial T hT Q Q₁) =
-      fixedEndpointDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall
-        (affineTrial T hT Q Q₁) := by
-    rfl
-  have he' : EulerCoerciveEndpointBounds.endpointOperator
-      (fixedFrameDerivative T hT P P₁)
-      (fixedInverse T hT P P₁ G c hc hP hp K hK hG hsmall)
-      (energyOperator T hT G) (affineTrial T hT P P₁) =
-      fixedEndpointDerivative T hT P P₁ G c hc hP hp K hK hG hsmall
-        (affineTrial T hT P P₁) := by
-    rfl
-  rw [he, he'] at h
   exact h.trans_eq (by unfold endpointDifferenceCost; ring)
 
 variable (m n : Icc (0 : ℝ) T → E)
@@ -408,10 +396,9 @@ theorem gram_sub_norm_le (A B : U →L[ℝ] E) (q : ℝ)
     (hA : ‖A‖ ≤ q) (hB : ‖B‖ ≤ q) :
     ‖gram A - gram B‖ ≤ 2 * q * ‖A-B‖ := by
   have hq := (norm_nonneg A).trans hA
-  have had : ‖A.adjoint-B.adjoint‖ = ‖A-B‖ := by
-    rw [← map_sub, LinearIsometryEquiv.norm_map]
+  have had : ‖A.adjoint-B.adjoint‖ = ‖A-B‖ := norm_adjoint_sub A B
   apply (norm_comp_sub_le A.adjoint B.adjoint A B).trans
-  rw [had, LinearIsometryEquiv.norm_map]
+  simp only [had, LinearIsometryEquiv.norm_map]
   exact (add_le_add (mul_le_mul_of_nonneg_left hA (norm_nonneg _))
     (mul_le_mul_of_nonneg_right hB (norm_nonneg _))).trans_eq (by ring)
 
@@ -442,7 +429,7 @@ theorem generator_norm_le (q r : ℝ) (hQn : ‖Q‖ ≤ q) (hQ₁n : ‖Q₁‖
   norm_num only [Real.norm_eq_abs]
   have hprod : ‖(Q t).adjoint.comp (Q₁ t)‖ ≤ q*r := by
     apply (opNorm_comp_le _ _).trans
-    rw [LinearIsometryEquiv.norm_map]
+    simp only [LinearIsometryEquiv.norm_map]
     exact mul_le_mul ((Q.norm_coe_le_norm t).trans hQn)
       ((Q₁.norm_coe_le_norm t).trans hQ₁n) (norm_nonneg _) hq
   apply (mul_le_mul_of_nonneg_left ((opNorm_comp_le _ _).trans
@@ -476,14 +463,13 @@ theorem generator_sub_norm_le (q r : ℝ)
       (mul_le_mul_of_nonneg_left hδQ (by positivity))
   have hprod : ‖(Q t).adjoint.comp (Q₁ t)‖ ≤ q*r := by
     apply (opNorm_comp_le _ _).trans
-    rw [LinearIsometryEquiv.norm_map]
+    simp only [LinearIsometryEquiv.norm_map]
     exact mul_le_mul htQ htQ₁ (norm_nonneg _) hq
   have hprodδ : ‖(Q t).adjoint.comp (Q₁ t) - (P t).adjoint.comp (P₁ t)‖ ≤
       ‖Q-P‖*r + q*‖Q₁-P₁‖ := by
     apply (norm_comp_sub_le _ _ _ _).trans
-    have had : ‖(Q t).adjoint-(P t).adjoint‖ = ‖Q t-P t‖ := by
-      rw [← map_sub, LinearIsometryEquiv.norm_map]
-    rw [had, LinearIsometryEquiv.norm_map]
+    have had : ‖(Q t).adjoint-(P t).adjoint‖ = ‖Q t-P t‖ := norm_adjoint_sub (Q t) (P t)
+    simp only [had, LinearIsometryEquiv.norm_map]
     exact add_le_add (mul_le_mul hδQ htQ₁ (by positivity) (by positivity))
       (mul_le_mul htP hδQ₁ (norm_nonneg _) hq)
   have htotal := (norm_comp_sub_le
