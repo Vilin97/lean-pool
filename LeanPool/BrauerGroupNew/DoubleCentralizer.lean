@@ -241,33 +241,9 @@ lemma centralizer_mulLeft_le_of_isCentralSimple :
     ((Algebra.TensorProduct.includeLeft (R := F) (S := F) (A := B) (B := Bᵐᵒᵖ)).range :
       Set (B ⊗[F] Bᵐᵒᵖ)) =
     (Algebra.TensorProduct.includeRight (R := F) (A := B) (B := Bᵐᵒᵖ)).range := by
-    refine le_antisymm ?_ ?_
-    · set ℬ := Module.finBasis F Bᵐᵒᵖ
-      intro z hz
-      obtain ⟨s, rfl⟩ := TensorProduct.eq_repr_basis_right ℬ z
-      refine Subalgebra.sum_mem _ fun i hi => ?_
-      have : (s i) ∈ Subalgebra.center F B := by
-        rw [Subalgebra.mem_center_iff]
-        intro b'
-        have eq := hz (b' ⊗ₜ 1) (by simp)
-        simp only [Finsupp.sum, Finset.mul_sum, Algebra.TensorProduct.tmul_mul_tmul, one_mul,
-          Finset.sum_mul, mul_one] at eq
-        rw [← sub_eq_zero, ← Finset.sum_sub_distrib] at eq
-        simp_rw [← TensorProduct.sub_tmul] at eq
-        replace eq := IsCentralSimple.TensorProduct.sum_tmul_basis_right_eq_zero' (h := eq)
-        specialize eq i hi
-        rw [sub_eq_zero] at eq
-        exact eq
-      rw [Algebra.IsCentral.center_eq_bot, Algebra.mem_bot] at this
-      obtain ⟨x, hx⟩ := this
-      dsimp only
-      rw [← hx, Algebra.algebraMap_eq_smul_one, ← smul_tmul']
-      exact Subalgebra.smul_mem _ (by simp) _
-    · set ℬ := Module.finBasis F B
-      rintro _ ⟨z, rfl⟩ _ ⟨y, rfl⟩
-      simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Algebra.TensorProduct.includeLeft_apply,
-        Algebra.TensorProduct.includeRight_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one,
-        one_mul]
+    rw [Subalgebra.centralizer_range_includeLeft_eq_center_tensorProduct,
+      Algebra.TensorProduct.map_range, AlgHom.comp_id, Subalgebra.range_comp_val,
+      Algebra.IsCentral.center_eq_bot, Algebra.map_bot, bot_sup_eq]
   rw [eq] at hx'
   obtain ⟨y, hy⟩ := hx'
   simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe,
