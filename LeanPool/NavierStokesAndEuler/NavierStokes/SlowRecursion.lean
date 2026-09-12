@@ -604,16 +604,30 @@ theorem positiveSolution_real_system {R T : ℝ} (hR : 0 < R) (hRT : R < T)
       add_comm, add_left_comm] at he ⊢
     exact he
 
+/-- The first two rows recover the radial derivative coordinates without using the input jets. -/
+theorem matrixRHS_first_rows {K : Type*} [Field K] (h lam C r eta : K)
+    (b : BaseJet K) (s : SourceJet K) (w v : Fin 6 → K) :
+    matrixRHS h lam C r eta b s w v 0 = w 4 ∧
+      matrixRHS h lam C r eta b s w v 1 = w 5 := by
+  constructor
+  · change dotProduct (![0, 0, 0, 0, 1, 0] : Fin 6 → K) w +
+      dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 4
+    simp [dotProduct, Fin.sum_univ_succ]
+  · change dotProduct (![0, 0, 0, 0, 0, 1] : Fin 6 → K) w +
+      dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 5
+    simp [dotProduct, Fin.sum_univ_succ]
+
 theorem RealSixSystem.first_derivative {R : ℝ} {J : Set ℝ} {h lam C : ℝ}
     {G : RealCoefficientData} {w : RealField} (hw : RealSixSystem R J h lam C G w)
     {r eta : ℝ} (hr : r ∈ Ioo (-R) R) (hr0 : r ≠ 0) (heta : eta ∈ J) :
     deriv (fun s => w s eta 0) r = w r eta 4 ∧
       deriv (fun s => w s eta 1) r = w r eta 5 := by
+  have hrows := matrixRHS_first_rows h lam C r eta
+    (realBase G (r ^ 2, eta)) (realSource G (r ^ 2, eta))
+    (w r eta) (fun j => deriv (fun v => w r v j) eta)
   constructor
-  · simpa [PositiveAxisSystem.diagonal, matrixRHS, A0, A1, forcing, Matrix.mulVec, dotProduct,
-      Fin.sum_univ_succ] using hw r hr hr0 eta heta 0
-  · simpa [PositiveAxisSystem.diagonal, matrixRHS, A0, A1, forcing, Matrix.mulVec, dotProduct,
-      Fin.sum_univ_succ] using hw r hr hr0 eta heta 1
+  · simpa [PositiveAxisSystem.diagonal, hrows.1] using hw r hr hr0 eta heta 0
+  · simpa [PositiveAxisSystem.diagonal, hrows.2] using hw r hr hr0 eta heta 1
 
 theorem xProfile_contDiffAt {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
     {W : Field}
