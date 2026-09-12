@@ -52,8 +52,7 @@ theorem sobolevNorm_mono (d : ℕ) {s t : ℝ} (hst : s ≤ t) (f : 𝓢(Domain 
 theorem directional_eq_iteratedDeriv (d n : ℕ) (v x : Domain d)
     (f : 𝓢(Domain d, ℂ)) :
     directional d n v f x = iteratedDeriv n (fun t : ℝ => f (x + t • v)) 0 := by
-  rw [directional, SchwartzMap.iteratedLineDerivOp_eq_iteratedFDeriv,
-    iteratedDeriv_eq_iteratedFDeriv]
+  rw [directional, schwartzIteratedDerivative_apply, iteratedDeriv_eq_iteratedFDeriv]
   let L : ℝ →L[ℝ] Domain d := (ContinuousLinearMap.id ℝ ℝ).smulRight v
   have hC : ContDiff ℝ ∞ (fun z => f (x + z)) := f.smooth'.comp (contDiff_const.add contDiff_id)
   have he := L.iteratedFDeriv_comp_right hC (0 : ℝ) (by simp : (n : ℕ∞ω) ≤ (∞ : ℕ∞ω))

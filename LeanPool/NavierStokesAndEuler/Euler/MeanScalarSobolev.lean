@@ -63,7 +63,7 @@ theorem scalar_pointwise_le_H2 (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
   have hder (i : Fin 3) (y : Space) :
       pureDerivative 3 2 (EuclideanSpace.single i 1) F y =
         (partialDerivative (partialDerivative f i) i y : ℂ) := by
-    rw [pureDerivative, SchwartzMap.iteratedLineDerivOp_eq_iteratedFDeriv]
+    rw [pureDerivative, schwartzIteratedDerivative_apply]
     change iteratedFDeriv ℝ 2 (Complex.ofRealCLM ∘ f) y
       (fun _ : Fin 2 => EuclideanSpace.single i 1) = _
     rw [Complex.ofRealCLM.iteratedFDeriv_comp_left hf.contDiffAt (by simp)]

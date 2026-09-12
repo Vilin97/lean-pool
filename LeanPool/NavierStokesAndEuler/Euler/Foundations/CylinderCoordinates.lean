@@ -8,6 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDefinitions
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 /-! Measure-preserving Euclidean coordinates and the actual L² bridge to the cylinder. -/
 

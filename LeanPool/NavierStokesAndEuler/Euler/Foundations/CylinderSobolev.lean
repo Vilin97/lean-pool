@@ -346,7 +346,8 @@ theorem directional_localized_support (n : ℕ) (i : Fin 4) (f : LiftDomain peri
       Domain 4 → ℂ) = (fun T : ContinuousMultilinearMap ℝ (fun _ : Fin n => Domain 4) ℂ =>
         T (fun _ => EuclideanSpace.single i 1)) ∘ iteratedFDeriv ℝ n (localized period f hf x) := by
     funext z
-    exact SchwartzMap.iteratedLineDerivOp_eq_iteratedFDeriv
+    exact schwartzIteratedDerivative_apply (fun _ : Fin n => EuclideanSpace.single i 1)
+      (localized period f hf x) z
   rw [he]
   exact subset_closure.trans ((tsupport_comp_subset (by simp) _).trans
     ((tsupport_iteratedFDeriv_subset n).trans (localized_tsupport period f hf x)))
@@ -364,7 +365,7 @@ theorem localized_directional_L2_le (n : ℕ) (i : Fin 4) (f : LiftDomain period
   have hb (z : Domain 4) :
       ‖directional 4 n (EuclideanSpace.single i 1) (localized period f hf x) z‖ ≤
         (bumpCoefficient period n : ℝ) * ‖translated period q x (euclideanCover period z)‖ := by
-    rw [directional, SchwartzMap.iteratedLineDerivOp_eq_iteratedFDeriv]
+    rw [directional, schwartzIteratedDerivative_apply]
     have hA := (iteratedFDeriv ℝ n (localized period f hf x) z).le_opNorm
       (fun _ : Fin n => EuclideanSpace.single i (1 : ℝ))
     simp only [PiLp.norm_single, norm_one, Finset.prod_const_one, mul_one] at hA

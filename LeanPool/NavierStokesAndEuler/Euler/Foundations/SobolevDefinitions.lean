@@ -6,8 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SchwartzDerivatives
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 
 /-!
@@ -101,6 +102,6 @@ open scoped SchwartzMap LineDeriv
 
 /-- Repeated differentiation in one fixed direction, as a Schwartz function. -/
 noncomputable def directional (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, ℂ)) :
-    𝓢(Domain d, ℂ) := ∂^{fun _ : Fin n => v} f
+    𝓢(Domain d, ℂ) := schwartzIteratedDerivative (fun _ : Fin n => v) f
 
 end EulerSobolevProducts

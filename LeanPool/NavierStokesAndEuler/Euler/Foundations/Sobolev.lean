@@ -85,7 +85,7 @@ open scoped LineDeriv
 omit [CompleteSpace F] in
 /-- The actual Fourier multiplier formula bounds each directional derivative. -/
 theorem fourier_lineDeriv_norm_le (d : ℕ) (f : 𝓢(Domain d, F)) (m ξ : Domain d) :
-    ‖schwartzFourier (∂_{m} f) ξ‖ ≤
+    ‖schwartzFourier (schwartzDerivative m f) ξ‖ ≤
       (2 * Real.pi) * ‖ξ‖ * ‖m‖ * ‖schwartzFourier f ξ‖ := by
   change ‖𝓕 (∂_{m} f) ξ‖ ≤ (2 * Real.pi) * ‖ξ‖ * ‖m‖ * ‖𝓕 f ξ‖
   have ht : (fun ξ : Domain d => inner ℝ ξ m).HasTemperateGrowth :=
@@ -103,7 +103,7 @@ theorem fourier_lineDeriv_norm_le (d : ℕ) (f : 𝓢(Domain d, F)) (m ξ : Doma
 omit [CompleteSpace F] in
 theorem weightedFourier_lineDeriv_norm_le (d : ℕ) (s : ℝ)
     (f : 𝓢(Domain d, F)) (m ξ : Domain d) :
-    ‖weightedFourier d s (∂_{m} f) ξ‖ ≤
+    ‖weightedFourier d s (schwartzDerivative m f) ξ‖ ≤
       (2 * Real.pi * ‖m‖) * ‖weightedFourier d (s + 1) f ξ‖ := by
   rw [weightedFourier_apply, weightedFourier_apply, norm_smul, norm_smul,
     Real.norm_of_nonneg (besselWeight_pos d s ξ).le,
@@ -120,10 +120,10 @@ theorem weightedFourier_lineDeriv_norm_le (d : ℕ) (s : ℝ)
 omit [CompleteSpace F] in
 /-- A directional derivative maps H^(s+1) to H^s with its explicit Fourier factor. -/
 theorem sobolevNorm_lineDeriv_le (d : ℕ) (s : ℝ) (f : 𝓢(Domain d, F)) (m : Domain d) :
-    sobolevNorm d s (∂_{m} f) ≤ (2 * Real.pi * ‖m‖) * sobolevNorm d (s + 1) f := by
+    sobolevNorm d s (schwartzDerivative m f) ≤ (2 * Real.pi * ‖m‖) * sobolevNorm d (s + 1) f := by
   unfold sobolevNorm
   apply Lp.norm_le_mul_norm_of_ae_le_mul
-  filter_upwards [(weightedFourier d s (∂_{m} f)).coeFn_toLp 2,
+  filter_upwards [(weightedFourier d s (schwartzDerivative m f)).coeFn_toLp 2,
     (weightedFourier d (s + 1) f).coeFn_toLp 2] with ξ hd hf
   rw [hd, hf]
   exact weightedFourier_lineDeriv_norm_le d s f m ξ
@@ -132,8 +132,10 @@ omit [CompleteSpace F] in
 /-- Iterating the Fourier multiplier estimate loses exactly one Sobolev order per derivative. -/
 theorem sobolevNorm_iteratedLineDeriv_le (d k : ℕ) (s : ℝ)
     (f : 𝓢(Domain d, F)) (m : Fin k → Domain d) :
-    sobolevNorm d s (∂^{m} f) ≤
+    sobolevNorm d s (schwartzIteratedDerivative m f) ≤
       (2 * Real.pi) ^ k * (∏ i, ‖m i‖) * sobolevNorm d (s + k) f := by
+  change sobolevNorm d s (∂^{m} f) ≤
+    (2 * Real.pi) ^ k * (∏ i, ‖m i‖) * sobolevNorm d (s + k) f
   induction k generalizing s with
   | zero => simp
   | succ k ih =>

@@ -27,7 +27,7 @@ variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteS
 
 /-- Repeated directional derivatives of a vector-valued Schwartz function. -/
 noncomputable def pureDerivative (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, F)) :
-    𝓢(Domain d, F) := ∂^{fun _ : Fin n => v} f
+    𝓢(Domain d, F) := schwartzIteratedDerivative (fun _ : Fin n => v) f
 
 omit [CompleteSpace F] in
 theorem fourier_pureDerivative_norm (d n : ℕ) (v : Domain d)
@@ -259,7 +259,7 @@ theorem localize_pureDerivative_L2_le (n : ℕ) (i : Fin 3) (f : Domain 3 → F)
   have hb (z : Domain 3) :
       ‖pureDerivative 3 n (EuclideanSpace.single i 1) (localize f hf x) z‖ ≤
         (unitBumpCoefficient n : ℝ) * ‖derivativeMagnitude n f (x+z)‖ := by
-    rw [pureDerivative, SchwartzMap.iteratedLineDerivOp_eq_iteratedFDeriv,
+    rw [pureDerivative, schwartzIteratedDerivative_apply,
       Real.norm_of_nonneg (derivativeMagnitude_nonneg n f (x+z))]
     have hA := (iteratedFDeriv ℝ n (localize f hf x) z).le_opNorm
       (fun _ : Fin n => EuclideanSpace.single i (1 : ℝ))

@@ -3590,6 +3590,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureSpatialRegularity
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.RealCylinder
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.RepresentativeMetricEvolution
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
+import LeanPool.NavierStokesAndEuler.Euler.Foundations.SchwartzDerivatives
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SchwartzFourier
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SetIntegralL2
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
