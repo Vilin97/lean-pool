@@ -1678,14 +1678,18 @@ theorem normalizedDebt_bounds (d : TailData) (eta : ℝ) :
       have hpos : 0 ≤ 1 / (1 - d.core.lam) := by positivity
       have htwo : 2 / (1 - d.core.lam) = 2 * (1 / (1 - d.core.lam)) := by ring
       constructor <;> linarith
-    nlinarith
+    calc
+      _ ≤ decayFactor d * 3 := mul_le_mul_of_nonneg_left hsmall he
+      _ = _ := mul_comm _ _
   · have hd : deriv (normalizedDebt d) eta = -decayFactor d * deriv (flatRatio d) eta := by
       unfold normalizedDebt
       rw [deriv_const_mul_field, deriv_const_sub]
       ring
     rw [hd, abs_mul, abs_neg, abs_of_nonneg he]
     have hbound := (flatRatio_deriv_bound d eta).trans hinv
-    nlinarith
+    calc
+      _ ≤ decayFactor d * 3 := mul_le_mul_of_nonneg_left hbound he
+      _ = _ := mul_comm _ _
 
 theorem decayFactor_le (d : TailData) (hlam : d.core.lam ≤ 1 / 15) :
     decayFactor d ≤ Real.exp 3 * d.core.lam ^ (28 : ℕ) := by
@@ -1715,7 +1719,12 @@ theorem actual_debt_first_jet_bound (d : TailData) (hlam : d.core.lam ≤ 1 / 15
     |deriv (normalizedDebt d) eta| ≤ (3 * Real.exp 3) * d.core.lam ^ (28 : ℕ) := by
   have hb := normalizedDebt_bounds d eta
   have he := decayFactor_le d hlam
-  constructor <;> nlinarith [hb.1, hb.2]
+  have hgrowth : 3 * decayFactor d ≤ (3 * Real.exp 3) * d.core.lam ^ (28 : ℕ) := by
+    calc
+      _ ≤ 3 * (Real.exp 3 * d.core.lam ^ (28 : ℕ)) :=
+        mul_le_mul_of_nonneg_left he (by norm_num)
+      _ = _ := (mul_assoc _ _ _).symm
+  exact ⟨hb.1.trans hgrowth, hb.2.trans hgrowth⟩
 
 theorem finalAngular_before_release (d : TailData) (eta : ℝ) {y : ℝ}
     (hy : y ≤ d.releaseStart) : finalAngular d (y, eta) = flattened d (y, eta) := by
@@ -1836,12 +1845,12 @@ theorem exists_scheduled_reset :
   have hδε : C * d.core.lam ^ (28 : ℕ) < ε := by
     apply lt_of_le_of_lt (mul_le_mul_of_nonneg_left (power28_le_self d) hC.le)
     have hlam := lt_of_lt_of_le hd ((min_le_right _ _).trans (min_le_left _ _))
-    nlinarith [(lt_div_iff₀ hC).mp hlam]
+    simpa only [mul_comm d.core.lam C] using (lt_div_iff₀ hC).mp hlam
   have hδsmall : L * (C * d.core.lam ^ (28 : ℕ)) ≤ d.core.lam / 4 := by
     have hlam := lt_of_lt_of_le hd ((min_le_right _ _).trans (min_le_right _ _))
     have hmul := (lt_div_iff₀ (show 0 < 4 * L * C by positivity)).mp hlam
     have hp := mul_le_mul_of_nonneg_left (power28_le_square d) (show 0 ≤ L * C by positivity)
-    nlinarith [mul_lt_mul_of_pos_right hmul d.core.lam_pos]
+    nlinarith only [hp, mul_lt_mul_of_pos_right hmul d.core.lam_pos]
   have hδ : ∀ eta, normalizedDebt d eta ∈ Ioo (-ε) ε := by
     intro eta
     exact abs_lt.mp ((actual_debt_first_jet_bound d hsmall eta).1.trans_lt hδε)
@@ -1883,7 +1892,7 @@ theorem exists_scheduled_reset :
     have hv := (hceq _ (hδ eta)).2.2.2.2 u
     have hb := mul_le_mul_of_nonneg_left (actual_debt_first_jet_bound d hsmall eta).1 hL.le
     constructor
-    · exact (hv.1.trans (hb.trans hδsmall)).trans (by linarith [d.core.lam_lt])
+    · exact (hv.1.trans (hb.trans hδsmall)).trans (by linarith only [d.core.lam_lt])
     · exact hv.2.trans (hb.trans hδsmall)
 
 /-- Correction center, given by `d.releaseStart - 3`. -/
