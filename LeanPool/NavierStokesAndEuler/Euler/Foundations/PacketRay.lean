@@ -480,8 +480,8 @@ theorem normalized_ray_entry_error
   have hκb := abs_le.mp hκ
   intro i j
   fin_cases i <;> fin_cases j <;>
+    norm_num [normalizedRayEntry, idealRayEntry, Fin.ext_iff, -abs_mul] <;>
     apply abs_le.mpr <;> constructor <;>
-    norm_num [normalizedRayEntry, idealRayEntry, Fin.ext_iff] <;>
     linarith only [he, b00, b02, b11, b20, b22, bε10, bε01, bε12, bε21,
       e01, e21, eε00, eε11, eε20, eε02, eε22, eε210, eε212, hHb, hκb]
 
@@ -562,12 +562,13 @@ theorem ray_geometric_bounds
         _ ≤ (2 * Θ ^ 2) * |U| + (3 * Θ ^ 2) * |V| :=
           add_le_add (mul_le_mul_of_nonneg_right hp (abs_nonneg _))
             (mul_le_mul_of_nonneg_right hq (abs_nonneg _))
-        _ ≤ 3 * Θ ^ 2 * (|U| + |V|) := by nlinarith [sq_nonneg Θ, abs_nonneg U]
+        _ ≤ 3 * Θ ^ 2 * (|U| + |V|) := by
+          nlinarith only [mul_nonneg (sq_nonneg Θ) (abs_nonneg U)]
     have hmul := mul_le_mul_of_nonneg_left hn (by positivity : 0 ≤ 6 * Θ ^ 2 * (|U| + |V|))
     linarith only [hb, hmul]
   have hD : 1 / 4 ≤ rayDenominator ε P Q N := by
     unfold rayDenominator
-    nlinarith [sq_nonneg P, mul_nonneg (sq_nonneg ε) (sq_nonneg Q)]
+    nlinarith only [hn, sq_nonneg P, mul_nonneg (sq_nonneg ε) (sq_nonneg Q)]
   have hPsum : |P + P₀| ≤ 3 * Θ ^ 2 := by linarith [abs_add_le P P₀]
   have hNsum : |N + 1| ≤ 3 := by have hh := abs_add_le N 1; norm_num at hh; linarith
   have hPsq : |P ^ 2 - P₀ ^ 2| ≤ 3 * ρ * Θ ^ 2 := by
@@ -673,8 +674,9 @@ theorem normalized_velocity_entry_error
   have hαb := abs_le.mp hα
   have hκb := abs_le.mp hκ
   intro i j
-  fin_cases i <;> fin_cases j <;> apply abs_le.mpr <;> constructor <;>
-    norm_num [normalizedVelocityEntry, idealVelocityEntry, Fin.ext_iff] <;>
+  fin_cases i <;> fin_cases j <;>
+    norm_num [normalizedVelocityEntry, idealVelocityEntry, Fin.ext_iff, -abs_mul] <;>
+    apply abs_le.mpr <;> constructor <;>
     linarith only [he, b00, b02, b11, b20, b22, bε10, bε12,
       e01, e21, eε00, eε02, eε11, eε20, eε22, eε210, eε212, hHb, hαb, hκb]
 
@@ -831,8 +833,9 @@ theorem normalized_unprojected_entry_error
   have hαb := abs_le.mp hα
   have hαεb := abs_le.mp hαε
   intro i j
-  fin_cases i <;> fin_cases j <;> apply abs_le.mpr <;> constructor <;>
-    norm_num [normalizedUnprojectedEntry, idealUnprojectedEntry, Fin.ext_iff] <;>
+  fin_cases i <;> fin_cases j <;>
+    norm_num [normalizedUnprojectedEntry, idealUnprojectedEntry, Fin.ext_iff, -abs_mul] <;>
+    apply abs_le.mpr <;> constructor <;>
     linarith only [he, b00, b02, b11, bε10, bε12, bε21,
       e01, eε00, eε02, eε11, eε210, eε212, hHb, hαb, hαεb]
 
