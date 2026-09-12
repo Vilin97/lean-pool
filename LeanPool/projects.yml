@@ -8083,6 +8083,8 @@ projects:
         - Deryk Osthus
       doi: 10.1016/j.aim.2015.09.032
       arxiv: "1410.5750"
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/6736c816e1f9cd105c2295a8e4716ad55609ccb0/preprints/PAPER_III/05_formalization/lean_v1.4_freeze
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
     license: Apache-2.0
     status: verified
     provenance: AI

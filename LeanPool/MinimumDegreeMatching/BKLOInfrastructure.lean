@@ -4,14 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Giannini, Aristotle
 -/
 import LeanPool.MinimumDegreeMatching.Spread
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Order
-import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
 
 /-!
 # Finite edge-set infrastructure for BKLO Lemma 10.7 at `r = 2`
@@ -148,144 +142,6 @@ theorem isMatchingAvoiding_involutionMatching {S : Finset V} {f : V → V} {x : 
     push Not
     exact ⟨fun h => hx (h ▸ ha), fun h => hx (h ▸ hmap a ha)⟩
 
-/-! ### The graph induced by an edge set on a vertex subset -/
-
-/-- The graph on the subtype `↥S` whose edges are the edges of `E` inside `S`. -/
-def setGraph (S : Finset V) (E : Finset (Sym2 V)) : SimpleGraph {x // x ∈ S} where
-  Adj a b := a ≠ b ∧ s((a : V), (b : V)) ∈ E
-  symm := ⟨fun a b h => ⟨h.1.symm, by rw [Sym2.eq_swap]; exact h.2⟩⟩
-  loopless := ⟨fun _ h => h.1 rfl⟩
-
-instance (S : Finset V) (E : Finset (Sym2 V)) : DecidableRel (setGraph S E).Adj := by
-  intro a b
-  unfold setGraph
-  infer_instance
-
-/-- The embedding of `Sym2 ↥S` into `Sym2 V`. -/
-def sym2val (S : Finset V) : Sym2 {x // x ∈ S} → Sym2 V := Sym2.map Subtype.val
-
-omit [DecidableEq V] in
-theorem sym2val_injective (S : Finset V) : Function.Injective (sym2val S) :=
-  Sym2.map.injective Subtype.val_injective
-
-omit [DecidableEq V] in
-@[simp] theorem sym2val_mk (S : Finset V) (a b : {x // x ∈ S}) :
-    sym2val S s(a, b) = s((a : V), (b : V)) := rfl
-
-omit [DecidableEq V] in
-theorem mem_sym2val (S : Finset V) (a : {x // x ∈ S}) (e : Sym2 {x // x ∈ S}) :
-    (a : V) ∈ sym2val S e ↔ a ∈ e := by
-  induction e using Sym2.ind with
-  | _ x y =>
-    simp only [sym2val_mk, Sym2.mem_iff]
-    constructor
-    · rintro (h | h)
-      exacts [Or.inl (Subtype.ext h.symm).symm, Or.inr (Subtype.ext h.symm).symm]
-    · rintro (rfl | rfl)
-      exacts [Or.inl rfl, Or.inr rfl]
-
-variable {S : Finset V} {E : Finset (Sym2 V)}
-
-theorem mem_edgeFinset_setGraph {e : Sym2 {x // x ∈ S}} :
-    e ∈ (setGraph S E).edgeFinset ↔ sym2val S e ∈ E ∧ ¬ e.IsDiag := by
-  induction e using Sym2.ind with
-  | _ a b =>
-    simp only [SimpleGraph.mem_edgeFinset, SimpleGraph.mem_edgeSet, sym2val_mk,
-      Sym2.mk_isDiag_iff]
-    exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
-
-/-- The edges of `setGraph S E`, pushed into `Sym2 V`, are exactly `E`. -/
-theorem image_edgeFinset_setGraph (hE : E ⊆ cliqueEdges S) :
-    (setGraph S E).edgeFinset.image (sym2val S) = E := by
-  ext e
-  simp only [Finset.mem_image]
-  constructor
-  · rintro ⟨f, hf, rfl⟩
-    exact (mem_edgeFinset_setGraph.1 hf).1
-  · intro he
-    obtain ⟨hmem, hnd⟩ := mem_cliqueEdgesV.1 (hE he)
-    induction e using Sym2.ind with
-    | _ x y =>
-      have hx : x ∈ S := hmem x (by simp)
-      have hy : y ∈ S := hmem y (by simp)
-      refine ⟨s((⟨x, hx⟩ : {x // x ∈ S}), ⟨y, hy⟩), ?_, rfl⟩
-      refine mem_edgeFinset_setGraph.2 ⟨he, ?_⟩
-      simp only [Sym2.mk_isDiag_iff]
-      intro h
-      exact hnd (by simpa [Sym2.mk_isDiag_iff] using congrArg Subtype.val h)
-
-theorem card_edgeFinset_setGraph (hE : E ⊆ cliqueEdges S) :
-    (setGraph S E).edgeFinset.card = E.card := by
-  have h := Finset.card_image_of_injective (setGraph S E).edgeFinset (sym2val_injective S)
-  rw [image_edgeFinset_setGraph hE] at h
-  exact h.symm
-
-theorem degree_setGraph (hE : E ⊆ cliqueEdges S) (a : {x // x ∈ S}) :
-    (setGraph S E).degree a = edeg E (a : V) := by
-  classical
-  have h1 : (setGraph S E).degree a
-      = ((setGraph S E).edgeFinset.filter (fun e => a ∈ e)).card := by
-    rw [← (setGraph S E).card_incidenceFinset_eq_degree a,
-      (setGraph S E).incidenceFinset_eq_filter a]
-  have h2 : ((setGraph S E).edgeFinset.filter (fun e => a ∈ e)).image (sym2val S)
-      = E.filter (fun e => (a : V) ∈ e) := by
-    ext e
-    simp only [Finset.mem_image, Finset.mem_filter]
-    constructor
-    · rintro ⟨f, ⟨hf, haf⟩, rfl⟩
-      exact ⟨(mem_edgeFinset_setGraph.1 hf).1, (mem_sym2val S a f).2 haf⟩
-    · rintro ⟨he, hae⟩
-      have hmem : e ∈ (setGraph S E).edgeFinset.image (sym2val S) := by
-        rw [image_edgeFinset_setGraph hE]; exact he
-      obtain ⟨f, hf, rfl⟩ := Finset.mem_image.1 hmem
-      exact ⟨f, ⟨hf, (mem_sym2val S a f).1 hae⟩, rfl⟩
-  rw [h1, edeg, ← h2, Finset.card_image_of_injective _ (sym2val_injective S)]
-
-omit [DecidableEq V] in
-theorem card_coe_eq (S : Finset V) : Fintype.card {x // x ∈ S} = S.card :=
-  Fintype.card_coe S
-
-/-- **Dirac, with the partner edges recorded.**  A nonempty even vertex set `N` carrying an edge
-set `A ⊆ cliqueEdges N` of minimum degree at least `|N|/2` admits a fixed-point-free partner
-involution whose orbit edges lie in `A`. -/
-theorem exists_involution_adj {N : Finset V} {A : Finset (Sym2 V)}
-    (hAsub : A ⊆ cliqueEdges N) (hEven : Even N.card)
-    (hdeg : ∀ v ∈ N, N.card / 2 ≤ edeg A v) (hne : N.Nonempty) :
-    ∃ f : V → V, (∀ a ∈ N, f a ∈ N) ∧ (∀ a ∈ N, f (f a) = a) ∧ (∀ a ∈ N, f a ≠ a) ∧
-      (∀ a ∈ N, s(a, f a) ∈ A) := by
-  classical
-  let _ : Nonempty {v // v ∈ N} := ⟨⟨hne.choose, hne.choose_spec⟩⟩
-  have hdegG : ∀ a : {v // v ∈ N}, N.card / 2 ≤ (setGraph N A).degree a := by
-    intro a
-    rw [degree_setGraph hAsub a]
-    exact hdeg (a : V) a.2
-  have hmin : N.card / 2 ≤ (setGraph N A).minDegree :=
-    SimpleGraph.le_minDegree_of_forall_le_degree _ (N.card / 2) hdegG
-  obtain ⟨M, hM⟩ := SimpleGraph.exists_isPerfectMatching_of_card_le_minDegree
-    (G := setGraph N A) (by rw [card_coe_eq]; exact hEven) (by simpa [card_coe_eq] using hmin)
-  have hpartner : ∀ a : {v // v ∈ N}, ∃! b, M.Adj a b := fun a => hM.1 (hM.2 a)
-  choose g hg huniq using hpartner
-  have hginv : ∀ a, g (g a) = a := fun a => (huniq (g a) a (hg a).symm).symm
-  have hgadj : ∀ a, (setGraph N A).Adj a (g a) := fun a => M.adj_sub (hg a)
-  have hgne : ∀ a, g a ≠ a := by
-    intro a h
-    have hadj := hgadj a
-    rw [h] at hadj
-    exact hadj.ne rfl
-  refine ⟨fun v => if h : v ∈ N then ((g ⟨v, h⟩ : {v // v ∈ N}) : V) else v, ?_, ?_, ?_, ?_⟩
-  · intro a ha; simp only [dite_eq_left ha]; exact (g ⟨a, ha⟩).2
-  · intro a ha
-    simp only [dite_eq_left ha, dite_eq_left (g ⟨a, ha⟩).2]
-    have h2 : (⟨((g ⟨a, ha⟩ : {v // v ∈ N}) : V), (g ⟨a, ha⟩).2⟩ : {v // v ∈ N}) = g ⟨a, ha⟩ := rfl
-    rw [h2, hginv ⟨a, ha⟩]
-  · intro a ha
-    simp only [dite_eq_left ha]
-    intro hcon
-    exact hgne ⟨a, ha⟩ (Subtype.ext hcon)
-  · intro a ha
-    simp only [dite_eq_left ha]
-    exact (hgadj ⟨a, ha⟩).2
-
 /-- Every edge of `H` inside `S` is a clique edge of `S`, provided `H` is loopless. -/
 theorem edgesIn_subset_cliqueEdges_loopless {H : Finset (Sym2 V)} (hloop : ∀ e ∈ H, ¬ e.IsDiag)
     (S : Finset V) : edgesIn H S ⊆ cliqueEdges S := by
@@ -316,6 +172,40 @@ theorem degTo_le_edeg_edgesIn {H : Finset (Sym2 V)} {S : Finset V} {y : V} (hy :
   calc degTo H y S = ((nbhdIn H y S).image (fun z => s(y, z))).card :=
         (Finset.card_image_of_injOn hinj).symm
     _ ≤ edeg (edgesIn H S) y := Finset.card_le_card hsub
+
+/-- On a loopless edge set supported on `N`, counting neighbours of `v` is the same as counting
+incident edges. This is the bridge from the BKLO finite-edge vocabulary to the generic spread
+matching interface. -/
+theorem card_edgeNeighbors_eq_edeg {A : Finset (Sym2 V)} {N : Finset V}
+    (hAsub : A ⊆ cliqueEdges N) (v : V) :
+    ((N.filter fun z => s(v, z) ∈ A).erase v).card = edeg A v := by
+  classical
+  unfold edeg
+  apply Finset.card_bij (fun z _ => s(v, z))
+  · intro z hz
+    obtain ⟨-, hz'⟩ := Finset.mem_erase.1 hz
+    obtain ⟨hzN, hzA⟩ := Finset.mem_filter.1 hz'
+    exact Finset.mem_filter.2 ⟨hzA, by simp⟩
+  · intro a ha b hb hab
+    simp only [Sym2.eq_iff] at hab
+    rcases hab with ⟨_, h⟩ | ⟨h₁, h₂⟩
+    · exact h
+    · exact h₂.trans h₁
+  · intro e he
+    obtain ⟨heA, hve⟩ := Finset.mem_filter.1 he
+    have hcl := mem_cliqueEdgesV.1 (hAsub heA)
+    induction e using Sym2.ind with
+    | _ a b =>
+      have haN : a ∈ N := hcl.1 a (by simp)
+      have hbN : b ∈ N := hcl.1 b (by simp)
+      have hab : a ≠ b := Sym2.mk_isDiag_iff.not.mp hcl.2
+      simp only [Sym2.mem_iff] at hve
+      rcases hve with rfl | rfl
+      · refine ⟨b, ?_, rfl⟩
+        exact Finset.mem_erase.2 ⟨hab.symm, Finset.mem_filter.2 ⟨hbN, heA⟩⟩
+      · have heA' : s(v, a) ∈ A := by rwa [Sym2.eq_swap]
+        refine ⟨a, Finset.mem_erase.2 ⟨hab, Finset.mem_filter.2 ⟨haN, heA'⟩⟩, ?_⟩
+        exact Sym2.eq_swap
 
 /-- The data the greedy sweep produces at an apex `x`: a perfect matching of `N_H(x,W)` avoiding
 `x`, all of whose edges are edges of `H` inside `N_H(x,W)`. -/
@@ -350,126 +240,6 @@ theorem edeg_sdiff_ge_of_slack {E D : Finset (Sym2 V)} {v : V} {h d : ℕ}
   omega
 
 
-
-/-- The edges of a partner involution meet each vertex at most once. -/
-theorem edeg_image_partner_le_one {N : Finset V} {f : V → V}
-    (hinv : ∀ a ∈ N, f (f a) = a) {v : V} :
-    edeg (N.image (fun a => s(a, f a))) v ≤ 1 := by
-  classical
-  have hsub : (N.image (fun a => s(a, f a))).filter (fun e => v ∈ e)
-      ⊆ ({s(v, f v)} : Finset (Sym2 V)) := by
-    intro e he
-    obtain ⟨heIm, hve⟩ := Finset.mem_filter.1 he
-    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 heIm
-    refine Finset.mem_singleton.2 ?_
-    rcases Sym2.mem_iff.1 hve with h | h
-    · rw [h]
-    · have hfv : f v = a := by rw [h]; exact hinv a ha
-      rw [hfv, h]
-      exact Sym2.eq_swap
-  exact le_trans (Finset.card_le_card hsub) (by simp)
-
-/-- Deleting the edges of a partner involution deletes exactly the partner from each
-neighbourhood. -/
-theorem nbhdIn_sdiff_image_partner {N : Finset V} {A : Finset (Sym2 V)} {f : V → V}
-    (hinv : ∀ a ∈ N, f (f a) = a) {y : V} (hy : y ∈ N) :
-    nbhdIn (A \ N.image (fun a => s(a, f a))) y N = (nbhdIn A y N).erase (f y) := by
-  classical
-  ext z
-  simp only [mem_nbhdIn, Finset.mem_erase, Finset.mem_sdiff, Finset.mem_image]
-  constructor
-  · rintro ⟨hzN, hzA, hzE⟩
-    refine ⟨?_, hzN, hzA⟩
-    intro hzf
-    exact hzE ⟨y, hy, by rw [hzf]⟩
-  · rintro ⟨hzf, hzN, hzA⟩
-    refine ⟨hzN, hzA, ?_⟩
-    rintro ⟨a, ha, hae⟩
-    rcases Sym2.eq_iff.1 hae with ⟨rfl, rfl⟩ | ⟨rfl, hfa⟩
-    · exact hzf rfl
-    · exact hzf (by rw [← hfa, hinv a ha])
-
-/-- **Spread perfect matchings from Dirac slack (the inductive form).**  With `δ(A) ≥ |N|/2 + t`
-there is a perfect matching of `N` inside `A` whose weight is at most a `1/(t+1)` fraction of the
-total weight of the pairs still available in `A`. -/
-theorem exists_spread_involution_aux {N : Finset V} (hEven : Even N.card)
-    (w : V → V → ℝ) (hw : ∀ y z, 0 ≤ w y z) :
-    ∀ (t : ℕ) (A : Finset (Sym2 V)), A ⊆ cliqueEdges N →
-      (∀ v ∈ N, N.card / 2 + t ≤ edeg A v) →
-      ∃ f : V → V, (∀ a ∈ N, f a ∈ N) ∧ (∀ a ∈ N, f (f a) = a) ∧ (∀ a ∈ N, f a ≠ a) ∧
-        (∀ a ∈ N, s(a, f a) ∈ A) ∧
-        ((t : ℝ) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ nbhdIn A y N, w y z := by
-  classical
-  rcases N.eq_empty_or_nonempty with rfl | hne
-  · intro t A _ _
-    exact ⟨id, by simp, by simp, by simp, by simp, by simp⟩
-  intro t
-  induction t with
-  | zero =>
-    intro A hAsub hdeg
-    have hdeg0 : ∀ v ∈ N, N.card / 2 ≤ edeg A v := by
-      intro v hv; have := hdeg v hv; omega
-    obtain ⟨f, hmap, hinv, hfne, hadj⟩ := exists_involution_adj hAsub hEven hdeg0 hne
-    refine ⟨f, hmap, hinv, hfne, hadj, ?_⟩
-    rw [Nat.cast_zero, zero_add, one_mul]
-    refine Finset.sum_le_sum fun y hy => ?_
-    exact Finset.single_le_sum (f := fun z => w y z) (fun z _ => hw y z)
-      (mem_nbhdIn.2 ⟨hmap y hy, hadj y hy⟩)
-  | succ t ih =>
-    intro A hAsub hdeg
-    have hdeg0 : ∀ v ∈ N, N.card / 2 ≤ edeg A v := by
-      intro v hv; have := hdeg v hv; omega
-    obtain ⟨f₀, hmap0, hinv0, hne0, hadj0⟩ := exists_involution_adj hAsub hEven hdeg0 hne
-    have hA'sub : A \ N.image (fun a => s(a, f₀ a)) ⊆ cliqueEdges N :=
-      Finset.sdiff_subset.trans hAsub
-    have hdeg' : ∀ v ∈ N, N.card / 2 + t ≤ edeg (A \ N.image (fun a => s(a, f₀ a))) v := by
-      intro v hv
-      have h1 := hdeg v hv
-      have h2 : edeg (N.image (fun a => s(a, f₀ a))) v ≤ 1 := edeg_image_partner_le_one hinv0
-      have h3 := edeg_le_edeg_sdiff_add_edeg A (N.image (fun a => s(a, f₀ a))) v
-      omega
-    obtain ⟨f₁, hmap1, hinv1, hne1, hadj1, hb1⟩ := ih _ hA'sub hdeg'
-    have hsplit : ∑ y ∈ N, ∑ z ∈ nbhdIn (A \ N.image (fun a => s(a, f₀ a))) y N, w y z
-        = (∑ y ∈ N, ∑ z ∈ nbhdIn A y N, w y z) - ∑ y ∈ N, w y (f₀ y) := by
-      rw [← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun y hy => ?_
-      rw [nbhdIn_sdiff_image_partner hinv0 hy,
-        Finset.sum_erase_eq_sub (mem_nbhdIn.2 ⟨hmap0 y hy, hadj0 y hy⟩)]
-    rw [hsplit] at hb1
-    have htpos : (0 : ℝ) ≤ (t : ℝ) + 1 := by positivity
-    by_cases hcmp : ∑ y ∈ N, w y (f₀ y) ≤ ∑ y ∈ N, w y (f₁ y)
-    · refine ⟨f₀, hmap0, hinv0, hne0, hadj0, ?_⟩
-      have h5 := mul_le_mul_of_nonneg_left hcmp htpos
-      push_cast
-      linarith only [hb1, h5]
-    · push Not at hcmp
-      refine ⟨f₁, hmap1, hinv1, hne1, fun a ha => (Finset.mem_sdiff.1 (hadj1 a ha)).1, ?_⟩
-      push_cast
-      linarith only [hb1, hcmp]
-
-/-- **Spread perfect matchings from Dirac slack.**  If `δ(A) ≥ |N|/2 + t` on an even set `N`, then
-for every nonnegative weight `w` some perfect matching of `N` inside `A`, presented as a partner
-involution `f`, satisfies `∑_{y ∈ N} w(y, f y) ≤ (1/(t+1)) ∑_{y,z ∈ N} w(y,z)`.
-
-This replaces the probabilistic step of BKLO (Proposition 10.8): the `t+1` matchings averaged over
-are pairwise edge-disjoint, obtained by applying Dirac's theorem `t+1` times in a row. -/
-theorem exists_spread_involution {N : Finset V} {A : Finset (Sym2 V)} {t : ℕ}
-    (hAsub : A ⊆ cliqueEdges N) (hEven : Even N.card)
-    (hdeg : ∀ v ∈ N, N.card / 2 + t ≤ edeg A v) (w : V → V → ℝ) (hw : ∀ y z, 0 ≤ w y z) :
-    ∃ f : V → V, (∀ a ∈ N, f a ∈ N) ∧ (∀ a ∈ N, f (f a) = a) ∧ (∀ a ∈ N, f a ≠ a) ∧
-      (∀ a ∈ N, s(a, f a) ∈ A) ∧
-      ∑ y ∈ N, w y (f y) ≤ (1 / ((t : ℝ) + 1)) * ∑ y ∈ N, ∑ z ∈ N, w y z := by
-  obtain ⟨f, h1, h2, h3, h4, h5⟩ := exists_spread_involution_aux hEven w hw t A hAsub hdeg
-  refine ⟨f, h1, h2, h3, h4, ?_⟩
-  have hmono : ∑ y ∈ N, ∑ z ∈ nbhdIn A y N, w y z ≤ ∑ y ∈ N, ∑ z ∈ N, w y z :=
-    Finset.sum_le_sum fun y _ =>
-      Finset.sum_le_sum_of_subset_of_nonneg (nbhdIn_subset A y N) (fun z _ _ => hw y z)
-  have hkey : ((t : ℝ) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ N, w y z := h5.trans hmono
-  have hpos : (0 : ℝ) < (t : ℝ) + 1 := by positivity
-  have hrw : (1 / ((t : ℝ) + 1)) * ∑ y ∈ N, ∑ z ∈ N, w y z
-      = (∑ y ∈ N, ∑ z ∈ N, w y z) / ((t : ℝ) + 1) := by ring
-  rw [hrw, le_div_iff₀ hpos]
-  linarith only [hkey]
 
 /-! ### Matchings from involutions -/
 

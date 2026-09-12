@@ -11,7 +11,7 @@ import LeanPool.MinimumDegreeMatching.BKLO
 /-!
 # BKLO simultaneous perfect matchings and spread matchings
 
-Source: arxiv:1410.5750, doi:10.1016/j.aim.2015.09.032
+Source: arxiv:1410.5750, doi:10.1016/j.aim.2015.09.032, url:https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/6736c816e1f9cd105c2295a8e4716ad55609ccb0/preprints/PAPER_III/05_formalization/lean_v1.4_freeze
 Authors: Juan Pablo Traverso Gianini, Aristotle
 Status: verified
 Main declarations: `BKLOK2.lemma107K2_holds`

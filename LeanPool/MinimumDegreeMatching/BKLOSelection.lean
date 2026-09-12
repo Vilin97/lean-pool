@@ -4,6 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Giannini, Aristotle
 -/
 import LeanPool.MinimumDegreeMatching.BKLOInfrastructure
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Order
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
 
 /-!
 # Deterministic simultaneous matching selection
@@ -369,7 +375,8 @@ theorem pot_step {β q : ℝ} (hq : 0 ≤ q) {H : Finset (Sym2 V)} {W : Finset V
 /-- **The sequential selection.**  The apices of `R` can be processed one at a time, each receiving
 a perfect matching of its neighbourhood avoiding all the edges used so far, as long as the potential
 stays below `2 ^ (s₁+1)`.  The Dirac slack is split: `s₁` absorbs the already used edges, and the
-remaining `s₂` supplies the `1/(s₂+1)`-spread matching of `BKLO.exists_spread_involution`. -/
+remaining `s₂` supplies the `1/(s₂+1)`-spread matching of
+`SimpleGraph.exists_spread_involution_of_edgeSet`. -/
 theorem spread_process {H : Finset (Sym2 V)} {U W : Finset V}
     {q : ℝ} {s₁ s₂ : ℕ} (hq : 0 ≤ q) (hloop : ∀ e ∈ H, ¬ e.IsDiag) (hUW : Disjoint U W)
     (hEven : ∀ x ∈ U, Even (nbhdIn H x W).card)
@@ -410,9 +417,14 @@ theorem spread_process {H : Finset (Sym2 V)} {U W : Finset V}
       intro v hv
       rw [hAeq]
       exact edeg_sdiff_ge_of_slack (hmindeg x₀ hx₀U v hv) (hused v hv)
+    have hdegA' : ∀ v ∈ N₀,
+        N₀.card / 2 + s₂ ≤ ((N₀.filter fun z => s(v, z) ∈ A).erase v).card := by
+      intro v hv
+      rw [card_edgeNeighbors_eq_edeg hAsub v]
+      exact hdegA v hv
     -- the Dirac slack supplies a partner involution of small weight
     obtain ⟨f, hmap, hinv, hfne, hadj, hwbound⟩ :=
-      exists_spread_involution hAsub (hEven x₀ hx₀U) hdegA
+      SimpleGraph.exists_spread_involution_of_edgeSet (hEven x₀ hx₀U) hdegA'
         (fun y z => wgt H W q F (R.erase x₀) R y z) (fun y z => wgt_nonneg hq _ _ _ _ _)
     set M : Finset (Finset V) := involutionMatching N₀ f with hM
     obtain ⟨hMatch, hMsub, hMcov, hMedges⟩ :=
