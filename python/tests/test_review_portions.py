@@ -572,3 +572,41 @@ def test_completed_calls_are_saved_before_later_failure(monkeypatch, tmp_path):
     session.send([])
     saved = json.loads(destination.with_suffix(".calls.jsonl").read_text())
     assert saved["payload"]["verdict"] == "pass"
+
+
+def test_followup_budget_includes_serialized_metadata_and_escaping(monkeypatch):
+    """Escaping and many per-query envelopes cannot overflow the next call."""
+    calls = []
+
+    def prepare(evidence, rules):
+        return [{"role": "user", "content": evidence}]
+
+    def send(messages):
+        assert review._message_tokens(messages) <= 10_000
+        calls.append(messages)
+        return result(
+            {
+                "verdict": "pass",
+                "source_requests": [f"D{i}" for i in range(20)]
+                if len(calls) == 1
+                else [],
+            }
+        )
+
+    def excerpt(diff, query, allowance):
+        return {"query": query, "source": "\\" * allowance, "status": "metadata " * 50}
+
+    monkeypatch.setattr(review_portions, "source_excerpts", excerpt)
+    answer = review._integrate_portions("", "{}", {}, 10_000, prepare, send)
+    assert len(calls) == 2
+    assert answer.payload["verdict"] == "discuss"
+
+
+def test_final_findings_are_reported_once():
+    """A retained finding blocks approval without a duplicate synthetic entry."""
+    finding = {"comment": "Unresolved semantic concern"}
+    answer = review_portions.enforce_resolutions(
+        {"verdict": "pass", "findings": [finding]}, {}
+    )
+    assert answer["verdict"] == "discuss"
+    assert answer["findings"] == [finding]

@@ -229,6 +229,8 @@ def enforce_resolutions(payload: dict, obligations: dict[str, str]) -> dict:
         payload = dict(payload)
         findings = list(payload.get("findings") or [])
         for identifier in sorted(missing):
+            if identifier.startswith("integration:final:finding:"):
+                continue  # The concrete finding already appears in this final report.
             findings.append(
                 {
                     "file": "",

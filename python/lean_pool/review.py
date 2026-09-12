@@ -1251,19 +1251,36 @@ def _integrate_portions(
             )
         )
         bundle["obligations"] = obligations
-        updated = prepare(
-            json.dumps(bundle, ensure_ascii=False),
-            review_portions.integration_instructions(),
-        )
-        available = budget - _message_tokens(updated)
-        allowance = max(
-            0, int((available - 512) * CHARS_PER_TOKEN_ESTIMATE) // len(queries)
-        )
-        bundle["source_followups"].extend(
-            review_portions.source_excerpts(diff, query, allowance) for query in queries
-        )
+        if not _fit_source_followups(diff, queries, bundle, budget, prepare):
+            break
     payload = review_portions.enforce_resolutions(final.payload, obligations)
     return replace(final, payload=payload)
+
+
+def _fit_source_followups(
+    diff: str, queries: list[str], bundle: dict, budget: int, prepare: Callable
+) -> bool:
+    """Fit the serialized excerpts and their metadata within the next call."""
+    rules = review_portions.integration_instructions()
+    available = budget - _message_tokens(
+        prepare(json.dumps(bundle, ensure_ascii=False), rules)
+    )
+    allowance = max(
+        0, int((available - 512) * CHARS_PER_TOKEN_ESTIMATE) // len(queries)
+    )
+    for _ in range(20):
+        excerpts = [
+            review_portions.source_excerpts(diff, query, allowance) for query in queries
+        ]
+        candidate = bundle | {"source_followups": bundle["source_followups"] + excerpts}
+        messages = prepare(json.dumps(candidate, ensure_ascii=False), rules)
+        if _message_tokens(messages) <= budget:
+            bundle["source_followups"] = candidate["source_followups"]
+            return True
+        if allowance == 0:
+            break
+        allowance //= 2
+    return False
 
 
 class _ReviewSession:
