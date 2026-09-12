@@ -409,19 +409,8 @@ lemma kvm_ineq_III_aux' {X Y Z : Ω → G} [FiniteRange X] [FiniteRange Y]
   d[X; μ # Y + Z; μ] ≤ d[X; μ # Y; μ] + (2 : ℝ)⁻¹ * (H[Y + Z; μ] - H[Y; μ]) := by
     obtain ⟨Ω', hΩ', μ', X', Y', Z', hprob, h_indep', hX', hY', hZ', hident_X, hident_Y, hident_Z,
       hfin_X, hfin_Y, hfin_Z⟩ := independent_copies3_nondep_finiteRange hX hY hZ μ μ μ
-    -- the argument below could be extracted into a Mathlib lemma
-    have hident_YZ : IdentDistrib (⟨Y',Z'⟩) (⟨Y, Z⟩) μ' μ := {
-      aemeasurable_fst := by fun_prop
-      aemeasurable_snd := by fun_prop
-      map_eq := by
-        replace h_indep' : IndepFun Y' Z' μ' := h_indep'.indepFun (show 1 ≠ 2 by simp)
-        rw [indepFun_iff_map_prod_eq_prod_map_map] at h_indep h_indep' <;> try fun_prop
-        rw [h_indep, h_indep']; congr 1
-        · exact hident_Y.map_eq
-        exact hident_Z.map_eq
-    }
-    replace hident_YZ : IdentDistrib (Y' + Z') (Y + Z) μ' μ := by
-      convert! hident_YZ.comp measurable_add
+    have hident_YZ : IdentDistrib (Y' + Z') (Y + Z) μ' μ :=
+      hident_Y.add hident_Z (h_indep'.indepFun (show 1 ≠ 2 by simp)) h_indep
     rw [←IdentDistrib.rdist_congr hident_X hident_Y, ←IdentDistrib.rdist_congr hident_X hident_YZ,
         ←IdentDistrib.entropy_congr hident_Y, ←IdentDistrib.entropy_congr hident_YZ]
     apply kvm_ineq_III_aux _ _ _ h_indep' <;> fun_prop
