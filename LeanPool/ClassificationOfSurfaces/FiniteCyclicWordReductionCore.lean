@@ -3180,7 +3180,7 @@ def positiveTargetWord {n : ℕ}
     (outer carrier : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos outer, .pos outer, .neg carrier] ++
+  .pos outer :: .pos outer :: .neg carrier ::
     insideTail ++ .pos carrier :: inverseWord outsideTail
 
 /-- Contextual crosscap source with arbitrary orientations on both distinguished edges. -/
@@ -3671,8 +3671,7 @@ def positiveSourceWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos outer, .pos first, .pos second,
-    .neg first, .neg second] ++
+  .pos outer :: .pos first :: .pos second :: .neg first :: .neg second ::
     insideTail ++ .neg outer :: outsideTail
 
 /-- The same completed handle commuted outside the residual pair. -/
@@ -3680,8 +3679,7 @@ def positiveTargetWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos first, .pos second, .neg first,
-    .neg second, .pos outer] ++
+  .pos first :: .pos second :: .neg first :: .neg second :: .pos outer ::
     insideTail ++ .neg outer :: outsideTail
 
 /-- The contextual handle source with its residual carrier displayed negative first. -/
@@ -3689,8 +3687,7 @@ def negativeSourceWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.neg outer, .pos first, .pos second,
-    .neg first, .neg second] ++
+  .neg outer :: .pos first :: .pos second :: .neg first :: .neg second ::
     insideTail ++ .pos outer :: outsideTail
 
 /-- Negative-residual-carrier target spelling. -/
@@ -3698,8 +3695,7 @@ def negativeTargetWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos first, .pos second, .neg first,
-    .neg second, .neg outer] ++
+  .pos first :: .pos second :: .neg first :: .neg second :: .neg outer ::
     insideTail ++ .pos outer :: outsideTail
 
 /-- Contextual handle source with arbitrary residual-carrier orientation. -/
@@ -3802,7 +3798,7 @@ def negativeSourceSignedIso {n : ℕ}
       hfirstPos, hsecondPos,
       hfirstNeg, hsecondNeg]
     simp only [Dyck.reverseEdgeRelabeling_neg,
-      Dyck.reverseEdgeRelabeling_pos, List.map_nil]
+      Dyck.reverseEdgeRelabeling_pos]
     exact List.IsRotated.refl _
 
 /-- Reversing only the residual carrier identifies negative and positive handle targets. -/
@@ -3865,7 +3861,7 @@ def negativeTargetSignedIso {n : ℕ}
       hfirstPos, hsecondPos,
       hfirstNeg, hsecondNeg]
     simp only [Dyck.reverseEdgeRelabeling_neg,
-      Dyck.reverseEdgeRelabeling_pos, List.map_nil]
+      Dyck.reverseEdgeRelabeling_pos]
     exact List.IsRotated.refl _
 
 private theorem exists_positiveTarget_of_thirdTarget {n : ℕ}
