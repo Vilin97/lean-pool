@@ -8058,3 +8058,56 @@ projects:
       - "15B48"
       - "05C35"
       - "15A18"
+  - slug: navier-stokes-and-euler
+    title: Finite-time breakdown for Navier–Stokes and Euler
+    summary: Formalizes forced three-dimensional Navier–Stokes breakdown on Euclidean space and the
+      periodic torus for every positive viscosity, and finite-time singularity formation for unforced
+      Euler from smooth, compactly supported, divergence-free initial data. The Euler result specifies
+      maximal Sobolev lifespan, divergence of the velocity C¹ norm, and divergence of the time integral
+      of the vorticity norm.
+    branch: partial differential equations and mathematical fluid dynamics
+    entry_module: LeanPool.NavierStokesAndEuler
+    authors:
+    - OpenAI
+    source:
+      title: Finite time blowup for Navier–Stokes and Finite time blowup for the Euler equation
+      authors:
+      - OpenAI
+      url: https://github.com/openai/NavierStokesAndEuler
+      github_repo: openai/NavierStokesAndEuler
+      commit: 8937a8f4cbc7abaab5e9e97d1cc7f5d2319d9538
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - NavierStokes.Comparator.navier_stokes_breakdown_R3
+    - Euler.euler_breakdown_R3
+    main_results:
+    - declaration: NavierStokes.Comparator.navier_stokes_breakdown_R3
+      informal: For every positive viscosity, there are smooth divergence-free initial data and smooth
+        forcing on ℝ³, with the prescribed spatial and temporal decay, admitting no global smooth
+        Navier–Stokes solution with uniformly bounded kinetic energy.
+    - declaration: NavierStokes.Comparator.navier_stokes_breakdown_periodic
+      informal: For every positive viscosity, there are smooth periodic divergence-free initial data
+        and smooth periodic forcing with the prescribed temporal decay, admitting no global smooth
+        periodic Navier–Stokes solution.
+    - declaration: Euler.euler_breakdown_R3
+      informal: There exist smooth divergence-free initial data on ℝ³ whose spatial derivatives decay
+        faster than every polynomial and which admit no global smooth unforced Euler solution with
+        uniformly bounded kinetic energy.
+    - declaration: Euler.exists_compact_smooth_euler_singularity
+      informal: There exist nonzero smooth compactly supported divergence-free initial data, a maximal
+        time 0 < Tstar ≤ 1, and an unforced Euler solution on [0, Tstar) in the all-order Sobolev
+        class with bounded kinetic energy. Smooth Sobolev solutions on [0, T] exist exactly when T
+        < Tstar. The velocity C¹ norm has infinite left limsup at Tstar, and the time integral of
+        the spatial supremum of the vorticity norm diverges.
+    tags:
+    - navier-stokes
+    - euler-equations
+    - finite-time-blowup
+    - fluid-dynamics
+    - sobolev-spaces
+    msc:
+    - 35Q30
+    - 35Q31
+    - 35B44
