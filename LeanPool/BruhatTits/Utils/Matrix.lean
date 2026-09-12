@@ -67,8 +67,9 @@ lemma coeffs_fromBlocks (A : Matrix n n' R) (B : Matrix n m R) (C : Matrix m' n'
     (A.fromBlocks B C D).coeffs =
         A.coeffs ∪ B.coeffs ∪ C.coeffs ∪ D.coeffs := by
   ext a
-  simp only [coeffs]
-  aesop
+  simp only [coeffs, Set.mem_image2, Set.mem_univ, true_and, Sum.exists,
+    fromBlocks_apply₁₁, fromBlocks_apply₁₂, fromBlocks_apply₂₁, fromBlocks_apply₂₂,
+    Set.mem_union, exists_or, or_assoc, or_left_comm]
 
 lemma coeffs_zero [Zero R] [Nonempty n] [Nonempty m] : (0 : Matrix n m R).coeffs = {0} := by
   classical
@@ -193,10 +194,9 @@ lemma coeffs_sup_fromBlocks (A : Matrix n n' R) (B : Matrix n m R)
       A.coeffsSup v ⊔ B.coeffsSup v ⊔ C.coeffsSup v ⊔ D.coeffsSup v := by
   classical
   simp only [coeffsSup, ← Finset.sup'_union, coeffs_fromBlocks]
-  congr
+  congr 1
   ext
-  simp
-  tauto
+  simp only [Set.Finite.mem_toFinset, Set.mem_union, Finset.mem_union]
 
 end «Finite»
 
