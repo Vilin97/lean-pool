@@ -1599,11 +1599,11 @@ theorem stressForce_sub {theta axial theta' axial' : Chart → ℝ} {z : SpaceTi
     (ha' : DifferentiableAt ℝ axial' (AxisymmetricFields.profilePoint z.1 z.2)) :
     stressForce (fun p => theta p - theta' p) (fun p => axial p - axial' p) z =
       stressForce theta axial z - stressForce theta' axial' z := by
+  simp only [stressForce, SlowResidualMatching.tangentialStressForce,
+    LeadingStress.radialDivergence, SimilarityProfile.partialS,
+    fderiv_fun_sub ht ht', fderiv_fun_sub ha ha', sub_apply]
   ext i
-  fin_cases i <;>
-    simp [stressForce, SlowResidualMatching.tangentialStressForce, LeadingStress.radialDivergence,
-      SimilarityProfile.partialS, fderiv_fun_sub ht ht', fderiv_fun_sub ha ha',
-      AxisymmetricResidual.pack, coordinateVector] <;> ring
+  fin_cases i <;> simp [AxisymmetricResidual.pack, coordinateVector] <;> ring
 
 theorem scalarConst_rate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
     {F : SpaceTime → ℝ} {U : Set SpaceTime} {M : ℕ} {r : ℝ}
@@ -2010,6 +2010,12 @@ theorem truncationResidual_rate {l : Filter SpaceTime} {h lo hi : ℝ}
 
 end TruncationRate
 
+private theorem le_mul_add_one_of_div_le {x h a b : ℝ} (hh : 0 < h)
+    (hx : x / h ≤ a) (hab : a ≤ b) : x ≤ h * (b + 1) :=
+  ((div_le_iff₀ hh).mp hx).trans
+    ((mul_le_mul_of_nonneg_right (hab.trans (le_add_of_nonneg_right zero_le_one)) hh.le).trans_eq
+      (mul_comm _ _))
+
 section NonlinearAssembly
 
 open ProblemStatement DiagonalResidual ResidualStability SlowExpansionResidual
@@ -2070,9 +2076,8 @@ theorem baseResidual_jetRate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi
   let J := max (m + 2) N
   have hJ : m + 2 ≤ J := le_max_left _ _
   have hJN : (N : ℝ) ≤ J := by exact_mod_cast le_max_right (m + 2) N
-  have hgain : n + b + 2 * CoordinateAlgebra.A h + 6 * m + 12 ≤ h * ((J : ℝ) + 1) := by
-    have hn' := (div_le_iff₀ hh).mp hN
-    nlinarith
+  have hgain : n + b + 2 * CoordinateAlgebra.A h + 6 * m + 12 ≤ h * ((J : ℝ) + 1) :=
+    le_mul_add_one_of_div_le hh hN hJN
   have hq := A.positive_small hh hh1
   have hU := annularPast_isOpen
   have hlU := A.in_annularPast hh hh1 hlo
@@ -3092,9 +3097,8 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
   let J := max (m + 2) N
   have hJ : m + 2 ≤ J := le_max_left _ _
   have hJN : (N : ℝ) ≤ J := by exact_mod_cast le_max_right (m + 2) N
-  have hgain : n + b + 2 * CoordinateAlgebra.A h + 6 * m + 12 ≤ h * ((J : ℝ) + 1) := by
-    have hn' := (div_le_iff₀ hh).mp hN
-    nlinarith
+  have hgain : n + b + 2 * CoordinateAlgebra.A h + 6 * m + 12 ≤ h * ((J : ℝ) + 1) :=
+    le_mul_add_one_of_div_le hh hN hJN
   have hq := A.positive_small hh hh1
   have hU := past_isOpen
   have hlU : ∀ᶠ z in l, z ∈ past := A.past.mono (fun _ ht => ⟨ht, mem_univ _⟩)
