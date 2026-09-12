@@ -8065,8 +8065,8 @@ private theorem pairGraphCopy_parent_child_hammingDist_le
           ((pairLayerFinEquiv baseSize layer.val).symm parent))).val at hedge
   have hdist :=
     ((hammingHost_adj_iff dimension radius _ _).mp hedge).2
-  simpa only [pairGraphCopyParentWords, pairGraphCopyChildWords, ge_iff_le,
-      hammingDist_comm] using hdist
+  rw [hammingDist_comm]
+  exact hdist
 
 private theorem pairGraphCopy_averageDisagreement_le_radius
     {baseSize depth dimension radius : ℕ}
