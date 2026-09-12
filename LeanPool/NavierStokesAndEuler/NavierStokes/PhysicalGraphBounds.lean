@@ -1782,8 +1782,8 @@ theorem liftedPhase_power_bound {h K Z r0 P B d : ℝ}
   have hTg := ChartScales.Tg_pos
   have hQ1 := Q_inv_ge_one n
   have hSd : 1 ≤ ChartScales.S n ^ d := Real.one_le_rpow hS hd
-  have hbase : 1 ≤ B * ChartScales.S n ^ d := by nlinarith
-  have hM : 1 ≤ M0 * ChartScales.S n := by nlinarith
+  have hbase : 1 ≤ B * ChartScales.S n ^ d := one_le_mul_of_one_le_of_one_le hB hSd
+  have hM : 1 ≤ M0 * ChartScales.S n := one_le_mul_of_one_le_of_one_le hM0 hS
   have hci : |(ChartScales.timeCoefficient h n)⁻¹| ≤ ChartScales.Tg * ChartScales.S n := by
     rw [abs_of_pos (inv_pos.mpr (ChartScales.timeCoefficient_pos h n))]
     exact ChartScales.timeCoefficient_inv_upper h hh hn
@@ -1805,7 +1805,7 @@ theorem liftedPhase_power_bound {h K Z r0 P B d : ℝ}
         simpa only [norm_iteratedFDeriv_zero] using hκb 0 (Nat.zero_le _)
     apply (slotMap_norm_bound κ _ center r0 y (by linarith) hZ (by positivity) hκ0 hz hv).trans
     dsimp [M0]
-    nlinarith
+    nlinarith only [hK, hZ, hS]
   have hlin : |p| + |pz / ChartScales.epsilon h n| + |x0| ≤
       3 * P * ChartScales.Q n ^ (-1 : ℝ) := by
     have hP0 : 0 ≤ P := by linarith
@@ -1821,7 +1821,7 @@ theorem liftedPhase_power_bound {h K Z r0 P B d : ℝ}
       D0 * ChartScales.S n := by
     have he := mul_le_mul_of_nonneg_right hci (norm_nonneg etaCoordinate)
     dsimp [D0]
-    nlinarith
+    nlinarith only [he, hK, hS]
   have he := liftedPhase_jet_bound hκ h n center r0 p pz x0 hF hG y m
     (by linarith) hM (by linarith) hκb hpoint hFb hGb i hi
   have hinside :
