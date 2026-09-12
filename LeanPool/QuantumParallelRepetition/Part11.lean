@@ -581,7 +581,7 @@ def unconditionalActualFairSourceBobStoppingUnitary
         G n S D denominator numerator nonempty)
       cleanup
 
-theorem unconditionalActualFairSourceAliceFlagPOVM_succ_nested
+private theorem unconditionalActualFairSourceAliceFlagPOVM_succ_nested
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [decA : DecidableEq A]
@@ -653,7 +653,7 @@ theorem unconditionalActualFairSourceAliceFlagPOVM_succ_nested
           (integratorActualC485SourceAlicePOVM
             G n S D a₀ q)) j x
 
-theorem unconditionalActualFairSourceBobFlagPOVM_succ_nested
+private theorem unconditionalActualFairSourceBobFlagPOVM_succ_nested
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [decB : DecidableEq B]
@@ -815,7 +815,7 @@ private def unconditionalActualC485RawPhysicalVerifierBorn
     (Matrix.toEuclideanCLM (n := ι × κ) (𝕜 := ℂ)
       (directDSVActualLocalPOVMWinningEffect G PA PB x y)) z
 
-theorem unconditionalActualC485CompleteDecodedScalarBorn
+private theorem unconditionalActualC485CompleteDecodedScalarBorn
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {P N d m : ℕ} {ι κ R T : Type}
@@ -945,7 +945,7 @@ def unconditionalActualFairSourcePhysicalStopBorn
             1 P N d L m)) j.succ j.succ)
 
 open Classical in
-theorem unconditionalActualFairSourceHistoryStopBorn_eq_selected
+private theorem unconditionalActualFairSourceHistoryStopBorn_eq_selected
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -980,7 +980,7 @@ theorem unconditionalActualFairSourceHistoryStopBorn_eq_selected
   unfold integratorActualC485WinningEffect
   rfl
 
-theorem unconditionalActualFairSourcePhysicalStopBorn_eq_raw
+private theorem unconditionalActualFairSourcePhysicalStopBorn_eq_raw
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [DecidableEq A] [DecidableEq B]
@@ -1023,7 +1023,7 @@ theorem unconditionalActualFairSourcePhysicalStopBorn_eq_raw
   dsimp only
   rfl
 
-theorem unconditionalActualFairSourceMatchedHistoryGamma
+private theorem unconditionalActualFairSourceMatchedHistoryGamma
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -1044,7 +1044,7 @@ theorem unconditionalActualFairSourceMatchedHistoryGamma
     (unconditionalFairMatchedFlag_aliceTarget_eq_aliceSample
       G n S D denominator numerator nonempty flag x y).symm
 
-theorem unconditionalActualFairSourceMatchedHistoryPhi
+private theorem unconditionalActualFairSourceMatchedHistoryPhi
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -1067,7 +1067,7 @@ theorem unconditionalActualFairSourceMatchedHistoryPhi
     (unconditionalFairMatchedFlag_bobTarget_eq_aliceSample
       G n S D denominator numerator nonempty flag x y matching).symm
 
-theorem unconditionalActualFairSourceMatchedHistoryCleanedVector
+private theorem unconditionalActualFairSourceMatchedHistoryCleanedVector
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))

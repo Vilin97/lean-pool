@@ -36,14 +36,14 @@ private def dSVDensityRationalPhysicalProjector
   (dSVDensityRationalLeftProjectiveThresholdPOVM
     w N k ξ).effect true
 
-theorem dSVDensityRationalPhysicalProjector_pos
+private theorem dSVDensityRationalPhysicalProjector_pos
     {d N : ℕ} (w : ℝ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     (dSVDensityRationalPhysicalProjector w ξ k).PosSemidef :=
   (dSVDensityRationalLeftProjectiveThresholdPOVM
     w N k ξ).positive true
 
-theorem dSVDensityRationalPhysicalProjector_projective
+private theorem dSVDensityRationalPhysicalProjector_projective
     {d N : ℕ} (w : ℝ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     dSVDensityRationalPhysicalProjector w ξ k *
@@ -53,7 +53,7 @@ theorem dSVDensityRationalPhysicalProjector_projective
     w N k (dSVSoftBobLeftReducedDensity ξ)
     (dSVSoftBobLeftReducedDensity_posSemidef ξ) true
 
-theorem dSVDensityRationalPhysicalProjector_complement_pos
+private theorem dSVDensityRationalPhysicalProjector_complement_pos
     {d N : ℕ} (w : ℝ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     (1 - dSVDensityRationalPhysicalProjector w ξ k).PosSemidef :=
@@ -71,7 +71,7 @@ private def dSVDensityRationalPhysicalGlobalPOVM
     (dSVDensityRationalPhysicalProjector_pos w ξ)
     (dSVDensityRationalPhysicalProjector_complement_pos w ξ)
 
-theorem dSVDensityRationalPhysicalProjectorSquare_eq_atomMismatch
+private theorem dSVDensityRationalPhysicalProjectorSquare_eq_atomMismatch
     {d N : ℕ} (w : ℝ)
     (ξ ζ : BipartiteUnitVector d) (k : Fin N) :
     (Matrix.trace
@@ -139,7 +139,7 @@ theorem dSVDensityRationalPhysicalProjectorSquare_eq_atomMismatch
   rw [Matrix.trace_mul_comm R P]
   ring
 
-theorem dSVDensityRationalPhysicalProjectorSquare_grid_eq
+private theorem dSVDensityRationalPhysicalProjectorSquare_grid_eq
     {d N : ℕ} (w : ℝ)
     (ξ ζ : BipartiteUnitVector d) :
     (∑ k : Fin N,
@@ -221,7 +221,7 @@ theorem dSVDensityRationalPhysicalProjectorSquare_grid_eq
         div_eq_mul_inv, one_mul, iff_true, mul_one]
     · simp only [left, decide_false, right, ↓reduceIte, zero_div, one_div, mul_zero]
 
-theorem dSVDensityRationalPhysicalProjector_weighted_rank_eq
+private theorem dSVDensityRationalPhysicalProjector_weighted_rank_eq
     {d N : ℕ} (w : ℝ) (ξ : BipartiteUnitVector d) :
     (∑ k : Fin N, dSVUniformDensityThresholdWeight N k *
       (Matrix.trace
@@ -352,7 +352,7 @@ private def dSVDensityRationalCompleteProjectiveThresholdProjector
   (dSVDensityRationalLeftProjectiveThresholdPOVM
     w N k ξ).effect true
 
-theorem dSVDensityRationalCompleteProjectiveThresholdProjector_pos
+private theorem dSVDensityRationalCompleteProjectiveThresholdProjector_pos
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     (dSVDensityRationalCompleteProjectiveThresholdProjector
@@ -375,7 +375,7 @@ theorem dSVDensityRationalCompleteProjectiveThresholdEffect_projective
     (dSVSoftBobLeftReducedDensity ξ)
     (dSVSoftBobLeftReducedDensity_posSemidef ξ) a
 
-theorem dSVDensityRationalCompleteProjectiveThresholdEffect_false
+private theorem dSVDensityRationalCompleteProjectiveThresholdEffect_false
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     (dSVDensityRationalLeftProjectiveThresholdPOVM
@@ -388,7 +388,7 @@ theorem dSVDensityRationalCompleteProjectiveThresholdEffect_false
   rw [Fintype.sum_bool, add_comm] at complete
   exact eq_sub_of_add_eq complete
 
-theorem
+private theorem
     dSVDensityRationalCompleteProjectiveThresholdProjector_complement_pos
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
@@ -719,7 +719,7 @@ def dSVDensityRationalCanonicalAliceBasis
 theorem dSVDensityRationalCanonicalAliceBasis_target
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     ξ.val = schmidtVector
-      (dSVUniformDensityPolarLeftSchmidtCoefficient ξ)
+      (dSVUniformLeftDensitySchmidtCoefficient ξ)
       (dSVDensityRationalCanonicalAliceBasis ξ)
       (dSVUniformDensityThresholdLeftBobBasis ξ) :=
   Classical.choose_spec
@@ -752,7 +752,7 @@ theorem dSVDensityRationalCanonicalAcceptedTarget_distance_sq_eq
     ‖ξ.val - dSVDensityRationalCanonicalAcceptedTarget
       w N ξ‖ ^ 2 =
       ∑ i : Fin d,
-        (dSVUniformDensityPolarLeftSchmidtCoefficient ξ i -
+        (dSVUniformLeftDensitySchmidtCoefficient ξ i -
           dSVDensityRationalCanonicalAcceptedCoefficient
             w N ξ i) ^ 2 := by
   rw [dSVDensityRationalCanonicalAliceBasis_target ξ]
@@ -763,7 +763,7 @@ theorem dSVDensityRationalCanonicalAcceptedTarget_distance_sq_eq
 theorem dSVDensityRationalCanonicalAcceptedCoefficient_error_sq_le
     {d N : ℕ} {w : ℝ} (width : 0 < w) (grid : 0 < N)
     (ξ : BipartiteUnitVector d) (i : Fin d) :
-    (dSVUniformDensityPolarLeftSchmidtCoefficient ξ i -
+    (dSVUniformLeftDensitySchmidtCoefficient ξ i -
         dSVDensityRationalCanonicalAcceptedCoefficient
           w N ξ i) ^ 2 ≤
       ((dSVSoftBobLeftReducedDensity_posSemidef ξ).isHermitian.eigenvalues i) / w +
@@ -795,7 +795,7 @@ theorem dSVDensityRationalCanonicalAcceptedTarget_distance_sq_le
   rw [dSVDensityRationalCanonicalAcceptedTarget_distance_sq_eq]
   calc
     (∑ i : Fin d,
-      (dSVUniformDensityPolarLeftSchmidtCoefficient ξ i -
+      (dSVUniformLeftDensitySchmidtCoefficient ξ i -
         dSVDensityRationalCanonicalAcceptedCoefficient
           w N ξ i) ^ 2) ≤
       ∑ i : Fin d,
@@ -851,7 +851,7 @@ private def dSVDensityRationalCanonicalNormalizedTarget
   NormedSpace.normalize
     (dSVDensityRationalCanonicalAcceptedTarget w N ξ)
 
-theorem dSVDensityRationalCanonicalNormalizedTarget_norm
+private theorem dSVDensityRationalCanonicalNormalizedTarget_norm
     {d N : ℕ} {w : ℝ} (width : 0 < w) (grid : 0 < N)
     (fine : (d : ℝ) / (N : ℝ) < 1 / (w + 1))
     (ξ : BipartiteUnitVector d) :
@@ -862,7 +862,7 @@ theorem dSVDensityRationalCanonicalNormalizedTarget_norm
     (dSVDensityRationalCanonicalAcceptedTarget_ne_zero
       width grid fine ξ)
 
-theorem dSVDensityRationalCanonicalNormalizedTarget_distance_le
+private theorem dSVDensityRationalCanonicalNormalizedTarget_distance_le
     {d N : ℕ} {w : ℝ} (width : 0 < w) (grid : 0 < N)
     (fine : (d : ℝ) / (N : ℝ) < 1 / (w + 1))
     (ξ : BipartiteUnitVector d) :
@@ -1189,7 +1189,7 @@ private def dSVDensityRationalPhysicalMixedBornSuccess
     (transposePOVM
       (dSVDensityRationalPhysicalGlobalPOVM w ζ))
 
-theorem dSVDensityRationalPhysicalMixedBornSuccess_eq
+private theorem dSVDensityRationalPhysicalMixedBornSuccess_eq
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalPhysicalMixedBornSuccess
@@ -1211,7 +1211,7 @@ theorem dSVDensityRationalPhysicalMixedBornSuccess_eq
     (dSVDensityRationalPhysicalProjector_projective w ξ)
     (dSVDensityRationalPhysicalProjector_projective w ζ)
 
-theorem dSVDensityRationalPhysicalMixedBornSuccess_loss_le
+private theorem dSVDensityRationalPhysicalMixedBornSuccess_loss_le
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalPhysicalDiagonalBornSuccess
@@ -1281,7 +1281,7 @@ private def dSVDensityRationalActualMixedAsynchronousMass
     ‖dSVDensityRationalCompleteProjectiveOutcome
       w N ξ ζ false true‖ ^ 2
 
-theorem dSVDensityRationalActualMixedSuccessMass_eq
+private theorem dSVDensityRationalActualMixedSuccessMass_eq
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalActualMixedSuccessMass w N ξ ζ =
@@ -1293,7 +1293,7 @@ theorem dSVDensityRationalActualMixedSuccessMass_eq
       grid dimension w ξ ζ]
   rfl
 
-theorem dSVDensityRationalActualMixedOutcome_norm_sq_eq_born
+private theorem dSVDensityRationalActualMixedOutcome_norm_sq_eq_born
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d)
     (a b : Bool) :
@@ -1329,7 +1329,7 @@ theorem dSVDensityRationalActualMixedOutcome_norm_sq_eq_born
   simpa only [dSVDensityRationalCompleteProjectiveOutcome, binaryBornProbability,
     dSVUniformDensityThresholdSharedDensity, ← alice_physical, ← bob_physical] using actual
 
-theorem dSVDensityRationalActualMixedContinueMass_eq_born
+private theorem dSVDensityRationalActualMixedContinueMass_eq_born
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalActualMixedContinueMass w N ξ ζ =
@@ -1344,7 +1344,7 @@ theorem dSVDensityRationalActualMixedContinueMass_eq_born
   exact dSVDensityRationalActualMixedOutcome_norm_sq_eq_born
     grid dimension w ξ ζ false false
 
-theorem dSVDensityRationalActualMixedAsynchronousMass_eq_born
+private theorem dSVDensityRationalActualMixedAsynchronousMass_eq_born
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalActualMixedAsynchronousMass w N ξ ζ =
@@ -1361,7 +1361,7 @@ theorem dSVDensityRationalActualMixedAsynchronousMass_eq_born
     dSVDensityRationalActualMixedOutcome_norm_sq_eq_born
       grid dimension w ξ ζ false true]
 
-theorem dSVDensityRationalActualMixed_mass_partition
+private theorem dSVDensityRationalActualMixed_mass_partition
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalActualMixedContinueMass w N ξ ζ +
@@ -1695,7 +1695,7 @@ private def dSVDensityRationalMixedSpectralAtomBlock
       positiveMatrixSpectralAtom G hG j
     else 0
 
-theorem dSVDensityRationalMixedSpectralAtomBlock_eq_projectorProduct
+private theorem dSVDensityRationalMixedSpectralAtomBlock_eq_projectorProduct
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d)
     (a b : Bool) (k : Fin N) :
@@ -1731,7 +1731,7 @@ theorem dSVDensityRationalMixedSpectralAtomBlock_eq_projectorProduct
     · simp only [alice, bob, and_true, ↓reduceIte, zero_mul]
     · simp only [alice, bob, and_self, ↓reduceIte, mul_zero]
 
-theorem dSVDensityRationalMixedSpectralAtomBlock_trace_eq
+private theorem dSVDensityRationalMixedSpectralAtomBlock_trace_eq
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d)
     (a b : Bool) (k : Fin N) :
@@ -1766,7 +1766,7 @@ section
 open WithLp
 open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 
-theorem dSVDensityRationalActualMixedAsynchronousMass_eq_crossHazard
+private theorem dSVDensityRationalActualMixedAsynchronousMass_eq_crossHazard
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalActualMixedAsynchronousMass
@@ -1800,7 +1800,7 @@ theorem dSVDensityRationalActualMixedAsynchronousMass_eq_crossHazard
   simp only [Matrix.mul_sub, mul_one, trace_sub, sub_re, Matrix.sub_mul, one_mul]
   ring
 
-theorem dSVDensityRationalActualMixed_escape_ge_diagonal
+private theorem dSVDensityRationalActualMixed_escape_ge_diagonal
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
     dSVDensityRationalPhysicalDiagonalBornSuccess
@@ -2034,7 +2034,7 @@ private def dSVDensityRationalCanonicalPrefixMask
             ξ).isHermitian.eigenvalues i) = true
       then (1 : ℂ) else 0
 
-theorem dSVDensityRationalCanonicalPrefixMask_transpose
+private theorem dSVDensityRationalCanonicalPrefixMask_transpose
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     (dSVDensityRationalCanonicalPrefixMask
@@ -2043,7 +2043,7 @@ theorem dSVDensityRationalCanonicalPrefixMask_transpose
   classical
   simp only [dSVDensityRationalCanonicalPrefixMask, blockDiagonal'_diagonal, diagonal_transpose]
 
-theorem dSVDensityRationalPhysicalAcceptedProjector_eq_spectralMask
+private theorem dSVDensityRationalPhysicalAcceptedProjector_eq_spectralMask
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     Matrix.blockDiagonal'
@@ -3087,7 +3087,7 @@ private def dSVDensityRationalPublicLogRankBucketFiber
     r.val ≠ 0 ∧
       dSVDensityRationalPublicLogRankBucket Q phase r = label
 
-theorem dSVDensityRationalPublicLogRankBucketFiber_mem
+private theorem dSVDensityRationalPublicLogRankBucketFiber_mem
     {N B : ℕ} (Q : ℕ) (phase : Fin B) (label : Option ℕ)
     (r : Fin (N + 1)) :
     r ∈ dSVDensityRationalPublicLogRankBucketFiber
@@ -3111,7 +3111,7 @@ def dSVDensityRationalPublicLogRankBucketRepresentative
       Q phase label).min' present
   else 0
 
-theorem dSVDensityRationalPublicLogRankBucketRepresentative_mem
+private theorem dSVDensityRationalPublicLogRankBucketRepresentative_mem
     {N B : ℕ} (Q : ℕ) (phase : Fin B) (label : Option ℕ)
     (present :
       (dSVDensityRationalPublicLogRankBucketFiber
@@ -3322,7 +3322,7 @@ private def dSVDensityRationalMixedCanonicalCrossMatrix
         ζ).isHermitian.eigenvectorUnitary :
       Matrix (Fin d) (Fin d) ℂ)).transpose
 
-theorem dSVDensityRationalMixedCanonicalCrossGauge_eq
+private theorem dSVDensityRationalMixedCanonicalCrossGauge_eq
     {d : ℕ} (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     (((dSVUniformDensityBobHistoryCopyBasis
@@ -3358,7 +3358,7 @@ theorem dSVDensityRationalMixedCanonicalCrossGauge_eq
   rw [← Matrix.blockDiagonal'_mul]
   rfl
 
-theorem dSVDensityRationalCanonicalPrefixMask_eq_diagonal
+private theorem dSVDensityRationalCanonicalPrefixMask_eq_diagonal
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     dSVDensityRationalCanonicalPrefixMask w N ξ =
@@ -3439,7 +3439,7 @@ theorem dSVDensityRationalMixedCanonicalRawSource_apply
   · simp only [dSVDensityRationalMixedCanonicalCrossMatrix, transpose_apply, blockDiagonal'_apply,
       flags, ↓reduceDIte, mul_zero, mul_ite, mul_one, ite_self, false_and, ↓reduceIte]
 
-theorem dSVDensityRationalMixedCanonicalProjectorMatrix_eq
+private theorem dSVDensityRationalMixedCanonicalProjectorMatrix_eq
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     (((dSVUniformDensityBobHistoryCopyBasis
@@ -3682,7 +3682,7 @@ private def dSVDensityRationalPublicLogBilateralPureTensor
   toLp 2 fun q : (ι × κ) × (ι × κ) =>
     v (q.1.1, q.2.1) * u (q.1.2, q.2.2)
 
-theorem dSVDensityRationalPublicLogBilateralPureTensor_norm_sq
+private theorem dSVDensityRationalPublicLogBilateralPureTensor_norm_sq
     {ι κ : Type*} [Fintype ι] [Fintype κ]
     (v : EuclideanSpace ℂ (ι × ι))
     (u : EuclideanSpace ℂ (κ × κ)) :
@@ -3736,7 +3736,7 @@ private def dSVDensityRationalPublicLogPhasePureSource
     (ePRState B)
     (dSVUniformDensityThresholdWholeHistorySharedState N d L)
 
-theorem dSVDensityRationalPublicLogPhasePureSource_apply
+private theorem dSVDensityRationalPublicLogPhasePureSource_apply
     (B N d L : ℕ)
     (φ ψ : Fin B)
     (a b : DSVUniformDensityThresholdWholeHistoryLocalIndex
@@ -3751,7 +3751,7 @@ theorem dSVDensityRationalPublicLogPhasePureSource_apply
   simp only [dSVDensityRationalPublicLogPhasePureSource,
     dSVDensityRationalPublicLogBilateralPureTensor, ePRState, ofReal_inv, ite_mul, zero_mul]
 
-theorem dSVDensityRationalPublicLogPhasePureSource_norm
+private theorem dSVDensityRationalPublicLogPhasePureSource_norm
     {B N d L : ℕ}
     (phases : 0 < B) (grid : 0 < N) (dimension : 0 < d) :
     ‖dSVDensityRationalPublicLogPhasePureSource
@@ -3779,7 +3779,7 @@ private def dSVDensityRationalPublicLogPhaseHarmonicPureSource
     (dSVDensityRationalPublicLogPhasePureSource B N d L)
     (embezzlementState m)
 
-theorem dSVDensityRationalPublicLogPhaseHarmonicPureSource_apply
+private theorem dSVDensityRationalPublicLogPhaseHarmonicPureSource_apply
     (B N d L m : ℕ)
     (φ ψ : Fin B)
     (a b : DSVUniformDensityThresholdWholeHistoryLocalIndex
@@ -3798,7 +3798,7 @@ theorem dSVDensityRationalPublicLogPhaseHarmonicPureSource_apply
       embezzlementState m (i, j) = _
   rw [dSVDensityRationalPublicLogPhasePureSource_apply]
 
-theorem dSVDensityRationalPublicLogPhaseHarmonicPureSource_norm
+private theorem dSVDensityRationalPublicLogPhaseHarmonicPureSource_norm
     {B N d L m : ℕ}
     (phases : 0 < B) (grid : 0 < N)
     (dimension : 0 < d) (harmonic : 0 < m) :
@@ -4762,7 +4762,7 @@ private def dSVDensityRationalHeterogeneousPhysicalStageHazardRatio
       dSVDensityRationalHeterogeneousPhysicalStageAsynchronous
         N width schedule ξ ζ k)
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousPhysicalStageAsynchronous_eq_escape_mul_ratio
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -4793,7 +4793,7 @@ theorem
     simp only [h_zero, add_zero, zero_div, mul_zero]
   · field_simp
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousPhysicalStoppedAsynchronousMass_eq_ratioLedger
     {d S L : ℕ} (N : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -4900,7 +4900,7 @@ theorem
   exact dSVDensityRationalLargeWidthPhysicalRelativeHazard_le
     dimension (large (schedule k)) grid (fine (schedule k)) ξ ζ
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousPhysicalStageHazardRatio_le_relative_diagonal
     {d S L N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (width : Fin S → ℝ) (large : ∀ s, 1 ≤ width s)
@@ -4934,7 +4934,7 @@ theorem
   exact div_le_div_of_nonneg_left
     asynchronous_nonnegative self_positive self_lower
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousPhysicalStageHazardRatio_le_targetDistance
     {d S L N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (width : Fin S → ℝ) (large : ∀ s, 1 ≤ width s)
@@ -5395,7 +5395,7 @@ private def rightSpectralBornWeight
   bornTracePairing ρ.matrix F
     (positiveMatrixSpectralAtom G hG i)
 
-theorem rightSpectralBornWeight_nonneg
+private theorem rightSpectralBornWeight_nonneg
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
      [DecidableEq dB]
@@ -5407,7 +5407,7 @@ theorem rightSpectralBornWeight_nonneg
   exact trace_mul_posSemidef_nonneg ρ.positive
     (hF.kronecker (positiveMatrixSpectralAtom_posSemidef G hG i))
 
-theorem rightSpectralBornWeight_sum
+private theorem rightSpectralBornWeight_sum
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
      [DecidableEq dB]
@@ -5427,7 +5427,7 @@ theorem rightSpectralBornWeight_sum
     _ = bornTracePairing ρ.matrix F (1 : Matrix dB dB ℂ) := by
       rw [positiveMatrixSpectralAtom_sum]
 
-theorem rightSpectralBornWeight_moment
+private theorem rightSpectralBornWeight_moment
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
      [DecidableEq dB]
@@ -5462,7 +5462,7 @@ theorem rightSpectralBornWeight_moment
         ring
     _ = bornTracePairing ρ.matrix F G := h.symm
 
-theorem rightSpectralBornWeight_entropy
+private theorem rightSpectralBornWeight_entropy
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
      [DecidableEq dB]
@@ -5493,7 +5493,7 @@ theorem rightSpectralBornWeight_entropy
       unfold rightSpectralBornWeight
       ring
 
-theorem rightSpectralBornWeight_negEntropy
+private theorem rightSpectralBornWeight_negEntropy
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
      [DecidableEq dB]
@@ -6789,7 +6789,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 omit [Fintype X] [Fintype Y] in
-theorem fullCoordinateAliceQuestion_eq
+private theorem fullCoordinateAliceQuestion_eq
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -6820,7 +6820,7 @@ theorem fullCoordinateAliceQuestion_eq
           fullCoordinateAssembleHiddenAlice, hji, mem_insert, or_self]
 
 omit [Fintype X] [Fintype Y] in
-theorem fullCoordinateBobQuestion_eq
+private theorem fullCoordinateBobQuestion_eq
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -6849,7 +6849,7 @@ theorem fullCoordinateBobQuestion_eq
       · simp only [fullHistoryBobQuestion, hjD, ↓reduceDIte, mem_insert, hji, hjL, or_self,
           fullCoordinateNewHistory, fullCoordinateOldHistory]
 
-theorem fullCoordinateHiddenAliceWeight_split
+private theorem fullCoordinateHiddenAliceWeight_split
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
@@ -6879,7 +6879,7 @@ theorem fullCoordinateHiddenAliceWeight_split
     simp only [he, mem_insert, true_or]
   simp only [hj, ↓reduceDIte, fullCoordinateNewHistory]
 
-theorem fullCoordinateHiddenBobWeight_split
+private theorem fullCoordinateHiddenBobWeight_split
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (hiL : i ∉ L)
@@ -6905,7 +6905,7 @@ theorem fullCoordinateHiddenBobWeight_split
     exact hiL (he ▸ j.property)
   simp only [hj, ↓reduceDIte, Subtype.coe_eta, fullCoordinateOldHistory]
 
-theorem fullCoordinateAliceFilter_conditional_mean
+private theorem fullCoordinateAliceFilter_conditional_mean
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
@@ -6954,7 +6954,7 @@ theorem fullCoordinateAliceFilter_conditional_mean
       simp only [Fintype.sum_prod_type, conditionalAliceAverage, fullHistoryAliceFilter, smul_sum,
         smul_smul, f]
 
-theorem fullCoordinateBobFilter_conditional_mean
+private theorem fullCoordinateBobFilter_conditional_mean
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
@@ -7082,7 +7082,7 @@ private def fullCoordinateAliceEntropyIncrement
           (fullCoordinateAliceMeanFilter G n S D L i r α y))
       (fullCoordinateBobQuestionFilter G n S D L i r β y)
 
-theorem fullCoordinateAliceEntropyIncrement_eq
+private theorem fullCoordinateAliceEntropyIncrement_eq
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
@@ -7110,7 +7110,7 @@ theorem fullCoordinateAliceEntropyIncrement_eq
     G n S D L i hiD hiL r β] at h
   exact h
 
-theorem fullCoordinateAliceEntropyIncrement_nonneg
+private theorem fullCoordinateAliceEntropyIncrement_nonneg
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)

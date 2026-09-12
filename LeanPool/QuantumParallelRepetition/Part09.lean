@@ -432,7 +432,7 @@ private def exactSourceGlobalCatalystBasisEquiv
     (exactSourceGlobalAlicePOVM G n S D a₀ x)
     e a i j k l
 
-theorem exactSourceGlobalCatalystWinningEffect_compression
+private theorem exactSourceGlobalCatalystWinningEffect_compression
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (e : ℕ)
@@ -499,7 +499,7 @@ theorem exactSourceGlobalCatalystWinningEffect_compression
         mul_one, zero_mul, ite_self]
     · rfl
 
-theorem exactSourceGlobalCatalystWinningEffect_tensor_quadratic
+private theorem exactSourceGlobalCatalystWinningEffect_tensor_quadratic
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -640,7 +640,7 @@ theorem exactPsi_eq_padded_normalizedPureVector_of_ne_zero
     simp only [exactPaddedVector, normalizedPureVector, PiLp.smul_apply,
       smul_zero, smul_eq_mul, Complex.real_smul]
 
-theorem exactSourceGlobalCatalystWinningEffect_law_supported_verifier
+private theorem exactSourceGlobalCatalystWinningEffect_law_supported_verifier
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -972,7 +972,7 @@ theorem unconditionalSelectedCopy_tensor_sub
     (x i - y i) * work j
   ring
 
-theorem unconditionalSelectedCopyRetainedWork_norm_sq
+private theorem unconditionalSelectedCopyRetainedWork_norm_sq
     {S N d L : ℕ} {τ : Type*} [Fintype τ]
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -985,7 +985,7 @@ theorem unconditionalSelectedCopyRetainedWork_norm_sq
   rw [unconditionalMatchedVerifierTensor_norm_sq,
     dSVDensityRationalHeterogeneousStoppedCommonPrefixFailureVector_norm_sq]
 
-theorem unconditionalSelectedCopyMatchedBranch_deviation_sq
+private theorem unconditionalSelectedCopyMatchedBranch_deviation_sq
     {S N d L B m : ℕ} {τ : Type*} [Fintype τ]
     (Q : ℕ) (width : Fin S → ℝ)
     (schedule : Fin L → Fin S)
@@ -1243,7 +1243,7 @@ theorem unconditionalConjugatePureVector_transpose_quadratic
   intro j _
   ring
 
-theorem unconditionalConjugatePOVM_jointEffect
+private theorem unconditionalConjugatePOVM_jointEffect
     {A B ι κ : Type*} [Fintype A] [Fintype B]
     [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]
     (P : POVM A ι) (Q : POVM B κ) (a : A) (b : B) :
@@ -1288,7 +1288,7 @@ private def unconditionalConjugateSourceGlobalCatalystWinningEffect
           G n S D e b₀ y)).effect b
     else 0
 
-theorem
+private theorem
     unconditionalConjugateSourceGlobalCatalystWinningEffect_eq_transpose
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -1314,7 +1314,7 @@ theorem
       a b
   · exact Matrix.transpose_zero.symm
 
-theorem unconditionalConjugateSourceGlobalCatalystWinningEffect_quadratic
+private theorem unconditionalConjugateSourceGlobalCatalystWinningEffect_quadratic
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (e : ℕ)
@@ -1374,7 +1374,7 @@ theorem unconditionalConjugateSourceGlobalCatalystWinningEffect_quadratic
       (exactSourceGlobalCatalystWinningEffect
         G n S D e a₀ b₀ x y) z
 
-theorem
+private theorem
     unconditionalConjugateSourceGlobalCatalystWinningEffect_law_supported
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -1718,7 +1718,7 @@ private def unconditionalMixedConjugateSigmaLocalAction
             (Σ _ : Fin B × Fin d, Fin m) ℂ)).mulVec
       (ofLp z)))
 
-theorem unconditionalMixedConjugateSigmaLocalAction_apply
+private theorem unconditionalMixedConjugateSigmaLocalAction_apply
     {d m : ℕ} (B : ℕ)
     (U V : Matrix.unitaryGroup (Fin d) ℂ)
     (z : EuclideanSpace ℂ
@@ -1748,7 +1748,7 @@ private def unconditionalMixedConjugateAcceptedPhaseHarmonicTarget
       (dSVDensityRationalCanonicalAcceptedTarget w N ξ))
     (fun _ _ _ => embezzlementState (N * n))
 
-theorem unconditionalMixedConjugateTargetCovariance
+private theorem unconditionalMixedConjugateTargetCovariance
     {d N B n : ℕ} {w : ℝ}
     (width : 0 < w) (grid : 0 < N) (dimension : 0 < d)
     (ξ ζ : BipartiteUnitVector d) :
@@ -1869,7 +1869,7 @@ theorem unconditionalSelectedCopy_coherentPhaseConstantWork_norm_sq
       congr 1
       rw [EuclideanSpace.norm_sq_eq, Fintype.sum_prod_type]
 
-theorem unconditionalSelectedCopy_conjugateAcceptedTarget_norm_sq
+private theorem unconditionalSelectedCopy_conjugateAcceptedTarget_norm_sq
     {d N B m : ℕ} (phases : 0 < B)
     (grid : 0 < N) (harmonic : 0 < m)
     (w : ℝ) (ξ : BipartiteUnitVector d) :
@@ -1883,7 +1883,7 @@ theorem unconditionalSelectedCopy_conjugateAcceptedTarget_norm_sq
     embezzlementState_norm (N * m) (Nat.mul_pos grid harmonic)]
   ring
 
-theorem unconditionalSelectedCopy_mixedConjugateLocalAction_norm
+private theorem unconditionalSelectedCopy_mixedConjugateLocalAction_norm
     {d B m : ℕ}
     (U V : Matrix.unitaryGroup (Fin d) ℂ)
     (z : EuclideanSpace ℂ
@@ -1895,7 +1895,7 @@ theorem unconditionalSelectedCopy_mixedConjugateLocalAction_norm
       (unconditionalMixedConjugateSigmaAtomLift (m := m) B U)
       (unconditionalMixedConjugateSigmaAtomLift (m := m) B V) z
 
-theorem unconditionalSelectedCopyIdealStage_norm_sq
+private theorem unconditionalSelectedCopyIdealStage_norm_sq
     {d N B m : ℕ} {w : ℝ}
     (phases : 0 < B) (grid : 0 < N)
     (dimension : 0 < d) (harmonic : 0 < m)
@@ -1930,7 +1930,7 @@ theorem unconditionalSelectedCopyIdealStage_norm_sq
   apply (eq_div_iff (ne_of_gt dimension_real)).2
   simpa only [mul_comm] using cancelled
 
-theorem unconditionalSelectedCopyCleanedStage_norm_sq
+private theorem unconditionalSelectedCopyCleanedStage_norm_sq
     {d N B m : ℕ} {w : ℝ}
     (phases : 0 < B) (grid : 0 < N) (harmonic : 0 < m)
     (width : 0 < w)
@@ -1975,7 +1975,7 @@ theorem unconditionalSelectedCopyCleanedMatchedBranch_norm_sq
   simp only [one_pow, mul_comm, one_mul, dSVDensityRationalHeterogeneousPhysicalStageSuccess,
     dSVDensityRationalHeterogeneousPhysicalStageOutcome, j.isLt, ↓reduceDIte, Fin.eta]
 
-theorem unconditionalSelectedCopyIdealMatchedBranch_norm_sq
+private theorem unconditionalSelectedCopyIdealMatchedBranch_norm_sq
     {S N d L B m : ℕ} {τ : Type*} [Fintype τ]
     (phases : 0 < B) (grid : 0 < N)
     (dimension : 0 < d) (harmonic : 0 < m)
@@ -2066,7 +2066,7 @@ theorem unconditionalMixedConjugateSelectedBranch_tensor_smul
     ((c : ℂ) * stage a) * work b
   ring
 
-theorem unconditionalMixedConjugateSelectedBranchCovariance
+private theorem unconditionalMixedConjugateSelectedBranchCovariance
     {S N d L B m : ℕ} {τ : Type*} [Fintype τ] [DecidableEq τ]
     (grid : 0 < N) (dimension : 0 < d)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -2225,7 +2225,7 @@ private def actualStoppingGlobalWinningEffect
           (fun s => PB s y)).effect b
     else 0
 
-theorem actualStoppingGlobalWinningEffect_same
+private theorem actualStoppingGlobalWinningEffect_same
     (G : Game X Y A B)
     (PA : (r : R) → X → POVM A (ι r))
     (PB : (s : R) → Y → POVM B (κ s))
@@ -2247,7 +2247,7 @@ theorem actualStoppingGlobalWinningEffect_same
   · simp only [kroneckerMap_apply, dependentBlockPOVM_effect_same]
   · rfl
 
-theorem actualStoppingGlobalWinningEffect_cross_eq_zero
+private theorem actualStoppingGlobalWinningEffect_cross_eq_zero
     (G : Game X Y A B)
     (PA : (r : R) → X → POVM A (ι r))
     (PB : (s : R) → Y → POVM B (κ s))
@@ -2279,7 +2279,7 @@ theorem actualStoppingGlobalWinningEffect_cross_eq_zero
         mul_zero]
     · rfl
 
-theorem actualStoppingGlobalBorn_eq_sum
+private theorem actualStoppingGlobalBorn_eq_sum
     (G : Game X Y A B)
     (PA : (r : R) → X → POVM A (ι r))
     (PB : (s : R) → Y → POVM B (κ s))
@@ -2410,7 +2410,7 @@ def actualStoppingQuestionLocalAction
       (V : Matrix (Σ r, ι r) (Σ r, ι r) ℂ)).mulVec
       (ofLp z))
 
-theorem actualStoppingQuestionLocalWinningEffect_quadratic
+private theorem actualStoppingQuestionLocalWinningEffect_quadratic
     (G : Game X Y A B)
     (PA : (r : R) → X → POVM A (ι r))
     (PB : (r : R) → Y → POVM B (ι r))
@@ -2772,7 +2772,7 @@ private def dSVDensityRationalHeterogeneousOriginalSameStopSigmaSource
       width schedule ξ ζ
       (fun _ _ _ => embezzlementState m))
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousOriginalSameStopSigmaSource_apply
     (S B N d L m : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -2806,7 +2806,7 @@ theorem
     Equiv.coe_trans, Equiv.coe_fn_mk, Prod.map_apply, Function.comp_apply,
     Equiv.symm_apply_apply, Equiv.sigmaEquivProd_symm_apply]
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousOriginalSameStopSigmaSource_eq_stopped
     (S B N d L m : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -2845,7 +2845,7 @@ theorem
   simp only [ePRState, Fintype.card_pi, Fintype.card_fin, prod_const, card_univ, Nat.cast_pow,
     ofReal_inv, EmbeddingLike.apply_eq_iff_eq, ite_mul, zero_mul]
 
-theorem dSVDensityRationalHeterogeneousOriginalStoppedState_apply
+private theorem dSVDensityRationalHeterogeneousOriginalStoppedState_apply
     (S B N d L m : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -2912,7 +2912,7 @@ private def directDSVSelectedCopyLocalHistoryEquiv
     (directDSVRemainingCopyEquiv (β := β) j)).trans
     (Fin.insertNthEquiv (fun _ : Fin (L + 1) => β) j.castSucc)
 
-@[simp] theorem directDSVSelectedCopyLocalHistoryEquiv_hit
+@[simp] private theorem directDSVSelectedCopyLocalHistoryEquiv_hit
     {L : ℕ} {β : Type*} (j : Fin L)
     (selected : β) (before : Fin j.val → β)
     (after : Fin (L - j.val) → β) :
@@ -2921,7 +2921,7 @@ private def directDSVSelectedCopyLocalHistoryEquiv
   simp only [directDSVSelectedCopyLocalHistoryEquiv, Equiv.trans_apply, Equiv.prodCongr_apply,
     Equiv.coe_refl, Prod.map_apply, id_eq, Fin.insertNthEquiv_apply, Fin.insertNth_apply_same]
 
-@[simp] theorem directDSVSelectedCopyLocalHistoryEquiv_before
+@[simp] private theorem directDSVSelectedCopyLocalHistoryEquiv_before
     {L : ℕ} {β : Type*} (j : Fin L)
     (selected : β) (before : Fin j.val → β)
     (after : Fin (L - j.val) → β) (i : Fin j.val) :
@@ -2947,7 +2947,7 @@ private def directDSVSelectedCopyLocalHistoryEquiv
       else after ⟨k.val - j.val, by omega⟩) = before i
   simp only [k, i.isLt, ↓reduceDIte]
 
-@[simp] theorem directDSVSelectedCopyLocalHistoryEquiv_after
+@[simp] private theorem directDSVSelectedCopyLocalHistoryEquiv_after
     {L : ℕ} {β : Type*} (j : Fin L)
     (selected : β) (before : Fin j.val → β)
     (after : Fin (L - j.val) → β) (i : Fin (L - j.val)) :
@@ -2996,7 +2996,7 @@ theorem directDSVRemainingCopyProductSplit
       rw [Fin.prod_univ_add]
       congr 1
 
-theorem directDSVActualStoppingSelectedHistory_sourceProduct
+private theorem directDSVActualStoppingSelectedHistory_sourceProduct
     {S N d L : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -3191,7 +3191,7 @@ private def unconditionalSourcePhysicalStoppingTargetFirstStateEquiv
       (unconditionalSourcePhysicalStoppingTargetFirstIndexEquiv
         S B N d L m))
 
-theorem unconditionalSourcePhysicalStoppingTargetFirst_branch_apply
+private theorem unconditionalSourcePhysicalStoppingTargetFirst_branch_apply
     {S B N d L m : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -3284,7 +3284,7 @@ theorem unconditionalSelectedMultiscalePhase_card
   simp only [DSVDensityRationalPublicMultiscalePhase, Fintype.card_pi, Fintype.card_fin,
     prod_const, card_univ, pow_succ, Nat.mul_comm]
 
-theorem unconditionalSelectedMultiscalePhase_EPR_apply
+private theorem unconditionalSelectedMultiscalePhase_EPR_apply
     {S B : ℕ} (scale : Fin (S + 1))
     (p q : Fin B)
     (r t : Fin (Fintype.card (Fin S → Fin B))) :
@@ -3341,7 +3341,7 @@ private def unconditionalActualMultiscalePhaseIndexEquiv
       exact unconditionalSelectedMultiscalePhaseIndexEquiv
         (S := S) scale
 
-theorem unconditionalActualMultiscalePhase_EPR_apply
+private theorem unconditionalActualMultiscalePhase_EPR_apply
     {S B : ℕ} (scale : Fin S)
     (p q : Fin B)
     (r t : Fin (Fintype.card (Fin (S - 1) → Fin B))) :
@@ -3427,7 +3427,7 @@ theorem unconditionalSourcePhysicalCleanedStoppingFixedSource_norm
     dSVDensityRationalPublicMultiscalePhaseTargetFirstPreparedSource_norm
       phases grid dimension harmonic
 
-theorem
+private theorem
     unconditionalSourcePhysicalCleanedStoppingLocalAction_reindex
     {S B N d L m : ℕ}
     (U V : Matrix.unitaryGroup
@@ -3488,7 +3488,7 @@ theorem
           (V : Matrix _ _ ℂ) (e.symm b) (e.symm q.2) *
           z (e.symm q.1, e.symm q.2))).symm
 
-theorem
+private theorem
     unconditionalSourcePhysicalCleanedStoppingFixedSource_physicalAction
     {S B N d L m : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -3512,7 +3512,7 @@ theorem
   rw [unconditionalSourcePhysicalCleanedStoppingLocalAction_reindex]
   rfl
 
-theorem
+private theorem
     unconditionalSourcePhysicalCleanedStoppingFixedSource_branch_apply
     {S B N d L m : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -3739,7 +3739,8 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 attribute [local instance] Classical.propDecidable
 
-private abbrev UnconditionalActualCleanedSelectedRetainedIndex
+/-- Retained local histories before and after the selected stopping stage. -/
+abbrev UnconditionalActualCleanedSelectedRetainedIndex
     {N d L : ℕ} (j : Fin L) (R : Type) :=
   (Fin j.val → DSVUniformDensityThresholdLocalIndex N d) ×
     ((Fin (L - j.val) →
@@ -3850,7 +3851,7 @@ private def unconditionalActualCleanedSelectedFiniteStageDecoder
     unconditionalActualCleanedSelectedFullStageUnitary
       phaseSplit Q width schedule ξ spectral A j)
 
-@[simp] theorem
+@[simp] private theorem
     unconditionalActualCleanedSelectedFiniteStageDecoder_succ
     {S B N d L m : ℕ} {R : Type}
     [Fintype R] [DecidableEq R]
@@ -3870,7 +3871,7 @@ private def unconditionalActualCleanedSelectedFiniteStageDecoder
         phaseSplit Q width schedule ξ spectral A j := by
   simp only [unconditionalActualCleanedSelectedFiniteStageDecoder, Fin.cases_succ]
 
-theorem unconditionalActualCleanedSelectedMatchedStoppingBranch
+private theorem unconditionalActualCleanedSelectedMatchedStoppingBranch
     {S B N d L m : ℕ} {R : Type}
     [Fintype R] [DecidableEq R]
     (phaseSplit :
@@ -4078,7 +4079,7 @@ private def unconditionalActualPhysicalMixedAcceptedRawStage
         ((finProdFinEquiv.symm q.1.2).2,
          (finProdFinEquiv.symm q.2.2).2)
 
-theorem unconditionalActualPhysicalMixedAcceptedSpectralGauge_apply
+private theorem unconditionalActualPhysicalMixedAcceptedSpectralGauge_apply
     {B N d m : ℕ}
     (U : Matrix.unitaryGroup
       (DSVUniformDensityThresholdLocalIndex N d) ℂ)
@@ -4138,7 +4139,7 @@ theorem
   intro i _
   rw [Finset.sum_comm]
 
-theorem unconditionalActualPhysicalMixedAcceptedSpectralGauge_stage
+private theorem unconditionalActualPhysicalMixedAcceptedSpectralGauge_stage
     {B N d m : ℕ} {w : ℝ}
     (width : 0 < w) (grid : 0 < N)
     (ξ ζ : BipartiteUnitVector d) :
@@ -4274,7 +4275,7 @@ private def unconditionalActualCanonicalRawSelectedPhysicalStage
         ((finProdFinEquiv.symm q.1.2).2,
          (finProdFinEquiv.symm q.2.2).2)
 
-theorem unconditionalActualCanonicalCleanedHistorySymm_eq_direct
+private theorem unconditionalActualCanonicalCleanedHistorySymm_eq_direct
     {L : ℕ} (j : Fin L) (β : Type*)
     (selected : β) (before : Fin j.val → β)
     (later : Fin (L - j.val) → β) :
@@ -4300,7 +4301,7 @@ theorem unconditionalActualCanonicalCleanedHistorySymm_eq_direct
         (directDSVSelectedCopyLocalHistoryEquiv_after
           j selected before later i).symm
 
-theorem unconditionalActualCanonicalFullSource_eq_rawSelectedStage
+private theorem unconditionalActualCanonicalFullSource_eq_rawSelectedStage
     {S B N d L m : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) (j : Fin L) :
@@ -4382,7 +4383,7 @@ theorem unconditionalActualCanonicalFullSource_eq_rawSelectedStage
   unfold dSVDensityRationalPhysicalAcceptedOutcome
   ring
 
-theorem unconditionalActualCanonicalRawSelectedPhysicalStage_eq
+private theorem unconditionalActualCanonicalRawSelectedPhysicalStage_eq
     {B N d m : ℕ} (w : ℝ)
     (ξ ζ : BipartiteUnitVector d) :
     unconditionalActualCanonicalRawSelectedPhysicalStage
@@ -4441,6 +4442,20 @@ def directDSVActualLocalPOVMWinningEffect
     if G.predicate x y a b = true then
       PA.effect a ⊗ₖ PB.effect b
     else 0
+
+/-- A stopping branch uses the winning effect of its two selected measurements. -/
+theorem actualStoppingBranchWinningEffect_eq_direct
+    {X Y A B R : Type} {ι κ : R → Type}
+    [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
+    [∀ r, Fintype (ι r)] [∀ r, DecidableEq (ι r)]
+    [∀ r, Fintype (κ r)] [∀ r, DecidableEq (κ r)]
+    (G : Game X Y A B)
+    (PA : (r : R) → X → POVM A (ι r))
+    (PB : (s : R) → Y → POVM B (κ s))
+    (r s : R) (x : X) (y : Y) :
+    actualStoppingBranchWinningEffect G PA PB r s x y =
+      directDSVActualLocalPOVMWinningEffect G (PA r x) (PB s y) x y := rfl
+
 
 theorem directDSVActualReindexedRetainedPOVMWinningEffect
     {X Y A B s t u v ι κ : Type*}
@@ -4588,7 +4603,7 @@ private def unconditionalSelectedRetainedBilateralRegroup
   left_inv := by rintro ⟨⟨_, _⟩, ⟨_, _⟩⟩; rfl
   right_inv := by rintro ⟨⟨_, _⟩, ⟨_, _⟩⟩; rfl
 
-theorem unconditionalRegroupedSelectedRetainedReindexAction
+private theorem unconditionalRegroupedSelectedRetainedReindexAction
     {κ ι τ δ : Type}
     [Fintype κ] [DecidableEq κ]
     [Fintype ι] [DecidableEq ι]
@@ -4698,7 +4713,7 @@ def unconditionalActualFixedSourceRetainedHistoryPairEquiv
     rintro ⟨before, ⟨⟨afterA, afterB⟩, ⟨phaseA, phaseB⟩⟩⟩
     simp only [Prod.mk.eta]
 
-theorem unconditionalActualFixedSourceFullBilateralRegroup_eq
+private theorem unconditionalActualFixedSourceFullBilateralRegroup_eq
     {B N d L m : ℕ} {R : Type} (j : Fin L) :
     unconditionalSourcePhysicalCleanedFullBilateralRegroup
         (R := R) (B := B) (N := N) (d := d) (m := m) j =
@@ -4717,7 +4732,7 @@ theorem unconditionalActualFixedSourceFullBilateralRegroup_eq
     ⟨selectedB, beforeB, afterB, phaseB⟩⟩
   rfl
 
-theorem unconditionalActualFixedSourceFullPhysicalBilateralStageTransport
+private theorem unconditionalActualFixedSourceFullPhysicalBilateralStageTransport
     {S B N d L m : ℕ} {R : Type}
     [Fintype R] [DecidableEq R]
     (phaseSplit :
@@ -4791,7 +4806,7 @@ theorem unconditionalActualFixedSourceFullPhysicalBilateralStageTransport
     unconditionalActualFixedSourceFullBilateralRegroup_eq,
     e, work, UA, UB] using transport
 
-theorem unconditionalActualFixedSourceDecodedMatchedBranch
+private theorem unconditionalActualFixedSourceDecodedMatchedBranch
     {S B N d L m : ℕ}
     (Q : ℕ) (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -5045,7 +5060,7 @@ theorem exactSourceAnswerTypes_nonempty_of_remaining
   classical
   let i : Fin n :=
     (Classical.choice (Fintype.card_pos_iff.mp
-      (exactRemainingCoordinate_card_pos D remaining))).val
+      (remainingCoordinate_card_pos D remaining))).val
   let xs : Fin n → X :=
     fun _ => Classical.choice (gameQuestionX_nonempty G)
   let ys : Fin n → Y :=
@@ -5073,113 +5088,6 @@ theorem exactSourceAnswerTypes_nonempty_of_remaining
     rw [zero] at normalized
     norm_num at normalized
 
-private def physical8OneScaleActualSourceFlaggedStrategy
-    {X Y A B : Type}
-    [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
-    (G : Game X Y A B)
-    (n : ℕ) (S : Strategy (G.repeat n))
-    (D : Finset (Fin n))
-    (remaining : 0 < (Finset.univ \ D).card)
-    (denominator : ℕ)
-    (numerator : ExactLocalSamplerIndex X Y D →
-      ExactHistoryFlag X Y A B D → ℕ)
-    (nonempty : ∀ index,
-      (rationalMarked denominator (numerator index)).Nonempty)
-    (w : ℝ) (N L P Q m : ℕ)
-    (phases : 0 < P) (grid : 0 < N) (harmonic : 0 < m)
-    (UA UB : Fin P → Option ℕ →
-      Matrix.unitaryGroup (Fin (N * m)) ℂ) : Strategy G := by
-  classical
-  let d : ℕ := Fintype.card
-    (ExactGlobalHistoryLocalIndex G n S D)
-  have dimension : 0 < d :=
-    exactGlobalHistoryLocalIndex_card_pos G n S D
-  let R : Type := Fin (Fintype.card (Fin (1 - 1) → Fin P))
-  let phaseSplit :
-      DSVDensityRationalPublicMultiscalePhaseIndex 1 P ≃
-        Fin P × R :=
-    (unconditionalActualMultiscalePhaseIndexEquiv
-      (B := P) (0 : Fin 1)).symm
-  let width : Fin 1 → ℝ := fun _ => w
-  let schedule : Fin L → Fin 1 := fun _ => 0
-  let F : Type := ExactSourceSharedFlag X Y A B D denominator
-  let ξ : F → X → BipartiteUnitVector d :=
-    fun flag x => exactGlobalHistoryFinGamma G n S D
-      (exactSourceAlicePermutationHistory
-        D denominator numerator nonempty flag x) x
-  let ζ : F → Y → BipartiteUnitVector d :=
-    fun flag y => exactGlobalHistoryFinPhi G n S D
-      (exactSourceBobPermutationHistory
-        D denominator numerator nonempty flag y) y
-  let a₀ : A := Classical.choice
-    (exactSourceAnswerTypes_nonempty_of_remaining
-      G n S D remaining).1
-  let b₀ : B := Classical.choice
-    (exactSourceAnswerTypes_nonempty_of_remaining
-      G n S D remaining).2
-  let globalAlice : X → POVM A (Fin d) := fun x =>
-    reindexedPOVM (finCongr (Nat.mul_one d))
-      (unconditionalConjugatePOVM
-        (exactSourceGlobalCatalystAlicePOVM G n S D 1 a₀ x))
-  let globalBob : Y → POVM B (Fin d) := fun y =>
-    reindexedPOVM (finCongr (Nat.mul_one d))
-      (unconditionalConjugatePOVM
-        (exactSourceGlobalCatalystBobPOVM G n S D 1 b₀ y))
-  let PA : F → Fin (L + 1) → X →
-      POVM A
-        (UnconditionalSourcePhysicalStoppingPhaseFiber
-          1 P N d L m) :=
-    fun flag => physical8OneScaleOriginalFlagPOVM
-      (N := N) (d := d) (m := m) phaseSplit a₀
-      (fun x => unitaryConjugatePOVM
-        (conjugateUnitary
-          (dSVDensityRationalCanonicalAliceBasis (ξ flag x)))
-        (globalAlice x))
-  let PB : F → Fin (L + 1) → Y →
-      POVM B
-        (UnconditionalSourcePhysicalStoppingPhaseFiber
-          1 P N d L m) :=
-    fun flag => physical8OneScaleOriginalFlagPOVM
-      (N := N) (d := d) (m := m) phaseSplit b₀
-      (fun y => unitaryConjugatePOVM
-        (conjugateUnitary
-          (dSVUniformDensityThresholdLeftBobBasis (ζ flag y)))
-        (globalBob y))
-  let U := physical8OneScaleActualAliceStoppingUnitary
-    (P := P) (N := N) (d := d) (L := L) (m := m)
-    phaseSplit Q width schedule ξ UA
-  let V := physical8OneScaleActualBobStoppingUnitary
-    (P := P) (N := N) (d := d) (L := L) (m := m)
-    phaseSplit Q width schedule ζ UB
-  let prepared : F → EuclideanSpace ℂ
-      ((Σ _ : Fin (L + 1),
-          UnconditionalSourcePhysicalStoppingPhaseFiber
-            1 P N d L m) ×
-       (Σ _ : Fin (L + 1),
-          UnconditionalSourcePhysicalStoppingPhaseFiber
-            1 P N d L m)) :=
-    fun _ => unconditionalSourcePhysicalCleanedStoppingFixedSource
-      1 P N d L m
-  have prepared_normalized : ∀ flag : F, ‖prepared flag‖ = 1 := by
-    intro flag
-    exact unconditionalSourcePhysicalCleanedStoppingFixedSource_norm
-      phases grid dimension harmonic
-  exact pureFlaggedStrategy G
-    (exactSourceSharedFlagWeight D denominator)
-    (exactSourceSharedFlagWeight_nonneg D denominator)
-    (exactSourceSharedFlagWeight_sum D remaining denominator)
-    prepared prepared_normalized
-    (fun flag x => unitaryConjugatePOVM (U flag x)
-      (dependentBlockPOVM (fun r => PA flag r x)))
-    (fun flag y => unitaryConjugatePOVM (V flag y)
-      (dependentBlockPOVM (fun r => PB flag r y)))
-
-/--
-The type used to represent unconditional one scale actual source flagged strategy in the exact
-sampling construction.
--/
-abbrev unconditionalOneScaleActualSourceFlaggedStrategy :=
-  @physical8OneScaleActualSourceFlaggedStrategy
 
 end
 
@@ -5200,7 +5108,7 @@ def unconditionalActualOneScaleFixedSourcePhaseSplit (P : ℕ) :
   (unconditionalActualMultiscalePhaseIndexEquiv
     (B := P) (0 : Fin 1)).symm
 
-theorem unconditionalActualOneScaleFlagControlledFiniteStageDecoder_eq
+private theorem unconditionalActualOneScaleFlagControlledFiniteStageDecoder_eq
     {S B N d L m : ℕ} {R : Type}
     [Fintype R] [DecidableEq R]
     (phaseSplit :
@@ -5253,7 +5161,7 @@ private def unconditionalActualOneScaleFixedSourceDecodedState
       (unconditionalSourcePhysicalCleanedStoppingFixedSource
         1 P N d L m))
 
-theorem unconditionalActualOneScaleFixedSourcePhysicalQuestionAction
+private theorem unconditionalActualOneScaleFixedSourcePhysicalQuestionAction
     {F X Y : Type} {P N d L m : ℕ}
     (Q : ℕ) (width : Fin 1 → ℝ) (schedule : Fin L → Fin 1)
     (ξ : F → X → BipartiteUnitVector d)
@@ -5283,7 +5191,7 @@ theorem unconditionalActualOneScaleFixedSourcePhysicalQuestionAction
   rw [Matrix.mulVec_mulVec, ← Matrix.mul_kronecker_mul]
   rfl
 
-theorem unconditionalActualOneScaleFixedSourceDecodedMatchedBranch
+private theorem unconditionalActualOneScaleFixedSourceDecodedMatchedBranch
     {P N d L m : ℕ}
     (Q : ℕ) (width : Fin 1 → ℝ) (schedule : Fin L → Fin 1)
     (ξ ζ : BipartiteUnitVector d)
@@ -5914,7 +5822,7 @@ theorem unconditionalCanonicalAcceptedScale_sq_eq_diagonalBorn
     dSVDensityRationalPhysicalDiagonalBornSuccess_eq]
   field_simp [ne_of_gt width, ne_of_gt dimension_real]
 
-theorem unconditionalNormalizedCanonicalRetainedWork_norm_sq
+private theorem unconditionalNormalizedCanonicalRetainedWork_norm_sq
     {S N d L B m : ℕ} {T : Type*} [Fintype T]
     (phases : 0 < B) (grid : 0 < N)
     (dimension : 0 < d) (harmonic : 0 < m)
@@ -6170,7 +6078,7 @@ theorem unconditionalActualSelectedBranchLocalAction_decidableEq_irrel
   cases same
   rfl
 
-theorem unconditionalActualC485CanonicalCorrectedIdeal_generic
+private theorem unconditionalActualC485CanonicalCorrectedIdeal_generic
     {S N d L B m : ℕ} {T : Type*}
     [Fintype T] [DecidableEq T]
     {width : Fin S → ℝ}
@@ -6217,7 +6125,7 @@ theorem unconditionalActualC485CanonicalCorrectedIdeal_generic
         positive rest).symm
 
 open Classical in
-theorem unconditionalActualC485CanonicalVector_eq_correctedIdeal
+private theorem unconditionalActualC485CanonicalVector_eq_correctedIdeal
     {S B N d L m : ℕ}
     {width : Fin S → ℝ}
     (schedule : Fin L → Fin S)
@@ -6708,7 +6616,7 @@ theorem
     Equiv.prodCongr_symm, finCongr_symm, Equiv.prodCongr_apply, Prod.map_apply, Fin.cast_cast,
     Fin.cast_eq_self] using recovered.symm
 
-theorem unconditionalActualFairSourceWinningEffect_reindex
+private theorem unconditionalActualFairSourceWinningEffect_reindex
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [decA : DecidableEq A] [decB : DecidableEq B]
@@ -6812,7 +6720,7 @@ theorem unconditionalActualFairSourceEOneReindexedGlobalWinningBorn
             unconditionalActualFairSourceConjugateTensorEmbezzlementOne_inverse_reindex
               ξ
 
-theorem unconditionalActualFairSourceBaseSupportedBorn
+private theorem unconditionalActualFairSourceBaseSupportedBorn
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -6893,7 +6801,7 @@ private def unconditionalActualFairSourcePhaseHarmonicWork
     (unconditionalMatchedVerifierTensor
       (ePRState P) (embezzlementState k))
 
-theorem unconditionalActualFairSourcePhaseHarmonicWork_norm
+private theorem unconditionalActualFairSourcePhaseHarmonicWork_norm
     {P k : ℕ} (phases : 0 < P) (harmonic : 0 < k) :
     ‖unconditionalActualFairSourcePhaseHarmonicWork P k‖ = 1 := by
   unfold unconditionalActualFairSourcePhaseHarmonicWork
@@ -6903,7 +6811,7 @@ theorem unconditionalActualFairSourcePhaseHarmonicWork_norm
     embezzlementState_norm k harmonic]
   norm_num
 
-theorem unconditionalActualFairSourcePhaseHarmonicStage_sourceProduct
+private theorem unconditionalActualFairSourcePhaseHarmonicStage_sourceProduct
     {P N d m : ℕ}
     (ψ : EuclideanSpace ℂ (Fin d × Fin d)) :
     LinearIsometryEquiv.piLpCongrLeft 2 ℂ ℂ
@@ -6929,7 +6837,7 @@ theorem unconditionalActualFairSourcePhaseHarmonicStage_sourceProduct
     Equiv.coe_fn_mk, Prod.map_apply, unconditionalMatchedVerifierTensor,
     unconditionalActualFairSourcePhaseHarmonicWork, mul_assoc]
 
-theorem unconditionalActualFairSourceSelectedBorn_of_base
+private theorem unconditionalActualFairSourceSelectedBorn_of_base
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -7003,7 +6911,7 @@ theorem unconditionalActualFairSourceSelectedBorn_of_base
         (unconditionalConjugatePureVector ψ) = value
   rw [work_unit, one_pow, one_mul, base_born]
 
-theorem unconditionalActualFairSourceOuterBorn_of_base
+private theorem unconditionalActualFairSourceOuterBorn_of_base
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))

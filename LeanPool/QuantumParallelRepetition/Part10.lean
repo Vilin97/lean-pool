@@ -959,7 +959,7 @@ theorem unconditionalActualLocalPOVMWinningEffect_posSemidef
   · exact ((PA.positive a).kronecker (PB.positive b)).nonneg
   · exact le_rfl
 
-theorem unconditionalActualLocalPOVMLosingEffect_posSemidef
+private theorem unconditionalActualLocalPOVMLosingEffect_posSemidef
     {X Y A B s t : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [Fintype s] [Fintype t] [DecidableEq s] [DecidableEq t]
@@ -978,7 +978,7 @@ theorem unconditionalActualLocalPOVMLosingEffect_posSemidef
   · exact le_rfl
   · exact ((PA.positive a).kronecker (PB.positive b)).nonneg
 
-theorem unconditionalActualLocalPOVMWinningEffect_add_losingEffect
+private theorem unconditionalActualLocalPOVMWinningEffect_add_losingEffect
     {X Y A B s t : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [Fintype s] [Fintype t] [DecidableEq s] [DecidableEq t]
@@ -2421,13 +2421,13 @@ private def pdfConditioningTolerance (ε : ℝ) : ℝ :=
 private def pdfCatalystAccuracy (K ε : ℝ) : ℝ :=
   (ε / (16 * K)) ^ 12
 
-theorem pdfUniversalRate_pos
+private theorem pdfUniversalRate_pos
     {B : ℝ} (positive : 0 < B) :
     0 < pdfUniversalRate B := by
   unfold pdfUniversalRate
   positivity
 
-theorem pdfGapRate_pos
+private theorem pdfGapRate_pos
     {B ε ell : ℝ}
     (lowerBound : 0 < B) (gap : 0 < ε) (alphabet : 0 ≤ ell) :
     0 < pdfGapRate B ε ell := by
@@ -2435,7 +2435,7 @@ theorem pdfGapRate_pos
   have universal := pdfUniversalRate_pos lowerBound
   positivity
 
-theorem pdfGapRate_eq_scaled_twelfth_power
+private theorem pdfGapRate_eq_scaled_twelfth_power
     {B ε ell : ℝ}
     (lowerBound : 0 < B) (gap : 0 < ε) (alphabet : 0 ≤ ell) :
     pdfGapRate B ε ell =
@@ -2476,7 +2476,7 @@ theorem pdfGapBase_twelfth_le_one
     (ε / (4 * B)) ^ 12 ≤ 1 :=
   (pdfGapBase_twelfth_le_gap lowerBound gap unit).trans unit
 
-theorem pdfGapRate_le_gap_div_eight
+private theorem pdfGapRate_le_gap_div_eight
     {B ε ell : ℝ}
     (lowerBound : 1 ≤ B) (gap : 0 < ε)
     (unit : ε ≤ 1) (alphabet : 0 ≤ ell) :
@@ -2498,14 +2498,14 @@ theorem pdfGapRate_le_gap_div_eight
           gcongr
     _ = ε / 8 := by ring
 
-theorem pdfConditioningTolerance_bounds
+private theorem pdfConditioningTolerance_bounds
     {ε : ℝ} (gap : 0 < ε) (unit : ε ≤ 1) :
     0 < pdfConditioningTolerance ε ∧
       pdfConditioningTolerance ε ≤ 1 / 4 := by
   unfold pdfConditioningTolerance
   constructor <;> linarith
 
-theorem pdfGapRate_le_half_conditioningTolerance
+private theorem pdfGapRate_le_half_conditioningTolerance
     {B ε ell : ℝ}
     (lowerBound : 1 ≤ B) (gap : 0 < ε)
     (unit : ε ≤ 1) (alphabet : 0 ≤ ell) :
@@ -2519,7 +2519,7 @@ theorem pdfGapRate_le_half_conditioningTolerance
       unfold pdfConditioningTolerance
       ring
 
-theorem pdfGapRate_entropy_factor
+private theorem pdfGapRate_entropy_factor
     {B ε ell : ℝ}
     (lowerBound : 0 < B) (gap : 0 < ε) (alphabet : 0 ≤ ell) :
     2 * pdfGapRate B ε ell * (1 + 4 * ell / ε) =
@@ -2540,7 +2540,7 @@ theorem pdfAlphabetEntropyFactor_le_one
   apply (div_le_iff₀ denominator).2
   linarith
 
-theorem pdfGapRate_entropy_le_twelfth_power
+private theorem pdfGapRate_entropy_le_twelfth_power
     {B ε ell : ℝ}
     (lowerBound : 1 ≤ B) (gap : 0 < ε) (alphabet : 0 ≤ ell) :
     2 * pdfGapRate B ε ell * (1 + 4 * ell / ε) ≤
@@ -2557,7 +2557,7 @@ theorem pdfGapRate_entropy_le_twelfth_power
             nonnegative
     _ = _ := by ring
 
-theorem pdfCatalystAccuracy_bounds
+private theorem pdfCatalystAccuracy_bounds
     {K ε : ℝ}
     (lowerBound : 1 ≤ K) (gap : 0 < ε) (unit : ε ≤ 1) :
     0 < pdfCatalystAccuracy K ε ∧
@@ -2600,7 +2600,7 @@ theorem pdfQuantitativeEntropyRate_lt
   have scaled := mul_lt_mul_of_pos_left horizon factor
   linarith
 
-theorem pdfQuantitativeEntropyRate_lt_twelfth_power
+private theorem pdfQuantitativeEntropyRate_lt_twelfth_power
     {B ε ell : ℝ} {n m k : ℕ} {t : ℝ}
     (lowerBound : 1 ≤ B) (gap : 0 < ε)
     (unit : ε ≤ 1) (alphabet : 0 ≤ ell)
@@ -2633,7 +2633,7 @@ theorem pdfQuantitativeEntropyRate_lt_twelfth_power
     (pdfGapRate_entropy_le_twelfth_power
       lowerBound gap alphabet)
 
-theorem pdfCatalystAccuracy_twelfth_root
+private theorem pdfCatalystAccuracy_twelfth_root
     {K ε : ℝ} (lowerBound : 1 ≤ K) (gap : 0 < ε) :
     (pdfCatalystAccuracy K ε) ^ (1 / 12 : ℝ) =
       ε / (16 * K) := by
@@ -2680,7 +2680,7 @@ theorem pdfEntropyRoundingLoss_lt_gapQuarter
     _ = ε / 4 := by
       field_simp
 
-theorem pdfCatalystAccuracy_samplingLoss
+private theorem pdfCatalystAccuracy_samplingLoss
     {K ε : ℝ} (lowerBound : 1 ≤ K) (gap : 0 < ε) :
     2 * K * (pdfCatalystAccuracy K ε) ^ (1 / 12 : ℝ) =
       ε / 8 := by
@@ -2708,7 +2708,7 @@ theorem pdfUniversalErrorCeiling_pos
   unfold universalErrorCeiling
   positivity
 
-theorem pdfRoundingCoefficient_two_le
+private theorem pdfRoundingCoefficient_two_le
     {K : ℝ} (lowerBound : 1 ≤ K) :
     2 ≤ pdfRoundingCoefficient K := by
   have nonnegative : 0 ≤ K := by linarith
@@ -2724,7 +2724,7 @@ theorem pdfRoundingCoefficient_two_le
   unfold pdfRoundingCoefficient
   linarith
 
-theorem pdfRoundingCoefficient_one_le
+private theorem pdfRoundingCoefficient_one_le
     {K : ℝ} (lowerBound : 1 ≤ K) :
     1 ≤ pdfRoundingCoefficient K := by
   have lower := pdfRoundingCoefficient_two_le lowerBound
@@ -2769,7 +2769,7 @@ theorem pdfSqrtEight_le_twelfthRoot
         (pdfSqrt_le_twelfthRoot nonnegative bounded)
         (Real.sqrt_nonneg _)
 
-theorem pdfQuantitativeRoundingLoss
+private theorem pdfQuantitativeRoundingLoss
     {K alpha eta kappa gamma : ℝ}
     (lowerBound : 0 ≤ K)
     (nonnegative : 0 ≤ eta)
@@ -2927,7 +2927,7 @@ private def pdfConstantStrategy
       aliceMeasurement := fun _ => pdfConstantPOVM a
       bobMeasurement := fun _ => pdfConstantPOVM b }
 
-theorem pdfConstantStrategy_outcomeProbability
+private theorem pdfConstantStrategy_outcomeProbability
     (G : Game X Y A B) (a : A) (b : B)
     (x : X) (y : Y) (a' : A) (b' : B) :
     (pdfConstantStrategy G a b).outcomeProbability x y a' b' =
@@ -2941,7 +2941,7 @@ theorem pdfConstantStrategy_outcomeProbability
   by_cases alice : a' = a <;> by_cases bob : b' = b <;>
     simp [alice, bob, Matrix.trace_one]
 
-theorem pdfConstantStrategy_winProbability
+private theorem pdfConstantStrategy_winProbability
     (G : Game X Y A B) (a : A) (b : B) :
     (pdfConstantStrategy G a b).winProbability =
       ∑ x : X, ∑ y : Y,
@@ -2964,7 +2964,7 @@ theorem pdfConstantStrategy_winProbability
   simp only [sum_ite_irrel, sum_ite_eq', mem_univ, ↓reduceIte, sum_const_zero, mul_ite, mul_one,
     mul_zero]
 
-theorem pdfQuestionWeight_le_constantStrategy
+private theorem pdfQuestionWeight_le_constantStrategy
     (G : Game X Y A B)
     (x : X) (y : Y) (a : A) (b : B)
     (accepted : G.predicate x y a b = true) :
@@ -3101,7 +3101,7 @@ theorem pdfPinskerRate_le_sqrt_martingaleRate
       G n S D positive
   linarith
 
-theorem pdfActualMartingaleRate_lt_twelfth_power
+private theorem pdfActualMartingaleRate_lt_twelfth_power
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ)
@@ -3133,7 +3133,7 @@ theorem pdfActualMartingaleRate_lt_twelfth_power
   simpa only [martingaleRate, answerLogCost, gt_iff_lt, alphabet_eq]
     using actual
 
-theorem pdfFullQuantitativeSamplingLoss
+private theorem pdfFullQuantitativeSamplingLoss
     {K ε eta kappa : ℝ}
     (lowerBound : 1 ≤ K)
     (gap : 0 < ε)

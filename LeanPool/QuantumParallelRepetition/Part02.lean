@@ -300,7 +300,7 @@ private def descendingHarmonicSchmidtPermutation
   Tuple.sort (fun q : Fin (d * n) =>
     -harmonicTensorSchmidtAmplitude (n := n) σ q)
 
-theorem descendingHarmonicSchmidtPermutation_antitone
+private theorem descendingHarmonicSchmidtPermutation_antitone
     {d n : ℕ} (σ : Fin d → ℝ) :
     Antitone (fun q : Fin (d * n) =>
       harmonicTensorSchmidtAmplitude (n := n) σ
@@ -313,7 +313,7 @@ theorem descendingHarmonicSchmidtPermutation_antitone
     hij
   exact neg_le_neg_iff.mp h
 
-theorem harmonicSchmidtThreshold_card_eq
+private theorem harmonicSchmidtThreshold_card_eq
     {d n : ℕ} (σ : Fin d → ℝ) (x : ℝ) :
     (((Finset.univ.filter fun q : Fin (d * n) =>
       x ≤ harmonicTensorSchmidtAmplitude (n := n) σ q).card : ℕ) : ℝ) =
@@ -344,7 +344,7 @@ theorem harmonicSchmidtThreshold_card_eq
           intro i _
           simp only [harmonicTensorSchmidtAmplitude, Equiv.symm_apply_apply, sum_boole]
 
-theorem harmonicSchmidtThreshold_count_sq_le_one
+private theorem harmonicSchmidtThreshold_count_sq_le_one
     {d n : ℕ} (σ : Fin d → ℝ)
     (hσ : ∀ i, 0 ≤ σ i)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1)
@@ -369,7 +369,7 @@ theorem harmonicSchmidtThreshold_count_sq_le_one
         (σ i) x (hσ i) hx
     _ = 1 := hunit
 
-theorem descendingHarmonicSchmidtAmplitude_rank_sq_le_one
+private theorem descendingHarmonicSchmidtAmplitude_rank_sq_le_one
     {d n : ℕ} (σ : Fin d → ℝ)
     (hσ : ∀ i, 0 ≤ σ i)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1)
@@ -413,7 +413,7 @@ theorem descendingHarmonicSchmidtAmplitude_rank_sq_le_one
   exact (mul_le_mul_of_nonneg_right hcardreal
     (sq_nonneg x)).trans htotal
 
-theorem descendingHarmonicSchmidtAmplitude_le_harmonic
+private theorem descendingHarmonicSchmidtAmplitude_le_harmonic
     {d n : ℕ} (σ : Fin d → ℝ)
     (hσ : ∀ i, 0 ≤ σ i)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1)
@@ -457,7 +457,7 @@ private def diagonalSchmidtUnitVector
   rw [hunit] at hsquare
   nlinarith [norm_nonneg (diagonalSchmidtState σ)]
 
-theorem diagonalSchmidtTensorTarget_diagonal
+private theorem diagonalSchmidtTensorTarget_diagonal
     {d n : ℕ} (σ : Fin d → ℝ)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1)
     (q : Fin (d * n)) :
@@ -478,7 +478,7 @@ private def harmonicSchmidtPermutationUnitary
     (descendingHarmonicSchmidtPermutation
       (n := n) σ).symm
 
-theorem harmonicSchmidtPermutationAction_off_diagonal
+private theorem harmonicSchmidtPermutationAction_off_diagonal
     {d n : ℕ} (σ : Fin d → ℝ)
     (i j : Fin (d * n)) (hij : i ≠ j) :
     localUnitaryAction
@@ -497,7 +497,7 @@ theorem harmonicSchmidtPermutationAction_off_diagonal
       (n := n) σ).symm.injective.ne hij
   simp only [hperm, ↓reduceIte, smul_zero]
 
-theorem harmonicSchmidtPermutationAction_diagonal
+private theorem harmonicSchmidtPermutationAction_diagonal
     {d n : ℕ} (σ : Fin d → ℝ)
     (k : Fin (d * n)) :
     localUnitaryAction
@@ -515,7 +515,7 @@ theorem harmonicSchmidtPermutationAction_diagonal
     embezzlementState_apply]
   simp only [Equiv.symm_apply_apply, ↓reduceIte, ofReal_inv, real_smul]
 
-theorem harmonicTensorSchmidtAmplitude_sq_sum
+private theorem harmonicTensorSchmidtAmplitude_sq_sum
     {d n : ℕ} (σ : Fin d → ℝ)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1) :
     (∑ q : Fin (d * n),
@@ -552,7 +552,7 @@ theorem harmonicTensorSchmidtAmplitude_sq_sum
         rw [Finset.sum_mul]
     _ = harmonicNumber n := by rw [hunit, one_mul]
 
-theorem descendingHarmonicSchmidtAmplitude_sq_sum
+private theorem descendingHarmonicSchmidtAmplitude_sq_sum
     {d n : ℕ} (σ : Fin d → ℝ)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1) :
     (∑ k : Fin (d * n),
@@ -591,7 +591,7 @@ private def universalCatalystOverlapTerm
         (descendingHarmonicSchmidtPermutation
           (n := n) σ k)
 
-theorem universalCatalystOverlap_eq_sum
+private theorem universalCatalystOverlap_eq_sum
     {d n : ℕ} (σ : Fin d → ℝ)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1) :
     (inner ℂ
@@ -659,7 +659,7 @@ theorem universalCatalystOverlap_eq_sum
             div_self_mul_self', inv_im, ofReal_im, neg_zero, zero_div, mul_zero, sub_zero, mul_im,
             zero_mul, add_zero, universalCatalystOverlapTerm]
 
-theorem universalCatalystOverlapTerm_lower
+private theorem universalCatalystOverlapTerm_lower
     {d n : ℕ} (σ : Fin d → ℝ)
     (hσ : ∀ i, 0 ≤ σ i)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1)
@@ -699,7 +699,7 @@ theorem universalCatalystOverlapTerm_lower
         dsimp [c, a, h, universalCatalystOverlapTerm]
         ring
 
-theorem universalDiagonalCatalystOverlap_lower
+private theorem universalDiagonalCatalystOverlap_lower
     {d n : ℕ} (hd : 0 < d) (hn : 0 < n)
     (σ : Fin d → ℝ)
     (hσ : ∀ i, 0 ≤ σ i)
@@ -787,7 +787,7 @@ private def harmonicTargetLiftUnitary
     (Matrix.mem_unitaryGroup_iff').mp hM]
   exact (Matrix.reindexRingEquiv ℂ e).map_one
 
-@[simp] theorem harmonicTargetLiftUnitary_apply
+@[simp] private theorem harmonicTargetLiftUnitary_apply
     {d n : ℕ}
     (U : Matrix.unitaryGroup (Fin d) ℂ)
     (a b : Fin d) (i j : Fin n) :
@@ -842,7 +842,7 @@ theorem targetCatalystDoubleSum_reindex
               (fun j : Fin (d * n) =>
                 F (finProdFinEquiv p) j)).symm
 
-theorem harmonicTargetLift_diagonal_action_apply
+private theorem harmonicTargetLift_diagonal_action_apply
     {d n : ℕ}
     (σ : Fin d → ℝ)
     (hunit : (∑ i : Fin d, σ i ^ 2) = 1)
@@ -907,7 +907,7 @@ theorem harmonicTargetLift_diagonal_action_apply
         intro k _
         ring
 
-theorem harmonicTargetLift_diagonal_action
+private theorem harmonicTargetLift_diagonal_action
     {d n : ℕ}
     (ξ : BipartiteUnitVector d)
     (σ : Fin d → ℝ)
@@ -980,7 +980,7 @@ theorem localUnitaryAction_sub
           ((U.val ⊗ₖ V.val).mulVec (ofLp w))
   exact Matrix.mulVec_sub _ _ _
 
-theorem universalDiagonalCatalystOverlap_of_harmonic_ratio
+private theorem universalDiagonalCatalystOverlap_of_harmonic_ratio
     {d n : ℕ} (hd : 0 < d) (hn : 0 < n)
     (σ : Fin d → ℝ)
     (hσ : ∀ i, 0 ≤ σ i)
@@ -1022,7 +1022,7 @@ theorem universalDiagonalCatalystOverlap_of_harmonic_ratio
     (universalDiagonalCatalystOverlap_lower
       hd hn σ hσ hunit)
 
-theorem universalDiagonalCatalyst_distance
+private theorem universalDiagonalCatalyst_distance
     {d n : ℕ} (hd : 0 < d) (hn : 0 < n)
     (σ : Fin d → ℝ)
     (hσ : ∀ i, 0 ≤ σ i)
@@ -1431,7 +1431,7 @@ theorem finiteUniformGrid_interval_card_le
     exact add_nonneg (div_nonneg difference positive.le)
       (by norm_num)
 
-theorem finiteUniformThresholdCrossing_le
+private theorem finiteUniformThresholdCrossing_le
     {lower upper : ℝ}
     (window : lower < upper)
     (a b : ℝ)
@@ -1495,7 +1495,7 @@ private def targetCoefficientMatrix
     Matrix (Fin d) (Fin d) ℂ :=
   fun b a => ξ.val (a, b)
 
-theorem targetCoefficientMatrix_vec
+private theorem targetCoefficientMatrix_vec
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     toLp 2 (Matrix.vec (targetCoefficientMatrix ξ)) = ξ.val := by
   ext ⟨a, b⟩
@@ -1507,13 +1507,13 @@ private def targetReducedDensity
   (targetCoefficientMatrix ξ).conjTranspose *
     targetCoefficientMatrix ξ
 
-theorem targetReducedDensity_posSemidef
+private theorem targetReducedDensity_posSemidef
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     (targetReducedDensity ξ).PosSemidef := by
   exact Matrix.posSemidef_conjTranspose_mul_self
     (targetCoefficientMatrix ξ)
 
-theorem targetReducedDensity_trace
+private theorem targetReducedDensity_trace
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     Matrix.trace (targetReducedDensity ξ) = 1 := by
   have vectorized := matrixVectorization_inner
@@ -1597,12 +1597,12 @@ private def targetCanonicalSchmidtCoefficient
   Real.sqrt
     ((targetReducedDensity_posSemidef ξ).isHermitian.eigenvalues i)
 
-theorem targetCanonicalSchmidtCoefficient_nonneg
+private theorem targetCanonicalSchmidtCoefficient_nonneg
     {d : ℕ} (ξ : BipartiteUnitVector d) (i : Fin d) :
     0 ≤ targetCanonicalSchmidtCoefficient ξ i :=
   Real.sqrt_nonneg _
 
-theorem targetCanonicalSchmidtCoefficient_sq_sum
+private theorem targetCanonicalSchmidtCoefficient_sq_sum
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     (∑ i : Fin d, targetCanonicalSchmidtCoefficient ξ i ^ 2) = 1 := by
   unfold targetCanonicalSchmidtCoefficient
@@ -1613,7 +1613,7 @@ theorem targetCanonicalSchmidtCoefficient_sq_sum
     (targetReducedDensity_posSemidef ξ)
     (targetReducedDensity_trace ξ)
 
-theorem exists_proofTargetCanonicalSpectralSchmidtDecomposition
+private theorem exists_proofTargetCanonicalSpectralSchmidtDecomposition
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     ∃ (V : Matrix.unitaryGroup (Fin d) ℂ),
       ξ.val = schmidtVector
@@ -1781,7 +1781,7 @@ private def targetCanonicalSpectralEnergy
       Real.sqrt (hG.isHermitian.eigenvalues j)) ^ 2 *
       spectralAtomOverlap F G hF hG i j
 
-theorem targetCanonicalSpectralEnergy_le_of_canonicalSchmidt
+private theorem targetCanonicalSpectralEnergy_le_of_canonicalSchmidt
     {d : ℕ} (ξ ζ : BipartiteUnitVector d)
     (V W : Matrix.unitaryGroup (Fin d) ℂ)
     (hξ :
@@ -1831,7 +1831,7 @@ theorem targetCanonicalSpectralEnergy_le_of_canonicalSchmidt
   simpa only [targetCanonicalSpectralEnergy, hξ, hζ]
     using henergy
 
-theorem targetCanonicalSpectralEnergy_le
+private theorem targetCanonicalSpectralEnergy_le
     {d : ℕ} (ξ ζ : BipartiteUnitVector d) :
     targetCanonicalSpectralEnergy ξ ζ ≤
       2 * ‖ξ.val - ζ.val‖ ^ 2 := by
@@ -2659,7 +2659,7 @@ private def dSVUniformDensitySchmidtSumMass
         (targetReducedDensity_posSemidef ξ)
         (targetReducedDensity_posSemidef ζ) i j
 
-theorem dSVUniformDensitySchmidtSumMass_le_four
+private theorem dSVUniformDensitySchmidtSumMass_le_four
     {d : ℕ} (ξ ζ : BipartiteUnitVector d) :
     dSVUniformDensitySchmidtSumMass ξ ζ ≤ 4 := by
   let F := targetReducedDensity ξ
@@ -2722,7 +2722,7 @@ theorem dSVUniformDensitySchmidtSumMass_le_four
   rw [split, left, right]
   linarith
 
-theorem dSVUniformDensitySpectralAtomDiscrepancy_le
+private theorem dSVUniformDensitySpectralAtomDiscrepancy_le
     {d : ℕ} (ξ ζ : BipartiteUnitVector d) :
     dSVUniformDensitySpectralAtomDiscrepancy ξ ζ ≤
       2 * Real.sqrt 2 * ‖ξ.val - ζ.val‖ := by
@@ -2829,7 +2829,7 @@ private def markedFirst (rank : α ≃ Fin (Fintype.card α))
         (nonempty.image (fun a => rank (permutation a)))))
 
 omit [DecidableEq α] in
-theorem markedFirst_mem (rank : α ≃ Fin (Fintype.card α))
+private theorem markedFirst_mem (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     (permutation : Equiv.Perm α) :
     markedFirst rank marked nonempty permutation ∈ marked := by
@@ -2839,7 +2839,7 @@ theorem markedFirst_mem (rank : α ≃ Fin (Fintype.card α))
   simpa only [markedFirst, ← heq, Equiv.symm_apply_apply] using ha
 
 omit [DecidableEq α] in
-theorem markedFirst_rank (rank : α ≃ Fin (Fintype.card α))
+private theorem markedFirst_rank (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     (permutation : Equiv.Perm α) :
     rank (permutation (markedFirst rank marked nonempty permutation)) =
@@ -2848,7 +2848,7 @@ theorem markedFirst_rank (rank : α ≃ Fin (Fintype.card α))
   simp only [markedFirst, Equiv.apply_symm_apply]
 
 omit [DecidableEq α] in
-theorem markedFirst_rank_le (rank : α ≃ Fin (Fintype.card α))
+private theorem markedFirst_rank_le (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     (permutation : Equiv.Perm α) {a : α} (ha : a ∈ marked) :
     rank (permutation (markedFirst rank marked nonempty permutation)) ≤
@@ -2857,7 +2857,7 @@ theorem markedFirst_rank_le (rank : α ≃ Fin (Fintype.card α))
   exact Finset.min'_le _ _ (Finset.mem_image.mpr ⟨a, ha, rfl⟩)
 
 omit [DecidableEq α] in
-theorem markedFirst_eq_of_mem_of_rank_le
+private theorem markedFirst_eq_of_mem_of_rank_le
     (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     (permutation : Equiv.Perm α) {a : α} (ha : a ∈ marked)
@@ -2870,7 +2870,7 @@ theorem markedFirst_eq_of_mem_of_rank_le
     (hle _ (markedFirst_mem rank marked nonempty permutation))
 
 omit [DecidableEq α] in
-theorem markedFirst_subset_eq_of_mem
+private theorem markedFirst_subset_eq_of_mem
     (rank : α ≃ Fin (Fintype.card α))
     {small large : Finset α}
     (hsmall : small.Nonempty) (hlarge : large.Nonempty)
@@ -2883,7 +2883,7 @@ theorem markedFirst_subset_eq_of_mem
   intro a ha
   exact markedFirst_rank_le rank large hlarge permutation (hsub ha)
 
-theorem markedFirst_eq_iff_union_first_mem_inter
+private theorem markedFirst_eq_iff_union_first_mem_inter
     (rank : α ≃ Fin (Fintype.card α))
     (left right : Finset α)
     (hleft : left.Nonempty) (hright : right.Nonempty)
@@ -2923,7 +2923,7 @@ theorem markedFirst_eq_iff_union_first_mem_inter
       (Finset.mem_inter.mp hcommon).2
     exact hleft'.trans hright'.symm
 
-theorem markedFirst_ne_iff_union_first_mem_symmDiff
+private theorem markedFirst_ne_iff_union_first_mem_symmDiff
     (rank : α ≃ Fin (Fintype.card α))
     (left right : Finset α)
     (hleft : left.Nonempty) (hright : right.Nonempty)
@@ -2972,7 +2972,7 @@ theorem swap_mem_iff_of_mem {marked : Finset α} {x y : α}
       simp only [Equiv.swap_apply_right, hx, hy]
     · rw [Equiv.swap_apply_of_ne_of_ne hax hay]
 
-theorem markedFirst_swap_trans
+private theorem markedFirst_swap_trans
     (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     {x y : α} (hx : x ∈ marked) (hy : y ∈ marked)
@@ -2994,7 +2994,7 @@ private def firstFiber (rank : α ≃ Fin (Fintype.card α))
   Finset.univ.filter fun permutation =>
     markedFirst rank marked nonempty permutation = a
 
-theorem firstFiber_card_eq
+private theorem firstFiber_card_eq
     (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     {x y : α} (hx : x ∈ marked) (hy : y ∈ marked) :
@@ -3026,7 +3026,7 @@ theorem firstFiber_card_eq
     ext a
     simp only [Equiv.trans_apply, Equiv.swap_apply_self]
 
-theorem markedFirst_event_card_mul
+private theorem markedFirst_event_card_mul
     (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     (event : Finset α) (hevent : event ⊆ marked) :
@@ -3079,7 +3079,7 @@ theorem markedFirst_event_card_mul
   rw [hevent_card, htotal_card]
   ac_rfl
 
-theorem sharedPermutation_disagreement_card_mul
+private theorem sharedPermutation_disagreement_card_mul
     (rank : α ≃ Fin (Fintype.card α))
     (left right : Finset α)
     (hleft : left.Nonempty) (hright : right.Nonempty) :
@@ -3118,7 +3118,7 @@ def uniformPermutationProbability (event : Equiv.Perm α → Prop) : ℝ := by
   exact ((Finset.univ.filter fun permutation : Equiv.Perm α =>
       event permutation).card : ℝ) / Fintype.card (Equiv.Perm α)
 
-theorem markedFirst_event_probability
+private theorem markedFirst_event_probability
     (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     (event : Finset α) (hevent : event ⊆ marked) :
@@ -3145,7 +3145,7 @@ theorem markedFirst_event_probability
     exact_mod_cast hcount
   simpa only [] using hreal
 
-theorem sharedPermutation_disagreement_probability
+private theorem sharedPermutation_disagreement_probability
     (rank : α ≃ Fin (Fintype.card α))
     (left right : Finset α)
     (hleft : left.Nonempty) (hright : right.Nonempty) :
@@ -3170,7 +3170,7 @@ theorem sharedPermutation_disagreement_probability
   exact_mod_cast
     sharedPermutation_disagreement_card_mul rank left right hleft hright
 
-theorem sharedPermutation_disagreement_probability_le
+private theorem sharedPermutation_disagreement_probability_le
     (rank : α ≃ Fin (Fintype.card α))
     (left right : Finset α)
     (hleft : left.Nonempty) (hright : right.Nonempty) :
@@ -3191,7 +3191,7 @@ private def markedTotalVariation (left right : Finset α) : ℝ :=
   (((left \ right) ∪ (right \ left)).card : ℝ) /
     (2 * (left.card : ℝ))
 
-theorem sharedPermutation_disagreement_probability_le_two_mul_tv
+private theorem sharedPermutation_disagreement_probability_le_two_mul_tv
     (rank : α ≃ Fin (Fintype.card α))
     (left right : Finset α)
     (hleft : left.Nonempty) (hright : right.Nonempty) :
@@ -3311,7 +3311,7 @@ theorem rationalMarked_nonempty
   rw [rationalMarked_card denominator numerator normalized]
   exact positive
 
-theorem rationalMarked_letter_probability
+private theorem rationalMarked_letter_probability
     (denominator : ℕ) (numerator : β → ℕ)
     (normalized : (∑ letter, numerator letter) = denominator)
     (nonempty : (rationalMarked denominator numerator).Nonempty)
@@ -3400,7 +3400,7 @@ theorem centered_log_upper_of_le_one
 private def pinskerScalarGap (x : ℝ) : ℝ :=
   InformationTheory.klFun x - 3 * (x - 1) ^ 2 / (2 * (x + 2))
 
-theorem hasDerivAt_pinskerScalarGap {x : ℝ} (hx : 0 < x) :
+private theorem hasDerivAt_pinskerScalarGap {x : ℝ} (hx : 0 < x) :
     HasDerivAt pinskerScalarGap
       (Real.log x - 3 * (x - 1) * (x + 5) / (2 * (x + 2) ^ 2)) x := by
   have hden : 2 * (x + 2) ≠ 0 := by positivity
@@ -3468,7 +3468,7 @@ theorem pinskerScalarGap_derivative_nonpos
   have hlog := centered_log_upper_of_le_one hx0 hx1
   linarith
 
-theorem pinskerScalarGap_nonneg {x : ℝ} (hx : 0 ≤ x) :
+private theorem pinskerScalarGap_nonneg {x : ℝ} (hx : 0 ≤ x) :
     0 ≤ pinskerScalarGap x := by
   by_cases hzero : x = 0
   · subst x
@@ -3801,7 +3801,7 @@ theorem distributionFloorNumerator_cast_le
   exact Nat.floor_le (mul_nonneg (hp i) (Nat.cast_nonneg _))
 
 omit [Fintype ι] [DecidableEq ι] in
-theorem distributionFloorProbability_le
+private theorem distributionFloorProbability_le
     (denominator : ℕ) (positive : 0 < denominator)
     (p : ι → ℝ) (hp : ∀ i, 0 ≤ p i) (i : ι) :
     distributionFloorProbability denominator p i ≤ p i := by
@@ -3811,7 +3811,7 @@ theorem distributionFloorProbability_le
   exact distributionFloorNumerator_cast_le denominator p hp i
 
 omit [Fintype ι] [DecidableEq ι] in
-theorem distributionFloorProbability_error_lt
+private theorem distributionFloorProbability_error_lt
     (denominator : ℕ) (positive : 0 < denominator)
     (p : ι → ℝ) (i : ι) :
     p i - distributionFloorProbability denominator p i <
@@ -3863,7 +3863,7 @@ theorem distributionRoundedNumerator_sum
   omega
 
 omit [DecidableEq ι] in
-theorem distributionFloorResidual_probability_eq_sum
+private theorem distributionFloorResidual_probability_eq_sum
     (denominator : ℕ) (positive : 0 < denominator)
     (p : ι → ℝ)
     (hp : ∀ i, 0 ≤ p i)
@@ -3879,7 +3879,7 @@ theorem distributionFloorResidual_probability_eq_sum
     normalized, ← Finset.sum_div]
   field_simp
 
-theorem distributionRoundedProbability_eq_floor_add
+private theorem distributionRoundedProbability_eq_floor_add
     (base : ι) (denominator : ℕ) (p : ι → ℝ) (i : ι) :
     distributionRoundedProbability base denominator p i =
       distributionFloorProbability denominator p i +
@@ -4362,7 +4362,7 @@ theorem rationalMarked_inter_card
         (rationalNumerator_le_denominator
           denominator left hleft i)
 
-theorem rationalMarked_markedTotalVariation_eq
+private theorem rationalMarked_markedTotalVariation_eq
     (denominator : ℕ) (positive : 0 < denominator)
     (left right : ι → ℕ)
     (hleft : (∑ i, left i) = denominator)
@@ -4475,7 +4475,7 @@ theorem uniformPermutationProbability_mono
             (Finset.mem_filter.mp hpermutation).2⟩)
   · exact_mod_cast (Nat.zero_le (Fintype.card (Equiv.Perm α)))
 
-theorem rationalPermutationOutput_disagreement_le_two_mul_tv
+private theorem rationalPermutationOutput_disagreement_le_two_mul_tv
     (denominator : ℕ) (left right : ι → ℕ)
     (nonempty_left : (rationalMarked denominator left).Nonempty)
     (nonempty_right : (rationalMarked denominator right).Nonempty) :
@@ -4562,7 +4562,7 @@ private def dSVUniformLeftDensityConjugateSwapVector
     EuclideanSpace ℂ (Fin d × Fin d) :=
   toLp 2 (fun ij : Fin d × Fin d => star (z (ij.2, ij.1)))
 
-theorem dSVUniformLeftDensityConjugateSwapVector_norm
+private theorem dSVUniformLeftDensityConjugateSwapVector_norm
     {d : ℕ} (z : EuclideanSpace ℂ (Fin d × Fin d)) :
     ‖dSVUniformLeftDensityConjugateSwapVector z‖ = ‖z‖ := by
   have squares :
@@ -4580,7 +4580,7 @@ theorem dSVUniformLeftDensityConjugateSwapVector_norm
     (dSVUniformLeftDensityConjugateSwapVector z),
     norm_nonneg z]
 
-theorem dSVUniformLeftDensityConjugateSwapVector_distance
+private theorem dSVUniformLeftDensityConjugateSwapVector_distance
     {d : ℕ} (z w : EuclideanSpace ℂ (Fin d × Fin d)) :
     ‖dSVUniformLeftDensityConjugateSwapVector z -
         dSVUniformLeftDensityConjugateSwapVector w‖ =
@@ -4603,7 +4603,7 @@ private def dSVUniformLeftDensityConjugateSwap
     (dSVUniformLeftDensityConjugateSwapVector_norm ξ.val).trans
       ξ.property⟩
 
-theorem dSVUniformLeftDensityConjugateSwap_coefficient
+private theorem dSVUniformLeftDensityConjugateSwap_coefficient
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     targetCoefficientMatrix
         (dSVUniformLeftDensityConjugateSwap ξ) =
@@ -4611,7 +4611,7 @@ theorem dSVUniformLeftDensityConjugateSwap_coefficient
   ext b a
   rfl
 
-theorem dSVUniformLeftDensityConjugateSwap_density
+private theorem dSVUniformLeftDensityConjugateSwap_density
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     targetReducedDensity
         (dSVUniformLeftDensityConjugateSwap ξ) =
@@ -4621,7 +4621,7 @@ theorem dSVUniformLeftDensityConjugateSwap_density
   rw [dSVUniformLeftDensityConjugateSwap_coefficient,
     Matrix.conjTranspose_conjTranspose]
 
-theorem dSVUniformLeftDensityConjugateSwap_distance
+private theorem dSVUniformLeftDensityConjugateSwap_distance
     {d : ℕ} (ξ ζ : BipartiteUnitVector d) :
     ‖(dSVUniformLeftDensityConjugateSwap ξ).val -
         (dSVUniformLeftDensityConjugateSwap ζ).val‖ =
@@ -4654,7 +4654,7 @@ def dSVUniformLeftDensitySpectralAtomDiscrepancy
         (dSVSoftBobLeftReducedDensity_posSemidef ξ)
         (dSVSoftBobLeftReducedDensity_posSemidef ζ) i j
 
-theorem dSVUniformLeftDensitySpectralAtomDiscrepancy_eq_swap
+private theorem dSVUniformLeftDensitySpectralAtomDiscrepancy_eq_swap
     {d : ℕ} (ξ ζ : BipartiteUnitVector d) :
     dSVUniformLeftDensitySpectralAtomDiscrepancy ξ ζ =
       dSVUniformDensitySpectralAtomDiscrepancy
@@ -5068,21 +5068,11 @@ section
 open WithLp
 open scoped BigOperators ComplexOrder MatrixOrder
 
-/--
-The DSV uniform density polar left schmidt coefficient construction used in the quantum
-parallel-repetition argument.
--/
-def dSVUniformDensityPolarLeftSchmidtCoefficient
-    {d : ℕ} (ξ : BipartiteUnitVector d)
-    (i : Fin d) : ℝ :=
-  Real.sqrt
-    ((dSVSoftBobLeftReducedDensity_posSemidef ξ).isHermitian.eigenvalues i)
-
 theorem exists_proofDSVUniformDensityPolarLeftCanonicalSchmidt
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     ∃ A : Matrix.unitaryGroup (Fin d) ℂ,
       ξ.val = schmidtVector
-        (dSVUniformDensityPolarLeftSchmidtCoefficient ξ)
+        (dSVUniformLeftDensitySchmidtCoefficient ξ)
         A (dSVUniformDensityThresholdLeftBobBasis ξ) := by
   let χ := dSVUniformLeftDensityConjugateSwap ξ
   have density : targetReducedDensity χ =
@@ -5097,10 +5087,10 @@ theorem exists_proofDSVUniformDensityPolarLeftCanonicalSchmidt
     simp only [density]
   have canonical_coefficient :
       targetCanonicalSchmidtCoefficient χ =
-        dSVUniformDensityPolarLeftSchmidtCoefficient ξ := by
+        dSVUniformLeftDensitySchmidtCoefficient ξ := by
     funext i
     unfold targetCanonicalSchmidtCoefficient
-      dSVUniformDensityPolarLeftSchmidtCoefficient
+      dSVUniformLeftDensitySchmidtCoefficient
     simp only [density]
   rw [canonical_basis, canonical_coefficient] at decomposition
   refine ⟨conjugateUnitary V, ?_⟩
@@ -5129,7 +5119,7 @@ private def finiteTensorLocalUnitaryMatrix
     Matrix (ι → β) (ι → β) ℂ :=
   fun q r => ∏ i : ι, (U i : Matrix β β ℂ) (q i) (r i)
 
-theorem finiteTensorLocalUnitaryMatrix_gram
+private theorem finiteTensorLocalUnitaryMatrix_gram
     {ι β : Type*}
     [Fintype ι] [DecidableEq ι]
     [Fintype β] [DecidableEq β]
@@ -5499,7 +5489,7 @@ private def scalarPurificationLp (z : ℝ) (hz : 0 ≤ z) :
   ((scalarResolventFilter_memLp_two hz).ofReal (K := ℂ)).toLp
     (fun s : ℝ => ((z / (z + s) : ℝ) : ℂ))
 
-theorem scalarPurificationLp_coeFn
+private theorem scalarPurificationLp_coeFn
     (z : ℝ) (hz : 0 ≤ z) :
     (scalarPurificationLp z hz : ℝ → ℂ) =ᵐ[volume.restrict (Ioi 0)]
       (fun s : ℝ => ((z / (z + s) : ℝ) : ℂ)) :=
@@ -5543,7 +5533,7 @@ theorem commonPurificationSubspace_finiteDimensional
   exact FiniteDimensional.span_of_finite ℂ
     (Set.finite_range (commonPurificationGenerator F M positive hM))
 
-theorem ensemble_scalarPurificationLp_mem_common
+private theorem ensemble_scalarPurificationLp_mem_common
     {ι d : Type*} [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)
@@ -5555,7 +5545,7 @@ theorem ensemble_scalarPurificationLp_mem_common
   apply Submodule.subset_span
   exact ⟨Sum.inl (i, k), rfl⟩
 
-theorem mean_scalarPurificationLp_mem_common
+private theorem mean_scalarPurificationLp_mem_common
     {ι d : Type*} [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)
@@ -5597,7 +5587,7 @@ theorem spectralPurificationFilterEntryLp_coeFn
         (fun s : ℝ => spectralPurificationFilter F hF s i j) :=
   (((spectralPurificationFilter_memLp_two F hF).eval i).eval j).coeFn_toLp
 
-theorem spectralPurificationFilterEntryLp_eq_eigen_sum
+private theorem spectralPurificationFilterEntryLp_eq_eigen_sum
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) (i j : d) :
     spectralPurificationFilterEntryLp F hF i j =
@@ -5899,7 +5889,7 @@ open scoped BigOperators Topology ComplexOrder MatrixOrder
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem finitePurificationMatrix_difference_gram_apply
+private theorem finitePurificationMatrix_difference_gram_apply
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)
@@ -5938,7 +5928,7 @@ theorem finitePurificationMatrix_difference_gram_apply
   simp only [star_sub, RCLike.star_def, mul_comm, dotProduct, map_sub, PiLp.sub_apply,
     WithLp.ofLp_sub, Pi.star_apply, Pi.sub_apply]
 
-theorem purificationSubspaceEntry_difference_inner_eq_integral
+private theorem purificationSubspaceEntry_difference_inner_eq_integral
     {ι d : Type*} [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)
@@ -6150,24 +6140,12 @@ private def matrixPurificationVector
     (K : Matrix d d ℂ) : EuclideanSpace ℂ (d × d) :=
   toLp 2 (Matrix.vec K)
 
-theorem matrixPurificationVector_norm_sq
+private theorem matrixPurificationVector_norm_sq
     {d : Type*} [Fintype d]
     (K : Matrix d d ℂ) :
     ‖matrixPurificationVector K‖ ^ 2 =
       (Matrix.trace (Matrix.conjTranspose K * K)).re := by
-  calc
-    ‖matrixPurificationVector K‖ ^ 2 =
-        (⟪matrixPurificationVector K,
-          matrixPurificationVector K⟫_ℂ).re :=
-      norm_sq_eq_re_inner (𝕜 := ℂ) (matrixPurificationVector K)
-    _ = (star (Matrix.vec K) ⬝ᵥ Matrix.vec K).re := by
-      rw [EuclideanSpace.inner_eq_star_dotProduct]
-      change
-        (Matrix.vec K ⬝ᵥ star (Matrix.vec K)).re =
-          (star (Matrix.vec K) ⬝ᵥ Matrix.vec K).re
-      rw [dotProduct_comm]
-    _ = (Matrix.trace (Matrix.conjTranspose K * K)).re := by
-      rw [Matrix.star_vec_dotProduct_vec]
+  exact matrixVectorization_norm_sq K
 
 private def strategyPurificationShuffle
     (dA dB : Type) :
@@ -6192,7 +6170,7 @@ def strategyPurificationVector
       Matrix.vec (spectralSupportSqrt S.state.matrix S.state.positive)
         (strategyPurificationShuffle S.Alice S.Bob q))
 
-theorem strategyPurificationVector_norm_sq
+private theorem strategyPurificationVector_norm_sq
     {X Y A B : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} (S : Strategy G) :
@@ -6276,7 +6254,7 @@ def purificationAlicePOVM
         rw [P.complete]
         exact Matrix.one_kronecker_one
 
-theorem purificationJointEffect_submatrix
+private theorem purificationJointEffect_submatrix
     {dA dB : Type}
     [DecidableEq dA] [DecidableEq dB]
     (A : Matrix dA dA ℂ) (B : Matrix dB dB ℂ) :

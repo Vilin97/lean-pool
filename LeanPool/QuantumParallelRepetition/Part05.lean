@@ -413,7 +413,7 @@ theorem exactReverseRightPermutation_card
   rw [Fintype.card_perm, Fintype.card_perm]
   simp only [Fintype.card_coe, exactReverseRightSide_card, Nat.factorial_succ, Nat.mul_comm]
 
-theorem exactReverseLeftSeedWeight_eq_forward
+private theorem exactReverseLeftSeedWeight_eq_forward
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     exactReverseLeftSeedWeight seed =
@@ -430,7 +430,7 @@ theorem exactReverseLeftSeedWeight_eq_forward
   field_simp
   ring
 
-theorem exactReverseRightSeedWeight_eq_forward
+private theorem exactReverseRightSeedWeight_eq_forward
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     exactReverseRightSeedWeight seed =
@@ -873,7 +873,7 @@ private def exactFairBobQuestionEntropyIncrement
         (exactBobMeanFilter
           G n S D r.seed r.history r.bobAnswer x))
 
-theorem exactFairAlice_conditional_variation_le
+private theorem exactFairAlice_conditional_variation_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) (y : Y)
@@ -900,7 +900,7 @@ theorem exactFairAlice_conditional_variation_le
   rw [exactBobPurificationMatrix_gram] at h
   exact h
 
-theorem exactFairBob_conditional_variation_le
+private theorem exactFairBob_conditional_variation_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) (x : X)
@@ -959,7 +959,7 @@ def exactFairBobHistoryEntropyIncrement
   ∑ x : X, G.marginalX x *
     exactFairBobQuestionEntropyIncrement G n S D r x
 
-theorem exactFairAliceHistoryVariation_le_entropy
+private theorem exactFairAliceHistoryVariation_le_entropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) :
@@ -995,7 +995,7 @@ theorem exactFairAliceHistoryVariation_le_entropy
                 ring
       _ ≤ _ := mul_le_mul_of_nonneg_left hlocal (G.marginalY_nonneg y)
 
-theorem exactFairBobHistoryVariation_le_entropy
+private theorem exactFairBobHistoryVariation_le_entropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) :
@@ -1047,7 +1047,7 @@ theorem exactFairHistoryPriorWeight_nonneg
   exact mul_nonneg (exactSeedWeight_nonneg r.seed)
     (exactRevealMass_nonneg G n D r.seed r.history)
 
-theorem exactAcceptedFairAliceVariation_le_entropy
+private theorem exactAcceptedFairAliceVariation_le_entropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
     (∑ r : ExactHistoryFlag X Y A B D,
@@ -1068,7 +1068,7 @@ theorem exactAcceptedFairAliceVariation_le_entropy
       (exactFairHistoryPriorWeight_nonneg G n D r)
   · exact le_rfl
 
-theorem exactAcceptedFairBobVariation_le_entropy
+private theorem exactAcceptedFairBobVariation_le_entropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
     (∑ r : ExactHistoryFlag X Y A B D,
@@ -1748,7 +1748,7 @@ private def exactInsertedRank
   (Finset.subtypeInsertEquivOption not_mem).trans
     ((Equiv.optionCongr rank).trans (finSuccEquiv' cut).symm)
 
-@[simp] theorem exactInsertedRank_marker
+@[simp] private theorem exactInsertedRank_marker
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side)
     (rank : {j : M // j ∈ side} ≃ Fin side.card)
@@ -1758,7 +1758,7 @@ private def exactInsertedRank
   simp only [exactInsertedRank, subtypeInsertEquivOption, Equiv.trans_apply, Equiv.coe_fn_mk,
     ↓reduceDIte, Equiv.optionCongr_apply, Option.map_none, finSuccEquiv'_symm_none]
 
-theorem exactInsertedRank_old
+private theorem exactInsertedRank_old
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side)
     (rank : {j : M // j ∈ side} ≃ Fin side.card)
@@ -1864,7 +1864,7 @@ private def exactInsertedPrefixBefore
       (exactInsertedRank i side not_mem rank cut j).val <
         cut.val)).image Subtype.val
 
-theorem exactInsertedPrefixBefore_marker_eq
+private theorem exactInsertedPrefixBefore_marker_eq
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side)
     (rank : {j : M // j ∈ side} ≃ Fin side.card)
@@ -1935,7 +1935,7 @@ private def exactReverseRightPrefixBeforeMarked
       seed.coordinate seed.partition)
     (exactRightRank seed) seed.rightCut
 
-theorem exactReverseLeftPrefixBeforeMarked_eq
+private theorem exactReverseLeftPrefixBeforeMarked_eq
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     exactReverseLeftPrefixBeforeMarked seed =
@@ -1947,7 +1947,7 @@ theorem exactReverseLeftPrefixBeforeMarked_eq
       seed.coordinate seed.partition)
     (exactLeftRank seed) seed.leftCut
 
-theorem exactReverseRightPrefixBeforeMarked_eq
+private theorem exactReverseRightPrefixBeforeMarked_eq
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     exactReverseRightPrefixBeforeMarked seed =
@@ -1999,7 +1999,7 @@ theorem exactOrderedSidePrefix_mem_iff
       ⟨⟨j, hj⟩, Finset.mem_filter.mpr
         ⟨Finset.mem_univ _, hlt⟩, rfl⟩
 
-theorem exactInsertedPrefixBefore_mem_iff
+private theorem exactInsertedPrefixBefore_mem_iff
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side)
     (rank : {j : M // j ∈ side} ≃ Fin side.card)
@@ -2428,7 +2428,7 @@ private def exactPrefixNextDecode
     ((Ω × (Fin h → V)) × V) → (Ω × (Fin h → V)) :=
   fun t => (t.1.1, Function.update t.1.2 k t.2)
 
-theorem exactPrefixNextDecode_comp
+private theorem exactPrefixNextDecode_comp
     {Ω V : Type*} {h : ℕ}
     (default : V) (k : Fin h) :
     exactPrefixNextDecode (Ω := Ω) (V := V) k ∘
@@ -2674,7 +2674,7 @@ private def exactReverseAliceCanonicalPartition
   fun j => if j = coordinate then ignored
     else if j ∈ side then false else true
 
-theorem exactReverseAliceCanonicalPartition_side
+private theorem exactReverseAliceCanonicalPartition_side
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -2691,7 +2691,7 @@ theorem exactReverseAliceCanonicalPartition_side
         exactReverseAliceCanonicalPartition,
         hj, hs]
 
-theorem exactReverseAliceCanonicalPartition_unique
+private theorem exactReverseAliceCanonicalPartition_unique
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (partition : M → Bool)
@@ -2740,7 +2740,7 @@ private def exactReverseBobCanonicalPartition
   fun j => if j = coordinate then ignored
     else if j ∈ side then true else false
 
-theorem exactReverseBobCanonicalPartition_side
+private theorem exactReverseBobCanonicalPartition_side
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -2757,7 +2757,7 @@ theorem exactReverseBobCanonicalPartition_side
         exactReverseBobCanonicalPartition,
         hj, hs]
 
-theorem exactReverseBobCanonicalPartition_unique
+private theorem exactReverseBobCanonicalPartition_unique
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (partition : M → Bool)
@@ -4020,7 +4020,7 @@ private def exactReverseSideContextWeight
       (Equiv.Perm {j : M // j ∈ context.otherSide}) : ℝ)) *
     (1 / (context.otherSide.card + 1 : ℝ))
 
-theorem exactReverseAliceConditionalSeedWeight_eq_context_div_card
+private theorem exactReverseAliceConditionalSeedWeight_eq_context_div_card
     {M : Type*} [Fintype M] [DecidableEq M]
     (nonempty : 0 < Fintype.card M)
     (seed : ExactForwardSeed M) :
@@ -4046,7 +4046,7 @@ theorem exactReverseAliceConditionalSeedWeight_eq_context_div_card
   rw [ite_eq_left (exactReverseLeftSide_coordinate_mem seed)]
   field_simp [hside.ne']
 
-theorem exactReverseBobConditionalSeedWeight_eq_context_div_card
+private theorem exactReverseBobConditionalSeedWeight_eq_context_div_card
     {M : Type*} [Fintype M] [DecidableEq M]
     (nonempty : 0 < Fintype.card M)
     (seed : ExactForwardSeed M) :
@@ -4606,7 +4606,7 @@ private def exactDeleteMarkedRank
             Subtype.ext same
           rw [hj, marked])).trans (finSuccAboveEquiv cut).symm)
 
-theorem exactInsertedRank_deleteMarked
+private theorem exactInsertedRank_deleteMarked
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side)
     (rank : {j : M // j ∈ insert i side} ≃
@@ -4673,7 +4673,7 @@ private def exactPermutationOfSideRank
     Equiv.Perm {j : M // j ∈ side} :=
   (rank.trans (Finset.equivFin side).symm).symm
 
-theorem exactPermutationOfSideRank_rank
+private theorem exactPermutationOfSideRank_rank
     {M : Type*}
     (side : Finset M)
     (rank : {j : M // j ∈ side} ≃ Fin side.card) :
@@ -4684,7 +4684,7 @@ theorem exactPermutationOfSideRank_rank
   simp only [exactPermutationOfSideRank, Equiv.symm_trans, Equiv.symm_symm, Equiv.trans_apply,
     Equiv.apply_symm_apply]
 
-theorem exactReverseAliceCanonicalPartition_otherSide
+private theorem exactReverseAliceCanonicalPartition_otherSide
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -4702,7 +4702,7 @@ theorem exactReverseAliceCanonicalPartition_otherSide
         exactReverseAliceCanonicalPartition,
         marked, belongs]
 
-theorem exactReverseBobCanonicalPartition_otherSide
+private theorem exactReverseBobCanonicalPartition_otherSide
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -4720,7 +4720,7 @@ theorem exactReverseBobCanonicalPartition_otherSide
         exactReverseBobCanonicalPartition,
         marked, belongs]
 
-theorem exactReverseAliceCanonicalPartition_card
+private theorem exactReverseAliceCanonicalPartition_card
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -4732,7 +4732,7 @@ theorem exactReverseAliceCanonicalPartition_card
       side coordinate member ignored)
   simpa only [exactLeft_coordinate_not_mem, not_false_eq_true, card_insert_of_notMem] using h
 
-theorem exactReverseBobCanonicalPartition_card
+private theorem exactReverseBobCanonicalPartition_card
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -5563,7 +5563,7 @@ def exactReverseBobWeightedMarkerEquiv
     exact exactReverseBobMarkerDecode_rightInverse
       side context position
 
-theorem exactReverseAliceOriginalSeedWeight_factor
+private theorem exactReverseAliceOriginalSeedWeight_factor
     {M : Type*} [Fintype M] [DecidableEq M]
     (nonempty : 0 < Fintype.card M)
     (seed : ExactForwardSeed M) :
@@ -5585,7 +5585,7 @@ theorem exactReverseAliceOriginalSeedWeight_factor
       rw [exactReverseAliceConditionalSeedWeight_eq_context_div_card
         nonempty seed]
 
-theorem exactReverseBobOriginalSeedWeight_factor
+private theorem exactReverseBobOriginalSeedWeight_factor
     {M : Type*} [Fintype M] [DecidableEq M]
     (nonempty : 0 < Fintype.card M)
     (seed : ExactForwardSeed M) :
@@ -6422,7 +6422,7 @@ private def exactFairQuestionTailWeight
       G.questionWeight (tailX j) (tailY j)
     else 0
 
-theorem exactFairQuestionTailWeight_independent
+private theorem exactFairQuestionTailWeight_independent
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -6440,7 +6440,7 @@ theorem exactFairQuestionTailWeight_independent
   rw [exactRevealCode_splitAt_independent
     D seed x x' y y' tailX tailY]
 
-theorem exactJointQuestionMass_eq_question_mul_tail
+private theorem exactJointQuestionMass_eq_question_mul_tail
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -7261,7 +7261,7 @@ private def exactFairAcceptedBobVariation
         exactFairBobHistoryVariation G n S D r
     else 0
 
-theorem exactFairPsiPhiDistance_mul_postselection_le
+private theorem exactFairPsiPhiDistance_mul_postselection_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D) :
@@ -7342,7 +7342,7 @@ theorem exactFairPsiPhiDistance_mul_postselection_le
         ring
       · simp only [accepted, ↓reduceIte, sum_const_zero, mul_zero]
 
-theorem exactFairGammaPsiDistance_mul_postselection_le
+private theorem exactFairGammaPsiDistance_mul_postselection_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D) :

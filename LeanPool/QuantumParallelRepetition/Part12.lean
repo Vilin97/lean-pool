@@ -61,7 +61,7 @@ private structure UnconditionalActualFairSourceSamplerData
         then 0 else 1) ≤
       4 * (exactSourcePinskerRate G n S D + gamma)
 
-theorem unconditionalActualFairSourceSamplerData_of_positive
+private theorem unconditionalActualFairSourceSamplerData_of_positive
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -148,7 +148,7 @@ private structure UnconditionalActualFairSourceStoppingHazardData
               (64 * Real.sqrt (martingaleRate G n S D) +
                 alpha ^ (1 / 3 : ℝ))
 
-theorem unconditionalActualFairSourceStoppingHazardData_of_positive
+private theorem unconditionalActualFairSourceStoppingHazardData_of_positive
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -257,7 +257,7 @@ private structure UnconditionalActualFairCachedSourceVerifierLedger
       (∑ j : K,
         quadraticExpectation (effect (h, j)) (actual (h, j))) ≤ 1
 
-theorem unconditionalActualFairCachedLedgerStoppingTransfer
+private theorem unconditionalActualFairCachedLedgerStoppingTransfer
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -405,7 +405,7 @@ private structure UnconditionalActualFairSourceRoundingContext
     UnconditionalActualFairSourceStoppingHazardData G n S D alpha
 
 /-- Builds the fair-source rounding context from positive sampling parameters. -/
-def unconditionalActualFairSourceRoundingContextOfPositive
+private def unconditionalActualFairSourceRoundingContextOfPositive
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -450,7 +450,7 @@ private def d (_c : UnconditionalActualFairSourceRoundingContext
     G n S D alpha gamma) : ℕ :=
   Fintype.card (ExactGlobalHistoryLocalIndex G n S D)
 
-theorem dimension_pos
+private theorem dimension_pos
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) : 0 < d c :=
   exactGlobalHistoryLocalIndex_card_pos G n S D
@@ -465,18 +465,18 @@ private def schedule
       G n S D alpha gamma) : Fin c.stopping.L → Fin 1 :=
   fun _ => 0
 
-theorem width_positive
+private theorem width_positive
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) : 0 < c.stopping.w := by
   linarith [c.stopping.width_large]
 
-theorem width_all
+private theorem width_all
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) : ∀ s : Fin 1, 0 < width c s := by
   intro s
   exact width_positive c
 
-theorem fine_all
+private theorem fine_all
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) :
     ∀ s : Fin 1,
@@ -553,7 +553,7 @@ private def source
     (width c) (schedule c)
     (gammaVector c p.1) (phiVector c p.1) (psiVector c p.1) p.2
 
-theorem answerNonempty
+private theorem answerNonempty
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) : Nonempty A ∧ Nonempty B :=
   exactSourceAnswerTypes_nonempty_of_remaining
@@ -664,7 +664,7 @@ private def prepared
     1 c.stopping.P c.stopping.N (d c)
     c.stopping.L c.stopping.m
 
-theorem prepared_normalized
+private theorem prepared_normalized
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) :
     ∀ f : flag c, ‖prepared c f‖ = 1 := by
@@ -676,12 +676,15 @@ theorem prepared_normalized
 private def rounded
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) : Strategy G :=
-  unconditionalOneScaleActualSourceFlaggedStrategy
-    G n S D c.remaining
-    c.sampler.denominator c.sampler.numerator c.sampler.nonempty
-    c.stopping.w c.stopping.N c.stopping.L c.stopping.P
-    c.stopping.Q c.stopping.m c.stopping.phases c.stopping.grid
-    c.stopping.harmonic c.stopping.UA c.stopping.UB
+  pureFlaggedStrategy G
+    (exactSourceSharedFlagWeight D c.sampler.denominator)
+    (exactSourceSharedFlagWeight_nonneg D c.sampler.denominator)
+    (exactSourceSharedFlagWeight_sum D c.remaining c.sampler.denominator)
+    c.prepared c.prepared_normalized
+    (fun flag x => unitaryConjugatePOVM (c.U flag x)
+      (dependentBlockPOVM (fun r => c.PA flag r x)))
+    (fun flag y => unitaryConjugatePOVM (c.V flag y)
+      (dependentBlockPOVM (fun r => c.PB flag r y)))
 
 end UnconditionalActualFairSourceRoundingContext
 
@@ -698,7 +701,7 @@ open UnconditionalActualFairSourceRoundingContext
 
 attribute [local instance] Classical.propDecidable
 
-theorem unconditionalActualFairSourceRoundingContext_actualRow
+private theorem unconditionalActualFairSourceRoundingContext_actualRow
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} {n : ℕ} {S : Strategy (G.repeat n)}
@@ -713,7 +716,7 @@ theorem unconditionalActualFairSourceRoundingContext_actualRow
     (gammaVector c h) (phiVector c h)
     c.stopping.Q c.stopping.UA c.stopping.UB
 
-theorem unconditionalActualFairSourceRoundingContext_clippingBound
+private theorem unconditionalActualFairSourceRoundingContext_clippingBound
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} {n : ℕ} {S : Strategy (G.repeat n)}
@@ -730,7 +733,7 @@ theorem unconditionalActualFairSourceRoundingContext_clippingBound
     c.stopping.fine c.stopping.phases c.stopping.harmonic
     (schedule c) c.stopping.scalar
 
-theorem unconditionalActualFairSourceRoundingContext_cleanBound
+private theorem unconditionalActualFairSourceRoundingContext_cleanBound
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} {n : ℕ} {S : Strategy (G.repeat n)}
@@ -796,7 +799,7 @@ theorem unconditionalActualFairSourceRoundingContext_cleanBound
           simpa only [deviation, actual, canonical] using identification
     _ ≤ _ := fair_hazard
 
-theorem unconditionalActualFairSourceRoundingContext_analyticLedger
+private theorem unconditionalActualFairSourceRoundingContext_analyticLedger
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} {n : ℕ} {S : Strategy (G.repeat n)}
@@ -919,7 +922,7 @@ open QuantumParallelRepetition.ClassicalSampling
 
 attribute [local instance] Classical.propDecidable
 
-theorem unconditionalActualFairSourceRoundingContext_verifierLedger
+private theorem unconditionalActualFairSourceRoundingContext_verifierLedger
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} {n : ℕ} {S : Strategy (G.repeat n)}
@@ -975,7 +978,7 @@ theorem unconditionalActualFairSourceRoundingContext_verifierLedger
       (fun h j => c.actual (h, j))
       (unconditionalActualFairSourceRoundingContext_actualRow c) h
 
-theorem unconditionalActualFairSourceRoundingContext_physicalBranch
+private theorem unconditionalActualFairSourceRoundingContext_physicalBranch
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} {n : ℕ} {S : Strategy (G.repeat n)}
@@ -1011,6 +1014,7 @@ theorem unconditionalActualFairSourceRoundingContext_physicalBranch
             j.succ j.succ) := by
   classical
   apply le_of_eq
+  simp only [actualStoppingBranchWinningEffect_eq_direct]
   change
     (∑ j : Fin c.stopping.L,
       unconditionalActualFairSourceHistoryStopBorn
@@ -1031,7 +1035,7 @@ theorem unconditionalActualFairSourceRoundingContext_physicalBranch
     c.stopping.Q c.width c.schedule c.stopping.UA c.stopping.UB
     c.stopping.grid c.width_all flag x y matching
 
-theorem unconditionalActualFairSourceRoundingContext_stoppedVerifier
+private theorem unconditionalActualFairSourceRoundingContext_stoppedVerifier
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {G : Game X Y A B} {n : ℕ} {S : Strategy (G.repeat n)}
@@ -1046,7 +1050,7 @@ theorem unconditionalActualFairSourceRoundingContext_stoppedVerifier
           4 * Real.sqrt c.deviation + 2 * Real.sqrt c.clipping) ≤
       c.rounded.winProbability := by
   classical
-  have stopped :=
+  exact
     unconditionalActualFairCachedLedgerStoppingTransfer
       G n S D c.remaining c.positive
       c.sampler.base c.sampler.denominator c.sampler.denominator_positive
@@ -1065,15 +1069,6 @@ theorem unconditionalActualFairSourceRoundingContext_stoppedVerifier
       (fun flag x y matching =>
         unconditionalActualFairSourceRoundingContext_physicalBranch
           c flag x y matching)
-  change
-    1 - (1 - entangledValue G) / 2 -
-      5 * (exactSourcePinskerRate G n S D + gamma) -
-        ((64 * Real.sqrt (martingaleRate G n S D) +
-            alpha ^ (1 / 3 : ℝ) +
-            (alpha ^ (1 / 3 : ℝ)) ^ 2) +
-          4 * Real.sqrt c.deviation + 2 * Real.sqrt c.clipping) ≤
-      c.rounded.winProbability at stopped
-  exact stopped
 
 end
 

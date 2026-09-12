@@ -182,7 +182,7 @@ private def jointEffect (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
     Matrix (S.Alice × S.Bob) (S.Alice × S.Bob) ℂ :=
   (S.aliceMeasurement x).effect a ⊗ₖ (S.bobMeasurement y).effect b
 
-theorem jointEffect_positive (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
+private theorem jointEffect_positive (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
     (S.jointEffect x y a b).PosSemidef := by
   exact ((S.aliceMeasurement x).positive a).kronecker
     ((S.bobMeasurement y).positive b)
@@ -197,7 +197,7 @@ theorem outcomeProbability_nonneg (S : Strategy G)
   exact trace_mul_posSemidef_nonneg S.state.positive
     (S.jointEffect_positive x y a b)
 
-theorem jointEffect_complete (S : Strategy G) (x : X) (y : Y) :
+private theorem jointEffect_complete (S : Strategy G) (x : X) (y : Y) :
     (∑ a : A, ∑ b : B, S.jointEffect x y a b) = 1 := by
   classical
   calc
@@ -517,7 +517,7 @@ private def mixtureMatchedIndex (S : J → Strategy G) :
   | ⟨j, (a, b)⟩ => (⟨j, a⟩, ⟨j, b⟩)
 
 omit [Fintype J] [DecidableEq J] in
-theorem mixtureMatchedIndex_injective (S : J → Strategy G) :
+private theorem mixtureMatchedIndex_injective (S : J → Strategy G) :
     Function.Injective (mixtureMatchedIndex S) := by
   rintro ⟨i, a, b⟩ ⟨j, c, d⟩ h
   have hflag : i = j := congrArg (fun q => q.1.1) h
@@ -535,7 +535,7 @@ private def mixtureEmbedding (S : J → Strategy G) :
   classical
   exact fun q r => if q = mixtureMatchedIndex S r then 1 else 0
 
-theorem mixtureEmbedding_isometry (S : J → Strategy G) :
+private theorem mixtureEmbedding_isometry (S : J → Strategy G) :
     (mixtureEmbedding S)ᴴ * mixtureEmbedding S = 1 := by
   classical
   ext i j
@@ -550,7 +550,7 @@ theorem mixtureEmbedding_isometry (S : J → Strategy G) :
       MonoidWithZeroHom.map_ite_one_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
       Finset.mem_univ, ↓reduceIte, hindex.symm, ne_eq, h, not_false_eq_true, one_apply_ne]
 
-theorem mixtureEmbedding_compress (S : J → Strategy G)
+private theorem mixtureEmbedding_compress (S : J → Strategy G)
     (E : Matrix (mixtureAlice S × mixtureBob S)
       (mixtureAlice S × mixtureBob S) ℂ) :
     (mixtureEmbedding S)ᴴ * E * mixtureEmbedding S =
@@ -566,7 +566,7 @@ private def mixtureBlockMatrix (p : J → ℝ) (S : J → Strategy G) :
   Matrix.blockDiagonal' fun j => p j • (S j).state.matrix
 
 omit [Fintype J] in
-theorem mixtureBlockMatrix_posSemidef
+private theorem mixtureBlockMatrix_posSemidef
     [Finite J]
     (p : J → ℝ) (hp : ∀ j, 0 ≤ p j) (S : J → Strategy G) :
     (mixtureBlockMatrix p S).PosSemidef := by
@@ -575,7 +575,7 @@ theorem mixtureBlockMatrix_posSemidef
   intro j
   exact (S j).state.positive.smul (hp j)
 
-theorem mixtureBlockMatrix_trace
+private theorem mixtureBlockMatrix_trace
     (p : J → ℝ) (S : J → Strategy G) :
     Matrix.trace (mixtureBlockMatrix p S) =
       (↑(∑ j : J, p j) : ℂ) := by
@@ -652,7 +652,7 @@ private def convexMixtureStrategy (p : J → ℝ)
   aliceMeasurement := mixtureAlicePOVM S
   bobMeasurement := mixtureBobPOVM S
 
-theorem mixtureJointEffect_compress (S : J → Strategy G)
+private theorem mixtureJointEffect_compress (S : J → Strategy G)
     (x : X) (y : Y) (a : A) (b : B) :
     (((mixtureAlicePOVM S x).effect a ⊗ₖ
       (mixtureBobPOVM S y).effect b).submatrix
@@ -668,7 +668,7 @@ theorem mixtureJointEffect_compress (S : J → Strategy G)
   · simp only [mixtureAlicePOVM, mixtureBobPOVM, submatrix_apply, mixtureMatchedIndex,
       kroneckerMap_apply, blockDiagonal'_apply, h, ↓reduceDIte, mul_zero, Strategy.jointEffect]
 
-theorem mixtureEmbedding_trace_mul (S : J → Strategy G)
+private theorem mixtureEmbedding_trace_mul (S : J → Strategy G)
     (R : Matrix (mixtureMatched S) (mixtureMatched S) ℂ)
     (E : Matrix (mixtureAlice S × mixtureBob S)
       (mixtureAlice S × mixtureBob S) ℂ) :
@@ -699,7 +699,7 @@ theorem mixtureEmbedding_trace_mul (S : J → Strategy G)
             (mixtureMatchedIndex S)) := by
           rw [mixtureEmbedding_compress]
 
-theorem mixtureBlockMatrix_trace_mul
+private theorem mixtureBlockMatrix_trace_mul
     (p : J → ℝ) (S : J → Strategy G)
     (E : ∀ j : J,
       Matrix ((S j).Alice × (S j).Bob)
@@ -710,7 +710,7 @@ theorem mixtureBlockMatrix_trace_mul
   rw [← Matrix.blockDiagonal'_mul, Matrix.trace_blockDiagonal']
   simp only [Algebra.smul_mul_assoc, trace_smul, Complex.real_smul]
 
-theorem convexMixtureStrategy_outcomeProbability
+private theorem convexMixtureStrategy_outcomeProbability
     (p : J → ℝ) (hp : ∀ j, 0 ≤ p j)
     (h_normalized : (∑ j : J, p j) = 1)
     (S : J → Strategy G) (x : X) (y : Y) (a : A) (b : B) :
@@ -728,7 +728,7 @@ theorem convexMixtureStrategy_outcomeProbability
   simp only [Complex.real_smul, Complex.re_sum, Complex.mul_re, Complex.ofReal_re,
     Complex.ofReal_im, zero_mul, sub_zero, Strategy.outcomeProbability]
 
-theorem convexMixtureStrategy_winProbability
+private theorem convexMixtureStrategy_winProbability
     (p : J → ℝ) (hp : ∀ j, 0 ≤ p j)
     (h_normalized : (∑ j : J, p j) = 1)
     (S : J → Strategy G) :
@@ -1145,7 +1145,7 @@ private def strategyWinEvent (G : Game X Y A B) :
     (fun ω =>
       G.predicate ω.1 ω.2.1 ω.2.2.1 ω.2.2.2 = true)
 
-theorem strategyEventLaw_winEvent
+private theorem strategyEventLaw_winEvent
     (G : Game X Y A B) (S : Strategy G) :
     (strategyEventLaw G S).eventMass (strategyWinEvent G) =
       S.winProbability := by
@@ -1181,7 +1181,7 @@ def repeatedCoordinateWin (G : Game X Y A B) (n : ℕ)
   G.predicate (ω.1 i) (ω.2.1 i)
     (ω.2.2.1 i) (ω.2.2.2 i)
 
-theorem repeated_allWinEvent_eq
+private theorem repeated_allWinEvent_eq
     (G : Game X Y A B) (n : ℕ) :
     FiniteEventLaw.winEvent (repeatedCoordinateWin G n)
       (Finset.univ : Finset (Fin n)) =
@@ -1599,7 +1599,7 @@ private def diagonalPurificationGram
   Matrix.diagonal fun i =>
     (((eigenvalue i / (eigenvalue i + s)) ^ 2 : ℝ) : ℂ)
 
-theorem diagonalPurificationGram_integrable
+private theorem diagonalPurificationGram_integrable
     {d : Type*} [Fintype d] [DecidableEq d]
     (eigenvalue : d → ℝ)
     (h_nonneg : ∀ i, 0 ≤ eigenvalue i) :
@@ -1624,7 +1624,7 @@ theorem diagonalPurificationGram_integrable
       Complex.ofReal_add, ne_eq, h, not_false_eq_true, Matrix.diagonal_apply_ne,
       integrable_fun_zero]
 
-theorem integral_diagonalPurificationGram
+private theorem integral_diagonalPurificationGram
     {d : Type*} [Fintype d] [DecidableEq d]
     (eigenvalue : d → ℝ)
     (h_nonneg : ∀ i, 0 ≤ eigenvalue i) :
@@ -1690,7 +1690,7 @@ private def spectralPurificationGram
   spectralConjugationCLM hF.isHermitian.eigenvectorUnitary
     (diagonalPurificationGram hF.isHermitian.eigenvalues s)
 
-theorem spectralPurificationGram_integrable
+private theorem spectralPurificationGram_integrable
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     IntegrableOn (spectralPurificationGram F hF) (Ioi 0) := by
@@ -1699,7 +1699,7 @@ theorem spectralPurificationGram_integrable
   exact (spectralConjugationCLM hF.isHermitian.eigenvectorUnitary).integrable_comp
     hdiag
 
-theorem integral_spectralPurificationGram
+private theorem integral_spectralPurificationGram
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     (∫ s in Ioi (0 : ℝ), spectralPurificationGram F hF s) = F := by
@@ -1741,7 +1741,7 @@ def spectralPurificationFilter
       ((hF.isHermitian.eigenvalues i /
         (hF.isHermitian.eigenvalues i + s) : ℝ) : ℂ))
 
-theorem spectralPurificationFilter_gram
+private theorem spectralPurificationFilter_gram
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) (s : ℝ) :
     star (spectralPurificationFilter F hF s) *
@@ -2245,19 +2245,19 @@ def spectralSupportSqrt
     (F : Matrix d d ℂ) (hF : F.PosSemidef) : Matrix d d ℂ :=
   spectralSupportFunctional F hF Real.sqrt
 
-theorem spectralSupportInverse_isHermitian
+private theorem spectralSupportInverse_isHermitian
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     (spectralSupportInverse F hF).IsHermitian :=
   spectralSupportFunctional_isHermitian F hF _
 
-theorem spectralSupportProjection_isHermitian
+private theorem spectralSupportProjection_isHermitian
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     (spectralSupportProjection F hF).IsHermitian :=
   spectralSupportFunctional_isHermitian F hF _
 
-theorem spectralSupportInverse_mul
+private theorem spectralSupportInverse_mul
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     spectralSupportInverse F hF * F =
@@ -2277,7 +2277,7 @@ theorem spectralSupportInverse_mul
       · simp only [hi, inv_zero, mul_zero, ↓reduceIte]
       · simp only [ne_eq, hi, not_false_eq_true, inv_mul_cancel₀, ↓reduceIte])
 
-theorem mul_spectralSupportInverse
+private theorem mul_spectralSupportInverse
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     F * spectralSupportInverse F hF =
@@ -2297,7 +2297,7 @@ theorem mul_spectralSupportInverse
       · simp only [hi, inv_zero, mul_zero, ↓reduceIte]
       · simp only [ne_eq, hi, not_false_eq_true, mul_inv_cancel₀, ↓reduceIte])
 
-theorem spectralSupportProjection_mul
+private theorem spectralSupportProjection_mul
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     spectralSupportProjection F hF * F = F := by
@@ -2319,7 +2319,7 @@ theorem spectralSupportProjection_mul
         by_cases hi : hF.isHermitian.eigenvalues i = 0 <;> simp [hi])
     _ = F := spectralSupportFunctional_id F hF
 
-theorem spectralSupportInverse_penrose
+private theorem spectralSupportInverse_penrose
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     spectralSupportInverse F hF * F *
@@ -2370,7 +2370,7 @@ section
 open Matrix
 open scoped BigOperators ComplexOrder MatrixOrder
 
-theorem mul_spectralSupportProjection
+private theorem mul_spectralSupportProjection
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     F * spectralSupportProjection F hF = F := by
@@ -2404,7 +2404,7 @@ theorem posSemidef_kernel_of_sub_posSemidef
       _ = 0 := by rw [hx]; simp only [dotProduct_zero]
   exact (add_eq_zero_iff_of_nonneg hA_nonneg hsub_nonneg).mp hzero |>.1
 
-theorem posSemidef_mul_spectralSupportProjection
+private theorem posSemidef_mul_spectralSupportProjection
     {d : Type*} [Fintype d] [DecidableEq d]
     {F A : Matrix d d ℂ}
     (hF : F.PosSemidef) (hA : A.PosSemidef)
@@ -2427,7 +2427,7 @@ theorem posSemidef_mul_spectralSupportProjection
     simpa only [mul_sub, mul_one] using hAzero
   exact (sub_eq_zero.mp hdiff).symm
 
-theorem spectralSupportProjection_mul_posSemidef
+private theorem spectralSupportProjection_mul_posSemidef
     {d : Type*} [Fintype d] [DecidableEq d]
     {F A : Matrix d d ℂ}
     (hF : F.PosSemidef) (hA : A.PosSemidef)
@@ -2470,7 +2470,7 @@ private def purificationRangeProjection
     (Γ : Matrix e d ℂ) : Matrix e e ℂ :=
   Γ * spectralSupportInverse F hF * Matrix.conjTranspose Γ
 
-theorem purificationRangeProjection_isHermitian
+private theorem purificationRangeProjection_isHermitian
     {d e : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
     (Γ : Matrix e d ℂ) :
@@ -2481,7 +2481,7 @@ theorem purificationRangeProjection_isHermitian
   simp only [Matrix.mul_assoc, conjTranspose_mul, conjTranspose_conjTranspose,
     (spectralSupportInverse_isHermitian F hF).eq]
 
-theorem purificationRangeProjection_idempotent
+private theorem purificationRangeProjection_idempotent
     {d e : Type*} [Fintype d] [DecidableEq d]
     [Fintype e]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
@@ -2505,7 +2505,7 @@ theorem purificationRangeProjection_idempotent
           Matrix.conjTranspose Γ := by
             rw [spectralSupportInverse_penrose]
 
-theorem purificationRangeProjection_complement_posSemidef
+private theorem purificationRangeProjection_complement_posSemidef
     {d e : Type*} [Fintype d] [DecidableEq d]
     [Fintype e] [DecidableEq e]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
@@ -2539,7 +2539,7 @@ private def purifiedRefinementCore
   Γ * spectralSupportInverse F hF * effect a *
     spectralSupportInverse F hF * Matrix.conjTranspose Γ
 
-theorem purifiedRefinementCore_posSemidef
+private theorem purifiedRefinementCore_posSemidef
     {ι d e : Type*}
     [Fintype d] [DecidableEq d]
     [Finite e]
@@ -2555,7 +2555,7 @@ theorem purifiedRefinementCore_posSemidef
   simpa only [purifiedRefinementCore, Matrix.mul_assoc, conjTranspose_mul,
     (spectralSupportInverse_isHermitian F hF).eq] using h
 
-theorem purifiedRefinementCore_sum
+private theorem purifiedRefinementCore_sum
     {ι d e : Type*} [Fintype ι]
     [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
@@ -2594,7 +2594,7 @@ private def purifiedRefinedEffect
   purifiedRefinementCore F hF Γ effect a +
     if a = a₀ then 1 - purificationRangeProjection F hF Γ else 0
 
-theorem purifiedRefinedEffect_posSemidef
+private theorem purifiedRefinedEffect_posSemidef
     {ι d e : Type*} [DecidableEq ι]
     [Fintype d] [DecidableEq d]
     [Fintype e] [DecidableEq e]
@@ -2613,7 +2613,7 @@ theorem purifiedRefinedEffect_posSemidef
   · exact purificationRangeProjection_complement_posSemidef F hF Γ hΓ
   · exact Matrix.PosSemidef.zero
 
-theorem purifiedRefinedEffect_complete
+private theorem purifiedRefinedEffect_complete
     {ι d e : Type*} [Fintype ι] [DecidableEq ι]
     [Fintype d] [DecidableEq d]
      [DecidableEq e]
@@ -2629,7 +2629,7 @@ theorem purifiedRefinedEffect_complete
   rw [purifiedRefinementCore_sum F hF Γ effect hsum]
   simp only [Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte, add_sub_cancel]
 
-theorem purificationRangeProjection_compression
+private theorem purificationRangeProjection_compression
     {d e : Type*} [Fintype d] [DecidableEq d]
     [Fintype e]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
@@ -2648,7 +2648,7 @@ theorem purificationRangeProjection_compression
       rw [mul_spectralSupportInverse]
     _ = F := spectralSupportProjection_mul F hF
 
-theorem purificationRangeProjection_complement_compression
+private theorem purificationRangeProjection_complement_compression
     {d e : Type*} [Fintype d] [DecidableEq d]
     [Fintype e] [DecidableEq e]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
@@ -2667,7 +2667,7 @@ theorem purificationRangeProjection_complement_compression
       rw [hΓ, purificationRangeProjection_compression F hF Γ hΓ]
     _ = 0 := sub_self F
 
-theorem purifiedRefinementCore_compression
+private theorem purifiedRefinementCore_compression
     {ι d e : Type*} [Fintype ι]
     [Fintype d] [DecidableEq d]
     [Fintype e]
@@ -2707,7 +2707,7 @@ theorem purifiedRefinementCore_compression
       exact posSemidef_mul_spectralSupportProjection hF
         (hpositive a) hsub
 
-theorem purifiedRefinedEffect_compression
+private theorem purifiedRefinedEffect_compression
     {ι d e : Type*} [Fintype ι] [DecidableEq ι]
     [Fintype d] [DecidableEq d]
     [Fintype e] [DecidableEq e]
@@ -3260,7 +3260,7 @@ private def fullQuestionWinIndicator
     G.predicate (xs i) (ys i) (α i) (β i) = true
     then 1 else 0
 
-theorem fullHistoryWinIndicator_eq_question
+private theorem fullHistoryWinIndicator_eq_question
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n))
     (h : FullSubsetHistory X Y n D L)
@@ -3284,7 +3284,7 @@ theorem fullHistoryWinIndicator_eq_question
     simpa only [fullHistoryAliceQuestion, i.property, ↓reduceDIte, Subtype.coe_eta,
       fullHistoryBobQuestion] using hw i
 
-theorem conditionedEffects_postselection_sum
+private theorem conditionedEffects_postselection_sum
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -3397,7 +3397,7 @@ theorem repeated_partialWinMass_expansion
               S.outcomeProbability xs ys aa bb else 0) :=
         congrArg ((G.repeat n).questionWeight xs ys * ·) (ite_eq_right hw).symm
 
-theorem fullQuestionConditionedBornMass_eq
+private theorem fullQuestionConditionedBornMass_eq
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
@@ -4235,7 +4235,7 @@ private def spectralEntropyKernel
         hF.isHermitian.eigenvalues i /
           (hF.isHermitian.eigenvalues i + s) : ℝ) : ℂ))
 
-theorem spectralEntropyKernel_integrable
+private theorem spectralEntropyKernel_integrable
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     IntegrableOn (spectralEntropyKernel F hF) (Ioi 0) := by
@@ -4280,7 +4280,7 @@ open scoped BigOperators Topology ComplexOrder MatrixOrder Matrix.Norms.Elementw
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem spectralEntropyKernel_eq_scalar_sub_filter
+private theorem spectralEntropyKernel_eq_scalar_sub_filter
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) (s : ℝ) :
     spectralEntropyKernel F hF s =
@@ -4372,7 +4372,7 @@ theorem weightedSpectralFilterVariance_integrable
   intro k
   simpa only [Pi.smul_apply] using (hscaled.eval j).eval k
 
-theorem weightedSpectralEntropyJensen_integrable
+private theorem weightedSpectralEntropyJensen_integrable
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (weight : ι → ℝ) (F : ι → Matrix d d ℂ)
     (M : Matrix d d ℂ)
@@ -4389,7 +4389,7 @@ theorem weightedSpectralEntropyJensen_integrable
       (F i) (positive i)).smul (weight i)
   · exact spectralEntropyKernel_integrable M hM
 
-theorem weightedSpectralEntropyJensen_eq_shifted_inverse
+private theorem weightedSpectralEntropyJensen_eq_shifted_inverse
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (weight : ι → ℝ) (F : ι → Matrix d d ℂ)
     (M : Matrix d d ℂ)
@@ -4460,7 +4460,7 @@ theorem weightedSpectralEntropyJensen_eq_shifted_inverse
     spectralPurificationFilter_eq_one_sub_shifted_inverse M hM hs]
   module
 
-theorem integrated_weighted_spectralPurificationFilter_jensen
+private theorem integrated_weighted_spectralPurificationFilter_jensen
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (weight : ι → ℝ) (F : ι → Matrix d d ℂ)
     (M : Matrix d d ℂ)
@@ -4612,7 +4612,7 @@ private def diagonalEntropyKernel
     ((eigenvalue i / (1 + s) -
       eigenvalue i / (eigenvalue i + s) : ℝ) : ℂ)
 
-theorem diagonalEntropyKernel_integrable
+private theorem diagonalEntropyKernel_integrable
     {d : Type*} [Fintype d] [DecidableEq d]
     (eigenvalue : d → ℝ)
     (nonnegative : ∀ i, 0 ≤ eigenvalue i) :
@@ -4638,7 +4638,7 @@ theorem diagonalEntropyKernel_integrable
       Complex.ofReal_one, ne_eq, hij, not_false_eq_true, Matrix.diagonal_apply_ne,
       integrable_fun_zero]
 
-theorem integral_diagonalEntropyKernel
+private theorem integral_diagonalEntropyKernel
     {d : Type*} [Fintype d] [DecidableEq d]
     (eigenvalue : d → ℝ)
     (nonnegative : ∀ i, 0 ≤ eigenvalue i) :
@@ -4687,7 +4687,7 @@ theorem integral_diagonalEntropyKernel
       Complex.ofReal_one, ne_eq, hij, not_false_eq_true, Matrix.diagonal_apply_ne, integral_zero,
       Complex.ofReal_mul]
 
-theorem integral_spectralEntropyKernel_eq_cfc
+private theorem integral_spectralEntropyKernel_eq_cfc
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) :
     (∫ s in Ioi (0 : ℝ), spectralEntropyKernel F hF s) =
@@ -4765,7 +4765,7 @@ private theorem integral_weightedSpectralEntropy_sum_eq_cfc
   intro i _
   exact integral_weightedSpectralEntropy_term_eq_cfc weight F positive i
 
-theorem integral_weightedSpectralEntropyJensen_eq_cfc
+private theorem integral_weightedSpectralEntropyJensen_eq_cfc
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (weight : ι → ℝ) (F : ι → Matrix d d ℂ)
     (M : Matrix d d ℂ)
@@ -5159,7 +5159,7 @@ private def leftSpectralBornWeight
   bornTracePairing ρ.matrix
     (positiveMatrixSpectralAtom F hF i) G
 
-theorem leftSpectralBornWeight_nonneg
+private theorem leftSpectralBornWeight_nonneg
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
     [DecidableEq dA]
@@ -5171,7 +5171,7 @@ theorem leftSpectralBornWeight_nonneg
   exact trace_mul_posSemidef_nonneg ρ.positive
     ((positiveMatrixSpectralAtom_posSemidef F hF i).kronecker hG)
 
-theorem leftSpectralBornWeight_sum
+private theorem leftSpectralBornWeight_sum
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
     [DecidableEq dA]
@@ -5191,7 +5191,7 @@ theorem leftSpectralBornWeight_sum
     _ = bornTracePairing ρ.matrix (1 : Matrix dA dA ℂ) G := by
       rw [positiveMatrixSpectralAtom_sum]
 
-theorem leftSpectralBornWeight_moment
+private theorem leftSpectralBornWeight_moment
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
     [DecidableEq dA]
@@ -5229,7 +5229,7 @@ theorem leftSpectralBornWeight_moment
         ring
     _ = bornTracePairing ρ.matrix F G := h.symm
 
-theorem leftSpectralBornWeight_entropy
+private theorem leftSpectralBornWeight_entropy
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
     [DecidableEq dA]
@@ -5309,7 +5309,7 @@ theorem positiveContraction_eigenvalue_le_one
     (CFC.le_one_iff (R := ℝ) F hF.isHermitian).mp hFle
   exact hspectrum _ (hF.isHermitian.eigenvalues_mem_spectrum_real i)
 
-theorem leftSpectralBornWeight_negEntropy
+private theorem leftSpectralBornWeight_negEntropy
     {dA dB : Type*}
     [Fintype dA] [Fintype dB]
     [DecidableEq dA]
@@ -6410,7 +6410,7 @@ private def weightedComplexOverlapVector
   toLp 2 fun q : ι × κ =>
     (Real.sqrt (σ q.1 * μ q.2) : ℂ) * L q.1 q.2
 
-theorem weightedComplexOverlapVector_norm_sq
+private theorem weightedComplexOverlapVector_norm_sq
     {ι κ : Type*} [Fintype ι] [Fintype κ]
     (σ : ι → ℝ) (μ : κ → ℝ)
     (hσ : ∀ i, 0 ≤ σ i) (hμ : ∀ j, 0 ≤ μ j)
@@ -6438,7 +6438,7 @@ theorem complexInner_norm_sq_le
   nlinarith [norm_nonneg (inner ℂ z w), norm_nonneg z,
     norm_nonneg w, mul_nonneg (norm_nonneg z) (norm_nonneg w)]
 
-theorem twoSidedSchmidtSpectralEnergy_le
+private theorem twoSidedSchmidtSpectralEnergy_le
     {ι κ ν : Type*} [Fintype ι] [Fintype κ] [Fintype ν]
     (ψ φ : EuclideanSpace ℂ ν)
     (hψ : ‖ψ‖ = 1) (hφ : ‖φ‖ = 1)
@@ -6710,7 +6710,7 @@ theorem schmidtVector_apply
     Matrix.kroneckerMap_apply, mul_comm, ite_mul, zero_mul, Fintype.sum_prod_type,
     Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte, mul_assoc]
 
-theorem weightedComplexOverlapVector_inner
+private theorem weightedComplexOverlapVector_inner
     {ι κ : Type*} [Fintype ι] [Fintype κ]
     (σ : ι → ℝ) (μ : κ → ℝ)
     (hσ : ∀ i, 0 ≤ σ i) (hμ : ∀ j, 0 ≤ μ j)

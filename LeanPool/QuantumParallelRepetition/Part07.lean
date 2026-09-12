@@ -142,7 +142,7 @@ theorem dSVDensityRationalPureMatchedFlagIndicator_sum
       exact same (first.trans second.symm)
     simp only [absent, ↓reduceIte, sum_const_zero, same]
 
-theorem dSVDensityRationalPureMatchedFlagBorn_sum_eq
+private theorem dSVDensityRationalPureMatchedFlagBorn_sum_eq
     {A C : Type*} [Fintype A] [Fintype C]
     {L : ℕ} (alice : A → Fin (L + 1))
     (bob : C → Fin (L + 1))
@@ -177,7 +177,7 @@ theorem dSVDensityRationalPureMatchedFlagBorn_sum_eq
       rw [← Finset.mul_sum,
         dSVDensityRationalPureMatchedFlagIndicator_sum]
 
-theorem dSVDensityRationalPureFlagBorn_partition
+private theorem dSVDensityRationalPureFlagBorn_partition
     {A C : Type*} [Fintype A] [Fintype C]
     {L : ℕ} (alice : A → Fin (L + 1))
     (bob : C → Fin (L + 1))
@@ -201,7 +201,7 @@ theorem dSVDensityRationalPureFlagBorn_partition
   intro c _
   split_ifs <;> ring
 
-theorem dSVDensityRationalPureMatchedFlagBorn_zero_succ
+private theorem dSVDensityRationalPureMatchedFlagBorn_zero_succ
     {A C : Type*} [Fintype A] [Fintype C]
     {L : ℕ} (alice : A → Fin (L + 1))
     (bob : C → Fin (L + 1))
@@ -216,7 +216,7 @@ theorem dSVDensityRationalPureMatchedFlagBorn_zero_succ
             alice bob z j.succ j.succ := by
   rw [Fin.sum_univ_succ]
 
-theorem dSVDensityRationalPureFlagBorn_partition_zero_succ
+private theorem dSVDensityRationalPureFlagBorn_partition_zero_succ
     {A C : Type*} [Fintype A] [Fintype C]
     {L : ℕ} (alice : A → Fin (L + 1))
     (bob : C → Fin (L + 1))
@@ -235,7 +235,7 @@ theorem dSVDensityRationalPureFlagBorn_partition_zero_succ
     alice bob z] at actual
   linarith
 
-theorem dSVDensityRationalPureFlagBorn_normalized_partition_zero_succ
+private theorem dSVDensityRationalPureFlagBorn_normalized_partition_zero_succ
     {A C : Type*} [Fintype A] [Fintype C]
     {L : ℕ} (alice : A → Fin (L + 1))
     (bob : C → Fin (L + 1))
@@ -458,7 +458,7 @@ theorem
     (dSVDensityRationalHeterogeneousPhysicalStageContinue
       N width schedule ξ ζ) L
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousActualPhysicalBaseFlagBorn_eq_flagMass
     {S d N L : ℕ} (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -741,7 +741,7 @@ private def dSVDensityRationalPublicBucketPhysicalCommonRank
     have right := s.isLt
     omega⟩
 
-theorem dSVDensityRationalPublicBucketPhysicalCommonRank_eq
+private theorem dSVDensityRationalPublicBucketPhysicalCommonRank_eq
     {d N : ℕ} (w : ℝ)
     (ξ ζ : BipartiteUnitVector d)
     (i j : Fin d) :
@@ -787,7 +787,7 @@ theorem
   exact mul_le_mul_of_nonneg_left
     (accurate phase r s) (Nat.cast_nonneg r.val)
 
-theorem
+private theorem
     exists_proofDSVDensityRationalPublicBucketPhysicalMixedPrefixCleanup_sq
     {Ω I : Type*} [DecidableEq I] {N : ℕ} (grid : 0 < N)
     (bucket : Ω → Fin (N + 1) → I)
@@ -959,7 +959,7 @@ def dSVDensityRationalPublicBucketPhysicalCoherentLocalReset
           (dSVDensityRationalPhysicalAcceptedRank
             w N ζ q.2))) z
 
-theorem
+private theorem
     dSVDensityRationalPublicBucketPhysicalCoherentMixedReset_distance_sq
     {d N B n : ℕ} (phases : 0 < B) (Q : ℕ) (w : ℝ)
     (ξ ζ : BipartiteUnitVector d)
@@ -1154,7 +1154,7 @@ private def dSVDensityRationalPublicLogRankPhaseWeightedCrossing
           dSVDensityRationalPublicLogRankBucket Q phase s
        then (0 : ℝ) else 1)
 
-theorem dSVDensityRationalPublicLogRankPhaseWeightedCrossing_nonneg
+private theorem dSVDensityRationalPublicLogRankPhaseWeightedCrossing_nonneg
     {N : ℕ} (Q B : ℕ) (r s : Fin (N + 1)) :
     0 ≤ dSVDensityRationalPublicLogRankPhaseWeightedCrossing
       Q B r s := by
@@ -1164,7 +1164,7 @@ theorem dSVDensityRationalPublicLogRankPhaseWeightedCrossing_nonneg
   unfold dSVDensityRationalPublicLogRankPhaseWeight
   split <;> positivity
 
-theorem
+private theorem
     dSVDensityRationalPublicLogRankPhaseWeightedCrossing_le_fineLabel
     {N B : ℕ} (positive : 0 < B) (Q : ℕ)
     (r s : Fin (N + 1))
@@ -1212,7 +1212,7 @@ theorem dSVDensityRationalPublicLogRankFineLabel_abs_sub_le
         (Q : ℝ) * Real.log ((max 1 s.val : ℕ) : ℝ))
     linarith [first.1, second.2]
 
-theorem
+private theorem
     dSVDensityRationalPublicLogRankPhaseWeightedCrossing_min_le
     {N B : ℕ} (positive : 0 < B) (Q : ℕ)
     (r s : Fin (N + 1)) :
@@ -1440,7 +1440,7 @@ section
 open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
-theorem dSVDensityRationalPublicLogRankPhaseWeightedCrossing_le_one
+private theorem dSVDensityRationalPublicLogRankPhaseWeightedCrossing_le_one
     {N B : ℕ} (positive : 0 < B) (Q : ℕ)
     (r s : Fin (N + 1)) :
     dSVDensityRationalPublicLogRankPhaseWeightedCrossing
@@ -1456,7 +1456,7 @@ theorem dSVDensityRationalPublicLogRankPhaseWeightedCrossing_le_one
     _ = 1 :=
       dSVDensityRationalPublicLogRankPhaseWeight_sum positive
 
-theorem
+private theorem
     dSVDensityRationalPublicLogRankPhaseWeightedCrossing_alice_le
     {N B : ℕ} (positive : 0 < B) (Q : ℕ)
     (r s : Fin (N + 1)) :
@@ -1500,7 +1500,7 @@ theorem
     ((Q : ℝ) / (B : ℝ) + 1) * t + m / (B : ℝ)
   linarith
 
-theorem
+private theorem
     exists_proofDSVDensityRationalPublicBucketPhysicalQuantitativeMixedPrefixCleanup_sq
     {N B : ℕ} (grid : 0 < N) (phases : 0 < B)
     {Q : ℕ} (fine : 0 < Q)
@@ -1689,7 +1689,7 @@ private def dSVDensityRationalHeterogeneousCommonStopSpectralAtomWeight
   dSVDensityRationalPrefixHarmonicSpectralOverlap ξ ζ i j /
     ((d : ℝ) * (N : ℝ))
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousCommonStopSpectralAtomWeight_nonneg
     {d : ℕ} (N : ℕ)
     (ξ ζ : BipartiteUnitVector d)
@@ -1710,7 +1710,7 @@ private def dSVDensityRationalHeterogeneousCommonStopSpectralRankGap
       |((dSVDensityRationalPhysicalAcceptedRank w N ξ i).val : ℝ) -
         ((dSVDensityRationalPhysicalAcceptedRank w N ζ j).val : ℝ)|
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousCommonStopSpectralRankGap_eq_hazard
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
@@ -1735,7 +1735,7 @@ private def dSVDensityRationalHeterogeneousCommonStopSpectralAliceMass
       N ξ ζ i j *
       ((dSVDensityRationalPhysicalAcceptedRank w N ξ i).val : ℝ)
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousCommonStopSpectralAliceMass_eq_diagonalBorn
     {d N : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (w : ℝ) (ξ ζ : BipartiteUnitVector d) :
@@ -2114,7 +2114,7 @@ theorem
       dSVDensityRationalHeterogeneousPhysicalStoppedEscape_budget
         grid dimension width schedule ξ ζ
 
-theorem
+private theorem
     exists_proofDSVDensityRationalHeterogeneousStoppedCommonStopGaugeErrorBound
     {d N B : ℕ} (grid : 0 < N) (dimension : 0 < d)
     (phases : 0 < B) {Q : ℕ} (fine : 0 < Q)
@@ -2254,7 +2254,7 @@ def dSVDensityRationalHeterogeneousStoppedCommonPrefixFailureVector
     (dSVDensityRationalHeterogeneousStoppedCommonPrefixFailureCopy
       width schedule ξ ζ j)
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousStoppedCommonPrefixFailureCopy_eq_actual
     {S N d L : ℕ} (width : Fin S → ℝ)
     (schedule : Fin L → Fin S)
@@ -2340,7 +2340,7 @@ def dSVDensityRationalHeterogeneousStoppedCommonPrefixHazard
       dSVDensityRationalHeterogeneousCommonStopGaugeStageError
         Q (width (schedule j)) n ξ ζ A C
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousStoppedCommonPrefixHazard_eq_gaugeError
     {d N B S L : ℕ} (Q n : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
@@ -2407,7 +2407,7 @@ private def unconditionalPublicBucketLoss
       16 * (Real.exp (((B : ℝ) + 1) / (Q : ℝ)) - 1) +
       8 / (B : ℝ))
 
-theorem exists_proofUnconditionalPublicBucketBalance
+private theorem exists_proofUnconditionalPublicBucketBalance
     (t : ℝ) (positive : 0 < t) (bounded : t ≤ 1) :
     ∃ B Q : ℕ, 0 < B ∧ 0 < Q ∧
       (1 / (B : ℝ) ≤ t / 2) ∧
@@ -2894,7 +2894,7 @@ def exactLocallySampleableJBRounded
       denominator) /
     (Fintype.card (SourceRemainingCoordinate D) : ℝ)
 
-theorem exactLocallySampleableJA_weightedConditional
+private theorem exactLocallySampleableJA_weightedConditional
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) :
@@ -2918,7 +2918,7 @@ theorem exactLocallySampleableJA_weightedConditional
           (exactLocallySampleableLaw G n S D) i x r
   ring
 
-theorem exactLocallySampleableJB_weightedConditional
+private theorem exactLocallySampleableJB_weightedConditional
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) :
@@ -2942,7 +2942,7 @@ theorem exactLocallySampleableJB_weightedConditional
           (exactLocallySampleableLaw G n S D) i y r
   ring
 
-theorem exactLocallySampleableJARounded_weightedConditional
+private theorem exactLocallySampleableJARounded_weightedConditional
     (G : Game X Y A B) (n : ℕ) (D : Finset (Fin n))
     (denominator : ℕ)
     (numerator : ExactLocalSamplerIndex X Y D →
@@ -2965,7 +2965,7 @@ theorem exactLocallySampleableJARounded_weightedConditional
         ((numerator (.inl (i, x)) r : ℝ) / denominator)
   ring
 
-theorem exactLocallySampleableJBRounded_weightedConditional
+private theorem exactLocallySampleableJBRounded_weightedConditional
     (G : Game X Y A B) (n : ℕ) (D : Finset (Fin n))
     (denominator : ℕ)
     (numerator : ExactLocalSamplerIndex X Y D →
@@ -3291,7 +3291,7 @@ theorem exactSourceSharedFlagWeight_sum
   have coordinate_nonzero :
       (Fintype.card (SourceRemainingCoordinate D) : ℝ) ≠ 0 := by
     exact_mod_cast
-      (Nat.ne_of_gt (exactRemainingCoordinate_card_pos
+      (Nat.ne_of_gt (remainingCoordinate_card_pos
         D remaining))
   have permutation_nonzero :
       (Fintype.card
@@ -3574,7 +3574,7 @@ private def finiteCoordinateMarginal
   classical
   exact groupedMass (fun x : ι → V => x i) p
 
-theorem finiteIndependentProductWeight_nonneg
+private theorem finiteIndependentProductWeight_nonneg
     {ι V : Type*} [Fintype ι]
     (q : ι → V → ℝ) (hq : ∀ i v, 0 ≤ q i v)
     (x : ι → V) :
@@ -3583,7 +3583,7 @@ theorem finiteIndependentProductWeight_nonneg
   unfold finiteIndependentProductWeight
   exact Finset.prod_nonneg fun i _ => hq i (x i)
 
-theorem finiteIndependentProductWeight_sum
+private theorem finiteIndependentProductWeight_sum
     {ι V : Type*} [Fintype ι] [Fintype V]
     (q : ι → V → ℝ)
     (hq : ∀ i, (∑ v : V, q i v) = 1) :
@@ -3596,7 +3596,7 @@ theorem finiteIndependentProductWeight_sum
       (Fintype.prod_sum (fun i : ι => fun v : V => q i v)).symm
     _ = 1 := by simp only [hq, prod_const_one]
 
-theorem finiteCoordinateMarginal_nonneg
+private theorem finiteCoordinateMarginal_nonneg
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : (ι → V) → ℝ) (hp : ∀ x, 0 ≤ p x)
     (i : ι) (v : V) :
@@ -3605,7 +3605,7 @@ theorem finiteCoordinateMarginal_nonneg
   unfold finiteCoordinateMarginal
   exact groupedMass_nonneg (fun x : ι → V => x i) p hp v
 
-theorem finiteCoordinateMarginal_sum
+private theorem finiteCoordinateMarginal_sum
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : (ι → V) → ℝ) (i : ι) :
     (∑ v : V, finiteCoordinateMarginal p i v) =
@@ -3614,7 +3614,7 @@ theorem finiteCoordinateMarginal_sum
   unfold finiteCoordinateMarginal
   exact groupedMass_sum (fun x : ι → V => x i) p
 
-theorem finiteJoint_le_coordinateMarginal
+private theorem finiteJoint_le_coordinateMarginal
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : (ι → V) → ℝ) (hp : ∀ x, 0 ≤ p x)
     (x : ι → V) (i : ι) :
@@ -3625,7 +3625,7 @@ theorem finiteJoint_le_coordinateMarginal
     (fun a _ => hp a)
     (by simp only [mem_filter, mem_univ, and_self])
 
-theorem finiteCoordinateMarginal_absolute_continuity
+private theorem finiteCoordinateMarginal_absolute_continuity
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : (ι → V) → ℝ) (q : ι → V → ℝ)
     (hac : ∀ x, finiteIndependentProductWeight q x = 0 → p x = 0)
@@ -3642,7 +3642,7 @@ theorem finiteCoordinateMarginal_absolute_continuity
   apply Finset.prod_eq_zero (Finset.mem_univ i)
   simpa only [hxi] using hz
 
-theorem finiteJoint_absolute_continuous_product_marginals
+private theorem finiteJoint_absolute_continuous_product_marginals
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : (ι → V) → ℝ) (hp : ∀ x, 0 ≤ p x)
     (x : ι → V) :
@@ -3664,7 +3664,7 @@ theorem finiteJoint_absolute_continuous_product_marginals
     exact Finset.prod_pos fun i _ => hmarginal i
   exact hproduct.ne' hz
 
-theorem finiteCoordinateMarginal_sum_mul
+private theorem finiteCoordinateMarginal_sum_mul
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : (ι → V) → ℝ) (i : ι) (f : V → ℝ) :
     (∑ x : ι → V, p x * f (x i)) =
@@ -3689,7 +3689,7 @@ theorem finiteCoordinateMarginal_sum_mul
       have hxi : x i = v := (Finset.mem_filter.mp hx).2
       simp only [hxi]
 
-theorem finiteProductMarginal_relativeEntropy_le
+private theorem finiteProductMarginal_relativeEntropy_le
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : (ι → V) → ℝ) (q : ι → V → ℝ)
     (hp : ∀ x, 0 ≤ p x)
@@ -3930,7 +3930,7 @@ theorem strategyBobQuestionPrior_marginal
   rw [S.outcomeProbability_normalized x y]
   ring
 
-theorem repeatedAliceQuestionPrior_product
+private theorem repeatedAliceQuestionPrior_product
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (xs : Fin n → X) :
     groupedMass
@@ -3968,7 +3968,7 @@ theorem repeatedAliceQuestionPrior_product
       exact (Fintype.prod_sum
         (fun i : Fin n => fun y : Y => G.questionWeight (xs i) y)).symm
 
-theorem repeatedBobQuestionPrior_product
+private theorem repeatedBobQuestionPrior_product
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (ys : Fin n → Y) :
     groupedMass
@@ -4309,7 +4309,7 @@ theorem exactBobInformationPosterior_firstMarginal
         (fun ω : ExactOutcome X Y A B n =>
           fun j : SourceRemainingCoordinate D => ω.2.1 j.val) i y
 
-theorem finiteProductMarginal_projection_relativeEntropy_le
+private theorem finiteProductMarginal_projection_relativeEntropy_le
     {Ω ι V : Type*} [Fintype Ω] [Fintype ι] [Fintype V]
     (posterior prior : Ω → ℝ) (projection : Ω → (ι → V))
     (q : ι → V → ℝ) (budget : ℝ)
@@ -4354,7 +4354,7 @@ theorem finiteProductMarginal_projection_relativeEntropy_le
   rw [actual_prior] at hdpi
   exact htensor.trans (hdpi.trans actual_budget)
 
-theorem repeatedAliceCoordinateInformation_sum_le
+private theorem repeatedAliceCoordinateInformation_sum_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D) :
@@ -4414,7 +4414,7 @@ theorem repeatedAliceCoordinateInformation_sum_le
   rw [hprojected] at h
   exact h
 
-theorem repeatedBobCoordinateInformation_sum_le
+private theorem repeatedBobCoordinateInformation_sum_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D) :
@@ -4474,7 +4474,7 @@ theorem repeatedBobCoordinateInformation_sum_le
   rw [hprojected] at h
   exact h
 
-theorem finiteCoordinateMarginal_groupedMass
+private theorem finiteCoordinateMarginal_groupedMass
     {Ω ι V : Type*} [Fintype Ω] [Fintype ι] [Fintype V]
     (projection : Ω → (ι → V)) (mass : Ω → ℝ)
     (i : ι) (v : V) :
@@ -4532,7 +4532,7 @@ theorem finiteUniformCoordinate_relativeEntropy
   rw [mul_div_mul_left _ _ huniform]
   ring
 
-theorem repeatedAlicePostselectedQuestionLaw_nonneg
+private theorem repeatedAlicePostselectedQuestionLaw_nonneg
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D)
@@ -4547,7 +4547,7 @@ theorem repeatedAlicePostselectedQuestionLaw_nonneg
     (FiniteEventLaw.winEvent (repeatedCoordinateWin G n) D)
     positive ω
 
-theorem repeatedBobPostselectedQuestionLaw_nonneg
+private theorem repeatedBobPostselectedQuestionLaw_nonneg
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D)
@@ -4562,7 +4562,7 @@ theorem repeatedBobPostselectedQuestionLaw_nonneg
     (FiniteEventLaw.winEvent (repeatedCoordinateWin G n) D)
     positive ω
 
-theorem repeatedAlicePostselectedCoordinateMarginal
+private theorem repeatedAlicePostselectedCoordinateMarginal
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (j : Fin n) (x : X) :
     finiteCoordinateMarginal
@@ -4583,7 +4583,7 @@ theorem repeatedAlicePostselectedCoordinateMarginal
   exact finiteCoordinateMarginal_groupedMass
     projection posterior j x
 
-theorem repeatedBobPostselectedCoordinateMarginal
+private theorem repeatedBobPostselectedCoordinateMarginal
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (j : Fin n) (y : Y) :
     finiteCoordinateMarginal
@@ -4604,7 +4604,7 @@ theorem repeatedBobPostselectedCoordinateMarginal
   exact finiteCoordinateMarginal_groupedMass
     projection posterior j y
 
-theorem exactAliceSourceMarginalInformation_eq
+private theorem exactAliceSourceMarginalInformation_eq
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (remaining : 0 < (Finset.univ \ D).card)
@@ -4646,12 +4646,12 @@ theorem exactAliceSourceMarginalInformation_eq
   unfold exactAliceSourceMarginalInformation
   rw [hposterior, hreference]
   exact finiteUniformCoordinate_relativeEntropy
-    (exactRemainingCoordinate_card_pos D remaining)
+    (remainingCoordinate_card_pos D remaining)
     (fun i : SourceRemainingCoordinate D =>
       finiteCoordinateMarginal posterior i.val)
     G.marginalX
 
-theorem exactBobSourceMarginalInformation_eq
+private theorem exactBobSourceMarginalInformation_eq
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (remaining : 0 < (Finset.univ \ D).card)
@@ -4693,7 +4693,7 @@ theorem exactBobSourceMarginalInformation_eq
   unfold exactBobSourceMarginalInformation
   rw [hposterior, hreference]
   exact finiteUniformCoordinate_relativeEntropy
-    (exactRemainingCoordinate_card_pos D remaining)
+    (remainingCoordinate_card_pos D remaining)
     (fun i : SourceRemainingCoordinate D =>
       finiteCoordinateMarginal posterior i.val)
     G.marginalY
@@ -4941,7 +4941,7 @@ def exactConditionedReverseAlicePrefixEntropyIncrement
     (default : Y) (k : Fin side.card) : ℝ :=
   reweightedSeedPrefixEntropyIncrement
     (exactReverseAliceConditionalSeedLaw
-      (exactRemainingCoordinate_card_pos D remaining) side)
+      (remainingCoordinate_card_pos D remaining) side)
     G n S D
     (exactReverseAliceSourceProjection
       (X := X) (Y := Y) (A := A) (B := B) D side)
@@ -4956,7 +4956,7 @@ def exactConditionedReverseBobPrefixEntropyIncrement
     (default : X) (k : Fin side.card) : ℝ :=
   reweightedSeedPrefixEntropyIncrement
     (exactReverseBobConditionalSeedLaw
-      (exactRemainingCoordinate_card_pos D remaining) side)
+      (remainingCoordinate_card_pos D remaining) side)
     G n S D
     (exactReverseBobSourceProjection
       (X := X) (Y := Y) (A := A) (B := B) D side)
@@ -5038,9 +5038,9 @@ theorem exact_source_equation_twenty_three_of_actual_conditioned_reindex
     exact_source_equation_twenty_three_of_conditioned_reverse_prefix
       G n S D remaining positive base
       (exactReverseAliceConditionalSeedLaw
-        (exactRemainingCoordinate_card_pos D remaining))
+        (remainingCoordinate_card_pos D remaining))
       (exactReverseBobConditionalSeedLaw
-        (exactRemainingCoordinate_card_pos D remaining))
+        (remainingCoordinate_card_pos D remaining))
       (ExactReverseAliceFixedInformation X Y D)
       (ExactReverseBobFixedInformation X Y D)
       (exactReverseAliceSourceProjection
@@ -5684,7 +5684,7 @@ def exactConditionedReverseAliceNextJoint
     ExactReverseAliceNextContext X Y A B D side → ℝ :=
   reweightedSeedPrefixJoint
     (exactReverseAliceConditionalSeedLaw
-      (exactRemainingCoordinate_card_pos D remaining) side)
+      (remainingCoordinate_card_pos D remaining) side)
     G n S D
     (exactReverseAliceSourceProjection
       (X := X) (Y := Y) (A := A) (B := B) D side)
@@ -5701,7 +5701,7 @@ def exactConditionedReverseAliceNextPrior
     ExactReverseAliceNextContext X Y A B D side → ℝ :=
   reweightedSeedPrefixPrior
     (exactReverseAliceConditionalSeedLaw
-      (exactRemainingCoordinate_card_pos D remaining) side)
+      (remainingCoordinate_card_pos D remaining) side)
     G n S D
     (exactReverseAliceSourceProjection
       (X := X) (Y := Y) (A := A) (B := B) D side)
@@ -5718,7 +5718,7 @@ def exactConditionedReverseBobNextJoint
     ExactReverseBobNextContext X Y A B D side → ℝ :=
   reweightedSeedPrefixJoint
     (exactReverseBobConditionalSeedLaw
-      (exactRemainingCoordinate_card_pos D remaining) side)
+      (remainingCoordinate_card_pos D remaining) side)
     G n S D
     (exactReverseBobSourceProjection
       (X := X) (Y := Y) (A := A) (B := B) D side)
@@ -5735,7 +5735,7 @@ def exactConditionedReverseBobNextPrior
     ExactReverseBobNextContext X Y A B D side → ℝ :=
   reweightedSeedPrefixPrior
     (exactReverseBobConditionalSeedLaw
-      (exactRemainingCoordinate_card_pos D remaining) side)
+      (remainingCoordinate_card_pos D remaining) side)
     G n S D
     (exactReverseBobSourceProjection
       (X := X) (Y := Y) (A := A) (B := B) D side)

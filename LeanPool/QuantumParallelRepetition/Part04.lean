@@ -46,7 +46,7 @@ private def sourceRemainingPermutationCoordinate
     (k : Fin (Finset.univ \ D).card) : Fin n :=
   (sourceRemainingPermutationCoordinateSubtype D π k).val
 
-@[simp] theorem sourceRemainingPermutationRank_coordinate
+@[simp] private theorem sourceRemainingPermutationRank_coordinate
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
@@ -54,7 +54,7 @@ private def sourceRemainingPermutationCoordinate
       (sourceRemainingPermutationCoordinateSubtype D π k) = k := by
   simp only [sourceRemainingPermutationCoordinateSubtype, Equiv.apply_symm_apply]
 
-theorem sourceRemainingPermutationCoordinate_not_mem
+private theorem sourceRemainingPermutationCoordinate_not_mem
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
@@ -79,7 +79,7 @@ private def sourceRemainingPermutationPrefix
   exact (sourceRemainingPermutationPrefixSubtype D π k).image
     (fun i : SourceRemainingCoordinate D => i.val)
 
-theorem sourceRemainingPermutationPrefix_subset
+private theorem sourceRemainingPermutationPrefix_subset
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin ((Finset.univ \ D).card + 1)) :
@@ -89,7 +89,7 @@ theorem sourceRemainingPermutationPrefix_subset
   obtain ⟨j, _, hj⟩ := Finset.mem_image.mp hi
   simpa only [mem_sdiff, mem_univ, true_and, hj] using j.property
 
-theorem sourceRemainingPermutationCoordinate_not_mem_prefix
+private theorem sourceRemainingPermutationCoordinate_not_mem_prefix
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
@@ -106,7 +106,7 @@ theorem sourceRemainingPermutationCoordinate_not_mem_prefix
   simp only [sourceRemainingPermutationRank_coordinate, Fin.val_castSucc,
     lt_self_iff_false] at hlt
 
-theorem sourceRemainingPermutationPrefixSubtype_succ
+private theorem sourceRemainingPermutationPrefixSubtype_succ
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
@@ -139,7 +139,7 @@ theorem sourceRemainingPermutationPrefixSubtype_succ
         Order.lt_one_iff]
     · omega
 
-theorem sourceRemainingPermutationPrefix_succ
+private theorem sourceRemainingPermutationPrefix_succ
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
@@ -152,7 +152,7 @@ theorem sourceRemainingPermutationPrefix_succ
     Finset.image_insert]
   rfl
 
-@[simp] theorem sourceRemainingPermutationPrefix_zero
+@[simp] private theorem sourceRemainingPermutationPrefix_zero
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D) :
     sourceRemainingPermutationPrefix D π 0 = ∅ := by
@@ -160,7 +160,7 @@ theorem sourceRemainingPermutationPrefix_succ
   simp only [sourceRemainingPermutationPrefix, sourceRemainingPermutationPrefixSubtype,
     Fin.coe_ofNat_eq_mod, Nat.zero_mod, not_lt_zero, filter_false, image_empty]
 
-@[simp] theorem sourceRemainingPermutationPrefix_last
+@[simp] private theorem sourceRemainingPermutationPrefix_last
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D) :
     sourceRemainingPermutationPrefix D π
@@ -179,7 +179,7 @@ theorem sourceRemainingPermutationPrefix_succ
       (sourceRemainingPermutationRank D π
         (⟨i, hi⟩ : SourceRemainingCoordinate D)).isLt⟩
 
-theorem sourceRemainingPermutationCoordinate_sum
+private theorem sourceRemainingPermutationCoordinate_sum
     {T : Type*} [AddCommMonoid T]
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
@@ -213,7 +213,7 @@ private def sourcePermutationAliceEntropyIncrement
     (sourceRemainingPermutationPrefix D π k.castSucc)
     (sourceRemainingPermutationCoordinate D π k)
 
-theorem sourcePermutationAliceEntropyIncrement_nonneg
+private theorem sourcePermutationAliceEntropyIncrement_nonneg
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
@@ -222,7 +222,7 @@ theorem sourcePermutationAliceEntropyIncrement_nonneg
   · exact sourceRemainingPermutationCoordinate_not_mem D π k
   · exact sourceRemainingPermutationCoordinate_not_mem_prefix D π k
 
-theorem sourcePermutationAliceEntropyPotential_step
+private theorem sourcePermutationAliceEntropyPotential_step
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
@@ -238,7 +238,7 @@ theorem sourcePermutationAliceEntropyPotential_step
     (sourceRemainingPermutationCoordinate_not_mem D π k)
     (sourceRemainingPermutationCoordinate_not_mem_prefix D π k)
 
-theorem sourcePermutationAliceEntropyIncrement_sum
+private theorem sourcePermutationAliceEntropyIncrement_sum
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (π : SourceRemainingPermutation D) :
     (∑ k : Fin (Finset.univ \ D).card,
@@ -267,7 +267,7 @@ theorem sourcePermutationAliceEntropyIncrement_sum
     _ = _ := by simp only [sourceRemainingPermutationPrefix_last,
                   sourceRemainingPermutationPrefix_zero]
 
-theorem sourcePermutationAliceEntropyIncrement_sum_le
+private theorem sourcePermutationAliceEntropyIncrement_sum_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (hp : 0 < (strategyEventLaw (G.repeat n) S).eventMass
@@ -298,7 +298,7 @@ private def sourceUniformPermutationAverage
     ((Fintype.card (SourceRemainingPermutation D) : ℝ) *
       ((Finset.univ \ D).card : ℝ))
 
-theorem sourceRemainingPermutation_card_pos
+private theorem sourceRemainingPermutation_card_pos
     {n : ℕ} (D : Finset (Fin n)) :
     0 < (Fintype.card (SourceRemainingPermutation D) : ℝ) := by
   classical
@@ -306,7 +306,7 @@ theorem sourceRemainingPermutation_card_pos
     ⟨Equiv.refl (SourceRemainingCoordinate D)⟩ :
       0 < Fintype.card (SourceRemainingPermutation D))
 
-theorem sourceUniformPermutationAverage_le
+private theorem sourceUniformPermutationAverage_le
     {n : ℕ} (D : Finset (Fin n))
     (hm : 0 < (Finset.univ \ D).card)
     (f : SourceRemainingPermutation D →
@@ -350,7 +350,7 @@ theorem sourceUniformPermutationAverage_le
     _ = C / ((Finset.univ \ D).card : ℝ) :=
       mul_div_mul_left C ((Finset.univ \ D).card : ℝ) hperm.ne'
 
-theorem sourceUniformPermutationAverage_nonneg
+private theorem sourceUniformPermutationAverage_nonneg
     {n : ℕ} (D : Finset (Fin n))
     (f : SourceRemainingPermutation D →
       Fin (Finset.univ \ D).card → ℝ)
@@ -364,7 +364,7 @@ theorem sourceUniformPermutationAverage_nonneg
       (Nat.cast_nonneg (Fintype.card (SourceRemainingPermutation D)))
       (Nat.cast_nonneg (Finset.univ \ D).card)
 
-theorem sourceUniformPermutationAliceEntropyBudget
+private theorem sourceUniformPermutationAliceEntropyBudget
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (hm : 0 < (Finset.univ \ D).card)
@@ -549,7 +549,7 @@ private def exactSeedEquiv
       leftCut, rightCut⟩
     rfl
 
-@[simp] theorem exactSeedEquiv_symm_apply
+@[simp] private theorem exactSeedEquiv_symm_apply
     {M : Type*} [Fintype M] [DecidableEq M]
     (t : ExactSeedTuple M) :
     (exactSeedEquiv M).symm t =
@@ -2394,7 +2394,7 @@ def exactFiberQuestionMass
   ∑ xs : Fin n → X, ∑ ys : Fin n → Y,
     exactFiberQuestionWeight G n D seed history x y xs ys
 
-theorem exactFiberQuestionWeight_mul_mass
+private theorem exactFiberQuestionWeight_mul_mass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -3124,7 +3124,7 @@ section InsertedWeights
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-theorem fullCoordinateInsertedHistory_weight
+private theorem fullCoordinateInsertedHistory_weight
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n) (hiD : i ∉ D)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -3184,7 +3184,7 @@ theorem fullCoordinateInsertedHistory_weight
     univ_eq_attach]
   ring
 
-theorem conditionedAliceEffect_insert_eq_coordinate
+private theorem conditionedAliceEffect_insert_eq_coordinate
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (i : Fin n) (hiD : i ∉ D)
     (α : {j : Fin n // j ∈ D} → A)
@@ -3225,7 +3225,7 @@ theorem conditionedAliceEffect_insert_eq_coordinate
   · have hnot := mt hiff.mpr h
     simp only [ite_eq_right h, ite_eq_right hnot]
 
-theorem conditionedBobEffect_insert_eq_coordinate
+private theorem conditionedBobEffect_insert_eq_coordinate
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (i : Fin n) (hiD : i ∉ D)
     (β : {j : Fin n // j ∈ D} → B)
@@ -3563,7 +3563,7 @@ private def sourceHistoryFlagEquiv
     rcases t with ⟨π, k, r, α, β⟩
     rfl
 
-noncomputable instance sourceHistoryFlagFintype
+private noncomputable instance sourceHistoryFlagFintype
     {n : ℕ} (D : Finset (Fin n)) :
     Fintype (SourceHistoryFlag X Y A B D) := by
   classical
@@ -3571,7 +3571,7 @@ noncomputable instance sourceHistoryFlagFintype
     (sourceHistoryFlagEquiv (X := X) (Y := Y)
       (A := A) (B := B) D).symm
 
-theorem sourceHistoryFlag_sum
+private theorem sourceHistoryFlag_sum
     {n : ℕ} (D : Finset (Fin n))
     (f : SourceHistoryFlag X Y A B D → ℝ) :
     (∑ r : SourceHistoryFlag X Y A B D, f r) =
@@ -3882,7 +3882,7 @@ theorem martingale_log_cost_eq
               answerLogCost, one_div, Real.log_inv]
             ring
 
-theorem aliceMartingaleEntropyBudget
+private theorem aliceMartingaleEntropyBudget
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (hm : 0 < (Finset.univ \ D).card)
@@ -3948,7 +3948,7 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-theorem fullCoordinateInsertedHistory_winIndicator_eq
+private theorem fullCoordinateInsertedHistory_winIndicator_eq
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n) (hiD : i ∉ D)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -4027,7 +4027,7 @@ private def fullCoordinateInsertedHiddenAliceEquiv
     simp only [Equiv.apply_symm_apply]
 
 omit [Fintype X] [Fintype Y] in
-theorem fullCoordinateInsertedAliceQuestion_eq
+private theorem fullCoordinateInsertedAliceQuestion_eq
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -4060,7 +4060,7 @@ theorem fullCoordinateInsertedAliceQuestion_eq
           Equiv.symm_mk, Equiv.coe_fn_mk]
         congr 1
 
-theorem fullCoordinateInsertedHiddenAliceWeight_eq
+private theorem fullCoordinateInsertedHiddenAliceWeight_eq
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -4096,7 +4096,7 @@ theorem fullCoordinateInsertedHiddenAliceWeight_eq
     _ = _ := rfl
 
 omit [Fintype X] [Fintype Y] in
-theorem fullCoordinateInsertedBobQuestion_eq
+private theorem fullCoordinateInsertedBobQuestion_eq
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -4124,7 +4124,7 @@ theorem fullCoordinateInsertedBobQuestion_eq
       · simp only [fullHistoryBobQuestion, mem_insert, hji, hjD, or_self, ↓reduceDIte, hjL,
           fullCoordinateInsertedHistory, fullCoordinateOldHistory]
 
-theorem fullCoordinateInsertedHiddenBobWeight_eq
+private theorem fullCoordinateInsertedHiddenBobWeight_eq
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -4136,7 +4136,7 @@ theorem fullCoordinateInsertedHiddenBobWeight_eq
         (fullCoordinateOldHistory D L i r y) hidden := by
   rfl
 
-theorem fullCoordinateInsertedHistory_aliceFilter
+private theorem fullCoordinateInsertedHistory_aliceFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
@@ -4205,7 +4205,7 @@ theorem fullCoordinateInsertedHistory_aliceFilter
       rw [conditionedAliceEffect_insert_eq_coordinate
         G n S D i hiD α a]
 
-theorem fullCoordinateInsertedHistory_bobFilter
+private theorem fullCoordinateInsertedHistory_bobFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
@@ -4237,7 +4237,7 @@ theorem fullCoordinateInsertedHistory_bobFilter
   rw [fullCoordinateInsertedBobQuestion_eq D L i hiD hiL r x y hidden]
   rw [conditionedBobEffect_insert_eq_coordinate G n S D i hiD β b]
 
-theorem fullCoordinateInsertedHistory_sum
+private theorem fullCoordinateInsertedHistory_sum
     {T : Type*} [AddCommMonoid T]
     {n : ℕ} (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D)
@@ -4251,7 +4251,7 @@ theorem fullCoordinateInsertedHistory_sum
     using ((fullCoordinateInsertedHistoryEquiv
       (X := X) (Y := Y) D L i hiD).sum_comp f).symm
 
-theorem fullCoordinateAnswerExtension_sum
+private theorem fullCoordinateAnswerExtension_sum
     {T R : Type*} [Fintype T] [AddCommMonoid R]
     {n : ℕ} (D : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D)
@@ -4264,7 +4264,7 @@ theorem fullCoordinateAnswerExtension_sum
     using ((fullCoordinateAnswerExtensionEquiv
       (T := T) D i hiD).sum_comp f).symm
 
-theorem fullCoordinateWeightedInsertedSum
+private theorem fullCoordinateWeightedInsertedSum
     (G : Game X Y A B) {n : ℕ}
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D)
@@ -4433,7 +4433,7 @@ private def fullCoordinateAcceptedPostselectedMass
               (fullCoordinateBobRefinementEffect
                 G n S D L i r β y b)))
 
-theorem fullCoordinateAcceptedPostselectedMass_eq
+private theorem fullCoordinateAcceptedPostselectedMass_eq
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (hiD : i ∉ D) (hiL : i ∉ L)
@@ -4540,7 +4540,7 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-theorem sourceHistoryAcceptedMass_eq_uniform
+private theorem sourceHistoryAcceptedMass_eq_uniform
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n)) (D : Finset (Fin n)) :
     sourceHistoryAcceptedMass G n S D =
@@ -6087,12 +6087,6 @@ theorem exactLocallySampleableJB_nonneg
         t.1 t.2.2.1 t.2.2.2))
     (Nat.cast_nonneg _)
 
-theorem exactRemainingCoordinate_card_pos
-    {n : ℕ} (D : Finset (Fin n))
-    (remaining : 0 < (Finset.univ \ D).card) :
-    0 < Fintype.card (SourceRemainingCoordinate D) := by
-  simpa only [Fintype.card_coe, card_pos] using remaining
-
 theorem exactLocallySampleableJA_sum
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
@@ -6103,7 +6097,7 @@ theorem exactLocallySampleableJA_sum
   have hcard :
       (Fintype.card (SourceRemainingCoordinate D) : ℝ) ≠ 0 := by
     exact_mod_cast
-      (Nat.ne_of_gt (exactRemainingCoordinate_card_pos D remaining))
+      (Nat.ne_of_gt (remainingCoordinate_card_pos D remaining))
   calc
     (∑ t : ExactLocallySampleableTuple X Y A B D,
       exactLocallySampleableJA G n S D base t) =
@@ -6145,7 +6139,7 @@ theorem exactLocallySampleableJB_sum
   have hcard :
       (Fintype.card (SourceRemainingCoordinate D) : ℝ) ≠ 0 := by
     exact_mod_cast
-      (Nat.ne_of_gt (exactRemainingCoordinate_card_pos D remaining))
+      (Nat.ne_of_gt (remainingCoordinate_card_pos D remaining))
   calc
     (∑ t : ExactLocallySampleableTuple X Y A B D,
       exactLocallySampleableJB G n S D base t) =
@@ -6191,7 +6185,7 @@ theorem exactLocallySampleableLaw_absolute_continuous_JA
   have hcard :
       (Fintype.card (SourceRemainingCoordinate D) : ℝ) ≠ 0 := by
     exact_mod_cast
-      (Nat.ne_of_gt (exactRemainingCoordinate_card_pos D remaining))
+      (Nat.ne_of_gt (remainingCoordinate_card_pos D remaining))
   change
     G.questionWeight x y *
       exactAliceLocalConditional D base
@@ -6224,7 +6218,7 @@ theorem exactLocallySampleableLaw_absolute_continuous_JB
   have hcard :
       (Fintype.card (SourceRemainingCoordinate D) : ℝ) ≠ 0 := by
     exact_mod_cast
-      (Nat.ne_of_gt (exactRemainingCoordinate_card_pos D remaining))
+      (Nat.ne_of_gt (remainingCoordinate_card_pos D remaining))
   change
     G.questionWeight x y *
       exactBobLocalConditional D base
@@ -6438,7 +6432,7 @@ def exactJointBobCoordinateFilter
     conditionedBobCoordinateEffect
       G n S D answer ys seed.coordinate.val b
 
-theorem exactFiber_born_of_rank_one
+private theorem exactFiber_born_of_rank_one
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -6481,7 +6475,7 @@ theorem exactFiber_born_of_rank_one
   field_simp [nonzero]
   linarith [hborn]
 
-theorem exactJointQuestionFilter_born
+private theorem exactJointQuestionFilter_born
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -7025,7 +7019,7 @@ theorem exactMixedRowMarginal_mul_total
         (∑ i' : ι, ∑ j : κ, left i' j) := by
       simp only [Finset.mul_sum]
 
-theorem exactFiberAliceMarginal_mul_cross_mass
+private theorem exactFiberAliceMarginal_mul_cross_mass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -7046,7 +7040,7 @@ theorem exactFiberAliceMarginal_mul_cross_mass
   exact exactFiberQuestionWeight_aliceMixed_rectangle
     G n D seed history x y y' u v s t
 
-theorem exactFiberBobMarginal_mul_cross_mass
+private theorem exactFiberBobMarginal_mul_cross_mass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -7131,7 +7125,7 @@ theorem exactFiberQuestionMass_nonneg
       exactFiberQuestionWeight_nonneg
         G n D seed history x y xs ys))
 
-theorem exactAliceFiberNormalizedRow
+private theorem exactAliceFiberNormalizedRow
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -7194,7 +7188,7 @@ theorem exactAliceFiberNormalizedRow
           G n D seed history x y := by
       rw [Finset.sum_mul]
 
-theorem exactBobFiberNormalizedColumn
+private theorem exactBobFiberNormalizedColumn
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -7257,7 +7251,7 @@ theorem exactBobFiberNormalizedColumn
           G n D seed history x y := by
       rw [Finset.sum_mul]
 
-theorem exactAliceConditionalMatrix_eq_joint
+private theorem exactAliceConditionalMatrix_eq_joint
     {d : Type*}
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
@@ -7340,7 +7334,7 @@ theorem exactAliceConditionalMatrix_eq_joint
       rw [← exactAliceFiberNormalizedRow
         G n D seed history x y xs nonzero]
 
-theorem exactBobConditionalMatrix_eq_joint
+private theorem exactBobConditionalMatrix_eq_joint
     {d : Type*}
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
@@ -7423,7 +7417,7 @@ theorem exactBobConditionalMatrix_eq_joint
       rw [← exactBobFiberNormalizedColumn
         G n D seed history x y ys nonzero]
 
-theorem exactAliceQuestionFilter_eq_joint
+private theorem exactAliceQuestionFilter_eq_joint
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -7440,7 +7434,7 @@ theorem exactAliceQuestionFilter_eq_joint
     G n D seed history x y nonzero
     (conditionedAliceEffect G n S D answer)
 
-theorem exactBobQuestionFilter_eq_joint
+private theorem exactBobQuestionFilter_eq_joint
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)

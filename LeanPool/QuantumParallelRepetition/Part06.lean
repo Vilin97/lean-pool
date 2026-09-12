@@ -602,7 +602,7 @@ private def exactJointPrefixBobOperatorMass
         conditionedBobEffect G n S D answer ys
     else 0
 
-theorem exactJointPrefixQuestionMass_eq_sum_alice
+private theorem exactJointPrefixQuestionMass_eq_sum_alice
     (G : Game X Y A B) (n : ℕ)
     (fixedX fixedY : Finset (Fin n))
     (knownX : Fin n → X) (knownY : Fin n → Y) :
@@ -636,7 +636,7 @@ theorem exactJointPrefixQuestionMass_eq_sum_alice
     rw [ite_eq_right]
     exact fun h => compatible h.2
 
-theorem exactJointPrefixQuestionMass_eq_sum_bob
+private theorem exactJointPrefixQuestionMass_eq_sum_bob
     (G : Game X Y A B) (n : ℕ)
     (fixedX fixedY : Finset (Fin n))
     (knownX : Fin n → X) (knownY : Fin n → Y) :
@@ -669,7 +669,7 @@ theorem exactJointPrefixQuestionMass_eq_sum_bob
     rw [ite_eq_right]
     exact fun h => compatible h.1
 
-theorem exactJointPrefixQuestionMass_insert_alice
+private theorem exactJointPrefixQuestionMass_insert_alice
     (G : Game X Y A B) (n : ℕ)
     (fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (fresh : j ∉ fixedX) (opposite_fixed : j ∈ fixedY)
@@ -694,7 +694,7 @@ theorem exactJointPrefixQuestionMass_insert_alice
       compatible j opposite_fixed]
   · simp only [compatible, ↓reduceIte, mul_zero]
 
-theorem exactJointPrefixQuestionMass_insert_bob
+private theorem exactJointPrefixQuestionMass_insert_bob
     (G : Game X Y A B) (n : ℕ)
     (fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (opposite_fixed : j ∈ fixedX) (fresh : j ∉ fixedY)
@@ -719,7 +719,7 @@ theorem exactJointPrefixQuestionMass_insert_bob
       compatible j opposite_fixed]
   · simp only [compatible, ↓reduceIte, mul_zero]
 
-theorem exactJointPrefixQuestionAtom_zero_of_mass_zero
+private theorem exactJointPrefixQuestionAtom_zero_of_mass_zero
     (G : Game X Y A B) (n : ℕ)
     (fixedX fixedY : Finset (Fin n))
     (knownX : Fin n → X) (knownY : Fin n → Y)
@@ -751,7 +751,7 @@ theorem exactJointPrefixQuestionAtom_zero_of_mass_zero
       · exact (G.repeat n).weight_nonneg xs yy
       · exact le_rfl)).mp row_zero ys (Finset.mem_univ ys)
 
-theorem exactJointPrefixAliceOperatorMass_zero_of_mass_zero
+private theorem exactJointPrefixAliceOperatorMass_zero_of_mass_zero
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n))
     (answer : {j : Fin n // j ∈ D} → A)
@@ -776,7 +776,7 @@ theorem exactJointPrefixAliceOperatorMass_zero_of_mass_zero
     exact zero_smul ℝ (conditionedAliceEffect G n S D answer xs)
   · rw [ite_eq_right compatible]
 
-theorem exactJointPrefixBobOperatorMass_zero_of_mass_zero
+private theorem exactJointPrefixBobOperatorMass_zero_of_mass_zero
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n))
     (answer : {j : Fin n // j ∈ D} → B)
@@ -801,7 +801,7 @@ theorem exactJointPrefixBobOperatorMass_zero_of_mass_zero
     exact zero_smul ℝ (conditionedBobEffect G n S D answer ys)
   · rw [ite_eq_right compatible]
 
-theorem exactJointPrefixAliceOperatorMass_sum_insert
+private theorem exactJointPrefixAliceOperatorMass_sum_insert
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (fresh : j ∉ fixedX)
@@ -866,7 +866,7 @@ theorem exactJointPrefixAliceOperatorMass_sum_insert
         rw [ite_eq_right]
         exact fun h => compatible ⟨h.1.2, h.2⟩
 
-theorem exactJointPrefixBobOperatorMass_sum_insert
+private theorem exactJointPrefixBobOperatorMass_sum_insert
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (fresh : j ∉ fixedY)
@@ -953,7 +953,7 @@ private def exactJointPrefixBobOperatorFilter
     exactJointPrefixBobOperatorMass
       G n S D fixedX fixedY answer knownX knownY
 
-theorem exactJointPrefixAliceOperatorFilter_martingale
+private theorem exactJointPrefixAliceOperatorFilter_martingale
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (fresh : j ∉ fixedX) (opposite_fixed : j ∈ fixedY)
@@ -1030,7 +1030,7 @@ theorem exactJointPrefixAliceOperatorFilter_martingale
           rw [exactJointPrefixAliceOperatorMass_sum_insert
             G n S D fixedX fixedY j fresh answer knownX knownY]
 
-theorem exactJointPrefixBobOperatorFilter_martingale
+private theorem exactJointPrefixBobOperatorFilter_martingale
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (opposite_fixed : j ∈ fixedX) (fresh : j ∉ fixedY)
@@ -1132,7 +1132,7 @@ private def exactFairBobQuestionMask
   (D ∪ (exactRight seed.coordinate seed.partition).image
     Subtype.val) ∪ (exactLeftPrefix seed).image Subtype.val
 
-theorem exactRevealCode_eq_iff_fair_question_masks
+private theorem exactRevealCode_eq_iff_fair_question_masks
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
     (q q' : ExactFullQuestion X Y n) :
@@ -1224,7 +1224,7 @@ theorem exactRevealCode_eq_iff_fair_question_masks
         Finset.mem_union_right _ <|
           Finset.mem_image.mpr ⟨j.val, j.property, rfl⟩
 
-theorem exactAliceQuestionMass_eq_jointPrefixQuestionMass
+private theorem exactAliceQuestionMass_eq_jointPrefixQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1286,7 +1286,7 @@ theorem exactAliceQuestionMass_eq_jointPrefixQuestionMass
   · rw [ite_eq_right (fun h => compatible (same.mp h)),
       ite_eq_right compatible]
 
-theorem exactBobQuestionMass_eq_jointPrefixQuestionMass
+private theorem exactBobQuestionMass_eq_jointPrefixQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1348,7 +1348,7 @@ theorem exactBobQuestionMass_eq_jointPrefixQuestionMass
   · rw [ite_eq_right (fun h => compatible (same.mp h)),
       ite_eq_right compatible]
 
-theorem exactAliceQuestionFilter_eq_jointPrefixOperatorFilter
+private theorem exactAliceQuestionFilter_eq_jointPrefixOperatorFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1420,7 +1420,7 @@ theorem exactAliceQuestionFilter_eq_jointPrefixOperatorFilter
   · rw [ite_eq_right (fun h => compatible (same.mp h)),
       ite_eq_right compatible, smul_zero]
 
-theorem exactBobQuestionFilter_eq_jointPrefixOperatorFilter
+private theorem exactBobQuestionFilter_eq_jointPrefixOperatorFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -1505,7 +1505,7 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-theorem exactJointPrefixAliceOperatorMass_eq_sum_bobMass
+private theorem exactJointPrefixAliceOperatorMass_eq_sum_bobMass
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n))
     (answer : {j : Fin n // j ∈ D} → A)
@@ -1541,7 +1541,7 @@ theorem exactJointPrefixAliceOperatorMass_eq_sum_bobMass
     rw [ite_eq_right]
     exact fun h => compatible h.1
 
-theorem exactJointPrefixBobOperatorMass_eq_sum_aliceMass
+private theorem exactJointPrefixBobOperatorMass_eq_sum_aliceMass
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n))
     (answer : {j : Fin n // j ∈ D} → B)
@@ -1578,7 +1578,7 @@ theorem exactJointPrefixBobOperatorMass_eq_sum_aliceMass
     rw [ite_eq_right]
     exact fun h => compatible h.2
 
-theorem exactJointPrefixAliceOperatorMass_insert_bob
+private theorem exactJointPrefixAliceOperatorMass_insert_bob
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (opposite_fixed : j ∈ fixedX) (fresh : j ∉ fixedY)
@@ -1604,7 +1604,7 @@ theorem exactJointPrefixAliceOperatorMass_insert_bob
       compatible j opposite_fixed, smul_smul]
   · rw [ite_eq_right compatible, ite_eq_right compatible, smul_zero]
 
-theorem exactJointPrefixBobOperatorMass_insert_alice
+private theorem exactJointPrefixBobOperatorMass_insert_alice
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (fresh : j ∉ fixedX) (opposite_fixed : j ∈ fixedY)
@@ -1630,7 +1630,7 @@ theorem exactJointPrefixBobOperatorMass_insert_alice
       compatible j opposite_fixed, smul_smul]
   · rw [ite_eq_right compatible, ite_eq_right compatible, smul_zero]
 
-theorem exactJointPrefixAliceOperatorFilter_insert_bob
+private theorem exactJointPrefixAliceOperatorFilter_insert_bob
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (opposite_fixed : j ∈ fixedX) (fresh : j ∉ fixedY)
@@ -1663,7 +1663,7 @@ theorem exactJointPrefixAliceOperatorFilter_insert_bob
     · field_simp
   rw [coefficient]
 
-theorem exactJointPrefixBobOperatorFilter_insert_alice
+private theorem exactJointPrefixBobOperatorFilter_insert_alice
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D fixedX fixedY : Finset (Fin n)) (j : Fin n)
     (fresh : j ∉ fixedX) (opposite_fixed : j ∈ fixedY)
@@ -2177,7 +2177,7 @@ private def exactReverseBobLowQuestionPotential
                 bobAnswer (q.1 seed.coordinate.val)))
         else 0)
 
-theorem exactReverseAliceHighOperatorPotential_eq_question
+private theorem exactReverseAliceHighOperatorPotential_eq_question
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2248,7 +2248,7 @@ theorem exactReverseAliceHighOperatorPotential_eq_question
             (exactReverseBobMarkerDecode side context marker)
             history bobAnswer y))
 
-theorem exactReverseAliceLowOperatorPotential_eq_question
+private theorem exactReverseAliceLowOperatorPotential_eq_question
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2319,7 +2319,7 @@ theorem exactReverseAliceLowOperatorPotential_eq_question
             (exactReverseBobMarkerDecode side context marker)
             history bobAnswer y))
 
-theorem exactReverseBobHighOperatorPotential_eq_question
+private theorem exactReverseBobHighOperatorPotential_eq_question
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2390,7 +2390,7 @@ theorem exactReverseBobHighOperatorPotential_eq_question
               (exactReverseAliceMarkerDecode side context marker)
               history bobAnswer y)))
 
-theorem exactReverseBobLowOperatorPotential_eq_question
+private theorem exactReverseBobLowOperatorPotential_eq_question
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2461,7 +2461,7 @@ theorem exactReverseBobLowOperatorPotential_eq_question
               (exactReverseAliceMarkerDecode side context marker)
               history bobAnswer x)))
 
-theorem exactReverseAliceFilterOperatorMarkerEntropy_eq_question_sub
+private theorem exactReverseAliceFilterOperatorMarkerEntropy_eq_question_sub
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2478,7 +2478,7 @@ theorem exactReverseAliceFilterOperatorMarkerEntropy_eq_question_sub
     exactReverseAliceHighOperatorPotential_eq_question,
     exactReverseAliceLowOperatorPotential_eq_question]
 
-theorem exactReverseBobFilterOperatorMarkerEntropy_eq_question_sub
+private theorem exactReverseBobFilterOperatorMarkerEntropy_eq_question_sub
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2566,7 +2566,7 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-theorem exactReverseContextQuestionPrefix_eq_image
+private theorem exactReverseContextQuestionPrefix_eq_image
     {n : ℕ} (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
     (context : ExactReverseSideContext
@@ -2583,7 +2583,7 @@ theorem exactReverseContextQuestionPrefix_eq_image
   rw [Finset.image_image]
   rfl
 
-theorem exactReverseAlicePrefixXMask_eq_fair
+private theorem exactReverseAlicePrefixXMask_eq_fair
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
     exactReverseAlicePrefixXMask D
@@ -2600,7 +2600,7 @@ theorem exactReverseAlicePrefixXMask_eq_fair
     exactReverseBobContext_prefix_before_marked]
   rfl
 
-theorem exactReverseAliceFixedYMask_eq_insert_fair
+private theorem exactReverseAliceFixedYMask_eq_insert_fair
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
     exactReverseAliceFixedYMask D
@@ -2617,7 +2617,7 @@ theorem exactReverseAliceFixedYMask_eq_insert_fair
   ext j
   simp only [Finset.mem_union, Finset.mem_insert, or_assoc, or_left_comm]
 
-theorem exactReverseBobFixedXMask_eq_insert_fair
+private theorem exactReverseBobFixedXMask_eq_insert_fair
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
     exactReverseBobFixedXMask D
@@ -2634,7 +2634,7 @@ theorem exactReverseBobFixedXMask_eq_insert_fair
   ext j
   simp only [Finset.mem_union, Finset.mem_insert, or_assoc, or_left_comm]
 
-theorem exactReverseBobPrefixYMask_eq_fair
+private theorem exactReverseBobPrefixYMask_eq_fair
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
     exactReverseBobPrefixYMask D
@@ -2664,7 +2664,7 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-theorem exactReverseContextQuestionPrefix_succ
+private theorem exactReverseContextQuestionPrefix_succ
     {n : ℕ} (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
     (context : ExactReverseSideContext
@@ -2712,7 +2712,7 @@ theorem exactReverseContextQuestionPrefix_succ
         Nat.lt_trans (Finset.mem_filter.mp ha).2
           (Nat.lt_succ_self marker.val)⟩
 
-theorem exactFairAliceQuestionMask_coordinate_not_mem
+private theorem exactFairAliceQuestionMask_coordinate_not_mem
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
     seed.coordinate.val ∉ exactFairAliceQuestionMask D seed := by
@@ -2735,7 +2735,7 @@ theorem exactFairAliceQuestionMask_coordinate_not_mem
     exact exactRight_coordinate_not_mem
       seed.coordinate seed.partition (equal ▸ belongs)
 
-theorem exactFairBobQuestionMask_coordinate_not_mem
+private theorem exactFairBobQuestionMask_coordinate_not_mem
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
     seed.coordinate.val ∉ exactFairBobQuestionMask D seed := by
@@ -2814,7 +2814,7 @@ private def exactReverseBobAlignedCfcPrefixPotential
                 bobAnswer q.1 q.2))
         else 0)
 
-theorem exactReverseAliceAlignedCfcPrefixPotential_telescope
+private theorem exactReverseAliceAlignedCfcPrefixPotential_telescope
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2833,7 +2833,7 @@ theorem exactReverseAliceAlignedCfcPrefixPotential_telescope
     (exactReverseAliceAlignedCfcPrefixPotential
       G n S D side context) side.card
 
-theorem exactReverseBobAlignedCfcPrefixPotential_telescope
+private theorem exactReverseBobAlignedCfcPrefixPotential_telescope
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -2877,7 +2877,7 @@ theorem exactPriorQuestion_coordinate_weight_ne_zero
   rw [Game.repeat_questionWeight]
   exact Finset.prod_eq_zero (Finset.mem_univ j) zero
 
-theorem exactJointPrefixQuestionMass_pos_of_question
+private theorem exactJointPrefixQuestionMass_pos_of_question
     (G : Game X Y A B) (n : ℕ)
     (fixedX fixedY : Finset (Fin n))
     (knownX : Fin n → X) (knownY : Fin n → Y)
@@ -2965,7 +2965,7 @@ theorem exactRevealCode_update_distinguished_bob
         D seed (same ▸ hj)
     exact Function.update_of_ne different y q.2
 
-theorem exactFairAliceMeanFilter_eq_jointPrefixOperatorFilter
+private theorem exactFairAliceMeanFilter_eq_jointPrefixOperatorFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -3059,7 +3059,7 @@ theorem exactFairAliceMeanFilter_eq_jointPrefixOperatorFilter
       simpa only [Function.update_eq_self] using stable.symm
     rw [equal]
 
-theorem exactFairBobMeanFilter_eq_jointPrefixOperatorFilter
+private theorem exactFairBobMeanFilter_eq_jointPrefixOperatorFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -3229,7 +3229,7 @@ theorem exactReverseAliceMarker_induction
   rw [inverse] at actual
   exact actual
 
-theorem exactReverseAlicePrefixXMask_succ
+private theorem exactReverseAlicePrefixXMask_succ
     {n : ℕ} (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
     (context : ExactReverseSideContext
@@ -3247,7 +3247,7 @@ theorem exactReverseAlicePrefixXMask_succ
   simp only [Finset.mem_union, Finset.mem_insert]
   tauto
 
-theorem exactReverseBobPrefixYMask_succ
+private theorem exactReverseBobPrefixYMask_succ
     {n : ℕ} (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
     (context : ExactReverseSideContext
@@ -3265,7 +3265,7 @@ theorem exactReverseBobPrefixYMask_succ
   simp only [Finset.mem_union, Finset.mem_insert]
   tauto
 
-theorem exactReverseAliceLowQuestionPotential_eq_alignedPrefix
+private theorem exactReverseAliceLowQuestionPotential_eq_alignedPrefix
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3328,7 +3328,7 @@ theorem exactReverseAliceLowQuestionPotential_eq_alignedPrefix
         exact accepted
       simp only [ite_eq_right sourceRejected, ite_eq_right accepted]
 
-theorem exactReverseBobLowQuestionPotential_eq_alignedPrefix
+private theorem exactReverseBobLowQuestionPotential_eq_alignedPrefix
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3404,7 +3404,7 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-theorem exactAliceQuestionFilter_eq_fullJointPrefixOperatorFilter
+private theorem exactAliceQuestionFilter_eq_fullJointPrefixOperatorFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -3445,7 +3445,7 @@ theorem exactAliceQuestionFilter_eq_fullJointPrefixOperatorFilter
       answer q.1 q.2 (q.2 seed.coordinate.val) conditional
   simpa only [Function.update_eq_self] using stable.symm
 
-theorem exactBobQuestionFilter_eq_fullJointPrefixOperatorFilter
+private theorem exactBobQuestionFilter_eq_fullJointPrefixOperatorFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -3486,7 +3486,7 @@ theorem exactBobQuestionFilter_eq_fullJointPrefixOperatorFilter
       answer q.1 q.2 (q.1 seed.coordinate.val) conditional
   simpa only [Function.update_eq_self] using stable.symm
 
-theorem exactReverseAliceHighQuestionPotential_eq_alignedPrefix
+private theorem exactReverseAliceHighQuestionPotential_eq_alignedPrefix
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3550,7 +3550,7 @@ theorem exactReverseAliceHighQuestionPotential_eq_alignedPrefix
         exact accepted
       simp only [ite_eq_right sourceRejected, ite_eq_right accepted]
 
-theorem exactReverseBobHighQuestionPotential_eq_alignedPrefix
+private theorem exactReverseBobHighQuestionPotential_eq_alignedPrefix
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3614,7 +3614,7 @@ theorem exactReverseBobHighQuestionPotential_eq_alignedPrefix
         exact accepted
       simp only [ite_eq_right sourceRejected, ite_eq_right accepted]
 
-theorem exactReverseAliceFilterOperatorMarkerEntropy_eq_aligned_step
+private theorem exactReverseAliceFilterOperatorMarkerEntropy_eq_aligned_step
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3631,7 +3631,7 @@ theorem exactReverseAliceFilterOperatorMarkerEntropy_eq_aligned_step
     exactReverseAliceHighQuestionPotential_eq_alignedPrefix,
     exactReverseAliceLowQuestionPotential_eq_alignedPrefix]
 
-theorem exactReverseBobFilterOperatorMarkerEntropy_eq_aligned_step
+private theorem exactReverseBobFilterOperatorMarkerEntropy_eq_aligned_step
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3648,7 +3648,7 @@ theorem exactReverseBobFilterOperatorMarkerEntropy_eq_aligned_step
     exactReverseBobHighQuestionPotential_eq_alignedPrefix,
     exactReverseBobLowQuestionPotential_eq_alignedPrefix]
 
-theorem exactReverseAliceFilterOperatorMarkerEntropy_sum_telescope
+private theorem exactReverseAliceFilterOperatorMarkerEntropy_sum_telescope
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3687,7 +3687,7 @@ theorem exactReverseAliceFilterOperatorMarkerEntropy_sum_telescope
     _ = _ := exactReverseAliceAlignedCfcPrefixPotential_telescope
       G n S D side context
 
-theorem exactReverseBobFilterOperatorMarkerEntropy_sum_telescope
+private theorem exactReverseBobFilterOperatorMarkerEntropy_sum_telescope
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -3761,7 +3761,7 @@ private def exactFixedSeedOutcomeCode
     outcome.1 seed.coordinate.val,
     outcome.2.1 seed.coordinate.val)
 
-theorem exactFixedSeedOutcomeCode_fiber_iff
+private theorem exactFixedSeedOutcomeCode_fiber_iff
     {n : ℕ} (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
     (history : ExactRevealHistory X Y D seed)
@@ -3809,7 +3809,7 @@ theorem exactFixedSeedOutcomeCode_fiber_iff
         · exact funext hb
         · exact Prod.ext hx hy
 
-theorem exactFixedSeedGroupedBornMass_eq
+private theorem exactFixedSeedGroupedBornMass_eq
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -3842,7 +3842,7 @@ theorem exactFixedSeedGroupedBornMass_eq
         D seed history aliceAnswer bobAnswer x y outcome).mpr
         incompatible)
 
-theorem exactFixedSeedOutcomeCode_accepted_iff
+private theorem exactFixedSeedOutcomeCode_accepted_iff
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -4002,7 +4002,7 @@ private def exactReverseAliceAcceptedScalarEntropy
                 G n S D seed history bobAnswer y)))
     else 0
 
-theorem exactReverseAliceLowOperatorPotential_neg_le_scalarEntropy
+private theorem exactReverseAliceLowOperatorPotential_neg_le_scalarEntropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -4041,7 +4041,7 @@ theorem exactReverseAliceLowOperatorPotential_neg_le_scalarEntropy
     linarith
   · simp only [accepted, ↓reduceIte, neg_zero, Std.le_refl]
 
-theorem exactReverseAliceAlignedCfcPrefixPotential_last_nonpos
+private theorem exactReverseAliceAlignedCfcPrefixPotential_last_nonpos
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -4062,7 +4062,7 @@ theorem exactReverseAliceAlignedCfcPrefixPotential_last_nonpos
     last] at high
   exact high
 
-theorem exactReverseAliceFilterOperatorMarkerEntropy_sum_le_scalarEntropy
+private theorem exactReverseAliceFilterOperatorMarkerEntropy_sum_le_scalarEntropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -4121,7 +4121,7 @@ private def exactReverseBobAcceptedScalarEntropy
                 G n S D seed history bobAnswer x)))
     else 0
 
-theorem exactReverseBobFilterLowOperatorPotential_neg_le_scalarEntropy
+private theorem exactReverseBobFilterLowOperatorPotential_neg_le_scalarEntropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -4157,7 +4157,7 @@ theorem exactReverseBobFilterLowOperatorPotential_neg_le_scalarEntropy
     simpa only [mul_neg] using scaled
   · simp only [neg_zero, Std.le_refl]
 
-theorem exactReverseBobAlignedCfcPrefixPotential_terminal_nonpos
+private theorem exactReverseBobAlignedCfcPrefixPotential_terminal_nonpos
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -4178,7 +4178,7 @@ theorem exactReverseBobAlignedCfcPrefixPotential_terminal_nonpos
     step] at high
   exact high
 
-theorem exactReverseBobFilterOperatorMarkerEntropy_sum_le_scalarEntropy
+private theorem exactReverseBobFilterOperatorMarkerEntropy_sum_le_scalarEntropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -4559,7 +4559,7 @@ private def exactFairBobScalarBornMass
     (exactBobMeanFilter
       G n S D seed atom.1 atom.2.2.1 atom.2.2.2)
 
-theorem exactFairAliceScalarCountingWeight_nonneg
+private theorem exactFairAliceScalarCountingWeight_nonneg
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -4571,7 +4571,7 @@ theorem exactFairAliceScalarCountingWeight_nonneg
       (G.marginalY_nonneg atom.2.2.2)
   · exact le_rfl
 
-theorem exactFairBobScalarCountingWeight_nonneg
+private theorem exactFairBobScalarCountingWeight_nonneg
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -4583,7 +4583,7 @@ theorem exactFairBobScalarCountingWeight_nonneg
       (G.marginalX_nonneg atom.2.2.2)
   · exact le_rfl
 
-theorem exactFairAliceScalarBornMass_nonneg
+private theorem exactFairAliceScalarBornMass_nonneg
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -4595,7 +4595,7 @@ theorem exactFairAliceScalarBornMass_nonneg
       (exactBobQuestionFilter_posSemidef
         G n S D seed atom.1 atom.2.2.1 atom.2.2.2))
 
-theorem exactFairBobScalarBornMass_nonneg
+private theorem exactFairBobScalarBornMass_nonneg
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -4607,7 +4607,7 @@ theorem exactFairBobScalarBornMass_nonneg
       (exactBobMeanFilter_posSemidef
         G n S D seed atom.1 atom.2.2.1 atom.2.2.2))
 
-theorem exactFairAliceScalarCountingWeight_sum_le
+private theorem exactFairAliceScalarCountingWeight_sum_le
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
@@ -4652,7 +4652,7 @@ theorem exactFairAliceScalarCountingWeight_sum_le
       rw [exactRevealMass_sum, G.marginalY_normalized]
       ring
 
-theorem exactFairBobScalarCountingWeight_sum_le
+private theorem exactFairBobScalarCountingWeight_sum_le
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
@@ -4697,7 +4697,7 @@ theorem exactFairBobScalarCountingWeight_sum_le
       rw [exactRevealMass_sum, G.marginalX_normalized]
       ring
 
-theorem exactFairAliceScalarBornMass_sum
+private theorem exactFairAliceScalarBornMass_sum
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
@@ -4743,7 +4743,7 @@ theorem exactFairAliceScalarBornMass_sum
     _ = _ := exactFairAliceMeanAcceptedBornMass_sum
       G n S D seed
 
-theorem exactFairBobScalarBornMass_sum
+private theorem exactFairBobScalarBornMass_sum
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
@@ -4789,7 +4789,7 @@ theorem exactFairBobScalarBornMass_sum
     _ = _ := exactFairBobMeanAcceptedBornMass_sum
       G n S D seed
 
-theorem exactFairAliceScalarBornMass_le_one
+private theorem exactFairAliceScalarBornMass_le_one
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -4807,7 +4807,7 @@ theorem exactFairAliceScalarBornMass_le_one
     (exactBobQuestionFilter_complement_posSemidef
       G n S D seed atom.1 atom.2.2.1 atom.2.2.2)
 
-theorem exactFairBobScalarBornMass_le_one
+private theorem exactFairBobScalarBornMass_le_one
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -4863,7 +4863,7 @@ private def exactFairBobSeedScalarEntropy
                 G n S D seed history bobAnswer x)))
     else 0
 
-theorem exactFairAliceSeedScalarEntropy_eq_weighted
+private theorem exactFairAliceSeedScalarEntropy_eq_weighted
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
@@ -4892,7 +4892,7 @@ theorem exactFairAliceSeedScalarEntropy_eq_weighted
     ring
   · simp only [accepted, ↓reduceIte, exactFairAliceScalarCountingWeight, zero_mul, sum_const_zero]
 
-theorem exactFairBobSeedScalarEntropy_eq_weighted
+private theorem exactFairBobSeedScalarEntropy_eq_weighted
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D) :
@@ -4921,7 +4921,7 @@ theorem exactFairBobSeedScalarEntropy_eq_weighted
     ring
   · simp only [accepted, ↓reduceIte, exactFairBobScalarCountingWeight, zero_mul, sum_const_zero]
 
-theorem exactFairAliceSeedScalarEntropy_le
+private theorem exactFairAliceSeedScalarEntropy_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D)
@@ -4963,7 +4963,7 @@ theorem exactFairAliceSeedScalarEntropy_le
   rw [exactFairAliceSeedScalarEntropy_eq_weighted]
   exact estimate
 
-theorem exactFairBobSeedScalarEntropy_le
+private theorem exactFairBobSeedScalarEntropy_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D)
@@ -5005,7 +5005,7 @@ theorem exactFairBobSeedScalarEntropy_le
   rw [exactFairBobSeedScalarEntropy_eq_weighted]
   exact estimate
 
-theorem exactReverseAliceAcceptedScalarEntropy_le
+private theorem exactReverseAliceAcceptedScalarEntropy_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D)
@@ -5021,7 +5021,7 @@ theorem exactReverseAliceAcceptedScalarEntropy_le
   exact exactFairAliceSeedScalarEntropy_le G n S D positive
     (exactReverseBobMarkerDecode side context marker)
 
-theorem exactReverseBobAcceptedScalarEntropy_le
+private theorem exactReverseBobAcceptedScalarEntropy_le
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (positive : 0 < repeatedPostselectionMass G n S D)
@@ -5049,17 +5049,17 @@ variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 private def sourceAnswerAlphabetBound (A B : Type*) [Fintype A] [Fintype B] : ℝ :=
   max 1 ((Fintype.card A : ℝ) * (Fintype.card B : ℝ))
 
-theorem one_le_sourceAnswerAlphabetBound
+private theorem one_le_sourceAnswerAlphabetBound
     (A B : Type*) [Fintype A] [Fintype B] :
     1 ≤ sourceAnswerAlphabetBound A B := by
   exact le_max_left _ _
 
-theorem sourceAnswerAlphabetBound_log_nonneg
+private theorem sourceAnswerAlphabetBound_log_nonneg
     (A B : Type*) [Fintype A] [Fintype B] :
     0 ≤ Real.log (sourceAnswerAlphabetBound A B) := by
   exact Real.log_nonneg (one_le_sourceAnswerAlphabetBound A B)
 
-theorem fullHistoryAnswerCount_le_sourceAnswerAlphabetBound_pow
+private theorem fullHistoryAnswerCount_le_sourceAnswerAlphabetBound_pow
     {n : ℕ} (D : Finset (Fin n)) :
     fullHistoryAnswerCount (A := A) (B := B) D ≤
       sourceAnswerAlphabetBound A B ^ D.card := by
@@ -5110,7 +5110,7 @@ theorem divisor_greedy_remaining_bounds
         (Finset.subset_univ D))
   omega
 
-theorem divisor_greedy_log_cost_per_remaining_le
+private theorem divisor_greedy_log_cost_per_remaining_le
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     {η : ℝ} (hη : 0 < η)
@@ -5211,7 +5211,7 @@ theorem divisor_greedy_log_cost_per_remaining_le
       field_simp
       ring
 
-theorem exists_source_rounding_divisor
+private theorem exists_source_rounding_divisor
     (A B : Type*) [Fintype A] [Fintype B]
     {K η δ : ℝ}
     (hK : 0 ≤ K) (hη : 0 < η) (hδ : 0 < δ) :
@@ -6362,7 +6362,7 @@ private def dSVDensityRationalHeterogeneousActualPhysicalFlagBornCopyMatrix
           accepted flag i atom
        then (U : Matrix β β ℂ) atom input else 0)
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousActualPhysicalFlagBornCopyMatrix_eq_spectralMask
     {β : Type*} [Fintype β] [DecidableEq β] {L : ℕ}
     (accepted : Fin L → β → Prop) (U : Matrix.unitaryGroup β ℂ)
@@ -6462,7 +6462,7 @@ theorem
   · simp only [dSVDensityRationalHeterogeneousActualCopyCondition, active, ↓reduceDIte,
       ↓reduceIte, diagonal_one, dSVDensityRationalCompleteStoppedOptionalLocalSchedule]
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousActualPhysicalFlagBornAliceCopy_eq_optionalEffect
     {S d N L : ℕ} (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ : BipartiteUnitVector d)
@@ -6489,7 +6489,7 @@ theorem
             (dSVDensityRationalHeterogeneousActualPhysicalFlagBornCopyWidth
               width schedule i) N ξ outcome).symm
 
-theorem
+private theorem
     dSVDensityRationalHeterogeneousActualPhysicalFlagBornBobCopy_eq_optionalEffect
     {S d N L : ℕ} (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ζ : BipartiteUnitVector d)
