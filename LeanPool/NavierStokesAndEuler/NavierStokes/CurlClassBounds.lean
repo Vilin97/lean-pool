@@ -298,7 +298,7 @@ def gradientLinear : (Space →L[ℝ] ℝ) →L[ℝ] Space :=
 
 @[simp] theorem gradientLinear_apply (L : Space →L[ℝ] ℝ) (i : Fin 3) :
     (gradientLinear L) i = L (coordinateVector i) := by
-  fin_cases i <;> simp [gradientLinear, Fin.sum_univ_three, coordinateVector]
+  simp [gradientLinear, coordinateVector, Pi.single_apply]
 
 theorem curlLinear_smulRight (L : Space →L[ℝ] ℝ) (a : Space) :
     SpatialCurl.curlLinear (L.smulRight a) = cross (gradientLinear L) a := by
