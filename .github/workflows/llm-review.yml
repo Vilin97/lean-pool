@@ -221,7 +221,17 @@ jobs:
           # Uses the VM's Codex account quota; no API key or paid fallback.
           REVIEW_MODEL: gpt-6-astra
           REVIEW_EFFORT: xhigh
+          REVIEW_EVIDENCE_PATH: ${{ runner.temp }}/review-evidence.json
         run: uv run python -m lean_pool.review
+
+      - name: Upload review evidence
+        if: success() && steps.ci.outputs.conclusion == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: review-evidence
+          path: ${{ runner.temp }}/review-evidence.json
+          if-no-files-found: ignore
+          retention-days: 30
 
       - name: Remove Azure review credentials
         if: always()

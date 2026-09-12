@@ -14,11 +14,34 @@ and shell, apps, plugins, browser, image, and agent tools disabled. Each request
 uses a temporary directory on `/data`, removed when it finishes. The VM's existing
 account dispatcher handles account selection and quota waits.
 
-The initial text budget is 180,000 estimated input tokens, leaving room in the
-VM's advertised 272,000-token model context for instructions and reasoning.
-The existing partial-review banner and restriction against approving an elided
-project diff apply. Each worker call has a 100-minute timeout, including quota
-waits; a timeout kills its dispatcher process group and fails the review.
+Each model call has a 272,000-estimated-token input ceiling, including the
+review instructions, PR description, shared evidence, and prior-art results.
+Oversized diffs are partitioned losslessly, preferring complete files and Lean
+command boundaries. Oversized individual commands continue in numbered source
+ranges. Every diff character is covered, with a SHA-256 digest and range manifest.
+No file body is discarded to meet the budget. Missing or truncated GitHub text
+patches are reconstructed from hash-verified Git blobs; source acquisition fails
+if those blobs cannot be retrieved. GitHub line statistics can be zero for an
+omitted nonempty patch, so they are never treated as proof that a file is empty.
+
+For each rubric, up to three source portions are reviewed concurrently. Their
+complete structured evidence and open questions feed a final integration review.
+That review checks the headline contracts and dependencies across modules. It
+can request exact declaration or file excerpts from the original diff, with up
+to three source follow-ups when summaries leave a semantic question unanswered. It
+must explicitly resolve every non-passing portion, finding, and open question
+before it can pass; unresolved obligations force discussion. Missing/malformed
+portion results or integration evidence that cannot fit fail the run rather than
+silently reducing coverage. Small diffs still use one call per rubric.
+
+A context-window rejection retries using smaller lossless portions. The token
+estimate is conservative, not an exact tokenizer measurement; the ceiling does
+not change the model's actual context window. Reported usage includes all source
+and integration calls, including successful work before a retry; unknown usage
+is disclosed. The workflow uploads the complete structured evidence and coverage
+manifest as the `review-evidence` artifact. The existing blocking/advisory rubric rules remain intact.
+Each worker call has a 100-minute timeout, including quota waits; a timeout kills
+its dispatcher process group and fails the review.
 
 ## Deployment
 
