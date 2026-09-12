@@ -189,126 +189,12 @@ private lemma IsTransform.isUnit_eq {symmetry : Fin 6} {point image : PartsPoint
 
 end PartsPoint
 
-private def partsSymmetryOfNat (value : Nat) : Fin 6 :=
-  ⟨value % 6, Nat.mod_lt value (by decide)⟩
-
-private def partsVertexOfNat (value : Nat) : Fin 481 :=
-  ⟨value % 481, Nat.mod_lt value (by decide)⟩
-
-private lemma partsPoint_permuteVertex_isTransform0 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hupper : value < 64) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
-private lemma partsPoint_permuteVertex_isTransform1 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hlower : 64 ≤ value) (hupper : value < 128) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
-private lemma partsPoint_permuteVertex_isTransform2 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hlower : 128 ≤ value) (hupper : value < 192) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
-private lemma partsPoint_permuteVertex_isTransform3 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hlower : 192 ≤ value) (hupper : value < 256) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
-private lemma partsPoint_permuteVertex_isTransform4 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hlower : 256 ≤ value) (hupper : value < 320) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
-private lemma partsPoint_permuteVertex_isTransform5 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hlower : 320 ≤ value) (hupper : value < 384) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
-private lemma partsPoint_permuteVertex_isTransform6 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hlower : 384 ≤ value) (hupper : value < 448) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
-private lemma partsPoint_permuteVertex_isTransform7 (symmetryValue : Nat)
-    (hsymmetry : symmetryValue < 6)
-    (value : Nat) (hupper : value < 481) (hlower : 448 ≤ value) :
-    PartsPoint.IsTransform (partsSymmetryOfNat symmetryValue)
-      (partsPoint (partsVertexOfNat value))
-      (partsPoint (partsPermuteVertex (partsSymmetryOfNat symmetryValue)
-        (partsVertexOfNat value))) := by
-  interval_cases symmetryValue <;> interval_cases value <;>
-    simp only [PartsPoint.IsTransform, partsSymmetryOfNat] <;> decide
-
 /-- The stored vertex tables implement the exact isometries described above. -/
 private lemma partsPoint_permuteVertex_isTransform (symmetry : Fin 6) :
     ∀ vertex, PartsPoint.IsTransform symmetry (partsPoint vertex)
       (partsPoint (partsPermuteVertex symmetry vertex)) := by
-  intro vertex
-  have hsymmetry : partsSymmetryOfNat symmetry.val = symmetry := by
-    apply Fin.ext
-    exact Nat.mod_eq_of_lt symmetry.isLt
-  have hvertex : partsVertexOfNat vertex.val = vertex := by
-    apply Fin.ext
-    exact Nat.mod_eq_of_lt vertex.isLt
-  rw [← hsymmetry, ← hvertex]
-  by_cases h64 : vertex.val < 64
-  · exact partsPoint_permuteVertex_isTransform0 symmetry.val symmetry.isLt vertex.val h64
-  by_cases h128 : vertex.val < 128
-  · exact partsPoint_permuteVertex_isTransform1 symmetry.val symmetry.isLt vertex.val
-      (Nat.le_of_not_gt h64) h128
-  by_cases h192 : vertex.val < 192
-  · exact partsPoint_permuteVertex_isTransform2 symmetry.val symmetry.isLt vertex.val
-      (Nat.le_of_not_gt h128) h192
-  by_cases h256 : vertex.val < 256
-  · exact partsPoint_permuteVertex_isTransform3 symmetry.val symmetry.isLt vertex.val
-      (Nat.le_of_not_gt h192) h256
-  by_cases h320 : vertex.val < 320
-  · exact partsPoint_permuteVertex_isTransform4 symmetry.val symmetry.isLt vertex.val
-      (Nat.le_of_not_gt h256) h320
-  by_cases h384 : vertex.val < 384
-  · exact partsPoint_permuteVertex_isTransform5 symmetry.val symmetry.isLt vertex.val
-      (Nat.le_of_not_gt h320) h384
-  by_cases h448 : vertex.val < 448
-  · exact partsPoint_permuteVertex_isTransform6 symmetry.val symmetry.isLt vertex.val
-      (Nat.le_of_not_gt h384) h448
-  · exact partsPoint_permuteVertex_isTransform7 symmetry.val symmetry.isLt vertex.val
-      vertex.isLt (Nat.le_of_not_gt h448)
+  fin_cases symmetry <;>
+    simp only [PartsPoint.IsTransform] <;> decide +kernel
 
 private lemma partsAdjacent_permuteVertex (symmetry : Fin 6) (left right : Fin 481) :
     partsAdjacent (partsPermuteVertex symmetry left) (partsPermuteVertex symmetry right) =
@@ -506,112 +392,112 @@ private lemma partsCertificateVariantVerifies_of_base
   exact verified
 
 private theorem partsBaseCertificate0_verify :
-    (partsBaseCertificate 0).Verifies := by decide
+    (partsBaseCertificate 0).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate1_verify :
-    (partsBaseCertificate 1).Verifies := by decide
+    (partsBaseCertificate 1).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate2_verify :
-    (partsBaseCertificate 2).Verifies := by decide
+    (partsBaseCertificate 2).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate3_verify :
-    (partsBaseCertificate 3).Verifies := by decide
+    (partsBaseCertificate 3).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate4_verify :
-    (partsBaseCertificate 4).Verifies := by decide
+    (partsBaseCertificate 4).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate5_verify :
-    (partsBaseCertificate 5).Verifies := by decide
+    (partsBaseCertificate 5).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate6_verify :
-    (partsBaseCertificate 6).Verifies := by decide
+    (partsBaseCertificate 6).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate7_verify :
-    (partsBaseCertificate 7).Verifies := by decide
+    (partsBaseCertificate 7).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate8_verify :
-    (partsBaseCertificate 8).Verifies := by decide
+    (partsBaseCertificate 8).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate9_verify :
-    (partsBaseCertificate 9).Verifies := by decide
+    (partsBaseCertificate 9).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate10_verify :
-    (partsBaseCertificate 10).Verifies := by decide
+    (partsBaseCertificate 10).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate11_verify :
-    (partsBaseCertificate 11).Verifies := by decide
+    (partsBaseCertificate 11).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate12_verify :
-    (partsBaseCertificate 12).Verifies := by decide
+    (partsBaseCertificate 12).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate13_verify :
-    (partsBaseCertificate 13).Verifies := by decide
+    (partsBaseCertificate 13).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate14_verify :
-    (partsBaseCertificate 14).Verifies := by decide
+    (partsBaseCertificate 14).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate15_verify :
-    (partsBaseCertificate 15).Verifies := by decide
+    (partsBaseCertificate 15).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate16_verify :
-    (partsBaseCertificate 16).Verifies := by decide
+    (partsBaseCertificate 16).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate17_verify :
-    (partsBaseCertificate 17).Verifies := by decide
+    (partsBaseCertificate 17).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate18_verify :
-    (partsBaseCertificate 18).Verifies := by decide
+    (partsBaseCertificate 18).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate19_verify :
-    (partsBaseCertificate 19).Verifies := by decide
+    (partsBaseCertificate 19).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate20_verify :
-    (partsBaseCertificate 20).Verifies := by decide
+    (partsBaseCertificate 20).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate21_verify :
-    (partsBaseCertificate 21).Verifies := by decide
+    (partsBaseCertificate 21).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate22_verify :
-    (partsBaseCertificate 22).Verifies := by decide
+    (partsBaseCertificate 22).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate23_verify :
-    (partsBaseCertificate 23).Verifies := by decide
+    (partsBaseCertificate 23).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate24_verify :
-    (partsBaseCertificate 24).Verifies := by decide
+    (partsBaseCertificate 24).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate25_verify :
-    (partsBaseCertificate 25).Verifies := by decide
+    (partsBaseCertificate 25).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate26_verify :
-    (partsBaseCertificate 26).Verifies := by decide
+    (partsBaseCertificate 26).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate27_verify :
-    (partsBaseCertificate 27).Verifies := by decide
+    (partsBaseCertificate 27).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate28_verify :
-    (partsBaseCertificate 28).Verifies := by decide
+    (partsBaseCertificate 28).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate29_verify :
-    (partsBaseCertificate 29).Verifies := by decide
+    (partsBaseCertificate 29).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate30_verify :
-    (partsBaseCertificate 30).Verifies := by decide
+    (partsBaseCertificate 30).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate31_verify :
-    (partsBaseCertificate 31).Verifies := by decide
+    (partsBaseCertificate 31).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate32_verify :
-    (partsBaseCertificate 32).Verifies := by decide
+    (partsBaseCertificate 32).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate33_verify :
-    (partsBaseCertificate 33).Verifies := by decide
+    (partsBaseCertificate 33).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate34_verify :
-    (partsBaseCertificate 34).Verifies := by decide
+    (partsBaseCertificate 34).Verifies := by decide +kernel
 
 private theorem partsBaseCertificate35_verify :
-    (partsBaseCertificate 35).Verifies := by decide
+    (partsBaseCertificate 35).Verifies := by decide +kernel
 
 /-- Every stored base tree passes the checker before applying root symmetries. -/
 theorem partsBaseCertificate_verifies (base : Fin 36) :
