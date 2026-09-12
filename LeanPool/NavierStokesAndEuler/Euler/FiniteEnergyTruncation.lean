@@ -8,7 +8,10 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.CompactParameterIntegral
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
 import LeanPool.NavierStokesAndEuler.Euler.RadialPotentialL2
 import Mathlib.Algebra.Order.Star.Real
@@ -24,6 +27,8 @@ prescribed ball. This construction does not assume Sobolev regularity of `u`.
 -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 
 noncomputable section

@@ -7,12 +7,15 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricTransport
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.RingTheory.Finiteness.Prod
 
 /-! Expanding spatial cutoffs and transport cancellation for noncompact fields on the cylinder. -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 noncomputable section
 

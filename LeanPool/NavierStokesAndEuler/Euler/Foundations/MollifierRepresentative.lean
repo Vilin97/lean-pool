@@ -9,10 +9,11 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SetIntegralL2
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Function.AEEqOfIntegral
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderCoordinates
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.MetricTransport
 public import Mathlib.Analysis.Calculus.BumpFunction.Normed
@@ -26,6 +27,8 @@ section
 /-! Classical smooth cylinder representatives obtained by Euclidean mollification. -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 noncomputable section
 
@@ -167,6 +170,8 @@ section
 
 @[expose] public section
 
+attribute [local instance] FiniteDimensional.hasContDiffBump
+
 noncomputable section
 
 namespace EulerCoverMollificationFubini
@@ -294,6 +299,8 @@ end
 end
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 noncomputable section
 

@@ -9,7 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderCoordinates
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevProducts
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.TransportDerivatives
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDerivativeNorm
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
@@ -17,6 +18,8 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 /-! Actual derivative-word Sobolev norms on R³ × T and compact localizations. -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 noncomputable section
 

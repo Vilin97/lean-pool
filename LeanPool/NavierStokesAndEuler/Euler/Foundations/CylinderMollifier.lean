@@ -10,12 +10,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderCoordinate
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
 public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.Analysis.Convolution
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 
 /-! Genuine approximate identities for the lifted L² translation representation. -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 noncomputable section
 

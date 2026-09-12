@@ -4499,6 +4499,7 @@ import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianEvolution
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianFields
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
+import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
 import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteSum
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable

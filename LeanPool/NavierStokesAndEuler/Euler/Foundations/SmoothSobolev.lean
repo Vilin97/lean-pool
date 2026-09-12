@@ -7,7 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
@@ -15,6 +16,8 @@ import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 /-! Sobolev embedding for general smooth fields on R³, without Schwartz assumptions. -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 noncomputable section
 

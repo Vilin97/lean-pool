@@ -7,7 +7,8 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BorelExtension
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 
 /-!
 # Jointly smooth Taylor–Borel extension of spatially smooth jets
@@ -18,6 +19,8 @@ This gives joint smoothness without imposing global bounds on the input jets.
 -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 
 noncomputable section

@@ -9,9 +9,13 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
 
+import Mathlib.Analysis.Calculus.FDeriv.Mul
+
 /-! Expanding ordinary-space cutoffs and their actual first derivative controls. -/
 
 @[expose] public section
+
+attribute [local instance] FiniteDimensional.hasContDiffBump
 
 
 noncomputable section

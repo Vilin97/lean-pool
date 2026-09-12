@@ -12,6 +12,8 @@ import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 import Mathlib.Analysis.Calculus.TangentCone.Prod
 
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+
 /-!
 # Joint smooth gluing from matching normal time jets
 

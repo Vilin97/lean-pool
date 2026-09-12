@@ -8,6 +8,8 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
+import Mathlib.Analysis.Calculus.Deriv.Slope
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Strong L² derivatives of smooth representatives are their actual classical derivatives. -/
 
