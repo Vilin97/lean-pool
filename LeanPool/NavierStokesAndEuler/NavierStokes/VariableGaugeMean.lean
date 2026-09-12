@@ -1359,7 +1359,7 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
   classical
   obtain ⟨ρ, hρ, hρL, hleft, hright⟩ := exists_log_plateau_width (b := b) ha
     (c := (2 * a + b) / 3) (d := (a + 2 * b) / 3)
-    (by linarith) (by linarith) (by linarith)
+    (by linarith only [hab]) (by linarith only [hab]) (by linarith only [hab])
     (TransportPrimitive.interiorCutoff a b)
     (fun X hX => TransportPrimitive.interiorCutoff_zero hab hX)
     (fun X hX => TransportPrimitive.interiorCutoff_one hab hX)
@@ -1383,9 +1383,9 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
   have hRK : 0 ≤ rightK := Finset.sum_nonneg (fun j _ => hKR j)
   have hmassK : 0 ≤ massK := mul_nonneg hW (sub_pos.mpr hce).le
   have hmidK : 0 ≤ midK := div_nonneg (mul_nonneg hmassK (by positivity)) hδ.le
-  have hleftK : leftK ≤ K := by dsimp [K]; linarith
-  have hrightK : rightK ≤ K := by dsimp [K]; linarith
-  have hmiddleK : midK ≤ K := by dsimp [K]; linarith
+  have hleftK : leftK ≤ K := by dsimp [K]; linarith only [hRK, hmidK]
+  have hrightK : rightK ≤ K := by dsimp [K]; linarith only [hLK, hmidK]
+  have hmiddleK : midK ≤ K := by dsimp [K]; linarith only [hLK, hRK]
   have hKK : 0 ≤ K := hLK.trans hleftK
   refine ⟨K, hKK, ?_⟩
   intro U hU ell hell hl hu M v f hf hs hsg A B hA hB z hz hR hin hcut j hj
@@ -1399,7 +1399,8 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
   have hpos : ∀ᶠ x in 𝓝 z, 0 < radialRatio ell x := hratio.eventually (lt_mem_nhds hratioPos)
   have hnorm : 0 ≤ logWeight cL cR a b p (z.1 / ell z.2.1) :=
     (weight_pos cL cR p (logPosition_mem ha hR)).le
-  have hKone : K ≤ K * (1 + B) := by nlinarith
+  have hKone : K ≤ K * (1 + B) :=
+    le_mul_of_one_le_right hKK (le_add_of_nonneg_right hB)
   have hmass (i : ℕ) (hi : i ≤ m) :
       ‖iteratedFDeriv ℝ i (TransportPrimitive.pastIntegral M ((0 : S), v) f) z‖ ≤ massK * A ∧
       ‖iteratedFDeriv ℝ i (TransportPrimitive.totalIntegral M ((0 : S), v) f) z‖ ≤ massK * A := by
@@ -1421,7 +1422,9 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
   · have heq : transportGauge a b M ell v f =ᶠ[𝓝 z]
         TransportPrimitive.pastIntegral M ((0 : S), v) f := by
       have hlogleft : ∀ᶠ x in 𝓝 z, logPosition a (radialRatio ell x) < ρ :=
-        hlog.eventually (gt_mem_nhds (by change logPosition a (z.1 / ell z.2.1) < ρ; linarith))
+        hlog.eventually (gt_mem_nhds (by
+          change logPosition a (z.1 / ell z.2.1) < ρ
+          linarith only [hzleft, hρ]))
       filter_upwards [hpos, hlogleft] with x hxp hxl
       have hzero : normalizedCutoff a b ell x = 0 := by
         have he := hleft (logPosition a (radialRatio ell x)) hxl.le
@@ -1436,7 +1439,7 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
       (PhysicalMeanDomain.freezeSlow_continuous (TransportPrimitive.iteratedFDeriv_contDiff hf
           j).continuous _)
       (iteratedFDeriv_supportedGauge_fiber hU hell.continuousOn hsg hz j) A hA
-      (fun R hR Y => hin j hj R hR Y.2) z hR (by linarith)
+      (fun R hR Y => hin j hj R hR Y.2) z hR (by linarith only [hzleft, hρ, hρL])
     have hsingle : KL j' ≤ leftK := Finset.single_le_sum (fun i _ => hKL i) (Finset.mem_univ j')
     exact h.trans (mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_right ((hsingle.trans hleftK).trans hKone) hA) hnorm)
@@ -1445,7 +1448,8 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
           -TransportPrimitive.futureIntegral M ((0 : S), v) f := by
         have hlogright : ∀ᶠ x in 𝓝 z, logLength a b - ρ < logPosition a (radialRatio ell x) :=
           hlog.eventually (lt_mem_nhds (by
-              change logLength a b - ρ < logPosition a (z.1 / ell z.2.1); linarith))
+              change logLength a b - ρ < logPosition a (z.1 / ell z.2.1)
+              linarith only [hzright, hρ]))
         filter_upwards [hpos, hlogright] with x hxp hxr
         have hone : normalizedCutoff a b ell x = 1 := by
           have he := hright (logPosition a (radialRatio ell x)) hxr.le
@@ -1462,7 +1466,7 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
         (PhysicalMeanDomain.freezeSlow_continuous (TransportPrimitive.iteratedFDeriv_contDiff hf
             j).continuous _)
         (iteratedFDeriv_supportedGauge_fiber hU hell.continuousOn hsg hz j) A hA
-        (fun R hR Y => hin j hj R hR Y.2) z hR (by linarith)
+        (fun R hR Y => hin j hj R hR Y.2) z hR (by linarith only [hzright, hρ, hρL])
       have hsingle : KR j' ≤ rightK := Finset.single_le_sum (fun i _ => hKR i) (Finset.mem_univ j')
       exact h.trans (mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_right ((hsingle.trans hrightK).trans hKone) hA) hnorm)
@@ -1482,9 +1486,10 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
       have hmid : massK * A + (2 : ℝ) ^ m * B * (massK * A) ≤ midK * (1 + B) * A * δ := by
         dsimp [midK]
         have hpow : 0 ≤ (2 : ℝ) ^ m := by positivity
-        have : 1 + (2 : ℝ) ^ m * B ≤ (1 + (2 : ℝ) ^ m) * (1 + B) := by linarith
+        have : 1 + (2 : ℝ) ^ m * B ≤ (1 + (2 : ℝ) ^ m) * (1 + B) := by
+          linarith only [hpow, hB]
         field_simp [hδ.ne']
-        linarith [mul_nonneg (mul_nonneg hmassK hA) (sub_nonneg.mpr this)]
+        linarith only [mul_nonneg (mul_nonneg hmassK hA) (sub_nonneg.mpr this)]
       exact (hb.trans hmid).trans ((mul_le_mul_of_nonneg_left hw
         (mul_nonneg (mul_nonneg hmidK (by positivity)) hA)).trans
           (mul_le_mul_of_nonneg_right
