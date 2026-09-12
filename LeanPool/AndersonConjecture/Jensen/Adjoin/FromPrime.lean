@@ -86,8 +86,9 @@ private def adjoin_from_prime_proof
     have hC_mem : ∀ P ∈ C, ∃ (r : R.carrier), (r : T) ≠ 0 ∧
         P ∈ associatedPrimes T (T ⧸ Ideal.span {(r : T)}) := by
       intro P hP
-      rw [mem_iUnion] at hP
-      simp_all
+      obtain ⟨r, hr⟩ := mem_iUnion.mp hP
+      obtain ⟨hr_ne, hP_assoc⟩ := mem_iUnion.mp hr
+      exact ⟨r, hr_ne, hP_assoc⟩
     have hC_prime : ∀ P ∈ C, P.IsPrime := by
       intro P hP
       obtain ⟨r, _, hP_assoc⟩ := hC_mem P hP
@@ -95,7 +96,7 @@ private def adjoin_from_prime_proof
     have hC_ne_max : ∀ P ∈ C, P ≠ IsLocalRing.maximalIdeal T := by
       intro P hP hPM
       obtain ⟨r, hr_ne, hP_assoc⟩ := hC_mem P hP
-      simp_all
+      exact hM_not_assoc r hr_ne (hPM ▸ hP_assoc)
     -- q ⊄ P for P ∈ C: height argument
     have hq_not_le : ∀ P ∈ C, ¬(q ≤ P) := by
       intro P hP hle
@@ -105,29 +106,20 @@ private def adjoin_from_prime_proof
       rcases eq_or_lt_of_le hle with rfl | hlt
       · -- q = P: r ∈ q via associated prime, contradicts q ∩ R = ⊥
         have hr_mem_q : (r : T) ∈ q := by
-          obtain ⟨_, m, hann⟩ := hP_assoc
-          rw [hann]
-          apply Ideal.le_radical
-          rw [Submodule.mem_colon_singleton]
-          change (r : T) • m ∈ (⊥ : Submodule T (T ⧸ Ideal.span {(r : T)}))
-          rw [Submodule.mem_bot]
-          obtain ⟨m', rfl⟩ := Ideal.Quotient.mk_surjective m
-          change (Ideal.Quotient.mk (Ideal.span {(r : T)})) ((r : T) * m') = 0
-          simp_all
+          have hann_le := hP_assoc.annihilator_le
+          rw [Submodule.annihilator_top, Ideal.annihilator_quotient] at hann_le
+          exact hann_le (Ideal.mem_span_singleton_self _)
         have hr_comap : r ∈ q.comap R.carrier.subtype := Ideal.mem_comap.mpr hr_mem_q
-        simp_all
+        exact hr_ne (congrArg Subtype.val (by simpa only [hqR, Ideal.mem_bot] using hr_comap))
       · -- q < P: height chain ⊥ < q < P gives ht(P) ≥ 2, contradiction
         have h_bot_lt_q : (⊥ : Ideal T) < q := bot_lt_iff_ne_bot.mpr hq_ne_bot
         have h1 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ q Ideal.isPrime_bot
           hq_prime h_bot_lt_q
         have h2 := Ideal.height_add_one_le_of_lt_of_isPrime hlt
-        have h4 : (2 : ℕ∞) ≤ P.height :=
-          calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
-            _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-              simp_all
-            _ ≤ q.height + 1 := by gcongr
-            _ ≤ P.height := h2
-        exact not_lt.mpr h4 (by exact_mod_cast hP_ht.trans_lt (by norm_num))
+        have h4 : (2 : ℕ∞) ≤ P.height := by
+          simpa only [Ideal.height_bot, zero_add, one_add_one_eq_two] using
+            (add_le_add_left h1 1).trans h2
+        exact (by norm_num : ¬(2 : ℕ∞) ≤ 1) (h4.trans hP_ht)
     -- Augment C with ⊥ to ensure t ≠ 0
     let C' : Set (Ideal T) := C ∪ {⊥}
     have hC'_prime : ∀ P ∈ C', P.IsPrime := by
@@ -157,7 +149,7 @@ private def adjoin_from_prime_proof
       intro P hP hle
       rcases hP with hP | hP
       · exact hq_not_le P hP hle
-      · simp_all
+      · exact hq_ne_bot (bot_unique (mem_singleton_iff.mp hP ▸ hle))
     let φ : (P : Ideal T) → R.carrier →+* T ⧸ P :=
       fun P => (Ideal.Quotient.mk P).comp R.carrier.subtype
     let liftQ : (P : Ideal T) → T ⧸ P → T :=
@@ -303,7 +295,9 @@ private def adjoin_from_prime_proof
       | zero =>
         intro f hf_deg hf_eval
         rw [Polynomial.eq_C_of_natDegree_le_zero hf_deg] at hf_eval ⊢
-        simp_all
+        apply Polynomial.C_eq_zero.mpr
+        exact (FaithfulSMul.algebraMap_injective R.carrier T)
+          (by simpa only [aeval_C, map_zero] using hf_eval)
       | succ n ih =>
         intro f hf_deg hf_eval
         -- f.coeff 0 ∈ q ∩ R = ⊥, then f = X * f.divX, apply IH
@@ -321,10 +315,9 @@ private def adjoin_from_prime_proof
             exact q.neg_mem (q.mul_mem_right _ ht_q)
           have hc_comap : f.coeff 0 ∈ q.comap R.carrier.subtype :=
             Ideal.mem_comap.mpr hc_in_q
-          simp_all
+          simpa only [hqR, Ideal.mem_bot] using hc_comap
         have hf_eq : f = X * f.divX := by
-          have := Polynomial.X_mul_divX_add f
-          simp_all
+          simpa only [hc0, map_zero, add_zero] using (Polynomial.X_mul_divX_add f).symm
         have hdivX_eval : aeval t f.divX = 0 := by
           have : aeval t f = t * aeval t f.divX := by
             conv_lhs => rw [hf_eq]
@@ -364,20 +357,18 @@ private def adjoin_from_prime_proof
           have hQ_ne_P : Q ≠ P := fun h => hPQ (h ▸ le_refl _)
           have hQ_ne_bot : Q ≠ ⊥ := by
             intro h
-            simp_all
+            exact hr₀T_ne (by simpa only [h, Ideal.mem_bot] using
+              (hQ_le_span (Ideal.mem_span_singleton_self _)))
           have hQ_lt_P : Q < P := lt_of_le_of_ne hQ_le_P hQ_ne_P
           have h_bot_lt_Q : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
           have h1 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ Q
             Ideal.isPrime_bot hQ_prime h_bot_lt_Q
           have h2 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ Q P
             hQ_prime hP_prime hQ_lt_P
-          have h4 : (2 : ℕ∞) ≤ P.height :=
-            calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
-              _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-                simp_all
-              _ ≤ Q.height + 1 := by gcongr
-              _ ≤ P.height := h2
-          exact not_lt.mpr h4 (by exact_mod_cast hP_ht.trans_lt (by norm_num))
+          have h4 : (2 : ℕ∞) ≤ P.height := by
+            simpa only [Ideal.height_bot, zero_add, one_add_one_eq_two] using
+              (add_le_add_left h1 1).trans h2
+          exact (by norm_num : ¬(2 : ℕ∞) ≤ 1) (h4.trans hP_ht)
         -- Minimal primes of principal ⊆ associated primes of quotient
         have hP_assoc : P ∈ associatedPrimes T (T ⧸ Ideal.span {(r₀ : T)}) := by
           have hsub := Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes
