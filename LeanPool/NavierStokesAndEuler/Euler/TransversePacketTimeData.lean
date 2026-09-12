@@ -787,7 +787,8 @@ local instance instTransversePacketTimeData10 : NormedSpace ℝ C(Icc (0 : ℝ) 
 
 /-- The derivative of the inverse is constructed from the original fields. -/
 def inverseDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space) :=
-  -pathCompositionMap D.FInv.field D.M.field
+  -pathCompositionMap (α := Space) (K := Icc (0 : ℝ) D.T)
+    (E := Space) (F := Space) (U := Space) D.FInv.field D.M.field
 
 /-- The derivative of the transported normal is the fixed adjoint-vector map of that path. -/
 def normalDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space) :=
@@ -840,7 +841,8 @@ theorem normal_hasDerivWithinAt (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T) (x : Sp
 
 theorem inverseDerivative_translation :
     translateCoefficientPath D.inverseDerivative = fun a =>
-      -pathCompositionMap (translateCoefficientPath D.FInv.field a)
+      -pathCompositionMap (α := Space) (K := Icc (0 : ℝ) D.T)
+        (E := Space) (F := Space) (U := Space) (translateCoefficientPath D.FInv.field a)
         (translateCoefficientPath D.M.field a) := by
   funext a
   apply ContinuousMap.ext
