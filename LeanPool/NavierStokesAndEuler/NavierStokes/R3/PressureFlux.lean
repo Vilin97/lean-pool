@@ -16,12 +16,11 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFunctionals
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GradientOperator
-import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HarmonicTestFunctionals
+public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HarmonicTestFunctionals
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 public import Mathlib.MeasureTheory.Integral.IntegrableOn
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Integral.Prod
@@ -1192,20 +1191,6 @@ open Set Filter MeasureTheory
 open scoped Topology ContDiff
 
 namespace NavierStokesR3.TemporalTestUniqueness
-
-/-- Continuity turns the distributional fundamental lemma into equality at
-every time of the open interval. The tests are real, and values may be complex. -/
-theorem eq_zero_on_open_of_tests {U : Set ℝ} (hU : IsOpen U) {f : ℝ → ℂ}
-    (hf : ContinuousOn f U)
-    (htest : ∀ a : ℝ → ℝ, ContDiff ℝ ∞ a → HasCompactSupport a → tsupport a ⊆ U →
-      (∫ t : ℝ, a t • f t) = 0) :
-    ∀ t ∈ U, f t = 0 := by
-  have hae := hU.ae_eq_zero_of_integral_contDiff_smul_eq_zero
-    (hf.locallyIntegrableOn hU.measurableSet) htest
-  have hrestr : f =ᵐ[volume.restrict U] (fun _ => (0 : ℂ)) := by
-    filter_upwards [ae_restrict_of_ae hae, ae_restrict_mem hU.measurableSet] with t ht htU
-    exact ht htU
-  exact Measure.eqOn_open_of_ae_eq hrestr hU hf continuousOn_const
 
 /-- A compact temporal test supported in `(0,T)` has the same integral over
 `[0,T]` as over the line. No integrability of the untested function is needed. -/

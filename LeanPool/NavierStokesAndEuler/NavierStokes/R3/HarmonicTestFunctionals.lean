@@ -286,3 +286,24 @@ theorem eq_zero_of_compact_harmonic
     hharmonic ψ
 
 end NavierStokesR3.HarmonicTestFunctionals
+
+namespace NavierStokesR3.TemporalTestUniqueness
+
+open Set Filter
+open scoped Topology ContDiff
+
+/-- Continuity turns the distributional fundamental lemma into equality at
+every time of the open interval. The tests are real, and values may be complex. -/
+theorem eq_zero_on_open_of_tests {U : Set ℝ} (hU : IsOpen U) {f : ℝ → ℂ}
+    (hf : ContinuousOn f U)
+    (htest : ∀ a : ℝ → ℝ, ContDiff ℝ ∞ a → HasCompactSupport a → tsupport a ⊆ U →
+      (∫ t : ℝ, a t • f t) = 0) :
+    ∀ t ∈ U, f t = 0 := by
+  have hae := hU.ae_eq_zero_of_integral_contDiff_smul_eq_zero
+    (hf.locallyIntegrableOn hU.measurableSet) htest
+  have hrestr : f =ᵐ[volume.restrict U] (fun _ => (0 : ℂ)) := by
+    filter_upwards [ae_restrict_of_ae hae, ae_restrict_mem hU.measurableSet] with t ht htU
+    exact ht htU
+  exact Measure.eqOn_open_of_ae_eq hrestr hU hf continuousOn_const
+
+end NavierStokesR3.TemporalTestUniqueness
