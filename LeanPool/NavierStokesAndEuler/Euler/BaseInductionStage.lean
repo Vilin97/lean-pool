@@ -750,9 +750,9 @@ theorem physical_bounds (hδ1 : δ ≤ 1) (hh : 0 ≤ hchild)
     ‖fderiv ℝ (F.state.evolution.force t) x‖ ≤
       initialCoefficientCost+2*initialCoefficientCost*(hchild*firstRatio)+k^(-(1/4 : ℝ)) := by
   let S := packetBaseState β hβ ell hell hell1 T hT hTB
-  let M := firstPacketMeanData β hβ ell hell hell1 T hT hTB
-  let D := firstPacketData β hβ ell hell hell1 T hT hTB
-  let res := forwardInitializedApproximationResidual M D rfl δ hδ firstCoordinate (subset_refl _)
+  let res := forwardInitializedApproximationResidual
+    (firstPacketMeanData β hβ ell hell hell1 T hT hTB)
+    (firstPacketData β hβ ell hell hell1 T hT hTB) rfl δ hδ firstCoordinate (subset_refl _)
     (δ*hchild) (firstPacketAgreement β hβ ell hell hell1 T hT hTB) (truncation k) F.hn k hk.four
   have h := S.evolution.exactHomogeneousPacket_low_bounds
     firstNormal firstNormal_unit firstFrame support compact F.Q res k (mul_inv_cancel₀ hk.pos.ne')
@@ -765,7 +765,7 @@ theorem physical_bounds (hδ1 : δ ≤ 1) (hh : 0 ≤ hchild)
     (packetBase_physical_force β hβ ell hell hell1 T hT hTB t x)
     (S.evolution.force_quadratic_upper_of_lowBounds (packetBaseLowBounds β hβ ell hell hell1 T hT
         hTB) t x)
-  dsimp only [S, M, D, res, firstPacketMeanData, firstPacketData] at h
+  dsimp only [S, res, firstPacketMeanData, firstPacketData] at h
   constructor
   · dsimp only [state, firstPacketState, SmoothState.forwardChild,
       SmoothState.packetChild, Evolution.child]
