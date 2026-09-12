@@ -2894,6 +2894,15 @@ theorem uniformCoefficient_nonneg {C₁ C₂ M₀ U₀ G₀ : ℝ}
   unfold uniformCoefficient
   positivity
 
+private theorem sum_products_le_product_sums {a b x y : ℝ}
+    (ha : 0 ≤ a) (hb : 0 ≤ b) (hx : 0 ≤ x) (hy : 0 ≤ y) :
+    a * x + b * y ≤ (a + b) * (x + y) := by
+  calc
+    _ ≤ a * (x + y) + b * (x + y) :=
+      add_le_add (mul_le_mul_of_nonneg_left (le_add_of_nonneg_right hy) ha)
+        (mul_le_mul_of_nonneg_left (le_add_of_nonneg_left hx) hb)
+    _ = _ := (add_mul a b (x + y)).symm
+
 /-- Collecting constants uses only the fixed data-norm bounds, not the radius. -/
 theorem uniform_expression_bound {C₁ C₂ M₀ U₀ G₀ M U G A B R : ℝ}
     (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) (hM₀ : 0 ≤ M₀) (hU₀ : 0 ≤ U₀) (hG₀ : 0 ≤ G₀)
@@ -2918,13 +2927,16 @@ theorem uniform_expression_bound {C₁ C₂ M₀ U₀ G₀ M U G A B R : ℝ}
       (M₀ ^ (3 / 2 : ℝ) + 2 * M₀ * U₀) * (B ^ (1 / 2 : ℝ) + 1) := by
     have h := add_le_add (mul_le_mul_of_nonneg_right hMp hB₁) hMU
     have hm0u0 : 0 ≤ 2 * M₀ * U₀ := by positivity
-    exact h.trans (by nlinarith only [hM₀p, mul_nonneg hm0u0 hB₁])
+    exact h.trans (by simpa only [mul_one] using
+      sum_products_le_product_sums hM₀p hm0u0 hB₁ zero_le_one)
   have hAR : 0 ≤ A / R := div_nonneg hA hR.le
   have hInv : 0 ≤ 1 / R ^ 2 := by positivity
   have hD : A / R + M / R ^ 2 ≤ (M₀ + 1) * (A / R + 1 / R ^ 2) := by
     have hdiv := (div_le_div_iff_of_pos_right (sq_pos_of_pos hR)).2 hMM
     have hdiv' : M / R ^ 2 ≤ M₀ * (1 / R ^ 2) := by simpa only [mul_one_div] using hdiv
-    nlinarith only [hdiv', mul_nonneg hM₀ hAR, hInv]
+    exact (add_le_add le_rfl hdiv').trans (by
+      simpa only [one_mul, add_comm (1 : ℝ) M₀] using
+        sum_products_le_product_sums zero_le_one hM₀ hAR hInv)
   have hlocal :
       C₁ * (M ^ (3 / 2 : ℝ) * B ^ (1 / 2 : ℝ) + 2 * M * U) * (A / R + M / R ^ 2) ≤
       (C₁ * (M₀ ^ (3 / 2 : ℝ) + 2 * M₀ * U₀) * (M₀ + 1)) *
@@ -2947,7 +2959,7 @@ theorem uniform_expression_bound {C₁ C₂ M₀ U₀ G₀ M U G A B R : ℝ}
   have hE₁ : 0 ≤ (B ^ (1 / 2 : ℝ) + 1) * (A / R + 1 / R ^ 2) := by positivity
   have hE₂ : 0 ≤ R ^ (-(7 / 4 : ℝ)) * B ^ (3 / 4 : ℝ) := mul_nonneg hRp hB₃
   unfold uniformCoefficient
-  nlinarith only [add_le_add hlocal hcomm, mul_nonneg hK₁ hE₂, mul_nonneg hK₂ hE₁]
+  exact (add_le_add hlocal hcomm).trans (sum_products_le_product_sums hK₁ hK₂ hE₁ hE₂)
 
 theorem rpow_three_fourths_div {R : ℝ} (hR : 0 < R) :
     R ^ (-(3 / 4 : ℝ)) / R = R ^ (-(7 / 4 : ℝ)) := by
