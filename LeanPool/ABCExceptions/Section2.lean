@@ -57,9 +57,8 @@ theorem Finset.mem_abcExceptionsBelow (ε : ℝ) (X : ℕ) (a b c : ℕ) :
 @[gcongr]
 lemma Finset.abcExceptionsBelow_mono_right {ε : ℝ} {X Y : ℕ} (hXY : X ≤ Y) :
     abcExceptionsBelow ε X ⊆ abcExceptionsBelow ε Y := by
-  rintro ⟨a, b, c⟩
-  simp +contextual
-  omega
+  exact Finset.filter_subset_filter _
+    (Finset.Icc_subset_Icc le_rfl ⟨hXY, hXY, hXY⟩)
 
 @[gcongr]
 lemma Finset.abcExceptionsBelow_mono_left {ε₁ ε₂ : ℝ} {X : ℕ} (hε : ε₁ ≤ ε₂) :
@@ -1184,12 +1183,12 @@ theorem exists_nice_factorization'
     · exact c_le_pow
     gcongr
     · norm_cast
-    · linarith [sq_nonneg ε]
+    · linarith only [sq_nonneg ε]
   · rw [Nat.le_floor_iff]
     · apply c_le_pow.trans
       gcongr _ ^ ?_
       · norm_cast
-      · nlinarith
+      · nlinarith only [hε, hε_pos]
     positivity
   · rw [sub_eq_add_neg, Real.rpow_add, Real.rpow_neg, mul_inv_le_iff₀]
     · apply hsim.1.trans (rad_n_le.trans _)
@@ -1366,7 +1365,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
           · simp only [Real.rpow_one]
             trans 2 * (c₂ *(∏ i, (w i : ℝ) ^ (i.val + 1)))
             · norm_cast
-              simp_all
+              rwa [← c_eq_c_mul_prod]
             · rw [← mul_assoc, mul_comm 2, mul_assoc]
               gcongr
           · apply Real.rpow_pos_of_pos
@@ -1412,7 +1411,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
     · apply fun i ↦ (similar_pow_log (hu_pos i))
     · apply fun i ↦ (similar_pow_log (hv_pos i))
     · apply fun i ↦ (similar_pow_log (hw_pos i))
-    · simp_all
+    · rwa [← a_eq_c_mul_prod, ← b_eq_c_mul_prod, ← c_eq_c_mul_prod]
     · apply coprime_mul_prod_aux _ _ (a_eq_c_mul_prod ▸ b_eq_c_mul_prod ▸ hab) <;> omega
     · apply coprime_mul_prod_aux _ _ (a_eq_c_mul_prod ▸ c_eq_c_mul_prod ▸ hac) <;> omega
     · apply coprime_mul_prod_aux _ _ (b_eq_c_mul_prod ▸ c_eq_c_mul_prod ▸ hbc) <;> omega
