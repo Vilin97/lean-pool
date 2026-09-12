@@ -719,7 +719,9 @@ theorem forced_joint_jet_bound
       _ = w * ((2 : ℝ) ^ N * K ^ 2) * S ^ (m + 1) * P ((σ : ℝ) * t) := by
         rw [pow_succ]
         ring
-      _ ≤ _ := by gcongr
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hconst hw)
+          (pow_nonneg (zero_le_one.trans hS) _)) hp0.le
   have hExp' : Real.exp ((t * μ) * ((1 : ℝ) - 0)) ≤ K' := by
     apply (Real.exp_le_exp.mpr (show (t * μ) * (1 - 0) ≤ μ * L by nlinarith [ht.2])).trans
     exact hExp.trans hKK'
