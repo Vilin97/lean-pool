@@ -521,7 +521,8 @@ def leftInversePath (c : ℝ) (hc : 0 < c) (Q : C(K, α →ᵇ U →L[ℝ] E))
 /-- The actual ordinary coefficient in source equation (12). -/
 def generatorPath (c : ℝ) (hc : 0 < c) (Q Q₁ : C(K, α →ᵇ U →L[ℝ] E))
     (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q t x v‖ ^ 2) : C(K,α →ᵇ U →L[ℝ] U) :=
-  (-2 : ℝ) • pathCompositionMap (leftInversePath c hc Q hQ) Q₁
+  (-2 : ℝ) • pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := U)
+    (leftInversePath c hc Q hQ) Q₁
 
 @[simp] theorem leftInversePath_apply (c : ℝ) (hc : 0 < c) (Q : C(K, α →ᵇ U →L[ℝ] E))
     (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q t x v‖ ^ 2) (t : K) (x : α) :
