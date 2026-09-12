@@ -403,11 +403,7 @@ def test_integration_can_retrieve_exact_missing_definitions(monkeypatch):
             {
                 "verdict": "block",
                 "source_requests": [],
-                "findings": [
-                    {
-                        "comment": "True does not prove the claimed property."
-                    }
-                ],
+                "findings": [{"comment": "True does not prove the claimed property."}],
             }
         )
 
@@ -451,3 +447,52 @@ def test_evidence_artifact_contains_all_model_results(monkeypatch, tmp_path):
     data = json.loads(path.read_text())
     assert data[0]["requests"][0]["payload"]["evidence_summary"] == "source definitions"
     assert data[0]["coverage"] == "manifest"
+
+
+@pytest.mark.parametrize("resolve", [False, True])
+def test_integration_followup_preserves_previous_concerns(resolve):
+    """A follow-up cannot erase a newly found issue or unanswered source request."""
+    calls = []
+
+    def prepare(evidence, rules):
+        return [{"role": "user", "content": evidence}]
+
+    def send(messages):
+        bundle = json.loads(messages[0]["content"])
+        calls.append(bundle)
+        if len(calls) == 1:
+            return result(
+                {
+                    "verdict": "discuss",
+                    "bottom_line": "Cross-module meaning needs checking",
+                    "findings": [{"comment": "Potentially vacuous definition"}],
+                    "open_questions": ["Does the premise have a witness?"],
+                    "source_requests": ["MissingDefinition"],
+                }
+            )
+        assert bundle["integration_history"][0]["findings"]
+        assert len(bundle["obligations"]) == 4
+        assert "No matching" in str(bundle["source_followups"])
+        resolutions = (
+            [
+                {
+                    "id": identifier,
+                    "evidence": "Concrete supplied evidence resolves this concern",
+                }
+                for identifier in bundle["obligations"]
+            ]
+            if resolve
+            else []
+        )
+        return result(
+            {"verdict": "pass", "source_requests": [], "resolutions": resolutions}
+        )
+
+    answer = review._integrate_portions(
+        "+def Known := 0", "{}", {}, 10_000, prepare, send
+    )
+    assert len(calls) == 2
+    assert answer.payload["verdict"] == ("pass" if resolve else "discuss")
+    if not resolve:
+        assert "Potentially vacuous definition" in str(answer.payload["findings"])
+        assert "MissingDefinition" in str(answer.payload["findings"])

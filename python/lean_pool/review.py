@@ -1209,7 +1209,9 @@ def _integrate_portions(
     """Resolve cross-portion questions with bounded exact-source follow-ups."""
     bundle = json.loads(evidence)
     bundle["source_followups"] = []
-    for _ in range(4):
+    bundle["integration_history"] = []
+    for iteration in range(1, 5):
+        bundle["obligations"] = obligations
         material = json.dumps(bundle, ensure_ascii=False)
         messages = prepare(material, review_portions.integration_instructions())
         available = budget - _message_tokens(messages)
@@ -1229,12 +1231,22 @@ def _integrate_portions(
             )
         if not queries:
             break
+        bundle["integration_history"].append(final.payload)
+        obligations.update(
+            review_portions.report_obligations(
+                f"integration:{iteration}", final.payload
+            )
+        )
+        bundle["obligations"] = obligations
+        updated = prepare(
+            json.dumps(bundle, ensure_ascii=False),
+            review_portions.integration_instructions(),
+        )
+        available = budget - _message_tokens(updated)
         allowance = max(0, (available - 512) // len(queries))
         bundle["source_followups"].extend(
             review_portions.source_excerpts(diff, query, allowance) for query in queries
         )
-    for index, query in enumerate(queries, 1):
-        obligations[f"integration:source:{index}"] = f"Source still requested: {query}"
     payload = review_portions.enforce_resolutions(final.payload, obligations)
     return replace(final, payload=payload)
 

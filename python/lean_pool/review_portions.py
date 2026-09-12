@@ -154,16 +154,7 @@ def evidence_bundle(
     """Keep all portion reports and enumerate obligations without truncation."""
     obligations: dict[str, str] = {}
     for index, payload in enumerate(payloads, 1):
-        if payload.get("verdict") not in ("pass", "approve"):
-            obligations[f"{index}:verdict"] = str(
-                payload.get("bottom_line")
-                or payload.get("verdict")
-                or "Missing verdict"
-            )
-        for number, finding in enumerate(payload.get("findings", []), 1):
-            obligations[f"{index}:finding:{number}"] = json.dumps(finding)
-        for number, question in enumerate(payload["open_questions"], 1):
-            obligations[f"{index}:question:{number}"] = question
+        obligations.update(report_obligations(str(index), payload))
     return json.dumps(
         {
             "coverage": manifest,
@@ -173,6 +164,26 @@ def evidence_bundle(
         },
         ensure_ascii=False,
     ), obligations
+
+
+def report_obligations(prefix: str, payload: dict) -> dict[str, str]:
+    """Preserve every report's concerns until integration explicitly resolves them."""
+    obligations = {}
+    if payload.get("verdict") not in ("pass", "approve"):
+        obligations[f"{prefix}:verdict"] = str(
+            payload.get("bottom_line") or payload.get("verdict") or "Missing verdict"
+        )
+    for field, kind in (
+        ("findings", "finding"),
+        ("open_questions", "question"),
+        ("source_requests", "source"),
+    ):
+        items = payload.get(field, [])
+        if not isinstance(items, list):
+            raise ValueError(f"Review {field} must be a list")
+        for number, item in enumerate(items, 1):
+            obligations[f"{prefix}:{kind}:{number}"] = json.dumps(item)
+    return obligations
 
 
 def validate_portion_payload(payload: dict) -> None:
