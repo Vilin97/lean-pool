@@ -3,15 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.CP.Basic
-import LeanPool.BollobasNikiforov.Kernel.Data
+public import LeanPool.BollobasNikiforov.Kernel.Data
+public import LeanPool.BollobasNikiforov.M.Elim
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import LeanPool.BollobasNikiforov.Kernel.Main
-import LeanPool.BollobasNikiforov.M.Config
-import LeanPool.BollobasNikiforov.M.Elim
-import Mathlib.Data.Matrix.ColumnRowPartitioned
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Feature factorisation `M = FFᵀ + L` and the Schur complement of `E`
@@ -26,6 +24,8 @@ rows by `(F_E, 𝒰)`, the Schur complement of the first block is
 `(I + F_Eᵀ L_EE⁻¹ F_E)⁻¹` by the Woodbury companion identity
 (paper (eq:Schur)).
 -/
+
+@[expose] public section
 
 open Matrix
 open scoped Matrix
@@ -793,8 +793,7 @@ lemma configLEE_quad (v : Option (Fin k) → ℝ) :
   have hD : ∑ i, s i * configD t ρ x i * v (some i) ^ 2 =
       ∑ i, s i * v (some i) ^ 2 +
         ∑ i, s i * configH t ρ x i * v (some i) ^ 2 := by
-    simp only [configD, mul_add, add_mul, sum_add_distrib, mul_assoc]
-    ring
+    simp only [configD, mul_add, add_mul, sum_add_distrib, mul_assoc, mul_one]
   rw [hD]
   ring
 

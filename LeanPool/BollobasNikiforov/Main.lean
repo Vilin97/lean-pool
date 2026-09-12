@@ -3,14 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Definition
+public import LeanPool.BollobasNikiforov.Definition
+public import Mathlib.Combinatorics.SimpleGraph.Clique
 import LeanPool.BollobasNikiforov.Spectral.Interlace
 import LeanPool.BollobasNikiforov.Spectral.Weighted
-import LeanPool.BollobasNikiforov.Basic.Spectrum
-import LeanPool.BollobasNikiforov.Basic.Graph
-import Mathlib.Combinatorics.SimpleGraph.Clique
-import Mathlib.Combinatorics.SimpleGraph.Finite
 
 /-!
 # The Bollobás--Nikiforov inequality
@@ -20,6 +18,8 @@ Adjacency eigenvalues are ordered nonincreasingly and counted with algebraic
 multiplicity. Completeness is `G = ⊤`; the hypothesis `G ≠ ⊤` is the paper's
 noncomplete assumption. `[Nontrivial V]` is the paper's `n ≥ 2`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

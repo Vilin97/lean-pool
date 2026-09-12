@@ -3,15 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Kernel.Data
+public import LeanPool.BollobasNikiforov.Kernel.Data
 import LeanPool.BollobasNikiforov.Kernel.SM
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Sign lemmas for the kernel auxiliaries `P` and `Z`
@@ -19,6 +18,8 @@ import Mathlib.Tactic.Ring
 The expansions and nonnegativity statements for `P` and `Z` in `docs/sol.tex` §3
 (`eq:functions`, after `eq:factor`).
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

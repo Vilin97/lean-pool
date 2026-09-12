@@ -3,10 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Basic.Spectrum
-import LeanPool.BollobasNikiforov.Definition
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import LeanPool.BollobasNikiforov.Basic.Spectrum
+public import LeanPool.BollobasNikiforov.Definition
+public import Mathlib.Combinatorics.SimpleGraph.LapMatrix
 
 /-!
 # Noncomplete graphs and the two largest adjacency eigenvalues
@@ -16,6 +17,8 @@ matrix. Courant-Fischer on that coordinate plane yields `lambda2 G ≥ 0` when `
 is not complete, and therefore `F(A_G) = lambda1 G ^ 2 + lambda2 G ^ 2`. The
 largest eigenvalue is nonnegative for every finite graph, complete or not.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

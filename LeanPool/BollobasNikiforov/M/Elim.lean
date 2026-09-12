@@ -3,18 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.CP.Basic
-import LeanPool.BollobasNikiforov.M.Config
-import LeanPool.BollobasNikiforov.TN.Truncated
+public import LeanPool.BollobasNikiforov.CP.Basic
+public import LeanPool.BollobasNikiforov.M.Config
+public import LeanPool.BollobasNikiforov.TN.Truncated
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Real.Basic
-import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Mathlib.Logic.Equiv.Fin.Basic
 
 /-!
 # Ordered elimination residuals
@@ -33,6 +28,8 @@ TN13 (EL10), so residual columns stay nonnegative (EL11). Scaled outer
 products of those columns yield a completely positive `C₀` (EL12). The
 remainder is the `T`-Schur complement of `E` and is PSD (EL13–EL14).
 -/
+
+@[expose] public section
 
 open Matrix Function
 
@@ -675,7 +672,7 @@ lemma det_smul_row_col {n : Type*} [Fintype n] [DecidableEq n]
       (of fun i j ↦ u i * v j * A i j) =
         of fun i j ↦ u i * (v j * A i j) := by
     ext i j
-    ring
+    exact mul_assoc _ _ _
   have hcol : (of fun i j ↦ v j * A i j).det = (∏ j, v j) * A.det :=
     det_mul_row v A
   have hrow :

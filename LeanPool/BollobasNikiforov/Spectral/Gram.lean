@@ -3,16 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Basic.Graph
-import LeanPool.BollobasNikiforov.Basic.Inner
-import LeanPool.BollobasNikiforov.Basic.Spectrum
+public import LeanPool.BollobasNikiforov.Basic.Graph
+public import LeanPool.BollobasNikiforov.Basic.Spectrum
 import LeanPool.BollobasNikiforov.Spectral.Weighted
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
-import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Edge-supported positive part and the Gram form
@@ -28,6 +25,8 @@ with `BollobasNikiforov.MS.Basic` (pulled in by `Weighted`), and also overlaps W
 `eigenvectorBasis_dotProduct`. The CG03 argument is therefore reproduced in
 `GramAux`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

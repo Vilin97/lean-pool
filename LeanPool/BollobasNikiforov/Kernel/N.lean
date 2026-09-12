@@ -3,19 +3,16 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Kernel.Data
-import LeanPool.BollobasNikiforov.TN.Basic
-import LeanPool.BollobasNikiforov.TN.Convex
-import Mathlib.Algebra.BigOperators.Fin
+public import LeanPool.BollobasNikiforov.Kernel.Data
+public import LeanPool.BollobasNikiforov.TN.Convex
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Convex.Mul
 import Mathlib.Analysis.Convex.Slope
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.LinearAlgebra.Matrix.Adjugate
-import Mathlib.LinearAlgebra.Matrix.Block
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.SchurComplement
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Nonnegativity of `N`
@@ -24,6 +21,8 @@ The identity `N = det(I + Q W)` of `docs/sol.tex` §3, the factorization of
 `W` through two totally nonnegative three-column matrices, and `1 ≤ N x`
 for `x ≥ 0`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 
