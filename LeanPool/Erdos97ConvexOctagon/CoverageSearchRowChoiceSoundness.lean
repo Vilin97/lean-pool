@@ -49,7 +49,8 @@ theorem searchRowChoices_complete (centre : Vertex) :
     (rowOptions centre).reverse =
       List.ofFn (fun index : Fin 35 =>
         packedRow (searchRowChoiceAt centre index).rowMask) := by
-  fin_cases centre <;> decide
+  revert centre
+  decide +kernel
 
 /-- Every mathematical incidence row occurs at one lightweight search index. -/
 theorem exists_searchRowChoiceIndex (Q : OctagonIncidence) (centre : Vertex) :
@@ -66,7 +67,8 @@ theorem exists_searchRowChoiceIndex (Q : OctagonIncidence) (centre : Vertex) :
 theorem searchRowChoiceAt_pairMask (centre : Vertex) (index : Fin 35) :
     (searchRowChoiceAt centre index).pairMask =
       rowPairMask (searchRowChoiceAt centre index).rowMask := by
-  fin_cases centre <;> fin_cases index <;> rfl
+  revert centre index
+  decide +kernel
 
 /-- The centre-two row table uses exactly the public fixed-branch ordering. -/
 theorem searchRowChoiceAt_two_mask (index : Fin 35) :
