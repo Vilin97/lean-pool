@@ -2897,8 +2897,11 @@ def baseL2Data : EulerBaseEulerParent.L2Data (baseInput P u C R hC hR hu hdiv) w
   velocity_match t x :=
     (localField_apply P u C R hC hR hu hdiv (baseInclusion P C R hC hR t) x).trans
       (baseInput_field P u C R hC hR hu hdiv t x).symm
-  derivative_match t x :=
-    localDerivativeField_apply P u C R hC hR hu hdiv (baseInclusion P C R hC hR t) x
+  derivative_match t x := by
+    rw [show (baseInput P u C R hC hR hu hdiv).derivative =
+      (derivativeCoefficient P u C R hC hR hu hdiv).compTime (baseInclusion P C R hC hR) from rfl]
+    erw [SmoothTimeField.compTime_apply]
+    exact localDerivativeField_apply P u C R hC hR hu hdiv (baseInclusion P C R hC hR t) x
   C := outputVelocitySize P C R
   S := outputRadius R
   C₁ := outputDerivativeSize P C R hC hR
