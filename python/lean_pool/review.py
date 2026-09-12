@@ -1255,7 +1255,9 @@ def _integrate_portions(
             review_portions.integration_instructions(),
         )
         available = budget - _message_tokens(updated)
-        allowance = max(0, (available - 512) // len(queries))
+        allowance = max(
+            0, int((available - 512) * CHARS_PER_TOKEN_ESTIMATE) // len(queries)
+        )
         bundle["source_followups"].extend(
             review_portions.source_excerpts(diff, query, allowance) for query in queries
         )

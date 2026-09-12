@@ -496,3 +496,35 @@ def test_integration_followup_preserves_previous_concerns(resolve):
     if not resolve:
         assert "Potentially vacuous definition" in str(answer.payload["findings"])
         assert "MissingDefinition" in str(answer.payload["findings"])
+
+
+@pytest.mark.parametrize("field", ["findings", "open_questions", "source_requests"])
+def test_final_integration_concerns_prevent_approval(field):
+    """A final pass cannot override unresolved concerns in that same report."""
+    payload = {"verdict": "pass", field: ["Unresolved semantic question"]}
+    answer = review_portions.enforce_resolutions(payload, {})
+    assert answer["verdict"] == "discuss"
+    assert "Unresolved semantic question" in str(answer["findings"])
+
+
+def test_source_excerpt_allowance_uses_characters(monkeypatch):
+    """An excerpt can use the remaining token budget at the configured ratio."""
+    calls = []
+    allowances = []
+
+    def prepare(evidence, rules):
+        return [{"role": "user", "content": evidence}]
+
+    def send(messages):
+        calls.append(messages)
+        return result(
+            {"verdict": "pass", "source_requests": ["Known"] if len(calls) == 1 else []}
+        )
+
+    def excerpt(diff, query, allowance):
+        allowances.append(allowance)
+        return {"source": "def Known := 0"}
+
+    monkeypatch.setattr(review_portions, "source_excerpts", excerpt)
+    review._integrate_portions("def Known := 0", "{}", {}, 10_000, prepare, send)
+    assert 15_000 < allowances[0] < 20_000
