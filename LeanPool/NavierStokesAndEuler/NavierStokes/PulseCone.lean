@@ -2686,7 +2686,7 @@ theorem axialHistoryError_bound (w : ResetWitness d K)
         (4 * (1 / 2 + d.h) * eta) * (Pi w p / E w p ^ 2) -
         (1 - eta ^ 2) * (dEta (Pi w) p / E w p ^ 2)) := by
     unfold axialHistoryError
-    dsimp only [p] at *
+    dsimp only [p] at hE hX ⊢
     field_simp [hE.ne', hX.ne']; ring
   have hb := normalized_axial_bound hE.le hw' hdata.1 ha' hcoef.2.1 hc' hs' hse' hp' hpe'
   rw [← hid] at hb
@@ -2959,7 +2959,9 @@ theorem shearB_main_error (w : ResetWitness d K) (hsmall : d.core.lam ≤ 1 / 12
   have hR := pulseRatio_abs_le d.core hsmall amp heta hamp y
   have hZ := scaledPulse_deriv_abs_le d.core hsmall amp heta hamp y
   have he := (scaledPulse_correction_bounds d.core hsmall amp heta hamp y).1
-  have hpow : d.core.lam ^ 2 ≤ d.core.lam := by nlinarith [d.core.lam_pos, d.core.lam_lt]
+  have hpow : d.core.lam ^ 2 ≤ d.core.lam := by
+    simpa only [pow_two, mul_one] using mul_le_mul_of_nonneg_left
+      (show d.core.lam ≤ 1 by linarith only [d.core.lam_lt]) d.core.lam_pos.le
   have hscale := mul_le_mul_of_nonneg_left hpow (valueRepairConstant_pos d.core.P_pos d.core.m).le
   have hid : shearB w amp (d.core.pulseStart + y, eta) + mainRatio d.core amp eta y =
       -(pulseRatio d.core amp (y, eta) - mainRatio d.core amp eta y) + 2 * d.core.lam *
@@ -3001,14 +3003,16 @@ theorem mainDirection_ideal_error (d : TailData)
   have h₁ := mul_le_mul hratio hR (abs_nonneg _) (show 0 ≤ 3 * d.core.lam by
       linarith [d.core.lam_pos])
   have h₃ := mul_le_mul hCd hc.2 (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 3)
-  have hpow : d.core.lam ^ 2 ≤ d.core.lam := by nlinarith [d.core.lam_pos, d.core.lam_lt]
+  have hpow : d.core.lam ^ 2 ≤ d.core.lam := by
+    simpa only [pow_two, mul_one] using mul_le_mul_of_nonneg_left
+      (show d.core.lam ≤ 1 by linarith only [d.core.lam_lt]) d.core.lam_pos.le
   have hscale := mul_le_mul_of_nonneg_left hpow (valueRepairConstant_pos d.core.P_pos d.core.m).le
   rw [hid]
   apply (abs_sub _ _).trans
   apply (add_le_add_left (abs_add_le _ _) _).trans
   rw [abs_mul, abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-  dsimp [directionMainErrorConstant, mainRatio, mainSlope] at *
-  linarith
+  dsimp [directionMainErrorConstant, mainRatio, mainSlope] at h₁ h₃ hc hscale ⊢
+  linarith only [h₁, h₃, hc.1, hscale]
 
 /-! ## The shaped wait supplies the actual angular equilibrium error -/
 
