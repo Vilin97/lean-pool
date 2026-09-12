@@ -251,7 +251,7 @@ def firstChildLowBounds (hL : H.L = 0) (hquarter : A.ell ≤ 1 / 4)
     hCM0
   · dsimp [Cnew]
     positivity [firstRatio_pos]
-  · linarith
+  · exact le_add_of_nonneg_right zero_le_one
   · exact A.ell_pos.le
   · exact hquarter
   · dsimp [Knew]
@@ -375,6 +375,18 @@ open Set EulerSmoothLimit EulerParentPacketFrames EulerPacketSupport
 variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
   (T : ℝ) (hT : 0 < T) (hTB : T ≤ initialTime)
 
+theorem packetBaseParent_scale :
+    (packetBaseParent β hβ ell hell hell1 T hT hTB).ell = ell := rfl
+
+theorem packetBaseParent_time :
+    (packetBaseParent β hβ ell hell hell1 T hT hTB).T = T := rfl
+
+theorem packetBaseLowBounds_pressure :
+    (packetBaseLowBounds β hβ ell hell hell1 T hT hTB).K = initialCoefficientCost := rfl
+
+-- Preserve the abstract parent while constructing the first packet data.
+attribute [local irreducible] initialParent
+
 /-- First packet mean data, given by `(packetBaseParent β hβ ell hell hell1 T hT hTB).meanData
 (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)`. -/
 def firstPacketMeanData : EulerMeanPacketProvider.Data :=
@@ -436,12 +448,15 @@ def firstPacketLowBounds (hquarter : ell ≤ 1 / 4) (hδ1 : δ ≤ 1) (hhchild :
     (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)
     firstNormal firstNormal_unit firstFrame support compact δ hδ hδ1 hchild hhchild
     firstCoordinate (subset_refl _) N hN k hk Q G hG hgraph nextEll hnext hnext1
-    rfl hquarter (subset_halfBall.trans Metric.ball_subset_closedBall)
+    rfl (by simpa only [packetBaseParent_scale] using hquarter)
+    (subset_halfBall.trans Metric.ball_subset_closedBall)
     ev ep initialCoefficientCost initialCoefficientCost herr
     (firstPacket_primary_size β hβ ell hell hell1 T hT hTB)
     (firstPacket_primary_flux β hβ ell hell hell1 T hT hTB)
     (packetBase_physical_strain β hβ ell hell hell1 T hT hTB)
-    (packetBase_physical_force β hβ ell hell hell1 T hT hTB) hsmall
+    (packetBase_physical_force β hβ ell hell hell1 T hT hTB)
+    (by simpa only [packetBaseParent_scale, packetBaseParent_time,
+      packetBaseLowBounds_pressure] using hsmall)
 
 end EulerBaseDatum
 
@@ -1107,12 +1122,15 @@ def firstStage : Stage S 0 := by
     rw [zero_add,baseHorizon_eq_timeWidth S.J S.x_pos]
   · intro t x
     have h := (F.physical_bounds S.first.spike_one S.first.shear_pos.le t x).1
-    dsimp only [FirstScaleGuards.state, previousShear]
+    change ‖fderiv ℝ (fun y => F.state.evolution.velocity (t, y)) x‖ ≤
+      gradientConstant * S.X ^ 1000
     exact h.trans hbounds.1
   · intro t x
     have h := (F.physical_bounds S.first.spike_one S.first.shear_pos.le t x).2
-    dsimp only [FirstScaleGuards.state, previousShear, olderShear]
-    simpa only [mul_one] using h.trans hbounds.2
+    change ‖fderiv ℝ (F.state.evolution.force t) x‖ ≤
+      hessianConstant * S.X ^ 1000 * 1
+    rw [mul_one]
+    exact h.trans hbounds.2
   · rw [hlow.1]
     simp only [sum_range_zero,add_zero,le_refl]
   · rw [hlow.2.1]
