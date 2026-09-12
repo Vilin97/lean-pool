@@ -1926,13 +1926,15 @@ theorem exists_unique_natural_fixedPoint [CompleteSpace V]
     exact (div_le_one hΛpos).mpr hΛ1
   have hs : 0 ≤ 1 / (2 * Λ) := by positivity
   let f := controlledRemainder O d S R M hR hM (1 / Λ) ht a ha
+  have hfB : f.bound = B := controlledRemainder_bound_eq O d S R M hR hM (1 / Λ) ht a ha
+  have hfL : f.lip = L := controlledRemainder_lip_eq O d S R M hR hM (1 / Λ) ht a ha
   have hb : (1 / (2 * Λ)) * f.bound ≤ 1 := by
-    change (1 / (2 * Λ)) * B ≤ 1
+    rw [hfB]
     rw [show (1 / (2 * Λ)) * B = B / (2 * Λ) by ring]
     apply (div_le_iff₀ hden).mpr
     linarith
   have hl : (1 / (2 * Λ)) * f.lip ≤ 1 / 2 := by
-    change (1 / (2 * Λ)) * L ≤ 1 / 2
+    rw [hfL]
     rw [show (1 / (2 * Λ)) * L = L / (2 * Λ) by ring]
     apply (div_le_iff₀ hden).mpr
     linarith
@@ -1941,7 +1943,7 @@ theorem exists_unique_natural_fixedPoint [CompleteSpace V]
   refine ⟨x, hx, ?_, ?_, ?_⟩
   · simpa only [f, controlledRemainder_eval] using hfixed
   · change ‖x - x₀‖ ≤ B / (2 * Λ)
-    change ‖x - x₀‖ ≤ (1 / (2 * Λ)) * B at herr
+    rw [hfB] at herr
     simpa only [one_div, div_eq_mul_inv, mul_comm, one_mul] using herr
   · intro y hy hyfixed
     apply huniq y hy
