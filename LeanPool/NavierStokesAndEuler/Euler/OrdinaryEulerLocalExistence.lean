@@ -85,10 +85,6 @@ def field (u : L2) : SmoothL2Field Space := smoothL2Field (S.op u) (S.smooth u)
 
 @[simp] theorem field_toLp (u : L2) : (S.field u).toLp=S.op u := smoothL2Field_toLp _ _
 
-private theorem valueOperator_ordinary (q : ℕ) (u : L2) (hu : SmoothOrbit u) :
-    valueOperator 1 q (ordinarySobolev q u hu)=ordinaryLift u :=
-  ordinarySobolev_value q u hu
-
 /-- Lift linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def liftLinear (q : ℕ) : L2 →ₗ[ℝ] SobolevSpace 1 q where
   toFun u := ordinarySobolev q (S.op u) (S.smooth u)
