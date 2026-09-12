@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerVorticity
 import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
 import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
 
 /-! Scalar components of genuine smooth velocity and vorticity fields,
 their exact elliptic identity, and a fixed coordinate operator bound. -/

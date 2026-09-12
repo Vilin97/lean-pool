@@ -11,6 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Lagrangian
 public import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientProduct
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothL2CoefficientPath
 import LeanPool.NavierStokesAndEuler.Euler.LpSmoothCoefficientContinuity
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! The classical Euler equation supplies strong evolution in every
 Sobolev norm once the actual velocity and pressure-gradient L² jets are

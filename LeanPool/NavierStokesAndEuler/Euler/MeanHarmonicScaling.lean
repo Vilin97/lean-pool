@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicInterior
 import LeanPool.NavierStokesAndEuler.Euler.MeanScalarSobolev
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! Scaling the actual Laplacian and harmonic interior estimates on R³. -/
 

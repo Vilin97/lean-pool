@@ -8,6 +8,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatVolterra
 public import LeanPool.NavierStokesAndEuler.Euler.DuhamelDifferentiation
 import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-! The constructed gained-derivative heat fixed point satisfies the actual differential PDE in L².
 -/

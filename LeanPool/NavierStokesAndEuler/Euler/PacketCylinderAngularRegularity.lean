@@ -8,6 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 import LeanPool.NavierStokesAndEuler.Euler.PeriodicDerivativeMean
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! Genuine periodicity and zero-mean identities for raw cylinder-path witnesses. -/
 

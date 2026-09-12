@@ -12,6 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryFactorization
 import LeanPool.NavierStokesAndEuler.Euler.PacketFieldTensorBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
 import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryScaling
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! The primary's literal velocity gradient at every spatial point.  Its
 fast derivative is the source shear, and the slow derivative has an

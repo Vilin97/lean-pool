@@ -15,6 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+public import Mathlib.Analysis.InnerProductSpace.Laplacian
 
 /-! The heat estimates specialized to genuine ordinary smooth L² fields. -/
 

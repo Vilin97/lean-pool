@@ -12,6 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanTimeContinuousTranslation
 import LeanPool.NavierStokesAndEuler.Euler.MeanPathSpatialRepresentative
 import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-!
 # Commuting actual spatial derivatives with the time derivative

@@ -15,6 +15,7 @@ import Mathlib.MeasureTheory.SpecificCodomains.WithLp
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevL2Product
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! Actual pointwise multiplication on the complete cylinder Sobolev spaces Hq, q≥6. -/
 

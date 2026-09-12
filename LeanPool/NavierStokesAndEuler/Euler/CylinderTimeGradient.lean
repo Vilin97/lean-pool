@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
 import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeWords
+import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! Time regularity of the full genuine covering derivative, reconstructed from its four directions.
 -/
