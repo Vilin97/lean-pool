@@ -888,6 +888,7 @@ theorem coefficient0_contDiffAt_of_pullback {n : WithTop ℕ∞} {h lam C : ℂ}
     simp only [coefficient0, A0, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    (first | exact contDiffAt_const | skip) <;>
     fin_cases j <;>
     simp only [coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
         edge, neg_mul, neg_add_rev, Fin.zero_eta,
@@ -914,10 +915,20 @@ theorem coefficient1_contDiffAt_of_pullback {n : WithTop ℕ∞} {h : ℂ} {F : 
     (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))).inv hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
+  have hphi : ContDiffAt ℝ n (fun v : ℝ × ℂ =>
+      (v.1 : ℂ) ^ 2 * F 1 (v.1 ^ 2, v.2) + F 0 (v.1 ^ 2, v.2)) w :=
+    ((hcoe.pow 2).mul (hdata 1)).add (hdata 0)
+  have hu : ContDiffAt ℝ n (fun v : ℝ × ℂ =>
+      (v.1 : ℂ) ^ 2 * F 4 (v.1 ^ 2, v.2)) w := (hcoe.pow 2).mul (hdata 4)
+  have htransport : ContDiffAt ℝ n (fun v : ℝ × ℂ =>
+      dScale h * v.2 + (1 - v.2 ^ 2) * F 3 (v.1 ^ 2, v.2)) w :=
+    (contDiffAt_const.mul contDiffAt_snd).add
+      ((contDiffAt_const.sub (contDiffAt_snd.pow 2)).mul (hdata 3))
   fin_cases i <;>
     simp only [coefficient1, A1, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    (first | exact contDiffAt_const | skip) <;>
     fin_cases j <;>
     simp only [edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
         Fin.zero_eta, Matrix.cons_val_zero,
@@ -925,6 +936,9 @@ theorem coefficient1_contDiffAt_of_pullback {n : WithTop ℕ∞} {h : ℂ} {F : 
                 Matrix.cons_val] <;>
     (repeat' first
       | exact contDiffAt_const
+      | exact hphi
+      | exact hu
+      | exact htransport
       | exact hdata _
       | exact contDiffAt_snd
       | exact hcoe
@@ -968,6 +982,7 @@ theorem coefficient0_analyticAt {h lam C : ℂ} {F : CoefficientData} {r : ℝ} 
     simp only [coefficient0, A0, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    (first | exact analyticAt_const | skip) <;>
     fin_cases j <;>
     simp only [coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
         edge, neg_mul, neg_add_rev, Fin.zero_eta,
@@ -993,6 +1008,7 @@ theorem coefficient1_analyticAt {h : ℂ} {F : CoefficientData} {r : ℝ} {z : �
     simp only [coefficient1, A1, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
+    (first | exact analyticAt_const | skip) <;>
     fin_cases j <;>
     simp only [edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
         Fin.zero_eta, Matrix.cons_val_zero,
