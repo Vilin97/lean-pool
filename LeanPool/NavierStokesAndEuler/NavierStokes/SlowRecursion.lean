@@ -7,7 +7,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.BoundaryAxisJets
 import Mathlib.Analysis.Calculus.Deriv.Prod
-public import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.Complex.CauchyIntegral
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SimilarityProfile
 import Mathlib.Analysis.Calculus.ContDiff.Operations
 import Mathlib.Analysis.Calculus.Deriv.Inv
@@ -2056,7 +2056,8 @@ noncomputable def parameterDerivative {R : ℝ} {U : Set ℂ} (hU : IsOpen U)
     (F : AxisFunction R U) : AxisFunction R U :=
   ⟨BoundaryAxisJets.complexPartial F, {
     smooth := BoundaryAxisJets.complexPartial_contDiffOn isOpen_Ioo hU F.2.smooth F.2.holomorphic
-    holomorphic := fun r hr => (F.2.holomorphic r hr).deriv hU
+    holomorphic := by
+      exact fun r hr => (F.2.holomorphic r hr).deriv hU
     even := by
       intro z hz r hr
       apply Filter.EventuallyEq.deriv_eq
