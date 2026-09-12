@@ -1568,14 +1568,18 @@ noncomputable def frameForcingLinear (d : FrameData Q) (z : Q × ℝ) : PrimaryO
       intro f g
       ext i
       fin_cases i <;>
-        simp [FrameData.forcing, FrameData.forceX, FrameData.forceY, inner_add_right,
-          MovingFrameODE.tail_add] <;> ring
+        simp only [FrameData.forcing, FrameData.forceX, FrameData.forceY, PiLp.add_apply,
+          MovingFrameODE.tail_add, inner_add_right, neg_sub, neg_add_rev, Fin.isValue,
+          Fin.zero_eta, Fin.mk_one, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.cons_val_fin_one] <;> ring
     map_smul' := by
       intro c f
       ext i
       fin_cases i <;>
-        simp [FrameData.forcing, FrameData.forceX, FrameData.forceY,
-          inner_smul_right, MovingFrameODE.tail_smul] <;> ring }
+        simp only [FrameData.forcing, FrameData.forceX, FrameData.forceY, PiLp.smul_apply,
+          smul_eq_mul, MovingFrameODE.tail_smul, inner_smul_right, neg_sub, Fin.isValue,
+          Fin.zero_eta, Fin.mk_one, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.cons_val_fin_one, RingHom.id_apply] <;> ring }
 
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 @[simp] theorem frameForcingLinear_apply (d : FrameData Q) (f : Q × ℝ → PrimaryODE.Space) (z : Q ×
