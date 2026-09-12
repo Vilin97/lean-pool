@@ -478,7 +478,9 @@ theorem regularTridecagon_chord_multiplicity (k : Fin 6) :
     exact regularTridecagon_pairDistance_eq_chord_iff
       (Finset.mem_filter.mp he).2 k
   rw [hfilter]
-  fin_cases k <;> decide
+  clear hfilter
+  revert k
+  decide +kernel
 
 /-- Explicit coordinates for the regular dodecagon and its center. -/
 def dodecagonWithCenterPoint (i : Fin 13) : ℂ :=
@@ -499,11 +501,12 @@ def dodecagonWithCenterPoint (i : Fin 13) : ℂ :=
 
 theorem dodecagonWithCenterPoint_injective :
     Function.Injective dodecagonWithCenterPoint := by
-  intro i j hij
-  fin_cases i <;> fin_cases j <;>
-    simp [dodecagonWithCenterPoint, Complex.ext_iff] at hij ⊢ <;>
-    nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3),
-      Real.sqrt_pos.2 (by norm_num : (0 : ℝ) < 3)]
+  have hroot : (1 : ℝ) < Real.sqrt 3 := by
+    nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3), Real.sqrt_nonneg (3 : ℝ)]
+  apply List.nodup_ofFn.mp
+  norm_num [List.ofFn_succ, dodecagonWithCenterPoint, Complex.ext_iff]
+  repeat' apply And.intro
+  all_goals (intros; linarith [hroot])
 
 /-- The centered regular dodecagon template in the published classification. -/
 def dodecagonWithCenter : Configuration (Fin 13) where
@@ -530,11 +533,11 @@ def hexagramWithCenterPoint (i : Fin 13) : ℂ :=
 
 theorem hexagramWithCenterPoint_injective :
     Function.Injective hexagramWithCenterPoint := by
-  intro i j hij
-  fin_cases i <;> fin_cases j <;>
-    simp [hexagramWithCenterPoint, Complex.ext_iff] at hij ⊢ <;>
-    nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3),
-      Real.sqrt_pos.2 (by norm_num : (0 : ℝ) < 3)]
+  have hroot : (0 : ℝ) < Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
+  apply List.nodup_ofFn.mp
+  norm_num [List.ofFn_succ, hexagramWithCenterPoint, Complex.ext_iff]
+  repeat' apply And.intro
+  all_goals linarith [hroot]
 
 /-- The centered regular-hexagram template in the published classification. -/
 def hexagramWithCenter : Configuration (Fin 13) where
@@ -560,7 +563,7 @@ theorem dodecagonWithCenter_unit_distance_multiplicity :
       nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3),
         Real.sqrt_pos.2 (by norm_num : (0 : ℝ) < 3)]
   rw [hfilter]
-  decide
+  decide +kernel
 
 /-- Enumeration of twenty-four unit pairs in the centered hexagram. -/
 def hexagramUnitPair (k : Fin 24) : Fin 13 × Fin 13 :=
@@ -591,11 +594,12 @@ def hexagramUnitPair (k : Fin 24) : Fin 13 × Fin 13 :=
   | _ => (11, 12)
 
 theorem hexagramUnitPair_injective : Function.Injective hexagramUnitPair := by
-  decide
+  decide +kernel
 
 theorem hexagramUnitPair_mem_pairs (k : Fin 24) :
     hexagramUnitPair k ∈ pairs (Finset.univ : Finset (Fin 13)) := by
-  fin_cases k <;> decide
+  revert k
+  decide +kernel
 
 theorem hexagramUnitPair_distance (k : Fin 24) :
     hexagramWithCenter.pairDistance (hexagramUnitPair k) = 1 := by
