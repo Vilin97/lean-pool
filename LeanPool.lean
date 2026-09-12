@@ -1776,6 +1776,7 @@ import LeanPool.GapCVP.Part16A
 import LeanPool.GapCVP.Part16B
 import LeanPool.GapCVP.Part17
 import LeanPool.GapCVP.Part18
+import LeanPool.GapCVP.StatementLifting
 import LeanPool.GrothendieckVanishing
 import LeanPool.GrothendieckVanishing.ClosedImmersion
 import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology

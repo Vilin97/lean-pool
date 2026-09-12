@@ -5,6 +5,7 @@ Authors: OpenAI, Dean Cureton
 -/
 
 import LeanPool.GapCVP.Part04B
+import LeanPool.GapCVP.StatementLifting
 
 /-! # GapCVP proof, part 04, continuation 03 -/
 
@@ -738,26 +739,10 @@ abbrev ConditionalLabel (tm : Turing.FinTM2) := tm.Λ ⊕ Bool
 abbrev ConditionalState (tm : Turing.FinTM2) := Option Bool × tm.σ
 
 /-- GapCVP reduction support. -/
-def liftValidStatement (tm : Turing.FinTM2) :
-    Turing.TM2.Stmt tm.Γ tm.Λ tm.σ →
-      Turing.TM2.Stmt tm.Γ (ConditionalLabel tm)
-        (ConditionalState tm)
-  | .push k f q =>
-      .push k (fun state => f state.2) (liftValidStatement tm q)
-  | .peek k f q =>
-      .peek k (fun state symbol => (state.1, f state.2 symbol))
-        (liftValidStatement tm q)
-  | .pop k f q =>
-      .pop k (fun state symbol => (state.1, f state.2 symbol))
-        (liftValidStatement tm q)
-  | .load f q =>
-      .load (fun state => (state.1, f state.2))
-        (liftValidStatement tm q)
-  | .branch test yes no =>
-      .branch (fun state => test state.2)
-        (liftValidStatement tm yes) (liftValidStatement tm no)
-  | .goto next => .goto (fun state => .inl (next state.2))
-  | .halt => .load (fun state => (none, state.2)) .halt
+abbrev liftValidStatement (tm : Turing.FinTM2) :=
+  liftStatement (K := tm.K) (Γ := tm.Γ) id (Sum.inl : tm.Λ → ConditionalLabel tm)
+    (Prod.snd : Option Bool × tm.σ → tm.σ) (fun state value => (state.1, value))
+    (.load (fun state => (none, state.2)) .halt)
 
 private def fixedOutputStatement
     {valid : List Bool → List Bool}
@@ -840,30 +825,11 @@ theorem liftValidStatement_stepAux
       validConfiguration computer fallback
         (Turing.TM2.stepAux statement state sourceStacks) := by
   classical
-  induction statement generalizing state sourceStacks with
-  | push k f q ih =>
-      exact ih (state := state)
-        (sourceStacks := Function.update sourceStacks k
-          (f state :: sourceStacks k))
-  | peek k f q ih =>
-      exact ih (state := f state (sourceStacks k).head?)
-        (sourceStacks := sourceStacks)
-  | pop k f q ih =>
-      exact ih (state := f state (sourceStacks k).head?)
-        (sourceStacks := Function.update sourceStacks k
-          (sourceStacks k).tail)
-  | load f q ih =>
-      exact ih (state := f state) (sourceStacks := sourceStacks)
-  | branch test yes no ihYes ihNo =>
-      cases htest : test state with
-      | false =>
-          simpa only [liftValidStatement, TM2.stepAux, htest, Bool.cond_false] using
-              ihNo (state := state) (sourceStacks := sourceStacks)
-      | true =>
-          simpa only [liftValidStatement, TM2.stepAux, htest, Bool.cond_true] using
-              ihYes (state := state) (sourceStacks := sourceStacks)
-  | goto next => rfl
-  | halt => rfl
+  exact liftStatement_stepAux id Sum.inl Prod.snd (fun state value => (state.1, value))
+    (.load (fun state => (none, state.2)) .halt)
+    (fun state => (some true, state)) id (validConfiguration computer fallback)
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ _ => rfl)
+    (fun _ _ _ => rfl) (fun _ _ => rfl) statement state sourceStacks
 
 /-- Internal support shared across GapCVP continuation modules. -/
 theorem validConfiguration_step

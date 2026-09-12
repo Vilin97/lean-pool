@@ -541,32 +541,12 @@ private abbrev BoundedFoldLabel (tm : Turing.FinTM2) := tm.Λ ⊕ Fin 5
 
 private abbrev BoundedFoldState (tm : Turing.FinTM2) := Option Bool × tm.σ
 
-private def liftBoundedFoldWorkerStatement (tm : Turing.FinTM2) :
-    Turing.TM2.Stmt tm.Γ tm.Λ tm.σ →
-      Turing.TM2.Stmt (boundedFoldAlphabet tm)
-        (BoundedFoldLabel tm) (BoundedFoldState tm)
-  | .push k f next =>
-      .push (.inl k) (fun state => f state.2)
-        (liftBoundedFoldWorkerStatement tm next)
-  | .peek k f next =>
-      .peek (.inl k)
-        (fun state symbol => (state.1, f state.2 symbol))
-        (liftBoundedFoldWorkerStatement tm next)
-  | .pop k f next =>
-      .pop (.inl k)
-        (fun state symbol => (state.1, f state.2 symbol))
-        (liftBoundedFoldWorkerStatement tm next)
-  | .load f next =>
-      .load (fun state => (state.1, f state.2))
-        (liftBoundedFoldWorkerStatement tm next)
-  | .branch test yes no =>
-      .branch (fun state => test state.2)
-        (liftBoundedFoldWorkerStatement tm yes)
-        (liftBoundedFoldWorkerStatement tm no)
-  | .goto next => .goto (fun state => .inl (next state.2))
-  | .halt =>
-      .load (fun state => (none, state.2))
-        (.goto (fun _ => .inr (2 : Fin 5)))
+private abbrev liftBoundedFoldWorkerStatement (tm : Turing.FinTM2) :=
+  liftStatement (K := tm.K) (Γ := boundedFoldAlphabet tm)
+    Sum.inl (Sum.inl : tm.Λ → BoundedFoldLabel tm)
+    (Prod.snd : Option Bool × tm.σ → tm.σ) (fun state value => (state.1, value))
+    (.load (fun state => (none, state.2))
+      (.goto (fun _ => .inr (2 : Fin 5))))
 
 /-- Internal support shared across GapCVP continuation modules. -/
 noncomputable def boundedDependentRecordFoldMachine
@@ -721,44 +701,13 @@ private theorem liftBoundedFoldWorkerStatement_stepAux
         boundedFoldWorkerConfiguration computer counter
           (Turing.TM2.stepAux statement state sourceStacks) := by
   classical
-  induction statement generalizing state sourceStacks with
-  | push k f next ih =>
-      change Turing.TM2.stepAux
-        (liftBoundedFoldWorkerStatement computer.tm next)
-        (none, state)
-        (Function.update
-          (boundedFoldStacks computer.tm sourceStacks counter [])
-          (.inl k) (f state :: sourceStacks k)) = _
-      rw [← boundedFoldStacks_update_worker]
-      exact ih (state := state)
-        (sourceStacks :=
-          Function.update sourceStacks k (f state :: sourceStacks k))
-  | peek k f next ih =>
-      exact ih (state := f state (sourceStacks k).head?)
-        (sourceStacks := sourceStacks)
-  | pop k f next ih =>
-      change Turing.TM2.stepAux
-        (liftBoundedFoldWorkerStatement computer.tm next)
-        (none, f state (sourceStacks k).head?)
-        (Function.update
-          (boundedFoldStacks computer.tm sourceStacks counter [])
-          (.inl k) (sourceStacks k).tail) = _
-      rw [← boundedFoldStacks_update_worker]
-      exact ih (state := f state (sourceStacks k).head?)
-        (sourceStacks :=
-          Function.update sourceStacks k (sourceStacks k).tail)
-  | load f next ih =>
-      exact ih (state := f state) (sourceStacks := sourceStacks)
-  | branch test yes no ihYes ihNo =>
-      cases htest : test state with
-      | false =>
-          simpa only [liftBoundedFoldWorkerStatement, TM2.stepAux, htest, Bool.cond_false] using
-              ihNo (state := state) (sourceStacks := sourceStacks)
-      | true =>
-          simpa only [liftBoundedFoldWorkerStatement, TM2.stepAux, htest, Bool.cond_true] using
-              ihYes (state := state) (sourceStacks := sourceStacks)
-  | goto next => rfl
-  | halt => rfl
+  exact liftStatement_stepAux Sum.inl Sum.inl Prod.snd (fun state value => (state.1, value))
+    (.load (fun state => (none, state.2)) (.goto (fun _ => .inr (2 : Fin 5))))
+    (fun state => (none, state)) (fun source => boundedFoldStacks computer.tm source counter [])
+    (boundedFoldWorkerConfiguration computer counter)
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    (fun source k value => boundedFoldStacks_update_worker computer.tm source counter [] k value)
+    (fun _ _ _ => rfl) (fun _ _ => rfl) statement state sourceStacks
 
 /-- Internal support shared across GapCVP continuation modules. -/
 theorem boundedFoldWorkerConfiguration_step

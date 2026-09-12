@@ -332,31 +332,11 @@ private def formulaPreservationCanonicalStack (stack : Fin 6) : Fin 8 :=
 private def formulaPreservationCanonicalLabel (phase : Fin 17) : Fin 20 :=
   ⟨phase.val, by omega⟩
 
-private def liftFormulaPreservationCanonicalStmt :
-    Turing.TM2.Stmt (fun _ : Fin 6 => Bool)
-      (Fin 17) (Option Bool) →
-    Turing.TM2.Stmt (fun _ : Fin 8 => Bool)
-      (Fin 20) (Option Bool)
-  | .push stack push continuation =>
-      .push (formulaPreservationCanonicalStack stack) push
-        (liftFormulaPreservationCanonicalStmt continuation)
-  | .peek stack peek continuation =>
-      .peek (formulaPreservationCanonicalStack stack) peek
-        (liftFormulaPreservationCanonicalStmt continuation)
-  | .pop stack pop continuation =>
-      .pop (formulaPreservationCanonicalStack stack) pop
-        (liftFormulaPreservationCanonicalStmt continuation)
-  | .load load continuation =>
-      .load load (liftFormulaPreservationCanonicalStmt continuation)
-  | .branch branch yes no =>
-      .branch branch
-        (liftFormulaPreservationCanonicalStmt yes)
-        (liftFormulaPreservationCanonicalStmt no)
-  | .goto target =>
-      .goto (fun state =>
-        formulaPreservationCanonicalLabel (target state))
-  | .halt =>
-      .goto (fun _ => (19 : Fin 20))
+private abbrev liftFormulaPreservationCanonicalStmt :=
+  liftStatement (Γ := fun _ : Fin 8 => Bool)
+    formulaPreservationCanonicalStack formulaPreservationCanonicalLabel
+    (id : Option Bool → Option Bool) (fun _ value => value)
+    (.goto (fun _ => (19 : Fin 20)))
 
 private def formulaPreservationPeek (stack : Fin 8)
     (present absent : Turing.TM2.Stmt
@@ -592,42 +572,14 @@ private theorem liftFormulaPreservationCanonicalStmt_stepAux
       formulaPreservationCanonicalConfiguration
         (Turing.TM2.stepAux statement state source)
         backup scratch := by
-  induction statement generalizing state source with
-  | push stack push continuation ih =>
-      simp only [liftFormulaPreservationCanonicalStmt,
-        Turing.TM2.stepAux,
-        formulaPreservationCanonicalStacks_apply]
-      rw [← formulaPreservationCanonicalStacks_update]
-      exact ih state (Function.update source stack
-        (push state :: source stack))
-  | peek stack peek continuation ih =>
-      simpa only [liftFormulaPreservationCanonicalStmt,
-        Turing.TM2.stepAux,
-        formulaPreservationCanonicalStacks_apply] using
-        ih (peek state (source stack).head?) source
-  | pop stack pop continuation ih =>
-      simp only [liftFormulaPreservationCanonicalStmt,
-        Turing.TM2.stepAux,
-        formulaPreservationCanonicalStacks_apply]
-      rw [← formulaPreservationCanonicalStacks_update]
-      exact ih (pop state (source stack).head?)
-        (Function.update source stack (source stack).tail)
-  | load load continuation ih =>
-      simpa only [liftFormulaPreservationCanonicalStmt,
-        Turing.TM2.stepAux] using
-        ih (load state) source
-  | branch branch yes no ihyes ihno =>
-      cases hbranch : branch state with
-      | false =>
-          simpa only [liftFormulaPreservationCanonicalStmt, TM2.stepAux, hbranch, Bool.cond_false]
-              using ihno state source
-      | true =>
-          simpa only [liftFormulaPreservationCanonicalStmt, TM2.stepAux, hbranch, Bool.cond_true]
-              using ihyes state source
-  | goto target =>
-      rfl
-  | halt =>
-      rfl
+  exact liftStatement_stepAux formulaPreservationCanonicalStack formulaPreservationCanonicalLabel
+    id (fun _ value => value) (.goto (fun _ => (19 : Fin 20))) id
+    (fun source => formulaPreservationCanonicalStacks source backup scratch)
+    (fun configuration => formulaPreservationCanonicalConfiguration configuration backup scratch)
+    (fun _ => rfl) (fun _ _ => rfl)
+    (fun source k => formulaPreservationCanonicalStacks_apply source backup scratch k)
+    (fun source k value => formulaPreservationCanonicalStacks_update source backup scratch k value)
+    (fun _ _ _ => rfl) (fun _ _ => rfl) statement state source
 
 private theorem formulaPreservationCanonicalConfiguration_step
     (backup scratch : List Bool)

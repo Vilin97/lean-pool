@@ -359,51 +359,63 @@ private def delimitedCompare_truncatedSecondTrace
     lengthPrefixedWord_length]
   omega
 
+/-- Exhaust the five shapes of two length-prefixed fields, including missing delimiters
+and truncated payloads. The motive may carry a computation trace, not just a proposition. -/
+def lengthPrefixedPairCases {motive : List Bool → Sort*}
+    (missingFirst : ∀ count, motive (List.replicate count true))
+    (truncatedFirst : ∀ count tail, tail.length < count →
+      motive (List.replicate count true ++ false :: tail))
+    (missingSecond : ∀ first count,
+      motive (lengthPrefixedWord first ++ List.replicate count true))
+    (truncatedSecond : ∀ first count tail, tail.length < count →
+      motive (lengthPrefixedWord first ++ (List.replicate count true ++ false :: tail)))
+    (valid : ∀ first second suffix,
+      motive (lengthPrefixedWord first ++ (lengthPrefixedWord second ++ suffix)))
+    (input : List Bool) : motive input := by
+  cases unaryInputSplit input with
+  | inl witness =>
+      obtain ⟨count, rfl⟩ := witness
+      exact missingFirst count
+  | inr witness =>
+      obtain ⟨count, tail, rfl⟩ := witness
+      by_cases hlength : count ≤ tail.length
+      · rw [validInput_reconstruct count tail hlength]
+        cases unaryInputSplit (tail.drop count) with
+        | inl witness =>
+            obtain ⟨secondCount, hsecond⟩ := witness
+            rw [hsecond]
+            exact missingSecond (tail.take count) secondCount
+        | inr witness =>
+            obtain ⟨secondCount, secondTail, hsecond⟩ := witness
+            rw [hsecond]
+            by_cases hsecondLength : secondCount ≤ secondTail.length
+            · rw [validInput_reconstruct secondCount secondTail hsecondLength]
+              exact valid (tail.take count) (secondTail.take secondCount)
+                (secondTail.drop secondCount)
+            · exact truncatedSecond (tail.take count) secondCount secondTail
+                (Nat.lt_of_not_ge hsecondLength)
+      · exact truncatedFirst count tail (Nat.lt_of_not_ge hlength)
+
 private def delimitedCompare_totalTrace (input : List Bool) :
     EvalsToInTime delimitedPairComparisonMachine.step (delimitedCompareConfiguration 0 .invalid
         input [] [] [] [] [] [] [] [] [])
       (some (Turing.haltList delimitedPairComparisonMachine
         (sourcePreservingDelimitedPairComparisonWord input)))
       (24 * (input.length + 1) + 24) := by
-  cases unaryInputSplit input with
-  | inl witness =>
-      obtain ⟨count, hinput⟩ := witness
-      subst input
-      exact delimitedCompare_missingFirstTrace count
-  | inr witness =>
-      obtain ⟨count, tail, hinput⟩ := witness
-      subst input
-      by_cases hlength : count ≤ tail.length
-      · let first := tail.take count
-        let rest := tail.drop count
-        have hfirstRecord :
-            List.replicate count true ++ false :: tail =
-              lengthPrefixedWord first ++ rest := by
-          simpa only using validInput_reconstruct count tail hlength
-        rw [hfirstRecord]
-        cases unaryInputSplit rest with
-        | inl secondWitness =>
-            obtain ⟨secondCount, hsecond⟩ := secondWitness
-            rw [hsecond]
-            exact delimitedCompare_missingSecondTrace
-              first secondCount
-        | inr secondWitness =>
-            obtain ⟨secondCount, secondTail, hsecond⟩ := secondWitness
-            rw [hsecond]
-            by_cases hsecondLength : secondCount ≤ secondTail.length
-            · have hsecondRecord := validInput_reconstruct
-                secondCount secondTail hsecondLength
-              rw [hsecondRecord]
-              simpa only [FinTM2.step, Fin.isValue, List.length_append, lengthPrefixedWord_length,
-                  List.length_take,
-                  List.length_drop, List.append_assoc] using
-                  delimitedCompareValidTrace first (secondTail.take secondCount) (secondTail.drop
-                      secondCount)
-            · exact delimitedCompare_truncatedSecondTrace
-                first secondCount secondTail
-                (Nat.lt_of_not_ge hsecondLength)
-      · exact delimitedCompare_truncatedFirstTrace
-          count tail (Nat.lt_of_not_ge hlength)
+  refine lengthPrefixedPairCases (motive := fun input =>
+    EvalsToInTime delimitedPairComparisonMachine.step (delimitedCompareConfiguration 0 .invalid
+        input [] [] [] [] [] [] [] [] [])
+      (some (Turing.haltList delimitedPairComparisonMachine
+        (sourcePreservingDelimitedPairComparisonWord input)))
+      (24 * (input.length + 1) + 24)) ?_ ?_ ?_ ?_ ?_ input
+  · exact delimitedCompare_missingFirstTrace
+  · exact delimitedCompare_truncatedFirstTrace
+  · exact delimitedCompare_missingSecondTrace
+  · intro first count tail hlength
+    simpa only [List.append_assoc] using
+      delimitedCompare_truncatedSecondTrace first count tail hlength
+  · intro first second suffix
+    simpa only [List.append_assoc] using delimitedCompareValidTrace first second suffix
 
 /-- GapCVP reduction support. -/
 def sourcePreservingDelimitedPairComparisonComputable :

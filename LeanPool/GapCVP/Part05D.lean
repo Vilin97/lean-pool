@@ -359,34 +359,12 @@ private abbrev OriginalSourcePreservingLabel (tm : Turing.FinTM2) :=
 private abbrev OriginalSourcePreservingState (tm : Turing.FinTM2) :=
   Option Bool × tm.σ
 
-private def liftOriginalSourcePreservingStatement (tm : Turing.FinTM2) :
-    Turing.TM2.Stmt tm.Γ tm.Λ tm.σ →
-      Turing.TM2.Stmt
-        (originalSourcePreservingAlphabet tm)
-        (OriginalSourcePreservingLabel tm)
-        (OriginalSourcePreservingState tm)
-  | .push stack value next =>
-      .push (.inl stack) (fun state => value state.2)
-        (liftOriginalSourcePreservingStatement tm next)
-  | .peek stack inspect next =>
-      .peek (.inl stack)
-        (fun state symbol => (state.1, inspect state.2 symbol))
-        (liftOriginalSourcePreservingStatement tm next)
-  | .pop stack consume next =>
-      .pop (.inl stack)
-        (fun state symbol => (state.1, consume state.2 symbol))
-        (liftOriginalSourcePreservingStatement tm next)
-  | .load update next =>
-      .load (fun state => (state.1, update state.2))
-        (liftOriginalSourcePreservingStatement tm next)
-  | .branch decide yes no =>
-      .branch (fun state => decide state.2)
-        (liftOriginalSourcePreservingStatement tm yes)
-        (liftOriginalSourcePreservingStatement tm no)
-  | .goto next => .goto (fun state => .inl (next state.2))
-  | .halt =>
-      .load (fun state => (none, state.2))
-        (.goto (fun _ => .inr (2 : Fin 5)))
+private abbrev liftOriginalSourcePreservingStatement (tm : Turing.FinTM2) :=
+  liftStatement (K := tm.K) (Γ := originalSourcePreservingAlphabet tm)
+    Sum.inl (Sum.inl : tm.Λ → OriginalSourcePreservingLabel tm)
+    (Prod.snd : Option Bool × tm.σ → tm.σ) (fun state value => (state.1, value))
+    (.load (fun state => (none, state.2))
+      (.goto (fun _ => .inr (2 : Fin 5))))
 
 private noncomputable def originalSourcePreservingMachine
     {f : List Bool → List Bool}
@@ -650,50 +628,15 @@ private theorem liftOriginalSourcePreservingStatement_stepAux
         computer backup scratch result
         (Turing.TM2.stepAux statement state source) := by
   classical
-  induction statement generalizing state source with
-  | push stack value next ih =>
-      change Turing.TM2.stepAux
-        (liftOriginalSourcePreservingStatement computer.tm next)
-        (none, state)
-        (Function.update
-          (originalSourcePreservingStacks computer.tm
-            source backup scratch result)
-          (.inl stack) (value state :: source stack)) = _
-      rw [← sourceStacks_update_worker]
-      exact ih (state := state)
-        (source := Function.update source stack
-          (value state :: source stack))
-  | peek stack inspect next ih =>
-      exact ih (state := inspect state (source stack).head?)
-        (source := source)
-  | pop stack consume next ih =>
-      change Turing.TM2.stepAux
-        (liftOriginalSourcePreservingStatement computer.tm next)
-        (none, consume state (source stack).head?)
-        (Function.update
-          (originalSourcePreservingStacks computer.tm
-            source backup scratch result)
-          (.inl stack) (source stack).tail) = _
-      rw [← sourceStacks_update_worker]
-      exact ih (state := consume state (source stack).head?)
-        (source := Function.update source stack
-          (source stack).tail)
-  | load update next ih =>
-      exact ih (state := update state) (source := source)
-  | branch decide yes no ihyes ihno =>
-      cases hdecision : decide state with
-      | false =>
-          simpa only [liftOriginalSourcePreservingStatement, TM2.stepAux, hdecision,
-              Bool.cond_false]
-              using
-              ihno (state := state) (source := source)
-      | true =>
-          simpa only [liftOriginalSourcePreservingStatement, TM2.stepAux, hdecision,
-              Bool.cond_true]
-              using
-              ihyes (state := state) (source := source)
-  | goto next => rfl
-  | halt => rfl
+  exact liftStatement_stepAux Sum.inl Sum.inl Prod.snd (fun state value => (state.1, value))
+    (.load (fun state => (none, state.2)) (.goto (fun _ => .inr (2 : Fin 5))))
+    (fun state => (none, state))
+    (fun source => originalSourcePreservingStacks computer.tm source backup scratch result)
+    (sourceWorkerConfiguration computer backup scratch result)
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    (fun source k value =>
+      sourceStacks_update_worker computer.tm source backup scratch result k value)
+    (fun _ _ _ => rfl) (fun _ _ => rfl) statement state source
 
 private theorem originalSourcePreservingWorkerConfiguration_step
     {f : List Bool → List Bool}

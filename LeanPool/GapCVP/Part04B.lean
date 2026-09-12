@@ -615,44 +615,20 @@ private def certifiedNatural_totalTrace (input : List Bool) :
       (some (Turing.haltList delimitedNaturalComparisonMachine
         (sourcePreservingDelimitedNaturalComparisonWord input)))
       (24 * (input.length + 1) + 24) := by
-  cases unaryInputSplit input with
-  | inl witness =>
-      obtain ⟨count, hinput⟩ := witness
-      subst input
-      exact certifiedNatural_missingFirstTrace count
-  | inr witness =>
-      obtain ⟨count, tail, hinput⟩ := witness
-      subst input
-      by_cases hlength : count ≤ tail.length
-      · let first := tail.take count
-        let rest := tail.drop count
-        have hfirstRecord :
-            List.replicate count true ++ false :: tail =
-              lengthPrefixedWord first ++ rest := by
-          simpa only using validInput_reconstruct count tail hlength
-        rw [hfirstRecord]
-        cases unaryInputSplit rest with
-        | inl secondWitness =>
-            obtain ⟨secondCount, hsecond⟩ := secondWitness
-            rw [hsecond]
-            exact certifiedNatural_missingSecondTrace first secondCount
-        | inr secondWitness =>
-            obtain ⟨secondCount, secondTail, hsecond⟩ := secondWitness
-            rw [hsecond]
-            by_cases hsecondLength : secondCount ≤ secondTail.length
-            · have hsecondRecord := validInput_reconstruct
-                secondCount secondTail hsecondLength
-              rw [hsecondRecord]
-              simpa only [FinTM2.step, Fin.isValue, List.length_append, lengthPrefixedWord_length,
-                  List.length_take,
-                  List.length_drop, List.append_assoc] using
-                  certifiedNatural_validTrace first (secondTail.take secondCount) (secondTail.drop
-                      secondCount)
-            · exact certifiedNatural_truncatedSecondTrace
-                first secondCount secondTail
-                (Nat.lt_of_not_ge hsecondLength)
-      · exact certifiedNatural_truncatedFirstTrace
-          count tail (Nat.lt_of_not_ge hlength)
+  refine lengthPrefixedPairCases (motive := fun input =>
+    EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 0 .invalid
+        input [] [] [] [] [] [] [] [] [])
+      (some (Turing.haltList delimitedNaturalComparisonMachine
+        (sourcePreservingDelimitedNaturalComparisonWord input)))
+      (24 * (input.length + 1) + 24)) ?_ ?_ ?_ ?_ ?_ input
+  · exact certifiedNatural_missingFirstTrace
+  · exact certifiedNatural_truncatedFirstTrace
+  · exact certifiedNatural_missingSecondTrace
+  · intro first count tail hlength
+    simpa only [List.append_assoc] using
+      certifiedNatural_truncatedSecondTrace first count tail hlength
+  · intro first second suffix
+    simpa only [List.append_assoc] using certifiedNatural_validTrace first second suffix
 
 /-- GapCVP reduction support. -/
 def sourcePreservingDelimitedNaturalComparisonComputable :
