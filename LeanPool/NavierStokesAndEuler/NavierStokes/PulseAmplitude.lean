@@ -634,8 +634,9 @@ theorem normalizedMatrix_entry (c : Parameters) (i j : Fin 2) :
     _ = _ := by fin_cases j <;> norm_num [center, mul_comm]
 
 theorem rowMoment_lower (c : Parameters) (i : Fin 2) : rowFloor ≤ rowMoment (c.exponents i) := by
-  apply (rowMoment_bounds ?_ ?_).1
-  all_goals fin_cases i <;> norm_num [Parameters.exponents] <;> linarith [c.lam_pos, c.lam_lt]
+  obtain ⟨hl, hu⟩ := beta_bounds c i
+  dsimp only [beta] at hl hu
+  exact (rowMoment_bounds (by linarith only [hl]) (by linarith only [hu])).1
 
 theorem rowMoment_pos (c : Parameters) (i : Fin 2) : 0 < rowMoment (c.exponents i) :=
   rowFloor_pos.trans_le (rowMoment_lower c i)
