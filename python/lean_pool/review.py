@@ -1236,13 +1236,11 @@ def _integrate_portions(
             )
         final = send(messages)
         queries = final.payload.get("source_requests", [])
-        if (
-            not isinstance(queries, list)
-            or len(queries) > 20
-            or any(not isinstance(query, str) or not query.strip() for query in queries)
+        if not isinstance(queries, list) or any(
+            not isinstance(query, str) or not query.strip() for query in queries
         ):
             raise ValueError(
-                "Integration source requests must be at most 20 nonempty strings"
+                f"Integration source requests must be nonempty strings: {queries!r}"
             )
         if not queries:
             break
@@ -1284,6 +1282,9 @@ class _ReviewSession:
         result = _send_review(self.model, messages, self.effort)
         with self.lock:
             self.completed.append(result)
+            if destination := os.environ.get("REVIEW_EVIDENCE_PATH"):
+                with Path(destination).with_suffix(".calls.jsonl").open("a") as stream:
+                    stream.write(json.dumps(asdict(result), default=vars) + "\n")
         return result
 
     def accounted(self, result: ReviewResult) -> ReviewResult:

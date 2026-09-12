@@ -225,11 +225,11 @@ jobs:
         run: uv run python -m lean_pool.review
 
       - name: Upload review evidence
-        if: success() && steps.ci.outputs.conclusion == 'success'
+        if: always() && steps.ci.outputs.conclusion == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: review-evidence
-          path: ${{ runner.temp }}/review-evidence.json
+          path: ${{ runner.temp }}/review-evidence*
           if-no-files-found: ignore
           retention-days: 30
 

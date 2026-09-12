@@ -534,3 +534,41 @@ def test_source_excerpt_allowance_uses_characters(monkeypatch):
     monkeypatch.setattr(review_portions, "source_excerpts", excerpt)
     review._integrate_portions("def Known := 0", "{}", {}, 10_000, prepare, send)
     assert 15_000 < allowances[0] < 20_000
+
+
+def test_many_source_requests_are_not_discarded(monkeypatch):
+    """The input budget, rather than an arbitrary request count, bounds retrieval."""
+    requested = [f"Definition{index}" for index in range(25)]
+    retrieved = []
+    calls = []
+
+    def prepare(evidence, rules):
+        return [{"role": "user", "content": evidence}]
+
+    def send(messages):
+        calls.append(messages)
+        return result(
+            {"verdict": "pass", "source_requests": requested if len(calls) == 1 else []}
+        )
+
+    def excerpt(diff, query, allowance):
+        retrieved.append(query)
+        return {"query": query, "status": "No matching source"}
+
+    monkeypatch.setattr(review_portions, "source_excerpts", excerpt)
+    answer = review._integrate_portions("", "{}", {}, 10_000, prepare, send)
+    assert retrieved == requested
+    assert answer.payload["verdict"] == "discuss"
+
+
+def test_completed_calls_are_saved_before_later_failure(monkeypatch, tmp_path):
+    """Successful source work survives an integration or transport failure."""
+    destination = tmp_path / "review-evidence.json"
+    monkeypatch.setenv("REVIEW_EVIDENCE_PATH", str(destination))
+    monkeypatch.setattr(
+        review, "_send_review", lambda *args: result({"verdict": "pass"})
+    )
+    session = review._ReviewSession(review.DEFAULT_MODEL, "xhigh")
+    session.send([])
+    saved = json.loads(destination.with_suffix(".calls.jsonl").read_text())
+    assert saved["payload"]["verdict"] == "pass"
