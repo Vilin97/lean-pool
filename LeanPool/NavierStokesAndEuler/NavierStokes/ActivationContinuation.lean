@@ -640,6 +640,10 @@ noncomputable def pressureJets (Λ : ℝ) (p : Point) : Fin 4 → ℝ :=
     parameterPartial P.pressure p - deriv P.pressure0 p.2,
     p.1 * P.f p ^ 2]
 
+private theorem inv_mul_scaled_mul {s : ℝ} (hs : s ≠ 0) (a b : ℝ) :
+    s⁻¹ * (a * (s * b)) = a * b := by
+  rw [mul_left_comm, inv_mul_cancel_left₀ hs]
+
 theorem sourceQ_model (h j σ : ℝ) {Λ φ Y θ r : ℝ} (hΛ : Λ ≠ 0)
     (hφ : (1 / 8 : ℝ) ≤ φ) (p : Point)
     (hrad : p.1 * radialPartial P.f p / P.f p = θ * Y * r / φ) :
@@ -654,8 +658,10 @@ theorem sourceQ_model (h j σ : ℝ) {Λ φ Y θ r : ℝ} (hΛ : Λ ≠ 0)
   change _ = _
   simp only [NaturalAxisData.D, NaturalAxisData.d, StressAlgebra.axialExponent,
     StressAlgebra.coordinateFactor] at hg ⊢
-  field_simp [hΛ]
-  linear_combination -(2 * Λ) * hg
+  simp only [mul_add, one_div, inv_mul_scaled_mul hΛ, inv_mul_cancel_left₀ hΛ,
+    show ∀ a b : ℝ, Λ⁻¹ * a * (Λ * b) = a * b by
+      intro a b; rw [mul_assoc, inv_mul_scaled_mul hΛ]]
+  linear_combination -Λ * hg
 
 theorem sourceN_model (h j : ℝ) {Λ B : ℝ} (hΛ : Λ ≠ 0)
     (p : Point) (hη : p.2 ∈ Icc (-1 : ℝ) 1)
@@ -667,7 +673,8 @@ theorem sourceN_model (h j : ℝ) {Λ B : ℝ} (hΛ : Λ ≠ 0)
   unfold Profiles.axialSource StressAlgebra.axialSource Profiles.W
   unfold NaturalAxisData.W NaturalAxisData.d NaturalAxisData.D NaturalAxisData.A
   unfold StressAlgebra.axialExponent StressAlgebra.velocityExponent StressAlgebra.coordinateFactor
-  field_simp [hΛ]; ring
+  simp only [mul_add, one_div, inv_mul_scaled_mul hΛ, inv_mul_cancel_left₀ hΛ]
+  ring
 
 theorem qJets_bound (h j σ : ℝ) {Λ B φ : ℝ} (hB : 0 ≤ B) {p : Point}
     (hφ : |φ| ≤ B)
