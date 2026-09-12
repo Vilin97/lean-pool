@@ -806,7 +806,8 @@ private noncomputable def shannonGateArray (N : Nat)
     have hi_eq : oD k q + j = i.val := by omega
     have hpbr_j : blkSz * p + r = j := by
       change blkSz * (j / blkSz) + j % blkSz = j; exact Nat.div_add_mod j blkSz
-    have hpbr : oD k q + p * blkSz + r = i.val := by nlinarith [mul_comm blkSz p]
+    have hpbr : oD k q + p * blkSz + r = i.val := by
+      rw [Nat.add_assoc, Nat.mul_comm p blkSz, hpbr_j, hi_eq]
     have hw0_lt : w0 < W := by
       change (if r = 0 then selIdx 0 else N + oD k q + p * blkSz + (r - 1)) < W
       split_ifs with hr0
@@ -1034,6 +1035,11 @@ private theorem or_andLayerSem_eq_f (N : Nat)
   have hfoldl := foldl_or_unique_true (dataSum N hN x) hds_lt hP_ne
   rw [hfoldl, dite_eq_left hds_lt, andLayerSem_eq N f hN x]
 
+/-- Two negated-XOR literals recognize one two-bit assignment. -/
+private theorem mintermTwo_eval (a b p q : Bool) :
+    ((!p ^^ a) && (!q ^^ b)) = decide (a = p ∧ b = q) := by
+  decide +revert
+
 /-- The OR chain accumulates AND-layer semantic values.
 
     This is the key wire-level fact: by induction on r, the OR-chain gate
@@ -1121,8 +1127,7 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
           decide_eq_decide.mpr hcast]
         simp only [Fin.forall_fin_two, Fin.val_zero, Fin.val_one,
           show addrBits N + 0 = addrBits N from by omega, Nat.testBit_zero]
-        cases x ⟨addrBits N, by omega⟩ <;> cases x ⟨addrBits N + 1, by omega⟩ <;>
-          cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
+        exact mintermTwo_eval _ _ _ _
       · rw [dite_eq_right hjL1]
         simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
@@ -1290,8 +1295,7 @@ private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
         conv_rhs => rw [show treePos j (treeLevel j) = j from by rw [htl]; exact htp]
         rw [decide_eq_decide.mpr hcast] <;> [skip; exact inferInstance]
         simp only [Fin.forall_fin_two, Fin.val_zero, Fin.val_one, Nat.testBit_zero]
-        cases x ⟨0, hN2 0 (by omega)⟩ <;> cases x ⟨1, hN2 1 (by omega)⟩ <;>
-          cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
+        exact mintermTwo_eval _ _ _ _
       · rw [dite_eq_right hjL1]
         simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
@@ -1454,50 +1458,10 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       (List.range (r + 2)).foldl
         (fun acc a => acc || (Nat.testBit p a && decide (a = aSum))) false := by
     intro r hr hrW
-    have hsz_eq : szSections k q = szSections (addrBits N) (dataBits N) := rfl
-    have hoC_eq : oC q = oC (dataBits N) := rfl
-    have hW_bound : N + oC q + (2 ^ k - 4) + (2 ^ k) ≤ N + szSections k q := by
-      have : oD k q ≤ szSections k q := by
-        change oD (addrBits N) (dataBits N) ≤ szSections (addrBits N) (dataBits N)
-        unfold szSections oD oC; omega
-      have : oC q + (2 ^ k - 4) + 2 ^ k ≤ oD k q := by
-        change oC (dataBits N) + (2 ^ (addrBits N) - 4) + 2 ^ (addrBits N) ≤
-          oD (addrBits N) (dataBits N)
-        unfold oD oC
-        have : 2 ^ (addrBits N + 1) - 4 = (2 ^ addrBits N - 4) + 2 ^ addrBits N := by
-          have := pow_double (addrBits N)
-          have := pow_ge_4 (addrBits N) (show 2 ≤ addrBits N from by omega)
-          omega
-        linarith
-      omega
     have hoE_lt : oD k q + p * (2 ^ k - 1) + (2 ^ k - 1) ≤ oE k q := by
-      change oD (addrBits N) (dataBits N) +
-        colPatIdx N f (addrBits N) (dataBits N) (addrDataSum N hN) ⟨y, hy⟩ *
-          (2 ^ (addrBits N) - 1) + (2 ^ (addrBits N) - 1) ≤
-        oE (addrBits N) (dataBits N)
-      unfold oE oD
-      have := Nat.mul_le_mul_right (2 ^ (addrBits N) - 1)
-        (show colPatIdx N f (addrBits N) (dataBits N) (addrDataSum N hN) ⟨y, hy⟩ + 1 ≤
-          2 ^ (2 ^ addrBits N) from by exact hp_lt)
-      nlinarith
-    have hsel_bound (pos : Nat) (hpos : pos < 2 ^ k) :
-        N + oC q + (2 ^ k - 4) + pos < N + szSections k q :=
-      lt_of_lt_of_le (show N + oC q + (2 ^ k - 4) + pos <
-        N + oC q + (2 ^ k - 4) + 2 ^ k from by omega) hW_bound
-    have selWire (pos : Nat) (hpos : pos < 2 ^ k) :
-        (if Nat.testBit p pos then
-          (shannonCircuit N f hN).wireValue x
-            ⟨N + oC q + (2 ^ k - 4) + pos, hsel_bound pos hpos⟩
-         else
-          (shannonCircuit N f hN).wireValue x ⟨N, by linarith [hsel_bound pos hpos]⟩) =
-        (Nat.testBit p pos && decide (pos = aSum)) := by
-      split_ifs with htb
-      · have h := colOutput_addrLeaf N f hN x pos hpos (hsel_bound pos hpos)
-        rw [show (Nat.testBit p pos && decide (pos = aSum)) = decide (pos = aSum) from by
-          simp [htb]]
-        exact h
-      · have h := colOutput_constFalse N f hN x (by linarith [hsel_bound pos hpos])
-        simp_all
+      unfold oE
+      rw [Nat.add_assoc, ← Nat.succ_mul]
+      exact Nat.add_le_add_left (Nat.mul_le_mul_right _ hp_lt) _
     induction r with
     | zero =>
       have h_ne0 : oD k q + p * (2 ^ k - 1) ≠ 0 := by
@@ -1540,8 +1504,8 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
         exact colOutput_addrLeaf N f hN x _ (hbk ▸ (show _ < 2 ^ k by omega)) _
       · simp only [Bool.eq_false_iff.mpr htb, Bool.false_and]; exact colOutput_constFalse N f hN x _
     | succ r' ih =>
-      have h_ne0' : oD k q + p * (2 ^ k - 1) + (r' + 1) ≠ 0 := by
-        simp_all
+      have h_ne0' : oD k q + p * (2 ^ k - 1) + (r' + 1) ≠ 0 :=
+        Nat.succ_ne_zero _
       have h_ge_oC' : ¬(oD k q + p * (2 ^ k - 1) + (r' + 1) < oC q) := by
         simp only [show k = addrBits N from rfl, show q = dataBits N from rfl] at *
         unfold oD oC; omega
@@ -1560,7 +1524,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
         p * (2 ^ k - 1) + (r' + 1) from by omega]
       simp only [show (p * (2 ^ k - 1) + (r' + 1)) / (2 ^ k - 1) = p from
         Nat.div_eq_of_lt_le (by omega)
-          (show p * (2 ^ k - 1) + (r' + 1) < (p + 1) * (2 ^ k - 1) by nlinarith),
+          (by simpa only [Nat.succ_mul] using Nat.add_lt_add_left hr (p * (2 ^ k - 1))),
         show (p * (2 ^ k - 1) + (r' + 1)) % (2 ^ k - 1) = r' + 1 from by
           rw [show p * (2 ^ k - 1) + (r' + 1) = (r' + 1) + (2 ^ k - 1) * p from by ring,
               Nat.add_mul_mod_self_left]; exact Nat.mod_eq_of_lt (by omega)]
