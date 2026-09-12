@@ -367,3 +367,30 @@ theorem lineHeat_derivative_identity (a : LiftTangent) {v : ℝ≥0} (hv : v ≠
   ring
 
 end EulerGaussianCylinderHeat
+
+/-! Real exponential-moment identities complement the Gaussian averaging API. -/
+
+public section
+
+namespace NavierStokesAndEuler.ExponentialMoments
+
+open MeasureTheory ProbabilityTheory Filter Set
+open scoped Topology
+
+variable {Ω : Type*} [MeasurableSpace Ω] {X : Ω → ℝ} {μ : Measure Ω} {t : ℝ}
+
+/-- Differentiating a real exponential moment raises its power by one. -/
+theorem hasDerivAt_integral
+    (ht : t ∈ interior {s | Integrable (fun ω => Real.exp (s * X ω)) μ}) (n : ℕ) :
+    HasDerivAt (fun s => ∫ ω, X ω ^ n * Real.exp (s * X ω) ∂μ)
+      (∫ ω, X ω ^ (n + 1) * Real.exp (t * X ω) ∂μ) t := by
+  exact hasDerivAt_integral_pow_mul_exp_real ht n
+
+/-- Real exponential moments are analytic inside their integrability interval. -/
+theorem analyticAt_integral
+    (ht : t ∈ interior {s | Integrable (fun ω => Real.exp (s * X ω)) μ}) (n : ℕ) :
+    AnalyticAt ℝ (fun s => ∫ ω, X ω ^ n * Real.exp (s * X ω) ∂μ) t := by
+  exact (analyticAt_iteratedDeriv_mgf ht n).congr
+    ((isOpen_interior.eventually_mem ht).mono fun s hs => iteratedDeriv_mgf hs n)
+
+end NavierStokesAndEuler.ExponentialMoments

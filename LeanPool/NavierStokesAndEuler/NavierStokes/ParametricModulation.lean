@@ -21,7 +21,7 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothLoop
 public import Mathlib.Analysis.Calculus.DSlope
 public import Mathlib.Probability.Moments.IntegrableExpMul
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Probability.Moments.MGFAnalytic
+import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatDerivative
 
 /-!
 # Joint periodic primitives and realization of the constructed true-cone loops
@@ -96,16 +96,12 @@ theorem moment_zero_pos (s : ℝ) : 0 < moment 0 s := by
 
 theorem moment_hasDerivAt (n : ℕ) (s : ℝ) :
     HasDerivAt (moment n) (moment (n + 1) s) s := by
-  exact (hasDerivAt_integral_pow_mul_exp_real (mem_interior_integrableExpSet s) n).div_const _
+  exact (NavierStokesAndEuler.ExponentialMoments.hasDerivAt_integral
+    (mem_interior_integrableExpSet s) n).div_const _
 
 theorem moment_analyticAt (n : ℕ) (s : ℝ) : AnalyticAt ℝ (moment n) s := by
-  have heq : moment n = fun t => iteratedDeriv n (mgf Real.cos angleMeasure) t / (2 * Real.pi) := by
-    funext t
-    rw [iteratedDeriv_mgf (mem_interior_integrableExpSet t) n]
-    rfl
-  rw [heq]
-  exact (analyticAt_iteratedDeriv_mgf (mem_interior_integrableExpSet s) n).div
-    analyticAt_const period_ne_zero
+  exact (NavierStokesAndEuler.ExponentialMoments.analyticAt_integral
+    (mem_interior_integrableExpSet s) n).div analyticAt_const period_ne_zero
 
 theorem moment_contDiff (n : ℕ) : ContDiff ℝ (∞ : WithTop ℕ∞) (moment n) :=
   contDiff_iff_contDiffAt.mpr (fun s => (moment_analyticAt n s).contDiffAt)
