@@ -823,7 +823,7 @@ def approximationResidual (hT : 0 < T) (ε : ℝ)
           ((G.smul ε).toFieldTower.realization (q+1) s) -
         coefficientSobolevOperator P ((input G ε).metric.jet q s)
           ((Field.zero P T).toFieldTower.realization q s)) t
-    rw [nonlinearity_eq_residual G ε q hq s,zero_tower,sub_self,map_zero,sub_zero]
+    simp only [nonlinearity_eq_residual G ε q hq s,zero_tower,sub_self,map_zero]
     exact hd
 
 end EulerSmallCorrection
@@ -2672,7 +2672,7 @@ theorem unit_pressure_point (t : Icc (0 : ℝ) 1) (x : LiftDomain P) :
   have hz : (Field.zero P 1).toFieldTower.pointField t x=0 := by
     change EulerSobolevPointEvaluation.pointEvaluation P x
       ((Field.zero P 1).toFieldTower.realization 3 t)=0
-    rw [EulerSmallCorrection.zero_tower,map_zero]
+    simp only [EulerSmallCorrection.zero_tower,map_zero]
   change (Field.zero P 1).toFieldTower.pointField t x+_=_
   rw [hz,zero_add]
 
