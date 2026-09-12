@@ -874,14 +874,23 @@ private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData
     ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w :=
   (hF i).comp w ((contDiffAt_fst.pow 2).prodMk contDiffAt_snd)
 
+theorem inverse_ell_contDiffAt {n : WithTop ℕ∞} {h : ℂ} {w : ℝ × ℂ}
+    (hL : ell h w.2 ≠ 0) :
+    ContDiffAt ℝ n (fun v : ℝ × ℂ => (ell h v.2)⁻¹) w := by
+  change 1 - 2 * h * w.2 ^ 2 ≠ 0 at hL
+  exact (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))).inv hL
+
+theorem inverse_ell_analyticAt {h z : ℂ} (hL : ell h z ≠ 0) :
+    AnalyticAt ℂ (fun v => (ell h v)⁻¹) z := by
+  change 1 - 2 * h * z ^ 2 ≠ 0 at hL
+  exact (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
+
 theorem coefficient0_contDiffAt_of_pullback {n : WithTop ℕ∞} {h lam C : ℂ} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w)
     (hL : ell h w.2 ≠ 0) (i j : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => coefficient0 h lam C F v.1 v.2 i j) w := by
   have hdata := hF
-  change 1 - 2 * h * w.2 ^ 2 ≠ 0 at hL
-  have hlinv : ContDiffAt ℝ n (fun v : ℝ × ℂ => (1 - 2 * h * v.2 ^ 2)⁻¹) w :=
-    (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))).inv hL
+  have hlinv := inverse_ell_contDiffAt (n := n) (w := w) hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
   fin_cases i <;>
@@ -910,9 +919,7 @@ theorem coefficient1_contDiffAt_of_pullback {n : WithTop ℕ∞} {h : ℂ} {F : 
     (hL : ell h w.2 ≠ 0) (i j : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => coefficient1 h F v.1 v.2 i j) w := by
   have hdata := hF
-  change 1 - 2 * h * w.2 ^ 2 ≠ 0 at hL
-  have hlinv : ContDiffAt ℝ n (fun v : ℝ × ℂ => (1 - 2 * h * v.2 ^ 2)⁻¹) w :=
-    (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))).inv hL
+  have hlinv := inverse_ell_contDiffAt (n := n) (w := w) hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
   have hphi : ContDiffAt ℝ n (fun v : ℝ × ℂ =>
@@ -953,9 +960,7 @@ theorem sourceField_contDiffAt_of_pullback {n : WithTop ℕ∞} {h C : ℂ} {F :
     (hL : ell h w.2 ≠ 0) (i : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => sourceField h C F v.1 v.2 i) w := by
   have hdata := hF
-  change 1 - 2 * h * w.2 ^ 2 ≠ 0 at hL
-  have hlinv : ContDiffAt ℝ n (fun v : ℝ × ℂ => (1 - 2 * h * v.2 ^ 2)⁻¹) w :=
-    (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))).inv hL
+  have hlinv := inverse_ell_contDiffAt (n := n) (w := w) hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
   fin_cases i <;>
@@ -975,9 +980,7 @@ theorem sourceField_contDiffAt_of_pullback {n : WithTop ℕ∞} {h C : ℂ} {F :
 theorem coefficient0_analyticAt {h lam C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i j : Fin 6) :
     AnalyticAt ℂ (fun v => coefficient0 h lam C F r v i j) z := by
-  change 1 - 2 * h * z ^ 2 ≠ 0 at hL
-  have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
-    (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
+  have hlinv := inverse_ell_analyticAt hL
   fin_cases i <;>
     simp only [coefficient0, A0, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
@@ -1001,9 +1004,7 @@ theorem coefficient0_analyticAt {h lam C : ℂ} {F : CoefficientData} {r : ℝ} 
 theorem coefficient1_analyticAt {h : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i j : Fin 6) :
     AnalyticAt ℂ (fun v => coefficient1 h F r v i j) z := by
-  change 1 - 2 * h * z ^ 2 ≠ 0 at hL
-  have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
-    (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
+  have hlinv := inverse_ell_analyticAt hL
   fin_cases i <;>
     simp only [coefficient1, A1, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
@@ -1027,9 +1028,7 @@ theorem coefficient1_analyticAt {h : ℂ} {F : CoefficientData} {r : ℝ} {z : �
 theorem sourceField_analyticAt {h C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i : Fin 6) :
     AnalyticAt ℂ (fun v => sourceField h C F r v i) z := by
-  change 1 - 2 * h * z ^ 2 ≠ 0 at hL
-  have hlinv : AnalyticAt ℂ (fun v : ℂ => (1 - 2 * h * v ^ 2)⁻¹) z :=
-    (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
+  have hlinv := inverse_ell_analyticAt hL
   fin_cases i <;>
     simp only [sourceField, forcing, pressureSource, coefficientSource, Fin.isValue,
         div_eq_mul_inv, ell, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
