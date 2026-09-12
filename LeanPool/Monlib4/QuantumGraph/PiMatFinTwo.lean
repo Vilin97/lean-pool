@@ -410,42 +410,12 @@ theorem Finset.sum_nat_eq_one_iff_exists_unique_eq_one
   (h : ∑ i, f i = 1) :
   (∃! i : ι, f i = 1) := by
   classical
-  have this1 : ∀ i : ι, f i ≤ 1 := by
-    intro i
-    by_contra!
-    have :=
-    calc 1 = ∑ j, f j := h.symm
-      _ = f i
-        + ∑ j ∈ Finset.univ \ {i}, f j :=
-          by rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ _)]
-      _ > 1 + ∑ j ∈ Finset.univ \ {i}, f j := by
-          nlinarith
-      _ ≥ 1 := by norm_num
-    linarith
-  have : ∃! i, 1 ≤ f i := by
-    apply existsUnique_of_exists_of_unique
-    · by_contra!
-      simp_all
-    · intro y₁ y₂ hy hd
-      by_contra!
-      have :=
-      calc
-        1 =  ∑ i : ι, f i := h.symm
-        _ = f y₁ + f y₂
-          + ∑ i ∈ (Finset.univ \ {y₁}) \ {y₂}, f i := by
-              have : y₂ ∈ Finset.univ \ {y₁} := by simp [this.symm]
-              rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ y₁),
-                Finset.sum_eq_add_sum_sdiff_singleton_of_mem this, add_assoc]
-        _ ≥ 1 + 1
-          + ∑ i ∈ (Finset.univ \ {y₁}) \ {y₂}, f i := by
-              apply LE.le.ge
-              linarith
-        _ ≥ 2 := by norm_num
-      linarith
-  obtain ⟨i, ⟨hi, hii⟩⟩ := this
-  simp_rw [le_antisymm_iff]
-  use i
-  simpa only [this1, true_and, hi] using hii
+  obtain ⟨i, _, hi⟩ := Finset.sum_pos_iff.mp (show 0 < ∑ i, f i from h.symm ▸ Nat.zero_lt_one)
+  have hfi : f i = 1 := le_antisymm
+    (h ▸ Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)) hi
+  refine ⟨i, hfi, fun j hj => ?_⟩
+  by_contra hji
+  exact Nat.one_ne_zero (hj.symm.trans (Pi.nat_eq_zero_of_sum_eq_one_and_unique_one h hfi hji))
 
 theorem QuantumGraph.Real.dimOfPiMatSubmodule_eq_zero_iff_eq_zero
   {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
