@@ -7,7 +7,9 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ChartScales
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
@@ -55,7 +57,9 @@ def bump : ContDiffBump (0 : ℝ) where
   rIn_lt_rOut := by norm_num
 
 /-- Translated bump, given by `bump (x - k)`. -/
-def translatedBump (k : ℤ) (x : ℝ) : ℝ := bump (x - k)
+def translatedBump (k : ℤ) (x : ℝ) : ℝ :=
+  letI : HasContDiffBump ℝ := by infer_instance
+  bump (x - k)
 
 theorem translatedBump_nonneg (k : ℤ) (x : ℝ) : 0 ≤ translatedBump k x := bump.nonneg
 

@@ -11,6 +11,7 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
 import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-!
 # Spatial localization through actual Cartesian potentials

@@ -9,6 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothCutoffs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.DiagonalScale
 import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 
 /-!
 # A constructed compactly supported Taylor–Borel extension

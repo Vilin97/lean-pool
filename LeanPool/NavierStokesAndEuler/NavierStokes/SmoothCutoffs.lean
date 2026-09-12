@@ -6,7 +6,9 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
 # Constructed smooth cutoffs for the diagonal sum and time switch
@@ -35,7 +37,9 @@ def cutoffBump : ContDiffBump (0 : ℝ) where
   rIn_lt_rOut := by norm_num
 
 /-- Cutoff, given by `cutoffBump`. -/
-def cutoff : ℝ → ℝ := cutoffBump
+def cutoff : ℝ → ℝ :=
+  letI : HasContDiffBump ℝ := by infer_instance
+  cutoffBump
 
 theorem cutoff_contDiff : ContDiff ℝ ∞ cutoff := cutoffBump.contDiff
 
