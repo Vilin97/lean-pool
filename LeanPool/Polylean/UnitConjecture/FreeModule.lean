@@ -203,6 +203,56 @@ theorem eq_mem_of_equalOnList (l : List X) (f g : X → R) (x : X) (mhyp : x ∈
       simp_all
 
 
+/-! ### Combining coefficients -/
+
+namespace FormalSum
+
+/-- Add a monomial, combining its coefficient with the first matching basis term. -/
+def addMonomial (term : R × X) : FormalSum R X → FormalSum R X
+  | [] => if term.1 = 0 then [] else [term]
+  | head :: tail =>
+      if head.2 = term.2 then
+        if head.1 + term.1 = 0 then tail else (head.1 + term.1, head.2) :: tail
+      else head :: addMonomial term tail
+
+/-- Combining a monomial preserves its contribution to every coordinate. -/
+theorem coords_addMonomial (term : R × X) (sum : FormalSum R X) (x : X) :
+    (addMonomial term sum).coords x = monomCoeff R X x term + sum.coords x := by
+  induction sum with
+  | nil =>
+      by_cases hzero : term.1 = 0
+      · cases h : term.2 == x <;> simp [addMonomial, hzero, coords, monomCoeff, h]
+      · simp [addMonomial, hzero, coords]
+  | cons head tail ih =>
+      by_cases hsame : head.2 = term.2
+      · simp only [addMonomial, hsame, ite_true]
+        by_cases hzero : head.1 + term.1 = 0
+        · rw [ite_eq_left hzero]
+          by_cases hx : term.2 = x
+          · simp only [coords, monomCoeff, hsame, hx, beq_self_eq_true]
+            rw [← add_assoc, add_comm term.1 head.1, hzero, zero_add]
+          · simp [coords, monomCoeff, hsame, beq_false_of_ne hx]
+        · rw [ite_eq_right hzero]
+          by_cases hx : term.2 = x
+          · simp only [coords, monomCoeff, hsame, hx, beq_self_eq_true]
+            rw [add_comm head.1 term.1, add_assoc]
+          · simp [coords, monomCoeff, hsame, beq_false_of_ne hx]
+      · simp [addMonomial, hsame, coords, ih, add_left_comm]
+
+/-- Combine repeated basis terms and discard terms whose coefficients cancel. -/
+def combineCoefficients : FormalSum R X → FormalSum R X
+  | [] => []
+  | term :: tail => addMonomial term (combineCoefficients tail)
+
+/-- Combining coefficients preserves every coordinate of a formal sum. -/
+theorem coords_combineCoefficients (sum : FormalSum R X) (x : X) :
+    sum.combineCoefficients.coords x = sum.coords x := by
+  induction sum with
+  | nil => rfl
+  | cons term tail ih => simp [combineCoefficients, coords_addMonomial, ih, coords]
+
+end FormalSum
+
 /-!
 ## Quotient Free Module
 
@@ -264,6 +314,15 @@ We also show that the coordinate functions are defined on the quotient. -/
 
 
 namespace FreeModule
+
+/-- Equal combined formal sums represent equal free-module elements. -/
+theorem quotient_eq_of_combineCoefficients_eq (left right : FormalSum R X)
+    (h : left.combineCoefficients = right.combineCoefficients) :
+    (⟦left⟧ : FreeModule R X) = ⟦right⟧ := by
+  apply Quotient.sound
+  funext x
+  rw [← FormalSum.coords_combineCoefficients left x,
+    ← FormalSum.coords_combineCoefficients right x, h]
 
 /-- Equality on both supports gives equal quotients. -/
 theorem eqlquot_of_equalOnList (s₁ s₂ : FormalSum R X)

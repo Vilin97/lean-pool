@@ -156,14 +156,17 @@ theorem α_nonTrivial : ¬ (trivialNonZeroElem α) := by
   result is `(1 : 𝔽₂[P])`.
 
   The computational aspects of the group ring implementation and the Metabelian construction
-  are used here. -/
+  are used here. Coefficients are combined before comparison so that checking equality
+  does not repeatedly scan the full uncollected product. -/
 
 /-- The product of Gardam's unit and its inverse is one. -/
 theorem α_mul_α' : ringMul α α' = (1 : 𝔽₂[P]) := by
+  apply FreeModule.quotient_eq_of_combineCoefficients_eq
   decide +kernel
 
 /-- The product of Gardam's inverse and its unit is one. -/
 theorem α'_mul_α : ringMul α' α = (1 : 𝔽₂[P]) := by
+  apply FreeModule.quotient_eq_of_combineCoefficients_eq
   decide +kernel
 
 /-- A proof of the existence of a non-trivial unit in `𝔽₂[P]`. -/
