@@ -597,9 +597,9 @@ theorem EuclideanSpace.prod_exists_finset {n m : Type*} [Fintype n] [DecidableEq
   ∃ S : Finset ((EuclideanSpace ℂ n) × EuclideanSpace ℂ m),
     x = ∑ s ∈ S, euclideanSpaceTensor' (R := ℂ) (s.1 ⊗ₜ[ℂ] s.2) := by
   obtain ⟨S, hS⟩ := TensorProduct.exists_finset ((euclideanSpaceTensor' (R:=ℂ)).symm x)
-  use S
-  apply_fun (euclideanSpaceTensor' (R:=ℂ)).symm using LinearEquiv.injective _
-  simp only [map_sum, LinearIsometryEquiv.symm_apply_apply, hS]
+  refine ⟨S, ?_⟩
+  simpa only [map_sum, LinearIsometryEquiv.apply_symm_apply] using
+    congrArg (euclideanSpaceTensor' (R := ℂ)) hS
 
 theorem QuantumSet.PiMat_n :
   withPiQuantum[φ]
@@ -766,21 +766,12 @@ theorem EuclideanSpace.prodChoose_spec {n m : Type*} [Fintype n] [DecidableEq n]
   [Fintype m] [DecidableEq m] (x : EuclideanSpace ℂ (n × m)) :
   x = ∑ s : n × m, euclideanSpaceTensor' (R:=ℂ)
     (((EuclideanSpace.prodChoose x s).1) ⊗ₜ ((EuclideanSpace.prodChoose x s).2)) := by
-  have := TensorProduct.of_basis_eq_span ((euclideanSpaceTensor' (R :=
-    ℂ)).symm x) (EuclideanSpace.basisFun n ℂ).toBasis (EuclideanSpace.basisFun m ℂ).toBasis
-  apply_fun (euclideanSpaceTensor' (R := ℂ)).symm using LinearIsometryEquiv.injective _
-  simp only [map_sum, LinearIsometryEquiv.symm_apply_apply]
-  rw [this, ← Finset.sum_product']
-  simp only [Finset.univ_product_univ, ← TensorProduct.tmul_smul]
-  simp only [← TensorProduct.smul_tmul]
-  let p₁ := (EuclideanSpace.basisFun n ℂ).toBasis
-  let p₂ := (EuclideanSpace.basisFun m ℂ).toBasis
-  let a := fun i : n × m => (((p₁.tensorProduct p₂).repr ((euclideanSpaceTensor' (R :=
-    ℂ)).symm x)) i • p₁ i.1)
-  have ha : ∀ i, a i = (((p₁.tensorProduct p₂).repr ((euclideanSpaceTensor' (R :=
-    ℂ)).symm x)) i • p₁ i.1) := fun i => rfl
-  simp only [p₁, p₂, ← ha]
-  rfl
+  let b := (EuclideanSpace.basisFun n ℂ).toBasis.tensorProduct
+    (EuclideanSpace.basisFun m ℂ).toBasis
+  simpa only [b, Module.Basis.tensorProduct_apply', TensorProduct.smul_tmul',
+    map_sum, LinearIsometryEquiv.apply_symm_apply, EuclideanSpace.prodChoose] using
+    (congrArg (euclideanSpaceTensor' (R := ℂ))
+      (b.sum_repr ((euclideanSpaceTensor' (R := ℂ)).symm x))).symm
 
 omit [Fintype ι] in
 private theorem PiMat_eq_left_block_miss {a b c : ι} (h : a ≠ b)
@@ -1462,14 +1453,9 @@ theorem QuantumGraph.Real.PiMat_conj_unitary_submodule_eq_map :
     LinearIsometryEquiv.symm_symm]
   simp only [LinearIsometryEquiv.coe_toLinearEquiv, LinearEquiv.coe_toLinearMap,
     LinearMap.coe_toContinuousLinearMap, unitaryTensorEuclidean_apply']
-  simp only [Matrix.includeBlock_apply, Matrix.dite_kronecker, Pi.star_apply, star_zero,
-    apply_dite, Matrix.transpose_zero,
-    map_zero, Matrix.kronecker_zero]
+  simp only [Matrix.includeBlock_conjTranspose, Matrix.conj_conjTranspose]
   rw [Fintype.sum_eq_single i]
-  · simp only [↓reduceDIte]
-    simp only [
-      eq_mp_eq_cast, cast_eq,
-      Matrix.star_eq_conjTranspose, Matrix.conj_conjTranspose,
+  · simp only [Matrix.includeBlock_apply_same,
       Matrix.transpose_transpose, Matrix.vecMulVec_kronecker_vecMulVec,
       Matrix.toEuclideanStarAlgEquiv_coe]
     congr
@@ -1481,13 +1467,13 @@ theorem QuantumGraph.Real.PiMat_conj_unitary_submodule_eq_map :
     refine Finset.sum_eq_zero fun _ _ => Finset.sum_eq_zero fun _ _ =>
       Finset.sum_eq_zero fun _ _ => ?_
     rcases x with ⟨x₁, x₂⟩
-    by_cases h₂ : x₂ = i.2
-    · by_cases h₁ : x₁ = i.1
-      · exfalso
-        apply hx
-        ext <;> assumption
-      · simp [h₂, h₁]
-    · simp [h₂]
+    by_cases h₁ : x₁ = i.1
+    · subst x₁
+      have h₂ : x₂ ≠ i.2 := fun h₂ => hx (Prod.ext rfl h₂)
+      simp only [Matrix.includeBlock_apply_ne_same _ h₂, Matrix.transpose_zero,
+        Matrix.kronecker_zero, map_zero]
+    · simp only [Matrix.includeBlock_apply_ne_same _ h₁,
+        Matrix.zero_kronecker, map_zero]
 
 theorem orthogonalProjection'_bot {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
   [InnerProductSpace 𝕜 E] :
