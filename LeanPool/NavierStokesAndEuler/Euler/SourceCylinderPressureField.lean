@@ -520,7 +520,8 @@ theorem pressureSource_contDiff (hSc : IsCompact S)
   let r : C(Icc (0 : ℝ) T,Supported period Space S hS) := f - (2 : ℝ) • w
   have hr : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a
       (includePath period S hS r)) := by
-    simpa only [r,map_sub,map_smul] using hf.sub (hw.const_smul (2 : ℝ))
+    simpa only [r, ContinuousLinearMap.map_sub, ContinuousLinearMap.map_smul] using
+      hf.sub (hw.const_smul (2 : ℝ))
   exact supported_product_orbit_contDiff period (normalFunctional m cm hcm hm)
     (normalFunctional_translation_contDiff m cm hcm hm) S hS r hr
 
