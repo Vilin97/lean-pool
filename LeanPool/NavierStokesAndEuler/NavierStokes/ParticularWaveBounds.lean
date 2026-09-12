@@ -404,10 +404,9 @@ theorem projectedOperator_continuousOn {X H : Type*} [TopologicalSpace X]
       ((innerSL ℝ).continuous.comp_continuousOn hnd)
   have hv : ContinuousOn (fun z => (⟪n z, n z⟫_ℝ)⁻¹ • n z) S :=
     ((hn.inner hn).inv₀ (fun z hz => inner_self_ne_zero.mpr (hne z hz))).smul hn
-  have ho : ContinuousOn (fun z =>
-      ((innerSL ℝ (n z)).comp (A z) - innerSL ℝ (nd z)).smulRight
-        ((⟪n z, n z⟫_ℝ)⁻¹ • n z)) S :=
-    isBoundedBilinearMap_smulRight.continuous.comp_continuousOn (hlin.prodMk hv)
+  have ho :=
+    (isBoundedBilinearMap_smulRight (𝕜 := ℝ) (E := H) (F := H)).continuous.comp_continuousOn
+      (hlin.prodMk hv)
   exact (hA.neg.add ho).sub (hδ.smul continuousOn_const)
 
 theorem projectedForcing_continuousOn {X : Type*} [TopologicalSpace X]
