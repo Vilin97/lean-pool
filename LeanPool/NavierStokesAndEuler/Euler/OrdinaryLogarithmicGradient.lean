@@ -19,6 +19,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicDerivatives
 import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianFields
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.DistLEIntegral
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 public import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussian
 
 /-!
