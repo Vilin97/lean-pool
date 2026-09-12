@@ -63,27 +63,12 @@ private theorem normalizeAlong_snd_sub
 theorem normalizeAlong_sqDist
     {a b : Point ℝ} (hab : a ≠ b) (p q : Point ℝ) :
     sqDist (normalizeAlong a b p) (normalizeAlong a b q) = sqDist p q := by
-  have hscale := normalizeAlong_scale_pos hab
-  have hscaleSq := Real.sq_sqrt (sqDist_nonneg a b)
   change ((normalizeAlong a b q).1 - (normalizeAlong a b p).1) ^ 2 +
       ((normalizeAlong a b q).2 - (normalizeAlong a b p).2) ^ 2 = sqDist p q
-  rw [normalizeAlong_fst_sub, normalizeAlong_snd_sub]
-  have hid :
-      (((q.1 - p.1) * (b.1 - a.1) + (q.2 - p.2) * (b.2 - a.2)) ^ 2 +
-        ((b.1 - a.1) * (q.2 - p.2) - (b.2 - a.2) * (q.1 - p.1)) ^ 2) =
-      sqDist a b * ((q.1 - p.1) ^ 2 + (q.2 - p.2) ^ 2) := by
-    simp only [sqDist]
-    ring
-  calc
-    _ = ((((q.1 - p.1) * (b.1 - a.1) + (q.2 - p.2) * (b.2 - a.2)) ^ 2 +
-          ((b.1 - a.1) * (q.2 - p.2) - (b.2 - a.2) * (q.1 - p.1)) ^ 2) /
-            Real.sqrt (sqDist a b) ^ 2) := by ring
-    _ = (sqDist a b * ((q.1 - p.1) ^ 2 + (q.2 - p.2) ^ 2)) /
-          Real.sqrt (sqDist a b) ^ 2 := by rw [hid]
-    _ = (q.1 - p.1) ^ 2 + (q.2 - p.2) ^ 2 := by
-      rw [hscaleSq]
-      field_simp [ne_of_gt (sqDist_pos_of_ne hab)]
-    _ = sqDist p q := by simp only [sqDist]
+  rw [normalizeAlong_fst_sub, normalizeAlong_snd_sub, div_pow, div_pow, ← add_div,
+    Real.sq_sqrt (sqDist_nonneg a b), div_eq_iff (sqDist_pos_of_ne hab).ne']
+  dsimp only [sqDist]
+  ring
 
 private theorem normalizeAlong_injective
     {a b : Point ℝ} (hab : a ≠ b) : Function.Injective (normalizeAlong a b) := by
@@ -101,37 +86,16 @@ theorem normalizeAlong_turn
     {a b : Point ℝ} (hab : a ≠ b) (p q r : Point ℝ) :
     turn (normalizeAlong a b p) (normalizeAlong a b q)
       (normalizeAlong a b r) = turn p q r := by
-  have hscale := normalizeAlong_scale_pos hab
-  have hscaleSq := Real.sq_sqrt (sqDist_nonneg a b)
   change ((normalizeAlong a b q).1 - (normalizeAlong a b p).1) *
       ((normalizeAlong a b r).2 - (normalizeAlong a b p).2) -
       ((normalizeAlong a b q).2 - (normalizeAlong a b p).2) *
         ((normalizeAlong a b r).1 - (normalizeAlong a b p).1) = turn p q r
   rw [normalizeAlong_fst_sub, normalizeAlong_snd_sub,
-    normalizeAlong_fst_sub, normalizeAlong_snd_sub]
-  have hid :
-      (((q.1 - p.1) * (b.1 - a.1) + (q.2 - p.2) * (b.2 - a.2)) *
-          ((b.1 - a.1) * (r.2 - p.2) - (b.2 - a.2) * (r.1 - p.1)) -
-        ((b.1 - a.1) * (q.2 - p.2) - (b.2 - a.2) * (q.1 - p.1)) *
-          ((r.1 - p.1) * (b.1 - a.1) + (r.2 - p.2) * (b.2 - a.2))) =
-      sqDist a b * ((q.1 - p.1) * (r.2 - p.2) -
-        (q.2 - p.2) * (r.1 - p.1)) := by
-    simp only [sqDist]
-    ring
-  calc
-    _ = ((((q.1 - p.1) * (b.1 - a.1) + (q.2 - p.2) * (b.2 - a.2)) *
-            ((b.1 - a.1) * (r.2 - p.2) - (b.2 - a.2) * (r.1 - p.1)) -
-          ((b.1 - a.1) * (q.2 - p.2) - (b.2 - a.2) * (q.1 - p.1)) *
-            ((r.1 - p.1) * (b.1 - a.1) + (r.2 - p.2) * (b.2 - a.2))) /
-              Real.sqrt (sqDist a b) ^ 2) := by ring
-    _ = (sqDist a b * ((q.1 - p.1) * (r.2 - p.2) -
-          (q.2 - p.2) * (r.1 - p.1))) / Real.sqrt (sqDist a b) ^ 2 := by
-      rw [hid]
-    _ = (q.1 - p.1) * (r.2 - p.2) -
-        (q.2 - p.2) * (r.1 - p.1) := by
-      rw [hscaleSq]
-      field_simp [ne_of_gt (sqDist_pos_of_ne hab)]
-    _ = turn p q r := by simp only [turn]
+    normalizeAlong_fst_sub, normalizeAlong_snd_sub,
+    div_mul_div_comm, div_mul_div_comm, ← sub_div, ← pow_two,
+    Real.sq_sqrt (sqDist_nonneg a b), div_eq_iff (sqDist_pos_of_ne hab).ne']
+  dsimp only [sqDist, turn]
+  ring
 
 private theorem normalizeAlong_first_center
     {a b : Point ℝ} (hab : a ≠ b) :
@@ -973,7 +937,7 @@ private theorem shared_tip_unique_farthest
     rw [he] at hesN
     rw [ht] at htsN
     simp only [sqDist] at hesN htsN
-    nlinarith
+    nlinarith only [hc, hesN, htsN]
   have hs : N s = (c, H) := Prod.ext hsFirst rfl
   have hH : 0 < H := by
     have hsecond := normalizeAlong_second_coordinate hcenters (P s)
@@ -1893,7 +1857,7 @@ private theorem fullTwoRungCanonicalFrame_exists
     rw [he] at hesN
     rw [ht] at htsN
     simp only [sqDist] at hesN htsN
-    nlinarith
+    nlinarith only [hc, hesN, htsN]
   have hs : N G.s = (c, H) := Prod.ext hsFirst rfl
   have hH : 0 < H := by
     have hsecond := normalizeAlong_second_coordinate hcenters (P G.s)
@@ -1983,10 +1947,8 @@ private theorem fullTwoRungCanonicalFrame_exists
     rw [hscaleSq]
     exact hbaseLeRaw
   have hradius : (c + offset) ^ 2 + K ^ 2 = c ^ 2 + H ^ 2 := by
-    rw [hw] at hewN
-    rw [he] at hewN
-    simp only [sqDist] at hewN
-    nlinarith [hd₁Radius]
+    rw [hw, he] at hewN
+    simpa only [sqDist, sub_zero] using hewN.trans hd₁Radius
   have hconstraint :
       2 * c * offset + offset ^ 2 =
         heightDrop * (H + (H - heightDrop)) := by
@@ -2291,75 +2253,56 @@ private theorem fullTwoRung_metric_split
   let normalizedK := F.K / D
   let normalizedDrop := F.heightDrop / D
   have hC : 0 < normalizedC := div_pos F.c_pos hD
-  have hbaseLength : 2 * F.c ≤ D := by
-    by_contra hnot
-    have hlt : D < 2 * F.c := lt_of_not_ge hnot
-    have hsum : 0 < 2 * F.c + D := by linarith [F.c_pos, hD]
-    have hproduct : 0 < (2 * F.c - D) * (2 * F.c + D) :=
-      mul_pos (sub_pos.mpr hlt) hsum
-    nlinarith [F.base_le_d₁, hDsq]
+  have hbaseLength : 2 * F.c ≤ D :=
+    (sq_le_sq₀ (mul_nonneg (by norm_num) F.c_pos.le) hD.le).mp
+      (F.base_le_d₁.trans_eq hDsq.symm)
   have hChi : normalizedC ≤ (1 : ℝ) / 2 := by
     rw [div_le_iff₀ hD]
-    linarith
+    linarith only [hbaseLength]
   have hOffset : 0 < normalizedOffset := div_pos F.offset_pos hD
   have hBetaSq : beta ^ 2 = 1 - 4 * normalizedC * normalizedOffset := by
     have hd₂sq := Real.sq_sqrt hd₂.le
     dsimp [beta, normalizedC, normalizedOffset]
     field_simp [ne_of_gt hD]
-    nlinarith [hDsq, hd₂sq, F.classDifference]
+    nlinarith only [hDsq, hd₂sq, F.classDifference]
   have hGamma : 0 < gamma := div_pos (Real.sqrt_pos.2 hd₃) hD
   have hH : 0 < normalizedH := div_pos F.H_pos hD
   have hHSq : normalizedH ^ 2 = 1 - normalizedC ^ 2 := by
     dsimp [normalizedH, normalizedC]
     field_simp [ne_of_gt hD]
-    nlinarith [hDsq, F.d₁_radius]
+    nlinarith only [hDsq, F.d₁_radius]
   have hK : 0 < normalizedK := div_pos F.K_pos hD
   have hKRadius : d₁ = (F.c + F.offset) ^ 2 + F.K ^ 2 := by
     have hconstraint := F.heightConstraint
     rw [F.heightDrop_eq] at hconstraint
-    nlinarith [F.d₁_radius]
+    nlinarith only [hconstraint, F.d₁_radius]
   have hKSq : normalizedK ^ 2 = 1 - (normalizedC + normalizedOffset) ^ 2 := by
     dsimp [normalizedK, normalizedC, normalizedOffset]
     field_simp [ne_of_gt hD]
-    nlinarith [hDsq, hKRadius]
+    nlinarith only [hDsq, hKRadius]
   have hDrop : 0 < normalizedDrop := div_pos F.heightDrop_pos hD
   have hDropDef : normalizedDrop = normalizedH - normalizedK := by
     dsimp [normalizedDrop, normalizedH, normalizedK]
-    rw [F.heightDrop_eq]
-    field_simp [ne_of_gt hD]
+    rw [F.heightDrop_eq, sub_div]
   rcases metric_sign_dichotomy hC hChi hOffset hBetaSq hGamma hH hHSq
       hK hKSq hDrop hDropDef with hlong | hshort
   · left
     have hscaled := mul_le_mul_of_nonneg_right hlong hD.le
-    have hbetaD : beta * D = Real.sqrt d₂ := by
-      dsimp [beta]
-      field_simp [ne_of_gt hD]
-    have hgammaD : gamma * D = Real.sqrt d₃ := by
-      dsimp [gamma]
-      field_simp [ne_of_gt hD]
-    nlinarith
+    have hbetaD : beta * D = Real.sqrt d₂ := div_mul_cancel₀ _ hD.ne'
+    have hgammaD : gamma * D = Real.sqrt d₃ := div_mul_cancel₀ _ hD.ne'
+    simpa only [add_mul, one_mul, mul_assoc, hbetaD, hgammaD] using hscaled
   · right
     have hcleared := (div_lt_iff₀ (by positivity : 0 < 4 * normalizedDrop)).mp hshort
     have hscaled := mul_lt_mul_of_pos_left hcleared (sq_pos_of_pos hD)
     have hbetaSqD : beta ^ 2 * D ^ 2 = d₂ := by
-      have hd₂sq := Real.sq_sqrt hd₂.le
-      dsimp [beta]
-      field_simp [ne_of_gt hD]
-      nlinarith
+      dsimp only [beta]
+      rw [div_pow, div_mul_cancel₀ _ (pow_ne_zero _ hD.ne'), Real.sq_sqrt hd₂.le]
     have hgammaSqD : gamma ^ 2 * D ^ 2 = d₃ := by
-      have hd₃sq := Real.sq_sqrt hd₃.le
-      dsimp [gamma]
-      field_simp [ne_of_gt hD]
-      nlinarith
-    have hdropD : normalizedDrop * D = F.heightDrop := by
-      dsimp [normalizedDrop]
-      field_simp [ne_of_gt hD]
-    have hHD : normalizedH * D = F.H := by
-      dsimp [normalizedH]
-      field_simp [ne_of_gt hD]
-    have hbetaD : beta * D = Real.sqrt d₂ := by
-      dsimp [beta]
-      field_simp [ne_of_gt hD]
+      dsimp only [gamma]
+      rw [div_pow, div_mul_cancel₀ _ (pow_ne_zero _ hD.ne'), Real.sq_sqrt hd₃.le]
+    have hdropD : normalizedDrop * D = F.heightDrop := div_mul_cancel₀ _ hD.ne'
+    have hHD : normalizedH * D = F.H := div_mul_cancel₀ _ hD.ne'
+    have hbetaD : beta * D = Real.sqrt d₂ := div_mul_cancel₀ _ hD.ne'
     have hleft : D ^ 2 * (1 + 2 * gamma ^ 2 - 3 * beta ^ 2) =
         d₁ + 2 * d₃ - 3 * d₂ := by
       calc
@@ -2401,7 +2344,7 @@ private theorem fullTwoRung_second_class_short_impossible
   have hVrLe : sqDist (P G.vertex) (P G.r) ≤ d₃ :=
     (top_three_class_bounds_of_ne G.classes G.vertex_ne_r).2.2 hVrLt
   have hclassNeg : d₂ - d₁ = -4 * F.c * F.offset := by
-    linarith [F.classDifference]
+    linarith only [F.classDifference]
   have hsum := two_rung_sum_identity_with_classes
     (c := F.c) (d := F.offset) (H := F.H) (Δ := F.heightDrop)
     (X := F.X) (Y := F.Y) (A := d₁) (B := d₂)
@@ -2419,9 +2362,10 @@ private theorem fullTwoRung_second_class_short_impossible
     simpa only [N, FullTwoRungGeometry.normalized,
       normalizeAlong_sqDist hcenters] using hsum
   have hYUpper : 4 * F.heightDrop * F.Y ≤ d₁ + 2 * d₃ - 3 * d₂ := by
-    nlinarith
+    linarith only [hsumRaw, hVwLe, hVrLe, hVs]
   have hY : F.Y < F.H - Real.sqrt d₂ := by
-    nlinarith [F.heightDrop_pos]
+    exact (mul_lt_mul_iff_right₀ (mul_pos (by norm_num) F.heightDrop_pos)).mp
+      (hYUpper.trans_lt hshort)
   have hVsN : sqDist (N G.vertex) (N G.s) = d₂ := by
     simpa only [N, FullTwoRungGeometry.normalized,
       normalizeAlong_sqDist hcenters] using hVs
@@ -2431,7 +2375,7 @@ private theorem fullTwoRung_second_class_short_impossible
   have hsqrtSq := Real.sq_sqrt hd₂
   have hsqrtNonneg := Real.sqrt_nonneg d₂
   simp only [sqDist] at hVsN
-  nlinarith [sq_nonneg (F.c - F.X)]
+  nlinarith only [hVsN, hsqrtSq, hsqrtNonneg, hY, sq_nonneg (F.c - F.X)]
 
 private theorem fullTwoRung_second_class_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
