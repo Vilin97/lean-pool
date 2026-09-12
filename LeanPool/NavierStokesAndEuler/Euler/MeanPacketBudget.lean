@@ -97,6 +97,22 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerM
   EulerMeanCutoffCurl EulerGevrey Finset
 open scoped ContDiff
 
+/-- Reuse the additive structure of potential operators in derivative bounds. -/
+local instance instPotentialOperatorNormedGroup :
+    NormedAddCommGroup (L2 →L[ℝ] homogeneousSpace) := inferInstance
+
+/-- Reuse the additive structure of curl operators in derivative bounds. -/
+local instance instCurlOperatorNormedGroup :
+    NormedAddCommGroup (homogeneousSpace →L[ℝ] L2) := inferInstance
+
+/-- Reuse the scalar structure of potential operators in derivative bounds. -/
+local instance instPotentialOperatorNormedSpace :
+    NormedSpace ℝ (L2 →L[ℝ] homogeneousSpace) := inferInstance
+
+/-- Reuse the scalar structure of curl operators in derivative bounds. -/
+local instance instCurlOperatorNormedSpace :
+    NormedSpace ℝ (homogeneousSpace →L[ℝ] L2) := inferInstance
+
 theorem majorant_four_radius (R : ℝ) (hR : 0 ≤ R) (n : ℕ) :
     majorant R 0 n ≤ majorant (4*R) 0 n := by
   unfold majorant
@@ -238,6 +254,9 @@ end
 noncomputable section
 
 namespace EulerMeanBoundary
+
+attribute [local instance] instPotentialOperatorNormedGroup instCurlOperatorNormedGroup
+  instPotentialOperatorNormedSpace instCurlOperatorNormedSpace
 
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal EulerMeanGradientTest
   EulerMeanCutoffCurl EulerGevrey
