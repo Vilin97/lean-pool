@@ -280,6 +280,10 @@ local instance timeCorrectionGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace 
 synthesis. -/
 local instance timeCorrectionSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
+/-- Cache pointwise addition for the Sobolev paths used in correction sources. -/
+local instance timeCorrectionPathAdd (T : ℝ) (q : ℕ) :
+    Add C(Icc (0 : ℝ) T, SobolevSpace period q) := inferInstance
+
 /-- The actual order-zero source is a continuous path on the energy Sobolev level. -/
 def orderZeroPath {s : ℕ} (hs : 6 ≤ s) (T : ℝ)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
@@ -361,11 +365,11 @@ theorem restrict_raw_source {q : ℕ} (hq : 6 ≤ q)
           (fun i => coefficientSobolevOperator period (KQ i))
           (truncateOperator period (q+1) z) (truncateOperator period q r) (truncateOperator period
               q e) := by
-  rw [map_add]
-  exact congrArg₂ (fun x y : SobolevSpace period q => x+y)
-    (restrict_transport_state period hq L hL _ e U hU)
-    (restrict_orderZeroSource period (by omega : 6 ≤ q+1) hq (by omega : q ≤ q+1)
-      L hL A0 KP0 KQ0 A KP KQ z r e)
+  exact (map_add (truncateOperator period q) _ _).trans
+    (congrArg₂ (fun x y : SobolevSpace period q => x+y)
+      (restrict_transport_state period hq L hL _ e U hU)
+      (restrict_orderZeroSource period (by omega : 6 ≤ q+1) hq (by omega : q ≤ q+1)
+        L hL A0 KP0 KQ0 A KP KQ z r e))
 
 /-- The actual positive coercive pressure operator is a continuous energy-order time path. -/
 def positivePressurePath {s : ℕ} (T : ℝ) (G : CoefficientPath period s (Icc (0 : ℝ) T))
