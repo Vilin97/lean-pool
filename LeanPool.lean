@@ -3137,6 +3137,7 @@ import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
 import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
 import LeanPool.MinimumDegreeMatching
 import LeanPool.MinimumDegreeMatching.Basic
+import LeanPool.MinimumDegreeMatching.Spread
 import LeanPool.MisereGames
 import LeanPool.MisereGames.AugmentedForm
 import LeanPool.MisereGames.AugmentedForm.Lift
