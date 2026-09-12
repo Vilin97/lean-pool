@@ -1733,17 +1733,29 @@ noncomputable def complexCrossLinear : ComplexVector →L[ℝ] ComplexVector →
 noncomputable def normalCross (n : RealVector) (a : ComplexVector) : ComplexVector :=
   complexCrossLinear (complexify n) a
 
+theorem normalCross_apply (n : RealVector) (a : ComplexVector) :
+    normalCross n a =
+      (n 1 : ℂ) • (a 2 • Pi.single 0 (1 : ℂ)) -
+      (n 2 : ℂ) • (a 1 • Pi.single 0 (1 : ℂ)) +
+      (n 2 : ℂ) • (a 0 • Pi.single 1 (1 : ℂ)) -
+      (n 0 : ℂ) • (a 2 • Pi.single 1 (1 : ℂ)) +
+      (n 0 : ℂ) • (a 1 • Pi.single 2 (1 : ℂ)) -
+      (n 1 : ℂ) • (a 0 • Pi.single 2 (1 : ℂ)) := rfl
+
 @[simp] theorem normalCross_zero (n : RealVector) (a : ComplexVector) :
     normalCross n a 0 = (n 1 : ℂ) * a 2 - (n 2 : ℂ) * a 1 := by
-  simp [normalCross, complexCrossLinear]
+  rw [normalCross_apply]
+  simp
 
 @[simp] theorem normalCross_one (n : RealVector) (a : ComplexVector) :
     normalCross n a 1 = (n 2 : ℂ) * a 0 - (n 0 : ℂ) * a 2 := by
-  simp [normalCross, complexCrossLinear]
+  rw [normalCross_apply]
+  simp
 
 @[simp] theorem normalCross_two (n : RealVector) (a : ComplexVector) :
     normalCross n a 2 = (n 0 : ℂ) * a 1 - (n 1 : ℂ) * a 0 := by
-  simp [normalCross, complexCrossLinear]
+  rw [normalCross_apply]
+  simp
 
 theorem normalCross_smul (n : RealVector) (a : ComplexVector) (c : ℂ) :
     normalCross n (c • a) = c • normalCross n a := by
