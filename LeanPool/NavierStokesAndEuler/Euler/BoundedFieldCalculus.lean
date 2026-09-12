@@ -174,7 +174,7 @@ theorem compositionMap_norm : ‖compositionMap (α := α) (U := U) (E := E) (F 
   (bilinearMap_norm (compL ℝ U E F)).trans (norm_compL_le ℝ U E F)
 
 @[simp] theorem compositionMap_apply (A : α →ᵇ E →L[ℝ] F) (B : α →ᵇ U →L[ℝ] E) (x : α) :
-    compositionMap A B x = (A x).comp (B x) := rfl
+    compositionMap (α := α) (U := U) (E := E) (F := F) A B x = (A x).comp (B x) := rfl
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
@@ -229,7 +229,8 @@ def pathCompositionMap : C(K,α →ᵇ E →L[ℝ] F) →L[ℝ]
 
 @[simp] theorem pathCompositionMap_apply (A : C(K, α →ᵇ E →L[ℝ] F))
     (B : C(K, α →ᵇ U →L[ℝ] E)) (t : K) (x : α) :
-    pathCompositionMap A B t x = (A t x).comp (B t x) := rfl
+    pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F) A B t x =
+      (A t x).comp (B t x) := rfl
 
 theorem pathCompositionMap_norm : ‖pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F)‖
     ≤ 1 := by
@@ -251,7 +252,8 @@ variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- Genuine smoothness of pointwise field composition in the uniform time-space norm. -/
 theorem pathComposition_contDiff (A : P → C(K, α →ᵇ E →L[ℝ] F))
     (B : P → C(K, α →ᵇ U →L[ℝ] E)) {n : ℕ∞ω} (hA : ContDiff ℝ n A) (hB : ContDiff ℝ n B) :
-    ContDiff ℝ n (fun y => pathCompositionMap (A y) (B y)) :=
+    ContDiff ℝ n (fun y =>
+      pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F) (A y) (B y)) :=
   ((ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
     (E := C(K,α →ᵇ E →L[ℝ] F))
     (F := C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U →L[ℝ] F))
@@ -263,7 +265,9 @@ theorem pathComposition_bound (A : P → C(K, α →ᵇ E →L[ℝ] F))
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D) (c d : ℕ)
     (hbA : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant R c n)
     (hbB : ∀ n x, ‖iteratedFDeriv ℝ n B x‖ ≤ D * majorant R d n) (n : ℕ) (x : P) :
-    ‖iteratedFDeriv ℝ n (fun y => pathCompositionMap (A y) (B y)) x‖ ≤ (3*C*D)*majorant R (c+d) n :=
+    ‖iteratedFDeriv ℝ n (fun y =>
+      pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F) (A y) (B y)) x‖ ≤
+        (3*C*D)*majorant R (c+d) n :=
   bilinear_bound (pathCompositionMap (α := α) (K := K) (U := U) (E := E) (F := F))
     (pathCompositionMap_norm (α := α) (K := K) (U := U) (E := E) (F := F))
     A B hA hB R C D hR hC hD c d hbA hbB n x
@@ -354,7 +358,7 @@ def pathAdjointMap : C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ E →L
 
 omit [CompactSpace K] in
 @[simp] theorem pathAdjointMap_apply (A : C(K, α →ᵇ U →L[ℝ] E)) (t : K) (x : α) :
-    pathAdjointMap A t x = (A t x).adjoint := rfl
+    pathAdjointMap (α := α) (K := K) (U := U) (E := E) A t x = (A t x).adjoint := rfl
 
 theorem pathAdjointMap_norm : ‖pathAdjointMap (α := α) (K := K) (U := U) (E := E)‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
