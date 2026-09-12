@@ -8058,3 +8058,53 @@ projects:
       - "15B48"
       - "05C35"
       - "15A18"
+  - slug: besicovitchs-1-2
+    title: A machine-checked bound of 0.6934 for Besicovitch's 1/2-problem
+    summary: >-
+      Proves the planar Besicovitch threshold is at most 6934/10000, improving the published
+      7/10 record. The development formalizes the finite six-point reduction, thirty rational Gram
+      certificates, the endpoint isolation argument, and Besicovitch's classical lower-bound example.
+    branch: geometric measure theory
+    entry_module: LeanPool.Besicovitch
+    authors:
+      - Yongxi Lin
+    source:
+      title: The bound sigma_1(R^2) <= 6934/10000 for Besicovitch's 1/2-problem
+      authors:
+        - Yongxi Lin
+      url: https://github.com/CoolRmal/Besicovitchs-1-2
+      github_repo: CoolRmal/Besicovitchs-1-2
+      commit: 17c9597b2a901bf386d5bb8382d0a74d2069f25b
+    license: Apache-2.0
+    status: draft
+    provenance: AI
+    main_declarations:
+      - Besicovitch.sigma_one_plane_le_6934_div_10000
+    main_results:
+      - declaration: Besicovitch.sigma_one_plane_le_6934_div_10000
+        informal: >-
+          The planar one-dimensional rectifiability threshold is at most 6934/10000, improving the
+          published upper bound 7/10.
+      - declaration: Besicovitch.forcesOneRectifiability_plane_of_gt
+        informal: >-
+          Every threshold strictly above 6934/10000 forces countable one-rectifiability in the plane.
+      - declaration: Besicovitch.one_half_le_sigma_one_plane
+        informal: >-
+          The planar threshold is at least one half, witnessed by Besicovitch's purely unrectifiable
+          example.
+      - declaration: Besicovitch.weightedGeometricBound_gram
+        informal: >-
+          Thirty exact rational Gram certificates prove the weighted six-point score is at most
+          -1/2000 for every separated admissible pair in the unit ball.
+    tags:
+      - besicovitch-problem
+      - geometric-measure-theory
+      - rectifiability
+      - finite-certificates
+      - gram-matrices
+    msc:
+      - "28A75"
+      - "28A78"
+      - "49Q15"
+      - "68V20"
+      - "90C05"
