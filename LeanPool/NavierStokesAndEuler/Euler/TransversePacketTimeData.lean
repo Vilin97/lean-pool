@@ -389,7 +389,8 @@ include hN hQ₁ in
 theorem timeNormalPath_contDiff : ContDiff ℝ ∞ (fun a => timeNormalPath (N a) (Q₁ a)) := by
   have hNa := (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ)).contDiff.comp hN
   have hQa := (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space)).contDiff.comp hQ₁
-  have hNN := pathComposition_contDiff N (fun x => pathAdjointMap (N x)) hN hNa
+  have hNN := pathComposition_contDiff N
+    (fun x => pathAdjointMap (U := Space) (E := ℝ) (N x)) hN hNa
   have hNQ := pathComposition_contDiff N Q₁ hN hQ₁
   have hA := pathComposition_contDiff (E := ℝ) (F := ℝ) (U := Space)
     (fun x => pathCompositionMap (E := Space) (F := ℝ) (U := ℝ)
@@ -416,7 +417,8 @@ theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0
       (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) (N x) (Q₁ x)) (N x)
   have hNa := (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ)).contDiff.comp hN
   have hQa := (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space)).contDiff.comp hQ₁
-  have hNN := pathComposition_contDiff N (fun x => pathAdjointMap (N x)) hN hNa
+  have hNN := pathComposition_contDiff N
+    (fun x => pathAdjointMap (U := Space) (E := ℝ) (N x)) hN hNa
   have hNQ := pathComposition_contDiff N Q₁ hN hQ₁
   have hA : ContDiff ℝ ∞ A := pathComposition_contDiff _ _ hNN hQa
   have hB : ContDiff ℝ ∞ B := pathComposition_contDiff _ _ hNQ hN
@@ -424,7 +426,7 @@ theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0
     pathAdjointMap_norm N hN R C hR hC 0 hbN
   have hbQa := contraction_bound (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space))
     pathAdjointMap_norm Q₁ hQ₁ R D hR hD 0 hbQ₁
-  have hbNN := pathComposition_bound N (fun x => pathAdjointMap (N x)) hN hNa
+  have hbNN := pathComposition_bound N (fun x => pathAdjointMap (U := Space) (E := ℝ) (N x)) hN hNa
     R C C hR hC hC 0 0 hbN hbNa
   have hbNQ := pathComposition_bound N Q₁ hN hQ₁ R C D hR hC hD 0 0 hbN hbQ₁
   have hbA : ∀ j x, ‖iteratedFDeriv ℝ j A x‖ ≤ (3*(3*C*C)*D)*majorant R 0 j :=
