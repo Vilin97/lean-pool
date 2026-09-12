@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ModulatedHistories
 import Mathlib.Analysis.Calculus.Deriv.Prod
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationStocks
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # The true cone after radial modulation

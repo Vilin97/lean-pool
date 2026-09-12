@@ -12,6 +12,7 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ProfileHistories
 import LeanPool.NavierStokesAndEuler.NavierStokes.ShapeTransition
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Actual histories and moment repair for radial modulation

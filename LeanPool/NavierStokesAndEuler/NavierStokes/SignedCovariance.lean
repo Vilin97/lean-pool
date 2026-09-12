@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PartitionedCovariance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedQuotients
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WeightedClasses
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Signed covariance updates with the constructed primary waves

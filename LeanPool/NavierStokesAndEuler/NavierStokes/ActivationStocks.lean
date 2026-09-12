@@ -8,6 +8,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.NaturalEntrance
 public import LeanPool.NavierStokesAndEuler.NavierStokes.StressActivation
 import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Actual lag stocks during the activation ramp
@@ -1261,9 +1262,9 @@ noncomputable def radiusPair (J : Set ℝ) (X0 : ℝ) : StockPair J :=
 
 /-- Sqrt radius pair, constructed using `SmoothPair.common`. -/
 noncomputable def sqrtRadiusPair (J : Set ℝ) {X0 : ℝ} (hX0 : 0 < X0) : StockPair J :=
-  SmoothPair.common (fun q => Real.sqrt (2 * scaledRadius X0 q))
-    ((contDiff_const.mul (scaledRadius_smooth X0)).sqrt
-      (fun q => (mul_pos (by norm_num) (scaledRadius_pos hX0 q)).ne')).contDiffOn
+  SmoothPair.common (fun q => Real.sqrt (2 * scaledRadius X0 q)) (by
+    exact ((contDiff_const.mul (scaledRadius_smooth X0)).sqrt
+      (fun q => (mul_pos (by norm_num) (scaledRadius_pos hX0 q)).ne')).contDiffOn)
 
 /-- D pair, given by `parameterPair J NaturalAxisData.d (contDiff_const.sub (contDiff_id.pow
 2))`. -/

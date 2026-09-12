@@ -11,6 +11,7 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
 import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Calculus.FDeriv.Extend
 import Mathlib.Analysis.Calculus.TangentCone.Prod
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Joint smoothness of even descent

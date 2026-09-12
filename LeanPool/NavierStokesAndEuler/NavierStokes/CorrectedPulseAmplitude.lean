@@ -11,6 +11,7 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.UniformAngularReset
 public import LeanPool.NavierStokesAndEuler.NavierStokes.TailEnergyBounds
 import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Pulse amplitude after the actual angular-moment reset

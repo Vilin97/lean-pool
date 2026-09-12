@@ -11,6 +11,7 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.HolomorphicFamily
 import LeanPool.NavierStokesAndEuler.NavierStokes.ParametricRephase
 import LeanPool.NavierStokesAndEuler.NavierStokes.VolterraRegularity
 import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 /-!
 # Canonical axis jets without a negative squared-radius extension
@@ -654,6 +655,7 @@ noncomputable def interiorBump {R S : ℝ} (hS : 0 < S) (hSR : S < R) : ContDiff
 
 /-- Interior cutoff, given by `interiorBump hS hSR r * interiorBump hS hSR (-r)`. -/
 noncomputable def interiorCutoff {R S : ℝ} (hS : 0 < S) (hSR : S < R) (r : ℝ) : ℝ :=
+  letI : HasContDiffBump ℝ := by infer_instance
   interiorBump hS hSR r * interiorBump hS hSR (-r)
 
 theorem interiorCutoff_contDiff {R S : ℝ} (hS : 0 < S) (hSR : S < R) :

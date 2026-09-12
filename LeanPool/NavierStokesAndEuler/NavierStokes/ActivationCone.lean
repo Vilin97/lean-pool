@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.NavierStokes.ConeAlgebra
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationStocks
 import LeanPool.NavierStokesAndEuler.NavierStokes.UniformCone
 import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
 # Initial activation cone estimates
