@@ -1087,6 +1087,7 @@ class ReviewResult:
     calls: int = 1
     coverage: str | None = None
     requests: tuple[ReviewResult, ...] = ()
+    source_reviews: tuple[ReviewResult, ...] = ()
 
 
 def _review_messages(
@@ -1207,7 +1208,9 @@ def _review_in_portions(
         manifest, [r.payload for r in results], shared
     )
     final = _integrate_portions(diff, evidence, obligations, budget, prepare, send)
-    return replace(final, portions=len(results), coverage=manifest)
+    return replace(
+        final, portions=len(results), coverage=manifest, source_reviews=tuple(results)
+    )
 
 
 def _integrate_portions(

@@ -87,6 +87,9 @@ def test_complete_workflow_budget_accounting_and_integration(monkeypatch):
                 "findings": [],
                 "open_questions": [],
                 "evidence_summary": "Reviewed unique_2_499 and local definitions.",
+                "source_number": int(
+                    re.search(r"source portion (\d+)/", user).group(1)
+                ),
             }
         )
 
@@ -94,6 +97,9 @@ def test_complete_workflow_budget_accounting_and_integration(monkeypatch):
     answer = review.request_review(review.DEFAULT_MODEL, "rules", diff, "review")
     assert answer.payload["verdict"] == "pass"
     assert answer.portions > 1
+    assert [item.payload["source_number"] for item in answer.source_reviews] == list(
+        range(1, answer.portions + 1)
+    )
     assert answer.calls == answer.portions + 1 == len(calls)
     assert answer.usage.prompt_tokens == len(calls) * 10
     assert answer.usage.completion_tokens == len(calls) * 3
