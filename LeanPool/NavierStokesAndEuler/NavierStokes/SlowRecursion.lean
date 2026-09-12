@@ -1345,15 +1345,14 @@ theorem Z_partials_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
   have hz := hn.mul ((hasDerivAt_inv hL₀).comp_hasFDerivAt w hl)
   simp only [Function.comp_def, ← pow_two] at hz
   change HasFDerivAt (Z h b v) _ w at hz
+  change (fderiv ℝ (Z h b v) w) (1, 0) = jetZX h b w.1 w.2 (profileJet v w) ∧
+    (fderiv ℝ (Z h b v) w) (0, 1) = jetZE h b w.1 w.2 (profileJet v w)
+  simp only [hz.fderiv, add_apply, sub_apply, smul_apply, zero_apply,
+    ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd', smul_eq_mul]
   constructor
-  · change (fderiv ℝ (Z h b v) w) (1, 0) = _
-    rw [hz.fderiv]
-    simp [jetZX, jetZNumeratorX, jetL, profileJet, partialX, partialEta, smul_eq_mul]
+  · simp [jetZX, jetZNumeratorX, jetL, profileJet, partialX, partialEta]
     field_simp [hL₁]; ring
-  · change (fderiv ℝ (Z h b v) w) (0, 1) = _
-    rw [hz.fderiv]
-    simp [jetZE, jetZNumeratorE, jetZNumerator, jetL, profileJet, partialX, partialEta,
-      smul_eq_mul]
+  · simp [jetZE, jetZNumeratorE, jetZNumerator, jetL, profileJet, partialX, partialEta]
     field_simp [hL₁]; ring
 
 theorem Z2_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
