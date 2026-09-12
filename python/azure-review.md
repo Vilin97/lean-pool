@@ -4,7 +4,14 @@ The LLM review workflow uses `gpt-6-astra` at `xhigh` reasoning effort through
 the authenticated Codex account pool on the `lean` Azure VM. It consumes that
 pool's Codex quota, with no OpenAI API key and no fallback to paid API requests.
 The existing review rubrics, CI prerequisite, verdict aggregation, and sticky
-comments still apply. Comments identify the model, token counts, and quota billing.
+comments still apply. Comments identify the model, token counts, quota billing,
+and an **estimated cost** at the model's [official Standard API rates](https://developers.openai.com/api/docs/pricing).
+For GPT-6-Astra, these are $10/M input tokens and $50/M output tokens; requests
+above 272,000 input tokens use $20/M input and $75/M output (verified 2026-09-12).
+The estimate values all input at the uncached rate, excluding cache-write
+premiums, tool fees, and VM costs. It is a nominal API equivalent, not an invoice
+for Codex usage. Each rubric is priced separately before summing its cost, so
+five short prompts do not accidentally incur the long-context rate.
 
 GitHub Actions continues to fetch the PR and post the comment. Only the review
 instructions and contributor text cross SSH. The workflow checks out its trusted

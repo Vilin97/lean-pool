@@ -61,7 +61,9 @@ def test_default_routes_over_ssh_without_instantiating_openai(monkeypatch):
     assert result.usage.prompt_tokens == 20
     footer = review.render_usage(result.usage, result.model, result.tier, result.effort)
     assert "no API credits" in footer
-    assert "$" not in footer
+    assert "**Estimated cost:** $0.0007" in footer
+    assert "Standard API equivalent" in footer
+    assert "uncached input" in footer
 
 
 @pytest.mark.parametrize(
@@ -182,7 +184,7 @@ def test_worker_timeout_kills_process_group(monkeypatch, tmp_path):
 
 
 def test_azure_rubric_footer_reports_quota():
-    """Five-rubric reviews report quota billing without inventing a dollar cost."""
+    """Five-rubric reviews report token value separately from quota billing."""
     result = review.ReviewResult(
         {},
         SimpleNamespace(prompt_tokens=20, completion_tokens=10),
@@ -195,4 +197,62 @@ def test_azure_rubric_footer_reports_quota():
     footer = review._render_rubric_usage(outcomes, "xhigh")
     assert "100 in / 50 out" in footer
     assert "no API credits" in footer
+    assert "**Estimated cost:** $0.0035" in footer
+
+
+@pytest.mark.parametrize(
+    "input_tokens,expected",
+    [(100_000, "$1.5000"), (272_000, "$3.2200"), (272_001, "$6.1900")],
+)
+def test_azure_estimate_uses_official_context_rates(input_tokens, expected):
+    """The full request switches rates only above the official 272K boundary."""
+    usage = SimpleNamespace(prompt_tokens=input_tokens, completion_tokens=10_000)
+    footer = review.render_usage(usage, "gpt-6-astra", codex_review.TIER)
+    assert f"**Estimated cost:** {expected}" in footer
+    assert "no API credits" in footer
+    assert "**Cost:**" not in footer
+
+
+def test_azure_rubrics_price_each_request_before_summing():
+    """A large aggregate of short prompts does not trigger long-context pricing."""
+    result = review.ReviewResult(
+        {},
+        SimpleNamespace(prompt_tokens=100_000, completion_tokens=1_000),
+        codex_review.TIER,
+        None,
+        "gpt-6-astra",
+        "xhigh",
+    )
+    footer = review._render_rubric_usage([SimpleNamespace(result=result)] * 5, "xhigh")
+    assert "500,000 in / 5,000 out" in footer
+    assert "**Estimated cost:** $5.2500" in footer
+
+
+def test_azure_missing_usage_does_not_claim_zero_cost():
+    """Unavailable token counts are never represented as a free review."""
+    footer = review.render_usage(None, "gpt-6-astra", codex_review.TIER)
     assert "$" not in footer
+    assert "no API credits" in footer
+    result = review.ReviewResult({}, None, codex_review.TIER, None, "gpt-6-astra", None)
+    footer = review._render_rubric_usage([SimpleNamespace(result=result)], None)
+    assert "$" not in footer
+
+
+def test_azure_partial_usage_labels_partial_estimate():
+    """An incomplete rubric total cannot masquerade as the complete cost."""
+    known = review.ReviewResult(
+        {},
+        SimpleNamespace(prompt_tokens=100_000, completion_tokens=1_000),
+        codex_review.TIER,
+        None,
+        "gpt-6-astra",
+        None,
+    )
+    missing = review.ReviewResult(
+        {}, None, codex_review.TIER, None, "gpt-6-astra", None
+    )
+    footer = review._render_rubric_usage(
+        [SimpleNamespace(result=known), SimpleNamespace(result=missing)], None
+    )
+    assert "**Estimated cost:** $1.0500" in footer
+    assert "partial" in footer
