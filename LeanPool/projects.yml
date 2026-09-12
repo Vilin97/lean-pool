@@ -8098,7 +8098,8 @@ projects:
         informal: >-
           If every vertex of a finite even vertex set has at least half the set size plus t
           neighbors inside the set, then the graph contains t + 1 pairwise edge-disjoint
-          perfect matchings of that set, represented by distinct partner involutions.
+          perfect matchings of that set, represented by an indexed family of partner involutions.
+          These involutions are pairwise distinct when the vertex set is nonempty.
       - declaration: SimpleGraph.exists_spread_involution
         informal: >-
           Under the same minimum-degree condition with slack t, every nonnegative edge-weight
