@@ -8059,13 +8059,15 @@ projects:
       - "05C35"
       - "15A18"
   - slug: minimum-degree-matchings
-    title: Minimum-degree and spread matchings
+    title: BKLO simultaneous perfect matchings and spread matchings
     summary: >-
-      Develops perfect and near-perfect matchings under sharp minimum-degree hypotheses,
-      together with a slack form producing pairwise edge-disjoint perfect matchings and a
-      quantitative weighted spread bound over any linearly ordered field. A shared finite-set
-      augmentation argument supplies the even case, a universal-apex reduction gives the odd
-      case, and averaging over edge-disjoint matchings gives the weighted bound.
+      Formalizes the r = 2 specialization of the simultaneous factor-selection step in BKLO
+      Lemma 10.7: under quantitative parity, minimum-degree, codegree, and incidence hypotheses,
+      a linearly sized, overlapping family of neighbourhood graphs admits perfect matchings whose
+      edge sets are pairwise disjoint. The proof replaces the published randomized greedy process
+      by a deterministic pessimistic-estimator sweep. Supporting results develop perfect,
+      near-perfect, edge-disjoint, and quantitatively weighted spread matchings from sharp
+      minimum-degree hypotheses.
     branch: graph theory
     entry_module: LeanPool.MinimumDegreeMatching
     authors:
@@ -8073,19 +8075,25 @@ projects:
       - Aristotle
     source:
       title: >-
-        Reusable matching formalizations accompanying Linear-Error Clique Partitions of
-        Split Graphs via Structured Triangle Packing
+        Edge-decompositions of graphs with high minimum degree
       authors:
-        - Juan Pablo Traverso Gianini
-        - Aristotle
-      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/6736c816e1f9cd105c2295a8e4716ad55609ccb0/preprints/PAPER_III/05_formalization/lean_v1.4_freeze
-      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+        - Ben Barber
+        - Daniela Kühn
+        - Allan Lo
+        - Deryk Osthus
+      doi: 10.1016/j.aim.2015.09.032
+      arxiv: "1410.5750"
     license: Apache-2.0
     status: verified
     provenance: AI
     main_declarations:
-      - SimpleGraph.exists_spread_involution
+      - BKLOK2.lemma107K2_holds
     main_results:
+      - declaration: BKLOK2.lemma107K2_holds
+        informal: >-
+          Specializes BKLO Lemma 10.7 to r = 2 in its apex-neighbourhood configuration: for every
+          sufficiently large admissible configuration, all indexed neighbourhood graphs admit
+          perfect matchings whose edge sets are pairwise disjoint. The proof is deterministic.
       - declaration: SimpleGraph.exists_isPerfectMatching_of_minDegree
         informal: >-
           Every finite simple graph of even order whose minimum degree is at least half its
@@ -8108,8 +8116,7 @@ projects:
     tags:
       - graph-theory
       - perfect-matchings
-      - minimum-degree
       - edge-disjoint-matchings
-      - weighted-matchings
+      - pseudorandomness
     msc:
       - "05C70"

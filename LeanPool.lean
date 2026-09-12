@@ -3136,6 +3136,9 @@ import LeanPool.MinModulusUniqueMultisetSum
 import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
 import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
 import LeanPool.MinimumDegreeMatching
+import LeanPool.MinimumDegreeMatching.BKLO
+import LeanPool.MinimumDegreeMatching.BKLOInfrastructure
+import LeanPool.MinimumDegreeMatching.BKLOSelection
 import LeanPool.MinimumDegreeMatching.Basic
 import LeanPool.MinimumDegreeMatching.Spread
 import LeanPool.MisereGames

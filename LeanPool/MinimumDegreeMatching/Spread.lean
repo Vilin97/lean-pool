@@ -413,6 +413,32 @@ end Aux
 
 /-! ### Dirac's theorem and spread matchings for simple graphs -/
 
+/-- **Spread perfect matchings for a finite edge set.**  This is the edge-set interface used by
+the simultaneous matching selection in the `r = 2` specialization of BKLO Lemma 10.7.  Under a
+Dirac condition with slack `t`, it supplies a partner involution whose weight is at most the
+average weight over the `t + 1` edge-disjoint perfect matchings available from that slack. -/
+theorem exists_spread_involution_of_edgeSet {R : Type*} [Field R] [LinearOrder R]
+    [IsStrictOrderedRing R] {A : Finset (Sym2 V)} {N : Finset V} {t : ℕ}
+    (hEven : Even N.card)
+    (hdeg : ∀ v ∈ N, N.card / 2 + t ≤ ((N.filter fun z => s(v, z) ∈ A).erase v).card)
+    (w : V → V → R) (hw : ∀ y z, 0 ≤ w y z) :
+    ∃ f : V → V, (∀ a ∈ N, f a ∈ N) ∧ (∀ a ∈ N, f (f a) = a) ∧
+      (∀ a ∈ N, f a ≠ a) ∧ (∀ a ∈ N, s(a, f a) ∈ A) ∧
+      ∑ y ∈ N, w y (f y) ≤ (1 / ((t : R) + 1)) * ∑ y ∈ N, ∑ z ∈ N, w y z := by
+  classical
+  obtain ⟨f, hf, hbound⟩ :=
+    exists_isMatchingOn_weight (N := N) hEven w (fun y _ z _ => hw y z) t A hdeg
+  refine ⟨f, hf.mapsTo, hf.invol, hf.ne, fun a ha => (mem_nbhdOn.1 (hf.adj a ha)).2.2, ?_⟩
+  have hmono : ∑ y ∈ N, ∑ z ∈ nbhdOn A N y, w y z ≤ ∑ y ∈ N, ∑ z ∈ N, w y z :=
+    Finset.sum_le_sum fun y _ =>
+      Finset.sum_le_sum_of_subset_of_nonneg nbhdOn_subset fun z _ _ => hw y z
+  have hkey : ((t : R) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ N, w y z :=
+    hbound.trans hmono
+  have hpos : (0 : R) < (t : R) + 1 :=
+    add_pos_of_nonneg_of_pos (Nat.cast_nonneg t) zero_lt_one
+  rw [one_div, inv_mul_eq_div, le_div_iff₀ hpos, mul_comm]
+  exact hkey
+
 variable {G : SimpleGraph V} [DecidableRel G.Adj] {N : Finset V} {t : ℕ}
 
 open scoped Classical in
