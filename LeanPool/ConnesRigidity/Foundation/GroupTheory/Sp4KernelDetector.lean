@@ -95,10 +95,37 @@ private def boolCommutes (a b : BMatrix) : Prop :=
 def boolCommutesB (a b : BMatrix) : Bool :=
   boolMatrixEqB (boolMul a b) (boolMul b a)
 
+/-- The standard alternating pairing of Boolean four-vectors. -/
+def boolPairing (a b : Fin 4 → Bool) : Bool :=
+  (a 2 && b 0) ^^ (a 3 && b 1) ^^ (a 0 && b 2) ^^ (a 1 && b 3)
+
+private theorem boolPairing_comm (a b : Fin 4 → Bool) : boolPairing a b = boolPairing b a := by
+  simp only [boolPairing, Bool.and_comm, Bool.xor_assoc, Bool.xor_left_comm, Bool.xor_comm]
+
+private theorem boolPairing_self (a : Fin 4 → Bool) : boolPairing a a = false := by
+  simp [boolPairing, Bool.and_comm, Bool.xor_left_comm]
+
+private theorem boolMul_symplectic_apply (x : BMatrix) (i j : Fin 4) :
+    boolMul (boolMul x boolJ) (boolTranspose x) i j = boolPairing (x i) (x j) := by
+  simp [boolMul, boolDot, boolTranspose, boolJ, bvEntry, boolPairing]
+
+/-- Check preservation of the symplectic form using its six independent row pairings. -/
+def boolSymplecticB (x : BMatrix) : Bool :=
+  -- The unit pairings reject zero rows before checking orthogonality.
+  boolPairing (x 0) (x 2) && boolPairing (x 1) (x 3) &&
+  !(boolPairing (x 0) (x 1)) && !(boolPairing (x 0) (x 3)) &&
+  !(boolPairing (x 1) (x 2)) && !(boolPairing (x 2) (x 3))
+
+/-- The six-pairing test agrees with the full symplectic matrix equation. -/
+theorem boolSymplecticB_eq (x : BMatrix) :
+    boolSymplecticB x = boolMatrixEqB (boolMul (boolMul x boolJ) (boolTranspose x)) boolJ := by
+  simp only [boolMatrixEqB, boolMul_symplectic_apply, boolPairing_self]
+  simp [boolJ, bvEntry, boolSymplecticB, boolPairing_comm, Bool.and_assoc,
+    Bool.and_left_comm, Bool.and_comm]
+
 /-- Boolean certificate predicate used by the kernel-checked finite search. -/
 def kernelDetectorCheck (x : BitVec 16) : Bool :=
-  !(boolMatrixEqB (boolMul (boolMul (bvEntry x) boolJ)
-      (boolTranspose (bvEntry x))) boolJ) ||
+  !(boolSymplecticB (bvEntry x)) ||
   boolMatrixEqB (bvEntry x) boolOne ||
   !(boolCommutesB (boolConj boolG1 boolG1Inv (bvEntry x)) (bvEntry x)) ||
   !(boolCommutesB (boolConj boolG2 boolG2Inv (bvEntry x)) (bvEntry x))
@@ -112,10 +139,9 @@ private theorem boolean_detector_cover
     ¬boolCommutes (boolConj boolG2 boolG2Inv (bvEntry x)) (bvEntry x) := by
   intro x hs hn
   have hc := hcertificate x
-  have hsB :
-      boolMatrixEqB (boolMul (boolMul (bvEntry x) boolJ)
-        (boolTranspose (bvEntry x))) boolJ = true :=
-    (boolMatrixEqB_eq_true_iff _ _).2 hs
+  have hsB : boolSymplecticB (bvEntry x) = true := by
+    rw [boolSymplecticB_eq]
+    exact (boolMatrixEqB_eq_true_iff _ _).2 hs
   have hnB : boolMatrixEqB (bvEntry x) boolOne = false := by
     cases h : boolMatrixEqB (bvEntry x) boolOne
     · rfl

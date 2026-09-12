@@ -22,25 +22,25 @@ namespace Sp4
 theorem kernelDetectorBlock4 : ∀ high : Fin 8, ∀ middle low : Fin 16,
     kernelDetectorCheck (BitVec.ofNat 16
       (2048 * 4 + 256 * high.val + 16 * middle.val + low.val)) = true := by
-  decide
+  decide +kernel
 
 /-- The detector succeeds on 16-bit matrix block 5 (with indices 0 through 31). -/
 theorem kernelDetectorBlock5 : ∀ high : Fin 8, ∀ middle low : Fin 16,
     kernelDetectorCheck (BitVec.ofNat 16
       (2048 * 5 + 256 * high.val + 16 * middle.val + low.val)) = true := by
-  decide
+  decide +kernel
 
 /-- The detector succeeds on 16-bit matrix block 6 (with indices 0 through 31). -/
 theorem kernelDetectorBlock6 : ∀ high : Fin 8, ∀ middle low : Fin 16,
     kernelDetectorCheck (BitVec.ofNat 16
       (2048 * 6 + 256 * high.val + 16 * middle.val + low.val)) = true := by
-  decide
+  decide +kernel
 
 /-- The detector succeeds on 16-bit matrix block 7 (with indices 0 through 31). -/
 theorem kernelDetectorBlock7 : ∀ high : Fin 8, ∀ middle low : Fin 16,
     kernelDetectorCheck (BitVec.ofNat 16
       (2048 * 7 + 256 * high.val + 16 * middle.val + low.val)) = true := by
-  decide
+  decide +kernel
 
 end Sp4
 end Connes
