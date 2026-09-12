@@ -2189,6 +2189,12 @@ import LeanPool.InfinitaryLogic.Scott.Rank
 import LeanPool.InfinitaryLogic.Scott.RefinementCount
 import LeanPool.InfinitaryLogic.Scott.Sentence
 import LeanPool.InfinitaryLogic.Util
+import LeanPool.InfiniteConnesRigidity
+import LeanPool.InfiniteConnesRigidity.CarryAndCrossedProduct
+import LeanPool.InfiniteConnesRigidity.FactorAndRigidity
+import LeanPool.InfiniteConnesRigidity.GroupConstruction
+import LeanPool.InfiniteConnesRigidity.SpectralAndPropertyT
+import LeanPool.InfiniteConnesRigidity.UniversalLattice
 import LeanPool.IsTranscendentalPi
 import LeanPool.IsTranscendentalPi.AnalyticEstimates
 import LeanPool.IsTranscendentalPi.CalculusOnPoly
