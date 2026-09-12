@@ -2243,11 +2243,7 @@ theorem StripScales.isPathConnected_stripForwardPieces (S : J.StripScales) :
     convert hwalk (j - i).val using 1
     rw [ZMod.natCast_zmod_val]
     ring
-  have heq : (⋃ i : ZMod J.n, J.forwardEdgePatch S i) = J.stripForwardPieces S := by
-    ext x
-    simp only [forwardEdgePatch, stripForwardPieces, Set.mem_iUnion, Set.mem_union]
-    aesop
-  rwa [heq] at hconnected
+  simpa only [forwardEdgePatch, Set.iUnion_union_distrib, stripForwardPieces] using hconnected
 
 theorem StripScales.isPathConnected_stripBackwardPieces (S : J.StripScales) :
     IsPathConnected (J.stripBackwardPieces S) := by
@@ -2279,11 +2275,7 @@ theorem StripScales.isPathConnected_stripBackwardPieces (S : J.StripScales) :
     convert hwalk (j - i).val using 1
     rw [ZMod.natCast_zmod_val]
     ring
-  have heq : (⋃ i : ZMod J.n, J.backwardEdgePatch S i) = J.stripBackwardPieces S := by
-    ext x
-    simp only [backwardEdgePatch, stripBackwardPieces, Set.mem_iUnion, Set.mem_union]
-    aesop
-  rwa [heq] at hconnected
+  simpa only [backwardEdgePatch, Set.iUnion_union_distrib, stripBackwardPieces] using hconnected
 
 /-- Every point of the polygon is approached from both of the explicit strip bands. -/
 theorem StripScales.carrier_subset_closure_stripPieces (S : J.StripScales) :
@@ -2366,44 +2358,10 @@ theorem interior_edgeSegment (i : ZMod J.n) : interior (J.edgeSegment i) = ∅ :
   have hpair : affineSpan ℝ ({J.vertex i, J.vertex (i + 1)} : Set Plane) = ⊤ := by
     rw [← affineSpan_convexHull, convexHull_pair]
     exact hspan
-  set dx : ℝ := (J.vertex (i + 1)) 0 - (J.vertex i) 0 with hdx
-  set dy : ℝ := (J.vertex (i + 1)) 1 - (J.vertex i) 1 with hdy
-  set q : Plane :=
-    (WithLp.toLp 2 ![(J.vertex i) 0 - dy, (J.vertex i) 1 + dx] : Plane) with hq
-  have hqline : q ∈ affineSpan ℝ ({J.vertex i, J.vertex (i + 1)} : Set Plane) := by
-    rw [hpair]
-    trivial
-  rw [mem_affineSpan_pair_iff_exists_lineMap_eq] at hqline
-  obtain ⟨t, ht⟩ := hqline
-  have ht0 := congrArg (fun p : Plane => p 0) ht
-  have ht1 := congrArg (fun p : Plane => p 1) ht
-  simp only [AffineMap.lineMap_apply, vsub_eq_sub, vadd_eq_add, PiLp.add_apply,
-    PiLp.sub_apply, PiLp.smul_apply, smul_eq_mul] at ht0 ht1
-  change t * ((J.vertex (i + 1)) 0 - (J.vertex i) 0) + (J.vertex i) 0 =
-      (J.vertex i) 0 - dy at ht0
-  change t * ((J.vertex (i + 1)) 1 - (J.vertex i) 1) + (J.vertex i) 1 =
-      (J.vertex i) 1 + dx at ht1
-  have ht0' := congrArg (fun x : ℝ => x * dy) ht0
-  have ht1' := congrArg (fun x : ℝ => x * dx) ht1
-  rw [hdy] at ht0 ht0'
-  rw [hdx] at ht1 ht1'
-  have hdx0 : dx = 0 := by
-    rw [hdx]
-    nlinarith [sq_nonneg ((J.vertex (i + 1)) 0 - (J.vertex i) 0),
-      sq_nonneg ((J.vertex (i + 1)) 1 - (J.vertex i) 1)]
-  have hdy0 : dy = 0 := by
-    rw [hdy]
-    nlinarith [sq_nonneg ((J.vertex (i + 1)) 0 - (J.vertex i) 0),
-      sq_nonneg ((J.vertex (i + 1)) 1 - (J.vertex i) 1)]
-  apply J.adjacent_ne i
-  ext j
-  fin_cases j
-  · change (J.vertex i) 0 = (J.vertex (i + 1)) 0
-    rw [hdx] at hdx0
-    linarith
-  · change (J.vertex i) 1 = (J.vertex (i + 1)) 1
-    rw [hdy] at hdy0
-    linarith
+  have hdim := (collinear_pair ℝ (J.vertex i) (J.vertex (i + 1))).finrank_le_one
+  rw [AffineSubspace.vectorSpan_eq_top_of_affineSpan_eq_top ℝ Plane Plane hpair,
+    finrank_top] at hdim
+  norm_num [Plane, finrank_euclideanSpace] at hdim
 
 /-- A finite polygonal carrier has empty interior in the plane. -/
 theorem interior_carrier : interior J.carrier = ∅ := by
