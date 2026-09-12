@@ -224,7 +224,7 @@ local instance instBoundedFieldCalculus34 : NormedSpace ℝ (C(K,α →ᵇ U →
 def pathCompositionMap : C(K,α →ᵇ E →L[ℝ] F) →L[ℝ]
     C(K,α →ᵇ U →L[ℝ] E) →L[ℝ] C(K,α →ᵇ U →L[ℝ] F) :=
   (EulerContinuousPathCalculus.coefficientMap (K := K)
-    (E := α →ᵇ U →L[ℝ] E) (F := α →ᵇ U →L[ℝ] F)).comp
+    (E := α →ᵇ U →L[ℝ] E) (F := α →ᵇ U →L[ℝ] F)) ∘L
     ((compositionMap (α := α) (U := U) (E := E) (F := F)).compLeftContinuous ℝ K)
 
 @[simp] theorem pathCompositionMap_apply (A : C(K, α →ᵇ E →L[ℝ] F))
