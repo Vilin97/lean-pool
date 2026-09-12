@@ -9,7 +9,6 @@ import Mathlib.Data.Fintype.Sets
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic.Common
 import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Ring.RingNF
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.NormNum

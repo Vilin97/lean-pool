@@ -34,11 +34,10 @@ Everything below the rules — title, description, diff — is written by the
 contributor, so it is framed to the model as evidence to verify rather
 than instruction to follow (:data:`UNTRUSTED_INPUT_RULE`).
 
-The reviewer prefers OpenAI's ``flex`` tier (cheaper, slower, occasionally
-unavailable). When flex returns 429 Resource Unavailable, the request is
-retried with ``service_tier="auto"`` (standard pricing). The rendered
-comment shows which tier was actually used and prices the request at that
-tier's rate.
+Reviews default to GPT-6-Astra through the Azure VM's authenticated Codex
+account pool over restricted SSH. Failures never fall back to API credits.
+The optional, explicitly selected ``openai`` backend retains flex/standard
+API billing for local use; the production workflow does not provide an API key.
 
 Very large PRs (machine-generated certificates or case data) can exceed
 the model's input-token limit — PR #278's 3.1M-character diff was
@@ -56,7 +55,9 @@ above OpenAI's long-context input threshold. Update it when bumping
 ``DEFAULT_MODEL`` or when OpenAI changes pricing.
 
 Environment variables:
-    OPENAI_API_KEY: OpenAI credentials (required).
+    REVIEW_BACKEND: ``codex-azure`` (default) or explicit ``openai``.
+    REVIEW_SSH_HOST: SSH host alias for the restricted Azure worker.
+    OPENAI_API_KEY: Required only for the explicit ``openai`` backend.
     PR_NUMBER:      Pull request number to review (required).
     GH_TOKEN:       Token for the GitHub CLI (required in CI).
     GITHUB_REPOSITORY:
@@ -87,22 +88,16 @@ from typing import Any
 
 from openai import APIStatusError, BadRequestError, OpenAI, RateLimitError
 
-from lean_pool import challenge, prior_art
+from lean_pool import challenge, codex_review, prior_art
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
 REFACTOR_RULES_PATH = REPO_ROOT / ".github" / "REFACTOR_REVIEW_RULES.md"
 CHALLENGE_RULES_PATH = REPO_ROOT / ".github" / "CHALLENGE_REVIEW_RULES.md"
 SOLUTION_RULES_PATH = REPO_ROOT / ".github" / "SOLUTION_REVIEW_RULES.md"
-# The `gpt-5.6` alias routes to the newest gpt-5.6-sol snapshot (OpenAI's
-# flagship reasoning model), so snapshot upgrades arrive automatically.
-# OpenAI publishes no cross-family rolling alias — when a new family ships
-# (gpt-5.7, gpt-6), this line and PRICING_PER_M still need a bump.
-DEFAULT_MODEL = "gpt-5.6"
-# Reasoning effort sent with every review request. `xhigh` is the deep
-# end of gpt-5.6's range (none/low/medium/high/xhigh/max); reasoning
-# tokens are billed as output tokens, so this is the main cost dial —
-# lower it via the REVIEW_EFFORT env var if review costs run hot.
+# Reviews default to the authenticated Codex account pool on the Azure VM.
+DEFAULT_MODEL = "gpt-6-astra"
+# Preserve the existing review depth.
 DEFAULT_REASONING_EFFORT = "xhigh"
 # Flex tier requests can take longer than the default 10-minute timeout,
 # and xhigh reasoning stretches generation further.
@@ -1068,7 +1063,7 @@ class ReviewResult:
     Attributes:
         payload: Parsed JSON review from the model.
         usage: OpenAI ``CompletionUsage`` object, or ``None``.
-        tier: ``"flex"`` or ``"standard"`` — the tier that served it.
+        tier: ``"codex-azure"``, ``"flex"``, or ``"standard"``.
         truncation: Diff elision applied, ``None`` for a full-diff review.
         model: Model that actually served the request — the resolved
             snapshot when the request went through an alias.
@@ -1099,8 +1094,8 @@ def request_review(
     tokens (:func:`fit_diff_to_budget`). Token estimation is approximate,
     so if the API still rejects the input as too large, the diff budget is
     halved and the request refitted and retried instead of failing the
-    review. Tries the ``flex`` service tier first; if OpenAI returns 429
-    Resource Unavailable, retries with ``service_tier="auto"`` (standard).
+    review. The default Azure Codex backend fails closed. Only the explicit
+    OpenAI backend uses the flex-to-standard API tier fallback.
 
     Args:
         model: Model name or alias to request.
@@ -1115,7 +1110,10 @@ def request_review(
     Returns:
         The :class:`ReviewResult` for the request that succeeded.
     """
-    client = OpenAI(timeout=REQUEST_TIMEOUT_SECONDS)
+    backend = os.environ.get("REVIEW_BACKEND", "codex-azure")
+    if backend not in ("codex-azure", "openai"):
+        raise ValueError(f"Unknown REVIEW_BACKEND: {backend}")
+    client = OpenAI(timeout=REQUEST_TIMEOUT_SECONDS) if backend == "openai" else None
     fence = secrets.token_hex(8)
     system_prompt = "\n".join(
         [
@@ -1133,7 +1131,11 @@ def request_review(
         + estimate_tokens(system_prompt)
         + estimate_tokens(prior_art_section or "")
     )
-    diff_budget_tokens = MAX_INPUT_TOKENS - scaffold_tokens
+    # Leave room for output and Codex instructions in Astra's context window.
+    input_budget = (
+        min(MAX_INPUT_TOKENS, 180_000) if backend == "codex-azure" else MAX_INPUT_TOKENS
+    )
+    diff_budget_tokens = input_budget - scaffold_tokens
     for attempt in range(REVIEW_FIT_ATTEMPTS):
         fitted_diff, truncation = fit_diff_to_budget(diff, diff_budget_tokens)
         if truncation is not None:
@@ -1152,9 +1154,14 @@ def request_review(
             {"role": "user", "content": user_content},
         ]
         try:
-            response, tier, effort_used = _completion_with_tier_fallback(
-                client, model, messages, effort
-            )
+            if backend == "codex-azure":
+                response, tier, effort_used = codex_review.request_completion(
+                    model, messages, effort
+                )
+            else:
+                response, tier, effort_used = _completion_with_tier_fallback(
+                    client, model, messages, effort
+                )
         except BadRequestError as error:
             if not _is_token_overflow(error) or attempt == REVIEW_FIT_ATTEMPTS - 1:
                 raise
@@ -1269,13 +1276,20 @@ def render_usage(usage: Any, model: str, tier: str, effort: str | None = None) -
     pair is not listed there.
     """
     if usage is None:
-        return ""
+        return (
+            "**Billing:** Codex account quota on Azure (no API credits)"
+            if tier == codex_review.TIER
+            else ""
+        )
     in_tok = getattr(usage, "prompt_tokens", 0) or 0
     out_tok = getattr(usage, "completion_tokens", 0) or 0
 
     parts = [f"**Tokens:** {in_tok:,} in / {out_tok:,} out", f"**Tier:** `{tier}`"]
     if effort:
         parts.append(f"**Effort:** `{effort}`")
+    if tier == codex_review.TIER:
+        parts.append("**Billing:** Codex account quota on Azure (no API credits)")
+        return " · ".join(parts)
     rates = pricing_rates(model, tier, in_tok)
     if rates is not None:
         in_price, out_price = rates
@@ -1495,7 +1509,9 @@ def _render_rubric_usage(outcomes: list[RubricOutcome], effort: str | None) -> s
     ]
     if effort:
         parts.append(f"**Effort:** `{effort}`")
-    if cost > 0 or not unpriced:
+    if all(o.result.tier == codex_review.TIER for o in outcomes):
+        parts.append("**Billing:** Codex account quota on Azure (no API credits)")
+    elif cost > 0 or not unpriced:
         cost_cell = f"**Cost:** ${cost:.4f}"
         if unpriced:
             cost_cell += " (partial — some calls unpriced)"
@@ -1864,9 +1880,6 @@ def main() -> int:
     pr_number = os.environ.get("PR_NUMBER")
     if not pr_number:
         print("PR_NUMBER not set", file=sys.stderr)
-        return 2
-    if not os.environ.get("OPENAI_API_KEY"):
-        print("OPENAI_API_KEY not set", file=sys.stderr)
         return 2
 
     model = os.environ.get("REVIEW_MODEL", DEFAULT_MODEL)
