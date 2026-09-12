@@ -199,22 +199,8 @@ private theorem Pkn_succ_succ
     have hpow : (-1 : ℝ) ^ (k + 2) = (-1) ^ k := by ring
     have hpow1 : (-1 : ℝ) ^ (k + 1) = -(-1) ^ k := by ring
     rw [hpow, hpow1]
-    -- Goal: (-1)^k * 1 * d(n,k+2) = -n*(-(-1)^k*1*d(n,k+1)) - (k+1)*n*((-1)^k*1*d(n-1,k))
-    -- = (-1)^k * n * d(n,k+1) - (-1)^k * (k+1)*n*d(n-1,k)
-    -- = (-1)^k * [n*d(n,k+1) - (k+1)*n*d(n-1,k)]
-    -- From hR: d(n,k+2) + (k+1)*n*d(n-1,k) = n*d(n,k+1)
-    -- So d(n,k+2) = n*d(n,k+1) - (k+1)*n*d(n-1,k)
-    -- After factoring (-1)^k, both sides match.
-    have hR' : (↑(n.descFactorial (k + 2)) : ℝ) =
-        ↑n * ↑(n.descFactorial (k + 1)) - (↑k + 1) * ↑n * ↑((n - 1).descFactorial k) := by linarith
-    -- Factor out (-1)^k: both sides equal (-1)^k * hR'
-    -- Just use ring after substituting hR'
-    push_cast
-    calc (-1 : ℝ) ^ k * 1 * ↑(n.descFactorial (k + 2))
-        = (-1) ^ k * (↑n * ↑(n.descFactorial (k + 1)) -
-            (↑k + 1) * ↑n * ↑((n - 1).descFactorial k)) := by rw [mul_one, hR']
-      _ = -↑n * (-(-1) ^ k * 1 * ↑(n.descFactorial (k + 1))) -
-            (↑k + 1) * ↑n * ((-1) ^ k * 1 * ↑((n - 1).descFactorial k)) := by ring
+    push_cast at hR ⊢
+    linear_combination (-1 : ℝ) ^ k * hR
   | succ a =>
     -- m = a + 1 case: use Polynomial.coeff_X_sub_C_mul
     rw [Polynomial.coeff_X_sub_C_mul, Pkn_coeff_single, Pkn_coeff_single]
@@ -233,13 +219,7 @@ private theorem Pkn_succ_succ
                     show a ≤ k + 1 from by omega, ite_true,
                     show a + 1 ≤ k + 1 from by omega, ite_true,
                     show a + 1 ≤ k from ha2, ite_true]
-        -- This is the generic case. Use charlier_coeff_nat with s' = k - a.
-        -- s = k+2-(a+1) = k+1-a. Set s' = k-1-a so s = s'+2 when a+1 ≤ k-1.
-        -- Actually s' = k - a - 1 and s = s' + 2 iff k - a ≥ 2 iff a ≤ k-2.
-        -- For a+1 ≤ k, a ≤ k-1. If a ≤ k-2, use charlier_coeff_nat.
-        -- If a = k-1 (so s=2), also use charlier_coeff_nat with s'=0.
-        -- If a = k (so s=1)... but a+1 ≤ k means a ≤ k-1, so a ≤ k-1 and s ≥ 2.
-        -- So s = k+1-a ≥ 2 always in this branch. Good.
+        -- Match the shifted indices in the coefficient recurrence.
         have hnat := charlier_coeff_nat k n (k - 1 - a)
         -- Simplify indices: k-1-a+2 = k+1-a, k-1-a+1 = k-a, k-1-a stays
         have hs2 : k - 1 - a + 2 = k + 1 - a := by omega
@@ -262,20 +242,7 @@ private theorem Pkn_succ_succ
           have : k - a = (k - 1 - a) + 1 := by omega
           rw [this]; ring
         rw [hpow2, hpow1]
-        -- Factor out (-1)^{k-1-a} from both sides
-        set s := (-1 : ℝ) ^ (k - 1 - a)
-        -- Goal: s * A = s * B - n * (-s * C) - (k+1)*n*(s*D)
-        --     = s * B + n*s*C - (k+1)*n*s*D
-        --     = s * (B + n*C - (k+1)*n*D)
-        -- LHS = s * A
-        -- This follows from A + (k+1)*n*D = B + n*C which is hR
-        have hs : s ≠ 0 := by positivity
-        have : s * (↑((k + 2).choose (k + 1 - a)) * ↑(n.descFactorial (k + 1 - a))) =
-          s * (↑((k + 1).choose (k + 1 - a)) * ↑(n.descFactorial (k + 1 - a)) +
-            ↑n * (↑((k + 1).choose (k - a)) * ↑(n.descFactorial (k - a))) -
-            (↑k + 1) * ↑n * (↑(k.choose (k - 1 - a)) * ↑((n - 1).descFactorial (k - 1 - a)))) := by
-          congr 1; linarith
-        linarith [mul_comm s (↑((k + 2).choose (k + 1 - a)) * ↑(n.descFactorial (k + 1 - a)))]
+        linear_combination (-1 : ℝ) ^ (k - 1 - a) * hR
       · push Not at ha2
         -- k < a+1 and a+1 ≤ k+2, so a+1 ∈ {k+1, k+2}, i.e., a ∈ {k, k+1}
         -- a ∈ {k, k+1}
@@ -1458,7 +1425,8 @@ private lemma Pkn_shift (k n : ℕ) :
       have hch_nat : (k + 1).choose (k + 1 - m) * (k + 1 - m) = (k + 1) * k.choose (k - m) := by
         have hs : k - m + 1 = k + 1 - m := by omega
         have := Nat.add_one_mul_choose_eq k (k - m)
-        rw [hs] at this; linarith
+        rw [hs] at this
+        exact this.symm
       have hdF_R : ((n + 1).descFactorial (k + 1 - m) : ℝ) =
           (n.descFactorial (k + 1 - m) : ℝ) +
             ((k + 1 - m : ℕ) : ℝ) * (n.descFactorial (k - m) : ℝ) := by exact_mod_cast hdF_nat
@@ -1467,17 +1435,8 @@ private lemma Pkn_shift (k n : ℕ) :
       have hpow : ((-1 : ℝ) ^ (k + 1 - m)) = -((-1 : ℝ) ^ (k - m)) := by
         rw [show k + 1 - m = (k - m) + 1 from by omega, pow_succ]; ring
       rw [hdF_R, hpow]
-      set p := ((-1 : ℝ) ^ (k - m))
-      set A := ((↑((k + 1).choose (k + 1 - m))) : ℝ)
-      set B := ((↑(k + 1 - m : ℕ)) : ℝ)
-      set D := ((↑(n.descFactorial (k + 1 - m))) : ℝ)
-      set E := ((↑(n.descFactorial (k - m))) : ℝ)
-      set F := ((↑(k.choose (k - m))) : ℝ)
-      have hab : A * B = (↑(k + 1) : ℝ) * F := hch_R
-      have : -p * A * (D + B * E) = -p * A * D - (↑(k + 1) : ℝ) * (p * F * E) := by
-        have step : -p * A * (D + B * E) = -p * A * D - p * (A * B) * E := by ring
-        rw [step, hab]; ring
-      linarith
+      linear_combination -((-1 : ℝ) ^ (k - m)) *
+        (n.descFactorial (k - m) : ℝ) * hch_R
     · push Not at hm2
       have hm_eq : m = k + 1 := by omega
       simp_all
@@ -1577,8 +1536,8 @@ private theorem scaled_laguerre_bound_Pkn (k : ℕ) :
     have hcomb_eval : (Pkn (k + 2) (N + 1)).eval x =
         (x - ↑(N + 1)) * (Pkn (k + 1) N).eval x -
           ↑(k + 1) * x * (Pkn k N).eval x := by
-      have h := Pkn_combined k N
-      simp_all
+      simp only [Pkn_combined, Polynomial.eval_sub, Polynomial.eval_mul,
+        Polynomial.eval_X, Polynomial.eval_C]
     -- Triangle inequality
     have htri : |(Pkn (k + 2) (N + 1)).eval x| ≤
         |x - ↑(N + 1)| * |(Pkn (k + 1) N).eval x| +
@@ -1648,7 +1607,7 @@ private theorem scaled_laguerre_bound_Pkn (k : ℕ) :
       -- Bound √(m+1) + |x-(m+1)| ≤ S + 2
       have hshift : Real.sqrt ((m : ℝ) + 1) + |x - ((m : ℝ) + 1)| ≤ S + 2 := by
         have h1 : Real.sqrt ((m : ℝ) + 1) ≤ Real.sqrt (m : ℝ) + 1 := by
-          nlinarith [Real.sq_sqrt hm_nn, Real.sq_sqrt hm1_nn,
+          nlinarith only [Real.sq_sqrt hm_nn, Real.sq_sqrt hm1_nn,
                      Real.sqrt_nonneg (m : ℝ)]
         have h2 : |x - ((m : ℝ) + 1)| ≤ |x - (m : ℝ)| + 1 := by
           calc |x - ((m : ℝ) + 1)| = |(x - (m : ℝ)) + (-1)| := by ring_nf
@@ -1656,7 +1615,7 @@ private theorem scaled_laguerre_bound_Pkn (k : ℕ) :
             _ = |x - (m : ℝ)| + 1 := by simp [abs_neg]
         linarith
       -- S + 2 ≤ 3 * S since S ≥ 1
-      have hS_shift : S + 2 ≤ 3 * S := by nlinarith
+      have hS_shift : S + 2 ≤ 3 * S := by linarith only [hS_ge_one]
       have hS1_nn : 0 ≤ Real.sqrt ((m : ℝ) + 1) + |x - ((m : ℝ) + 1)| := by positivity
       calc |(Pkn k N).eval x|
           ≤ Ak * ((m : ℝ) + 1) ^ ((k : ℝ) / 2) *
@@ -1678,7 +1637,9 @@ private theorem scaled_laguerre_bound_Pkn (k : ℕ) :
               _ ≤ |x - (m : ℝ)| + |(k : ℝ) + 1| := abs_sub _ _
               _ = _ := by rw [abs_of_nonneg hk1_nn]
         _ ≤ S + ((k : ℝ) + 1) := by linarith [Real.sqrt_nonneg (m : ℝ)]
-        _ ≤ ((k + 2 : ℕ) : ℝ) * S := by push_cast; nlinarith
+        _ ≤ ((k + 2 : ℕ) : ℝ) * S := by
+          push_cast
+          nlinarith only [hS_ge_one, hk1_nn]
     -- Bound |x| ≤ 2*S^2
     have hx_bound : |x| ≤ 2 * S ^ 2 := by
       have h1 : |x| ≤ |x - (m : ℝ)| + (m : ℝ) := by
@@ -2250,7 +2211,7 @@ private lemma radial_density_eq_step (k : ℕ) (r : ℝ) (hr : 0 ≤ r) (hr_pos 
   have hfact_inv_le_one : 1 / ((Nat.factorial k : ℝ) ^ 2) ≤ 1 := by
     have hfac_ge_one_nat : 1 ≤ Nat.factorial k := Nat.succ_le_of_lt (Nat.factorial_pos k)
     have hfac_sq_ge : (1 : ℝ) ≤ (Nat.factorial k : ℝ) ^ 2 := by
-      nlinarith [show (1 : ℝ) ≤ (Nat.factorial k : ℝ) by exact_mod_cast hfac_ge_one_nat]
+      nlinarith only [show (1 : ℝ) ≤ (Nat.factorial k : ℝ) by exact_mod_cast hfac_ge_one_nat]
     have htmp : (1 : ℝ) / ((Nat.factorial k : ℝ) ^ 2) ≤ (1 : ℝ) / 1 :=
       one_div_le_one_div_of_le (by positivity : (0 : ℝ) < 1) hfac_sq_ge
     simpa using htmp
@@ -2280,11 +2241,9 @@ private lemma radial_density_eq_step (k : ℕ) (r : ℝ) (hr : 0 ≤ r) (hr_pos 
           ((1 + |r - 1|) ^ (4 * k + 1) * Real.exp (-(r - 1) ^ 2 / 2)) := by
             have hcoef_le : ((1 / ((Nat.factorial k : ℝ) ^ 2)) * Ak ^ 2 * Real.exp 1) ≤
                 Ak ^ 2 * Real.exp 1 := by
-              have htmp : (1 / ((Nat.factorial k : ℝ) ^ 2)) * Ak ^ 2 ≤ 1 * Ak ^ 2 :=
-                mul_le_mul_of_nonneg_right hfact_inv_le_one (sq_nonneg Ak)
-              have htmp' : (1 / ((Nat.factorial k : ℝ) ^ 2)) * Ak ^ 2 ≤ Ak ^ 2 := by
-                simpa using htmp
-              nlinarith [Real.exp_pos 1, htmp']
+              simpa only [one_mul] using mul_le_mul_of_nonneg_right
+                (mul_le_mul_of_nonneg_right hfact_inv_le_one (sq_nonneg Ak))
+                (Real.exp_nonneg 1)
             have hrest_nonneg :
                 0 ≤ (1 + |r - 1|) ^ (4 * k + 1) * Real.exp (-(r - 1) ^ 2 / 2) := by positivity
             exact mul_le_mul_of_nonneg_right hcoef_le hrest_nonneg
@@ -2429,7 +2388,8 @@ private theorem radial_density_gaussian_bound_small (k : ℕ) :
     dsimp [K0]
     rw [hrewrite_exp]
     ring
-  simp_all
+  rw [hK0_eval]
+  exact hK0_le
 
 /-- For n < k and r ≥ 0: exp(-r²/2) ≤ exp(-(1/4)*posPart(|r-√n|-(k+3))²).
 Since n < k, √n ≤ k, so posPart(|r-√n|-(k+3)) ≤ r and p² ≤ r² ≤ 2r²,
