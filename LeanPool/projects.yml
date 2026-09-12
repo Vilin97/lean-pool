@@ -8058,3 +8058,67 @@ projects:
       - "15B48"
       - "05C35"
       - "15A18"
+  - slug: minimum-degree-matchings
+    title: BKLO simultaneous perfect matchings and spread matchings
+    summary: >-
+      Formalizes the r = 2 specialization of the simultaneous factor-selection step in BKLO
+      Lemma 10.7: under quantitative parity, minimum-degree, codegree, and incidence hypotheses,
+      a linearly sized, overlapping family of neighbourhood graphs admits perfect matchings whose
+      edge sets are pairwise disjoint. The proof replaces the published randomized greedy process
+      by a deterministic pessimistic-estimator sweep. Supporting results develop perfect,
+      near-perfect, edge-disjoint, and quantitatively weighted spread matchings from sharp
+      minimum-degree hypotheses.
+    branch: graph theory
+    entry_module: LeanPool.MinimumDegreeMatching
+    authors:
+      - Juan Pablo Traverso Gianini
+      - Aristotle
+    source:
+      title: >-
+        Edge-decompositions of graphs with high minimum degree
+      authors:
+        - Ben Barber
+        - Daniela Kühn
+        - Allan Lo
+        - Deryk Osthus
+      doi: 10.1016/j.aim.2015.09.032
+      arxiv: "1410.5750"
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/6736c816e1f9cd105c2295a8e4716ad55609ccb0/preprints/PAPER_III/05_formalization/lean_v1.4_freeze
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - BKLOK2.lemma107K2_holds
+    main_results:
+      - declaration: BKLOK2.lemma107K2_holds
+        informal: >-
+          Specializes BKLO Lemma 10.7 to r = 2 in its apex-neighbourhood configuration: for every
+          sufficiently large admissible configuration, all indexed neighbourhood graphs admit
+          perfect matchings whose edge sets are pairwise disjoint. The proof is deterministic.
+      - declaration: SimpleGraph.exists_isPerfectMatching_of_minDegree
+        informal: >-
+          Every finite simple graph of even order whose minimum degree is at least half its
+          order has a perfect matching.
+      - declaration: SimpleGraph.exists_isMatching_compl_singleton_of_minDegree
+        informal: >-
+          Every finite simple graph of odd order n and minimum degree at least (n - 1) / 2
+          has a matching whose vertex set is the complement of a singleton.
+      - declaration: SimpleGraph.exists_involutions_pairwise_ne
+        informal: >-
+          If every vertex of a finite even vertex set has at least half the set size plus t
+          neighbors inside the set, then the graph contains t + 1 pairwise edge-disjoint
+          perfect matchings of that set, represented by an indexed family of partner involutions.
+          These involutions are pairwise distinct when the vertex set is nonempty.
+      - declaration: SimpleGraph.exists_spread_involution
+        informal: >-
+          Under the same minimum-degree condition with slack t, every nonnegative edge-weight
+          function admits a perfect matching whose weight is at most 1 / (t + 1) times the
+          total weight over ordered pairs in the vertex set.
+    tags:
+      - graph-theory
+      - perfect-matchings
+      - edge-disjoint-matchings
+      - pseudorandomness
+    msc:
+      - "05C70"
