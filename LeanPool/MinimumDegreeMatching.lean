@@ -13,10 +13,8 @@ import LeanPool.MinimumDegreeMatching.Spread
 Source: url:https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/6736c816e1f9cd105c2295a8e4716ad55609ccb0/preprints/PAPER_III/05_formalization/lean_v1.4_freeze
 Authors: Juan Pablo Traverso Gianini, Aristotle
 Status: verified
-Main declarations: `SimpleGraph.exists_isPerfectMatching_of_minDegree`,
-  `SimpleGraph.exists_isMatching_compl_singleton_of_minDegree`,
-  `SimpleGraph.exists_involutions_pairwise_ne`, `SimpleGraph.exists_spread_involution`
-Tags: graph-theory, perfect-matchings, minimum-degree, edge-disjoint-matchings
+Main declarations: `SimpleGraph.exists_isPerfectMatching_of_minDegree`, `SimpleGraph.exists_isMatching_compl_singleton_of_minDegree`, `SimpleGraph.exists_involutions_pairwise_ne`, `SimpleGraph.exists_spread_involution`
+Tags: graph-theory, perfect-matchings, minimum-degree, edge-disjoint-matchings, weighted-matchings
 MSC: 05C70
 -/
 
