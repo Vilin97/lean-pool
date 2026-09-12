@@ -797,10 +797,12 @@ theorem center_error (t : Icc (0 : ℝ) T) :
     (deriv (profile δ) (k*⟪firstNormal,S.evolution.inverse.normalized s 0⟫_ℝ))
     (D.normal.field s (S.evolution.inverse.normalized s 0))
     (canonicalVelocity D firstCoordinate s (S.evolution.inverse.normalized s 0))
+  have hcoefficient := F.coefficient
+  dsimp only [firstPacketMeanData, firstPacketData] at hcoefficient
   dsimp only [state, firstPacketState]
   exact S.forwardChild_center_error H
     firstNormal firstNormal_unit firstFrame support compact symmetric δ hδ firstCoordinate
-    (subset_refl _) (δ*hchild) (truncation k) F.hn k hk.four F.Q F.G F.coefficient F.graph
+    (subset_refl _) (δ*hchild) (truncation k) F.hn k hk.four F.Q F.G hcoefficient F.graph
     nextEll hnext hnext1 F.labels C (k^(-(1/4 : ℝ))) (fun s => by
       have hs := (F.errors s 0).1
       dsimp only [firstPacketMeanData, firstPacketData] at hs
