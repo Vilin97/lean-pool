@@ -6549,21 +6549,7 @@ theorem matched_sum_card_inter_partition
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (B : Finset V) :
     ∑ C ∈ P.parts, (C ∩ B).card = (U ∩ B).card := by
-  have hdis :
-      (P.parts : Set (Finset V)).PairwiseDisjoint
-        (fun C : Finset V => C ∩ B) := by
-    intro C hC D hD hne
-    exact (P.disjoint hC hD hne).mono
-      Finset.inter_subset_left Finset.inter_subset_left
-  have hunion : P.parts.biUnion (fun C => C ∩ B) = U ∩ B := by
-    ext x
-    simp only [Finset.mem_biUnion, Finset.mem_inter, ← P.biUnion_parts, id_eq]
-    aesop
-  calc
-    ∑ C ∈ P.parts, (C ∩ B).card =
-        (P.parts.biUnion fun C => C ∩ B).card :=
-      (Finset.card_biUnion hdis).symm
-    _ = (U ∩ B).card := congrArg Finset.card hunion
+  exact sum_card_inter_partition P B
 
 public
 theorem matchedRetained_bad_density_tendsto_zero

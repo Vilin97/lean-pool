@@ -243,15 +243,6 @@ open scoped BigOperators ComplexConjugate ComplexOrder InnerProductSpace Pointwi
 
 universe u
 
-private theorem rooted_realMarkov_eq_mass_realPermutationMarkov
-    {ι V : Type*} [Fintype ι]
-    (p : ι → Equiv.Perm V) :
-    KunRealComplexMarkovBridge.realMarkov p =
-      KunFinitePermutationMarkovMass.realPermutationMarkov p := by
-  funext f x
-  simp only [KunRealComplexMarkovBridge.realMarkov, div_eq_mul_inv, mul_comm,
-    KunFinitePermutationMarkovMass.realPermutationMarkov]
-
 private theorem rooted_markov_real_iterate_sq_error
     {ι V : Type*} [Fintype ι] [Fintype V] [DecidableEq V]
     (p : ι → Equiv.Perm V) (T : Finset V) (k : ℕ) :
@@ -267,16 +258,6 @@ private theorem rooted_markov_real_iterate_sq_error
   have h :=
     KunRealComplexMarkovBridge.norm_iterate_permutationMarkov_indicator_sub_sq
       p (KunDirectedIndicatorJensen.realIndicator T) k
-  have hcomplex :
-      KunRealComplexMarkovBridge.permutationMarkov p =
-        KunRootedIndicatorCrossing.permutationMarkov p := rfl
-  have hvector :
-      KunRealComplexMarkovBridge.indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T) =
-        KunRootedIndicatorCrossing.indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T) := rfl
-  rw [rooted_realMarkov_eq_mass_realPermutationMarkov] at h
-  rw [hcomplex, hvector] at h
   simpa only [KunDirectedIndicatorJensen.realIndicator] using h
 
 private theorem rooted_indicator_defect_sq_le_boundary
@@ -290,45 +271,10 @@ private theorem rooted_indicator_defect_sq_le_boundary
           (KunDirectedIndicatorJensen.realIndicator T)‖ ^ 2 ≤
       2 * (boundary p T : ℝ) /
         (Fintype.card ι : ℝ) := by
-  have hcomplex :
-      KunRealComplexMarkovBridge.permutationMarkov p =
-        KunRootedIndicatorCrossing.permutationMarkov p := rfl
-  have hvector :
-      KunRealComplexMarkovBridge.indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T) =
-        KunRootedIndicatorCrossing.indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T) := rfl
-  have hreal :
-      KunRealComplexMarkovBridge.realMarkov p
-          (KunDirectedIndicatorJensen.realIndicator T) =
-        KunDirectedIndicatorJensen.realPermutationMarkov p
-          (KunDirectedIndicatorJensen.realIndicator T) := rfl
-  have henergy :=
-    KunRealComplexMarkovBridge.norm_permutationMarkov_indicator_sub_sq
-      p (KunDirectedIndicatorJensen.realIndicator T)
-  rw [hcomplex, hvector, hreal] at henergy
-  have hindicator :
-      KunDirectedIndicatorJensen.realIndicator T =
-        KunDirectedIndicatorJensen.realIndicator T := by
-    funext x
-    simp only [KunDirectedIndicatorJensen.realIndicator,
-      KunDirectedIndicatorJensen.realIndicator]
-  rw [hindicator]
-  calc
-    ‖permutationMarkov p
-        (indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T)) -
-        indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T)‖ ^ 2 =
-      ∑ x,
-        (KunDirectedIndicatorJensen.realPermutationMarkov p
-          (KunDirectedIndicatorJensen.realIndicator T) x -
-            KunDirectedIndicatorJensen.realIndicator T x) ^ 2 := by
-          exact henergy
-    _ ≤ 2 * (boundary p T : ℝ) /
-        (Fintype.card ι : ℝ) :=
-      KunDirectedIndicatorJensen.realPermutationMarkov_indicator_defect_sq_le_boundary
-        p T
+  exact (KunRealComplexMarkovBridge.norm_permutationMarkov_indicator_sub_sq
+    p (KunDirectedIndicatorJensen.realIndicator T)).trans_le
+      (KunDirectedIndicatorJensen.realPermutationMarkov_indicator_defect_sq_le_boundary p T)
+
 
 end
 
@@ -344,9 +290,9 @@ open scoped BigOperators
 
 universe u
 
-private def sourceFiniteIndicator
-    {V : Type*} [DecidableEq V] (T : Finset V) (x : V) : ℝ :=
-  if x ∈ T then 1 else 0
+private abbrev sourceFiniteIndicator
+    {V : Type*} [DecidableEq V] (T : Finset V) :=
+  KunDirectedIndicatorJensen.realIndicator T
 
 private def sourceRootedIndicatorMarkovModel
     {G : Type} [Group G] [DecidableEq G]
@@ -379,19 +325,7 @@ private theorem sourceRootedIndicatorMarkovModel_isGenerated
   · intro x
     change sourceFiniteIndicator T x = 0 ∨
       sourceFiniteIndicator T x = 1
-    by_cases hx : x ∈ T
-    · right
-      unfold sourceFiniteIndicator
-      split
-      · rfl
-      · rename_i hnot
-        exact (hnot hx).elim
-    · left
-      unfold sourceFiniteIndicator
-      split
-      · rename_i hmem
-        exact (hx hmem).elim
-      · rfl
+    exact KunDirectedIndicatorJensen.realIndicator_eq_zero_or_one T x
   · intro g
     rfl
   · exact chosen_symmetric_wordEvaluation_one
@@ -423,7 +357,7 @@ private theorem sourceRootedIndicatorMarkovModel_isRootedAtRadius
   have hxT : x ∈ T := by
     by_contra hnot
     apply hxreal
-    unfold sourceFiniteIndicator
+    unfold sourceFiniteIndicator KunDirectedIndicatorJensen.realIndicator
     split
     · rename_i hmem
       exact (hnot hmem).elim
@@ -640,9 +574,9 @@ namespace KunActualFinalRestrictedVariation
 
 open scoped BigOperators
 
-private def realMarkov {V ι : Type*} [Fintype ι]
-    (σ : ι → Equiv.Perm V) (f : V → ℝ) (x : V) : ℝ :=
-  (∑ i : ι, f ((σ i).symm x)) / (Fintype.card ι : ℝ)
+private abbrev realMarkov {V ι : Type*} [Fintype ι]
+    (σ : ι → Equiv.Perm V) :=
+  KunDirectedIndicatorJensen.realPermutationMarkov σ
 
 private theorem sum_permutation_mul_eq_sum_inverse_mul
     {V : Type*} [Fintype V]
@@ -713,7 +647,7 @@ private theorem sum_sum_sq_displacement_eq_twice_card_mul_realMarkov_residual
       rw [Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro x _
-      unfold realMarkov
+      unfold realMarkov KunDirectedIndicatorJensen.realPermutationMarkov
       simp_rw [mul_sub]
       rw [Finset.sum_sub_distrib, Finset.sum_const,
         Finset.card_univ, nsmul_eq_mul]
@@ -1459,7 +1393,9 @@ private theorem card_partitionWordCrossing_le_add_distance
         permutationDistance p q := by
       simp only [ne_eq, permutationDistance, hammingDist]
 
-private theorem tendsto_action_inverse
+/-- A sofic approximation preserves inversion asymptotically in normalized Hamming distance. -/
+public
+theorem tendsto_action_inverse
     {G : Type*} [Group G] (A : SoficApproximation G)
     (u : G) :
     Tendsto
@@ -2627,15 +2563,6 @@ private theorem exists_rooted_word_radius_real_markov_sq_error_le_boundary
       field_simp
       ring
 
-private theorem rooted_final_realMarkov_eq_mass_realPermutationMarkov
-    {ι V : Type*} [Fintype ι]
-    (p : ι → Equiv.Perm V) :
-    KunActualFinalRestrictedVariation.realMarkov p =
-      KunFinitePermutationMarkovMass.realPermutationMarkov p := by
-  funext f x
-  simp only [KunActualFinalRestrictedVariation.realMarkov, div_eq_mul_inv, mul_comm,
-    KunFinitePermutationMarkovMass.realPermutationMarkov]
-
 private theorem rooted_real_markov_iterate_residual_sqrt_eq
     {ι V : Type*} [Fintype ι] [Fintype V] [DecidableEq V]
     (p : ι → Equiv.Perm V) (T : Finset V) (k : ℕ) :
@@ -2652,20 +2579,9 @@ private theorem rooted_real_markov_iterate_residual_sqrt_eq
         ((permutationMarkov p)^[k])
           (indicatorVector
             (KunDirectedIndicatorJensen.realIndicator T))‖ := by
-  have hcomplex :
-      KunRealComplexMarkovBridge.permutationMarkov p =
-        KunRootedIndicatorCrossing.permutationMarkov p := rfl
-  have hvector :
-      KunRealComplexMarkovBridge.indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T) =
-        KunRootedIndicatorCrossing.indicatorVector
-          (KunDirectedIndicatorJensen.realIndicator T) := rfl
   have henergy :=
     KunRealComplexMarkovBridge.norm_iterate_permutationMarkov_indicator_sub_iterate_sq
       p (KunDirectedIndicatorJensen.realIndicator T) k
-  rw [hcomplex, hvector,
-    rooted_realMarkov_eq_mass_realPermutationMarkov] at henergy
-  have hfinal := rooted_final_realMarkov_eq_mass_realPermutationMarkov p
   have hsum :
       (∑ x : V,
         (KunActualFinalRestrictedVariation.realMarkov p
@@ -2679,7 +2595,6 @@ private theorem rooted_real_markov_iterate_residual_sqrt_eq
         ((permutationMarkov p)^[k])
           (indicatorVector
             (KunDirectedIndicatorJensen.realIndicator T))‖ ^ 2 := by
-    rw [hfinal]
     simpa only [Function.iterate_succ_apply'] using henergy.symm
   rw [hsum, Real.sqrt_sq (norm_nonneg _)]
 
@@ -3403,80 +3318,6 @@ private theorem list_generator_crossing_density_tendsto_zero
       simpa only [List.map_cons, List.prod_cons, ge_iff_le, add_div] using
         (div_le_div_of_nonneg_right hreal (by positivity : (0 : ℝ) ≤ Fintype.card (V n)))
 
-private theorem action_list_prod_tendsto
-    {G : Type*} [Group G]
-    (A : SoficApproximation G) (l : List G) :
-    Tendsto
-      (fun n =>
-        normalizedHamming
-          ((A.model n).action l.prod)
-          ((l.map (A.model n).action).prod))
-      atTop (nhds 0) := by
-  induction l with
-  | nil =>
-      simp only [List.prod_nil, PermutationModel.map_one, List.map_nil, normalizedHamming_self,
-        tendsto_const_nhds_iff]
-  | cons g l ih =>
-      simp only [List.map_cons, List.prod_cons]
-      have hupper : Tendsto
-          (fun n =>
-            normalizedHamming
-                ((A.model n).action (g * l.prod))
-                ((A.model n).action g * (A.model n).action l.prod) +
-              normalizedHamming
-                ((A.model n).action l.prod)
-                ((l.map (A.model n).action).prod))
-          atTop (nhds 0) := by
-        simpa only [add_zero] using (A.multiplicative g l.prod).add ih
-      refine squeeze_zero
-        (fun n => normalizedHamming_nonneg _ _) ?_ hupper
-      intro n
-      have htriangle := normalizedHamming_triangle
-        ((A.model n).action (g * l.prod))
-        ((A.model n).action g * (A.model n).action l.prod)
-        ((A.model n).action g *
-          (l.map (A.model n).action).prod)
-      rw [normalizedHamming_mul_left] at htriangle
-      exact htriangle
-
-private theorem exists_word_of_symmetric_generators
-    {H : Type*} [Group H]
-    (S : Finset H)
-    (hsymmetric : ∀ g ∈ S, g⁻¹ ∈ S)
-    (hgenerates : Subgroup.closure (S : Set H) = ⊤)
-    (g : H) :
-    ∃ l : List ↥S,
-      ((l.map fun i : ↥S => (i : H)).prod) = g := by
-  classical
-  have hg : g ∈ Subgroup.closure (S : Set H) := by
-    rw [hgenerates]
-    simp only [Subgroup.mem_top]
-  induction hg using Subgroup.closure_induction with
-  | mem x hx =>
-      exact ⟨[⟨x, hx⟩], by simp only [List.map_cons, List.map_nil, List.prod_cons, List.prod_nil,
-        mul_one]⟩
-  | one =>
-      exact ⟨[], by simp only [List.map_nil, List.prod_nil]⟩
-  | mul x y _ _ ihx ihy =>
-      obtain ⟨lx, hlx⟩ := ihx
-      obtain ⟨ly, hly⟩ := ihy
-      refine ⟨lx ++ ly, ?_⟩
-      rw [List.map_append, List.prod_append, hlx, hly]
-  | inv x _ ih =>
-      obtain ⟨l, hl⟩ := ih
-      let invLetter : ↥S → ↥S :=
-        fun i => ⟨(i : H)⁻¹, hsymmetric (i : H) i.property⟩
-      refine ⟨(l.map invLetter).reverse, ?_⟩
-      rw [List.map_reverse, List.map_map]
-      change ((l.map fun i : ↥S => (i : H)⁻¹).reverse).prod = x⁻¹
-      have hmap :
-          (l.map fun i : ↥S => (i : H)⁻¹) =
-            (l.map (fun i : ↥S => (i : H))).map
-              (fun z : H => z⁻¹) := by
-        rw [List.map_map]
-        rfl
-      rw [hmap, ← List.prod_inv_reverse, hl]
-
 public
 theorem crossing_density_tendsto_zero_of_normalizedHamming
     {V : ℕ → Type*}
@@ -3549,7 +3390,7 @@ theorem fixed_generated_word_crossing_density_tendsto_zero
       atTop (nhds 0) := by
   classical
   obtain ⟨l, hl⟩ :=
-    exists_word_of_symmetric_generators S hsymmetric hgenerates g
+    KunActualSoficRootRadius.exists_generator_word_of_symmetric_generates S hsymmetric hgenerates g
   have hgenerator (i : ↥S) : Tendsto
       (fun n =>
         ((partitionWordCrossing (Q n)
@@ -3589,7 +3430,7 @@ theorem fixed_generated_word_crossing_density_tendsto_zero
         ((l.map fun i : ↥S =>
           (A.model n).action (φ (i : H))).prod))
       atTop (nhds 0) := by
-    have h := action_list_prod_tendsto A
+    have h := KunActualSoficRootRadius.action_list_prod_tendsto A
       (l.map fun i : ↥S => φ (i : H))
     rw [hprod] at h
     simpa only [List.map_subtype, List.map_map, Function.comp_def] using h
@@ -3728,19 +3569,17 @@ def sourceCompressionUElement :
   ⟨compressionU,
     compressionU_mem_ninePrefixElementaryGroup⟩
 
-private def sourceCompressionVElement :
+/-- The second compression element, regarded as an element of the nine-prefix elementary group. -/
+public
+def sourceCompressionVElement :
     prefixElementaryGroup ninePrefixCode :=
   ⟨compressionV,
     compressionV_mem_ninePrefixElementaryGroup⟩
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
 public
-def sourceAlphaElement
-    (g : prefixElementaryGroup alphaPrefixCode) :
-    prefixElementaryGroup ninePrefixCode :=
-  ⟨g.val,
-    SourceGeneration.alphaPrefixElementaryGroup_le_nine
-      g.property⟩
+abbrev sourceAlphaElement (g : prefixElementaryGroup alphaPrefixCode) :=
+  SourceGeneratedWordCrossing.sourceAlphaInclusion g
 
 private def sourceConjugatedAlphaUElement
     (g : prefixElementaryGroup alphaPrefixCode) :
@@ -3819,10 +3658,9 @@ private def completedDiagonalPermutationHom {V : Type*} :
     intro p q
     ext z <;> rfl
 
-private def completedGoodPermutationGraphIndicator
-    {V : Type*} [DecidableEq V]
-    (T : Finset (V × V)) (z : V × V) : ℝ :=
-  if z ∈ T then 1 else 0
+private abbrev completedGoodPermutationGraphIndicator
+    {V : Type*} [DecidableEq V] (T : Finset (V × V)) :=
+  KunDirectedIndicatorJensen.realIndicator T
 
 private def completedGoodPermutationGraphRootedModel
     {G ι V : Type u} [Fintype V] [DecidableEq V]
@@ -3853,10 +3691,7 @@ private theorem completedGoodPermutationGraphRootedModel_isGenerated
           (goodPermutationGraph p B) z = 0 ∨
         completedGoodPermutationGraphIndicator
           (goodPermutationGraph p B) z = 1
-    unfold completedGoodPermutationGraphIndicator
-    by_cases hz : z ∈ goodPermutationGraph p B
-    · exact Or.inr (ite_eq_left hz)
-    · exact Or.inl (ite_eq_right hz)
+    exact KunDirectedIndicatorJensen.realIndicator_eq_zero_or_one (goodPermutationGraph p B) z
   · intro g
     change
       completedDiagonalPermutationHom (φ g) =
@@ -4783,45 +4618,6 @@ private theorem list_permutation_hamming_tendsto
         (σ n i) (τ n i)
         ((l.map (σ n)).prod) ((l.map (τ n)).prod)
 
-private theorem approximate_action_list_prod_tendsto
-    {G : Type*} [Group G]
-    (V : ℕ → Type*)
-    [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
-    (p : ∀ n, G → Equiv.Perm (V n))
-    (hone : ∀ n, p n 1 = 1)
-    (hmul : ∀ a g : G,
-      Tendsto
-        (fun n => normalizedHamming
-          (p n (a * g)) (p n a * p n g))
-        atTop (nhds 0))
-    (l : List G) :
-    Tendsto
-      (fun n => normalizedHamming
-        (p n l.prod) ((l.map (p n)).prod))
-      atTop (nhds 0) := by
-  induction l with
-  | nil =>
-      simp only [List.prod_nil, hone, List.map_nil, normalizedHamming_self, tendsto_const_nhds_iff]
-  | cons a l ih =>
-      simp only [List.map_cons, List.prod_cons]
-      have hupper : Tendsto
-          (fun n =>
-            normalizedHamming
-                (p n (a * l.prod)) (p n a * p n l.prod) +
-              normalizedHamming
-                (p n l.prod) ((l.map (p n)).prod))
-          atTop (nhds 0) := by
-        simpa only [add_zero] using (hmul a l.prod).add ih
-      refine squeeze_zero
-        (fun n => normalizedHamming_nonneg _ _) ?_ hupper
-      intro n
-      have h := normalizedHamming_triangle
-        (p n (a * l.prod))
-        (p n a * p n l.prod)
-        (p n a * (l.map (p n)).prod)
-      rw [normalizedHamming_mul_left] at h
-      exact h
-
 /-- Internal interface connecting the split non-sofic proof modules. -/
 public
 def chosenWordEvaluation
@@ -4865,7 +4661,7 @@ private theorem chosenWordEvaluation_tendsto_action
       (fun n => normalizedHamming
         (p n g) (((w g).map fun i => p n (s i)).prod))
       atTop (nhds 0) := by
-    have h := approximate_action_list_prod_tendsto
+    have h := KunActualSoficRootRadius.approximate_action_list_prod_tendsto
       V p hone hmul ((w g).map s)
     simpa only [hw g, List.map_map, Function.comp_def] using h
   have hp' : Tendsto
@@ -5459,23 +5255,9 @@ private theorem exists_source_sparse_cut_at_radius
     hr X hgenerated hrooted T hT
       (by
         intro x
-        dsimp only [X, sourceRootedIndicatorMarkovModel,
-          sourceFiniteIndicator]
-        split
-        next hleft =>
-          split
-          next => rfl
-          next hright =>
-            exfalso
-            apply hright
-            exact Finset.mem_def.mpr (Finset.mem_def.mp hleft)
-        next hleft =>
-          split
-          next hright =>
-            exfalso
-            apply hleft
-            exact Finset.mem_def.mpr (Finset.mem_def.mp hright)
-          next => rfl)
+        simp only [X, sourceRootedIndicatorMarkovModel, sourceFiniteIndicator,
+          KunDirectedIndicatorJensen.realIndicator]
+        congr 1)
       hboundary'
   exact ⟨U, hclose, hcut⟩
 
@@ -5749,47 +5531,12 @@ private theorem unitary_word_displacement_le
               simp only [List.length_cons, Nat.cast_add, Nat.cast_one]
               ring
 
-private theorem exists_word_of_symmetric_generating_finset
-    {G : Type u} [Group G] (S : Finset G)
-    (hsymmetric : ∀ g ∈ S, g⁻¹ ∈ S)
-    (hgenerates : Subgroup.closure (S : Set G) = ⊤) (g : G) :
-    ∃ l : List ↥S, ((l.map fun i : ↥S => (i : G)).prod) = g := by
-  classical
-  have hg : g ∈ Subgroup.closure (S : Set G) := by
-    rw [hgenerates]
-    simp only [Subgroup.mem_top]
-  induction hg using Subgroup.closure_induction with
-  | mem x hx =>
-      exact ⟨[⟨x, hx⟩], by simp only [List.map_cons, List.map_nil, List.prod_cons, List.prod_nil,
-        mul_one]⟩
-  | one =>
-      exact ⟨[], by simp only [List.map_nil, List.prod_nil]⟩
-  | mul x y _ _ ihx ihy =>
-      obtain ⟨lx, hlx⟩ := ihx
-      obtain ⟨ly, hly⟩ := ihy
-      refine ⟨lx ++ ly, ?_⟩
-      rw [List.map_append, List.prod_append, hlx, hly]
-  | inv x _ ih =>
-      obtain ⟨l, hl⟩ := ih
-      let invLetter : ↥S → ↥S :=
-        fun i => ⟨(i : G)⁻¹, hsymmetric (i : G) i.property⟩
-      refine ⟨(l.map invLetter).reverse, ?_⟩
-      rw [List.map_reverse, List.map_map]
-      change ((l.map fun i : ↥S => (i : G)⁻¹).reverse).prod = x⁻¹
-      have hmap :
-          (l.map fun i : ↥S => (i : G)⁻¹) =
-            (l.map fun i : ↥S => (i : G)).map
-              (fun z : G => z⁻¹) := by
-        rw [List.map_map]
-        rfl
-      rw [hmap, ← List.prod_inv_reverse, hl]
-
 private def symmetricGeneratingWord
     {G : Type u} [Group G] (S : Finset G)
     (hsymmetric : ∀ g ∈ S, g⁻¹ ∈ S)
     (hgenerates : Subgroup.closure (S : Set G) = ⊤) (g : G) :
     List ↥S :=
-  (exists_word_of_symmetric_generating_finset
+  (KunActualSoficRootRadius.exists_generator_word_of_symmetric_generates
     S hsymmetric hgenerates g).choose
 
 private theorem symmetricGeneratingWord_prod
@@ -5798,7 +5545,7 @@ private theorem symmetricGeneratingWord_prod
     (hgenerates : Subgroup.closure (S : Set G) = ⊤) (g : G) :
     (((symmetricGeneratingWord S hsymmetric hgenerates g).map
       fun i : ↥S => (i : G)).prod) = g :=
-  (exists_word_of_symmetric_generating_finset
+  (KunActualSoficRootRadius.exists_generator_word_of_symmetric_generates
     S hsymmetric hgenerates g).choose_spec
 
 private def kazhdanPairOnSymmetricGeneratingFinset
@@ -5912,15 +5659,11 @@ private theorem sourceAlphaInclusion_injective :
       prefixElementaryGroup ninePrefixCode =>
         z.val) hxy
 
-private def sourceCompressionU :
-    prefixElementaryGroup ninePrefixCode :=
-  ⟨compressionU,
-    compressionU_mem_ninePrefixElementaryGroup⟩
+private abbrev sourceCompressionU :=
+  SourceBothCompressionNormalization.sourceCompressionUElement
 
-private def sourceCompressionV :
-    prefixElementaryGroup ninePrefixCode :=
-  ⟨compressionV,
-    compressionV_mem_ninePrefixElementaryGroup⟩
+private abbrev sourceCompressionV :=
+  SourceBothCompressionNormalization.sourceCompressionVElement
 
 private noncomputable def sourcePositiveGenerators
     (SΓ : Finset
@@ -6098,10 +5841,8 @@ section
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
 public
-def sourceCompressionTable :
-    Fin 2 →
-      prefixElementaryGroup ninePrefixCode :=
-  ![sourceCompressionU, sourceCompressionV]
+abbrev sourceCompressionTable :=
+  SourceBothCompressionNormalization.sourceCompressionTable
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
 public
@@ -7239,37 +6980,7 @@ private theorem sofic_action_inverse_normalizedHamming_tendsto_zero
           (((A.model n).action g)⁻¹)
           ((A.model n).action (g⁻¹)))
       atTop (𝓝 0) := by
-  have heq :
-      (fun n =>
-        normalizedHamming
-          (((A.model n).action g)⁻¹)
-          ((A.model n).action (g⁻¹))) =
-        (fun n =>
-          normalizedHamming
-            ((A.model n).action (g * g⁻¹))
-            ((A.model n).action g *
-              (A.model n).action (g⁻¹))) := by
-    funext n
-    calc
-      normalizedHamming
-          (((A.model n).action g)⁻¹)
-          ((A.model n).action (g⁻¹)) =
-        normalizedHamming
-          ((A.model n).action g *
-            ((A.model n).action g)⁻¹)
-          ((A.model n).action g *
-            (A.model n).action (g⁻¹)) :=
-        (normalizedHamming_mul_left
-          ((A.model n).action g)
-          (((A.model n).action g)⁻¹)
-          ((A.model n).action (g⁻¹))).symm
-      _ = normalizedHamming
-          ((A.model n).action (g * g⁻¹))
-          ((A.model n).action g *
-            (A.model n).action (g⁻¹)) := by
-        simp only [mul_inv_cancel, (A.model n).map_one]
-  rw [heq]
-  exact A.multiplicative g (g⁻¹)
+  exact SourceCompressionTransportCrossing.tendsto_action_inverse A g
 
 private theorem sofic_action_squared_energy_mul
     {G : Type*} [Group G]
@@ -8721,37 +8432,7 @@ theorem sofic_action_inverse_normalizedHamming_tendsto_zero
           (((A.model n).action g)⁻¹)
           ((A.model n).action (g⁻¹)))
       atTop (nhds 0) := by
-  have heq :
-      (fun n =>
-        normalizedHamming
-          (((A.model n).action g)⁻¹)
-          ((A.model n).action (g⁻¹))) =
-        (fun n =>
-          normalizedHamming
-            ((A.model n).action (g * g⁻¹))
-            ((A.model n).action g *
-              (A.model n).action (g⁻¹))) := by
-    funext n
-    calc
-      normalizedHamming
-          (((A.model n).action g)⁻¹)
-          ((A.model n).action (g⁻¹)) =
-        normalizedHamming
-          ((A.model n).action g *
-            ((A.model n).action g)⁻¹)
-          ((A.model n).action g *
-            (A.model n).action (g⁻¹)) :=
-        (normalizedHamming_mul_left
-          ((A.model n).action g)
-          (((A.model n).action g)⁻¹)
-          ((A.model n).action (g⁻¹))).symm
-      _ = normalizedHamming
-          ((A.model n).action (g * g⁻¹))
-          ((A.model n).action g *
-            (A.model n).action (g⁻¹)) := by
-        simp only [mul_inv_cancel, (A.model n).map_one]
-  rw [heq]
-  exact A.multiplicative g (g⁻¹)
+  exact SourceCompressionTransportCrossing.tendsto_action_inverse A g
 
 end KunCommonRankArcInvariance
 
