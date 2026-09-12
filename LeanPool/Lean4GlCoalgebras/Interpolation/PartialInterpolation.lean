@@ -8,6 +8,7 @@ module
 public import LeanPool.Lean4GlCoalgebras.Interpolation.Interpolants
 public import LeanPool.Lean4GlCoalgebras.Split.ProofTransformations
 import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum.Abs
 import Mathlib.Tactic.NormNum.DivMod
 import Mathlib.Tactic.NormNum.OfScientific
@@ -215,7 +216,10 @@ noncomputable def partialLeftOrₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 
               | 1 =>
                 simp [Ext.r, Ext.p]
           root := 0
-          path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+          path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+            intro i j edge
+            fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢
+            omega))}
         | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
         | y :: z :: l => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 
@@ -232,7 +236,7 @@ noncomputable def partialLeftOrᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 
       α u := ⟨Ext.RuleApp.pre y (by simp [p_def]), {}⟩
       step := by simp [Ext.r, Ext.p]
       root := ()
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (by simpa [Ext.edge, Ext.p] using f.2.2 0)}
     | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
     | _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 
@@ -282,7 +286,9 @@ noncomputable def partialLeftAndₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
       | 2 => by simp [Ext.r, Ext.p]
       | 3 => by simp [Ext.r, Ext.p]
     root := 0
-    path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+    path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+      intro i j edge
+      fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢ <;> omega))}
     else {
     X := Fin 6
     α | 0 =>
@@ -344,7 +350,9 @@ noncomputable def partialLeftAndₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
       | 4 => by simp [Ext.r, Ext.p]
       | 5 => by simp [Ext.r, Ext.p]
     root := 0
-    path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+    path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+      intro i j edge
+      fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢ <;> omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | [_] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
@@ -382,7 +390,10 @@ noncomputable def partialLeftAndᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
         | 1 => by simp [Ext.r, Ext.p]
         | 2 => by simp [Ext.r, Ext.p]
       root := 0
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+        intro i j edge
+        fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢
+        omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | [_] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
@@ -433,7 +444,9 @@ noncomputable def partialLeftBoxₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
           induction interpolant 𝕏 (at encodeVar y) <;> simp_all
         | 2 => by simp [Ext.r, Ext.p]
       root := 0
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+        intro i j edge
+        fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢ <;> omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 
@@ -467,7 +480,10 @@ noncomputable def partialLeftBoxᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
           cases ψ <;> simp
         | 1 => by simp [Ext.r, Ext.p]
       root := 0
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+        intro i j edge
+        fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢
+        omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 
@@ -619,7 +635,7 @@ noncomputable def partialRightOrₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
           α u := ⟨Ext.RuleApp.pre y (by simp [p_def]), {}⟩
           step := by simp [Ext.r, Ext.p]
           root := ()
-          path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+          path z f := False.elim (by simpa [Ext.edge, Ext.p] using f.2.2 0)}
         | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
         | y :: z :: l => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 
@@ -650,7 +666,10 @@ noncomputable def partialRightOrᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
           | 1 =>
             simp [Ext.r, Ext.p]
       root := 0
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+        intro i j edge
+        fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢
+        omega))}
     | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
     | _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 
@@ -688,7 +707,10 @@ noncomputable def partialRightAndₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
         | 1 => by simp [Ext.r, Ext.p]
         | 2 => by simp [Ext.r, Ext.p]
       root := 0
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+        intro i j edge
+        fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢
+        omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | [_] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
@@ -739,7 +761,9 @@ noncomputable def partialRightAndᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
       | 2 => by simp [Ext.r, Ext.p]
       | 3 => by simp [Ext.r, Ext.p]
     root := 0
-    path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+    path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+      intro i j edge
+      fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢ <;> omega))}
     else {
     X := Fin 6
     α | 0 =>
@@ -809,7 +833,9 @@ noncomputable def partialRightAndᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
       | 4 => by simp [Ext.r, Ext.p]
       | 5 => by simp [Ext.r, Ext.p]
     root := 0
-    path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+    path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+      intro i j edge
+      fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢ <;> omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | [_] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
@@ -846,7 +872,10 @@ noncomputable def partialRightBoxₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
           cases ψ <;> simp
         | 1 => by simp [Ext.r, Ext.p]
       root := 0
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+        intro i j edge
+        fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢
+        omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 
@@ -897,7 +926,9 @@ noncomputable def partialRightBoxᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
           induction interpolant 𝕏 (at encodeVar y) <;> simp_all -- MALVIN so weird
         | 2 => by simp [Ext.r, Ext.p]
       root := 0
-      path z f := by exfalso; simp [Ext.edge, Ext.p] at f; grind}
+      path z f := False.elim (noInfinitePathOfIncreasing f.2.2 (by
+        intro i j edge
+        fin_cases i <;> simp [Ext.edge, Ext.p] at edge ⊢ <;> omega))}
   | [] => by have := 𝕏.step x; simp [rule_def] at this; simp_all
   | _ :: _ :: _ => by have := 𝕏.step x; simp [rule_def] at this; simp_all
 

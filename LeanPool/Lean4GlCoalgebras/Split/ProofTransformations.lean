@@ -8,6 +8,7 @@ module
 public import Mathlib.Data.Sigma.Lex
 public import LeanPool.Lean4GlCoalgebras.Split.Proof
 public import LeanPool.Lean4GlCoalgebras.Split.CutProof
+import Mathlib.Data.Fintype.EquivFin
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.Linarith.Frontend
 import Mathlib.Tactic.NormNum.Abs
@@ -885,4 +886,13 @@ noncomputable def proofTransformation {𝕏 : Proof} {σ}
     α := proofTransformationMap partialProof
     step := by exact proofTransformation_step partialProof root_prop
     path := by exact proofTransformation_path partialProof box_prop }
+
+/-- A relation that strictly increases a finite preorder has no infinite paths. -/
+theorem noInfinitePathOfIncreasing {α : Type*} [Preorder α] [Finite α]
+    {relation : α → α → Prop} {f : ℕ → α}
+    (path : ∀ k, relation (f k) (f (k + 1)))
+    (increasing : ∀ i j, relation i j → i < j) : False :=
+  not_injective_infinite_finite f
+    (strictMono_nat_of_lt_succ fun k => increasing _ _ (path k)).injective
+
 end Lean4GlCoalgebras
