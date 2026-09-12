@@ -53,26 +53,21 @@ theorem fourier_conj_apply (f : Space → ℂ) (ξ : Space) :
 theorem integral_fourier_mul_conj (f g : ComplexTest) :
     (∫ ξ : Space, 𝓕 (f : Space → ℂ) ξ * conj (𝓕 (g : Space → ℂ) ξ)) =
       ∫ x : Space, f x * conj (g x) := by
-  change (∫ ξ : Space, 𝓕 f ξ * conj (𝓕 g ξ)) =
-      ∫ x : Space, f x * conj (g x)
-  have hg : Integrable (fun ξ : Space => conj (𝓕 g ξ)) :=
+  have hg : Integrable (fun ξ : Space => conj (𝓕 (g : Space → ℂ) ξ)) :=
     (Complex.conjCLE : ℂ →L[ℝ] ℂ).integrable_comp
-      (FourierTransform.fourierCLE ℂ ComplexTest g).integrable
-  simp only [SchwartzMap.fourier_coe] at hg ⊢
+      (EulerSobolev.schwartzFourier g).integrable
   rw [integral_fourier_mul f.integrable hg]
   apply integral_congr_ae
   filter_upwards [] with x
   rw [fourier_conj_apply,
     g.continuous.fourierInv_fourier_eq g.integrable
-      (FourierTransform.fourierCLE ℂ ComplexTest g).integrable]
+      (EulerSobolev.schwartzFourier g).integrable]
 
 /-- The convention with conjugation on the first factor, used by complex inner products. -/
 theorem integral_conj_fourier_mul (f g : ComplexTest) :
     (∫ ξ : Space, conj (𝓕 (f : Space → ℂ) ξ) * 𝓕 (g : Space → ℂ) ξ) =
       ∫ x : Space, conj (f x) * g x := by
-  change (∫ ξ : Space, conj (𝓕 f ξ) * 𝓕 g ξ) =
-      ∫ x : Space, conj (f x) * g x
-  simpa only [mul_comm, SchwartzMap.fourier_coe] using integral_fourier_mul_conj g f
+  simpa only [mul_comm] using integral_fourier_mul_conj g f
 
 /-- A Schwartz function has a finite squared `L²` norm. -/
 theorem integrable_norm_sq (f : ComplexTest) :
@@ -82,13 +77,11 @@ theorem integrable_norm_sq (f : ComplexTest) :
 /-- The Fourier transform of a Schwartz function has a finite squared `L²` norm. -/
 theorem integrable_norm_sq_fourier (f : ComplexTest) :
     Integrable (fun ξ : Space => ‖𝓕 (f : Space → ℂ) ξ‖ ^ 2) := by
-  change Integrable (fun ξ : Space => ‖𝓕 f ξ‖ ^ 2)
-  exact integrable_norm_sq (FourierTransform.fourierCLE ℂ ComplexTest f)
+  exact integrable_norm_sq (EulerSobolev.schwartzFourier f)
 
 /-- Parseval's identity for the real squared `L²` norm of a Schwartz function. -/
 theorem integral_norm_sq_fourier (f : ComplexTest) :
     (∫ ξ : Space, ‖𝓕 (f : Space → ℂ) ξ‖ ^ 2) = ∫ x : Space, ‖f x‖ ^ 2 := by
-  change (∫ ξ : Space, ‖𝓕 f ξ‖ ^ 2) = ∫ x : Space, ‖f x‖ ^ 2
   have h := integral_fourier_mul_conj f f
   simp only [Complex.mul_conj, Complex.normSq_eq_norm_sq, integral_complex_ofReal] at h
   exact Complex.ofReal_injective h

@@ -36,19 +36,20 @@ theorem rieszTest_add (i j : Fin 3) (ψ φ : ComplexTest) :
     rieszTest i j (ψ + φ) = rieszTest i j ψ + rieszTest i j φ := by
   have hmul :
       (fun ξ : Space => (rieszSymbol i j ξ : ℂ) *
-        (FourierTransform.fourierCLE ℂ ComplexTest (ψ + φ)) ξ) =
+        (EulerSobolev.schwartzFourier (ψ + φ)) ξ) =
       (fun ξ : Space => (rieszSymbol i j ξ : ℂ) *
-        (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) +
+        (EulerSobolev.schwartzFourier ψ) ξ) +
       (fun ξ : Space => (rieszSymbol i j ξ : ℂ) *
-        (FourierTransform.fourierCLE ℂ ComplexTest φ) ξ) := by
+        (EulerSobolev.schwartzFourier φ) ξ) := by
+    have hadd : EulerSobolev.schwartzFourier (ψ + φ) =
+        EulerSobolev.schwartzFourier ψ + EulerSobolev.schwartzFourier φ :=
+      (EulerSobolev.schwartzFourierCLM (V := Space) (E := ℂ)).map_add ψ φ
     funext ξ
-    simp [mul_add]
+    simp only [hadd, add_apply, Pi.add_apply, mul_add]
   have hcont : Continuous (fun p : Space × Space => (-innerₗ Space) p.1 p.2) := by
     change Continuous (fun p : Space × Space => -⟪p.1, p.2⟫)
     exact (continuous_fst.inner continuous_snd).neg
   unfold rieszTest
-  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
-      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   rw [hmul]
   exact VectorFourier.fourierIntegral_add Real.continuous_fourierChar hcont
     (integrable_rieszMultiplier i j ψ) (integrable_rieszMultiplier i j φ)
@@ -57,14 +58,15 @@ theorem rieszTest_smul (i j : Fin 3) (c : ℂ) (ψ : ComplexTest) :
     rieszTest i j (c • ψ) = c • rieszTest i j ψ := by
   have hmul :
       (fun ξ : Space => (rieszSymbol i j ξ : ℂ) *
-        (FourierTransform.fourierCLE ℂ ComplexTest (c • ψ)) ξ) =
+        (EulerSobolev.schwartzFourier (c • ψ)) ξ) =
       c • (fun ξ : Space => (rieszSymbol i j ξ : ℂ) *
-        (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) := by
+        (EulerSobolev.schwartzFourier ψ) ξ) := by
+    have hsmul : EulerSobolev.schwartzFourier (c • ψ) =
+        c • EulerSobolev.schwartzFourier ψ :=
+      (EulerSobolev.schwartzFourierCLM (V := Space) (E := ℂ)).map_smul c ψ
     funext ξ
-    simp [mul_left_comm]
+    simp only [hsmul, smul_apply, Pi.smul_apply, smul_eq_mul, mul_left_comm]
   unfold rieszTest
-  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
-      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   rw [hmul]
   exact VectorFourier.fourierIntegral_const_smul _ _ _ _ c
 
@@ -95,8 +97,6 @@ theorem rieszTest_sum (i j : Fin 3) {ι : Type*} (s : Finset ι) (ψ : ι → Co
 theorem rieszTest_tendsto_zero (i j : Fin 3) (ψ : ComplexTest) :
     Tendsto (rieszTest i j ψ) (cocompact Space) (𝓝 0) := by
   unfold rieszTest
-  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
-      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   rw [Real.fourierInv_eq_fourier_comp_neg]
   exact tendsto_integral_exp_inner_smul_cocompact _
 
