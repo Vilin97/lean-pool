@@ -235,12 +235,13 @@ open scoped Topology BigOperators ContDiff InnerProductSpace
 /-- Cross product on the same Euclidean space as the PDE target, as a bounded
 bilinear map. -/
 def crossLinear : Space →L[ℝ] Space →L[ℝ] Space :=
-  (EuclideanSpace.proj 1).smulRight ((EuclideanSpace.proj 2).smulRight (coordinateVector 0)) -
-  (EuclideanSpace.proj 2).smulRight ((EuclideanSpace.proj 1).smulRight (coordinateVector 0)) +
-  (EuclideanSpace.proj 2).smulRight ((EuclideanSpace.proj 0).smulRight (coordinateVector 1)) -
-  (EuclideanSpace.proj 0).smulRight ((EuclideanSpace.proj 2).smulRight (coordinateVector 1)) +
-  (EuclideanSpace.proj 0).smulRight ((EuclideanSpace.proj 1).smulRight (coordinateVector 2)) -
-  (EuclideanSpace.proj 1).smulRight ((EuclideanSpace.proj 0).smulRight (coordinateVector 2))
+  let projection : Fin 3 → Space →L[ℝ] ℝ := EuclideanSpace.proj
+  (projection 1).smulRight ((projection 2).smulRight (coordinateVector 0)) -
+  (projection 2).smulRight ((projection 1).smulRight (coordinateVector 0)) +
+  (projection 2).smulRight ((projection 0).smulRight (coordinateVector 1)) -
+  (projection 0).smulRight ((projection 2).smulRight (coordinateVector 1)) +
+  (projection 0).smulRight ((projection 1).smulRight (coordinateVector 2)) -
+  (projection 1).smulRight ((projection 0).smulRight (coordinateVector 2))
 
 /-- Cross, given by `crossLinear u v`. -/
 def cross (u v : Space) : Space := crossLinear u v
