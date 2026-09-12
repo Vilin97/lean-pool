@@ -798,7 +798,10 @@ theorem center_error (t : Icc (0 : ℝ) T) :
   exact S.forwardChild_center_error H
     firstNormal firstNormal_unit firstFrame support compact symmetric δ hδ firstCoordinate
     (subset_refl _) (δ*hchild) (truncation k) F.hn k hk.four F.Q F.G F.coefficient F.graph
-    nextEll hnext hnext1 F.labels C (k^(-(1/4 : ℝ))) (fun s => (F.errors s 0).1) t
+    nextEll hnext hnext1 F.labels C (k^(-(1/4 : ℝ))) (fun s => by
+      have hs := (F.errors s 0).1
+      dsimp only [firstPacketMeanData, firstPacketData] at hs
+      exact hs) t
 
 end EulerBaseDatum.FirstPacketChoice
 
