@@ -3,12 +3,7 @@ Copyright (c) 2026 Aristotle contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle
 -/
-import Mathlib.Combinatorics.SimpleGraph.Tutte
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+import Mathlib.Combinatorics.SimpleGraph.Matching
 
 /-!
 # Spread perfect matchings in Dirac graphs
@@ -57,6 +52,22 @@ namespace SimpleGraph
 
 variable {V : Type*} [DecidableEq V]
 
+omit [DecidableEq V] in
+/-- A fixed-point-free involution all of whose orbits are edges of `G` is a perfect matching
+of `G`, in the sense of `SimpleGraph.Subgraph.IsPerfectMatching`. -/
+theorem exists_isPerfectMatching_of_involutive {G : SimpleGraph V} {f : V → V}
+    (hinv : ∀ a, f (f a) = a)
+    (hadj : ∀ a, G.Adj a (f a)) : ∃ M : G.Subgraph, M.IsPerfectMatching ∧ ∀ a, M.Adj a (f a) := by
+  refine ⟨{ verts := Set.univ
+            Adj := fun a b => G.Adj a b ∧ f a = b
+            adj_sub := fun h => h.1
+            edge_vert := fun _ => trivial
+            symm := ⟨fun a b h => ⟨h.1.symm, by rw [← h.2, hinv]⟩⟩ },
+    ?_, fun a => ⟨hadj a, rfl⟩⟩
+  rw [Subgraph.isPerfectMatching_iff]
+  exact fun v => ⟨f v, ⟨hadj v, rfl⟩, fun w hw => hw.2.symm⟩
+
+
 /-! ### Matchings of a finite vertex set, as partner involutions -/
 
 section Aux
@@ -92,35 +103,14 @@ omit [DecidableEq V] in
 private theorem even_card_of_involutive {f : V → V} :
     ∀ S : Finset V, (∀ a ∈ S, f a ∈ S) → (∀ a ∈ S, f (f a) = a) → (∀ a ∈ S, f a ≠ a) →
       Even S.card := by
-  classical
-  intro S
-  induction S using Finset.strongInduction with
-  | _ S ih =>
-    intro hmap hinv hne
-    rcases S.eq_empty_or_nonempty with rfl | ⟨a, ha⟩
-    · simp
-    · have hfa : f a ∈ S := hmap a ha
-      have hafa : f a ≠ a := hne a ha
-      have hTsub : (S.erase a).erase (f a) ⊂ S :=
-        Finset.ssubset_of_subset_of_ssubset (erase_subset _ _) (erase_ssubset ha)
-      have hmem : ∀ b ∈ (S.erase a).erase (f a), b ∈ S := fun b hb =>
-        mem_of_mem_erase (mem_of_mem_erase hb)
-      have hmapT : ∀ b ∈ (S.erase a).erase (f a), f b ∈ (S.erase a).erase (f a) := by
-        intro b hb
-        have hbS : b ∈ S := hmem b hb
-        rw [mem_erase, mem_erase] at hb ⊢
-        refine ⟨fun h => hb.2.1 ?_, fun h => hb.1 ?_, hmap b hbS⟩
-        · have h2 : f (f b) = f (f a) := by rw [h]
-          rwa [hinv b hbS, hinv a ha] at h2
-        · have h2 : f (f b) = f a := by rw [h]
-          rwa [hinv b hbS] at h2
-      have hcard : S.card = ((S.erase a).erase (f a)).card + 2 := by
-        rw [card_erase_of_mem (mem_erase.2 ⟨hafa, hfa⟩), card_erase_of_mem ha]
-        have : 1 < S.card := one_lt_card.2 ⟨a, ha, f a, hfa, fun h => hafa h.symm⟩
-        omega
-      have := ih _ hTsub hmapT (fun b hb => hinv b (hmem b hb)) fun b hb => hne b (hmem b hb)
-      rw [hcard]
-      exact this.add even_two
+  intro S hmap hinv hne
+  let g : S → S := fun a => ⟨f a, hmap a a.property⟩
+  have hg : ∀ a, g (g a) = a := fun a => Subtype.ext (hinv a a.property)
+  have hadj : ∀ a, (⊤ : SimpleGraph S).Adj a (g a) := by
+    intro a
+    exact fun h => hne a a.property (congrArg Subtype.val h).symm
+  obtain ⟨M, hM, -⟩ := exists_isPerfectMatching_of_involutive hg hadj
+  simpa using hM.even_card
 
 /-- Extending a matching by a new edge both of whose endpoints are unmatched. -/
 private theorem isMatchingOn_insert_insert {u v : V} (hM : IsMatchingOn A N S f)
@@ -344,51 +334,6 @@ private theorem card_nbhdOn_sdiff_image (hM : IsMatchingOn A N N f) {y : V} (hy 
   have : 0 < (nbhdOn A N y).card := card_pos.2 ⟨f y, hM.adj y hy⟩
   omega
 
-/-- The inductive form of the spread bound: with Dirac slack `t`, some perfect matching of `N`
-inside `A` has weight at most a `1 / (t + 1)` fraction of the total weight available in `A`. -/
-private theorem exists_isMatchingOn_weight (hEven : Even N.card) (w : V → V → ℝ)
-    (hw : ∀ y z, 0 ≤ w y z) :
-    ∀ (t : ℕ) (A : Finset (Sym2 V)), (∀ v ∈ N, N.card / 2 + t ≤ (nbhdOn A N v).card) →
-      ∃ f : V → V, IsMatchingOn A N N f ∧
-        ((t : ℝ) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ nbhdOn A N y, w y z := by
-  intro t
-  induction t with
-  | zero =>
-    intro A hdeg
-    obtain ⟨f, hf⟩ := exists_isMatchingOn (A := A) hEven fun v hv => by have := hdeg v hv; omega
-    refine ⟨f, hf, ?_⟩
-    rw [Nat.cast_zero, zero_add, one_mul]
-    exact Finset.sum_le_sum fun y hy =>
-      Finset.single_le_sum (f := fun z => w y z) (fun z _ => hw y z) (hf.adj y hy)
-  | succ t ih =>
-    intro A hdeg
-    obtain ⟨f₀, hf₀⟩ := exists_isMatchingOn (A := A) hEven fun v hv => by
-      have := hdeg v hv; omega
-    set A' := A \ N.image fun a => s(a, f₀ a) with hA'
-    have hdeg' : ∀ v ∈ N, N.card / 2 + t ≤ (nbhdOn A' N v).card := by
-      intro v hv
-      have h1 := hdeg v hv
-      have h2 := card_nbhdOn_sdiff_image hf₀ hv
-      rw [hA']
-      omega
-    obtain ⟨f₁, hf₁, hb₁⟩ := ih A' hdeg'
-    have hsplit : ∑ y ∈ N, ∑ z ∈ nbhdOn A' N y, w y z
-        = (∑ y ∈ N, ∑ z ∈ nbhdOn A N y, w y z) - ∑ y ∈ N, w y (f₀ y) := by
-      rw [← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun y hy => ?_
-      rw [nbhdOn_sdiff_image hf₀ hy, Finset.sum_erase_eq_sub (hf₀.adj y hy)]
-    rw [hsplit] at hb₁
-    have htpos : (0 : ℝ) ≤ (t : ℝ) + 1 := by positivity
-    by_cases hcmp : ∑ y ∈ N, w y (f₀ y) ≤ ∑ y ∈ N, w y (f₁ y)
-    · refine ⟨f₀, hf₀, ?_⟩
-      have h5 := mul_le_mul_of_nonneg_left hcmp htpos
-      push_cast
-      linarith
-    · push Not at hcmp
-      refine ⟨f₁, hf₁.mono sdiff_subset, ?_⟩
-      push_cast
-      linarith
-
 /-- The inductive form of the edge-disjointness statement: with Dirac slack `t` there are `t + 1`
 pairwise edge-disjoint perfect matchings of `N` inside `A`. -/
 private theorem exists_isMatchingOn_pairwise (hEven : Even N.card) :
@@ -433,6 +378,36 @@ private theorem exists_isMatchingOn_pairwise (hEven : Even N.card) :
         · simpa using hnew i a ha
         · have hij' : i ≠ j := fun h => hij (by rw [h])
           simpa using hne' i j hij' a ha
+
+
+/-- Average the weights of edge-disjoint matchings; each available edge is charged at most once. -/
+private theorem exists_isMatchingOn_weight {R : Type*} [Field R] [LinearOrder R]
+    [IsStrictOrderedRing R] (hEven : Even N.card) (w : V → V → R)
+    (hw : ∀ y ∈ N, ∀ z ∈ N, 0 ≤ w y z) (t : ℕ) (A : Finset (Sym2 V))
+    (hdeg : ∀ v ∈ N, N.card / 2 + t ≤ (nbhdOn A N v).card) :
+    ∃ f : V → V, IsMatchingOn A N N f ∧
+      ((t : R) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ nbhdOn A N y, w y z := by
+  classical
+  obtain ⟨F, hF, hne⟩ := exists_isMatchingOn_pairwise hEven t A hdeg
+  obtain ⟨i, -, hi⟩ := (univ : Finset (Fin (t + 1))).exists_min_image
+    (fun i => ∑ y ∈ N, w y (F i y)) univ_nonempty
+  refine ⟨F i, hF i, ?_⟩
+  calc
+    ((t : R) + 1) * ∑ y ∈ N, w y (F i y)
+        = ∑ j : Fin (t + 1), ∑ y ∈ N, w y (F i y) := by simp [Nat.cast_add, Nat.cast_one]
+    _ ≤ ∑ j : Fin (t + 1), ∑ y ∈ N, w y (F j y) :=
+      sum_le_sum fun j hj => hi j hj
+    _ = ∑ y ∈ N, ∑ j : Fin (t + 1), w y (F j y) := sum_comm
+    _ ≤ ∑ y ∈ N, ∑ z ∈ nbhdOn A N y, w y z := by
+      refine sum_le_sum fun y hy => ?_
+      have hinj : Function.Injective (fun j => F j y) := by
+        intro j k h
+        by_contra hjk
+        exact hne j k hjk y hy h
+      rw [← sum_image (fun j _ k _ h => hinj h)]
+      exact sum_le_sum_of_subset_of_nonneg
+        (by rintro z hz; obtain ⟨j, -, rfl⟩ := mem_image.mp hz; exact (hF j).adj y hy)
+        (fun z hz _ => hw y hy z (nbhdOn_subset hz))
 
 end Aux
 
@@ -500,16 +475,17 @@ of the total weight: `∑ y ∈ N, w y (f y) ≤ (1 / (t + 1)) * ∑ y ∈ N, �
 
 The matching is obtained by averaging over the `t + 1` pairwise edge-disjoint perfect matchings
 supplied by `SimpleGraph.exists_involutions_pairwise_ne`. -/
-theorem exists_spread_involution (hEven : Even N.card)
+theorem exists_spread_involution {R : Type*} [Field R] [LinearOrder R]
+    [IsStrictOrderedRing R] (hEven : Even N.card)
     (hdeg : ∀ v ∈ N, N.card / 2 + t ≤ (N.filter fun z => G.Adj v z).card)
-    (w : V → V → ℝ) (hw : ∀ y z, 0 ≤ w y z) :
+    (w : V → V → R) (hw : ∀ y z, 0 ≤ w y z) :
     ∃ f : V → V, (∀ a ∈ N, f a ∈ N) ∧ (∀ a ∈ N, f (f a) = a) ∧ (∀ a ∈ N, f a ≠ a) ∧
       (∀ a ∈ N, G.Adj a (f a)) ∧
-      ∑ y ∈ N, w y (f y) ≤ (1 / ((t : ℝ) + 1)) * ∑ y ∈ N, ∑ z ∈ N, w y z := by
+      ∑ y ∈ N, w y (f y) ≤ (1 / ((t : R) + 1)) * ∑ y ∈ N, ∑ z ∈ N, w y z := by
   classical
   set A : Finset (Sym2 V) := N.sym2.filter fun e => e ∈ G.edgeSet with hA
   obtain ⟨f, hf, hbound⟩ :=
-    exists_isMatchingOn_weight (N := N) hEven w hw t A fun v hv => by
+    exists_isMatchingOn_weight (N := N) hEven w (fun y _ z _ => hw y z) t A fun v hv => by
       rw [hA, nbhdOn_graph hv]; exact hdeg v hv
   refine ⟨f, hf.mapsTo, hf.invol, hf.ne, fun a ha => ?_, ?_⟩
   · have := (mem_filter.1 (mem_nbhdOn.1 (hf.adj a ha)).2.2).2
@@ -517,25 +493,12 @@ theorem exists_spread_involution (hEven : Even N.card)
   · have hmono : ∑ y ∈ N, ∑ z ∈ nbhdOn A N y, w y z ≤ ∑ y ∈ N, ∑ z ∈ N, w y z :=
       Finset.sum_le_sum fun y _ =>
         Finset.sum_le_sum_of_subset_of_nonneg nbhdOn_subset fun z _ _ => hw y z
-    have hkey : ((t : ℝ) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ N, w y z := hbound.trans hmono
-    have hpos : (0 : ℝ) < (t : ℝ) + 1 := by positivity
-    rw [show (1 / ((t : ℝ) + 1)) * ∑ y ∈ N, ∑ z ∈ N, w y z
-        = (∑ y ∈ N, ∑ z ∈ N, w y z) / ((t : ℝ) + 1) by ring, le_div_iff₀ hpos]
-    linarith
+    have hkey : ((t : R) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ N, w y z := hbound.trans hmono
+    have hpos : (0 : R) < (t : R) + 1 :=
+      add_pos_of_nonneg_of_pos (Nat.cast_nonneg t) zero_lt_one
+    rw [one_div, inv_mul_eq_div, le_div_iff₀ hpos, mul_comm]
+    exact hkey
 
-omit [DecidableEq V] [DecidableRel G.Adj] in
-/-- A fixed-point-free involution all of whose orbits are edges of `G` is a perfect matching
-of `G`, in the sense of `SimpleGraph.Subgraph.IsPerfectMatching`. -/
-theorem exists_isPerfectMatching_of_involutive {f : V → V} (hinv : ∀ a, f (f a) = a)
-    (hadj : ∀ a, G.Adj a (f a)) : ∃ M : G.Subgraph, M.IsPerfectMatching ∧ ∀ a, M.Adj a (f a) := by
-  refine ⟨{ verts := Set.univ
-            Adj := fun a b => G.Adj a b ∧ f a = b
-            adj_sub := fun h => h.1
-            edge_vert := fun _ => trivial
-            symm := ⟨fun a b h => ⟨h.1.symm, by rw [← h.2, hinv]⟩⟩ },
-    ?_, fun a => ⟨hadj a, rfl⟩⟩
-  rw [Subgraph.isPerfectMatching_iff]
-  exact fun v => ⟨f v, ⟨hadj v, rfl⟩, fun w hw => hw.2.symm⟩
 
 omit [DecidableEq V] in
 /-- **Dirac's theorem for perfect matchings**, for a finite graph with an even number of vertices

@@ -3,9 +3,7 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini and Aristotle contributors. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-import Mathlib.Combinatorics.SimpleGraph.Tutte
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+import LeanPool.MinimumDegreeMatching.Spread
 
 /-!
 # Perfect and near-perfect matchings from high minimum degree
@@ -25,14 +23,9 @@ The results are stated in the idiomatic `SimpleGraph.Subgraph` matching vocabula
 
 ## Implementation notes
 
-The proofs go through Mathlib's Tutte theorem (`SimpleGraph.tutte`).  For an even vertex
-count, a minimum degree of at least `|V| / 2` rules out any Tutte violator (bounding the
-number of connected components of `G − u` by `|u|`), hence a perfect matching exists.  The
-odd case is reduced to the even case by adjoining a universal apex vertex and deleting it
-from the resulting perfect matching.
-
-This file is self-contained and depends only on Mathlib; it is intended to be ready for
-upstreaming to `Mathlib/Combinatorics/SimpleGraph/`.
+The even case reuses the finite-set augmentation theorem from `Spread`. The odd case is
+reduced to it by adjoining a universal apex vertex and deleting that vertex from the resulting
+perfect matching. Both public formulations therefore share one proof of the degree criterion.
 -/
 
 namespace SimpleGraph
@@ -42,200 +35,12 @@ open Finset
 variable {V : Type*} [Fintype V]
 
 open Classical in
-/-- The neighbourhood cardinality as an `ncard` equals the degree. -/
-private theorem neighborSet_ncard_eq_degree (H : SimpleGraph V) (v : V) :
-    (H.neighborSet v).ncard = H.degree v := by
-  classical
-  rw [Set.ncard_eq_toFinset_card', ← card_neighborFinset_eq_degree]
-  congr 1
-
-omit [Fintype V] in
-open Classical in
-/-- A connected component's support contains a vertex together with all of its
-neighbours, hence has at least `deg v + 1` elements. -/
-private theorem comp_supp_card_ge [Finite V] (H : SimpleGraph V) (v : V) :
-    (H.neighborSet v).ncard + 1 ≤ (H.connectedComponentMk v).supp.ncard := by
-  let _instFintypeV : Fintype V := Fintype.ofFinite V
-  classical
-  rw [neighborSet_ncard_eq_degree]
-  have hsub : (insert v (H.neighborFinset v) : Finset V) ⊆
-      (H.connectedComponentMk v).supp.toFinset := by
-    intro x hx
-    simp only [Finset.mem_insert, mem_neighborFinset] at hx
-    rw [Set.mem_toFinset]
-    rcases hx with rfl | hx
-    · exact (ConnectedComponent.mem_supp_iff _ _).mpr rfl
-    · exact (ConnectedComponent.mem_supp_iff _ _).mpr
-        (ConnectedComponent.eq.mpr (Adj.reachable hx.symm))
-  have hcard : (insert v (H.neighborFinset v)).card = H.degree v + 1 := by
-    rw [Finset.card_insert_of_notMem (by simp), card_neighborFinset_eq_degree]
-  calc H.degree v + 1 = (insert v (H.neighborFinset v)).card := hcard.symm
-    _ ≤ (H.connectedComponentMk v).supp.toFinset.card := Finset.card_le_card hsub
-    _ = (H.connectedComponentMk v).supp.ncard := by rw [Set.ncard_eq_toFinset_card']
-
-open Classical in
-/-- If every vertex of `H` has degree at least `d`, the number of connected components
-times `d + 1` is at most `|V|`. -/
-private theorem num_components_le (H : SimpleGraph V) (d : ℕ)
-    (hd : ∀ v : V, d ≤ (H.neighborSet v).ncard) :
-    Fintype.card H.ConnectedComponent * (d + 1) ≤ Fintype.card V := by
-  classical
-  have sum_supp_card :
-      ∑ c : H.ConnectedComponent, c.supp.toFinset.card = Fintype.card V := by
-    rw [← Finset.card_univ, ← Finset.card_biUnion]
-    · congr 1
-      ext v
-      simp only [Finset.mem_biUnion, Finset.mem_univ, true_and, Set.mem_toFinset]
-      exact ⟨fun _ => trivial,
-        fun _ => ⟨H.connectedComponentMk v, (ConnectedComponent.mem_supp_iff _ _).mpr rfl⟩⟩
-    · intro c₁ _ c₂ _ hne
-      simp only [Function.onFun, Finset.disjoint_left]
-      intro v h1 h2
-      rw [Set.mem_toFinset, ConnectedComponent.mem_supp_iff] at h1 h2
-      exact hne (h1 ▸ h2)
-  rw [← sum_supp_card]
-  have hge : ∀ c : H.ConnectedComponent, d + 1 ≤ c.supp.toFinset.card := by
-    intro c
-    rw [← Set.ncard_eq_toFinset_card']
-    obtain ⟨v, hv⟩ := c.exists_rep
-    have h := comp_supp_card_ge H v
-    have hvc : H.connectedComponentMk v = c := hv
-    rw [hvc] at h
-    have := hd v
-    omega
-  calc Fintype.card H.ConnectedComponent * (d + 1)
-      = ∑ _c : H.ConnectedComponent, (d + 1) := by
-        rw [Finset.sum_const, Finset.card_univ]; ring
-    _ ≤ ∑ c : H.ConnectedComponent, c.supp.toFinset.card :=
-        Finset.sum_le_sum (fun c _ => hge c)
-
-open Classical in
-/-- The number of odd components is at most the total number of components. -/
-private theorem oddComponents_ncard_le (H : SimpleGraph V) :
-    H.oddComponents.ncard ≤ Fintype.card H.ConnectedComponent := by
-  calc H.oddComponents.ncard ≤ (Set.univ : Set H.ConnectedComponent).ncard :=
-        Set.ncard_le_ncard (Set.subset_univ _) Set.finite_univ
-    _ = Nat.card H.ConnectedComponent := Set.ncard_univ _
-    _ = Fintype.card H.ConnectedComponent := Nat.card_eq_fintype_card
-
-open Classical in
-/-- Degree in the induced subgraph on `V \ u` is at least `δ(G) − |u|`. -/
-private theorem induced_degree_ge (G : SimpleGraph V) [DecidableRel G.Adj] (u : Finset V)
-    (w : ((⊤ : G.Subgraph).deleteVerts (↑u : Set V)).verts) :
-    G.minDegree - u.card ≤
-      (((⊤ : G.Subgraph).deleteVerts (↑u : Set V)).coe.neighborSet w).ncard := by
-  classical
-  have hwu : (w : V) ∉ u := by
-    have := w.2
-    simp only [SimpleGraph.Subgraph.deleteVerts_verts, SimpleGraph.Subgraph.verts_top,
-      Set.mem_sdiff, Set.mem_univ, true_and, Finset.mem_coe] at this
-    exact this
-  have hinj : (((⊤ : G.Subgraph).deleteVerts (↑u:Set V)).coe.neighborSet w).ncard
-      = ((G.neighborFinset (w : V)) \ u).card := by
-    rw [Set.ncard_eq_toFinset_card']
-    apply Finset.card_bij (fun (b : ((⊤ : G.Subgraph).deleteVerts (↑u:Set V)).verts)
-        (_ : b ∈ _) => (b : V))
-    · intro b hb
-      rw [Set.mem_toFinset, SimpleGraph.mem_neighborSet, SimpleGraph.Subgraph.coe_adj] at hb
-      simp only [SimpleGraph.Subgraph.deleteVerts_adj, SimpleGraph.Subgraph.top_adj,
-        SimpleGraph.Subgraph.verts_top, Set.mem_univ, true_and, Finset.mem_coe] at hb
-      simp only [Finset.mem_sdiff, mem_neighborFinset]
-      exact ⟨hb.2.2, hb.2.1⟩
-    · intro a ha b hb hab
-      exact Subtype.ext hab
-    · intro c hc
-      simp only [Finset.mem_sdiff, mem_neighborFinset] at hc
-      have hcv : c ∈ ((⊤ : G.Subgraph).deleteVerts (↑u:Set V)).verts := by
-        simp only [SimpleGraph.Subgraph.deleteVerts_verts, SimpleGraph.Subgraph.verts_top,
-          Set.mem_sdiff, Set.mem_univ, true_and, Finset.mem_coe]
-        exact hc.2
-      refine ⟨⟨c, hcv⟩, ?_, rfl⟩
-      rw [Set.mem_toFinset, SimpleGraph.mem_neighborSet, SimpleGraph.Subgraph.coe_adj]
-      simp only [SimpleGraph.Subgraph.deleteVerts_adj, SimpleGraph.Subgraph.top_adj,
-        SimpleGraph.Subgraph.verts_top, Set.mem_univ, true_and, Finset.mem_coe]
-      exact ⟨hwu, hc.2, hc.1⟩
-  rw [hinj]
-  have h1 : G.minDegree ≤ (G.neighborFinset (w:V)).card := by
-    rw [card_neighborFinset_eq_degree]; exact G.minDegree_le_degree _
-  have h2 : (G.neighborFinset (w:V)).card ≤ ((G.neighborFinset (w:V)) \ u).card + u.card :=
-    Finset.card_le_card_sdiff_add_card
-  omega
-
-/-- Pure-`ℕ` arithmetic core behind the Tutte-count bound: from a component-count bound,
-a trivial component bound, the parity fact and the size relations, the number of odd
-components is at most `m`. -/
-private lemma arith_core {O K W n d m : ℕ}
-    (hOK : O ≤ K) (hK : K * (d - m + 1) ≤ W) (hK0 : K ≤ W)
-    (hVn : W = n - m) (hmn : m ≤ n) (hn2d : n ≤ 2 * d)
-    (hev : Even n) (hpar : Odd O ↔ Odd W) : O ≤ m := by
-  by_cases hm0 : m = 0
-  · subst hm0
-    have hK1 : K ≤ 1 := by
-      by_contra hc
-      push Not at hc
-      have h2 : 2 * (d - 0 + 1) ≤ K * (d - 0 + 1) := Nat.mul_le_mul_right _ hc
-      omega
-    have hOle1 : O ≤ 1 := le_trans hOK hK1
-    have hevV : Even W := by rw [hVn]; simpa using hev
-    have hnodd : ¬ Odd O := by rw [hpar]; exact Nat.not_odd_iff_even.mpr hevV
-    have hevO : Even O := Nat.not_odd_iff_even.mp hnodd
-    rcases hevO with ⟨t, ht⟩
-    omega
-  · have hm1 : 1 ≤ m := Nat.one_le_iff_ne_zero.mpr hm0
-    by_cases hmd : d ≤ m
-    · omega
-    · push Not at hmd
-      obtain ⟨a, hda, ha1⟩ : ∃ a, d = m + a ∧ 1 ≤ a := ⟨d - m, by omega, by omega⟩
-      by_contra hcon
-      push Not at hcon
-      have hKm : m + 1 ≤ K := by omega
-      have hK' : K * (d - m + 1) ≤ n - m := by rw [← hVn]; exact hK
-      have h3 : (m + 1) * (a + 1) ≤ n - m := by
-        have := le_trans (Nat.mul_le_mul_right (d - m + 1) hKm) hK'
-        have hae : d - m + 1 = a + 1 := by omega
-        rwa [hae] at this
-      have hb : n - m ≤ m + 2 * a := by omega
-      have hexp : (m + 1) * (a + 1) = m * a + m + a + 1 := by ring
-      rw [hexp] at h3
-      have hma : a ≤ m * a := Nat.le_mul_of_pos_left a (by omega)
-      omega
-
-open Classical in
-/-- **No Tutte violator at high minimum degree (even case).**  A finite graph with an even
-number of vertices and `|V| ≤ 2·δ(G)` has no Tutte violator. -/
-private theorem no_tutte_violator_of_minDegree (G : SimpleGraph V) [DecidableRel G.Adj]
-    (hev : Even (Fintype.card V)) (hcard : Fintype.card V ≤ 2 * G.minDegree)
-    (u : Set V) : ¬ G.IsTutteViolator u := by
-  classical
-  simp only [SimpleGraph.IsTutteViolator, not_lt]
-  obtain ⟨uF, huF⟩ : ∃ uF : Finset V, (↑uF : Set V) = u := ⟨u.toFinset, Set.coe_toFinset u⟩
-  rw [← huF, Set.ncard_coe_finset]
-  have hcardV : Fintype.card ((⊤ : G.Subgraph).deleteVerts (↑uF : Set V)).verts
-      = Fintype.card V - uF.card := by
-    rw [SimpleGraph.Subgraph.deleteVerts_verts, SimpleGraph.Subgraph.verts_top]
-    have h : (Set.univ \ (↑uF : Set V)) = ((univ \ uF : Finset V) : Set V) := by simp
-    rw [h]
-    simp only [SetLike.coe_sort_coe, Fintype.card_coe]
-    rw [Finset.card_univ_sdiff]
-  have hK := num_components_le ((⊤ : G.Subgraph).deleteVerts (↑uF : Set V)).coe
-    (G.minDegree - uF.card) (fun w => induced_degree_ge G uF w)
-  have hK0 := num_components_le ((⊤ : G.Subgraph).deleteVerts (↑uF : Set V)).coe 0
-    (fun _ => Nat.zero_le _)
-  simp only [zero_add, mul_one] at hK0
-  have hOK := oddComponents_ncard_le ((⊤ : G.Subgraph).deleteVerts (↑uF : Set V)).coe
-  have hpar := SimpleGraph.odd_ncard_oddComponents
-    ((⊤ : G.Subgraph).deleteVerts (↑uF : Set V)).coe
-  rw [Nat.card_eq_fintype_card] at hpar
-  have hnm : uF.card ≤ Fintype.card V := by simpa using Finset.card_le_univ uF
-  exact arith_core hOK hK hK0 hcardV hnm hcard hev hpar
-
-open Classical in
 /-- **Dirac-type perfect matching (even case).**  A finite simple graph on an even number of
 vertices whose minimum degree satisfies `|V| ≤ 2 · δ(G)` has a perfect matching. -/
 theorem exists_isPerfectMatching_of_minDegree (G : SimpleGraph V) [DecidableRel G.Adj]
     (heven : Even (Fintype.card V)) (hδ : Fintype.card V ≤ 2 * G.minDegree) :
-    ∃ M : G.Subgraph, M.IsPerfectMatching :=
-  SimpleGraph.tutte.mpr (fun u => no_tutte_violator_of_minDegree G heven hδ u)
+    ∃ M : G.Subgraph, M.IsPerfectMatching := by
+  exact exists_isPerfectMatching_of_card_le_minDegree heven (by omega)
 
 /-- Adjoin one universal (apex) vertex `none` to `G`. -/
 private def apexGraph (G : SimpleGraph V) : SimpleGraph (Option V) where

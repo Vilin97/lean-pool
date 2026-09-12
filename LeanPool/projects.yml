@@ -8063,8 +8063,9 @@ projects:
     summary: >-
       Develops perfect and near-perfect matchings under sharp minimum-degree hypotheses,
       together with a slack form producing pairwise edge-disjoint perfect matchings and a
-      quantitative weighted spread bound. The proofs combine a Tutte-theorem route, a
-      universal-apex reduction, and a direct finite-set augmentation argument.
+      quantitative weighted spread bound over any linearly ordered field. A shared finite-set
+      augmentation argument supplies the even case, a universal-apex reduction gives the odd
+      case, and averaging over edge-disjoint matchings gives the weighted bound.
     branch: graph theory
     entry_module: LeanPool.MinimumDegreeMatching
     authors:

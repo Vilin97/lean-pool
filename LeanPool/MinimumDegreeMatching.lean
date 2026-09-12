@@ -22,8 +22,8 @@ MSC: 05C70
 ## Mathematical overview
 
 This project develops perfect, near-perfect, edge-disjoint, and weighted spread matchings from
-sharp minimum-degree hypotheses. One route uses Mathlib's formalization of Tutte's theorem; a
-second, constructive finite-set route proves the perfect-matching result directly by augmentation.
-The latter route iterates under degree slack to obtain pairwise edge-disjoint perfect matchings and
-then averages over them to produce a matching with a quantitative spread bound.
+sharp minimum-degree hypotheses. A finite-set augmentation proof establishes the perfect-matching
+result, and adjoining a universal apex vertex gives the near-perfect case. Iterating the matching
+construction under degree slack gives pairwise edge-disjoint perfect matchings; averaging then
+produces a matching with a quantitative spread bound.
 -/
