@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 
 /-!
@@ -77,7 +79,7 @@ theorem weightedSchwartz_injective : Function.Injective weightedSchwartz := by
 /-- Weighted Fourier embedding of tests into ordinary complex `L²`. -/
 def BCLM : ComplexTest →L[ℂ] Lp ℂ 2 (volume : Measure Space) :=
   (SchwartzMap.toLpCLM ℂ ℂ 2 volume).comp
-    (weightedSchwartz.comp (FourierTransform.fourierCLE ℂ ComplexTest).toContinuousLinearMap)
+    (weightedSchwartz.comp EulerSobolev.schwartzFourierCLM)
 
 /-- The linear map underlying the continuous weighted Fourier embedding. -/
 def B : ComplexTest →ₗ[ℂ] Lp ℂ 2 (volume : Measure Space) :=
@@ -87,7 +89,9 @@ theorem continuous_B : Continuous B := BCLM.continuous
 
 theorem B_ae_eq (ψ : ComplexTest) :
     B ψ =ᵐ[volume] fun ξ : Space =>
-      (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ := by
+      (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ := by
+  change B ψ =ᵐ[volume] fun ξ : Space =>
+      (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ
   exact (SchwartzMap.coeFn_toLp (weightedSchwartz
     (FourierTransform.fourierCLE ℂ ComplexTest ψ)) 2 volume).trans
       (Filter.Eventually.of_forall (weightedSchwartz_apply _))
@@ -106,21 +110,27 @@ theorem norm_weightedSchwartz_apply_sq (ψ : ComplexTest) (ξ : Space) :
 
 theorem integrable_fourierHNormSq_four (ψ : ComplexTest) :
     Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 4 *
-      ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2) volume := by
+      ‖(EulerSobolev.schwartzFourier ψ) ξ‖ ^ 2) volume := by
+  change Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 4 *
+      ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2) volume
   simpa only [norm_weightedSchwartz_apply_sq] using
     ((weightedSchwartz (FourierTransform.fourierCLE ℂ ComplexTest ψ)).memLp 2
         volume).integrable_norm_pow
       (by norm_num : (2 : ℕ) ≠ 0)
 
 theorem fourierHNormSq_three_integrand_le_four (ψ : ComplexTest) (ξ : Space) :
-    (1 + ‖ξ‖ ^ 2) ^ 3 * ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2 ≤
-      (1 + ‖ξ‖ ^ 2) ^ 4 * ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2 := by
+    (1 + ‖ξ‖ ^ 2) ^ 3 * ‖(EulerSobolev.schwartzFourier ψ) ξ‖ ^ 2 ≤
+      (1 + ‖ξ‖ ^ 2) ^ 4 * ‖(EulerSobolev.schwartzFourier ψ) ξ‖ ^ 2 := by
+  change (1 + ‖ξ‖ ^ 2) ^ 3 * ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2 ≤
+      (1 + ‖ξ‖ ^ 2) ^ 4 * ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2
   apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
   exact pow_le_pow_right₀ (le_add_of_nonneg_right (sq_nonneg ‖ξ‖)) (by decide)
 
 theorem integrable_fourierHNormSq_three (ψ : ComplexTest) :
     Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
-      ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2) volume := by
+      ‖(EulerSobolev.schwartzFourier ψ) ξ‖ ^ 2) volume := by
+  change Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
+      ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2) volume
   apply (integrable_fourierHNormSq_four ψ).mono'
   · exact ((continuous_const.add (continuous_norm.pow 2)).pow 3 |>.mul
       ((FourierTransform.fourierCLE ℂ ComplexTest ψ).continuous.norm.pow 2)).aestronglyMeasurable
@@ -140,6 +150,7 @@ theorem norm_B_eq_sqrt (ψ : ComplexTest) :
     integral_nonneg fun ξ => by positivity
   rw [ENNReal.toReal_ofReal (Real.rpow_nonneg hi _), Real.sqrt_eq_rpow]
   simp only [fourierHNormSq, one_div]
+  rfl
 
 theorem norm_B_sq (ψ : ComplexTest) :
     ‖B ψ‖ ^ 2 = fourierHNormSq 4 ψ := by
@@ -162,7 +173,9 @@ theorem sqrt_fourierHNormSq_three_le_norm_B (ψ : ComplexTest) :
 
 theorem inner_B_eq_integral (q : Lp ℂ 2 (volume : Measure Space)) (ψ : ComplexTest) :
     @inner ℂ _ _ q (B ψ) = ∫ ξ : Space, star (q ξ) *
-      (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ := by
+      (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ := by
+  change @inner ℂ _ _ q (B ψ) = ∫ ξ : Space, star (q ξ) *
+      (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ
   rw [L2.inner_def]
   apply integral_congr_ae
   filter_upwards [B_ae_eq ψ] with ξ hξ

@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 
 /-!
@@ -66,19 +68,25 @@ theorem rieszSymbol_mul_norm_sq (i j : Fin 3) (ξ : Space) :
 
 theorem measurable_rieszMultiplier (i j : Fin 3) (ψ : ComplexTest) :
     Measurable (fun ξ : Space =>
-      (rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) := by
+      (rieszSymbol i j ξ : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ) := by
+  change Measurable (fun ξ : Space =>
+      (rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ)
   exact (Complex.continuous_ofReal.measurable.comp (measurable_rieszSymbol i j)).mul
     (FourierTransform.fourierCLE ℂ ComplexTest ψ).continuous.measurable
 
 theorem norm_rieszMultiplier_le (i j : Fin 3) (ψ : ComplexTest) (ξ : Space) :
-    ‖(rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ≤
-      ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ := by
+    ‖(rieszSymbol i j ξ : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ‖ ≤
+      ‖(EulerSobolev.schwartzFourier ψ) ξ‖ := by
+  change ‖(rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ≤
+      ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖
   rw [norm_mul]
   exact mul_le_of_le_one_left (norm_nonneg _) (norm_rieszSymbol_complex_le i j ξ)
 
 theorem integrable_rieszMultiplier (i j : Fin 3) (ψ : ComplexTest) :
     Integrable (fun ξ : Space =>
-      (rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) := by
+      (rieszSymbol i j ξ : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ) := by
+  change Integrable (fun ξ : Space =>
+      (rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ)
   refine (FourierTransform.fourierCLE ℂ ComplexTest ψ).integrable.norm.mono'
     (measurable_rieszMultiplier i j ψ).aestronglyMeasurable ?_
   exact Filter.Eventually.of_forall (norm_rieszMultiplier_le i j ψ)
@@ -86,7 +94,9 @@ theorem integrable_rieszMultiplier (i j : Fin 3) (ψ : ComplexTest) :
 theorem integrable_pow_mul_norm_rieszMultiplier (i j : Fin 3) (ψ : ComplexTest)
     (n : ℕ) :
     Integrable (fun ξ : Space => ‖ξ‖ ^ n *
-      ‖(rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖) := by
+      ‖(rieszSymbol i j ξ : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ‖) := by
+  change Integrable (fun ξ : Space => ‖ξ‖ ^ n *
+      ‖(rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖)
   refine ((FourierTransform.fourierCLE ℂ ComplexTest ψ).integrable_pow_mul volume n).mono'
     ((continuous_norm.measurable.pow_const n).mul
       (measurable_rieszMultiplier i j ψ).norm).aestronglyMeasurable ?_
@@ -114,11 +124,14 @@ theorem continuous_rieszTest (i j : Fin 3) (ψ : ComplexTest) :
 
 theorem norm_rieszTest_le_integral_multiplier (i j : Fin 3) (ψ : ComplexTest) (x : Space) :
     ‖rieszTest i j ψ x‖ ≤
-      ∫ ξ : Space, ‖(rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ := by
+      ∫ ξ : Space, ‖(rieszSymbol i j ξ : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ‖ := by
+  change ‖rieszTest i j ψ x‖ ≤
+      ∫ ξ : Space, ‖(rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖
   exact VectorFourier.norm_fourierIntegral_le_integral_norm _ _ _ _ _
 
 theorem norm_rieszTest_le_integral (i j : Fin 3) (ψ : ComplexTest) (x : Space) :
-    ‖rieszTest i j ψ x‖ ≤ ∫ ξ : Space, ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ := by
+    ‖rieszTest i j ψ x‖ ≤ ∫ ξ : Space, ‖(EulerSobolev.schwartzFourier ψ) ξ‖ := by
+  change ‖rieszTest i j ψ x‖ ≤ ∫ ξ : Space, ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖
   apply (norm_rieszTest_le_integral_multiplier i j ψ x).trans
   exact integral_mono (integrable_rieszMultiplier i j ψ).norm
     (FourierTransform.fourierCLE ℂ ComplexTest ψ).integrable.norm (norm_rieszMultiplier_le i j ψ)

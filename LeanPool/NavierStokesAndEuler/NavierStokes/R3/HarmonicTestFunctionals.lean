@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierSobolevWeights
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzCompactApproximation
@@ -233,6 +235,12 @@ theorem representative_eq_zero_of_harmonic
   let ψ : ComplexTest := (FourierTransform.fourierCLE ℂ ComplexTest).symm φ
   have hzero := hq ψ
   rw [FourierSobolevWeights.inner_B_eq_integral] at hzero
+  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
+      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl] at hzero
+  have hlap (ψ : ComplexTest) (ξ : Space) :
+      FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ) ξ =
+        (-(4 * (Real.pi : ℂ) ^ 2) * ((‖ξ‖ ^ 2 : ℝ) : ℂ)) *
+          FourierTransform.fourierCLE ℂ ComplexTest ψ ξ := fourier_laplacianCLM_apply ψ ξ
   let c : ℂ := -(4 * (Real.pi : ℂ) ^ 2)
   have hc : c ≠ 0 := by
     dsimp [c]
@@ -245,7 +253,7 @@ theorem representative_eq_zero_of_harmonic
       (fun ξ : Space => c • (star (q ξ) *
         (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * ((‖ξ‖ ^ 2 : ℝ) : ℂ) * φ ξ)) := by
     funext ξ
-    rw [fourier_laplacianCLM_apply]
+    rw [hlap]
     simp only [ψ, ContinuousLinearEquiv.apply_symm_apply, smul_eq_mul, c]
     ring
   rw [hi, integral_smul] at hzero

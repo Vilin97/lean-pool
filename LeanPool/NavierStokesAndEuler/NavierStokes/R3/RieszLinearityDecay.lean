@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
 import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
@@ -45,6 +47,8 @@ theorem rieszTest_add (i j : Fin 3) (ψ φ : ComplexTest) :
     change Continuous (fun p : Space × Space => -⟪p.1, p.2⟫)
     exact (continuous_fst.inner continuous_snd).neg
   unfold rieszTest
+  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
+      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   rw [hmul]
   exact VectorFourier.fourierIntegral_add Real.continuous_fourierChar hcont
     (integrable_rieszMultiplier i j ψ) (integrable_rieszMultiplier i j φ)
@@ -59,6 +63,8 @@ theorem rieszTest_smul (i j : Fin 3) (c : ℂ) (ψ : ComplexTest) :
     funext ξ
     simp [mul_left_comm]
   unfold rieszTest
+  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
+      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   rw [hmul]
   exact VectorFourier.fourierIntegral_const_smul _ _ _ _ c
 
@@ -89,6 +95,8 @@ theorem rieszTest_sum (i j : Fin 3) {ι : Type*} (s : Finset ι) (ψ : ι → Co
 theorem rieszTest_tendsto_zero (i j : Fin 3) (ψ : ComplexTest) :
     Tendsto (rieszTest i j ψ) (cocompact Space) (𝓝 0) := by
   unfold rieszTest
+  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
+      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   rw [Real.fourierInv_eq_fourier_comp_neg]
   exact tendsto_integral_exp_inner_smul_cocompact _
 

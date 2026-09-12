@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
 public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
@@ -230,9 +232,14 @@ theorem partialTest_apply (k : Fin 3) (ψ : ComplexTest) (x : Space) :
 
 /-- The Fourier transform of a directional derivative of a Schwartz function. -/
 theorem fourier_pderivTest (ψ : ComplexTest) (d ξ : Space) :
-    (FourierTransform.fourierCLE ℂ ComplexTest (LineDeriv.lineDerivOpCLM ℂ ComplexTest d ψ)) ξ =
+    (EulerSobolev.schwartzFourier
+      (LineDeriv.lineDerivOpCLM ℂ ComplexTest d ψ)) ξ =
       (2 * Real.pi * Complex.I) * (⟪ξ, d⟫ : ℂ) *
-        (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ := by
+        (EulerSobolev.schwartzFourier ψ) ξ := by
+  change (FourierTransform.fourierCLE ℂ ComplexTest
+      (LineDeriv.lineDerivOpCLM ℂ ComplexTest d ψ)) ξ =
+      (2 * Real.pi * Complex.I) * (⟪ξ, d⟫ : ℂ) *
+        (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ
   have hD : Integrable (fderiv ℝ (fun y => ψ y)) :=
     (SchwartzMap.fderivCLM ℂ Space ℂ ψ).integrable
   change 𝓕 (fun x => fderiv ℝ (fun y => ψ y) x d) ξ = _
@@ -245,9 +252,9 @@ theorem fourier_pderivTest (ψ : ComplexTest) (d ξ : Space) :
   ring
 
 theorem fourier_partialTest (ψ : ComplexTest) (k : Fin 3) (ξ : Space) :
-    (FourierTransform.fourierCLE ℂ ComplexTest (partialTest k ψ)) ξ =
+    (EulerSobolev.schwartzFourier (partialTest k ψ)) ξ =
       (2 * Real.pi * Complex.I) * (ξ k : ℂ) *
-        (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ := by
+        (EulerSobolev.schwartzFourier ψ) ξ := by
   simpa only [partialTest, NavierStokes.ProblemStatement.coordinateVector,
     EuclideanSpace.inner_single_right, RCLike.conj_to_real, one_mul] using
     fourier_pderivTest ψ (NavierStokes.ProblemStatement.coordinateVector k) ξ
@@ -256,7 +263,7 @@ theorem fourier_partialTest (ψ : ComplexTest) (k : Fin 3) (ξ : Space) :
 Fourier integral in every direction. -/
 theorem fderiv_fourierInv_apply {f : Space → ℂ} (hf : Integrable f)
     (hf1 : Integrable (fun ξ : Space => ‖ξ‖ * ‖f ξ‖)) (x d : Space) :
-    fderiv ℝ (𝓕⁻ f) x d =
+    fderiv ℝ (𝓕⁻ (f : Space → ℂ)) x d =
       𝓕⁻ (fun ξ : Space =>
         (2 * Real.pi * Complex.I) * (⟪ξ, d⟫ : ℂ) * f ξ) x := by
   let L : Space →L[ℝ] Space →L[ℝ] ℝ :=
@@ -290,7 +297,7 @@ theorem pderiv_rieszTest (i j : Fin 3) (ψ : ComplexTest) (d x : Space) :
     fderiv ℝ (rieszTest i j ψ) x d =
       rieszTest i j (LineDeriv.lineDerivOpCLM ℂ ComplexTest d ψ) x := by
   change fderiv ℝ (𝓕⁻ (fun ξ : Space =>
-      (rieszSymbol i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ)) x d = _
+      (rieszSymbol i j ξ : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ)) x d = _
   rw [fderiv_fourierInv_apply (integrable_rieszMultiplier i j ψ)
     (by simpa only [pow_one] using integrable_pow_mul_norm_rieszMultiplier i j ψ 1)]
   unfold rieszTest
@@ -443,6 +450,14 @@ mixed derivative. The multiplier identity is valid also at frequency zero. -/
 theorem rieszTest_laplacianCLM (i j : Fin 3) (ψ : ComplexTest) (x : Space) :
     rieszTest i j (laplacianCLM ψ) x =
       -(partialCLM i (partialCLM j ψ)) x := by
+  have hpartial (i : Fin 3) (ψ : ComplexTest) (ξ : Space) :
+      FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ =
+        (2 * (Real.pi : ℂ) * Complex.I * (ξ i : ℂ)) *
+          FourierTransform.fourierCLE ℂ ComplexTest ψ ξ := fourier_partialCLM_apply i ψ ξ
+  have hlap (ψ : ComplexTest) (ξ : Space) :
+      FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ) ξ =
+        (-(4 * (Real.pi : ℂ) ^ 2) * ((‖ξ‖ ^ 2 : ℝ) : ℂ)) *
+          FourierTransform.fourierCLE ℂ ComplexTest ψ ξ := fourier_laplacianCLM_apply ψ ξ
   have hmult (ξ : Space) :
       (rieszSymbol i j ξ : ℂ) *
           (FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ)) ξ =
@@ -451,7 +466,7 @@ theorem rieszTest_laplacianCLM (i j : Fin 3) (ψ : ComplexTest) (x : Space) :
     change (rieszSymbol i j ξ : ℂ) *
         (FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ)) ξ =
       -((FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i (partialCLM j ψ))) ξ)
-    rw [fourier_laplacianCLM_apply, fourier_partialCLM_apply, fourier_partialCLM_apply]
+    rw [hlap, hpartial, hpartial]
     have hsymbol : (rieszSymbol i j ξ : ℂ) * ((‖ξ‖ ^ 2 : ℝ) : ℂ) =
         -((ξ i : ℂ) * (ξ j : ℂ)) := by
       exact_mod_cast rieszSymbol_mul_norm_sq i j ξ
@@ -468,6 +483,8 @@ theorem rieszTest_laplacianCLM (i j : Fin 3) (ψ : ComplexTest) (x : Space) :
       (FourierTransform.fourierCLE ℂ ComplexTest (-(partialCLM i (partialCLM j ψ))) :
         Space → ℂ) := funext hmult
   unfold rieszTest
+  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
+      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   rw [hfun]
   have hinv := congrArg (fun φ : ComplexTest => φ x)
     ((FourierTransform.fourierCLE ℂ ComplexTest).symm_apply_apply

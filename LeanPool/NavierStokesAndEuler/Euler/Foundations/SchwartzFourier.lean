@@ -49,4 +49,20 @@ private theorem schwartzFourier_eq (f : 𝓢(V, E)) :
 theorem schwartzFourier_apply (f : 𝓢(V, E)) (x : V) :
     schwartzFourier f x = 𝓕 (f : V → E) x := rfl
 
+/-- The ordinary Fourier integral as a continuous linear map on Schwartz functions. -/
+def schwartzFourierCLM : 𝓢(V, E) →L[ℂ] 𝓢(V, E) where
+  toFun := schwartzFourier
+  map_add' := by
+    intro f g
+    exact (FourierTransform.fourierCLM (F := 𝓢(V, E)) ℂ 𝓢(V, E)).map_add f g
+  map_smul' := by
+    intro c f
+    exact (FourierTransform.fourierCLM (F := 𝓢(V, E)) ℂ 𝓢(V, E)).map_smul c f
+  cont := by
+    exact (FourierTransform.fourierCLM (F := 𝓢(V, E)) ℂ 𝓢(V, E)).continuous
+
+private theorem schwartzFourierCLM_eq :
+    schwartzFourierCLM (V := V) (E := E) =
+      FourierTransform.fourierCLM (F := 𝓢(V, E)) ℂ 𝓢(V, E) := rfl
+
 end EulerSobolev

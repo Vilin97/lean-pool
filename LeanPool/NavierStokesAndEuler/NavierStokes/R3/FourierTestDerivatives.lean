@@ -6,6 +6,10 @@ Authors: OpenAI
 
 module
 
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
 
@@ -52,9 +56,12 @@ def laplacianCLM : ComplexTest →L[ℂ] ComplexTest :=
 
 /-- Fourier transform of a coordinate derivative. -/
 theorem fourier_partialCLM_apply (i : Fin 3) (ψ : ComplexTest) (ξ : Space) :
-    FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ =
+    EulerSobolev.schwartzFourier (partialCLM i ψ) ξ =
       (2 * (Real.pi : ℂ) * Complex.I * (ξ i : ℂ)) *
-        FourierTransform.fourierCLE ℂ ComplexTest ψ ξ := by
+        EulerSobolev.schwartzFourier ψ ξ := by
+  change FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ =
+      (2 * (Real.pi : ℂ) * Complex.I * (ξ i : ℂ)) *
+        FourierTransform.fourierCLE ℂ ComplexTest ψ ξ
   have hd : Integrable (fderiv ℝ (ψ : Space → ℂ)) := by
     exact (SchwartzMap.fderivCLM ℂ Space ℂ ψ).integrable
   change 𝓕 (fun x => fderiv ℝ (ψ : Space → ℂ) x
@@ -74,9 +81,12 @@ theorem fourier_partialCLM_apply (i : Fin 3) (ψ : ComplexTest) (ξ : Space) :
 
 /-- The ordinary Laplacian has Fourier multiplier `-4π²‖ξ‖²`. -/
 theorem fourier_laplacianCLM_apply (ψ : ComplexTest) (ξ : Space) :
-    FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ) ξ =
+    EulerSobolev.schwartzFourier (laplacianCLM ψ) ξ =
       (-(4 * (Real.pi : ℂ) ^ 2) * ((‖ξ‖ ^ 2 : ℝ) : ℂ)) *
-        FourierTransform.fourierCLE ℂ ComplexTest ψ ξ := by
+        EulerSobolev.schwartzFourier ψ ξ := by
+  change FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ) ξ =
+      (-(4 * (Real.pi : ℂ) ^ 2) * ((‖ξ‖ ^ 2 : ℝ) : ℂ)) *
+        FourierTransform.fourierCLE ℂ ComplexTest ψ ξ
   have hnorm : ‖ξ‖ ^ 2 = (ξ 0) ^ 2 + (ξ 1) ^ 2 + (ξ 2) ^ 2 := by
     simp [PiLp.norm_sq_eq_of_L2, Fin.sum_univ_succ, Real.norm_eq_abs, sq_abs, add_assoc]
   have hsplit : laplacianCLM ψ = partialCLM 0 (partialCLM 0 ψ) +
@@ -86,7 +96,11 @@ theorem fourier_laplacianCLM_apply (ψ : ComplexTest) (ξ : Space) :
   change FourierTransform.fourierCLE ℂ ComplexTest (partialCLM 0 (partialCLM 0 ψ)) ξ +
       (FourierTransform.fourierCLE ℂ ComplexTest (partialCLM 1 (partialCLM 1 ψ)) ξ +
        FourierTransform.fourierCLE ℂ ComplexTest (partialCLM 2 (partialCLM 2 ψ)) ξ) = _
-  simp_rw [fourier_partialCLM_apply]
+  have hpartial (i : Fin 3) (ψ : ComplexTest) (ξ : Space) :
+      FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ =
+        (2 * (Real.pi : ℂ) * Complex.I * (ξ i : ℂ)) *
+          FourierTransform.fourierCLE ℂ ComplexTest ψ ξ := fourier_partialCLM_apply i ψ ξ
+  simp_rw [hpartial]
   rw [hnorm]
   push_cast
   ring_nf

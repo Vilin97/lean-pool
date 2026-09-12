@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszLinearityDecay
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.FourierTestDerivatives
@@ -106,28 +108,28 @@ theorem fourierHNormSq_nonneg (s : ℕ) (ψ : ComplexTest) :
 /-- A Fourier multiplier of order at most two has the required `H³` control. -/
 theorem sqrt_l2Sq_le_of_fourier_bound (ψ φ : ComplexTest) {C : ℝ} (hC : 0 ≤ C)
     (hw : Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
-      ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2))
-    (hφ : ∀ ξ : Space, ‖FourierTransform.fourierCLE ℂ ComplexTest φ ξ‖ ≤
-      C * (1 + ‖ξ‖ ^ 2) * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) :
+      ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2))
+    (hφ : ∀ ξ : Space, ‖EulerSobolev.schwartzFourier φ ξ‖ ≤
+      C * (1 + ‖ξ‖ ^ 2) * ‖EulerSobolev.schwartzFourier ψ ξ‖) :
     Real.sqrt (l2Sq (φ : Space → ℂ)) ≤ C * Real.sqrt (fourierHNormSq 3 ψ) := by
-  have hsq : (∫ ξ : Space, ‖FourierTransform.fourierCLE ℂ ComplexTest φ ξ‖ ^ 2) ≤
+  have hsq : (∫ ξ : Space, ‖EulerSobolev.schwartzFourier φ ξ‖ ^ 2) ≤
       C ^ 2 * fourierHNormSq 3 ψ := by
     rw [fourierHNormSq, ← integral_const_mul]
     apply integral_mono (SchwartzParseval.integrable_norm_sq_fourier φ)
       (hw.const_mul (C ^ 2))
     intro ξ
     calc
-      ‖FourierTransform.fourierCLE ℂ ComplexTest φ ξ‖ ^ 2 ≤
-          (C * (1 + ‖ξ‖ ^ 2) * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) ^ 2 :=
+      ‖EulerSobolev.schwartzFourier φ ξ‖ ^ 2 ≤
+          (C * (1 + ‖ξ‖ ^ 2) * ‖EulerSobolev.schwartzFourier ψ ξ‖) ^ 2 :=
         pow_le_pow_left₀ (norm_nonneg _) (hφ ξ) 2
       _ = C ^ 2 * ((1 + ‖ξ‖ ^ 2) ^ 2 *
-          ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2) := by ring
+          ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2) := by ring
       _ ≤ C ^ 2 * ((1 + ‖ξ‖ ^ 2) ^ 3 *
-          ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2) := by
+          ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2) := by
         apply mul_le_mul_of_nonneg_left _ (sq_nonneg C)
         apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
         exact pow_le_pow_right₀ (le_add_of_nonneg_right (sq_nonneg ‖ξ‖)) (by norm_num)
-  simp only [FourierTransform.fourierCLE_apply] at hsq
+  simp only [EulerSobolev.schwartzFourier_apply] at hsq
   rw [SchwartzParseval.integral_norm_sq_fourier] at hsq
   calc
     Real.sqrt (l2Sq (φ : Space → ℂ)) ≤
@@ -137,22 +139,22 @@ theorem sqrt_l2Sq_le_of_fourier_bound (ψ φ : ComplexTest) {C : ℝ} (hC : 0 �
 
 /-- Exact magnitude of the coordinate-derivative Fourier multiplier. -/
 theorem norm_fourier_partialCLM (i : Fin 3) (ψ : ComplexTest) (ξ : Space) :
-    ‖FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ‖ =
-      (2 * Real.pi) * ‖ξ i‖ * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ := by
+    ‖EulerSobolev.schwartzFourier (partialCLM i ψ) ξ‖ =
+      (2 * Real.pi) * ‖ξ i‖ * ‖EulerSobolev.schwartzFourier ψ ξ‖ := by
   rw [fourier_partialCLM_apply]
   simp only [norm_mul, Complex.norm_real, Complex.norm_I, mul_one,
     Real.norm_of_nonneg Real.pi_pos.le]
   norm_num
 
 theorem norm_fourier_partialCLM_le (i : Fin 3) (ψ : ComplexTest) (ξ : Space) :
-    ‖FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ‖ ≤
-      (2 * Real.pi) * ‖ξ‖ * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ := by
+    ‖EulerSobolev.schwartzFourier (partialCLM i ψ) ξ‖ ≤
+      (2 * Real.pi) * ‖ξ‖ * ‖EulerSobolev.schwartzFourier ψ ξ‖ := by
   rw [norm_fourier_partialCLM]
   exact mul_le_mul_of_nonneg_right
     (mul_le_mul_of_nonneg_left (PiLp.norm_apply_le ξ i) (by positivity)) (norm_nonneg _)
 
 theorem norm_test_le_integral_fourier (ψ : ComplexTest) (x : Space) :
-    ‖ψ x‖ ≤ ∫ ξ : Space, ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ := by
+    ‖ψ x‖ ≤ ∫ ξ : Space, ‖EulerSobolev.schwartzFourier ψ ξ‖ := by
   calc
     ‖ψ x‖ = ‖(𝓕⁻ (𝓕 ψ)) x‖ := by
       rw [FourierTransform.fourierInv_fourier_eq]
@@ -160,34 +162,34 @@ theorem norm_test_le_integral_fourier (ψ : ComplexTest) (x : Space) :
 
 theorem integral_norm_fourier_partialCLM_le_of_integrable (i : Fin 3) (ψ : ComplexTest)
     (hw : Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
-      ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2)) :
-    (∫ ξ : Space, ‖FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ‖) ≤
+      ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2)) :
+    (∫ ξ : Space, ‖EulerSobolev.schwartzFourier (partialCLM i ψ) ξ‖) ≤
       (2 * Real.pi * fourierMomentConstant) * Real.sqrt (fourierHNormSq 3 ψ) := by
   have hm : Integrable (fun ξ : Space => ‖ξ‖ *
-      ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) := by
+      ‖EulerSobolev.schwartzFourier ψ ξ‖) := by
     simpa only [pow_one] using
-      (FourierTransform.fourierCLE ℂ ComplexTest ψ).integrable_pow_mul volume 1
+      (EulerSobolev.schwartzFourier ψ).integrable_pow_mul volume 1
   calc
-    (∫ ξ : Space, ‖FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ‖) ≤
+    (∫ ξ : Space, ‖EulerSobolev.schwartzFourier (partialCLM i ψ) ξ‖) ≤
         ∫ ξ : Space, (2 * Real.pi) *
-          (‖ξ‖ * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) := by
-      apply integral_mono (FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i
+          (‖ξ‖ * ‖EulerSobolev.schwartzFourier ψ ξ‖) := by
+      apply integral_mono (EulerSobolev.schwartzFourier (partialCLM i
           ψ)).integrable.norm
         (hm.const_mul (2 * Real.pi))
       intro ξ
       simpa only [mul_assoc] using norm_fourier_partialCLM_le i ψ ξ
     _ = (2 * Real.pi) * (∫ ξ : Space, ‖ξ‖ *
-        ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) := integral_const_mul _ _
+        ‖EulerSobolev.schwartzFourier ψ ξ‖) := integral_const_mul _ _
     _ ≤ (2 * Real.pi) * (fourierMomentConstant * Real.sqrt (fourierHNormSq 3 ψ)) :=
       mul_le_mul_of_nonneg_left
-        (integral_first_moment_le (FourierTransform.fourierCLE ℂ ComplexTest
+        (integral_first_moment_le (EulerSobolev.schwartzFourier
             ψ).continuous.aestronglyMeasurable
           hw) (by positivity)
     _ = _ := by ring
 
 theorem sqrt_l2Sq_test_le_of_integrable (ψ : ComplexTest)
     (hw : Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
-      ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2)) :
+      ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2)) :
     Real.sqrt (l2Sq (ψ : Space → ℂ)) ≤ Real.sqrt (fourierHNormSq 3 ψ) := by
   simpa only [one_mul] using
     sqrt_l2Sq_le_of_fourier_bound ψ ψ (C := 1) (by positivity) hw (fun ξ => by
@@ -197,28 +199,28 @@ theorem sqrt_l2Sq_test_le_of_integrable (ψ : ComplexTest)
 
 theorem sqrt_l2Sq_partial_partial_le_of_integrable (i : Fin 3) (ψ : ComplexTest)
     (hw : Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
-      ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2)) :
+      ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2)) :
     Real.sqrt (l2Sq (partialCLM i (partialCLM i ψ) : Space → ℂ)) ≤
       (2 * Real.pi) ^ 2 * Real.sqrt (fourierHNormSq 3 ψ) := by
   apply sqrt_l2Sq_le_of_fourier_bound ψ (partialCLM i (partialCLM i ψ))
     (sq_nonneg _) hw
   intro ξ
   calc
-    ‖FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i (partialCLM i ψ)) ξ‖ ≤
+    ‖EulerSobolev.schwartzFourier (partialCLM i (partialCLM i ψ)) ξ‖ ≤
         (2 * Real.pi) * ‖ξ‖ *
-          ‖FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ‖ :=
+          ‖EulerSobolev.schwartzFourier (partialCLM i ψ) ξ‖ :=
       norm_fourier_partialCLM_le i (partialCLM i ψ) ξ
     _ ≤ (2 * Real.pi) * ‖ξ‖ *
-        ((2 * Real.pi) * ‖ξ‖ * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) :=
+        ((2 * Real.pi) * ‖ξ‖ * ‖EulerSobolev.schwartzFourier ψ ξ‖) :=
       mul_le_mul_of_nonneg_left (norm_fourier_partialCLM_le i ψ ξ) (by positivity)
     _ = (2 * Real.pi) ^ 2 * ‖ξ‖ ^ 2 *
-        ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ := by ring
+        ‖EulerSobolev.schwartzFourier ψ ξ‖ := by ring
     _ ≤ (2 * Real.pi) ^ 2 * (1 + ‖ξ‖ ^ 2) *
-        ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ := by gcongr; linarith
+        ‖EulerSobolev.schwartzFourier ψ ξ‖ := by gcongr; linarith
 
 theorem norm_partialCLM_le_of_integrable (i : Fin 3) (ψ : ComplexTest)
     (hw : Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
-      ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2)) (x : Space) :
+      ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2)) (x : Space) :
     ‖partialCLM i ψ x‖ ≤
       (2 * Real.pi * fourierMomentConstant) * Real.sqrt (fourierHNormSq 3 ψ) :=
   (norm_test_le_integral_fourier (partialCLM i ψ) x).trans
@@ -226,7 +228,7 @@ theorem norm_partialCLM_le_of_integrable (i : Fin 3) (ψ : ComplexTest)
 
 theorem norm_rieszTest_partialCLM_le_of_integrable (i j k : Fin 3) (ψ : ComplexTest)
     (hw : Integrable (fun ξ : Space => (1 + ‖ξ‖ ^ 2) ^ 3 *
-      ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖ ^ 2)) (x : Space) :
+      ‖EulerSobolev.schwartzFourier ψ ξ‖ ^ 2)) (x : Space) :
     ‖rieszTest i j (partialCLM k ψ) x‖ ≤
       (2 * Real.pi * fourierMomentConstant) * Real.sqrt (fourierHNormSq 3 ψ) :=
   (RieszTestOperators.norm_rieszTest_le_integral i j (partialCLM k ψ) x).trans
@@ -234,14 +236,14 @@ theorem norm_rieszTest_partialCLM_le_of_integrable (i j k : Fin 3) (ψ : Complex
 
 /-- The first moment of a Schwartz Fourier transform is controlled uniformly by `H³`. -/
 theorem fourier_first_moment_le (ψ : ComplexTest) :
-    (∫ ξ : Space, ‖ξ‖ * ‖FourierTransform.fourierCLE ℂ ComplexTest ψ ξ‖) ≤
+    (∫ ξ : Space, ‖ξ‖ * ‖EulerSobolev.schwartzFourier ψ ξ‖) ≤
       fourierMomentConstant * Real.sqrt (fourierHNormSq 3 ψ) :=
-  integral_first_moment_le (FourierTransform.fourierCLE ℂ ComplexTest
+  integral_first_moment_le (EulerSobolev.schwartzFourier
       ψ).continuous.aestronglyMeasurable
     (FourierSobolevWeights.integrable_fourierHNormSq_three ψ)
 
 theorem integral_norm_fourier_partialCLM_le (i : Fin 3) (ψ : ComplexTest) :
-    (∫ ξ : Space, ‖FourierTransform.fourierCLE ℂ ComplexTest (partialCLM i ψ) ξ‖) ≤
+    (∫ ξ : Space, ‖EulerSobolev.schwartzFourier (partialCLM i ψ) ξ‖) ≤
       (2 * Real.pi * fourierMomentConstant) * Real.sqrt (fourierHNormSq 3 ψ) :=
   integral_norm_fourier_partialCLM_le_of_integrable i ψ
     (FourierSobolevWeights.integrable_fourierHNormSq_three ψ)

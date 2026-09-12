@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.RieszSymbolRegularity
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.SchwartzParseval
@@ -54,8 +56,8 @@ theorem integrable_rieszTest_mul_conj (i j : Fin 3) (ψ φ : ComplexTest) :
 /-- Fourier duality with the inverse Fourier kernel. -/
 theorem integral_fourierInv_mul {f g : Space → ℂ}
     (hf : Integrable f) (hg : Integrable g) :
-    (∫ x : Space, 𝓕⁻ f x * g x) =
-      ∫ ξ : Space, f ξ * 𝓕 g (-ξ) := by
+    (∫ x : Space, 𝓕⁻ (f : Space → ℂ) x * g x) =
+      ∫ ξ : Space, f ξ * 𝓕 (g : Space → ℂ) (-ξ) := by
   have hflip : (-innerₗ Space).flip = -innerₗ Space := by
     ext x y
     exact congrArg Neg.neg (real_inner_comm y x).symm
@@ -70,7 +72,7 @@ theorem integral_fourierInv_mul {f g : Space → ℂ}
 
 /-- Conjugation changes the inverse Fourier kernel into the Fourier kernel. -/
 theorem fourierInv_conj_apply (f : Space → ℂ) (ξ : Space) :
-    𝓕⁻ (fun x => conj (f x)) ξ = conj (𝓕 f ξ) := by
+    𝓕⁻ (fun x => conj (f x)) ξ = conj (𝓕 (f : Space → ℂ) ξ) := by
   rw [Real.fourierInv_eq_fourier_neg,
     SchwartzParseval.fourier_conj_apply,
     Real.fourierInv_eq_fourier_neg, neg_neg]
@@ -78,13 +80,17 @@ theorem fourierInv_conj_apply (f : Space → ℂ) (ξ : Space) :
 /-- Pair the actual double Riesz transform with a Schwartz function in Fourier space. -/
 theorem rieszTest_pairing_fourier (i j : Fin 3) (ψ φ : ComplexTest) :
     (∫ x : Space, rieszTest i j ψ x * φ x) =
-      ∫ ξ : Space, (rieszSymbol i j ξ : ℂ) * 𝓕 ψ ξ * 𝓕 φ (-ξ) := by
+      ∫ ξ : Space, (rieszSymbol i j ξ : ℂ) * 𝓕 (ψ : Space → ℂ) ξ * 𝓕 (φ : Space → ℂ) (-ξ) := by
+  change (∫ x : Space, rieszTest i j ψ x * φ x) =
+      ∫ ξ : Space, (rieszSymbol i j ξ : ℂ) * 𝓕 ψ ξ * 𝓕 φ (-ξ)
   exact integral_fourierInv_mul (integrable_rieszMultiplier i j ψ) φ.integrable
 
 /-- Hermitian Fourier pairing for the actual double Riesz transform. -/
 theorem rieszTest_pairing_fourier_conj (i j : Fin 3) (ψ φ : ComplexTest) :
     (∫ x : Space, rieszTest i j ψ x * conj (φ x)) =
-      ∫ ξ : Space, (rieszSymbol i j ξ : ℂ) * 𝓕 ψ ξ * conj (𝓕 φ ξ) := by
+      ∫ ξ : Space, (rieszSymbol i j ξ : ℂ) * 𝓕 (ψ : Space → ℂ) ξ * conj (𝓕 (φ : Space → ℂ) ξ) := by
+  change (∫ x : Space, rieszTest i j ψ x * conj (φ x)) =
+      ∫ ξ : Space, (rieszSymbol i j ξ : ℂ) * 𝓕 ψ ξ * conj (𝓕 φ ξ)
   have hφ : Integrable (fun x : Space => conj (φ x)) :=
     (Complex.conjCLE : ℂ →L[ℝ] ℂ).integrable_comp φ.integrable
   rw [rieszTest, integral_fourierInv_mul (integrable_rieszMultiplier i j ψ) hφ]
@@ -92,7 +98,7 @@ theorem rieszTest_pairing_fourier_conj (i j : Fin 3) (ψ φ : ComplexTest) :
   filter_upwards [] with ξ
   rw [SchwartzParseval.fourier_conj_apply,
     Real.fourierInv_eq_fourier_neg, neg_neg]
-  simp only [FourierTransform.fourierCLE_apply, SchwartzMap.fourier_coe]
+  simp only [EulerSobolev.schwartzFourier_apply, SchwartzMap.fourier_coe]
 
 /-- The even Riesz multiplier makes the bilinear pairing symmetric. -/
 theorem rieszTest_selfAdjoint (i j : Fin 3) (ψ φ : ComplexTest) :

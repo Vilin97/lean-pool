@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelPairedBound
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
 public import Mathlib.Analysis.Fourier.FourierTransform
@@ -97,7 +99,7 @@ theorem integral_norm_heatSecondSymbol (i j : Fin 3) (ξ : Space) :
 /-- A second derivative of the heat evolution, expressed in frequency space. -/
 def heatSecondTest (s : ℝ) (i j : Fin 3) (ψ : ComplexTest) : Space → ℂ :=
   FourierTransform.fourierInv (fun ξ : Space =>
-    (heatSecondSymbol s i j ξ : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ)
+    (heatSecondSymbol s i j ξ : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ)
 
 private theorem heatSecondTest_eq_integral (s : ℝ) (i j : Fin 3)
     (ψ : ComplexTest) (x : Space) :
@@ -105,6 +107,8 @@ private theorem heatSecondTest_eq_integral (s : ℝ) (i j : Fin 3)
       ∫ ξ : Space, heatSecondSymbol s i j ξ •
         (Real.fourierChar ⟪ξ, x⟫ • (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) := by
   rw [heatSecondTest, Real.fourierInv_eq]
+  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
+      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   apply integral_congr_ae
   filter_upwards [] with ξ
   simp only [Circle.smul_def, smul_eq_mul, Algebra.smul_def, realAlgebraMap_apply]
@@ -156,6 +160,8 @@ theorem rieszTest_eq_integral_heatSecondTest (i j : Fin 3) (ψ : ComplexTest) (x
         heatSecondSymbol s i j ξ •
           (Real.fourierChar ⟪ξ, x⟫ • (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) := by
       rw [rieszTest, Real.fourierInv_eq]
+      rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
+          (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
       apply integral_congr_ae
       filter_upwards [] with ξ
       rw [integral_smul_const, integral_heatSecondSymbol]
