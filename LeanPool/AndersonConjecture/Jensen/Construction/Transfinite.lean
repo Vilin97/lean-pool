@@ -200,12 +200,9 @@ private noncomputable def mk_union_nsub_aux
     have hq'_ht := (Ideal.height_le_iff (n := 1)).mp
       ((rings γ hγ_lt).height_bound t ht P hP) _ inferInstance hq'_lt
     have : IsDomain (rings γ hγ_lt).carrier := inferInstance
-    exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
-      lift (Ideal.comap inclγ q).height to ℕ using ne_top_of_lt hq'_ht with n hn
-      simp only [Nat.cast_lt] at hq'_ht
-      simp only [Nat.cast_le]
-      omega
-    ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
+    exact absurd ((Ideal.height_le_iff (n := 0)).mp
+      (le_of_eq (Order.lt_one_iff.mp hq'_ht))
+      ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
   · set n := Cardinal.mk {γ : ι // γ < α}
     have h_each_le : ∀ (β : ι) (hβ : β < α),
         Cardinal.mk (rings β hβ).carrier ≤ max Cardinal.aleph0 n := by
@@ -585,9 +582,6 @@ private def transfinite_construction_proof
     · convert hr using 1
     · rcases eq_or_lt_of_le hle_α with heq_α | hlt_α
       · have hβ₁_lt_α : β₁ < α := heq_α ▸ hlt
-        have hmem_prevF : (r : T) ∈ (prevF α (fun γ hγ => data γ)).carrier := by
-          have := hring_le_prev_α β₁ hβ₁_lt_α r.2
-          rwa [hprevF_eq α] at this
         have hmem_prev : (r : T) ∈ (data α).2.1.carrier :=
           hring_le_prev_α β₁ hβ₁_lt_α r.2
         have h_nsub_eq := hprevF_eq α
@@ -596,9 +590,6 @@ private def transfinite_construction_proof
           intro S₁ S₂ h x hx hp
           cases h
           exact hp
-        have prime_transport' : ∀ (S₁ S₂ : NSubring T) (h : S₂ = S₁) (x : T) (hx : x ∈ S₁.carrier),
-            Prime (⟨x, hx⟩ : S₁.carrier) → Prime (⟨x, h ▸ hx⟩ : S₂.carrier) := by
-          simp_all
         have hmem_prevF_carrier : (r : T) ∈ (prevF α (fun γ hγ => data γ)).carrier := by
           rwa [← h_nsub_eq]
         have hprime_prevF : Prime (⟨(r : T), hmem_prevF_carrier⟩ :
@@ -614,7 +605,7 @@ private def transfinite_construction_proof
                   (mk_union_nsub α (fun γ hγ => data γ) (not_isMin_iff.mp hmin) hgood_α
                     (fun β hβ => (data β).2.2.2.2.2.2.2)).1.carrier := by
                 rwa [← h_prevF_eq]
-              exact prime_transport' _ _ h_prevF_eq _ hmem_u
+              exact prime_transport _ _ h_prevF_eq.symm _ hmem_u
                 ((mk_union_nsub α (fun γ hγ => data γ) (not_isMin_iff.mp hmin) hgood_α
                     (fun β hβ => (data β).2.2.2.2.2.2.2)).2.2.2.2
                   β₁ hβ₁_lt_α r hr hmem_u)
@@ -631,8 +622,8 @@ private def transfinite_construction_proof
                 rwa [← h_prevF_eq]
               rcases eq_or_lt_of_le (Order.lt_succ_iff_of_not_isMax
                 hγ_ex.choose_spec.1 |>.mp (hγ_ex.choose_spec.2 ▸ hβ₁_lt_α)) with rfl | hlt'
-              · exact prime_transport' _ _ h_prevF_eq _ hmem_ring_γ hr
-              · exact prime_transport' _ _ h_prevF_eq _ hmem_ring_γ
+              · exact prime_transport _ _ h_prevF_eq.symm _ hmem_ring_γ hr
+              · exact prime_transport _ _ h_prevF_eq.symm _ hmem_ring_γ
                   (hprimes_lt (le_of_lt hlt') hγ_lt r
                     (((IH_wf hγ_ex.choose hγ_lt).1 β₁ hlt').trans
                       (data hγ_ex.choose).2.2.1.le r.2) hr)
@@ -765,12 +756,9 @@ private def transfinite_construction_proof
     have hq'_ht := (Ideal.height_le_iff (n := 1)).mp
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
     have : IsDomain (chain.ring γ).carrier := inferInstance
-    exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
-      lift (Ideal.comap inclγ q).height to ℕ using ne_top_of_lt hq'_ht with n hn
-      simp only [Nat.cast_lt] at hq'_ht
-      simp only [Nat.cast_le]
-      omega
-    ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
+    exact absurd ((Ideal.height_le_iff (n := 0)).mp
+      (le_of_eq (Order.lt_one_iff.mp hq'_ht))
+      ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
   let A : NSubring T :=
     { carrier := U
       isUFD := transfinite_union_isUFD chain U hU_le hU_mem
