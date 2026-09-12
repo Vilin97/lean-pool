@@ -234,13 +234,13 @@ include h
 omit [CompleteSpace U] in
 theorem initial_forcing_eq_smul : (H.initial τ hτ hτT.le).path = a • (G.initial τ hτ hτT.le).path
     := by
-  change initialPath D.T τ hτT.le H.path = a • initialPath D.T τ hτT.le G.path
-  rw [h,map_smul]
+  let L := initialPath (V := Supported P Space D.support D.support_measurable) D.T τ hτT.le
+  exact (congrArg L h).trans (L.map_smul a G.path)
 
 omit [CompleteSpace U] in
 theorem tail_forcing_eq_smul : (H.tail τ hτ.le hτT).path = a • (G.tail τ hτ.le hτT).path := by
-  change tailPath D.T τ hτ.le H.path = a • tailPath D.T τ hτ.le G.path
-  rw [h,map_smul]
+  let L := tailPath (V := Supported P Space D.support D.support_measurable) D.T τ hτ.le
+  exact (congrArg L h).trans (L.map_smul a G.path)
 
 theorem forwardInitial_eq_smul : (forwardInitial τ hτ hτT B H).value =
     a • (forwardInitial τ hτ hτT B G).value := by
@@ -263,7 +263,8 @@ theorem futureVelocity_eq_smul : futureVelocity τ hτ hτT B H = a • futureVe
   rw [(G.tail τ hτ.le hτT).velocityPath_eq_smul (H.tail τ hτ.le hτT)
     (forwardInitial τ hτ hτT B G) (forwardInitial τ hτ hτT B H) a
     (tail_forcing_eq_smul τ hτ hτT G H a h) (forwardInitial_eq_smul τ hτ hτT B G H a h)]
-  exact (includePath P D.support D.support_measurable).map_smul a _
+  exact (includePath (V := Space) (K := Icc (0 : ℝ) (D.T - τ))
+    P D.support D.support_measurable).map_smul a _
 
 theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B H = a • futureDerivative τ hτ hτT B
     G := by
@@ -271,7 +272,8 @@ theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B H = a • futu
   rw [(G.tail τ hτ.le hτT).derivativePath_eq_smul (H.tail τ hτ.le hτT)
     (forwardInitial τ hτ hτT B G) (forwardInitial τ hτ hτT B H) a
     (tail_forcing_eq_smul τ hτ hτT G H a h) (forwardInitial_eq_smul τ hτ hτT B G H a h)]
-  exact (includePath P D.support D.support_measurable).map_smul a _
+  exact (includePath (V := Space) (K := Icc (0 : ℝ) (D.T - τ))
+    P D.support D.support_measurable).map_smul a _
 
 theorem velocityPath_eq_smul : velocityPath τ hτ hτT B H = a • velocityPath τ hτ hτT B G := by
   apply ContinuousMap.ext
