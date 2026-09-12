@@ -1393,17 +1393,19 @@ theorem equation30_relative_ratio
   have htpos := hpos t ht0
   by_cases htp : t ≤ 1 / ε
   · have hm := hpre ⟨hs, hst.trans htp⟩ ⟨ht0, htp⟩ hst
-    nlinarith
+    exact hm.trans (le_mul_of_one_le_left htpos.le hΘ)
   · have htpost : 1 / ε ≤ t := le_of_not_ge htp
     by_cases hsp : s ≤ 1 / ε
     · have hbefore := hpre ⟨hs, hsp⟩ ⟨hthreshold0, le_rfl⟩ hsp
       have hafter := hpost (show 1 / ε ∈ Ici (1 / ε) by simp) htpost htpost
       have hmidpos := hpos (1 / ε) hthreshold0
-      nlinarith
+      exact hbefore.trans ((le_mul_of_one_le_left hmidpos.le hthreshold).trans
+        (hafter.trans (mul_le_mul_of_nonneg_right ht htpos.le)))
     · have hspost : 1 / ε ≤ s := le_of_not_ge hsp
       have hm := hpost hspost htpost hst
       have hspos := hpos s hs
-      nlinarith
+      exact (le_mul_of_one_le_left hspos.le (hthreshold.trans hspost)).trans
+        (hm.trans (mul_le_mul_of_nonneg_right ht htpos.le))
 
 /-- The exact logarithmic-derivative equation wherever the scalar solution
 does not vanish. -/
