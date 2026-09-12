@@ -1394,7 +1394,7 @@ theorem coefficient_time (ε : ℝ) (hε : 0 < ε)
   have hd : HasDerivWithinAt
       (fun r => ε⁻¹ • A.realField 1 zero_le_one (r/ε) x)
       (ε⁻¹ • ((1/ε) • A₁.field (timeMap ε hε t) x)) (Icc (0 : ℝ) ε) t :=
-    (ho.scomp (t : ℝ) hi hmap).const_smul ε⁻¹
+    (ho.scomp (h := fun r : ℝ => r / ε) (t : ℝ) hi hmap).const_smul ε⁻¹
   simp only [one_div,smul_smul,← pow_two] at hd
   have he (r : ℝ) (hr : r ∈ Icc (0 : ℝ) ε) :
       (coefficient ε hε A).realField ε hε.le r x =
