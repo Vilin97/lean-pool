@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
 public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-! Sobolev embedding for general smooth fields on R³, without Schwartz assumptions. -/
 
@@ -31,8 +32,10 @@ noncomputable def pureDerivative (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, 
 omit [CompleteSpace F] in
 theorem fourier_pureDerivative_norm (d n : ℕ) (v : Domain d)
     (f : 𝓢(Domain d, F)) (ξ : Domain d) :
-    ‖𝓕 (pureDerivative d n v f) ξ‖ =
-      (2 * Real.pi) ^ n * ‖inner ℝ ξ v‖ ^ n * ‖𝓕 f ξ‖ := by
+    ‖schwartzFourier (pureDerivative d n v f) ξ‖ =
+      (2 * Real.pi) ^ n * ‖inner ℝ ξ v‖ ^ n * ‖schwartzFourier f ξ‖ := by
+  change ‖𝓕 (pureDerivative d n v f) ξ‖ =
+      (2 * Real.pi) ^ n * ‖inner ℝ ξ v‖ ^ n * ‖𝓕 f ξ‖
   induction n with
   | zero => simp [pureDerivative]
   | succ n ih =>
@@ -87,13 +90,13 @@ theorem sobolevNorm_two_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, F)) :
       (‖f.toLp 2‖ + (2 * Real.pi) ^ (-2 : ℤ) *
         ∑ i : Fin d, ‖(pureDerivative d 2 (EuclideanSpace.single i 1) f).toLp 2‖) := by
   let g : Option (Fin d) → 𝓢(Domain d, F) := fun i => match i with
-    | none => 𝓕 f
+    | none => schwartzFourier f
     | some i => ((2 * Real.pi) ^ (-2 : ℤ) : ℝ) •
-        𝓕 (pureDerivative d 2 (EuclideanSpace.single i 1) f)
+        schwartzFourier (pureDerivative d 2 (EuclideanSpace.single i 1) f)
   have hpoint (ξ : Domain d) :
       ‖weightedFourier d 2 f ξ‖ ≤ 1 * ∑ i, ‖g i ξ‖ := by
     rw [weightedFourier_apply, norm_smul, Real.norm_of_nonneg (besselWeight_pos d 2 ξ).le]
-    have hg : ∑ i, ‖g i ξ‖ = (1 + ∑ i, ‖ξ i‖ ^ 2) * ‖𝓕 f ξ‖ := by
+    have hg : ∑ i, ‖g i ξ‖ = (1 + ∑ i, ‖ξ i‖ ^ 2) * ‖schwartzFourier f ξ‖ := by
       rw [Fintype.sum_option]
       simp only [g, smul_apply, norm_smul,
         Real.norm_of_nonneg (by positivity : 0 ≤ (2 * Real.pi) ^ (-2 : ℤ)),
@@ -106,7 +109,7 @@ theorem sobolevNorm_two_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, F)) :
       rw [add_mul, one_mul, Finset.sum_mul]
     rw [hg]
     nlinarith [mul_le_mul_of_nonneg_right (le_of_eq (show besselWeight d 2 ξ = 1 + ∑ i, ‖ξ i‖ ^ 2 by
-        norm_num [besselWeight, EuclideanSpace.norm_sq_eq])) (norm_nonneg (𝓕 f ξ))]
+        norm_num [besselWeight, EuclideanSpace.norm_sq_eq])) (norm_nonneg (schwartzFourier f ξ))]
   have h := normLp_le_sum d (weightedFourier d 2 f) g 1
     (by norm_num) hpoint
   have hnorm : ∑ i, ‖(g i).toLp 2‖ = ‖f.toLp 2‖ +

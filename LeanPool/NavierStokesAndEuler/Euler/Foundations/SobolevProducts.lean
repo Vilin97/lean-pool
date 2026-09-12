@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Sobolev
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-!
 # Sobolev Products
@@ -27,6 +28,7 @@ open scoped SchwartzMap ENNReal ContDiff LineDeriv
 theorem sobolevNorm_zero (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
     sobolevNorm d 0 f = ‖f.toLp 2‖ := by
   have he : weightedFourier d 0 f = 𝓕 f := by
+    change weightedFourier d 0 f = schwartzFourier f
     ext ξ
     simp [weightedFourier_apply, besselWeight]
   simp [sobolevNorm, he]
@@ -107,8 +109,10 @@ theorem besselWeight_six_le_pure_six (d : ℕ) (ξ : Domain d) :
 
 theorem fourier_directional_norm (d n : ℕ) (v : Domain d)
     (f : 𝓢(Domain d, ℂ)) (ξ : Domain d) :
-    ‖𝓕 (directional d n v f) ξ‖ =
-      (2 * Real.pi) ^ n * ‖inner ℝ ξ v‖ ^ n * ‖𝓕 f ξ‖ := by
+    ‖schwartzFourier (directional d n v f) ξ‖ =
+      (2 * Real.pi) ^ n * ‖inner ℝ ξ v‖ ^ n * ‖schwartzFourier f ξ‖ := by
+  change ‖𝓕 (directional d n v f) ξ‖ =
+      (2 * Real.pi) ^ n * ‖inner ℝ ξ v‖ ^ n * ‖𝓕 f ξ‖
   induction n with
   | zero => simp [directional]
   | succ n ih =>
@@ -160,13 +164,13 @@ theorem sobolevNorm_six_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)) 
       (‖f.toLp 2‖ + (2 * Real.pi) ^ (-6 : ℤ) *
         ∑ i : Fin d, ‖(directional d 6 (EuclideanSpace.single i 1) f).toLp 2‖) := by
   let g : Option (Fin d) → 𝓢(Domain d, ℂ) := fun i => match i with
-    | none => 𝓕 f
+    | none => schwartzFourier f
     | some i => ((2 * Real.pi) ^ (-6 : ℤ) : ℝ) •
-        𝓕 (directional d 6 (EuclideanSpace.single i 1) f)
+        schwartzFourier (directional d 6 (EuclideanSpace.single i 1) f)
   have hpoint (ξ : Domain d) :
       ‖weightedFourier d 6 f ξ‖ ≤ ((d : ℝ) + 1) ^ 2 * ∑ i, ‖g i ξ‖ := by
     rw [weightedFourier_apply, norm_smul, Real.norm_of_nonneg (besselWeight_pos d 6 ξ).le]
-    have hg : ∑ i, ‖g i ξ‖ = (1 + ∑ i, ‖ξ i‖ ^ 6) * ‖𝓕 f ξ‖ := by
+    have hg : ∑ i, ‖g i ξ‖ = (1 + ∑ i, ‖ξ i‖ ^ 6) * ‖schwartzFourier f ξ‖ := by
       rw [Fintype.sum_option]
       simp only [g, smul_apply, norm_smul,
         Real.norm_of_nonneg (by positivity : 0 ≤ (2 * Real.pi) ^ (-6 : ℤ)),
@@ -178,7 +182,8 @@ theorem sobolevNorm_six_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)) 
       simp_rw [← mul_assoc, hp, one_mul]
       rw [add_mul, one_mul, Finset.sum_mul]
     rw [hg]
-    linarith [mul_le_mul_of_nonneg_right (besselWeight_six_le_pure_six d ξ) (norm_nonneg (𝓕 f ξ))]
+    linarith [mul_le_mul_of_nonneg_right (besselWeight_six_le_pure_six d ξ)
+      (norm_nonneg (schwartzFourier f ξ))]
   have h := normLp_le_sum d (weightedFourier d 6 f) g (((d : ℝ) + 1) ^ 2)
     (sq_nonneg _) hpoint
   have hnorm : ∑ i, ‖(g i).toLp 2‖ = ‖f.toLp 2‖ +

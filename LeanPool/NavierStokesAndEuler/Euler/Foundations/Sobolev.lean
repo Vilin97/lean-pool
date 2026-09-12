@@ -9,7 +9,8 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevDefinitions
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SchwartzFourier
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-!
@@ -32,11 +33,11 @@ variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F
 /-- The Fourier transform multiplied by the Sobolev weight. -/
 noncomputable def weightedFourier (d : ℕ) (s : ℝ) (f : 𝓢(Domain d, F)) :
     𝓢(Domain d, F) :=
-  SchwartzMap.smulLeftCLM F (besselWeight d s) (𝓕 f)
+  SchwartzMap.smulLeftCLM F (besselWeight d s) (schwartzFourier f)
 
 omit [CompleteSpace F] in
 theorem weightedFourier_apply (d : ℕ) (s : ℝ) (f : 𝓢(Domain d, F)) (ξ : Domain d) :
-    weightedFourier d s f ξ = besselWeight d s ξ • 𝓕 f ξ := by
+    weightedFourier d s f ξ = besselWeight d s ξ • schwartzFourier f ξ := by
   simp [weightedFourier, SchwartzMap.smulLeftCLM_apply_apply (besselWeight_temperate d s)]
 
 /-- The inhomogeneous Fourier `Hˢ` norm of a Schwartz function. -/
@@ -45,7 +46,8 @@ noncomputable def sobolevNorm (d : ℕ) (s : ℝ) (f : 𝓢(Domain d, F)) : ℝ 
 
 /-- Fourier inversion bounds a Schwartz function pointwise by the L¹ norm of its transform. -/
 theorem norm_apply_le_fourier_L1 (d : ℕ) (f : 𝓢(Domain d, F)) (x : Domain d) :
-    ‖f x‖ ≤ ‖(𝓕 f).toLp 1‖ := by
+    ‖f x‖ ≤ ‖(schwartzFourier f).toLp 1‖ := by
+  change ‖f x‖ ≤ ‖(𝓕 f).toLp 1‖
   have h := SchwartzMap.norm_fourier_apply_le_toLp_one (𝓕 f) (-x)
   have he : ‖f x‖ = ‖𝓕 (𝓕 f) (-x)‖ := by
     change ‖f x‖ = ‖(𝓕⁻ (𝓕 f)) x‖
@@ -56,9 +58,9 @@ omit [CompleteSpace F] in
 /-- Hölder with the reciprocal weight converts the Fourier L¹ norm into the Hˢ norm. -/
 theorem fourier_L1_le_sobolevNorm (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s)
     (f : 𝓢(Domain d, F)) :
-    ‖(𝓕 f).toLp 1‖ ≤ embeddingConstant d s hs * sobolevNorm d s f := by
+    ‖(schwartzFourier f).toLp 1‖ ≤ embeddingConstant d s hs * sobolevNorm d s f := by
   have hid : (besselWeight d (-s) • (weightedFourier d s f : Domain d → F)) =
-      ((𝓕 f : 𝓢(Domain d, F)) : Domain d → F) := by
+      (schwartzFourier f : Domain d → F) := by
     ext ξ
     simp only [Pi.smul_apply', weightedFourier_apply, smul_smul, besselWeight_neg_mul, one_smul]
   have hh := eLpNorm_smul_le_mul_eLpNorm (p := 2) (q := 2) (r := 1)
@@ -83,7 +85,9 @@ open scoped LineDeriv
 omit [CompleteSpace F] in
 /-- The actual Fourier multiplier formula bounds each directional derivative. -/
 theorem fourier_lineDeriv_norm_le (d : ℕ) (f : 𝓢(Domain d, F)) (m ξ : Domain d) :
-    ‖𝓕 (∂_{m} f) ξ‖ ≤ (2 * Real.pi) * ‖ξ‖ * ‖m‖ * ‖𝓕 f ξ‖ := by
+    ‖schwartzFourier (∂_{m} f) ξ‖ ≤
+      (2 * Real.pi) * ‖ξ‖ * ‖m‖ * ‖schwartzFourier f ξ‖ := by
+  change ‖𝓕 (∂_{m} f) ξ‖ ≤ (2 * Real.pi) * ‖ξ‖ * ‖m‖ * ‖𝓕 f ξ‖
   have ht : (fun ξ : Domain d => inner ℝ ξ m).HasTemperateGrowth :=
     ((innerSL ℝ).flip m).hasTemperateGrowth
   have he : 𝓕 (∂_{m} f) ξ = (2 * Real.pi * Complex.I) • ((inner ℝ ξ m) • 𝓕 f ξ) := by
@@ -105,10 +109,10 @@ theorem weightedFourier_lineDeriv_norm_le (d : ℕ) (s : ℝ)
     Real.norm_of_nonneg (besselWeight_pos d s ξ).le,
     Real.norm_of_nonneg (besselWeight_pos d (s + 1) ξ).le]
   calc
-    _ ≤ besselWeight d s ξ * ((2 * Real.pi) * ‖ξ‖ * ‖m‖ * ‖𝓕 f ξ‖) :=
+    _ ≤ besselWeight d s ξ * ((2 * Real.pi) * ‖ξ‖ * ‖m‖ * ‖schwartzFourier f ξ‖) :=
       mul_le_mul_of_nonneg_left (fourier_lineDeriv_norm_le d f m ξ) (besselWeight_pos d s ξ).le
-    _ = (2 * Real.pi * ‖m‖) * (besselWeight d s ξ * ‖ξ‖) * ‖𝓕 f ξ‖ := by ring
-    _ ≤ (2 * Real.pi * ‖m‖) * besselWeight d (s + 1) ξ * ‖𝓕 f ξ‖ := by
+    _ = (2 * Real.pi * ‖m‖) * (besselWeight d s ξ * ‖ξ‖) * ‖schwartzFourier f ξ‖ := by ring
+    _ ≤ (2 * Real.pi * ‖m‖) * besselWeight d (s + 1) ξ * ‖schwartzFourier f ξ‖ := by
       gcongr
       exact besselWeight_mul_norm_le d s ξ
     _ = _ := by ring

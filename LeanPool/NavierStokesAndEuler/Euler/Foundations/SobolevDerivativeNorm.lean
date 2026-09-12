@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SobolevProducts
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-! The Fourier H³ norm is controlled by genuine third directional derivatives in L². -/
 
@@ -99,13 +100,13 @@ theorem sobolevNorm_three_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)
       (‖f.toLp 2‖ + (2 * Real.pi) ^ (-3 : ℤ) *
         ∑ i : Fin d, ‖(directional d 3 (EuclideanSpace.single i 1) f).toLp 2‖) := by
   let g : Option (Fin d) → 𝓢(Domain d, ℂ) := fun i => match i with
-    | none => 𝓕 f
+    | none => schwartzFourier f
     | some i => ((2 * Real.pi) ^ (-3 : ℤ) : ℝ) •
-        𝓕 (directional d 3 (EuclideanSpace.single i 1) f)
+        schwartzFourier (directional d 3 (EuclideanSpace.single i 1) f)
   have hpoint (ξ : Domain d) :
       ‖weightedFourier d 3 f ξ‖ ≤ ((d : ℝ) + 1) ^ 2 * ∑ i, ‖g i ξ‖ := by
     rw [weightedFourier_apply, norm_smul, Real.norm_of_nonneg (besselWeight_pos d 3 ξ).le]
-    have hg : ∑ i, ‖g i ξ‖ = (1 + ∑ i, ‖ξ i‖ ^ 3) * ‖𝓕 f ξ‖ := by
+    have hg : ∑ i, ‖g i ξ‖ = (1 + ∑ i, ‖ξ i‖ ^ 3) * ‖schwartzFourier f ξ‖ := by
       rw [Fintype.sum_option]
       simp only [g, smul_apply, norm_smul,
         Real.norm_of_nonneg (by positivity : 0 ≤ (2 * Real.pi) ^ (-3 : ℤ)),
@@ -117,8 +118,8 @@ theorem sobolevNorm_three_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)
       simp_rw [← mul_assoc, hp, one_mul]
       rw [add_mul, one_mul, Finset.sum_mul]
     rw [hg]
-    nlinarith [mul_le_mul_of_nonneg_right (besselWeight_three_le_pure_three d ξ) (norm_nonneg (𝓕 f
-        ξ))]
+    nlinarith [mul_le_mul_of_nonneg_right (besselWeight_three_le_pure_three d ξ)
+      (norm_nonneg (schwartzFourier f ξ))]
   have h := normLp_le_sum d (weightedFourier d 3 f) g (((d : ℝ) + 1) ^ 2)
     (sq_nonneg _) hpoint
   have hnorm : ∑ i, ‖(g i).toLp 2‖ = ‖f.toLp 2‖ +
