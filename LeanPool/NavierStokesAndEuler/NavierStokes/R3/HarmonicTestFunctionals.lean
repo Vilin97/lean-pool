@@ -232,15 +232,10 @@ theorem representative_eq_zero_of_harmonic
     q = 0 := by
   apply WeakFourierUniqueness.eq_zero_of_integral_weight_normSq_test_eq_zero q
   intro φ
-  let ψ : ComplexTest := (FourierTransform.fourierCLE ℂ ComplexTest).symm φ
+  obtain ⟨ψ, hψ⟩ := (FourierTransform.fourierCLE ℂ ComplexTest).surjective φ
+  change EulerSobolev.schwartzFourier ψ = φ at hψ
   have hzero := hq ψ
   rw [FourierSobolevWeights.inner_B_eq_integral] at hzero
-  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
-      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl] at hzero
-  have hlap (ψ : ComplexTest) (ξ : Space) :
-      FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ) ξ =
-        (-(4 * (Real.pi : ℂ) ^ 2) * ((‖ξ‖ ^ 2 : ℝ) : ℂ)) *
-          FourierTransform.fourierCLE ℂ ComplexTest ψ ξ := fourier_laplacianCLM_apply ψ ξ
   let c : ℂ := -(4 * (Real.pi : ℂ) ^ 2)
   have hc : c ≠ 0 := by
     dsimp [c]
@@ -249,12 +244,12 @@ theorem representative_eq_zero_of_harmonic
     exact pow_ne_zero 2 (by exact_mod_cast Real.pi_ne_zero)
   have hi : (fun ξ : Space => star (q ξ) *
       (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) *
-        FourierTransform.fourierCLE ℂ ComplexTest (laplacianCLM ψ) ξ) =
+        EulerSobolev.schwartzFourier (laplacianCLM ψ) ξ) =
       (fun ξ : Space => c • (star (q ξ) *
         (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * ((‖ξ‖ ^ 2 : ℝ) : ℂ) * φ ξ)) := by
     funext ξ
-    rw [hlap]
-    simp only [ψ, ContinuousLinearEquiv.apply_symm_apply, smul_eq_mul, c]
+    rw [fourier_laplacianCLM_apply, hψ]
+    simp only [smul_eq_mul, c]
     ring
   rw [hi, integral_smul] at hzero
   change c * (∫ ξ : Space, star (q ξ) *
