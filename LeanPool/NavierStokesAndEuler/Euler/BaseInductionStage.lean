@@ -1126,11 +1126,13 @@ def firstStage : Stage S 0 := by
     rw [zero_add,baseHorizon_eq_timeWidth S.J S.x_pos]
   · intro t x
     have h := (F.physical_bounds S.first.spike_one S.first.shear_pos.le t x).1
+    rw [show S.first.state S.j_one = F.state from rfl]
     change ‖fderiv ℝ (fun y => F.state.evolution.velocity (t, y)) x‖ ≤
       gradientConstant * S.X ^ 1000
     exact h.trans hbounds.1
   · intro t x
     have h := (F.physical_bounds S.first.spike_one S.first.shear_pos.le t x).2
+    rw [show S.first.state S.j_one = F.state from rfl]
     change ‖fderiv ℝ (F.state.evolution.force t) x‖ ≤
       hessianConstant * S.X ^ 1000 * 1
     rw [mul_one]
