@@ -539,12 +539,13 @@ theorem exists_firstPacketChoice (hδ1 : δ ≤ 1) (hh : 0 < hchild)
     k hk hfrequency hKk hinv nextEll hnext hnext1
   refine ⟨⟨hn,Q,G,hgraph,hG,LC,hLC,hdisplacement,?_⟩⟩
   intro t x
+  dsimp only [firstPacketMeanData, firstPacketData]
   constructor
-  · erw [A.normalizedPacketVelocity_forwardInitialized H firstNormal firstNormal_unit
+  · rw [A.normalizedPacketVelocity_forwardInitialized H firstNormal firstNormal_unit
       firstFrame support compact δ hδ firstCoordinate (subset_refl _) (δ*hchild)
       (truncation k) hn k hk.four Q S.evolution.inverse t]
     exact (herror t x).1
-  · erw [A.normalizedPacketPressure_forwardInitialized H firstNormal firstNormal_unit
+  · rw [A.normalizedPacketPressure_forwardInitialized H firstNormal firstNormal_unit
       firstFrame support compact δ hδ firstCoordinate (subset_refl _) (δ*hchild)
       (truncation k) hn k hk.four Q S.evolution.inverse t]
     conv_lhs =>
