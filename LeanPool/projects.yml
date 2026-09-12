@@ -8083,9 +8083,6 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - SimpleGraph.exists_isPerfectMatching_of_minDegree
-      - SimpleGraph.exists_isMatching_compl_singleton_of_minDegree
-      - SimpleGraph.exists_involutions_pairwise_ne
       - SimpleGraph.exists_spread_involution
     main_results:
       - declaration: SimpleGraph.exists_isPerfectMatching_of_minDegree
