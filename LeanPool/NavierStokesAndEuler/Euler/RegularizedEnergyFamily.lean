@@ -131,7 +131,7 @@ theorem regularizedWordBlock_heat {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : 
       heatOperator period 2 v (regularizedWordBlock period hm n w u) := by
   change boundedWordBlock period 2 m (by
       omega) w (heatRegularizer period q n (heatOperator period q v u)) = _
-  rw [heatRegularizer_heat, boundedWordBlock_heat]
+  simp only [heatRegularizer_heat, boundedWordBlock_heat]
   rfl
 
 /-- Its underlying field is exactly heat applied to the actual energy-order derivative of the
@@ -335,10 +335,10 @@ theorem regularizedWordPath_first_eq {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w
     value period (boundedWordBlock period 1 m (by omega) w
       (restrictOperator period (by
           omega : 2+q ≤ q+3) (heatRegularizer period q n (truncateOperator period q (u t)))))
-  rw [value_truncateOperator, boundedWordBlock_value]
+  simp only [value_truncateOperator, boundedWordBlock_value]
   change value period (boundedWordBlock period 2 m (by
       omega) w (heatRegularizer period q n (truncateOperator period q (u t)))) = _
-  rw [boundedWordBlock_value]
+  simp only [boundedWordBlock_value]
   rfl
 
 /-- Genuine maximal regularity gives strong H¹ time convergence for every full energy-order
@@ -454,7 +454,7 @@ theorem forcingWordPath_equation {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : F
       G t (value period (regularizedWordBlock period hm n w (p t))) =
     forcingWordPath period hm n w T A G u f p t +
       ν • jetLaplacian period (toJet period (regularizedWordPath period hm n w T u t)) := by
-  rw [forcingWordPath_apply]
+  simp only [forcingWordPath_apply]
   abel
 
 /-- The full energy-order regularized word has the actual clamped-path heat derivative at each
