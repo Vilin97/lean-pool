@@ -359,6 +359,11 @@ noncomputable section
 
 namespace EulerCylinderDirichlet.Coefficients
 
+-- Naturality uses the solver identities without unfolding the constructed inverse.
+attribute [local irreducible] EulerTransverseFixedSpaceInverse.fixedFrameSolver
+  EulerTransverseFixedEvolution.velocityLp EulerTransverseFixedEvolution.accelerationLp
+  EulerTransverseFixedEvolution.velocityPath
+
 open Set MeasureTheory ContinuousLinearMap InnerProductSpace EulerTimeLp
   EulerVolterraConvolution EulerLpCylinderTranslation EulerTimeLpBoundedMap
   EulerTransverseGramInverse
