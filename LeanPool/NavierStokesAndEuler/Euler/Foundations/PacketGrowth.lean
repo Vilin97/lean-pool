@@ -237,11 +237,15 @@ theorem equation30_cosh_lower
   · simpa using hV₁0
   · intro t ht
     obtain ⟨hl, hu⟩ := hcoeff t ht
-    constructor <;> nlinarith [sq_nonneg (β * t ^ 2)]
+    constructor
+    · exact le_add_of_nonneg_right (sq_nonneg _)
+    · have hs : (β * t ^ 2) ^ 2 ≤ 1 := by
+        simpa only [one_pow] using pow_le_pow_left₀ hl hu 2
+      linarith only [hs]
   · intro t ht
     obtain ⟨hl, hu⟩ := hcoeff t ht
     have hp : 0 ≤ β * (β * t ^ 2) := mul_nonneg hβ hl
-    have hq : β * (β * t ^ 2) ≤ β := by nlinarith
+    have hq : β * (β * t ^ 2) ≤ β := mul_le_of_le_one_right hβ hu
     constructor <;> linarith
 
 /-- Equation (30) gives positivity and a nonnegative derivative from the
