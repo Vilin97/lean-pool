@@ -4,11 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.SpherePacking
+import LeanPool.MetricCodes.MatrixPerron
+import Mathlib.InformationTheory.Hamming
 import Mathlib.Algebra.Order.Chebyshev
-import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Data.Nat.Dist
+import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-!
 # Foundations for binary and spherical code bounds
@@ -33,12 +40,12 @@ abbrev Ambient (n : ℕ) := EuclideanSpace ℝ (Fin n)
 abbrev BinaryWord (n : ℕ) := Fin n → Bool
 
 /-- The hamming dist used in the metric-code argument. -/
-def hammingDist {n : ℕ} (x y : BinaryWord n) : ℕ :=
-  (Finset.univ.filter fun i => x i ≠ y i).card
+abbrev hammingDist {n : ℕ} (x y : BinaryWord n) : ℕ :=
+  _root_.hammingDist x y
 
-@[simp] theorem hammingDist_self {n : ℕ} (x : BinaryWord n) :
+theorem hammingDist_self {n : ℕ} (x : BinaryWord n) :
     hammingDist x x = 0 := by
-  simp only [hammingDist, ne_eq, not_true_eq_false, Finset.filter_false, Finset.card_empty]
+  exact _root_.hammingDist_self x
 
 /-- The binary weight used in the metric-code argument. -/
 def binaryWeight {n : ℕ} (x : BinaryWord n) : ℕ :=
@@ -2247,7 +2254,7 @@ theorem sum_sign_mul_eq_hammingDist
           (∑ a : Fin n,
             if x a ≠ y a then (1 : ℝ) else 0) =
               (MetricCodes.hammingDist x y : ℝ) := by
-        simpa only [MetricCodes.hammingDist] using
+        simpa only [MetricCodes.hammingDist, _root_.hammingDist] using
           (Finset.sum_boole (R := ℝ)
             (fun a : Fin n => x a ≠ y a)
             (Finset.univ : Finset (Fin n)))
@@ -4043,10 +4050,7 @@ theorem binaryWeight_eq_card_wordSupport {n : ℕ} (x : BinaryWord n) :
 
 theorem hammingDist_comm {n : ℕ} (x y : BinaryWord n) :
     hammingDist x y = hammingDist y x := by
-  unfold hammingDist
-  congr 1
-  ext i
-  simp only [ne_eq, mem_filter, mem_univ, true_and, ne_comm]
+  exact _root_.hammingDist_comm x y
 
 theorem hammingDist_eq_card_support_sdiff {n : ℕ}
     (x y : BinaryWord n) :
@@ -4066,7 +4070,7 @@ theorem hammingDist_eq_card_support_sdiff {n : ℕ}
     apply Finset.disjoint_left.mpr
     intro i hxy hyx
     exact (Finset.mem_sdiff.mp hxy).2 (Finset.mem_sdiff.mp hyx).1
-  unfold hammingDist
+  unfold hammingDist _root_.hammingDist
   rw [hsets, Finset.card_union_of_disjoint hdisj]
 
 theorem hammingDist_eq_two_mul_of_binaryWeight_eq {n : ℕ}
@@ -4118,15 +4122,12 @@ theorem binaryTranslate_injective {n : ℕ} (x : BinaryWord n) :
 theorem hammingDist_binaryTranslate {n : ℕ} (z x y : BinaryWord n) :
     hammingDist (binaryTranslate z x) (binaryTranslate z y) =
       hammingDist x y := by
-  unfold hammingDist
-  apply congrArg Finset.card
-  apply Finset.filter_congr
-  intro i _
-  exact not_congr (Bool.xor_right_inj (x := z i) (y := x i) (z := y i))
+  exact _root_.hammingDist_comp (fun i => Bool.xor (z i))
+    (fun _ _ _ h => Bool.xor_right_inj.mp h)
 
 theorem binaryWeight_binaryTranslate {n : ℕ} (x y : BinaryWord n) :
     binaryWeight (binaryTranslate x y) = hammingDist x y := by
-  unfold binaryWeight hammingDist
+  unfold binaryWeight hammingDist _root_.hammingDist
   congr 1
   ext i
   simp only [binaryTranslate, bne_iff_ne, ne_eq, mem_filter, mem_univ, true_and]
@@ -4364,10 +4365,6 @@ section
 open Filter MeasureTheory Metric
 open scoped ENNReal InnerProductSpace Topology
 
-attribute [-instance]
-  CohnElkies.numeralTwoAtLeast
-  CohnElkies.euclideanFiniteDimensional
-  CohnElkies.euclideanBorelSpace
 
 /-- The euclidean used in the spherical-code argument. -/
 abbrev Euclidean (n : ℕ) := EuclideanSpace ℝ (Fin n)
@@ -4737,8 +4734,8 @@ theorem rayleigh_eq_inner (n k L : ℕ) (x : Space k L) :
   rfl
 
 /-- The coordinate abs used in the binary-code argument. -/
-def coordinateAbs (k L : ℕ) (x : Space k L) : Space k L :=
-  WithLp.toLp 2 (fun p : Index k L => |x p|)
+abbrev coordinateAbs (k L : ℕ) (x : Space k L) : Space k L :=
+  MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs x
 
 theorem coordinateAbs_nonneg (k L : ℕ)
     (x : Space k L) (p : Index k L) :
@@ -4747,20 +4744,12 @@ theorem coordinateAbs_nonneg (k L : ℕ)
 
 theorem coordinateAbs_norm (k L : ℕ) (x : Space k L) :
     ‖coordinateAbs k L x‖ = ‖x‖ := by
-  have hsquare : ‖coordinateAbs k L x‖ ^ 2 = ‖x‖ ^ 2 := by
-    rw [EuclideanSpace.real_norm_sq_eq, EuclideanSpace.real_norm_sq_eq]
-    apply Finset.sum_congr rfl
-    intro p hp
-    simp only [coordinateAbs, sq_abs]
-  nlinarith [norm_nonneg (coordinateAbs k L x), norm_nonneg x]
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs_norm x
 
 theorem coordinateAbs_ne_zero (k L : ℕ)
     {x : Space k L} (hx : x ≠ 0) :
     coordinateAbs k L x ≠ 0 := by
-  intro habs
-  have hnorm := coordinateAbs_norm k L x
-  rw [habs, norm_zero] at hnorm
-  exact hx (norm_eq_zero.mp hnorm.symm)
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs_ne_zero hx
 
 theorem matrix_entry_nonneg {n k L : ℕ}
     (hn : 0 < n) (hkL : k ≤ L) (hLn : L + k ≤ n)
@@ -4783,29 +4772,8 @@ theorem inner_le_inner_coordinateAbs {n k L : ℕ}
       @inner ℝ (Space k L) _
         (operator n k L (coordinateAbs k L x))
         (coordinateAbs k L x) := by
-  rw [PiLp.inner_apply, PiLp.inner_apply]
-  simp only [Real.inner_apply]
-  change
-    (∑ p : Index k L,
-      (∑ q : Index k L, matrix n k L p q * x q) * x p) ≤
-    (∑ p : Index k L,
-      (∑ q : Index k L, matrix n k L p q * |x q|) * |x p|)
-  simp_rw [Finset.sum_mul]
-  apply Finset.sum_le_sum
-  intro p hp
-  apply Finset.sum_le_sum
-  intro q hq
-  have hentry := matrix_entry_nonneg hn hkL hLn p q
-  have hproduct : x q * x p ≤ |x q| * |x p| := by
-    calc
-      x q * x p ≤ |x q * x p| := le_abs_self _
-      _ = |x q| * |x p| := abs_mul _ _
-  calc
-    matrix n k L p q * x q * x p =
-        matrix n k L p q * (x q * x p) := by ring
-    _ ≤ matrix n k L p q * (|x q| * |x p|) :=
-      mul_le_mul_of_nonneg_left hproduct hentry
-    _ = matrix n k L p q * |x q| * |x p| := by ring
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.inner_le_inner_coordinateAbs
+    (matrix n k L) (matrix_entry_nonneg hn hkL hLn) x
 
 theorem rayleigh_le_coordinateAbs {n k L : ℕ}
     (hn : 0 < n) (hkL : k ≤ L) (hLn : L + k ≤ n)
@@ -4843,54 +4811,16 @@ theorem exists_nonnegative_topEigenvector {n k L : ℕ}
     ∃ x : Space k L,
       x ≠ 0 ∧ operator n k L x = topEigenvalue n k L • x ∧
       ∀ p : Index k L, 0 ≤ x p := by
-  obtain ⟨x, hx, heig⟩ := exists_topEigenvector n k L
-  let y : Space k L := coordinateAbs k L x
-  have hy : y ≠ 0 := coordinateAbs_ne_zero k L hx
-  have hyray : rayleigh n k L y = topEigenvalue n k L :=
-    coordinateAbs_top_rayleigh hn hkL hLn x hx heig
-  have hself : IsSelfAdjoint (continuousOperator n k L) :=
-    (operator_isSymmetric n k L).isSelfAdjoint
-  have hmax :
-      IsMaxOn (continuousOperator n k L).reApplyInnerSelf
-        (sphere (0 : Space k L) ‖y‖) y := by
-    intro z hz
-    have hnorm : ‖z‖ = ‖y‖ := by simpa only [mem_sphere_iff_norm, sub_zero] using hz
-    have hznonzero : z ≠ 0 := by
-      intro hzero
-      rw [hzero, norm_zero] at hnorm
-      exact hy (norm_eq_zero.mp hnorm.symm)
-    have hray := rayleigh_le_top n k L z hznonzero
-    rw [← hyray] at hray
-    change
-      (continuousOperator n k L).reApplyInnerSelf z / ‖z‖ ^ 2 ≤
-        (continuousOperator n k L).reApplyInnerSelf y / ‖y‖ ^ 2 at hray
-    rw [hnorm] at hray
-    have hnormpos : 0 < ‖y‖ ^ 2 :=
-      sq_pos_of_pos (norm_pos_iff.mpr hy)
-    exact (div_le_div_iff_of_pos_right hnormpos).mp hray
-  have heigy := hself.hasEigenvector_of_isMaxOn hy hmax
-  refine ⟨y, hy, ?_, fun p => coordinateAbs_nonneg k L x p⟩
-  have happly := heigy.apply_eq_smul
-  simpa only [topEigenvalue, ne_eq, rayleigh, continuousOperator,
-    LinearMap.coe_toContinuousLinearMap, Real.ringHom_apply] using happly
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.exists_nonnegative_topEigenvector
+    (matrix n k L) (matrix_hermitian n k L) (matrix_entry_nonneg hn hkL hLn)
 
 theorem exists_nonnegative_unit_topEigenvector {n k L : ℕ}
     (hn : 0 < n) (hkL : k ≤ L) (hLn : L + k ≤ n) :
     ∃ x : Space k L,
       ‖x‖ = 1 ∧ operator n k L x = topEigenvalue n k L • x ∧
       ∀ p : Index k L, 0 ≤ x p := by
-  obtain ⟨x, hx, heig, hnonneg⟩ :=
-    exists_nonnegative_topEigenvector hn hkL hLn
-  have hnormpos : 0 < ‖x‖ := norm_pos_iff.mpr hx
-  refine ⟨‖x‖⁻¹ • x, ?_, ?_, ?_⟩
-  · rw [norm_smul, Real.norm_eq_abs,
-      abs_of_pos (inv_pos.mpr hnormpos)]
-    exact inv_mul_cancel₀ (ne_of_gt hnormpos)
-  · rw [map_smul, heig]
-    exact smul_comm _ _ _
-  · intro p
-    change 0 ≤ ‖x‖⁻¹ * x p
-    exact mul_nonneg (inv_nonneg.mpr hnormpos.le) (hnonneg p)
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.exists_nonnegative_unit_topEigenvector
+    (matrix n k L) (matrix_hermitian n k L) (matrix_entry_nonneg hn hkL hLn)
 
 theorem matrix_adjacent_pos {n k L : ℕ}
     (hn : 0 < n) (hkL : k ≤ L) (hLn : L + k ≤ n)
@@ -7693,28 +7623,19 @@ theorem matrix_entry_nonneg {n w p q L : ℕ}
   · exact le_rfl
 
 /-- The coordinate abs used in the Johnson-code argument. -/
-def coordinateAbs (p q L : ℕ)
+abbrev coordinateAbs (p q L : ℕ)
     (x : Space p q L) : Space p q L :=
-  WithLp.toLp 2 (fun i : Index p q L => |x i|)
+  MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs x
 
 theorem coordinateAbs_norm (p q L : ℕ)
     (x : Space p q L) :
     ‖coordinateAbs p q L x‖ = ‖x‖ := by
-  have hsquare : ‖coordinateAbs p q L x‖ ^ 2 = ‖x‖ ^ 2 := by
-    rw [EuclideanSpace.real_norm_sq_eq,
-      EuclideanSpace.real_norm_sq_eq]
-    apply Finset.sum_congr rfl
-    intro i _
-    simp only [coordinateAbs, sq_abs]
-  nlinarith [norm_nonneg (coordinateAbs p q L x), norm_nonneg x]
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs_norm x
 
 theorem coordinateAbs_ne_zero (p q L : ℕ)
     {x : Space p q L} (hx : x ≠ 0) :
     coordinateAbs p q L x ≠ 0 := by
-  intro habs
-  have hnorm := coordinateAbs_norm p q L x
-  rw [habs, norm_zero] at hnorm
-  exact hx (norm_eq_zero.mp hnorm.symm)
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs_ne_zero hx
 
 theorem inner_le_inner_coordinateAbs {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
@@ -7724,30 +7645,8 @@ theorem inner_le_inner_coordinateAbs {n w p q L : ℕ}
       @inner ℝ (Space p q L) _
         (operator n w p q L (coordinateAbs p q L x))
         (coordinateAbs p q L x) := by
-  rw [PiLp.inner_apply, PiLp.inner_apply]
-  simp only [Real.inner_apply]
-  change
-    (∑ i : Index p q L,
-      (∑ j : Index p q L, matrix n w p q L i j * x j) * x i) ≤
-    (∑ i : Index p q L,
-      (∑ j : Index p q L,
-        matrix n w p q L i j * |x j|) * |x i|)
-  simp_rw [Finset.sum_mul]
-  apply Finset.sum_le_sum
-  intro i _
-  apply Finset.sum_le_sum
-  intro j _
-  have hentry := matrix_entry_nonneg h hstrict i j
-  have hproduct : x j * x i ≤ |x j| * |x i| := by
-    calc
-      x j * x i ≤ |x j * x i| := le_abs_self _
-      _ = |x j| * |x i| := abs_mul _ _
-  calc
-    matrix n w p q L i j * x j * x i =
-        matrix n w p q L i j * (x j * x i) := by ring
-    _ ≤ matrix n w p q L i j * (|x j| * |x i|) :=
-      mul_le_mul_of_nonneg_left hproduct hentry
-    _ = matrix n w p q L i j * |x j| * |x i| := by ring
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.inner_le_inner_coordinateAbs
+    (matrix n w p q L) (matrix_entry_nonneg h hstrict) x
 
 theorem rayleigh_le_coordinateAbs {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
@@ -7792,37 +7691,8 @@ theorem exists_nonnegative_topEigenvector {n w p q L : ℕ}
       x ≠ 0 ∧
         operator n w p q L x = topEigenvalue n w p q L • x ∧
         ∀ i : Index p q L, 0 ≤ x i := by
-  obtain ⟨x, hx, heigen⟩ := exists_topEigenvector n w p q L
-  let y : Space p q L := coordinateAbs p q L x
-  have hy : y ≠ 0 := coordinateAbs_ne_zero p q L hx
-  have hyray : rayleigh n w p q L y = topEigenvalue n w p q L :=
-    coordinateAbs_top_rayleigh h hstrict x hx heigen
-  have hself : IsSelfAdjoint (continuousOperator n w p q L) :=
-    (operator_isSymmetric n w p q L).isSelfAdjoint
-  have hmax :
-      IsMaxOn (continuousOperator n w p q L).reApplyInnerSelf
-        (Metric.sphere (0 : Space p q L) ‖y‖) y := by
-    intro z hz
-    have hnorm : ‖z‖ = ‖y‖ := by simpa only [mem_sphere_iff_norm, sub_zero] using hz
-    have hznonzero : z ≠ 0 := by
-      intro hzero
-      rw [hzero, norm_zero] at hnorm
-      exact hy (norm_eq_zero.mp hnorm.symm)
-    have hray := rayleigh_le_top n w p q L z hznonzero
-    rw [← hyray] at hray
-    change
-      (continuousOperator n w p q L).reApplyInnerSelf z / ‖z‖ ^ 2 ≤
-        (continuousOperator n w p q L).reApplyInnerSelf y / ‖y‖ ^ 2
-      at hray
-    rw [hnorm] at hray
-    have hnormpos : 0 < ‖y‖ ^ 2 :=
-      sq_pos_of_pos (norm_pos_iff.mpr hy)
-    exact (div_le_div_iff_of_pos_right hnormpos).mp hray
-  have heigeny := hself.hasEigenvector_of_isMaxOn hy hmax
-  refine ⟨y, hy, ?_, fun i => abs_nonneg (x i)⟩
-  have happly := heigeny.apply_eq_smul
-  simpa only [topEigenvalue, ne_eq, rayleigh, continuousOperator,
-    LinearMap.coe_toContinuousLinearMap, Real.ringHom_apply] using happly
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.exists_nonnegative_topEigenvector
+    (matrix n w p q L) (matrix_hermitian n w p q L) (matrix_entry_nonneg h hstrict)
 
 theorem exists_nonnegative_unit_topEigenvector
     {n w p q L : ℕ}
@@ -7832,18 +7702,8 @@ theorem exists_nonnegative_unit_topEigenvector
       ‖x‖ = 1 ∧
         operator n w p q L x = topEigenvalue n w p q L • x ∧
         ∀ i : Index p q L, 0 ≤ x i := by
-  obtain ⟨x, hx, heigen, hnonneg⟩ :=
-    exists_nonnegative_topEigenvector h hstrict
-  have hnormpos : 0 < ‖x‖ := norm_pos_iff.mpr hx
-  refine ⟨‖x‖⁻¹ • x, ?_, ?_, ?_⟩
-  · rw [norm_smul, Real.norm_eq_abs,
-      abs_of_pos (inv_pos.mpr hnormpos)]
-    exact inv_mul_cancel₀ (ne_of_gt hnormpos)
-  · rw [map_smul, heigen]
-    exact smul_comm _ _ _
-  · intro i
-    change 0 ≤ ‖x‖⁻¹ * x i
-    exact mul_nonneg (inv_nonneg.mpr hnormpos.le) (hnonneg i)
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.exists_nonnegative_unit_topEigenvector
+    (matrix n w p q L) (matrix_hermitian n w p q L) (matrix_entry_nonneg h hstrict)
 
 theorem matrix_adjacent_pos {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)

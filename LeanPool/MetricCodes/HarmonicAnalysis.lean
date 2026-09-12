@@ -3592,8 +3592,8 @@ open scoped BigOperators InnerProductSpace
 namespace Perron
 
 /-- The coordinate abs used in the spherical-code argument. -/
-def coordinateAbs (k L : ℕ) (x : Jacobi.Space k L) : Jacobi.Space k L :=
-  WithLp.toLp 2 (fun p : Jacobi.Index k L => |x p|)
+abbrev coordinateAbs (k L : ℕ) (x : Jacobi.Space k L) : Jacobi.Space k L :=
+  MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs x
 
 theorem coordinateAbs_nonneg (k L : ℕ)
     (x : Jacobi.Space k L) (p : Jacobi.Index k L) :
@@ -3602,21 +3602,12 @@ theorem coordinateAbs_nonneg (k L : ℕ)
 
 theorem coordinateAbs_norm (k L : ℕ) (x : Jacobi.Space k L) :
     ‖coordinateAbs k L x‖ = ‖x‖ := by
-  have hsquare : ‖coordinateAbs k L x‖ ^ 2 = ‖x‖ ^ 2 := by
-    rw [EuclideanSpace.real_norm_sq_eq,
-      EuclideanSpace.real_norm_sq_eq]
-    apply Finset.sum_congr rfl
-    intro p hp
-    simp only [coordinateAbs, sq_abs]
-  nlinarith [norm_nonneg (coordinateAbs k L x), norm_nonneg x]
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs_norm x
 
 theorem coordinateAbs_ne_zero (k L : ℕ)
     {x : Jacobi.Space k L} (hx : x ≠ 0) :
     coordinateAbs k L x ≠ 0 := by
-  intro habs
-  have hnorm := coordinateAbs_norm k L x
-  rw [habs, norm_zero] at hnorm
-  exact hx (norm_eq_zero.mp hnorm.symm)
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs_ne_zero hx
 
 theorem matrix_entry_nonneg {n : ℕ} (hn : 3 ≤ n)
     (k L : ℕ) (p q : Jacobi.Index k L) :
@@ -3633,31 +3624,8 @@ theorem inner_le_inner_coordinateAbs {n : ℕ} (hn : 3 ≤ n)
       @inner ℝ (Jacobi.Space k L) _
         (Jacobi.operator n k L (coordinateAbs k L x))
         (coordinateAbs k L x) := by
-  rw [PiLp.inner_apply, PiLp.inner_apply]
-  simp only [Real.inner_apply]
-  change
-    (∑ p : Jacobi.Index k L,
-      (∑ q : Jacobi.Index k L,
-        Jacobi.matrix n k L p q * x q) * x p) ≤
-    (∑ p : Jacobi.Index k L,
-      (∑ q : Jacobi.Index k L,
-        Jacobi.matrix n k L p q * |x q|) * |x p|)
-  simp_rw [Finset.sum_mul]
-  apply Finset.sum_le_sum
-  intro p hp
-  apply Finset.sum_le_sum
-  intro q hq
-  have hentry := matrix_entry_nonneg hn k L p q
-  have hproduct : x q * x p ≤ |x q| * |x p| := by
-    calc
-      x q * x p ≤ |x q * x p| := le_abs_self _
-      _ = |x q| * |x p| := abs_mul _ _
-  calc
-    Jacobi.matrix n k L p q * x q * x p =
-        Jacobi.matrix n k L p q * (x q * x p) := by ring
-    _ ≤ Jacobi.matrix n k L p q * (|x q| * |x p|) :=
-      mul_le_mul_of_nonneg_left hproduct hentry
-    _ = Jacobi.matrix n k L p q * |x q| * |x p| := by ring
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.inner_le_inner_coordinateAbs
+    (Jacobi.matrix n k L) (matrix_entry_nonneg hn k L) x
 
 theorem rayleigh_le_coordinateAbs {n : ℕ} (hn : 3 ≤ n)
     (k L : ℕ) (x : Jacobi.Space k L) :
@@ -3701,39 +3669,8 @@ theorem exists_nonnegative_topEigenvector
       x ≠ 0 ∧
       Jacobi.operator n k L x = Jacobi.topEigenvalue n k L • x ∧
       ∀ p : Jacobi.Index k L, 0 ≤ x p := by
-  obtain ⟨x, hx, heig⟩ := Jacobi.exists_topEigenvector n k L
-  let y : Jacobi.Space k L := coordinateAbs k L x
-  have hy : y ≠ 0 := coordinateAbs_ne_zero k L hx
-  have hyray : Jacobi.rayleigh n k L y =
-      Jacobi.topEigenvalue n k L :=
-    coordinateAbs_top_rayleigh hn k L x hx heig
-  have hself : IsSelfAdjoint (Jacobi.continuousOperator n k L) := by
-    exact (Jacobi.operator_isSymmetric n k L).isSelfAdjoint
-  have hmax :
-      IsMaxOn (Jacobi.continuousOperator n k L).reApplyInnerSelf
-        (sphere (0 : Jacobi.Space k L) ‖y‖) y := by
-    intro z hz
-    have hnorm : ‖z‖ = ‖y‖ := by simpa only [mem_sphere_iff_norm, sub_zero] using hz
-    have hznonzero : z ≠ 0 := by
-      intro hzzero
-      rw [hzzero, norm_zero] at hnorm
-      exact hy (norm_eq_zero.mp hnorm.symm)
-    have hray := Jacobi.rayleigh_le_top n k L z hznonzero
-    rw [← hyray] at hray
-    change
-      (Jacobi.continuousOperator n k L).reApplyInnerSelf z /
-        ‖z‖ ^ 2 ≤
-        (Jacobi.continuousOperator n k L).reApplyInnerSelf y /
-          ‖y‖ ^ 2 at hray
-    rw [hnorm] at hray
-    have hnormpos : 0 < ‖y‖ ^ 2 :=
-      sq_pos_of_pos (norm_pos_iff.mpr hy)
-    exact (div_le_div_iff_of_pos_right hnormpos).mp hray
-  have heigy := hself.hasEigenvector_of_isMaxOn hy hmax
-  refine ⟨y, hy, ?_, fun p => coordinateAbs_nonneg k L x p⟩
-  have happly := heigy.apply_eq_smul
-  simpa only [Jacobi.topEigenvalue, ne_eq, Jacobi.rayleigh, Jacobi.continuousOperator,
-    LinearMap.coe_toContinuousLinearMap, Real.ringHom_apply] using happly
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.exists_nonnegative_topEigenvector
+    (Jacobi.matrix n k L) (Jacobi.matrix_hermitian n k L) (matrix_entry_nonneg hn k L)
 
 theorem exists_nonnegative_unit_topEigenvector
     {n : ℕ} (hn : 3 ≤ n) (k L : ℕ) :
@@ -3741,18 +3678,8 @@ theorem exists_nonnegative_unit_topEigenvector
       ‖x‖ = 1 ∧
       Jacobi.operator n k L x = Jacobi.topEigenvalue n k L • x ∧
       ∀ p : Jacobi.Index k L, 0 ≤ x p := by
-  obtain ⟨x, hx, heig, hnonneg⟩ :=
-    exists_nonnegative_topEigenvector hn k L
-  have hnormpos : 0 < ‖x‖ := norm_pos_iff.mpr hx
-  refine ⟨‖x‖⁻¹ • x, ?_, ?_, ?_⟩
-  · rw [norm_smul, Real.norm_eq_abs,
-      abs_of_pos (inv_pos.mpr hnormpos)]
-    exact inv_mul_cancel₀ (ne_of_gt hnormpos)
-  · rw [map_smul, heig]
-    exact smul_comm _ _ _
-  · intro p
-    change 0 ≤ ‖x‖⁻¹ * x p
-    exact mul_nonneg (inv_nonneg.mpr hnormpos.le) (hnonneg p)
+  exact MetricCodes.Spherical.HigherHierarchyFinitePerron.exists_nonnegative_unit_topEigenvector
+    (Jacobi.matrix n k L) (Jacobi.matrix_hermitian n k L) (matrix_entry_nonneg hn k L)
 
 theorem unit_coordinate_sq_sum
     {k L : ℕ} {x : Jacobi.Space k L} (hx : ‖x‖ = 1) :

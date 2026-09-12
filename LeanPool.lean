@@ -3141,6 +3141,7 @@ import LeanPool.MetricCodes.HarmonicAnalysis
 import LeanPool.MetricCodes.Hierarchy
 import LeanPool.MetricCodes.HighestWeights
 import LeanPool.MetricCodes.Interlacing
+import LeanPool.MetricCodes.MatrixPerron
 import LeanPool.MetricCodes.Rates
 import LeanPool.MetricCodes.Representation
 import LeanPool.MetricCodes.Rigidity

@@ -5,6 +5,8 @@ Authors: OpenAI, Dean Cureton
 -/
 
 import LeanPool.MetricCodes.Hierarchy
+import Mathlib.Algebra.MvPolynomial.Funext
+import Mathlib.Algebra.MvPolynomial.Monad
 import Mathlib.Analysis.InnerProductSpace.TensorProduct
 
 /-!

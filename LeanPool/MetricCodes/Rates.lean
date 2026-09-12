@@ -5,6 +5,7 @@ Authors: OpenAI, Dean Cureton
 -/
 
 import LeanPool.MetricCodes.Binary
+import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Orthogonality
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
 import Mathlib.LinearAlgebra.Lagrange
