@@ -752,7 +752,18 @@ noncomputable def fromSnd :
     let : Module K A := inferInstanceAs <| Module K (CrossProductAlgebra a)
     let : Module K B := inferInstanceAs <| Module K (CrossProductAlgebra b)
     let basis : Basis Gal(K, F) K B := (basis (f := b)).unitsSMul c
+    have basis_val (σ : Gal(K, F)) :
+        (basis σ : CrossProductAlgebra b).val = Finsupp.single σ (c σ : K) := by
+      change ((CrossProductAlgebra.basis (f := b)).unitsSMul c σ).val = _
+      rw [Basis.unitsSMul_apply]
+      change ((c σ : K) • CrossProductAlgebra.basis σ).val = _
+      rw [CrossProductAlgebra.val_smul, CrossProductAlgebra.basis_val,
+        Finsupp.smul_single, smul_eq_mul, _root_.mul_one]
     let φ0 : A ≃ₗ[K] B := CrossProductAlgebra.basis.equiv basis (.refl _)
+    have map_basis (σ : Gal(K, F)) :
+        φ0 (CrossProductAlgebra.basis σ : A) = basis σ :=
+      Basis.equiv_apply (b := (CrossProductAlgebra.basis : Basis Gal(K, F) K A))
+        (b' := basis) (e := Equiv.refl Gal(K, F)) σ
     have : LinearMap.CompatibleSMul A B F K := by
       constructor
       have eq (c : F) (a : A) : c • a = algebraMap F K c • a :=
@@ -773,10 +784,7 @@ noncomputable def fromSnd :
             CrossProductAlgebra.val_smul]]
         refine (φ0.map_smul ((↑(a (1, 1))⁻¹) : K)
           (CrossProductAlgebra.basis 1 : A)).trans ?_
-        rw [show φ0 (CrossProductAlgebra.basis 1 : A) =
-            basis ((Equiv.refl Gal(K, F)) 1) by
-          exact Basis.equiv_apply (b := (CrossProductAlgebra.basis : Basis Gal(K, F) K A))
-            (b' := basis) (e := Equiv.refl Gal(K, F)) 1]
+        rw [map_basis]
         apply val_injective
         change ((↑((a (1, 1))⁻¹) : K) •
             (basis ((Equiv.refl Gal(K, F)) 1) : CrossProductAlgebra b)).val =
@@ -786,11 +794,8 @@ noncomputable def fromSnd :
         change ((↑(a (1, 1)))⁻¹ : K) •
             ((CrossProductAlgebra.basis.unitsSMul c) 1).val =
           Finsupp.single 1 (↑(b (1, 1)))⁻¹
-        conv_lhs => enter [2, 1]; erw [Basis.unitsSMul_apply]
-        erw [CrossProductAlgebra.val_smul]
-        simp only [CrossProductAlgebra.basis, Basis.coe_ofRepr, valLinearEquiv_symm_apply,
-          AddEquiv.toEquiv_eq_coe, Equiv.invFun_as_coe, AddEquiv.coe_toEquiv_symm,
-          valAddEquiv_symm_apply_val, Finsupp.smul_single, smul_eq_mul, _root_.mul_one]
+        erw [basis_val]
+        simp only [Finsupp.smul_single, smul_eq_mul]
         congr 1
         specialize hc 1 1
         simp only [one_smul, _root_.mul_one, div_self', _root_.one_mul, Pi.div_apply,
@@ -835,19 +840,7 @@ noncomputable def fromSnd :
             refine Eq.trans ?_ (congrArg₂ HMul.hMul
               (φ0.map_smul ((k1 : K)) (CrossProductAlgebra.basis σ : A)).symm
               (φ0.map_smul ((k2 : K)) (CrossProductAlgebra.basis τ : A)).symm)
-            rw [show φ0 (CrossProductAlgebra.basis (σ * τ) : A) =
-                basis ((Equiv.refl Gal(K, F)) (σ * τ)) by
-              exact Basis.equiv_apply (b := (CrossProductAlgebra.basis : Basis Gal(K, F) K A))
-                (b' := basis) (e := Equiv.refl Gal(K, F)) (σ * τ),
-              show φ0 (CrossProductAlgebra.basis σ : A) =
-                basis ((Equiv.refl Gal(K, F)) σ) by
-              exact Basis.equiv_apply (b := (CrossProductAlgebra.basis : Basis Gal(K, F) K A))
-                (b' := basis) (e := Equiv.refl Gal(K, F)) σ,
-              show φ0 (CrossProductAlgebra.basis τ : A) =
-                basis ((Equiv.refl Gal(K, F)) τ) by
-              exact Basis.equiv_apply (b := (CrossProductAlgebra.basis : Basis Gal(K, F) K A))
-                (b' := basis) (e := Equiv.refl Gal(K, F)) τ]
-            simp only [Equiv.refl_apply]
+            erw [map_basis, map_basis, map_basis]
             apply val_injective
             change (((k1 * σ k2 * ↑(a (σ, τ))) : K) •
                 (basis (σ * τ) : CrossProductAlgebra b)).val =
@@ -856,13 +849,7 @@ noncomputable def fromSnd :
             change ((k1 * σ k2 * ↑(a (σ, τ))) : K) • (basis (σ * τ)).val =
               CrossProductAlgebra.mulLinearMap b ((k1 : K) • (basis σ).val)
                 ((k2 : K) • (basis τ).val)
-            unfold basis
-            erw [Basis.unitsSMul_apply, Basis.unitsSMul_apply, Basis.unitsSMul_apply]
-            erw [CrossProductAlgebra.val_smul, CrossProductAlgebra.val_smul,
-              CrossProductAlgebra.val_smul]
-            simp only [CrossProductAlgebra.basis, Basis.coe_ofRepr, valLinearEquiv_symm_apply,
-              AddEquiv.toEquiv_eq_coe, Equiv.invFun_as_coe, AddEquiv.coe_toEquiv_symm,
-              valAddEquiv_symm_apply_val, Finsupp.smul_single, smul_eq_mul, _root_.mul_one,
+            simp only [basis_val, Finsupp.smul_single, smul_eq_mul,
               mulLinearMap_single_single, map_mul]
             congr 1
             specialize hc σ τ
