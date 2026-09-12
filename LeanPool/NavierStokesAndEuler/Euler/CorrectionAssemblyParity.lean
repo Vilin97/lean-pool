@@ -354,7 +354,7 @@ theorem transport_reflection {q : ℕ} (hq : 6 ≤ q)
         (derivativeOperator period q i (sobolevReflection period (q+1) v)) =
       -sobolevReflection period q (productHq period hq (L i) (hL i)
         (truncateOperator period q u) (derivativeOperator period q i v)) := by
-    rw [truncate_reflection period u, derivative_reflection period i v,
+    simp only [truncate_reflection period u, derivative_reflection period i v,
       product_neg_right period hq (L i) (hL i)]
     exact congrArg Neg.neg (product_reflection period hq (L i) (hL i)
       (truncateOperator period q u) (derivativeOperator period q i v)).symm
@@ -420,7 +420,7 @@ theorem projectedSource_reflection {q : ℕ} {A : SmoothCoefficient period}
     (pressureSobolevOperator period K κ m c hc hpos u)) =
     sobolevReflection period q u - coefficientSobolevOperator period K
       (pressureSobolevOperator period K κ m c hc hpos (sobolevReflection period q u))
-  rw [map_sub, coefficient_reflection period K hA, pressureSobolev_reflection period K hA]
+  simp only [map_sub, coefficient_reflection period K hA, pressureSobolev_reflection period K hA]
 
 /-- The coordinate product reflects without a derivative sign. -/
 theorem coordinateProduct_reflection {q : ℕ} (hq : 6 ≤ q) (i : Fin 3)
