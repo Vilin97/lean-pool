@@ -558,14 +558,18 @@ theorem circleHomeomorph_exp_of_mem_Ico
     exact_mod_cast (List.length_pos_of_ne_nil hne).ne'
   have hsum : (weights.sum : ℝ) ≠ 0 := by
     exact_mod_cast (List.sum_pos weights h hne).ne'
-  rw [show Circle.exp (2 * Real.pi / weights.length * x) =
-      AddCircle.homeomorphCircle hlength
-        (x : AddCircle (weights.length : ℝ)) by
-    rw [AddCircle.homeomorphCircle_apply, AddCircle.toCircle_apply_mk]]
-  unfold circleHomeomorph
-  simp only [Homeomorph.trans_apply, Homeomorph.symm_apply_apply]
-  rw [addCircleHomeomorph_apply_of_mem_Ico weights h hne x hx]
-  rw [AddCircle.homeomorphCircle_apply, AddCircle.toCircle_apply_mk]
+  -- Keep the component homeomorphisms folded when passing to angular coordinates.
+  change (AddCircle.homeomorphCircle hsum)
+    (addCircleHomeomorph weights h hne
+      ((AddCircle.homeomorphCircle hlength).symm
+        (Circle.exp (2 * Real.pi / weights.length * x)))) = _
+  have hsource : (AddCircle.homeomorphCircle hlength).symm
+      (Circle.exp (2 * Real.pi / weights.length * x)) =
+        (x : AddCircle (weights.length : ℝ)) := by
+    apply (AddCircle.homeomorphCircle hlength).symm_apply_eq.mpr
+    rw [AddCircle.homeomorphCircle_apply, AddCircle.toCircle_apply_mk]
+  rw [hsource, addCircleHomeomorph_apply_of_mem_Ico weights h hne x hx,
+    AddCircle.homeomorphCircle_apply, AddCircle.toCircle_apply_mk]
 
 /-- On the `i`th unit interval, stretching is affine with slope equal to the `i`th weight. -/
 theorem stretch_index_add
