@@ -78,6 +78,36 @@ def test_render_index_reproduces_the_committed_index() -> None:
     assert render_index(root) == (root / "LeanPool.lean").read_text(encoding="utf-8")
 
 
+def test_render_index_preserves_module_exports_during_conflicts(tmp_path: Path) -> None:
+    """A conflicting import PR cannot revert the library to plain imports."""
+    pool = tmp_path / "LeanPool"
+    pool.mkdir()
+    (pool / "Alpha.lean").touch()
+    (pool / "Beta.lean").touch()
+    (tmp_path / "LeanPool.lean").write_text(
+        "<<<<<<< HEAD\nmodule  -- shake: keep-all --deprecated_module: ignore\n\n"
+        "public import LeanPool.Alpha\n=======\n"
+        "import LeanPool.Beta\n>>>>>>> incoming\n"
+    )
+    expected = (
+        "module  -- shake: keep-all --deprecated_module: ignore\n\n"
+        "public import LeanPool.Alpha\npublic import LeanPool.Beta\n"
+    )
+    assert render_index(tmp_path) == expected
+    (tmp_path / "LeanPool.lean").write_text(expected)
+    assert render_index(tmp_path) == expected
+
+
+def test_render_index_ignores_module_inside_comments(tmp_path: Path) -> None:
+    """Documentation cannot accidentally opt an index into the module system."""
+    (tmp_path / "LeanPool").mkdir()
+    (tmp_path / "LeanPool" / "Alpha.lean").touch()
+    (tmp_path / "LeanPool.lean").write_text(
+        "/-\nmodule\n/- nested -/\n-/\nimport LeanPool.Alpha\n"
+    )
+    assert render_index(tmp_path) == "import LeanPool.Alpha\n"
+
+
 # --------------------------------------------------------------------------- #
 # Registry merging
 # --------------------------------------------------------------------------- #
