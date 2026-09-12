@@ -465,9 +465,10 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- A genuine supported scalar path representing the right side of ∂θπ in (11). -/
 def pressureSource : C(Icc (0 : ℝ) T,Supported period ℝ S hS) :=
-  supportedMultiplierMap period S hS (normalFunctional m cm hcm hm)
-    (f - (2 : ℝ) • supportedMultiplierMap period S hS M.field
-      (velocity period S hS T hT Q Q₁ c hc hQ f a₀))
+  supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := Space) (F := ℝ) period S hS
+    (normalFunctional m cm hcm hm)
+    (f - (2 : ℝ) • supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := Space) (F := Space)
+      period S hS M.field (velocity period S hS T hT Q Q₁ c hc hQ f a₀))
 
 /-- The pressure source is precisely the manuscript's scalar quotient. -/
 theorem pressureSource_ae (t : Icc (0 : ℝ) T) :
