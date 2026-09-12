@@ -444,12 +444,13 @@ def firstPacketLowBounds (hquarter : ell ≤ 1 / 4) (hδ1 : δ ≤ 1) (hhchild :
         (initialCoefficientCost + hchild * firstRatio + ev) * ell ^ 3 * T ≤ 1 / 2) :
     LowBounds ((packetBaseParent β hβ ell hell hell1 T hT hTB).child
       G k firstNormal hgraph nextEll hnext hnext1) := by
+  have hcoefficient := hG
   have herrors := herr
-  dsimp only [firstPacketMeanData, firstPacketData] at herrors
+  dsimp only [firstPacketMeanData, firstPacketData] at hcoefficient herrors
   exact (packetBaseState β hβ ell hell hell1 T hT hTB).evolution.firstChildLowBounds
     (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)
     firstNormal firstNormal_unit firstFrame support compact δ hδ hδ1 hchild hhchild
-    firstCoordinate (subset_refl _) N hN k hk Q G hG hgraph nextEll hnext hnext1
+    firstCoordinate (subset_refl _) N hN k hk Q G hcoefficient hgraph nextEll hnext hnext1
     rfl (by simpa only [packetBaseParent_scale] using hquarter)
     (subset_halfBall.trans Metric.ball_subset_closedBall)
     ev ep initialCoefficientCost initialCoefficientCost herrors
