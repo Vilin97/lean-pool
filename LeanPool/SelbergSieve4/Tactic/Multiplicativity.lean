@@ -42,4 +42,3 @@ Authors: Arend Mellendijk
 --     IsMultiplicative ((ζ:ArithmeticFunction R).pdiv f) := by
 --   exact IsMultiplicative.pdiv (IsMultiplicative.nat_cast isMultiplicative_zeta) hf
 module
-
