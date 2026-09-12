@@ -148,9 +148,8 @@ theorem adaptiveGlobalFanFaceMap_standardAffine_point
     aQ (b (R.facePlaneInverseAffineLF f (R.facePlaneHomeomorph f x).1))
   rw [haQ _ hyCarrier]
   apply congrArg aQ
-  rw [← hxPlane]
+  rw [← hxPlane, K.adaptiveFanSourcePoint_val]
   funext v
-  change (∑ p, y p * (K.adaptiveFanVertexSource U hU f p).1 v) = b x.1 v
   rw [hb]
   exact K.adaptiveFanRelabel_source_sum_apply hU f x v
 
@@ -206,20 +205,11 @@ theorem adaptiveGlobalFanMapStandardAffine_apply
           z ((K.adaptiveFanFaceVertexEquiv U hU f).symm p) *
             (K.adaptiveFanVertexSource U hU f p).1 v := by
     intro z v
-    simp only [adaptiveGlobalFanLinearPiece, LinearMap.sum_apply,
-      LinearMap.smulRight_apply, LinearMap.proj_apply, Finset.sum_apply,
-      Pi.smul_apply, smul_eq_mul]
+    rw [adaptiveGlobalFanLinearPiece, LinearMap.sum_apply, Finset.sum_apply]
+    rfl
   have hpoint := K.adaptiveGlobalFanFaceMap_standardAffine_point hU f
     (K.adaptiveGlobalFanAffinePiece hU f) haQ
       (K.adaptiveGlobalFanLinearPiece hU f) hb x
-  change ((K.safeSubdivision f.1.1).homeo
-      (K.adaptiveFanSourcePoint U hU f
-        (K.adaptiveFanRelabelSimplex U hU f x))).1 = _
-  change _ =
-    (((K.adaptiveGlobalFanAffinePiece hU f).comp
-      (K.adaptiveGlobalFanLinearPiece hU f).toAffineMap).comp
-        ((K.adaptiveLocallyFiniteTriangleComplex U hU).facePlaneInverseAffineLF f))
-      ((K.adaptiveLocallyFiniteTriangleComplex U hU).facePlaneHomeomorph f x).1
   exact hpoint
 
 /- One adaptive global fan face is affine, in original intrinsic barycentric coordinates, as a
@@ -259,13 +249,13 @@ theorem adaptiveFanFaceMap_val_eq_vertex_sum
     ).affineCombination ℝ point weight
   have hzfun :
       zfun = (K.adaptiveFanSourcePoint U hU f x).1 := by
+    rw [K.adaptiveFanSourcePoint_val]
     rw [show zfun =
         ∑ p, weight p • point p by
       exact Finset.affineCombination_eq_linear_combination
         Finset.univ point weight hweight]
     funext v
-    simp only [weight, point, adaptiveFanSourcePoint,
-      Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+    simp only [weight, point, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
   have hsourceCarrier :
       K.adaptiveFanSourcePoint U hU f x ∈
         Q.refined.faceCarrier f.1.2.1.1 :=
