@@ -4713,12 +4713,6 @@ private theorem quadraticPairing_range_le_quadraticRestriction_range (n : ℕ) :
         exact ih
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem binary_sq_eq_self (a : F) : a * a = a := by
-  by_cases ha : a = 0
-  · simp only [ha, mul_zero]
-  · rw [FeedbackBooleanPolynomial.eq_one_of_ne_zero_zmod_two a ha, mul_one]
-
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem carry_self_eq_evaluate_d (ℓ : X) (b : B) :
     carry ℓ ℓ b = ℓ (d b) := by
   let lhs : B →ₗ[F] F := carry ℓ ℓ
@@ -4728,7 +4722,7 @@ private theorem carry_self_eq_evaluate_d (ℓ : X) (b : B) :
     intro v
     change carry ℓ ℓ (diagonal v) = (ℓ.comp d) (diagonal v)
     rw [carry_apply_diagonal, LinearMap.comp_apply, d_diagonal]
-    exact binary_sq_eq_self (ℓ v)
+    exact scalar_mul_self (ℓ v)
   exact DFunLike.congr_fun h b
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -5437,55 +5431,45 @@ private theorem integral_add_character_eq_zero
     exact Circle.coe_eq_one.mp (sub_eq_zero.mp h)
   · exact h
 
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-public
-theorem carryCharacterL2_orthonormal (n : ℕ) :
-    Orthonormal ℂ (carryCharacterL2 n) := by
+open Classical in
+/-- Distinct characters are orthogonal for any invariant probability measure. -/
+public theorem integral_character_mul_conj
+    {G : Type*} [AddCommGroup G] [TopologicalSpace G]
+    [IsTopologicalAddGroup G] [MeasurableSpace G] [BorelSpace G]
+    (μ : Measure G) [μ.IsAddLeftInvariant] [IsProbabilityMeasure μ]
+    (χ ψ : PontryaginDual (Multiplicative G)) :
+    (∫ x : G, (ψ (Multiplicative.ofAdd x) : ℂ) *
+      starRingEnd ℂ (χ (Multiplicative.ofAdd x) : ℂ) ∂μ) =
+      if χ = ψ then 1 else 0 := by
   classical
-  rw [orthonormal_iff_ite]
-  intro η θ
-  change inner ℂ
-      (ContinuousMap.toLp 2 (carryHaar n) ℂ (carryComplexCharacter n η))
-      (ContinuousMap.toLp 2 (carryHaar n) ℂ (carryComplexCharacter n θ)) =
-    if η = θ then 1 else 0
-  rw [ContinuousMap.inner_toLp (carryHaar n)
-    (carryComplexCharacter n η) (carryComplexCharacter n θ)]
   split_ifs with h
-  · subst θ
-    have hpoint : ∀ x : CarryGroup n,
-        (Additive.toMul η (Multiplicative.ofAdd x) : ℂ) *
-          starRingEnd ℂ
-            (Additive.toMul η (Multiplicative.ofAdd x) : ℂ) = 1 := by
-      intro x
+  · subst ψ
+    have hpoint (x : G) : (χ (Multiplicative.ofAdd x) : ℂ) *
+        starRingEnd ℂ (χ (Multiplicative.ofAdd x) : ℂ) = 1 := by
       rw [← Circle.coe_inv_eq_conj, ← Circle.coe_mul, mul_inv_cancel]
       rfl
-    change
-      (∫ x : CarryGroup n,
-        (Additive.toMul η (Multiplicative.ofAdd x) : ℂ) *
-          starRingEnd ℂ
-            (Additive.toMul η (Multiplicative.ofAdd x) : ℂ)
-          ∂carryHaar n) = 1
     simp_rw [hpoint]
     simp only [integral_const, probReal_univ, one_smul]
-  · have hne :
-        Additive.toMul θ * (Additive.toMul η)⁻¹ ≠ 1 := by
-      intro he
-      apply h
-      apply Eq.symm
-      apply Additive.toMul.injective
-      exact mul_inv_eq_one.mp he
-    have hz := integral_add_character_eq_zero
-      (carryHaar n) (Additive.toMul θ * (Additive.toMul η)⁻¹) hne
-    convert hz using 1
+  · have hne : ψ * χ⁻¹ ≠ 1 := fun he => h (mul_inv_eq_one.mp he).symm
+    convert integral_add_character_eq_zero μ (ψ * χ⁻¹) hne using 1
     congr 1
     funext x
-    change
-      (Additive.toMul θ (Multiplicative.ofAdd x) : ℂ) *
-          starRingEnd ℂ
-            (Additive.toMul η (Multiplicative.ofAdd x) : ℂ) =
-        ((Additive.toMul θ (Multiplicative.ofAdd x) *
-          (Additive.toMul η (Multiplicative.ofAdd x))⁻¹ : Circle) : ℂ)
+    change (ψ (Multiplicative.ofAdd x) : ℂ) *
+      starRingEnd ℂ (χ (Multiplicative.ofAdd x) : ℂ) =
+      ((ψ (Multiplicative.ofAdd x) * (χ (Multiplicative.ofAdd x))⁻¹ : Circle) : ℂ)
     rw [Circle.coe_mul, Circle.coe_inv_eq_conj]
+
+/-- Cross-module support for the infinite Connes-rigidity construction. -/
+public
+theorem carryCharacterL2_orthonormal (n : ℕ) : Orthonormal ℂ (carryCharacterL2 n) := by
+  classical
+  rw [orthonormal_iff_ite]
+  intro a b
+  change inner ℂ (ContinuousMap.toLp 2 (carryHaar n) ℂ (carryComplexCharacter n a))
+    (ContinuousMap.toLp 2 (carryHaar n) ℂ (carryComplexCharacter n b)) = if a = b then 1 else 0
+  rw [ContinuousMap.inner_toLp]
+  simpa only [carryComplexCharacter, ContinuousMap.coe_mk, Additive.toMul.injective.eq_iff] using
+    integral_character_mul_conj (carryHaar n) (Additive.toMul a) (Additive.toMul b)
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
@@ -5945,95 +5929,18 @@ theorem splitCharacterL2_span_closure_eq_top :
   simp only [ContinuousLinearMap.coe_coe]
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem split_integral_character_eq_zero
-    {G : Type*} [AddCommGroup G] [TopologicalSpace G]
-    [IsTopologicalAddGroup G] [MeasurableSpace G] [BorelSpace G]
-    (μ : Measure G) [μ.IsAddLeftInvariant]
-    (χ : PontryaginDual (Multiplicative G)) (hχ : χ ≠ 1) :
-    (∫ z : G, (χ (Multiplicative.ofAdd z) : ℂ) ∂μ) = 0 := by
-  obtain ⟨g, hg⟩ : ∃ g : G, χ (Multiplicative.ofAdd g) ≠ 1 := by
-    by_contra h
-    push Not at h
-    apply hχ
-    apply PontryaginDual.ext
-    intro g
-    simpa only [PontryaginDual.one_apply, ofAdd_toAdd] using h (Multiplicative.toAdd g)
-  have htrans :
-      (χ (Multiplicative.ofAdd g) : ℂ) *
-        (∫ z : G, (χ (Multiplicative.ofAdd z) : ℂ) ∂μ) =
-        ∫ z : G, (χ (Multiplicative.ofAdd z) : ℂ) ∂μ := by
-    calc
-      _ = ∫ z : G,
-          (χ (Multiplicative.ofAdd g) : ℂ) *
-            (χ (Multiplicative.ofAdd z) : ℂ) ∂μ :=
-        (integral_const_mul (χ (Multiplicative.ofAdd g) : ℂ)
-          (fun z : G => (χ (Multiplicative.ofAdd z) : ℂ))).symm
-      _ = ∫ z : G, (χ (Multiplicative.ofAdd (g + z)) : ℂ) ∂μ := by
-        congr 1
-        funext z
-        simp only [ofAdd_add, map_mul, Circle.coe_mul]
-      _ = ∫ z : G, (χ (Multiplicative.ofAdd z) : ℂ) ∂μ :=
-        integral_add_left_eq_self
-          (fun z : G => (χ (Multiplicative.ofAdd z) : ℂ)) g
-  have hzero :
-      ((χ (Multiplicative.ofAdd g) : ℂ) - 1) *
-        (∫ z : G, (χ (Multiplicative.ofAdd z) : ℂ) ∂μ) = 0 := by
-    linear_combination htrans
-  rcases mul_eq_zero.mp hzero with h | h
-  · exfalso
-    apply hg
-    exact Circle.coe_eq_one.mp (sub_eq_zero.mp h)
-  · exact h
-
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
 theorem splitCharacterL2_orthonormal : Orthonormal ℂ splitCharacterL2 := by
   classical
   rw [orthonormal_iff_ite]
-  intro d e
-  change inner ℂ
-      (ContinuousMap.toLp 2 productHaar ℂ (splitComplexCharacter d))
-      (ContinuousMap.toLp 2 productHaar ℂ (splitComplexCharacter e)) =
-    if d = e then 1 else 0
-  rw [ContinuousMap.inner_toLp productHaar
-    (splitComplexCharacter d) (splitComplexCharacter e)]
-  split_ifs with h
-  · subst e
-    have hpoint : ∀ z : X × Y,
-        (splitPontryaginCharacter d (Multiplicative.ofAdd z) : ℂ) *
-          starRingEnd ℂ
-            (splitPontryaginCharacter d (Multiplicative.ofAdd z) : ℂ) = 1 := by
-      intro z
-      rw [← Circle.coe_inv_eq_conj, ← Circle.coe_mul, mul_inv_cancel]
-      rfl
-    change
-      (∫ z : X × Y,
-        (splitPontryaginCharacter d (Multiplicative.ofAdd z) : ℂ) *
-          starRingEnd ℂ
-            (splitPontryaginCharacter d (Multiplicative.ofAdd z) : ℂ)
-          ∂productHaar) = 1
-    simp_rw [hpoint]
-    simp only [integral_const, probReal_univ, one_smul]
-  · have hne :
-        splitPontryaginCharacter e * (splitPontryaginCharacter d)⁻¹ ≠ 1 := by
-      intro he
-      apply h
-      apply Eq.symm
-      apply splitPontryaginCharacter_injective
-      exact mul_inv_eq_one.mp he
-    have hz := split_integral_character_eq_zero
-      productHaar
-      (splitPontryaginCharacter e * (splitPontryaginCharacter d)⁻¹) hne
-    convert hz using 1
-    congr 1
-    funext z
-    change
-      (splitPontryaginCharacter e (Multiplicative.ofAdd z) : ℂ) *
-          starRingEnd ℂ
-            (splitPontryaginCharacter d (Multiplicative.ofAdd z) : ℂ) =
-        ((splitPontryaginCharacter e (Multiplicative.ofAdd z) *
-          (splitPontryaginCharacter d (Multiplicative.ofAdd z))⁻¹ : Circle) : ℂ)
-    rw [Circle.coe_mul, Circle.coe_inv_eq_conj]
+  intro a b
+  change inner ℂ (ContinuousMap.toLp 2 productHaar ℂ (splitComplexCharacter a))
+    (ContinuousMap.toLp 2 productHaar ℂ (splitComplexCharacter b)) = if a = b then 1 else 0
+  rw [ContinuousMap.inner_toLp]
+  simpa only [splitComplexCharacter, ContinuousMap.coe_mk,
+    splitPontryaginCharacter_injective.eq_iff] using
+    integral_character_mul_conj productHaar
+      (splitPontryaginCharacter a) (splitPontryaginCharacter b)
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
@@ -8323,31 +8230,6 @@ private theorem complex_four_unit_decomposition {z : ℂ} :
   rw [realUnit_add_conj, realUnit_add_conj]
   apply Complex.ext <;> simp
 
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-private def clip (z : ℂ) : ℂ :=
-  (1 / max 1 ‖z‖ : ℝ) • z
-
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem continuous_clip : Continuous clip := by
-  unfold clip
-  exact (Continuous.div continuous_const
-      (continuous_const.max continuous_norm)
-      (fun z => by positivity)).smul continuous_id
-
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem clip_eq_self_of_norm_le {z : ℂ} (hz : ‖z‖ ≤ 1) : clip z = z := by
-  rw [clip, max_eq_left hz]
-  norm_num
-
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem norm_clip_le (z : ℂ) : ‖clip z‖ ≤ 1 := by
-  by_cases hz : ‖z‖ ≤ 1
-  · rw [clip_eq_self_of_norm_le hz]
-    exact hz
-  · have hzpos : 0 < ‖z‖ := lt_of_lt_of_le zero_lt_one (le_of_not_ge hz)
-    rw [clip, max_eq_right (le_of_not_ge hz), norm_smul, Real.norm_eq_abs,
-      abs_of_pos (one_div_pos.mpr hzpos), one_div, inv_mul_cancel₀ hzpos.ne']
-
 variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -8361,19 +8243,19 @@ private theorem lp_infty_ae_norm_le (f : Lp ℂ ⊤ μ) :
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def normalizedCoefficient (f : Lp ℂ ⊤ μ) (x : Ω) : ℂ :=
-  clip (((Lp.memLp f).aestronglyMeasurable.mk (fun y => f y) x) /
+  complexUnitBallClip (((Lp.memLp f).aestronglyMeasurable.mk (fun y => f y) x) /
     ((‖f‖ + 1 : ℝ) : ℂ))
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem measurable_normalizedCoefficient (f : Lp ℂ ⊤ μ) :
     Measurable (normalizedCoefficient f) := by
   unfold normalizedCoefficient
-  exact continuous_clip.measurable.comp
+  exact continuous_complexUnitBallClip.measurable.comp
     ((Lp.memLp f).aestronglyMeasurable.measurable_mk.div measurable_const)
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem norm_normalizedCoefficient_le (f : Lp ℂ ⊤ μ) (x : Ω) :
-    ‖normalizedCoefficient f x‖ ≤ 1 := norm_clip_le _
+    ‖normalizedCoefficient f x‖ ≤ 1 := complexUnitBallClip_norm_le _
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem normalizedCoefficient_ae (f : Lp ℂ ⊤ μ) :
@@ -8383,7 +8265,7 @@ private theorem normalizedCoefficient_ae (f : Lp ℂ ⊤ μ) :
     (Lp.memLp f).aestronglyMeasurable.ae_eq_mk] with x hx hrep
   unfold normalizedCoefficient
   rw [← hrep]
-  apply clip_eq_self_of_norm_le
+  apply complexUnitBallClip_eq_self_of_norm_le
   rw [norm_div, Complex.norm_real, Real.norm_eq_abs,
     abs_of_pos (by positivity : 0 < ‖f‖ + 1)]
   exact (div_le_one (by positivity : 0 < ‖f‖ + 1)).2 (by linarith)
