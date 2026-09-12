@@ -176,7 +176,8 @@ theorem potentialCoefficient_translation_contDiff :
       fun a => potentialPathMap (translateCoefficientPath (normalFunctional m c hc hm) a) :=
     funext (potentialCoefficient_translated m c hc hm)
   rw [he]
-  exact potentialPathMap.contDiff.comp (normalFunctional_translation_contDiff m c hc hm)
+  exact (potentialPathMap (K := K)).contDiff.comp
+    (normalFunctional_translation_contDiff m c hc hm)
 
 /-- The source coefficient passes through a linear contraction, with no radius or shift change. -/
 theorem potentialCoefficient_translation_bound (Rc C Ri : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
@@ -359,8 +360,12 @@ local instance instSourcePotentialTimeCoefficient24 : NormedSpace ℝ C(K,Potent
 
 /-- Time normal path, constructed using `pathCompositionMap`. -/
 def timeNormalPath (N : C(K, NormalField)) (Q₁ : C(K, Space →ᵇ ℝ →L[ℝ] Space)) : C(K,NormalField) :=
-  pathCompositionMap (pathCompositionMap N (pathAdjointMap N)) (pathAdjointMap Q₁) -
-    (2 : ℝ) • pathCompositionMap (pathCompositionMap N Q₁) N
+  pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
+    (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ)
+      N (pathAdjointMap (U := Space) (E := ℝ) N))
+    (pathAdjointMap (U := ℝ) (E := Space) Q₁) -
+      (2 : ℝ) • pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
+        (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) N Q₁) N
 
 theorem timeNormalPath_apply (N : C(K, NormalField)) (Q₁ : C(K, Space →ᵇ ℝ →L[ℝ] Space))
     (t : K) (y : Space) : timeNormalPath N Q₁ t y = normalTimeMap (N t y) (Q₁ t y) := rfl
@@ -386,11 +391,13 @@ theorem timeNormalPath_contDiff : ContDiff ℝ ∞ (fun a => timeNormalPath (N a
   have hQa := (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space)).contDiff.comp hQ₁
   have hNN := pathComposition_contDiff N (fun x => pathAdjointMap (N x)) hN hNa
   have hNQ := pathComposition_contDiff N Q₁ hN hQ₁
-  have hA := pathComposition_contDiff
-    (fun x => pathCompositionMap (N x) (pathAdjointMap (N x)))
-    (fun x => pathAdjointMap (Q₁ x)) hNN hQa
-  have hB := pathComposition_contDiff (fun x => pathCompositionMap (N x) (Q₁ x)) N hNQ hN
-  exact hA.sub (hB.const_smul 2)
+  have hA := pathComposition_contDiff (E := ℝ) (F := ℝ) (U := Space)
+    (fun x => pathCompositionMap (E := Space) (F := ℝ) (U := ℝ)
+      (N x) (pathAdjointMap (U := Space) (E := ℝ) (N x)))
+    (fun x => pathAdjointMap (U := ℝ) (E := Space) (Q₁ x)) hNN hQa
+  have hB := pathComposition_contDiff (E := ℝ) (F := ℝ) (U := Space)
+    (fun x => pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) (N x) (Q₁ x)) N hNQ hN
+  exact hA.sub (hB.const_smul (2 : ℝ))
 
 include hN hQ₁ in
 theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D)
@@ -427,10 +434,11 @@ theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0
   have hb₂B (j : ℕ) (x : X) :
       ‖iteratedFDeriv ℝ j (fun y => (2 : ℝ) • B y) x‖ ≤
         (2*(3*(3*C*D)*C))*majorant R 0 j := by
-    rw [iteratedFDeriv_const_smul_apply' (hB.contDiffAt.of_le (by simp)), norm_smul]
+    rw [iteratedFDeriv_const_smul_apply' (a := (2 : ℝ))
+      (hB.contDiffAt.of_le (by simp)), norm_smul]
     norm_num only [Real.norm_ofNat]
     exact (mul_le_mul_of_nonneg_left (hbB j x) (by norm_num : (0 : ℝ) ≤ 2)).trans_eq (by ring)
-  have h := sub_bound A (fun y => (2 : ℝ) • B y) hA (hB.const_smul 2)
+  have h := sub_bound A (fun y => (2 : ℝ) • B y) hA (hB.const_smul (2 : ℝ))
     R (3*(3*C*C)*D) (2*(3*(3*C*D)*C)) 0 hbA hb₂B n a
   exact h.trans_eq (by ring)
 
