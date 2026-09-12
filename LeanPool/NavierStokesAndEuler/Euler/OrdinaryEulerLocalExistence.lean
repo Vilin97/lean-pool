@@ -94,16 +94,14 @@ def liftLinear (q : ℕ) : L2 →ₗ[ℝ] SobolevSpace 1 q where
   toFun u := ordinarySobolev q (S.op u) (S.smooth u)
   map_add' u v := by
     apply value_injective 1
-    change valueOperator 1 q (ordinarySobolev q (S.op (u+v)) _) =
-      valueOperator 1 q (ordinarySobolev q (S.op u) _ + ordinarySobolev q (S.op v) _)
-    rw [(valueOperator 1 q).map_add]
-    simp only [valueOperator_ordinary,map_add]
+    change value 1 (ordinarySobolev q (S.op (u+v)) _) =
+      value 1 (ordinarySobolev q (S.op u) _) + value 1 (ordinarySobolev q (S.op v) _)
+    simp only [ordinarySobolev_value,map_add]
   map_smul' c u := by
     apply value_injective 1
-    change valueOperator 1 q (ordinarySobolev q (S.op (c • u)) _) =
-      valueOperator 1 q (c • ordinarySobolev q (S.op u) _)
-    rw [(valueOperator 1 q).map_smul]
-    simp only [valueOperator_ordinary,map_smul]
+    change value 1 (ordinarySobolev q (S.op (c • u)) _) =
+      c • value 1 (ordinarySobolev q (S.op u) _)
+    simp only [ordinarySobolev_value,map_smul]
 
 @[simp] theorem liftLinear_value (q : ℕ) (u : L2) :
     value 1 (S.liftLinear q u)=ordinaryLift (S.op u) := ordinarySobolev_value _ _ _
