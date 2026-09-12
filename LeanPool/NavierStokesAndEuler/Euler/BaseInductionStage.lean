@@ -1032,14 +1032,21 @@ variable {β : ℝ} {hβ : |β| ≤ 1} {ell : ℝ} {hell : 0 < ell} {hell1 : ell
 
 /-- Initial frame as an element of `ParentFrame (F.parent.transverseData m hm R S hS) 0`. -/
 def initialFrame : ParentFrame (F.parent.transverseData m hm R S hS) 0 := by
+  let baseParent := packetBaseParent β hβ ell hell hell1 T hT hTB
   let B := packetBaseState β hβ ell hell hell1 T hT hTB
   have h0 := initialCoefficientCost_nonneg
   exact B.forwardRenewal F.state rfl firstNormal firstNormal_unit firstFrame support compact
     m hm R S hS 0 le_rfl initialCoefficientCost initialCoefficientCost (1+initialCoefficientCost)
     (k^(-(1/4 : ℝ))) h0 (le_add_of_nonneg_right h0) (Real.rpow_nonneg hk.pos.le _)
     (le_add_of_nonneg_left zero_le_one) (by linarith only [h0])
-    (fun t _ => packetBase_strain_bound β hβ ell hell hell1 T hT hTB (projIcc 0 T hT.le t) 0)
-    (fun t _ => packetBase_curvature_bound β hβ ell hell hell1 T hT hTB (projIcc 0 T hT.le t) 0)
+    (fun t _ => by
+      dsimp only [Parent.centerStrain, EulerVolterraConvolution.extendPath]
+      exact packetBase_strain_bound β hβ ell hell hell1 T hT hTB
+        (projIcc 0 baseParent.T baseParent.T_pos.le t) 0)
+    (fun t _ => by
+      dsimp only [Parent.centerCurvature, EulerVolterraConvolution.extendPath]
+      exact packetBase_curvature_bound β hβ ell hell hell1 T hT hTB
+        (projIcc 0 baseParent.T baseParent.T_pos.le t) 0)
     δ hδ (δ*hchild) k firstCoordinate
     (by intro h; have he := firstCoordinate_norm; rw [h,norm_zero] at he; norm_num at he)
     (fun t _ => F.center_error t)
