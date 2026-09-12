@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import Mathlib.Probability.Distributions.Gaussian.Real
+
 import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
 
 public import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
@@ -41,7 +43,7 @@ variable (period : ℝ) [Fact (0 < period)]
 /-- A continuous real-parameter extension of the Gaussian average, constant for negative variance.
 -/
 def realLineHeat (a : LiftTangent) (t : ℝ) (f : LiftL2 period) : LiftL2 period :=
-  ∫ x : ℝ, lineOrbit period a f (Real.sqrt t * x) ∂gaussianReal 0 1
+  ∫ x : ℝ, lineOrbit period a f (Real.sqrt t * x) ∂gaussianMeasure 0 1
 
 theorem realLineHeat_eq (a : LiftTangent) {t : ℝ} (ht : 0 ≤ t) (f : LiftL2 period) :
     realLineHeat period a t f = lineHeat period a ⟨t, ht⟩ f :=
@@ -83,7 +85,8 @@ moment. -/
 theorem realLineHeat_hasDerivAt_moment (a : LiftTangent) (f g : LiftL2 period)
     (hD : HasDerivAt (lineOrbit period a f) g 0) {t : ℝ} (ht : 0 < t) :
     HasDerivAt (fun s => realLineHeat period a s f)
-      (∫ x : ℝ, (x / (2 * Real.sqrt t)) • lineOrbit period a g (Real.sqrt t * x) ∂gaussianReal 0 1)
+      (∫ x : ℝ, (x / (2 * Real.sqrt t)) • lineOrbit period a g (Real.sqrt t * x)
+        ∂gaussianMeasure 0 1)
           t := by
   let F : ℝ → ℝ → LiftL2 period := fun s x => lineOrbit period a f (Real.sqrt s * x)
   let F' : ℝ → ℝ → LiftL2 period := fun s x => (x / (2 * Real.sqrt s)) • lineOrbit period a g
@@ -102,11 +105,11 @@ theorem realLineHeat_hasDerivAt_moment (a : LiftTangent) (f g : LiftL2 period)
       (div_le_div_of_nonneg_left (abs_nonneg x)
         (mul_pos (by norm_num) (Real.sqrt_pos.mpr hhalf))
         (mul_le_mul_of_nonneg_left (Real.sqrt_le_sqrt hs.le) (by norm_num))) (norm_nonneg g)
-  have hFint : Integrable (F t) (gaussianReal 0 1) :=
+  have hFint : Integrable (F t) (gaussianMeasure 0 1) :=
     Integrable.of_bound ((lineOrbit_continuous period a f).comp (continuous_const.mul
         continuous_id)).aestronglyMeasurable_of_secondCountable
       ‖f‖ (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f _).le))
-  have hBint : Integrable B (gaussianReal 0 1) :=
+  have hBint : Integrable B (gaussianMeasure 0 1) :=
     ((gaussianId_integrable 1).norm.div_const (2 * Real.sqrt (t/2))).mul_const ‖g‖
   have h := hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (F := F) (F' := F') (bound := B) (Ioi_mem_nhds (by linarith : t/2 < t))
@@ -124,11 +127,12 @@ theorem realLineHeat_hasDerivAt_moment (a : LiftTangent) (f g : LiftL2 period)
 -/
 theorem varianceMoment_eq_half_derivative (a : LiftTangent) {t : ℝ} (ht : 0 < t) (g : LiftL2
     period) :
-    (∫ x : ℝ, (x / (2 * Real.sqrt t)) • lineOrbit period a g (Real.sqrt t * x) ∂gaussianReal 0 1) =
+    (∫ x : ℝ, (x / (2 * Real.sqrt t)) • lineOrbit period a g (Real.sqrt t * x)
+      ∂gaussianMeasure 0 1) =
       (1/2 : ℝ) • lineHeatDerivative period a ⟨t, ht.le⟩ g := by
   have hs : Real.sqrt t ≠ 0 := (Real.sqrt_pos.mpr ht).ne'
-  have hmap : Measure.map (fun x => Real.sqrt t * x) (gaussianReal 0 1) = gaussianReal 0 ⟨t, ht.le⟩
-      := by
+  have hmap : Measure.map (fun x => Real.sqrt t * x) (gaussianMeasure 0 1) =
+      gaussianMeasure 0 ⟨t, ht.le⟩ := by
     have h := gaussianReal_map_const_mul (μ := 0) (v := (1 : ℝ≥0)) (Real.sqrt t)
     have he : NNReal.mk (Real.sqrt t ^ 2) (sq_nonneg _) * 1 = (⟨t, ht.le⟩ : ℝ≥0) := by
       apply Subtype.ext
@@ -136,11 +140,11 @@ theorem varianceMoment_eq_half_derivative (a : LiftTangent) {t : ℝ} (ht : 0 < 
       rw [mul_one, Real.sq_sqrt ht.le]
     rw [mul_zero, he] at h
     exact h
-  change (∫ x : ℝ, (x / (2 * Real.sqrt t)) • lineOrbit period a g (Real.sqrt t * x) ∂gaussianReal 0
-      1) =
-    (1/2 : ℝ) • (t⁻¹ • ∫ x : ℝ, x • lineOrbit period a g x ∂gaussianReal 0 ⟨t, ht.le⟩)
+  change (∫ x : ℝ, (x / (2 * Real.sqrt t)) • lineOrbit period a g (Real.sqrt t * x)
+      ∂gaussianMeasure 0 1) =
+    (1/2 : ℝ) • (t⁻¹ • ∫ x : ℝ, x • lineOrbit period a g x ∂gaussianMeasure 0 ⟨t, ht.le⟩)
   have hm := integral_map_of_stronglyMeasurable
-    (μ := gaussianReal 0 1) (φ := fun x : ℝ => Real.sqrt t * x)
+    (μ := gaussianMeasure 0 1) (φ := fun x : ℝ => Real.sqrt t * x)
     (f := fun x : ℝ => x • lineOrbit period a g x) (by fun_prop)
     ((continuous_id.smul (lineOrbit_continuous period a g)).stronglyMeasurable)
   rw [← hmap, hm, ← integral_smul, ← integral_smul]

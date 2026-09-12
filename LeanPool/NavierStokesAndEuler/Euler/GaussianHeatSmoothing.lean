@@ -19,7 +19,7 @@ noncomputable section
 
 namespace EulerGaussianCylinderHeat
 
-open MeasureTheory ProbabilityTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
+open MeasureTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
    EulerCylinderMollifier EulerClosedTranslationGraph
       EulerSpatialSobolevInverse
   EulerCylinderCoordinates
@@ -30,9 +30,9 @@ variable (period : ℝ) [Fact (0 < period)]
 theorem lineHeatDerivative_add (a : LiftTangent) (v : ℝ≥0) (f g : LiftL2 period) :
     lineHeatDerivative period a v (f+g) = lineHeatDerivative period a v f + lineHeatDerivative
         period a v g := by
-  have h : (∫ x : ℝ, x • lineOrbit period a (f+g) x ∂gaussianReal 0 v) =
-      (∫ x : ℝ, x • lineOrbit period a f x ∂gaussianReal 0 v) +
-      (∫ x : ℝ, x • lineOrbit period a g x ∂gaussianReal 0 v) := by
+  have h : (∫ x : ℝ, x • lineOrbit period a (f+g) x ∂gaussianMeasure 0 v) =
+      (∫ x : ℝ, x • lineOrbit period a f x ∂gaussianMeasure 0 v) +
+      (∫ x : ℝ, x • lineOrbit period a g x ∂gaussianMeasure 0 v) := by
     simp only [lineOrbit, map_add, smul_add]
     exact integral_add (gaussianMomentOrbit_integrable period a v f)
         (gaussianMomentOrbit_integrable period a v g)
@@ -114,7 +114,7 @@ theorem lineHeatDerivative_translation (a : LiftTangent) (v : ℝ≥0) (b : Lift
   simp only [lineHeatDerivative, map_smul]
   congr 1
   change (translation period b).toContinuousLinearMap
-      (∫ x : ℝ, x • lineOrbit period a f x ∂gaussianReal 0 v) = _
+      (∫ x : ℝ, x • lineOrbit period a f x ∂gaussianMeasure 0 v) = _
   rw [← (translation period b).toContinuousLinearMap.integral_comp_comm
       (gaussianMomentOrbit_integrable period a v f)]
   apply integral_congr_ae

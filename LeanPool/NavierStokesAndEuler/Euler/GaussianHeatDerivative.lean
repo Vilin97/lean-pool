@@ -9,7 +9,8 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
 
 import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
 import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.Probability.Distributions.Gaussian.Real
+public import LeanPool.NavierStokesAndEuler.Euler.GaussianKernels
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureSpatialRegularity
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedWeakDerivative
@@ -29,6 +30,9 @@ namespace EulerGaussianCylinderHeat
 open MeasureTheory ProbabilityTheory EulerLiftedGradientSpace EulerPressureSpatialRegularity
   EulerLiftedWeakDerivative EulerCylinderMollifier EulerSpatialSobolevInverse
 open scoped ENNReal NNReal Topology
+
+private theorem gaussianMeasure_eq_real (μ : ℝ) (v : ℝ≥0) :
+    gaussianMeasure μ v = gaussianReal μ v := rfl
 
 variable (period : ℝ) [Fact (0 < period)]
 
@@ -55,7 +59,7 @@ theorem lineOrbit_integrable (a : LiftTangent) (f : LiftL2 period) (μ : Measure
 
 /-- Gaussian averaging with variance v along a cylinder direction. -/
 def lineHeat (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period :=
-  ∫ x, lineOrbit period a f x ∂gaussianReal 0 v
+  ∫ x, lineOrbit period a f x ∂gaussianMeasure 0 v
 
 @[simp] theorem lineHeat_zero (a : LiftTangent) (f : LiftL2 period) : lineHeat period a 0 f = f :=
     by
@@ -65,7 +69,7 @@ def lineHeat (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period
 theorem lineHeat_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
     ‖lineHeat period a v f‖ ≤ ‖f‖ := by
   have h := norm_integral_le_of_norm_le (integrable_const ‖f‖ : Integrable (fun _ : ℝ => ‖f‖)
-      (gaussianReal 0 v))
+      (gaussianMeasure 0 v))
     (f := lineOrbit period a f) (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f
         x).le))
   simpa [lineHeat, measureReal_def] using h
@@ -99,8 +103,8 @@ theorem lineHeat_translation (a : LiftTangent) (v : ℝ≥0) (b : LiftDomain per
     period) :
     translation period b (lineHeat period a v f) = lineHeat period a v (translation period b f) :=
         by
-  change (translation period b).toContinuousLinearMap (∫ x, lineOrbit period a f x ∂gaussianReal 0
-      v) = _
+  change (translation period b).toContinuousLinearMap (∫ x, lineOrbit period a f x
+      ∂gaussianMeasure 0 v) = _
   rw [← (translation period b).toContinuousLinearMap.integral_comp_comm (lineOrbit_integrable
       period a f _)]
   apply integral_congr_ae
@@ -121,10 +125,11 @@ theorem jointOrbit_integrable (a : LiftTangent) (f : LiftL2 period)
 /-- Addition of Gaussian variances gives the semigroup law on actual cylinder L² fields. -/
 theorem lineHeat_semigroup (a : LiftTangent) (v w : ℝ≥0) (f : LiftL2 period) :
     lineHeat period a v (lineHeat period a w f) = lineHeat period a (v+w) f := by
-  have hconv : (gaussianReal 0 v) ∗ (gaussianReal 0 w) = gaussianReal 0 (v+w) := by
-    simpa using (gaussianReal_conv_gaussianReal (m₁ := 0) (m₂ := 0) (v₁ := v) (v₂ := w))
+  have hconv : (gaussianMeasure 0 v) ∗ (gaussianMeasure 0 w) = gaussianMeasure 0 (v+w) := by
+    simpa only [gaussianMeasure_eq_real, zero_add] using
+      (gaussianReal_conv_gaussianReal (m₁ := 0) (m₂ := 0) (v₁ := v) (v₂ := w))
   calc
-    _ = ∫ x, ∫ y, lineOrbit period a f (x+y) ∂gaussianReal 0 w ∂gaussianReal 0 v := by
+    _ = ∫ x, ∫ y, lineOrbit period a f (x+y) ∂gaussianMeasure 0 w ∂gaussianMeasure 0 v := by
       apply integral_congr_ae
       apply Filter.Eventually.of_forall
       intro x
@@ -134,9 +139,10 @@ theorem lineHeat_semigroup (a : LiftTangent) (v w : ℝ≥0) (f : LiftL2 period)
       intro y
       simp only [lineOrbit, translationPath_add, translation_add]
       rw [add_comm (translationPath period a y)]
-    _ = ∫ p : ℝ × ℝ, lineOrbit period a f (p.1+p.2) ∂(gaussianReal 0 v).prod (gaussianReal 0 w) :=
+    _ = ∫ p : ℝ × ℝ, lineOrbit period a f (p.1+p.2)
+        ∂(gaussianMeasure 0 v).prod (gaussianMeasure 0 w) :=
       (integral_prod _ (jointOrbit_integrable period a f _ _)).symm
-    _ = ∫ x, lineOrbit period a f x ∂(gaussianReal 0 v ∗ gaussianReal 0 w) := by
+    _ = ∫ x, lineOrbit period a f x ∂(gaussianMeasure 0 v ∗ gaussianMeasure 0 w) := by
       rw [Measure.conv]
       exact (integral_map_of_stronglyMeasurable
         (show Measurable (fun p : ℝ × ℝ => p.1 + p.2) by fun_prop)
@@ -146,7 +152,7 @@ theorem lineHeat_semigroup (a : LiftTangent) (v w : ℝ≥0) (f : LiftL2 period)
 /-- Different coordinate heat averages commute, since all cylinder translations commute. -/
 theorem lineHeat_commute (a b : LiftTangent) (v w : ℝ≥0) (f : LiftL2 period) :
     lineHeat period a v (lineHeat period b w f) = lineHeat period b w (lineHeat period a v f) := by
-  change (lineHeatOperator period a v) (∫ x, lineOrbit period b f x ∂gaussianReal 0 w) = _
+  change (lineHeatOperator period a v) (∫ x, lineOrbit period b f x ∂gaussianMeasure 0 w) = _
   rw [← (lineHeatOperator period a v).integral_comp_comm (lineOrbit_integrable period b f _)]
   apply integral_congr_ae
   apply Filter.Eventually.of_forall
@@ -155,14 +161,15 @@ theorem lineHeat_commute (a b : LiftTangent) (v w : ℝ≥0) (f : LiftL2 period)
 
 /-- Fixed standard-Gaussian representation of every nonnegative-variance average. -/
 theorem lineHeat_eq_standardGaussian (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
-    lineHeat period a v f = ∫ x, lineOrbit period a f (Real.sqrt (v : ℝ) * x) ∂gaussianReal 0 1 :=
-        by
+    lineHeat period a v f =
+      ∫ x, lineOrbit period a f (Real.sqrt (v : ℝ) * x) ∂gaussianMeasure 0 1 := by
   have hvar : (⟨Real.sqrt (v : ℝ) ^ 2, sq_nonneg _⟩ : ℝ≥0) * 1 = v := by
     ext
     simp [Real.sq_sqrt v.coe_nonneg]
   have hmap := gaussianReal_map_const_mul (μ := 0) (v := (1 : ℝ≥0)) (Real.sqrt (v : ℝ))
-  have hmap' : Measure.map (fun x => Real.sqrt (v : ℝ) * x) (gaussianReal 0 1) = gaussianReal 0 v
-      := by
+  have hmap' : Measure.map (fun x => Real.sqrt (v : ℝ) * x) (gaussianMeasure 0 1) =
+      gaussianMeasure 0 v := by
+    simp only [gaussianMeasure_eq_real]
     convert hmap using 2
     · simp
     · ext
@@ -220,19 +227,19 @@ theorem kernelOrbit_integrable (a : LiftTangent) (f : LiftL2 period)
 
 /-- The actual derivative of the real Gaussian density. -/
 theorem gaussianPDF_hasDerivAt (v : ℝ≥0) (x : ℝ) :
-    HasDerivAt (gaussianPDFReal 0 v) (-(x / (v : ℝ)) * gaussianPDFReal 0 v x) x := by
+    HasDerivAt (gaussianDensity 0 v) (-(x / (v : ℝ)) * gaussianDensity 0 v x) x := by
   have h := ((((hasDerivAt_id x).pow 2).neg.div_const (2*(v : ℝ))).exp).const_mul
     (Real.sqrt (2*Real.pi*(v : ℝ)))⁻¹
   convert! h using 1
   · ext y
-    simp [gaussianPDFReal]
-  · simp only [gaussianPDFReal, sub_zero, Pi.neg_apply, Pi.pow_apply, id_eq,
+    simp [gaussianDensity]
+  · simp only [gaussianDensity, sub_zero, Pi.neg_apply, Pi.pow_apply, id_eq,
       Nat.cast_ofNat, Nat.reduceSub, pow_one, mul_one]
     ring
 
 /-- The Gaussian first-moment kernel is integrable against Lebesgue measure. -/
 theorem gaussianMomentKernel_integrable (v : ℝ≥0) :
-    Integrable (fun x : ℝ => (x / (v : ℝ)) * gaussianPDFReal 0 v x) := by
+    Integrable (fun x : ℝ => (x / (v : ℝ)) * gaussianDensity 0 v x) := by
   by_cases hv : v = 0
   · subst v
     simp
@@ -241,26 +248,27 @@ theorem gaussianMomentKernel_integrable (v : ℝ≥0) :
     ((Real.sqrt (2*Real.pi*(v : ℝ)))⁻¹ / (v : ℝ))
   convert! h using 1
   ext x
-  simp only [gaussianPDFReal, sub_zero]
+  simp only [gaussianDensity, sub_zero]
   have he : -(x ^ 2) / (2*(v : ℝ)) = -(2*(v : ℝ))⁻¹ * x ^ 2 := by ring
   rw [he]
   ring
 
 /-- The first absolute moment of a centered Gaussian. -/
-def gaussianAbsMoment (v : ℝ≥0) : ℝ := ∫ x : ℝ, |x| ∂gaussianReal 0 v
+def gaussianAbsMoment (v : ℝ≥0) : ℝ := ∫ x : ℝ, |x| ∂gaussianMeasure 0 v
 
 theorem gaussianAbsMoment_nonneg (v : ℝ≥0) : 0 ≤ gaussianAbsMoment v :=
   integral_nonneg (fun x => abs_nonneg x)
 
-theorem gaussianId_integrable (v : ℝ≥0) : Integrable (fun x : ℝ => x) (gaussianReal 0 v) := by
+theorem gaussianId_integrable (v : ℝ≥0) : Integrable (fun x : ℝ => x) (gaussianMeasure 0 v) := by
   exact (memLp_one_iff_integrable).mp (memLp_id_gaussianReal (μ := 0) (v := v) 1)
 
 /-- Absolute Gaussian moments scale by the standard deviation. -/
 theorem gaussianAbsMoment_scale (v : ℝ≥0) :
     gaussianAbsMoment v = Real.sqrt (v : ℝ) * gaussianAbsMoment 1 := by
-  have hmap : Measure.map (fun x => Real.sqrt (v : ℝ) * x) (gaussianReal 0 1) = gaussianReal 0 v :=
-      by
+  have hmap : Measure.map (fun x => Real.sqrt (v : ℝ) * x) (gaussianMeasure 0 1) =
+      gaussianMeasure 0 v := by
     have h := gaussianReal_map_const_mul (μ := 0) (v := (1 : ℝ≥0)) (Real.sqrt (v : ℝ))
+    simp only [gaussianMeasure_eq_real]
     convert h using 2
     · simp
     · ext
@@ -272,7 +280,7 @@ theorem gaussianAbsMoment_scale (v : ℝ≥0) :
   rfl
 
 theorem gaussianMomentOrbit_integrable (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
-    Integrable (fun x : ℝ => x • lineOrbit period a f x) (gaussianReal 0 v) := by
+    Integrable (fun x : ℝ => x • lineOrbit period a f x) (gaussianMeasure 0 v) := by
   apply ((gaussianId_integrable v).norm.mul_const ‖f‖).mono'
     ((gaussianId_integrable v).1.smul (lineOrbit_continuous period a
       f).aestronglyMeasurable_of_secondCountable)
@@ -283,7 +291,7 @@ theorem gaussianMomentOrbit_integrable (a : LiftTangent) (v : ℝ≥0) (f : Lift
 
 /-- The bounded candidate generator after Gaussian smoothing. -/
 def lineHeatDerivative (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period :=
-  (v : ℝ)⁻¹ • ∫ x : ℝ, x • lineOrbit period a f x ∂gaussianReal 0 v
+  (v : ℝ)⁻¹ • ∫ x : ℝ, x • lineOrbit period a f x ∂gaussianMeasure 0 v
 
 theorem lineHeatDerivative_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
     ‖lineHeatDerivative period a v f‖ ≤ (v : ℝ)⁻¹ * gaussianAbsMoment v * ‖f‖ := by
@@ -291,7 +299,8 @@ theorem lineHeatDerivative_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 p
     ((gaussianId_integrable v).norm.mul_const ‖f‖)
     (f := fun x : ℝ => x • lineOrbit period a f x)
     (Filter.Eventually.of_forall (fun x => by simp only [norm_smul, lineOrbit_norm]; exact le_rfl))
-  have hb : ‖∫ x : ℝ, x • lineOrbit period a f x ∂gaussianReal 0 v‖ ≤ gaussianAbsMoment v * ‖f‖ :=
+  have hb : ‖∫ x : ℝ, x • lineOrbit period a f x ∂gaussianMeasure 0 v‖ ≤
+      gaussianAbsMoment v * ‖f‖ :=
       by
     simpa only [integral_mul_const, Real.norm_eq_abs, gaussianAbsMoment] using hi
   rw [lineHeatDerivative, norm_smul, Real.norm_of_nonneg (inv_nonneg.mpr v.coe_nonneg)]
@@ -330,28 +339,28 @@ operator. -/
 theorem lineHeat_derivative_identity (a : LiftTangent) {v : ℝ≥0} (hv : v ≠ 0)
     (f g : LiftL2 period) (hD : HasDerivAt (lineOrbit period a f) g 0) :
     lineHeat period a v g = lineHeatDerivative period a v f := by
-  have hp := kernelOrbit_integrable period a f (gaussianPDFReal 0 v) (integrable_gaussianPDFReal 0
+  have hp := kernelOrbit_integrable period a f (gaussianDensity 0 v) (integrable_gaussianPDFReal 0
       v)
-  have hpg := kernelOrbit_integrable period a g (gaussianPDFReal 0 v) (integrable_gaussianPDFReal 0
+  have hpg := kernelOrbit_integrable period a g (gaussianDensity 0 v) (integrable_gaussianPDFReal 0
       v)
   have hdp := kernelOrbit_integrable period a f
-    (fun x => -(x/(v : ℝ)) * gaussianPDFReal 0 v x) ((gaussianMomentKernel_integrable v).neg.congr
+    (fun x => -(x/(v : ℝ)) * gaussianDensity 0 v x) ((gaussianMomentKernel_integrable v).neg.congr
       (Filter.Eventually.of_forall (fun x => by simp only [Pi.neg_apply]; ring)))
   have hIBP := integral_bilinear_hasDerivAt_right_eq_neg_left_of_integrable
     (L := ContinuousLinearMap.lsmul ℝ ℝ)
     (fun x _ => gaussianPDF_hasDerivAt v x)
     (fun x _ => translation_hasDerivAt_all period a f g hD x) hpg hdp hp
-  rw [lineHeat, integral_gaussianReal_eq_integral_smul hv]
-  change (∫ x, gaussianPDFReal 0 v x • lineOrbit period a g x) = _
-  rw [show (∫ x, gaussianPDFReal 0 v x • lineOrbit period a g x) =
-      -(∫ x, (-(x/(v : ℝ)) * gaussianPDFReal 0 v x) • lineOrbit period a f x) from hIBP]
-  rw [lineHeatDerivative, integral_gaussianReal_eq_integral_smul hv, ← integral_smul, ←
-      integral_neg]
+  rw [lineHeat, gaussianMeasure_eq_real, integral_gaussianReal_eq_integral_smul hv]
+  change (∫ x, gaussianDensity 0 v x • lineOrbit period a g x) = _
+  rw [show (∫ x, gaussianDensity 0 v x • lineOrbit period a g x) =
+      -(∫ x, (-(x/(v : ℝ)) * gaussianDensity 0 v x) • lineOrbit period a f x) from hIBP]
+  rw [lineHeatDerivative, gaussianMeasure_eq_real, integral_gaussianReal_eq_integral_smul hv,
+    ← integral_smul, ← integral_neg]
   apply integral_congr_ae
   apply Filter.Eventually.of_forall
   intro x
-  change -((-(x / (v : ℝ)) * gaussianPDFReal 0 v x) • lineOrbit period a f x) =
-    (v : ℝ)⁻¹ • (gaussianPDFReal 0 v x • (x • lineOrbit period a f x))
+  change -((-(x / (v : ℝ)) * gaussianDensity 0 v x) • lineOrbit period a f x) =
+    (v : ℝ)⁻¹ • (gaussianDensity 0 v x • (x • lineOrbit period a f x))
   rw [← neg_smul]
   simp only [smul_smul]
   congr 1

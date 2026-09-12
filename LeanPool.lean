@@ -3611,6 +3611,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GainedMildFormula
 import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatDerivative
 import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatSmoothing
 import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatTotal
+import LeanPool.NavierStokesAndEuler.Euler.GaussianKernels
 import LeanPool.NavierStokesAndEuler.Euler.GeneralCylinderAlgebra
 import LeanPool.NavierStokesAndEuler.Euler.GevreyComposition
 import LeanPool.NavierStokesAndEuler.Euler.GevreyCompositionLp
