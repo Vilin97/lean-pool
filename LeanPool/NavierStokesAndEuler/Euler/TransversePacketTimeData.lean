@@ -399,9 +399,14 @@ theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0
     (n : ℕ) (a : X) :
     ‖iteratedFDeriv ℝ n (fun x => timeNormalPath (N x) (Q₁ x)) a‖ ≤
       (27*C^2*D)*majorant R 0 n := by
-  let A := fun x => pathCompositionMap (pathCompositionMap (N x) (pathAdjointMap (N x)))
-    (pathAdjointMap (Q₁ x))
-  let B := fun x => pathCompositionMap (pathCompositionMap (N x) (Q₁ x)) (N x)
+  let A : X → C(K,NormalField) := fun x =>
+    pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
+      (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ)
+        (N x) (pathAdjointMap (U := Space) (E := ℝ) (N x)))
+      (pathAdjointMap (U := ℝ) (E := Space) (Q₁ x))
+  let B : X → C(K,NormalField) := fun x =>
+    pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
+      (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) (N x) (Q₁ x)) (N x)
   have hNa := (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ)).contDiff.comp hN
   have hQa := (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space)).contDiff.comp hQ₁
   have hNN := pathComposition_contDiff N (fun x => pathAdjointMap (N x)) hN hNa
