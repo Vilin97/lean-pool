@@ -20,31 +20,31 @@ namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 /-- Root audit for fixed branch (1, 3). -/
 theorem coverageBranchRoot_1_03 :
     branchClaimRootValidB 1 3 (.patternThree 178) = true := by
-  rfl
+  decide +kernel
 
 /-- Root audit for fixed branch (3, 26). -/
 theorem coverageBranchRoot_3_26 :
     branchClaimRootValidB 3 26 (.search branchClaims3Row26) = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (3, 25), starting at 320. -/
 theorem coverageBranchNodes_3_25_00320 :
     nodeClaimChunkValidB branchClaims3Row25 320 21 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (3, 26), starting at 0. -/
 theorem coverageBranchNodes_3_26_00000 :
     nodeClaimChunkValidB branchClaims3Row26 0 64 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (3, 26), starting at 64. -/
 theorem coverageBranchNodes_3_26_00064 :
     nodeClaimChunkValidB branchClaims3Row26 64 64 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (3, 26), starting at 128. -/
 theorem coverageBranchNodes_3_26_00128 :
     nodeClaimChunkValidB branchClaims3Row26 128 64 = true := by
-  rfl
+  decide +kernel
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage
