@@ -84,8 +84,7 @@ theorem gradient_pairing (u : SobolevSpace period 2) (v : SobolevSpace period 1)
     linarith
   rw [← laplacianOperator_value period u, laplacianOperator_apply]
   change _ = -⟪(valueOperator period 0) (∑ i : Fin 4, _), value period v⟫_ℝ
-  rw [map_sum, sum_inner]
-  simp only [hi, Finset.sum_neg_distrib]
+  simp only [map_sum, sum_inner, hi, Finset.sum_neg_distrib]
   rfl
 
 /-- Actual L² time derivatives of the first spatial derivatives determine the gradient-energy
@@ -134,7 +133,7 @@ theorem heat_gradient_energy_hasDerivAt (u : ℝ → SobolevSpace period 3)
     rfl
   change HasDerivAt _ (-2 * ⟪laplacianEvaluation period 2 _ (truncateOperator period 2 (u t)),
     ν • value period (laplacianOperator period 1 (u t)) + value period f⟫_ℝ) t at h
-  rw [he, laplacianOperator_value] at h
+  simp only [he, laplacianOperator_value] at h
   exact h
 
 /-- The actual derivative of gradient energy controls the full L² Laplacian with no source
@@ -198,7 +197,7 @@ theorem hessian_row_identity (u : SobolevSpace period 3) (j : Fin 4) :
   have he : laplacianEvaluation period 2 (by norm_num) (derivativeOperator period 2 j u) =
       value period (derivativeOperator period 0 j (laplacianOperator period 1 u)) := by
     rw [← laplacianOperator_value, laplacian_derivative]
-  rw [he, value_truncateOperator] at h
+  simp only [he, value_truncateOperator] at h
   have h' := h.trans (congrArg Neg.neg (real_inner_comm (F := LiftL2 period)
       (value period (derivativeOperator period 2 j u))
       (value period (derivativeOperator period 0 j (laplacianOperator period 1 u)))))
@@ -218,7 +217,7 @@ theorem laplacian_gradient_pairing (u : SobolevSpace period 3) :
       laplacianEvaluation period 3 (by norm_num) u := by
     rw [laplacianEvaluation_apply, laplacianEvaluation_apply]
     rfl
-  rw [he, laplacianOperator_value, real_inner_self_eq_norm_sq] at hp
+  simp only [he, laplacianOperator_value, real_inner_self_eq_norm_sq] at hp
   exact hp
 
 /-- All genuine second-coordinate derivatives are controlled exactly by the Laplacian. -/
@@ -435,7 +434,7 @@ theorem time_H2_elliptic_bound (T : ℝ) (hT : 0 ≤ T) (u : C(Icc (0 : ℝ) T, 
       norm_num) (extendPath T hT u t)‖^2) :=
     (((laplacianEvaluation period 3 (by
         norm_num)).continuous.comp (extendPath_continuous T hT u)).norm).pow 2
-  rw [pathLp_norm_sq]
+  simp only [pathLp_norm_sq]
   exact integral_le_constant_add _ _ _ T hT hhigh hLap (fun t _ => path_H2_point_bound period T hT
       u t)
 
@@ -559,6 +558,13 @@ open MeasureTheory Set EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerS
 open scoped Topology
 
 variable (period : ℝ) [Fact (0 < period)]
+
+/-- Cache pointwise subtraction for the Sobolev paths used in difference estimates. -/
+local instance instSobolevPathSub (T : ℝ) (k : ℕ) :
+    Sub C(Set.Icc (0 : ℝ) T, SobolevSpace period k) := inferInstance
+
+/-- Cache the scalar action used by the Sobolev heat equations. -/
+local instance instSobolevScalarAction (k : ℕ) : SMul ℝ (SobolevSpace period k) := inferInstance
 
 /-- A bounded linear observation preserves the difference form of the forced heat right hand side.
 -/
