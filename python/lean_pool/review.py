@@ -1087,6 +1087,7 @@ class ReviewResult:
     calls: int = 1
     coverage: str | None = None
     requests: tuple[ReviewResult, ...] = ()
+    source_reviews: tuple[ReviewResult, ...] = ()
 
 
 def _review_messages(
@@ -1207,7 +1208,9 @@ def _review_in_portions(
         manifest, [r.payload for r in results], shared
     )
     final = _integrate_portions(diff, evidence, obligations, budget, prepare, send)
-    return replace(final, portions=len(results), coverage=manifest)
+    return replace(
+        final, portions=len(results), coverage=manifest, source_reviews=tuple(results)
+    )
 
 
 def _integrate_portions(
@@ -1233,13 +1236,11 @@ def _integrate_portions(
             )
         final = send(messages)
         queries = final.payload.get("source_requests", [])
-        if (
-            not isinstance(queries, list)
-            or len(queries) > 20
-            or any(not isinstance(query, str) or not query.strip() for query in queries)
+        if not isinstance(queries, list) or any(
+            not isinstance(query, str) or not query.strip() for query in queries
         ):
             raise ValueError(
-                "Integration source requests must be at most 20 nonempty strings"
+                f"Integration source requests must be nonempty strings: {queries!r}"
             )
         if not queries:
             break
@@ -1250,17 +1251,36 @@ def _integrate_portions(
             )
         )
         bundle["obligations"] = obligations
-        updated = prepare(
-            json.dumps(bundle, ensure_ascii=False),
-            review_portions.integration_instructions(),
-        )
-        available = budget - _message_tokens(updated)
-        allowance = max(0, (available - 512) // len(queries))
-        bundle["source_followups"].extend(
-            review_portions.source_excerpts(diff, query, allowance) for query in queries
-        )
+        if not _fit_source_followups(diff, queries, bundle, budget, prepare):
+            break
     payload = review_portions.enforce_resolutions(final.payload, obligations)
     return replace(final, payload=payload)
+
+
+def _fit_source_followups(
+    diff: str, queries: list[str], bundle: dict, budget: int, prepare: Callable
+) -> bool:
+    """Fit the serialized excerpts and their metadata within the next call."""
+    rules = review_portions.integration_instructions()
+    available = budget - _message_tokens(
+        prepare(json.dumps(bundle, ensure_ascii=False), rules)
+    )
+    allowance = max(
+        0, int((available - 512) * CHARS_PER_TOKEN_ESTIMATE) // len(queries)
+    )
+    for _ in range(20):
+        excerpts = [
+            review_portions.source_excerpts(diff, query, allowance) for query in queries
+        ]
+        candidate = bundle | {"source_followups": bundle["source_followups"] + excerpts}
+        messages = prepare(json.dumps(candidate, ensure_ascii=False), rules)
+        if _message_tokens(messages) <= budget:
+            bundle["source_followups"] = candidate["source_followups"]
+            return True
+        if allowance == 0:
+            break
+        allowance //= 2
+    return False
 
 
 class _ReviewSession:
@@ -1279,6 +1299,9 @@ class _ReviewSession:
         result = _send_review(self.model, messages, self.effort)
         with self.lock:
             self.completed.append(result)
+            if destination := os.environ.get("REVIEW_EVIDENCE_PATH"):
+                with Path(destination).with_suffix(".calls.jsonl").open("a") as stream:
+                    stream.write(json.dumps(asdict(result), default=vars) + "\n")
         return result
 
     def accounted(self, result: ReviewResult) -> ReviewResult:

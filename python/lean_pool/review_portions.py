@@ -216,10 +216,21 @@ def enforce_resolutions(payload: dict, obligations: dict[str, str]) -> dict:
     if resolved - obligations.keys():
         raise ValueError("Integration cites an unknown review obligation")
     missing = obligations.keys() - resolved
+    final_concerns = {
+        identifier: concern
+        for identifier, concern in report_obligations(
+            "integration:final", payload
+        ).items()
+        if not identifier.endswith(":verdict")
+    }
+    obligations = obligations | final_concerns
+    missing |= final_concerns.keys()
     if missing:
         payload = dict(payload)
         findings = list(payload.get("findings") or [])
         for identifier in sorted(missing):
+            if identifier.startswith("integration:final:finding:"):
+                continue  # The concrete finding already appears in this final report.
             findings.append(
                 {
                     "file": "",

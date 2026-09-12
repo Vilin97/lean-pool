@@ -87,6 +87,9 @@ def test_complete_workflow_budget_accounting_and_integration(monkeypatch):
                 "findings": [],
                 "open_questions": [],
                 "evidence_summary": "Reviewed unique_2_499 and local definitions.",
+                "source_number": int(
+                    re.search(r"source portion (\d+)/", user).group(1)
+                ),
             }
         )
 
@@ -94,6 +97,9 @@ def test_complete_workflow_budget_accounting_and_integration(monkeypatch):
     answer = review.request_review(review.DEFAULT_MODEL, "rules", diff, "review")
     assert answer.payload["verdict"] == "pass"
     assert answer.portions > 1
+    assert [item.payload["source_number"] for item in answer.source_reviews] == list(
+        range(1, answer.portions + 1)
+    )
     assert answer.calls == answer.portions + 1 == len(calls)
     assert answer.usage.prompt_tokens == len(calls) * 10
     assert answer.usage.completion_tokens == len(calls) * 3
@@ -496,3 +502,111 @@ def test_integration_followup_preserves_previous_concerns(resolve):
     if not resolve:
         assert "Potentially vacuous definition" in str(answer.payload["findings"])
         assert "MissingDefinition" in str(answer.payload["findings"])
+
+
+@pytest.mark.parametrize("field", ["findings", "open_questions", "source_requests"])
+def test_final_integration_concerns_prevent_approval(field):
+    """A final pass cannot override unresolved concerns in that same report."""
+    payload = {"verdict": "pass", field: ["Unresolved semantic question"]}
+    answer = review_portions.enforce_resolutions(payload, {})
+    assert answer["verdict"] == "discuss"
+    assert "Unresolved semantic question" in str(answer["findings"])
+
+
+def test_source_excerpt_allowance_uses_characters(monkeypatch):
+    """An excerpt can use the remaining token budget at the configured ratio."""
+    calls = []
+    allowances = []
+
+    def prepare(evidence, rules):
+        return [{"role": "user", "content": evidence}]
+
+    def send(messages):
+        calls.append(messages)
+        return result(
+            {"verdict": "pass", "source_requests": ["Known"] if len(calls) == 1 else []}
+        )
+
+    def excerpt(diff, query, allowance):
+        allowances.append(allowance)
+        return {"source": "def Known := 0"}
+
+    monkeypatch.setattr(review_portions, "source_excerpts", excerpt)
+    review._integrate_portions("def Known := 0", "{}", {}, 10_000, prepare, send)
+    assert 15_000 < allowances[0] < 20_000
+
+
+def test_many_source_requests_are_not_discarded(monkeypatch):
+    """The input budget, rather than an arbitrary request count, bounds retrieval."""
+    requested = [f"Definition{index}" for index in range(25)]
+    retrieved = []
+    calls = []
+
+    def prepare(evidence, rules):
+        return [{"role": "user", "content": evidence}]
+
+    def send(messages):
+        calls.append(messages)
+        return result(
+            {"verdict": "pass", "source_requests": requested if len(calls) == 1 else []}
+        )
+
+    def excerpt(diff, query, allowance):
+        retrieved.append(query)
+        return {"query": query, "status": "No matching source"}
+
+    monkeypatch.setattr(review_portions, "source_excerpts", excerpt)
+    answer = review._integrate_portions("", "{}", {}, 10_000, prepare, send)
+    assert retrieved == requested
+    assert answer.payload["verdict"] == "discuss"
+
+
+def test_completed_calls_are_saved_before_later_failure(monkeypatch, tmp_path):
+    """Successful source work survives an integration or transport failure."""
+    destination = tmp_path / "review-evidence.json"
+    monkeypatch.setenv("REVIEW_EVIDENCE_PATH", str(destination))
+    monkeypatch.setattr(
+        review, "_send_review", lambda *args: result({"verdict": "pass"})
+    )
+    session = review._ReviewSession(review.DEFAULT_MODEL, "xhigh")
+    session.send([])
+    saved = json.loads(destination.with_suffix(".calls.jsonl").read_text())
+    assert saved["payload"]["verdict"] == "pass"
+
+
+def test_followup_budget_includes_serialized_metadata_and_escaping(monkeypatch):
+    """Escaping and many per-query envelopes cannot overflow the next call."""
+    calls = []
+
+    def prepare(evidence, rules):
+        return [{"role": "user", "content": evidence}]
+
+    def send(messages):
+        assert review._message_tokens(messages) <= 10_000
+        calls.append(messages)
+        return result(
+            {
+                "verdict": "pass",
+                "source_requests": [f"D{i}" for i in range(20)]
+                if len(calls) == 1
+                else [],
+            }
+        )
+
+    def excerpt(diff, query, allowance):
+        return {"query": query, "source": "\\" * allowance, "status": "metadata " * 50}
+
+    monkeypatch.setattr(review_portions, "source_excerpts", excerpt)
+    answer = review._integrate_portions("", "{}", {}, 10_000, prepare, send)
+    assert len(calls) == 2
+    assert answer.payload["verdict"] == "discuss"
+
+
+def test_final_findings_are_reported_once():
+    """A retained finding blocks approval without a duplicate synthetic entry."""
+    finding = {"comment": "Unresolved semantic concern"}
+    answer = review_portions.enforce_resolutions(
+        {"verdict": "pass", "findings": [finding]}, {}
+    )
+    assert answer["verdict"] == "discuss"
+    assert answer["findings"] == [finding]
