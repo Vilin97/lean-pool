@@ -55,7 +55,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanFixedTranslation
 import LeanPool.NavierStokesAndEuler.Euler.HilbertCoerciveGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.MeanScaledCutoff
 import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryFrechet
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicSmallBall
 public import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryMixed
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketUniformScaleSums
 import LeanPool.NavierStokesAndEuler.Euler.MeanBoundaryDerivative
@@ -271,8 +271,8 @@ theorem cutoffUnitBallFactor_nonneg : 0 ≤ cutoffUnitBallFactor := by
 
 theorem closedBall_volume_oneThird (R : ℝ) (hR : 0 ≤ R) :
     (volume (Metric.closedBall (0 : Space) R)).toReal ^ (1/3 : ℝ) = R * cutoffUnitBallFactor := by
-  rw [EuclideanSpace.volume_closedBall_fin_three, ENNReal.toReal_mul, ENNReal.toReal_pow,
-    ENNReal.toReal_ofReal hR, ENNReal.toReal_ofReal (by positivity),
+  rw [MeasureTheory.Measure.addHaar_closedBall_eq_addHaar_ball,
+    EulerMeanHarmonic.volume_ball_toReal R hR,
     Real.mul_rpow (pow_nonneg hR 3) (by positivity), ← Real.rpow_natCast_mul hR]
   norm_num [cutoffUnitBallFactor]
 
