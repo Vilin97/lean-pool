@@ -641,6 +641,7 @@ theorem exists_vertexDiskControl
     (hinj : Set.InjOn h K.support) : Nonempty (K.VertexDiskControl h) := by
   classical
   let I := Option ((K.Vertex × K.Vertex) ⊕ (K.Vertex × K.EdgeFace))
+  have : Nonempty I := ⟨none⟩
   let P : I → ℝ → Prop
     | none, _ => True
     | some (Sum.inl (v, w)), δ => v = w ∨
@@ -2527,25 +2528,24 @@ theorem graphReplacementMap_affineOn_middle {h : Plane → Plane}
       linarith
     have hmul := mul_le_mul_of_nonneg_left hr hdelta
     linarith
-  have hzBounds {x : Plane} (hx : x ∈ R.cellCarrier u) : z x ∈ Set.Icc 0 n := by
-    have ht0 := hmid0 x hx
-    have ht1 := hmid1 x hx
-    have hr0 : 0 ≤ 4 * K.edgeParameter i x - 2 := by linarith
-    have hr1 : 4 * K.edgeParameter i x - 2 ≤ 1 := by linarith
+  have hzExitBounds {x : Plane} (hx : x ∈ R.cellCarrier u) :
+      z x ∈ Set.Icc (n * A.exitData.left) (n * A.exitData.right) := by
+    have hr0 : 0 ≤ 4 * K.edgeParameter i x - 2 := by linarith only [hmid0 x hx]
+    have hr1 : 4 * K.edgeParameter i x - 2 ≤ 1 := by linarith only [hmid1 x hx]
     constructor
-    · apply mul_nonneg hn.le
-      exact add_nonneg A.exitData.left_nonneg (mul_nonneg hdelta hr0)
-    · calc
-        n * (A.exitData.left + (A.exitData.right - A.exitData.left) *
-            (4 * K.edgeParameter i x - 2)) ≤ n * 1 := by
-          apply mul_le_mul_of_nonneg_left _ hn.le
-          calc
-            A.exitData.left + (A.exitData.right - A.exitData.left) *
-                (4 * K.edgeParameter i x - 2) ≤ A.exitData.right := by
-              have := mul_le_mul_of_nonneg_left hr1 hdelta
-              linarith
-            _ ≤ 1 := A.exitData.right_le_one
-        _ = n := mul_one n
+    · apply mul_le_mul_of_nonneg_left _ hn.le
+      exact le_add_of_nonneg_right (mul_nonneg hdelta hr0)
+    · apply mul_le_mul_of_nonneg_left _ hn.le
+      calc
+        A.exitData.left + (A.exitData.right - A.exitData.left) *
+            (4 * K.edgeParameter i x - 2) ≤
+            A.exitData.left + (A.exitData.right - A.exitData.left) :=
+          add_le_add le_rfl (mul_le_of_le_one_right hdelta hr1)
+        _ = A.exitData.right := add_sub_cancel _ _
+  have hzBounds {x : Plane} (hx : x ∈ R.cellCarrier u) : z x ∈ Set.Icc 0 n :=
+    ⟨(mul_nonneg hn.le A.exitData.left_nonneg).trans (hzExitBounds hx).1,
+      (hzExitBounds hx).2.trans (by
+        simpa only [mul_one] using mul_le_mul_of_nonneg_left A.exitData.right_le_one hn.le)⟩
   have hucard : u.card ≤ 2 :=
     card_le_two_of_cellCarrier_subset_face hu (K.edgeAt_mem_simplexes i)
       (by rw [K.edgeAt_card]) hui
@@ -2584,21 +2584,7 @@ theorem graphReplacementMap_affineOn_middle {h : Plane → Plane}
         have hcn : c < n * A.exitData.left := by
           rw [div_lt_iff₀ hn] at hv0
           simpa [mul_comm] using hv0
-        have hpLower : n * A.exitData.left ≤ z (R.position p) := by
-          dsimp [z]
-          have hr := hmid0 (R.position p) hp
-          have : 0 ≤ (A.exitData.right - A.exitData.left) *
-              (4 * K.edgeParameter i (R.position p) - 2) :=
-            mul_nonneg hdelta (by linarith)
-          nlinarith
-        have hqLower : n * A.exitData.left ≤ z (R.position q) := by
-          dsimp [z]
-          have hr := hmid0 (R.position q) hq
-          have : 0 ≤ (A.exitData.right - A.exitData.left) *
-              (4 * K.edgeParameter i (R.position q) - 2) :=
-            mul_nonneg hdelta (by linarith)
-          nlinarith
-        exact hcn.le.trans (le_min hpLower hqLower)
+        exact hcn.le.trans (le_min (hzExitBounds hp).1 (hzExitBounds hq).1)
       · have hv0' : A.exitData.left ≤ c / n := le_of_not_gt hv0
         by_cases hv1 : c / n ≤ A.exitData.right
         · have hbreak := K.graphReplacementFace_parameter_side hcont D C i
@@ -2654,19 +2640,7 @@ theorem graphReplacementMap_affineOn_middle {h : Plane → Plane}
             have : A.exitData.right < c / n := lt_of_not_ge hv1
             rw [lt_div_iff₀ hn] at this
             simpa [mul_comm] using this
-          have hpUpper : z (R.position p) ≤ n * A.exitData.right := by
-            dsimp [z]
-            have hr := hmid1 (R.position p) hp
-            have hmul := mul_le_mul_of_nonneg_left
-              (show 4 * K.edgeParameter i (R.position p) - 2 ≤ 1 by linarith) hdelta
-            nlinarith
-          have hqUpper : z (R.position q) ≤ n * A.exitData.right := by
-            dsimp [z]
-            have hr := hmid1 (R.position q) hq
-            have hmul := mul_le_mul_of_nonneg_left
-              (show 4 * K.edgeParameter i (R.position q) - 2 ≤ 1 by linarith) hdelta
-            nlinarith
-          exact (max_le hpUpper hqUpper).trans hcn.le
+          exact (max_le (hzExitBounds hp).2 (hzExitBounds hq).2).trans hcn.le
     obtain ⟨s, hs, hssegment⟩ := exists_face_containing_axis_segment_of_no_vertex
       A.parameterization.source hn.le hab ha hb A.parameterization.source_support
         A.parameterization.source_card_le_two havoid
