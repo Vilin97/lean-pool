@@ -10,10 +10,15 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketInductionStage
 import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
 import LeanPool.NavierStokesAndEuler.Euler.ParentEulerParity
 
-/-! The actual physical gradient at a stage's activation diverges with
-the stage index. This uses the invariant's true frame decomposition. -/
+/-!
+# Growth of the activation gradient
 
-@[expose] public section
+The frame decomposes the strain at the origin into a rank-one shear, a background and
+a remainder. The shear dominates the other terms and diverges with the stage index.
+The argument only needs `GrowthData`; the `Stage` results retain the full-stage interface.
+-/
+
+public section
 
 
 noncomputable section
@@ -50,7 +55,7 @@ theorem previousShear_ge_index {c B : ℝ} (S : Scales c B) (n : ℕ) :
 end Scales
 end EulerPacketInductionScales
 
-namespace EulerPacketInduction.Stage
+namespace EulerPacketInduction.GrowthData
 
 open Set Real Filter InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerPacketInductionScales EulerPacketSourceGeometry EulerPacketNormalizedPrimary
@@ -58,13 +63,14 @@ open Set Real Filter InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerTransversePacketProvider
 open scoped Topology
 
-variable {c B : ℝ} {S : Scales c B} {n : ℕ} (P : Stage S n)
+variable {c B : ℝ} {S : Scales c B} {n : ℕ} (P : GrowthData S n)
 
-/-- Activation gradient, given by `‖fderiv ℝ (fun x => P.state.evolution.velocity (P.time,x))
-0‖`. -/
-def activationGradient : ℝ :=
+/-- The norm of the spatial velocity gradient at the packet centre and activation time. -/
+@[expose] def activationGradient : ℝ :=
   ‖fderiv ℝ (fun x => P.state.evolution.velocity (P.time,x)) 0‖
 
+/-- The leading shear gives a gradient lower bound after subtracting the background
+and remainder controlled by the frame estimates. -/
 theorem gradient_lower (hn : n ≠ 0) : previousShear S.J S.X n/2 ≤ P.activationGradient := by
   let t : Icc (0 : ℝ) P.parent.T := ⟨P.time,P.time_nonneg,P.time_lt.le⟩
   let M := P.parent.strain.field t 0
@@ -96,7 +102,8 @@ theorem gradient_lower (hn : n ≠ 0) : previousShear S.J S.X n/2 ≤ P.activati
   rw [heq] at hM
   linarith only [hM,he]
 
-theorem gradient_atTop (P : ∀ n, Stage S n) :
+/-- Activation gradients diverge along any family of growth data. -/
+theorem gradient_atTop (P : ∀ n, GrowthData S n) :
     Tendsto (fun n => (P n).activationGradient) atTop atTop := by
   apply tendsto_atTop.2
   intro b
@@ -107,5 +114,26 @@ theorem gradient_atTop (P : ∀ n, Stage S n) :
   have hs := S.previousShear_ge_index n
   have hg := (P n).gradient_lower hn0
   linarith only [hN,hi,hs,hg]
+
+end EulerPacketInduction.GrowthData
+
+namespace EulerPacketInduction.Stage
+
+open Filter EulerPacketInductionScales EulerPacketSourceScaleSequence
+
+variable {c B : ℝ} {S : Scales c B} {n : ℕ} (P : Stage S n)
+
+/-- The norm of the spatial velocity gradient at the stage's activation point. -/
+@[expose] def activationGradient : ℝ :=
+  ‖fderiv ℝ (fun x => P.state.evolution.velocity (P.time,x)) 0‖
+
+/-- A full stage satisfies the growth estimate through its growth data. -/
+theorem gradient_lower (hn : n ≠ 0) : previousShear S.J S.X n/2 ≤ P.activationGradient :=
+  P.toGrowthData.gradient_lower hn
+
+/-- The activation gradients of a family of full stages diverge. -/
+theorem gradient_atTop (P : ∀ n, Stage S n) :
+    Tendsto (fun n => (P n).activationGradient) atTop atTop :=
+  GrowthData.gradient_atTop fun n => (P n).toGrowthData
 
 end EulerPacketInduction.Stage

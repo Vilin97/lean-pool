@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
+import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.Analysis.Calculus.ContDiff.Operations
@@ -70,7 +71,7 @@ def spatialPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 theorem continuous_partial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : Space → E} (hf : ContDiff ℝ 1 f) (i : Fin 3) : Continuous (spatialPartial i f) :=
-  (hf.continuous_fderiv (by norm_num)).clm_apply continuous_const
+  SolutionDifference.continuous_partial hf i
 
 theorem integrable_cube {E : Type*} [NormedAddCommGroup E]
     {f : Space → E} (hf : Continuous f) : Integrable (fun y => f (toSpace y)) cubeMeasure :=

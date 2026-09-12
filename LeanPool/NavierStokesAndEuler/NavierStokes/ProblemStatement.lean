@@ -10,11 +10,11 @@ public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 
 /-!
-# OPEN target: the candidate forced Navier--Stokes construction
+# The candidate forced Navier–Stokes construction
 
 This module states the primary existential assertion of Candidate Theorem 1.1.
-`candidateStatement` is a proposition, not an axiom or a proved theorem.
-No witness satisfying it is constructed here.
+`candidateStatement` separates the candidate contract from its construction.
+The witnesses and their consequences are proved in the downstream assembly modules.
 
 The unit torus is represented by periodic functions on Euclidean three-space.
 Time is the first coordinate in `SpaceTime`. Smoothness at time zero is relative
@@ -126,10 +126,9 @@ structure CandidateProperties (u : VelocityField) (p : PressureField)
     navierStokesResidual u p t x = f (t, x)
   speed_unbounded : SpeedUnboundedAtOne u
 
-/-- OPEN: the primary existential content of Candidate Theorem 1.1.
-There is no proof, witness, or axiom asserting this proposition in this module.
-Maximal lifespan, Sobolev blow-up, and force derivative decay require additional
-theorems and are not silently included as proved consequences. -/
+/-- The primary existential content of Candidate Theorem 1.1.
+Maximal lifespan, Sobolev blow-up, and force derivative decay are derived
+from these candidate conditions in separate theorems. -/
 def candidateStatement : Prop :=
   ∃ u : VelocityField, ∃ p : PressureField, ∃ f : VelocityField,
     CandidateProperties u p f

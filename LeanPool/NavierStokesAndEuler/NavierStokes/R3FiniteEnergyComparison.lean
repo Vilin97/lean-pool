@@ -30,7 +30,7 @@ energy bound. It makes no periodicity or compact-support assumption on a
 hypothetical global solution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,20 +55,26 @@ structure GlobalSolutionRn (f : VelocityField) (v : VelocityField) (p : Pressure
   integrable : ∀ t : ℝ, 0 ≤ t → MemLp (fun x : Space => ‖v (t, x)‖) 2
   globally_bounded_energy : ∃ E : ℝ, ∀ t : ℝ, 0 ≤ t → (∫ x : Space, ‖v (t, x)‖ ^ 2) < E
 
+/-- Forget energy bounds while retaining the shared equation and initial data. -/
+theorem GlobalSolutionRn.toSolutionOn {f v : VelocityField} {p : PressureField}
+    (solution : GlobalSolutionRn f v p) :
+    SolutionOn 1 0 (fun _ => 0) (Ici 0) f v p where
+  velocity_smooth := solution.velocity_smooth
+  pressure_smooth := solution.pressure_smooth
+  initial_velocity := solution.initial_velocity
+  divergence_free := solution.divergence_free
+  navier_stokes := by
+    intro time _ positive position
+    simpa only [viscousResidual_one] using solution.navier_stokes time positive position
+
 theorem comparator_equation_Rn {ν : ℝ} {u₀ : Space → Space} {f v : Space → ℝ → Space}
     {p : Space → ℝ → ℝ}
     (h : Comparator.NavierStokesExistenceAndSmoothnessRn ν u₀ f v p)
     {t : ℝ} (ht : 0 < t) (x : Space) :
     temporalDerivative (fromComparator v) t x + advection (fromComparator v) t x -
       ν • spatialLaplacian (fromComparator v) t x +
-      pressureGradient (fromComparator p) t x = f x t := by
-  have hv := smooth_space_slice (fromComparator_smooth h.velocity_smooth) ht.le
-  rw [temporalDerivative_eq _ ht, laplacian_eq _ _ _
-    (hv.of_le (ENat.natCast_lt_of_coe_top_le_withTop le_rfl 2).le), gradient_eq]
-  change derivWithin (v x) (Ici 0) t + fderiv ℝ (v · t) x (v x t) -
-    ν • Δ (v · t) x + gradient (p · t) x = f x t
-  rw [h.navier_stokes x t ht.le]
-  abel
+      pressureGradient (fromComparator p) t x = f x t :=
+  comparator_equation_core h.toNavierStokesExistenceAndSmoothness ht x
 
 /-- Normalize an arbitrary global finite-energy comparison solution to viscosity one. -/
 theorem normalized_solution_Rn {ν : ℝ} (hν : 0 < ν) {f : VelocityField}
@@ -78,28 +84,11 @@ theorem normalized_solution_Rn {ν : ℝ} (hν : 0 < ν) {f : VelocityField}
     GlobalSolutionRn f (rescale ν⁻¹ ν⁻¹ (fromComparator v))
       (rescale (ν⁻¹ ^ 2) ν⁻¹ (fromComparator p)) := by
   have hc : 0 < ν⁻¹ := inv_pos.mpr hν
-  have hv := fromComparator_smooth h.velocity_smooth
-  have hp := fromComparator_smooth h.pressure_smooth
-  refine ⟨rescale_smooth hv _ hc.le, rescale_smooth hp _ hc.le, ?_, ?_, ?_, ?_, ?_⟩
-  · intro x
-    simp [rescale, fromComparator, h.initial_condition]
+  have core := normalized_solution_core hν h.toNavierStokesExistenceAndSmoothness
+  refine ⟨core.velocity_smooth, core.pressure_smooth, core.initial_velocity,
+    core.divergence_free, ?_, ?_, ?_⟩
   · intro t ht x
-    rw [rescale_divergence, divergence_eq]
-    change ν⁻¹ * Comparator.divergence (v · (ν⁻¹ * t)) x = 0
-    rw [h.div_free x (ν⁻¹ * t) (mul_nonneg hc.le ht), mul_zero]
-  · intro t ht x
-    rw [navierStokesResidual, rescale_temporalDerivative _ _ _ _ _
-      (differentiable_time_slice hv (mul_pos hc ht) x),
-      rescale_advection, rescale_laplacian, rescale_gradient]
-    have he := congrArg (fun z : Space => ν⁻¹ ^ 2 • z)
-      (comparator_equation_Rn h (mul_pos hc ht) x)
-    have hcoef : ν⁻¹ ^ 2 * ν = ν⁻¹ := by field_simp
-    have hforce : ν⁻¹ ^ 2 • toComparator (rescaledForce ν f) x (ν⁻¹ * t) = f (t, x) := by
-      simp [toComparator, rescaledForce, rescale, smul_smul, hν.ne']
-    rw [hforce] at he
-    simp only [smul_add, smul_sub, smul_smul] at he
-    rw [hcoef] at he
-    simpa only [pow_two] using he
+    simpa only [viscousResidual_one] using core.navier_stokes t ht.le ht x
   · intro t ht
     simpa only [rescale, fromComparator, norm_smul] using
       (h.integrable (ν⁻¹ * t) (mul_nonneg hc.le ht)).const_mul ‖ν⁻¹‖
@@ -117,7 +106,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

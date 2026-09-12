@@ -7,21 +7,25 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ComparatorDefinitions
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
+public import LeanPool.NavierStokesAndEuler.NavierStokes.Solution
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.TangentCone.Prod
 import Mathlib.Analysis.InnerProductSpace.Trace
 
 /-!
-# Coordinate and viscosity bridge to the periodic Clay statement
+# Coordinate and viscosity bridge to the Clay statements
 
 This module translates the project's physical differential operators to the
 comparator's operators, and normalizes any positive viscosity to one. It uses
 only the independent comparator definitions; no reference theorem is imported.
-The application to the constructed candidate is in `ComparatorTheorem`.
+The applications to the periodic and finite-energy candidates share the same
+normalization theorem, `normalized_solution_core`.
+
+The shared normalization API adapts work by Code4me2:
+https://github.com/Code4me2/NavierStokesAndEuler/tree/26e896edbdbe1215c0d50ddba24b2b6453646f5f.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,11 +36,11 @@ open Set Function InnerProductSpace ProblemStatement
 open scoped ContDiff Laplacian RealInnerProductSpace
 
 /-- Change the argument order from `(time, space)` to `space, time`. -/
-def toComparator {V : Type*} (f : SpaceTime → V) : Space → ℝ → V :=
+@[expose] def toComparator {V : Type*} (f : SpaceTime → V) : Space → ℝ → V :=
   fun x t => f (t, x)
 
 /-- Change the argument order from `space, time` to `(time, space)`. -/
-def fromComparator {V : Type*} (f : Space → ℝ → V) : SpaceTime → V :=
+@[expose] def fromComparator {V : Type*} (f : Space → ℝ → V) : SpaceTime → V :=
   fun z => f z.2 z.1
 
 theorem divergence_eq (v : VelocityField) (t : ℝ) (x : Space) :
@@ -72,11 +76,11 @@ theorem temporalDerivative_eq (v : VelocityField) {t : ℝ} (ht : 0 < t) (x : Sp
   rfl
 
 /-- Time change and amplitude change for a spacetime field. -/
-def rescale {V : Type*} [SMul ℝ V] (a c : ℝ) (f : SpaceTime → V) : SpaceTime → V :=
+@[expose] def rescale {V : Type*} [SMul ℝ V] (a c : ℝ) (f : SpaceTime → V) : SpaceTime → V :=
   fun z => a • f (c * z.1, z.2)
 
 /-- The force for viscosity `ν`, starting with a force for viscosity one. -/
-def rescaledForce (ν : ℝ) (f : VelocityField) : VelocityField := rescale (ν ^ 2) ν f
+@[expose] def rescaledForce (ν : ℝ) (f : VelocityField) : VelocityField := rescale (ν ^ 2) ν f
 
 theorem rescale_smooth {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     {f : SpaceTime → V} (hf : ContDiffOn ℝ ∞ f futureDomain)
@@ -212,9 +216,22 @@ structure GlobalSolutionOne (f : VelocityField) (v : VelocityField) (p : Pressur
   divergence_free : ∀ t : ℝ, 0 ≤ t → ∀ x : Space, spatialDivergence v t x = 0
   navier_stokes : ∀ t : ℝ, 0 < t → ∀ x : Space, navierStokesResidual v p t x = f (t, x)
 
-theorem comparator_equation {ν : ℝ} {u₀ : Space → Space} {f v : Space → ℝ → Space}
+/-- Forget periodicity while preserving the global equation and initial data. -/
+theorem GlobalSolutionOne.toSolutionOn {f v : VelocityField} {p : PressureField}
+    (solution : GlobalSolutionOne f v p) :
+    SolutionOn 1 0 (fun _ => 0) (Ici 0) f v p where
+  velocity_smooth := solution.velocity_smooth
+  pressure_smooth := solution.pressure_smooth
+  initial_velocity := solution.initial_velocity
+  divergence_free := solution.divergence_free
+  navier_stokes := by
+    intro time _ positive position
+    simpa only [viscousResidual_one] using solution.navier_stokes time positive position
+
+/-- The equation in project coordinates, assuming only the common comparator contract. -/
+theorem comparator_equation_core {ν : ℝ} {u₀ : Space → Space} {f v : Space → ℝ → Space}
     {p : Space → ℝ → ℝ}
-    (h : Comparator.NavierStokesExistenceAndSmoothnessPeriodic ν u₀ f v p)
+    (h : Comparator.NavierStokesExistenceAndSmoothness ν u₀ f v p)
     {t : ℝ} (ht : 0 < t) (x : Space) :
     temporalDerivative (fromComparator v) t x + advection (fromComparator v) t x -
       ν • spatialLaplacian (fromComparator v) t x +
@@ -227,6 +244,58 @@ theorem comparator_equation {ν : ℝ} {u₀ : Space → Space} {f v : Space →
   rw [h.navier_stokes x t ht.le]
   abel
 
+theorem comparator_equation {ν : ℝ} {u₀ : Space → Space} {f v : Space → ℝ → Space}
+    {p : Space → ℝ → ℝ}
+    (h : Comparator.NavierStokesExistenceAndSmoothnessPeriodic ν u₀ f v p)
+    {t : ℝ} (ht : 0 < t) (x : Space) :
+    temporalDerivative (fromComparator v) t x + advection (fromComparator v) t x -
+      ν • spatialLaplacian (fromComparator v) t x +
+      pressureGradient (fromComparator p) t x = f x t :=
+  comparator_equation_core h.toNavierStokesExistenceAndSmoothness ht x
+
+/-- Residual scaling needs only a nonzero viscosity and differentiability of the
+single time slice at the rescaled point; no spatial regularity is assumed. -/
+theorem rescale_residual_of_differentiable {ν : ℝ} (hν : ν ≠ 0)
+    {v : VelocityField} {p : PressureField} {t : ℝ} {x : Space}
+    (hv : DifferentiableAt ℝ (fun s => v (s, x)) (ν⁻¹ * t)) :
+    navierStokesResidual (rescale ν⁻¹ ν⁻¹ v) (rescale (ν⁻¹ ^ 2) ν⁻¹ p) t x =
+      ν⁻¹ ^ 2 • viscousResidual ν v p (ν⁻¹ * t) x := by
+  rw [navierStokesResidual, rescale_temporalDerivative _ _ _ _ _ hv,
+    rescale_advection, rescale_laplacian, rescale_gradient, viscousResidual]
+  have hcoef : ν⁻¹ * ν⁻¹ * ν = ν⁻¹ := by field_simp
+  simp only [smul_add, smul_sub, smul_smul, pow_two, hcoef]
+
+/-- Normalizing time and amplitudes converts the viscosity-`ν` residual to viscosity one. -/
+theorem rescale_residual {ν : ℝ} (hν : 0 < ν) {v : VelocityField} {p : PressureField}
+    (hv : ContDiffOn ℝ ∞ v futureDomain) {t : ℝ} (ht : 0 < t) (x : Space) :
+    navierStokesResidual (rescale ν⁻¹ ν⁻¹ v) (rescale (ν⁻¹ ^ 2) ν⁻¹ p) t x =
+      ν⁻¹ ^ 2 • viscousResidual ν v p (ν⁻¹ * t) x :=
+  rescale_residual_of_differentiable hν.ne'
+    (differentiable_time_slice hv (mul_pos (inv_pos.mpr hν) ht) x)
+
+/-- Normalize the common comparator contract; geometric and energy conditions
+can then be transported independently. -/
+theorem normalized_solution_core {ν : ℝ} (hν : 0 < ν) {f : VelocityField}
+    {v : Space → ℝ → Space} {p : Space → ℝ → ℝ}
+    (h : Comparator.NavierStokesExistenceAndSmoothness ν (fun _ => 0)
+      (toComparator (rescaledForce ν f)) v p) :
+    SolutionOn 1 0 (fun _ => 0) (Ici 0) f (rescale ν⁻¹ ν⁻¹ (fromComparator v))
+      (rescale (ν⁻¹ ^ 2) ν⁻¹ (fromComparator p)) := by
+  have hc : 0 < ν⁻¹ := inv_pos.mpr hν
+  have hv := fromComparator_smooth h.velocity_smooth
+  have hp := fromComparator_smooth h.pressure_smooth
+  refine ⟨rescale_smooth hv _ hc.le, rescale_smooth hp _ hc.le, ?_, ?_, ?_⟩
+  · intro x
+    simp [rescale, fromComparator, h.initial_condition]
+  · intro t ht x
+    rw [rescale_divergence, divergence_eq]
+    change ν⁻¹ * Comparator.divergence (v · (ν⁻¹ * t)) x = 0
+    rw [h.div_free x (ν⁻¹ * t) (mul_nonneg hc.le ht), mul_zero]
+  · intro t _ ht x
+    rw [viscousResidual_one, rescale_residual hν hv ht x, viscousResidual,
+      comparator_equation_core h (mul_pos hc ht) x]
+    simp [toComparator, rescaledForce, rescale, smul_smul, hν.ne']
+
 /-- Pull a hypothetical viscosity-`ν` solution back to viscosity one. -/
 theorem normalized_solution {ν : ℝ} (hν : 0 < ν) {f : VelocityField}
     {v : Space → ℝ → Space} {p : Space → ℝ → ℝ}
@@ -234,34 +303,14 @@ theorem normalized_solution {ν : ℝ} (hν : 0 < ν) {f : VelocityField}
       (toComparator (rescaledForce ν f)) v p) :
     GlobalSolutionOne f (rescale ν⁻¹ ν⁻¹ (fromComparator v))
       (rescale (ν⁻¹ ^ 2) ν⁻¹ (fromComparator p)) := by
-  have hc : 0 < ν⁻¹ := inv_pos.mpr hν
-  have hv := fromComparator_smooth h.velocity_smooth
-  have hp := fromComparator_smooth h.pressure_smooth
-  refine ⟨rescale_smooth hv _ hc.le, rescale_smooth hp _ hc.le, ?_, ?_, ?_, ?_, ?_⟩
-  · apply rescale_periodic (a := ν⁻¹) (c := ν⁻¹) ?_ hc.le
-    intro t ht x i
-    exact h.isOnePeriodic_velocity t ht x i
-  · apply rescale_periodic (a := ν⁻¹ ^ 2) (c := ν⁻¹) ?_ hc.le
-    intro t ht x i
-    exact h.isOnePeriodic_pressure t ht x i
-  · intro x
-    simp [rescale, fromComparator, h.initial_condition]
+  have core := normalized_solution_core hν h.toNavierStokesExistenceAndSmoothness
+  refine ⟨core.velocity_smooth, core.pressure_smooth, ?_, ?_, core.initial_velocity,
+    core.divergence_free, ?_⟩
+  · exact rescale_periodic (fun t ht x i => h.isOnePeriodic_velocity t ht x i)
+      _ (inv_pos.mpr hν).le
+  · exact rescale_periodic (fun t ht x i => h.isOnePeriodic_pressure t ht x i)
+      _ (inv_pos.mpr hν).le
   · intro t ht x
-    rw [rescale_divergence, divergence_eq]
-    change ν⁻¹ * Comparator.divergence (v · (ν⁻¹ * t)) x = 0
-    rw [h.div_free x (ν⁻¹ * t) (mul_nonneg hc.le ht), mul_zero]
-  · intro t ht x
-    rw [navierStokesResidual, rescale_temporalDerivative _ _ _ _ _
-      (differentiable_time_slice hv (mul_pos hc ht) x),
-      rescale_advection, rescale_laplacian, rescale_gradient]
-    have he := congrArg (fun z : Space => ν⁻¹ ^ 2 • z)
-      (comparator_equation h (mul_pos hc ht) x)
-    have hcoef : ν⁻¹ ^ 2 * ν = ν⁻¹ := by field_simp
-    have hforce : ν⁻¹ ^ 2 • toComparator (rescaledForce ν f) x (ν⁻¹ * t) = f (t, x) := by
-      simp [toComparator, rescaledForce, rescale, smul_smul, hν.ne']
-    rw [hforce] at he
-    simp only [smul_add, smul_sub, smul_smul] at he
-    rw [hcoef] at he
-    simpa only [pow_two] using he
+    simpa only [viscousResidual_one] using core.navier_stokes t ht.le ht x
 
 end NavierStokes.ComparatorBridge

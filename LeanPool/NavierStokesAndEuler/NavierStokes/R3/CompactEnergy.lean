@@ -5,7 +5,7 @@ Authors: OpenAI
 -/
 module
 
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
 import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
@@ -17,8 +17,7 @@ public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import LeanPool.NavierStokesAndEuler.ForMathlib.Gronwall
 
 /-!
 # Energy of compactly supported fields on Euclidean three-space
@@ -52,26 +51,13 @@ theorem forced_gronwall_weighted {T C : ℝ} {E E' : ℝ → ℝ}
     (hderiv : ∀ t ∈ Ioo 0 T, HasDerivAt E (E' t) t)
     (hbound : ∀ t ∈ Ioo 0 T, E' t ≤ E t + C) :
     ∀ t ∈ Icc 0 T, (E t + C) * Real.exp (-t) ≤ C := by
-  let G : ℝ → ℝ := fun t => Real.exp (-t) * (E t + C)
-  let G' : ℝ → ℝ := fun t => Real.exp (-t) * (E' t - (E t + C))
-  have hgcont : ContinuousOn G (Icc 0 T) :=
-    (Real.continuous_exp.comp continuous_id.neg).continuousOn.mul
-      (hcont.add continuousOn_const)
-  have hgderiv (t : ℝ) (ht : t ∈ Ioo 0 T) : HasDerivAt G (G' t) t := by
-    have hexp := (hasDerivAt_id t).neg.exp
-    convert! hexp.mul ((hderiv t ht).add_const C) using 1
-    try dsimp [G, G']
-    ring
-  have hG : AntitoneOn G (Icc 0 T) := by
-    apply antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc 0 T) hgcont
-    · intro t ht
-      exact (hgderiv t (by simpa only [interior_Icc] using ht)).hasDerivWithinAt
-    · intro t ht
-      exact mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le
-        (sub_nonpos.mpr (hbound t (by simpa only [interior_Icc] using ht)))
+  have hmono := Gronwall.antitoneOn_exp_neg_mul_of_deriv_le (K := 1) (f := fun t => E t + C)
+    (hcont.add continuousOn_const) (fun t ht => (hderiv t ht).add_const C)
+    (fun t ht => by simpa only [one_mul] using hbound t ht)
   intro t ht
-  have hle := hG ⟨le_rfl, hT⟩ ht ht.1
-  simpa [G, hinitial, mul_comm] using hle
+  have hle := hmono ⟨le_rfl, hT⟩ ht ht.1
+  simp only [neg_mul, one_mul, neg_zero, Real.exp_zero, hinitial, zero_add] at hle
+  simpa only [mul_comm (Real.exp (-t)) (E t + C)] using hle
 
 /-- The scalar forced Gronwall estimate with zero initial energy. -/
 theorem forced_gronwall {T C : ℝ} {E E' : ℝ → ℝ}
@@ -185,8 +171,8 @@ open scoped Topology BigOperators ContDiff InnerProductSpace
 namespace NavierStokesR3.CompactEnergy
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le

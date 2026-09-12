@@ -8,7 +8,7 @@ module
 
 import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
 
-public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
+public import LeanPool.NavierStokesAndEuler.ForMathlib.SobolevThreeDimensional
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 public import Mathlib.Analysis.Calculus.Gradient.Basic
 import Mathlib.MeasureTheory.Function.L2Space
@@ -38,16 +38,14 @@ def sobolevConstant : ℝ≥0 :=
 /-- The ordinary homogeneous Sobolev inequality, with no dependence on support size. -/
 theorem homogeneous_sobolev (f : Space → Space)
     (hf : ContDiff ℝ ∞ f) (hfc : HasCompactSupport f) :
-    lpNorm f 6 volume ≤ (sobolevConstant : ℝ) * lpNorm (fderiv ℝ f) 2 volume := by
-  have hd : Continuous (fderiv ℝ f) := (hf.fderiv_right (m := ∞) (by simp)).continuous
-  have hdm : MemLp (fderiv ℝ f) 2 volume := hd.memLp_of_hasCompactSupport (hfc.fderiv ℝ)
-  have h := eLpNorm_le_eLpNorm_fderiv_of_eq_inner (volume : Measure Space)
-    (hf.of_le (by simp) : ContDiff ℝ 1 f) hfc (p := 2) (p' := 6)
-    (by norm_num) (by simp [Space]) (by norm_num [Space])
-  have hr := ENNReal.toReal_mono (by finiteness [hdm.eLpNorm_ne_top]) h
-  simpa [ENNReal.toReal_mul, ENNReal.coe_toReal,
-    toReal_eLpNorm hf.continuous.aestronglyMeasurable_of_secondCountable,
-    toReal_eLpNorm hd.aestronglyMeasurable, sobolevConstant] using hr
+    lpNorm f 6 volume ≤ (sobolevConstant : ℝ) * lpNorm (fderiv ℝ f) 2 volume :=
+  by
+  have h := NavierStokesAndEuler.SobolevThreeDimensional.toReal_eLpNorm_six_le_of_hasCompactSupport
+    (hf.of_le (by simp)) hfc
+  simpa only [sobolevConstant,
+    NavierStokesAndEuler.SobolevThreeDimensional.sobolevConstant,
+    toReal_eLpNorm hf.continuous.aestronglyMeasurable,
+    toReal_eLpNorm (hf.continuous_fderiv (by simp)).aestronglyMeasurable] using h
 
 /-- A three-vector's Euclidean norm is at most the sum of its component norms. -/
 theorem norm_le_sum_coordinates (v : Space) : ‖v‖ ≤ ∑ i : Fin 3, ‖v i‖ := by

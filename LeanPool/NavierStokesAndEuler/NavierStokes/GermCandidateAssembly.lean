@@ -5,10 +5,12 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.WeightedDecay
+
 import LeanPool.NavierStokesAndEuler.NavierStokes.AxisPreservation
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedCandidateAssembly
 public import LeanPool.NavierStokesAndEuler.NavierStokes.MixedPeriodicAssembly
-public import LeanPool.NavierStokesAndEuler.NavierStokes.ProblemStatement
+public import LeanPool.NavierStokesAndEuler.NavierStokes.Solution
 import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
 import Mathlib.Analysis.Calculus.ContDiff.Basic
 public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
@@ -446,6 +448,20 @@ structure ClassicalSolution (f : VelocityField) (initial : Space → Space)
   navier_stokes : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x : Space,
     navierStokesResidual u p t x = f (t, x)
 
+/-- The local equation and arbitrary initial datum, independently of periodicity. -/
+theorem ClassicalSolution.toSolutionOn {f : VelocityField} {initial : Space → Space}
+    {T : ℝ} {u : VelocityField} {p : PressureField}
+    (solution : ClassicalSolution f initial T u p) :
+    SolutionOn 1 0 initial (Ico 0 T) f u p where
+  velocity_smooth := solution.velocity_smooth
+  pressure_smooth := solution.pressure_smooth
+  initial_velocity := solution.initial_velocity
+  divergence_free := solution.divergence_free
+  navier_stokes := by
+    intro time member positive position
+    simpa only [viscousResidual_one] using
+      solution.navier_stokes time ⟨positive, member.2⟩ position
+
 /-- Velocity agrees on, given by `∀ t ∈ Ico (0 : ℝ) T, ∀ x : Space, u (t, x) = v (t, x)`. -/
 noncomputable def VelocityAgreesOn (T : ℝ) (u v : VelocityField) : Prop :=
   ∀ t ∈ Ico (0 : ℝ) T, ∀ x : Space, u (t, x) = v (t, x)
@@ -788,26 +804,20 @@ theorem futureJet_decay {f : VelocityField}
       (show Icc (0 : ℝ) (T + 1) ×ˢ (univ : Set Space) ⊆ futureDomain from
         fun _ hz => ⟨hz.1.1, hz.2⟩))
     (fun t ht x i => futureJet_periodic hp m t ht.1 x i)
-  let C : ℝ := M * (1 + (T + 1)) ^ K
-  have hbase : 0 < 1 + (T + 1) := by linarith
-  have hC : 0 < C := mul_pos hM (Real.rpow_pos_of_pos hbase K)
-  refine ⟨C, hC, ?_⟩
-  intro t ht x
-  by_cases hsmall : t ≤ T + 1
-  · have hpow : (1 + (T + 1)) ^ (-K) ≤ (1 + t) ^ (-K) :=
-      Real.rpow_le_rpow_of_nonpos (by linarith) (by linarith) (neg_nonpos.mpr hK)
-    have hcancel : C * (1 + (T + 1)) ^ (-K) = M := by
-      dsimp [C]
-      rw [mul_assoc, ← Real.rpow_add hbase]
-      simp
-    calc
-      ‖futureJet f m (t, x)‖ ≤ M := hb t ⟨ht, hsmall⟩ x
-      _ = C * (1 + (T + 1)) ^ (-K) := hcancel.symm
-      _ ≤ C * (1 + t) ^ (-K) := mul_le_mul_of_nonneg_left hpow hC.le
-  · have htpos : 0 < t := by linarith
-    rw [futureJet_eq_full_of_pos hf htpos x m,
-      CompactForceDecay.iteratedFDeriv_eq_zero_after hzero m (by linarith : T < t) x, norm_zero]
-    exact mul_nonneg hC.le (Real.rpow_nonneg (by linarith) _)
+  obtain ⟨C, hC, hdecay⟩ :=
+    NavierStokesAndEuler.WeightedDecay.exists_pos_norm_le_div_of_slab_bound
+      (J := futureJet f m) (w := fun z => (1 + z.1) ^ K) (T := T + 1)
+      (fun t ht _ => Real.rpow_pos_of_pos (by linarith) K)
+      (fun t ht x => by
+        have htpos : 0 < t := by linarith
+        rw [futureJet_eq_full_of_pos hf htpos x m]
+        exact CompactForceDecay.iteratedFDeriv_eq_zero_after hzero m (by linarith) x)
+      ⟨M * (1 + (T + 1)) ^ K, fun t ht x => mul_le_mul (hb t ht x)
+        (Real.rpow_le_rpow (by linarith [ht.1]) (by linarith [ht.2]) hK)
+        (Real.rpow_nonneg (by linarith [ht.1]) K) hM.le⟩
+  refine ⟨C, hC, fun t ht x => ?_⟩
+  rw [Real.rpow_neg (by linarith), ← div_eq_mul_inv]
+  exact hdecay t ht x
 
 /-- The ordinary tensor bound for the same force.  Global smoothness is
 provided by the actual force constructor; negative-time periodicity is not needed. -/

@@ -11,7 +11,7 @@ public import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
 
 /-!
 # Spatial derivatives of Fourier test functions
@@ -44,14 +44,14 @@ def laplacianCLM : ComplexTest →L[ℂ] ComplexTest :=
 
 @[simp] theorem partialCLM_apply (i : Fin 3) (ψ : ComplexTest) (x : Space) :
     partialCLM i ψ x =
-      NavierStokes.PeriodicIntegration.spatialPartial i (ψ : Space → ℂ) x := rfl
+      NavierStokes.SolutionDifference.spatialPartial i (ψ : Space → ℂ) x := rfl
 
 @[simp] theorem laplacianCLM_apply (ψ : ComplexTest) (x : Space) :
     laplacianCLM ψ x =
-      ∑ i : Fin 3, NavierStokes.PeriodicIntegration.spatialPartial i
-        (fun y => NavierStokes.PeriodicIntegration.spatialPartial i (ψ : Space → ℂ) y) x := by
+      ∑ i : Fin 3, NavierStokes.SolutionDifference.spatialPartial i
+        (fun y => NavierStokes.SolutionDifference.spatialPartial i (ψ : Space → ℂ) y) x := by
   simp [laplacianCLM, Fin.sum_univ_succ, partialCLM,
-    NavierStokes.PeriodicIntegration.spatialPartial, SchwartzMap.lineDerivOp_apply_eq_fderiv]
+    NavierStokes.SolutionDifference.spatialPartial, SchwartzMap.lineDerivOp_apply_eq_fderiv]
   rfl
 
 /-- Fourier transform of a coordinate derivative. -/

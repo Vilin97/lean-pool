@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.CompactParameterIntegral
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 public import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
+public import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothCutoff
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
@@ -416,47 +417,29 @@ theorem exists_derivative_position_bound (χ : Space → ℝ) (hχ : ContDiff �
 
 /-- Unit truncation bump, given by `⟨1, 2, by norm_num, by norm_num⟩`. -/
 def unitTruncationBump : ContDiffBump (0 : Space) :=
-  ⟨1, 2, by norm_num, by norm_num⟩
+  NavierStokesAndEuler.SmoothCutoff.baseBump Space
 
 /-- Truncation cutoff, given by `scaledCutoff unitTruncationBump R`. -/
-def truncationCutoff (R : ℝ) : Space → ℝ := scaledCutoff unitTruncationBump R
+def truncationCutoff (R : ℝ) : Space → ℝ :=
+  NavierStokesAndEuler.SmoothCutoff.cutoff Space R
 
 theorem truncationCutoff_smooth (R : ℝ) : ContDiff ℝ ∞ (truncationCutoff R) :=
-  scaledCutoff_smooth unitTruncationBump unitTruncationBump.contDiff R
+  NavierStokesAndEuler.SmoothCutoff.cutoff_smooth R
 
-theorem truncationCutoff_norm_le (R : ℝ) (x : Space) : ‖truncationCutoff R x‖ ≤ 1 := by
-  change ‖unitTruncationBump (R⁻¹ • x)‖ ≤ 1
-  rw [Real.norm_of_nonneg unitTruncationBump.nonneg]
-  exact unitTruncationBump.le_one
+theorem truncationCutoff_norm_le (R : ℝ) (x : Space) : ‖truncationCutoff R x‖ ≤ 1 :=
+  NavierStokesAndEuler.SmoothCutoff.norm_cutoff_le_one R x
 
 theorem truncationCutoff_compact (R : ℝ) (hR : 0 < R) :
     HasCompactSupport (truncationCutoff R) :=
-  scaledCutoff_compact unitTruncationBump unitTruncationBump.hasCompactSupport R hR.ne'
+  NavierStokesAndEuler.SmoothCutoff.cutoff_hasCompactSupport hR
 
 theorem truncationCutoff_support (R : ℝ) (hR : 0 < R) :
-    tsupport (truncationCutoff R) ⊆ Metric.closedBall 0 (2 * R) := by
-  apply closure_minimal _ Metric.isClosed_closedBall
-  intro x hx
-  have hz : R⁻¹ • x ∈ Function.support (unitTruncationBump : Space → ℝ) := hx
-  rw [unitTruncationBump.support_eq] at hz
-  have hn : R⁻¹ * ‖x‖ < 2 := by
-    simpa only [unitTruncationBump, mem_ball_zero_iff, norm_smul,
-      Real.norm_of_nonneg (inv_nonneg.mpr hR.le)] using hz
-  have hxR : ‖x‖ < 2 * R := by
-    rw [← div_eq_inv_mul] at hn
-    exact (div_lt_iff₀ hR).mp hn
-  exact mem_closedBall_zero_iff.mpr hxR.le
+    tsupport (truncationCutoff R) ⊆ Metric.closedBall 0 (2 * R) :=
+  NavierStokesAndEuler.SmoothCutoff.cutoff_tsupport_subset hR
 
 theorem truncationCutoff_eventually_one (R : ℝ) (hR : 0 < R) (x : Space)
-    (hx : ‖x‖ < R) : truncationCutoff R =ᶠ[𝓝 x] 1 := by
-  have hz : R⁻¹ • x ∈ Metric.ball (0 : Space) unitTruncationBump.rIn := by
-    change ‖R⁻¹ • x - 0‖ < 1
-    rw [sub_zero, norm_smul, Real.norm_of_nonneg (inv_nonneg.mpr hR.le),
-      ← div_eq_inv_mul, div_lt_one hR]
-    exact hx
-  have hp := unitTruncationBump.eventuallyEq_one_of_mem_ball hz
-  have hscale : Continuous (fun y : Space => R⁻¹ • y) := continuous_id.const_smul R⁻¹
-  exact hp.comp_tendsto hscale.continuousAt
+    (hx : ‖x‖ < R) : truncationCutoff R =ᶠ[𝓝 x] 1 :=
+  NavierStokesAndEuler.SmoothCutoff.cutoff_eventuallyEq_one hR hx
 
 /-- The truncation family used by the finite-energy flow argument. -/
 def finiteEnergyTruncation (u : Space → Space) (R : ℝ) : Space → Space :=

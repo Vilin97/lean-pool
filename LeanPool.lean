@@ -4191,6 +4191,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketStageInputs
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageLowPropagation
 import LeanPool.NavierStokesAndEuler.Euler.PacketStagePhysicalBounds
 import LeanPool.NavierStokesAndEuler.Euler.PacketStageRestriction
+import LeanPool.NavierStokesAndEuler.Euler.PacketStageSuccessor
 import LeanPool.NavierStokesAndEuler.Euler.PacketTailBase
 import LeanPool.NavierStokesAndEuler.Euler.PacketTailBound
 import LeanPool.NavierStokesAndEuler.Euler.PacketTailNormalization
@@ -4501,8 +4502,12 @@ import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianIntegration
 import LeanPool.NavierStokesAndEuler.Euler.WholeSpaceGaussianKernel
 import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteDimensionalBumps
 import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteSum
+import LeanPool.NavierStokesAndEuler.ForMathlib.Gronwall
+import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothCutoff
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import LeanPool.NavierStokesAndEuler.ForMathlib.SobolevThreeDimensional
 import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
+import LeanPool.NavierStokesAndEuler.ForMathlib.WeightedDecay
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationCone
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationContinuation
 import LeanPool.NavierStokesAndEuler.NavierStokes.ActivationStocks
@@ -4853,6 +4858,8 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothMomentRepair
 import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothParameterIntegral
 import LeanPool.NavierStokesAndEuler.NavierStokes.SmoothPathFamily
 import LeanPool.NavierStokesAndEuler.NavierStokes.SolenoidalDiagonal
+import LeanPool.NavierStokesAndEuler.NavierStokes.Solution
+import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
 import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeEndpoint
 import LeanPool.NavierStokesAndEuler.NavierStokes.SpacetimeGluing
 import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialBorelExtension

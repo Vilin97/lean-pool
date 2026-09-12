@@ -9,22 +9,20 @@ import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedInterpolation
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.PressureFlux
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonCutoffs
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicUniqueness
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
 import Mathlib.MeasureTheory.Function.L2Space
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.WeightedSobolev
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.Calculus.Deriv.MeanValue
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import LeanPool.NavierStokesAndEuler.ForMathlib.Gronwall
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.MeasureTheory.Function.LocallyIntegrable
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
 
@@ -79,8 +77,8 @@ open scoped BigOperators ContDiff InnerProductSpace
 namespace NavierStokesR3.LocalizedDifferenceEnergy
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 
 private theorem laplacian_nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le
@@ -234,8 +232,8 @@ open scoped Topology BigOperators ContDiff InnerProductSpace
 namespace NavierStokesR3.LocalizedDifferenceEnergy
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 open Comparison (weightedEnergy weightedEnergyRate weightedDissipation gradientSq)
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
@@ -782,7 +780,7 @@ namespace NavierStokesR3.LocalizedFluxEstimates
 
 open ProblemStatement Comparison
 open NavierStokes.ProblemStatement (spatialDerivative coordinateVector)
-open NavierStokes.PeriodicIntegration (spatialPartial)
+open NavierStokes.SolutionDifference (spatialPartial)
 
 /-- The cutoff makes the coupling integral finite. -/
 theorem coupling_integrable {χ : Space → ℝ} {u w : VelocityField} {t : ℝ}
@@ -813,7 +811,7 @@ theorem neg_coupling_le_weightedEnergy {χ : Space → ℝ} {u w : VelocityField
   intro x
   change -(χ x * ⟪w (t, x), spatialDerivative u t x (w (t, x))⟫_ℝ) ≤
     G * (χ x * ‖w (t, x)‖ ^ 2)
-  have h := NavierStokes.PeriodicUniqueness.nonlinear_energy_bound
+  have h := NavierStokes.SolutionDifference.nonlinear_energy_bound
     (spatialDerivative u t x) (w (t, x)) (hG x)
   linarith [mul_le_mul_of_nonneg_left h (hχ0 x)]
 
@@ -900,8 +898,8 @@ theorem continuous_laplacian {χ : Space → ℝ} (hχ : ContDiff ℝ ∞ χ) :
     Continuous (ComparisonCutoffs.laplacian χ) := by
   unfold ComparisonCutoffs.laplacian
   exact continuous_finsetSum _ fun i _ =>
-    (NavierStokes.PeriodicUniqueness.spatial_partial_contDiff
-      (NavierStokes.PeriodicUniqueness.spatial_partial_contDiff hχ i) i).continuous
+    (NavierStokes.SolutionDifference.spatial_partial_contDiff
+      (NavierStokes.SolutionDifference.spatial_partial_contDiff hχ i) i).continuous
 
 /-- A bounded Laplacian can be paired with any square-integrable field. -/
 theorem laplacian_flux_bound {χ : Space → ℝ} {w : Space → Space}
@@ -1040,8 +1038,8 @@ section
 # Scalar closure of the whole-space comparison estimate
 
 The localized energy may have derivatives only in the interior of the time
-interval. The integrating-factor argument below therefore uses continuity on
-the closed interval and the mean-value theorem on its interior. In particular,
+interval. The shared scalar Gronwall estimates therefore use continuity on
+the closed interval and derivatives on its interior. In particular,
 no energy inequality at a time endpoint is assumed.
 -/
 
@@ -1061,38 +1059,10 @@ theorem exp_neg_mul_le_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
     (hderiv : ∀ t ∈ Ioo 0 T, HasDerivAt E (E' t) t)
     (hbound : ∀ t ∈ Ioo 0 T, E' t ≤ K * E t + ε) :
     ∀ t ∈ Icc 0 T, Real.exp (-K * t) * E t ≤ ε * t := by
-  let G : ℝ → ℝ := fun t => Real.exp (-K * t) * E t - ε * t
-  let G' : ℝ → ℝ := fun t => Real.exp (-K * t) * (E' t - K * E t) - ε
-  have hgcont : ContinuousOn G (Icc 0 T) :=
-    ((Real.continuous_exp.comp (continuous_const.mul continuous_id)).continuousOn.mul
-      hcont).sub (continuous_const.mul continuous_id).continuousOn
-  have hgderiv (t : ℝ) (ht : t ∈ Ioo 0 T) : HasDerivAt G (G' t) t := by
-    have hexp := ((hasDerivAt_id t).const_mul (-K)).exp
-    convert! (hexp.mul (hderiv t ht)).sub ((hasDerivAt_id t).const_mul ε) using 1
-    try dsimp [G, G']
-    ring
-  have hG : AntitoneOn G (Icc 0 T) := by
-    apply antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc 0 T) hgcont
-    · intro t ht
-      exact (hgderiv t (by simpa only [interior_Icc] using ht)).hasDerivWithinAt
-    · intro t ht
-      have ht' : t ∈ Ioo 0 T := by simpa only [interior_Icc] using ht
-      have hexp : Real.exp (-K * t) ≤ 1 := by
-        rw [← Real.exp_zero]
-        exact Real.exp_le_exp.mpr
-          (mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr hK) ht'.1.le)
-      have hfirst : Real.exp (-K * t) * (E' t - K * E t) ≤
-          Real.exp (-K * t) * ε :=
-        mul_le_mul_of_nonneg_left (by linarith [hbound t ht']) (Real.exp_pos _).le
-      have hsecond : Real.exp (-K * t) * ε ≤ ε := by
-        simpa only [one_mul] using mul_le_mul_of_nonneg_right hexp hε
-      dsimp only [G']
-      linarith
   intro t ht
-  have hle := hG ⟨le_rfl, hT⟩ ht ht.1
-  have hzero : G 0 ≤ 0 := by simpa [G] using hinitial
-  have hnonpos := hle.trans hzero
-  exact sub_nonpos.mp hnonpos
+  have hle := Gronwall.exp_neg_mul_le_add_of_deriv_le_add hT hK hε hcont hderiv hbound t ht
+  simp only [sub_zero] at hle
+  exact hle.trans (by linarith)
 
 /-- Perturbed Gronwall, retaining the actual time in the bound. -/
 theorem le_exp_mul_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
@@ -1102,19 +1072,9 @@ theorem le_exp_mul_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
     (hbound : ∀ t ∈ Ioo 0 T, E' t ≤ K * E t + ε) :
     ∀ t ∈ Icc 0 T, E t ≤ ε * t * Real.exp (K * t) := by
   intro t ht
-  have hweighted := exp_neg_mul_le_of_deriv_le hT hK hε hcont hinitial hderiv hbound t ht
-  have hmul := mul_le_mul_of_nonneg_right hweighted (Real.exp_pos (K * t)).le
-  have hexp : Real.exp (-K * t) * Real.exp (K * t) = 1 := by
-    rw [← Real.exp_add]
-    have hcancel : -K * t + K * t = 0 := by ring
-    rw [hcancel, Real.exp_zero]
-  calc
-    E t = Real.exp (-K * t) * E t * Real.exp (K * t) := by
-      calc
-        E t = E t * 1 := (mul_one _).symm
-        _ = E t * (Real.exp (-K * t) * Real.exp (K * t)) := by rw [hexp]
-        _ = _ := by ring
-    _ ≤ ε * t * Real.exp (K * t) := hmul
+  have hle := Gronwall.le_exp_mul_add_of_deriv_le_add hT hK hε hcont hderiv hbound t ht
+  simp only [sub_zero] at hle
+  exact hle.trans (mul_le_mul_of_nonneg_right (by linarith) (Real.exp_pos _).le)
 
 /-- Perturbed Gronwall with one bound valid throughout the closed interval. -/
 theorem le_uniform_exp_mul_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
@@ -1123,16 +1083,8 @@ theorem le_uniform_exp_mul_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
     (hderiv : ∀ t ∈ Ioo 0 T, HasDerivAt E (E' t) t)
     (hbound : ∀ t ∈ Ioo 0 T, E' t ≤ K * E t + ε) :
     ∀ t ∈ Icc 0 T, E t ≤ ε * T * Real.exp (K * T) := by
-  intro t ht
-  calc
-    E t ≤ ε * t * Real.exp (K * t) :=
-      le_exp_mul_of_deriv_le hT hK hε hcont hinitial hderiv hbound t ht
-    _ ≤ ε * T * Real.exp (K * T) := by
-      apply mul_le_mul
-      · exact mul_le_mul_of_nonneg_left ht.2 hε
-      · exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left ht.2 hK)
-      · exact (Real.exp_pos _).le
-      · exact mul_nonneg hε hT
+  simpa only [sub_zero] using
+    Gronwall.le_uniform_exp_mul_of_deriv_le_add hT hK hε hcont hinitial hderiv hbound
 
 /-- A forcing error of order `1 / R` gives a uniform energy error of the same
 order. The numerator depends only on `C`, `K`, and the time interval. -/
@@ -1275,7 +1227,7 @@ theorem eq_zero_of_weighted_rate_bound {w : VelocityField} {T K C R₀ : ℝ}
       weightedEnergyRate (weight R) w t ≤ K * weightedEnergy (weight R) w t + C / R) :
     ∀ t ∈ Icc (0 : ℝ) T, ∀ x : Space, w (t, x) = 0 := by
   intro t ht
-  have hs := NavierStokes.PeriodicUniqueness.spatial_smooth hw ht
+  have hs := NavierStokes.SolutionDifference.spatial_smooth hw ht
   apply eq_zero_of_radius_bound hs.continuous (hi t ht)
     (D := C * T * Real.exp (K * T)) (R₀ := R₀)
   intro R hR
@@ -1307,7 +1259,7 @@ namespace NavierStokesR3.WholeSpaceComparisonClosure
 
 open ProblemStatement Comparison ComparisonCutoffs
 open NavierStokes.ProblemStatement (spatialDerivative spatialDivergence)
-open NavierStokes.PeriodicUniqueness (spatial_smooth time_differentiable_at_interior)
+open NavierStokes.SolutionDifference (spatial_smooth time_differentiable_at_interior)
 
 /-- Pressure envelope, given by `(B ^ (1 / 2 : ℝ) + 1) * (A / R + 1 / R ^ 2) + R ^ (-7 / 4 : ℝ)
 * B ^ (3 / 4 : ℝ)`. -/
@@ -1488,7 +1440,7 @@ theorem exists_gradient_bound {T : ℝ} (hT : 0 < T) {u : VelocityField}
     (hsupp : ∀ t ∈ Icc (0 : ℝ) T, tsupport (fun x : Space => u (t, x)) ⊆ K) :
     ∃ G : ℝ, 0 ≤ G ∧ ∀ t ∈ Icc (0 : ℝ) T, ∀ x : Space,
       ‖spatialDerivative u t x‖ ≤ G := by
-  obtain ⟨G, hG, hbound⟩ := NavierStokes.PeriodicUniqueness.exists_gradient_bound hT hu hK
+  obtain ⟨G, hG, hbound⟩ := NavierStokes.SolutionDifference.exists_gradient_bound hT hu hK
   refine ⟨G, hG.le, ?_⟩
   intro t ht x
   by_cases hx : x ∈ K
@@ -1625,7 +1577,7 @@ namespace NavierStokesR3.WholeSpaceUniqueness
 
 open ProblemStatement Comparison
 open NavierStokes.ProblemStatement (spatialDivergence)
-open NavierStokes.PeriodicUniqueness (spatial_smooth)
+open NavierStokes.SolutionDifference (spatial_smooth)
 
 /-- Whole-space comparison on a positive closed time interval. Finite energy
 of the reference velocity is a consequence of its compact spatial support. -/

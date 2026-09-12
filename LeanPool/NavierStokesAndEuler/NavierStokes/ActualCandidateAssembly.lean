@@ -2392,6 +2392,94 @@ open Set Function Filter ProblemStatement
 open CorrectionInitialization.ActualPrimary
 open scoped Topology ContDiff BigOperators
 
+/-! ## Exterior germs for physical stages
+
+One certificate supplies support and axis-germ bounds. The existing exterior
+lemmas on closed sublevels remain available; they imply this local certificate.
+-/
+
+theorem axis_not_active {w : SpaceTime} (ht : w ∈ PhysicalWaveSum.preterminal)
+    (ha : PhysicalGraphBounds.radialProjection w = 0) : w ∉ ActualPolarCoverage.active := by
+  intro hm
+  have hr := ((ActualCurrentWaveSupport.profileRadius_mem_iff_active ht).mpr hm).1
+  rw [ActualCurrentWaveSupport.profileRadius_zero_of_axis h ha] at hr
+  exact (not_le_of_gt (PrimaryTargetBounds.leftRadius_pos nominal)) hr
+
+/-- The exterior of the active annulus is open within the preterminal region: the profile
+radius is continuous there and the annulus is its preimage of a closed interval. -/
+theorem eventually_not_active {w : SpaceTime} (ht : w ∈ PhysicalWaveSum.preterminal)
+    (he : w ∉ ActualPolarCoverage.active) :
+    ∀ᶠ y in 𝓝 w, y ∉ ActualPolarCoverage.active := by
+  have hr : ActualCurrentWaveSupport.profileRadius h w ∉
+      Icc (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal) :=
+    fun hm => he ((ActualCurrentWaveSupport.profileRadius_mem_iff_active ht).mp hm)
+  filter_upwards [PhysicalWaveSum.preterminal_open.mem_nhds ht,
+    ActualCurrentWaveSupport.profileRadius_continuousAt outgoing.data.h_pos
+      outgoing.data.h_lt_half ht (isClosed_Icc.isOpen_compl.mem_nhds hr)] with y hy hyr
+  exact fun hm => hyr ((ActualCurrentWaveSupport.profileRadius_mem_iff_active hy).mpr hm)
+
+/-- A stage field of the actual candidate: zero near every point of the physical domain
+outside the active annulus. -/
+structure PhysicalStage (B N0 : ℕ) {V : Type*} [Zero V]
+    (f : SpaceTime → V) : Prop where
+  /-- The field vanishes in a neighborhood of each exterior point. -/
+  exterior : ∀ w ∈ ActualCandidateConstruction.physicalDomain B N0,
+    w ∉ ActualPolarCoverage.active → f =ᶠ[𝓝 w] fun _ => 0
+
+namespace PhysicalStage
+
+variable {B N0 : ℕ} {V : Type*} [Zero V] {f : SpaceTime → V}
+
+/-- A pointwise exterior identity suffices, since the exterior is open in the domain. -/
+theorem of_eq_zero (hz : ∀ w ∈ ActualCandidateConstruction.physicalDomain B N0,
+    w ∉ ActualPolarCoverage.active → f w = 0) : PhysicalStage B N0 f := by
+  refine ⟨fun w hw he => ?_⟩
+  filter_upwards [(CutStageEstimates.physicalSublevel_open outgoing.data.h_pos
+    outgoing.data.h_lt_half (ActualCandidateConstruction.qbig B N0)).mem_nhds hw,
+    eventually_not_active hw.1 he] with y hy hye
+  exact hz y hy hye
+
+/-- The zero field is a physical stage. -/
+theorem zero : PhysicalStage B N0 (fun _ : SpaceTime => (0 : V)) :=
+  ⟨fun _ _ _ => Filter.EventuallyEq.rfl⟩
+
+theorem eq_zero (hf : PhysicalStage B N0 f) {w : SpaceTime}
+    (hw : w ∈ ActualCandidateConstruction.physicalDomain B N0)
+    (he : w ∉ ActualPolarCoverage.active) : f w = 0 :=
+  (hf.exterior w hw he).eq_of_nhds
+
+/-- Shrinking support: a support point lies in the active annulus, whose outer edge is
+below the outer constant. -/
+theorem support {V : Type*} [NormedAddCommGroup V] {f : SpaceTime → V}
+    (hf : PhysicalStage B N0 f) :
+    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
+      (ActualCandidateConstruction.qbig B N0) f := by
+  intro w ht hq hn
+  have ha : w ∈ ActualPolarCoverage.active := by
+    by_contra hna
+    exact hn (hf.eq_zero ⟨ht, hq⟩ hna)
+  have hr := ((ActualCurrentWaveSupport.profileRadius_mem_iff_active ht).mpr ha).2.trans
+    ActualCurrentWaveSupport.rightRadius_le_actualOuterConstant
+  exact (div_le_iff₀ (Real.sqrt_pos.mpr
+    (PhysicalWaveSum.physicalQ_pos outgoing.data.h_pos outgoing.data.h_lt_half ht))).mp hr
+
+/-- The axis of the local domain lies outside the active annulus, so the hub's axis zero
+germ is a projection. -/
+theorem axisZeroOn {f : VelocityField} (hf : PhysicalStage B N0 f) :
+    GermCandidateAssembly.AxisZeroOn
+      (MixedAxisPreservation.localDomain h (ActualCandidateConstruction.qbig B N0)) f :=
+  fun w hw ha => hf.exterior w hw (axis_not_active hw.1 ha)
+
+/-- Exterior zero germs are preserved by addition. -/
+theorem add {V : Type*} [AddZeroClass V] {f g : SpaceTime → V}
+    (hf : PhysicalStage B N0 f) (hg : PhysicalStage B N0 g) :
+    PhysicalStage B N0 (f + g) := by
+  refine ⟨fun w hw he => ?_⟩
+  filter_upwards [hf.exterior w hw he, hg.exterior w hw he] with y hy hz
+  simp only [Pi.add_apply, hy, hz, add_zero]
+
+end PhysicalStage
+
 /-! ## The finite initialization, without the base fields -/
 
 /-- Initial potential, given by `InitialPhysicalData.potential B N0 +
@@ -2476,52 +2564,6 @@ theorem initialDirect_smooth (B N0 : ℕ) :
   exact (initialDirectData B N0).field_smooth
     (LocalAngularDiagonal.localSlowDomain_open outgoing.data.h_pos outgoing.data.h_lt_half _)
 
-theorem initialPotential_support (B N0 : ℕ) :
-    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-      (ActualCandidateConstruction.qbig B N0) (initialPotential B N0) := by
-  have hw := PhysicalStageSupport.wave_vector_support
-    (InitialPhysicalData.potentialWaveData B N0)
-    (qbig := ActualCandidateConstruction.qbig B N0)
-    (R := ActualInitialization.geometry.patch.b) (by exact le_rfl)
-  have hm := (ActualMeanStageData.initial_shrinkingSupport B N0
-    (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.qbig B N0)
-        le_rfl).2.2.2
-  erw [ActualMeanStageData.initialStreamSupport_field] at hm
-  rw [initialPotential, ActualCandidateConstruction.streamMeanStages_zero]
-  exact PhysicalStageSupport.support_add hw hm
-
-theorem initialPressure_support (B N0 : ℕ) :
-    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-      (ActualCandidateConstruction.qbig B N0) (initialPressure B N0) := by
-  have hw := PhysicalStageSupport.wave_pressure_support
-    (InitialPhysicalData.pressureWaveData B N0)
-    (qbig := ActualCandidateConstruction.qbig B N0)
-    (R := ActualInitialization.geometry.patch.b) (by exact le_rfl)
-  have hm := (PhysicalStageSupport.actual_coherent_support
-    (ActualMeanPhysicalData.initialPressureFamily B N0 (ActualCandidateConstruction.firstBand B N0))
-    (ActualMeanStageData.nativeSupport_of_moving _
-      (ActualMeanPhysicalData.initial_pressure_moving B N0))
-    (qbig := ActualCandidateConstruction.qbig B N0) le_rfl).1
-  rw [initialPressure, ActualCandidateConstruction.pressureMeanStages_zero]
-  exact PhysicalStageSupport.support_add hw hm
-
-theorem initialDirect_support (B N0 : ℕ) :
-    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-      (ActualCandidateConstruction.qbig B N0) (initialDirect B N0) := by
-  have hm := (ActualMeanStageData.initial_shrinkingSupport B N0
-    (ActualCandidateConstruction.firstBand B N0) (ActualCandidateConstruction.qbig B N0) le_rfl).1
-  erw [ActualMeanStageData.initialAngularSupport_field] at hm
-  simp only [initialDirect, ActualCandidateConstruction.angularMeanStages_zero]
-  exact hm
-
-theorem initialPotential_axisZeroOn (B N0 : ℕ) :
-    GermCandidateAssembly.AxisZeroOn
-      (MixedAxisPreservation.localDomain h (ActualCandidateConstruction.qbig B N0))
-      (initialPotential B N0) := by
-  rw [initialPotential_eq_stage]
-  exact GermCandidateAssembly.potentialStage_axisZeroOn outgoing.data.h_pos outgoing.data.h_lt_half
-      _
-
 /-! ## Exact exterior coordinates -/
 
 theorem physicalRadiusX_eq (w : SpaceTime) :
@@ -2572,6 +2614,39 @@ theorem initialPressure_exterior (B N0 : ℕ) {w : SpaceTime}
     ActualCandidateConstruction.pressureMeanStages_zero,
     (ActualMeanExterior.initialPressure_exterior B N0
       (ActualCandidateConstruction.firstBand B N0) ht hq he).1, add_zero]
+
+/-- The initial potential has an exterior zero germ on its physical domain. -/
+theorem initialPotential_stage (B N0 : ℕ) : PhysicalStage B N0 (initialPotential B N0) :=
+  PhysicalStage.of_eq_zero fun _ hw he => initialPotential_exterior B N0 hw.1 hw.2.le he
+
+/-- The initial pressure has an exterior zero germ on its physical domain. -/
+theorem initialPressure_stage (B N0 : ℕ) : PhysicalStage B N0 (initialPressure B N0) :=
+  PhysicalStage.of_eq_zero fun _ hw he => initialPressure_exterior B N0 hw.1 hw.2.le he
+
+/-- The initial direct field has an exterior zero germ on its physical domain. -/
+theorem initialDirect_stage (B N0 : ℕ) : PhysicalStage B N0 (initialDirect B N0) :=
+  PhysicalStage.of_eq_zero fun _ hw he => initialDirect_exterior B N0 hw.1 hw.2.le he
+
+theorem initialPotential_support (B N0 : ℕ) :
+    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
+      (ActualCandidateConstruction.qbig B N0) (initialPotential B N0) :=
+  (initialPotential_stage B N0).support
+
+theorem initialPressure_support (B N0 : ℕ) :
+    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
+      (ActualCandidateConstruction.qbig B N0) (initialPressure B N0) :=
+  (initialPressure_stage B N0).support
+
+theorem initialDirect_support (B N0 : ℕ) :
+    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
+      (ActualCandidateConstruction.qbig B N0) (initialDirect B N0) :=
+  (initialDirect_stage B N0).support
+
+theorem initialPotential_axisZeroOn (B N0 : ℕ) :
+    GermCandidateAssembly.AxisZeroOn
+      (MixedAxisPreservation.localDomain h (ActualCandidateConstruction.qbig B N0))
+      (initialPotential B N0) :=
+  (initialPotential_stage B N0).axisZeroOn
 
 /-! ## The literal zeroth potential and pressure retain the base -/
 
@@ -2978,27 +3053,6 @@ theorem particular_smooth (B N0 : ℕ)
     (ActualCyclePreservation.state_coherent B N0 hN j) hN
     ActualCoreSupport.refinedCarrier_closed (fun _ _ => Subset.rfl) le_rfl
 
-theorem particular_support (B N0 : ℕ)
-    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
-    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        (ActualCandidateConstruction.qbig B N0) (particularPotential B N0 j) ∧
-      MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
-        (ActualCandidateConstruction.qbig B N0) (particularPressure B N0 j) :=
-  ActualValidBandWaves.shrinking_support
-    (ActualCyclePreservation.state_invariant B N0 hN j)
-    (ActualCyclePreservation.state_coherent B N0 hN j) hN
-    ActualCoreSupport.refinedCarrier_closed (fun _ _ => Subset.rfl) le_rfl
-
-theorem particular_axisZeroOn (B N0 : ℕ)
-    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
-    GermCandidateAssembly.AxisZeroOn
-      (MixedAxisPreservation.localDomain h (ActualCandidateConstruction.qbig B N0))
-      (particularPotential B N0 j) :=
-  ActualValidBandWaves.axis_zero
-    (ActualCyclePreservation.state_invariant B N0 hN j)
-    (ActualCyclePreservation.state_coherent B N0 hN j) hN
-    ActualCoreSupport.refinedCarrier_closed (fun _ _ => Subset.rfl) le_rfl
-
 theorem particular_zero_germs (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) {w : SpaceTime}
     (hw : w ∈ ActualCandidateConstruction.physicalDomain B N0)
@@ -3016,6 +3070,55 @@ theorem signed_zero_germs (B N0 : ℕ)
     (signedPotential B N0 hN j =ᶠ[𝓝 w] fun _ => 0) ∧
       (signedPressure B N0 hN j =ᶠ[𝓝 w] fun _ => 0) :=
   ActualSignedExterior.cycle_zero_germs _ _ _ ht he
+
+/-- The stream correction inherits its zero germs from its exterior identity. -/
+theorem stream_stage {B N0 : ℕ} (M : ActualCandidateConstruction.MeanCycleInput B N0) (j : ℕ) :
+    PhysicalStage B N0 (ActualCandidateConstruction.streamMeanStages B N0 j) :=
+  PhysicalStage.of_eq_zero fun _ hw he => stream_exterior M j hw.1 hw.2.le he
+
+/-- The mean pressure inherits its zero germs from its exterior identity. -/
+theorem meanPressure_stage {B N0 : ℕ} (M : ActualCandidateConstruction.MeanCycleInput B N0)
+    (j : ℕ) : PhysicalStage B N0 (ActualCandidateConstruction.pressureMeanStages B N0 j) :=
+  PhysicalStage.of_eq_zero fun _ hw he => meanPressure_exterior M j hw.1 hw.2.le he
+
+theorem particular_stage (B N0 : ℕ)
+    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
+    PhysicalStage B N0 (particularPotential B N0 j) ∧
+      PhysicalStage B N0 (particularPressure B N0 j) :=
+  ⟨⟨fun _ hw he => (particular_zero_germs B N0 hN j hw he).1⟩,
+    ⟨fun _ hw he => (particular_zero_germs B N0 hN j hw he).2⟩⟩
+
+theorem signed_stage (B N0 : ℕ)
+    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
+    PhysicalStage B N0 (signedPotential B N0 hN j) ∧
+      PhysicalStage B N0 (signedPressure B N0 hN j) :=
+  ⟨⟨fun _ hw he => (signed_zero_germs B N0 hN j hw.1 he).1⟩,
+    ⟨fun _ hw he => (signed_zero_germs B N0 hN j hw.1 he).2⟩⟩
+
+/-- The positive stages are sums of three physical stages. -/
+theorem positive_stage (B N0 : ℕ)
+    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
+    PhysicalStage B N0 (positivePotential B N0 hN j) ∧
+      PhysicalStage B N0 (positivePressure B N0 hN j) :=
+  ⟨((particular_stage B N0 hN j).1.add (signed_stage B N0 hN j).1).add
+      (stream_stage (meanCycleInput B N0 hN) (j + 1)),
+    ((particular_stage B N0 hN j).2.add (signed_stage B N0 hN j).2).add
+      (meanPressure_stage (meanCycleInput B N0 hN) (j + 1))⟩
+
+theorem particular_support (B N0 : ℕ)
+    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
+    MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
+        (ActualCandidateConstruction.qbig B N0) (particularPotential B N0 j) ∧
+      MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
+        (ActualCandidateConstruction.qbig B N0) (particularPressure B N0 j) :=
+  ⟨(particular_stage B N0 hN j).1.support, (particular_stage B N0 hN j).2.support⟩
+
+theorem particular_axisZeroOn (B N0 : ℕ)
+    (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
+    GermCandidateAssembly.AxisZeroOn
+      (MixedAxisPreservation.localDomain h (ActualCandidateConstruction.qbig B N0))
+      (particularPotential B N0 j) :=
+  (particular_stage B N0 hN j).1.axisZeroOn
 
 theorem support_of_exterior_zero {V : Type*} [NormedAddCommGroup V]
     {f : SpaceTime → V} {qbig : ℝ}
@@ -3037,40 +3140,26 @@ theorem signed_support (B N0 : ℕ)
         (ActualCandidateConstruction.qbig B N0) (signedPotential B N0 hN j) ∧
       MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
         (ActualCandidateConstruction.qbig B N0) (signedPressure B N0 hN j) :=
-  ⟨support_of_exterior_zero (fun _ ht he => (signed_zero_germs B N0 hN j ht he).1.eq_of_nhds),
-    support_of_exterior_zero (fun _ ht he => (signed_zero_germs B N0 hN j ht he).2.eq_of_nhds)⟩
-
-theorem axis_not_active {w : SpaceTime} (ht : w ∈ PhysicalWaveSum.preterminal)
-    (ha : PhysicalGraphBounds.radialProjection w = 0) : w ∉ ActualPolarCoverage.active := by
-  intro hm
-  have hr := ((ActualCurrentWaveSupport.profileRadius_mem_iff_active ht).mpr hm).1
-  rw [ActualCurrentWaveSupport.profileRadius_zero_of_axis h ha] at hr
-  exact (not_le_of_gt (PrimaryTargetBounds.leftRadius_pos nominal)) hr
+  ⟨(signed_stage B N0 hN j).1.support, (signed_stage B N0 hN j).2.support⟩
 
 theorem signed_axisZeroOn (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
     GermCandidateAssembly.AxisZeroOn
       (MixedAxisPreservation.localDomain h (ActualCandidateConstruction.qbig B N0))
-      (signedPotential B N0 hN j) := by
-  intro w hw ha
-  exact (signed_zero_germs B N0 hN j hw.1 (axis_not_active hw.1 ha)).1
+      (signedPotential B N0 hN j) :=
+  (signed_stage B N0 hN j).1.axisZeroOn
 
 theorem positivePotential_support (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
     MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
       (ActualCandidateConstruction.qbig B N0) (positivePotential B N0 hN j) :=
-  PhysicalStageSupport.support_add
-    (PhysicalStageSupport.support_add (particular_support B N0 hN j).1 (signed_support B N0 hN j).1)
-    (ActualCandidateConstruction.streamMeanStages_shrinkingSupport (meanCycleInput B N0 hN) (j + 1))
+  (positive_stage B N0 hN j).1.support
 
 theorem positivePressure_support (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
     MixedDiagonalExtensions.SublevelShrinkingSupport h PhysicalStageSupport.actualOuterConstant
       (ActualCandidateConstruction.qbig B N0) (positivePressure B N0 hN j) :=
-  PhysicalStageSupport.support_add
-    (PhysicalStageSupport.support_add (particular_support B N0 hN j).2 (signed_support B N0 hN j).2)
-    (ActualCandidateConstruction.pressureMeanStages_shrinkingSupport (meanCycleInput B N0 hN) (j +
-        1))
+  (positive_stage B N0 hN j).2.support
 
 theorem directStages_support (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) :
@@ -3084,21 +3173,14 @@ theorem positivePotential_axisZeroOn (B N0 : ℕ)
     GermCandidateAssembly.AxisZeroOn
       (MixedAxisPreservation.localDomain h (ActualCandidateConstruction.qbig B N0))
       (positivePotential B N0 hN j) :=
-  ((particular_axisZeroOn B N0 hN j).add (signed_axisZeroOn B N0 hN j)).add
-    (stream_axisZeroOn (meanCycleInput B N0 hN) (j + 1))
+  (positive_stage B N0 hN j).1.axisZeroOn
 
 theorem positive_exterior (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) {w : SpaceTime}
     (hw : w ∈ ActualCandidateConstruction.physicalDomain B N0)
     (he : w ∉ ActualPolarCoverage.active) :
-    positivePotential B N0 hN j w = 0 ∧ positivePressure B N0 hN j w = 0 := by
-  have hp := particular_zero_germs B N0 hN j hw he
-  have hs := signed_zero_germs B N0 hN j hw.1 he
-  constructor
-  · simp only [positivePotential, Pi.add_apply, hp.1.eq_of_nhds, hs.1.eq_of_nhds,
-      stream_exterior (meanCycleInput B N0 hN) (j + 1) hw.1 hw.2.le he, add_zero]
-  · simp only [positivePressure, Pi.add_apply, hp.2.eq_of_nhds, hs.2.eq_of_nhds,
-      meanPressure_exterior (meanCycleInput B N0 hN) (j + 1) hw.1 hw.2.le he, add_zero]
+    positivePotential B N0 hN j w = 0 ∧ positivePressure B N0 hN j w = 0 :=
+  ⟨(positive_stage B N0 hN j).1.eq_zero hw he, (positive_stage B N0 hN j).2.eq_zero hw he⟩
 
 theorem exteriorStages (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) :

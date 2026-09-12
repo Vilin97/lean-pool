@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelPairedBound
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.HeatKernelCommutator
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
@@ -63,8 +65,8 @@ open scoped Topology BigOperators ContDiff
 namespace NavierStokesR3.PressureTemporalIdentity
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 open ConservativeDifference
 open Comparison (tensorDiff)
 
@@ -279,8 +281,8 @@ open scoped Topology BigOperators ContDiff
 namespace NavierStokesR3.PressureRecovery
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 open Comparison (ComplexTest tensorDiff)
 open ConservativeDifference HarmonicTestFunctionals
 
@@ -1232,8 +1234,8 @@ open scoped Topology BigOperators ContDiff
 namespace NavierStokesR3.PressureRecovery
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 open Comparison ConservativeDifference HarmonicTestFunctionals PressureFunctionals
 
 /-- These are exactly the local smooth equation and uniform finite-energy
@@ -2050,8 +2052,8 @@ open scoped ContDiff BigOperators
 namespace NavierStokesR3.PressureFluxIdentity
 
 open ProblemStatement Comparison PressureRecovery HarmonicTestFunctionals
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 
 theorem fluxFunction_smooth {χ : Space → ℝ} {w : Space → Space}
     (hχ : ContDiff ℝ ∞ χ) (hw : ContDiff ℝ ∞ w) :
@@ -2221,7 +2223,7 @@ open scoped BigOperators ContDiff
 namespace NavierStokesR3.ActualPressureFlux
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference
 open Comparison PressureRecovery PressureFluxIdentity
 
 theorem difference_slice_smooth {T t : ℝ} {u v : VelocityField} {p q : PressureField}
@@ -3099,8 +3101,8 @@ theorem exists_uniform_actual_pressure_flux_bound {T : ℝ} {u v : VelocityField
   refine ⟨CP, hCP, ?_⟩
   intro R hR t ht
   have ht' : t ∈ Icc 0 T := Ioo_subset_Icc_self ht
-  have hu := NavierStokes.PeriodicUniqueness.spatial_smooth H.smooth_u ht'
-  have hv := NavierStokes.PeriodicUniqueness.spatial_smooth H.smooth_v ht'
+  have hu := NavierStokes.SolutionDifference.spatial_smooth H.smooth_u ht'
+  have hv := NavierStokes.SolutionDifference.spatial_smooth H.smooth_v ht'
   exact (actual_flux_integrable_and_le_canonicalNorm H ht (zero_lt_one.trans_le hR) hu hv).2.trans
     (hbound R hR u v t hu hv (hM t ht').1 (hU t ht').1 (fun i j => (hG t ht' i j).1)
       (hM t ht').2 (hU t ht').2 (fun i j => (hG t ht' i j).2))

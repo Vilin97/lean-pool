@@ -6,8 +6,9 @@ Authors: OpenAI
 
 module
 
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
 import Mathlib.Analysis.InnerProductSpace.Calculus
@@ -272,8 +273,8 @@ open scoped Topology BigOperators ContDiff InnerProductSpace
 namespace NavierStokesR3.LocalizedDifferenceEnergy
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le

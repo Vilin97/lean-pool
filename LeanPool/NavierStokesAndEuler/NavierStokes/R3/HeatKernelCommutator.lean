@@ -374,7 +374,7 @@ private theorem integrable_coordinate_multiplier_moment {f : Space → ℂ}
 private theorem partialD_ofReal {f : Space → ℝ} (hf : Differentiable ℝ f)
     (i : Fin 3) (z : Space) :
     partialD i (fun x : Space => (f x : ℂ)) z = (partialD (E := ℝ) i f z : ℂ) := by
-  unfold partialD NavierStokes.PeriodicIntegration.spatialPartial
+  unfold partialD NavierStokes.SolutionDifference.spatialPartial
   change fderiv ℝ (Complex.ofRealCLM ∘ f) z
     (NavierStokes.ProblemStatement.coordinateVector i) = _
   rw [((Complex.ofRealCLM.hasFDerivAt).comp z (hf z).hasFDerivAt).fderiv]
@@ -442,14 +442,14 @@ private theorem heatKernelFourierData {s : ℝ} (hs : 0 < s) (i j : Fin 3) :
     exact fourierIntegralInv_heatGaussian hs x
   have hd1 : partialD j (FourierTransform.fourierInv g) = FourierTransform.fourierInv f1 := by
     funext x
-    unfold partialD NavierStokes.PeriodicIntegration.spatialPartial
+    unfold partialD NavierStokes.SolutionDifference.spatialPartial
     simpa [f1, c, NavierStokes.ProblemStatement.coordinateVector,
       EuclideanSpace.inner_single_right] using
       RieszTestOperators.fderiv_fourierInv_apply hg hg1 x
         (NavierStokes.ProblemStatement.coordinateVector j)
   have hd2 : partialD i (FourierTransform.fourierInv f1) = FourierTransform.fourierInv f2 := by
     funext x
-    unfold partialD NavierStokes.PeriodicIntegration.spatialPartial
+    unfold partialD NavierStokes.SolutionDifference.spatialPartial
     simpa [f2, c, NavierStokes.ProblemStatement.coordinateVector,
       EuclideanSpace.inner_single_right] using
       RieszTestOperators.fderiv_fourierInv_apply hf1 hf1moment x

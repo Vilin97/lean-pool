@@ -7,7 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ProblemStatement
-public import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicIntegration
+public import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
 
 /-!
 # Common definitions for whole-space comparison
@@ -32,10 +32,10 @@ open ProblemStatement
 /-- Slab: an abbreviation for `Icc a b ×ˢ univ`. -/
 abbrev slab (a b : ℝ) : Set SpaceTime := Icc a b ×ˢ univ
 
-/-- Partial D: an abbreviation for `NavierStokes.PeriodicIntegration.spatialPartial i f x`. -/
+/-- Partial D: an abbreviation for `NavierStokes.SolutionDifference.spatialPartial i f x`. -/
 abbrev partialD {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (i : Fin 3) (f : Space → E) (x : Space) : E :=
-  NavierStokes.PeriodicIntegration.spatialPartial i f x
+  NavierStokes.SolutionDifference.spatialPartial i f x
 
 /-- Comparison Lᵖ norm, given by `(eLpNorm f p (volume : Measure Space)).toReal`. -/
 def comparisonLpNorm {E : Type*} [NormedAddCommGroup E] (p : ℝ≥0∞) (f : Space → E) : ℝ :=

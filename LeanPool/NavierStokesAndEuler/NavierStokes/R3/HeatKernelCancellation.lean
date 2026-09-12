@@ -281,7 +281,7 @@ theorem hasFDerivAt_heatKernel {s : ℝ} (hs : 0 < s) (z : Space) :
 
 theorem partial_heatKernel {s : ℝ} (hs : 0 < s) (i : Fin 3) (z : Space) :
     partialD i (heatKernel s) z = -(z i / (2 * s)) * heatKernel s z := by
-  unfold partialD NavierStokes.PeriodicIntegration.spatialPartial
+  unfold partialD NavierStokes.SolutionDifference.spatialPartial
   rw [(hasFDerivAt_heatKernel hs z).fderiv]
   simp [NavierStokes.ProblemStatement.coordinateVector,
     EuclideanSpace.inner_single_right]
@@ -315,7 +315,7 @@ theorem heatKernelSecond_eq_partial {s : ℝ} (hs : 0 < s)
     ext x
     ring
   rw [hfirst]
-  unfold partialD NavierStokes.PeriodicIntegration.spatialPartial
+  unfold partialD NavierStokes.SolutionDifference.spatialPartial
   change heatKernelSecond s i j z = fderiv ℝ ((fun x : Space => -(x j / (2 * s))) * heatKernel s) z
       (NavierStokes.ProblemStatement.coordinateVector i)
   rw [(hg.mul (hasFDerivAt_heatKernel hs z)).fderiv]

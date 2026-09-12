@@ -7,7 +7,7 @@ Authors: OpenAI
 module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
-public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
+public import LeanPool.NavierStokesAndEuler.ForMathlib.SobolevThreeDimensional
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.GradientOperator
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.LpNormTools
 
@@ -49,16 +49,8 @@ The finite derivative norm is supplied by compact support and `C¹` regularity. 
 theorem lpNorm_six_le {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     {f : Space → E} (hf : ContDiff ℝ 1 f) (hs : HasCompactSupport f) :
-    comparisonLpNorm 6 f ≤ sobolevConstant * comparisonLpNorm 2 (fderiv ℝ f) := by
-  have hn : Module.finrank ℝ Space = 3 := by simp [Space, NavierStokes.ProblemStatement.Space]
-  have h := eLpNorm_le_eLpNorm_fderiv_of_eq_inner (volume : Measure Space)
-    hf hs (p := 2) (p' := 6) (by norm_num) (by omega) (by rw [hn]; norm_num)
-  have hd : MemLp (fderiv ℝ f) 2 (volume : Measure Space) :=
-    (hf.continuous_fderiv (by simp)).memLp_of_hasCompactSupport (hs.fderiv ℝ)
-  have hfin : (eLpNormLESNormFDerivOfEqInnerConst (volume : Measure Space) 2 : ℝ≥0∞) *
-      eLpNorm (fderiv ℝ f) 2 volume ≠ (⊤ : ℝ≥0∞) :=
-    ENNReal.mul_ne_top ENNReal.coe_ne_top hd.eLpNorm_ne_top
-  simpa [comparisonLpNorm, sobolevConstant, ENNReal.toReal_mul] using ENNReal.toReal_mono hfin h
+    comparisonLpNorm 6 f ≤ sobolevConstant * comparisonLpNorm 2 (fderiv ℝ f) :=
+  NavierStokesAndEuler.SobolevThreeDimensional.toReal_eLpNorm_six_le_of_hasCompactSupport hf hs
 
 /-- Multiplication by any positive natural power of a compact cutoff preserves
 compact support, even if the multiplied function is not compactly supported. -/

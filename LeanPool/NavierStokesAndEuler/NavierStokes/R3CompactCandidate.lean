@@ -5,6 +5,8 @@ Authors: OpenAI
 -/
 module
 
+import LeanPool.NavierStokesAndEuler.ForMathlib.WeightedDecay
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.SpatialLocalization
 import LeanPool.NavierStokesAndEuler.NavierStokes.PeriodicResidualLimits
 import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
@@ -91,18 +93,18 @@ theorem jet_decay {S : Set Space} (hS : IsCompact S) {f : VelocityField}
     exact ne_of_gt (by linarith [norm_nonneg z.2])
   obtain ⟨M, hM⟩ := (isCompact_Icc.prod hS).exists_bound_of_continuousOn
     (((hj.mono hsub).norm).mul hw)
-  refine ⟨max M 1, lt_of_lt_of_le zero_lt_one (le_max_right _ _), ?_⟩
+  apply NavierStokesAndEuler.WeightedDecay.exists_pos_norm_le_div_of_slab_bound
+    (J := J) (w := fun z => (1 + ‖z.2‖ + z.1) ^ K) (T := T + 1)
+    (fun t ht _ => Real.rpow_pos_of_pos (by positivity) K)
+    (fun t ht x => jet_zero_after hz m (by linarith) x)
+  refine ⟨max M 0, ?_⟩
   intro t ht x
-  have hp : 0 < (1 + ‖x‖ + t) ^ K := Real.rpow_pos_of_pos (by positivity) K
   by_cases hx : x ∈ S
-  · by_cases htt : t ≤ T + 1
-    · apply (le_div_iff₀ hp).mpr
-      have hb := hM (t, x) ⟨⟨ht, htt⟩, hx⟩
-      exact (le_abs_self _).trans (hb.trans (le_max_left _ _))
-    · rw [jet_zero_after hz m (by linarith) x, norm_zero]
-      exact le_of_lt (div_pos (lt_of_lt_of_le zero_lt_one (le_max_right _ _)) hp)
-  · rw [jet_zero_outside hS.isClosed hs m ht hx, norm_zero]
-    exact le_of_lt (div_pos (lt_of_lt_of_le zero_lt_one (le_max_right _ _)) hp)
+  · exact ((le_abs_self _).trans (hM (t, x) ⟨ht, hx⟩)).trans (le_max_left _ _)
+  · change ‖iteratedFDerivWithin ℝ m f futureDomain (t, x)‖ * _ ≤ _
+    rw [jet_zero_outside hS.isClosed hs m ht.1 hx, norm_zero, zero_mul]
+    exact le_max_right _ _
+
 
 theorem rescale_supported {S : Set Space} {f : VelocityField} (hf : SupportedIn S f)
     (a : ℝ) {c : ℝ} (hc : 0 ≤ c) : SupportedIn S (ComparatorBridge.rescale a c f) := by
@@ -152,6 +154,19 @@ structure Properties (u : VelocityField) (p : PressureField) (f : VelocityField)
   divergence_free : ∀ t ∈ Ico (0 : ℝ) 1, ∀ x, spatialDivergence u t x = 0
   navier_stokes : ∀ t ∈ Ioo (0 : ℝ) 1, ∀ x, navierStokesResidual u p t x = f (t, x)
   speed_unbounded : SpeedUnboundedAtOne u
+
+/-- Forget compact support and blow-up to retain the common local solution contract. -/
+theorem Properties.toSolutionOn {u f : VelocityField} {p : PressureField}
+    (candidate : Properties u p f) :
+    SolutionOn 1 0 (fun _ => 0) (Ico 0 1) f u p where
+  velocity_smooth := candidate.velocity_smooth
+  pressure_smooth := candidate.pressure_smooth
+  initial_velocity := candidate.zero_initial_velocity
+  divergence_free := candidate.divergence_free
+  navier_stokes := by
+    intro time member positive position
+    simpa only [viscousResidual_one] using
+      candidate.navier_stokes time ⟨positive, member.2⟩ position
 
 /-- Outer cutoff, given by `spatialCutoff ((1 / 2 : ℝ) • x)`. -/
 def outerCutoff (x : Space) : ℝ := spatialCutoff ((1 / 2 : ℝ) • x)

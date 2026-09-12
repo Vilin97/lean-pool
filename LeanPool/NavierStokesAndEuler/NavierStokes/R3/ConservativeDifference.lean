@@ -6,6 +6,8 @@ Authors: OpenAI
 
 module
 
+import LeanPool.NavierStokesAndEuler.NavierStokes.SolutionDifference
+
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactEnergy
 import LeanPool.NavierStokesAndEuler.NavierStokes.R3.CompactTimeIntegral
@@ -32,8 +34,8 @@ open scoped Topology BigOperators ContDiff
 namespace NavierStokesR3.ConservativeDifference
 
 open NavierStokes.ProblemStatement
-open NavierStokes.PeriodicIntegration (spatialPartial)
-open NavierStokes.PeriodicUniqueness
+open NavierStokes.SolutionDifference (spatialPartial)
+open NavierStokes.SolutionDifference
 open Comparison (tensorDiff)
 
 private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
