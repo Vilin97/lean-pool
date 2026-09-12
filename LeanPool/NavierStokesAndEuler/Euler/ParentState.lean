@@ -27,6 +27,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketVolumeDivergence
 public import LeanPool.NavierStokesAndEuler.Euler.PacketInverseFlowGevrey
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedGradientSpace
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
+import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
 public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
 public import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
@@ -263,6 +264,11 @@ theorem partitionCoefficient_continuous (c : OrderedFinpartition n) :
   exact (c.compAlongOrderedFinpartitionL ℝ Vector3 Vector3 Vector3).flipMultilinear.cont.comp
     (continuous_pi (fun i => hJ (c.partSize i) (c.partSize_pos i) (c.partSize_le i)))
 
+include hJ in
+theorem partitionCoefficient_aestronglyMeasurable (c : OrderedFinpartition n) (t : K) :
+    AEStronglyMeasurable (partitionCoefficient Y c t) volume :=
+  ((partitionCoefficient_continuous Y hJ c).uncurry_left t).aestronglyMeasurable_of_secondCountable
+
 include hD hB in
 theorem partitionCoefficient_bound (c : OrderedFinpartition n) (t : K) (x : Vector3) :
     ‖partitionCoefficient Y c t x‖ ≤ partitionBound D c := by
@@ -283,12 +289,12 @@ variable [FirstCountableTopology K]
 def partitionPath (c : OrderedFinpartition n) :
     C(K,Lp (Tensor n) 2 (volume : Measure Vector3)) where
   toFun t := operator volume (partitionCoefficient Y c t)
-    ((partitionCoefficient_continuous Y hJ c).uncurry_left t).aestronglyMeasurable
+    (partitionCoefficient_aestronglyMeasurable Y hJ c t)
     (partitionBound D c) (partitionCoefficient_bound Y D hD hB c t) (pulledJetPath Y hmp u c.length
         t)
   continuous_toFun := operator_path_continuous volume (partitionBound D c) (partitionCoefficient Y
       c)
-    (fun t => ((partitionCoefficient_continuous Y hJ c).uncurry_left t).aestronglyMeasurable)
+    (fun t => partitionCoefficient_aestronglyMeasurable Y hJ c t)
     (fun _ => (partitionCoefficient_continuous Y hJ c).comp (continuous_id.prodMk continuous_const))
     (partitionCoefficient_bound Y D hD hB c) _ (pulledJetPath Y hmp u c.length).continuous
 
@@ -299,7 +305,7 @@ theorem partitionPath_ae (g : K → Vector3 → Vector3)
       fun x => c.compAlongOrderedFinpartition (iteratedFDeriv ℝ c.length (g t) (Y t x))
         (fun i => iteratedFDeriv ℝ (c.partSize i) (Y t) x) := by
   have h := operator_ae volume (partitionCoefficient Y c t)
-    ((partitionCoefficient_continuous Y hJ c).uncurry_left t).aestronglyMeasurable
+    (partitionCoefficient_aestronglyMeasurable Y hJ c t)
     (partitionBound D c) (partitionCoefficient_bound Y D hD hB c t) (pulledJetPath Y hmp u c.length
         t)
   filter_upwards [h,pulledJetPath_ae Y hmp u g hu c.length t] with x hx hy
@@ -390,7 +396,8 @@ theorem compositionTensor_memLp :
     memLp_finsetSum _ (fun i _ => composedJetNorm_memLp f g n hmp hLp i)
   have hc : Continuous (iteratedFDeriv ℝ n (g ∘ f)) :=
     (hg.comp hf).continuous_iteratedFDeriv (by simp)
-  apply (hs.const_mul ((n.factorial : ℝ)*D^n)).of_le hc.aestronglyMeasurable
+  apply (hs.const_mul ((n.factorial : ℝ)*D^n)).of_le
+    hc.aestronglyMeasurable_of_secondCountable
   filter_upwards [] with x
   rw [Real.norm_of_nonneg (mul_nonneg (by positivity)
     (Finset.sum_nonneg (fun _ _ => norm_nonneg _)))]
@@ -489,7 +496,7 @@ theorem tensorPath_norm_le (g : K → Vector3 → Vector3)
       compositionTensorLp_norm_le (Y t) (g t) (hY t) (hg t) n D hD
         (fun i h1 hi => hB i h1 hi t) (hmp t) hLp
     _ = _ := by
-      congr 1
+      apply congrArg (((n.factorial : ℝ) * D ^ n) * ·)
       apply Finset.sum_congr rfl
       intro i _
       rw [Lp.norm_def,eLpNorm_congr_ae (hu i.val t)]
