@@ -140,6 +140,11 @@ LONG_CONTEXT_INPUT_TOKENS = 272_000
 # Source: https://developers.openai.com/api/docs/pricing — update when
 # bumping DEFAULT_MODEL or when OpenAI changes pricing.
 PRICING_PER_M: dict[str, dict[str, tuple[tuple[float, float], tuple[float, float]]]] = {
+    # Official Standard API rates verified 2026-09-12. Codex has no invoice
+    # amount, so its displayed estimate uses these uncached token rates.
+    "gpt-6-astra": {
+        "standard": ((10.00, 50.00), (20.00, 75.00)),
+    },
     # The `gpt-5.6` key also covers the alias itself, which routes to
     # gpt-5.6-sol; both rows carry Sol rates.
     "gpt-5.6-sol": {
@@ -165,7 +170,7 @@ def pricing_rates(
     Args:
         model: Model name as reported by the API — a dated snapshot like
             ``gpt-5.6-sol-2026-06-17`` matches its family prefix.
-        tier: Service tier the request was billed at.
+        tier: Service tier, or ``codex-azure`` for a Standard API estimate.
         input_tokens: Prompt size, which selects the short- or
             long-context rate.
 
@@ -173,12 +178,19 @@ def pricing_rates(
         The matching rate pair, or ``None`` when the model/tier pair is
         not in :data:`PRICING_PER_M`.
     """
+    if tier == codex_review.TIER:
+        tier = "standard"
     for prefix in sorted(PRICING_PER_M, key=len, reverse=True):
         if model == prefix or model.startswith(prefix):
             rates = PRICING_PER_M[prefix].get(tier)
             if rates is None:
                 return None
-            return rates[1] if input_tokens >= LONG_CONTEXT_INPUT_TOKENS else rates[0]
+            long_context = (
+                input_tokens > LONG_CONTEXT_INPUT_TOKENS
+                if prefix == "gpt-6-astra"
+                else input_tokens >= LONG_CONTEXT_INPUT_TOKENS
+            )
+            return rates[1] if long_context else rates[0]
     return None
 
 
@@ -1267,13 +1279,23 @@ def run_project_rubrics(
     return outcomes
 
 
+def render_estimated_cost(cost: float) -> str:
+    """Label the nominal token value without implying an actual Codex charge."""
+    return (
+        f"**Estimated cost:** ${cost:.4f} "
+        "([Standard API equivalent](https://developers.openai.com/api/docs/pricing); "
+        "uncached input)"
+    )
+
+
 def render_usage(usage: Any, model: str, tier: str, effort: str | None = None) -> str:
     """Render a one-line token / tier / effort / cost footer.
 
     Returns an empty string if ``usage`` is unavailable. Cost is computed
     from :data:`PRICING_PER_M` at the short- or long-context rate the
     request's input size lands in, and suppressed when the model/tier
-    pair is not listed there.
+    pair is not listed there. Azure uses an explicitly labeled Standard
+    API equivalent, valuing all input tokens at the uncached rate.
     """
     if usage is None:
         return (
@@ -1289,13 +1311,18 @@ def render_usage(usage: Any, model: str, tier: str, effort: str | None = None) -
         parts.append(f"**Effort:** `{effort}`")
     if tier == codex_review.TIER:
         parts.append("**Billing:** Codex account quota on Azure (no API credits)")
-        return " · ".join(parts)
     rates = pricing_rates(model, tier, in_tok)
     if rates is not None:
         in_price, out_price = rates
         cost = (in_tok * in_price + out_tok * out_price) / 1_000_000
-        cost_cell = f"**Cost:** ${cost:.4f}"
-        if in_tok >= LONG_CONTEXT_INPUT_TOKENS:
+        cost_cell = (
+            render_estimated_cost(cost)
+            if tier == codex_review.TIER
+            else f"**Cost:** ${cost:.4f}"
+        )
+        if in_tok > LONG_CONTEXT_INPUT_TOKENS or (
+            in_tok == LONG_CONTEXT_INPUT_TOKENS and not model.startswith("gpt-6-astra")
+        ):
             cost_cell += " (long-context rate)"
         parts.append(cost_cell)
     else:
@@ -1511,8 +1538,12 @@ def _render_rubric_usage(outcomes: list[RubricOutcome], effort: str | None) -> s
         parts.append(f"**Effort:** `{effort}`")
     if all(o.result.tier == codex_review.TIER for o in outcomes):
         parts.append("**Billing:** Codex account quota on Azure (no API credits)")
-    elif cost > 0 or not unpriced:
-        cost_cell = f"**Cost:** ${cost:.4f}"
+    if cost > 0 or not unpriced:
+        cost_cell = (
+            render_estimated_cost(cost)
+            if any(o.result.tier == codex_review.TIER for o in outcomes)
+            else f"**Cost:** ${cost:.4f}"
+        )
         if unpriced:
             cost_cell += " (partial — some calls unpriced)"
         parts.append(cost_cell)
