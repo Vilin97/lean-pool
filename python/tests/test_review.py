@@ -8,6 +8,13 @@ import types
 # The stub registered by tests/conftest.py; its exception classes carry
 # the status_code attributes the review module's error handling inspects.
 import openai
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def explicit_api_backend(monkeypatch):
+    """Keep legacy API tests explicit; Azure routing has its own test module."""
+    monkeypatch.setenv("REVIEW_BACKEND", "openai")
 
 
 def _file_patch(path: str, body_lines: list[str]) -> str:
