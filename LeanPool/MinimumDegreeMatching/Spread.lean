@@ -3,7 +3,12 @@ Copyright (c) 2026 Aristotle contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle
 -/
-import Mathlib
+import Mathlib.Combinatorics.SimpleGraph.Tutte
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Push
+import Mathlib.Tactic.Ring
 
 /-!
 # Spread perfect matchings in Dirac graphs
