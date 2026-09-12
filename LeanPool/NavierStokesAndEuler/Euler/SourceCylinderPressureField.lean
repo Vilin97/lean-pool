@@ -508,8 +508,10 @@ theorem pressureSource_contDiff (hSc : IsCompact S)
     (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period U))) :
     ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS
       (pressureSource period S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm))) := by
-  let v := velocity period S hS T hT Q Q₁ c hc hQ f a₀
-  let w := supportedMultiplierMap period S hS M.field v
+  let v : C(Icc (0 : ℝ) T,Supported period Space S hS) :=
+    velocity period S hS T hT Q Q₁ c hc hQ f a₀
+  let w : C(Icc (0 : ℝ) T,Supported period Space S hS) :=
+    supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := Space) (F := Space) period S hS M.field v
   have hv := velocity_contDiff period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀
   have hw := supported_product_orbit_contDiff period M.field M.translation_contDiff S hS v hv
   have hr : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a
