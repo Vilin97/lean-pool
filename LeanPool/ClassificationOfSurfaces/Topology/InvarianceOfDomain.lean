@@ -106,21 +106,8 @@ theorem differentiable_approx_of_continuous {δ : ℝ} (hδ : 0 < δ) {U : Set E
   let G_i (i : Fin n) : C(E, ℝ) :=
     {toFun := fun y => basis.toBasis.equivFunL (G y) i, continuous_toFun := by fun_prop}
   let coordEquiv := basis.toBasis.equivFunL
-  have hpos_symm : 0 < ‖(coordEquiv.symm : ((Fin n) → ℝ) →L[ℝ] E)‖ := by
-    refine lt_of_le_of_ne (norm_nonneg _) fun h_eq => ?_
-    let w : Fin n → ℝ := fun _ => 1
-    have hw : w ≠ 0 := by
-      have : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp Module.finrank_pos
-      obtain ⟨i⟩ := (inferInstance : Nonempty (Fin n))
-      intro h
-      have : w i = 0 := congr_fun h i
-      linarith
-    have hw0 : (coordEquiv.symm : (Fin n → ℝ) →L[ℝ] E) w = 0 := by
-      rw [norm_eq_zero.1 h_eq.symm]
-      rfl
-    have hfalse : coordEquiv (coordEquiv.symm w) = coordEquiv 0 := congrArg coordEquiv hw0
-    rw [coordEquiv.apply_symm_apply w, map_zero] at hfalse
-    exact hw hfalse
+  have hpos_symm : 0 < ‖(coordEquiv.symm : ((Fin n) → ℝ) →L[ℝ] E)‖ :=
+    coordEquiv.norm_symm_pos
   -- Define `C` as the operator norm for l.symm
   let C := ‖(coordEquiv.symm : (Fin n → ℝ) →L[ℝ] E)‖
   let ε' := δ / (2 * C)
@@ -139,7 +126,7 @@ theorem differentiable_approx_of_continuous {δ : ℝ} (hδ : 0 < δ) {U : Set E
     intro y hy
     let v : Fin n → ℝ := fun i => (p_i i : C(E, ℝ)) y - (basis.toBasis.equivFunL (G y)) i
     have hv i : |v i| < ε' := by
-      grind only [ContinuousMap.coe_mk, Real.norm_eq_abs, (hp_i i).2 y hy]
+      simpa only [v, G_i, ContinuousMap.coe_mk, Real.norm_eq_abs] using (hp_i i).2 y hy
     have hnorm_v : ‖v‖ < ε' := by rw [pi_norm_lt_iff hε']; exact fun i => hv i
     have hP_eq : P y - G y = coordEquiv.symm v := by
       apply coordEquiv.injective
@@ -197,7 +184,8 @@ private theorem radialProjection_mem_sep_union_sphere (c : E) {epsilon : ℝ}
       {z ∈ s | ‖z - c‖ ≥ epsilon} ∪ sphere c epsilon := by
   by_cases h : epsilon < ‖y - c‖
   · have hyc : 0 < ‖y - c‖ := hepsilon.trans h
-    grind [max_eq_right_of_lt, one_smul, add_sub_cancel, div_lt_one hyc]
+    rw [max_eq_right_of_lt ((div_lt_one hyc).mpr h), one_smul, add_sub_cancel]
+    exact Or.inl ⟨hy, h.le⟩
   · right
     simp only [not_lt] at h
     have hy_neq_c : c ≠ y := fun hcy ↦ hc (hcy ▸ hy)
@@ -241,7 +229,8 @@ theorem invariance_of_domain_interior (f : E → E)
   let G' : C(E, E) := ⟨fun x => (G x : E), continuous_subtype_val.comp (ContinuousMap.continuous G)⟩
   -- Prove that `G` restricted to the image equals `FInvCmap`
   have hG_eq : ∀ y (hy : y ∈ f '' closedBall 0 1), G y = FInvCmap ⟨y, hy⟩ := by
-    grind [ContinuousMap.restrict_apply]
+    intro y hy
+    exact congr($hG ⟨y, hy⟩)
   -- Now prove the left‑inverse property for `G'`
   have hG'_left_inv : ∀ x ∈ closedBall 0 1, G' (f x) = x := fun x hx =>
     (congr_arg Subtype.val (hG_eq (f x) (mem_image_of_mem f hx))).trans
@@ -282,7 +271,8 @@ theorem invariance_of_domain_interior (f : E → E)
     have hdist : ‖y - f 0‖ < 2 * ε := by
       have hineq := norm_add_le (y - c) (c - f 0)
       simp only [sub_add_sub_cancel] at hineq; linarith
-    grind [dist_zero_right, dist_eq_norm]
+    rw [← h2εeq, ← dist_eq_norm] at hdist
+    simpa only [hG0, dist_zero_right] using (h2ε1 hdist).le
   -- Let `Σ₁ := {y ∈ f(B^n): ‖y - c‖ ≥ ε}`.
   let sigma1 : Set (E) := {y ∈ f '' closedBall 0 1 | ‖y - c‖ ≥ ε}
   -- Let `Σ₂ := {y ∈ ℝ^n : ‖y - c‖ = ε}`.
@@ -329,8 +319,8 @@ theorem invariance_of_domain_interior (f : E → E)
     by_contra hGeq
     have hG_inj_on_image : Set.InjOn G (f '' closedBall 0 1) := by
       intro x hx y hy h
-      have hx_eq : G x = FInvCmap ⟨x, hx⟩ := by grind
-      have hy_eq : G y = FInvCmap ⟨y, hy⟩ := by grind
+      have hx_eq := hG_eq x hx
+      have hy_eq := hG_eq y hy
       rw [hx_eq, hy_eq] at h
       exact congr_arg Subtype.val (FEquiv.symm.injective h)
     have hyeq : y = f 0 := by
@@ -386,15 +376,16 @@ theorem invariance_of_domain_interior (f : E → E)
       exact ⟨v, mem_ball_zero_iff.mp hv_in_ball, by simp [hsigma1empty], hv_notin_sigma2⟩
     have hP_cont : ContinuousOn (fun v => ‖P v‖) sigma1 := by fun_prop
     -- Let `d` be a point of `Σ₁` such that `‖P(d)‖` takes its minimum value.
-    let ⟨d, _, hd⟩ := IsCompact.exists_isMinOn hsigma1compact hsigma1nonempty hP_cont
+    let ⟨d, hd_mem, hd⟩ := IsCompact.exists_isMinOn hsigma1compact hsigma1nonempty hP_cont
     -- Let `k` be the minimum of these two, to ensure both properties.
     let k := min ‖P d‖ δ
+    have hkpos : 0 < k := lt_min_iff.mpr
+      ⟨norm_pos_iff.mpr (fun h ↦ h0_notin_image ⟨d, hd_mem, h⟩), hδ1⟩
     obtain ⟨v, hvnorm, hv1⟩ : ∃ a ∈ ball 0 k, a ∉ P '' sphere c ε := by
       rw [← Set.not_subset]
       intro hsub
       have : volume (ball (0 : E) k) ≤ 0 := by rw [← hP_image_null]; exact measure_mono hsub
-      exact LT.lt.false (lt_of_lt_of_le (measure_ball_pos volume (0 : E)
-        (lt_min_iff.mpr ⟨by simp only [norm_pos_iff, ne_eq]; grind, hδ1⟩)) this)
+      exact LT.lt.false (lt_of_lt_of_le (measure_ball_pos volume (0 : E) hkpos) this)
     refine ⟨v, ⟨by linarith [mem_ball_zero_iff.mp hvnorm, min_le_right ‖P d‖ δ],
       ⟨fun hin1 => ?_, fun hin2 ↦ hv1 hin2⟩⟩⟩
     rcases hin1 with ⟨x, hx, rfl⟩
@@ -402,7 +393,8 @@ theorem invariance_of_domain_interior (f : E → E)
   -- Let `P'` be the perturbation of `P` such that `P'(y) = P(y) - v`.
   let P' : C(E, E) := {toFun := fun y => P y - v, continuous_toFun:= by fun_prop}
   -- `v` is not in `Σ`.
-  have hv_notin_sigma : v ∉ P '' sigma := by grind
+  have hv_notin_sigma : v ∉ P '' sigma := by
+    simpa only [sigma, image_union, mem_union, not_or] using And.intro hv1 hv2
   -- Define `Gtilde : f(B^n) → ℝ^n` as `Gtilde(y) = P'(Φ(y))`.
   let Gtilde : E → E := fun y => P' (Phi y)
   -- `Gtilde` is continuous.
@@ -432,10 +424,11 @@ theorem invariance_of_domain_interior (f : E → E)
         _ ≤ _ := by linarith
     · -- If `‖y - c‖ ≤ ε`, then `Φ y ∈ Σ₂`.
       simp only [not_lt] at hP
-      have hy_neq_c : c ≠ y := by grind
+      have hy_neq_c : c ≠ y := fun hcy ↦ hc2 (hcy ▸ hy)
       have hleft : 1 ≤ ε / ‖y - c‖ :=
         (one_le_div (norm_pos_iff.mpr (sub_ne_zero.mpr (Ne.symm hy_neq_c)))).mpr hP
-      have hPhi : Phi y = c + (ε / ‖y - c‖) • (y - c) := by grind [max_eq_left]
+      have hPhi : Phi y = c + (ε / ‖y - c‖) • (y - c) := by
+        simp only [Phi, max_eq_left hleft]
       have hyimg : Phi y ∈ sphere c ε := by
         simp [hPhi, mem_sphere_iff_norm, add_sub_cancel_left, norm_smul,
           (sub_ne_zero_of_ne (Ne.symm hy_neq_c)), hε1.le]
@@ -450,7 +443,7 @@ theorem invariance_of_domain_interior (f : E → E)
           _ < ε + ε := add_lt_add_right hc1 ε
           _ = 2 * ε := by ring
         rw [← h2εeq, ← dist_eq_norm] at hdist
-        grind [h2ε1 hdist, dist_zero_right]
+        simpa only [hG0, dist_zero_right] using (h2ε1 hdist).le
       specialize hG_small y hP
       calc
         ‖G y - P' (Phi y)‖
