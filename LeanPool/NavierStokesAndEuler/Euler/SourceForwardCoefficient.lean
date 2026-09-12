@@ -217,8 +217,9 @@ variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- Smoothness of the actual uniform Gram coefficient path. -/
 theorem gramPath_contDiff (A : P → C(K, α →ᵇ U →L[ℝ] E)) {n : ℕ∞ω} (hA : ContDiff ℝ n A) :
     ContDiff ℝ n (fun a => gramPath (A a)) :=
-  pathComposition_contDiff (fun a => pathAdjointMap (A a)) A ((pathAdjointMap (α := α) (K := K) (U
-      := U) (E := E)).contDiff.comp hA) hA
+  pathComposition_contDiff
+    (fun a => pathAdjointMap (α := α) (K := K) (U := U) (E := E) (A a)) A
+    ((pathAdjointMap (α := α) (K := K) (U := U) (E := E)).contDiff.comp hA) hA
 
 /-- Smoothness of the constructed inverse in the uniform time-space norm. -/
 theorem inversePath_contDiff (A : P → C(K, α →ᵇ U →L[ℝ] E))
@@ -317,7 +318,8 @@ theorem gramPath_bound (Q : P → C(K, α →ᵇ U →L[ℝ] E)) (hQ : ContDiff 
   have hAdj := (pathAdjointMap (α := α) (K := K) (U := U) (E := E)).contDiff.comp hQ
   have hAdjBound := contraction_bound (pathAdjointMap (α := α) (K := K) (U := U) (E := E))
     pathAdjointMap_norm Q hQ R C hR hC 0 hbQ
-  have h := pathComposition_bound (fun y => pathAdjointMap (Q y)) Q hAdj hQ
+  have h := pathComposition_bound
+    (fun y => pathAdjointMap (α := α) (K := K) (U := U) (E := E) (Q y)) Q hAdj hQ
     R C C hR hC hC 0 0 hAdjBound hbQ n x
   have he : 3*C*C = 3*C^2 := by ring
   have hfun : (fun y => gramPath (Q y)) = (fun y =>
@@ -566,7 +568,8 @@ theorem leftInversePath_bound (n : ℕ) (x : P) :
   have hbAdj := contraction_bound (pathAdjointMap (α := α) (K := K) (U := U) (E := E))
     pathAdjointMap_norm Q hQr (4*Ri) C₀ hrad hC₀ 0 hbQ'
   exact pathComposition_bound (fun y => inversePath c hc (Q y) (hQ y))
-    (fun y => pathAdjointMap (Q y)) (inversePath_contDiff c hc Q hQ hQr)
+    (fun y => pathAdjointMap (α := α) (K := K) (U := U) (E := E) (Q y))
+    (inversePath_contDiff c hc Q hQ hQr)
     ((pathAdjointMap (α := α) (K := K) (U := U) (E := E)).contDiff.comp hQr) (4*Ri) Ri C₀ hrad hi
         hC₀ 0 0
     (EulerBoundedFieldGramInverse.inversePath_coefficient_bound Q c hc hQ hQr Rc C₀ hRc hC₀ hbQ Ri
