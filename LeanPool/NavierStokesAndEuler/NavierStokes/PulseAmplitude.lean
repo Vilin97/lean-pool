@@ -684,40 +684,42 @@ theorem two_row_solution_bound {k lam A0 A1 r0 r1 x0 x1 d0 d1 : ℝ}
       lam * |x1| ≤ ((1 + Real.exp 1) / k) * (|d0| + |d1|) := by
   have hA0p := hk.trans_le hA0
   have hA1p := hk.trans_le hA1
-  have h0' : x0 + r0 * x1 = d0 / A0 := (eq_div_iff hA0p.ne').mpr (by linarith [h0])
-  have h1' : x0 + r1 * x1 = d1 / A1 := (eq_div_iff hA1p.ne').mpr (by linarith [h1])
+  have h0' : x0 + r0 * x1 = d0 / A0 := (eq_div_iff hA0p.ne').mpr ((mul_comm _ _).trans h0)
+  have h1' : x0 + r1 * x1 = d1 / A1 := (eq_div_iff hA1p.ne').mpr ((mul_comm _ _).trans h1)
   have ha0 : |d0 / A0| ≤ |d0| / k := by
     rw [abs_div, abs_of_pos hA0p]
     exact div_le_div_of_nonneg_left (abs_nonneg _) hk hA0
   have ha1 : |d1 / A1| ≤ |d1| / k := by
     rw [abs_div, abs_of_pos hA1p]
     exact div_le_div_of_nonneg_left (abs_nonneg _) hk hA1
-  have hdx : (r0 - r1) * x1 = d0 / A0 - d1 / A1 := by linarith [h0', h1']
+  have hdx : (r0 - r1) * x1 = d0 / A0 - d1 / A1 := by linarith only [h0', h1']
   have hdiff := abs_sub (d0 / A0) (d1 / A1)
   rw [← hdx, abs_mul, abs_of_pos (hlam.trans_le hgap)] at hdiff
   have hx1 : lam * |x1| ≤ (|d0| + |d1|) / k := by
-    have hx := mul_le_mul_of_nonneg_right hgap (abs_nonneg x1)
-    rw [add_div]
-    linarith
-  have hx0eq : x0 = d0 / A0 - r0 * x1 := by linarith [h0']
+    calc
+      _ ≤ (r0 - r1) * |x1| := mul_le_mul_of_nonneg_right hgap (abs_nonneg x1)
+      _ ≤ |d0 / A0| + |d1 / A1| := hdiff
+      _ ≤ |d0| / k + |d1| / k := add_le_add ha0 ha1
+      _ = _ := (add_div _ _ _).symm
+  have hx0eq : x0 = d0 / A0 - r0 * x1 := eq_sub_of_add_eq h0'
   have hx0 : |x0| ≤ |d0 / A0| + r0 * |x1| := by
     rw [hx0eq]
     simpa only [abs_mul, abs_of_nonneg hr0] using abs_sub (d0 / A0) (r0 * x1)
   have hd : 0 ≤ (|d0| + |d1|) / k := div_nonneg (by positivity) hk.le
   have he : 0 ≤ Real.exp (1 : ℝ) := (Real.exp_pos _).le
   have h0d : |d0| / k ≤ (|d0| + |d1|) / k :=
-    div_le_div_of_nonneg_right (by linarith [abs_nonneg d1]) hk.le
+    div_le_div_of_nonneg_right (le_add_of_nonneg_right (abs_nonneg d1)) hk.le
   have hsmall : lam * |d0 / A0| ≤ (|d0| + |d1|) / k := by
     have hmul := mul_le_mul_of_nonneg_right hlam' (abs_nonneg (d0 / A0))
-    linarith
+    exact (hmul.trans_eq (one_mul _)).trans (ha0.trans h0d)
   have hscaled := mul_le_mul_of_nonneg_left hx0 hlam.le
   have hrscaled : r0 * (lam * |x1|) ≤ Real.exp 1 * ((|d0| + |d1|) / k) :=
     mul_le_mul hr0' hx1 (mul_nonneg hlam.le (abs_nonneg x1)) he
   have hid : ((1 + Real.exp 1) / k) * (|d0| + |d1|) =
       (|d0| + |d1|) / k + Real.exp 1 * ((|d0| + |d1|) / k) := by ring
   constructor <;> rw [hid]
-  · linarith
-  · nlinarith
+  · linarith only [hscaled, hsmall, hrscaled]
+  · exact hx1.trans (le_add_of_nonneg_right (mul_nonneg he hd))
 
 theorem normalized_solution_bound (c : Parameters) (x d : Fin 2 → ℝ)
     (h : (normalizedMatrix c).mulVec x = d) (j : Fin 2) :
