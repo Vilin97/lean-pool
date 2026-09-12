@@ -23,6 +23,7 @@ import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.RingTheory.SimpleRing.Congr
 import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
@@ -519,77 +520,8 @@ omit [FiniteDimensional F A] [Algebra.IsCentral F A] [IsSimpleRing A] in
 lemma Subalgebra.conj_simple_iff {B : Subalgebra F A} {x : Aˣ} :
     IsSimpleOrder (TwoSidedIdeal <| B.conj x) ↔
     IsSimpleOrder (TwoSidedIdeal B) := by
-  let e : TwoSidedIdeal (B.conj x) ≃o TwoSidedIdeal B :=
-  { toFun J := J.comap (B.toConj x)
-    invFun J := .mk'
-      (Set.image (B.toConj x) J)
-      (⟨0, TwoSidedIdeal.zero_mem _, by simp⟩)
-      (by
-        rintro _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩
-        rw [← map_add]
-        refine ⟨a + b, J.add_mem ha hb, rfl⟩)
-      (by
-        rintro _ ⟨a, ha, rfl⟩
-        rw [← map_neg]
-        refine ⟨-a, J.neg_mem ha, rfl⟩)
-      (by
-        rintro ⟨_, ⟨a, ha, rfl⟩⟩ _ ⟨b, hb, rfl⟩
-        refine ⟨⟨a, ha⟩ * b, J.mul_mem_left _ _ hb, ?_⟩
-        ext
-        simp_all)
-      (by
-        rintro ⟨_, ⟨a, ha, rfl⟩⟩ ⟨_, ⟨b, hb, rfl⟩⟩ ⟨c, hc1, hc2⟩
-        refine ⟨⟨a, ha⟩ * ⟨b, hb⟩, J.mul_mem_right _ _ <| by
-          have h : (x : A) * (c : A) * (↑x⁻¹ : A) = (x : A) * a * (↑x⁻¹ : A) :=
-            Subtype.ext_iff.1 hc2
-          rw [Units.mul_left_inj, Units.mul_right_inj] at h
-          have hac : (⟨a, ha⟩ : B) = c := Subtype.ext h.symm
-          rw [hac]
-          exact hc1, ?_⟩
-        ext
-        simp only [toConj, MulMemClass.mk_mul_mk, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
-          OneHom.coe_mk, mul_assoc]
-        rw [← mul_assoc x⁻¹.1, Units.inv_mul, one_mul])
-    left_inv := by
-      intro J
-      ext ⟨_, ⟨a, ha, rfl⟩⟩
-      simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
-      simp_all only [TwoSidedIdeal.mem_mk', Set.mem_image, SetLike.mem_coe,
-        TwoSidedIdeal.mem_comap, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
-        OneHom.coe_mk, Subtype.exists]
-      constructor
-      · rintro ⟨b, _, hbJ, hbe⟩
-        exact hbe ▸ hbJ
-      · intro h
-        exact ⟨a, ha, h, rfl⟩
-    right_inv := by
-      intro J
-      ext ⟨a, ha⟩
-      simp only [TwoSidedIdeal.mem_comap]
-      generalize_proofs
-      rw [TwoSidedIdeal.mem_mk']
-      try assumption
-      simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-        Set.mem_image, SetLike.mem_coe, Subtype.mk.injEq, Units.mul_left_inj, Units.mul_right_inj,
-        Subtype.exists, exists_and_right, exists_eq_right, ha, exists_true_left]
-    map_rel_iff' := by
-      intro J K
-      simp only [Equiv.coe_fn_mk]
-      constructor
-      · rintro H ⟨_, ⟨a, ha1, rfl⟩⟩ ha2
-        have := @H ⟨a, ha1⟩ (by
-          simp only [toConj, TwoSidedIdeal.mem_comap, AlgHom.coe_mk, RingHom.coe_mk,
-            MonoidHom.coe_mk, OneHom.coe_mk, ha2])
-        simp only [toConj, TwoSidedIdeal.mem_comap, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
-          OneHom.coe_mk] at this
-        exact this
-      · intro H ⟨a, ha1⟩ ha2
-        simp only [toConj, TwoSidedIdeal.mem_comap, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
-          OneHom.coe_mk] at ha2
-        simp only [toConj, TwoSidedIdeal.mem_comap, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
-          OneHom.coe_mk]
-        exact H ha2 }
-  rw [OrderIso.isSimpleOrder_iff e]
+  exact (TwoSidedIdeal.orderIsoOfRingEquiv
+    (Subalgebra.conjEquiv B x).symm.toRingEquiv).isSimpleOrder_iff
 
 omit [FiniteDimensional F A] [Algebra.IsCentral F A] [IsSimpleRing A] in
 lemma Subalgebra.conj_centralizer (B : Subalgebra F A) {x : Aˣ} :
@@ -858,10 +790,10 @@ noncomputable def writeAsTensorProduct
     A ≃ₐ[F] B ⊗[F] Subalgebra.centralizer F (B : Set A) :=
   haveI s1 : IsSimpleRing (Subalgebra.centralizer F (B : Set A)) :=
     centralizerIsSimple B (Module.Free.chooseBasis _ _)
-  haveI s2 : IsSimpleRing (B ⊗[F] Subalgebra.centralizer F (B : Set A)) :=
-    ⟨TwoSidedIdeal.orderIsoOfRingEquiv
-      (Algebra.TensorProduct.comm F B (Subalgebra.centralizer F (B : Set A))).toRingEquiv
-      |>.isSimpleOrder⟩
+  haveI s2 : IsSimpleRing (B ⊗[F] Subalgebra.centralizer F (B : Set A)) := by
+    exact IsSimpleRing.of_ringEquiv
+      (Algebra.TensorProduct.comm F (Subalgebra.centralizer F (B : Set A)) B).toRingEquiv
+      (IsCentralSimple.TensorProduct.simple F (Subalgebra.centralizer F (B : Set A)) B)
   AlgEquiv.symm <| AlgEquiv.ofBijective (Algebra.TensorProduct.lift B.val (Subalgebra.val _)
     fun x y => show _ = _ by simpa using y.2 x x.2) <|
       bijective_of_dim_eq_of_isCentralSimple F (B ⊗[F] Subalgebra.centralizer F (B : Set A)) A
