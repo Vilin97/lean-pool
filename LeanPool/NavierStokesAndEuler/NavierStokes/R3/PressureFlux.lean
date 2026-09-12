@@ -1915,7 +1915,7 @@ theorem memLp_and_lpNorm_fderiv_r_two_le {φ : Space → ℝ} {w : Space → Spa
     WeightedSobolev.memLp_cutoffGradientAmplitude hφ.continuous hs hw1 2
   have hG24 : MemLp (fun x => (24 * L) • G x) 2 volume := hG.const_smul (24 * L)
   have hw40 : MemLp (fun x => (40 * L ^ 2 + 8 * J) • ‖w x‖) 2 volume :=
-    hw2.norm.const_smul (40 * L ^ 2 + 8 * J)
+    hw2.norm.const_mul (40 * L ^ 2 + 8 * J)
   have hc : 0 ≤ 40 * L ^ 2 + 8 * J := by positivity
   refine ⟨memLp_fderiv_r hφ hs hw 2, ?_⟩
   calc
