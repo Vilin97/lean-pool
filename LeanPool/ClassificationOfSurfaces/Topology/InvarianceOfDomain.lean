@@ -435,15 +435,8 @@ theorem invariance_of_domain_interior (f : E → E)
       have hP_approx_le : ‖P (Phi y)‖ ≤ ‖(G (Phi y) : E)‖ + δ := by
         linarith [norm_sub_rev (P (Phi y)) (G (Phi y) : E), hP_bound (Phi y) (Or.inr hyimg),
         norm_le_norm_add_norm_sub' (P (Phi y)) (G (Phi y))]
-      have hG_phi_small : ‖(G (Phi y) : E)‖ ≤ 0.1 := by
-        rw [dist_eq_norm] at hc1
-        have hdist : ‖Phi y - f 0‖ < 2 * ε := calc
-          ‖Phi y - f 0‖  ≤ ‖Phi y - c‖ + ‖c - f 0‖ := by grw [← sub_add_sub_cancel,norm_add_le]
-          _ = ε + ‖c - f 0‖ := by rw [mem_sphere_iff_norm.mp hyimg]
-          _ < ε + ε := add_lt_add_right hc1 ε
-          _ = 2 * ε := by ring
-        rw [← h2εeq, ← dist_eq_norm] at hdist
-        simpa only [hG0, dist_zero_right] using (h2ε1 hdist).le
+      have hG_phi_small : ‖(G (Phi y) : E)‖ ≤ 0.1 :=
+        hG_small (Phi y) (mem_sphere_iff_norm.mp hyimg).le
       specialize hG_small y hP
       calc
         ‖G y - P' (Phi y)‖
