@@ -182,11 +182,35 @@ jobs:
         working-directory: python
         run: uv sync --group review
 
+      - name: Configure restricted Azure review connection
+        if: steps.ci.outputs.conclusion == 'success'
+        env:
+          REVIEW_SSH_KEY: ${{ secrets.REVIEW_AZURE_SSH_KEY }}
+          REVIEW_KNOWN_HOSTS: ${{ secrets.REVIEW_AZURE_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          test -n "$REVIEW_SSH_KEY"
+          test -n "$REVIEW_KNOWN_HOSTS"
+          install -d -m 700 ~/.ssh
+          umask 077
+          printf '%s\n' "$REVIEW_SSH_KEY" > ~/.ssh/lean_pool_review
+          printf '%s\n' "$REVIEW_KNOWN_HOSTS" > ~/.ssh/lean_pool_review_known_hosts
+          cat >> ~/.ssh/config <<'CONFIG'
+          Host lean-pool-review-azure
+            HostName leanvm-vilin97.westus2.cloudapp.azure.com
+            User vasil
+            IdentityFile ~/.ssh/lean_pool_review
+            IdentitiesOnly yes
+            UserKnownHostsFile ~/.ssh/lean_pool_review_known_hosts
+            StrictHostKeyChecking yes
+          CONFIG
+
       - name: Run LLM review
         if: steps.ci.outputs.conclusion == 'success'
         working-directory: python
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          REVIEW_BACKEND: codex-azure
+          REVIEW_SSH_HOST: lean-pool-review-azure
           # Mathlib prior-art search. Absent, the review still runs and
           # is told the search did not happen.
           LEANEXPLORE_API_KEY: ${{ secrets.LEANEXPLORE_API_KEY }}
@@ -194,16 +218,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           REVIEW_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          # Override here if the model or effort needs to change. The
-          # gpt-5.6 alias tracks the newest gpt-5.6-sol snapshot; there
-          # is no cross-family rolling alias, so a new family (gpt-5.7)
-          # needs a bump here. Per-tier prices live in PRICING_PER_M
-          # inside review.py — update there when bumping the model.
-          REVIEW_MODEL: gpt-5.6
-          # Reasoning depth (main cost dial): none/low/medium/high/xhigh/max,
-          # or "default" to let the model decide.
+          # Uses the VM's Codex account quota; no API key or paid fallback.
+          REVIEW_MODEL: gpt-6-astra
           REVIEW_EFFORT: xhigh
         run: uv run python -m lean_pool.review
+
+      - name: Remove Azure review credentials
+        if: always()
+        run: rm -f ~/.ssh/lean_pool_review ~/.ssh/lean_pool_review_known_hosts
 
       # Request Copilot's PR review. Idempotent — re-requesting the same
       # reviewer is a no-op. `if: always()` ensures Copilot still gets
