@@ -97,9 +97,9 @@ theorem future_velocity_bound (n : ℕ) :
       (normalize L.g L.positive (HistoryData.forcingPath (zeroForcing (P := P) (D.tail τ hτ.le
           hτT)))))
         j 0 ≤ 0*majorant L.R (d+2) j := by
-    simp only [HistoryData.forcingPath,zeroForcing,map_zero,zero_mul]
-    erw [map_zero]
-    simp only [map_zero,block_zero_function,le_refl]
+    simp only [HistoryData.forcingPath,zeroForcing,ContinuousLinearMap.map_zero,zero_mul]
+    erw [ContinuousLinearMap.map_zero]
+    simp only [ContinuousLinearMap.map_zero,block_zero_function,le_refl]
   dsimp only [futureVelocity]
   rw [show d+3=d+2+1 by omega]
   exact
@@ -123,9 +123,9 @@ theorem future_derivative_bound (n : ℕ) :
       (normalize L.g L.positive (HistoryData.forcingPath (zeroForcing (P := P) (D.tail τ hτ.le
           hτT)))))
         j 0 ≤ 0*majorant L.R (d+2) j := by
-    simp only [HistoryData.forcingPath,zeroForcing,map_zero,zero_mul]
-    erw [map_zero]
-    simp only [map_zero,block_zero_function,le_refl]
+    simp only [HistoryData.forcingPath,zeroForcing,ContinuousLinearMap.map_zero,zero_mul]
+    erw [ContinuousLinearMap.map_zero]
+    simp only [ContinuousLinearMap.map_zero,block_zero_function,le_refl]
   dsimp only [futureDerivative]
   rw [show d+3=d+2+1 by omega]
   exact
@@ -251,7 +251,10 @@ theorem initial_amplitude_bound
       (fun a => pathTranslate P a (normalize g hg (S Z)))
       (fun a => pathTranslate P a (normalize g hg (S Y)))
       hsZ A hA
-      (fun a => by rw [hrestore,map_smul,map_smul]) R C e n 0 (hunit Z hZ n)
+      (fun a => by
+        rw [hrestore]
+        exact ((pathTranslate (V := V) P a) ∘L normalize g hg).map_smul A (S Z))
+      R C e n 0 (hunit Z hZ n)
     exact hr.trans_eq (by ring)
 
 end EulerTransversePacketProvider
@@ -346,13 +349,17 @@ variable {P : ℝ} [Fact (0 < P)]
   (hbAt : ∀ n, block standardDirection q
     (fun a : LiftTangent => pathTranslate P a (normalize g hg (derivativePath τ hτ hτT B Y))) n 0 ≤
       A * majorant R d n)
-  (hbK : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.potentialCoefficientPath) a‖ ≤
+  (hbK : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath
+      (K := Icc (0 : ℝ) D.T) (V := Space →L[ℝ] Space) D.potentialCoefficientPath) a‖ ≤
     C * majorant Rc 0 n)
-  (hbKt : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.potentialDerivative) a‖ ≤
+  (hbKt : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath
+      (K := Icc (0 : ℝ) D.T) (V := Space →L[ℝ] Space) D.potentialDerivative) a‖ ≤
     C * majorant Rc 0 n)
-  (hbI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ C * majorant Rc 0
+  (hbI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath
+      (K := Icc (0 : ℝ) D.T) (V := Space →L[ℝ] Space) D.FInv.field) a‖ ≤ C * majorant Rc 0
       n)
-  (hbIt : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.inverseDerivative) a‖ ≤
+  (hbIt : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath
+      (K := Icc (0 : ℝ) D.T) (V := Space →L[ℝ] Space) D.inverseDerivative) a‖ ≤
     C * majorant Rc 0 n)
 
 include hRc hC hA hR hbA hbK in
