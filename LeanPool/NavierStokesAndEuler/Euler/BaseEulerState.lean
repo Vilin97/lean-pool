@@ -1844,12 +1844,11 @@ def localDerivativeField (t : Icc (0 : ℝ) (amplitude P C R hC hR)) : SmoothL2F
 theorem localDerivativeField_apply (t : Icc (0 : ℝ) (amplitude P C R hC hR)) (x : Space) :
     (localDerivativeField P u C R hC hR hu hdiv t).field x =
       (derivativeCoefficient P u C R hC hR hu hdiv).field t x := by
-  let st := EulerTimeRescaling.timeMap (amplitude P C R hC hR) (amplitude_pos P C R hC hR) t
-  change ((amplitude P C R hC hR)⁻¹)^2 •
-      (((correctionBudget P u C R hC hR hu hdiv).timeDerivativeTower P).zeroGraphField st).field x =
-    ((amplitude P C R hC hR)⁻¹)^2 •
-      (unitDerivativeCoefficient P u C R hC hR hu hdiv).field st x
-  have he := unitDerivativeCoefficient_graph P u C R hC hR hu hdiv st x
+  simp only [localDerivativeField, derivativeCoefficient,
+    EulerTimeRescaling.derivativeCoefficient, SmoothL2Field.mapField_field,
+    SmoothTimeField.map_apply, SmoothTimeField.compTime_apply, smul_apply, id_apply]
+  have he := unitDerivativeCoefficient_graph P u C R hC hR hu hdiv
+    (EulerTimeRescaling.timeMap (amplitude P C R hC hR) (amplitude_pos P C R hC hR) t) x
   rw [FieldTower.zeroGraphCoefficient_apply] at he
   exact congrArg (fun v : Space => ((amplitude P C R hC hR)⁻¹)^2 • v) he.symm
 
