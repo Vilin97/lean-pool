@@ -44,7 +44,7 @@ def partsRootDecisionNodes : Array (Array PartsRootNode) := #[
 theorem partsRootDecision_verifies :
     PartsRootVerifiesNodeB partsRootDecisionNodes 1024
       partsNormalizedRootPath 0 = true := by
-  decide
+  decide +kernel
 
 /-- No proper coloring of the Parts graph extends the normalized fixed root. -/
 theorem no_parts_coloring_of_normalized_root {coloring : Fin 481 → Fin 4}
