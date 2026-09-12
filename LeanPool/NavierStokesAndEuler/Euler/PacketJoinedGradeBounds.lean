@@ -398,6 +398,9 @@ theorem amplitude_bound
     simp only [hS,map_zero,block_zero_function,hz,mul_zero,zero_mul,le_refl]
   · have hApos : 0 < A := lt_of_le_of_ne hA (Ne.symm hz)
     let H := G.smul A⁻¹
+    let normalizedTranslation (a : LiftTangent) :
+        C(Icc (0 : ℝ) D.T, LiftL2 P) →L[ℝ] C(Icc (0 : ℝ) D.T, LiftL2 P) :=
+      (pathTranslate P a).comp (normalize g hg)
     have hinput : HistoryData.forcingPath H = A⁻¹ • HistoryData.forcingPath G := by
       change includePath P D.support D.support_measurable (A⁻¹ • G.path) = _
       rw [map_smul]
@@ -406,7 +409,8 @@ theorem amplitude_bound
       have he : (fun a => pathTranslate P a (normalize g hg (HistoryData.forcingPath H))) =
           fun a => A⁻¹ • pathTranslate P a (normalize g hg (HistoryData.forcingPath G)) := by
         funext a
-        rw [hinput,map_smul,map_smul]
+        exact (congrArg (normalizedTranslation a) hinput).trans
+          (map_smul (normalizedTranslation a) A⁻¹ _)
       rw [he]
       simpa only [one_mul] using block_normalize_bound directions q
         (fun a => pathTranslate P a (normalize g hg (HistoryData.forcingPath G)))
@@ -418,7 +422,8 @@ theorem amplitude_bound
       (fun a => pathTranslate P a (normalize g hg (S H)))
       (fun a => pathTranslate P a (normalize g hg (S G)))
       (normalize_orbit_contDiff P g hg (S H) (hs H)) A hA
-      (fun a => by rw [hrestore,map_smul,map_smul]) R C e n 0 (hunit H hH n)
+      (fun a => (congrArg (normalizedTranslation a) hrestore).trans
+        (map_smul (normalizedTranslation a) A (S H))) R C e n 0 (hunit H hH n)
     exact hresult.trans_eq (by ring)
 
 end EulerTransversePacketProvider
