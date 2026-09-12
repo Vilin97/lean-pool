@@ -103,18 +103,13 @@ theorem cross_smul {R : Type*} [CommRing R] (s t : R) (u v : Vec3 R) :
 /-- A nonzero real normal has nonzero squared length, as required in (30). -/
 theorem real_dot_self_ne_zero {n : Vec3 ℝ} (hn : n ≠ 0) : dot n n ≠ 0 := by
   intro h
-  have h0 : n 0 = 0 := by
-    dsimp [dot] at h
-    nlinarith [sq_nonneg (n 0), sq_nonneg (n 1), sq_nonneg (n 2)]
-  have h1 : n 1 = 0 := by
-    dsimp [dot] at h
-    nlinarith [sq_nonneg (n 0), sq_nonneg (n 1), sq_nonneg (n 2)]
-  have h2 : n 2 = 0 := by
-    dsimp [dot] at h
-    nlinarith [sq_nonneg (n 0), sq_nonneg (n 1), sq_nonneg (n 2)]
+  have hsum : ∑ i : Fin 3, n i * n i = 0 := by
+    simpa only [Fin.sum_univ_three, dot, add_assoc] using h
+  have hz := (Finset.sum_eq_zero_iff_of_nonneg
+    (fun i _ => mul_self_nonneg (n i))).mp hsum
   apply hn
-  funext j
-  fin_cases j <;> simp_all
+  funext i
+  exact mul_self_eq_zero.mp (hz i (Finset.mem_univ i))
 
 /-- The normalized double cross product displayed in Lemma 8.8. -/
 theorem normalized_double_cross {R : Type*} [Field R] (n a : Vec3 R)
