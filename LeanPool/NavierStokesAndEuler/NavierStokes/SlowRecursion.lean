@@ -1480,13 +1480,31 @@ noncomputable def complexifyJet (j : Jet2 ℝ) : Jet2 ℂ where
   dex := j.dex
   dee := j.dee
 
+/-- The first-order jet time formula commutes with the real inclusion. -/
+theorem jetT_ofReal (h b X e : ℝ) (j : Jet2 ℝ) :
+    ((jetT h b X e j : ℝ) : ℂ) = jetT (h : ℂ) (b : ℂ) (X : ℂ) (e : ℂ) (complexifyJet j) := by
+  simp [jetT, jetL, complexifyJet]
+
+/-- The first-order jet axial formula commutes with the real inclusion. -/
+theorem jetZ_ofReal (h b X e : ℝ) (j : Jet2 ℝ) :
+    ((jetZ h b X e j : ℝ) : ℂ) = jetZ (h : ℂ) (b : ℂ) (X : ℂ) (e : ℂ) (complexifyJet j) := by
+  simp [jetZ, jetZNumerator, jetL, complexifyJet]
+
+/-- The second-order jet axial formula commutes with the real inclusion. -/
+theorem jetZ2_ofReal (h b X e : ℝ) (j : Jet2 ℝ) :
+    ((jetZ2 h b X e j : ℝ) : ℂ) = jetZ2 (h : ℂ) (b : ℂ) (X : ℂ) (e : ℂ) (complexifyJet j) := by
+  simp [jetZ2, jetZ, jetZE, jetZX, jetZNumerator, jetZNumeratorX,
+    jetZNumeratorE, jetL, complexifyJet]
+
 /-- The holomorphic algebra uses the exact real source formula on real inputs. -/
 theorem jetOmegaDivX_ofReal (h X e : ℝ) (U : ℕ → ℝ) (v : ℕ → Jet2 ℝ) (k : ℕ) :
     ((jetOmegaDivX h X e U v k : ℝ) : ℂ) =
       jetOmegaDivX (h : ℂ) (X : ℂ) (e : ℂ) (fun j => (U j : ℂ))
         (fun j => complexifyJet (v j)) k := by
-  cases k <;> simp [jetOmegaDivX, jetShifted, jetT, jetZ2, jetZ, jetZE, jetZX,
-    jetZNumerator, jetZNumeratorX, jetZNumeratorE, jetL, complexifyJet]
+  cases k <;> simp only [jetOmegaDivX, jetShifted, Complex.ofReal_add, Complex.ofReal_sub,
+    Complex.ofReal_mul, Complex.ofReal_div, Complex.ofReal_sum, Complex.ofReal_natCast,
+    Complex.ofReal_ofNat, Complex.ofReal_zero, Complex.ofReal_one, jetT_ofReal,
+    jetZ_ofReal, jetZ2_ofReal, complexifyJet]
 
 theorem omegaDivX_complex_formula (h : ℝ) (U v : ℕ → InnerProfile) (k : ℕ) (w : InnerPoint)
     (hv : ∀ j, j ≤ k → ContDiffAt ℝ 2 (v j) w) (hL : L h w.2 ≠ 0) :
@@ -1756,9 +1774,10 @@ theorem jetLowerTransportSource_ofReal (h b σ X e : ℝ) (v U : ℕ → ℝ)
       jetLowerTransportSource (h : ℂ) (b : ℂ) (σ : ℂ) (X : ℂ) (e : ℂ)
         (fun j => (v j : ℂ)) (fun j => (U j : ℂ))
         (fun j => complexifyJet (f j)) n := by
-  cases n <;> simp [jetLowerTransportSource, jetShiftedProfileAxial,
-    jetZ2, jetZ, jetZE, jetZX, jetZNumerator, jetZNumeratorX, jetZNumeratorE,
-    jetL, complexifyJet]
+  cases n <;> simp only [jetLowerTransportSource, jetShiftedProfileAxial,
+    Complex.ofReal_add, Complex.ofReal_sub, Complex.ofReal_mul, Complex.ofReal_sum,
+    Complex.ofReal_natCast, Complex.ofReal_ofNat, Complex.ofReal_zero, jetZ_ofReal,
+    jetZ2_ofReal, complexifyJet]
 
 theorem lowerTransportSource_complex_formula (h b σ : ℝ) (v U f : ℕ → InnerProfile)
     (n : ℕ) (w : InnerPoint)
