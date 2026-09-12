@@ -205,12 +205,13 @@ noncomputable def beta (c : Parameters) (i : Fin 2) : ℝ := c.exponents i + 1
 
 theorem beta_bounds (c : Parameters) (i : Fin 2) :
     0 < beta c i ∧ beta c i ≤ 1 / 2 := by
-  fin_cases i <;> norm_num [beta, Parameters.exponents] <;>
-    constructor <;> linarith [c.lam_pos, c.lam_lt]
+  unfold beta Parameters.exponents
+  split <;> constructor <;> linarith only [c.lam_pos, c.lam_lt]
 
 theorem beta_small_bounds (c : Parameters) (hc : c.lam ≤ 1 / 120) (i : Fin 2) :
     2 / 5 ≤ beta c i ∧ 29 ≤ 60 * beta c i := by
-  fin_cases i <;> norm_num [beta, Parameters.exponents] <;> constructor <;> linarith
+  unfold beta Parameters.exponents
+  split <;> constructor <;> linarith only [hc]
 
 /-- Hold amplitude, given by `radialAmplitude c.P c.dropLength c.lam c.holdStart`. -/
 noncomputable def holdAmplitude (c : Parameters) : ℝ :=
