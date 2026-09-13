@@ -180,19 +180,21 @@ box `|t| ≤ 15`, `1 ≤ λ ≤ 9` that contains every genuine solution
 def reprN (m d : ℕ) : Bool :=
   decide (∃ t ∈ Finset.range 16, ∃ l ∈ Finset.Icc 1 9, 4 * m - t ^ 2 = d * l ^ 2 ∧ t ^ 2 ≤ 4 * m)
 
-/-- `reprN` recomputed with plain `List.range` loops: the same search, but evaluated by the
-kernel without going through `Finset`/`Multiset` decidability instances. -/
+/-- `reprN` recomputed with lists, checking the trace bound before searching the positive
+multipliers. This evaluates in the kernel without `Finset`/`Multiset` decidability instances. -/
 private def reprB (m d : ℕ) : Bool :=
-  (List.range 16).any fun t => (List.range 10).any fun l =>
-    decide (1 ≤ l) && (4 * m - t ^ 2 == d * l ^ 2) && decide (t ^ 2 ≤ 4 * m)
+  (List.range 16).any fun t => decide (t ^ 2 ≤ 4 * m) &&
+    (List.range' 1 9).any fun l => (4 * m - t ^ 2 == d * l ^ 2)
 
 private lemma reprN_eq_reprB (m d : ℕ) : reprN m d = reprB m d := by
   rw [Bool.eq_iff_iff]
   simp only [reprN, reprB, decide_eq_true_eq, List.any_eq_true, List.mem_range,
-    Bool.and_eq_true, beq_iff_eq, Finset.mem_range, Finset.mem_Icc]
+    List.mem_range'_1, Bool.and_eq_true, beq_iff_eq, Finset.mem_range, Finset.mem_Icc]
   constructor
-  · rintro ⟨t, ht, l, ⟨hl1, hl9⟩, h1, h2⟩; exact ⟨t, ht, l, by omega, ⟨hl1, h1⟩, h2⟩
-  · rintro ⟨t, ht, l, hl, ⟨hl1, h1⟩, h2⟩; exact ⟨t, ht, l, ⟨hl1, by omega⟩, h1, h2⟩
+  · rintro ⟨t, ht, l, ⟨hl1, hl9⟩, h1, h2⟩
+    exact ⟨t, ht, h2, l, ⟨hl1, by omega⟩, h1⟩
+  · rintro ⟨t, ht, h2, l, ⟨hl1, hl9⟩, h1⟩
+    exact ⟨t, ht, l, ⟨hl1, by omega⟩, h1, h2⟩
 
 /-- **(C5), computational core.** The only `d ∈ [1, 244]` simultaneously representable at
 `m = 41, 43, 61` is `d = 163` (i.e. `D₀ = −163`).  The `{41,43,47}` trap of §6.6 is exactly
