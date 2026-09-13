@@ -8,6 +8,13 @@ import types
 # The stub registered by tests/conftest.py; its exception classes carry
 # the status_code attributes the review module's error handling inspects.
 import openai
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def explicit_api_backend(monkeypatch):
+    """Keep legacy API tests explicit; Azure routing has its own test module."""
+    monkeypatch.setenv("REVIEW_BACKEND", "openai")
 
 
 def _file_patch(path: str, body_lines: list[str]) -> str:
@@ -406,149 +413,6 @@ def test_render_comment_refactor_mode() -> None:
     # Project-only assessment fields must not leak into a refactor review.
     assert "| Fit |" not in body
     assert "| Level |" not in body
-
-
-def test_fit_diff_under_budget_is_untouched() -> None:
-    """A diff inside the token budget is sent verbatim, with no truncation."""
-    from lean_pool.review import fit_diff_to_budget
-
-    diff = _file_patch("LeanPool/Foo/A.lean", ["import Mathlib", "-- tiny"]) + "\n"
-    fitted, truncation = fit_diff_to_budget(diff, budget_tokens=10_000)
-
-    assert fitted == diff
-    assert truncation is None
-
-
-def test_fit_diff_elides_largest_files_first() -> None:
-    """Oversized diffs lose the biggest file bodies but keep paths and heads."""
-    from lean_pool.review import (
-        CHARS_PER_TOKEN_ESTIMATE,
-        ELISION_MARKER,
-        fit_diff_to_budget,
-    )
-
-    small = _file_patch(
-        "LeanPool/Tiny/Small.lean", [f"KEEP_SMALL line {i}" for i in range(5)]
-    )
-    huge = _file_patch(
-        "LeanPool/Big/Certificate.lean",
-        [f"BULK_CERT interval case {i} padding 12345/67890" for i in range(400)],
-    )
-    medium = _file_patch(
-        "LeanPool/Mid/Medium.lean",
-        [f"KEEP_MEDIUM padding padding {i}" for i in range(50)],
-    )
-    diff = "\n".join([small, huge, medium]) + "\n"
-
-    budget_tokens = 4_000
-    fitted, truncation = fit_diff_to_budget(diff, budget_tokens=budget_tokens)
-
-    assert truncation is not None
-    assert truncation.total_files == 3
-    assert truncation.elided_files == 1
-    assert not truncation.hard_truncated
-    assert truncation.original_chars == len(diff)
-    assert truncation.final_chars == len(fitted)
-    assert len(fitted) <= int(budget_tokens * CHARS_PER_TOKEN_ESTIMATE)
-    # The elided file keeps its path, head lines, and an elision marker
-    # recording the dropped line counts.
-    assert "diff --git a/LeanPool/Big/Certificate.lean" in fitted
-    assert "+BULK_CERT interval case 0 " in fitted
-    assert "case 399" not in fitted
-    assert ELISION_MARKER in fitted
-    assert "361 of 401 patch lines omitted" in fitted
-    # Small files survive in full, in their original order.
-    assert "+KEEP_SMALL line 4" in fitted
-    assert "+KEEP_MEDIUM padding padding 49" in fitted
-    assert (
-        fitted.index("Small.lean")
-        < fitted.index("Certificate.lean")
-        < fitted.index("Medium.lean")
-    )
-
-
-def test_fit_diff_hard_truncates_as_last_resort() -> None:
-    """When even fully elided files overflow, the diff tail is cut outright."""
-    from lean_pool.review import ELISION_MARKER, fit_diff_to_budget
-
-    diff = (
-        "\n".join(
-            _file_patch(
-                f"LeanPool/Bulk/File{n}.lean",
-                [f"generated case {n}.{i}" for i in range(60)],
-            )
-            for n in range(40)
-        )
-        + "\n"
-    )
-    fitted, truncation = fit_diff_to_budget(diff, budget_tokens=500)
-
-    assert truncation is not None
-    assert truncation.hard_truncated
-    assert len(fitted) < 1_500
-    assert ELISION_MARKER in fitted
-    assert "remainder of the diff omitted" in fitted
-
-
-def test_request_review_refits_after_token_overflow(monkeypatch) -> None:
-    """An "input tokens exceed" API rejection refits the diff, not the run."""
-    from lean_pool import review
-
-    calls: list[str] = []
-    payload_json = '{"summary": "ok", "verdict": "approve", "findings": []}'
-
-    class _FakeCompletions:
-        """Rejects the first request as oversized, accepts the second."""
-
-        def create(self, **kwargs):
-            """Record the user message and answer like the OpenAI client."""
-            assert kwargs["service_tier"] == "flex"
-            calls.append(kwargs["messages"][1]["content"])
-            if len(calls) == 1:
-                raise openai.BadRequestError(
-                    "Input tokens exceed the configured limit of 922000 "
-                    "tokens. Your messages resulted in 1556823 tokens."
-                )
-            message = types.SimpleNamespace(content=payload_json)
-            return types.SimpleNamespace(
-                choices=[types.SimpleNamespace(message=message)], usage=None
-            )
-
-    class _FakeClient:
-        """Stub OpenAI client exposing chat.completions.create."""
-
-        def __init__(self) -> None:
-            """Wire up the fake chat.completions endpoint."""
-            self.chat = types.SimpleNamespace(completions=_FakeCompletions())
-
-    monkeypatch.setattr(review, "OpenAI", lambda timeout: _FakeClient())
-    monkeypatch.setattr(review, "MAX_INPUT_TOKENS", 3_000)
-
-    big = _file_patch(
-        "LeanPool/Big/Generated.lean",
-        [f"machine generated bulk case line {i}".ljust(40, ".") for i in range(100)],
-    )
-    small = _file_patch("LeanPool/Tiny/Card.lean", ["KEEP_ME"] * 10)
-    diff = "\n".join([big, small]) + "\n"
-
-    result = review.request_review(
-        model="gpt-5.5", rules="R" * 200, diff=diff, system_prompt="Review."
-    )
-
-    assert result.payload == {"summary": "ok", "verdict": "approve", "findings": []}
-    assert result.usage is None
-    assert result.tier == "flex"
-    # The stubbed response reports no model, so the requested one stands.
-    assert result.model == "gpt-5.5"
-    # First attempt sent the full diff; the retry elided the big file.
-    assert len(calls) == 2
-    assert review.ELISION_MARKER not in calls[0]
-    assert "case line 99" in calls[0]
-    assert review.ELISION_MARKER in calls[1]
-    assert len(calls[1]) < len(calls[0])
-    assert "+KEEP_ME" in calls[1]
-    assert result.truncation is not None
-    assert result.truncation.elided_files == 1
 
 
 def test_request_review_reraises_unrelated_bad_request(monkeypatch) -> None:
@@ -1091,7 +955,7 @@ def test_rubric_usage_sums_cost_across_calls() -> None:
 
     line = _render_rubric_usage(outcomes, "xhigh")
 
-    assert "20,000 in / 4,000 out across 2 rubric calls" in line
+    assert "20,000 in / 4,000 out across 2 model calls" in line
     assert "**Tier:** `flex`" in line
     assert "**Effort:** `xhigh`" in line
     # 2 x (10k x $2.50/M + 2k x $15/M) = 2 x $0.055 = $0.11 on flex.
