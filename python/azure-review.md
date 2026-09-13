@@ -4,7 +4,14 @@ The LLM review workflow uses `gpt-6-astra` at `xhigh` reasoning effort through
 the authenticated Codex account pool on the `lean` Azure VM. It consumes that
 pool's Codex quota, with no OpenAI API key and no fallback to paid API requests.
 The existing review rubrics, CI prerequisite, verdict aggregation, and sticky
-comments still apply. Comments identify the model, token counts, and quota billing.
+comments still apply. Comments identify the model, token counts, quota billing,
+and an **estimated cost** at the model's [official Standard API rates](https://developers.openai.com/api/docs/pricing).
+For GPT-6-Astra, these are $10/M input tokens and $50/M output tokens; requests
+above 272,000 input tokens use $20/M input and $75/M output (verified 2026-09-12).
+The estimate values all input at the uncached rate, excluding cache-write
+premiums, tool fees, and VM costs. It is a nominal API equivalent, not an invoice
+for Codex usage. Each rubric is priced separately before summing its cost, so
+five short prompts do not accidentally incur the long-context rate.
 
 GitHub Actions continues to fetch the PR and post the comment. Only the review
 instructions and contributor text cross SSH. The workflow checks out its trusted
@@ -14,11 +21,38 @@ and shell, apps, plugins, browser, image, and agent tools disabled. Each request
 uses a temporary directory on `/data`, removed when it finishes. The VM's existing
 account dispatcher handles account selection and quota waits.
 
-The initial text budget is 180,000 estimated input tokens, leaving room in the
-VM's advertised 272,000-token model context for instructions and reasoning.
-The existing partial-review banner and restriction against approving an elided
-project diff apply. Each worker call has a 100-minute timeout, including quota
-waits; a timeout kills its dispatcher process group and fails the review.
+Each model call has a 272,000-estimated-token input ceiling, including the
+review instructions, PR description, shared evidence, and prior-art results.
+Oversized diffs are partitioned losslessly, preferring complete files and Lean
+command boundaries. Oversized individual commands continue in numbered source
+ranges. Every diff character is covered, with a SHA-256 digest and range manifest.
+No file body is discarded to meet the budget. Missing or truncated GitHub text
+patches are reconstructed from hash-verified Git blobs; source acquisition fails
+if those blobs cannot be retrieved. GitHub line statistics can be zero for an
+omitted nonempty patch, so they are never treated as proof that a file is empty.
+
+For each rubric, up to three source portions are reviewed concurrently. Their
+complete structured evidence and open questions feed a final integration review.
+That review checks the headline contracts and dependencies across modules. It
+can request exact declaration or file excerpts from the original diff, with up
+to three source follow-ups when summaries leave a semantic question unanswered. It
+must explicitly resolve every non-passing portion, finding, and open question
+before it can pass; unresolved obligations force discussion. Accepted resolutions
+persist across follow-ups, and the reviewer can explicitly reopen an obligation
+when later evidence changes its assessment. Missing/malformed
+portion results or integration evidence that cannot fit fail the run rather than
+silently reducing coverage. Small diffs still use one call per rubric.
+
+A malformed JSON response retries the same model call at most twice, preserving
+completed portions. Persistent format errors and unrelated worker failures remain
+failures. A context-window rejection retries using smaller lossless portions. The token
+estimate is conservative, not an exact tokenizer measurement; the ceiling does
+not change the model's actual context window. Reported usage includes all source
+and integration calls, including successful work before a retry; unknown usage
+is disclosed. The workflow uploads the complete structured evidence and coverage
+manifest as the `review-evidence` artifact. The existing blocking/advisory rubric rules remain intact.
+Each worker call has a 100-minute timeout, including quota waits; a timeout kills
+its dispatcher process group and fails the review.
 
 ## Deployment
 
