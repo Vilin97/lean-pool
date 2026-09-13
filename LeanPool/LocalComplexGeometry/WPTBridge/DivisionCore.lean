@@ -3,8 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
 
 /-!
 # Sequence-level Weierstrass division bridge
@@ -12,6 +13,8 @@ import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
 This file packages the analytic quotient and remainder sequence operators for
 prepared divisors so the local complex-geometry development can reuse them.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped ENNReal NNReal Topology

@@ -3,9 +3,17 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.FieldTheory.Finite.Basic
-import LeanPool.Redhill.Common.VWPair
+public import LeanPool.Redhill.Common.VWPair
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Zify
 
 /-!
 # Definitions for the general case
@@ -15,6 +23,8 @@ for sufficiently large `h`.
 
 The lower bound `s` for `primeChain` in `U` was originally `200 * Y F ^ 6`.
 -/
+
+@[expose] public section
 
 
 namespace GeneralCase

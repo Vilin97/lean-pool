@@ -3,12 +3,11 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.TorusReduction
-import Mathlib.Algebra.Order.Floor.Ring
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.Tactic.Push
+public import LeanPool.ThreeGap.TorusReduction
+public import Mathlib.NumberTheory.Real.Irrational
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Simultaneous Dirichlet approximation ⟹ `RecordsContinue` (makes `g_∞ ≤ 2^d+1` unconditional)
@@ -33,6 +32,8 @@ Hence the `L^∞` higher-dimensional three-distance theorem holds for every `α`
 coordinate, **with no remaining hypothesis** (`nnDist_count_unconditional`,
 `nnDist_count_plane_unconditional`). Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimDirichlet
 

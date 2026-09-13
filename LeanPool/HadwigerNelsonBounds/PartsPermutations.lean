@@ -3,15 +3,23 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsPermutationData0
-import LeanPool.HadwigerNelsonBounds.PartsPermutationData1
-import LeanPool.HadwigerNelsonBounds.PartsPermutationData2
-import LeanPool.HadwigerNelsonBounds.PartsPermutationData3
-import LeanPool.HadwigerNelsonBounds.PartsPermutationData4
-import LeanPool.HadwigerNelsonBounds.PartsPermutationData5
+public import LeanPool.HadwigerNelsonBounds.PartsPermutationData0
+public import LeanPool.HadwigerNelsonBounds.PartsPermutationData1
+public import LeanPool.HadwigerNelsonBounds.PartsPermutationData2
+public import LeanPool.HadwigerNelsonBounds.PartsPermutationData3
+public import LeanPool.HadwigerNelsonBounds.PartsPermutationData4
+public import LeanPool.HadwigerNelsonBounds.PartsPermutationData5
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! The six exact automorphisms of the normalized Parts root. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

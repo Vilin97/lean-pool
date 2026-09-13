@@ -3,8 +3,14 @@ Copyright (c) 2026 Jun Kwon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jun Kwon
 -/
+module
 
-import LeanPool.Polytopes.Polytope
+public import LeanPool.Polytopes.Polytope
+public import LeanPool.Polytopes.Polar
+public import Mathlib.Analysis.Convex.Extreme
+import LeanPool.Polytopes.Cutspace
+import Mathlib.Analysis.Convex.Intrinsic
+import Mathlib.Analysis.Convex.KreinMilman
 
 /-!
 Let 𝑋 be a closed convex subset of ℝ^𝑑. Then:
@@ -13,6 +19,8 @@ Let 𝑋 be a closed convex subset of ℝ^𝑑. Then:
 
 Theorem : Every 𝑉-polytope is an 𝐻-polytope, and every compact 𝐻-polytope is a 𝑉-polytope.
 -/
+
+@[expose] public section
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 open Pointwise

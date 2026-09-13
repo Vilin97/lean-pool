@@ -6,9 +6,12 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Multiset.Defs
-public import LeanPool.PFR.Mathlib.Data.Fin.Basic
 public import LeanPool.PFR.MultiTauFunctional
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.Mathlib.Data.Fin.Basic
+import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # Bounding the mutual information

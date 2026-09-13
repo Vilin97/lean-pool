@@ -3,15 +3,22 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
+module
+
+public meta import Lean.Elab.Term.TermElabM
+public import LeanPool.MRiscX.Elab.HandleExpr
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Elab.Term.TermElabM
 import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import LeanPool.MRiscX.Elab.HandleExpr
 
 /-!
 # EvalLabelInHoare
 
 This module provides label resolution inside MRiscX Hoare syntax.
 -/
-open Lean Elab
+
+public meta section
+open Lean Elab Term
 
 /-
 This file contains a logic to replace the labelname with the actual pc index

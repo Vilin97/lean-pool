@@ -3,9 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
-import Mathlib.Order.Filter.Germ.Basic
+public import Mathlib.Order.Filter.Germ.Basic
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Complex.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Elementary facts about analytic function germs
@@ -14,6 +17,8 @@ The public theorem represents germs by functions modulo `=ᶠ[𝓝 x]`.  These
 lemmas record the corresponding ring-theoretic unit fact without introducing a
 separate sheaf or stalk API into the public statement.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

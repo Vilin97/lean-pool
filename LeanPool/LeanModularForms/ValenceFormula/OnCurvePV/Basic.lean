@@ -3,13 +3,21 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PVInfrastructure.UniformStepBound
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
 import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
 import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
 import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # On-Curve PV: Infrastructure
@@ -17,6 +25,8 @@ import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
 Bridge lemmas, elliptic point CPV, segment geometry helpers, arc injectivity,
 and CPV helper lemmas (avoidance, concatenation, sub-interval extension, integrability).
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

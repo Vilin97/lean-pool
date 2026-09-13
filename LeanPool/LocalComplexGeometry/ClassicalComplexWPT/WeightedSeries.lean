@@ -3,12 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import Mathlib.Analysis.Normed.Lp.lpSpace
-import Mathlib.Analysis.Normed.Operator.NormedSpace
-import Mathlib.Analysis.Normed.Ring.InfiniteSum
-import Mathlib.Data.Finsupp.Antidiagonal
-import Mathlib.Data.Finsupp.Weight
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.Analysis.Normed.Operator.Basic
 
 /-!
 # Weighted `ℓ¹` coefficient infrastructure
@@ -18,6 +16,8 @@ The ordinary complex norm is not ultrametric.  We therefore work with honest
 high shifts and low cuts have operator norm at most one, and evaluation on the
 unit polydisc is bounded by the `ℓ¹` norm.
 -/
+
+@[expose] public section
 
 open Finset
 open scoped ENNReal NNReal Topology

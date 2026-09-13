@@ -3,12 +3,11 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Instances
 import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
-import Mathlib.Data.Real.Basic
-import Mathlib.MeasureTheory.MeasurableSpace.Defs
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Instances
 
 
 /-!
@@ -16,6 +15,8 @@ import LeanPool.QuasiBorelSpaces.MeasureTheory.Instances
 
 This file defines the concept of a quasi-borel space, as given by [HeunenKSY17].
 -/
+
+@[expose] public section
 
 open scoped MeasureTheory
 

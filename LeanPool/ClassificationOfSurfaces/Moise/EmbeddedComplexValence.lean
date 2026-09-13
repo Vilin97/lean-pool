@@ -3,10 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
+public import Mathlib.Geometry.Manifold.Instances.Real
 import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
-import LeanPool.ClassificationOfSurfaces.Surface
-import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Edge valence of a triangle complex embedded in a surface
@@ -16,6 +20,8 @@ triangles meet along any two-vertex edge.  The proof is the local invariance-of-
 used implicitly in Moise's gluing theorem: two pages around an edge already form a planar
 neighborhood, so a third page approaching the same edge would have to enter their open image.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 

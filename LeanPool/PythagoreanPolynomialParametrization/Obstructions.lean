@@ -3,14 +3,28 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import LeanPool.PythagoreanPolynomialParametrization.Basic
+public import LeanPool.PythagoreanPolynomialParametrization.Basic
+import Mathlib.Algebra.MvPolynomial.Funext
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Prime.Int
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.MvPolynomial.Basic
+import Mathlib.RingTheory.Polynomial.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Integer-coefficient obstruction
 
 This file contains the paper's impossibility result for a single triple of
 integer-coefficient polynomials.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

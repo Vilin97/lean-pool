@@ -3,9 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Finiteness.Chain
+public import LeanPool.JacobianDiffgeo.Finiteness.Chain
+public import LeanPool.JacobianDiffgeo.Cech.Refinement
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The norm-bounded trade (`finiteness-and-chi`, gated file 1/3)
@@ -23,6 +30,8 @@ step 5). This is the first of the three files that were blocked on the cech `Col
 * `classMap`/`classMap_tradeDiff_eq_zero`/`classMap_surjective`: the Čech class map and its two
   Schwartz-consumer properties.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech
@@ -279,7 +288,7 @@ variable [T2Space X] [CompactSpace X]
 noncomputable def boundZ1 {P : Fin T.n → Opens X}
     (h : ∀ i, closure (P i : Set X) ⊆ (T.Ustar i : Set X))
     (F : Z1 (0 : RS.Divisor X) T.coverStar) : NC1 T P :=
-  fun p => restrictGerm (closure_inf_pair_subset T h p.1 p.2)
+  fun p => restrictGerm (private_decl% (closure_inf_pair_subset T h p.1 p.2))
     ((F : C1 (0 : RS.Divisor X) T.coverStar) (p.1, p.2))
 
 /-- The `(i, j)`-component of a good-cover cocycle, as a `LinSysOn`-membership term (a named

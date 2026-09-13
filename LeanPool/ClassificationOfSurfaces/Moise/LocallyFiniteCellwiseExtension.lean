@@ -3,7 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceFilling
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceFilling
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Cellwise assembly for locally finite PL face fillings
@@ -14,6 +17,8 @@ filled interiors are pairwise disjoint, the replacement graph misses every fille
 the family of filled closed regions is locally finite.  Under these conditions the transported
 maps form a genuine locally finite triangle complex in the plane.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

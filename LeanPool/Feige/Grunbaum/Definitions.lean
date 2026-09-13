@@ -3,11 +3,11 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-import Mathlib.Analysis.Convex.Body
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.Integral.Average
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.Measure.OpenPos
+module
+
+public import Mathlib.MeasureTheory.Integral.Average
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 
 /-!
 # Definitions for Grünbaum's centroid halfspace theorem
@@ -17,6 +17,8 @@ finite-dimensional convex geometry, a convex body is normally required to
 have nonempty interior.  `FullDimensionalConvexBody` records precisely that
 standard convention.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

@@ -10,11 +10,15 @@ topology is transported from the actual compact character group, so the
 coordinate model is not an unrelated product placeholder.
 Paper: §§3--4.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualActions
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
 
 /-!
 The dual topology component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualTopology

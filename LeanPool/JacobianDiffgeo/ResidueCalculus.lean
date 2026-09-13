@@ -3,15 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ResidueCalculus.TaylorCoeff
-import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
-import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
-import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
-import LeanPool.JacobianDiffgeo.ResidueCalculus.GermFunctionals
-import LeanPool.JacobianDiffgeo.ResidueCalculus.MittagLeffler
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.TaylorCoeff
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.ChangeOfVariables
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.GermFunctionals
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.MittagLeffler
 
 /-!
 # residue-calculus: Laurent coefficients, residues, and the circle-integral bridge (`RS`)
@@ -45,3 +46,5 @@ Routing: this unit is the LOCAL, planar input. `∑ Res = 0` (Stokes) lives in r
 planar-stokes-atoms; the residue functional `H¹(Ω) → ℂ` of Serre duality lives in
 serre-duality-cech/tails. Neither is built here.
 -/
+
+@[expose] public section

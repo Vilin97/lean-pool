@@ -3,12 +3,16 @@ Copyright (c) 2026 Jun Kwon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jun Kwon
 -/
+module
 
-import LeanPool.Polytopes.Polar
+public import LeanPool.Polytopes.Polar
+import LeanPool.Polytopes.Pre
 
 /-!
 Cut spaces obtained by intersecting collections of halfspaces.
 -/
+
+@[expose] public section
 
 open Module
 

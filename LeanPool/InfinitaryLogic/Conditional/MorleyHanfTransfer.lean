@@ -3,16 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.Hanf
-import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
-import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Nat.Nth
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Lattice
-import Mathlib.Order.Hom.Basic
-import Mathlib.Order.WellFounded
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
+public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
+public import Mathlib.SetTheory.Cardinal.Aleph
 /-!
 # Morley-Hanf Transfer Hypothesis (Conditional)
 
@@ -32,6 +28,8 @@ Both are placed in `Conditional/` to make the external dependency visible.
 - [Mar16], §5
 - [KK04], §1.6
 -/
+
+@[expose] public section
 
 universe u v
 
@@ -266,7 +264,7 @@ instance : Infinite Carrier :=
   Cardinal.infinite_iff.mpr (mk_Carrier ▸ Cardinal.aleph0_le_beth _)
 
 /-- A copy of `ℕ` inside the carrier, along which heights are unbounded. -/
-private noncomputable def emb : ℕ ↪ Carrier := Infinite.natEmbedding Carrier
+noncomputable def emb : ℕ ↪ Carrier := Infinite.natEmbedding Carrier
 
 /-- The height of a carrier element: the inverse of `emb` on its range, arbitrary elsewhere. -/
 noncomputable def hgt (x : Carrier) : ℕ := Function.invFun emb x
@@ -277,7 +275,7 @@ def P (i : ℕ) : Lang.BoundedFormulaω Empty 1 :=
     (fun _ => Term.var (Sum.inr (0 : Fin 1)))
 
 /-- The countable conjunction `⋀ᵢ Pᵢ x₀`. -/
-private def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
+def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
 
 /-- The seed: `⋀ᵢ Pᵢ` first, then every `Pᵢ`. -/
 def seed : ℕ → Σ n, Lang.BoundedFormulaω Empty n := fun k =>

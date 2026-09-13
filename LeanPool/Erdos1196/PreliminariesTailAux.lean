@@ -3,12 +3,14 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.InvLog
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import Mathlib.NumberTheory.AbelSummation
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Auxiliary tail lemmas for primitive sets above `x`
@@ -25,6 +27,8 @@ be computed exactly.
 * `integrableOn_Ioi_two_inv_log_cube`
 * `integral_Ioi_two_inv_log_cube`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators Topology
 open Filter MeasureTheory

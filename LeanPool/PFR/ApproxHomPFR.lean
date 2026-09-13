@@ -6,11 +6,22 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.FunLike.Fintype
-public import Mathlib.Data.Int.Lemmas
-public import LeanPool.PFR.HomPFR
-public import LeanPool.PFR.Mathlib.Data.Finset.Basic
-public import LeanPool.PFR.AddCombi.BSG
+public import Mathlib.LinearAlgebra.Dual.Lemmas
+
+public import Mathlib.Algebra.Algebra.Defs
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Module.ZMod
+public import Mathlib.Data.Finset.Density
+public import Mathlib.Data.Real.Basic
+public import Mathlib.LinearAlgebra.Dual.Defs
+import LeanPool.PFR.AddCombi.BSG
+import LeanPool.PFR.HomPFR
+import LeanPool.PFR.Main
+import LeanPool.PFR.Mathlib.Data.Finset.Basic
+import LeanPool.PFR.RhoFunctional
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Data.FunLike.Fintype
+import Mathlib.Data.Int.Lemmas
 
 /-!
 # The approximate homomorphism form of PFR

@@ -3,11 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H2
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H2
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2`
@@ -25,6 +26,8 @@ measure-preserving chart map and then extended by zero from the chart source.
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h1ToL2`
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h2ToL2`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

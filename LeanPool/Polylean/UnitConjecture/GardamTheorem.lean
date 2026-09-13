@@ -3,11 +3,19 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Mathlib.Algebra.Field.Basic
-import Mathlib.Data.ZMod.Defs
-import LeanPool.Polylean.UnitConjecture.TorsionFree
-import LeanPool.Polylean.UnitConjecture.GroupRing
+public import Mathlib.Data.ZMod.Defs
+public import LeanPool.Polylean.UnitConjecture.TorsionFree
+public import LeanPool.Polylean.UnitConjecture.GroupRing
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 
@@ -17,6 +25,8 @@ The proof of the theorem `𝔽₂[P]` has non-trivial units. Together with the m
 result of `TorsionFree` -- that `P` is torsion-free, this completes the formal
 proof of Gardam's theorem that Kaplansky's Unit Conjecture is false.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 
@@ -79,11 +89,11 @@ namespace Gardam
 open P
 
 /-- Embed a group element as the corresponding basis element of `𝔽₂[P]`. -/
-private abbrev groupRingOf (g : P) : 𝔽₂[P] :=
+abbrev groupRingOf (g : P) : 𝔽₂[P] :=
   ⟦[(1, g)]⟧
 
 /-- The group-ring multiplication, made explicit to avoid the monomial `HMul R G` notation. -/
-private abbrev ringMul (u v : 𝔽₂[P]) : 𝔽₂[P] :=
+abbrev ringMul (u v : 𝔽₂[P]) : 𝔽₂[P] :=
   GroupRing.mul u v
 
 /-- The `p` component of Gardam's non-trivial unit `α`. -/
@@ -146,14 +156,17 @@ theorem α_nonTrivial : ¬ (trivialNonZeroElem α) := by
   result is `(1 : 𝔽₂[P])`.
 
   The computational aspects of the group ring implementation and the Metabelian construction
-  are used here. -/
+  are used here. Coefficients are combined before comparison so that checking equality
+  does not repeatedly scan the full uncollected product. -/
 
 /-- The product of Gardam's unit and its inverse is one. -/
 theorem α_mul_α' : ringMul α α' = (1 : 𝔽₂[P]) := by
+  apply FreeModule.quotient_eq_of_combineCoefficients_eq
   decide +kernel
 
 /-- The product of Gardam's inverse and its unit is one. -/
 theorem α'_mul_α : ringMul α' α = (1 : 𝔽₂[P]) := by
+  apply FreeModule.quotient_eq_of_combineCoefficients_eq
   decide +kernel
 
 /-- A proof of the existence of a non-trivial unit in `𝔽₂[P]`. -/

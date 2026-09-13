@@ -3,15 +3,13 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
+module
+
+public import LeanPool.Erdos1196.FirstEntryRowTerm
+public import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.Preliminaries
-import LeanPool.Erdos1196.FirstEntryRowTerm
-import Mathlib.Algebra.Order.Floor.Div
-import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Topology.Instances.Real.Lemmas
-import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Harmonic.Bounds
-import Mathlib.NumberTheory.TsumDivisorsAntidiagonal
 
 /-!
 # Core definitions for the normalization constant
@@ -28,6 +26,8 @@ the two separate estimate files.
 * `normalizationSmallPrimePart`
 * `normalizationFirstEntryPart`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators Topology
 

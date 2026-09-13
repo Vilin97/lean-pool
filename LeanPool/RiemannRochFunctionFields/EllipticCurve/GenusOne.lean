@@ -5,7 +5,10 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusCounting
+public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusCounting
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Genus one for elliptic function fields

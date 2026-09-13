@@ -3,13 +3,22 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.ModelTheory.Basic
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 /-!
 # Sequential colimits
 
 `DirectedColim` is the quotient of a sequence of types by its transition maps. The local Skolem
 tower uses this generic construction for its function and relation symbols.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

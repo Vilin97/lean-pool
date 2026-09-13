@@ -3,14 +3,17 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
-import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
-import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
-import LeanPool.JacobianDiffgeo.Finiteness.Chain
-import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
-import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
-import LeanPool.JacobianDiffgeo.Finiteness.Chi
+public import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
+public import LeanPool.JacobianDiffgeo.Finiteness.BddHolo
+public import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
+public import LeanPool.JacobianDiffgeo.Finiteness.Chain
+public import LeanPool.JacobianDiffgeo.Finiteness.TradeBounded
+public import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+public import LeanPool.JacobianDiffgeo.Finiteness.Chi
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # finiteness-and-chi: `FiniteDimensional H¹(X, O_D)` via Schwartz/Montel (namespace
@@ -80,3 +83,5 @@ forbidden tactic.
   Existence gate consumes); `l_mono`/`l_le_l_add_degree`/`h1_le_of_le`/`h1_le_h1_add_degree`
   (monotonicity corollaries).
 -/
+
+@[expose] public section

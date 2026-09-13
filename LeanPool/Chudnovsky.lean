@@ -3,26 +3,28 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
-import LeanPool.Chudnovsky.Chudnovsky
-import LeanPool.Chudnovsky.Clausen
-import LeanPool.Chudnovsky.Coefficients
-import LeanPool.Chudnovsky.ComplexMult
-import LeanPool.Chudnovsky.DivisionValues
-import LeanPool.Chudnovsky.Estimates
-import LeanPool.Chudnovsky.Fourier
-import LeanPool.Chudnovsky.Kummer
-import LeanPool.Chudnovsky.Lattices
-import LeanPool.Chudnovsky.Liouville
-import LeanPool.Chudnovsky.MainTheorem
-import LeanPool.Chudnovsky.Numerics
-import LeanPool.Chudnovsky.PicardFuchs
-import LeanPool.Chudnovsky.Quasiperiods
-import LeanPool.Chudnovsky.Ramanujan
-import LeanPool.Chudnovsky.SigmaZeta
-import LeanPool.Chudnovsky.SingularModuli
-import LeanPool.Chudnovsky.WeierstrassMore
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.Chudnovsky
+public import LeanPool.Chudnovsky.Clausen
+public import LeanPool.Chudnovsky.Coefficients
+public import LeanPool.Chudnovsky.ComplexMult
+public import LeanPool.Chudnovsky.DivisionValues
+public import LeanPool.Chudnovsky.Estimates
+public import LeanPool.Chudnovsky.Fourier
+public import LeanPool.Chudnovsky.Kummer
+public import LeanPool.Chudnovsky.Lattices
+public import LeanPool.Chudnovsky.Liouville
+public import LeanPool.Chudnovsky.MainTheorem
+public import LeanPool.Chudnovsky.Numerics
+public import LeanPool.Chudnovsky.PicardFuchs
+public import LeanPool.Chudnovsky.Quasiperiods
+public import LeanPool.Chudnovsky.Ramanujan
+public import LeanPool.Chudnovsky.SigmaZeta
+public import LeanPool.Chudnovsky.SingularModuli
+public import LeanPool.Chudnovsky.WeierstrassMore
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # A Detailed Proof of the Chudnovsky Formula
@@ -34,3 +36,5 @@ Main declarations: `Chudnovsky.chudnovskySum_eq_pi_inv`
 Tags: number-theory, pi, chudnovsky, modular-forms, complex-multiplication
 MSC: 11Y60, 11F03, 33C05
 -/
+
+@[expose] public section

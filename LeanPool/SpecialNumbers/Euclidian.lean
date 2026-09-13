@@ -3,10 +3,10 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Euclid Numbers
@@ -32,6 +32,8 @@ the notation from [knuth1989concrete].
 * [Concrete Mathematics][knuth1989concrete]
 * [The On-Line Encyclopedia of Integer Sequences][oeis]
 -/
+
+@[expose] public section
 
 namespace SpecialNumbers
 
@@ -157,7 +159,8 @@ theorem euclid_strictMono : StrictMono euclid := by
 
 -- An auxiliary sequence that converges to the constant in the explicit formula for
 -- the Euclid numbers.
-private noncomputable def logEuclidSub (n : ℕ) : ℝ := 1 / 2 ^ n * Real.log (euclid n - 1 / 2)
+/-- The normalized logarithmic lower approximation for the Euclid sequence. -/
+noncomputable def logEuclidSub (n : ℕ) : ℝ := 1 / 2 ^ n * Real.log (euclid n - 1 / 2)
 
 private theorem reuclid_ge_one (n : ℕ) : (1 : ℝ) ≤ euclid n := Nat.one_le_cast.mpr euclid_ge_one
 
@@ -238,7 +241,8 @@ private theorem bddAbove_logEuclidSub : BddAbove (Set.range logEuclidSub) := by
 
 open Filter
 
-private noncomputable def euclidLogConstant : ℝ := ⨆ i, logEuclidSub i
+/-- The supremum of the normalized logarithmic Euclid approximations. -/
+noncomputable def euclidLogConstant : ℝ := ⨆ i, logEuclidSub i
 
 /--
 The sequence

@@ -3,9 +3,11 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
+module
+
+public import LeanPool.BooleanIsoperimetry.Cube
 import Mathlib.Algebra.BigOperators.Module
 import Mathlib.Data.Nat.Choose.Sum
-import LeanPool.BooleanIsoperimetry.Cube
 
 /-!
 # Binomial cascade arithmetic
@@ -14,6 +16,8 @@ This file develops binomial-prefix and Macaulay-cascade infrastructure for
 simplicial initial segments in the Boolean cube, including the slice recurrence
 for the Harper boundary function `H`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

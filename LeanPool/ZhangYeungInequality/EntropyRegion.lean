@@ -3,8 +3,9 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.Prelude
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 
 /-!
 # Entropy-region infrastructure for Theorem 4
@@ -19,6 +20,8 @@ map from `Fin n` down to the first four coordinates. Witness-specific `Fin n` le
 (the lifted
 witness and its cone membership / violation) live in `ZhangYeung.Theorem4`.
 -/
+
+@[expose] public section
 
 namespace ZhangYeung
 

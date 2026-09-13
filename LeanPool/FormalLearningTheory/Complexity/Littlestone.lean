@@ -3,7 +3,13 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.VCDimension
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Littlestone Dimension (Online Paradigm)
@@ -11,6 +17,8 @@ import LeanPool.FormalLearningTheory.Complexity.VCDimension
 The online-learning analog of VC dimension.
 Characterizes mistake-bounded learnability.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Combinatorics.Front.Rank
+module
+
+public import LeanPool.NashWilliams.Combinatorics.Front.Rank
+public import Mathlib.Order.Lattice.Nat
 
 /-!
 # The ray of a front
@@ -38,6 +41,8 @@ The trivial front is `{[]}` (rank `0`). For a front, `[] ∉ F`, `F ≠ {[]}`, `
 "`[n] ∈ tree F` for every `n ∈ M`" are all equivalent; `[] ∉ F` is the canonical working flag
 (see `IsFront.nil_not_mem_iff`).
 -/
+
+@[expose] public section
 
 open Set List
 

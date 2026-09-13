@@ -5,7 +5,14 @@ Authors: Kenny Lau
 -/
 module
 
-public import LeanPool.ZetaZeros.Hilbert.SymmetryL2
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The `L²` inner product of symmetric elements is real

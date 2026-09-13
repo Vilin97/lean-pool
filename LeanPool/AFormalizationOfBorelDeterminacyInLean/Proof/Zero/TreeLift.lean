@@ -3,8 +3,17 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
+
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
@@ -12,9 +21,11 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
+@[expose] public section
+
 
 namespace GaleStewartGame.BorelDet.Zero
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
@@ -409,7 +420,7 @@ lemma x_mem_tree_short h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Pl
 def WinnableOrLost := ∃ h, (H.lift h).Winnable ∨ (H.lift h).Lost
 variable (hWL : H.WinnableOrLost)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-noncomputable def wLLift' := by
+noncomputable def wLLift' : WLLift' hyp := by
   classical
   exact
     if hW : (H.lift hWL.1).Winnable then

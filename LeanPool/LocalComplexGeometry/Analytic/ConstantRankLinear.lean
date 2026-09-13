@@ -3,11 +3,16 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Analytic.Rank
+public import LeanPool.LocalComplexGeometry.Analytic.Rank
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.Topology.Algebra.Module.Complement
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.RingTheory.SimpleModule.Basic
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Linear algebra for the constant-rank theorem
@@ -17,6 +22,8 @@ constant-rank proof: invariance of range dimension under injective/surjective
 composition, a vertical-kernel criterion, and canonical product coordinates on
 `Fin (r + k) → ℂ`.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

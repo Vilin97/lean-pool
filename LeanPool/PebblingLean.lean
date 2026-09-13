@@ -3,26 +3,30 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import LeanPool.PebblingLean.Basic
-import LeanPool.PebblingLean.Hypercube
-import LeanPool.PebblingLean.Weight
-import LeanPool.PebblingLean.LowerBound
-import LeanPool.PebblingLean.FiniteProbability
-import LeanPool.PebblingLean.Concentration
-import LeanPool.PebblingLean.Delivery
-import LeanPool.PebblingLean.GraphIso
-import LeanPool.PebblingLean.HypercubePath
-import LeanPool.PebblingLean.HypercubeProduct
-import LeanPool.PebblingLean.Product
-import LeanPool.PebblingLean.UpperBound
-import LeanPool.PebblingLean.UpperBoundDelivery
-import LeanPool.PebblingLean.UpperBoundProbability
-import LeanPool.PebblingLean.UpperBoundRecurrence
-import LeanPool.PebblingLean.UpperBoundLoss
-import LeanPool.PebblingLean.UpperBoundParameters
-import LeanPool.PebblingLean.Paper
-import LeanPool.PebblingLean.Examples
+public import LeanPool.PebblingLean.Basic
+public import LeanPool.PebblingLean.Hypercube
+public import LeanPool.PebblingLean.Weight
+public import LeanPool.PebblingLean.LowerBound
+public import LeanPool.PebblingLean.FiniteProbability
+public import LeanPool.PebblingLean.Concentration
+public import LeanPool.PebblingLean.Delivery
+public import LeanPool.PebblingLean.GraphIso
+public import LeanPool.PebblingLean.HypercubePath
+public import LeanPool.PebblingLean.HypercubeProduct
+public import LeanPool.PebblingLean.Product
+public import LeanPool.PebblingLean.UpperBound
+public import LeanPool.PebblingLean.UpperBoundDelivery
+public import LeanPool.PebblingLean.UpperBoundProbability
+public import LeanPool.PebblingLean.UpperBoundRecurrence
+public import LeanPool.PebblingLean.UpperBoundLoss
+public import LeanPool.PebblingLean.UpperBoundParameters
+public import LeanPool.PebblingLean.Paper
+public import LeanPool.PebblingLean.Examples
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Optimal Pebbling Number of the Hypercube
@@ -34,3 +38,5 @@ Main declarations: `PebblingLean.Hypercube.Paper.optimalPebblingNumber_theta`
 Tags: combinatorics, pebbling, hypercube
 MSC: 05C57
 -/
+
+@[expose] public section

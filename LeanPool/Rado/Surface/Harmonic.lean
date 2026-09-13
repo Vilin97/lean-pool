@@ -3,8 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
+
+public import LeanPool.Rado.Surface.Charts
+public import LeanPool.Rado.Complex.SubMean
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import LeanPool.Rado.Complex.Dirichlet
-import LeanPool.Rado.Surface.Charts
+import Mathlib.Analysis.Complex.Harmonic.MeanValue
 
 /-!
 # Harmonic and subharmonic functions on a Riemann surface
@@ -17,6 +23,8 @@ local-to-global bridge `SubMeanLocalOn` — the sub-mean-value inequality on
 small circles implies it on all circles, via the maximum principle and
 comparison with the Poisson extension.
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 

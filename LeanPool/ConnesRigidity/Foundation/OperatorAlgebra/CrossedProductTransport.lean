@@ -10,11 +10,15 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: split generic Haar transport into its own module and changed
 imports and namespace. Paper: §3. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProduct
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProduct
 
 /-!
 The crossed product transport component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace CrossedProduct

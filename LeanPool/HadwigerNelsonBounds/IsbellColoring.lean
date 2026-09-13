@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
+public import LeanPool.HadwigerNelsonBounds.Voronoi
 import LeanPool.HadwigerNelsonBounds.LatticeSeparation
-import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
 
 /-!
 # Isbell's seven-coloring
@@ -13,6 +15,8 @@ import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
 This module proves the numerical gap estimates, constructs the plane coloring,
 and establishes the seven-color upper bound.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

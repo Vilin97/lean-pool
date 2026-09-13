@@ -3,9 +3,12 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.ExampleB
-import LeanPool.DomainTheory.Neighborhood.Theorem111
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import LeanPool.DomainTheory.Neighborhood.Theorem111
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
 
 /-!
 # Exercise 1.13 (Scott 1981, PRG-19, §1) — the infinite binary system `B`,
@@ -37,6 +40,8 @@ the top".
 Constructive except `branch_isTotal`'s use of `B`'s structure (still `[propext,
 Quot.sound]`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise113
 
@@ -121,6 +126,6 @@ theorem branch_isTotal (p : ℕ → Bool) : B.IsTotal (branch p) := by
   · exact (branch_mem_iff p).mpr ⟨σ.length, h⟩
   · have hlen : (prefixSeq p σ.length).length = σ.length := prefixSeq_length p σ.length
     have hσ : prefixSeq p σ.length = σ := h.eq_of_length hlen
-    exact (branch_mem_iff p).mpr ⟨σ.length, by rw [hσ]⟩
+    exact (branch_mem_iff p).mpr ⟨σ.length, by rw [hσ]; exact List.prefix_rfl⟩
 
 end Domain.Neighborhood.Exercise113

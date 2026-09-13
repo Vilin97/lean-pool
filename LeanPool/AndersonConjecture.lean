@@ -3,15 +3,20 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
 
-import LeanPool.AndersonConjecture.AdicKerEval
-import LeanPool.AndersonConjecture.AdicLocal
-import LeanPool.AndersonConjecture.AdicNoetherian
-import LeanPool.AndersonConjecture.Basic
-import LeanPool.AndersonConjecture.CompleteDomain
-import LeanPool.AndersonConjecture.Jensen
-import LeanPool.AndersonConjecture.Main
-import LeanPool.AndersonConjecture.QuasiCompleteRing
+public import LeanPool.AndersonConjecture.AdicKerEval
+public import LeanPool.AndersonConjecture.AdicLocal
+public import LeanPool.AndersonConjecture.AdicNoetherian
+public import LeanPool.AndersonConjecture.Basic
+public import LeanPool.AndersonConjecture.CompleteDomain
+public import LeanPool.AndersonConjecture.Jensen
+public import LeanPool.AndersonConjecture.Main
+public import LeanPool.AndersonConjecture.QuasiCompleteRing
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Inv
 
 /-!
 # The Anderson Conjecture: A Weakly Quasi-Complete Ring Need Not Be Quasi-Complete
@@ -23,6 +28,8 @@ Main declarations: `anderson_main_theorem`
 Tags: commutative-algebra, ring-theory
 MSC: 13B35, 13H10
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

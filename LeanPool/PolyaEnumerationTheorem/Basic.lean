@@ -3,17 +3,13 @@ Copyright (c) 2026 Luka Opravš. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luka Opravš
 -/
-import Mathlib.GroupTheory.Perm.Cycle.Type
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+module
+
+public import Mathlib.GroupTheory.Perm.Cycle.Factors
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Pólya's enumeration theorem
 
@@ -46,6 +42,8 @@ over the possible numbers of cycles instead of the elements of the group `G`.
 For additional information, refer to
 <https://en.wikipedia.org/wiki/P%C3%B3lya_enumeration_theorem>.
 -/
+
+@[expose] public section
 
 universe u v w
 

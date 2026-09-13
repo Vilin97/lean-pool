@@ -5,9 +5,7 @@ Authors: Yuyang Zhao
 -/
 module
 
-public import Mathlib.Data.Fintype.Defs
 public import Mathlib.Data.Fintype.OfMap
-import Mathlib.Tactic.DeriveFintype
 public import Mathlib.Algebra.Group.Defs
 
 /-!

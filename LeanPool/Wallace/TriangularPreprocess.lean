@@ -3,9 +3,24 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
+public import LeanPool.Wallace.FiniteCombinatorics
+public import Mathlib.Algebra.Group.Finsupp
+public import Mathlib.SetTheory.Cardinal.Continuum
+public import Mathlib.Tactic.Continuity
 import LeanPool.Wallace.MathlibFoundations
-import LeanPool.Wallace.FiniteCombinatorics
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.SetTheory.Cardinal.Finsupp
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Triangular coding and block preprocessing
@@ -16,6 +31,8 @@ injective sequences in the corresponding free Abelian group are coded, and their
 assigned distinct indices strictly above every coordinate in the sequence.  The second half of
 the file constructs a genuine subsequence whose prescribed finite blocks are bounded-independent.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Cardinal
@@ -234,15 +251,19 @@ theorem exists_index_gt_avoiding_finset
 
 /-- State of the recursive block selector.  `values l` contains the values already selected in
 block `l`; `last` is the last source index used. -/
-private structure BlockSelectionState (G : Type*) where
+structure BlockSelectionState (G : Type*) where
+  /-- The most recently selected block index. -/
   last : ℕ
+  /-- The finite set selected at each block index. -/
   values : ℕ → Finset G
 
-private def initialBlockSelectionState (G : Type*) : BlockSelectionState G where
+/-- The block-selection state with no selected values. -/
+def initialBlockSelectionState (G : Type*) : BlockSelectionState G where
   last := 0
   values := fun _ => ∅
 
-private noncomputable def excludedAt
+/-- The finite set of values excluded at the next block-selection stage. -/
+noncomputable def excludedAt
     {G : Type*} [AddCommGroup G] (M block : ℕ → ℕ) (n : ℕ)
     (st : BlockSelectionState G) : Finset G := by
   classical
@@ -251,7 +272,7 @@ private noncomputable def excludedAt
 
 /-- The next source index: strictly later than the previous one and outside both the values
 already used in this block and every bounded forbidden equation over them. -/
-private def nextBlockIndex
+def nextBlockIndex
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) : ℕ :=
   Classical.choose <|
@@ -284,7 +305,8 @@ private theorem nextBlockIndex_not_forbidden
   exact (nextBlockIndex_spec u hu M block n st).2
     (Finset.mem_union_right _ <| forbidden_mem_forbiddenFinset h)
 
-private noncomputable def blockSelectionStep
+/-- Advance block selection by choosing values outside the excluded set. -/
+noncomputable def blockSelectionStep
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) :
     BlockSelectionState G := by
@@ -296,7 +318,7 @@ private noncomputable def blockSelectionStep
         (insert (u k) (st.values (block n))) }
 
 /-- States after the first `n` positions of the new sequence have been selected. -/
-private def blockSelectionStates
+def blockSelectionStates
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) : ℕ → BlockSelectionState G
   | 0 => initialBlockSelectionState G
@@ -451,7 +473,7 @@ private theorem exists_lt_next_blockStart
 
 /-- The unique block label whose consecutive half-open interval contains `n`. -/
 def blockOf (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (n : ℕ) : ℕ :=
-  Nat.find (exists_lt_next_blockStart N hN n)
+  Nat.find (private_decl% (exists_lt_next_blockStart N hN n))
 
 theorem blockOf_spec (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (n : ℕ) :
     blockStart N (blockOf N hN n) ≤ n ∧

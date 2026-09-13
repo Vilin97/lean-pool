@@ -3,14 +3,14 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import Mathlib.Combinatorics.Enumerative.Catalan.Basic
+public import Mathlib.GroupTheory.Perm.Cycle.Type
+public import LeanPool.SemicircleCheck.ShiftTwoEquiv
+public import Mathlib.Logic.Equiv.Fin.Rotate
+public import LeanPool.SemicircleCheck.FinRotateLemmas
+public import LeanPool.SemicircleCheck.RotationArithmetic
 import Mathlib.GroupTheory.Perm.Fin
-import Mathlib.GroupTheory.Perm.Cycle.Type
-import Mathlib.Data.Fin.Basic
-import LeanPool.SemicircleCheck.ShiftTwoEquiv
-import LeanPool.SemicircleCheck.FinRotateLemmas
-import LeanPool.SemicircleCheck.RotationArithmetic
 
 /-!
   GENUS ZERO ↔ NONCROSSING
@@ -27,6 +27,8 @@ import LeanPool.SemicircleCheck.RotationArithmetic
   - Recursive noncrossing predicate, with a separate bridge to arc crossings
   - Three-stage proof decomposition via cycle count bound
 -/
+
+@[expose] public section
 
 open Equiv Equiv.Perm Fintype
 

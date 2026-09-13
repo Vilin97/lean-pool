@@ -3,8 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Challenge-signature pushforward exports (jacobian-functoriality §9, pushforward half)
@@ -26,6 +28,8 @@ and the full pullback-direction exports (`Jacobian.pullback`, `pullback_contMDif
 unit** — see the root file's LEDGER and this builder's final report for the precise gap
 (`Form1.trace`'s branch-point analyticity and the trace–path-integral relation).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

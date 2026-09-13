@@ -3,11 +3,18 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.Surjectivity
-import LeanPool.CriticalPortraits.Injectivity
-import LeanPool.CriticalPortraits.Forward
+public import LeanPool.CriticalPortraits.Portraits
 import LeanPool.CriticalPortraits.Denominator
+import LeanPool.CriticalPortraits.Surjectivity
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The headline census theorem: `#{portraits} = C(N, d−1) / d` for all `d`
@@ -21,6 +28,8 @@ With positions in `ZMod N` (`N = d*m`) and the delete-min map `T`:
 * `Set.BijOn.equiv` then gives an equivalence of the two subtypes, so their `Fintype.card`s
   agree; composing with the **denominator** count `card_levelCanonical_mul` yields the result.
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits
 open Finset

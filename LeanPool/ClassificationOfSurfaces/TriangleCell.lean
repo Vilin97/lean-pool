@@ -3,11 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
+public import LeanPool.ClassificationOfSurfaces.Moise.Anchors
 import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
-import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
 import Mathlib.Analysis.Convex.GaugeRescale
-import Mathlib.Topology.Instances.AddCircle.Real
 
 /-!
 # A side-parameter-compatible polygon cell model for a triangle
@@ -16,6 +18,8 @@ This file identifies the three-sided `PolygonCell` with the standard closed tria
 boundary calibration is exact: circular side `i` at parameter `t` is sent to the affine point at
 parameter `t` on standard triangle edge `i`.
 -/
+
+@[expose] public section
 
 open Set Topology
 

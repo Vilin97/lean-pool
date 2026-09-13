@@ -3,13 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Topology.Homotopy.Path
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import Mathlib.Analysis.Complex.HasPrimitives
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import Mathlib.Topology.Homotopy.Path
-import Mathlib.Analysis.Convex.Segment
+import Mathlib.Topology.Algebra.Module.Cardinality
 
 /-!
 # Planar atoms for paths-and-integrals (CC6)
@@ -29,6 +32,8 @@ Main declarations:
 * `RS.exists_homotopy_range_subset_of_convex` — any two paths with the same endpoints inside a
   convex planar set are homotopic rel endpoints through the set (affine homotopy).
 -/
+
+@[expose] public section
 
 noncomputable section
 

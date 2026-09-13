@@ -3,8 +3,11 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.Basic
-import Mathlib.Algebra.Order.Floor.Div
+module
+
+public import Mathlib.Algebra.Order.Floor.Div
+public import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # First-entry row data
@@ -20,6 +23,8 @@ the resulting tail sum, and the pairwise weights used later in the fiberwise rei
 * `firstEntryTail`
 * `firstEntryPairWeight`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators
 

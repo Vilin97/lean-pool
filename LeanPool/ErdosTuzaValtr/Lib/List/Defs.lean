@@ -3,17 +3,18 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Image
-import Mathlib.Tactic.Cases
-import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
+public import Mathlib.Data.Finset.Image
+public import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
 
 /-!
 # LeanPool.ErdosTuzaValtr.Lib.List.Defs
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.List.Defs`.
 -/
+
+@[expose] public section
 
 variable {α : Type _}
 

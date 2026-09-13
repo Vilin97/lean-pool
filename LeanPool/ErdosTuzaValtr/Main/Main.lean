@@ -3,20 +3,27 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Finset.Basic
-import LeanPool.ErdosTuzaValtr.Config.Default
-import LeanPool.ErdosTuzaValtr.Etv.Default
-import LeanPool.ErdosTuzaValtr.Main.Defs
-import LeanPool.ErdosTuzaValtr.Main.Lemmas.Default
+public import LeanPool.ErdosTuzaValtr.Main.Defs
+public import LeanPool.ErdosTuzaValtr.Config.Mirror
+import LeanPool.ErdosTuzaValtr.Etv.Mirror
 import LeanPool.ErdosTuzaValtr.Main.InductionStep
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon
+import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.Main
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Main.Main`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

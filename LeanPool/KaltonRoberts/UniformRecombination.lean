@@ -13,9 +13,15 @@ and produces a target `WeightedCollection` via expander recombination.
 
 **Reference**: Lemma 3.2 in Section 3 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.Collections
+module
+
+public import LeanPool.KaltonRoberts.Collections
 import LeanPool.KaltonRoberts.Recombination
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite-uniform recombination
@@ -23,6 +29,8 @@ import LeanPool.KaltonRoberts.Recombination
 Finite-uniform version of the one-sided recombination theorem, producing a
 target weighted collection via expander recombination.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

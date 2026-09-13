@@ -3,9 +3,15 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.SafeCollisionPhase
+public import LeanPool.PoincareThreeBody.SafeCollisionPhase
 import LeanPool.PoincareThreeBody.AnalyticCompactParameterIntegral
+import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
+import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Analyticity of the collision-avoiding average at the boundary
@@ -14,6 +20,8 @@ Compactness of one resonant period upgrades pointwise collision avoidance to a u
 neighborhood.  The compact parameter-integral theorem then gives analyticity of the safe average
 through the collision eccentricity.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

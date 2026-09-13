@@ -3,9 +3,16 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Defs
-import LeanPool.LehmerE10.Main
+public import LeanPool.LehmerE10.Defs
+public import LeanPool.LehmerE10.Main
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Lehmer's Polynomial and the E10 Coxeter Element
@@ -17,6 +24,8 @@ Main declarations: `LehmerE10.main_theorem`
 Tags: number-theory, mahler-measure, salem-numbers, coxeter-groups
 MSC: 11R06, 11C08, 20F55
 -/
+
+@[expose] public section
 
 /-!
 # Lehmer's polynomial and the E10 Coxeter element

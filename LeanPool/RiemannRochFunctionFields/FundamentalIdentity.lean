@@ -5,9 +5,9 @@ Authors: Guanghao Li
 -/
 module
 
-public import Mathlib.RingTheory.RamificationInertia.Basic
-public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
-public import Mathlib.LinearAlgebra.Dimension.Localization
+public import Mathlib.NumberTheory.RamificationInertia.Inertia
+public import Mathlib.NumberTheory.RamificationInertia.Ramification
+import Mathlib.RingTheory.RamificationInertia.Basic
 
 /-!
 # The fundamental identity in the quotient-based formulation

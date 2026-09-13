@@ -3,9 +3,13 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Frobenius
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The Fermat cubic `X^3 + Y^3 = Z^3` in characteristic two, via a Weierstrass model
@@ -26,6 +30,8 @@ through `x = Z/(X+Y)`, `y = X/(X+Y)`.  Under this isomorphism:
 
 All group-law statements are proved in this model.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

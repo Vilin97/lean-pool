@@ -3,20 +3,19 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.Defs
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.LinearAlgebra.UnitaryGroup
-import Mathlib.Algebra.Order.Star.Real
+module
+
+public import Mathlib.LinearAlgebra.Matrix.PosDef
 
 import LeanPool.RlTheoryInLean.Data.Matrix.Mul
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # LeanPool.RlTheoryInLean.Data.Matrix.PosDef
 -/
+
+@[expose] public section
 
 open Real Finset Filter TopologicalSpace Preorder Matrix EuclideanSpace
 open scoped InnerProductSpace RealInnerProductSpace

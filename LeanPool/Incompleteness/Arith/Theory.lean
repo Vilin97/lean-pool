@@ -3,14 +3,20 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arith.FormalizedArithmetic
+public import LeanPool.Incompleteness.Arith.FormalizedArithmetic
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.CodedTheory
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
 
 /-!
 
 # Formalized $\Sigma_1$-Completeness
 
 -/
+
+@[expose] public section
 
 namespace LO
 namespace FirstOrder

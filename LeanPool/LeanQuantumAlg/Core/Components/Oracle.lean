@@ -6,8 +6,8 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import LeanPool.LeanQuantumAlg.Core.Tensor
+public import LeanPool.LeanQuantumAlg.Core.Gate
+public import LeanPool.LeanQuantumAlg.Util.FinPow
 
 /-!
 # Boolean (XOR) oracles

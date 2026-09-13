@@ -3,19 +3,18 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
+public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Ring
 /-!
 Exact computation of `ClassicalAlgorithm.p recursive3ParamAlg`.
 
 The final result is the dyadic rational value
 `94835 / 393216 ≈ 0.24117787679 < 24118/100000`.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

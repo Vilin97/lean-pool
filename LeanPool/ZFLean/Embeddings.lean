@@ -3,14 +3,21 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Functions
+public import LeanPool.ZFLean.Functions
+import LeanPool.ZFLean.Tactics
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ZFLean.Embeddings
 
 Imported Lean Pool material for `LeanPool.ZFLean.Embeddings`.
 -/
+
+@[expose] public section
 
 namespace ZFSet
 /-- Imported ZFLean declaration. -/

@@ -5,9 +5,12 @@ Authors: Alfie Davies, Tomasz Maciosowski, Kim Morrison, Violeta Hernández Pala
 -/
 module
 
-public import LeanPool.MisereGames.GameForm.Birthday
 public import LeanPool.MisereGames.Form.Classes
 import Mathlib.Data.Fintype.Order
+public import LeanPool.MisereGames.Form.Birthday
+public import LeanPool.MisereGames.GameForm
+import LeanPool.MisereGames.GameForm.Birthday
+import Mathlib.Order.Lattice.Nat
 
 /-!
 Misere combinatorial games.

@@ -3,8 +3,10 @@ Copyright (c) 2026 Bhavik Mehta, Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Arend Mellendijk
 -/
+module
 
-import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+public import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Ring theory support for ABC exceptions
@@ -12,3 +14,5 @@ import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
 Import-only index for ring-theoretic support files used by the ABC exceptions
 development.
 -/
+
+@[expose] public section

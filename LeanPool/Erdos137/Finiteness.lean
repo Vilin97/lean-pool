@@ -3,28 +3,12 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import Mathlib.NumberTheory.Primorial
-import Mathlib.NumberTheory.PrimeCounting
-import Mathlib.NumberTheory.Bertrand
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.NumberTheory.SmoothNumbers
-import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
-import Mathlib.Algebra.Squarefree.Basic
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.Factorization.PrimePow
-import Mathlib.Data.Nat.Prime.Factorial
-import Mathlib.Data.Nat.Factorial.Basic
-import Mathlib.Algebra.BigOperators.Associated
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Common
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: powerful products of consecutive integers (conditional finiteness)
@@ -46,6 +30,8 @@ and Langevin / Granville; this is a formalization of the deduction, not a new re
 
 The radical bound `RadLB` is the only nonelementary input and appears as a hypothesis.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

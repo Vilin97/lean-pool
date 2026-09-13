@@ -6,9 +6,7 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Core.Components.Control
-public import LeanPool.LeanQuantumAlg.Core.Components.Kets
 
 /-!
 # The Hadamard test

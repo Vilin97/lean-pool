@@ -3,10 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Representatives
-import Mathlib.Algebra.Polynomial.Eval.Coeff
-import Mathlib.Order.Filter.Finite
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Specializing polynomial identities of function germs
@@ -17,6 +17,8 @@ corresponding pointwise complex-polynomial identity on one common
 neighborhood.  This is the finite-uniformity step needed when cleared generic
 fiber identities are specialized over the analytic base.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

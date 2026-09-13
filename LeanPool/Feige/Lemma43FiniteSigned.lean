@@ -3,8 +3,12 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.InsertionCommonDensity
+module
+
+public import LeanPool.Feige.InsertionCommonDensity
+public import LeanPool.Feige.Lemma43
 import LeanPool.Feige.Lemma43Complete
+import LeanPool.Feige.Lemma43Density
 
 /-!
 # Local transfer for finite signed-exponential common parts
@@ -13,6 +17,8 @@ This module specializes the automatic pushforward-density and
 likelihood-ratio results to the exact common laws appearing on genuine
 Boolean-lattice insertion edges.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

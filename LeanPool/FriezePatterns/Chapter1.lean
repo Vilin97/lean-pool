@@ -3,23 +3,27 @@ Copyright (c) 2026 Antoine de Saint-Germain. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
+module
 
-import Mathlib.Algebra.Field.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Set.Operations
 import Mathlib.Data.Finite.Prod
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Set.Finite.Range
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # LeanPool.FriezePatterns.Chapter1
 
 Imported Lean Pool material for `LeanPool.FriezePatterns.Chapter1`.
 -/
+
+@[expose] public section
 
 /-- A field-valued frieze pattern of height `n`: a function `f : ℕ × ℕ → F` with `0`s on
 the row `i = 0`, `1`s on rows `i = 1` and `i = n`, `0`s on rows `i ≥ n + 1`, satisfying the

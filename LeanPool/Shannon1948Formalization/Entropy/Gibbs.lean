@@ -3,8 +3,12 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy.Final
+public import LeanPool.Shannon1948Formalization.Entropy.Uniform
+public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Shannon.Entropy.Gibbs
@@ -26,6 +30,8 @@ Mathlib's concavity infrastructure for later proofs.
 - `entropyNat_uniformPNat`: `H(uniform n) = log n`
 - `entropyNat_le_log_card`: `H(p) ≤ log |α|`
 -/
+
+@[expose] public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

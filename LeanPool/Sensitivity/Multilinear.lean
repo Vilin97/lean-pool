@@ -3,11 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.Sensitivity.Defs
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Int.Basic
+module
+
+public import LeanPool.Sensitivity.Defs
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 
 /-!
 # Multilinear Representation and Degree
@@ -25,6 +25,8 @@ of that representation and the multilinear degree of `f`.
   `c_S(f) = ∑_{T ⊆ S} (-1)^{|S|-|T|} f(1_T)`.
 * `LeanPoolSensitivity.BoolFun.degree` — the multilinear degree of `f`.
 -/
+
+@[expose] public section
 
 namespace LeanPoolSensitivity
 

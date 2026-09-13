@@ -3,8 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.Defs
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Finset.Attr
 
 /-!
 EGRS75 two-prime infinitude — ASSEMBLY.
@@ -64,6 +67,8 @@ WHAT THIS FILE ESTABLISHES (HONEST STATUS — read carefully):
 Recon / context: MATH CONTEXT block in the run prompt; #376 recon at
   ~/Knowledge/Construct/recon/erdos_376.md.
 -/
+
+@[expose] public section
 
 namespace Egrs75
 

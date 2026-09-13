@@ -6,8 +6,10 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.ForMathlib.FourVariables
-public import LeanPool.PFR.FirstEstimate
+public import LeanPool.PFR.TauFunctional
+import LeanPool.PFR.Fibring
+import LeanPool.PFR.FirstEstimate
+import LeanPool.PFR.ForMathlib.FourVariables
 
 /-!
 # Second estimate

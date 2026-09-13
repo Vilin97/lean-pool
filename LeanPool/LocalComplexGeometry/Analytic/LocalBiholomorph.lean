@@ -3,11 +3,14 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Analytic.Linear
+
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # Germs of local biholomorphisms
@@ -17,6 +20,8 @@ the holomorphic constant-rank theorem.  A `LocalBiholomorphAt E F a b` consists 
 analytic maps in both directions, carrying `a` to `b`, whose two composites agree
 with the identity on neighborhoods of the relevant base points.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

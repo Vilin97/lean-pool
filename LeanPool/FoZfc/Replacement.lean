@@ -3,13 +3,9 @@ Copyright (c) 2026 Tetsuya Ishiu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tetsuya Ishiu
 -/
+module
 
-import Init.Data.Fin.Basic
-import LeanPool.FoZfc.Basic
-import LeanPool.FoZfc.Tostring
-import LeanPool.FoZfc.FixedSnoc
-import LeanPool.FoZfc.BoundedFormulaOps
-import LeanPool.FoZfc.Axioms
+public import LeanPool.FoZfc.Axioms
 
 /-!
 # The Replacement Axiom
@@ -31,6 +27,8 @@ import LeanPool.FoZfc.Axioms
 - Various "realize" theorems are proved.
 
 -/
+
+@[expose] public section
 
 open FirstOrder
 open FirstOrder.Language

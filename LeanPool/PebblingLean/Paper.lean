@@ -3,8 +3,13 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import LeanPool.PebblingLean.UpperBoundParameters
+public import LeanPool.PebblingLean.UpperBoundParameters
+import LeanPool.PebblingLean.LowerBound
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Paper-facing formulation
@@ -15,6 +20,8 @@ integer cost bounds; here we package those results as statements about a
 noncomputable optimal pebbling number `optimalPebblingNumber n` and the explicit
 constant `CLean`.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

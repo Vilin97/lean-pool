@@ -3,14 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.GlobalAssembly
-import LeanPool.Erdos132ConvexK3.WordClosures
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Erdos132ConvexK3.GlobalAssembly
+import LeanPool.Erdos132ConvexK3.Penultimate
+import LeanPool.Erdos132ConvexK3.TailClosure
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Geometric closure of the thirteen global cover words
@@ -22,6 +22,8 @@ reflected row-4 routes use the orientation-reversing isometry
 `reflectAcrossXAxis`; squared distances and degrees are transported back to
 the original labelling.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

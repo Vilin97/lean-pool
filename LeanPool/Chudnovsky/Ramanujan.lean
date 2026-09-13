@@ -3,9 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
-import Mathlib.NumberTheory.ModularForms.Derivative
+public import LeanPool.Chudnovsky.Basic
+public import Mathlib.NumberTheory.ModularForms.Derivative
+import Mathlib.NumberTheory.ModularForms.LevelOne.DimensionFormula
 
 /-!
 # Ramanujan's derivative identities
@@ -42,6 +44,8 @@ Byproducts stated for downstream use (Kummer/PicardFuchs and MainTheorem):
   `Chudnovsky.tendsto_E₄_atImInfty`, `Chudnovsky.tendsto_E₆_atImInfty`;
 * pointwise raw-derivative forms `deriv_comp_ofComplex_E2`/`_E₄`/`_E₆`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

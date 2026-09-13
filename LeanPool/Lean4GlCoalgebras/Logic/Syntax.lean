@@ -3,26 +3,27 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import Mathlib.Data.Set.Defs
-import Mathlib.CategoryTheory.Limits.Shapes.IsTerminal
-import Mathlib.CategoryTheory.Functor.EpiMono
-import Mathlib.CategoryTheory.Functor.Const
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Fintype.Defs
-import Mathlib.CategoryTheory.Endofunctor.Algebra
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Union
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Nat.Basic
-import Aesop
-import Mathlib.Tactic.Linarith
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Syntax of Basic Modal Logic
 
 Here we supply basic definitions, abbreviations, and lemmas about the syntax of BML.
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

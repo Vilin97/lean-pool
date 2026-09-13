@@ -3,18 +3,22 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.MeasurableSpace.Basic
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringLim
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
 import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringLim
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame

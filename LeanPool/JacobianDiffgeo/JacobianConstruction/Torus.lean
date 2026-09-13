@@ -3,14 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacobianConstruction.ChartedSpaceKitV
-import Mathlib.Topology.Algebra.Group.Quotient
-import Mathlib.Topology.Algebra.ContinuousMonoidHom
-import Mathlib.Algebra.Module.ZLattice.Basic
-import Mathlib.Geometry.Manifold.Algebra.LieGroup
-import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-import Mathlib.Analysis.Analytic.Linear
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.ChartedSpaceKitV
+public import Mathlib.Algebra.Module.ZLattice.Basic
+public import Mathlib.Geometry.Manifold.Algebra.LieGroup
 
 /-!
 # The abstract torus layer: `V ⧸ L` for `L : AddSubgroup V`
@@ -38,6 +35,8 @@ These are genuine theorems/instances *gated* by typeclass hypotheses (`[Discrete
 fire once a caller supplies them — which is exactly the hook period-lattice-rank uses once it
 establishes discreteness/full-rank for the actual period subgroup.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Pointwise
 open Set Filter Topology Metric

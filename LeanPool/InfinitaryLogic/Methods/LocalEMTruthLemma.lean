@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMTruth
-import LeanPool.InfinitaryLogic.Methods.LocalSkolemUniversal
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalSkolemUniversal
 /-!
 # The local EM truth lemma, layer 2: readiness + the staged truth lemma
 
@@ -61,6 +62,8 @@ Producing the restricted witness ("`ΓlocalColim`-restricted witness homogeneity
 as is the final connection to `TailTemplateRealizable`. This is a pure file (imports
 `LocalEMTruth`, hence the pure local stack only) — no EM-stack or `Conditional/` reach.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -135,7 +138,7 @@ about the source sequence (`LocalEMOmegaHomogeneous` below). -/
 /-- **Decidedness of a formula's eventual deep truth** (the named output of
 `eventualDeepTruth_decided`): either it holds eventually, or it fails eventually. Local analogue of
 `EMContext.Decided`, with the ambient `[Λ.Structure M]` in place of the `skolemColim` `letI`. -/
-private def LocalEMContext.Decided (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
+def LocalEMContext.Decided (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
     (φ : Λ.BoundedFormulaω Empty m)
     (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J) : Prop :=
   (∀ᶠ d in Filter.atTop, φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts i)) ∨

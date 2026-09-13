@@ -3,9 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.UseSite
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.UseSite
+public import LeanPool.Erdos132ConvexK3.Geometry
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # Maximal-gap tail closure
@@ -17,6 +20,8 @@ the head has at most four offsets, while strict edge--diagonal comparison
 and same-half-plane two-circle uniqueness leave at most two tail slots (one
 under the strict anchor).
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

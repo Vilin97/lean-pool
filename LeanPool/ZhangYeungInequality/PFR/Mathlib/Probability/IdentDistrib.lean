@@ -7,8 +7,8 @@ Authors: PFR contributors
 module
 
 public import Mathlib.Probability.IdentDistrib
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Constructions.Pi
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Constructions.Pi
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.IdentDistrib

@@ -10,9 +10,16 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Scaffolding notes:
   - `Rigidity/modulus_rigidity.md`
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! # ModulusRigidity -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset
@@ -378,7 +385,7 @@ private theorem fourierCoeff_pair_expansion
       ∑ p : Fin D × Fin D,
         fourierCoeff (fun t : Circle =>
           c p.1 * star (c p.2) * fourier ((p.1.1 : ℤ) - (p.2.1 : ℤ)) t) m := by
-    simpa [Finset.sum_apply] using hsum'
+    simpa only [Finset.sum_apply] using hsum'
   rw [hsum'']
   refine Finset.sum_congr rfl ?_
   intro p hp
@@ -600,9 +607,7 @@ private theorem finiteCirclePoly_normSq_fourierCoeff
             fourier ((p.1.1 : ℤ) - (p.2.1 : ℤ)) t := by
     ext t
     rw [finiteCirclePoly_sum (k := k) (a := c) hr t]
-    simpa [mul_assoc, mul_left_comm, mul_comm, qkn_real] using
-      (finiteSeries_mul_star_expand (D := d + 1)
-        (c := fun i : Fin (d + 1) => c i * (qkn k i.1 r : ℂ)) t)
+    exact finiteSeries_mul_star_expand (fun i : Fin (d + 1) => c i * (qkn k i.1 r : ℂ)) t
   have hcoeff := congrArg (fun F : Circle → ℂ => fourierCoeff F m) hprod_eq
   simpa [mul_assoc, mul_left_comm, mul_comm, qkn_real] using
     (hcoeff.trans
@@ -697,7 +702,7 @@ private lemma finite_modulus_coeff_rel {k d : ℕ} (a b : Fin (d + 1) → ℂ)
               simpa using (RCLike.mul_conj (finiteCirclePoly k r b t))
     have hcoeff :=
       congrArg (fun F : Circle → ℂ => fourierCoeff F m) hprod_eq
-    simpa [rawA, rawB] using (hAcoeff r hr).symm.trans (hcoeff.trans (hBcoeff r hr))
+    exact (hAcoeff r hr).symm.trans (hcoeff.trans (hBcoeff r hr))
   obtain ⟨Rd, hRd, hRd_nonzero⟩ := qkn_eventually_nonzero k d
   obtain ⟨Rn, hRn, hRn_nonzero⟩ := qkn_eventually_nonzero k n.1
   have hEqFaFb : Fa =ᶠ[Filter.atTop] Fb := by
@@ -711,14 +716,11 @@ private lemma finite_modulus_coeff_rel {k d : ℕ} (a b : Fin (d + 1) → ℂ)
     have hn : (qkn k n.1 r : ℂ) ≠ 0 := by
       exact_mod_cast hRn_nonzero r (le_trans (le_max_right _ _) hr)
     have hmulA : Fa r * ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) = rawA r := by
-      simpa [Fa, rawA, mul_assoc, mul_left_comm, mul_comm] using
-        pairSum_ratio_mul_den (k := k) a m n.1 hd hn
+      exact pairSum_ratio_mul_den (k := k) a m n.1 hd hn
     have hmulB : Fb r * ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) = rawB r := by
-      simpa [Fb, rawB, mul_assoc, mul_left_comm, mul_comm] using
-        pairSum_ratio_mul_den (k := k) b m n.1 hd hn
+      exact pairSum_ratio_mul_den (k := k) b m n.1 hd hn
     have hD : ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) ≠ 0 := mul_ne_zero hd hn
-    apply mul_right_cancel₀ hD
-    simp_all
+    exact mul_right_cancel₀ hD (hmulA.trans (hraw.trans hmulB.symm))
   have hFa_tendsto : Filter.Tendsto Fa Filter.atTop (𝓝 (topA * star (a n))) := by
     rw [htopA]
     exact pair_coeff_normalized_tendsto (k := k) (d := d) (a := a) (n := n)
@@ -1331,23 +1333,9 @@ private theorem high_coeff_vanish
         else 0)
   have hFtendsto :
       Filter.Tendsto F Filter.atTop (𝓝 (star (topCoeff a) * hermiteCoeff k G (d + ell))) := by
-    have hsum : Filter.Tendsto
-        (fun r : ℝ =>
-          (∑ i : Fin (d + 1),
-            star (a i) * hermiteCoeff k G (ell + i.1) *
-              (((qkn k i.1 r : ℂ) / (qkn k d r : ℂ)) *
-                ((qkn k (ell + i.1) r : ℂ) / (qkn k (d + ell) r : ℂ)))) +
-          (∑ i : Fin (d + 1),
-            if h : ell ≤ i.1 then
-              star (hermiteCoeff k G (i.1 - ell)) * a i *
-                (((qkn k i.1 r : ℂ) / (qkn k (d + ell) r : ℂ)) *
-                  ((qkn k (i.1 - ell) r : ℂ) / (qkn k d r : ℂ)))
-            else 0))
-        Filter.atTop (𝓝 (star (topCoeff a) * hermiteCoeff k G (d + ell) + 0)) := by
-      simpa using
-        (positive_mode_main_sum_tendsto (k := k) (d := d) (ell := ell) (a := a) (G := G)).add
+    simpa only [add_zero] using
+      (positive_mode_main_sum_tendsto (k := k) (d := d) (ell := ell) (a := a) (G := G)).add
         (positive_mode_error_sum_tendsto_zero (k := k) (d := d) (ell := ell) hEll (a := a) (G := G))
-    simpa [F] using hsum
   obtain ⟨Rd, hRd, hd_nonzero⟩ := qkn_eventually_nonzero k d
   obtain ⟨Rn, hRn, hn_nonzero⟩ := qkn_eventually_nonzero k (d + ell)
   have hFzero : F =ᶠ[Filter.atTop] fun _ : ℝ => (0 : ℂ) := by
@@ -1598,9 +1586,8 @@ private theorem finite_positive_mode_relation
     fun r : ℝ => finitePositiveModeMainSum k d a b n r + finitePositiveModeErrorSum k d a b n r
   have hFtendsto : Filter.Tendsto F Filter.atTop
       (𝓝 (star (a n) * b ⟨d, Nat.lt_succ_self d⟩ + star (b n) * a ⟨d, Nat.lt_succ_self d⟩)) := by
-    have hsum := (finite_positive_mode_main_tendsto (k := k) (d := d) a b n).add
+    exact (finite_positive_mode_main_tendsto (k := k) (d := d) a b n).add
       (finite_positive_mode_error_tendsto (k := k) (d := d) a b n)
-    simpa [F] using hsum
   obtain ⟨Rd, hRd, hd_nonzero⟩ := qkn_eventually_nonzero k d
   obtain ⟨Rn, hRn, hn_nonzero⟩ := qkn_eventually_nonzero k n.1
   have hFzero : F =ᶠ[Filter.atTop] fun _ : ℝ => (0 : ℂ) := by
@@ -1642,7 +1629,7 @@ private theorem finite_positive_mode_relation
                   rw [finitePositiveModeMainSum_mul_den (k := k) (d := d) (a := a) (b := b) n hd hn,
                     finitePositiveModeErrorSum_mul_den (k := k) (d := d) (a := a) (b := b) n hd hn]
         _ = 0 := hraw0
-    simp_all
+    exact (mul_eq_zero.mp hEq).resolve_left (mul_ne_zero hd hn)
   have hzero_tendsto : Filter.Tendsto F Filter.atTop (𝓝 (0 : ℂ)) := by simpa using hFzero.tendsto
   simpa [zero_add] using (tendsto_nhds_unique (f := F) (l := Filter.atTop) hFtendsto hzero_tendsto)
 

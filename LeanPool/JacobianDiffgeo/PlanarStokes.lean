@@ -3,10 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
-import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
-import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
+public import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+public import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
+public import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # planar-stokes-atoms: compact-support planar Stokes for `dbar` and the smeared residue
@@ -52,3 +55,5 @@ prior to summing; no "change of variables for the area integral" atom is designe
 the three `integral_wirtingerDbar_mul_inv_sub*`/`integrable_wirtingerDbar_mul_inv_sub` exports
 above for its Lemma-20.3 step — see the build-log entry for this unit for the full account.
 -/
+
+@[expose] public section

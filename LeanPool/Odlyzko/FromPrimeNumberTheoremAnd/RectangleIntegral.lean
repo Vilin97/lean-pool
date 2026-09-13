@@ -5,8 +5,8 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-! Adapted from [PNT+](https://github.com/AlexKontorovich/PrimeNumberTheoremAnd)
 by Alex Kontorovich and Terence Tao:

@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
-import LeanPool.JacobianDiffgeo.Cech.Refinement
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.GlueForm01
+public import LeanPool.JacobianDiffgeo.Cech.Refinement
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # PoU splitting of a Čech `0`-cocycle (`Jacobian/DolbeaultComparison/Splitting.lean`)
@@ -24,6 +29,8 @@ each splitting's PDE data as a `DbarGlueData` (via `GlueForm01.lean`), whose glu
   (`sub_mem_range_dbar_of_splittings`, `dolbForm_add_sub_mem`, `dolbForm_smul_sub_mem`,
   `dolbForm_mem_range_of_mem_B1`, `dolbForm_res_sub_mem`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

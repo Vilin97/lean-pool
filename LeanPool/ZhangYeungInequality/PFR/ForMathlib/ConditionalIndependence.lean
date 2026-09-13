@@ -6,10 +6,11 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Tactic.Finiteness
 public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.IdentDistrib
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.ConditionalProbability
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Pair
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.ForMathlib.ConditionalIndependence

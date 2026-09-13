@@ -3,10 +3,15 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
-import LeanPool.DomainTheory.Neighborhood.Definition72
-import LeanPool.DomainTheory.Neighborhood.Theorem74
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Theorem74
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Theorem 7.5 (Scott 1981, PRG-19, §7) — `(𝒟₀ → 𝒟₁)` is effectively given
@@ -50,6 +55,8 @@ it needs
 `𝒟₀`-inclusion to be decidable to single out `{i ∣ X ⊆ Xᵢ}` — and is developed
 with the decider.)
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

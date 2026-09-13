@@ -3,10 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+module
+
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
 import LeanPool.InfinitaryLogic.Methods.LocalEMSmallModel
-import LeanPool.InfinitaryLogic.ModelTheory.Hanf
-import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+import Mathlib.Data.Rat.Floor
 /-!
 # The uniform collapsing language (issue #11 unit 7b)
 
@@ -28,6 +31,8 @@ supplied generically (`realize_mapLanguage`) and smallness descends by
   of the collapsed sentence.
 -/
 
+@[expose] public section
+
 namespace FirstOrder
 
 namespace Language
@@ -35,7 +40,7 @@ namespace Language
 variable {L : Language.{0, 0}}
 
 /-- The dummy language: one function and one relation symbol at every arity. -/
-private def dummyLang : Language.{0, 0} :=
+def dummyLang : Language.{0, 0} :=
   ⟨fun _ => Unit, fun _ => Unit⟩
 
 /-- The uniform countable target: `φ`'s generated sublanguage plus the dummies. -/

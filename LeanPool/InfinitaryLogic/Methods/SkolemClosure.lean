@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SkolemColimit
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
 /-!
 # Staged set-closure (generic core for the Skolem-closed family `Γ*`)
 
@@ -19,13 +20,15 @@ The concrete formula `stepOne` (subformulas / components / Skolem witnesses / re
 to the lifted EM starting family.
 -/
 
+@[expose] public section
+
 namespace FirstOrder.Language
 
 variable {α : Type*}
 
 /-- Stages of closing `Γ₀` under the pointwise expansion `stepOne`: stage `0` is the seed, each
 successor adds `stepOne x` for every `x` already present. Increasing by construction. -/
-private def iterClosure (stepOne : α → Set α) (Γ₀ : Set α) : ℕ → Set α
+def iterClosure (stepOne : α → Set α) (Γ₀ : Set α) : ℕ → Set α
   | 0 => Γ₀
   | k + 1 => iterClosure stepOne Γ₀ k ∪ ⋃ x ∈ iterClosure stepOne Γ₀ k, stepOne x
 

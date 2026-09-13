@@ -3,11 +3,12 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
+module
+
+public import Mathlib.Probability.Moments.IntegrableExpMul
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.Analysis.Convex.Integral
-import Mathlib.Probability.Moments.Basic
-import Mathlib.Probability.Moments.IntegrableExpMul
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Exponential-Moment Bounds
@@ -25,6 +26,8 @@ This module introduces no new definitions.
 * `integrable_exp_add_and_integral_le`: combines exponential-moment bounds for two
   summands without requiring independence.
 -/
+
+@[expose] public section
 
 namespace LeanPool
 

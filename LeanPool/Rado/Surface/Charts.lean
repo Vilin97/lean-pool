@@ -3,8 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Topology.SecondCountable
-import LeanPool.Rado.Surface.HolomorphicCompat
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Riemann-surface chart conventions
@@ -25,6 +28,8 @@ is only needed at the very end). This file sets up the chart-level toolkit:
 * point-set instances: local compactness, local (path-)connectedness, local
   second countability.
 -/
+
+@[expose] public section
 
 open Set Topology Metric Manifold Filter
 

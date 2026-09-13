@@ -3,13 +3,17 @@ Copyright (c) 2026 Jun Kwon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jun Kwon
 -/
+module
 
-import LeanPool.Polytopes.Halfspace
-import Mathlib.Analysis.Convex.KreinMilman
+public import LeanPool.Polytopes.Halfspace
+public import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.LocallyConvex.Separation
 
 /-!
 Polar duals and their compactness properties.
 -/
+
+@[expose] public section
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

@@ -3,9 +3,13 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.FiniteDimensional
-import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Orthonormal Bases of Tensor Products
@@ -14,6 +18,8 @@ Compatibility module for the upstream Monlib4 file. The old declarations in this
 including `OrthonormalBasis.tensorProduct` and its simp lemmas, are already available
 from current Mathlib through the imports above.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

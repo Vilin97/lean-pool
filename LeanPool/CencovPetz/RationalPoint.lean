@@ -3,7 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.SplittingUniform
+module
+
+public import LeanPool.CencovPetz.SplittingUniform
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!
@@ -27,6 +33,8 @@ This file packages the notion of a common-denominator point and relates it to
 
 - `CencovPetz.Simplex.IsRational.isSplitRepresentable`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

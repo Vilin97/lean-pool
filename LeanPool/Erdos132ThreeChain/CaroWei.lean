@@ -3,16 +3,20 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Card
 import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Tactic.Positivity
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The Caro--Wei independence bound
@@ -26,6 +30,8 @@ estimate `1 / (d + 1) ≥ (5 - d) / 9`, valid because `(d - 2) ^ 2 ≥ 0`, conve
 bound into a lower bound on the independence number, and integrality upgrades `n / 3 > 4` to an
 independent set of size `5` once `n ≥ 13`.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

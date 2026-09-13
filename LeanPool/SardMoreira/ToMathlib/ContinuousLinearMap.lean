@@ -3,35 +3,19 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Normed.Operator.Basic
-import Mathlib.Analysis.Normed.Operator.Mul
-import Mathlib.Analysis.Normed.Operator.NNNorm
-import Mathlib.Analysis.Normed.Operator.NormedSpace
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Idempotent
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Quotient
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.RestrictScalars
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+public import Mathlib.Analysis.Normed.Operator.Basic
+public import Mathlib.Analysis.Asymptotics.Defs
+import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Auxiliary theorems about `ContinuousLinearMap`
 
 Mostly about `ContinuousLinearMap.IsInvertible` and `ContinuousLinearMap.inverse`.
 -/
+
+@[expose] public section
 
 open Filter Function Asymptotics Topology
 

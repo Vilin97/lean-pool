@@ -3,17 +3,20 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
-import LeanPool.LocalComplexGeometry.Analytic.LevelSet
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Examples
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalSum
-import LeanPool.LocalComplexGeometry.FiniteProjection.Main
-import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
-import LeanPool.LocalComplexGeometry.Nullstellensatz.FiberCancellation
-import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
-import LeanPool.LocalComplexGeometry.Nullstellensatz.OneVariable
-import LeanPool.LocalComplexGeometry.Palomar
+public import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
+public import LeanPool.LocalComplexGeometry.Analytic.LevelSet
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Examples
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalSum
+public import LeanPool.LocalComplexGeometry.FiniteProjection.Main
+public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.FiberCancellation
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.OneVariable
+public import LeanPool.LocalComplexGeometry.Palomar
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Foundational local complex-analytic geometry
@@ -25,6 +28,8 @@ Main declarations: `LocalComplexGeometry.localAnalyticNullstellensatz`
 Tags: complex-analysis, analytic-geometry, nullstellensatz, weierstrass-preparation
 MSC: 32A05, 32A10, 32B05, 32C25, 13E05
 -/
+
+@[expose] public section
 
 /-!
 # Local complex-analytic geometry

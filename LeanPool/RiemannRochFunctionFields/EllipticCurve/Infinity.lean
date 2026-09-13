@@ -6,12 +6,11 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.Genus.Ramification
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.ByContra
 import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+public import LeanPool.RiemannRochFunctionFields.EllipticCurve.Instances
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
+import LeanPool.RiemannRochFunctionFields.FundamentalIdentity
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # The unique place at infinity of a Weierstrass function field

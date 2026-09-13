@@ -3,10 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
+public import LeanPool.Erdos97ConvexOctagon.Radius
 import LeanPool.Erdos97ConvexOctagon.CayleyMenger
-import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
-import Mathlib.Analysis.Convex.Combination
 
 /-! # The final residual incidence class
 
@@ -14,6 +15,8 @@ The metric constraints of residual class 11 determine a normalized quadratic
 parameter. Each of its two possible ranges puts a labelled vertex in the
 convex hull of four other vertices.
 -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

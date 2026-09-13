@@ -3,8 +3,17 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisionRepresentatives
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PolynomialRepresentativeOperations
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeInduction
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.DivisibilitySpecialization
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.MinpolyResultant
+import LeanPool.LocalComplexGeometry.Nullstellensatz.PrimeBase
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Construction of the prepared-prime certificate
@@ -12,6 +21,8 @@ import LeanPool.LocalComplexGeometry.Nullstellensatz.PreparedPrimeCore
 This file constructs the finite pointwise certificate from generic-fibre data
 and closes the prepared-prime induction step.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

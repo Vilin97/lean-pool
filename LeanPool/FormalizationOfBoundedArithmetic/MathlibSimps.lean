@@ -6,21 +6,18 @@ Authors: ruplet
 
 -- In this file this is crucial to be careful with imports,
 -- as all `simp` lemmas in scope will get our `delta0_simp` attribute!
-import Lean.Elab.Command
-import Mathlib.Lean.Meta.Simp
-import Mathlib.Tactic.Simps.Basic
+module
 
-import Mathlib.ModelTheory.Basic
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Semantics
-import Mathlib.ModelTheory.Order
-import Mathlib.ModelTheory.Complexity
+
+public import Mathlib.ModelTheory.Order
 
 import LeanPool.FormalizationOfBoundedArithmetic.Register
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
 -/
+
+@[expose] public section
 
 open Lean Elab Command
 

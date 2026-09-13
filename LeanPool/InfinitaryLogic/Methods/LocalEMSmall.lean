@@ -3,8 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
+public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
 import LeanPool.InfinitaryLogic.Methods.LocalEMTupleOrbit
-import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
 /-!
 # Smallness of the local EM model (issue #11 unit 4)
 
@@ -21,6 +25,8 @@ realized types are exactly the union of the fibers over the countable code type
 subsingletons is countable. Transport to the original language is `Lomega1omegaSmall.of_expansion`
 (`ModelTheory/InfinitaryTypes.lean`), not re-proved here.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

@@ -3,11 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Exp
-import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Log
+public import LeanPool.Incompleteness.Arithmetization.ISigmaZero.Exponential.Log
+import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Bit -/
+
+@[expose] public section
 
 
 noncomputable section «lp_nc_section_1»

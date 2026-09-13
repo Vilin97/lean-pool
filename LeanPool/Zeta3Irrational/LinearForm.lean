@@ -3,13 +3,19 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import LeanPool.Zeta3Irrational.Integral
-import LeanPool.Zeta3Irrational.D
+public import LeanPool.Zeta3Irrational.Integral
+public import LeanPool.Zeta3Irrational.D
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Zeta3Irrational.LinearForm
 -/
+
+@[expose] public section
 
 namespace LeanPool.Zeta3Irrational
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms.OrdRes
+public import LeanPool.JacobianDiffgeo.CanonicalForms.OrdRes
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `MForm X`: meromorphic 1-forms as germ classes of chart-coefficient families (D1/D2/D4–D6)
@@ -30,6 +33,8 @@ meromorphic functions by codiscrete agreement (`Jacobian/Meromorphic/GermSpace.l
   the literal definition of the quotient relation via `ord_eq_top_iff`. Corollary:
   `MForm.ord_ne_top`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

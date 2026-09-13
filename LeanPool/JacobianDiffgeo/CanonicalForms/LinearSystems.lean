@@ -3,8 +3,17 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
+public import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.MittagLeffler
+import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Ω(D)`, the `L(D+K)` bridge, holomorphic forms, and ML form data (D11/D12/D13)
@@ -31,6 +40,8 @@ Unit: canonical-forms (`docs/design/canonical-forms.md` §2 D11–D13, §4.5, pr
 * **D13** `MLFormData`/`Realizes` (against `MForm.laurentCoeffAt`, on classes)/`totalRes`/
   `Realizes.resAt_eq`: a thin `X`-level wrapper around residue-calculus's `PrincipalPartData`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology

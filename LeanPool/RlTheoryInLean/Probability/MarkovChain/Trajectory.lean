@@ -3,26 +3,18 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Probability.ConditionalProbability
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
-import Mathlib.Probability.Kernel.Defs
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Order.Interval.Finset.Defs
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.Probability.Process.Filtration
-import Mathlib.Topology.Bornology.Basic
+module
 
-import LeanPool.RlTheoryInLean.Defs
-import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
-import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
-import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
+public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
+
+public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 
 /-!
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
 -/
 
-open RLTheory
+@[expose] public section
+
 open MeasureTheory MeasureTheory.Measure Filtration
 open ProbabilityTheory.Kernel
 open ProbabilityTheory

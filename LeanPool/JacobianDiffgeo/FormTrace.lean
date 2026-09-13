@@ -3,10 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.FormTrace.PairForm
-import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
-import LeanPool.JacobianDiffgeo.FormTrace.ResidueTraceCompat
+public import LeanPool.JacobianDiffgeo.FormTrace.PairForm
+public import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
+public import LeanPool.JacobianDiffgeo.FormTrace.ResidueTraceCompat
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # form-trace-tower: pair-form residues and residue-trace compatibility (namespace `RS.FormTrace`)
@@ -73,3 +76,5 @@ residues, chart handling, and residue-trace compatibility (Miranda Lemma 3.2 glo
 * **`serre-duality-tails`**: nothing from this unit is DAG-wired to it (confirmed by the design's
   own §0.3 audit; unaffected by any of the findings above).
 -/
+
+@[expose] public section

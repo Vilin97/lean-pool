@@ -3,6 +3,10 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
+
+public import Mathlib.Algebra.Algebra.Spectrum.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import LeanPool.Monlib4.LinearAlgebra.End
 
 /-!
@@ -10,6 +14,8 @@ import LeanPool.Monlib4.LinearAlgebra.End
 
  This file just proves that the spectrum of a linear map is commutative.
 -/
+
+@[expose] public section
 
 
 theorem isUnit_comm (K E : Type _) [DivisionRing K] [AddCommGroup E] [Module K E]

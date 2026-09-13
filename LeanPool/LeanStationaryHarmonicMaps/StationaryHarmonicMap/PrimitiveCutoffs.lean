@@ -3,7 +3,11 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryBasics
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryBasics
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Primitive cutoff realization
@@ -11,6 +15,8 @@ import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryBasics
 This module contains the primitive cutoff realization and the abstract
 one-dimensional sharp-cutoff inputs.
 -/
+
+@[expose] public section
 
 noncomputable section
 

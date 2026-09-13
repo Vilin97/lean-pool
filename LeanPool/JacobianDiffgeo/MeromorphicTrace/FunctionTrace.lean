@@ -8,10 +8,15 @@ Authors: Rado Kirov
 Blueprint unit: meromorphic-trace. `Tr_F h`: the global assembly, file 5 of the design's 6-file
 plan.
 -/
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
-import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
-import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+module
+
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Tr_F h`: the surface-level fibre trace (meromorphic-trace, cluster 2)
@@ -47,7 +52,9 @@ needed on `Y` itself).
   stability, though `trace_eq_finsum'` proves the identity at every point.)
 -/
 
-open scoped ContDiff Manifold OnePoint
+@[expose] public section
+
+open scoped ContDiff Manifold
 open Filter Set Function Topology
 
 namespace RS.MTrace

@@ -3,8 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.InfiniteSieve
-import Mathlib.Data.Nat.Cast.Order.Field
+module
+
+public import LeanPool.GKPCarry.InfiniteSieve
+meta import Lean.Meta.Tactic.NormCast
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # A density-one theorem for the GKP power-of-two condition
@@ -19,6 +29,8 @@ natural density one.
 The universal conjecture remains open because a density-zero failure set need
 not be empty.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

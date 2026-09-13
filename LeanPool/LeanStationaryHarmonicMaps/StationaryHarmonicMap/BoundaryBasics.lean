@@ -3,9 +3,12 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeights
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIdentity
 import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeights
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIdentity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Boundary and radius interfaces
@@ -17,6 +20,8 @@ These interfaces are internal scaffolding: they expose the intermediate
 boundary and radius statements so the proof can be checked modularly, but they
 are not intended as the public API of the project.
 -/
+
+@[expose] public section
 
 noncomputable section
 

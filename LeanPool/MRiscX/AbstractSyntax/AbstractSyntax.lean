@@ -3,16 +3,18 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.AbstractSyntax.Map
-import LeanPool.MRiscX.AbstractSyntax.Instr
-import LeanPool.MRiscX.Parser.AssemblySyntax
-import Lean
+module
+
+public import LeanPool.MRiscX.AbstractSyntax.Map
+public import LeanPool.MRiscX.AbstractSyntax.Instr
 
 /-!
 # AbstractSyntax
 
 This module provides core abstract-syntax types of the MRiscX assembly language.
 -/
+
+@[expose] public section
 open Nat
 open Lean Lean.Elab
 /--

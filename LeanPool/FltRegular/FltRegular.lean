@@ -11,7 +11,6 @@ public import Mathlib.NumberTheory.FLT.Basic
 public import LeanPool.FltRegular.NumberTheory.RegularPrimes
 import LeanPool.FltRegular.CaseI.Statement
 import LeanPool.FltRegular.CaseII.Statement
-import LeanPool.FltRegular.MayAssume.Lemmas
 
 /-!
 # Fermat's Last Theorem for regular primes

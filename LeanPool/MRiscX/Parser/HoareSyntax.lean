@@ -3,10 +3,14 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Parser.AssemblySyntax
+module
+
+public import LeanPool.MRiscX.Parser.AssemblySyntax
 /-!
 Syntax for hoare terms
 -/
+
+@[expose] public section
 /-- Syntax category for a full MRiscX Hoare triple together with its program. -/
 declare_syntax_cat hoareTerm
 

@@ -3,8 +3,13 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Lattice.Basic
+module
+
+public import LeanPool.BruhatTits.Lattice.Basic
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+import LeanPool.BruhatTits.Utils.Misc
 import LeanPool.BruhatTits.Utils.ValuationRings
+import Mathlib.RingTheory.Localization.Module
 
 /-!
 # Basic constructions and operations on lattices
@@ -32,6 +37,8 @@ Most constructions work for an arbitrary subring `R` of a field `K`.
   for natural exponents. Generally, try to bring all lattices in the context in the form
   of `b.twist hϖ f` for fixed `b` and varying `f`, in order to simplify calculations.
 -/
+
+@[expose] public section
 
 open Module
 
@@ -599,7 +606,8 @@ lemma permMatrix_smul_toSubmodule (b : Basis ι K (ι → K)) (e : ι ≃ ι) :
   ext i : 1
   simp [permMatrix, toLinear_symm_ofLinearEquiv_mulVec]
 
-private def swap₂ : Fin 2 ≃ Fin 2 where
+/-- The permutation exchanging the two indices of a rank-two basis. -/
+def swap₂ : Fin 2 ≃ Fin 2 where
   toFun
     | 0 => 1
     | 1 => 2

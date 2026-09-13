@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.BooleanChain
-import Mathlib.Logic.Equiv.Fin.Basic
+module
+
+public import LeanPool.Feige.BooleanChain
+public import Mathlib.Logic.Equiv.Fin.Basic
 
 /-!
 # Inserting a new coordinate into a maximal chain
@@ -16,6 +18,8 @@ the new chain is the lifted old chain; after rank `J` it is the lifted old
 chain with the new element adjoined.  These are the two cases of the
 inserted-chain construction used in the proof of Theorem 2.1.
 -/
+
+@[expose] public section
 
 open Finset
 

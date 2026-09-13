@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.EM.Template
-import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
-import Mathlib.Data.Finset.Sort
+module
+
+public import LeanPool.InfinitaryLogic.Methods.EM.Template
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 
 /-!
 # Template-to-`L[[J]]`-theory bridge for Lω₁ω
@@ -35,6 +37,8 @@ constant symbols) and, even for countable `J`, by the fact that `templateTheory 
 inherits the continuum size of the Lω₁ω formula syntax. Any future
 model-realizing tranche will need to restrict to a countable sub-theory.
 -/
+
+@[expose] public section
 
 universe u v w
 

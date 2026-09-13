@@ -3,11 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.ParameterDomainTopology
+public import LeanPool.PoincareThreeBody.NormalizationClosure
 import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
-import LeanPool.PoincareThreeBody.DelaunaySection
+import Mathlib.Analysis.Analytic.Uniqueness
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # A global analytic section of the mass-zero energy map
@@ -16,6 +19,8 @@ The rotating Kepler Hamiltonian admits a collision-free analytic phase-space sec
 real energy.  This supplies a canonical globally analytic one-variable representative for the
 mass-zero coefficient of any jointly analytic family.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

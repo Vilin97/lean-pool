@@ -3,9 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
+public import LeanPool.Chudnovsky.Basic
 import LeanPool.Chudnovsky.Ramanujan
+import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
 
 /-!
 # The `j`-function: definition, invariance, analyticity, q-expansion (Phase C, chunk B1)
@@ -46,6 +48,8 @@ and `qExpansion_coeff_unique` — no analytic estimate at all. (The η-product s
 harmlessly, in the *boundedness* of `j·q` at the cusp, via
 `tendsto_atImInfty_tprod_one_sub_eta_q_pow`.)
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -165,14 +169,14 @@ Mathlib's analytic `qExpansion`s. The only arithmetic input is the classical con
 section IntegerQExpansion
 
 /-- The formal power series `∑_{n ≥ 1} σ_k(n) Xⁿ` over `ℤ`. -/
-private def sigmaPS (k : ℕ) : PowerSeries ℤ :=
+def sigmaPS (k : ℕ) : PowerSeries ℤ :=
   PowerSeries.mk fun n ↦ if n = 0 then 0 else (ArithmeticFunction.sigma k n : ℤ)
 
 /-- The integer q-expansion `1 + 240·∑ σ₃(n) qⁿ` of `E₄`. -/
-private def E4Z : PowerSeries ℤ := 1 + 240 * sigmaPS 3
+def E4Z : PowerSeries ℤ := 1 + 240 * sigmaPS 3
 
 /-- The integer q-expansion `1 - 504·∑ σ₅(n) qⁿ` of `E₆`. -/
-private def E6Z : PowerSeries ℤ := 1 - 504 * sigmaPS 5
+def E6Z : PowerSeries ℤ := 1 - 504 * sigmaPS 5
 
 /-- Extract a numeral factor out of a power-series coefficient. -/
 private lemma coeff_ofNat_mul {a : ℕ} [a.AtLeastTwo] (φ : PowerSeries ℤ) (n : ℕ) :
@@ -267,12 +271,12 @@ private lemma exists_delta_coeff (m : ℕ) :
 
 /-- The integer q-expansion of the discriminant `Δ = q·∏(1-qⁿ)²⁴ = ∑ τ(n) qⁿ`
 (Ramanujan-τ coefficients), obtained as `(E₄³ - E₆²)/1728` in `ℤ⟦q⟧`. -/
-def deltaInt : PowerSeries ℤ := PowerSeries.mk fun m ↦ (exists_delta_coeff m).choose
+def deltaInt : PowerSeries ℤ := PowerSeries.mk fun m ↦ (private_decl% (exists_delta_coeff m)).choose
 
 private lemma deltaInt_spec (m : ℕ) :
     PowerSeries.coeff m (E4Z ^ 3 - E6Z ^ 2) = 1728 * PowerSeries.coeff m deltaInt := by
   rw [deltaInt, PowerSeries.coeff_mk]
-  exact (exists_delta_coeff m).choose_spec
+  exact (private_decl% (exists_delta_coeff m)).choose_spec
 
 /-! ### Analytic identification of `deltaInt` -/
 

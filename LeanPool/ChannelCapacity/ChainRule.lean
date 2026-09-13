@@ -3,11 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.ChannelCapacity.Basic
-import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+module
 
+public import LeanPool.ChannelCapacity.Basic
+
+import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
 import Mathlib.InformationTheory.KullbackLeibler.ChainRule
-import Mathlib.Probability.Kernel.CompProdEqIff
 import Mathlib.Probability.Kernel.Posterior
 
 /-!
@@ -19,6 +20,8 @@ The main theorem rewrites the KL divergence from the joint law `p ⊗ k` to the 
 `p ⊗ const ν` as the mutual information plus the KL divergence of the induced output law
 against `ν`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal

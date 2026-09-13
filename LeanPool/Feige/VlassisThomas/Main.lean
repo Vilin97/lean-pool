@@ -3,6 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
+module
+
+public import LeanPool.Feige.Calibration
+public import LeanPool.Feige.KStatistic
 import LeanPool.Feige.IndependentCalibrationAssembly
 import LeanPool.Feige.TwoPointBoundary
 
@@ -16,6 +20,8 @@ chain calibration, exponential-transfer argument, boundary approximation,
 measurable two-point mixing, and normalization to coordinatewise means at
 most one.
 -/
+
+@[expose] public section
 
 namespace VlassisThomas
 

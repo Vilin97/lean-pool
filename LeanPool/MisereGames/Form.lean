@@ -6,16 +6,9 @@ Authors: Alfie Davies, Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.OfSets
-public import Mathlib.Logic.Small.Set
-public import LeanPool.MisereGames.Mathlib.Small
-public import LeanPool.MisereGames.Outcome
-public import LeanPool.MisereGames.Player
 public import Mathlib.Algebra.Group.Pointwise.Set.Small
-public import Mathlib.Algebra.Group.Pointwise.Set.Basic
 public import Mathlib.Algebra.CharZero.Defs
-public import Mathlib.Data.Nat.Cast.Defs
-public import Mathlib.Logic.Small.Defs
-public import Mathlib.Order.SetNotation
+import LeanPool.MisereGames.Mathlib.Small
 
 /-!
 Misere combinatorial games.

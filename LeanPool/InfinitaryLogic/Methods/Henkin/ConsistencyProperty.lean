@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # Consistency Properties
 
@@ -22,6 +23,8 @@ of sentences satisfying closure conditions that guarantee model existence.
 - [Mar16], §4.1
 - [Kei71]
 -/
+
+@[expose] public section
 
 universe u v
 

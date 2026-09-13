@@ -3,11 +3,23 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise619
-import LeanPool.DomainTheory.Neighborhood.Definition613
-import LeanPool.DomainTheory.Neighborhood.Exercise213
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Exercise619
+public import LeanPool.DomainTheory.Neighborhood.Definition610
+public import LeanPool.DomainTheory.Neighborhood.Exercise510
+public import Mathlib.Order.Directed
+public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.List.Monad
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 6.19 (Scott 1981, PRG-19, §6) — Part B: the functor algebra
@@ -81,6 +93,8 @@ needs.
 
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

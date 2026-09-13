@@ -3,8 +3,11 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Segment differentiability for the homotopy
@@ -12,6 +15,8 @@ import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
 Proves that each segment of `fdBoundaryToPolygonHomotopy`
 is differentiable in t.
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

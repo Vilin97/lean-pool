@@ -3,14 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import LeanPool.Egrs75.DigitVector
-import LeanPool.Egrs75.DigitAtToolkit
-import Mathlib.Algebra.Order.Ring.GeomSum
-import Mathlib.Algebra.BigOperators.Intervals
+public import LeanPool.Egrs75.DigitVector
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Ring.GeomSum
 
 /-!
 EGRS75 LOW-case clearing — PRIMITIVE P4: condition-(3) window producer (2026-06-08).
@@ -55,6 +54,8 @@ Reuses (does not reprove) the imported base-`q` digit machinery.  Formalizes the
 theorem EGRS75 (1975).  Three primes is Erdős #376 (OPEN) — not attempted.
 -/
 
+@[expose] public section
+
 namespace Egrs75.P4
 
 open Nat
@@ -62,7 +63,6 @@ open Finset
 open Egrs75
 open Egrs75.LeafInduction
 open Egrs75.RepairDV
-open Egrs75.RepairPaperfaithful
 
 /-! ## The base-`q` geometric sum and the GOLDEN place-value identity -/
 
@@ -233,7 +233,7 @@ theorem mod_pow_succ (n q t : ℕ) :
 
 /-- The partial tail lower bound `LB q n j t = b_j·q^j + B·(q^{j+1} + … + q^{t-1})`,
 expressed as `(n/q^j%q)·q^j + B·∑_{j < s < t} q^s`.  (Only used internally.) -/
-private def tailLB (q n j t : ℕ) : ℕ :=
+def tailLB (q n j t : ℕ) : ℕ :=
   (n / q ^ j % q) * q ^ j + ((q - 1) / 2) * ∑ s ∈ Finset.Ico (j + 1) t, q ^ s
 
 /-- **Inductive tail bound (KERNEL-CLEAN).**  For `j = topBadIndex q n`, `i = leastGoodAbove`,

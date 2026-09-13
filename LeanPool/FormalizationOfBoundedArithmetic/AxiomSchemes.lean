@@ -3,23 +3,19 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Lean.Elab.Command
+public import LeanPool.FormalizationOfBoundedArithmetic.Semantics
 
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Semantics
 
-import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
-import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
-import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
-import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-import LeanPool.FormalizationOfBoundedArithmetic.Semantics
-import LeanPool.FormalizationOfBoundedArithmetic.Order
+
+public import LeanPool.FormalizationOfBoundedArithmetic.Order
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
 -/
+
+@[expose] public section
 
 open FirstOrder Language BoundedFormula Formula
 

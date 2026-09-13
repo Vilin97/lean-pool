@@ -3,11 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Learner.Core
-import LeanPool.FormalLearningTheory.Learner.Active
-import Mathlib.MeasureTheory.Constructions.Pi
+module
+
+public import LeanPool.FormalLearningTheory.Learner.Active
+public import Mathlib.MeasureTheory.Constructions.Pi
 
 /-!
 # PAC Learning Criteria
@@ -43,6 +42,8 @@ Measure.pi via outer measure. Full measurability of this set requires the error
 function xs ↦ D{x | L(S(xs)) x ≠ c x} to be measurable  -  a deep technical
 condition that specific proofs (Hoeffding, Sauer-Shelah) will establish.
 -/
+
+@[expose] public section
 
 universe u v
 

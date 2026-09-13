@@ -5,10 +5,9 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.Basic
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation
-public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
-public import Mathlib.RingTheory.Localization.Basic
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-! Local residue maps for height-one primes of Dedekind domains. -/
 

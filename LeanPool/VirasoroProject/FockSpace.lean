@@ -3,9 +3,19 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.HeisenbergAlgebra
-import LeanPool.VirasoroProject.IndexTri
-import LeanPool.VirasoroProject.LieVerma
+module
+
+public import LeanPool.VirasoroProject.HeisenbergAlgebra
+public import LeanPool.VirasoroProject.IndexTri
+public import LeanPool.VirasoroProject.LieVerma
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Algebra.EuclideanDomain.Field
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.Star
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Verma modules for the Virasoro algebra
@@ -55,6 +65,8 @@ appropriate triangular decomposition).
 Heisenberg algebra, Fock space
 
 -/
+
+@[expose] public section
 
 
 

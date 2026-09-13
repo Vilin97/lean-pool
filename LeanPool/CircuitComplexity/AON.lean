@@ -3,9 +3,12 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.AON.Defs
-import LeanPool.CircuitComplexity.Internal.AON
-import LeanPool.CircuitComplexity.Internal.Simulation
+module
+
+public import LeanPool.CircuitComplexity.Internal.AON
+public import LeanPool.CircuitComplexity.Internal.Simulation
+
+public import LeanPool.CircuitComplexity.AON.Defs
 
 /-! # AND/OR/NOT Basis
 
@@ -24,6 +27,8 @@ This module provides the AND/OR basis definitions and completeness results.
 * `CompleteBasis Basis.andOr2` — proved via gate-chain simulation
   from `unboundedAON`, using `CompleteBasis.of_simulation`
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

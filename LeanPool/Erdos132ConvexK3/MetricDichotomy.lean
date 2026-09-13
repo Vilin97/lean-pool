@@ -3,11 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Penultimate
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.EReal.Inv
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Metric/sign dichotomy
@@ -17,6 +23,8 @@ The proof uses only the four cross-color metric parameters, so its conclusion
 applies uniformly to all four cross-color pairs.  The two boundary radicals
 are retained as exact kernel inequalities.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

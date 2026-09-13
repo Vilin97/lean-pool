@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import LeanPool.LeanModularForms.ValenceFormula.Definitions
+public import LeanPool.LeanModularForms.ValenceFormula.Definitions
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Fundamental Domain Boundary – Basic Definitions
@@ -23,6 +24,8 @@ for SL₂(ℤ), both at fixed height `heightCutoff` and at variable height `H`.
 * `fdBoundaryHPartition` — partition for H-parameterized boundary
 * `seg5QRadiusH` — q-expansion radius e^(-2πH)
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

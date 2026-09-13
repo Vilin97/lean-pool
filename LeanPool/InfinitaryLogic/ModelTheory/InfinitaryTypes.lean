@@ -3,6 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
@@ -18,6 +21,8 @@ preimage of an expansion type under `mapLanguage`, so the realized reduct types 
 image); it does NOT ascend through arbitrary expansions, which is why the arbitrary-language
 endpoint of issue #11 must go through a canonical uniform expansion rather than this lemma.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

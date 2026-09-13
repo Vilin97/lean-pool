@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Kernel.Data
+public import LeanPool.BollobasNikiforov.Kernel.Data
 import LeanPool.BollobasNikiforov.Kernel.SM
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.LinearAlgebra.Matrix.Adjugate
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Bilinear expansion of `𝒦`
@@ -15,6 +17,8 @@ import Mathlib.LinearAlgebra.Matrix.Adjugate
 Completing squares in coordinates `2,1,0` yields `eq:bilinear`, and
 substituting `U` yields the factorization `eq:factor` of `docs/sol.tex` §3.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

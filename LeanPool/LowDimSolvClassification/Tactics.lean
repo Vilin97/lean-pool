@@ -3,30 +3,42 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth, the LieLean team
 -/
-import Lean.Meta.Tactic.NormCast
-import Mathlib.Algebra.Algebra.Tower
+module
+
+public meta import Lean.Meta.Tactic.NormCast
+public import Mathlib.Algebra.Lie.Basic
+public import Mathlib.Algebra.Algebra.Defs
+public import Mathlib.Tactic.Ring.Basic
+public import Mathlib.Algebra.Algebra.Tower
+public import Mathlib.Tactic.Ring.RingNF
 import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-import Mathlib.Tactic.Ring
-import Mathlib.Util.AtomM
-import Mathlib.Algebra.Lie.Basic
+import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 # LeanPool.LowDimSolvClassification.Tactics
+
+The reflected Lie expressions retain exposed definitions so the kernel can check proofs
+produced by the tactics. The metaprogramming implementation is compiled without exporting
+its definition bodies to importing modules.
 -/
+
+public section
 
 open Lean hiding Module
 open Meta Elab Qq Mathlib.Tactic List
 
 /-- Pair-or-single carrier used by the Lie-algebra atom store: each atom is either a single
 expression or a pair of expressions tracked together. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def V (M : Type*) := Sum M (M × M)
+
+meta section
 
 namespace AtomD
 
 /-- State of the Lie-algebra atom monad: the running list of atoms collected so far. -/
 structure State where
-  /-- TODO. -/
+  /-- Distinct scalar atoms and bracket pairs, in their order of discovery. -/
   atoms : Array (V Expr) := #[]
 
 end AtomD
@@ -41,7 +53,7 @@ def run {α : Type} (m : AtomD α) :
     MetaM α :=
   m.run' {}
 
-/-- TODO. -/
+/-- Find an existing atom up to definitional equality, or append a new one. -/
 def addAtomSimple (e : Expr) : AtomD (Nat × Bool × Expr) := do
   let c ← get
   match e with
@@ -53,7 +65,7 @@ def addAtomSimple (e : Expr) : AtomD (Nat × Bool × Expr) := do
           return (i, true, j)
       | _ => continue
     modifyGet fun c ↦ ((c.atoms.size, true, e₁), { c with atoms := c.atoms.push (Sum.inl e₁) })
-/-- TODO. -/
+/-- Intern a bracket pair, recording whether it matches the stored orientation. -/
 def addAtomDouble (e₁ e₂ : Expr) : AtomD (Nat × Bool × (Expr × Expr)) := do
   let c ← get
   let e : Expr × Expr := ⟨ e₁, e₂ ⟩
@@ -72,13 +84,13 @@ def addAtomDouble (e₁ e₂ : Expr) : AtomD (Nat × Bool × (Expr × Expr)) := 
     modifyGet fun c ↦ ((c.atoms.size, true, ⟨e₁,e₂⟩), { c with atoms := c.atoms.push (Sum.inr e) })
 
 open Qq in
-/-- TODO. -/
+/-- Intern a quoted atom and retain its definitional equality with the stored expression. -/
 def addAtomQ {u : Level} {α : Q(Type u)} (e : Q($α)) :
     AtomD (Nat × {e' : Q($α) // $e =Q $e'}) := do
   let (n, _, e') ← AtomD.addAtomSimple e
   return (n, ⟨e', ⟨⟩⟩)
 
-/-- TODO. -/
+/-- Intern a quoted bracket pair, retaining the equalities for its chosen orientation. -/
 def addAtomDoubleQ {u : Level} {α : Q(Type u)} (e₁ e₂ : Q($α)) :
     AtomD (Nat × Sum {e' : Q($α) × Q($α) // $e₁ =Q $(e'.2) ∧ $e₂ =Q $(e'.1)}
         {e' : Q($α) × Q($α) // $e₁ =Q $(e'.1) ∧ $e₂ =Q $(e'.2)}) := do
@@ -90,27 +102,31 @@ def addAtomDoubleQ {u : Level} {α : Q(Type u)} (e₁ e₂ : Q($α)) :
     return (n, Sum.inr ⟨⟨e₁',e₂'⟩, ⟨⟨⟩, ⟨⟩⟩⟩)
 end AtomD
 
+end
+
 namespace Mathlib.Tactic.LieSolver
 
-/-- TODO. -/
+/-- Interpret an atom as an element or as the bracket of two elements. -/
+@[expose]
 def v {M : Type*} [LieRing M] (x : V M) :=
   Sum.elim (fun m ↦ m) (fun ⟨ m₁ , m₂ ⟩ ↦ ⁅ m₁ , m₂ ⁆) x
 
-/-- TODO. -/
-@[implicit_reducible]
+/-- A Lie expression represented as a sum of scalar multiples of atoms. -/
+@[expose, implicit_reducible]
 def NF (R : Type*) (M : Type*) := List (R × V M)
 
 namespace NF
 variable {S : Type*} {R : Type*} {M : Type*}
 
-/-- TODO. -/
-@[match_pattern]
+/-- Prepend a scalar multiple of an atom to a reflected Lie expression. -/
+@[expose, match_pattern]
 def cons (p : R × V M) (l : NF R M) : NF R M := p :: l
 
-/-- TODO. -/
+/-- Constructor notation for reflected Lie expressions. -/
 infixl:100 " ::ᵣ " => cons
 
-/-- TODO. -/
+/-- Evaluate a reflected Lie expression by summing its scalar multiples of atoms. -/
+@[expose]
 def eval [SMul R M] [LieRing M] (l : NF R M) : M :=
   (l.map (fun (⟨r, x⟩ : R × V M) ↦ r • v x)).sum
 
@@ -271,7 +287,8 @@ theorem eq_of_eval_eq_eval {R₁ R₂ : Type*} [LieRing M] [Semiring R] [Module 
 
 variable (R)
 
-/-- TODO. -/
+/-- Extend the scalar ring of a reflected Lie expression through an algebra map. -/
+@[expose]
 def algebraMap [CommSemiring S] [Semiring R] [Algebra S R] (l : NF S M) : NF R M :=
   l.map (fun ⟨s, x⟩ ↦ (Algebra.algebraMap S R s, x))
 
@@ -286,27 +303,29 @@ theorem eval_algebraMap [CommSemiring S] [Semiring R] [Algebra S R] [LieRing M]
 
 end NF
 
+meta section
+
 variable {u v : Level}
 
-/-- TODO. -/
+/-- Quoted scalar-atom pairs with identifiers used to order and combine equal atoms. -/
 abbrev qNF (R : Q(Type u)) (M : Q(Type v)) := List ((Q($R) × Q(V $M)) × ℕ)
 
 namespace qNF
 
 variable {M : Q(Type v)} {R : Q(Type u)}
 
-/-- TODO. -/
+/-- Quote a normal form, discarding the atom identifiers used during normalization. -/
 def toNF (l : qNF R M) : Q(NF $R $M) :=
   let l' : List Q($R × V $M) := (l.map Prod.fst).map (fun (a, x) ↦ q(($a, $x)))
   let qt : List Q($R × V $M) → Q(List ($R × V $M)) := List.rec q([]) (fun e _ l ↦ q($e ::ᵣ $l))
   qt l'
 
-/-- TODO. -/
+/-- Apply a quoted function to every coefficient of a normal form. -/
 def onScalar {u₁ u₂ : Level} {R₁ : Q(Type u₁)} {R₂ : Q(Type u₂)} (l : qNF R₁ M) (f : Q($R₁ → $R₂)) :
     qNF R₂ M :=
   l.map fun ((a, x), k) ↦ ((q($f $a), x), k)
 
-/-- TODO. -/
+/-- Merge two normal forms ordered by atom identifier, adding matching coefficients. -/
 def add (iR : Q(Semiring $R)) : qNF R M → qNF R M → qNF R M
   | [], l => l
   | l, [] => l
@@ -318,7 +337,7 @@ def add (iR : Q(Semiring $R)) : qNF R M → qNF R M → qNF R M
     else
       ((a₂, x₂), k₂) :: add iR (((a₁, x₁), k₁) :: t₁) t₂
 
-/-- TODO. -/
+/-- Construct the proof that merging normal forms computes their sum. -/
 def mkAddProof {iR : Q(Semiring $R)} {iMM : Q(LieRing $M)} (iRM : Q(Module $R $M))
     (l₁ l₂ : qNF R M) :
     Q(NF.eval $(l₁.toNF) + NF.eval $(l₂.toNF) = NF.eval $((qNF.add iR l₁ l₂).toNF)) :=
@@ -336,7 +355,7 @@ def mkAddProof {iR : Q(Semiring $R)} {iMM : Q(LieRing $M)} (iRM : Q(Module $R $M
       let pf := mkAddProof iRM (((a₁, x₁), k₁) :: t₁) t₂
       (q(NF.add_eq_eval₃ ($a₂, $x₂) $pf):)
 
-/-- TODO. -/
+/-- Merge two normal forms ordered by atom identifier, subtracting matching coefficients. -/
 def sub (iR : Q(Ring $R)) : qNF R M → qNF R M → qNF R M
   | [], l => l.onScalar q(Neg.neg)
   | l, [] => l
@@ -348,7 +367,7 @@ def sub (iR : Q(Ring $R)) : qNF R M → qNF R M → qNF R M
     else
       ((q(-$a₂), x₂), k₂) :: sub iR (((a₁, x₁), k₁) :: t₁) t₂
 
-/-- TODO. -/
+/-- Construct the proof that subtracting normal forms computes their difference. -/
 def mkSubProof (iR : Q(Ring $R)) (iMM : Q(LieRing $M)) (iRM : Q(Module $R $M))
     (l₁ l₂ : qNF R M) :
     Q(NF.eval $(l₁.toNF) - NF.eval $(l₂.toNF) = NF.eval $((qNF.sub iR l₁ l₂).toNF)) :=
@@ -370,7 +389,7 @@ variable {iMM : Q(LieRing $M)}
   {u₁ : Level} {R₁ : Q(Type u₁)} {iR₁ : Q(Semiring $R₁)} (iRM₁ : Q(@Module $R₁ $M $iR₁ _))
   {u₂ : Level} {R₂ : Q(Type u₂)} (iR₂ : Q(Semiring $R₂)) (iRM₂ : Q(@Module $R₂ $M $iR₂ _))
 
-/-- TODO. -/
+/-- Move two normal forms to a common scalar ring, retaining proofs of their values. -/
 def matchRings (l₁ : qNF R₁ M) (l₂ : qNF R₂ M) (r : Q($R₂)) (x : Q($M)) :
     MetaM <| Σ u : Level, Σ R : Q(Type u), Σ iR : Q(Semiring $R), Σ _ : Q(@Module $R $M $iR _),
       (Σ l₁' : qNF R M, Q(NF.eval $(l₁'.toNF) = NF.eval $(l₁.toNF)))
@@ -404,10 +423,10 @@ end qNF
 
 variable {M : Q(Type v)}
 
-/-- TODO. -/
+/-- Recursion budget for parsing expressions and comparing their coefficients. -/
 def parseFuel : Nat := 4096
 
-/-- TODO. -/
+/-- Normalize a quoted Lie expression with bounded recursion and prove its value. -/
 def parseAux (fuel : Nat) (iMM : Q(LieRing $M)) (x : Q($M)) :
     AtomD (Σ u : Level, Σ R : Q(Type u), Σ iR : Q(Semiring $R), Σ _ : Q(@Module $R $M $iR _),
       Σ l : qNF R M, Q($x = NF.eval $(l.toNF))) := do
@@ -474,7 +493,7 @@ def parseAux (fuel : Nat) (iMM : Q(LieRing $M)) (x : Q($M)) :
         k)],
         q(NF.atom_eq_eval $x')⟩
 
-/-- TODO. -/
+/-- Normalize a quoted Lie expression using the standard recursion budget. -/
 def parse (iMM : Q(LieRing $M)) (x : Q($M)) :
     AtomD (Σ u : Level, Σ R : Q(Type u), Σ iR : Q(Semiring $R), Σ _ : Q(@Module $R $M $iR _),
       Σ l : qNF R M, Q($x = NF.eval $(l.toNF))) :=
@@ -483,7 +502,7 @@ def parse (iMM : Q(LieRing $M)) (x : Q($M)) :
 /-- Section boundary marker (keeps the proof-size linter happy). -/
 private theorem _marker_after_parse : True := trivial
 
-/-- TODO. -/
+/-- Reduce equality of normal forms to coefficient equalities with bounded recursion. -/
 def reduceCoefficientwiseAux (fuel : Nat) {R : Q(Type u)} {_ : Q(LieRing $M)} {_ : Q(Semiring $R)}
     (iRM : Q(Module $R $M)) (l₁ l₂ : qNF R M) :
     MetaM (List MVarId × Q(v (Sum.inl (NF.eval $(l₁.toNF))) =
@@ -517,14 +536,14 @@ def reduceCoefficientwiseAux (fuel : Nat) {R : Q(Type u)} {_ : Q(LieRing $M)} {_
         let (mvars, pf) ← reduceCoefficientwiseAux fuel iRM (((a₁, x₁), k₁) :: L₁) L₂
         pure (mvar.mvarId! :: mvars, (q(NF.eq_const_cons $x₂ $mvar $pf):))
 
-/-- TODO. -/
+/-- Produce coefficient goals and a proof that solving them equates the normal forms. -/
 def reduceCoefficientwise {R : Q(Type u)} {_ : Q(LieRing $M)} {_ : Q(Semiring $R)}
     (iRM : Q(Module $R $M)) (l₁ l₂ : qNF R M) :
     MetaM (List MVarId × Q(v (Sum.inl (NF.eval $(l₁.toNF))) =
       v (Sum.inl (NF.eval $(l₂.toNF))))) :=
   reduceCoefficientwiseAux parseFuel iRM l₁ l₂
 
-/-- TODO. -/
+/-- Normalize both sides of an equality and replace it with coefficient goals. -/
 def matchScalarsAux (g : MVarId) : AtomD (List MVarId) := do
   let eqData ← do
     match (← g.getType').eq? with
@@ -554,10 +573,10 @@ def matchScalarsAux (g : MVarId) : AtomD (List MVarId) := do
   g.assign q(NF.eq_of_eval_eq_eval $pf₁ $pf₂ $pf₁' $pf₂' $pf)
   return mvars
 
-/-- TODO. -/
+/-- Algebra-map identities used to simplify natural, integer, and rational coefficients. -/
 def algebraMapThms : Array Name := #[``eq_natCast, ``eq_intCast, ``eq_ratCast]
 
-/-- TODO. -/
+/-- Simplify casts and algebra maps in a generated coefficient goal. -/
 def postprocess (mvarId : MVarId) : MetaM MVarId := do
   let mut thms : SimpTheorems := ← NormCast.pushCastExt.getTheorems
   for thm in algebraMapThms do
@@ -568,7 +587,7 @@ def postprocess (mvarId : MVarId) : MetaM MVarId := do
     throwError "internal error in match_scalars_lie tactic: postprocessing should not close goals"
   return r
 
-/-- TODO. -/
+/-- Reduce a Lie equality to coefficient goals and simplify their scalar expressions. -/
 def matchScalars (g : MVarId) : MetaM (List MVarId) := do
   let mvars ← AtomD.run (matchScalarsAux g)
   mvars.mapM postprocess
@@ -582,6 +601,8 @@ and discharges each with `ring`. -/
 elab "module_lie" : tactic => Tactic.liftMetaFinishingTactic fun g ↦ do
   let l ← matchScalars g
   discard <| l.mapM fun mvar ↦ AtomM.run .instances (Ring.proveEq mvar)
+
+end
 
 end Mathlib.Tactic.LieSolver
 

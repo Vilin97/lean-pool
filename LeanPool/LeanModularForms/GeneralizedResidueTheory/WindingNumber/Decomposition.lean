@@ -3,8 +3,17 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.CrossingAnalysis
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Winding Number: H-W Decomposition Theorems
@@ -22,6 +31,8 @@ winding contribution and crossing angle contributions.
 * `generalizedWindingNumber_eq_neg_half_smooth_crossing` — smooth crossing gives -1/2
 * `windingNumberWithAngles_union` — additivity over disjoint crossings
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

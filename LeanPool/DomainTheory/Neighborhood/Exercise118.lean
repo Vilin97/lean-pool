@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.IntervalCases
@@ -35,6 +36,8 @@ with
 Constructive (`[propext, Quot.sound]`) except the counterexample's finite
 case-analysis.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

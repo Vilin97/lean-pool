@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example61
-import LeanPool.DomainTheory.Neighborhood.Definition72
+public import LeanPool.DomainTheory.Neighborhood.Example61
+public import LeanPool.DomainTheory.Neighborhood.Definition71
 
 /-!
 # Proposition 7.7 (Scott 1981, PRG-19, §7) — `D^§` is effectively given
@@ -41,6 +42,8 @@ This file builds the construction in milestones:
 `V k ∈ 𝒟^§`),
   `surj` (every `𝒟^§`-neighbourhood is some `V k`), nonemptiness. All choice-free.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

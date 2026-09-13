@@ -3,13 +3,17 @@ Copyright (c) 2026 Andrej Bauer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrej Bauer
 -/
-import Mathlib.Data.SetLike.Basic
-import LeanPool.PartialCombinatoryAlgebras.Basic
-import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
+module
+
+public import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-! We derive from a given section-retraction `List α → α` the
     combinatory algebra structure on `Set α`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.LikelihoodRatio
+module
+
+public import LeanPool.Feige.LikelihoodRatio
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Log-concavity of scaled one-sided exponential densities
@@ -12,6 +15,8 @@ The common part in each insertion edge is a convolution of positive and
 negative scaled exponentials.  This file verifies the four-point
 log-concavity condition for each individual one-sided exponential factor.
 -/
+
+@[expose] public section
 
 open scoped ENNReal
 

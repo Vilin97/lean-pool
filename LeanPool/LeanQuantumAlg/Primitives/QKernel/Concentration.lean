@@ -6,12 +6,10 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Util.Concentration
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-public import Mathlib.MeasureTheory.Integral.Pi
-public import Mathlib.MeasureTheory.Constructions.Pi
-public import Mathlib.Tactic.Common
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Integral.Pi
 /-!
 # Exponential concentration of the tensor-product RY quantum kernel
 

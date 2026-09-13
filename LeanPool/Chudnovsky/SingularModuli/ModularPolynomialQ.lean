@@ -3,8 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.CosetOrbit
+public import LeanPool.Chudnovsky.SingularModuli.CosetOrbit
+import LeanPool.Chudnovsky.Ramanujan
 import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
 
 /-!
@@ -59,6 +61,8 @@ The whole file is **sorry-free**. The gated pieces, with routes, are documented 
    `q`-Laurent expansion with `ℚ`-coefficients and finite pole order) — the input to `PhiQ`,
    documented at `PhiQ`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

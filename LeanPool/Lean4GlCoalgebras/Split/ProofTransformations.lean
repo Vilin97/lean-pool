@@ -3,17 +3,25 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import Mathlib.Data.Fintype.Defs
-import Mathlib.Data.Sigma.Lex
-import LeanPool.Lean4GlCoalgebras.Split.Proof
-import LeanPool.Lean4GlCoalgebras.Split.CutProof
+public import Mathlib.Data.Sigma.Lex
+public import LeanPool.Lean4GlCoalgebras.Split.Proof
+public import LeanPool.Lean4GlCoalgebras.Split.CutProof
+import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Defining GL-ext+pre proof system.
 
 Here we define the GL-ext+pre system. This system is different from the paper, where we build in
 how we connect non-axiomatic leaf nodes into `RuleApp` directly.
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 
@@ -876,6 +884,15 @@ noncomputable def proofTransformation {𝕏 : Proof} {σ}
     ExtSkip.Proof :=
   { X := (y : 𝕏.X) × (partialProof y).X
     α := proofTransformationMap partialProof
-    step := proofTransformation_step partialProof root_prop
-    path := proofTransformation_path partialProof box_prop }
+    step := by exact proofTransformation_step partialProof root_prop
+    path := by exact proofTransformation_path partialProof box_prop }
+
+/-- A relation that strictly increases a finite preorder has no infinite paths. -/
+theorem noInfinitePathOfIncreasing {α : Type*} [Preorder α] [Finite α]
+    {relation : α → α → Prop} {f : ℕ → α}
+    (path : ∀ k, relation (f k) (f (k + 1)))
+    (increasing : ∀ i j, relation i j → i < j) : False :=
+  not_injective_infinite_finite f
+    (strictMono_nat_of_lt_succ fun k => increasing _ _ (path k)).injective
+
 end Lean4GlCoalgebras

@@ -3,15 +3,16 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Criterion.PAC
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
-import LeanPool.FormalLearningTheory.Complexity.Rademacher
-import LeanPool.FormalLearningTheory.Complexity.Structures
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.Complexity.Compression
-import LeanPool.FormalLearningTheory.Complexity.Symmetrization
-import LeanPool.FormalLearningTheory.Bridge
-import LeanPool.FormalLearningTheory.Complexity.Measurability
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Rademacher
+public import LeanPool.FormalLearningTheory.Complexity.Compression
+public import LeanPool.FormalLearningTheory.Bridge
+public import LeanPool.FormalLearningTheory.Complexity.Measurability
+import LeanPool.FormalLearningTheory.Complexity.GeneralizationResults
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # PAC Learning Theorems
@@ -44,6 +45,8 @@ The reverse direction PACLearnable → VCDim < ∞ uses a probabilistic
 construction: if VCDim = ∞, construct a distribution D where any learner
 fails with probability > δ for some ε.
 -/
+
+@[expose] public section
 
 universe u v
 

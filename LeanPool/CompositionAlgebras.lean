@@ -3,18 +3,25 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
+module
 
-import LeanPool.CompositionAlgebras.Octonions
-import LeanPool.CompositionAlgebras.OctonionTrace
-import LeanPool.CompositionAlgebras.OctonionNucleus
-import LeanPool.CompositionAlgebras.OctonionModule
-import LeanPool.CompositionAlgebras.Composition.Defs
-import LeanPool.CompositionAlgebras.Composition.Instances
-import LeanPool.CompositionAlgebras.Composition.Doubling
-import LeanPool.CompositionAlgebras.Composition.CayleyDickson
-import LeanPool.CompositionAlgebras.Composition.Hurwitz
-import LeanPool.CompositionAlgebras.Composition.Isomorphisms
-import LeanPool.CompositionAlgebras.Composition.Classification
+public import LeanPool.CompositionAlgebras.Octonions
+public import LeanPool.CompositionAlgebras.OctonionTrace
+public import LeanPool.CompositionAlgebras.OctonionNucleus
+public import LeanPool.CompositionAlgebras.OctonionModule
+public import LeanPool.CompositionAlgebras.Composition.Defs
+public import LeanPool.CompositionAlgebras.Composition.Instances
+public import LeanPool.CompositionAlgebras.Composition.Doubling
+public import LeanPool.CompositionAlgebras.Composition.CayleyDickson
+public import LeanPool.CompositionAlgebras.Composition.Hurwitz
+public import LeanPool.CompositionAlgebras.Composition.Isomorphisms
+public import LeanPool.CompositionAlgebras.Composition.Classification
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Hurwitz's Classification of Euclidean Composition Algebras
@@ -26,6 +33,8 @@ Main declarations: `CompositionAlgebra.hurwitz_classification`
 Tags: nonassociative-algebra, composition-algebras, octonions, hurwitz-theorem, cayley-dickson
 MSC: 17A75, 17A35, 11E88
 -/
+
+@[expose] public section
 
 /-!
 # Euclidean composition algebras over `ℝ`

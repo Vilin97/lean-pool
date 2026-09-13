@@ -3,7 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.StarCondition
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.CofinalFiber
 import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.WORealization
 /-!
 # The closure fields (issue #12, commit 4b part 3 — Exercise 4.28)
 
@@ -19,6 +26,8 @@ changes nothing); the genuine extensions go through `WOMem.extend`, whose three 
 `GenU` reachability lemmas, the `sentenceJConsts` monotonicity calculus, and the
 `StarWitness` operations of the previous commits.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

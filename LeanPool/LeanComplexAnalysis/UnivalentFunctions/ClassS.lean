@@ -3,16 +3,13 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Defs
-import Mathlib.Analysis.Calculus.DSlope
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.Complex.CauchyIntegral
+module
+
+public import Mathlib.Analysis.Calculus.DSlope
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.Complex.RemovableSingularity
-import Mathlib.Tactic.LinearCombination
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Univalent Function Classes: classS and classSigma
@@ -27,6 +24,8 @@ univalent functions on the exterior of the closed unit disk with the expansion
 
 - If `f` is in `classS`, then `g(z) = 1/f(1/z)` is in `classSigma`; `inv_f_inv_in_Sigma`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanComplexAnalysis
 

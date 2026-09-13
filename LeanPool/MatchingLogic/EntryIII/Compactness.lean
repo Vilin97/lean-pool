@@ -3,13 +3,16 @@ Copyright (c) 2026 Aurélien Eveil. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
+module
 
-import LeanPool.MatchingLogic.Semantics
-import Mathlib.ModelTheory.Satisfiability
+public import LeanPool.MatchingLogic.Semantics
+public import Mathlib.ModelTheory.Satisfiability
 
 /-!
 # MatchingLogic.EntryIII.Compactness
 -/
+
+@[expose] public section
 
 namespace MatchingLogic.EntryIII
 

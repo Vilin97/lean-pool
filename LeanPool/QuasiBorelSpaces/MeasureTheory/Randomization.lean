@@ -3,22 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Sigmoid
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Cases
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.MeasureTheory.Measure.Restrict
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-import LeanPool.QuasiBorelSpaces.MeasureTheory.Option
-import LeanPool.QuasiBorelSpaces.MeasureTheory.StandardBorelSpace
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Randomization`.
 -/
+
+@[expose] public section
 
 
 open scoped unitInterval
@@ -107,8 +104,10 @@ lemma volume_restrict_normalize : volume.restrict (Set.Ico 0 (1 : I)) = volume :
   apply MeasureTheory.measure_inter_conull
   simp_all
 
-private noncomputable def packI [StandardBorelSpace A] : A → I := unpack ∘ pack
-private noncomputable def unpackI [StandardBorelSpace A] [Nonempty A] : I → A := unpack ∘ pack
+/-- Encode a standard Borel space into the unit interval. -/
+noncomputable def packI [StandardBorelSpace A] : A → I := unpack ∘ pack
+/-- Decode the unit-interval representation of a nonempty standard Borel space. -/
+noncomputable def unpackI [StandardBorelSpace A] [Nonempty A] : I → A := unpack ∘ pack
 
 @[local simp, local fun_prop]
 private lemma measurable_packI [StandardBorelSpace A] : Measurable (packI (A := A)) := by

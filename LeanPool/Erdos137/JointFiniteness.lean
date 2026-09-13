@@ -3,10 +3,12 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Finiteness
-import LeanPool.Erdos137.Base
-import LeanPool.Erdos137.BlockFramework
+public import LeanPool.Erdos137.BlockFramework
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: per-`k` non-powerfulness via the triple tiling (g = 3 instance)
@@ -78,6 +80,8 @@ The unconditional Erdős #137 remains open, as does abc. The crude `g = 3` tripl
 unconditional squarefree-value count for `n < k^{5+δ}` would give full joint `(n, k)` finiteness.
 That last unconditional input (Pandey) is not formalized here.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

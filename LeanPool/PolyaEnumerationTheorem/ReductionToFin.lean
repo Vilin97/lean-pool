@@ -3,8 +3,14 @@ Copyright (c) 2026 Luka Opravš. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luka Opravš
 -/
-import Mathlib.Data.FinEnum
-import LeanPool.PolyaEnumerationTheorem.Basic
+module
+
+public import Mathlib.Data.FinEnum
+public import LeanPool.PolyaEnumerationTheorem.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Reduction to `Fin`
@@ -14,6 +20,8 @@ under the group action of `G` on `X` is equal to the number of distinct coloring
 colors in `Y` under the induced group action of `G` on `Fin n`. This allows us to use `Fin n`
 instead of more complex types when working with numbers of distinct colorings.
 -/
+
+@[expose] public section
 
 universe u v w
 
@@ -49,10 +57,10 @@ private lemma smul_inv_fin (g : G) (i : Fin enum.card) :
   rw [smul_fin_eq, enum.equiv.symm_apply_apply]
 
 /-- Forward map: a coloring of `X` to a coloring of `Fin enum.card`. -/
-private def fwdColoring (f : X → Y) : Fin enum.card → Y := fun i => f (enum.equiv.symm i)
+def fwdColoring (f : X → Y) : Fin enum.card → Y := fun i => f (enum.equiv.symm i)
 
 /-- Inverse map: a coloring of `Fin enum.card` to a coloring of `X`. -/
-private def invColoring (f : Fin enum.card → Y) : X → Y := fun x => f (enum.equiv x)
+def invColoring (f : Fin enum.card → Y) : X → Y := fun x => f (enum.equiv x)
 
 private lemma fwd_inv (f : X → Y) : invColoring X Y (fwdColoring X Y f) = f := by
   funext x

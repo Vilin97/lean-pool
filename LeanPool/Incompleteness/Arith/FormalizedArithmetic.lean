@@ -3,14 +3,20 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Proof.Typed
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+public import Mathlib.Algebra.Order.Sub.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-!
 
 # Formalized Theory $\mathsf{R_0}$
 
 -/
+
+@[expose] public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -88,7 +94,8 @@ lemma «eq_refl!» (t : ⌜ℒₒᵣ⌝.Term) : T ⊢! t =' t := ⟨eqRefl T t�
 noncomputable def replace (φ : ⌜ℒₒᵣ⌝.Semiformula (0 + 1)) (t u : ⌜ℒₒᵣ⌝.Term) :
     T ⊢ t =' u ==> φ^/[t.sing] ==> φ^/[u.sing] := by
   have : T ⊢ (#'1 =' #'0 ==> φ^/[(#'1).sing] ==> φ^/[(#'0).sing]).all.all := R₀Theory.replace φ
-  have := by simpa using specialize this t
+  have := specialize this t
+  simp only [LO.Arith.substs₁_all] at this
   simpa [Language.SemitermVec.q_of_pos, Language.Semiformula.substs₁,
     Language.TSemifromula.substs_substs] using specialize this u
 

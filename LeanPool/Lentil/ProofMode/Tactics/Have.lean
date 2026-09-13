@@ -3,9 +3,15 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
+module
+
+
+public import LeanPool.Lentil.ProofMode.Tactics.Rename
 import LeanPool.Lentil.ProofMode.Tactics.Clear
-import LeanPool.Lentil.ProofMode.Tactics.Specialize
-import LeanPool.Lentil.Expr
+public import LeanPool.Lentil.ProofMode.Tactics.Specialize
+import LeanPool.Lentil.Rules.Basic
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -84,9 +90,9 @@ outside `tla_specialize` is finding the first prefix that elaborates as a TLA
 theorem.
 -/
 
-private def haveTacDSimps : Array Name := #[``List.cons_append, ``List.nil_append]
+private meta def haveTacDSimps : Array Name := #[``List.cons_append, ``List.nil_append]
 
-private def addValidTermHyp (newHypName : String) (tm : Term) : TacticM Unit := do
+private meta def addValidTermHyp (newHypName : String) (tm : Term) : TacticM Unit := do
   let e ← Term.withoutErrToSorry <| Term.elabTermAndSynthesize tm none
   Term.synthesizeSyntheticMVarsNoPostponing
   let ty ← inferType e >>= instantiateMVars
@@ -133,7 +139,7 @@ private def addValidTermHyp (newHypName : String) (tm : Term) : TacticM Unit := 
   replaceMainGoal goals
   postDSimpAfterApplyingReflectionTheorem haveTacDSimps
 
-private def addTheoremPrefix (newHypName : String) (head : Term) (usedArgs : Array Term) (restArgs : List Term) : TacticM (List Term) := do
+private meta def addTheoremPrefix (newHypName : String) (head : Term) (usedArgs : Array Term) (restArgs : List Term) : TacticM (List Term) := do
   let candidate := Syntax.mkApp head usedArgs
   (do
     addValidTermHyp newHypName candidate
@@ -144,7 +150,7 @@ private def addTheoremPrefix (newHypName : String) (head : Term) (usedArgs : Arr
     addTheoremPrefix newHypName head (usedArgs.push arg) args)
 
 /-- Introduce a new proof-mode hypothesis proved by the given term. -/
-def tlaHaveTerm (newHypName : String) (tm : Term) : TacticM Nat := withMainContext do
+meta def tlaHaveTerm (newHypName : String) (tm : Term) : TacticM Nat := withMainContext do
   (do
     let some hypsLen ← goalHypsLength | throwError "tla_have: goal is not an Entails sequent"
     addValidTermHyp newHypName tm
@@ -236,7 +242,7 @@ available with an extra temporal hypothesis `h : p ∧ q`.
 -/
 syntax (name := tlaSufficesTac) "tla_suffices" (ppSpace colGt ident) " : " tlafml " by " tacticSeq : tactic
 
-private def haveOrSufficesCommon (h : Ident) (fml : TSyntax `tlafml) : TacticM Unit := do
+private meta def haveOrSufficesCommon (h : Ident) (fml : TSyntax `tlafml) : TacticM Unit := do
   let nameStr := toString h.getId
   let fmlTerm ← TLA.syntaxTlafmlToTerm fml
   evalTactic <| ← `(tactic|
@@ -255,7 +261,10 @@ elab_rules : tactic
     haveOrSufficesCommon h fml
     -- Swap so the `Entails (hyps ++ …) goal` goal is focused, clean up the `++`,
     -- then close it with the user's tac.
-    evalTactic <| ← `(tactic| swap)
+    let goals ← getGoals
+    match goals with
+    | first :: second :: rest => setGoals (second :: first :: rest)
+    | _ => throwError "tla_suffices expected two goals"
     postDSimpAfterApplyingReflectionTheorem haveTacDSimps
     Tactic.focusAndDone <| evalTactic <| ← `(tactic| ($tac))
     -- Remaining main goal: `Entails hyps fml` (no `++` to clean).

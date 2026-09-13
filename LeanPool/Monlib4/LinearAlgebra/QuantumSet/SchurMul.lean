@@ -3,10 +3,14 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-import Mathlib.RingTheory.Coalgebra.Basic
-import Mathlib.RingTheory.Coalgebra.Hom
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+public import Mathlib.RingTheory.Coalgebra.Hom
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Schur Product Operator
@@ -16,6 +20,8 @@ operator.  The deeper upstream Schur-product theorem stack depends on the finite
 Hilbert-algebra coalgebra instance and tensor-product infrastructure that are not yet recovered
 in the current monlib4 slice.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct BigOperators
 
@@ -148,17 +154,9 @@ theorem bra_comp_linearMap {𝕜 E₁ E₂ : Type*} [RCLike 𝕜]
     [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [NormedAddCommGroup E₂]
     [InnerProductSpace 𝕜 E₂] [FiniteDimensional 𝕜 E₁] [FiniteDimensional 𝕜 E₂]
     (x : E₂) (f : E₁ →ₗ[𝕜] E₂) :
-    (bra 𝕜 x).toLinearMap.comp f = (bra 𝕜 (LinearMap.adjoint f x)).toLinearMap :=
-  letI := FiniteDimensional.complete 𝕜 E₁
-  letI := FiniteDimensional.complete 𝕜 E₂
-  calc
-    (bra 𝕜 x).toLinearMap ∘ₗ f =
-        ((bra 𝕜 x) ∘L LinearMap.toContinuousLinearMap f).toLinearMap := rfl
-    _ =
-        (bra 𝕜
-          (ContinuousLinearMap.adjoint (LinearMap.toContinuousLinearMap f) x)).toLinearMap := by
-          rw [bra_comp_continuousLinearMap]
-    _ = (bra 𝕜 (LinearMap.adjoint f x)).toLinearMap := rfl
+    (bra 𝕜 x).toLinearMap.comp f = (bra 𝕜 (LinearMap.adjoint f x)).toLinearMap := by
+  ext y
+  exact (LinearMap.adjoint_inner_left f y x).symm
 
 theorem linearMap_comp_ket {𝕜 E₁ E₂ : Type*} [RCLike 𝕜]
     [NormedAddCommGroup E₁] [InnerProductSpace 𝕜 E₁] [NormedAddCommGroup E₂]
@@ -210,60 +208,26 @@ theorem schurMul_one_one_left (x : A →ₗ[ℂ] B) :
 theorem schurMul_one_right_rankOne (a b : A) :
     (rankOne ℂ a b).toLinearMap •ₛ (1 : A →ₗ[ℂ] A) =
       lmul a ∘ₗ LinearMap.adjoint (lmul b) := by
-  let e := stdOrthonormalBasis ℂ A
-  calc
-    (rankOne ℂ a b).toLinearMap •ₛ (1 : A →ₗ[ℂ] A)
-        = (rankOne ℂ a b).toLinearMap •ₛ
-            (∑ i, (rankOne ℂ (e i) (e i)).toLinearMap) := by
-          rw [rankOne.sum_orthonormalBasis_eq_id_lm e]
-    _ = ∑ i, (rankOne ℂ (a * e i) (b * e i)).toLinearMap := by
-          rw [map_sum]
-          apply Finset.sum_congr rfl
-          intro i _
-          rw [schurMul.apply_rankOne]
-    _ = ∑ i, lmul a ∘ₗ
-          ((rankOne ℂ (e i) (e i)).toLinearMap ∘ₗ LinearMap.adjoint (lmul b)) := by
-          apply Finset.sum_congr rfl
-          intro i _
-          rw [LinearMap.rankOne_comp', LinearMap.comp_rankOne]
-          rfl
-    _ = lmul a ∘ₗ
-          ((∑ i, (rankOne ℂ (e i) (e i)).toLinearMap) ∘ₗ
-            LinearMap.adjoint (lmul b)) := by
-          rw [← LinearMap.comp_sum, ← LinearMap.sum_comp]
-    _ = lmul a ∘ₗ LinearMap.adjoint (lmul b) := by
-          rw [rankOne.sum_orthonormalBasis_eq_id_lm e]
-          ext x
-          rfl
+  trans lmul a ∘ₗ ((1 : A →ₗ[ℂ] A) ∘ₗ LinearMap.adjoint (lmul b))
+  · simp only [← rankOne.sum_orthonormalBasis_eq_id_lm (stdOrthonormalBasis ℂ A),
+      map_sum, LinearMap.sum_comp, LinearMap.comp_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    rw [schurMul.apply_rankOne, LinearMap.rankOne_comp', LinearMap.comp_rankOne]
+    rfl
+  · rfl
 
 theorem schurMul_one_left_rankOne (a b : A) :
     (1 : A →ₗ[ℂ] A) •ₛ (rankOne ℂ a b).toLinearMap =
       rmul a ∘ₗ LinearMap.adjoint (rmul b) := by
-  let e := stdOrthonormalBasis ℂ A
-  calc
-    (1 : A →ₗ[ℂ] A) •ₛ (rankOne ℂ a b).toLinearMap
-        = (∑ i, (rankOne ℂ (e i) (e i)).toLinearMap) •ₛ
-            (rankOne ℂ a b).toLinearMap := by
-          rw [rankOne.sum_orthonormalBasis_eq_id_lm e]
-    _ = ∑ i, (rankOne ℂ (e i * a) (e i * b)).toLinearMap := by
-          rw [map_sum, LinearMap.sum_apply]
-          apply Finset.sum_congr rfl
-          intro i _
-          rw [schurMul.apply_rankOne]
-    _ = ∑ i, rmul a ∘ₗ
-          ((rankOne ℂ (e i) (e i)).toLinearMap ∘ₗ LinearMap.adjoint (rmul b)) := by
-          apply Finset.sum_congr rfl
-          intro i _
-          rw [LinearMap.rankOne_comp', LinearMap.comp_rankOne]
-          rfl
-    _ = rmul a ∘ₗ
-          ((∑ i, (rankOne ℂ (e i) (e i)).toLinearMap) ∘ₗ
-            LinearMap.adjoint (rmul b)) := by
-          rw [← LinearMap.comp_sum, ← LinearMap.sum_comp]
-    _ = rmul a ∘ₗ LinearMap.adjoint (rmul b) := by
-          rw [rankOne.sum_orthonormalBasis_eq_id_lm e]
-          ext x
-          rfl
+  trans rmul a ∘ₗ ((1 : A →ₗ[ℂ] A) ∘ₗ LinearMap.adjoint (rmul b))
+  · simp only [← rankOne.sum_orthonormalBasis_eq_id_lm (stdOrthonormalBasis ℂ A),
+      map_sum, LinearMap.sum_apply, LinearMap.sum_comp, LinearMap.comp_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    rw [schurMul.apply_rankOne, LinearMap.rankOne_comp', LinearMap.comp_rankOne]
+    rfl
+  · rfl
 
 theorem schurMul_adjoint (x y : A →ₗ[ℂ] B) :
     LinearMap.adjoint (x •ₛ y) = LinearMap.adjoint x •ₛ LinearMap.adjoint y := by
@@ -284,19 +248,11 @@ theorem schurMul_real {A B : Type*} [starAlgebra A] [starAlgebra B]
 theorem Psi.schurMul {A B : Type*} [starAlgebra A] [starAlgebra B]
     [hA : QuantumSet A] [QuantumSet B] (r₁ r₂ : ℝ) (f g : A →ₗ[ℂ] B) :
     hA.Psi r₁ r₂ (f •ₛ g) = hA.Psi r₁ r₂ f * hA.Psi r₁ r₂ g := by
-  suffices ∀ (a c : B) (b d : A),
-      hA.Psi r₁ r₂ ((rankOne ℂ a b).toLinearMap •ₛ (rankOne ℂ c d).toLinearMap) =
-        hA.Psi r₁ r₂ (rankOne ℂ a b).toLinearMap *
-          hA.Psi r₁ r₂ (rankOne ℂ c d).toLinearMap by
-    obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne f
-    obtain ⟨γ, δ, rfl⟩ := LinearMap.exists_sum_rankOne g
-    simp only [map_sum, LinearMap.sum_apply, Finset.mul_sum, Finset.sum_mul]
-    simp_all
-  intro a c b d
-  rw [schurMul.apply_rankOne]
-  repeat rw [QuantumSet.Psi_apply]
-  repeat rw [QuantumSet.PsiToFun_apply]
-  simp_all
+  obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne f
+  obtain ⟨γ, δ, rfl⟩ := LinearMap.exists_sum_rankOne g
+  simp only [map_sum, LinearMap.sum_apply, Finset.mul_sum, Finset.sum_mul]
+  simp_rw [schurMul.apply_rankOne, QuantumSet.Psi_apply, QuantumSet.PsiToFun_apply,
+    map_mul, StarMul.star_mul, MulOpposite.op_mul, Algebra.TensorProduct.tmul_mul_tmul]
 
 theorem schurMul_assoc {A B : Type*} [starAlgebra A] [starAlgebra B]
     [hA : QuantumSet A] [QuantumSet B] (f g h : A →ₗ[ℂ] B) :

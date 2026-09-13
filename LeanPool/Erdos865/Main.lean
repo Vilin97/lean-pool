@@ -3,8 +3,15 @@ Copyright (c) 2026 Ricky Cipollini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ricky Cipollini
 -/
+module
+
+public import LeanPool.Erdos865.Defs
 import LeanPool.Erdos865.UpperBound
-import LeanPool.Erdos865.Sharpness
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # A sharp `5/8` bound for Erdős Problem 865
@@ -22,6 +29,8 @@ size forcing such a triple. This file assembles the proof that
 * `Erdos865.sharpness` — for `N = 8M` (`M ≥ 1`) there is a triple-free `A ⊆ [1,N]` with
   `8|A| = 5N + 16`, so the constant `5/8` is optimal.
 -/
+
+@[expose] public section
 
 open Finset
 

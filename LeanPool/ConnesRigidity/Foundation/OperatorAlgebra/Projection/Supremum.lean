@@ -12,9 +12,11 @@ witness, replaced the local multiplication relation by inherited operator
 order, and separated the abstract specification from its concrete proof.
 Paper: §3. See the upstream PORT_MAP.md.
 -/
+module
+
+public import LeanPool.ConnesRigidity.Core
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 import Mathlib.Analysis.InnerProductSpace.StarOrder
-import LeanPool.ConnesRigidity.Core
 
 /-!
 # Projection-supremum transport
@@ -24,6 +26,8 @@ star subalgebras to multiplication, then transports projection suprema across
 star-algebra equivalences. It supplies the normality witness consumed by the
 spatial factor equivalence in Zhou §3.
 -/
+
+@[expose] public section
 
 namespace Connes
 

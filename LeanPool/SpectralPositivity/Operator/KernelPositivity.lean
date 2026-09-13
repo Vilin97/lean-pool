@@ -3,12 +3,12 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.SpectralPositivity.Operator.JentzschProof
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kernel Positivity-Improving Criterion
@@ -34,6 +34,8 @@ This forces K > 0 a.e. on A × B for all such A, B.
 - Reed–Simon IV, Theorem XIII.44
 - Simon, *Functional Integration and Quantum Physics*, Prop. I.12
 -/
+
+@[expose] public section
 
 open MeasureTheory Measure Filter
 

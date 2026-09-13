@@ -3,10 +3,15 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.RationalPoint
-import LeanPool.CencovPetz.SimplexTopology
-import Mathlib.Analysis.SpecificLimits.Basic
+module
+
+public import LeanPool.CencovPetz.RationalPoint
+public import LeanPool.CencovPetz.SimplexTopology
+import Mathlib.Algebra.Order.Algebra
 import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
 
 
 /-!
@@ -22,6 +27,8 @@ simplex points.
 
 - `CencovPetz.Simplex.dense_setOf_isRational`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

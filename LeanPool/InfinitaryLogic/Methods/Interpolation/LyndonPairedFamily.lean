@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonClosures
-import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonClosures
 /-!
 # The polarity-refined paired family and its cross gates (issue #14, Unit 4a)
 
@@ -37,6 +38,8 @@ carries no polarity content.
 Unit 4b adds the sixteen consistency-property fields, the Henkin completion, and the model
 endpoint.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

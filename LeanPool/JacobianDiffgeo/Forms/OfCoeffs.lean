@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import LeanPool.JacobianDiffgeo.Forms.Analyticity
 
 /-!
 # Constructing holomorphic 1-forms from coefficient data (CC1, design §2.3)
@@ -25,6 +26,8 @@ Main declarations:
   assembled section in ANY maximal-atlas chart.
 * `RS.Form1.ofCoeffs`, `RS.Form1.coeffIn_ofCoeffs`, `RS.Form1.coeffAt_ofCoeffs`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold

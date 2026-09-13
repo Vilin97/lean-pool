@@ -3,9 +3,17 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import LeanPool.AndersonConjecture.Jensen.NSubring
 import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
 import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # GCD complexity measure
@@ -16,6 +24,8 @@ the well-founded measure for the inductive step of the close-up
 construction when n >= 3 generators. Dividing all generators by
 a common prime strictly decreases the complexity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

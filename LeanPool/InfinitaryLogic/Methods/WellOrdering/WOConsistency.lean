@@ -3,8 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.ClosureFields
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
 import LeanPool.InfinitaryLogic.Methods.WellOrdering.BaseMember
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.ClosureFields
 /-!
 # The bundled consistency property and completion endpoint (issue #12, packaging)
 
@@ -26,6 +31,8 @@ Step 5 consumes the returned `S` opaquely: the quotient term model realizes the 
 `q ↦ [ratConst q]` maps the rationals, and membership of every positive diagram atom supplies
 `RelPreserving`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -3,8 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DelaunaySection
+public import LeanPool.PoincareThreeBody.DelaunayActions
+import LeanPool.PoincareThreeBody.DelaunayFlow
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Poisson brackets and the Cartesian Delaunay action map
@@ -12,6 +16,8 @@ import LeanPool.PoincareThreeBody.DelaunaySection
 This file rewrites the physical Poisson bracket with the zero-mass Hamiltonian as contraction of
 the Kepler frequency with the two Poisson brackets against the Cartesian actions `(L,G)`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

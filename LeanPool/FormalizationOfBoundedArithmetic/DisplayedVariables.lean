@@ -3,16 +3,19 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Semantics
-import Mathlib.Tactic.FinCases
-import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
+public import Mathlib.ModelTheory.Syntax
+public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 import LeanPool.FormalizationOfBoundedArithmetic.Register
+import Mathlib.Tactic.FinCases
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
 -/
+
+@[expose] public section
 
 /-- Names used for displayed free variables in formulas. -/
 inductive FvName | x | y | z | X

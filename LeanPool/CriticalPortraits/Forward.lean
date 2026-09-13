@@ -3,9 +3,17 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.Core
-import LeanPool.CriticalPortraits.Portraits
+public import LeanPool.CriticalPortraits.Core
+public import LeanPool.CriticalPortraits.Portraits
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Forward bound (brick 3b): `T P` is level-canonical, for every degree `d`.
@@ -37,6 +45,8 @@ The proof has two parts.
   predecessor immediacy. Assembling the `Family` and applying the master bound at window
   `(0, j]` gives `T_levelCanonical`.
 -/
+
+@[expose] public section
 
 /-! # PART I — Abstract laminar interval family: Kernel + forest recursion.
 

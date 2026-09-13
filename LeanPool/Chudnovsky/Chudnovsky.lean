@@ -3,9 +3,12 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
+public import Mathlib.Analysis.Real.Pi.Chudnovsky
+public import LeanPool.Chudnovsky.Basic
 import LeanPool.Chudnovsky.Coefficients
-import Mathlib.Analysis.Real.Pi.Chudnovsky
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Glue: from Milla's `theohud` to Mathlib's `chudnovskySum = π⁻¹`
@@ -21,6 +24,8 @@ The intermediate milestone `chudnovsky_of_singular_moduli` states the full theor
 the Phase C inputs (`SingularModuli.lean`) as explicit hypotheses: the paper's proof
 minus the literature citations (Silverman II.6.1, II.4.3(b), Buell, Masser Thm. A1).
 -/
+
+@[expose] public section
 
 noncomputable section
 

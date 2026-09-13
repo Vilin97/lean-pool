@@ -3,12 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
-import LeanPool.JacobianDiffgeo.Dbar.Operator
-import LeanPool.JacobianDiffgeo.Cech.Cochains
+public import LeanPool.JacobianDiffgeo.Cech.Cochains
 import LeanPool.JacobianDiffgeo.Cech.Refinement
-import LeanPool.JacobianDiffgeo.Meromorphic
+import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Disk acyclicity of `𝒪_D` (`Jacobian/Dbar/DiskAcyclic.lean`)
@@ -30,6 +34,8 @@ independent construction (one-directional twisted cochain maps commuting with `d
 below is a complete, self-contained, fully admitted-free proof of disk acyclicity for the
 structure sheaf, which is the piece the design flags as needed with "no compactness".
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology TopologicalSpace

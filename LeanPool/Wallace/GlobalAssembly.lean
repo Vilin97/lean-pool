@@ -3,9 +3,18 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.ConcreteClosure
-import LeanPool.Wallace.SeparationInterface
+public import LeanPool.Wallace.ConcreteClosure
+public import LeanPool.Wallace.SeparationInterface
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Inv
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # From the local fusions to the Wallace counterexample
@@ -17,6 +26,8 @@ closure.  The transfinite recursion extends each such character to the whole fre
 makes it admissible at every code.  The resulting characters form a separating family, so the
 minimal construction interface yields the Wallace semigroup.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

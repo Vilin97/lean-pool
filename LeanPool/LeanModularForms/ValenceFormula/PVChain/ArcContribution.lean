@@ -3,10 +3,15 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
-import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
 import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Arc Contribution to the PV Chain
@@ -26,6 +31,8 @@ where `m(ε) → 2`.
 * `arc_cpv_eventually_eq_union` — bridge from `sArcOfS S ∪ sVertOfS S` to `sArcOfS S`
 * `tendsto_pvIntegral_arc_bridge` — final bridge for Assembly.lean
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

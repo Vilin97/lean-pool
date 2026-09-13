@@ -3,14 +3,17 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import LeanPool.Rupert.Basic
+public import LeanPool.Rupert.Basic
 
 /-!
 # LeanPool.Rupert.SnubCube
 
 Imported Lean Pool material for `LeanPool.Rupert.SnubCube`.
 -/
+
+@[expose] public section
 
 namespace SnubCube
 

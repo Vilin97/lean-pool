@@ -3,11 +3,13 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Defs
+public import LeanPool.LehmerE10.Defs
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 import Mathlib.NumberTheory.NumberField.InfinitePlace.Embeddings
 import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
-import Mathlib.Tactic.ComputeDegree
 import Mathlib.Tactic.NormNum.Prime
 
 /-!
@@ -24,6 +26,8 @@ Contents:
     `L` has φ(k) ≤ 10 (cyclotomic = minimal polynomial + degree bound).
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
+
+@[expose] public section
 
 namespace LehmerE10
 

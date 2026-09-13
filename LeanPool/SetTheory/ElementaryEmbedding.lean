@@ -3,7 +3,10 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import LeanPool.SetTheory.Omega
+module
+
+public import LeanPool.SetTheory.Omega
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Elementary embeddings of models of ZF
@@ -11,6 +14,8 @@ import LeanPool.SetTheory.Omega
 This module defines nontrivial elementary embeddings of a model of ZF into itself, their
 critical points, and the basic properties of the iterates of the critical point.
 -/
+
+@[expose] public section
 
 noncomputable section
 

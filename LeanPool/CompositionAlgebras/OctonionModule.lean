@@ -3,9 +3,13 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
+module
+
+public import LeanPool.CompositionAlgebras.Octonions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import LeanPool.CompositionAlgebras.OctonionTrace
 import Mathlib.LinearAlgebra.Dimension.Constructions
-import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!
@@ -34,6 +38,8 @@ is no `Module ℝ Octonion` for `CompositionAlgebra Octonion` to be stated over.
 * `Octonion.re_three_cyc` -- cyclic invariance of `re ((x y) z)`
 * `Octonion.finrank_eq_eight` -- `finrank ℝ 𝕆 = 8`
 -/
+
+@[expose] public section
 
 noncomputable section
 

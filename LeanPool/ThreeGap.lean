@@ -3,10 +3,12 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
-import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
-import LeanPool.ThreeGap.LinftyThreeTorusNine
+public import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
+public import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
+public import LeanPool.ThreeGap.LinftyThreeTorusNine
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Sharp Five-Distance and Sup-Norm Gap Theorems
@@ -18,3 +20,5 @@ Main declarations: `ThreeGap.LinftyRecords3.nine_attained`
 Tags: number-theory, kronecker-sequences, three-gap
 MSC: 11J71
 -/
+
+@[expose] public section

@@ -3,11 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.Relabelling
-import Mathlib.Data.List.Sort
+public import LeanPool.Erdos97ConvexOctagon.Incidence
+public import Mathlib.Data.List.Sublists
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Erdős 97 convex-octagon formalization: Finite Model -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

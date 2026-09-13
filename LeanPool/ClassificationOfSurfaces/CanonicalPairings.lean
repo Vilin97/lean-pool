@@ -3,7 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CanonicalWords
+module
+
+public import LeanPool.ClassificationOfSurfaces.CanonicalWords
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Pairings in canonical normal-form words
@@ -14,6 +20,8 @@ opposite-parameter boundary-seam pairings. The orientable generators are opposit
 `a`-handle, `b`-handle, and boundary-seam pairings. Each pairing appears in both source/target
 orders. The free `h` dart in each boundary block occurs only once and contributes no gluing.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,10 +3,12 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.Sensitivity.Defs
-import LeanPool.Sensitivity.Basic
-import LeanPool.Sensitivity.Multilinear
+module
+
+public import LeanPool.Sensitivity.Multilinear
 import LeanPool.Sensitivity.Main
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Consequences of the Sensitivity Theorem
@@ -19,6 +21,8 @@ of its sensitivity.
 
 * `LeanPoolSensitivity.degree_le_sensitivity_sq` — `f.degree ≤ f.sensitivity^2`.
 -/
+
+@[expose] public section
 
 namespace LeanPoolSensitivity
 

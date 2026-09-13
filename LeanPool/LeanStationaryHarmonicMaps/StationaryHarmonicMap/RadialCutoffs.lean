@@ -3,8 +3,11 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
+module
+
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Radial cutoff packages
@@ -12,6 +15,8 @@ import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
 This module packages the scalar radial cutoffs used to test weak stationarity.
 It is deliberately independent of the later radial integral identities.
 -/
+
+@[expose] public section
 
 noncomputable section
 

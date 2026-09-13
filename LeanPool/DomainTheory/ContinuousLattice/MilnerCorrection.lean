@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.ContinuousLattice.Specialization
+public import LeanPool.DomainTheory.ContinuousLattice.Specialization
 
 /-!
 # March 1972 correction (Scott, pp. 135–136)
@@ -39,6 +40,8 @@ pointwise, so the product (relativized) topology is contained in the Scott
 topology once
 the Milner hypothesis is in place.
 -/
+
+@[expose] public section
 
 namespace Domain.ContinuousLattice
 

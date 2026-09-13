@@ -5,8 +5,8 @@ Authors: Axiom Math
 -/
 module
 
-public import LeanPool.ZetaZeros.Zeta.Basic
-public import LeanPool.ZetaZeros.Zeta.Mass
+public import LeanPool.ZetaZeros.Zeta.Defs
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Properties of the extremal test function

@@ -3,8 +3,9 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.FullTopology
+public import LeanPool.Wallace.FullTopology
 
 /-!
 # Pulling a character package back along an embedding
@@ -14,6 +15,8 @@ additive group `G` embeds in a group `H` carrying a full character package, and 
 limit point for an embedded injective sequence has a chosen preimage in `G`, then the entire
 package pulls back to `G`.
 -/
+
+@[expose] public section
 
 open Filter Topology
 

@@ -3,7 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Equivariance of the local EM quotient (the issue #11 spike)
 
@@ -33,6 +36,8 @@ targeted expanded-language equivariance (`carrierEquiv_funMap` under the renamed
 `structureBase`, and the semantic endpoint `realize_carrierEquiv`: every base-language
 infinitary formula is invariant under the induced automorphism.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 
@@ -189,11 +194,11 @@ private theorem locJRename_locJRename_symm (e : J ≃o J) {α : Type} (t : Λ[[J
   exact locJRename_refl t
 
 /-- The renaming action as an equivalence of closed terms. -/
-private def locJRenameEquiv (e : J ≃o J) : Λ[[J]].Term Empty ≃ Λ[[J]].Term Empty where
+def locJRenameEquiv (e : J ≃o J) : Λ[[J]].Term Empty ≃ Λ[[J]].Term Empty where
   toFun := locJRename Λ J e
   invFun := locJRename Λ J e.symm
-  left_inv t := locJRename_symm_locJRename e t
-  right_inv t := locJRename_locJRename_symm e t
+  left_inv t := by exact locJRename_symm_locJRename e t
+  right_inv t := by exact locJRename_locJRename_symm e t
 
 /-! ## The descended automorphism of the local EM quotient -/
 
@@ -203,8 +208,8 @@ variable {M : Type} [Λ.Structure M]
 local EM quotient by renaming representatives — well-defined by the equivariance gate. -/
 noncomputable def LocalEMContext.carrierEquiv (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) : ctx.Carrier ≃ ctx.Carrier :=
-  Quotient.congr (locJRenameEquiv e) fun t u =>
-    (LocalEMContext.setoid_locJRename_iff Λ J ctx e t u).symm
+  Quotient.congr (locJRenameEquiv e) fun t u => by
+    exact (LocalEMContext.setoid_locJRename_iff Λ J ctx e t u).symm
 
 theorem LocalEMContext.carrierEquiv_mkClass (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) (t : Λ[[J]].Term Empty) :

@@ -3,17 +3,18 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
+
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
 import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
-import Mathlib.GroupTheory.GroupAction.Quotient
-
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

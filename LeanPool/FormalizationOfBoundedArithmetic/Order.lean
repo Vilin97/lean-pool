@@ -3,18 +3,18 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Order
+
+public import LeanPool.FormalizationOfBoundedArithmetic.Syntax
+public import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 import Mathlib.Tactic.FinCases
-
-import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Order
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language.Formula
 

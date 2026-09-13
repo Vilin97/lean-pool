@@ -3,12 +3,20 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.Forms.Finiteness
 import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
-import LeanPool.JacobianDiffgeo.TailDuality
-import LeanPool.JacobianDiffgeo.LaurentTail
-import LeanPool.JacobianDiffgeo.DolbeaultComparison
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the Serre functional (design §4.3, routing decision #2's "honest integration atom")
@@ -45,6 +53,8 @@ checkable against the weak-solution packaging (`LogPiece.lean`/`UpgradeDischarge
 concrete planar Stokes/residue computations — the shape `DolbeaultBridge.lean`'s abstract
 residue-pairing hypothesis does not directly offer.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory

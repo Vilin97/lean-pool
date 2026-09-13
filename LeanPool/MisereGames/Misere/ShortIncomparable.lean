@@ -6,9 +6,11 @@ Authors: Tomasz Maciosowski
 module
 
 import LeanPool.MisereGames.AugmentedForm.Short
-public import LeanPool.MisereGames.AugmentedForm.Lift
-public import LeanPool.MisereGames.Misere.Comparison
-import LeanPool.MisereGames.Misere.LiftIncomparable -- for docs
+public import LeanPool.MisereGames.AugmentedForm
+public import LeanPool.MisereGames.Form.Adjoint
+public import LeanPool.MisereGames.Form.Misere.Outcome
+public import LeanPool.MisereGames.Misere.Universe
+import LeanPool.MisereGames.Misere.Comparison
 
 /-!
 Misere combinatorial games.

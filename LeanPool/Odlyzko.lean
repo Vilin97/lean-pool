@@ -3,8 +3,11 @@ Copyright (c) 2026 The FLT Project. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The FLT Project, √2
 -/
+module
 
-import LeanPool.Odlyzko.ExplicitFormula.PoitouEstimate
+public import LeanPool.Odlyzko.ExplicitFormula.PoitouEstimate
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Poitou's Explicit Odlyzko Bound for Root Discriminants
@@ -16,6 +19,8 @@ Main declarations: `NumberField.Odlyzko.odlyzkoBound`
 Tags: number-theory, discriminants, number-fields, explicit-formula
 MSC: 11R29, 11R42
 -/
+
+@[expose] public section
 
 /-!
 # Odlyzko's bound for totally complex number fields

@@ -3,8 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
-import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Reconstructing functions from a model of the graph axioms (Craig Layer 3, Unit 5b)
 
@@ -20,6 +23,8 @@ occurrence-aware congruence `realize_congr_symbolsIn`, the exact occurrence iden
 `relationsIn_relationalizeFormula`, and Unit 4's `realize_relationalizeFormula`.
 -/
 
+@[expose] public section
+
 namespace FirstOrder.Language
 
 open FirstOrder Structure
@@ -33,7 +38,7 @@ variable {F : Set (Σ n, L.Functions n)} [Countable ↥F]
 
 /-- The function value extracted from a model of the graph axioms: the totality witness for
 `f ∈ F` (unique by functionality), an arbitrary element outside `F`. -/
-private noncomputable def graphValue (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
+noncomputable def graphValue (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
     (f : L.Functions n) (xs : Fin n → M) : M :=
   letI := Classical.dec ((⟨n, f⟩ : Σ n, L.Functions n) ∈ F)
   if h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F then

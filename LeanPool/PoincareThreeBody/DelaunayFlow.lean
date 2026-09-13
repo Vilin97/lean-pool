@@ -3,10 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DelaunayChart
+public import LeanPool.PoincareThreeBody.DelaunayChart
+public import LeanPool.PoincareThreeBody.KeplerFlow
+import LeanPool.PoincareThreeBody.IrrationalTorusFlow
 import LeanPool.PoincareThreeBody.KeplerHamiltonian
-import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # The unperturbed Hamiltonian flow in lifted Delaunay variables
@@ -15,6 +19,8 @@ The lifted Delaunay chart evolves by advancing the mean anomaly at rate `I₁⁻
 rotating periapsis angle at unit speed.  Here we verify directly that this curve satisfies all four
 Hamilton equations for the mass-zero rotating Kepler Hamiltonian.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -3,10 +3,13 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Algebra.Field.ZMod
+module
+
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.GroupTheory.PGroup
+public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.Module.Submodule.Lattice
 import Mathlib.FieldTheory.Finiteness
-import Mathlib.GroupTheory.PGroup
-import Mathlib.GroupTheory.Perm.DomMulAct
 
 /-!
 # Fixed points of 2-groups on 𝔽₂-modules
@@ -24,6 +27,8 @@ The eventual Mathlib home of `fixed_points_nontrivial` and `invariant_submodule_
 not obvious (they sit between `GroupTheory.PGroup`, `RepresentationTheory`, and the linear-algebra
 `Module` files); they are grouped here for now and will be placed during upstreaming.
 -/
+
+@[expose] public section
 
 /-- A `2`-group acting `ZMod 2`-linearly on a nontrivial finite `𝔽₂`-module fixes some nonzero
 vector. -/

@@ -3,19 +3,17 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
-import Mathlib.Algebra.Lie.Basic
-import Mathlib.Algebra.Lie.Abelian
-import Mathlib.LinearAlgebra.AffineSpace.AffineMap
-import Mathlib.Algebra.Lie.DirectSum
-import Mathlib.LinearAlgebra.Determinant
-import Mathlib.LinearAlgebra.Trace
-import LeanPool.LowDimSolvClassification.Semidirect
-import LeanPool.LowDimSolvClassification.GeneralResults
-import LeanPool.LowDimSolvClassification.InstancesConstructions
+module
+
+public import Mathlib.LinearAlgebra.Determinant
+public import Mathlib.LinearAlgebra.Trace
+public import LeanPool.LowDimSolvClassification.InstancesConstructions
 
 /-!
 # LeanPool.LowDimSolvClassification.InstancesLowDim
 -/
+
+@[expose] public section
 
 open Module
 open Submodule

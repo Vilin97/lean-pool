@@ -3,10 +3,12 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
+public import LeanPool.ThreeGap.EuclideanGrowth
 import LeanPool.ThreeGap.EuclideanAngle
 import LeanPool.ThreeGap.EuclideanPacking
-import LeanPool.ThreeGap.EuclideanGrowth
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Euclidean growth inequality `2 qₙ ≤ qₙ₊₅` (`K = 5`) via the planar packing count
@@ -35,6 +37,8 @@ sequence
 `(q, p)` with the defining hypotheses; discharging those for the actual record denominators is the
 remaining instantiation step. Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimApprox
 

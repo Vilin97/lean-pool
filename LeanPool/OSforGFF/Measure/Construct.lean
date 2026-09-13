@@ -3,14 +3,17 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
+public import LeanPool.OSforGFF.Schwinger.Defs
+public import LeanPool.OSforGFF.Measure.Minlos
+public import LeanPool.OSforGFF.Covariance.RealForm
+public import LeanPool.OSforGFF.Measure.MinlosAnalytic
+public import Mathlib.Probability.Distributions.Gaussian.Real
+import LeanPool.OSforGFF.Measure.NuclearSpace
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Probability.Distributions.Gaussian.Fernique
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Schwinger.Defs
-import LeanPool.OSforGFF.Measure.Minlos
-import LeanPool.OSforGFF.Covariance.RealForm
-import LeanPool.OSforGFF.Measure.MinlosAnalytic
 
 /-!
 # GFF Measure Construction via Minlos Theorem
@@ -33,6 +36,8 @@ then using Mathlib's `memLp_id_gaussianReal`.
 - `isGaussianGJ`: characteristic functional Z[J] = exp(−½⟨J,CJ⟩)
 - `constructGaussianMeasureMinlosFree`: the GFF measure for mass m > 0
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex QFT ProbabilityTheory
 open TopologicalSpace SchwartzMap
@@ -116,7 +121,7 @@ noncomputable def constructGaussianMeasureMinlosFree (m : ℝ) [Fact (0 < m)] :
   -- Continuity, symmetry, and normalization
   have h_cont := freeCovarianceFormR_continuous m
   have h_symm : ∀ f, freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f :=
-    freeCovarianceFormR_neg_neg m
+    private_decl% (freeCovarianceFormR_neg_neg m)
   have h_zero : freeCovarianceFormR m (0) (0) = 0 := by simp [freeCovarianceFormR]
   -- Use Minlos: directly obtain a ProbabilityMeasure with the Gaussian characteristic functional
   have h_minlos :=
@@ -156,7 +161,7 @@ theorem gff_real_characteristic (m : ℝ) [Fact (0 < m)] :
     Classical.choose_spec ex4
   have h_cont := freeCovarianceFormR_continuous m
   have h_symm : ∀ f, freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f :=
-    freeCovarianceFormR_neg_neg m
+    private_decl% (freeCovarianceFormR_neg_neg m)
   have h_zero : freeCovarianceFormR m (0) (0) = 0 := by simp [freeCovarianceFormR]
   have h_minlos :=
     gaussian_measure_characteristic_functional
@@ -340,7 +345,7 @@ lemma freeCovarianceFormR_gaussian_cf_pd (m : ℝ) [Fact (0 < m)] :
       freeCovarianceFormR m f f = ‖T f‖^2 :=
     Classical.choose_spec ex4
   have h_symm : ∀ f, freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f :=
-    freeCovarianceFormR_neg_neg m
+    private_decl% (freeCovarianceFormR_neg_neg m)
   exact gaussian_positive_definite_bochner T (freeCovarianceFormR m) h_eq h_symm
 
 /-- The free covariance form as a MinlosAnalytic.CovarianceForm structure. -/

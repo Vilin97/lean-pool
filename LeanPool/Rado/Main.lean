@@ -3,7 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
 import LeanPool.Rado.Surface.Assembly
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Radó's theorem: Riemann surfaces are second countable
@@ -19,6 +24,8 @@ This is the exact statement of
 The real-manifold analogue is false (Prüfer surface, long line), so the proof
 must use the complex structure in an essential way.
 -/
+
+@[expose] public section
 
 theorem rado_riemannSurface {X : Type*} [TopologicalSpace X] [T2Space X]
     [ConnectedSpace X] [ChartedSpace ℂ X]

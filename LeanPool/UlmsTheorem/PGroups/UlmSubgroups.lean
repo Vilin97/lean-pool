@@ -3,10 +3,12 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import Mathlib.SetTheory.Ordinal.Arithmetic
-import Mathlib.Algebra.Group.Subgroup.Map
-import LeanPool.UlmsTheorem.PGroups.Subgroups
+public import Mathlib.SetTheory.Ordinal.Arithmetic
+public import Mathlib.Algebra.Group.Subgroup.Map
+public import LeanPool.UlmsTheorem.PGroups.Subgroups
+import Mathlib.Algebra.Module.NatInt
 
 /-!
 # Ordinal Ulm subgroups
@@ -14,6 +16,8 @@ import LeanPool.UlmsTheorem.PGroups.Subgroups
 This file contains the transfinite Ulm filtration `ulmSubgroup` and its basic
 structural lemmas.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

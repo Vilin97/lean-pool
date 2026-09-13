@@ -3,10 +3,10 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
+public import LeanPool.OSforGFF.GaussianField.Nuclear.DyninMityagin
 import Mathlib.Analysis.Convex.Cone.Extension
-import Mathlib.Analysis.Normed.Group.InfiniteSum
 import Mathlib.Analysis.PSeries
 
 /-!
@@ -39,6 +39,8 @@ DM structure directly from the Hermite basis.
 - Pietsch, "Nuclear Locally Convex Spaces" (1972)
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4
 -/
+
+@[expose] public section
 
 noncomputable section
 

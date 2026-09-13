@@ -3,7 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
 import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian
 import LeanPool.RellichKondrachov.MeasureTheory.Measure.HausdorffVolume
 
@@ -26,6 +30,8 @@ resulting domination by `volume` on chart balls.
  - `RellichKondrachov.Geometry.Manifold.Sobolev.RiemannianFiniteChartData.`
    `volume_restrict_le_chartMeasure`
  -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

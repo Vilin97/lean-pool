@@ -3,9 +3,17 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
-import Mathlib.Algebra.GroupWithZero.Nat
-import Mathlib.Algebra.NeZero
-import Mathlib.Data.Nat.Choose.Sum
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Eulerian Numbers
@@ -22,6 +30,8 @@ the permutations of $\{1,2,\ldots,n\}$ with $k$ ascents — is not formalized he
 
 * [Concrete Mathematics][knuth1989concrete]
 -/
+
+@[expose] public section
 
 namespace SpecialNumbers
 

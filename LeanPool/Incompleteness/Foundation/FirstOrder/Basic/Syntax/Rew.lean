@@ -3,9 +3,13 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Predicate.Rew
-import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Formula
+public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Rew
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Formula
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Rewriting Entailment
@@ -26,6 +30,8 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 `LO.FirstOrder.Rew.hom`.
 
 -/
+
+@[expose] public section
 
 namespace Finset
 

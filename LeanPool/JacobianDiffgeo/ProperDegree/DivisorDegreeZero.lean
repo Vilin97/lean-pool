@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
 import LeanPool.JacobianDiffgeo.MeromorphicTrace.ArgumentPrinciple
-import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `deg(div φ) = 0` and the unconditional `L(D) = 0` for negative degree (proper-map-degree, file 2
@@ -37,6 +40,8 @@ estimate of 40–60 lines (the extra margin is the constancy-translation case sp
   unprimed name is already taken in the same `RS` namespace by that file — cannot rename their
   declaration, `CONVENTIONS.md` rule 4).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter

@@ -3,11 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
 import LeanPool.JacobianDiffgeo.Surface.Bridges
-import Mathlib.Analysis.Normed.Operator.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # Analyticity characterization of holomorphic 1-forms (CC1, design §2.2)
@@ -30,6 +29,8 @@ Main declarations:
   `RS.Form1.continuousOn_coeffIn` — coefficients of holomorphic 1-forms are analytic on chart
   targets (any maximal-atlas chart).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold

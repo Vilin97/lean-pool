@@ -3,7 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
+module
+
+public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
+public import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Order.Lattice.Nat
 /-!
 # Layer 7a: the schema-template Ω-witness bridge
 
@@ -23,6 +28,8 @@ truth of a `canonDeForm` ⇔ its eventual truth on the consecutive deep tuples `
 No enumeration, Zorn, or term model appears here — this is the interface milestone that fixes
 the shape the ω-stage completion (Layer 7b) must produce.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

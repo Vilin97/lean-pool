@@ -3,17 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.MeasureTheory.Integral.IntegrableOn
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Calculus.Deriv.Basic
+public import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.General.FunctionalAnalysis
-import LeanPool.OSforGFF.Spacetime.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 ## SpaceTime-specialized version
@@ -21,6 +16,8 @@ import LeanPool.OSforGFF.Spacetime.Basic
 For SpaceTime = EuclideanSpace ℝ (Fin 4), the time coordinate is accessed via `x 0`.
 This specialized version matches the signature needed in OS3_MixedRepInfra.lean.
 -/
+
+@[expose] public section
 
 open MeasureTheory SchwartzMap Real Set Metric
 open scoped ENNReal

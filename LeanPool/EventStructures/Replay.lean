@@ -3,11 +3,11 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import LeanPool.EventStructures.Basic
-import LeanPool.EventStructures.Configuration
-import LeanPool.EventStructures.Computation
-import LeanPool.EventStructures.Log
-import LeanPool.EventStructures.Trace
+module
+
+public import LeanPool.EventStructures.Log
+public import Mathlib.Order.SetNotation
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Replay
@@ -19,6 +19,8 @@ uniqueness of minimal and maximal replays and *conditional* existence lemmas:
 existence is established relative to a computation compatible with the log that
 reaches the corresponding replay set, not unconditionally.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

@@ -3,17 +3,18 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.NumberTheory.ModularForms.SlashInvariantForms
-import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
-import Mathlib.NumberTheory.ModularForms.Identities
-import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
+public import Mathlib.NumberTheory.ModularForms.SlashInvariantForms
+public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
 
 /-!
 # Identities of ModularForms and SlashInvariantForms
 
 Collection of useful identities of modular forms.
 -/
+
+@[expose] public section
 
 noncomputable section
 

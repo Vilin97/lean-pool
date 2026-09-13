@@ -8,10 +8,20 @@ Copyright (c) 2024 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Jujian Zhang, Kevin Buzzard
 -/
+module
+
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.Data.Matrix.Basic
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
 import LeanPool.BrauerGroupNew.Centralizer
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
 import LeanPool.BrauerGroupNew.Wedderburn
 import Mathlib.Algebra.Central.Basic
+import Mathlib.Data.Rat.Floor
 import Mathlib.RingTheory.Flat.Basic
+import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
+import Mathlib.Tactic.Continuity.Init
 /-!
 # Characteristic predicate for central simple algebras
 In this file we define the predicate `IsCentralSimple K D` where `K` is a field
@@ -22,6 +32,8 @@ This adds an extra layer of complication which we don't need. In fact ideals of 
 immediately give rise to nontrivial quotients of `D` so there are no central simple
 algebras in this case according to our definition.
 -/
+
+@[expose] public section
 universe u v w
 open Module
 variable (K : Type u) [Field K]

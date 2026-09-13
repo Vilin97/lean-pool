@@ -3,16 +3,23 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Rationals
-import LeanPool.ZFLean.Booleans
+public import LeanPool.ZFLean.Booleans
+public import LeanPool.ZFLean.Basic
+public import LeanPool.ZFLean.Integers
 import LeanPool.ZFLean.Tactics
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ZFLean.Functions
 
 Imported Lean Pool material for `LeanPool.ZFLean.Functions`.
 -/
+
+@[expose] public section
 
 namespace ZFSet
 
@@ -740,19 +747,19 @@ def lambda (dom : ZFSet) (ran : ZFSet) (exp : ZFSet → ZFSet) : ZFSet :=
 
 open Lean Parser Term
 /-- Imported ZFLean declaration. -/
-def funZType : Parser :=
+meta def funZType : Parser :=
   ":" >> ppSpace >> termParser leadPrec >> ppSpace >>
     unicodeSymbol "→" "->" >> ppSpace >> termParser leadPrec
 /-- Imported ZFLean declaration. -/
-def funZAlts : Parser :=
+meta def funZAlts : Parser :=
   "|" >> ppSpace >> Term.ident >> ppSpace >> unicodeSymbol "↦" "=>" >> ppSpace >> termParser
 
 /-- Parser for the domain, codomain, binder, and body of ZF function notation. -/
-def basicFunZ : Parser := leading_parser (withAnonymousAntiquot := false)
+meta def basicFunZ : Parser := leading_parser (withAnonymousAntiquot := false)
   ppGroup (ppSpace >> funZType) >> funZAlts
 
 /-- Parser for ZF lambda notation. -/
-@[term_parser] def funZ := leading_parser:maxPrec
+@[term_parser] meta def funZ := leading_parser:maxPrec
   ppAllowUngrouped >> unicodeSymbol "λᶻ" "funᶻ" >> basicFunZ
 
 /--

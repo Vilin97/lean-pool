@@ -3,11 +3,12 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
+module
+
+public import Mathlib.Logic.Equiv.Fin.Basic
+public import LeanPool.Koethe.Linearization.Basic
 import Mathlib.Algebra.Polynomial.Degree.Operations
-import Mathlib.Logic.Equiv.Fin.Basic
 import Mathlib.RingTheory.Nilpotent.Basic
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Linearization.Basic
 
 /-!
 # Root-row pencils and the polynomial root-column argument
@@ -18,6 +19,8 @@ output row by the central polynomial variable. If that matrix is nilpotent,
 root column gives `q = 1 + X * C(x) * q`. The coefficients of this polynomial
 are `x^n`, and their eventual vanishing proves nilpotence of `x`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

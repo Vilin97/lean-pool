@@ -3,12 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateNodeSoundness
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateNodeSoundness
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateManifest
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCoverSoundness
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryValidity
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateValidity
 import LeanPool.Erdos97ConvexOctagon.RowSymmetry
 
 /-! # Soundness of the exhaustive coverage-certificate manifest -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

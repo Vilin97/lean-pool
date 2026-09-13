@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
-import Mathlib.Data.Rat.Encodable
+module
+
+public import Mathlib.Data.Rat.Encodable
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 
 /-!
 # Constant coding for the undefinability of well-ordering (issue #12, commit 1)
@@ -18,6 +20,8 @@ Per the frozen audit (D3): rationals at `2 * Encodable.encode q`, Henkin constan
 This commit is the coding layer only: the two index functions, their injectivity, their
 disjointness, and the term/sentence-level wrappers over the kernel's `constTerm`/`constTermS`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

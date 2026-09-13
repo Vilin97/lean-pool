@@ -3,12 +3,22 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import LeanPool.FrontierMathOpenHypergraphs.Uniform.Frames
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform.Frames
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Nat.Pairing
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The uniform 26/25 factor and the finite bootstrap
 -/
+
+@[expose] public section
 
 namespace HypergraphLowerBound
 

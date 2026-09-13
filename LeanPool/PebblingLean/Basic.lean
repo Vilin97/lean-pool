@@ -3,8 +3,10 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Card
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
@@ -14,6 +16,8 @@ This file sets up the objects that should remain stable throughout the
 formalization: simple undirected graphs, pebbling distributions, legal pebbling
 moves, reachability, solvability, and optimality.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

@@ -3,7 +3,15 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Location
+module
+
+
+public meta import Lean.Elab.Tactic.Basic
+public meta import LeanPool.Lentil.ProofMode.Basic
+public import LeanPool.Lentil.ProofMode.Location
+meta import LeanPool.Lentil.ProofMode.Location
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -24,7 +32,7 @@ For a proof-mode hypothesis at index `i`, the conv path is:
 The goal predicate is just argument 2 of `Entails`.
 -/
 
-private def runConvAtProofModeLocations
+private meta def runConvAtProofModeLocations
     (loc? : Option (TSyntax ``Lean.Parser.Tactic.location))
     (mkConv : TacticM (TSyntax `conv)) : TacticM Unit := do
   let some (_, hyps) ← recognizeEntailsHypsFromGoal

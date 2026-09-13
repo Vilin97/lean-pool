@@ -3,8 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicDyck
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicUnorientedRealization
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicDyck
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicUnorientedRealization
+import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Gallier--Xu cross-cap rewrite
@@ -18,6 +25,8 @@ backwards, exactly as in Gallier--Xu's derivation. The broader
 `UnorientedPresentationIso` makes that face-orientation choice explicit; it is not hidden in the
 ordinary signed edge relabeling.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

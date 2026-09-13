@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Scott.Sentence
 import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
-import LeanPool.InfinitaryLogic.Scott.Sentence
 /-!
 # Arbitrary-target stabilization (issue #17 chunk 5.1)
 
@@ -25,6 +27,8 @@ The generic extension-family bridge (`bfEquiv_all_of_extensionFamily`, the two-s
 of the audited thin bridge) then upgrades stabilized `BFEquiv α` to EVERY ordinal
 (`bfEquiv_all_of_stabilizesCompletely_arbitrary`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

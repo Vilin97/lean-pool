@@ -3,11 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.AnalyticSeries
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.ExactOrder
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
 
 /-!
 # Normalized weighted coefficient sequences
@@ -17,6 +16,8 @@ weight so that the normalized coefficient sequence is strictly close to the
 degree-`d` monomial in the ordinary complex `ℓ¹` norm.  This is the
 Archimedean tail-scaling estimate needed by the Banach-algebra proof.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

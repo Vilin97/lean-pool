@@ -3,10 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
-import Mathlib.Analysis.Real.Pi.Bounds
+public import LeanPool.Chudnovsky.Basic
 import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Estimates for `1728·J` and `s₂` (Milla, arXiv:1809.00533v6, Chapter 5)
@@ -36,6 +37,8 @@ This file states the explicit estimates and `q`-series approximations of Chapter
 
 All estimates hold on `Chudnovsky.Region = {τ | Im τ > 5/4}`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

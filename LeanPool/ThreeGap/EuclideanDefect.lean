@@ -3,9 +3,10 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.EuclideanGrowthFive
-import LeanPool.ThreeGap.DeltaCost
+public import LeanPool.ThreeGap.EuclideanGrowth
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Euclidean approximation defect is attained (the nearest lattice point exists)
@@ -21,6 +22,8 @@ over that finite set realises the infimum.
 
 `deltaN_euclNorm_attained`: `∃ p, euclNorm n (rem α q p) = δ_q`. Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimApprox
 

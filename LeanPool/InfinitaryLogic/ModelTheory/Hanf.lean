@@ -3,9 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import Mathlib.SetTheory.Cardinal.Ordinal
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # Hanf Numbers
 
@@ -35,6 +35,8 @@ arbitrary language — is proved in `Conditional/MorleyHanfSchemaDischarge.lean`
 - [Mar16], §5
 -/
 
+@[expose] public section
+
 universe u v
 
 namespace FirstOrder
@@ -43,7 +45,7 @@ namespace Language
 
 variable {L : Language.{u, v}}
 
-open FirstOrder Structure Cardinal Ordinal
+open FirstOrder Structure Cardinal
 
 /-- A sentence has arbitrarily large models if for every cardinal κ, there
 exists a model of size ≥ κ. -/

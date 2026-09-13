@@ -3,11 +3,11 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini
 -/
-import Mathlib.Combinatorics.SimpleGraph.Clique
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Clique
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 import Mathlib.Combinatorics.SimpleGraph.Metric
-import Mathlib.Combinatorics.SimpleGraph.Paths
-import Mathlib.Data.Set.Finite.Lemmas
-import Mathlib.Tactic.Push
 
 /-!
 # Chordal graphs
@@ -33,6 +33,8 @@ self-contained and depends only on Mathlib.
 * `SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial` — a connected non-complete finite chordal
   graph has two non-adjacent simplicial vertices
 -/
+
+@[expose] public section
 
 namespace SimpleGraph
 

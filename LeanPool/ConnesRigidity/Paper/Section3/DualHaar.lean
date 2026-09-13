@@ -8,13 +8,17 @@ Authors: Utensil Song
 The actual compact dual and normalized Haar measure for Zhou's kernel.
 Paper: §§3--4.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.BinaryPontryaginDual
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalizedHaar
-import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.BinaryPontryaginDual
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalizedHaar
+public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
 
 /-!
 The dual haar component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualHaar

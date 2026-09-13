@@ -3,9 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
+public import LeanPool.PoincareThreeBody.MixedPartials
+public import LeanPool.PoincareThreeBody.Perturbation
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.HomologicalEquation
-import LeanPool.PoincareThreeBody.MixedPartials
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Mixed derivatives of the restricted three-body Hamiltonian
@@ -14,6 +19,8 @@ Joint analyticity permits the mass and phase derivatives of the Hamiltonian to b
 Combining this fact with the explicit mass derivative identifies the Hamiltonian term in
 Poincaré's first homological equation.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

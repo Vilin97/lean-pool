@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
 import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Dolbeault comparison `H¹(X, 𝒪) ≅ H^{0,1}(X)` (`Jacobian/DolbeaultComparison/Comparison.lean`)
@@ -20,6 +25,8 @@ PDE-free at `D = 0`: `H01 X := Form01 X ⧸ range dbar`, the Čech → Dolbeault
 the time of this build `Jacobian/Finiteness/H1Finite.lean` (the file that would discharge this
 hypothesis unconditionally) has not landed; see the unit's build-log entry.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

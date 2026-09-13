@@ -3,7 +3,12 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
+module
+
+meta import Lean.Parser.Term
+import Lean.Parser.Term
+
+@[expose] public section
 
 open Lean
 

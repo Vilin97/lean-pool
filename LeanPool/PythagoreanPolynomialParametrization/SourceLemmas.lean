@@ -3,8 +3,12 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import LeanPool.PythagoreanPolynomialParametrization.Basic
+public import LeanPool.PythagoreanPolynomialParametrization.Basic
+import Mathlib.NumberTheory.PythagoreanTriples
+import Mathlib.NumberTheory.SumFourSquares
+import Mathlib.Tactic.NormNum.Prime
 
 /-! # Source-level handoff lemmas
 
@@ -12,6 +16,8 @@ These declarations mirror the intermediate claims used in the paper's proofs. Th
 kept separate from the explicit polynomial witnesses so each proof obligation has a
 small, source-located target.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 

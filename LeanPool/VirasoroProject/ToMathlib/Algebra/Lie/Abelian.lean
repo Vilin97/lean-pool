@@ -3,11 +3,15 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Lie.Abelian
+module
+
+public import Mathlib.Algebra.Lie.Abelian
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Abelian
 -/
+
+@[expose] public section
 
 instance _root_.CommRing.isLieAbelian (R : Type*) [CommRing R] : IsLieAbelian R where
   trivial c₁ c₂ := by

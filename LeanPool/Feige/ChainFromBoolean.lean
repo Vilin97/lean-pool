@@ -3,8 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.BooleanChain
-import LeanPool.Feige.ChainCalibration
+module
+
+public import LeanPool.Feige.BooleanChain
+public import LeanPool.Feige.ChainCalibration
+public import LeanPool.Feige.TwoPoint
 
 /-!
 # Calibrated statistic sequences along maximal Boolean chains
@@ -14,6 +17,8 @@ extends the resulting finite sequence by zero.  The extension is a
 `CalibratedChain`, so the exact telescoping calibration lemma applies
 immediately.
 -/
+
+@[expose] public section
 
 namespace Feige
 

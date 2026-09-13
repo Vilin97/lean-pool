@@ -3,12 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arith.DC
-import LeanPool.Incompleteness.DC.Basic
-import LeanPool.Incompleteness.Foundation.Modal.Logic.WellKnown
+public import LeanPool.Incompleteness.Arith.DC
+public import LeanPool.Incompleteness.Foundation.Modal.Logic.WellKnown
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Basic -/
+
+@[expose] public section
 
 
 namespace LO

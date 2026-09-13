@@ -3,9 +3,15 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
+module
+
+public import Mathlib.Data.Set.BooleanAlgebra
+public import LeanPool.MRiscX.Elab.HoareElaborator
+public import LeanPool.MRiscX.Hoare.HoareCore
 import LeanPool.MRiscX.Hoare.HoareTheory
-import LeanPool.MRiscX.Delab.DelabHoare
-import Mathlib.Data.Set.BooleanAlgebra
+import LeanPool.MRiscX.Semantics.MsTheory
+import LeanPool.MRiscX.Util.BasicTheorems
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 This file contains the hoare rules from the paper of lundberg et al.
@@ -23,6 +29,8 @@ These statements must be valid in order for the conditions for applying the assu
 
 TODO: prove of S_LOOP
 -/
+
+@[expose] public section
 
 /--
 Allows to weaken the Hoare triple by removing a set

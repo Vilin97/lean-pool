@@ -3,10 +3,19 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean.Meta.Tactic.Generalize
-import Lean.Meta.CollectFVars
-import Lean.Elab.Tactic.Config
+module
+
+
+public import Aesop.BuiltinRules
+public meta import Lean.Elab.ConfigEval.Basic
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Elab.ConfigEval.Commands
+public meta import Lean.Elab.ConfigEval.DeriveEvalConfigItem
+public meta import Lean.Meta.Tactic.Generalize
 import LeanPool.Lentil.ProofMode.Basic
+public meta import LeanPool.Lentil.ProofMode.Basic
+
+public meta section
 
 namespace TLA.ProofMode
 

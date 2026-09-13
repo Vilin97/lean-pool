@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.Defs
-import Mathlib.Geometry.Manifold.MFDeriv.Basic
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
+public import Mathlib.Geometry.Manifold.MFDeriv.Defs
 
 /-!
 # Modified Nesterov Scheme and Supporting Definitions
@@ -17,6 +18,8 @@ Shared definitions for the proof of local accelerated convergence:
 - Fiber-saturated sets
 - Tangent/normal space of an embedded manifold
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,21 +3,17 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
-import Mathlib.Algebra.Lie.Semisimple.Defs
-import Mathlib.Algebra.Lie.Solvable
-import Mathlib.Algebra.Lie.Quotient
-import Mathlib.Algebra.Lie.Nilpotent
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.Data.Set.Card
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Data.Set.Image
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
-import LeanPool.LowDimSolvClassification.GeneralResults
+module
+
+public import LeanPool.LowDimSolvClassification.GeneralResults
 import LeanPool.LowDimSolvClassification.Classification2
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # LeanPool.LowDimSolvClassification.LemmasDim3
 -/
+
+@[expose] public section
 
 open Module
 open Submodule

@@ -3,13 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Basic.Inner
+public import LeanPool.BollobasNikiforov.Basic.Inner
 import LeanPool.BollobasNikiforov.CP.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Topology.Algebra.Monoid
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.Topology.Order.Lattice
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # The matrix `M(X)` of `eq:matrix`
@@ -18,6 +16,8 @@ For a real matrix `X`,
 `M X = X ⊙ X + ∑_{i<j} (if X i j < 0 then (X i j)² else 0) • vecMulVec (e i - e j) (e i - e j)`.
 When `X` is positive semidefinite this is PSD and entrywise nonnegative.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

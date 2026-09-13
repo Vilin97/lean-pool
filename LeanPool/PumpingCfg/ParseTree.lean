@@ -3,8 +3,9 @@ Copyright (c) 2026 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
+module
 
-import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
+public import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
 import LeanPool.PumpingCfg.ToMathlib
 
 /-!
@@ -13,6 +14,8 @@ import LeanPool.PumpingCfg.ToMathlib
 Defines `ChomskyNormalFormGrammar.parseTree`, binary parse trees for grammars in Chomsky
 normal form, together with their yield and the subtree relation used by the pumping argument.
 -/
+
+@[expose] public section
 
 universe uN uT
 

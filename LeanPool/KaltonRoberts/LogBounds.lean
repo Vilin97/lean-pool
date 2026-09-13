@@ -14,6 +14,9 @@ Each log bound is proved using the atanh series:
 The decomposition is `log(z) = e * log(2) + log(y)` where `z = 2^e * y`
 with `1 ≤ y ≤ 2`, and `t = (y-1)/(y+1)`.
 -/
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.ExponentialBounds
 
@@ -23,6 +26,8 @@ import Mathlib.Analysis.Complex.ExponentialBounds
 Numerical logarithm bounds proved via the atanh series and exact rational
 estimates.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

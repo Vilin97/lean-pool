@@ -3,15 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.Calculus.ContDiff.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Mul
-import Mathlib.Analysis.Calculus.FDeriv.Congr
-import Mathlib.Analysis.Calculus.ContDiff.Defs
-import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Measure.Lebesgue.Complex
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
 
 /-!
 # Compat: Leibniz rule, `ContDiffOn` gluing, and the rectangle ↔ iterated-integral bridge
@@ -29,6 +29,8 @@ Unit: planar-stokes-atoms (`docs/design/planar-stokes.md` §5.1). Mathlib-only (
   `AnnulusResidue.lean`'s Step 3) and as the exported compact-support corollary
   `integral_eq_intervalIntegral_of_tsupport_subset_reProdIm`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter
 

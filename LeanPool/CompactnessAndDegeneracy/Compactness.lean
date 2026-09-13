@@ -3138,9 +3138,11 @@ private theorem common_neighbor_unique_of_four_cycle_free
   let f : Fin 4 → V := ![u, x, v, y]
   refine ⟨⟨⟨f, ?_⟩, ?_⟩⟩
   · intro i j hij
-    fin_cases i <;> fin_cases j <;>
-      simp only [f, Fin.isValue, Fin.zero_eta,
-        Matrix.cons_val_zero] <;>
+    have hj : j = i - 1 ∨ j = i + 1 := by
+      simpa only [SimpleGraph.cycleGraph_neighborSet, Set.mem_insert_iff,
+        Set.mem_singleton_iff] using
+        (show j ∈ (SimpleGraph.cycleGraph 4).neighborSet i from hij)
+    rcases hj with rfl | rfl <;> fin_cases i <;>
       first
       | exact hux
       | exact hux.symm
@@ -3150,12 +3152,9 @@ private theorem common_neighbor_unique_of_four_cycle_free
       | exact huy.symm
       | exact hvy
       | exact hvy.symm
-      | exact False.elim ((of_decide_eq_false rfl) hij)
-  · intro i j hij
-    fin_cases i <;> fin_cases j <;>
-      simp [f, huv, huv.symm, hxy, Ne.symm hxy,
-        hux.ne, hux.symm.ne, hvx.ne, hvx.symm.ne,
-        huy.ne, huy.symm.ne, hvy.ne, hvy.symm.ne] at hij ⊢
+  · change Function.Injective f
+    simp only [f, Matrix.vecCons, Fin.cons_injective_iff]
+    simp [huv, hxy, hux.ne, huy.ne, hvx.symm.ne, hvy.ne, Function.Injective]
 
 private def CommonNeighborRelated {V : Type*} (G : SimpleGraph V)
     (u v : V) : Prop :=
@@ -3228,9 +3227,11 @@ private theorem common_neighbors_triangle_eq_of_cycle_free
   let f : Fin 6 → V := ![u, a, v, b, w, c]
   refine ⟨⟨⟨f, ?_⟩, ?_⟩⟩
   · intro i j hij
-    fin_cases i <;> fin_cases j <;>
-      simp only [f, Fin.isValue, Fin.zero_eta,
-        Matrix.cons_val_zero] <;>
+    have hj : j = i - 1 ∨ j = i + 1 := by
+      simpa only [SimpleGraph.cycleGraph_neighborSet, Set.mem_insert_iff,
+        Set.mem_singleton_iff] using
+        (show j ∈ (SimpleGraph.cycleGraph 6).neighborSet i from hij)
+    rcases hj with rfl | rfl <;> fin_cases i <;>
       first
       | exact hua
       | exact hua.symm
@@ -3244,15 +3245,10 @@ private theorem common_neighbors_triangle_eq_of_cycle_free
       | exact hwc.symm
       | exact huc
       | exact huc.symm
-      | exact False.elim ((of_decide_eq_false rfl) hij)
-  · intro i j hij
-    fin_cases i <;> fin_cases j <;>
-      simp [f, huv, huv.symm, hvw, hvw.symm, huw, huw.symm,
-        hab, Ne.symm hab, hbc, Ne.symm hbc, hac, Ne.symm hac,
-        hua.ne, hua.symm.ne, hva.ne, hva.symm.ne,
-        hvb.ne, hvb.symm.ne, hwb.ne, hwb.symm.ne,
-        hwc.ne, hwc.symm.ne, huc.ne, huc.symm.ne,
-        hub, hub.symm, hvc, hvc.symm, hwa, hwa.symm] at hij ⊢
+  · change Function.Injective f
+    simp only [f, Matrix.vecCons, Fin.cons_injective_iff]
+    simp [huv, hvw, huw, hab, hbc, hac, hua.ne, hva.symm.ne, hvb.ne,
+      hwb.symm.ne, hwc.ne, huc.ne, hub, hvc, hwa.symm, Function.Injective]
 
 private theorem common_second_neighbors_pairwise_unrelated
     {V : Type*} {G : SimpleGraph V}

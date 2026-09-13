@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
 /-!
 # Countable connectives over arbitrary countable index types
 
@@ -27,6 +29,8 @@ Only the realization lemmas are provided. No syntactic naturality API is built h
 encoding is noncanonical, so definitional commutation statements would be unpleasant —
 consumers should work through `realize_ciInf`/`realize_ciSup`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

@@ -14,7 +14,15 @@ recombination pipeline (Sections 3–5).
 
 **Reference**: Lemma 2.3 and Section 5 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.Defs
+public import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Weighted finite collections and certificate mass decomposition
@@ -22,6 +30,8 @@ import LeanPool.KaltonRoberts.Defs
 Weighted collections and the positive/negative mass decomposition of a dual
 certificate for the low-frequency construction and recombination pipeline.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 
@@ -346,23 +356,27 @@ Total weight = p + q = 1. Every item has frequency exactly q
 Symmetrically for the augmented negative collection B.
 -/
 
-private noncomputable def augPosWeight
+/-- The weights of the augmented positive collection. -/
+noncomputable def augPosWeight
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M) :
     Finset U ⊕ Finset U → ℝ
   | Sum.inl S => max (cert.lam S) 0
   | Sum.inr S => max (-cert.lam S) 0
 
-private def augPosSets : Finset U ⊕ Finset U → Finset U
+/-- The sets of the augmented positive collection. -/
+def augPosSets : Finset U ⊕ Finset U → Finset U
   | Sum.inl S => S
   | Sum.inr S => Sᶜ
 
-private noncomputable def augNegWeight
+/-- The weights of the augmented negative collection. -/
+noncomputable def augNegWeight
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M) :
     Finset U ⊕ Finset U → ℝ
   | Sum.inl S => max (-cert.lam S) 0
   | Sum.inr S => max (cert.lam S) 0
 
-private def augNegSets : Finset U ⊕ Finset U → Finset U
+/-- The sets of the augmented negative collection. -/
+def augNegSets : Finset U ⊕ Finset U → Finset U
   | Sum.inl S => S
   | Sum.inr S => Sᶜ
 

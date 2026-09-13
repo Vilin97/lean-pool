@@ -3,13 +3,19 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
+public import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
+public import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
+import LeanPool.KasamiCyclicAdditive.Geometry.BaseChange
 import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Quotient
 import LeanPool.KasamiCyclicAdditive.Geometry.FrobeniusAnnihilator
-import LeanPool.KasamiCyclicAdditive.Geometry.BaseChange
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The even-dimensional root-existence branch: the quotient-first bridge
@@ -44,6 +50,8 @@ The quotient-first route to `RootEqSolvable` in even dimension.
    chosen, they are already `algebraMap`-images of elements of `K` — no
    fixed-field descent theorem is needed.
 -/
+
+@[expose] public section
 
 open KasamiCyclicAdditive.FermatCubic KasamiCyclicAdditive.PointFrobenius WeierstrassCurve
 

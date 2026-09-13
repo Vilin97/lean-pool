@@ -3,18 +3,22 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.Loops
-import LeanPool.JacobianDiffgeo.Abel.WeakToMero
-import LeanPool.JacobianDiffgeo.Abel.DolbeaultBridge
-import LeanPool.JacobianDiffgeo.Abel.AreaPairing
-import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
-import LeanPool.JacobianDiffgeo.Abel.ChartSupported
-import LeanPool.JacobianDiffgeo.Abel.LogPiece
-import LeanPool.JacobianDiffgeo.Abel.LinkData
-import LeanPool.JacobianDiffgeo.Abel.Sufficiency
-import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
-import LeanPool.JacobianDiffgeo.Abel.OfCurveInj
+public import LeanPool.JacobianDiffgeo.Abel.Loops
+public import LeanPool.JacobianDiffgeo.Abel.WeakToMero
+public import LeanPool.JacobianDiffgeo.Abel.DolbeaultBridge
+public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
+public import LeanPool.JacobianDiffgeo.Abel.ChartSupported
+public import LeanPool.JacobianDiffgeo.Abel.LogPiece
+public import LeanPool.JacobianDiffgeo.Abel.LinkData
+public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
+public import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
+public import LeanPool.JacobianDiffgeo.Abel.OfCurveInj
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: Abel's theorem (Forster 20.7, dissection-free), `ofCurve_inj`
@@ -170,3 +174,5 @@ every breakpoint, including the case where the path revisits its own basepoint).
          ∀ z, (∀ i, z ≠ a i) → (∀ i, z ≠ x i) → F.ord z = 0
    ```
 -/
+
+@[expose] public section

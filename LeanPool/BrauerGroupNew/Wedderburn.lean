@@ -3,19 +3,26 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
+public import Mathlib.Algebra.Module.Torsion.Basic
+
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Artinian.Defs
+public import Mathlib.RingTheory.SimpleModule.Basic
 import LeanPool.BrauerGroupNew.MatrixCenterEquiv
 import LeanPool.BrauerGroupNew.TwoSidedIdeal
-import Mathlib.Algebra.Azumaya.Basic
-import Mathlib.Algebra.Central.Defs
-import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.RingTheory.HopkinsLevitzki
+import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 
 /-!
 # LeanPool.BrauerGroupNew.Wedderburn
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Wedderburn`.
 -/
+
+@[expose] public section
 
 variable (A : Type*) [Ring A]
 

@@ -3,12 +3,25 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang. All 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
+module
 
-import LeanPool.DeadEnds.Counting
+public import Mathlib.NumberTheory.PrimeCounting
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import LeanPool.DeadEnds.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Data.Int.CardIntervalMod
+import Mathlib.Data.Rat.Star
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Prime-tail and single-prime divisibility estimates.
 -/
+
+@[expose] public section
 
 namespace LeanPool.DeadEnds
 

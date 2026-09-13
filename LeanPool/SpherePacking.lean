@@ -3,8 +3,9 @@ Copyright (c) 2024 Sidharth Hariharan and 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Sidharth Hariharan, Gareth Ma, Dean Cureton
 -/
+module
 
-import LeanPool.SpherePacking.Conclusion
+public import LeanPool.SpherePacking.Conclusion
 
 /-!
 # Sharp asymptotic upper bounds for sphere packing

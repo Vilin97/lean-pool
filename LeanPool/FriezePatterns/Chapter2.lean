@@ -3,19 +3,24 @@ Copyright (c) 2026 Antoine de Saint-Germain. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
+module
 
-import LeanPool.FriezePatterns.Chapter1
-import Mathlib.Data.Nat.Fib.Basic
-import Mathlib.Tactic.NormNum
+public import Mathlib.Algebra.Ring.Divisibility.Basic
+
+public import Mathlib.Data.Nat.Fib.Basic
+public import Mathlib.Data.Nat.Cast.Order.Ring
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Linarith.Frontend
 import Mathlib.Tactic.NormNum.NatFib
-import Mathlib.Tactic.NthRewrite
-import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FriezePatterns.Chapter2
 
 Imported Lean Pool material for `LeanPool.FriezePatterns.Chapter2`.
 -/
+
+@[expose] public section
 ---- n-Flutes ----
 
 /-- An `n`-flute: a positive integer sequence `a` with `a 0 = 1`, periodic with period

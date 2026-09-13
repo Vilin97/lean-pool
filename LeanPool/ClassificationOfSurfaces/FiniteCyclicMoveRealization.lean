@@ -3,8 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1Realization
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicP2Realization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Realization invariance for finite cyclic move closures
@@ -14,6 +21,8 @@ presentation isomorphisms, P1 subdivisions, and genuine P2 face subdivisions all
 faithful polygonal quotient. Consequently, clients of directed chains and common-subdivision
 certificates do not need to pass the primitive invariance proofs explicitly.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

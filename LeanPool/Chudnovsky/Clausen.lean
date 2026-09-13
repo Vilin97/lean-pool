@@ -3,10 +3,19 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
-import Mathlib.Analysis.Analytic.OfScalars
-import Mathlib.Analysis.SpecialFunctions.OrdinaryHypergeometric
+public import Mathlib.Analysis.SpecialFunctions.OrdinaryHypergeometric
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Calculus.SmoothSeries
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Clausen's formula and the hypergeometric differential equations
@@ -39,6 +48,8 @@ This file covers chapter 6 of Milla's proof of the Chudnovsky formula (arXiv:180
 * `Chudnovsky.hyp2F1_sq_eq_tsum` : the representation
   `(₂F₁(1/12, 5/12; 1; z))² = ∑ (6n)!/((3n)!(n!)³) · zⁿ/12^(3n)` (paper Thm. `darst`).
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -402,6 +413,45 @@ private theorem ordinaryHypergeometric_discSummable (a b c : ℂ) (hc : ∀ k : 
               exact ascPochhammer_eval_neg_coe_nat_of_lt hlt]; ring
     rw [hc0, zero_mul, norm_zero]
 
+/-- The `₂F₁` coefficient recurrence `(m+a)(m+b) cₘ = (m+1)(m+c) c₍ₘ₊₁₎`
+(needs `c` non-degenerate). -/
+private theorem ordinaryHypergeometric_coeff_rec (a b c : ℂ) (hc : ∀ k : ℕ, (k : ℂ) ≠ -c) (m : ℕ) :
+    ((m : ℂ) + a) * ((m : ℂ) + b) * ordinaryHypergeometricCoefficient a b c m
+      = ((m : ℂ) + 1) * ((m : ℂ) + c) * ordinaryHypergeometricCoefficient a b c (m + 1) := by
+  have hpc : (ascPochhammer ℂ m).eval c ≠ 0 := fun hz0 => by
+    rw [ascPochhammer_eval_eq_zero_iff] at hz0
+    obtain ⟨k, _, hk⟩ := hz0; exact hc k hk
+  have hfac : ((m ! : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero m)
+  have hm1 : ((m : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero m
+  have hcadd : c + (m : ℂ) ≠ 0 := fun h => hc m (eq_neg_of_add_eq_zero_right h)
+  simp only [ordinaryHypergeometricCoefficient, ascPochhammer_succ_eval, Nat.factorial_succ,
+    Nat.cast_mul, Nat.cast_succ]
+  field_simp
+  ring
+
+/-- The `₃F₂` coefficient recurrence `(m+α)(m+β)(m+γ) dₘ = (m+1)(m+δ)(m+ε) d₍ₘ₊₁₎`
+(needs `δ`, `ε` non-degenerate). -/
+private theorem generalizedHypergeometric_coeff_rec (α β γ δ ε : ℂ)
+    (hδ : ∀ k : ℕ, (k : ℂ) ≠ -δ) (hε : ∀ k : ℕ, (k : ℂ) ≠ -ε) (m : ℕ) :
+    ((m : ℂ) + α) * ((m : ℂ) + β) * ((m : ℂ) + γ) *
+        generalizedHypergeometricCoefficient α β γ δ ε m
+      = ((m : ℂ) + 1) * ((m : ℂ) + δ) * ((m : ℂ) + ε) *
+        generalizedHypergeometricCoefficient α β γ δ ε (m + 1) := by
+  have hpd : (ascPochhammer ℂ m).eval δ ≠ 0 := fun hz0 => by
+    rw [ascPochhammer_eval_eq_zero_iff] at hz0
+    obtain ⟨k, _, hk⟩ := hz0; exact hδ k hk
+  have hpe : (ascPochhammer ℂ m).eval ε ≠ 0 := fun hz0 => by
+    rw [ascPochhammer_eval_eq_zero_iff] at hz0
+    obtain ⟨k, _, hk⟩ := hz0; exact hε k hk
+  have hfac : ((m ! : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero m)
+  have hm1 : ((m : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero m
+  have hdadd : δ + (m : ℂ) ≠ 0 := fun h => hδ m (eq_neg_of_add_eq_zero_right h)
+  have headd : ε + (m : ℂ) ≠ 0 := fun h => hε m (eq_neg_of_add_eq_zero_right h)
+  simp only [generalizedHypergeometricCoefficient, ascPochhammer_succ_eval, Nat.factorial_succ,
+    Nat.cast_mul, Nat.cast_succ]
+  field_simp
+  ring
+
 /-- Paper Thm. `dgl2f1`: on the unit disc, `f = ₂F₁(a, b; c; ·)` satisfies the hypergeometric
 differential equation `z(z-1)f'' + [(a+b+1)z - c]f' + ab·f = 0`.
 
@@ -413,7 +463,7 @@ theorem ordinaryHypergeometric_ode (a b c : ℂ) (hc : ∀ k : ℕ, (k : ℂ) �
       + ((a + b + 1) * z - c) * deriv (fun w : ℂ => ₂F₁ a b c w) z
       + a * b * ₂F₁ a b c z = 0 := by
   -- Coefficient sequences: `C` for `f`, `C1` for `f'`, `C2` for `f''`.
-  set C : ℕ → ℂ := ordinaryHypergeometricCoefficient a b c with hCdef
+  let C : ℕ → ℂ := ordinaryHypergeometricCoefficient a b c
   set C1 : ℕ → ℂ := fun n => ((n : ℂ) + 1) * C (n + 1) with hC1def
   set C2 : ℕ → ℂ := fun n => ((n : ℂ) + 1) * C1 (n + 1) with hC2def
   have hCsum : DiscSummable C := ordinaryHypergeometric_discSummable a b c hc
@@ -421,20 +471,8 @@ theorem ordinaryHypergeometric_ode (a b c : ℂ) (hc : ∀ k : ℕ, (k : ℂ) �
   have hC2sum : DiscSummable C2 := by rw [hC2def]; exact hC1sum.shift
   -- The coefficient recurrence `(m+a)(m+b) Cₘ = (m+1)(m+c) C₍ₘ₊₁₎` (needs only `hc`).
   have hrec : ∀ m : ℕ, ((m : ℂ) + a) * ((m : ℂ) + b) * C m
-      = ((m : ℂ) + 1) * ((m : ℂ) + c) * C (m + 1) := by
-    intro m
-    have hpc : ∀ i : ℕ, (ascPochhammer ℂ i).eval c ≠ 0 := by
-      intro i hz0
-      rw [ascPochhammer_eval_eq_zero_iff] at hz0
-      obtain ⟨k, _, hk⟩ := hz0
-      exact hc k (by linear_combination hk)
-    have hfac : ((m ! : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero m)
-    have hm1 : ((m : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero m
-    have hcadd : c + (m : ℂ) ≠ 0 := fun h => hc m (by linear_combination h)
-    simp only [hCdef, ordinaryHypergeometricCoefficient, ascPochhammer_succ_eval,
-      Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ]
-    field_simp
-    ring
+      = ((m : ℂ) + 1) * ((m : ℂ) + c) * C (m + 1) :=
+    ordinaryHypergeometric_coeff_rec a b c hc
   -- The power-series representations of `f`, `f'`, `f''`.
   have hfun : (fun w : ℂ => ₂F₁ a b c w) = fun w => ∑' n : ℕ, C n * w ^ n := by
     funext w
@@ -585,7 +623,7 @@ theorem generalizedHypergeometric_ode (α β γ δ ε : ℂ)
       + ((α * β + α * γ + β * γ + α + β + γ + 1) * z - δ * ε)
         * deriv (fun w : ℂ => ₃F₂ α β γ δ ε w) z
       + α * β * γ * ₃F₂ α β γ δ ε z = 0 := by
-  set D : ℕ → ℂ := generalizedHypergeometricCoefficient α β γ δ ε with hDdef
+  let D : ℕ → ℂ := generalizedHypergeometricCoefficient α β γ δ ε
   set D1 : ℕ → ℂ := fun n => ((n : ℂ) + 1) * D (n + 1) with hD1def
   set D2 : ℕ → ℂ := fun n => ((n : ℂ) + 1) * D1 (n + 1) with hD2def
   set D3 : ℕ → ℂ := fun n => ((n : ℂ) + 1) * D2 (n + 1) with hD3def
@@ -595,22 +633,8 @@ theorem generalizedHypergeometric_ode (α β γ δ ε : ℂ)
   have hD3sum : DiscSummable D3 := by rw [hD3def]; exact hD2sum.shift
   -- Coefficient recurrence `(m+α)(m+β)(m+γ) Dₘ = (m+1)(m+δ)(m+ε) D₍ₘ₊₁₎` (needs `hδ`, `hε`).
   have hrec3 : ∀ m : ℕ, ((m : ℂ) + α) * ((m : ℂ) + β) * ((m : ℂ) + γ) * D m
-      = ((m : ℂ) + 1) * ((m : ℂ) + δ) * ((m : ℂ) + ε) * D (m + 1) := by
-    intro m
-    have hpd : ∀ i : ℕ, (ascPochhammer ℂ i).eval δ ≠ 0 := fun i hz0 => by
-      rw [ascPochhammer_eval_eq_zero_iff] at hz0
-      obtain ⟨k, _, hk⟩ := hz0; exact hδ k (by linear_combination hk)
-    have hpe : ∀ i : ℕ, (ascPochhammer ℂ i).eval ε ≠ 0 := fun i hz0 => by
-      rw [ascPochhammer_eval_eq_zero_iff] at hz0
-      obtain ⟨k, _, hk⟩ := hz0; exact hε k (by linear_combination hk)
-    have hfac : ((m ! : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero m)
-    have hm1 : ((m : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero m
-    have hdadd : δ + (m : ℂ) ≠ 0 := fun h => hδ m (by linear_combination h)
-    have headd : ε + (m : ℂ) ≠ 0 := fun h => hε m (by linear_combination h)
-    simp only [hDdef, generalizedHypergeometricCoefficient, ascPochhammer_succ_eval,
-      Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ]
-    field_simp
-    ring
+      = ((m : ℂ) + 1) * ((m : ℂ) + δ) * ((m : ℂ) + ε) * D (m + 1) :=
+    generalizedHypergeometric_coeff_rec α β γ δ ε hδ hε
   -- Power-series representations of `g` and its derivatives.
   have hfun : (fun w : ℂ => ₃F₂ α β γ δ ε w) = fun w => ∑' n : ℕ, D n * w ^ n := by
     funext w
@@ -740,45 +764,6 @@ theorem generalizedHypergeometric_ode (α β γ δ ε : ℂ)
   linear_combination (z ^ m) * hKzero3 m
 
 /-! ## Clausen's formula (paper Thm. `satzclausen`) -/
-
-/-- The `₂F₁` coefficient recurrence `(m+a)(m+b) cₘ = (m+1)(m+c) c₍ₘ₊₁₎`
-(needs `c` non-degenerate). -/
-private theorem ordinaryHypergeometric_coeff_rec (a b c : ℂ) (hc : ∀ k : ℕ, (k : ℂ) ≠ -c) (m : ℕ) :
-    ((m : ℂ) + a) * ((m : ℂ) + b) * ordinaryHypergeometricCoefficient a b c m
-      = ((m : ℂ) + 1) * ((m : ℂ) + c) * ordinaryHypergeometricCoefficient a b c (m + 1) := by
-  have hpc : ∀ i : ℕ, (ascPochhammer ℂ i).eval c ≠ 0 := fun i hz0 => by
-    rw [ascPochhammer_eval_eq_zero_iff] at hz0
-    obtain ⟨k, _, hk⟩ := hz0; exact hc k (by linear_combination hk)
-  have hfac : ((m ! : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero m)
-  have hm1 : ((m : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero m
-  have hcadd : c + (m : ℂ) ≠ 0 := fun h => hc m (by linear_combination h)
-  simp only [ordinaryHypergeometricCoefficient, ascPochhammer_succ_eval, Nat.factorial_succ,
-    Nat.cast_mul, Nat.cast_succ]
-  field_simp
-  ring
-
-/-- The `₃F₂` coefficient recurrence `(m+α)(m+β)(m+γ) dₘ = (m+1)(m+δ)(m+ε) d₍ₘ₊₁₎`
-(needs `δ`, `ε` non-degenerate). -/
-private theorem generalizedHypergeometric_coeff_rec (α β γ δ ε : ℂ)
-    (hδ : ∀ k : ℕ, (k : ℂ) ≠ -δ) (hε : ∀ k : ℕ, (k : ℂ) ≠ -ε) (m : ℕ) :
-    ((m : ℂ) + α) * ((m : ℂ) + β) * ((m : ℂ) + γ) *
-        generalizedHypergeometricCoefficient α β γ δ ε m
-      = ((m : ℂ) + 1) * ((m : ℂ) + δ) * ((m : ℂ) + ε) *
-        generalizedHypergeometricCoefficient α β γ δ ε (m + 1) := by
-  have hpd : ∀ i : ℕ, (ascPochhammer ℂ i).eval δ ≠ 0 := fun i hz0 => by
-    rw [ascPochhammer_eval_eq_zero_iff] at hz0
-    obtain ⟨k, _, hk⟩ := hz0; exact hδ k (by linear_combination hk)
-  have hpe : ∀ i : ℕ, (ascPochhammer ℂ i).eval ε ≠ 0 := fun i hz0 => by
-    rw [ascPochhammer_eval_eq_zero_iff] at hz0
-    obtain ⟨k, _, hk⟩ := hz0; exact hε k (by linear_combination hk)
-  have hfac : ((m ! : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 (Nat.factorial_ne_zero m)
-  have hm1 : ((m : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero m
-  have hdadd : δ + (m : ℂ) ≠ 0 := fun h => hδ m (by linear_combination h)
-  have headd : ε + (m : ℂ) ≠ 0 := fun h => hε m (by linear_combination h)
-  simp only [generalizedHypergeometricCoefficient, ascPochhammer_succ_eval, Nat.factorial_succ,
-    Nat.cast_mul, Nat.cast_succ]
-  field_simp
-  ring
 
 /-- The general Clausen coefficient identity: the `n`-th Cauchy-product coefficient of
 `(₂F₁(a, b; a+b+1/2; ·))²` equals the `n`-th coefficient of `₃F₂(2a, 2b, a+b; 2a+2b, a+b+1/2; ·)`.

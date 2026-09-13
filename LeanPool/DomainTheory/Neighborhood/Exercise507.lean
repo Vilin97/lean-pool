@@ -3,8 +3,15 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 5.7 (Scott 1981, PRG-19, §5) — multi-variable `λ` and application from
@@ -49,6 +56,8 @@ No new axioms are introduced beyond the project's `Element.ext` /
 `ext_of_toElementMap` machinery
 already used by `curry`/`uncurry`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise507
 

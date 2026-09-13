@@ -3,9 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
-import LeanPool.InfinitaryLogic.Descriptive.PerfectAntichain
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The ambient isomorphism relation on coded structures
 
@@ -20,6 +24,8 @@ theorem about it.  The sentence-level predicates below then quantify over perfec
 `StructureSpace L` contained in `ModelsOf φ`, and the chosen refinement never enters their
 statements.
 -/
+
+@[expose] public section
 
 open Cardinal Set
 

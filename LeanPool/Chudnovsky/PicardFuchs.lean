@@ -3,8 +3,16 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Clausen
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The Picard–Fuchs differential equation
@@ -28,6 +36,8 @@ which bypasses the Picard–Fuchs equation entirely and proves the chapter-8 out
 `SatisfiesPicardFuchs` is used downstream (by `Kummer.lean`); the paper's chapter-7 existence
 theorem for the periods is not needed on the main chain and is omitted here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

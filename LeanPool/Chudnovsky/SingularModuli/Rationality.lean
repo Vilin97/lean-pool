@@ -3,10 +3,15 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
+public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+public import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
 import LeanPool.Chudnovsky.SingularModuli.CMRelations
+import LeanPool.Chudnovsky.SingularModuli.FormReduction
+import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
 import LeanPool.Chudnovsky.SingularModuli.Valence
+import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.Tactic.NormNum.Prime
 
 /-!
@@ -45,6 +50,8 @@ Let `j₀ := j τ₁₆₃` and `x` an arbitrary complex root of `minpoly ℚ j�
 * **(C7)** Hence `x = j τ′ = j τ₁₆₃ = j₀`; every root of `minpoly ℚ j₀` equals `j₀`, and the
   Vieta relation on the subleading coefficient (a rational) forces `j₀ ∈ ℚ`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

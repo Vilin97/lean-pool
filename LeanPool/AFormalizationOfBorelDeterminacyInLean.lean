@@ -3,9 +3,13 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
+
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # A formalization of Borel determinacy in Lean
@@ -17,6 +21,8 @@ Main declarations: `GaleStewartGame.borel_determinacy`, `GaleStewartGame.Games.b
 Tags: descriptive-set-theory, game-theory, determinacy
 MSC: 03E15, 54H05, 91A44
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

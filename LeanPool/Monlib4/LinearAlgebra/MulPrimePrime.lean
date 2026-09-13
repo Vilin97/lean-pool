@@ -3,11 +3,13 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Algebra.Bilinear
-import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.LinearAlgebra.Nacgor
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Nacgor
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
 import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 
 /-!
 
@@ -16,6 +18,8 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
 this defines the multiplication map $M_{n\times n} \to M_n$
 
 -/
+
+@[expose] public section
 
 
 open Matrix
@@ -123,7 +127,8 @@ theorem Matrix.KroneckerProduct.ext_iff {R P n₁ n₂ : Type _} [Finite n₁] [
   rw [Matrix.kmul_representation x]
   simp_rw [map_sum, _root_.map_smul, h _ _]
 
-private def mul_map_aux (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRing X] [NormedSpace 𝕜 X]
+/-- Multiplication as a linear map into continuous linear endomorphisms. -/
+def mulMapAux (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRing X] [NormedSpace 𝕜 X]
     [SMulCommClass 𝕜 X X] [IsScalarTower 𝕜 X X] [FiniteDimensional 𝕜 X] : X →ₗ[𝕜] X →L[𝕜] X
     where
   toFun x :=
@@ -143,7 +148,7 @@ namespace LinearMap
 def mulToClm (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRing X] [NormedSpace 𝕜 X]
     [SMulCommClass 𝕜 X X] [IsScalarTower 𝕜 X X] [FiniteDimensional 𝕜 X] : X →L[𝕜] X →L[𝕜] X
     where
-  toFun := mul_map_aux 𝕜 X
+  toFun := mulMapAux 𝕜 X
   map_add' := map_add _
   map_smul' := _root_.map_smul _
   cont := map_continuous _

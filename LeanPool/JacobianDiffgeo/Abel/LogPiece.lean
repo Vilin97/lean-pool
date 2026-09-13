@@ -3,10 +3,17 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.JacobianDiffgeo.PlanarStokes.AnnulusResidue
-import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the planar log piece and its residue identity (design §4.1 step 5, planar core)
@@ -33,6 +40,8 @@ pole at `α`), interpolated to `1` across the bump annulus `ρ < rIn ≤ ‖z - 
   `((z-β)⁻¹ - (z-α)⁻¹)·Gp`, and the Cauchy integral formula
   (`DiffContOnCl.circleIntegral_sub_inv_smul`) evaluates it.
 -/
+
+@[expose] public section
 
 open scoped ContDiff
 open Complex Metric Set MeasureTheory Filter Topology

@@ -3,14 +3,18 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.OmegaHom
+public import LeanPool.QuasiBorelSpaces.OmegaHom
+import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.Cont
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Cont`.
 -/
+
+@[expose] public section
 
 open QuasiBorelSpace
 open OmegaCompletePartialOrder
@@ -37,7 +41,7 @@ instance : PartialOrder (Cont R A) :=
     simp only [mk.injEq, imp_self])
 
 /-- The underlying continuation as an order homomorphism. -/
-private def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
+def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
   toFun := apply
   monotone' _ _ h := h
 

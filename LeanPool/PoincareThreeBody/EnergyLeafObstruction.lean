@@ -3,10 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.LeadingObstruction
+public import LeanPool.PoincareThreeBody.DelaunaySection
 import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
+import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Constancy of the leading coefficient on Kepler energy leaves
@@ -17,6 +21,8 @@ leading coefficient in the `L` direction at fixed `E` vanishes.  The mean-value 
 makes that coefficient constant on every connected energy-leaf segment contained in the
 interior elliptic region.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -3,10 +3,14 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Lattice.Transvect
+module
+
+public import LeanPool.BruhatTits.Lattice.Transvect
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.Algebra.Module.Torsion.Basic
 import LeanPool.BruhatTits.Utils.LinearAlgebra
-import Mathlib.LinearAlgebra.TensorProduct.RightExactness
-import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+import LeanPool.BruhatTits.Utils.ValuationRings
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # The `R ⧸ ϖ R`-vector space `L ⧸ ϖ L`
@@ -28,6 +32,8 @@ the two-dimensional `R ⧸ ϖ R`-vector space `L ⧸ ϖ L`.
   `ϖ L` and `L``.
 
 -/
+
+@[expose] public section
 
 open Module
 

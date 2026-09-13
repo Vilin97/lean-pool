@@ -3,11 +3,17 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.API
-import LeanPool.TwoColoringOneRound.LowerBound
-import LeanPool.TwoColoringOneRound.SimpleBounds
-import LeanPool.TwoColoringOneRound.UpperBound
+public import LeanPool.TwoColoringOneRound.MainResults
+
+public import LeanPool.TwoColoringOneRound.API
+public import LeanPool.TwoColoringOneRound.LowerBound
+public import LeanPool.TwoColoringOneRound.SimpleBounds
+public import LeanPool.TwoColoringOneRound.UpperBound
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # 2-Coloring Cycles in One Round
@@ -19,6 +25,8 @@ Main declarations: `Distributed2Coloring.pStar_ge_23879`, `Distributed2Coloring.
 Tags: distributed-computing, graph-coloring, randomized-algorithms, formal-verification
 MSC: 68W15, 05C15
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

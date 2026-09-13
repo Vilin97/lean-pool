@@ -3,18 +3,11 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.SpectralPositivity.Matrix.NonnegPower
-import LeanPool.SpectralPositivity.Operator.JentzschProof
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Topology.Order.IntermediateValue
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.LinearAlgebra.Charpoly.ToMatrix
-import Mathlib.LinearAlgebra.Eigenspace.Charpoly
-import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.Topology.Order.Compact
-import Mathlib.Topology.Sequences
+public import LeanPool.SpectralPositivity.Matrix.NonnegPower
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Perron–Frobenius Theorem for Nonneg Matrices
@@ -40,6 +33,8 @@ For B = A^k with all entries strictly positive (from `exists_pos_power`):
 - Horn–Johnson, *Matrix Analysis*, Cambridge, 2013, Ch. 8
 - Seneta, *Non-negative Matrices and Markov Chains*, Springer, 2006
 -/
+
+@[expose] public section
 
 open Matrix BigOperators Finset MeasureTheory
 

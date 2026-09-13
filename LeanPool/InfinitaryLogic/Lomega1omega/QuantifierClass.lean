@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # The universal and existential quantifier classes (issue #15, Unit 0)
 
@@ -26,6 +28,8 @@ This module is deliberately neutral: it depends only on the syntax layer and is 
 reused by any preservation theorem (issue #15's interpolation and relative preservation, and issue
 #16's end extensions), not to live inside the interpolation development.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

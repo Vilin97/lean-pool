@@ -3,20 +3,19 @@ Copyright (c) 2026 Carles Marín. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Carles Marín
 -/
+module
 
+public import Mathlib.Algebra.RingQuot
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Mathlib.RingTheory.PowerSeries.Log
 import LeanPool.ConnesKreimer.PowerSeriesLogMul
-import Mathlib.Algebra.FreeMonoid.Basic
-import Mathlib.Algebra.MonoidAlgebra.Basic
-import Mathlib.Algebra.RingQuot
-import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.HopfAlgebra.Convolution
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
 
 /-! Connes–Kreimer / Foissy (planar, R1) coproduct as a genuine Mathlib `Coalgebra` instance.
     Combinatorial core (List.Perm) proven below verbatim from `Coassoc.lean`; the Mathlib bridge
     lifts it to equality of linear maps. LOCAL — not part of the published godsil tree. -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

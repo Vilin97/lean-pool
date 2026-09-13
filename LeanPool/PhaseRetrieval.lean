@@ -3,9 +3,16 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
+module
 
-import LeanPool.PhaseRetrieval.Constant
-import LeanPool.PhaseRetrieval.DimdPoly
+public import LeanPool.PhaseRetrieval.Constant
+public import LeanPool.PhaseRetrieval.DimdPoly
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-!
 # Stable phase retrieval for Hermite-Fock expansions
@@ -17,6 +24,8 @@ Main declarations: `DimdPolyShowcaseChallenge.stable_phase_retrieval`
 Tags: phase-retrieval, hermite-fock, gaussian-measure, complex-analysis
 MSC: 42C05, 46E22, 94A12
 -/
+
+@[expose] public section
 
 /-!
 ## References

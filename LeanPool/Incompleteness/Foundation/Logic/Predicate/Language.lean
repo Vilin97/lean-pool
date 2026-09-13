@@ -3,8 +3,13 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Entailment
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Logic.Encodable.Basic
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Ring.Nat
 
 /-!
 # Language of first-order logic
@@ -15,6 +20,8 @@ This file defines the language of first-order logic.
 - `LO.FirstOrder.Language.constant C` is a language with only constants of the element `C`.
 - `LO.FirstOrder.Language.oRing`, `ℒₒᵣ` is the language of ordered ring.
 -/
+
+@[expose] public section
 
 namespace LO
 

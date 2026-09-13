@@ -3,19 +3,19 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import Mathlib.LinearAlgebra.Dimension.Localization
+module
+
+public import Mathlib.LinearAlgebra.TensorProduct.Pi
+public import Mathlib.LinearAlgebra.TensorProduct.Quotient
+public import Mathlib.Algebra.Module.Torsion.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Pi
-import Mathlib.LinearAlgebra.TensorProduct.Quotient
-import Mathlib.Algebra.Module.Torsion.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
 /-!
 # LeanPool.BruhatTits.Utils.LinearAlgebra
 -/
+
+@[expose] public section
 
 open Module
 

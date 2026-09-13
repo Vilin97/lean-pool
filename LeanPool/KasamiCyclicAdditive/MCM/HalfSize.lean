@@ -3,10 +3,14 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.MCM.Permutation
+public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.Algebra.Ring.Parity
+public import Mathlib.Data.Fintype.Card
 import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.MCM.Permutation
 
 /-!
 # Half-size of the Kasami derivative image
@@ -21,6 +25,8 @@ the field.  For even `k`, coprimality forces `n - k` to be odd, and the
 Frobenius transport of `MCM/ComplementTransport.lean` preserves the cardinality of the
 derivative image.
 -/
+
+@[expose] public section
 
 open Finset
 

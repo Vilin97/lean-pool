@@ -3,14 +3,17 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
-import LeanPool.JacobianDiffgeo.CanonicalForms.OrdRes
-import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
-import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
-import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
-import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
-import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+public import LeanPool.JacobianDiffgeo.CanonicalForms.MForm
+public import LeanPool.JacobianDiffgeo.CanonicalForms.OrdRes
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Differential
+public import LeanPool.JacobianDiffgeo.CanonicalForms.OneDimensional
+public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # canonical-forms: meromorphic 1-forms and the canonical divisor `K` (namespace `RS`)
@@ -94,3 +97,5 @@ congruences; the raw files remain the foundation every proof works through via r
   since residue-theorem is DOWNSTREAM of canonical-forms, importing it back would cycle; this is
   the clean home, and `residue-theorem` now imports it from here).
 -/
+
+@[expose] public section

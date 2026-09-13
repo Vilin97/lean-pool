@@ -3,12 +3,20 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
+public import LeanPool.Erdos97ConvexOctagon.PairStateExactness
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
 import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMaskSoundness
-import LeanPool.Erdos97ConvexOctagon.PairStateExactness
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Support lemmas for compact coverage certificates -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

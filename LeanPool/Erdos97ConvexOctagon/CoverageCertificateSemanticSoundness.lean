@@ -3,12 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CodeStateExactness
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateLookup
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
+public import LeanPool.Erdos97ConvexOctagon.CodeStateExactness
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
+public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
+public import LeanPool.Erdos97ConvexOctagon.PairStateExactness
+public import LeanPool.Erdos97ConvexOctagon.Relabelling
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
 
 /-! # Semantic consequences of compact coverage certificates -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

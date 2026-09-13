@@ -3,8 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderSyntax
+public import Mathlib.SetTheory.Cardinal.Aleph
 import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
 /-!
 # The ladder upper bound
 
@@ -16,6 +20,8 @@ predecessor (`≤ 2^ℶ = ℶ⁺`, `CardinalBounds.mk_le_two_power_of_injective_
 level is a countable union of earlier levels (`CardinalBounds.mk_iUnion_le_of_countable`).
 The top clause then bounds the whole model by `|U_⊤| ≤ ℶ_{α+1}`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

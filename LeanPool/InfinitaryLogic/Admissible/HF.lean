@@ -3,12 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import LeanPool.InfinitaryLogic.Lomega1omega.FirstOrderImage
+module
+
+public import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+public import LeanPool.InfinitaryLogic.Lomega1omega.FirstOrderImage
 import Mathlib.ModelTheory.Satisfiability
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # The HF fragment (issue #18)
@@ -37,6 +37,8 @@ returns Mathlib's canonical model in `Type (max u v)`.  The compatibility theore
 placeholder; nothing here uses it, and nothing here may be proved from it.
 -/
 
+@[expose] public section
+
 namespace FirstOrder.Language
 
 universe u v w uCode uIndex
@@ -44,7 +46,7 @@ universe u v w uCode uIndex
 variable {L : Language.{0, 0}}
 
 /-- The all-arity first-order image: every formula containing no infinitary node. -/
-private def hfSet (L : Language.{u, v}) : Set (Σ n, L.BoundedFormulaω Empty n) :=
+def hfSet (L : Language.{u, v}) : Set (Σ n, L.BoundedFormulaω Empty n) :=
   {p | p.2.IsFirstOrder}
 
 /-- **The HF fragment.**  Each field is now one appeal to the first-order-image API: three

@@ -3,13 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
-import LeanPool.Incompleteness.Foundation.Vorspiel.ExistsUnique
-import Mathlib.Algebra.Order.Monoid.Canonical.Defs
-import Mathlib.Data.Nat.Cast.Order.Basic
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # CobhamR0 -/
+
+@[expose] public section
 
 
 noncomputable section «lp_nc_section_1»

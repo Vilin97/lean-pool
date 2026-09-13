@@ -13,11 +13,16 @@ below makes the same joint choice coordinate by coordinate; the final theorem
 returns one total Boolean function and one application in which every
 coordinate has been strengthened according to that function.
 -/
+module
+
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
 import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.CanonicalChoice
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

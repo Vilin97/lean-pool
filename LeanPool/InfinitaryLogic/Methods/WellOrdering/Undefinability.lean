@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
+module
+
+public import Mathlib.SetTheory.Ordinal.Basic
 /-!
 # Undefinability of well-ordering (issue #12, step 6 layer 3)
 
@@ -27,9 +28,11 @@ every other arity as empty — this avoids deciding equality against the disting
 `lt`, which a general language does not support.
 -/
 
+@[expose] public section
+
 namespace FirstOrder.Language
 
-open FirstOrder Structure
+open FirstOrder
 
 /-- The all-arities relation family on an ordinal's type: binary positions get the ordinal
 order, every other arity is empty. -/

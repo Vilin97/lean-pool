@@ -3,9 +3,15 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Tactic.Linarith
-import LeanPool.PebblingLean.Basic
+public import LeanPool.PebblingLean.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Direct delivery along paths
@@ -14,6 +20,8 @@ This file formalizes the elementary deterministic fact used inside the upper
 bound: a pile of size `T * 2^d` at one end of a length-`d` path can deliver `T`
 pebbles to the other end.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

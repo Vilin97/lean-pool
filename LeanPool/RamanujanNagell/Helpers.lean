@@ -3,21 +3,14 @@ Copyright (c) 2026 Barinder S. Banwait. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Barinder S. Banwait
 -/
+module
 
-import Mathlib.Algebra.QuadraticAlgebra.Basic
-import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
-import Mathlib.Algebra.Order.Round
-import Mathlib.Data.Rat.Floor
-import Mathlib.RingTheory.PrincipalIdealDomain
-import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.NumberTheory.Multiplicity
-import Mathlib.RingTheory.Polynomial.Basic
-import Mathlib.RingTheory.Int.Basic
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Polyrith
+public import Mathlib.Algebra.QuadraticAlgebra.Basic
+public import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Algebraic infrastructure for `R = QuadraticAlgebra ℤ (-2) 1 = ℤ[(1+√-7)/2]`
@@ -32,6 +25,8 @@ rather than through `𝓞 K` where `K = QuadraticAlgebra ℚ (-2) 1`. The payoff
 * `EuclideanDomain R → IsPrincipalIdealRing R → UniqueFactorizationMonoid R`
   replaces the discriminant / class-number-1 detour through Dirichlet.
 -/
+
+@[expose] public section
 
 namespace RamanujanNagell
 
@@ -258,7 +253,8 @@ private lemma sixteen_norm_rem_le (a b : R) (hb : b ≠ 0) :
     nlinarith [hv_bd, huv_bd]
   nlinarith [h_chain, h_bd, hN_pos, sq N]
 
-private noncomputable def normMeasure (a : R) : ℕ := Int.natAbs (QuadraticAlgebra.norm a)
+/-- The natural absolute value of the quadratic-algebra norm. -/
+noncomputable def normMeasure (a : R) : ℕ := Int.natAbs (QuadraticAlgebra.norm a)
 
 private lemma natAbs_norm_rem_lt (a : R) {b : R} (hb : b ≠ 0) :
     normMeasure (rem a b) < normMeasure b := by
@@ -293,8 +289,8 @@ noncomputable instance instEuclideanDomain : EuclideanDomain R where
   quotient_mul_add_remainder_eq := quot_mul_add_rem_eq
   r := fun a b => normMeasure a < normMeasure b
   r_wellFounded := (measure normMeasure).wf
-  remainder_lt := natAbs_norm_rem_lt
-  mul_left_not_lt := norm_mul_left_not_lt
+  remainder_lt := by exact natAbs_norm_rem_lt
+  mul_left_not_lt := by exact norm_mul_left_not_lt
 
 /-- `R` is a principal ideal ring, since every Euclidean domain is one. -/
 instance instPrincipalIdealRing : IsPrincipalIdealRing R :=

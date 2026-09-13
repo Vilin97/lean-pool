@@ -3,10 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Inversion
-import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
-import Mathlib.Analysis.Analytic.Constructions
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Inversion
+public import LeanPool.JacobianDiffgeo.Surface.ChartedSpaceKit
 
 /-!
 # The two-chart complex-manifold structure on `ℙ¹` (CC5)
@@ -23,6 +23,8 @@ and `IsManifold 𝓘(ℂ) ω (OnePoint ℂ)` from two charts:
 `invFun w := inversion ↑w`) so that all four transition maps between `coeChart`/`invChart` are
 literally `id`/`Inv.inv` as total functions (junk values aligned by construction).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint

@@ -3,10 +3,11 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.IsComputable
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+module
+
+public import LeanPool.ComputableReal.IsComputable
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Rify
 
 /-!
 # Verified rational bounds for the exponential
@@ -17,6 +18,8 @@ Rational lower and upper bounds for `Real.exp` are built from truncated Taylor s
 functions are executable; the packaged sequence mentions `Real.exp` itself as its reference
 value, so `exp` and the instances are `noncomputable` Lean terms.
 -/
+
+@[expose] public section
 
 namespace ComputableℝSeq
 namespace Exp

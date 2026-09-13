@@ -3,11 +3,21 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
-import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
 import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Residue-Side Infrastructure for the PV Chain
@@ -24,6 +34,8 @@ Infrastructure lemmas needed to apply `generalizedResidueTheorem'` to
 * `residueSimplePole_logDeriv_eq_order` — residue = order at zeros
 * `residueSimplePole_logDeriv_eq_zero_at_nonzero` — residue = 0 at non-zeros
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
@@ -435,7 +447,7 @@ private lemma fdBoundary_H_eq_fdBoundary_on_13 (H : ℝ) {t : ℝ}
 
 omit f hf in
 private lemma norm_ge_one_of_normSq_ge_one {z : ℂ} (h : normSq z ≥ 1) : ‖z‖ ≥ 1 :=
-  calc ‖z‖ = Real.sqrt (normSq z) := rfl
+  calc ‖z‖ = Real.sqrt (normSq z) := RCLike.sqrt_normSq_eq_norm.symm
     _ ≥ Real.sqrt 1 := Real.sqrt_le_sqrt h
     _ = 1 := Real.sqrt_one
 

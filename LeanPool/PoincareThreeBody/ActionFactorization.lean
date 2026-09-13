@@ -3,8 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.ActionPoisson
+public import LeanPool.PoincareThreeBody.ActionPoisson
+public import LeanPool.PoincareThreeBody.DelaunaySection
+import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # Pointwise factorization of the leading integral through the Delaunay actions
@@ -13,6 +17,8 @@ The mass-zero leading coefficient is constant on every interior Kepler torus.  T
 that value-level statement to a differential identity: at every noncircular elliptic point, its
 phase differential is the pullback of the differential of the action-space representative.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

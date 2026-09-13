@@ -3,9 +3,11 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.Minlos.NuclearSpace
-import Mathlib.Topology.Instances.RealVectorSpace
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Bridge: Pietsch Nuclearity → Bochner IsHilbertNuclear
@@ -32,6 +34,8 @@ expansion `p(x) ≤ Σₖ |fₖ(x)| · cₖ` with `|fₖ| ≤ q`), we:
 - Pietsch, "Nuclear Locally Convex Spaces" (1972), §4
 - Trèves, "Topological Vector Spaces", Ch. 50-51
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

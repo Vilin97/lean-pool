@@ -6,7 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.Group.Action.Pointwise.Set.Basic
+public import Mathlib.Algebra.Group.Action.Defs
+public import Mathlib.Algebra.Group.Pointwise.Set.Basic
+public import Mathlib.Algebra.Group.Pointwise.Set.Scalar
 
 /-!
 # Pointwise set operations

@@ -3,15 +3,27 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.AlgebraicCard
-import Mathlib.Algebra.Field.ULift
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Mortality.MaskMortality
-import LeanPool.Koethe.MaskSequence.Universal
+module
+
+public import Mathlib.Algebra.Field.ULift
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import LeanPool.Koethe.Pencil
+public import Mathlib.LinearAlgebra.Matrix.Ideal
 import LeanPool.Koethe.Linearization.Nil
+import LeanPool.Koethe.MaskSequence.Universal
+import LeanPool.Koethe.Mortality.MaskMortality
 import LeanPool.Koethe.ShiftWitness.Witness
+import Mathlib.Algebra.AlgebraicCard
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The counterexample: a nil ideal with a non-nilpotent `2 × 2` matrix
@@ -24,6 +36,8 @@ This file assembles the whole development. The scalar-linearization theorem
 in an arbitrary universe, a nil two-sided ideal `I ⊆ R`, and a matrix in `M_2(I)` that is
 not nilpotent.
 -/
+
+@[expose] public section
 
 noncomputable section
 

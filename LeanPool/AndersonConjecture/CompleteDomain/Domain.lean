@@ -3,10 +3,14 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.Ideal.Maps
 import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.RingTheory.Ideal.Quotient.Operations
 import Mathlib.RingTheory.MvPowerSeries.Inverse
-import Mathlib.RingTheory.MvPowerSeries.Substitution
 
 /-!
 # The Complete Local Domain T
@@ -14,6 +18,8 @@ import Mathlib.RingTheory.MvPowerSeries.Substitution
 Construction of T = C[[x,y,z]]/(x^2 - yz) and the proof that
 T is an integral domain.
 -/
+
+@[expose] public section
 
 noncomputable section
 

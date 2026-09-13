@@ -3,13 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.GlobalReduction
+module
+
+public import LeanPool.Erdos132ConvexK3.GlobalReduction
 import LeanPool.Erdos132ConvexK3.Geometry
-import Lean.Elab.Tactic.Omega
-import Mathlib.Order.Interval.Finset.Fin
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # ErLV majorant arc nesting
@@ -20,6 +19,8 @@ boundary angles acute.  If two such majorants were avoiding, cyclic
 convexity propagates those local inequalities to all four angles of their
 quadrilateral, contradicting `strict_convex_quad_not_all_acute`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

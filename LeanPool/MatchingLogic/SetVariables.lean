@@ -25,11 +25,16 @@ keeps definedness out of the base language.
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.EntryPoints
+module
+
+public import LeanPool.MatchingLogic.Semantics
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.SetVariables
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 namespace SetVariables

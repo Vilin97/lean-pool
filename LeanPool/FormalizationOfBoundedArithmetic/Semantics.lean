@@ -3,21 +3,24 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Lean.Elab.Command
+public meta import Lean.Elab.Tactic.Conv.Congr
+public meta import Lean.Elab.Tactic.Conv.Rewrite
+public meta import Lean.Elab.Tactic.Conv.Unfold
 
-import Mathlib.ModelTheory.Semantics
 
-import LeanPool.FormalizationOfBoundedArithmetic.Syntax
-import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
+
+public import LeanPool.FormalizationOfBoundedArithmetic.Order
+import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+import LeanPool.FormalizationOfBoundedArithmetic.Register
 import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
-import LeanPool.FormalizationOfBoundedArithmetic.Order
-import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
-import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Semantics
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

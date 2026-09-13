@@ -3,12 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.Geometry.Manifold.Riemannian.Basic
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.MeasureTheory.Measure.Hausdorff
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
-import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Geometry.Manifold.Riemannian.Basic
+public import Mathlib.MeasureTheory.Measure.Hausdorff
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure`
@@ -25,6 +23,8 @@ Riemannian isometries and suitable for building `L²(M)` once finiteness propert
 - `RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure`:
   Hausdorff measure `μH[dim]` on `M`, using the emetric structure induced by the Riemannian metric.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

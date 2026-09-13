@@ -3,8 +3,18 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.CohomologyAPI
+public import Mathlib.Algebra.Category.Grp.Basic
+public import Mathlib.Topology.Sheaves.SheafCondition.UniqueGluing
+import Mathlib.Algebra.Category.Grp.Colimits
+import Mathlib.Algebra.Category.Grp.FilteredColimits
+import Mathlib.Algebra.Category.Grp.Limits
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # General filtered-colimit infrastructure for presheaves
@@ -14,9 +24,11 @@ finite-cover separation, eventual vanishing, compatible representative extractio
 finite-subcover gluing in cocone points.
 -/
 
+@[expose] public section
+
 universe u
 
-open CategoryTheory TopologicalSpace Abelian Limits Opposite TopCat
+open CategoryTheory TopologicalSpace Limits Opposite TopCat
 
 /-- Zero is preserved under filtered transitions: if restricting a transition to an open
     gives 0, then restricting any further transition also gives 0. -/

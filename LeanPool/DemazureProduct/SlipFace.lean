@@ -3,9 +3,19 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.DemazureProduct.Valley
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Int.Interval
+module
+
+public import LeanPool.DemazureProduct.Valley
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Slipfaces
@@ -15,6 +25,8 @@ This file defines slipface functions and develops their basic properties, includ
 Section 3, with some essential-set material from Section 7.1, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 
@@ -462,7 +474,7 @@ private lemma star_exists (s t : SlipFace) : ∃ p : SlipFace,
 See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
 noncomputable def star (s t : SlipFace) : SlipFace :=
-  Classical.choose (star_exists s t)
+  Classical.choose (private_decl% (star_exists s t))
 
 noncomputable instance : Mul SlipFace := ⟨star⟩
 
@@ -959,7 +971,7 @@ private lemma rres_exists (s t : SlipFace) (a b : ℤ) : ∃ m, ∀ l,
 
 /-- The argmax witnessing the right residual value $s \triangleright t (a,b)$. -/
 noncomputable def rresWit (s t : SlipFace) (a b : ℤ) : ℤ :=
-  Classical.choose (rres_exists s t a b)
+  Classical.choose (private_decl% (rres_exists s t a b))
 
 /-- The right residual function
 $$
@@ -1158,7 +1170,7 @@ private lemma lres_exists (s t : SlipFace) : ∃ p : SlipFace,
 `lresFunc`. See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
 noncomputable def lres (s t : SlipFace) : SlipFace :=
-  Classical.choose (lres_exists s t)
+  Classical.choose (private_decl% (lres_exists s t))
 
 /-- Infix notation for the slipface left residual. -/
 infixl:70 " ◃ " => lres

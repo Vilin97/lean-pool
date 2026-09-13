@@ -3,17 +3,16 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.IsHomDiagonal
-import LeanPool.QuasiBorelSpaces.List.Encoding
-import LeanPool.QuasiBorelSpaces.MeasureTheory.List
-import LeanPool.QuasiBorelSpaces.Option
-import LeanPool.QuasiBorelSpaces.Nat
-import LeanPool.QuasiBorelSpaces.Pi
-import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
-import LeanPool.QuasiBorelSpaces.SeparatesPoints
-import LeanPool.QuasiBorelSpaces.Sigma
+public import LeanPool.QuasiBorelSpaces.List.Encoding
+public import LeanPool.QuasiBorelSpaces.MeasureTheory.List
+public import LeanPool.QuasiBorelSpaces.Option
+public import LeanPool.QuasiBorelSpaces.Nat
+public import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Prop
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Lists over Quasi-Borel Spaces
@@ -32,6 +31,8 @@ on lists are homomorphisms.
 * List query operations (`mem`, `elem`, `length`, `get`, etc.) are homomorphisms
 * Set-like operations (`insert`, `union`, `erase`, `diff`) are homomorphisms
 -/
+
+@[expose] public section
 
 variable {A B C : Type*} [QuasiBorelSpace A] [QuasiBorelSpace B] [QuasiBorelSpace C]
 

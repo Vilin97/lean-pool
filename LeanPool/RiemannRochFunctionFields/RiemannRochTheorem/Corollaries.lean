@@ -5,10 +5,12 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Basic
-public import LeanPool.RiemannRochFunctionFields.LinearKneser
 
 import Mathlib.Algebra.Module.Submodule.Union
+public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import LeanPool.RiemannRochFunctionFields.LinearKneser
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Corollaries of Riemann–Roch

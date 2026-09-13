@@ -3,11 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Entailment
-import LeanPool.Incompleteness.Foundation.Logic.Axioms
+public import LeanPool.Incompleteness.Foundation.Logic.Entailment
+public import LeanPool.Incompleteness.Foundation.Logic.Axioms
+public import Mathlib.Algebra.Order.Ring.Nat
 
 /-! # Basic -/
+
+@[expose] public section
 
 
 namespace LO

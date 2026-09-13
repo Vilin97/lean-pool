@@ -3,8 +3,17 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
+module
+
+public meta import LeanPool.Lentil.ProofMode.Basic
+
+public meta import Batteries.Lean.Expr
+
+public import LeanPool.Lentil.ProofMode.Basic
 import LeanPool.Lentil.Rules.Basic
-import LeanPool.Lentil.ProofMode.Basic
+import Std.Tactic.BVDecide.Normalize.Prop
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -24,10 +33,11 @@ theorem Entails_intro_temporal {σ : Type u} {hyps : List (NamedPred σ)}
   Entails hyps [tlafml| newHyp → goal ] := by
   unfold Entails; simp [impl_intro_add_r, repeatedAnd_append]; rfl
 
-private def introTacDSimps := #[``List.cons_append, ``List.nil_append]
+/-- Reduction rules used after introducing a proof-mode hypothesis. -/
+meta def introTacDSimps := #[``List.cons_append, ``List.nil_append]
 
 /-- Introduce one proof-mode hypothesis with the given name. -/
-def tlaIntroCoreStep (k : SyntaxNodeKind) (name : TSyntax k)
+meta def tlaIntroCoreStep (k : SyntaxNodeKind) (name : TSyntax k)
   (ident? : TSyntax k → TacticM (Option Ident))
   (errorMsgPrefix : String) (tacIntroNonTemporalHyp : TSyntax k → TacticM (TSyntax `tactic))
   -- (tacIntroTemporalHyp : TSyntax k → TacticM Unit)

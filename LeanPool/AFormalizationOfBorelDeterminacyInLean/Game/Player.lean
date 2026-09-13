@@ -3,14 +3,36 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
+
+public meta import Aesop.BuiltinRules
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.Attr.Core
+public meta import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.Push
+public meta import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+public import Mathlib.Tactic.ToDual
+public meta import Qq.Typ
 import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Player
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame
@@ -39,7 +61,9 @@ attribute [simp_isPosition]
   ite_eq_iff eq_ite_iff ite_prop_iff_or
   --apply_ite
   --maybe reduce priority to stop (apply_ite (Eq _))
-attribute [simp_isPosition] reduceCtorEq
+/-- Constructor equality reduction for the position simplifier. -/
+simproc_decl playerReduceCtorEq (_ = _) := reduceCtorEq
+attribute [simp_isPosition] playerReduceCtorEq
 /-- Tactic support used by the Borel determinacy formalization. -/
 macro "synthIsPosition" : tactic =>
   `(tactic | first | done |

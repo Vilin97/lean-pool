@@ -3,10 +3,13 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 import LeanPool.ZhangYeungInequality.Delta
-import LeanPool.ZhangYeungInequality.Prelude
 import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
 
 /-!
 # Zhang-Yeung Theorem 2: a conditional information inequality
@@ -168,6 +171,8 @@ below takes its arguments in Delta.lean's order: `delta Z U X Y μ`.
 Shannon entropy, conditional mutual information, conditional information inequality,
 Kullback-Leibler divergence, Zhang-Yeung, essentially conditional inequality
 -/
+
+@[expose] public section
 
 namespace ZhangYeung
 

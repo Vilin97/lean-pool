@@ -3,10 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Analysis.Normed.Module.Convex
-import Mathlib.Topology.Connected.Clopen
-import Mathlib.Topology.MetricSpace.Thickening
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 
 /-!
 # Broken-line connectivity of open connected sets in the plane
@@ -26,6 +25,8 @@ because any metric ball inside `U` is convex, so the segment from a ball's centr
 points extends or truncates a broken line by one segment.  Preconnectedness of `U` then forces
 the complement to be empty.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

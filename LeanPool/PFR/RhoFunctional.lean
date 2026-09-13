@@ -6,9 +6,26 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.ForMathlib.ThreeVariables
 public import LeanPool.PFR.Kullback
-public import LeanPool.PFR.Main
+public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
+import LeanPool.PFR.Endgame
+import LeanPool.PFR.Fibring
+import LeanPool.PFR.FirstEstimate
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FourVariables
+import LeanPool.PFR.ForMathlib.ThreeVariables
+import LeanPool.PFR.HundredPercent
+import LeanPool.PFR.Main
+import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
+import Mathlib.Algebra.Module.ZMod
+import Mathlib.Combinatorics.Additive.RuzsaCovering
+import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+import Mathlib.MeasureTheory.Measure.Prokhorov
 
 /-!
 # The rho functional

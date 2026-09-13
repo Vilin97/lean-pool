@@ -3,9 +3,12 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
+public import LeanPool.Chudnovsky.Quasiperiods
 import LeanPool.Chudnovsky.DivisionValues
 import LeanPool.Chudnovsky.Fourier
+import LeanPool.Chudnovsky.Liouville
 
 /-!
 # Complex multiplication and the integrality of `E₂*` (Milla, Appendix B)
@@ -27,6 +30,8 @@ in place of `√D`, which keeps them branch-free.
 At `τ₁₆₃` : `41 − τ + τ² = 0`, i.e. `A = 41, B = −1, C = 1`, `D = −163`,
 `√D = 2τ − 1 = i√163`, `AC = 41` — the specialization used in `Coefficients.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

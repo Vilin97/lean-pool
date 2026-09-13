@@ -3,12 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.Kummer
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.GKPCarry.Statement
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.MaxPowDiv
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 # Binary reduction of the GKP conjecture
@@ -17,6 +17,8 @@ Kummer's theorem at `p = 2` identifies the two-adic valuation of a central
 binomial coefficient with binary popcount.  Hence every positive non-power of
 two already satisfies the divisibility-by-four branch of GKP.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

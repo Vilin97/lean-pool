@@ -3,10 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Measure.Map
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp`
@@ -30,6 +29,8 @@ This file provides:
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.measurePreserving_extChartAtMk`
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.chartPullbackL2`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

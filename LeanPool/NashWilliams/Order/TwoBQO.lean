@@ -3,12 +3,16 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import Mathlib.SetTheory.Ordinal.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
+module
+
+public import Mathlib.SetTheory.Ordinal.Basic
+public import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
 import LeanPool.NashWilliams.Combinatorics.Ramsey.Infinite
-import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # 2-better-quasi-orders (2-BQO)
@@ -47,6 +51,8 @@ embedding relation (`TwoBQO.embedForAll_wqo`).
 * `TwoBQO.dom_twoBQO`: the domination order on subsets of a 2-BQO is WQO.
 * `TwoBQO.embedForAll_wqo`: `EmbedForAll r` is WQO on `ℕ → Q` whenever `r` is 2-BQO on `Q`.
 -/
+
+@[expose] public section
 
 open Set Preorder
 
@@ -98,7 +104,7 @@ theorem perfect_or_bad {α : Type*} (r : α → α → Prop) (f : PairSeq α) :
 end PairSeq
 
 /-- `r` is **2-BQO** if there is no bad pair-sequence for `r`. -/
-private def TwoBQO_n {α : Type*} (r : α → α → Prop) : Prop :=
+def TwoBQON {α : Type*} (r : α → α → Prop) : Prop :=
   ¬ ∃ f : PairSeq α, PairSeq.IsBad r f
 
 /-- `r` is **2-BQO** if every pair-sequence has a good triple `m < n < l`, i.e.
@@ -106,8 +112,8 @@ private def TwoBQO_n {α : Type*} (r : α → α → Prop) : Prop :=
 def TwoBQO {α : Type*} (r : α → α → Prop) : Prop :=
   ∀ f : PairSeq α, ∃ m n l : ℕ, ∃ (hmn : m < n) (hnl : n < l), r (f m n hmn) (f n l hnl)
 
-theorem TwoBQO.iff_noBad {α : Type*} (r : α → α → Prop) : TwoBQO r ↔ TwoBQO_n r := by
-  simp only [TwoBQO_n, PairSeq.IsBad, not_exists, not_forall, not_not]
+theorem TwoBQO.iff_noBad {α : Type*} (r : α → α → Prop) : TwoBQO r ↔ TwoBQON r := by
+  simp only [TwoBQON, PairSeq.IsBad, not_exists, not_forall, not_not]
   exact Iff.symm (Eq.to_iff rfl)
 
 /-!

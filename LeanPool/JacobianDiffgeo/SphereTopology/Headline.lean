@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
 import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
+import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The backward headline: `X ≃ₜ S² ⇒ genus X = 0` (CC-sphere-topology, design §4)
@@ -18,6 +23,8 @@ compact Riemann surface has genus `0`) into the exact backward-headline signatur
 
 Main declaration: `RS.SphereTopology.genus_eq_zero_of_homeo_sphere`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

@@ -3,9 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+public import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
+public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
 import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 /-!
 # Constant surgery: substituting one constant for another
 
@@ -22,6 +26,8 @@ consumer replace a constant in a separator without spending a quantifier permiss
 The `instConst` dependency is why this file currently sits under `Methods` beside the interpolation
 machinery rather than in the syntax layer; #39's consolidation is where that is resolved.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

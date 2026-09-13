@@ -3,8 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.TailDuality.Duality
+public import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.Cech.SixTerm
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The tail-χ ledger: `chiT` additivity (serre-duality-tails, chiT-ledger closure)
@@ -45,6 +50,8 @@ out of scope, per `Comparison.lean`/the root docstring) — it is not used here 
   additivity statement.
 * **`chiT_eq_chiT_zero_add_degree (D) : chiT D = chiT 0 + D.degree`** — the primary deliverable.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

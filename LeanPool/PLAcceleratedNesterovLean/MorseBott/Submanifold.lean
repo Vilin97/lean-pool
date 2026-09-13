@@ -3,10 +3,14 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.IFTProof
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
 import LeanPool.PLAcceleratedNesterovLean.MorseBott.GradAlign
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.IFTProof
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Theorem 2.16: PŁ ⟹ S is a submanifold
@@ -61,6 +65,8 @@ where ∇f(x) ∈ E is the Riesz representative of Df(x) ∈ E*.
 - Implicit function theorem: Mathlib `IsContDiffImplicitAt` /
   `ImplicitFunctionData`.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Submodule Asymptotics
 

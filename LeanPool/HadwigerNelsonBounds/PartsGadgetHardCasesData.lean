@@ -3,16 +3,25 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData0
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData1
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData2
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData3
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData4
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData5
-import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData6
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData0
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData1
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData2
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData3
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData4
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData5
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData6
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetCases
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated aggregation and routing for the hard normalized cases. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

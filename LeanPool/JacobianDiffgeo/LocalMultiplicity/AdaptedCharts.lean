@@ -7,7 +7,12 @@ Authors: Rado Kirov
 /-
 Blueprint unit: local-multiplicity (CC4). Adapted charts: the local normal form `z ↦ z ^ k`.
 -/
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+module
+
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Adapted charts (Forster Thm 2.1)
@@ -20,6 +25,8 @@ import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
   source), `contMDiffOn_e/e'(_symm)`, and `multiplicity_eq` (adapted charts pin down the
   multiplicity).
 -/
+
+@[expose] public section
 
 open Filter Set OpenPartialHomeomorph Metric
 open scoped ContDiff Manifold Topology

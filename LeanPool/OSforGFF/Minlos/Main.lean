@@ -3,8 +3,16 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import LeanPool.OSforGFF.Minlos.MeasurableModification
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Minlos' Theorem
@@ -33,6 +41,8 @@ probability measure on the topological dual E' = WeakDual ℝ E.
 - Billingsley, "Convergence of Probability Measures", Thm 36.1
 - Degenne-Pfaffelhuber, KolmogorovExtension4 (formalized Kolmogorov extension)
 -/
+
+@[expose] public section
 
 open BigOperators MeasureTheory Complex TopologicalSpace
 

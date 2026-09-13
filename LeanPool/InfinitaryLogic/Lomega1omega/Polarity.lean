@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
 /-!
 # Polarity of relation-symbol occurrences (issue #14, Unit 0 layer 1)
 
@@ -30,6 +32,8 @@ Only the **generic** `relationsInSigned` equations are `@[simp]`; the `positiveR
 `negativeRelationsIn` forms are reducible abbreviations of those, so no derived rewrite is
 installed alongside them and nothing can loop through `not`, `and`, `or`, or `ex`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

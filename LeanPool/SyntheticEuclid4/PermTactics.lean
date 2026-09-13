@@ -3,7 +3,25 @@ Copyright (c) 2026 André Hernandez-Espiet, Vladimir Sedlacek. All rights reserv
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
-import LeanPool.SyntheticEuclid4.Tactics
+module
+
+public meta import LeanPool.SyntheticEuclid4.Tactics
+
+public meta import Aesop.BuiltinRules
+public meta import Lean.Elab.Tactic.Conv.Basic
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.Simps
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+import Lean.Elab.Tactic.RCases
+import Mathlib.Algebra.Order.AbsoluteValue.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 The permutation tactics `perm`, `perma`, and `linperm` for the symmetric area
@@ -12,8 +30,10 @@ tactics. These normalize the point arguments of the geometric primitives using
 the symmetry lemmas from `Tactics`.
 -/
 
-open SyntheticEuclid4
-open IncidenceGeometry
+public meta section
+
+open SyntheticEuclid4 IncidenceGeometry
+
 
 namespace Lean.Elab.Tactic
 

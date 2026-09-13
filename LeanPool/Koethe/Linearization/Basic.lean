@@ -3,9 +3,12 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
+module
+
+public import LeanPool.Koethe.Pencil
 import Mathlib.Tactic.NoncommRing
-import Mathlib.Tactic.Ring
-import LeanPool.Koethe.Pencil
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Finite homogeneous-linear systems
@@ -16,6 +19,8 @@ scalar/identity edges. `Represents` is the elimination property of the internal
 system. We construct this property directly, without needing a matrix inverse
 or a nilpotence assumption on the ambient algebra.
 -/
+
+@[expose] public section
 
 noncomputable section
 

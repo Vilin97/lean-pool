@@ -3,15 +3,18 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.CWComplex.Basic
+public import LeanPool.WhiteheadTheorem.HEP.Cofibration
+public import LeanPool.WhiteheadTheorem.Shapes.Cube
 import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
-import LeanPool.WhiteheadTheorem.HEP.Cofibration
 
 /-!
 In this file, the homotopy extension property (HEP) of the pair $(I^n, ∂I^n)$
 is derived from the HEP of $(D^n, ∂D^n)$.
 -/
+
+@[expose] public section
 
 open CategoryTheory TopCat
 open scoped Topology unitInterval

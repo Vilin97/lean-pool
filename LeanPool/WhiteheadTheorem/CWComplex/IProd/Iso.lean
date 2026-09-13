@@ -3,9 +3,9 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.CWComplex.IProd.Def
-import Mathlib.CategoryTheory.Adjunction.Limits
+public import LeanPool.WhiteheadTheorem.CWComplex.IProd.Def
 
 /-!
 This file verifies that the pair `(X.IProd.sk 0, X.IProd)` is homeomorphic to
@@ -13,6 +13,8 @@ This file verifies that the pair `(X.IProd.sk 0, X.IProd)` is homeomorphic to
 `CWComplex/IProd/Def.lean`, `X.IProd.sk 0` is its $(-1)$-skeleton,
 and `I` is the unit interval.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory unitInterval TopCat

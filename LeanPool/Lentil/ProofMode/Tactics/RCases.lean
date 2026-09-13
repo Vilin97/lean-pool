@@ -3,10 +3,20 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Tactics.Have
-import LeanPool.Lentil.ProofMode.Tactics.Clear
-import LeanPool.Lentil.ProofMode.Tactics.Rename
+module
+
+
+public import LeanPool.Lentil.ProofMode.Tactics.Have
+public import LeanPool.Lentil.ProofMode.Tactics.Clear
+public import LeanPool.Lentil.ProofMode.Tactics.Intro
+import Lean.Elab.Tactic.RCases
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
 import LeanPool.Lentil.ProofMode.Tactics.Revert
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -93,7 +103,7 @@ end
 
 end
 
-private def rcasesTacDSimps : Array Name :=
+private meta def rcasesTacDSimps : Array Name :=
   #[``List.findIdx, ``List.findIdx.go, ``List.get?Internal,
   ``List.eraseIdx, ``List.cons_append, ``List.nil_append,
   ``String.reduceBEq, ``String.reduceBNe,
@@ -103,7 +113,7 @@ private def rcasesTacDSimps : Array Name :=
 /-- Generate a name for the hyp slot consumed by this pattern: idents land their
     own name; `_` and tuples get fresh hygienic names that may be re-targeted on
     the recursive call. -/
-private def nameStrForPat (pat : TSyntax `rcasesPat) : TacticM String := do
+private meta def nameStrForPat (pat : TSyntax `rcasesPat) : TacticM String := do
   match pat with
   | `(rcasesPat| $name:ident) => return toString name.getId
   | _ =>
@@ -114,7 +124,7 @@ private def nameStrForPat (pat : TSyntax `rcasesPat) : TacticM String := do
 /-- Unwrap a `rcasesPatLo` to a single `rcasesPat`, rejecting `: ty` ascriptions.
     A genuine `|` alternation is re-wrapped as a parenthesized `rcasesPat`, so it
     can be carried uniformly and later recognized by `asAlternationOpt`. -/
-private def unwrapPatLo (p : TSyntax ``Lean.Parser.Tactic.rcasesPatLo) : TacticM (TSyntax `rcasesPat) := do
+private meta def unwrapPatLo (p : TSyntax ``Lean.Parser.Tactic.rcasesPatLo) : TacticM (TSyntax `rcasesPat) := do
   match p with
   | `(rcasesPatLo| $_:rcasesPatMed : $_:term) =>
     throwError "tla_rcases: type ascription ': ty' is not supported"
@@ -130,7 +140,7 @@ private def unwrapPatLo (p : TSyntax ``Lean.Parser.Tactic.rcasesPatLo) : TacticM
 
 /-- If `pat` is a parenthesized alternation `(p₁ | p₂ | …)` with at least two
     branches, return its branches; otherwise `none`. -/
-private def asAlternationOpt (pat : TSyntax `rcasesPat) : Option (Array (TSyntax `rcasesPat)) :=
+private meta def asAlternationOpt (pat : TSyntax `rcasesPat) : Option (Array (TSyntax `rcasesPat)) :=
   match pat with
   | `(rcasesPat| ( $lo:rcasesPatLo )) =>
     match lo with
@@ -148,7 +158,7 @@ private def asAlternationOpt (pat : TSyntax `rcasesPat) : Option (Array (TSyntax
 -- for a more efficient implementation in the future.
 /-- Split tuple sub-patterns into (head, tail) with right-associative wrapping
     for n > 2: `[p₁, p₂, …, pₙ]` becomes `(p₁, ⟨p₂, …, pₙ⟩)`. -/
-private def splitBinaryRightAssoc (pats : Array (TSyntax ``Lean.Parser.Tactic.rcasesPatLo))
+private meta def splitBinaryRightAssoc (pats : Array (TSyntax ``Lean.Parser.Tactic.rcasesPatLo))
     : TacticM (TSyntax `rcasesPat × TSyntax `rcasesPat) := do
   match pats.toList with
   | [] => throwError "tla_rcases: empty tuple ⟨⟩ is not supported"
@@ -161,7 +171,7 @@ private def splitBinaryRightAssoc (pats : Array (TSyntax ``Lean.Parser.Tactic.rc
 
 /-- Split alternation branches into (head, tail) with right-associative wrapping
     for n > 2: `[b₁, b₂, …, bₙ]` becomes `(b₁, (b₂ | … | bₙ))`. -/
-private def splitAltRightAssoc (branches : Array (TSyntax `rcasesPat))
+private meta def splitAltRightAssoc (branches : Array (TSyntax `rcasesPat))
     : TacticM (TSyntax `rcasesPat × TSyntax `rcasesPat) := do
   match branches.toList with
   | [] | [_] => throwError "tla_rcases: alternation needs at least two branches"
@@ -173,7 +183,7 @@ private def splitAltRightAssoc (branches : Array (TSyntax `rcasesPat))
 
 /-- The number of syntax nodes in `stx`; used as a recursion-fuel bound when
     destructuring `rcasesPat` patterns (each sub-pattern is strictly smaller). -/
-def syntaxNodeCount : Syntax → Nat
+meta def syntaxNodeCount : Syntax → Nat
   | .node _ _ args => args.foldl (fun acc s => acc + syntaxNodeCount s) 1
   | _ => 1
 
@@ -184,7 +194,7 @@ def syntaxNodeCount : Syntax → Nat
 
     A tuple `⟨..⟩` destructures `tlaAnd` / `tlaExists`; a parenthesized
     alternation `(.. | ..)` case-splits a `tlaOr`, producing two subgoals. -/
-def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
+meta def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
     (pat : TSyntax `rcasesPat) : TacticM Unit := do
   match fuel with
   | 0 => throwError "tla_rcases: pattern is nested too deeply"
@@ -266,7 +276,7 @@ def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
 /-- Run `tlaRcasesCoreFocused` on every current goal, collecting all resulting
     goals. Needed because an or-split multiplies goals, and sibling or
     subsequent patterns must then be applied to each of them. -/
-def tlaRcasesCoreAllGoals (fuel : Nat) (currentHyp : TemporalHypLoc)
+meta def tlaRcasesCoreAllGoals (fuel : Nat) (currentHyp : TemporalHypLoc)
     (pat : TSyntax `rcasesPat) : TacticM Unit := do
   let perGoal ← (← getGoals).mapM fun g => Tactic.run g (tlaRcasesCoreFocused fuel currentHyp pat)
   setGoals perGoal.flatten
@@ -274,7 +284,7 @@ def tlaRcasesCoreAllGoals (fuel : Nat) (currentHyp : TemporalHypLoc)
 /-- Destructure the proof-mode hypothesis at `currentHyp` against `pat`, acting
     on the main goal and leaving any other goals untouched. This is the entry
     point; the recursive work happens in `tlaRcasesCoreFocused`. -/
-def tlaRcasesCore (currentHyp : TemporalHypLoc) (pat : TSyntax `rcasesPat) : TacticM Unit :=
+meta def tlaRcasesCore (currentHyp : TemporalHypLoc) (pat : TSyntax `rcasesPat) : TacticM Unit :=
   -- The pattern's syntax-node count bounds the destructuring recursion depth.
   focus (tlaRcasesCoreFocused (syntaxNodeCount pat.raw + 1) currentHyp pat)
 

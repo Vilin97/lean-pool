@@ -6,7 +6,7 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
+public import Mathlib.Data.Nat.Notation
 
 /-!
 # Trusted cost annotations

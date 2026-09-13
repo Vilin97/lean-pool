@@ -3,11 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.ContinuousLattice.MilnerCorrection
-import LeanPool.DomainTheory.ContinuousLattice.ScottMaps
-import LeanPool.DomainTheory.ContinuousLattice.Injective
-import Mathlib.Order.Preorder.Finite
+public import LeanPool.DomainTheory.ContinuousLattice.ScottMaps
+public import LeanPool.DomainTheory.ContinuousLattice.Injective
 
 /-!
 # Continuous lattice constructions (Scott 1972, §2.8–2.12)
@@ -28,6 +27,8 @@ topology agrees with the product / subspace topology") are the parts that requir
 the Milner
 correction and remain open.
 -/
+
+@[expose] public section
 
 namespace Domain.ContinuousLattice
 

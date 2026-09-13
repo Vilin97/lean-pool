@@ -3,11 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
 import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Tree
 import LeanPool.Incompleteness.Foundation.Modal.Kripke.SimpleExtension
 
 /-! # Unnecessitation -/
+
+@[expose] public section
 
 
 namespace LO

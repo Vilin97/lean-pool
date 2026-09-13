@@ -3,8 +3,12 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.VMLStructures
+module
+
+public import LeanPool.Clawristotle.VMLStructures
+import LeanPool.Clawristotle.FlatTorus3Lemmas
 import LeanPool.Clawristotle.Section6
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Magnetic Field and Final Assembly (Section 8)
@@ -13,6 +17,8 @@ Proves the magnetic field is spatially constant (from curl B = 0 and div B = 0),
 derives E = 0 from the Poisson-Boltzmann equation, and assembles the abstract
 `ConcreteTheorem42` combining all sections.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

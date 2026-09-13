@@ -10,13 +10,18 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the semidirect-product coordinate unitary and changed
 imports and namespace. Paper: §3. See the upstream PORT_MAP.md.
 -/
-import Mathlib.GroupTheory.SemidirectProduct
-import Mathlib.Topology.Separation.CompletelyRegular
+module
+
+public import Mathlib.GroupTheory.SemidirectProduct
+public import LeanPool.ConnesRigidity.Core
 import LeanPool.ConnesRigidity.Porting.CoreTransfer
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 The semidirect fubini component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace SemidirectFubini
@@ -29,7 +34,8 @@ universe u v
 
 /- The curry map is the discrete ℓ² Fubini equivalence used for the fibres.
 Paper: §3. -/
-private def l2CurryFiber {ι : Type u} {κ : Type v}
+/-- Restrict a square-summable family on a product to one fibre. -/
+def l2CurryFiber {ι : Type u} {κ : Type v}
     (ξ : GroupL2 (ι × κ)) (i : ι) : GroupL2 κ :=
   ⟨fun k => ξ (i, k), by
     change Memℓp (fun k => ξ (i, k)) 2
@@ -78,8 +84,8 @@ The `l2Curry` construction used in the Connes rigidity formalization.
 def l2Curry (ι : Type u) (κ : Type v) :
     GroupL2 (ι × κ) ≃ₗᵢ[ℂ] lp (fun _ : ι => GroupL2 κ) 2 where
   toLinearEquiv :=
-    { toFun := fun ξ => ⟨fun i => l2CurryFiber ξ i, l2Curry_mem ξ⟩
-      invFun := fun ξ => ⟨fun p => ξ p.1 p.2, l2Uncurry_mem ξ⟩
+    { toFun := fun ξ => ⟨fun i => l2CurryFiber ξ i, by exact l2Curry_mem ξ⟩
+      invFun := fun ξ => ⟨fun p => ξ p.1 p.2, by exact l2Uncurry_mem ξ⟩
       left_inv := by
         intro ξ
         ext p

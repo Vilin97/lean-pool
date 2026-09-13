@@ -3,11 +3,20 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
+module
+
+public import LeanPool.InfinitaryLogic.Methods.HighlyOrderTransitive
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Tactic.Linarith
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Fin.Basic
 import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Linear ordered fields are highly order-transitive (issue #11 unit 6a)
@@ -22,6 +31,8 @@ positive affine dilation `z ↦ a + ((y-a)/(x-a)) * (z-a)` above the last alread
 The automorphism is built as a piecewise strictly monotone surjection
 (`StrictMono.orderIsoOfSurjective`) — no order-sum gluing needed.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

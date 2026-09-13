@@ -3,10 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.SharedDecoder
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Disjoint
-import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSeparation
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
 import LeanPool.InfinitaryLogic.Descriptive.AnalyticTree
+import LeanPool.InfinitaryLogic.Descriptive.Polish
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSeparation
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Disjoint
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.SharedDecoder
 /-!
 # López–Escobar, hard direction (issue #10, Unit 5b)
 
@@ -28,6 +32,8 @@ The assembly is Marker's, with every ingredient already proved:
 So `IsomorphismInvariant` is consumed exactly where Unit 3b/Unit 4 already consumed it,
 inside `pcSentences_entails_not`; this unit adds no further use of it.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

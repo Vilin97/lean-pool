@@ -3,14 +3,17 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import LeanPool.MRiscX.AbstractSyntax.MState
+module
+
+public import LeanPool.MRiscX.AbstractSyntax.MState
 
 /-!
 # Run
 
 This module provides the operational `run` semantics of MRiscX.
 -/
+
+@[expose] public section
 
 open Nat
 

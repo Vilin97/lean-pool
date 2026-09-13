@@ -3,8 +3,12 @@ Copyright (c) 2025 Michał Dobranowski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Dobranowski
 -/
-import Plausible.Arbitrary
-import LeanPool.Apportionment.Basic
+module
+
+public import LeanPool.Apportionment.Basic
+import LeanPool.Apportionment.Utils
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Instances for Plausible
@@ -30,6 +34,8 @@ example (e : Election 4) : e.votes[0] ≤ 15 + e.votes[1] := by
 #sample Election 2
 ```
 -/
+
+@[expose] public section
 
 open Plausible
 

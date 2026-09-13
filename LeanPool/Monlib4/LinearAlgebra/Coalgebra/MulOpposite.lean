@@ -3,17 +3,21 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
-import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
+public import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
+public import LeanPool.Monlib4.LinearAlgebra.LinearMapOp
+public import Mathlib.RingTheory.Coalgebra.Basic
 import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
-import Mathlib.LinearAlgebra.TensorProduct.Opposite
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.MulOpposite`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 
@@ -208,7 +212,7 @@ noncomputable def MulOpposite.coalgebra
   {R A : Type*} [CommSemiring R]
   [AddCommMonoid A] [Module R A]
   [Coalgebra R A] : Coalgebra R Aᵐᵒᵖ where
-    coassoc := MulOpposite_coassoc
+    coassoc := by exact MulOpposite_coassoc
     rTensor_counit_comp_comul := by
         rw [comul_def', counit_def, ← LinearMap.comp_assoc,
           LinearMap.rTensor_comp_map, LinearMap.comp_assoc,

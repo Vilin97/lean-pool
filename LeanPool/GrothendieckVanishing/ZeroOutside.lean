@@ -3,7 +3,13 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
+public import Mathlib.Algebra.Category.Grp.Colimits
+public import Mathlib.Algebra.Category.Grp.FilteredColimits
+public import Mathlib.Algebra.Category.Grp.Limits
+public import Mathlib.Algebra.Category.Grp.Zero
+public import Mathlib.Topology.Sheaves.Stalks
 import LeanPool.GrothendieckVanishing.CohomologyAPI
 
 /-!
@@ -34,6 +40,8 @@ finitely-generated subsheaf reduction in the Grothendieck vanishing proof.
 * `stalk_zeroOutsideInt_eq_zsmul_generator` — stalks on `U` are integer multiples of the
   canonical germ.
 -/
+
+@[expose] public section
 
 universe u
 

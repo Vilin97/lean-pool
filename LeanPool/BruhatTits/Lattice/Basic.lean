@@ -3,11 +3,14 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Utils.Matrix
+module
+
+public import LeanPool.BruhatTits.Utils.Matrix
+public import LeanPool.BruhatTits.Utils.Subring
 import LeanPool.BruhatTits.Utils.Misc
+import Mathlib.Algebra.Group.Action.Pointwise.Set.Finite
 import Mathlib.LinearAlgebra.Dimension.Localization
 import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.Algebra.Group.Action.Pointwise.Set.Finite
 
 /-!
 # Definition of lattices
@@ -18,6 +21,8 @@ if `M` is finitely generated and it spans `ι → K` as a `K`-module.
 If `R` is a principal ideal domain, any lattice is a free `R`-module of rank cardinality of `ι`.
 
 -/
+
+@[expose] public section
 
 open Module
 

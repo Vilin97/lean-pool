@@ -3,10 +3,12 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import LeanPool.Kuramoto.OrderParameter
 
 /-!
 # Kuramoto gradient flow
@@ -14,6 +16,8 @@ import LeanPool.Kuramoto.OrderParameter
 The Kuramoto potential `kuramotoV` and force field `kuramotoF`, together with the
 gradient identity expressing the force as the negative phase-derivative of the potential.
 -/
+
+@[expose] public section
 
 open Real Finset
 

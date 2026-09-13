@@ -3,10 +3,11 @@ Copyright (c) 2026 Lazar Milikic. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lazar Milikic
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Probability.IdentDistrib
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Probability.IdentDistrib
 
 /-!
 # The Cramer-Wold theorem
@@ -18,6 +19,8 @@ Main declarations: `LeanPool.CramerWold.euclideanSpace_measure_eq_of_forall_inne
 Tags: probability, measure-theory, characteristic-functions, cramer-wold
 MSC: 60B11, 60E10, 28A33
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

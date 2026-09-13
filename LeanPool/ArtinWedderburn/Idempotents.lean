@@ -3,15 +3,16 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.Algebra.Field.Defs
-import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.Algebra.Ring.Idempotent
-import LeanPool.ArtinWedderburn.PrimeRing
-import LeanPool.ArtinWedderburn.SetProd
-import LeanPool.ArtinWedderburn.CornerRing
+module
+
+public import LeanPool.ArtinWedderburn.CornerRing
 import LeanPool.ArtinWedderburn.MinIdeals
-import LeanPool.ArtinWedderburn.Auxiliary
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.RingTheory.Ideal.Maximal
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Orthogonal idempotents and matrix units
@@ -20,6 +21,8 @@ Develops orthogonal idempotents, builds matrix units from a system of pairwise
 orthogonal idempotents whose corner rings are division rings, and packages the
 data as `OrtIdem` / `OrtIdemDiv` structures.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

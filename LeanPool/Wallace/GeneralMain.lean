@@ -3,10 +3,13 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.TorsionFreeCoordinate
-import LeanPool.Wallace.RationalAssembly
-import LeanPool.Wallace.PackageTransport
+public import LeanPool.Wallace.TorsionFreeCoordinate
+public import LeanPool.Wallace.RationalAssembly
+public import LeanPool.Wallace.PackageTransport
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The main theorem for every torsion-free Abelian group of cardinality continuum
@@ -16,6 +19,8 @@ theorem stated in the paper.  The rational character package is pulled back alon
 coordinatization embedding from Section 2.  Its prescribed basis limits lie in the embedded
 group by construction, so no new fusion or set-theoretic hypothesis is needed.
 -/
+
+@[expose] public section
 
 open Cardinal
 

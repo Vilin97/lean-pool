@@ -5,9 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.Defs
-public import Mathlib.Analysis.Calculus.LogDeriv
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! TODO: Add doc-string. -/
 

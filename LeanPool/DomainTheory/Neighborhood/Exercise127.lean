@@ -3,10 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise118
+public import LeanPool.DomainTheory.Neighborhood.Exercise118
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Data.Set.Finite.Range
-import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 1.27 (Scott 1981, PRG-19, §1) — bounded sets and least upper bounds
@@ -41,6 +47,8 @@ The constructions (`sSup`) are `[propext, Quot.sound]`. The hard direction of
 this is a
 *proof*, so the construction stays choice-free.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

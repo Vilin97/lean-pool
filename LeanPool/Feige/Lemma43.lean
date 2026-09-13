@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.TransferProbability23
+module
+
+public import LeanPool.Feige.TransferProbability23
+public import LeanPool.Feige.LikelihoodRatio
 import LeanPool.Feige.TransferAlgebra
-import LeanPool.Feige.LikelihoodRatio
 
 /-!
 # Complete interface for the local exponential transfer step
@@ -14,6 +16,8 @@ This file packages the probability identity and the likelihood-ratio
 order comparison in forms intended for pointwise use along an insertion
 chain.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

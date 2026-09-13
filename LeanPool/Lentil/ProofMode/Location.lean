@@ -3,7 +3,15 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Basic
+module
+
+public import Aesop.BuiltinRules
+public meta import Lean.Elab.Tactic.Location
+public import Lean.Exception
+public import LeanPool.Lentil.Utils.MetaUtil
+import Lean.Elab.Tactic.Location
+
+public meta section
 
 namespace TLA.ProofMode
 

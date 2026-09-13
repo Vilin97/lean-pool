@@ -3,8 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ChartInduction
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
+import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
 import LeanPool.ClassificationOfSurfaces.Moise.PuncturedSurface
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Dual connectivity of completed surface triangulations
@@ -14,6 +21,8 @@ does not require a separate cyclic-link theorem.  If the faces split into two du
 their closed carriers can meet only at triangulation vertices.  Deleting that finite vertex
 locus would therefore disconnect the surface, contradicting finite-puncture connectivity.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 

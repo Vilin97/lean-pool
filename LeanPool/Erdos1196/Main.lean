@@ -3,9 +3,14 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.Markov
+module
+
+public import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.HitMass
+import LeanPool.Erdos1196.Markov
 import LeanPool.Erdos1196.PrimitiveWeight
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Main theorem for primitive sets above `x`
@@ -19,6 +24,8 @@ normalization estimates into the final logarithmic-series bound.
 
 * `mainTheorem`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators
 

@@ -11,14 +11,18 @@ Unlike `FV`, `allVars` records bound names too.  Freshness from `allVars` is
 the side condition needed when making the paper's implicit alpha-renaming
 steps explicit over the raw named syntax of the verified base.
 -/
-import LeanPool.MatchingLogic.Semantics
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Finset.Union
-import Mathlib.Data.Fintype.Basic
+module
+
+public import LeanPool.MatchingLogic.Semantics
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Finset.Union
+public import Mathlib.Data.Fintype.Basic
 
 /-!
 # MatchingLogic.EntryIII.Fresh
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

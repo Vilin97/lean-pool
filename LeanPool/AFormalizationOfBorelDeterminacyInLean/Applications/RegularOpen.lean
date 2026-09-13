@@ -3,17 +3,18 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
-import Mathlib.Order.Heyting.Regular
-import Mathlib.Tactic.ApplyFun
-import Mathlib.Topology.Sets.Opens
+public import Mathlib.Order.Heyting.Regular
+public import Mathlib.Topology.Sets.Opens
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 variable {X : Type*} [tX : TopologicalSpace X] {A B : Set X} {U V : tX.Opens}

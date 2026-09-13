@@ -18,10 +18,18 @@ the companion paper. It provides:
 **Reference**: Section 4 and the table in Section 5 of
 the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.PippengerProof
 import LeanPool.KaltonRoberts.Numerical
 import LeanPool.KaltonRoberts.PhiAnalysis
-import LeanPool.KaltonRoberts.PippengerProof
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Convex.Jensen
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pippenger expander construction
@@ -29,6 +37,8 @@ import LeanPool.KaltonRoberts.PippengerProof
 Row certificates and row-specific constructions for the probabilistic expander
 argument used in the Kalton-Roberts bound.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

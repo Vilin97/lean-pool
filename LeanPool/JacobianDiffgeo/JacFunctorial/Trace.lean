@@ -3,12 +3,18 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.TraceCoeff
+public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceCoeff
+public import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
 import LeanPool.JacobianDiffgeo.JacFunctorial.Density
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
-import LeanPool.JacobianDiffgeo.Forms.OfCoeffs
 import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+import LeanPool.JacobianDiffgeo.MeromorphicTrace.FunctionTrace
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Form1.trace` — the fibrewise trace of a holomorphic 1-form (jacobian-functoriality §6)
@@ -34,6 +40,8 @@ Main declarations:
   `RS.coeffAt_traceForm_of_isRegularValue` (the regular-value formula, feed for the projection
   formula / functoriality laws / the trace–period relation).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter Metric IsManifold

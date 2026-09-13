@@ -3,8 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.AnalyticNormalization
+public import LeanPool.PoincareThreeBody.AnalyticNormalization
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Normed.Module.FiniteDimension
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Poisson algebra for coefficient normalization
@@ -14,6 +20,8 @@ as does multiplication by a scalar.  Combined with the exact off-zero formula fo
 shows that the mass-normalized candidate remains a first integral for nonzero mass wherever the
 zeroth coefficient cancellation holds locally in phase space.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

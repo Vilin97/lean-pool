@@ -3,10 +3,18 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Defs
-import LeanPool.LehmerE10.Mahler
-import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # the finite contrast: the E₈ Coxeter element has order 30.
@@ -25,6 +33,8 @@ So the pair (E₈, E₁₀) realizes both sides of Kronecker's dichotomy for int
 spectrum on the unit circle ⟹ roots of unity ⟹ finite order, versus one eigenvalue off
 the circle ⟹ infinite order — with Lehmer's number as the first exit.
 -/
+
+@[expose] public section
 
 open Matrix
 

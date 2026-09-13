@@ -3,7 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.SphereHemisphere
+module
+
+public import LeanPool.ClassificationOfSurfaces.SphereHemisphere
+public import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The two-monogon quotient is the standard sphere
@@ -13,6 +20,8 @@ by the sphere's side pairing, so it descends to the polygonal realization.  This
 the descended map is bijective and hence, by compactness of the source and the Hausdorff property
 of the target, a homeomorphism with `SphereRepresentative`.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
 import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Planar Cousin: cocycle splittings (`Jacobian/Dbar/PlanarCousin.lean`)
@@ -21,6 +26,8 @@ project-independent (design D10).
 Cocycle convention matched to cech's `d0` (`(d0 h)_{ij} = h_j − h_i`) and `Z1.rel_res`
 (`f_{jk} − f_{ik} + f_{ij} = 0`, i.e. `f i k = f i j + f j k`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

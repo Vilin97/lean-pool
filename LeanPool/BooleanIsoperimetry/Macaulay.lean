@@ -3,7 +3,18 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import LeanPool.BooleanIsoperimetry.Cascade
+module
+
+public import LeanPool.BooleanIsoperimetry.Cascade
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Algebra.Group.Action.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Macaulay increment arithmetic
@@ -11,6 +22,8 @@ import LeanPool.BooleanIsoperimetry.Cascade
 This file develops the increment profile of the Harper boundary function and
 the nested-cascade inequalities used by the final minimization argument.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

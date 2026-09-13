@@ -3,16 +3,14 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-import LeanPool.OSforGFF.Covariance.Momentum
-import LeanPool.OSforGFF.OS.OS3MixedRep
-import LeanPool.OSforGFF.OS.OS3MixedRepInfra
-import LeanPool.OSforGFF.Covariance.Parseval
+public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
+public import LeanPool.OSforGFF.Covariance.Parseval
+public import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 import LeanPool.OSforGFF.Covariance.Position
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+import LeanPool.OSforGFF.OS.OS3MixedRep
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # OS3 — Covariance Reflection Positivity
@@ -31,6 +29,8 @@ perfect square ∫ (1/ω)|F_ω(kbar)|² dkbar with F_ω(kbar) = ∫ ftilde(t,kba
 - `freeCovariance_reflection_positive_bilinear`: ⟨Θf, Cf⟩ ≥ 0 (complex)
 - `freeCovariance_reflection_positive_real`: real-valued version
 -/
+
+@[expose] public section
 
 namespace QFT
 

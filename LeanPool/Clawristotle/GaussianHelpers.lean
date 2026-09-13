@@ -3,11 +3,13 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
-import Mathlib.MeasureTheory.Integral.Pi
+module
+
+public import LeanPool.Clawristotle.Defs
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Analysis.Calculus.ContDiff.Bounds
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Gaussian Helper Lemmas
@@ -15,6 +17,8 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 Gaussian normalization, gradient of exponential-quadratic functions,
 integrability, and related analysis lemmas used in Section 3.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

@@ -6,17 +6,19 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Data.Int.Star
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.UniformConvergence
+public import Mathlib.Analysis.Asymptotics.Defs
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Data.Int.Star
+import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 
 /-! # BigO -/
 
 
 @[expose] public section
 
-open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set
+open EisensteinSeries UpperHalfPlane TopologicalSpace Set
   Metric Filter Function Complex
 
 open scoped Interval Real NNReal ENNReal Topology BigOperators Nat

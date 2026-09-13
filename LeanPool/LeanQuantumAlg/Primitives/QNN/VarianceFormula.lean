@@ -6,12 +6,14 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import LeanPool.LeanQuantumAlg.Core.Gate
-public import LeanPool.LeanQuantumAlg.Primitives.QNN.DynamicalLieAlgebra
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.LieAlgebraicBP
 public import LeanPool.LeanQuantumAlg.Util.HilbertSchmidt
-public import Mathlib.Algebra.Lie.Matrix
+public import Mathlib.Analysis.Complex.Norm
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 
 /-!
 # The Lie-algebraic loss-variance formula (Ragone et al. 2023): foundations

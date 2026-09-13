@@ -3,8 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms
+public import LeanPool.JacobianDiffgeo.Forms.Analyticity
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Form1.pullback` — the easy direction (jacobian-functoriality §3)
@@ -30,6 +33,8 @@ Main declarations:
 * `RS.tangentCoord_mfderiv_chart_comp` — two-manifold generalization of
   `RS.tangentCoord_mfderiv_comp`, reading the target through its own preferred chart.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Bundle
 open Set IsManifold

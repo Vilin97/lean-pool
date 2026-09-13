@@ -3,10 +3,15 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.ChevallierGapBound
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.Data.Finset.Max
+public import LeanPool.ThreeGap.ChevallierGapBound
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Chevallier's Lemma: the gap count is `≤ n − m + 1` (Chevallier 1996, Lemma 1.3)
@@ -32,6 +37,8 @@ This file isolates the count as a pure statement about a cost function `r : ℕ 
 
 Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.Chevallier
 

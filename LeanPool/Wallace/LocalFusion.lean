@@ -3,16 +3,17 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.ConcreteLocalSetup
+public import LeanPool.Wallace.ConcreteLocalSetup
+public import LeanPool.Wallace.GlobalAssembly
+public import LeanPool.Wallace.FusionSchedule
+public import LeanPool.Wallace.FusionLimit
 import LeanPool.Wallace.BlockLimit
-import LeanPool.Wallace.GlobalAssembly
-import LeanPool.Wallace.FusionSchedule
 import LeanPool.Wallace.FusionStage
-import LeanPool.Wallace.FusionLimit
 import LeanPool.Wallace.InitialCharacter
-import Mathlib.Data.Finset.Lattice.Basic
-import Mathlib.Data.Finset.SDiff
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # A local character-fusion core
@@ -29,6 +30,8 @@ character and derive:
 
 The second half of the file carries out the scheduling induction for the concrete Wallace data.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 
@@ -431,10 +434,12 @@ variable (hfresh_independent : ∀ l,
   BoundedIndependent (FusionSchedule.stageIndependenceBound l) (fresh l))
 variable (initial : G →+ UnitAddCircle)
 
-private abbrev states (l : ℕ) : FusionState G l :=
+/-- The fusion state at each stage of the chosen recursion. -/
+abbrev states (l : ℕ) : FusionState G l :=
   fusionStates fresh enumeration x hfresh_card hfresh_independent initial l
 
-private abbrev step (l : ℕ) : FusionStep fresh enumeration x l (states fresh enumeration x
+/-- The chosen fusion step advancing the corresponding state. -/
+abbrev step (l : ℕ) : FusionStep fresh enumeration x l (states fresh enumeration x
     hfresh_card hfresh_independent initial l) :=
   chosenFusionStep fresh enumeration x hfresh_card hfresh_independent l
     (states fresh enumeration x hfresh_card hfresh_independent initial l)

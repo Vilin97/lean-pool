@@ -3,9 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
-import Mathlib.Topology.UnitInterval
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `ChartChain`: a Lebesgue-number chart subdivision along a path (CC6)
@@ -19,6 +21,8 @@ Main declarations:
 * `RS.ChartChain γ` — the subdivision structure.
 * `RS.exists_chartChain` — existence, for any continuous path `γ`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter

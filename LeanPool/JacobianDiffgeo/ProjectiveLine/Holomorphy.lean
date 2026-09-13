@@ -3,11 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+public import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+public import Mathlib.Analysis.Meromorphic.Order
+public import Mathlib.Geometry.Manifold.Diffeomorph
 import LeanPool.JacobianDiffgeo.Surface.Bridges
-import Mathlib.Analysis.Meromorphic.Order
-import Mathlib.Geometry.Manifold.Diffeomorph
 
 /-!
 # Holomorphy transfer kit for `ℙ¹` (CC5)
@@ -28,6 +29,8 @@ anywhere) this file converts holomorphy of maps `Z → OnePoint ℂ` into planar
   chart-locally meromorphic;
 * `contMDiff_inversion`/`inversionDiffeomorph`: inversion is a biholomorphic involution.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint

@@ -3,9 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.BooleanIsoperimetry.CoherentGap
+module
+
+public import LeanPool.BooleanIsoperimetry.CoherentGap
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Conway--Guy coherent-gap data
@@ -14,6 +17,8 @@ This file instantiates the triangular correction pattern used by the
 Conway--Guy distinct-subset-sum sequence.  The recurrence and notation follow
 Section 2 of Tom Bohman's 1996 paper on the Conway--Guy sequence.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

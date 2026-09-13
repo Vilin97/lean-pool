@@ -3,14 +3,18 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import Mathlib.SetTheory.ZFC.Basic
+public import Mathlib.SetTheory.ZFC.Basic
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # LeanPool.ZFLean.Basic
 
 Imported Lean Pool material for `LeanPool.ZFLean.Basic`.
 -/
+
+@[expose] public section
 noncomputable section
 
 namespace ZFSet

@@ -6,8 +6,9 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
 public import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
+public import LeanPool.LeanModularForms.Modularforms.Eisenstein
+import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
 
 /-!
 # Generators of the graded ring of level 1 modular forms: Definitions

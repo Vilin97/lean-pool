@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.AdicCompletion.Algebra
+module
+
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
 import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 
@@ -15,6 +17,8 @@ The M-adic completion of a Noetherian local ring (R, M) is again
 a local ring. The maximal ideal of the completion is the kernel
 of the natural surjection onto the residue field R/M.
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 open AdicCompletion Ideal Finset

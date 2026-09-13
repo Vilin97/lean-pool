@@ -3,15 +3,28 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
-import LeanPool.BrauerGroupNew.CentralSimple
+module
+
+public import Mathlib.RingTheory.TensorProduct.Basic
 import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.TwoSidedIdeal
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.LemmasAboutSimpleRing`.
 -/
+
+@[expose] public section
 universe u
 variable (K : Type u) [Field K]
 open TensorProduct in

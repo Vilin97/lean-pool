@@ -3,13 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Basic
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Convex.StrictConvexSpace
+module
+
+public import LeanPool.Erdos132ConvexK3.Basic
+public import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.InnerProductSpace.Convex
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 /-!
 # Geometric inputs for the convex three-distance argument
@@ -19,9 +17,12 @@ red--blue consequences, chord half-plane separation, and same-half-plane
 uniqueness for two-circle intersections.
 -/
 
+@[expose] public section
+
 namespace LeanPool.Erdos132ConvexK3
 
-private def toComplex (p : Point ℝ) : ℂ := ⟨p.1, p.2⟩
+/-- Regard a Cartesian point as a complex number. -/
+def toComplex (p : Point ℝ) : ℂ := ⟨p.1, p.2⟩
 
 /-- Ordinary Euclidean distance between real Cartesian points. -/
 noncomputable def euclideanDist (a b : Point ℝ) : ℝ :=

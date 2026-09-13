@@ -3,8 +3,17 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
+module
+
+public meta import Batteries.Lean.Expr
+
+public meta import LeanPool.Lentil.ProofMode.Basic
+public import LeanPool.Lentil.ProofMode.Basic
 import LeanPool.Lentil.ProofMode.Tactics.Revert
 import LeanPool.Lentil.ProofMode.Tactics.Specialize
+import LeanPool.Lentil.Rules.Basic
+
+@[expose] public section
 
 namespace TLA.ProofMode
 

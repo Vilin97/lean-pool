@@ -3,7 +3,10 @@ Copyright (c) 2026 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
-import LeanPool.PumpingCfg.Pumping
+module
+
+public import LeanPool.PumpingCfg.Pumping
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Pumping Lemma for Context-Free Grammars
@@ -15,6 +18,8 @@ Main declarations: `Language.IsContextFree.pumping`, `ChomskyNormalFormGrammar.p
 Tags: formal-languages, context-free-grammars, computability, pumping-lemma
 MSC: 68Q45
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

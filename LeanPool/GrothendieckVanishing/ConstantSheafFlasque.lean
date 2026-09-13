@@ -3,10 +3,10 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
-import LeanPool.GrothendieckVanishing.TopologicalKrullDim
-import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.FlasqueVanishing
 
 /-!
 # Flasqueness of the constant sheaf on an irreducible space
@@ -24,6 +24,8 @@ relies crucially on `nonempty_preirreducible_inter` for irreducible spaces.
 * `constantSheaf_flasque_of_irreducible`
 * `isFlasqueSheaf_zeroOutsideInt_top`
 -/
+
+@[expose] public section
 
 universe u
 

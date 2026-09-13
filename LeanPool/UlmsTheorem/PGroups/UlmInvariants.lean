@@ -3,10 +3,14 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
+public import Mathlib.Algebra.Field.ZMod
+public import LeanPool.UlmsTheorem.PGroups.Socle
+public import LeanPool.UlmsTheorem.PGroups.Heights
+public import Mathlib.LinearAlgebra.Dimension.Basic
+public import Mathlib.LinearAlgebra.Isomorphisms
 import Mathlib.LinearAlgebra.Dimension.DivisionRing
-import Mathlib.Algebra.Field.ZMod
-import LeanPool.UlmsTheorem.PGroups.Socle
 
 /-!
 # Ulm invariants
@@ -31,6 +35,8 @@ not the classical Ulm invariant used in Ulm's theorem.
 - Fuchs, "Abelian Groups", Chapter 11, §1
 - Kaplansky, "Infinite Abelian Groups", Theorem 14
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

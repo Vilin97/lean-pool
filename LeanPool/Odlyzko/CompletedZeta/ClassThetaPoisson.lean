@@ -5,8 +5,14 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.ClassThetaIntegral
-public import LeanPool.Odlyzko.CompletedZeta.TraceDualClass
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+
+public import LeanPool.Odlyzko.Theta.TraceDualIdeal
+public import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
@@ -14,13 +20,11 @@ public import LeanPool.Odlyzko.CompletedZeta.TraceDualClass
 
 noncomputable section
 
-open Complex NumberField NumberField.InfinitePlace NumberField.Units
-  NumberField.Units.dirichletUnitTheorem
+open Complex NumberField NumberField.InfinitePlace
 open scoped nonZeroDivisors
 
 namespace NumberField.Odlyzko
 
-open mixedEmbedding mixedEmbedding.fundamentalCone
 
 variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 

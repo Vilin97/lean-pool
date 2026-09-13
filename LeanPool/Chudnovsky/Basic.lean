@@ -3,8 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Mathlib.NumberTheory.ModularForms.Discriminant
 import Mathlib.NumberTheory.ModularForms.LevelOne.GradedRing
 
 /-!
@@ -25,6 +27,8 @@ We define, on top of Mathlib's `UpperHalfPlane`, `PeriodPair`, `E₄`, `E₆` an
 Following the plan in `PLAN.md`, `J` is defined directly in terms of Eisenstein series; the
 lattice-theoretic description `g₂³/Δ` becomes a lemma (proved in `Fourier.lean`).
 -/
+
+@[expose] public section
 
 noncomputable section
 

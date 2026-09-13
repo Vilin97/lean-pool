@@ -3,16 +3,27 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeExtensions
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.BodyFunctor
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeExtensions
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.BodyFunctor
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame
@@ -294,12 +305,13 @@ lemma bodyEquivSystem_strat {x} (S : StrategySystem T p) :
   rw [and_iff_right x.prop]
   -- `congr!` needs the quantified form exposed here.
   change (∀ x : T, _) ↔ _
-  congr! with y hp hc
-  · apply mem_principalOpen_iff_bodySystem_contains
-  · rw [← mem_principalOpen_iff_bodySystem_contains (S.str y.val.length y hp le_rfl).val' x,
-      ExtensionsAt.val', principalOpen_concat,
-      and_iff_right ((mem_principalOpen_iff_bodySystem_contains y.val x).mpr hc)]
-    rfl
+  congr! with y hp
+  rw [mem_principalOpen_iff_bodySystem_contains y.val x]
+  congr! with hc
+  rw [← mem_principalOpen_iff_bodySystem_contains (S.str y.val.length y hp le_rfl).val' x,
+    ExtensionsAt.val', principalOpen_concat,
+    and_iff_right ((mem_principalOpen_iff_bodySystem_contains y.val x).mpr hc)]
+  rfl
 lemma bodyEquivSystem_strat' {x} (S : StrategySystem T p) :
   (bodyEquivSystem.inv.app _ x).val ∈ body (strategyEquivSystem.symm S).pre.subtree
   ↔ consistent x S := by

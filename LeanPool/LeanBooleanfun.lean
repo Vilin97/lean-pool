@@ -3,12 +3,13 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
+module
 
-import LeanPool.LeanBooleanfun.AuxLemmas
-import LeanPool.LeanBooleanfun.ToMathlib
-import LeanPool.LeanBooleanfun.Basic
-import LeanPool.LeanBooleanfun.BooleanValued
-import LeanPool.LeanBooleanfun.Arrow
+public import LeanPool.LeanBooleanfun.AuxLemmas
+public import LeanPool.LeanBooleanfun.ToMathlib
+public import LeanPool.LeanBooleanfun.Basic
+public import LeanPool.LeanBooleanfun.BooleanValued
+public import LeanPool.LeanBooleanfun.Arrow
 
 /-!
 # Analysis of Boolean functions in Lean
@@ -20,6 +21,8 @@ Main declarations: `LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_
 Tags: boolean-functions, fourier-analysis, social-choice
 MSC: 06E30, 42C10, 91B14
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

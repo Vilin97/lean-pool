@@ -5,27 +5,26 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
-public import LeanPool.Odlyzko.CompletedZeta.RightHalfPlane
 public import LeanPool.Odlyzko.ExplicitFormula.GaussDigammaEqDigamma
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouQuadraticDecay
 public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPrimePowerSeriesIntegral
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartarTransform
-public import LeanPool.Odlyzko.ExplicitFormula.TartarPoitouTransform
-public import LeanPool.Odlyzko.ExplicitFormula.WeightedRectangleArgumentPrinciple
-public import LeanPool.Odlyzko.ExplicitFormula.ZeroFreeRectangles
-public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.RectangleIntegral
 public import LeanPool.Odlyzko.Numerics.Degree
 public import LeanPool.Odlyzko.Numerics.Integrability
-public import LeanPool.Odlyzko.Numerics.IntegralTail
-public import LeanPool.Odlyzko.Reduction
-public import Mathlib.Analysis.Complex.PhragmenLindelof
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-public import Mathlib.MeasureTheory.Integral.Prod
-public import Mathlib.NumberTheory.Harmonic.EulerMascheroni
+public import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaRectangle
+import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
+import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartarTransform
+import LeanPool.Odlyzko.ExplicitFormula.WeightedRectangleArgumentPrinciple
+import LeanPool.Odlyzko.ExplicitFormula.ZeroFreeRectangles
+import LeanPool.Odlyzko.Numerics.IntegralTail
+import LeanPool.Odlyzko.Numerics.Tail
+import LeanPool.Odlyzko.Reduction
+import LeanPool.Odlyzko.TestFunction.Fourier
+import LeanPool.Odlyzko.TestFunction.Quadratic
+import Mathlib.Analysis.Complex.PhragmenLindelof
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Regularized Poitou Contour Limit

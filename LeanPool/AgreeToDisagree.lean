@@ -3,9 +3,11 @@ Copyright (c) 2026 Axiom Math contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: AgreeToDisagree contributors
 -/
+module
 
-import LeanPool.AgreeToDisagree.AgreeToDisagree
-import LeanPool.AgreeToDisagree.AgreeToDisagreeBeliefs
+public import LeanPool.AgreeToDisagree.AgreeToDisagree
+public import LeanPool.AgreeToDisagree.AgreeToDisagreeBeliefs
+import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # Aumann's Agreement Theorem
@@ -17,6 +19,8 @@ Main declarations: `AgreeToDisagree.agreeToDisagree`, `AgreeToDisagree.agreeToDi
 Tags: probability, game-theory, epistemic-logic
 MSC: 60A10, 91A40
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

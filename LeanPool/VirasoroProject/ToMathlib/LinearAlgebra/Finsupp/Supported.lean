@@ -3,11 +3,17 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.LinearAlgebra.Finsupp.Supported
+module
+
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.LinearAlgebra.Span.Defs
+import Mathlib.Algebra.Module.Submodule.Basic
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Finsupp.Supported
 -/
+
+@[expose] public section
 
 --import Mathlib
 

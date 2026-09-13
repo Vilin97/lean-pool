@@ -3,18 +3,22 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
+public import Mathlib.Analysis.Calculus.DSlope
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 import Mathlib.Analysis.Complex.Liouville
-import Mathlib.Analysis.Calculus.DSlope
 import Mathlib.Analysis.Complex.RemovableSingularity
 import Mathlib.Analysis.Normed.Group.ZeroAtInfty
-import Mathlib.Analysis.Complex.HasPrimitives
-import Mathlib.MeasureTheory.Measure.OpenPos
-import Mathlib.Topology.MetricSpace.HausdorffDimension
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.Analysis.Normed.Module.Connected
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Topology.MetricSpace.HausdorffDimension
 
 /-!
 # Dixon's Proof of the Homological Cauchy Theorem
@@ -39,6 +43,8 @@ is exactly mathlib's `dslope f z w`. We use this identification throughout.
 * `cauchyIntegralFormula_nullHomologous` -- Cauchy integral formula
 * `contourIntegral_eq_zero_of_nullHomologous` -- vanishing for holomorphic functions
 -/
+
+@[expose] public section
 
 open Complex Set Filter Topology MeasureTheory intervalIntegral
 

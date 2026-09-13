@@ -3,14 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.M.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Option
-import Mathlib.Data.Fintype.Sum
-import Mathlib.Logic.Equiv.Fin.Basic
+public import LeanPool.BollobasNikiforov.M.Basic
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Planar configuration and block entries of `M`
@@ -22,6 +18,8 @@ Indices are identified with `Option (Fin k) ⊕ Fin p` via `configIdxEquiv`:
 `none` is `z₀`, `some i` is `zᵢ`, and `Sum.inr j` is `yⱼ`. The carrier is
 `Fin (k + 1 + p)`, which supplies `LinearOrder` for `M`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

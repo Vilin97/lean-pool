@@ -3,15 +3,22 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Basic
-import LeanPool.DirectedTopologyLean4.DihomotopyCover
-import LeanPool.DirectedTopologyLean4.PushoutAlternative
+module
+
+public import LeanPool.DirectedTopologyLean4.DihomotopyCover
+public import LeanPool.DirectedTopologyLean4.DipathSubtype
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs
 import LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
+import LeanPool.DirectedTopologyLean4.FractionEqualities
 import LeanPool.DirectedTopologyLean4.MorphismAux
+import LeanPool.DirectedTopologyLean4.PushoutAlternative
+import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 
 /-!
 # LeanPool.DirectedTopologyLean4.DirectedVanKampen
 -/
+
+@[expose] public section
 
 /-
   This file contains the directed version of the Van Kampen Theorem.

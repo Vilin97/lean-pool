@@ -10,12 +10,16 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the binary-polynomial row-reduction proof and adapted
 the index model, namespaces, and Mathlib APIs. See the upstream PORT_MAP.md.
 -/
+module
+
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
 import Mathlib.FieldTheory.Finite.Basic
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
 
 /-!
 # Elementary generation for Zhou §4
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace SpecialLinear

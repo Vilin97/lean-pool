@@ -3,14 +3,19 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Integers
+public import LeanPool.ZFLean.Integers
+public import Mathlib.Algebra.Field.Defs
+import Mathlib.Tactic.Ring.RingNF
 
 /-! # ZFC Rational Numbers
 
 This file defines the rational numbers in ZFC, based on the integers and using the `ZFInt` type.
 
 -/
+
+@[expose] public section
 
 namespace ZFSet
 /-- Imported ZFLean declaration. -/
@@ -295,11 +300,13 @@ theorem add_eq_sub_iff {a b c : ZFRat} : a + b = c ↔ a = c - b where
   mpr := fun h => by rw [h, sub_add_cancel]
 
 
-private noncomputable abbrev nsmul : ℕ → ZFRat → ZFRat
+/-- Repeated addition by a natural-number scalar. -/
+noncomputable abbrev nsmul : ℕ → ZFRat → ZFRat
   | 0, _ => 0
   | n+1, m => m + nsmul n m
 
-private noncomputable abbrev zsmul (n : ℤ) (x : ZFRat) : ZFRat :=
+/-- Integer scalar multiplication defined using repeated addition and negation. -/
+noncomputable abbrev zsmul (n : ℤ) (x : ZFRat) : ZFRat :=
   match n with
   | .ofNat n => nsmul n x
   | .negSucc n => -nsmul (n+1) x
@@ -468,9 +475,11 @@ theorem inv_mul {a : ZFRat} (ha : a ≠ 0) : a⁻¹ * a = 1 := by
 noncomputable instance : RatCast ZFRat where
   ratCast q := ((q.num : ZFRat) / (q.den : ZFRat))
 
-private noncomputable def qsmul (k : ℚ) (m : ZFRat) : ZFRat := (k : ZFRat) * m
+/-- Rational scalar multiplication through the encoded rational field. -/
+noncomputable def qsmul (k : ℚ) (m : ZFRat) : ZFRat := (k : ZFRat) * m
 
-private noncomputable def nnqsmul : ℚ≥0 → ZFRat → ZFRat :=
+/-- Nonnegative rational scalar multiplication through the encoded rational field. -/
+noncomputable def nnqsmul : ℚ≥0 → ZFRat → ZFRat :=
   fun ⟨k, _⟩ m ↦ qsmul k m
 
 open Classical in

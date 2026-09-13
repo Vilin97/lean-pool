@@ -7,6 +7,7 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.AdeleSpace.Basic
 public import LeanPool.RiemannRochFunctionFields.CoordinateFree.Divisor
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Adeles indexed by intrinsic places

@@ -3,11 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.SetTheory.Ordinal.Basic
 import Mathlib.SetTheory.Cardinal.Pigeonhole
-import Mathlib.SetTheory.Cardinal.Regular
-import Mathlib.Order.InitialSeg
-import Mathlib.Data.Fin.VecNotation
 
 /-!
 # Pair Erdős–Rado, parameterized by the color bound `κ`
@@ -33,6 +33,8 @@ This file develops the canonical partition tree and extracts a live node of leng
   forces a live node of length `≥ (succ κ).ord`.
 - **Consumer interface**: `exists_live_node_ge`.
 -/
+
+@[expose] public section
 
 universe u
 
@@ -263,7 +265,7 @@ theorem ehmr_partitionTree_card_lower
 
 /-- The successor set `S(h)`: points above all the reps respecting the recorded
 colors. (`β.ToType`-indexed `validFiber` shape, with a plain-function `rep`.) -/
-private def ehmrFiber (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+def ehmrFiber (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (rep : β.ToType → Source κ) (col : EHMRNodeAt C β) : Set (Source κ) :=
   { y | ∀ x : β.ToType, ∃ h : rep x < y, cR (pairEmbed h) = col x }
 
@@ -292,7 +294,7 @@ decreasing_by
     rwa [Ordinal.type_toType] at hh
 
 /-- The reps along a node: the chosen rep of the restriction to each position. -/
-private noncomputable def ehmrRep (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+noncomputable def ehmrRep (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (h : EHMRNodeAt C β) : β.ToType → Source κ := by
   haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
   exact fun x => ehmrChosen cR (Ordinal.typein (· < ·) x)

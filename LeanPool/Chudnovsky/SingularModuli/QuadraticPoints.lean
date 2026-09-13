@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 
 /-!
 # Binary quadratic forms and CM points (Phase C, Track 3)
@@ -31,6 +32,8 @@ The `GL₂` action is the classical *right* action on forms,
 `(f · M)(X, Y) = f(pX + qY, rX + sY)` for `M = ![![p, q], ![r, s]]`; it is packaged as
 `BQF.act f p q r s` taking the four entries directly (avoiding matrix-coercion churn).
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,20 +3,25 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
-import Mathlib.RingTheory.Coalgebra.Equiv
-import Mathlib.Analysis.InnerProductSpace.Basic
-import LeanPool.Monlib4.LinearAlgebra.Nacgor
+public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
+public import LeanPool.Monlib4.LinearAlgebra.Nacgor
+public import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
 import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
 import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional`.
 -/
+
+@[expose] public section
 
 variable {R A : Type*}
 local notation "lT" => LinearMap.lTensor

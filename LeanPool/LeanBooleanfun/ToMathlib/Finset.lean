@@ -3,13 +3,18 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+
+public import Mathlib.Data.Finset.BooleanAlgebra
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Auxiliary `Finset` lemmas
 
 Small helper lemmas about `Finset` that are not specific to Boolean functions.
 -/
+
+@[expose] public section
 
 namespace Finset
 

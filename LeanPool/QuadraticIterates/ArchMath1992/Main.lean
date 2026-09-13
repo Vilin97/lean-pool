@@ -3,10 +3,23 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Algebra.Order.Field.Power
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+module
 
+
+
+public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
 import LeanPool.QuadraticIterates.ArchMath1992.DegreeCriterion
+import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
+import LeanPool.QuadraticIterates.Mathlib.Algebra.Squares
+import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
+import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Rat.Star
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # The main theorems
@@ -20,6 +33,8 @@ guarantee this for every `n`).
 Part of the formalization of M. Stoll, *Galois groups over ℚ of some iterated polynomials*,
 Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 -/
+
+@[expose] public section
 
 open Polynomial
 open scoped ArithmeticFunction.Moebius

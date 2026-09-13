@@ -3,9 +3,10 @@ Copyright (c) 2026 Antoine de Saint Germain, Ambrose Tang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint Germain, Ambrose Tang
 -/
+module
 
-import LeanPool.RootSystem.An
-import LeanPool.RootSystem.BCn
+public import LeanPool.RootSystem.An
+public import LeanPool.RootSystem.BCn
 
 /-!
 # Explicit type Aₙ and BCₙ root pairings
@@ -17,6 +18,8 @@ Main declarations: `An.rootPairing`, `BCn.rootPairing`, `BCn.isReflective_iff_is
 Tags: representation-theory, root-systems, lie-theory, combinatorics
 MSC: 17B22, 20F55
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

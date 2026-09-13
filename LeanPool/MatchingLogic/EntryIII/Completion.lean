@@ -13,11 +13,15 @@ generated world.  Thus this is definitionally a generated-world copy plus at
 most one star, and the star exists exactly in the source's missing-variable
 case.
 -/
-import LeanPool.MatchingLogic.EntryIII.Generated
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Generated
 
 /-!
 # MatchingLogic.EntryIII.Completion
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

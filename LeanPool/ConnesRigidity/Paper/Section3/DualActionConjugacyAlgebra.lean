@@ -7,18 +7,27 @@ Authors: Utensil Song
 
 Algebraic covariance lemmas for Zhou's dual fiber shear. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
+import Mathlib.Algebra.Module.StablyFree.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 The dual action conjugacy algebra component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualActionConjugacyAlgebra
 
 open Construction
 open Construction.PaperKernel
-open PaperDualActions
 open PaperDualCoordinates
 open PaperFactorIsomorphism
 

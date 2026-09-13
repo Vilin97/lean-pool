@@ -3,18 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Basic.Graph
-import LeanPool.BollobasNikiforov.Basic.Inner
-import LeanPool.BollobasNikiforov.CP.Basic
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Analysis.Convex.StdSimplex
-import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.Topology.Order.Compact
+public import LeanPool.BollobasNikiforov.Basic.Graph
+public import LeanPool.BollobasNikiforov.Basic.Inner
+public import LeanPool.BollobasNikiforov.CP.Basic
+public import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Motzkin–Straus
@@ -23,6 +18,8 @@ The Motzkin–Straus theorem bounds the adjacency quadratic form on the
 nonnegative orthant by the Turán factor `1 - 1/ω(G)`, and the same bound
 passes to the Frobenius pairing against a completely positive matrix.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

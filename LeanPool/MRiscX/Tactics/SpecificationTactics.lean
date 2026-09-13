@@ -3,15 +3,21 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
+module
+
+public import LeanPool.MRiscX.AbstractSyntax.MState
+
+public meta import Lean.Elab.Tactic.Basic
 import LeanPool.MRiscX.Tactics.GeneralCustomTactics
-import LeanPool.MRiscX.AbstractSyntax.Instr
-import LeanPool.MRiscX.AbstractSyntax.MState
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # SpecificationTactics
 
 This module provides tactics proving the per-instruction specifications.
 -/
+
+@[expose] public section
 
 open Lean Elab Tactic
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.BlockFilters
-import LeanPool.Wallace.FusionSchedule
-import Mathlib.Analysis.Normed.Group.AddCircle
+public import LeanPool.Wallace.FusionSchedule
+public import LeanPool.Wallace.TriangularPreprocess
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Limits along block-density ultrafilters
@@ -15,6 +17,8 @@ A free ultrafilter cannot remain in finitely many finite blocks.  Consequently t
 of an ultrafilter-generic position tends to infinity.  This turns the vanishing geometric error
 on a retained member of the ultrafilter into convergence to zero in the circle.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

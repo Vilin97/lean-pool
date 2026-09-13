@@ -3,9 +3,15 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.OS.OS3MixedRepInfra
+public import LeanPool.OSforGFF.OS.OS3MixedRepInfra
+import LeanPool.OSforGFF.General.FourierTransforms
+import LeanPool.OSforGFF.General.LaplaceIntegral
+import LeanPool.OSforGFF.Spacetime.Decomposition
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # OS3 — Mixed Representation via Schwinger Parametrization
@@ -41,6 +47,8 @@ The mixed representation exhibits:
 - Glimm & Jaffe, "Quantum Physics: A Functional Integral Point of View" (1987), §11.4
 - Haag, "Local Quantum Physics" (1996), §V.3
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Real Filter QFT LaplaceIntegral
 open TopologicalSpace

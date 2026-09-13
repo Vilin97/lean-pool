@@ -7,12 +7,7 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.Basic
 public import LeanPool.RiemannRochFunctionFields.LocalResidue
-public import Mathlib.Algebra.Order.GroupWithZero.Canonical
-public import Mathlib.Algebra.Polynomial.Eval.Subring
-public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
-public import Mathlib.RingTheory.DedekindDomain.AdicValuation
-public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
-public import Mathlib.RingTheory.Polynomial.Tower
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Riemann–Roch spaces `L(D)`

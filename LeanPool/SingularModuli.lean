@@ -3,14 +3,19 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Basic
-import LeanPool.SingularModuli.QuadraticOrder.Norm
-import LeanPool.SingularModuli.QuadraticOrder.Discriminant
-import LeanPool.SingularModuli.QuadraticOrder.Verification
-import LeanPool.SingularModuli.QuadraticOrder.RootCounting
-import LeanPool.SingularModuli.QuadraticOrder.Prime
-import LeanPool.SingularModuli.QuadraticOrder.CanonicalForm
+public import LeanPool.SingularModuli.QuadraticOrder.Basic
+public import LeanPool.SingularModuli.QuadraticOrder.Norm
+public import LeanPool.SingularModuli.QuadraticOrder.Discriminant
+public import LeanPool.SingularModuli.QuadraticOrder.Verification
+public import LeanPool.SingularModuli.QuadraticOrder.RootCounting
+public import LeanPool.SingularModuli.QuadraticOrder.Prime
+public import LeanPool.SingularModuli.QuadraticOrder.CanonicalForm
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Quadratic-order prime classification
@@ -22,3 +27,5 @@ Main declarations: `QuadraticOrder.prime_inert_iff`, `QuadraticOrder.prime_split
 Tags: algebraic-number-theory, quadratic-orders, legendre-symbol
 MSC: 11R11, 11R29, 11A15
 -/
+
+@[expose] public section

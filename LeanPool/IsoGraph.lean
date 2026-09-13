@@ -3,8 +3,14 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Spec
+public import LeanPool.IsoGraph.Canon.Spec
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Verified canonical labelling of finite graphs
@@ -16,6 +22,8 @@ Main declarations: `IsoGraph.Canon.canonAdj_eq_iff`, `IsoGraph.Canon.canonAdj_re
 Tags: graph-theory, graph-isomorphism, canonical-labelling, verified-algorithms
 MSC: 05C60, 68R10
 -/
+
+@[expose] public section
 
 /-!
 ## Imported scope

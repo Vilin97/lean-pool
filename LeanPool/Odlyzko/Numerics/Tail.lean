@@ -5,8 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Analysis.Complex.Trigonometric
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-! TODO: Add doc-string. -/
 

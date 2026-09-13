@@ -6,11 +6,11 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.Group.Pointwise.Set.Card
-public import Mathlib.Algebra.Module.ZMod
-public import Mathlib.Combinatorics.Additive.RuzsaCovering
-public import Mathlib.GroupTheory.Complement
-public import LeanPool.PFR.EntropyPFR
+public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
+import LeanPool.PFR.EntropyPFR
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import Mathlib.Algebra.Module.ZMod
+import Mathlib.Combinatorics.Additive.RuzsaCovering
 
 /-!
 # Polynomial Freiman-Ruzsa conjecture

@@ -3,21 +3,32 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
-import LeanPool.BrauerGroupNew.CentralSimple
-import LeanPool.BrauerGroupNew.FieldCat
-import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
-import Mathlib.Algebra.BrauerGroup.Defs
-import Mathlib.Algebra.Central.Matrix
+module
+
+public import Mathlib.Algebra.Central.Basic
+
+public import LeanPool.BrauerGroupNew.CentralSimple
+public import LeanPool.BrauerGroupNew.FieldCat
+public import Mathlib.Algebra.BrauerGroup.Defs
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Algebra.Azumaya.Basic
+public import Mathlib.Algebra.Central.Matrix
 import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.RingTheory.SimpleRing.Matrix
+public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+public import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.BrauerGroup
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.BrauerGroup`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 universe u v v₁ v₂ w

@@ -5,8 +5,8 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-public import Mathlib.Topology.Order.Lattice
+public import Mathlib.Analysis.Complex.Trigonometric
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-! TODO: Add doc-string. -/
 

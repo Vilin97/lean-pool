@@ -9,11 +9,16 @@ Vacuum transport for the two concrete Zhou group-factor models.  The
 identity fibre is the zero Fourier coefficient, and all other fibres vanish.
 Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.GroupFactor
+import LeanPool.ConnesRigidity.Paper.Section3.QuotientAction
 
 /-!
 The group vacuum component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperGroupVacuum

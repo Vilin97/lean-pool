@@ -3,8 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import Mathlib.Data.Nat.Choose.Central
 import LeanPool.GKPCarry.CarryArithmetic
 import LeanPool.GKPCarry.FiniteRange
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Central-binomial consequence of the bounded C3 certificate
@@ -13,6 +18,8 @@ The bounded prefix computation supplies a secondary application of the general
 Kummer carry theorem: divisibility by nine for a finite family of central
 binomial coefficients indexed by powers of four.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

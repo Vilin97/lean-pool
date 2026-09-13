@@ -3,7 +3,14 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
+
+public import LeanPool.ThreeGap.EuclideanGrowth
+import LeanPool.ThreeGap.EuclideanAngle
+import LeanPool.ThreeGap.EuclideanGrowthFive
+import LeanPool.ThreeGap.FiveDistance
 import LeanPool.ThreeGap.FiveDistanceHM
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The sharp Euclidean growth inequality `2 qₙ ≤ qₙ₊₄` (`K = 4`) via Haynes–Marklof Theorem 8
@@ -19,10 +26,11 @@ shortest record `r(qₙ₊₄)` cannot lie in the open cone of two others, becau
 (`hbest`, the index difference lies in `(0, qₖ)`) forces `‖r(qₙ₊₄) − vⱼ − vₖ‖ > ‖vₖ‖`. Axiom-clean.
 -/
 
+@[expose] public section
+
 namespace ThreeGap.SimApprox
 
 open scoped Real
-open ThreeGap.EuclideanPacking
 
 variable {n : ℕ}
 

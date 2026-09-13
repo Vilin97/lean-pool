@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.OrbitPairing
+public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
 import Mathlib.Analysis.Meromorphic.NormalForm
 import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 
@@ -21,6 +22,8 @@ on orbits and establish finite support for the orbit sum.
 * `NonEllOrbit` — orbits distinct from `oi` and `orho`
 * `finite_support_ordOrbit` — finitely many orbits have nonzero `ordOrbit`
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

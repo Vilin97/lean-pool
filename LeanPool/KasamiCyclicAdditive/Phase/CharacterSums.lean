@@ -3,9 +3,14 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
+public import Mathlib.Data.FunLike.Fintype
+public import Mathlib.NumberTheory.GaussSum
 import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.Analysis.Complex.Polynomial.Basic
+public import Mathlib.NumberTheory.MulChar.Duality
+import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 
 /-!
 # Character-sum lemmas over a finite field
@@ -21,6 +26,8 @@ sum, characteristic-two self-inverse and Gauss-product identities, and related
 nonvanishing facts. Primitive-character nontriviality is supplied by
 `Phase/AdditiveCharacter.lean`.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -3,9 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicReduction
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalizationResult
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicReduction
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalizationResult
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Recursive reduction of finite cyclic one-face words
@@ -15,6 +20,8 @@ inverse pair.  This file supplies the next normalization phase: repeatedly cance
 while preserving a validity-bundled normalization chain.  If the final pair is the whole word,
 the result is the agreed ordinary-valid two-monogon sphere presentation.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -338,7 +345,7 @@ noncomputable def finish {P : ValidPresentation}
 end CancellationResult
 
 /-- If cancelling a displayed inverse pair leaves no tail, the source normalizes to the sphere. -/
-private noncomputable def cancellationResult_sphere_of_lowerTail_eq_nil {n : ℕ}
+noncomputable def cancellationResultSphereOfLowerTailEqNil {n : ℕ}
     {word : List (SignedDart (Fin (n + 1)))} (pair : CancellablePair word)
     (ha : pair.edge ∉ pair.tail.map edgeOfDart)
     (hlower : Cancellation.lowerTail pair.edge pair.tail = [])
@@ -427,7 +434,7 @@ private noncomputable def cancellationResult_sphere_of_lowerTail_eq_nil {n : ℕ
       (hToBase.trans (Cancellation.sphereNormalizationEquivalent validEmpty))
 
 /-- A displayed inverse pair with nonempty lower tail gives one certified cancellation step. -/
-private theorem exists_cancellationStep_of_lowerTail_ne_nil {n : ℕ}
+theorem exists_cancellationStep_of_lowerTail_ne_nil {n : ℕ}
     {word : List (SignedDart (Fin (n + 1)))} (pair : CancellablePair word)
     (ha : pair.edge ∉ pair.tail.map edgeOfDart)
     (hlower : Cancellation.lowerTail pair.edge pair.tail ≠ [])
@@ -537,7 +544,7 @@ noncomputable def cancelInversePairsFuel (fuel : ℕ) {n : ℕ}
         have hlowerBound : lower.length ≤ fuel - 1 := by
           omega
         by_cases hlower : lower = []
-        · exact cancellationResult_sphere_of_lowerTail_eq_nil pair ha hlower valid
+        · exact cancellationResultSphereOfLowerTailEqNil pair ha hlower valid
         · let stepWitness :=
             exists_cancellationStep_of_lowerTail_ne_nil pair ha hlower valid
           let validLower := Classical.choose stepWitness
@@ -992,10 +999,7 @@ noncomputable def reduceResidualPairsFuel (fuel : ℕ) {n : ℕ}
           rfl
         length_le := le_refl _ }
 termination_by fuel
-decreasing_by
-  apply Nat.sub_lt
-  · exact hfuelPositive
-  · omega
+decreasing_by all_goals exact Nat.sub_lt hfuelPositive (by omega)
 
 /-- Repeatedly delete every adjacent inverse pair from a residual word while retaining its ambient
 edge namespace and the surface multiplicities of all surviving names. -/
@@ -3176,7 +3180,7 @@ def positiveTargetWord {n : ℕ}
     (outer carrier : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos outer, .pos outer, .neg carrier] ++
+  .pos outer :: .pos outer :: .neg carrier ::
     insideTail ++ .pos carrier :: inverseWord outsideTail
 
 /-- Contextual crosscap source with arbitrary orientations on both distinguished edges. -/
@@ -3667,8 +3671,7 @@ def positiveSourceWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos outer, .pos first, .pos second,
-    .neg first, .neg second] ++
+  .pos outer :: .pos first :: .pos second :: .neg first :: .neg second ::
     insideTail ++ .neg outer :: outsideTail
 
 /-- The same completed handle commuted outside the residual pair. -/
@@ -3676,8 +3679,7 @@ def positiveTargetWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos first, .pos second, .neg first,
-    .neg second, .pos outer] ++
+  .pos first :: .pos second :: .neg first :: .neg second :: .pos outer ::
     insideTail ++ .neg outer :: outsideTail
 
 /-- The contextual handle source with its residual carrier displayed negative first. -/
@@ -3685,8 +3687,7 @@ def negativeSourceWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.neg outer, .pos first, .pos second,
-    .neg first, .neg second] ++
+  .neg outer :: .pos first :: .pos second :: .neg first :: .neg second ::
     insideTail ++ .pos outer :: outsideTail
 
 /-- Negative-residual-carrier target spelling. -/
@@ -3694,8 +3695,7 @@ def negativeTargetWord {n : ℕ}
     (outer first second : Fin n)
     (insideTail outsideTail : List (SignedDart (Fin n))) :
     List (SignedDart (Fin n)) :=
-  [.pos first, .pos second, .neg first,
-    .neg second, .neg outer] ++
+  .pos first :: .pos second :: .neg first :: .neg second :: .neg outer ::
     insideTail ++ .pos outer :: outsideTail
 
 /-- Contextual handle source with arbitrary residual-carrier orientation. -/
@@ -3798,7 +3798,7 @@ def negativeSourceSignedIso {n : ℕ}
       hfirstPos, hsecondPos,
       hfirstNeg, hsecondNeg]
     simp only [Dyck.reverseEdgeRelabeling_neg,
-      Dyck.reverseEdgeRelabeling_pos, List.map_nil]
+      Dyck.reverseEdgeRelabeling_pos]
     exact List.IsRotated.refl _
 
 /-- Reversing only the residual carrier identifies negative and positive handle targets. -/
@@ -3861,7 +3861,7 @@ def negativeTargetSignedIso {n : ℕ}
       hfirstPos, hsecondPos,
       hfirstNeg, hsecondNeg]
     simp only [Dyck.reverseEdgeRelabeling_neg,
-      Dyck.reverseEdgeRelabeling_pos, List.map_nil]
+      Dyck.reverseEdgeRelabeling_pos]
     exact List.IsRotated.refl _
 
 private theorem exists_positiveTarget_of_thirdTarget {n : ℕ}

@@ -3,16 +3,18 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Tactic.IntervalCases
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

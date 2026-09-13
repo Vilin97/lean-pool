@@ -3,11 +3,16 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import Mathlib.Analysis.Analytic.Basic
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-import Mathlib.Topology.Order.ExtendFrom
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 
 /-!
@@ -29,6 +34,8 @@ generalized residue theorem for piecewise C¹ immersions.
 * `integral_eq_sum_residues_of_avoids` — classical residue theorem
 * `pv_integral_simple_pole` — PV of c/(z-s) = 2πi · winding · c
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

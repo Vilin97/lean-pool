@@ -3,10 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
 import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.ArzelaAscoli
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.Topology.MetricSpace.Pseudo.Basic
 
 /-!
 # `L²` compactness criterion: transfer from `BCF` compactness to `L²` (Euclidean)
@@ -22,6 +22,8 @@ This file transfers the Arzelà–Ascoli compactness of the `BoundedContinuousFu
 
 Tracking: Beads `lean-103.5.2.26.5.3.2.2.1.2`.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

@@ -3,10 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # K -/
+
+@[expose] public section
 
 
 namespace LO
@@ -423,7 +427,8 @@ def collectBoxOr' (h : 𝓢 ⊢ □φ ⋎ □ψ) : 𝓢 ⊢ □(φ ⋎ ψ) := co
 omit [DecidableEq F] in lemma collectBoxOr'! (h : 𝓢 ⊢! □φ ⋎ □ψ) : 𝓢 ⊢! □(φ ⋎ ψ) :=
   ⟨collectBoxOr' h.some⟩
 
-private def diaOrInstOf (h : 𝓢 ⊢ χ ==> φ ⋎ ψ) : 𝓢 ⊢ ◇χ ==> ◇(φ ⋎ ψ) := by
+/-- Lift an implication with a disjunctive conclusion through possibility. -/
+def diaOrInstOf (h : 𝓢 ⊢ χ ==> φ ⋎ ψ) : 𝓢 ⊢ ◇χ ==> ◇(φ ⋎ ψ) := by
   apply impTrans'' (and₁' diaDuality);
   apply impTrans'' ?h (and₂' diaDuality);
   apply contra₀';

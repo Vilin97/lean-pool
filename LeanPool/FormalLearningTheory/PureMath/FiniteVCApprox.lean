@@ -3,8 +3,11 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
-import LeanPool.FormalLearningTheory.PureMath.BinaryMatrix
+module
+
+public import LeanPool.FormalLearningTheory.PureMath.ApproxMinimax
+public import Mathlib.Combinatorics.SetFamily.Shatter
+import Mathlib.Algebra.BigOperators.Field
 
 /-!
 # Finite Sample Approximation for FinitePMF
@@ -18,6 +21,8 @@ finite samples.
 - `tv_bound_implies_all_tests` : TV ≤ ε implies all tests ε-approximated
 - `boolFamilyToFinsetFamily` / `Finset.boolVCDim` : VC dimension for Boolean function families
 -/
+
+@[expose] public section
 
 open Finset
 

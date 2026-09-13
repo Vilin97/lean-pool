@@ -3,12 +3,21 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
+public import LeanPool.PebblingLean.Hypercube
+public import LeanPool.PebblingLean.Weight
+public import Mathlib.Data.Fintype.Powerset
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import LeanPool.PebblingLean.Hypercube
-import LeanPool.PebblingLean.Weight
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Lower-bound infrastructure for hypercubes
@@ -18,6 +27,8 @@ main result here is the first inequality in the paper's lower-bound proof:
 for a solvable distribution on `Q_n`, every target has initial weight at least
 one, and hence the sum of all target weights is at least `|Q_n|`.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

@@ -6,17 +6,7 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.RRspace.Basic
-public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
-public import Mathlib.FieldTheory.RatFunc.Basic
-public import Mathlib.RingTheory.Algebraic.Basic
-public import Mathlib.LinearAlgebra.Basis.Basic
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.Algebra.Polynomial.AlgebraMap
-public import Mathlib.Algebra.Polynomial.Degree.Operations
-public import Mathlib.Algebra.Polynomial.Degree.Support
-public import Mathlib.FieldTheory.RatFunc.AsPolynomial
-public import Mathlib.RingTheory.Adjoin.Polynomial.Bivariate
-public import Mathlib.RingTheory.Localization.Integral
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Pole divisors and Stichtenoth 1.4.11

@@ -7,13 +7,17 @@ Authors: Utensil Song
 
 Concrete coefficient proof for the Zhou square-span boundary. Paper: §2.
 -/
+module
+
+public import Mathlib.Algebra.Polynomial.Basis
+public import LeanPool.ConnesRigidity.Construction.PaperActions
 import Mathlib.Algebra.Algebra.ZMod
-import Mathlib.Algebra.Polynomial.Basis
-import LeanPool.ConnesRigidity.Construction.PaperActions
 
 /-!
 The square span component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Construction
@@ -94,7 +98,8 @@ theorem pair_mem_squareSpan (i j : OrderedBasisIndex) :
     Submodule.subset_span ⟨orderedBasis j, rfl⟩
   have A_add_self (x : A) : x + x = 0 := by
     ext n m
-    exact CharTwo.add_self_eq_zero ((x n).coeff m)
+    simpa only [Pi.add_apply, Pi.zero_apply, Polynomial.coeff_add, Polynomial.coeff_zero] using
+      CharTwo.add_self_eq_zero ((x n).coeff m)
   have tensor_add_self (x : TensorAA) : x + x = 0 := by
     refine TensorProduct.induction_on x ?_ ?_ ?_
     · simp

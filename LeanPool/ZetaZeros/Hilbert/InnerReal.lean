@@ -6,6 +6,11 @@ Authors: Kenny Lau
 module
 
 public import LeanPool.ZetaZeros.Hilbert.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Inner products of symmetric functions are real

@@ -3,9 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DenseResonantObstruction
+public import LeanPool.PoincareThreeBody.DelaunaySection
 import LeanPool.PoincareThreeBody.AnalyticDensity
+import LeanPool.PoincareThreeBody.DenseResonantObstruction
 import LeanPool.PoincareThreeBody.DisturbingAverageAnalytic
 
 /-!
@@ -17,6 +19,8 @@ a convenient sufficient formulation in the real-analytic setting developed here.
 defines that set intrinsically in the full two-dimensional action region and proves the resulting
 leading-coefficient obstruction.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

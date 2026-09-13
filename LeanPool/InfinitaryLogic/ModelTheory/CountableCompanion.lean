@@ -3,7 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.TypeIsolation
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.TypeIsolation
+public import LeanPool.InfinitaryLogic.ModelTheory.AElementary
+public import Mathlib.ModelTheory.Substructures
 import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
 /-!
 # The controlling fragment and the countable companion (issue #17 chunk 2)
@@ -19,6 +23,8 @@ Still language-general (countable function symbols only — relationality first 
 BF/Scott packaging boundary, per the frozen audit).
 -/
 
+@[expose] public section
+
 namespace FirstOrder
 
 namespace Language
@@ -31,7 +37,7 @@ variable {L : Language.{u, v}} {M : Type w} [L.Structure M]
 
 /-- The controlling seed: all isolators, and the existential closures of all isolators of one
 higher arity. -/
-private def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
+def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
     Set (Σ n, L.BoundedFormulaω Empty n) :=
   (⋃ n : ℕ, (fun p : Set (L.BoundedFormulaω Empty n) =>
       (⟨n, isolatingFormula (hsmall n) p⟩ : Σ n, L.BoundedFormulaω Empty n)) ''

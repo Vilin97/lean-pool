@@ -3,10 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
 import LeanPool.JacobianDiffgeo.Surface.Bridges
-import Mathlib.Analysis.Analytic.IsolatedZeros
 import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
 
 /-!
 # Identity theorem, isolated fibers, open mapping, surjectivity
@@ -25,6 +28,8 @@ For holomorphic maps between Riemann surfaces:
 * `surjective_of_not_const`: nonconstant + compact source + connected target ⇒ surjective
   (Forster 2.7; consumed by mapping-degree and the headline).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

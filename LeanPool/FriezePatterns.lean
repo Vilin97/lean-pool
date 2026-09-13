@@ -3,10 +3,14 @@ Copyright (c) 2026 Antoine de Saint-Germain. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
+module
 
-import LeanPool.FriezePatterns.Chapter1
-import LeanPool.FriezePatterns.Chapter2
-import LeanPool.FriezePatterns.Chapter3
+public import LeanPool.FriezePatterns.Chapter1
+public import LeanPool.FriezePatterns.Chapter2
+public import LeanPool.FriezePatterns.Chapter3
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Maxima of Coxeter frieze patterns are Fibonacci numbers
@@ -18,3 +22,5 @@ Main declarations: `main3`, `FluteBounded`, `glideSymm`, `translationInvariance`
 Tags: combinatorics, frieze-patterns, fibonacci, coxeter
 MSC: 05E15, 11B39, 13F60
 -/
+
+@[expose] public section

@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.Height.Defs
+module
+
+public import LeanPool.InfinitaryLogic.Scott.Height.Defs
 /-!
 # Canonical Scott Sentence
 
@@ -23,6 +25,8 @@ quantifier rank is minimized among Scott formulas.
 Scott sentence.
 - `canonicalScottSentence_qrank`: Quantifier rank bounded by scottHeight + ω.
 -/
+
+@[expose] public section
 
 universe u v w w'
 

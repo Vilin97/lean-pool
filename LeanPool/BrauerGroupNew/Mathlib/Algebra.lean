@@ -3,11 +3,14 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra
+public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra
 
 /-!
 # Brauer Group New Mathlib Algebra
 
 Import index for the Brauer group formalization.
 -/
+
+@[expose] public section

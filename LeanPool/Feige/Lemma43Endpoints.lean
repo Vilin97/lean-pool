@@ -3,12 +3,17 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
+module
+
+public import LeanPool.Feige.Lemma43
 import LeanPool.Feige.Lemma43Relations
-import LeanPool.Feige.TransferProbability23
+import LeanPool.Feige.TransferProbability
 
 /-!
 # Endpoint tail identities for the local transfer step
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

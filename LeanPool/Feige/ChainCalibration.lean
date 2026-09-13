@@ -3,7 +3,12 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.TwoPoint
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Calibrated measures on finite chains
@@ -19,6 +24,8 @@ The key fact is that the mass of a terminal segment beginning at `t` is
 exactly `K t`, which gives exact chain calibration whenever the rejected
 states form that terminal segment.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,9 +3,16 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Assembly
+module
+
+public import LeanPool.Erdos132ConvexK3.Assembly
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Non-vacuity witnesses for indexed word realizations
@@ -13,6 +20,8 @@ import Mathlib.Tactic.NormNum
 Explicit real configurations inhabit each of the thirteen exceptional-word
 realization predicates routed through the four shared closure families.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3.Witnesses
 

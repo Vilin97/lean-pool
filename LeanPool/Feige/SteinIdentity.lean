@@ -3,8 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Probability.Distributions.Exponential
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Exponential Stein identity
@@ -16,6 +19,8 @@ expose exactly the two weighted integrability
 conditions and the boundary condition at infinity needed for improper
 integration by parts.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set Filter Topology
 

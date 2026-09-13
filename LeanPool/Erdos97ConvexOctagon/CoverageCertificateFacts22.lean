@@ -3,51 +3,58 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData03
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData03
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Bounded coverage-certificate computation facts -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Root audit for fixed branch (0, 22). -/
 theorem coverageBranchRoot_0_22 :
     branchClaimRootValidB 0 22 (.patternTwo 0) = true := by
-  rfl
+  decide +kernel
 
 /-- Root audit for fixed branch (5, 20). -/
 theorem coverageBranchRoot_5_20 :
     branchClaimRootValidB 5 20 (.patternThree 1) = true := by
-  rfl
+  decide +kernel
 
 /-- Root audit for fixed branch (2, 25). -/
 theorem coverageBranchRoot_2_25 :
     branchClaimRootValidB 2 25 (.search branchClaims2Row25) = true := by
-  rfl
+  decide +kernel
 
 /-- Root audit for fixed branch (2, 26). -/
 theorem coverageBranchRoot_2_26 :
     branchClaimRootValidB 2 26 (.search branchClaims2Row26) = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (2, 24), starting at 64. -/
 theorem coverageBranchNodes_2_24_00064 :
     nodeClaimChunkValidB branchClaims2Row24 64 46 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (2, 25), starting at 0. -/
 theorem coverageBranchNodes_2_25_00000 :
     nodeClaimChunkValidB branchClaims2Row25 0 64 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (2, 25), starting at 64. -/
 theorem coverageBranchNodes_2_25_00064 :
     nodeClaimChunkValidB branchClaims2Row25 64 41 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (2, 26), starting at 0. -/
 theorem coverageBranchNodes_2_26_00000 :
     nodeClaimChunkValidB branchClaims2Row26 0 64 = true := by
-  rfl
+  decide +kernel
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage

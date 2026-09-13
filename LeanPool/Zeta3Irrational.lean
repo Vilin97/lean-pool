@@ -3,15 +3,18 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import LeanPool.Zeta3Irrational.Basic
-import LeanPool.Zeta3Irrational.Bound
-import LeanPool.Zeta3Irrational.Chebyshev
-import LeanPool.Zeta3Irrational.Equality
-import LeanPool.Zeta3Irrational.Integral
-import LeanPool.Zeta3Irrational.LegendrePoly
-import LeanPool.Zeta3Irrational.LinearForm
-import LeanPool.Zeta3Irrational.D
+public import LeanPool.Zeta3Irrational.Basic
+public import LeanPool.Zeta3Irrational.Bound
+public import LeanPool.Zeta3Irrational.Chebyshev
+public import LeanPool.Zeta3Irrational.Equality
+public import LeanPool.Zeta3Irrational.Integral
+public import LeanPool.Zeta3Irrational.LegendrePoly
+public import LeanPool.Zeta3Irrational.LinearForm
+public import LeanPool.Zeta3Irrational.D
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Irrationality of ζ(3)
@@ -23,6 +26,8 @@ Main declarations: `LeanPool.Zeta3Irrational.zeta3_irrational`
 Tags: number-theory, analysis, zeta-functions
 MSC: 11M06, 11J72
 -/
+
+@[expose] public section
 
 /-!
 This project formalizes the integral identities and denominator/positivity/

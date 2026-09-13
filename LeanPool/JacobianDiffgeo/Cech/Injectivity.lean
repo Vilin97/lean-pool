@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Colimit
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
 import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Forster 12.4: refinement maps are injective on `H¹` (CC8, D8, proof plan §6.7)
@@ -18,6 +21,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.4, §6.7).
   (via `Module.DirectLimit.of.zero_exact` + `resH1_injective`).
 * `subsingleton_H1_iff`: the colimit vanishes iff every cover-level `H¹` vanishes.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

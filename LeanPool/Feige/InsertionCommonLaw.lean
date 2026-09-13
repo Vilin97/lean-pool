@@ -3,12 +3,14 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.TwoPoint
-import LeanPool.Feige.SignedExpLaw
-import LeanPool.Feige.TransferProbability23
-import LeanPool.Feige.InsertionCommonDensity
+module
+
+public import LeanPool.Feige.TwoPoint
+public import LeanPool.Feige.SignedExpLaw
+public import LeanPool.Feige.TransferProbability23
+public import LeanPool.Feige.InsertionCommonDensity
+public import Mathlib.Probability.Independence.Basic
 import LeanPool.Feige.NNRealExponentialLaw
-import Mathlib.Probability.Independence.Basic
 
 /-!
 # Signed-sum laws along a Boolean insertion edge
@@ -16,6 +18,8 @@ import Mathlib.Probability.Independence.Basic
 The event defining `twoPointKFinset` is rewritten as nonnegativity of the
 corresponding signed exponential sum.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped BigOperators ENNReal

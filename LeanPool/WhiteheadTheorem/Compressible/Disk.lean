@@ -3,13 +3,17 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.Compressible.Defs
-import LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
+public import LeanPool.WhiteheadTheorem.Compressible.Defs
+public import LeanPool.WhiteheadTheorem.Shapes.MappingCylinder
+public import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
+public import LeanPool.WhiteheadTheorem.Shapes.Disk
+import LeanPool.WhiteheadTheorem.HEP.CubeJar
 import LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt
 import LeanPool.WhiteheadTheorem.RelHomotopyGroup.LongExactSeq
-import LeanPool.WhiteheadTheorem.HEP.CubeJar
-import Mathlib.Topology.Homotopy.Contractible
+import LeanPool.WhiteheadTheorem.Shapes.DiskHomeoCube
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 This file proves that if `f : C(X, Y)` is a weak homotopy equivalence,
@@ -18,6 +22,8 @@ is `n`-compressible for every natural number `n`, i.e.,
 it is compressible with respect to `TopCat.diskBoundaryIncl n : ∂𝔻 n ⟶ 𝔻 n`
 for each `n`.
 -/
+
+@[expose] public section
 
 open CategoryTheory TopCat
 open scoped unitInterval ContinuousMap Topology Topology.Homotopy

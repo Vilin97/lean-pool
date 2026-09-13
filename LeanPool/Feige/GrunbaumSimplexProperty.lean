@@ -3,12 +3,22 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
+module
+
+public import LeanPool.Feige.SimplexMeasure
+import LeanPool.Feige.Grunbaum.Main
+import LeanPool.Feige.Grunbaum.StrictBoundaryBridge
 import LeanPool.Feige.GrunbaumWeightedForm
-import LeanPool.Feige.SimplexMeasure
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Grünbaum property for the standard simplex
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory

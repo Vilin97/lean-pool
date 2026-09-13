@@ -3,7 +3,9 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import Mathlib.Probability.Distributions.Gaussian.Real
+module
+
+public import Mathlib.Probability.Distributions.Gaussian.Real
 
 /-!
 # The moment generating function of a squared standard Gaussian
@@ -19,6 +21,8 @@ The proof reduces the moment generating function to a Gaussian integral via
 `integral_gaussianReal_eq_integral_smul` and then evaluates it with
 mathlib's `integral_gaussian`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal

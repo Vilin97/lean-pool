@@ -3,10 +3,21 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Adjoin.FromPrime
+module
+
+public import LeanPool.AndersonConjecture.Jensen.NSubring
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
 import LeanPool.AndersonConjecture.Jensen.Avoidance
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Algebra.Polynomial.Cardinal
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
 import Mathlib.Data.Finsupp.Encodable
 import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Adjoining Elements to N-Subrings
@@ -16,6 +27,8 @@ transcendental adjunction preserving N-subring axioms (Loepp),
 adjunction from a prime ideal (Jensen), and the surjectivity
 step ensuring R → T/M² stays surjective (Heitmann Lemma 5).
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -61,8 +74,9 @@ private def adjoin_surjectivity_proof
     have hC_mem : ∀ P ∈ C, ∃ (r : R.carrier), (r : T) ≠ 0 ∧
         P ∈ associatedPrimes T (T ⧸ Ideal.span {(r : T)}) := by
       intro P hP
-      rw [mem_iUnion] at hP
-      simp_all
+      obtain ⟨r, hr⟩ := mem_iUnion.mp hP
+      obtain ⟨hr_ne, hP_assoc⟩ := mem_iUnion.mp hr
+      exact ⟨r, hr_ne, hP_assoc⟩
     have hC_prime : ∀ P ∈ C, P.IsPrime := by
       intro P hP
       obtain ⟨r, _, hP_assoc⟩ := hC_mem P hP
@@ -70,7 +84,7 @@ private def adjoin_surjectivity_proof
     have hC_ne_max : ∀ P ∈ C, P ≠ IsLocalRing.maximalIdeal T := by
       intro P hP hPM
       obtain ⟨r, hr_ne, hP_assoc⟩ := hC_mem P hP
-      simp_all
+      exact hM_not_assoc r hr_ne (hPM ▸ hP_assoc)
     have hM2_not_le : ∀ P ∈ C, ¬(IsLocalRing.maximalIdeal T ^ 2 ≤ P) := by
       intro P hP hle
       have hP_prime := hC_prime P hP
@@ -212,7 +226,9 @@ private def adjoin_surjectivity_proof
                           gcongr
                           · exact Polynomial.cardinalMk_le_max.trans (max_le le_rfl hR_inf)
                           · apply ciSup_le'
-                            simp_all
+                            intro f
+                            exact Cardinal.mk_le_aleph0_iff.mpr
+                              (Polynomial.rootSet_finite f T).countable.to_subtype
                       _ = Cardinal.mk R.carrier := Cardinal.mul_aleph0_eq hR_inf
             _ = Cardinal.mk R.carrier := Cardinal.add_eq_left hR_inf le_rfl
         have hD_mod_shifted_le : Cardinal.mk D_mod_shifted ≤ Cardinal.mk R.carrier := by
@@ -237,7 +253,7 @@ private def adjoin_surjectivity_proof
                         Cardinal.mk_iUnion_le _
                   _ ≤ Cardinal.mk R.carrier * Cardinal.aleph0 := by
                         gcongr
-                        · simp_all
+                        · exact Polynomial.cardinalMk_le_max.trans (max_le le_rfl hR_inf)
                         · apply ciSup_le'
                           intro f
                           apply Cardinal.mk_le_aleph0_iff.mpr
@@ -317,22 +333,17 @@ private def adjoin_surjectivity_proof
           intro Q ⟨hQ_prime, hQ_le_span⟩ hQ_le_P
           by_contra hPQ
           have hQ_ne_P : Q ≠ P := fun h => hPQ (h ▸ le_refl _)
-          have hQ_ne_bot : Q ≠ ⊥ := by
-            intro h
-            simp_all
+          have hQ_ne_bot : Q ≠ ⊥ := fun h => hr₀T_ne
+            (Ideal.span_singleton_eq_bot.mp (bot_unique (hQ_le_span.trans_eq h)))
           have hQ_lt_P : Q < P := lt_of_le_of_ne hQ_le_P hQ_ne_P
           have h_bot_lt_Q : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
+          have h1 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ Q
+            Ideal.isPrime_bot hQ_prime h_bot_lt_Q
           have h2 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ Q P hQ_prime hP_prime hQ_lt_P
-          have h4 : (2 : ℕ∞) ≤ P.height :=
-            calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
-              _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-                simp_all
-              _ ≤ Q.height + 1 := by
-                  gcongr
-                  exact @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ Q
-                    Ideal.isPrime_bot hQ_prime h_bot_lt_Q
-              _ ≤ P.height := h2
-          exact not_lt.mpr h4 (by exact_mod_cast hP_ht.trans_lt (by norm_num))
+          have h4 : (2 : ℕ∞) ≤ P.height := by
+            simpa only [Ideal.height_bot, zero_add, one_add_one_eq_two] using
+              (add_le_add_left h1 1).trans h2
+          exact (by norm_num : ¬(2 : ℕ∞) ≤ 1) (h4.trans hP_ht)
         have hP_assoc : P ∈ associatedPrimes T (T ⧸ Ideal.span {(r₀ : T)}) := by
           have hsub := Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes
             T (T ⧸ Ideal.span {(r₀ : T)})
@@ -363,7 +374,8 @@ private def adjoin_surjectivity_proof
   obtain ⟨S, hext, hut_mem⟩ :=
     adjoin_transcendental_isNSubring R (u + t) hut_trans hAss_ht hut_mod_trans
   refine ⟨S, hext, ⟨⟨u + t, hut_mem⟩, ?_⟩⟩
-  simp_all
+  simpa only [sub_add_eq_sub_sub, sub_self, zero_sub] using
+    ((IsLocalRing.maximalIdeal T ^ 2).neg_mem ht_M2)
 ⟩
 
 theorem adjoin_surjectivity

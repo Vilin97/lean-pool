@@ -3,7 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMContext
+import Mathlib.Order.Filter.AtTopBot.Basic
 /-!
 # The local EM truth lemma, layer 1: truth kernel + Skolem-witness transport
 
@@ -43,6 +46,8 @@ This is the local analogue of `EMTermModel.lean:114–180`. It is a pure file (i
 `LocalEMContext`, not the Conditional-touching `LocalEMExtraction`) so the local context/truth stack
 stays off the EM stack.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

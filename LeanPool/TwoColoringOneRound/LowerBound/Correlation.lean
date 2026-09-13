@@ -3,13 +3,32 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import Mathlib.Data.Finite.Perm
+public import Mathlib.Data.Fintype.Perm
+
+public import Mathlib.Data.Fintype.EquivFin
+
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import Mathlib.Algebra.Group.Action.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Rat.Defs
+import Mathlib.Algebra.Module.NatInt
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Finite.Prod
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.Correlation
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

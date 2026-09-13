@@ -6,7 +6,11 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.ExplicitFormula.PoitouTransform
-public import Mathlib.Analysis.Calculus.ParametricIntegral
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import LeanPool.Odlyzko.TestFunction.Bounds
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Tartar Poitou Transform

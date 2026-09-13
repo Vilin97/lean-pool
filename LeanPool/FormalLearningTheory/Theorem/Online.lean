@@ -3,7 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.GameInfra
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.GameInfra
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
 
 /-!
 # Online Learning Characterization Theorems
@@ -18,6 +21,8 @@ Main results:
 - `littlestone_characterization`: equivalence of the above
 - `optimal_mistake_bound_eq_ldim`: OptimalMistakeBound = LittlestoneDim (for nonempty C)
 -/
+
+@[expose] public section
 
 -- ============================================================
 -- FORWARD DIRECTION: OnlineLearnable → LittlestoneDim < ⊤

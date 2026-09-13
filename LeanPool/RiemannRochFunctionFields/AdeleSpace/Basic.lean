@@ -7,8 +7,8 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.RRspace.Basic
 public import Mathlib.Algebra.Module.MinimalAxioms
-public import Mathlib.LinearAlgebra.Quotient.Basic
 public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # K-valued adele space of a function field

@@ -3,8 +3,14 @@ Copyright (c) 2026 Makoto Yamashita. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Makoto Yamashita
 -/
+module
 
-import LeanPool.HSDInteriorPointLP.FixedYTMTheory
+public import LeanPool.HSDInteriorPointLP.FixedYTMTheory
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Generated predictor-corrector algorithm and final convergence theorem
@@ -19,6 +25,8 @@ Lean-reading hints for beginners:
 * `calc ...` is a readable chain of equalities/inequalities.
 * `omega` solves arithmetic goals over natural numbers and integers.
 -/
+
+@[expose] public section
 noncomputable section
 
 open scoped BigOperators

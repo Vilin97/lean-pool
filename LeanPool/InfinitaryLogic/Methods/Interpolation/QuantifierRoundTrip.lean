@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
-import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
-import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
+public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # The quantifier round-trip and the arbitrary-syntax C7 consumers (issue #8 tranche 1.5)
 
@@ -19,6 +21,8 @@ The Henkin truth lemma will meet an arbitrary existential `ψ.ex` (or negated un
 * `insepAt_instConst_of_insepAt_ex` / `insepAt_not_instConst_of_insepAt_not_all` — the actual
   C7 consumers for arbitrary existential / negated-universal parents.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

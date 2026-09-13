@@ -3,9 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.Geometry.Manifold.PartitionOfUnity
-import Mathlib.Topology.Compactness.Compact
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartData`
@@ -27,6 +27,8 @@ This file provides:
 * `RellichKondrachov.Geometry.Manifold.Sobolev.exists_finiteChartData_chartAt`: on a compact smooth
   manifold, there exists such data subordinate to `chartAt` sources.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

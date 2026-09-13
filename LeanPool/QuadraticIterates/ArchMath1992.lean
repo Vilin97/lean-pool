@@ -3,11 +3,16 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import LeanPool.QuadraticIterates.ArchMath1992.DegreeCriterion
-import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
-import LeanPool.QuadraticIterates.ArchMath1992.Iterates
-import LeanPool.QuadraticIterates.ArchMath1992.Main
-import LeanPool.QuadraticIterates.ArchMath1992.Sequences
+module
+
+public import LeanPool.QuadraticIterates.ArchMath1992.DegreeCriterion
+public import LeanPool.QuadraticIterates.ArchMath1992.Irreducibility
+public import LeanPool.QuadraticIterates.ArchMath1992.Iterates
+public import LeanPool.QuadraticIterates.ArchMath1992.Main
+public import LeanPool.QuadraticIterates.ArchMath1992.Sequences
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Galois groups over ℚ of some iterated polynomials
@@ -68,3 +73,5 @@ All declarations live in the `QuadraticIterates` namespace. The development is s
 over `ℤ`), `Iterates` (the polynomials `f_n`, the fields `K_n`, the groups `Ω_n`, the sequences
 `c` and `b`), `Irreducibility`, `DegreeCriterion` and `Main`.
 -/
+
+@[expose] public section

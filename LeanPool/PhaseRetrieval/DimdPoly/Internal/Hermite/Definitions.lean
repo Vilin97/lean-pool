@@ -15,17 +15,17 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   The goal of this file is only to pin down the common language of the
   development. Proofs come later.
 -/
-import Mathlib.Analysis.Fourier.AddCircle
-import Mathlib.Analysis.Complex.UpperHalfPlane.Measure
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.SpecialFunctions.PolarCoord
-import Mathlib.Data.Nat.Dist
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
+module
+
+public import Mathlib.Analysis.Fourier.AddCircle
+public import Mathlib.Data.Nat.Dist
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! # Definitions -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset

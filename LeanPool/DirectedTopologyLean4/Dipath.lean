@@ -3,13 +3,16 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.DirectedUnitInterval
-import LeanPool.DirectedTopologyLean4.UnitIntervalAux
-import LeanPool.DirectedTopologyLean4.Fraction
+module
+
+public import LeanPool.DirectedTopologyLean4.DirectedUnitInterval
+public import LeanPool.DirectedTopologyLean4.Fraction
 
 /-!
 # LeanPool.DirectedTopologyLean4.Dipath
 -/
+
+@[expose] public section
 
 /-
   This file contains the definition of a dipath in a directed space:

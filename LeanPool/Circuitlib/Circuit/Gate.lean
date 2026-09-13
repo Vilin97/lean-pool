@@ -3,10 +3,10 @@ Copyright (c) 2026 Matt Hunzinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
+module
 
-import LeanPool.Circuitlib.Circuit.Wires
-import Mathlib.Tactic.TypeStar
-import Mathlib.Order.Monotone.Defs
+public import LeanPool.Circuitlib.Circuit.Wires
+public import Mathlib.Order.Monotone.Defs
 
 /-! # Gates
 
@@ -15,6 +15,8 @@ import Mathlib.Order.Monotone.Defs
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
+
+@[expose] public section
 
 namespace Circuit
 

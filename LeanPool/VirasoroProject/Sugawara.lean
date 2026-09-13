@@ -3,22 +3,29 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.VirasoroAlgebra
-import LeanPool.VirasoroProject.HeisenbergAlgebra
+module
+
+public import Mathlib.Algebra.Torsor.Defs
+
+public import LeanPool.VirasoroProject.VirasoroAlgebra
+public import LeanPool.VirasoroProject.HeisenbergAlgebra
+public import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+public import Mathlib.Order.Filter.Cofinite
 import LeanPool.VirasoroProject.CentralChargeCalc
-import LeanPool.VirasoroProject.Commutator
-import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
+import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
 import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.Interval
+import Mathlib.Data.Int.Star
+import Mathlib.GroupTheory.GroupAction.Basic
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The bosonic Sugawara construction
 
@@ -53,6 +60,8 @@ This file contains the basic bosonic Sugawara construction.
 Sugawara construction, Virasoro algebra, Heisenberg algebra, bosonic Fock space
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

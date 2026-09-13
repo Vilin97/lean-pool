@@ -3,9 +3,12 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
+public import LeanPool.DomainTheory.Neighborhood.Product
+public import LeanPool.DomainTheory.Neighborhood.Exercise318
 import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
-import LeanPool.DomainTheory.Neighborhood.Product
+import Mathlib.Order.BooleanAlgebra.Set
 
 /-!
 # Exercise 3.24(iii)(iv) (Scott 1981, PRG-19, §3) — sum/product "isomorphisms"
@@ -45,6 +48,8 @@ The development re-uses Exercise 3.18's injections/projections and the structura
 extraction lemmas of
 Exercise 3.19.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

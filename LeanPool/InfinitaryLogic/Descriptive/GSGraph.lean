@@ -3,12 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import Mathlib.Topology.Baire.BaireMeasurable
 import Mathlib.Data.List.GetD
-import Mathlib.Topology.MetricSpace.PiNat
-import Mathlib.Topology.Baire.BaireMeasurable
-import Mathlib.Topology.Baire.Lemmas
 import Mathlib.Topology.Baire.LocallyCompactRegular
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+import Mathlib.Topology.MetricSpace.PiNat
 
 /-!
 # The graphs `G_S(2^ℕ)` and Miller's independence lemma
@@ -46,6 +46,8 @@ applied to the part of the symmetric difference inside each child cylinder). A c
 `x` outside both meager sets yields the edge
 `(prependWord (s ++ [false]) x, prependWord (s ++ [true]) x)` inside `B`.
 -/
+
+@[expose] public section
 
 open Set Filter Topology
 
@@ -173,13 +175,13 @@ def DenseWords (S : Set (List Bool)) : Prop :=
 /-! ### A canonical dense and sparse set of words -/
 
 /-- An enumeration of all finite binary words. -/
-private def wordEnum (n : ℕ) : List Bool := (Encodable.decode (α := List Bool) n).getD []
+def wordEnum (n : ℕ) : List Bool := (Encodable.decode (α := List Bool) n).getD []
 
 private theorem wordEnum_encode (w : List Bool) : wordEnum (Encodable.encode w) = w := by
   simp [wordEnum, Encodable.encodek]
 
 /-- Pad a word with `false` up to length `n`. -/
-private def padTo (w : List Bool) (n : ℕ) : List Bool := w ++ List.replicate (n - w.length) false
+def padTo (w : List Bool) (n : ℕ) : List Bool := w ++ List.replicate (n - w.length) false
 
 private theorem length_padTo {w : List Bool} {n : ℕ} (h : w.length ≤ n) : (padTo w n).length
   = n := by

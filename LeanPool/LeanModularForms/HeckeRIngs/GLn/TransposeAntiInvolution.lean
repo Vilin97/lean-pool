@@ -3,9 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Commutativity
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Commutativity
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # GL_n Hecke Algebra Commutativity via Transpose
@@ -20,6 +25,8 @@ gives commutativity of the Hecke ring.
 * `GLPairAntiInvolution` -- the transpose as an `AntiInvolution` for `GLPair n`
 * `instCommRingHeckeAlgebra` -- `CommRing (HeckeAlgebra n)`
 -/
+
+@[expose] public section
 
 open Matrix HeckeRing HeckeRing.GLn Matrix.SpecialLinearGroup
 

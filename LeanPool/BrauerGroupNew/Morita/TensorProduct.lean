@@ -3,14 +3,25 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+public import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+public import Mathlib.RingTheory.TensorProduct.Maps
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.BrauerGroupNew.Morita.TensorProduct
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Morita.TensorProduct`.
 -/
+
+@[expose] public section
 
 universe u v w
 
@@ -260,7 +271,7 @@ abbrev toModuleOverTensor : TensorModule R A C ⥤ ModuleCat (A ⊗[R] C) where
     map_smul' ac m := by
       induction ac using TensorProduct.induction_on with
       | zero => simp
-      | tmul a c => simp [moduleAux_apply, TensorModule.commutes_apply]
+      | tmul a c => simp [TensorModule.commutes_apply]
       | add _ _ _ _ => simp_all [add_smul]
   }
   map_id M := by ext; simp
@@ -291,7 +302,7 @@ abbrev e01 (M : TensorModule R A C) :
       · exact AddHom.id _
       · intro a m
         change a • m = (moduleAux R A C M (a ⊗ₜ[R] (1 : C))) m
-        simp [moduleAux_apply]
+        simp
     · exact id
     · exact congrFun rfl
     · exact congrFun rfl)) fun c ↦ by

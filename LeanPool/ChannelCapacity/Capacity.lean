@@ -3,14 +3,18 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
+
+public import LeanPool.ChannelCapacity.NonDegeneracy
 import LeanPool.ChannelCapacity.StrictConcavity
-import Mathlib.Topology.Semicontinuity.Basic
 
 /-!
 # ChannelCapacity.Capacity
 
 Capacity and generic existence/uniqueness packaging for maximizing mutual information.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

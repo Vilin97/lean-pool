@@ -3,10 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
-import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
-import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.I
+public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Rho
+public import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Winding Number Weights at Elliptic Points
@@ -22,6 +26,8 @@ fundamental domain boundary around the elliptic points i, ρ, ρ+1.
 * `effectiveWinding_rho_eq_neg_gWN` — 1/3 = -(gWN(ρ) + gWN(ρ+1))
 * `effectiveWinding_i_eq_neg_gWN` — 1/2 = -gWN(i)
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

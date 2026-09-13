@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DisturbingCertificate
-import LeanPool.PoincareThreeBody.PoincareSet
+public import LeanPool.PoincareThreeBody.DisturbingCertificate
+public import LeanPool.PoincareThreeBody.PoincareSet
 
 /-!
 # Finite certificates for the classical Poincaré set
@@ -16,6 +17,8 @@ sum, and a rigorous second-derivative error bound.  The analytic quadrature theo
 finite data into membership in the exact Poincaré set.  Consequently, it is enough to prove that
 the set of actions carrying such certificates is dense.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

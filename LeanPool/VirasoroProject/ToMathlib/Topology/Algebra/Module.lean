@@ -3,8 +3,9 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
+module
 
-import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap
+public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap
 
 /-!
 # Topological Module Support
@@ -12,3 +13,5 @@ import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap
 Import-only index for topological module support modules used by the Virasoro
 Project.
 -/
+
+@[expose] public section

@@ -3,14 +3,16 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
+module
+
+import Mathlib.Probability.Independence.Integration
+
+public import LeanPool.HansonWright.Probability.Process.SubGaussian
+public import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import LeanPool.HansonWright.Probability.Concentration.Bernstein
-import LeanPool.HansonWright.Probability.Process.SubGaussian
 import LeanPool.HansonWright.Probability.Moments.Exponential
-import Mathlib.Analysis.CStarAlgebra.Matrix
-import Mathlib.Analysis.InnerProductSpace.SingularValues
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.InnerProductSpace.Trace
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 
@@ -47,11 +49,12 @@ two-scale Chernoff bound.
   using the maximum coordinate least global-MGF sub-Gaussian scale.
 -/
 
+@[expose] public section
+
 namespace LeanPool
 
 open MeasureTheory Real
 open _root_.ProbabilityTheory
-open _root_.LeanPool.ProbabilityTheory
 open scoped BigOperators NNReal
 
 noncomputable section

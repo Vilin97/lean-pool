@@ -3,10 +3,11 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.ProdIntegrable
+public import LeanPool.OSforGFF.Spacetime.ProdIntegrable
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Spacetime Decomposition
@@ -25,6 +26,8 @@ time and spatial components: SpaceTime ≃ᵐ ℝ × SpatialCoords.
 * `spacetimeDecomp_apply` - Explicit formula: spacetimeDecomp k = (k 0, spatialPart k)
 * `spacetime_norm_sq_decompose` - Norm decomposition: ‖k‖² = k₀² + ‖k_sp‖²
 -/
+
+@[expose] public section
 
 open MeasureTheory MeasureSpace FiniteDimensional Real
 

@@ -3,14 +3,24 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.QuantumGraph.Basic
-import LeanPool.Monlib4.QuantumGraph.Example
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Symm
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+import LeanPool.Monlib4.LinearAlgebra.MySpec
 
 /-!
  # Isomorphisms between quantum graphs
 
  This file defines isomorphisms between quantum graphs.
 -/
+
+@[expose] public section
 
 
 open TensorProduct Matrix

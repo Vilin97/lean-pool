@@ -3,14 +3,17 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import LeanPool.Polylean.Complexes.Structures.Quiver
+public import LeanPool.Polylean.Complexes.Structures.Quiver
 
 /-!
 # LeanPool.Polylean.Complexes.Structures.Category
 
 Imported Lean Pool material for `LeanPool.Polylean.Complexes.Structures.Category`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

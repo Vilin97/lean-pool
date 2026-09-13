@@ -6,7 +6,10 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Order.Interval.Finset.Fin
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Fintype.Fin
 
 /-!
 # Finite sums indexed by `Fin`

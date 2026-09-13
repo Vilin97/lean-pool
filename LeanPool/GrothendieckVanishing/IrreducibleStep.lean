@@ -3,13 +3,15 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
+public import LeanPool.GrothendieckVanishing.GeneratedSubsheaf
+public import Mathlib.Topology.KrullDimension
+public import Mathlib.Topology.NoetherianSpace
 import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
 import LeanPool.GrothendieckVanishing.ConstantSheafFlasque
 import LeanPool.GrothendieckVanishing.FinitelyGeneratedVanishing
-import LeanPool.GrothendieckVanishing.FlasqueVanishing
 import LeanPool.GrothendieckVanishing.TopologicalKrullDim
-import LeanPool.GrothendieckVanishing.ZeroOutside
 import Mathlib.GroupTheory.Archimedean
 
 /-!
@@ -42,6 +44,8 @@ neighbourhood by minimality.
 * `epiImage_zeroOutsideInt_vanishing_of_locallySurjective` — Steps 3C + 4 + LES combined.
 * `irreducible_pos_vanishing` — the headline assembly.
 -/
+
+@[expose] public section
 
 universe u
 

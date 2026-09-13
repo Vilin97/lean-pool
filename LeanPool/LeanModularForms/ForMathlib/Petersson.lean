@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.NumberTheory.ModularForms.Petersson
+public import Mathlib.NumberTheory.ModularForms.Petersson
 
 /-!
 # Petersson inner product (project-local SL(2, ℤ) shims)
@@ -15,6 +16,8 @@ The Petersson lemmas from the ForMathlib draft have been upstreamed into
 with `[Γ.HasDetOne]`, whereas the rest of this project still works with a
 `Γ : Subgroup SL(2, ℤ)`.  We provide thin wrappers that translate the SL version into the GL one.
 -/
+
+@[expose] public section
 
 open ModularForm Complex UpperHalfPlane MatrixGroups
 

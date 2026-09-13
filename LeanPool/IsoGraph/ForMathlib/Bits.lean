@@ -3,11 +3,16 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import Mathlib.Data.Nat.Bitwise
-import Mathlib.Data.List.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.Group.Nat.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lemmas about `Nat.testBit` and bitwise folds
@@ -16,6 +21,8 @@ Statements that mention nothing from this development.  They were proved here be
 something in the library needed them, and they are collected in `ForMathlib` so that they
 can be contributed upstream, or deleted when Mathlib grows its own.
 -/
+
+@[expose] public section
 
 
 theorem eq_of_testBit_lt {n a b : ℕ} (ha : a < 2 ^ n) (hb : b < 2 ^ n)

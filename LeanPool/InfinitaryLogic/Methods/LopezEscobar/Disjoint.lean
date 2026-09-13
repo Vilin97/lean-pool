@@ -3,11 +3,18 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.TaggedGlue
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
-import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
-import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
 import LeanPool.InfinitaryLogic.Descriptive.InvariantMeasurableSpace
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.TaggedGlue
+import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The sole Löwenheim–Skolem consumer (issue #10, Unit 4 commit 3)
 
@@ -20,6 +27,8 @@ witness `c`'s graph-totality axiom bootstraps its nonemptiness; reconstruction p
 Endpoints: `pcMem_disjoint` and `pcSentences_entails_not`, the latter being exactly what
 Unit 5 feeds to `craig_pcSeparation_relational`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

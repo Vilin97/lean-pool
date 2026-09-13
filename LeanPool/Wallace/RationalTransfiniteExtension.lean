@@ -3,10 +3,18 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.CoefficientTransfiniteExtension
-import LeanPool.Wallace.RationalTriangularPreprocess
+public import LeanPool.Wallace.CoefficientTransfiniteExtension
+public import LeanPool.Wallace.RationalTriangularPreprocess
 import Mathlib.Algebra.Category.Grp.Injective
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Transfinite extension for the rational direct sum
@@ -15,6 +23,8 @@ This file supplies the coefficient-specific input to the shared transfinite recu
 extension theorem extends the integer character with prescribed value at one to a character on
 each rational coordinate.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 
@@ -28,7 +38,7 @@ universe u
 open CoefficientTransfiniteExtension
 
 /-- The integer character with prescribed value at one. -/
-private def integerCircleHom (t : UnitAddCircle) : ℤ →+ UnitAddCircle :=
+def integerCircleHom (t : UnitAddCircle) : ℤ →+ UnitAddCircle :=
   (zmultiplesHom UnitAddCircle) t
 
 private theorem intCastAddHom_rational_injective :
@@ -37,10 +47,10 @@ private theorem intCastAddHom_rational_injective :
   exact Rat.intCast_injective h
 
 /-- An additive homomorphism on `ℚ` extending the integer character with value `t` at one. -/
-private def extendRationalCoordinate (t : UnitAddCircle) : ℚ →+ UnitAddCircle :=
-  Classical.choose <|
-    (Module.Baer.of_divisible UnitAddCircle).extension_property_addMonoidHom
-      (Int.castAddHom ℚ) intCastAddHom_rational_injective (integerCircleHom t)
+def extendRationalCoordinate (t : UnitAddCircle) : ℚ →+ UnitAddCircle :=
+  Classical.choose <| private_decl%
+    ((Module.Baer.of_divisible UnitAddCircle).extension_property_addMonoidHom
+      (Int.castAddHom ℚ) intCastAddHom_rational_injective (integerCircleHom t))
 
 private theorem extendRationalCoordinate_comp_intCast (t : UnitAddCircle) :
     (extendRationalCoordinate t).comp (Int.castAddHom ℚ) = integerCircleHom t :=
@@ -55,9 +65,9 @@ private theorem extendRationalCoordinate_one (t : UnitAddCircle) :
   simpa [integerCircleHom] using h
 
 /-- Baer's extension supplies the coordinate extension used by the generic recursion. -/
-private def rationalCoordinateExtension : CoordinateExtension ℚ where
+def rationalCoordinateExtension : CoordinateExtension ℚ where
   ofValue := extendRationalCoordinate
-  ofValue_one := extendRationalCoordinate_one
+  ofValue_one := by exact extendRationalCoordinate_one
 
 /-- Triangular data for rational-valued prepared sequences. -/
 abbrev Data (I : Type u) [LT I] := CoefficientTransfiniteExtension.Data ℚ I

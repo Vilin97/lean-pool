@@ -3,13 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbeddingCore
 import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification0
 import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification1
 import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification2
 import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification3
 
 /-! Aggregated edge-geometry checks for the finite gadget. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

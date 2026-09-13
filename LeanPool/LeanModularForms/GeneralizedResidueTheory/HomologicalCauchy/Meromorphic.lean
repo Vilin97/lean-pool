@@ -3,11 +3,23 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.DixonProof
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CPVExistence
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.HigherOrderAssembly
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing.CPVHelpers
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Meromorphic Contour Integral Vanishing (Null-Homologous)
@@ -27,6 +39,8 @@ zero residues vanish along null-homologous curves.
 * `pv_res_tendsto_of_immersion_nullHomologous` --
   PV residue sum convergence for null-homologous curves
 -/
+
+@[expose] public section
 
 open Complex Set Filter Topology MeasureTheory intervalIntegral
 

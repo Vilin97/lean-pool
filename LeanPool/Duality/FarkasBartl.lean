@@ -3,16 +3,25 @@ Copyright (c) 2026 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak
 -/
-import Mathlib.Algebra.Order.Module.Defs
-import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-import Mathlib.Algebra.Module.Pi
-import Mathlib.Tactic.Abel
+module
+
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+
+public import Mathlib.Algebra.Order.Module.Defs
+public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Data.Fintype.Basic
 import LeanPool.Duality.Common
+import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+import Mathlib.Tactic.Abel
 
 /-!
 # LeanPool.Duality.FarkasBartl
 -/
+
+@[expose] public section
 
 private def withoutLastMap {m : ℕ} {R W : Type*} [Semiring R] [AddCommMonoid W] [Module R W]
     (A : W →ₗ[R] Fin m.succ → R) :
@@ -137,7 +146,7 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
   else
     push Not at is_easy
     obtain ⟨y', hay', hby'⟩ := is_easy
-    let M : Fin m.succ := ⟨m, lt_add_one m⟩ -- the last (new) index
+    let M : Fin m.succ := ⟨m, Nat.lt_succ_self m⟩ -- the last (new) index
     let y : W := (A y' M)⁻¹ • y' -- rescaled `y'`
     have hAy' : A y' M < 0 := by
       by_contra! contr

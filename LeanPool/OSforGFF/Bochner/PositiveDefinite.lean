@@ -3,20 +3,10 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Complex.Order
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Algebra.Module.LinearMap.Defs
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import Mathlib.Analysis.Matrix.Hermitian
+public import Mathlib.Analysis.Complex.Norm
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 
 /-!
 # Positive Definite Functions
@@ -47,6 +37,8 @@ but that weaker condition does not imply Hermitian symmetry.
 - `IsPositiveDefinite.mul`: pointwise product of PD functions is PD (Schur)
 - `isPositiveDefinite_precomp_linear`: composition with linear maps preserves PD
 -/
+
+@[expose] public section
 
 open Complex BigOperators
 open scoped Kronecker

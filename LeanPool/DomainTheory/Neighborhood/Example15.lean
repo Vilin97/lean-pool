@@ -3,10 +3,13 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.FinCases
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Set.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.SetLike
 
 /-!
 # Example 1.5 (Scott 1981, PRG-19, §1)
@@ -36,6 +39,8 @@ Unlike Examples 1.2–1.4 this construction needs no `fin_cases`/`decide`: it is
 `Set.Nonempty`
 bookkeeping, so it audits **constructive** (`[propext, Quot.sound]`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Example15
 

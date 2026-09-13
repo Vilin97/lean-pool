@@ -3,10 +3,14 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
-import LeanPool.KasamiCyclicAdditive.Geometry.IsogenyFactor
+public import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
+public import LeanPool.KasamiCyclicAdditive.Geometry.IsogenyFactor
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Base change of points along a field extension
@@ -17,6 +21,8 @@ on points of the Fermat cubic, built the same way as `frobPt` (via
 `frobPt` (`basePt_frobPt`), which is exactly the naturality needed to transport
 the `G`-preimage identity from `E(K)` to `E(F) = E(AlgebraicClosure K)`.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.PointFrobenius
 

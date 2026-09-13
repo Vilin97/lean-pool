@@ -3,9 +3,13 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import Mathlib.GroupTheory.Perm.Fin
-import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Algebra.Group.Even
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
   EVEN CARDINALITY FROM A FIXED-POINT-FREE INVOLUTION
@@ -13,6 +17,8 @@ import Mathlib.Data.Finset.Card
   A finite set closed under a fixed-point-free involution has even cardinality.
   This is the small combinatorial lemma later used in the Catalan recurrence.
 -/
+
+@[expose] public section
 
 open Equiv Equiv.Perm
 

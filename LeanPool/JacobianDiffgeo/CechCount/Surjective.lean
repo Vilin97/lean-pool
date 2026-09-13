@@ -3,8 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CechCount.Mul
+public import LeanPool.JacobianDiffgeo.CechCount.Mul
+import LeanPool.JacobianDiffgeo.Cech.SixTerm
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Multiplication epimorphisms on Čech `H¹` (cechcount unit, Forster 17.8)
@@ -20,6 +24,8 @@ primal form). Proof: factor through the intermediate divisor `D₁ := E + diviso
   `f·f⁻¹ = 1` in the function field `ℳ X`);
 * `mulH1 f hf` agrees with the composite (`mulH1_H1Incl`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module

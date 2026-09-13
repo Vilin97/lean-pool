@@ -3,11 +3,18 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import LeanPool.RiemannMappingTheorem.Cindex
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # LeanPool.RiemannMappingTheorem.HasSqrt
 -/
+
+@[expose] public section
 
 open Set Complex Metric Topology
 

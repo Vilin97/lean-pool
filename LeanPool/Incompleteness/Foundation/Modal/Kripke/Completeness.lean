@@ -3,11 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
+public import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import Mathlib.Tactic.TautoSet
 
 /-! # Completeness -/
+
+@[expose] public section
 
 
 namespace LO

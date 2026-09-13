@@ -15,10 +15,17 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   - `total_leakage_bound`   (Theorem 5.8)
   - `eta_5_bound`           (Theorem 5.9)
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
 import LeanPool.PhaseRetrieval.Constant.Internal.LaplaceFactorial
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # LeakageEstimate -/
+
+@[expose] public section
 
 
 open MeasureTheory Real Finset Complex

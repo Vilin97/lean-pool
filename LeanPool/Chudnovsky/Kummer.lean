@@ -3,11 +3,15 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.PicardFuchs
+public import LeanPool.Chudnovsky.PicardFuchs
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.Clausen
 import LeanPool.Chudnovsky.Estimates
 import LeanPool.Chudnovsky.Ramanujan
 import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.NumberTheory.ModularForms.LevelOne.DimensionFormula
 
 /-!
 # Kummer's solution of the Picard–Fuchs equation
@@ -49,6 +53,8 @@ what chapter 9 consumes after the PLAN A7 reformulation. TODO: if the final asse
 `MainTheorem.lean` turns out to need the literal `Δ^(1/12)` statement (it uses `ωtilde₁ = Δ^(1/12)`
 only through `F` and `dF/dJ`), add it here with an explicit principal-branch bookkeeping.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -170,7 +176,7 @@ theorem kummerB_satisfiesPicardFuchs :
   have hWz := (hasDerivAt_inv h1z).comp z ((hasDerivAt_id z).const_sub (1 : ℂ))
   have hGz := (hHD1 z⁻¹ huw).comp z (hasDerivAt_inv hz0)
   have hGdz := (hHD2 z⁻¹ huw).comp z (hasDerivAt_inv hz0)
-  have hSz := ((hasDerivAt_inv (pow_ne_zero 2 hz0)).comp z (hasDerivAt_pow 2 z)).neg
+  have hSz := ((hasDerivAt_pow 2 z).inv (pow_ne_zero 2 hz0)).neg
   -- Assemble `HasDerivAt D1 _ z` term by term.
   have hPI := hPz.mul hIz
   have ht1 := ((hPI.const_mul (-(1 / 4) : ℂ)).mul hQz).mul hGz
@@ -187,7 +193,7 @@ theorem kummerB_satisfiesPicardFuchs :
     rw [Complex.cpow_sub _ _ h1z, Complex.cpow_one, div_eq_mul_inv]
   -- Rewrite the Picard–Fuchs expression and finish by the ODE substitution.
   rw [heqEv.deriv_eq, hderivKummer z ⟨hznorm, hzim⟩, hHD_D1.deriv]
-  simp only [hD1def, kummerB, id_eq, Pi.mul_apply, Pi.neg_apply, Function.comp_apply]
+  simp only [hD1def, kummerB, id_eq, Pi.mul_apply, Pi.neg_apply, Pi.inv_apply, Function.comp_apply]
   rw [eZ1z, eW1z, hF2]
   field_simp
   ring

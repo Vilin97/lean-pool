@@ -3,8 +3,13 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
+public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
+import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Remaining region computations for the 3-parameter recursive algorithm
@@ -12,6 +17,8 @@ import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
 This file computes the contributions to `ClassicalAlgorithm.p recursive3ParamAlg` coming from the
 `b < t1` and `t1 ≤ b < t2` regions.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

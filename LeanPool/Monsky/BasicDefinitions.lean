@@ -3,29 +3,18 @@ Copyright (c) 2026 Dhyan Aranha and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhyan Aranha, contributors
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
-import LeanPool.Monsky.SegmentTriangle
+public import LeanPool.Monsky.SegmentTriangle
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.Monsky.BasicDefinitions
 
 Imported Lean Pool material for `LeanPool.Monsky.BasicDefinitions`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Monsky
 

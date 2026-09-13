@@ -3,14 +3,25 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Module
 import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativity
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.SMul
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Hecke Rings: Ring Instance and API
 
 The `Ring (𝕋 P ℤ)` instance and user-facing API lemmas for working with Hecke rings.
 -/
+
+@[expose] public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 

@@ -3,8 +3,23 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import LeanPool.AndersonConjecture.Basic
+public import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+public import LeanPool.AndersonConjecture.Jensen.Defs
+public import Mathlib.RingTheory.AdicCompletion.Functoriality
+import LeanPool.AndersonConjecture.AdicLocal
 import LeanPool.AndersonConjecture.Jensen.Jensen
 import LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+import Mathlib.RingTheory.AdicCompletion.Noetherian
+import Mathlib.RingTheory.KrullDimension.Regular
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Main Theorem: WQC Does Not Imply QC
@@ -15,6 +30,8 @@ with completion T = ℂ[[x,y,z]]/(x²-yz)
 Anderson's theorems
 reduce the problem to a quotient that fails weak quasi-completeness.
 -/
+
+@[expose] public section
 
 noncomputable section
 

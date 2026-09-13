@@ -3,15 +3,21 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
-import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
-import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
-import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
-import LeanPool.Erdos97ConvexOctagon.RowMasks
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
+public import LeanPool.Erdos97ConvexOctagon.RowMasks
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Flat local checker for coverage certificates -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
@@ -67,13 +73,16 @@ inductive BranchClaim where
   /-- The five remaining rows are covered by postorder local claims. -/
   | search (claims : BranchClaims)
 
-private def defaultNodeClaim : NodeClaim :=
+/-- The empty node claim used when a lookup has no matching entry. -/
+def defaultNodeClaim : NodeClaim :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0, #[]⟩
 
-private def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
+/-- An empty word claim retaining the requested word index. -/
+def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
   ⟨wordIndex, [], [], [], []⟩
 
-private def nodeWordClaimAtAux
+/-- Search a bounded suffix of the word-claim array for the requested index. -/
+def nodeWordClaimAtAux
   (wordClaims : Array NodeWordClaim) (wordIndex position : Nat) :
     Nat → NodeWordClaim
   | 0 => emptyNodeWordClaim wordIndex
@@ -114,14 +123,22 @@ def pairStateFromAssignments (assignments : List RowAssignment) : PairState :=
 def columnStateFromAssignments (assignments : List RowAssignment) : ColumnState :=
   assignments.foldl (fun state assignment => state.add assignment.2) ColumnState.empty
 
-private structure LocalCursor where
+/-- Accumulated verification status and outgoing references for a node claim. -/
+structure LocalCursor where
+  /-- Whether every processed row has passed its checks. -/
   ok : Bool
+  /-- Pattern origins collected from the processed rows. -/
   patternOrigins : List Nat
+  /-- Child claim identifiers collected from the processed rows. -/
   childIds : List Nat
+  /-- Hard-case origins collected from the processed rows. -/
   hardOrigins : List Nat
 
-private structure RejectionCursor where
+/-- Accumulated verification status and targets for rejected rows. -/
+structure RejectionCursor where
+  /-- Whether every processed rejection has passed its checks. -/
   ok : Bool
+  /-- Targets collected from the processed rejected rows. -/
   targets : List Nat
 
 private theorem foldl_fixed_of_false
@@ -195,7 +212,8 @@ def conflictCoverLookup (identifier : Nat) : Option ConflictCover :=
   | none => none
   | some group => group[identifier % 64]?
 
-private def processRow
+/-- Check one certificate row and update its accumulated references. -/
+def processRow
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (cursor : LocalCursor) (index : Nat) : LocalCursor :=
@@ -229,7 +247,7 @@ private def processRow
           ⟨childValid, cursor.patternOrigins, childIds, cursor.hardOrigins⟩
 
 /-- Process at most five compatible rows while threading the local witness streams. -/
-private def processFiveRows
+def processFiveRows
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (indices : List Nat) (initial : LocalCursor) : LocalCursor :=
@@ -345,7 +363,8 @@ def rejectedRowValidB
       decide (count + remainingColumnCapacity remaining targetVertex < 4)
   else false
 
-private def processRejectedRow
+/-- Check one rejected row and record its target. -/
+def processRejectedRow
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (cursor : RejectionCursor) (index : Nat) : RejectionCursor :=
   if !cursor.ok then cursor

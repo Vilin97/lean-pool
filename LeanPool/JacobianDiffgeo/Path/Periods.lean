@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+public import Mathlib.Topology.Homotopy.Path
 import LeanPool.JacobianDiffgeo.Path.HomotopySquare
-import Mathlib.LinearAlgebra.Basis.Defs
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Periods of a holomorphic 1-form along a loop (CC6)
@@ -22,6 +25,8 @@ Main declarations:
 * `RS.periodVector b γ` — the period vector w.r.t. a basis `b` of `Form1 X`, with
   `periodVector_trans/symm/refl`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Module

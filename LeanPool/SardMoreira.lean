@@ -3,28 +3,29 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import LeanPool.SardMoreira.ContDiff
-import LeanPool.SardMoreira.ContDiffMoreiraHolder
-import LeanPool.SardMoreira.ContinuousMultilinearMap
-import LeanPool.SardMoreira.Chart
-import LeanPool.SardMoreira.ChartEstimates
-import LeanPool.SardMoreira.ImplicitFunction
-import LeanPool.SardMoreira.LebesgueDensity
-import LeanPool.SardMoreira.LinearAlgebra
-import LeanPool.SardMoreira.LocalEstimates
-import LeanPool.SardMoreira.MainTheorem
-import LeanPool.SardMoreira.MeasureBallSemicontinuous
-import LeanPool.SardMoreira.MeasureComap
-import LeanPool.SardMoreira.MeasureNNReal
-import LeanPool.SardMoreira.NormedSpace
-import LeanPool.SardMoreira.OuterMeasureDeriv
-import LeanPool.SardMoreira.ToMathlib
-import LeanPool.SardMoreira.Topology
-import LeanPool.SardMoreira.UnifDoublingCover
-import LeanPool.SardMoreira.Unused
-import LeanPool.SardMoreira.UpperLowerSemicontinuous
-import LeanPool.SardMoreira.WithRPowDist
+public import LeanPool.SardMoreira.ContDiff
+public import LeanPool.SardMoreira.ContDiffMoreiraHolder
+public import LeanPool.SardMoreira.ContinuousMultilinearMap
+public import LeanPool.SardMoreira.Chart
+public import LeanPool.SardMoreira.ChartEstimates
+public import LeanPool.SardMoreira.ImplicitFunction
+public import LeanPool.SardMoreira.LebesgueDensity
+public import LeanPool.SardMoreira.LinearAlgebra
+public import LeanPool.SardMoreira.LocalEstimates
+public import LeanPool.SardMoreira.MainTheorem
+public import LeanPool.SardMoreira.MeasureBallSemicontinuous
+public import LeanPool.SardMoreira.MeasureComap
+public import LeanPool.SardMoreira.MeasureNNReal
+public import LeanPool.SardMoreira.NormedSpace
+public import LeanPool.SardMoreira.OuterMeasureDeriv
+public import LeanPool.SardMoreira.ToMathlib
+public import LeanPool.SardMoreira.Topology
+public import LeanPool.SardMoreira.UnifDoublingCover
+public import LeanPool.SardMoreira.Unused
+public import LeanPool.SardMoreira.UpperLowerSemicontinuous
+public import LeanPool.SardMoreira.WithRPowDist
 
 /-!
 # Moreira's version of Sard's theorem
@@ -36,6 +37,8 @@ Main declarations: `dimH_image_le_sardMoreiraBound_of_finrank_le`
 Tags: analysis, measure-theory, sard-theorem, hausdorff-measure
 MSC: 28A78, 58C25
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

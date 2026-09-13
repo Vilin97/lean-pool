@@ -3,12 +3,16 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.OrderedTwoPointInduction
-import Mathlib.Data.Fin.Tuple.Sort
+module
+
+public import LeanPool.Feige.OrderedTwoPointInduction
+public import Mathlib.Data.Fin.Tuple.Sort
 
 /-!
 # Reindexing and sorting finite two-point systems
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped BigOperators

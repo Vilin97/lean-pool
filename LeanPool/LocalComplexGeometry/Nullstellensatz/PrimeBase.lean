@@ -3,9 +3,14 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
 import LeanPool.LocalComplexGeometry.Germs.Ring
-import LeanPool.LocalComplexGeometry.Nullstellensatz.RadicalReduction
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The zero-dimensional prime case
@@ -14,6 +19,8 @@ The analytic Nullstellensatz induction starts in complex dimension zero.  The
 germ ring there is canonically `ℂ`, so its only prime ideal is zero; the zero
 ideal has the full neighborhood as its zero-set germ.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

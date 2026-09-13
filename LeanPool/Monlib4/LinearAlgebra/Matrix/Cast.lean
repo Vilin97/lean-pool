@@ -3,13 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Data.Matrix.Basic
+module
+
+public import Mathlib.Data.Matrix.Mul
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Matrix.Cast`.
 -/
+
+@[expose] public section
 
 variable {R k : Type*} {s : k → Type _}
 

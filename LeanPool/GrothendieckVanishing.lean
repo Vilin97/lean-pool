@@ -3,8 +3,16 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.GrothendieckVanishingOverview
+public import LeanPool.GrothendieckVanishing.GrothendieckVanishing
+
+public import LeanPool.GrothendieckVanishing.GrothendieckVanishingOverview
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Floor
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Topology.Sheaves.Init
 
 /-!
 # Grothendieck's Vanishing Theorem
@@ -16,3 +24,5 @@ Main declarations: `GrothendieckVanishing`
 Tags: algebraic-geometry, sheaf-theory, topology
 MSC: 14F06, 18F20
 -/
+
+@[expose] public section

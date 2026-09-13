@@ -3,9 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.SATReductionIncidence
-import LeanPool.Sundogcert.ThreeDMReindex
+public import LeanPool.Sundogcert.SATReductionIncidence
+public import LeanPool.Sundogcert.ThreeDMReindex
 
 /-!
   Sundogcert/SATReductionForward.lean — MILESTONE 8 of the `3SAT ≤ 3DM` marathon: the FORWARD
@@ -52,7 +53,9 @@ import LeanPool.Sundogcert.ThreeDMReindex
   Axiom-clean (no `native_decide`, no `decide`).  Expect `[propext, Classical.choice, Quot.sound]`.
 -/
 
-open Sundog.SATReduction Sundog.SATNPHard Sundog.VarWheel
+@[expose] public section
+
+open Sundog.SATReduction Sundog.SATNPHard
 open Sundog.SATReductionIncidence Sundog.ThreeDMReindex
 
 namespace Sundog.SATReductionForward

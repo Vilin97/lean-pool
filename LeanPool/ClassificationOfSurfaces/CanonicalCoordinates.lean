@@ -3,8 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CanonicalPairings
-import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
+module
+
+public import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
+public import LeanPool.ClassificationOfSurfaces.CanonicalWords
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Carrier coordinates for canonical normal-form words
@@ -14,6 +20,8 @@ It reconciles the canonical positive boundary-block ordering with the trusted Ev
 negative angles using `Fin.rev` and integral periodicity. The resulting theorems send each of the
 five canonical pairing families into the corresponding trusted equivalence closure.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces.NormalForm
 

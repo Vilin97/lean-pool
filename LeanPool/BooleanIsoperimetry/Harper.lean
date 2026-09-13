@@ -3,8 +3,17 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import Mathlib.Tactic.FinCases
+module
+
+public import LeanPool.BooleanIsoperimetry.Macaulay
 import LeanPool.BooleanIsoperimetry.Shadow
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Harper's vertex-isoperimetric theorem
@@ -12,6 +21,8 @@ import LeanPool.BooleanIsoperimetry.Shadow
 This file assembles the compression, Macaulay, Kruskal-Katona, and scalar
 recurrence layers into the final sorry-free proof of Harper's theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Colimit
-import Mathlib.LinearAlgebra.Dimension.Constructions
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Local Laurent windows and the skyscraper data (CC8, D7, proof plan §6.8)
@@ -26,8 +28,10 @@ inputs) are exported from `WindowRank.lean` instead, via a one-step splitting
 needed); the *structural* exactness in this file does not depend on them.
 -/
 
+@[expose] public section
+
 open scoped ContDiff Manifold Topology
-open Set TopologicalSpace RS.Cech Filter
+open Set TopologicalSpace Filter
 
 namespace RS.Cech
 

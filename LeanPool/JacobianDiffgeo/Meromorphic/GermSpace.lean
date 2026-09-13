@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Order.Filter.Germ.Basic
+public import LeanPool.JacobianDiffgeo.Meromorphic.Predicates
 import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
-import Mathlib.Order.Filter.Germ.Basic
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The germ space `MeroGermOn X U` and `ℳ X` (CC3, D1/D6)
@@ -23,6 +28,8 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.3,
 * `MeroGermOn.restrict (h : V ⊆ U) : MeroGermOn X U →ₐ[ℂ] MeroGermOn X V` (Čech's structure
   maps), with `restrict_mk`, `restrict_restrict`, `restrict_id`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

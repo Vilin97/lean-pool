@@ -3,8 +3,11 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Polygon properties: values, segment functions, derivatives, differentiability
@@ -17,6 +20,8 @@ Defines per-segment functions `fdPolygonSeg1`..`fdPolygonSeg5` and proves:
 * Derivative computation helpers and segment derivatives
 * Segment differentiability and `fdPolygon_differentiableAt_off_partition`
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

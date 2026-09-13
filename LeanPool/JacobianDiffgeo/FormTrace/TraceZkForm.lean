@@ -7,9 +7,10 @@ Authors: Rado Kirov
 /-
 Blueprint unit: form-trace-tower. `traceZkForm`: the Jacobian-weighted planar trace atom (D3).
 -/
-import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
-import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
-import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+module
+
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace.PlanarTrace
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The Jacobian-weighted planar trace atom (`form-trace-tower`, file 2/6)
@@ -38,6 +39,8 @@ the Jacobian factor" atom on top.
 * `laurentCoeffAt_traceZkForm` / `resAt_traceZkForm` — the Laurent-coefficient / residue
   identities, now UNCONDITIONALLY PROVABLE (mtrace's P6 landed, see `docs/build-log.md`).
 -/
+
+@[expose] public section
 
 open Filter Topology
 

@@ -3,69 +3,21 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
 
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.FunProp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Tauto
-import Mathlib.Tactic.ApplyFun
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Choose
-import Mathlib.Tactic.SimpRw
-import Mathlib.Tactic.SuppressCompilation
-import Mathlib.Tactic.Use
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Polyrith
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Generalize
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Algebra.Group.Support
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
 
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.FiniteMeasureExt
 
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.Density
 
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Analysis.Normed.Module.RCLike.Basic
-import Mathlib.Analysis.Normed.Module.RCLike.Real
 
-import Mathlib.Topology.Basic
-import Mathlib.Order.Filter.Basic
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.General.FunctionalAnalysis
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-import LeanPool.OSforGFF.Spacetime.TimeTranslation
-import LeanPool.OSforGFF.Schwinger.TwoPoint
+public import LeanPool.OSforGFF.Spacetime.Euclidean
+public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
+public import LeanPool.OSforGFF.Spacetime.TimeTranslation
+public import LeanPool.OSforGFF.Schwinger.TwoPoint
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 ## Osterwalder-Schrader Axioms
@@ -82,6 +34,8 @@ continuation to relativistic QFTs:
 Following Glimm-Jaffe formulation using probability measures on field configurations.
 Glimm and Jaffe, Quantum Physics, pp. 89-90
 -/
+
+@[expose] public section
 
 open MeasureTheory NNReal ENNReal
 open TopologicalSpace Measure QFT

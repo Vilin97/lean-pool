@@ -3,8 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Aristotle
 -/
+module
 
-import Mathlib.Analysis.ODE.Gronwall
+public import Mathlib.Analysis.ODE.Gronwall
 
 /-!
 # Forward Euler Method
@@ -32,6 +33,8 @@ convergence.
   inequality.
 - `ODE.EulerMethod.tendsto_path`: Convergence as `h → 0⁺`.
 -/
+
+@[expose] public section
 
 open Set Filter
 

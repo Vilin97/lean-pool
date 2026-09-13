@@ -3,11 +3,17 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
-import LeanPool.Brouwer.Scarf
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Combinatorics.SimpleGraph.Walk.Basic
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
-import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+module
+
+public import LeanPool.Brouwer.Scarf
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Scarf path graph
@@ -17,6 +23,8 @@ nearly-colorful rooms and doors of a fixed type `i`, and whose edges are
 room-door incidences. Following a path in this graph between odd-degree vertices
 is the combinatorial heart of the path-following proof of Scarf's lemma.
 -/
+
+@[expose] public section
 
 attribute [local instance] Classical.propDecidable
 open Finset

@@ -5,10 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.DedekindZeta.Convergence
 public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealFactor
-public import Mathlib.Analysis.SpecialFunctions.Log.Summable
-public import Mathlib.Topology.Algebra.InfiniteSum.Real
+import LeanPool.Odlyzko.DedekindZeta.Convergence
+import Mathlib.Analysis.SpecialFunctions.Log.Summable
 
 /-! TODO: Add doc-string. -/
 

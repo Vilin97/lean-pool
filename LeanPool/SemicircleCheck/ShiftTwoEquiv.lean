@@ -3,9 +3,10 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
+public import Mathlib.Algebra.Group.End
 import Mathlib.Data.Fin.Basic
-import Mathlib.GroupTheory.Perm.Basic
 
 /-!
   CANONICAL DELETION OF THE BOUNDARY PAIR
@@ -25,6 +26,8 @@ import Mathlib.GroupTheory.Perm.Basic
   The full deleteAdjacent is then:
     rotate to (0,1) → contractZeroOne → rotate back (if needed)
 -/
+
+@[expose] public section
 
 namespace SemicircleCore
 
@@ -89,7 +92,7 @@ def contractZeroOne (π : Equiv.Perm (Fin (2 * n + 2)))
     (h₁ : π ⟨1, by omega⟩ = ⟨0, by omega⟩) :
     Equiv.Perm (Fin (2 * n)) :=
   let hmaps := mapsTo_remaining h₀ h₁
-  let hmaps_inv := symm_mapsTo_remaining h₀ h₁
+  let hmaps_inv := private_decl% (symm_mapsTo_remaining h₀ h₁)
   let restrictPerm : Equiv.Perm { x : Fin (2 * n + 2) // 2 ≤ x.val } :=
     { toFun := fun ⟨x, hx⟩ => ⟨π x, hmaps hx⟩
       invFun := fun ⟨x, hx⟩ => ⟨π.symm x, hmaps_inv hx⟩

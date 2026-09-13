@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
 import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step1
 import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step2
 
@@ -16,6 +17,8 @@ Starting from a sufficiently small neighborhood of m⋆ with zero initial veloci
 all iterates remain in the controlled region Ω and the Lyapunov function
 decays geometrically.
 -/
+
+@[expose] public section
 
 noncomputable section
 

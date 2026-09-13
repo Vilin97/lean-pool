@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Data.Finset.Card
+module
+
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Finite planar distance configurations
@@ -14,6 +15,8 @@ multiplicities, and the low-multiplicity distances in Erdős Problem 132.
 The definitions work on a selected finite subset of a labelled configuration,
 which makes deletion and insertion statements literal finset identities.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132N14
 

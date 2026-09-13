@@ -3,13 +3,11 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Algebra.Order.Chebyshev
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # Rademacher Complexity
@@ -27,6 +25,8 @@ Upper bounded by VC dimension. Bridges to lean-rademacher library (K₂).
 - `rademacher_vanishing_imp_pac` : uniform Rad vanishing → PAC
 - `vcdim_finite_imp_rademacher_vanishing` : VCDim < ⊤ → Rad → 0
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,9 +3,14 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Base
+public import LeanPool.Erdos137.Base
+public import Mathlib.Data.Nat.Squarefree
 import LeanPool.Erdos137.TaoPoint
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: the deterministic squarefree-capacity reduction
@@ -69,6 +74,8 @@ powerful.
 * `smoothCapacity_eq_L_mul_P`, `smoothCapacity_le_four_mul_pow` : capacity `= L·P ≤ (4k)^k`.
 * `not_powerful_of_sqfree_count_beats_fourk` : explicit count ⟹ non-powerful obstruction.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

@@ -7,10 +7,9 @@ Authors: PFR contributors
 module
 
 public import Mathlib.Probability.Independence.Basic
-public import Mathlib.Probability.Kernel.Composition.Prod
 public import Mathlib.Probability.Kernel.CondDistrib
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Countable
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Integral.Lebesgue.Countable
 
 /-!
 # Disintegration of kernels in finite spaces

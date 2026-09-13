@@ -3,8 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.MeasurableTwoPointKernel
-import Mathlib.Probability.Kernel.Composition.MapComap
+module
+
+public import LeanPool.Feige.MeasurableTwoPointKernel
 
 /-!
 # An augmented latent kernel
@@ -13,6 +14,8 @@ The extra `Unit` branch records the atom at one.  The other branch records a
 strict below/above pair.  Thus a single latent parameter always determines a
 mean-one law supported on at most two points.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 

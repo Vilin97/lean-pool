@@ -3,8 +3,15 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
+module
+
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
 import Mathlib.RingTheory.Regular.IsSMulRegular
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Primality in R[x, y^{-1}] and coprime height bound
@@ -15,6 +22,8 @@ consequence, if y_1 and y_2 are coprime in R, no height-one
 prime of T contracting to a nonzero ideal of R can contain
 both y_1 and y_2.
 -/
+
+@[expose] public section
 
 noncomputable section
 

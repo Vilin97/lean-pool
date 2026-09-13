@@ -3,14 +3,14 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
-import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughInjectives
-import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Sheaf
-import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
-import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
+public import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Sheaf
+public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
+public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
+public import LeanPool.GrothendieckVanishing.ClosedImmersion
+import Mathlib.Algebra.Category.Grp.AB
 import Mathlib.Topology.Sheaves.Skyscraper
-import LeanPool.GrothendieckVanishing.ClosedImmersion
 
 /-!
 # Sheaf Cohomology API
@@ -60,6 +60,8 @@ calculations internal so downstream files never need to unfold `Sheaf.H` directl
 * `sheafH_dimension_shift_X₃_of_locallySurjective`: reverse dimension shift for locally
   surjective morphisms
 -/
+
+@[expose] public section
 
 universe w' w v u
 
@@ -162,13 +164,13 @@ private theorem extClass_postcomp_bijective_of_subsingleton_middle
 
 /-- The connecting morphism in the covariant long exact sequence as an additive equivalence,
     assuming the middle cohomology groups in degrees `n` and `n + 1` vanish. -/
-private noncomputable def extClass_postcompAddEquiv_of_subsingleton_middle
+noncomputable def extClassPostcompAddEquivOfSubsingletonMiddle
     (Z : C') {S : ShortComplex C'} (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Ext Z S.X₂ n))
     (h₂succ : Subsingleton (Ext Z S.X₂ (n + 1))) :
     Ext Z S.X₃ n ≃+ Ext Z S.X₁ (n + 1) :=
   AddEquiv.ofBijective (hS.extClass.postcomp Z (rfl : n + 1 = n + 1))
-    (extClass_postcomp_bijective_of_subsingleton_middle Z hS n h₂n h₂succ)
+    (private_decl% (extClass_postcomp_bijective_of_subsingleton_middle Z hS n h₂n h₂succ))
 
 /-- Naturality of the extension class: given a morphism `φ : S₁ ⟶ S₂` of short exact sequences,
     the connecting homomorphism commutes with the induced maps on Ext groups.
@@ -247,7 +249,7 @@ noncomputable def sheafHSuccMap {X : TopCat.{u}}
       (fun y ↦ y.comp hS.extClass rfl)
       (fun a b ↦ Ext.add_comp a b hS.extClass rfl)
 
-private theorem sheafH_succ_map_apply {X : TopCat.{u}}
+theorem sheafH_succ_map_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact)
     (n : ℕ)
@@ -714,13 +716,13 @@ noncomputable def sheafH0NatIsoSections {X : TopCat.{u}} :
 /-- Higher-degree connecting additive equivalence for a short exact sequence of sheaves:
 if the middle cohomology groups in degrees `n` and `n + 1` are subsingleton, then the
 connecting morphism induces an additive equivalence `H^n(S.X₃) ≃+ H^(n+1)(S.X₁)`. -/
-private noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : TopCat.{u}}
+noncomputable def sheafHExtClassAddEquivOfSubsingletonMiddle {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1))) :
     Sheaf.H S.X₃ n ≃+ Sheaf.H S.X₁ (n + 1) :=
-  extClass_postcompAddEquiv_of_subsingleton_middle _ hS n h₂n h₂succ
+  extClassPostcompAddEquivOfSubsingletonMiddle _ hS n h₂n h₂succ
 
 @[simp] private theorem sheafH_extClassAddEquiv_of_subsingleton_middle_apply
     {X : TopCat.{u}} {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
@@ -728,7 +730,7 @@ private noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : To
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1)))
     (y : Sheaf.H S.X₃ n) :
-    sheafH_extClassAddEquiv_of_subsingleton_middle hS n h₂n h₂succ y =
+    sheafHExtClassAddEquivOfSubsingletonMiddle hS n h₂n h₂succ y =
       y.comp hS.extClass rfl := rfl
 
 /-- Higher-degree connecting isomorphism for a short exact sequence of sheaves: if the
@@ -740,7 +742,7 @@ noncomputable def sheafHSuccIsoOfSubsingletonMiddle {X : TopCat.{u}}
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1))) :
     AddCommGrpCat.of (Sheaf.H S.X₃ n) ≅ AddCommGrpCat.of (Sheaf.H S.X₁ (n + 1)) :=
-  (sheafH_extClassAddEquiv_of_subsingleton_middle hS n h₂n h₂succ).toAddCommGrpIso
+  (sheafHExtClassAddEquivOfSubsingletonMiddle hS n h₂n h₂succ).toAddCommGrpIso
 
 private theorem sheafH_succ_iso_of_subsingleton_middle_hom_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}

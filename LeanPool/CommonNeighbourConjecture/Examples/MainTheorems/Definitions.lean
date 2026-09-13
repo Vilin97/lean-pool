@@ -3,16 +3,18 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.Order.Lattice.Nat
+public import Mathlib.Combinatorics.SimpleGraph.Basic
+public import Mathlib.Order.Lattice.Nat
 
 /-!
 # Definitions for the main theorem
 
 The complete non-Mathlib vocabulary used in the public statement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

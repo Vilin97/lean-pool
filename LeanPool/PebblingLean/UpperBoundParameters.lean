@@ -3,13 +3,12 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.Real.Sqrt
+public import LeanPool.PebblingLean.UpperBoundLoss
 import LeanPool.PebblingLean.LowerBound
-import LeanPool.PebblingLean.UpperBoundLoss
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Concrete parameter layer for the upper bound
@@ -30,6 +29,8 @@ parameters, and the finite collection of threshold inequalities.  The theorem
 at the bottom proves that these hypotheses imply the real asymptotic upper
 bound.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

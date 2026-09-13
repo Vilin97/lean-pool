@@ -3,10 +3,15 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
 import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
 import LeanPool.LocalComplexGeometry.Germs.Ring
+import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
 import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.RingTheory.Finiteness.Ideal
 
 /-!
@@ -17,6 +22,8 @@ is made regular in the last variable, Weierstrass preparation replaces it by
 an associated distinguished polynomial, and Weierstrass division maps the
 ideal into a finite lower-dimensional remainder module.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

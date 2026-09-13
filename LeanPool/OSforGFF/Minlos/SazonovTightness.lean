@@ -3,19 +3,15 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.Bochner.Sazonov
-import LeanPool.OSforGFF.Bochner.PositiveDefinite
-import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
-import Mathlib.MeasureTheory.Measure.Tight
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.l2Space
+public import LeanPool.OSforGFF.Bochner.Sazonov
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import Mathlib.MeasureTheory.Measure.CharacteristicFunction.Basic
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Analysis.InnerProductSpace.Trace
 import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Function.SpecialFunctions.RCLike
 
 /-! # Sazonov Tightness
@@ -35,6 +31,8 @@ spectral decomposition, and Chebyshev inequalities.
 - `sazonov_tight_marginals`: Sazonov CF continuity implies tight marginals
 - `sazonov_tight_marginals_apply`: Explicit tightness bound via Gaussian averaging
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Filter Topology Set InnerProductSpace Function
 open scoped Real FourierTransform
@@ -807,7 +805,7 @@ lemma scaled_tail_bound
 /-! ## Restriction of Operators to Marginal Subspaces -/
 
 /-- The embedding t ↦ ∑ tᵢvᵢ from EuclideanSpace to H. -/
-private def embedON {n : ℕ} (v : Fin n → H) : EuclideanSpace ℝ (Fin n) →ₗ[ℝ] H :=
+def embedON {n : ℕ} (v : Fin n → H) : EuclideanSpace ℝ (Fin n) →ₗ[ℝ] H :=
   { toFun := fun t => ∑ i, t i • v i
     map_add' := fun x y => by simp [add_smul, Finset.sum_add_distrib]
     map_smul' := fun r x => by
@@ -815,7 +813,7 @@ private def embedON {n : ℕ} (v : Fin n → H) : EuclideanSpace ℝ (Fin n) →
       congr 1; ext i; simp [smul_smul, mul_comm r] }
 
 /-- The projection x ↦ (⟪vᵢ, x⟫)ᵢ from H to EuclideanSpace. -/
-private def projON {n : ℕ} (v : Fin n → H) : H →ₗ[ℝ] EuclideanSpace ℝ (Fin n) :=
+def projON {n : ℕ} (v : Fin n → H) : H →ₗ[ℝ] EuclideanSpace ℝ (Fin n) :=
   { toFun := fun x => EuclideanSpace.equiv (Fin n) ℝ |>.symm (fun i => @inner ℝ H _ (v i) x)
     map_add' := fun x y => by ext i; simp [inner_add_right]
     map_smul' := fun r x => by ext i; simp [inner_smul_right] }

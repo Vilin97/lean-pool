@@ -3,10 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.AnalyticParameterIntegral
-import Mathlib.Analysis.Analytic.ChangeOrigin
+public import Mathlib.Analysis.Analytic.ChangeOrigin
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Uniform fiber series from one joint analytic ball
@@ -15,6 +17,8 @@ A joint power series on a ball in `(parameter, time)` yields parameter power ser
 radius on any smaller time slab.  These are the local pieces used in the compact-interval
 parameter-integral theorem.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -3,14 +3,31 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.BodyFunctor
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.PointedTrees
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Subset
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Topology.Bases
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame.BorelDet

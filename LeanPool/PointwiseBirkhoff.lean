@@ -3,8 +3,10 @@ Copyright (c) 2026 Lua Viana Reis, Oliver Butterley, Pietro Monticone. All right
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lua Viana Reis, Oliver Butterley, Pietro Monticone
 -/
+module
 
-import LeanPool.PointwiseBirkhoff.Main
+public import LeanPool.PointwiseBirkhoff.Main
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pointwise Birkhoff Ergodic Theorem
@@ -16,6 +18,8 @@ Main declarations: `LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem'`
 Tags: ergodic-theory, measure-theory, probability
 MSC: 37A30, 28D05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

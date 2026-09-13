@@ -27,12 +27,17 @@ those two coordinates.
 
 Statements pinned before any proof was attempted.
 -/
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import Mathlib.Data.Fin.VecNotation
+public import LeanPool.MatchingLogic.Localization
 import LeanPool.MatchingLogic.Composite
 
 /-!
 # MatchingLogic.Applicative
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 namespace Applicative

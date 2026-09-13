@@ -3,11 +3,17 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
+
+public import LeanPool.CencovPetz.RationalPoint
+public import LeanPool.CencovPetz.UniformScalarConstant
+import LeanPool.CencovPetz.PermutationInvariance
 import LeanPool.CencovPetz.SplittingInvariance
-import LeanPool.CencovPetz.SplittingUniform
-import LeanPool.CencovPetz.RationalPoint
-import LeanPool.CencovPetz.UniformScalarConstant
 import LeanPool.CencovPetz.UniformScalarMultiple
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!
@@ -25,6 +31,8 @@ scalar multiple of Fisher.
 
 - `CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_isSplitRepresentable`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

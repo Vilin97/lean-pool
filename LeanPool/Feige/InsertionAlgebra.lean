@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ChainCalibration
-import LeanPool.Feige.TransferAlgebra
+module
+
+public import LeanPool.Feige.ChainCalibration
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Algebraic bookkeeping for chain insertion
@@ -14,6 +16,8 @@ proof of Theorem 2.1.  The analytic content of the exponential transfer
 step is kept separate: once that step supplies the sign of `η`, the results below identify the new
 chain mixture as an upward transfer inside each pair `{Cⱼ, Hⱼ}`.
 -/
+
+@[expose] public section
 
 namespace Feige
 

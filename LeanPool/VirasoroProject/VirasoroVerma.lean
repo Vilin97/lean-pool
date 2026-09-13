@@ -3,9 +3,16 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.IndexTri
-import LeanPool.VirasoroProject.LieVerma
-import LeanPool.VirasoroProject.VirasoroAlgebra
+module
+
+public import LeanPool.VirasoroProject.IndexTri
+public import LeanPool.VirasoroProject.LieVerma
+public import LeanPool.VirasoroProject.VirasoroAlgebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Verma modules for the Virasoro algebra
@@ -47,6 +54,8 @@ This file defines Verma modules used in Lie algebra representation theory.
 Virasoro algebra, Verma module
 
 -/
+
+@[expose] public section
 
 
 namespace VirasoroProject
@@ -290,8 +299,8 @@ noncomputable def _root_.VirasoroProject.VirasoroVerma.universalMap {c h : 𝕜}
     VirasoroVerma 𝕜 c h →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] M := by
   apply @TriangularDecomposition.VermaHW.universalMap 𝕜 _ (VirasoroAlgebra 𝕜) _ _ (virasoroTri 𝕜)
         (VirasoroAlgebra.hw _ c h) M _ _ hwv ?_ ?_
-  · exact cartan_smul_eq_of_cgen_smul_eq_of_lzero_smul_eq 𝕜 hwv_c hwv_lzero
-  · exact upper_smul_eq_zero_of_forall_pos_lgen_smul_eq_zero 𝕜 hwv_lpos
+  · exact private_decl% (cartan_smul_eq_of_cgen_smul_eq_of_lzero_smul_eq 𝕜 hwv_c hwv_lzero)
+  · exact private_decl% (upper_smul_eq_zero_of_forall_pos_lgen_smul_eq_zero 𝕜 hwv_lpos)
 
 lemma _root_.VirasoroProject.VirasoroVerma.universalMap_hwVec (c h : 𝕜)
     (M : Type*) [AddCommGroup M] [Module (𝓤 𝕜 (VirasoroAlgebra 𝕜)) M] {hwv : M}

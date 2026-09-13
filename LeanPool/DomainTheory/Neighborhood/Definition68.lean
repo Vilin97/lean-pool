@@ -3,9 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition63
-import LeanPool.DomainTheory.Neighborhood.Exercise510
+public import LeanPool.DomainTheory.Neighborhood.Definition63
+public import LeanPool.DomainTheory.Neighborhood.Exercise510
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lecture VI — Definition 6.8 (Scott 1981, PRG-19): functors *continuous on maps*
@@ -84,6 +91,8 @@ representing `Φ` is the identity on the function space. Everything here is
 **choice-free**
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+public import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Objects of the phase-to-root-count identity
@@ -13,6 +15,8 @@ Throughout, `K` is a finite field (in the application `K = GF(2^n)`), `ψ` is a
 primitive additive character of `K` with values in `ℂ` (in the application
 `ψ x = (-1)^(Tr x)`), and `D` is an exponent inverse to `m` modulo `N = #Kˣ`.
 -/
+
+@[expose] public section
 
 open Finset
 

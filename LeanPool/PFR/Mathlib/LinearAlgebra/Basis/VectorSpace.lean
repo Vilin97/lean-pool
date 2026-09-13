@@ -6,8 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.Module.Projective
-public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.LinearAlgebra.DFinsupp
+import Mathlib.Algebra.Module.Projective
+import Mathlib.LinearAlgebra.Basis.VectorSpace
 
 /-!
 # Decompositions of submodules of product spaces

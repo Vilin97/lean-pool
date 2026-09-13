@@ -3,10 +3,16 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Tactic.Ring
-import LeanPool.PebblingLean.UpperBound
+public import LeanPool.PebblingLean.UpperBound
+public import LeanPool.PebblingLean.Delivery
 import LeanPool.PebblingLean.HypercubePath
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Delivery interpretation of annulus contributions
@@ -16,6 +22,8 @@ The probabilistic upper bound counts, for each target, the quantity
 annulus center.  This file proves that the counted quantity is not just
 bookkeeping: it is actually deliverable by pebbling moves.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

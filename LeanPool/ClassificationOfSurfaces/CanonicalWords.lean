@@ -3,8 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
-import LeanPool.ClassificationOfSurfaces.Representatives
+module
+
+public import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
+public import LeanPool.ClassificationOfSurfaces.Representatives
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Canonical normal-form boundary words
@@ -19,6 +25,8 @@ For Eval-admissible parameters, the words are nonempty and therefore also satisf
 certificates. Their faithful polygonal realizations are compared with the closed-disc quotients
 defined in `LeanEval/ChallengeDeps.lean` by the canonical realization layer.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

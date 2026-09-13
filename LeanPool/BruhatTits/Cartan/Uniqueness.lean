@@ -3,10 +3,12 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Cartan.Existence
-import LeanPool.BruhatTits.Utils.Misc
+module
+
+public import LeanPool.BruhatTits.Cartan.Existence
+public import Mathlib.GroupTheory.DoubleCoset
+import LeanPool.BruhatTits.Utils.ValuationRings
 import Mathlib.Data.Fin.Tuple.Sort
-import Mathlib.GroupTheory.DoubleCoset
 
 /-!
 # Uniqueness of the Cartan decomposition
@@ -25,6 +27,8 @@ as a disjoint union of double cosets `GL₂(R) * diag * GL₂(R)` where `diag` i
 completeness, this is stated as `iUnion₂_doset_cartanDiag_eq_univ` and
 `disjoint_doset_cartanDiag_of_ne` below.
 -/
+
+@[expose] public section
 
 open Module
 

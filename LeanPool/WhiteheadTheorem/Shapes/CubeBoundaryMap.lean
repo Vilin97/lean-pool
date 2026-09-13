@@ -3,16 +3,18 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.Shapes.Cube
-import LeanPool.WhiteheadTheorem.Auxiliary
-import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
+public import LeanPool.WhiteheadTheorem.Shapes.Cube
+public import LeanPool.WhiteheadTheorem.Auxiliary
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap`.
 -/
+
+@[expose] public section
 
 
 open scoped Topology Topology.Homotopy CategoryTheory
@@ -99,9 +101,10 @@ def mapVecOfBotTopSides : (k : Fin 3) → C(botTopSidesCover n k, Z) :=
       apply (f01 1).hom.continuous.comp
       fun_prop⟩
   let gs : C(sides.{u} n, Z) :=
-    { toFun := fun ⟨⟨y, _⟩, _⟩ ↦
+    { toFun := fun ⟨⟨y, hy⟩, hs⟩ ↦
         fs ⟨(Cube.splitAtLast y).fst,
-          ⟨(Cube.splitAtLast y).snd, splitAtLast_snd_mem_boundary_of_mem_sides ‹_›⟩ ⟩
+          ⟨(Cube.splitAtLast y).snd,
+            splitAtLast_snd_mem_boundary_of_mem_sides.{u} (y := ⟨y, hy⟩) hs⟩ ⟩
       continuous_toFun := by fun_prop }
   Fin.cons g0 <| Fin.cons g1 <| Fin.cons gs <| finZeroElim
 

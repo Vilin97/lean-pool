@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTileComplex
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTileComplex
 
 /-!
 # Conforming fan maps on adaptive midpoint tiles
@@ -13,6 +15,8 @@ successive boundary vertices to the positive barycentric center gives a locally 
 of parametrized triangles in the open subpolyhedron.  This file constructs those maps before
 proving the global face-to-face intersection theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 
@@ -983,9 +987,7 @@ theorem adaptiveFanNormalizedBaseFaceMap_eq_of_same_tile
         (K.adaptiveFanNormalizedBasePoint U hU ⟨t, i, a⟩ x hxCenter) =
       K.adaptiveFanFaceMap U hU ⟨t, j, b⟩
         (K.adaptiveFanNormalizedBasePoint U hU ⟨t, j, b⟩ y hyCenter) := by
-  let cx := x.1 (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩)
-  let cy := y.1 (K.adaptiveFanCenterVertex U hU ⟨t, j, b⟩)
-  have hc : cx = cy :=
+  have hc :=
     K.adaptiveFanCenterWeight_eq_of_faceMap_eq_of_tile_eq U hU t i j a b hxy
   have hsource :
       K.adaptiveFanSourcePoint U hU ⟨t, i, a⟩ x =
@@ -1001,35 +1003,19 @@ theorem adaptiveFanNormalizedBaseFaceMap_eq_of_same_tile
           (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩)).1 =
         (K.adaptiveFanVertexSource U hU ⟨t, j, b⟩
           (K.adaptiveFanCenterVertex U hU ⟨t, j, b⟩)).1 := by
+    -- Use the shared center to keep the subdivision homeomorphism folded.
+    change ((K.safeSubdivision t.1).homeo.symm (K.adaptiveFaceCenter U t)).1 =
+      ((K.safeSubdivision t.1).homeo.symm (K.adaptiveFaceCenter U t)).1
     rfl
   have hbaseVal :
       (K.adaptiveFanSourcePoint U hU ⟨t, i, a⟩
         (K.adaptiveFanNormalizedBasePoint U hU ⟨t, i, a⟩ x hxCenter)).1 =
       (K.adaptiveFanSourcePoint U hU ⟨t, j, b⟩
         (K.adaptiveFanNormalizedBasePoint U hU ⟨t, j, b⟩ y hyCenter)).1 := by
-    funext v
-    have hline :
-        AffineMap.lineMap
-            (K.adaptiveFanVertexSource U hU ⟨t, i, a⟩
-              (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩)).1
-            (K.adaptiveFanSourcePoint U hU ⟨t, i, a⟩
-              (K.adaptiveFanNormalizedBasePoint U hU ⟨t, i, a⟩ x hxCenter)).1
-            (1 - cx) =
-          AffineMap.lineMap
-            (K.adaptiveFanVertexSource U hU ⟨t, j, b⟩
-              (K.adaptiveFanCenterVertex U hU ⟨t, j, b⟩)).1
-            (K.adaptiveFanSourcePoint U hU ⟨t, j, b⟩
-              (K.adaptiveFanNormalizedBasePoint U hU ⟨t, j, b⟩ y hyCenter)).1
-            (1 - cy) := by
-      rw [← hxLine, ← hyLine]
-      exact congrArg Subtype.val hsource
-    have hcoord := congrFun hline v
+    have hline := hxLine.symm.trans ((congrArg Subtype.val hsource).trans hyLine)
     rw [AffineMap.lineMap_apply_module, AffineMap.lineMap_apply_module,
-      ← hc, ← hcenterSource] at hcoord
-    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hcoord
-    have hd : 1 - cx ≠ 0 := (sub_pos.mpr hxCenter).ne'
-    apply mul_left_cancel₀ hd
-    nlinarith
+      ← hc, ← hcenterSource] at hline
+    exact (smul_right_inj (sub_pos.mpr hxCenter).ne').mp (add_left_cancel hline)
   apply Subtype.ext
   change (K.safeSubdivision t.1).homeo
       (K.adaptiveFanSourcePoint U hU ⟨t, i, a⟩

@@ -18,11 +18,16 @@ The example is the smallest one that works: `M \ C` must have two points, since
 `AgreeOn` forces the two valuations to agree whenever their common value lies
 in `C`, and a one-point complement leaves them equal.
 -/
-import LeanPool.MatchingLogic.Locality
+module
+
+public import LeanPool.MatchingLogic.Locality
+import Mathlib.Data.Set.Insert
 
 /-!
 # MatchingLogic.Necessity
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 namespace Necessity

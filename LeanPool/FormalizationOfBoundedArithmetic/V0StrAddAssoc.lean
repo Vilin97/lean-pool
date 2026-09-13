@@ -8,11 +8,19 @@ Authors: ruplet
 -- ∀ {X Y Z : str}, (X + Y) + Z = X + (Y + Z)
 -- However, the proof was done using leanstral and is very verbose
 -- Please see V0.lean for the manually written foundations.
+module
+
+public import LeanPool.FormalizationOfBoundedArithmetic.V0
+import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
+import Mathlib.Tactic.Positivity.Finset
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrAddAssoc
 -/
+
+@[expose] public section
 
 variable {num str : Type} [M : V0ExtModel num str]
 open FirstOrder Language

@@ -3,11 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
-import Mathlib.Algebra.Order.Floor.Semiring
-import Mathlib.Combinatorics.SimpleGraph.Paths
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 
 /-!
 # Polygonal arcs from broken lines
@@ -18,6 +19,8 @@ triangle by the supporting lines of those segments, and by two coordinate lines 
 chain vertex, turns all crossings and all chain vertices into vertices of one finite triangle
 mesh.  A simple graph path in the resulting one-skeleton is then a loop-free polygonal arc.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -1343,7 +1346,8 @@ theorem resolvedCarrier_subset (hstart : B.start ∈ U) : B.resolvedCarrier ⊆ 
   · obtain ⟨i, hxi⟩ := Set.mem_iUnion.mp hx
     exact B.resolvedSegment_subset i hxi
 
-private def IsResolvedFace (s : Finset B.arrangementMesh.toPlaneComplex.Vertex) : Prop :=
+/-- A nonempty face supported on one vertex or one segment of the resolved walk. -/
+def IsResolvedFace (s : Finset B.arrangementMesh.toPlaneComplex.Vertex) : Prop :=
   s.Nonempty ∧
     ((B.resolvedWalk.length = 0 ∧ s ⊆ {B.resolvedWalk.getVert 0}) ∨
       ∃ i : Fin B.resolvedWalk.length,

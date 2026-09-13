@@ -7,6 +7,8 @@ Authors: PFR contributors
 module
 
 public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
 
 /-!
 # Ruzsa distance for finite sets

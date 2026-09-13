@@ -3,17 +3,15 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import Mathlib.Data.Rat.Defs
-import Mathlib.Data.Rat.Floor
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Data.Int.Log
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.WLOG
-import Mathlib.Tactic.Tauto
-import LeanPool.Flean.FloatCfg
+module
+
+public import Mathlib.Data.Rat.Floor
+public import Mathlib.Data.Int.Log
+public import LeanPool.Flean.FloatCfg
+public import Mathlib.Tactic.Continuity
 import LeanPool.Flean.LogRules
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Floating-Point Representations
@@ -23,6 +21,8 @@ floating-point numbers parameterized by a `FloatCfg`, together with its rational
 interpretation `coeQ`, negation, validity predicates, and an ordering
 `floatrepLe` proved equivalent to the order on the underlying rationals.
 -/
+
+@[expose] public section
 
 /-- A sign/exponent/mantissa representation of a (normal) floating-point number
 in the format `α`. -/

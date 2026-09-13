@@ -3,11 +3,13 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Vorspiel.BinaryRelations
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
 
 /-! # Closure -/
+
+@[expose] public section
 
 
 namespace LO

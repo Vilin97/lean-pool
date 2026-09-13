@@ -3,10 +3,17 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example43
-import LeanPool.DomainTheory.Neighborhood.Exercise326
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Example43
+public import LeanPool.DomainTheory.Neighborhood.Exercise326
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Theorem 5.6 (Scott 1981, PRG-19, §5) — recursive functions are λ-definable
@@ -59,6 +66,8 @@ domain `T`
 (Example 1.2) exactly as `cond`/`zeroMap` already do; the fixed points come from
 Theorem 4.1.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Theorem56
 

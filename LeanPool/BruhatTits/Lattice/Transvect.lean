@@ -3,10 +3,11 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import Mathlib.LinearAlgebra.Dimension.OrzechProperty
-import Mathlib.LinearAlgebra.TensorProduct.RightExactness
-import LeanPool.BruhatTits.Lattice.Construction
+module
+
+public import LeanPool.BruhatTits.Lattice.Construction
 import LeanPool.BruhatTits.Utils.LinearAlgebra
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 
 /-!
 # Transvection automorphisms and their action on lattices
@@ -31,6 +32,8 @@ We call the basis representing this automorphism the unipotent matrix associated
   spanned by `(ϖ ^ k • b₀, b₁)` is invariant under the action of `b.unipotent (ϖ ^ n * x)` if
   `n ≥ k`.
 -/
+
+@[expose] public section
 
 open Module
 

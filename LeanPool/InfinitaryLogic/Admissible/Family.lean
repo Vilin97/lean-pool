@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Syntax
 /-!
 # The family layer (issues #18, #19A)
 
@@ -33,6 +34,8 @@ on.
 - `FamilyPresentation`: ambient `Element`, the `IsFamilyCode` subdomain, and the decoding data.
 - `CodedFamily`, `codedIInf`, `codedISup`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

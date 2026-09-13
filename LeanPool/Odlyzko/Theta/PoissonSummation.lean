@@ -6,12 +6,10 @@ Authors: The FLT Project
 module
 
 public import Mathlib.Algebra.Module.ZLattice.Covolume
-public import Mathlib.Algebra.Module.ZLattice.Summable
 public import Mathlib.Analysis.Fourier.AddCircleMulti
-public import Mathlib.Analysis.InnerProductSpace.Dual
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
 public import Mathlib.LinearAlgebra.BilinearForm.DualLattice
-public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+import Mathlib.Algebra.Module.ZLattice.Summable
+import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
 
 /-! TODO: Add doc-string. -/
 

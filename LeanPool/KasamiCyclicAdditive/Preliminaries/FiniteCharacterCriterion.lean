@@ -3,10 +3,16 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+public import Mathlib.Algebra.Group.AddChar
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.NumberTheory.MulChar.Basic
 import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Finite character-sum criteria for bijectivity
@@ -21,6 +27,8 @@ MCM-permutation argument. If a map has zero as its unique zero and preserves
 every multiplicative-character sum, restrict it to the unit group and apply the
 additive criterion to `Additive Kˣ`.
 -/
+
+@[expose] public section
 
 open Finset
 open scoped BigOperators

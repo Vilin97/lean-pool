@@ -3,7 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.Simplex
+module
+
+public import LeanPool.CencovPetz.Simplex
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.Order
 
 
 /-!
@@ -33,6 +39,8 @@ reduces to Titu's lemma / Engel form of Cauchy–Schwarz on each fiber.
 - `CencovPetz.fisherBilin_pushforward_le`: Fisher quadratic form monotonicity under a
   surjective map (finite sufficient statistic).
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

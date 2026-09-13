@@ -3,8 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+public import LeanPool.LeanModularForms.ValenceFormula.OrbitSum
+public import LeanPool.LeanModularForms.ValenceFormula.OrbitPairing
 
 /-!
 # Canonical Representatives for Non-Elliptic Orbits
@@ -17,6 +19,8 @@ finsets used by `valence_formula_orbit_sum_s₀`.
 * `exists_repCanon_of_nonEllOrbit` — For any non-elliptic orbit `q` with `ordOrbit f q ≠ 0`,
   there exists `p ∈ repCanon f hf` with `orb p = q`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

@@ -7,13 +7,17 @@ Authors: Utensil Song
 
 Finite polynomial charts for Zhou's property-(T) detector. Paper: §4.
 -/
+module
+
+public import Mathlib.Algebra.Polynomial.OfFn
+public import LeanPool.ConnesRigidity.Construction
 import Mathlib.Algebra.Algebra.ZMod
-import Mathlib.Algebra.Polynomial.OfFn
-import LeanPool.ConnesRigidity.Construction
 
 /-!
 The finite charts component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFiniteCharts

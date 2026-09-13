@@ -3,14 +3,23 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameExact
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
 import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameBoosters
+import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameExact
 import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameResidues
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Finite frame bank
 -/
+
+@[expose] public section
 
 namespace HypergraphLowerBound
 

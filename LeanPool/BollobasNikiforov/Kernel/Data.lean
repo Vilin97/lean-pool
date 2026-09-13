@@ -3,12 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
 # Three-column kernel data
@@ -17,6 +17,8 @@ Feature vectors, the Gram matrix `𝒜`, moment scalars, and the auxiliary
 functions of `docs/sol.tex` §3 (`sec:kernel`, `eq:functions`). Coordinates of
 `ℝ³` are numbered `0,1,2`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

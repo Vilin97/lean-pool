@@ -3,15 +3,19 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import Mathlib.Data.Int.Basic
-import Mathlib.Tactic.Ring
+public import Mathlib.Algebra.Group.Basic
+public import Mathlib.Algebra.Ring.Defs
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas`.
 -/
+
+@[expose] public section
 
 
 section ring_lemmas

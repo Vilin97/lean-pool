@@ -3,98 +3,107 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exact small-frame validations
 -/
 
+@[expose] public section
+
 namespace HypergraphLowerBound
 
 private theorem exactSmallFrame_0_valid :
     (exactSmallFrames.get ⟨0, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨0, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨0, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_1_valid :
     (exactSmallFrames.get ⟨1, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨1, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨1, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_2_valid :
     (exactSmallFrames.get ⟨2, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨2, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨2, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_3_valid :
     (exactSmallFrames.get ⟨3, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨3, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨3, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_4_valid :
     (exactSmallFrames.get ⟨4, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨4, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨4, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_5_valid :
     (exactSmallFrames.get ⟨5, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨5, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨5, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_6_valid :
     (exactSmallFrames.get ⟨6, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨6, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨6, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_7_valid :
     (exactSmallFrames.get ⟨7, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨7, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨7, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_8_valid :
     (exactSmallFrames.get ⟨8, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨8, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨8, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_9_valid :
     (exactSmallFrames.get ⟨9, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨9, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨9, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_10_valid :
     (exactSmallFrames.get ⟨10, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨10, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨10, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_11_valid :
     (exactSmallFrames.get ⟨11, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨11, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨11, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_12_valid :
     (exactSmallFrames.get ⟨12, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨12, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨12, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_13_valid :
     (exactSmallFrames.get ⟨13, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨13, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨13, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_14_valid :
     (exactSmallFrames.get ⟨14, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨14, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨14, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_15_valid :
     (exactSmallFrames.get ⟨15, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨15, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨15, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_16_valid :
     (exactSmallFrames.get ⟨16, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨16, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨16, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_17_valid :
     (exactSmallFrames.get ⟨17, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨17, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨17, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_18_valid :
     (exactSmallFrames.get ⟨18, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨18, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨18, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_19_valid :
     (exactSmallFrames.get ⟨19, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨19, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨19, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 private theorem exactSmallFrame_20_valid :
     (exactSmallFrames.get ⟨20, by decide⟩).IsValid := by
-  exact (exactSmallFrames.get ⟨20, by decide⟩).checkComplementValid_sound rfl
+  exact (exactSmallFrames.get ⟨20, by decide⟩).checkComplementValid_sound (by decide +kernel)
 
 theorem exactSmallFrames_valid :
     ∀ spec ∈ exactSmallFrames, spec.IsValid := by

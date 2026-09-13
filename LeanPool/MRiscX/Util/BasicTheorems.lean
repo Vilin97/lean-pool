@@ -3,10 +3,14 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Hoare.HoareCore
-import Mathlib.Tactic.NthRewrite
-import Mathlib.Algebra.Order.Sub.Unbundled.Basic
+module
+
+
+public import Aesop.BuiltinRules
+public import Mathlib.Order.RelClasses
+import Batteries.Data.UInt
 import Mathlib.Data.Nat.ModEq
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 This file contains a list of theorems required during the implementation of this dsl
@@ -14,6 +18,8 @@ and the creation of the proof for the otp example.
 Some of them might actually already exists in the mathlib but
 i had trouble finding them.
 -/
+
+@[expose] public section
 
 theorem excluded_middle_implication : ∀ (P Q C : Prop),
   (P ∧ Q → C) ∧ (P ∧ ¬Q → C) →
@@ -157,5 +163,5 @@ instance instPreorderUInt64LeanPool : Preorder UInt64 where
 instance : WellFoundedLT UInt64 where
   wf := by
     apply Subrelation.wf (r := InvImage (· < ·) UInt64.toNat)
-      (fun h => UInt64.lt_iff_toNat_lt_toNat.mp h)
+      (fun h => (UInt64.lt_iff_toNat_lt_toNat).mp h)
     exact InvImage.wf _ wellFounded_lt

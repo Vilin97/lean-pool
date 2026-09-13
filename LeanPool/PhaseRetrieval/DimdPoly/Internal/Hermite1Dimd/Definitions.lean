@@ -3,16 +3,15 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import Mathlib.Analysis.Fourier.AddCircle
-import Mathlib.Analysis.SpecialFunctions.PolarCoord
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
 
 /-! # Definitions -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset

@@ -3,16 +3,23 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.PhiMap
-import LeanPool.Monlib4.QuantumGraph.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Opposite
-import LeanPool.Monlib4.QuantumGraph.Example
+module
+
+public import LeanPool.Monlib4.QuantumGraph.Basic
+public import LeanPool.Monlib4.QuantumGraph.Example
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Submodule
+import LeanPool.Monlib4.Preq.RCLikeLe
 
 /-!
 # LeanPool.Monlib4.QuantumGraph.Degree
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Degree`.
 -/
+
+@[expose] public section
 
 open scoped InnerProductSpace ComplexOrder
 

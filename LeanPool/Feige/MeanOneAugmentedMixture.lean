@@ -3,7 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.AugmentedParameterization
+module
+
+public import LeanPool.Feige.ProductTwoPointKernel
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # A total augmented mixture for mean-one laws
@@ -13,6 +16,8 @@ The positive-moment branch uses the latent two-point measure from Lemma
 latent law is simply the atom branch.  This removes the artificial
 coordinatewise strict-moment assumption from the finite product mixture.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

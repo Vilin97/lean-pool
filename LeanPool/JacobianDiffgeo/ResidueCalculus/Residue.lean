@@ -7,11 +7,10 @@ Authors: Rado Kirov
 /-
 Blueprint unit: residue-calculus. The residue functional `resAt` and its algebra.
 -/
+module
+
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
 import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
-import Mathlib.Analysis.Calculus.Deriv.ZPow
-import Mathlib.Analysis.Calculus.Deriv.Shift
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.LogDeriv
 
 /-!
 # The residue functional (residue-calculus)
@@ -31,6 +30,8 @@ Main exports:
 * `RS.resAt_tail_mul`, `RS.resAt_analyticAt_mul`, `RS.resAt_mul` — Serre-pairing atoms
   (Miranda VI.3 `Res_ω` shape `Σ c_n a_{−1−n}`).
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function
 

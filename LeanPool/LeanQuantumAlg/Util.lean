@@ -7,12 +7,14 @@ Authors: QudeLeap Team
 module
 
 public import LeanPool.LeanQuantumAlg.Init
+
 public import LeanPool.LeanQuantumAlg.Util.Complex
 public import LeanPool.LeanQuantumAlg.Util.Polynomial
 public import LeanPool.LeanQuantumAlg.Util.FinPow
 public import LeanPool.LeanQuantumAlg.Util.HilbertSchmidt
 public import LeanPool.LeanQuantumAlg.Util.TrigPolynomial
 public import LeanPool.LeanQuantumAlg.Util.Concentration
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # QuantumAlg utility layer

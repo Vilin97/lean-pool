@@ -3,8 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.OnCurvePV.Basic
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
 import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Basic
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # On-Curve PV: Endpoint and Corner CPV
@@ -12,6 +23,8 @@ import LeanPool.LeanModularForms.ValenceFormula.OnCurvePV.Basic
 Cauchy principal value existence at the endpoint `1/2 + H*I` and corner `-1/2 + H*I`
 of the fundamental domain boundary `fdBoundaryH H`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -28,7 +41,7 @@ private lemma inv_mul_mul_cancel (a b : ℂ) (hb : b ≠ 0) : (a * b)⁻¹ * b =
 private lemma one_lt_norm_of_one_lt_normSq {s : ℂ} (h : 1 < Complex.normSq s) : 1 < ‖s‖ :=
   calc (1 : ℝ) = Real.sqrt 1 := Real.sqrt_one.symm
     _ < Real.sqrt (Complex.normSq s) := Real.sqrt_lt_sqrt (by norm_num) h
-    _ = ‖s‖ := rfl
+    _ = ‖s‖ := RCLike.sqrt_normSq_eq_norm
 
 /-- `∫ t in a..1, t⁻¹ = log 1 - log a` for `0 < a ≤ 1`. -/
 private lemma integral_inv_eq_log_sub (a : ℝ) (ha : 0 < a) (ha1 : a ≤ 1) :

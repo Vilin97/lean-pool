@@ -13,9 +13,15 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Public API:
   - `rotational_averaging_bound` (Theorem 2.6)
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # RotationalAveraging -/
+
+@[expose] public section
 
 
 open MeasureTheory Real Complex Finset

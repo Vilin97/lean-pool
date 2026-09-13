@@ -3,10 +3,18 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition68
-import LeanPool.DomainTheory.Neighborhood.Proposition611
-import LeanPool.DomainTheory.Neighborhood.Proposition612
+public import LeanPool.DomainTheory.Neighborhood.Definition68
+public import LeanPool.DomainTheory.Neighborhood.Proposition612
+public import Mathlib.Order.Directed
+public import Mathlib.Order.SetNotation
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lecture VI — Definition 6.13 (Scott 1981, PRG-19): functors *monotone /
@@ -76,6 +84,8 @@ The identity functor is monotone and continuous on domains
 `continuousOnDomains_id`), witnessing non-vacuity. Everything is **choice-free**
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

@@ -3,11 +3,12 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core
-import LeanPool.PLAcceleratedNesterovLean.MorseBott
-import LeanPool.PLAcceleratedNesterovLean.Convergence
-import LeanPool.PLAcceleratedNesterovLean.MainTheorem
+public import LeanPool.PLAcceleratedNesterovLean.Core
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott
+public import LeanPool.PLAcceleratedNesterovLean.Convergence
+public import LeanPool.PLAcceleratedNesterovLean.MainTheorem
 
 /-!
 # Accelerated Nesterov convergence under local Polyak-Lojasiewicz conditions
@@ -19,6 +20,8 @@ Main declarations: `PLAcceleratedNesterovLean.nesterov_pl_accelerated_rate`
 Tags: optimization, numerical-analysis, gradient-methods, polyak-lojasiewicz, differential-geometry
 MSC: 49M37, 65K05, 58C15
 -/
+
+@[expose] public section
 
 /-!
 This project formalizes accelerated Nesterov convergence under a local

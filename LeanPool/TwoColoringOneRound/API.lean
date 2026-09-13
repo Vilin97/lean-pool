@@ -3,9 +3,14 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.Definitions
-import LeanPool.TwoColoringOneRound.MainResults
+public import LeanPool.TwoColoringOneRound.Definitions
+public import LeanPool.TwoColoringOneRound.MainResults
+
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Distributed2Coloring: API
@@ -23,6 +28,8 @@ This is the recommended entry point for humans.
 - `Distributed2Coloring.pStar_ge_23879` and `Distributed2Coloring.pStar_le_24118`
   (bounds on `Distributed2Coloring.ClassicalAlgorithm.pStar`)
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 end Distributed2Coloring

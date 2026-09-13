@@ -3,9 +3,12 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.AbsolutelyContinuousFun
 import Mathlib.Topology.Order.IsLocallyClosed
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
 
 /-!
 # Radius primitive formulas
@@ -13,6 +16,8 @@ import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
 This module contains primitive, increment, annulus, and interval-indicator
 forms of the radius derivative calculus.
 -/
+
+@[expose] public section
 
 noncomputable section
 

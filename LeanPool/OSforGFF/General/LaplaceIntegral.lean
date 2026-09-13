@@ -3,14 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
-import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.MeasureTheory.Function.Jacobian
 
 /-!
 # Proof of the Laplace Integral Identity (Bessel K_{1/2})
@@ -35,6 +34,8 @@ This is a special case of the modified Bessel function K_{1/2} identity.
 - DLMF §10.32.10 (Modified Bessel functions)
 - Glasser, M.L. "A remarkable property of definite integrals" (1983)
 -/
+
+@[expose] public section
 
 open Real Set MeasureTheory Filter Topology
 open scoped ENNReal NNReal

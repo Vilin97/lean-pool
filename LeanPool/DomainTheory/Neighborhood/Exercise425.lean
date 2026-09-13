@@ -3,8 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Example43
+public import LeanPool.DomainTheory.Neighborhood.Example43
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 4.25 (Scott 1981, PRG-19, Lecture IV) — the unary sequence domain `C₁`
@@ -50,6 +58,8 @@ The data (`C₁`, `consMap`, `relateNToC1`) is **choice-free** (`#print axioms �
 {propext,
 Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise425
 

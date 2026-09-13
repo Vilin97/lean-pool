@@ -3,11 +3,13 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Order.CompleteLattice.Basic
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.VCDimension
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Dual VC Dimension (Assouad's Lemma)
@@ -25,6 +27,8 @@ on the domain `↥C` where each point `x : X` induces a concept `c ↦ c x`.
   `2^(d+1)` concepts, then the original class shatters `d+1` points
 * `dual_vcdim_le_pow`  -  Assouad's bound: `VCDim*(C) ≤ 2^(VCDim(C)+1) - 1`
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -3,20 +3,19 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Data.Fintype.Lattice
-import Mathlib.Order.ConditionallyCompleteLattice.Finset
-import Mathlib.Topology.Homotopy.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
-import Mathlib.Topology.Category.TopCat.Limits.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.Products
+public import Mathlib.Topology.Homotopy.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.Products
+public import Mathlib.Topology.Category.TopCat.Basic
 
 /-!
 # LeanPool.WhiteheadTheorem.Auxiliary
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Auxiliary`.
 -/
+
+@[expose] public section
 
 
 namespace CategoryTheory
@@ -76,8 +75,8 @@ lemma Real.forall_le_of_iSup_le_of_bddAbove {ι : Sort*} {f : ι → ℝ} {a : �
   · exact Real.isLUB_sSup ‹_› hbdd |>.left (Set.mem_range_self i) |>.trans hf
 
 lemma Real.range_bddAbove_of_finite_domain {ι : Type*} (f : ι → ℝ) [Finite ι] :
-    BddAbove (Set.range f) := by
-  simp_all
+    BddAbove (Set.range f) :=
+  (Set.finite_range f).bddAbove
 
 lemma Real.forall_le_of_iSup_le_of_finite_domain {ι : Type*} {f : ι → ℝ} {a : ℝ}
     [Finite ι] (hf : ⨆ i, f i ≤ a) : ∀ (i : ι), f i ≤ a :=

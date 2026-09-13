@@ -3,16 +3,18 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Star.Basic
-import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Map
+module
+
+public import Mathlib.Algebra.Star.Basic
+public import Mathlib.LinearAlgebra.TensorProduct.Map
 
 /-!
  # Some stuff on ites
 
  Some lemmas about `ite` and `coe` for `star` and `tensor_product`.
 -/
+
+@[expose] public section
 
 
 @[simp]

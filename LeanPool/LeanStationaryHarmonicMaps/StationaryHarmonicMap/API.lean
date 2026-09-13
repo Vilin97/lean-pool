@@ -3,8 +3,13 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Public API for stationary Sobolev map monotonicity
@@ -31,6 +36,8 @@ The main user-facing objects are:
 Implementation-route theorems in the radial/coarea files should normally be
 treated as internal scaffolding.
 -/
+
+@[expose] public section
 
 noncomputable section
 

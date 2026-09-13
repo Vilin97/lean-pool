@@ -3,19 +3,23 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Finset.Basic
-import LeanPool.ErdosTuzaValtr.Config.Default
-import LeanPool.ErdosTuzaValtr.Etv.Default
-import LeanPool.ErdosTuzaValtr.Main.Defs
-import LeanPool.ErdosTuzaValtr.Main.Lemmas.Default
+public import LeanPool.ErdosTuzaValtr.Main.Defs
+public import LeanPool.ErdosTuzaValtr.Etv.AlphaBeta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.ErdosTuzaValtr.Main.InductionStep
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Main.InductionStep`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

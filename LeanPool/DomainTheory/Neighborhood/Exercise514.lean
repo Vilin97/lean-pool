@@ -3,9 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise513
-import Mathlib.Data.List.Basic
+public import LeanPool.DomainTheory.Neighborhood.Exercise513
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 5.14 (Scott 1981, PRG-19, Lecture V) — the graph model `Pω`
@@ -60,6 +62,8 @@ continuous maps.
 
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise514
 

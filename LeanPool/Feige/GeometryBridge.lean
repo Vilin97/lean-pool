@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.KStatistic
-import LeanPool.Feige.Reduction
-import LeanPool.Feige.SimplexMeasure
+module
+
+public import LeanPool.Feige.KStatistic
+public import LeanPool.Feige.Reduction
+public import LeanPool.Feige.SimplexMeasure
 
 /-!
 # From simplex geometry to the exponential statistic
@@ -16,6 +18,8 @@ representation.  This file records their identification and proves that
 the `α = 0` centroid-halfspace theorem supplies the `δ = 1`
 `LargeSumBridge` consumed by the final reduction.
 -/
+
+@[expose] public section
 
 namespace Feige
 

@@ -3,8 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
 /-!
 # Craig separation (PC-separation) for `L_ω₁ω`, relational (issue #8, audit §10)
 
@@ -29,6 +33,8 @@ derivation is the audited one: interpolate `ψ₁ ⊨ ¬ψ₂`, whose interpolan
 intersection (`functionsIn_not`/`relationsIn_not` strip the negation), then `restrictSymbols` it
 into `L₀` and read both directions off the reduct realization bridge (`realize_mapLanguage`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

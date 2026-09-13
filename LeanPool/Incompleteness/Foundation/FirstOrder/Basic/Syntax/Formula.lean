@@ -3,9 +3,12 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
-import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
+public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Term
+public import LeanPool.Incompleteness.Foundation.Logic.Predicate.Quantifier
+public import Mathlib.Data.Finset.Max
+import Mathlib.Algebra.Order.Ring.Nat
 
 /-!
 # Formulas of first-order logic
@@ -17,6 +20,8 @@ free variables of `ξ`.
 The quantification is represented by de Bruijn index.
 
 -/
+
+@[expose] public section
 
 namespace LO
 

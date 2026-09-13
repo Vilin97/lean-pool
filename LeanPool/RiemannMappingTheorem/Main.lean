@@ -3,14 +3,22 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import LeanPool.RiemannMappingTheorem.Spaces
+module
+
+public import LeanPool.RiemannMappingTheorem.Spaces
+public import LeanPool.RiemannMappingTheorem.HasSqrt
+import LeanPool.RiemannMappingTheorem.DerivInj
 import LeanPool.RiemannMappingTheorem.Etape2
-import LeanPool.RiemannMappingTheorem.HasSqrt
+import LeanPool.RiemannMappingTheorem.Hurwitz
 import LeanPool.RiemannMappingTheorem.Montel
+import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.RiemannMappingTheorem.Main
 -/
+
+@[expose] public section
 
 open UniformConvergence Topology Filter Set Metric Function
 

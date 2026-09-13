@@ -3,8 +3,11 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
+public import Mathlib.Topology.Instances.AddCircle.Real
 import LeanPool.Wallace.UniformKronecker
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # A character with a prescribed half-turn value
@@ -13,6 +16,8 @@ The local fusion starts from a character taking a chosen nonzero element to the 
 circle.  Torsion-freeness makes this one-point prescription compatible with every integer
 relation, and divisibility of the circle extends it to the ambient group.
 -/
+
+@[expose] public section
 
 namespace Wallace
 

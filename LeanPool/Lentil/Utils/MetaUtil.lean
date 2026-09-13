@@ -3,7 +3,14 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
+module
+
+public meta import Lean.Compiler.NoncomputableAttr
+public meta import Lean.Elab.Command
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Util.Trace
+
+public meta section
 
 open Lean Meta Elab Tactic
 
@@ -21,7 +28,10 @@ def simpleAddTheorem (name : Name) (lvlParams : List Name) (type value : Expr) (
 /-- Prove a theorem at the level of `MetaM`, without going into the proof mode. -/
 def simpleProveTheorem (name : Name) (lvlParams : List Name) (type : Expr) (proofScript : TSyntax `term)
     (nonComputable? : Bool) : MetaM Unit := do
-  let proof ← liftCommandElabM <| Command.liftTermElabM do
+  let type ← instantiateMVars type
+  -- Stay in the current elaborator so auxiliary declarations retain their kernel diagnostics.
+  let (type, proof) ← withDeclNameForAuxNaming name <|
+      Term.TermElabM.run' (s := { levelNames := lvlParams }) do
     -- when things go wrong, print the proof goal
     let proof ← Term.elabTermAndSynthesize proofScript type
     if proof.hasSorry then
@@ -29,7 +39,13 @@ def simpleProveTheorem (name : Name) (lvlParams : List Name) (type : Expr) (proo
     -- it is **SUPER WEIRD** that without adding this check, `proof` would still contain
     -- level metavariables, and `instantiateMVars` would not work as expected!
     check proof
-    instantiateMVars proof
+    let type ← instantiateMVars type
+    if type.hasMVar then
+      throwError "unresolved metavariables in generated theorem statement {name}"
+    let proof ← instantiateMVars proof
+    if proof.hasMVar then
+      throwError "unresolved metavariables in generated proof {name}"
+    return (type, proof)
   simpleAddTheorem name lvlParams type proof nonComputable?
 
 -- inspired by [this discussion](https://leanprover.zulipchat.com/#narrow/channel/239415-metaprogramming-.2F-tactics/topic/Generating.20fresh.20names.20for.20universe.20levels)

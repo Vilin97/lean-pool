@@ -3,8 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.H0
+public import LeanPool.JacobianDiffgeo.Cech.Cochains
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Refinement maps, 12.3 independence (CC8)
@@ -21,6 +24,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.4, proof plans §6.4
 **Forster 12.4** (`resH1_injective`/`toH1_injective`) has landed — see `Injectivity.lean`
 (sheaf-axiom gluing argument via `injPatch`/`exists_injGlue`, no analysis).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

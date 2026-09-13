@@ -3,10 +3,12 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
+
+public import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
+import LeanPool.Monlib4.Preq.Finset
 import LeanPool.Monlib4.QuantumGraph.Nontracial
-import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-import LeanPool.Monlib4.QuantumGraph.Iso
-import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
 
 /-!
 
@@ -15,6 +17,8 @@ import LeanPool.Monlib4.QuantumGraph.PiMatFinTwo
 This file contains the definition of a quantum graph as a projection, and the proof that the
 
 -/
+
+@[expose] public section
 
 
 variable {p : Type _} [Fintype p] [DecidableEq p] {n : p → Type _} [∀ i, Fintype (n i)]

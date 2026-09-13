@@ -3,9 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Monodromy.OpenLocus
-import LeanPool.JacobianDiffgeo.Monodromy.LogContinuation
+public import LeanPool.JacobianDiffgeo.Monodromy.OpenLocus
+public import LeanPool.JacobianDiffgeo.Monodromy.LogContinuation
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # monodromy (namespace `RS.Monodromy`)
@@ -71,3 +75,5 @@ type, which does not exist on disk yet, and no currently-designed consumer needs
 solutions` needs only the function-level `dlog f` case above). See `docs/design/monodromy.md` §5
 for the sketch, should a future unit ever need it.
 -/
+
+@[expose] public section

@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.H2`
@@ -28,6 +29,8 @@ where `μᵢ` is the pushforward chart measure (`chartMeasure`) and the graph ma
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.C2`
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.h2`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -95,7 +98,8 @@ abbrev h2TargetE (μ : Measure M) (i : d.ι) : Type _ :=
 /-- The product-of-charts target type used to define manifold `H²`. -/
 abbrev h2Target (μ : Measure M) : Type _ := ∀ i : d.ι, h2TargetE (d := d) (I := I) μ i
 
-private abbrev chartMeasureE (i : d.ι) : Measure E :=
+/-- The chart measure viewed on the model vector space. -/
+abbrev chartMeasureE (i : d.ι) : Measure E :=
   chartMeasure (d := d) (I := I) μ i
 
 private abbrev L2ℝ (i : d.ι) : Type _ := ↥(E →₂[chartMeasureE (d := d) (I := I) (μ := μ) i] ℝ)
@@ -110,7 +114,9 @@ private abbrev H2TargetE (i : d.ι) : Type _ :=
 
 private abbrev H2Target : Type _ := ∀ i : d.ι, H2TargetE (d := d) (I := I) (μ := μ) i
 
-private noncomputable def localizeToC2c (i : d.ι) :
+/-- Localize a twice continuously differentiable manifold function to a compactly supported chart
+function. -/
+noncomputable def localizeToC2c (i : d.ι) :
     ↥(C2 (E := E) (H := H) (M := M) (I := I)) →ₗ[ℝ]
       ↥(RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.C2c (E := E)) where
   toFun f :=

@@ -10,7 +10,15 @@ Authors: Ho Boon Suan
 This file contains the probabilistic counting argument proving existence of
 expanders for the four rows needed by the Kalton-Roberts bound.
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.Defs
+public import Mathlib.Data.Fintype.Perm
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Pippenger expander construction proof
@@ -18,6 +26,8 @@ import LeanPool.KaltonRoberts.Defs
 Probabilistic counting argument proving existence of expanders for the rows
 needed by the Kalton-Roberts bound.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

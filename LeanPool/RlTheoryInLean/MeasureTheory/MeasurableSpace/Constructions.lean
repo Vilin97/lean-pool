@@ -3,11 +3,15 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+module
+
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 
 /-!
 # LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
 -/
+
+@[expose] public section
 
 lemma Measurable.of_uncurry
   {α β γ : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]

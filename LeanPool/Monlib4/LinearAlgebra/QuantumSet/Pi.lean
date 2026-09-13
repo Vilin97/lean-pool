@@ -3,10 +3,12 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Algebra.Algebra.TransferInstance
+public import Mathlib.Algebra.Algebra.TransferInstance
 
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quantum Sets on Finite Products
@@ -14,6 +16,8 @@ import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
 This file restores the finite-product quantum set instance from upstream
 `Monlib.LinearAlgebra.QuantumSet.Pi`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators InnerProductSpace
 

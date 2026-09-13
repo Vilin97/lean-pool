@@ -8,13 +8,19 @@ Authors: Utensil Song
 Concrete normalized-Haar actions and the Zhou fiber-shear equivalence for the
 crossed-product model. Paper: §3.
 -/
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
+public import LeanPool.ConnesRigidity.Paper.Section3.DualActions
+public import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
 import LeanPool.ConnesRigidity.Paper.Section3.CrossedAction
 import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacy
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
 
 /-!
 The crossed haar component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperCrossedHaar

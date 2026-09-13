@@ -3,8 +3,13 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Chart
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Chart
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The points at infinity of the Fermat cubic and the diagonal translation formula
@@ -21,6 +26,8 @@ The main result is the diagonal translation formula:
 (w,t) + P_a = (a*w, a^{-1}*t)          (a^{-1} = a^2).
 ```
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
@@ -84,7 +91,7 @@ lemma pt_congr {w t w' t' : K} (h : w ^ 3 + t ^ 3 = 1) (h' : w' ^ 3 + t' ^ 3 = 1
 
 /-- **The diagonal translation formula**: `(w,t) + P_a = (a*w, a^{-1}*t)`. -/
 theorem add_ptInf {w t a : K} (h : w ^ 3 + t ^ 3 = 1) (ha : a ^ 3 = 1) :
-    pt w t h + ptInf a ha = pt (a * w) (a ^ 2 * t) (fermat_rotate h ha) := by
+    pt w t h + ptInf a ha = pt (a * w) (a ^ 2 * t) (private_decl% (fermat_rotate h ha)) := by
   by_cases ha1 : a = 1
   · subst ha1
     rw [ptInf_one, add_zero]

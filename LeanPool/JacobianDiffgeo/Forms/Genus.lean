@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Forms.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.JacobianDiffgeo.Forms.Finiteness
-import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `genus` (CC1, design §2.1) — root-level, exact challenge signature
@@ -21,6 +24,8 @@ Main declarations:
   `Jacobian/Forms/Finiteness.lean`.
 * `genus_eq_zero_iff_subsingleton` — `genus X = 0 ↔ Subsingleton (RS.Form1 X)`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

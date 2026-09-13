@@ -12,12 +12,16 @@ uses raw names and a partial, side-conditioned variable substitution.  The
 lemmas below recover the source's binder-renaming step when the replacement
 name is absent from `allVars`, hence absent both free and bound.
 -/
-import LeanPool.MatchingLogic.EntryIII.Fresh
-import LeanPool.MatchingLogic.ProofSystem
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Fresh
+public import LeanPool.MatchingLogic.ProofSystem
 
 /-!
 # MatchingLogic.EntryIII.Alpha
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

@@ -6,7 +6,8 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.Set.Insert
+public import Mathlib.Data.Set.Defs
+import Mathlib.Data.Set.Insert
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Insert

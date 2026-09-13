@@ -3,10 +3,18 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.RiemannRoch
-import LeanPool.JacobianDiffgeo.SphereTopology
-import LeanPool.JacobianDiffgeo.ProperDegree
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.JacobianDiffgeo.CanonicalForms.Existence
+import LeanPool.JacobianDiffgeo.ProperDegree.GenusZeroFinisher
+import LeanPool.JacobianDiffgeo.RiemannRoch.Basic
+import LeanPool.JacobianDiffgeo.SphereTopology.Headline
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # genus-zero-headline (#30): `genus X = 0 ↔ X ≃ₜ S²`
@@ -33,6 +41,8 @@ note). Assembles the two already-built halves:
 * **`genus_eq_zero_iff_homeo`** (root level, `docs/Jacobian_challenge.lean:54-56` verbatim, same
   standing variables — a direct alias target for final assembly).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

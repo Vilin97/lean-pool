@@ -3,12 +3,11 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Mul
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.Calculus.Deriv.Pow
 
 
 /-!
@@ -28,6 +27,8 @@ If ε·η ≤ a and 0 ≤ a < 1:
   (1-a)² + ε·η·(1-a) ≤ 1-a
   (1-a)(1+a) ≤ (1+a)² = 2(1-a)λ
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,15 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
-import LeanPool.ZFLean.Naturals
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Algebra.Order.Group.Defs
-import Mathlib.SetTheory.Cardinal.SchroederBernstein
+module
+
+public import LeanPool.ZFLean.Naturals
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Algebra.Group.End
+import LeanPool.ZFLean.Basic
+public import Mathlib.SetTheory.Cardinal.SchroederBernstein
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 /-! # ZFC Integers
 This file provides a construction of the integers in ZFC based on the construction of natural
 numbers. It follows the usual construction of integers as equivalence classes of pairs of natural
@@ -16,6 +21,8 @@ in a commutative ring structure.
 Finally, we show that that the `ZFInt` type is isomorphic to the type of elements contained in
 `ZFSet.Int` type using the Schröder-Bernstein theorem.
 -/
+
+@[expose] public section
 universe u
 
 namespace ZFSet
@@ -191,10 +198,12 @@ theorem sub_right_cancel (a b c : ZFInt) : c - a = c - b → a = b := by
 theorem add_eq_sub_iff {a b c : ZFInt} : a + b = c ↔ a = c - b where
   mp := fun h => by rw [← h, add_sub_cancel]
   mpr := fun h => by rw [h, sub_add_cancel]
-private noncomputable abbrev nsmul : ℕ → ZFInt → ZFInt
+/-- Repeated addition by a natural-number scalar. -/
+noncomputable abbrev nsmul : ℕ → ZFInt → ZFInt
   | 0, _ => 0
   | n+1, m => m + nsmul n m
-private noncomputable abbrev zsmul (n : ℤ) (x : ZFInt) : ZFInt :=
+/-- Integer scalar multiplication defined using repeated addition and negation. -/
+noncomputable abbrev zsmul (n : ℤ) (x : ZFInt) : ZFInt :=
   match n with
   | .ofNat n => nsmul n x
   | .negSucc n => -nsmul (n+1) x
@@ -219,7 +228,8 @@ private theorem mul_wf {a b c d s t u v : ZFNat}
 /-- Integer multiplication in the ZF integer model. -/
 noncomputable abbrev mul (n m : ZFInt) : ZFInt :=
   Quotient.liftOn₂ n m
-    (fun ⟨a, b⟩ ⟨c, d⟩ => mk (a * c + b * d, a * d + b * c)) fun _ _ _ _ => (sound <| mul_wf · ·)
+    (fun ⟨a, b⟩ ⟨c, d⟩ => mk (a * c + b * d, a * d + b * c)) fun _ _ _ _ => by
+      exact (sound <| mul_wf · ·)
 /-- Imported ZFLean declaration. -/
 noncomputable instance : Mul ZFInt := ⟨ZFInt.mul⟩
 theorem mul_eq (n m : ZFNat × ZFNat) :
@@ -836,7 +846,8 @@ noncomputable def ofInt : ℤ → ZFSet
 noncomputable def toZFInt : ℤ → ZFInt
   | .ofNat n => ZFInt.mk (0, ↑n)
   | .negSucc n => ZFInt.mk (↑n+1, 0)
-private def ofInt' : (n : ℤ) → PSet
+/-- The pre-set representative of an integer in the set-theoretic encoding. -/
+def ofInt' : (n : ℤ) → PSet
   | .ofNat 0 => {{∅}}
   | .ofNat (n+1) => {{∅}, {∅, .ofNat n}} -- (0, n)
   | .negSucc n => {{.ofNat (n+1)}, {∅, .ofNat (n+1)}} -- (n, 0)
@@ -928,7 +939,8 @@ theorem mem_Int_proj' {x : ZFSet} :
 namespace ZFInt
 
 open Classical in
-private noncomputable def outof : {x // x ∈ Int} → ZFInt := fun ⟨n, hn⟩ =>
+/-- Decode a member of the set-theoretic integers into its quotient representation. -/
+noncomputable def outof : {x // x ∈ Int} → ZFInt := fun ⟨n, hn⟩ =>
   have := mem_Int_proj' hn
   if case : n.π₁ = ∅ ∧ n.π₂ ∈ Nat then
     ZFInt.mk ⟨0, n.π₂, case.right⟩

@@ -3,8 +3,14 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
+module
+
+public import LeanPool.Clawristotle.Defs
+import LeanPool.Clawristotle.Section2
 import LeanPool.Clawristotle.Section3Helpers
 import LeanPool.Clawristotle.Section3Helpers2
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Nullspace of the Landau Operator (Section 3)
@@ -13,6 +19,8 @@ H-theorem for the Landau operator (D(f) <= 0), characterization of D(f) = 0
 as f being a Maxwellian, and Corollary 1: if entropy dissipation vanishes then
 f is a local Maxwellian at each spatial point.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

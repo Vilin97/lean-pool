@@ -3,8 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
+import Mathlib.Data.Set.Basic
 import Mathlib.Tactic.Set
 
 /-!
@@ -62,6 +64,8 @@ Quot.sound}`); the only
 classical lemma is `ext_of_toElementMap`, which decides neighbourhood membership
 by `by_cases`
 (`Classical.em`). -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 
@@ -350,8 +354,8 @@ sharpening `X' ⊆ X`
 means `↑X ⊑ ↑X'`, so `e(↑X) ⊑ e(↑X')` and the output transports along, then widens
 by `up_mem`. -/
 def ofIso (e : V₀.Element ≃o V₁.Element) : ApproximableMap V₀ V₁ where
-  rel X Y := ∃ _ : V₀.mem X, (e (V₀.principal ‹V₀.mem X›)).mem Y
-  rel_dom := fun ⟨hX, _⟩ => hX
+  rel X Y := ∃ hX : V₀.mem X, (e (V₀.principal hX)).mem Y
+  rel_dom := by rintro X Y ⟨hX, _⟩; exact hX
   rel_cod := fun ⟨_, hY⟩ => (e _).sub hY
   master_rel := ⟨V₀.master_mem, (e _).master_mem⟩
   inter_right := by

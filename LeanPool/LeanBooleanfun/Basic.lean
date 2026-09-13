@@ -3,10 +3,10 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
-import LeanPool.LeanBooleanfun.AuxLemmas
-import LeanPool.LeanBooleanfun.ToMathlib.Finset
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Algebra.CharP.Pi
+module
+
+public import LeanPool.LeanBooleanfun.AuxLemmas
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Analysis on Boolean functions
@@ -42,6 +42,8 @@ conventions in the context of Boolean functions, and the simplicity of working w
 * `‖⬝‖` denotes the (normalized) L² norm
 * `⋆` denotes convolution
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanBooleanfun.BooleanFun
 

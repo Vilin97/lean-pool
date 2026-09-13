@@ -3,8 +3,10 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
+
+public import Mathlib.Analysis.Normed.Lp.PiLp
 import LeanPool.Rupert.Attr
 
 /-!
@@ -13,8 +15,16 @@ import LeanPool.Rupert.Attr
 Imported Lean Pool material for `LeanPool.Rupert.MatrixSimps`.
 -/
 
-attribute [matrix_simps] Matrix.cons_dotProduct even_two Even.neg_pow neg_mul Nat.reduceAdd
-            sub_neg_eq_add mul_neg neg_neg Fin.isValue Matrix.cons_mulVec
+@[expose] public section
+
+/-- Reduce natural additions in concrete matrix expressions. -/
+dsimproc_decl matrixReduceNatAdd ((_ + _ : Nat)) := Nat.reduceAdd
+
+/-- Normalize finite indices in concrete matrix expressions. -/
+dsimproc_decl matrixNormalizeFin ((OfNat.ofNat _ : Fin _)) := Fin.isValue
+
+attribute [matrix_simps] Matrix.cons_dotProduct even_two Even.neg_pow neg_mul matrixReduceNatAdd
+            sub_neg_eq_add mul_neg neg_neg matrixNormalizeFin Matrix.cons_mulVec
             Matrix.cons_dotProduct Matrix.dotProduct_of_isEmpty add_zero Matrix.empty_mulVec
             Matrix.cons_val_zero Matrix.cons_val_one smul_smul Matrix.head_cons
             mul_one Matrix.tail_cons Matrix.cons_val zero_mul zero_smul

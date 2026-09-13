@@ -3,10 +3,10 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.ClosedImmersion
-import LeanPool.GrothendieckVanishing.CohomologyAPI
-import LeanPool.GrothendieckVanishing.FlasqueVanishing
+public import LeanPool.GrothendieckVanishing.FlasqueVanishing
+public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
 /-!
 # Closed-immersion cohomology
@@ -25,6 +25,8 @@ in `ClosedImmersion.lean`. LES-facing `Sheaf.H` wrappers come from `CohomologyAP
 and the flasque infrastructure from `FlasqueVanishing.lean`.
 -/
 
+@[expose] public section
+
 universe u
 
 open CategoryTheory TopologicalSpace Abelian Limits Opposite
@@ -32,7 +34,7 @@ open CategoryTheory TopologicalSpace Abelian Limits Opposite
 /-! ## Closed-immersion cohomology consequences -/
 
 -- Instance search does not unfold the subtype topology in `TopCat.of Z`.
-private noncomputable instance subtypeSheafHAddCommGroup
+noncomputable instance subtypeSheafHAddCommGroup
     {X : TopCat.{u}} {Z : Set X}
     (G : TopCat.Sheaf AddCommGrpCat.{u} (TopCat.of Z)) (n : ℕ) :
     AddCommGroup (Sheaf.H G n) :=

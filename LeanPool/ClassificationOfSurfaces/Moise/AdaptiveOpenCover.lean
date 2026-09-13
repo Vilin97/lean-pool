@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
 
 /-!
 # Adaptive triangulations subordinate to an open cover
@@ -14,6 +16,8 @@ cover.  In particular, the resulting locally finite triangulation has every clos
 one prescribed control neighborhood.  Quantitative chart approximation can therefore choose
 the neighborhoods first and reuse the conforming triangulation unchanged.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

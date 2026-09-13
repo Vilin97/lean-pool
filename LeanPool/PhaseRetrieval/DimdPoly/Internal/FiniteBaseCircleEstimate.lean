@@ -3,13 +3,25 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
+import LeanPool.PhaseRetrieval.Constant.Internal.MissingMathlib.Poincare
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 import Mathlib.Order.Interval.Set.Union
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.ImportedAnalyticInputs
-import LeanPool.PhaseRetrieval.Constant.Internal.HighFreqBandEstimate
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # FiniteBaseCircleEstimate -/
+
+@[expose] public section
 
 
 noncomputable section

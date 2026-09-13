@@ -3,8 +3,12 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
-import LeanPool.Kuramoto.Weighted
+public import LeanPool.Kuramoto.Weighted
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Hebbian phase/weight dynamics
@@ -12,6 +16,8 @@ import LeanPool.Kuramoto.Weighted
 A joint phase/weight Lyapunov function `hebbianL` with a Frobenius weight penalty, the
 Hebbian weight flow `hebbianWeightF`, and the joint Lyapunov descent property.
 -/
+
+@[expose] public section
 
 open Real Finset
 

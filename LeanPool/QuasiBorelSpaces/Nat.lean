@@ -3,8 +3,10 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Prod
+public import LeanPool.QuasiBorelSpaces.Prod
+import LeanPool.QuasiBorelSpaces.Basic
 import LeanPool.QuasiBorelSpaces.Prop
 
 /-!
@@ -12,6 +14,8 @@ import LeanPool.QuasiBorelSpaces.Prop
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Nat`.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace.Nat
 

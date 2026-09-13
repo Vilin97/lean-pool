@@ -3,15 +3,19 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-import LeanPool.ConnesRigidity.Construction.SquareSpan
-import LeanPool.ConnesRigidity.Paper.Section5.ICC
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Construction.SquareSpan
+public import LeanPool.ConnesRigidity.Paper.Section5.ICC
 
 /-!
 Concrete orbit and displacement proofs for Zhou's semidirect products. The
 finite quotient detector is checked by kernel computation over the public
 finite carrier. Paper: §5.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperICC

@@ -3,9 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Product
-import LeanPool.DomainTheory.Neighborhood.Exercise127
+public import LeanPool.DomainTheory.Neighborhood.Product
+public import LeanPool.DomainTheory.Neighborhood.Exercise127
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lecture III (§3) — the function space `(𝒟₀ → 𝒟₁)`: Definitions 3.8, Propositions
@@ -52,6 +59,8 @@ neighbourhood, condition
 `mapsBounded_iff_pointwiseBounded` (ii);
   `sSupMaps` with `toElementMap_sSupMaps` (iii).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

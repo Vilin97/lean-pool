@@ -3,24 +3,21 @@ Copyright (c) 2026 Joseph K. Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph K. Miller
 -/
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.Deriv.Add
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.Deriv.Mul
+module
+
+import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
+
+public import Mathlib.Analysis.Calculus.Gradient.Basic
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.Vlasov.Base.Geometry
+public import LeanPool.Vlasov.OT.Wasserstein
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.Deriv.Prod
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import Mathlib.Analysis.ODE.Gronwall
 import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.MeasureTheory.Measure.Dirac
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.MeasureTheory.Measure.Tight
-import LeanPool.Vlasov.Base.Geometry
-import LeanPool.Vlasov.OT.Wasserstein
 
 /-!
 # Derivation of the Vlasov equation from N-particle Hamiltonian dynamics
@@ -40,6 +37,8 @@ mean-field theory of the Vlasov equation:
 
 `(tex: …)` labels cross-reference the companion LaTeX paper.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

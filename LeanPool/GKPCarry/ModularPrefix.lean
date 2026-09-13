@@ -3,11 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.GKPCarry.Definitions
+module
+
+public import LeanPool.GKPCarry.Definitions
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Nat.Digits.Lemmas
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Modular evaluation of ternary prefixes
@@ -16,6 +17,8 @@ A ternary prefix depends only on a residue modulo a power of three. The
 binary-digit modular exponentiation function below lets the finite certificate
 evaluate those residues without first constructing the enormous value `4 ^ m`.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

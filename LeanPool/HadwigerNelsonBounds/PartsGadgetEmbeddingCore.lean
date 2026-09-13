@@ -3,9 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsPlaneGeometry
-import LeanPool.HadwigerNelsonBounds.PartsGadgetData
+public import LeanPool.HadwigerNelsonBounds.PartsPlaneGeometry
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetData
 
 /-!
 # Euclidean realization of the finite Parts gadget
@@ -13,6 +14,8 @@ import LeanPool.HadwigerNelsonBounds.PartsGadgetData
 The 73 descriptors encode two radius-three triangular-lattice patches with a
 common center.  The second patch is rotated through cosine `7/8`.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

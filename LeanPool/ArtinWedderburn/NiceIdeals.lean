@@ -3,17 +3,15 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.Algebra.Ring.Idempotent
-import Mathlib.Algebra.Group.Basic
-import Mathlib.RingTheory.Ideal.Span
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.RingTheory.SimpleModule.Basic
-import LeanPool.ArtinWedderburn.PrimeRing
-import LeanPool.ArtinWedderburn.CornerRing
-import LeanPool.ArtinWedderburn.Idempotents
-import LeanPool.ArtinWedderburn.CornerCornerLemma
+module
+
+public import LeanPool.ArtinWedderburn.CornerCornerLemma
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Nice ideals and the induction step in Artin–Wedderburn
@@ -21,6 +19,8 @@ import LeanPool.ArtinWedderburn.CornerCornerLemma
 A *nice ideal* is an idempotent ideal whose corner ring is `OrtIdemDiv`. We
 prove that in a prime artinian ring, every ideal is nice.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

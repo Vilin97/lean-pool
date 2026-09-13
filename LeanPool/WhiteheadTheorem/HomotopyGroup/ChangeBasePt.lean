@@ -3,18 +3,19 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.Defs
-import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
-import LeanPool.WhiteheadTheorem.HEP.Cube
-import LeanPool.WhiteheadTheorem.HEP.Cofibration
-import LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
+public import LeanPool.WhiteheadTheorem.Defs
+public import LeanPool.WhiteheadTheorem.HEP.Cube
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt`.
 -/
+
+@[expose] public section
 -- import Mathlib.CategoryTheory.Category.Pointed
 -- import WhiteheadTheorem.HEP.Retract
 -- import Mathlib.CategoryTheory.LiftingProperties.Adjunction

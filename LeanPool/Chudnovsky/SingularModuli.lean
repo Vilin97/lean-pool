@@ -3,8 +3,13 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.MasserA1
+public import LeanPool.Chudnovsky.SingularModuli.MasserA1
+import LeanPool.Chudnovsky.SingularModuli.Kronecker
+import LeanPool.Chudnovsky.SingularModuli.Rationality
+import LeanPool.Chudnovsky.SingularModuli.Valence
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Singular moduli at `τ₁₆₃`: the cited arithmetic inputs (Phase C)
@@ -29,6 +34,8 @@ Everything else in the development (Phases A, B, D) can be completed with these 
 explicit hypotheses, giving the intermediate milestone `chudnovsky_of_singular_moduli`
 (PLAN Phase C).
 -/
+
+@[expose] public section
 
 /-
 Candidate proof routes, summarized from PLAN.md (Phase C):

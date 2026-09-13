@@ -3,7 +3,13 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Tactics.Monotone
+module
+
+public import LeanPool.Lentil.ProofMode.Tactics.Monotone
+meta import LeanPool.Lentil.ProofMode.Basic
+import LeanPool.Lentil.Rules.Basic
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -24,13 +30,13 @@ end
 
 -- FIXME: The following logic is very similar in `Lentil.ProofMode.Tactics.Monotone`,
 -- consider unifying them
-private def peelAlwaysOpt (p : Expr) : Option Expr :=
+private meta def peelAlwaysOpt (p : Expr) : Option Expr :=
   if p.getAppFn'.isConstOf ``TLA.always then
     if h : p.isApp = true then some (p.appArg h) else none
   else
     none
 
-private def proofModeToggleGoalUnderAlways : TacticM Unit := withMainContext do
+private meta def proofModeToggleGoalUnderAlways : TacticM Unit := withMainContext do
   let g ← getMainGoal
   let target ← cleanupAnnotAndMore (← g.getType)
   let_expr Entails _ hypsExpr goal := target

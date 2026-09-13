@@ -6,8 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.DistanceGeometry.Defs
-public import LeanPool.DistanceGeometry.Schoenberg
-public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import LeanPool.DistanceGeometry.Schoenberg
 
 /-!
 # The Cayley–Menger determinant and simplex volume

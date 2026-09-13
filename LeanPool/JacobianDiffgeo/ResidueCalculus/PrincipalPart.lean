@@ -7,7 +7,9 @@ Authors: Rado Kirov
 /-
 Blueprint unit: residue-calculus. Principal parts and the decomposition theorem.
 -/
-import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
+module
+
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
 
 /-!
 # Principal parts at a point (residue-calculus)
@@ -24,6 +26,8 @@ Main exports:
 * `RS.laurentCoeffAt_principalPartAt` — the principal part has exactly the negative tail;
 * `RS.eq_principalPart_of_eventuallyEq` — uniqueness of tail + analytic decompositions.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function
 

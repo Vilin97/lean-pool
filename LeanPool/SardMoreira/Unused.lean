@@ -3,12 +3,27 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
+
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.InvariantBasisNumber
 import LeanPool.SardMoreira.ContDiff
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.SardMoreira.Unused
 -/
+
+@[expose] public section
 
 open scoped Topology
 open Filter Set

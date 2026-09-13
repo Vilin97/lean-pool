@@ -3,10 +3,20 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Monodromy.OpenLocus
-import LeanPool.JacobianDiffgeo.Meromorphic
-import Mathlib.Geometry.Manifold.Algebra.LieGroup
+public import LeanPool.JacobianDiffgeo.Monodromy.OpenLocus
+public import LeanPool.JacobianDiffgeo.Forms.MDifferential
+public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+public import Mathlib.Analysis.Complex.Exponential
+import LeanPool.JacobianDiffgeo.Path.Planar
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `monodromy`: continuation of `log f` along pole/zero-avoiding paths
@@ -42,6 +52,8 @@ Main declarations:
   prescribed initial branch value, and uniqueness (both bookkeeping over `Path`'s already-built
   existence/uniqueness API).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter TopologicalSpace

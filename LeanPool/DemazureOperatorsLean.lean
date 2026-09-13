@@ -3,13 +3,17 @@ Copyright (c) 2026 Óscar Álvarez Sánchez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Óscar Álvarez Sánchez
 -/
+module
 
-import LeanPool.DemazureOperatorsLean.Demazure
-import LeanPool.DemazureOperatorsLean.DemazureAux
-import LeanPool.DemazureOperatorsLean.DemazureRelations
-import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
-import LeanPool.DemazureOperatorsLean.StrongExchange
-import LeanPool.DemazureOperatorsLean.Matsumoto
+public import LeanPool.DemazureOperatorsLean.Demazure
+public import LeanPool.DemazureOperatorsLean.DemazureAux
+public import LeanPool.DemazureOperatorsLean.DemazureRelations
+public import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
+public import LeanPool.DemazureOperatorsLean.StrongExchange
+public import LeanPool.DemazureOperatorsLean.Matsumoto
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Demazure Operators and Lean
@@ -21,6 +25,8 @@ Main declarations: `Demazure.Dem`, `CoxeterSystem.strongExchangeProperty`
 Tags: algebraic-combinatorics, demazure-operators, polynomials, representation-theory
 MSC: 05E05, 13P10, 20F55
 -/
+
+@[expose] public section
 
 /-!
 The Demazure-operator declarations are sourced to the BGG Schubert-cells paper

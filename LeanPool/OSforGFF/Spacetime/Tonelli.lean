@@ -3,11 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.Decomposition
-import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+public import LeanPool.OSforGFF.Spacetime.Decomposition
+import LeanPool.OSforGFF.General.FunctionalAnalysis
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Schwartz Tonelli Factorization
@@ -25,6 +26,8 @@ depends only on the time coordinates.
 * Hörmander, "The Analysis of Linear Partial Differential Operators I"
 * Folland, "Real Analysis", Chapter 2 (Fubini-Tonelli theorem)
 -/
+
+@[expose] public section
 
 open MeasureTheory MeasureSpace FiniteDimensional Real
 

@@ -6,11 +6,7 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import Mathlib.LinearAlgebra.Matrix.Kronecker
-public import Mathlib.LinearAlgebra.Matrix.Trace
-public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
-public import Mathlib.Data.Matrix.Basis
 public import Mathlib.Data.Complex.Basic
 
 /-!

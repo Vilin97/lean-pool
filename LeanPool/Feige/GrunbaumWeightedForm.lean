@@ -3,8 +3,14 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Constants
-import LeanPool.Feige.GrunbaumImport
+module
+
+public import LeanPool.Feige.Constants
+public import LeanPool.Feige.GrunbaumImport
+import LeanPool.Feige.Grunbaum.SimplexCentroidCoordinates
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Weighted halfspaces on the Euclidean standard simplex
@@ -13,6 +19,8 @@ This file aligns the weighted linear form used in Feige's simplex argument
 with the positive-dimensional Euclidean model used by the Grünbaum
 formalization.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Set

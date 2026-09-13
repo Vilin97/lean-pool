@@ -3,8 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.TranslationTP2
-import Mathlib.Probability.Distributions.Exponential
+module
+
+public import LeanPool.Feige.TranslationTP2
+public import Mathlib.Probability.Distributions.Exponential
+public import LeanPool.Feige.OneSidedDensity
 
 /-!
 # Finite signed exponential sums
@@ -15,6 +18,8 @@ rate-one exponentials.  This file gives that law an explicit normalized
 density and derives its four-point log-concavity from translation TP2
 closure under convolution.
 -/
+
+@[expose] public section
 
 open scoped ENNReal
 open MeasureTheory ProbabilityTheory

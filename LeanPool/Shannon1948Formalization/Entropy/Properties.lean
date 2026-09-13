@@ -3,8 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy.Joint
+public import LeanPool.Shannon1948Formalization.Entropy.Joint
+public import Mathlib.Analysis.Convex.DoublyStochasticMatrix
+import LeanPool.Shannon1948Formalization.Entropy.Gibbs
 
 /-!
 # Shannon.Entropy.Properties
@@ -22,6 +25,8 @@ Gibbs inequality and concavity of `negMulLog`.
 5. `condEntropy_le_entropyNat` — conditioning reduces entropy: `H_X(Y) ≤ H(Y)`
 6. `condEntropy_nonneg` — conditional entropy is nonnegative
 -/
+
+@[expose] public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

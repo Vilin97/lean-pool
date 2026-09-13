@@ -3,9 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132ThreeChain.Plane
+public import LeanPool.Erdos132ThreeChain.Plane
 import LeanPool.Erdos132ThreeChain.PowerThree
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The four-point catalogue relative to a shortest edge
@@ -25,6 +34,8 @@ never both spanning in opposite senses, that every isoceles point has squared ra
 distances lie in the single adjacent pair `{c, 3 * c}`: no planar chain quadruple spans two
 steps of the chain.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

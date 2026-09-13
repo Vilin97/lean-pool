@@ -3,21 +3,20 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
-import Mathlib.Algebra.Ring.GrindInstances
-import Mathlib.Data.Nat.Factorization.Defs
-import Mathlib.Data.Nat.ModEq
+public import Mathlib.Data.Nat.Factorization.Defs
+public import Mathlib.Data.Nat.ModEq
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.GCongr
 import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Aesop
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-! ## Definitions -/
+
+@[expose] public section
 
 open scoped BigOperators
 

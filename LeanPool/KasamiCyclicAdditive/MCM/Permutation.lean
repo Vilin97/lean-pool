@@ -3,14 +3,13 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
-import LeanPool.KasamiCyclicAdditive.MCM.Fourier
-import LeanPool.KasamiCyclicAdditive.MCM.FrobeniusSum
-import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
+public import LeanPool.KasamiCyclicAdditive.MCM.Fourier
 import LeanPool.KasamiCyclicAdditive.MCM.CharacterArithmetic
+import LeanPool.KasamiCyclicAdditive.MCM.DicksonPermutation
 import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteCharacterCriterion
+import Mathlib.Data.FunLike.Fintype
 
 /-!
 # The MCM permutation theorem
@@ -28,6 +27,8 @@ character has vanishing untwisted MCM sum.  Together with the elementary fact
 that the MCM map has zero as its unique zero, this makes all multiplicative
 character sums preserved, hence the MCM map a permutation.
 -/
+
+@[expose] public section
 
 open Finset Polynomial
 

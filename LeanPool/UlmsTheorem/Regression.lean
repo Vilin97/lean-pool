@@ -3,8 +3,15 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
+public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
 import LeanPool.UlmsTheorem.Ulm.Theorem
+import Mathlib.Algebra.NoZeroSMulDivisors.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.LinearAlgebra.Dimension.Finite
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 DIFFERENTIAL TEST OF `ulm_theorem` AGAINST INDEPENDENTLY-KNOWN GROUND TRUTH.
@@ -47,6 +54,8 @@ Two checks that cannot live in a build, recorded here so they are not lost:
   cannot serve as an independent isomorphism oracle. Ground truth has to come
   from hand-computed finite instances like this one.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

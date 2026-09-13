@@ -3,11 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.OddPrimeValuationDistribution.CarryArithmetic
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Polynomial.Coeff
-import Mathlib.Data.Fintype.Vector
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.OddPrimeValuationDistribution.CarryArithmetic
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.Logic.Equiv.Fin.Basic
+import Mathlib.Data.Nat.SuccPred
 
 /-!
 # Carry polynomials in an arbitrary odd base
@@ -17,6 +18,8 @@ words whose doubling creates exactly `r` carries.  Splitting the digit set at
 the carry threshold gives a two-state transfer matrix and its scalar
 second-order recurrence.
 -/
+
+@[expose] public section
 
 namespace OddPrimeValuationDistribution
 

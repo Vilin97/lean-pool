@@ -3,24 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
 
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-import Mathlib.LinearAlgebra.BilinearMap
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.OS.Axioms
-import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Schwinger.Defs
+public import LeanPool.OSforGFF.OS.Axioms
+public import LeanPool.OSforGFF.Measure.Construct
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Gaussian Free Field Assembly
@@ -31,6 +20,8 @@ Defines muGFF m as a ProbabilityMeasure and proves two OS axioms for general Gau
   (the primary OS0 proof via Hartogs is in `OS.os0Analyticity`)
 - OS2 (Euclidean invariance): Z[gf] = Z[f] when covariance is E(4)-invariant
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex
 open TopologicalSpace SchwartzMap

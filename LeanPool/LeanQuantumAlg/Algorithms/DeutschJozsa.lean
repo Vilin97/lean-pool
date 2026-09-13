@@ -6,10 +6,9 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.WalshHadamard
-public import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
 public import LeanPool.LeanQuantumAlg.Core.Cost
+import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
 
 /-!
 # Deutsch-Jozsa algorithm

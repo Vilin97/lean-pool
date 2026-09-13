@@ -3,16 +3,21 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset`.
 -/
+
+@[expose] public section
 
 /-- Type synonym for a quantum set with its modular exponent shifted to `k`. -/
 def QuantumSet.toSubset (k : ℝ) (A : Type*) : Type _ :=

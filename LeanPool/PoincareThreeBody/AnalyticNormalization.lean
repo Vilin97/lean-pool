@@ -3,9 +3,16 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+public import LeanPool.PoincareThreeBody.MixedPartials
+public import LeanPool.PoincareThreeBody.Perturbation
+public import Mathlib.Analysis.Calculus.DSlope
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import LeanPool.PoincareThreeBody.Analytic
 import Mathlib.Analysis.Analytic.IsolatedZeros
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Analytic coefficient normalization in the mass parameter
@@ -15,6 +22,8 @@ divides by the mass parameter.  The differentiable slope `dslope` supplies the r
 mass zero.  This file establishes the analytic one-variable division theorem and applies it to
 each phase-space slice of the normalized residual.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -3,15 +3,17 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Calculus.Implicit
-import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-import LeanPool.SardMoreira.ContDiffMoreiraHolder
-import LeanPool.SardMoreira.LinearAlgebra
+public import Mathlib.Analysis.Calculus.Implicit
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.SardMoreira.ImplicitFunction
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -41,17 +43,18 @@ def implicitFunctionDataOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] 
     rw [LinearMap.range_eq_top]
     rintro ⟨_, x, rfl⟩
     simp_all
-  let φ := implicitFunctionDataOfComplemented (hrange.choose ∘ f) (hrange.choose ∘L f')
-    (hrange.choose.hasStrictFDerivAt.comp a hf) hrange_eq (by rwa [hker_eq])
   refine
-    { __ := φ,
+    { leftFun := hrange.choose ∘ f
+      leftDeriv := hrange.choose ∘L f'
+      pt := a
+      hasStrictFDerivAt_leftFun := hrange.choose.hasStrictFDerivAt.comp a hf
+      range_leftDeriv := hrange_eq
       rightFun := hker.choose
       rightDeriv := hker.choose
       range_rightDeriv := LinearMap.range_eq_of_proj (Classical.choose_spec hker)
       hasStrictFDerivAt_rightFun := hker.choose.hasStrictFDerivAt
       isCompl_ker := ?_ }
-  simpa only [φ, implicitFunctionDataOfComplemented, hker_eq]
-    using LinearMap.isCompl_of_proj hker.choose_spec
+  simpa only [hker_eq] using LinearMap.isCompl_of_proj hker.choose_spec
 
 /-- The `OpenPartialHomeomorph` associated to
 `implicitFunctionDataOfComplementedKerRange`. -/
@@ -82,7 +85,7 @@ theorem implicitToOpenPartialHomeomorphOfComplementedKerRange_apply {f : E → F
   -- `simp [implicitToOpenPartialHomeomorphOfComplementedKerRange,
   --  implicitFunctionDataOfComplementedKerRange]` works but it's much slower
   simp only [implicitToOpenPartialHomeomorphOfComplementedKerRange,
-    implicitFunctionDataOfComplementedKerRange, implicitFunctionDataOfComplemented,
+    implicitFunctionDataOfComplementedKerRange,
     Function.comp_apply, ImplicitFunctionData.toOpenPartialHomeomorph_apply]
 
 theorem coe_implicitToOpenPartialHomeomorphOfComplementedKerRange {f : E → F} {f' : E →L[𝕜] F}

@@ -3,9 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.CosetDecomposition
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Degree
 import LeanPool.LeanModularForms.HeckeRIngs.GL2.CongruenceIndex
 
 /-!
@@ -42,6 +43,8 @@ function `ψ(d) = d · ∏_{p | d} (1 + 1/p)`. For the prime-power case needed f
 
 * Shimura, Proposition 3.14, 3.18, Theorem 3.24
 -/
+
+@[expose] public section
 
 open HeckeRing HeckeRing.GL2 Finset CongruenceSubgroup Matrix.SpecialLinearGroup Matrix
   ModularGroup

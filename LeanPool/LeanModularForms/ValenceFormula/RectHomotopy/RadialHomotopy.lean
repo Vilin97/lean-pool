@@ -3,10 +3,16 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonProps
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonSlope
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Radial homotopy from polygon to unit circle
@@ -20,6 +26,8 @@ of `PiecewiseCurvesHomotopicAvoiding`.
 * `fdPolygon_piecewise_homotopic_to_radialCircle` — combined 8-condition proof
 * `winding_fdPolygon_eq_radialCircle` — winding numbers are equal
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

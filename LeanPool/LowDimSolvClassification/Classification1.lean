@@ -3,21 +3,23 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.LinearIndependent.Basic
-import Mathlib.LinearAlgebra.Dimension.DivisionRing
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.Dimension.Free
-import Mathlib.Algebra.Lie.Basic
-import Mathlib.Algebra.Lie.Abelian
-import Mathlib.Algebra.Lie.Solvable
-import Mathlib.Algebra.Field.Defs
+module
+
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.Algebra.Lie.Solvable
 import LeanPool.LowDimSolvClassification.GeneralResults
-import LeanPool.LowDimSolvClassification.InstancesLowDim
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.GroupTheory.GroupAction.Ring
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.LowDimSolvClassification.Classification1
 -/
+
+@[expose] public section
 
 open Module
 open Submodule

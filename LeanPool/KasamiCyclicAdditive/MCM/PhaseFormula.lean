@@ -3,16 +3,16 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
-import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
-import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
-import LeanPool.KasamiCyclicAdditive.MCM.Fourier
-import LeanPool.KasamiCyclicAdditive.MCM.Permutation
-import LeanPool.KasamiCyclicAdditive.MCM.DicksonPhase
+public import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
+public import LeanPool.KasamiCyclicAdditive.MCM.Fourier
 import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.MCM.DicksonPhase
+import LeanPool.KasamiCyclicAdditive.MCM.Permutation
+import LeanPool.KasamiCyclicAdditive.Phase.CharacterSums
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.NumberTheory.JacobiSum.Basic
 
 /-!
 # The MCM/Dickson phase formula
@@ -21,6 +21,8 @@ Proves the Dillon--Kashyap phase formula `DillonKashyapPhaseFormula` directly
 from the derivative-image half-size equation plus the MCM/Dickson identities —
 no Dillon--Kashyap or Dillon--Dobbertin Fourier theorem is imported.
 -/
+
+@[expose] public section
 
 open Finset Polynomial
 

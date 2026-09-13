@@ -6,13 +6,14 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaCenterLogBound
-public import LeanPool.Odlyzko.ExplicitFormula.CompletedZetaRectangle
 public import LeanPool.Odlyzko.ExplicitFormula.FiniteSetAvoidance
 public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouContourLimit
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedPoitouQuadraticDecay
-public import LeanPool.Odlyzko.ExplicitFormula.ZeroFreeRectangles
-public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.RectangleIntegral
-public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
+import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartarTransform
+import LeanPool.Odlyzko.ExplicitFormula.ZeroFreeRectangles
+import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Poitou Estimate

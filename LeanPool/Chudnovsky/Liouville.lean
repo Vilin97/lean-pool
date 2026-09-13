@@ -3,9 +3,17 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SigmaZeta
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Elliptic functions and the Liouville theorems
@@ -26,6 +34,8 @@ All statements in this file are fully proved (no `sorry`s). The second Liouville
 proved via a self-contained parallelogram residue theorem built from Mathlib's rectangle
 Cauchy--Goursat primitives.
 -/
+
+@[expose] public section
 
 noncomputable section
 

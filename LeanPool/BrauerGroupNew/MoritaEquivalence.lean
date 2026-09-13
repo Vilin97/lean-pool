@@ -3,16 +3,18 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
+public import Mathlib.Data.Matrix.Basis
+public import Mathlib.RingTheory.SimpleModule.Basic
+public import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Algebra.Category.ModuleCat.EpiMono
 import Mathlib.Algebra.Category.ModuleCat.Limits
-import Mathlib.Algebra.Group.Subgroup.Finite
-import Mathlib.Algebra.Homology.ShortComplex.Exact
+import Mathlib.CategoryTheory.Adjunction.Limits
+import Mathlib.CategoryTheory.EffectiveEpi.Basic
+import Mathlib.CategoryTheory.Limits.Preserves.Creates.Finite
 import Mathlib.CategoryTheory.Limits.Shapes.Countable
-import Mathlib.Data.Matrix.Basis
 import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.RingTheory.SimpleModule.Basic
-import Mathlib.RingTheory.SimpleRing.Basic
 
 /-!
 # Morita equivalence for matrix algebras
@@ -20,6 +22,8 @@ import Mathlib.RingTheory.SimpleRing.Basic
 This file ports the upstream BrauerGroup development proving the Morita
 equivalence between modules over a ring and over a matrix ring.
 -/
+
+@[expose] public section
 
 open CategoryTheory Matrix Module
 

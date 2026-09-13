@@ -3,11 +3,14 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.List.OfFn
-import LeanPool.PebblingLean.Concentration
-import LeanPool.PebblingLean.UpperBoundDelivery
+public import LeanPool.PebblingLean.Concentration
+public import LeanPool.PebblingLean.UpperBoundDelivery
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite probability setup for the upper bound
@@ -17,6 +20,8 @@ upper-bound argument.  It also records the interfaces for the Chernoff and
 Bernstein inputs.  These are propositions, not axioms: later work must prove
 them or replace them with imported theorems.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

@@ -10,40 +10,23 @@ Authors: Ho Boon Suan
 This file contains the core definitions used throughout the formalization of
 the companion paper.
 -/
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.Convex.Combination
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Combinatorics.Hall.Basic
-import Mathlib.Data.Fintype.Perm
-import Mathlib.Data.Nat.Choose.Cast
-import Mathlib.Order.BooleanSubalgebra
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Choose
-import Mathlib.Tactic.CongrExclamation
-import Mathlib.Tactic.Continuity
-import Mathlib.Tactic.Contrapose
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Qify
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Aesop
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Definitions for the Kalton-Roberts formalization
 
 Core definitions used throughout the formalization of the companion paper.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

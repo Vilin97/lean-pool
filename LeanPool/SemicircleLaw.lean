@@ -3,8 +3,12 @@ Copyright (c) 2026 FredRaj3. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FredRaj3
 -/
+module
 
-import LeanPool.SemicircleLaw.SemicircleDistribution
+public import LeanPool.SemicircleLaw.SemicircleDistribution
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Wigner Semicircle Distribution
@@ -16,6 +20,8 @@ Main declarations: `LeanPool.SemicircleLaw.integral_semicirclePDFReal_eq_one`
 Tags: probability, random-matrix-theory, distributions
 MSC: 60B20, 60E05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

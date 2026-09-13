@@ -3,12 +3,24 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.Rules.Basic
+module
+
+public import LeanPool.Lentil.Tactics.Basic
+import Aesop.Frontend.Tactic
+import Aesop.Main
+import Batteries.Tactic.Init
 import LeanPool.Lentil.Gadgets.TheoremDeriving
-import LeanPool.Lentil.ProofMode.Tactics
-import LeanPool.Lentil.ProofMode.Display
+import LeanPool.Lentil.ProofMode.Tactics.Apply
+import LeanPool.Lentil.ProofMode.Tactics.RCases
+import LeanPool.Lentil.ProofMode.Tactics.SplitAnds
+import LeanPool.Lentil.ProofMode.Tactics.Start
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-! Theorems about weak-fairness. -/
+
+@[expose] public section
 
 open Classical
 

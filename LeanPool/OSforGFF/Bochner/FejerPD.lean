@@ -3,14 +3,14 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-
-import LeanPool.OSforGFF.Bochner.PositiveDefinite
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
-import Mathlib.MeasureTheory.Measure.Prod
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Fourier transform of L¹ positive-definite functions is nonneg
@@ -39,6 +39,8 @@ The kernel → 1 pointwise and is bounded by 1, so DCT gives J_R → ∫ ψ.
 - Rudin, *Fourier Analysis on Groups*, Theorem 1.4.3
 - Folland, *A Course in Abstract Harmonic Analysis*, §4.2, Lemma 4.8
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Filter Topology BigOperators
 open scoped Real FourierTransform InnerProductSpace

@@ -3,8 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
-import Mathlib.Topology.Compactness.LocallyFinite
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
 
 /-!
 # Locally finite triangle complexes
@@ -25,6 +26,8 @@ Hausdorff space, local finiteness makes the face type finite; the no-junk-vertic
 makes the vertex type finite, and finite closed pasting produces the required homeomorphism from
 the canonical barycentric realization.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -1456,11 +1459,13 @@ theorem locallyFinite_oneSkeleton_cover : LocallyFinite K.edgeCarrier :=
 /-- The canonical interval parameter of a point known to lie on an edge carrier. -/
 noncomputable def edgeParameter (e : K.Edge) (p : S) (hp : p ∈ K.edgeCarrier e) :
     Set.Icc (0 : ℝ) 1 :=
-  Classical.choose (by rw [← K.range_edgePath e] at hp; exact hp)
+  Classical.choose (show ∃ r, K.edgePath e r = p from by
+    rw [← K.range_edgePath e] at hp; exact hp)
 
 theorem edgePath_edgeParameter (e : K.Edge) (p : S) (hp : p ∈ K.edgeCarrier e) :
     K.edgePath e (K.edgeParameter e p hp) = p :=
-  Classical.choose_spec (by rw [← K.range_edgePath e] at hp; exact hp)
+  Classical.choose_spec (show ∃ r, K.edgePath e r = p from by
+    rw [← K.range_edgePath e] at hp; exact hp)
 
 theorem edgeParameter_unique (e : K.Edge) (p : S) (hp : p ∈ K.edgeCarrier e)
     (r : Set.Icc (0 : ℝ) 1) (hr : K.edgePath e r = p) :

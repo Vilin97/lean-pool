@@ -3,13 +3,11 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Learner.Core
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
-import LeanPool.FormalLearningTheory.Criterion.Online
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+module
+
+public import LeanPool.FormalLearningTheory.Learner.Core
+public import LeanPool.FormalLearningTheory.Complexity.VCDimension
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Structured Complexity Measures
@@ -18,6 +16,8 @@ Compression schemes, algorithmic stability, multiclass dimensions,
 real-valued dimensions, teaching/eluder dimensions, SQ dimension,
 KL complexity, margin theory, covering numbers.
 -/
+
+@[expose] public section
 
 universe u v
 

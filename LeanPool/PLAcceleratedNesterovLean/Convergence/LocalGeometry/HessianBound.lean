@@ -3,9 +3,11 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step1
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Main
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Hessian coercivity from the Polyak-Łojasiewicz condition
@@ -20,6 +22,8 @@ bounds proved in `MorseBott.HessianPL`. The unique content here:
   3. `hessian_normal_bound_from_PL`: Hessian ≥ μ on normal directions (main export)
   4. `PL_gradient_hessian_bound`: gradient-form export
 -/
+
+@[expose] public section
 
 noncomputable section
 

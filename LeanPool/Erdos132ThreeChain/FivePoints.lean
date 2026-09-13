@@ -3,8 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.Erdos132ThreeChain.Plane
 import LeanPool.Erdos132ThreeChain.FourPoints
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The five-point obstruction
@@ -21,6 +31,8 @@ every three-vector Gram matrix in the plane forces each triple product `⟪u i, 
 
 This is the five-point Gram obstruction in its scale-free form.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

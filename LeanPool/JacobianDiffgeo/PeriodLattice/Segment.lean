@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
-import LeanPool.JacobianDiffgeo.Path.Continuation
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The in-chart segment path (shared helper for §6.3/§6.5)
@@ -17,6 +18,8 @@ since both sites need exactly the same construction (design §6.5's `segmentPath
 
 Main declarations: `RS.segmentPath`, `RS.pathIntegral_segmentPath`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Metric unitInterval

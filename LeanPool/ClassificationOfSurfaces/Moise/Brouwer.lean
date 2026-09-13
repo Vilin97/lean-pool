@@ -3,17 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
-import LeanPool.ClassificationOfSurfaces.Topology.InvarianceOfDomain
-import Mathlib.Analysis.InnerProductSpace.Continuous
-import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
 import Mathlib.Geometry.Euclidean.Sphere.Basic
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Brouwer's fixed-point theorem for the plane disk
@@ -27,6 +25,8 @@ root of the resulting quadratic equation gives this intersection explicitly.  On
 sphere that root is `1`, so the construction would be a retraction of the disk onto its boundary,
 contradicting `no_retraction_planeClosedUnitBall`.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

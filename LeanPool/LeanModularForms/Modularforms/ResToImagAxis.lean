@@ -6,11 +6,12 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Geometry.Manifold.Notation
-public import Mathlib.NumberTheory.ModularForms.QExpansion
 
-public import LeanPool.LeanModularForms.Modularforms.AtImInfty
-public import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.ModularForms.Basic
+import LeanPool.LeanModularForms.ForMathlib.AtImInfty
+import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+import Mathlib.NumberTheory.ModularForms.QExpansion
 
 /-! # ResToImagAxis -/
 

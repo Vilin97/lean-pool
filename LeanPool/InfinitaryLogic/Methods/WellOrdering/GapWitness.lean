@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.Constants
-import Mathlib.SetTheory.Ordinal.Enum
-import Mathlib.SetTheory.Cardinal.Aleph
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Constants
+public import Mathlib.SetTheory.Cardinal.Aleph
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 
 /-!
 # Base diagram, preservation predicate, and the gap witness (issue #12, commit 2)
@@ -29,6 +31,8 @@ the uniform insertion lemma) needs the chain to be long enough to contain rank `
 
 `GapWitness.mono` is the downward closure in `α` consumed by the `ω₁` fiber argument (C4).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

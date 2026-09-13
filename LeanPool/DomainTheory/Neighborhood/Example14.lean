@@ -3,8 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Set.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic.FinCases
 
@@ -40,6 +42,8 @@ the first example with **branching** — at the partial elements
 This is a concrete finite computation (`fin_cases`/`simp`); footprint
 `[propext, Classical.choice, Quot.sound]` — same as Examples 1.2/1.3.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Example14
 

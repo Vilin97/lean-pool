@@ -3,13 +3,22 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetData
 import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry0
 import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry1
 import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry2
 import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry3
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Aggregated central-inversion facts for the finite gadget. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

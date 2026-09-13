@@ -3,7 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReductionCore
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReductionCore
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Marked finite cyclic word reduction
@@ -12,6 +18,8 @@ This file completes the recursive reduction developed in
 `FiniteCyclicWordReductionCore`, carrying the marked normalization state through terminal block
 normalization and the connected-presentation result.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -3134,7 +3142,8 @@ private theorem not_mem_inside_and_outside_of_count_eq_two {n : ℕ}
     have hpositive : 0 < outside.count edge := List.count_pos_iff.mpr hmem
     omega
 
-private structure BoundaryBlockCommuteConditions {n : ℕ}
+/-- Disjointness conditions needed to commute a boundary block past a cancellable pair. -/
+structure BoundaryBlockCommuteConditions {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier hole : Fin (n + 1))
@@ -3146,7 +3155,7 @@ private structure BoundaryBlockCommuteConditions {n : ℕ}
   carrier_not_mem_outside :
     carrier ∉ (ReductionToken.expand pair.tailTokens).map edgeOfDart
 
-private theorem boundaryBlockCommuteConditions_of_valid {n : ℕ}
+theorem boundaryBlockCommuteConditions_of_valid {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier hole : Fin (n + 1))
@@ -3220,7 +3229,7 @@ noncomputable def toBoundaryBlockCommuteOfValid {n : ℕ}
     conditions.carrier_not_mem_outside
 
 @[simp]
-private theorem toBoundaryBlockCommuteOfValid_insideTokens {n : ℕ}
+theorem toBoundaryBlockCommuteOfValid_insideTokens {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier hole : Fin (n + 1)) (carrierNegative holeNegative : Bool)
@@ -3233,7 +3242,7 @@ private theorem toBoundaryBlockCommuteOfValid_insideTokens {n : ℕ}
       hbetween valid).insideTokens = insideTokens := rfl
 
 @[simp]
-private theorem toBoundaryBlockCommuteOfValid_outsideTokens {n : ℕ}
+theorem toBoundaryBlockCommuteOfValid_outsideTokens {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier hole : Fin (n + 1)) (carrierNegative holeNegative : Bool)
@@ -3290,7 +3299,8 @@ def toCrosscapBlockCommute {n : ℕ}
   outer_not_mem_inside := houterInside
   outer_not_mem_outside := houterOutside
 
-private structure CrosscapBlockCommuteConditions {n : ℕ}
+/-- Disjointness conditions needed to commute a crosscap block past a cancellable pair. -/
+structure CrosscapBlockCommuteConditions {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier : Fin (n + 1))
@@ -3305,7 +3315,7 @@ private structure CrosscapBlockCommuteConditions {n : ℕ}
   outer_not_mem_outside :
     pair.edge ∉ (ReductionToken.expand pair.tailTokens).map edgeOfDart
 
-private theorem crosscapBlockCommuteConditions_of_valid {n : ℕ}
+theorem crosscapBlockCommuteConditions_of_valid {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier : Fin (n + 1)) (carrierNegative : Bool)
@@ -3392,7 +3402,7 @@ noncomputable def toCrosscapBlockCommuteOfValid {n : ℕ}
     conditions.outer_not_mem_outside
 
 @[simp]
-private theorem toCrosscapBlockCommuteOfValid_insideTokens {n : ℕ}
+theorem toCrosscapBlockCommuteOfValid_insideTokens {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier : Fin (n + 1)) (carrierNegative : Bool)
@@ -3404,7 +3414,7 @@ private theorem toCrosscapBlockCommuteOfValid_insideTokens {n : ℕ}
       ).insideTokens = insideTokens := rfl
 
 @[simp]
-private theorem toCrosscapBlockCommuteOfValid_outsideTokens {n : ℕ}
+theorem toCrosscapBlockCommuteOfValid_outsideTokens {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (carrier : Fin (n + 1)) (carrierNegative : Bool)
@@ -3472,7 +3482,8 @@ def toHandleBlockCommute {n : ℕ}
   outer_not_mem_inside := houterInside
   outer_not_mem_outside := houterOutside
 
-private structure HandleBlockCommuteConditions {n : ℕ}
+/-- Disjointness conditions needed to commute a handle block past a cancellable pair. -/
+structure HandleBlockCommuteConditions {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (first second : Fin (n + 1))
@@ -3487,7 +3498,7 @@ private structure HandleBlockCommuteConditions {n : ℕ}
   outer_not_mem_inside : pair.edge ∉ (ReductionToken.expand insideTokens).map edgeOfDart
   outer_not_mem_outside : pair.edge ∉ (ReductionToken.expand pair.tailTokens).map edgeOfDart
 
-private theorem handleBlockCommuteConditions_of_valid {n : ℕ}
+theorem handleBlockCommuteConditions_of_valid {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (first second : Fin (n + 1))
@@ -3596,7 +3607,7 @@ noncomputable def toHandleBlockCommuteOfValid {n : ℕ}
     conditions.outer_not_mem_outside
 
 @[simp]
-private theorem toHandleBlockCommuteOfValid_insideTokens {n : ℕ}
+theorem toHandleBlockCommuteOfValid_insideTokens {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (first second : Fin (n + 1))
@@ -3607,7 +3618,7 @@ private theorem toHandleBlockCommuteOfValid_insideTokens {n : ℕ}
       insideTokens := rfl
 
 @[simp]
-private theorem toHandleBlockCommuteOfValid_outsideTokens {n : ℕ}
+theorem toHandleBlockCommuteOfValid_outsideTokens {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (first second : Fin (n + 1))
@@ -6177,7 +6188,8 @@ private theorem shortenBoundaryPair_targetPair_betweenTokens {n : ℕ}
           loweredInside := by
   rfl
 
-private noncomputable def shortenCompletedBlock {n : ℕ}
+/-- Shorten a residual pair by commuting its leading completed block. -/
+noncomputable def shortenCompletedBlock {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (state : MarkedExecutionState tokens)
@@ -6195,7 +6207,8 @@ private noncomputable def shortenCompletedBlock {n : ℕ}
   | handle first second =>
       exact pair.shortenHandleBlock state protectedNonempty first second insideTokens hbetween
 
-private noncomputable def shortenBoundaryThenCompletedBlock {n : ℕ}
+/-- Shorten a residual pair past a boundary followed by a completed block. -/
+noncomputable def shortenBoundaryThenCompletedBlock {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
     (state : MarkedExecutionState tokens)
@@ -6522,14 +6535,16 @@ private theorem resolveBoundary_rawBoundaryCount_eq_tail {n : ℕ}
       ReductionToken.rawBoundaryCount pair.tailTokens :=
   resolution_rawBoundaryCount_eq_tail (pair.resolveBoundary state hole holeNegative hbetween)
 
-private inductive CertifiedResolutionStep {n : ℕ}
+/-- A completed resolution or a certified shortening that permits another recursive step. -/
+inductive CertifiedResolutionStep {n : ℕ}
     {tokens : List (ReductionToken n)}
     (pair : MarkedResidualCancellablePair tokens)
     (state : MarkedExecutionState tokens) : Type
   | resolved (resolution : MarkedResidualPairResolution pair state)
   | shortened (shortening : MarkedResidualPairShortening pair state)
 
-private noncomputable def nextResolutionStep {n : ℕ}
+/-- Choose the next certified step in resolving a marked residual pair. -/
+noncomputable def nextResolutionStep {n : ℕ}
     {tokens : List (ReductionToken n)}
     (pair : MarkedResidualCancellablePair tokens)
     (state : MarkedExecutionState tokens)
@@ -6592,7 +6607,8 @@ private theorem nextResolutionStep_shortening_decreases {n : ℕ}
   | resolved => trivial
   | shortened shortening => exact shortening.betweenLengthLt
 
-private def finishShorteningResolution {n : ℕ}
+/-- Transport a resolution back across its preceding shortening step. -/
+def finishShorteningResolution {n : ℕ}
     {tokens : List (ReductionToken n)}
     {pair : MarkedResidualCancellablePair tokens}
     {state : MarkedExecutionState tokens}

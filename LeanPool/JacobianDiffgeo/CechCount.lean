@@ -3,11 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CechCount.Mul
-import LeanPool.JacobianDiffgeo.CechCount.Surjective
-import LeanPool.JacobianDiffgeo.CechCount.Count
-import LeanPool.JacobianDiffgeo.CechCount.Final
+public import LeanPool.JacobianDiffgeo.CechCount.Mul
+public import LeanPool.JacobianDiffgeo.CechCount.Surjective
+public import LeanPool.JacobianDiffgeo.CechCount.Count
+public import LeanPool.JacobianDiffgeo.CechCount.Final
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # cechcount: the final gate — `dim H¹(𝒪_X) ≤ genus X` (namespace `RS` / `RS.Cech`)
@@ -38,3 +42,5 @@ executed directly on the project's Čech colimit `RS.Cech.H1` (Hodge-free, duali
   `RS.finrank_int_periodSubgroup_final` (`ℤ`-rank `2g`), and
   **`Jacobian.ofCurve_inj`** (the challenge's `ofCurve_inj`, hypothesis-free).
 -/
+
+@[expose] public section

@@ -6,11 +6,17 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Normed.Ring.Lemmas
-public import Mathlib.Data.Int.Star
-public import Mathlib.NumberTheory.TsumDivisorsAntidiagonal
-public import Mathlib.Tactic.Common
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Algebra.Ring.Int.Defs
+public import Mathlib.Data.Fin.VecNotation
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.FinCases
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-! # Equivs -/
 
@@ -20,7 +26,7 @@ public import Mathlib.Tactic.Common
 
 
 open TopologicalSpace Set
-  Metric Filter Function Complex
+  Metric Filter Function
 
 
 

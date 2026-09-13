@@ -3,10 +3,19 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import LeanPool.Polylean.UnitConjecture.TorsionFree
-import LeanPool.Polylean.UnitConjecture.GroupRing
-import LeanPool.Polylean.UnitConjecture.GardamTheorem
+public import LeanPool.Polylean.UnitConjecture.TorsionFree
+public import LeanPool.Polylean.UnitConjecture.GroupRing
+public import LeanPool.Polylean.UnitConjecture.GardamTheorem
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Polylean Unit Conjecture infrastructure
@@ -62,3 +71,5 @@ checking equality on a basis for finitely generated abelian groups.
   can be defined by giving functions on a basis, and show that we have decidable equality for
   homomorphisms on finitely generated free abelian groups.
 -/
+
+@[expose] public section

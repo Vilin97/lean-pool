@@ -3,10 +3,16 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Basic
-import Mathlib.Data.Fin.VecNotation
+module
+
+public import LeanPool.Erdos132ConvexK3.Basic
+public import Mathlib.Data.Fin.VecNotation
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exact rational regression witnesses
@@ -15,6 +21,8 @@ Kernel-reduced checks for the three configurations used during the convex
 `k = 3` campaign.  Keeping them at the basic layer lets global counterexample
 regressions use them without importing the closure stack.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3.Witnesses
 

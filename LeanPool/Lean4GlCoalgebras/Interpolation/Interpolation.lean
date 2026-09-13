@@ -3,13 +3,23 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
 import LeanPool.Lean4GlCoalgebras.Interpolation.PartialInterpolation
+import LeanPool.Lean4GlCoalgebras.Split.Completeness
+import LeanPool.Lean4GlCoalgebras.Split.Soundness
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! ## Interpolation
 
 We use everything we have proven so far to show that GL has interpolation!
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

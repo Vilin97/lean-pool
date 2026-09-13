@@ -3,9 +3,15 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.IsComputable
-import Mathlib.Data.Real.Sign
-import Mathlib.Data.Real.ConjExponents
+module
+
+public import LeanPool.ComputableReal.IsComputable
+public import Mathlib.Data.Real.Sign
+public import Mathlib.Data.Real.ConjExponents
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # `IsComputable` instances for basic real operations
@@ -15,6 +21,8 @@ This file provides `IsComputable` instances for scientific literals, `dite`/`ite
 under the basic operations on real numbers. The instances that branch on a comparison
 (`Real.sign`, `max`, `min`, `abs`) inherit its classical sign test and are `noncomputable`.
 -/
+
+@[expose] public section
 
 namespace IsComputable
 
@@ -50,11 +58,11 @@ noncomputable instance instComputableSign (x : ℝ) [hx : IsComputable x] : IsCo
 --with this implementation.
 noncomputable instance instComputableMax (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (max x y) :=
-  liftEq (x := ite (x ≤ y) ..) (by rw [max_def]; congr) inferInstance
+  liftEq (x := ite (x ≤ y) y x) (by rw [max_def]; congr) inferInstance
 
 noncomputable instance instComputableMin (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (min x y) :=
-  liftEq (x := ite (x ≤ y) ..) (by rw [min_def]; congr) inferInstance
+  liftEq (x := ite (x ≤ y) x y) (by rw [min_def]; congr) inferInstance
 
 --This ends up calling the same sequence twice (which leads to an exponential
 --slowdown when many nested `abs` are present); would be good to write one that

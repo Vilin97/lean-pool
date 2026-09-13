@@ -7,12 +7,17 @@ Authors: Utensil Song
 
 Concrete SL₃ orbit witnesses for the finite polynomial charts. Paper: §4.
 -/
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
+public import LeanPool.ConnesRigidity.Construction.PaperActions
 import LeanPool.ConnesRigidity.Construction.PaperActionInstances
-import LeanPool.ConnesRigidity.Paper.Section4.FiniteCharts
 
 /-!
 The chart orbits component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperChartOrbits

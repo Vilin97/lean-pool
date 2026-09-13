@@ -7,6 +7,9 @@ module
 
 public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredReflection
 public import LeanPool.Odlyzko.CompletedZeta.ClassThetaIntegral
+public import LeanPool.Odlyzko.CompletedZeta.ClassThetaRadial
+import LeanPool.Odlyzko.CompletedZeta.ShapeThetaPeriodicity
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

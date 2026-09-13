@@ -3,11 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian`
@@ -26,6 +26,8 @@ measure on the chart target, restricted to suitable neighborhoods.
   on the chart ball, the pushforward of `riemannianVolumeMeasure` is dominated by `μH[dim]` on `E`
   with an explicit constant.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

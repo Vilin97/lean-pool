@@ -3,8 +3,10 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.IsDiag
 
 /-!
@@ -12,6 +14,8 @@ import Mathlib.LinearAlgebra.Matrix.IsDiag
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.MatrixCenterEquiv`.
 -/
+
+@[expose] public section
 
 local notation "M[" ι "," R "]" => Matrix ι ι R
 

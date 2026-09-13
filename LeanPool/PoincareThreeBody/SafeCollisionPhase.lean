@@ -3,9 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.AlignedAverageBlowup
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+public import LeanPool.PoincareThreeBody.ResonantCollisionBoundary
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # A phase avoiding every boundary collision
@@ -13,6 +16,8 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 Shifting the aligned orientation by `π/q` puts it halfway between the possible collision phases.
 The exclusion is ultimately the parity contradiction `1 + 2ql = 2pk`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

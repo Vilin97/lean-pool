@@ -6,20 +6,17 @@ Authors: OpenAI, Dean Cureton
 
 module
 
-public import Mathlib.Algebra.MvPolynomial.PDeriv
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Data.Fintype.CardEmbedding
-public import Mathlib.Data.Nat.BitIndices
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Algebra
-public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
 public import Mathlib.LinearAlgebra.Matrix.MvPolynomial
 public import Mathlib.LinearAlgebra.Matrix.Permanent
 import Mathlib.LinearAlgebra.Vandermonde
-import Mathlib.Logic.Equiv.Embedding
 import Mathlib.RingTheory.AlgebraicIndependent.AlgebraicClosure
-public import Mathlib.RingTheory.AlgebraicIndependent.Basic
 import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
 public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Algebra.MvPolynomial.PDeriv
+import Mathlib.Data.Nat.BitIndices
 
 /-!
 # Quartic-over-logarithmic lower bound for rational permanent formulas

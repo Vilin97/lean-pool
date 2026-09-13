@@ -3,7 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
+import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Radó crossing weld and chart induction
@@ -11,6 +18,8 @@ import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
 This file completes the chart-induction framework developed in `ChartInductionCore`. It constructs
 the crossing weld, packages the one-chart induction step, and assembles the final triangulation.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 
@@ -914,34 +923,63 @@ private theorem MixedLocalFanData.localMixedFaceMap_eq_iff_of_local
       rw [extendFaceCoordinates_of_notMem _ _ hvt,
         extendFaceCoordinates_of_notMem _ _ hvu]
 
+/-- The map laws shared by the construction and the full compatibility certificate. -/
+private structure MixedMapCertificate (M : MixedLocalFanData) where
+  mixedOldFaceVertices_card : ∀ f : M.MixedOldFace, (M.mixedOldFaceVertices f).card = 3
+  continuous_mixedOldFaceMap : ∀ f : M.MixedOldFace, Continuous (M.mixedOldFaceMap f)
+  mixedOldFaceMap_val : ∀ (f : M.MixedOldFace)
+      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}),
+    (M.mixedOldFaceMap f x).1 = fun k ↦ ∑ v : M.OldVertex,
+      extendFaceCoordinates (M.mixedOldFaceVertices f) x v * v.1.1 k
+  localMixedFaceMap_eq_iff : ∀ {t u : M.localComplex.Face}
+      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}},
+    M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inl u) y ↔
+      extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
+        extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl u)) y
+  fanMixedFaceMap_eq_iff : ∀ {f g : M.OutsideFanFace}
+      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
+      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr g)}},
+    M.mixedOldFaceMap (Sum.inr f) x = M.mixedOldFaceMap (Sum.inr g) y ↔
+      extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) x =
+        extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr g)) y
+  mixedOldFaceMap_simplexLineMap : ∀ (f : M.MixedOldFace)
+      (x y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f})
+      (r : Set.Icc (0 : ℝ) 1),
+    (M.mixedOldFaceMap f (simplexLineMap x y r)).1 =
+      AffineMap.lineMap (M.mixedOldFaceMap f x).1 (M.mixedOldFaceMap f y).1 r.1
+  mixedOldFaceMap_vertex : ∀ (f : M.MixedOldFace)
+      (v : {v // v ∈ M.mixedOldFaceVertices f}),
+    M.mixedOldFaceMap f (stdSimplex.vertex v) = v.1.1
+
+/-- The local interpolation laws shared by construction and compatibility. -/
+private structure MixedLocalInterpolationCertificate (M : MixedLocalFanData) where
+  localUsedVertex_mem_face_of_map_eq : ∀ (t : M.localComplex.Face)
+      (z : stdSimplex ℝ {v // v ∈ t.1}) (u : M.localComplex.UsedVertex),
+    M.localFaceMap t z = M.localVertexPoint u → u.1 ∈ t.1
+  exists_localFacePoint_eq_of_edgeParameter_between : ∀
+      (t : M.localComplex.Face) (e : M.ambient.Edge) (a b : {v // v ∈ t.1})
+      (p : M.ambient.realization),
+    M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩ ∈ M.ambient.faceCarrier e.1 →
+    M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩ ∈ M.ambient.faceCarrier e.1 →
+    p ∈ M.ambient.faceCarrier e.1 →
+    M.marking.edgeParameterValue e
+        (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) ≤
+      M.marking.edgeParameterValue e p →
+    M.marking.edgeParameterValue e p ≤ M.marking.edgeParameterValue e
+        (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
+    M.marking.edgeParameterValue e
+        (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) <
+      M.marking.edgeParameterValue e
+        (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
+    ∃ z : stdSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p
+
 /-- The local facts needed by the chart-independent local/fan compatibility argument. -/
-private structure MixedLocalFanCertificate (M : MixedLocalFanData) where
+private structure MixedLocalFanCertificate (M : MixedLocalFanData)
+    extends MixedMapCertificate M, MixedLocalInterpolationCertificate M where
   parentFace : M.localComplex.Face → M.ambient.Face
   outside_parent_ne : ∀ (f : M.OutsideFanFace) (t : M.localComplex.Face),
     f.1.1 ≠ parentFace t
-  mixedOldFaceVertices_card : ∀ f : M.MixedOldFace,
-    (M.mixedOldFaceVertices f).card = 3
-  continuous_mixedOldFaceMap : ∀ f : M.MixedOldFace,
-    Continuous (M.mixedOldFaceMap f)
-  mixedOldFaceMap_val :
-    ∀ (f : M.MixedOldFace)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}),
-      (M.mixedOldFaceMap f x).1 = fun k ↦ ∑ v : M.OldVertex,
-        extendFaceCoordinates (M.mixedOldFaceVertices f) x v * v.1.1 k
-  localMixedFaceMap_eq_iff :
-    ∀ {t u : M.localComplex.Face}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}},
-      M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inl u) y ↔
-        extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
-          extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl u)) y
-  fanMixedFaceMap_eq_iff :
-    ∀ {f g : M.OutsideFanFace}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr g)}},
-      M.mixedOldFaceMap (Sum.inr f) x = M.mixedOldFaceMap (Sum.inr g) y ↔
-        extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) x =
-          extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr g)) y
   mixedOldFaceMap_eq_of_extendedCoordinates :
     ∀ {f g : M.MixedOldFace}
       {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}}
@@ -984,36 +1022,6 @@ private structure MixedLocalFanCertificate (M : MixedLocalFanData) where
     ∀ (t : M.localComplex.Face) p, p ∈ M.marking.points →
       p ∈ M.ambient.faceCarrier (parentFace t).1 →
         ∃ u : M.localComplex.UsedVertex, M.localVertexPoint u = p
-  localUsedVertex_mem_face_of_map_eq :
-    ∀ (t : M.localComplex.Face) (z : stdSimplex ℝ {v // v ∈ t.1})
-      (u : M.localComplex.UsedVertex),
-      M.localFaceMap t z = M.localVertexPoint u → u.1 ∈ t.1
-  exists_localFacePoint_eq_of_edgeParameter_between :
-    ∀ (t : M.localComplex.Face) (e : M.ambient.Edge) (a b : {v // v ∈ t.1})
-      (p : M.ambient.realization),
-      M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩ ∈ M.ambient.faceCarrier e.1 →
-      M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩ ∈ M.ambient.faceCarrier e.1 →
-      p ∈ M.ambient.faceCarrier e.1 →
-      M.marking.edgeParameterValue e
-          (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) ≤
-        M.marking.edgeParameterValue e p →
-      M.marking.edgeParameterValue e p ≤
-        M.marking.edgeParameterValue e
-          (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
-      M.marking.edgeParameterValue e
-          (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) <
-        M.marking.edgeParameterValue e
-          (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
-      ∃ z : stdSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p
-  mixedOldFaceMap_simplexLineMap :
-    ∀ (f : M.MixedOldFace)
-      (x y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f})
-      (r : Set.Icc (0 : ℝ) 1),
-      (M.mixedOldFaceMap f (simplexLineMap x y r)).1 =
-        AffineMap.lineMap (M.mixedOldFaceMap f x).1 (M.mixedOldFaceMap f y).1 r.1
-  mixedOldFaceMap_vertex :
-    ∀ (f : M.MixedOldFace) (v : {v // v ∈ M.mixedOldFaceVertices f}),
-      M.mixedOldFaceMap f (stdSimplex.vertex v) = v.1.1
   mixedLocalExtended_eq_single_of_map_eq_localVertex :
     ∀ (t : M.localComplex.Face)
       (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)})
@@ -1600,7 +1608,10 @@ private noncomputable def MixedLocalFanCertificate.mixedSubdivision
   have barycentricAffine_apply (z : M.UsedOldVertex → ℝ) :
       barycentricAffine z = fun k ↦ ∑ v : M.UsedOldVertex, z v * v.1.1.1 k := by
     funext k
-    simp [barycentricAffine, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+    -- These evaluation rules avoid testing whether the dependent vertex type is empty.
+    simp only [barycentricAffine, LinearMap.coe_toAffineMap, LinearMap.sum_apply,
+      LinearMap.smulRight_apply, LinearMap.proj_apply, Finset.sum_apply, Pi.smul_apply,
+      smul_eq_mul]
   letI : Fintype K.Vertex := K.compactIntrinsic.vertexFintype
   exact
     { refined := K.compactIntrinsic
@@ -5048,33 +5059,6 @@ private theorem ChartInductionGeometry.canonicalSelectedFace_of_fanInterval_endp
   · exact False.elim (G.marking.edgeIntervalFirst_ne_second e f.1.2.2
       (hp₀Second.trans hp₁Second.symm))
 
-private structure MixedMapCertificate (M : MixedLocalFanData) where
-  mixedOldFaceVertices_card : ∀ f : M.MixedOldFace, (M.mixedOldFaceVertices f).card = 3
-  continuous_mixedOldFaceMap : ∀ f : M.MixedOldFace, Continuous (M.mixedOldFaceMap f)
-  mixedOldFaceMap_val : ∀ (f : M.MixedOldFace)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}),
-    (M.mixedOldFaceMap f x).1 = fun k ↦ ∑ v : M.OldVertex,
-      extendFaceCoordinates (M.mixedOldFaceVertices f) x v * v.1.1 k
-  localMixedFaceMap_eq_iff : ∀ {t u : M.localComplex.Face}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}},
-    M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inl u) y ↔
-      extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
-        extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl u)) y
-  fanMixedFaceMap_eq_iff : ∀ {f g : M.OutsideFanFace}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr g)}},
-    M.mixedOldFaceMap (Sum.inr f) x = M.mixedOldFaceMap (Sum.inr g) y ↔
-      extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) x =
-        extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr g)) y
-  mixedOldFaceMap_simplexLineMap : ∀ (f : M.MixedOldFace)
-      (x y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f})
-      (r : Set.Icc (0 : ℝ) 1),
-    (M.mixedOldFaceMap f (simplexLineMap x y r)).1 =
-      AffineMap.lineMap (M.mixedOldFaceMap f x).1 (M.mixedOldFaceMap f y).1 r.1
-  mixedOldFaceMap_vertex : ∀ (f : M.MixedOldFace)
-      (v : {v // v ∈ M.mixedOldFaceVertices f}),
-    M.mixedOldFaceMap f (stdSimplex.vertex v) = v.1.1
 
 private theorem exists_canonicalMixedMapCertificate
     {S : Type*} [TopologicalSpace S]
@@ -5466,26 +5450,6 @@ private theorem exists_canonicalMixedLocalBarycentricCertificate
         R.refined.edgeParameter_eq_secondCoordinate]
   exact ⟨⟨hmemParent, hmemMarking, hpositive, hparameter⟩⟩
 
-private structure MixedLocalInterpolationCertificate (M : MixedLocalFanData) where
-  localUsedVertex_mem_face_of_map_eq : ∀ (t : M.localComplex.Face)
-      (z : stdSimplex ℝ {v // v ∈ t.1}) (u : M.localComplex.UsedVertex),
-    M.localFaceMap t z = M.localVertexPoint u → u.1 ∈ t.1
-  exists_localFacePoint_eq_of_edgeParameter_between : ∀
-      (t : M.localComplex.Face) (e : M.ambient.Edge) (a b : {v // v ∈ t.1})
-      (p : M.ambient.realization),
-    M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩ ∈ M.ambient.faceCarrier e.1 →
-    M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩ ∈ M.ambient.faceCarrier e.1 →
-    p ∈ M.ambient.faceCarrier e.1 →
-    M.marking.edgeParameterValue e
-        (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) ≤
-      M.marking.edgeParameterValue e p →
-    M.marking.edgeParameterValue e p ≤ M.marking.edgeParameterValue e
-        (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
-    M.marking.edgeParameterValue e
-        (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) <
-      M.marking.edgeParameterValue e
-        (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
-    ∃ z : stdSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p
 
 private theorem exists_canonicalMixedLocalInterpolationCertificate
     {S : Type*} [TopologicalSpace S]
@@ -5577,17 +5541,14 @@ private theorem exists_canonicalMixedLocalFanCertificate
     exists_canonicalMixedLocalInterpolationCertificate P hT
   obtain ⟨mixedCertificate, -⟩ :=
     exists_sealed_copy (X := MixedLocalFanCertificate mixedData)
-    { parentFace := fun t ↦ (localFaceLevelFace t).1
+    { toMixedMapCertificate := mapCertificate
+      toMixedLocalInterpolationCertificate := interpolationCertificate
+      parentFace := fun t ↦ (localFaceLevelFace t).1
       outside_parent_ne := by
         intro f t h
         apply f.2
         rw [h]
         exact (localFaceLevelFace t).2
-      mixedOldFaceVertices_card := mapCertificate.mixedOldFaceVertices_card
-      continuous_mixedOldFaceMap := mapCertificate.continuous_mixedOldFaceMap
-      mixedOldFaceMap_val := mapCertificate.mixedOldFaceMap_val
-      localMixedFaceMap_eq_iff := mapCertificate.localMixedFaceMap_eq_iff
-      fanMixedFaceMap_eq_iff := mapCertificate.fanMixedFaceMap_eq_iff
       mixedOldFaceMap_eq_of_extendedCoordinates :=
         mapCertificate.map_eq_of_extendedCoordinates
       localMixedFaceMap_mem_parent :=
@@ -5613,12 +5574,6 @@ private theorem exists_canonicalMixedLocalFanCertificate
           (localFaceLevelFace t) p hpMark hpFace
         obtain ⟨u, -, hu⟩ := Finset.mem_image.mp hpLocal
         exact ⟨u, hu⟩
-      localUsedVertex_mem_face_of_map_eq :=
-        interpolationCertificate.localUsedVertex_mem_face_of_map_eq
-      exists_localFacePoint_eq_of_edgeParameter_between :=
-        interpolationCertificate.exists_localFacePoint_eq_of_edgeParameter_between
-      mixedOldFaceMap_simplexLineMap := mapCertificate.mixedOldFaceMap_simplexLineMap
-      mixedOldFaceMap_vertex := mapCertificate.mixedOldFaceMap_vertex
       mixedLocalExtended_eq_single_of_map_eq_localVertex :=
         mapCertificate.localExtended_eq_single
       mixedFanExtended_eq_single_of_map_eq_fanVertex :=

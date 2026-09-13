@@ -7,8 +7,6 @@ module
 
 public import Mathlib.Logic.Small.Defs
 import Mathlib.Logic.Small.Set
-import Mathlib.Logic.Relation
-import Mathlib.Order.SetNotation
 
 /-!
 Misere combinatorial games.

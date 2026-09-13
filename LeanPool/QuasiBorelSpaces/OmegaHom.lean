@@ -3,11 +3,11 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
-import LeanPool.QuasiBorelSpaces.Prod
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Basic
+import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # Exponentials for ω-quasi-borel spaces
@@ -16,6 +16,8 @@ This file defines the function space `OmegaQuasiBorelHom X Y` (written
 `X →ω𝒒 Y`) of Scott-continuous QBS morphisms. It proves that this space is
 itself an ωQBS.
 -/
+
+@[expose] public section
 
 open QuasiBorelSpace
 open OmegaQuasiBorelSpace
@@ -29,8 +31,8 @@ structure OmegaQuasiBorelHom
     [OmegaQuasiBorelSpace X] [OmegaQuasiBorelSpace Y] where
   /-- The underlying function of an ω-quasi-borel morphism. -/
   toFun : X → Y
-  private isHom' : IsHom toFun := by fun_prop
-  private ωScottContinuous' : ωScottContinuous toFun := by fun_prop
+  isHom' : IsHom toFun := by fun_prop
+  ωScottContinuous' : ωScottContinuous toFun := by fun_prop
 
 @[inherit_doc] infixr:25 " →ω𝒒 " => OmegaQuasiBorelHom
 
@@ -105,7 +107,7 @@ def toQuasiBorelHom (f : X →ω𝒒 Y) : X →𝒒 Y where
   toFun := f
 
 /-- The underlying pointwise function as an order homomorphism. -/
-private def coeOrderHom : (X →ω𝒒 Y) →o (X → Y) where
+def coeOrderHom : (X →ω𝒒 Y) →o (X → Y) where
   toFun f := f
   monotone' _ _ h := h
 

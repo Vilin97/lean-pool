@@ -3,8 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Multi-point PV: Dominated Convergence
@@ -20,6 +26,8 @@ a.e. limit, norm bounds, measurability, and the main convergence theorems.
 * `multipointPV_eq_sum_of_integral_zero` — multi-point PV equals sum of
   single-point PVs when regular integral vanishes
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

@@ -3,17 +3,35 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
+public import LeanPool.BrauerGroupNew.BrauerGroup
+public import LeanPool.BrauerGroupNew.SplittingOfCSA
+public import LeanPool.BrauerGroupNew.Subfield.Defs
+import LeanPool.BrauerGroupNew.DoubleCentralizer
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
 import LeanPool.BrauerGroupNew.MatrixEquivTensor
 import LeanPool.BrauerGroupNew.RelativeBrauer
 import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
 import LeanPool.BrauerGroupNew.Subfield.Subfield
+import LeanPool.BrauerGroupNew.Wedderburn
+import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Central.Matrix
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.Subfield.Splitting
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Splitting`.
 -/
+
+@[expose] public section
 
 universe u
 

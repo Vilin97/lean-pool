@@ -3,9 +3,14 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import LeanPool.DomainTheory.Neighborhood.Exercise318
 import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+import Mathlib.Data.List.Monad
+import Mathlib.Order.BooleanAlgebra.Set
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Example 6.2 (Scott 1981, PRG-19, §6) — `B` and `C` as solutions of domain
@@ -43,6 +48,8 @@ filter maps `toBB` (forward) / `fromBB` (inverse), mirroring
 
 All *data* is choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

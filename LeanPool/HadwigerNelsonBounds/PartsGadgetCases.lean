@@ -3,8 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Routing between independently checked gadget certificates
@@ -14,6 +20,8 @@ This checker verifies that the roots of those certificates cover every
 unblocked color branch.  Certificate soundness remains a theorem of Lean,
 while each small tree is independently reduced by the kernel.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

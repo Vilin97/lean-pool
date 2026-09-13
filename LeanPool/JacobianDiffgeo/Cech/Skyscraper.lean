@@ -3,9 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Window
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Cech.H0
 import LeanPool.JacobianDiffgeo.Cech.Injectivity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The Mittag-Leffler atom and the skyscraper fragment (CC8, D7, proof plan §6.9)
@@ -27,6 +31,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.7).
 (`mlClass_eq_of_realizes`), `exact_windowMap_windowConnect`, `exact_windowConnect_H1Incl` —
 is proved in `SixTerm.lean`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

@@ -3,12 +3,19 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132ConvexK3.Assembly
-import LeanPool.Erdos132ConvexK3.GlobalClosure
-import LeanPool.Erdos132ConvexK3.RegressionWitnesses
-import LeanPool.Erdos132ConvexK3.UseSite
-import LeanPool.Erdos132ConvexK3.Witnesses
+public import LeanPool.Erdos132ConvexK3.Assembly
+public import LeanPool.Erdos132ConvexK3.GlobalClosure
+public import LeanPool.Erdos132ConvexK3.RegressionWitnesses
+public import LeanPool.Erdos132ConvexK3.UseSite
+public import LeanPool.Erdos132ConvexK3.Witnesses
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Convex Three-Distance Degree-Six Theorem and Exceptional-Word Closures
@@ -20,6 +27,8 @@ Main declarations: `LeanPool.Erdos132ConvexK3.convex_top_three_degree_six`
 Tags: discrete-geometry, distance-graphs, erdos-problems, convexity
 MSC: 52C10, 05C12
 -/
+
+@[expose] public section
 
 /-!
 # Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132

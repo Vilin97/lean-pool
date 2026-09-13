@@ -3,8 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import Mathlib.Analysis.Complex.CauchyIntegral
 
 /-!
 # Atom 1: compact-support planar Stokes for `dbar`
@@ -18,6 +23,8 @@ is `≡ 0` there, leaving exactly the `wirtingerDbar`-area identity. The holomor
 corollary (`integral_wirtingerDbar_mul_eq_zero_of_differentiableOn`, Atom 1b) is the "no pole in
 this chart" case residue-theorem needs for every PoU piece that misses every pole.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set
 

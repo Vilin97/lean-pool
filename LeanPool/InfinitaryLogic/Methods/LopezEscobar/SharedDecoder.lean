@@ -3,7 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.CodeClass
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The shared-symbol decoder (issue #10, Unit 5a)
 
@@ -25,6 +31,8 @@ Contents:
 * `realize_sharedToBase` — **the semantic square**: for every graph code `d`, a shared
   sentence holds in the sublanguage reduct of `d` iff its decoding holds in `codeReduct d`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -69,7 +77,8 @@ noncomputable def sharedToBase (T₀ T₁ : (n : ℕ) → Set ((Fin n → Bool) 
     sharedLang L T₀ T₁ →ᴸ L where
   onFunction {_} f := f.1.elim
   onRelation {_} r :=
-    Classical.choose (exists_base_of_mem_relSym (pcSentence_relationsIn_inter T₀ T₁ r.2))
+    Classical.choose (private_decl%
+      (exists_base_of_mem_relSym (pcSentence_relationsIn_inter T₀ T₁ r.2)))
 
 /-- The decoder recovers the shared symbol: its base image is the symbol itself. -/
 private theorem sharedToBase_onRelation_spec

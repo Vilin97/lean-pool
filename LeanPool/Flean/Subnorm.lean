@@ -3,9 +3,14 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import LeanPool.Flean.FloatCfg
+module
+
+public import LeanPool.Flean.FloatCfg
+public import LeanPool.Flean.IntRounding
+public import Mathlib.Data.Int.Log
 import LeanPool.Flean.LogRules
-import LeanPool.Flean.IntRounding
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Qify
 
 /-!
 # Subnormal Floating-Point Representations
@@ -14,6 +19,8 @@ This module defines `SubnormRep`, the sign/mantissa representation of subnormal
 floating-point numbers, its rational interpretation, rounding to subnormals, and
 the validity and error properties of subnormal rounding.
 -/
+
+@[expose] public section
 
 variable {C : FloatCfg}
 

@@ -3,9 +3,18 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.FockSpace
-import LeanPool.VirasoroProject.Sugawara
-import LeanPool.VirasoroProject.VirasoroVerma
+module
+
+public import LeanPool.VirasoroProject.FockSpace
+public import LeanPool.VirasoroProject.Sugawara
+public import LeanPool.VirasoroProject.VirasoroVerma
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.Star
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Sugawara construction applied to the charged Fock space
@@ -42,6 +51,8 @@ construction.
 Heisenberg algebra, Fock space, Virasoro algebra, Sugawara construction
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 
@@ -118,7 +129,7 @@ noncomputable def sugawaraRepresentationOfModuleUeaHeisenbergAlgebra
     ModuleOfModuleAlgebra.lsmul 𝕜 V (ιUEA 𝕜 (jgen 𝕜 k))
   sugawaraRepresentation (heiOper := heiOper)
     (fun v ↦ htrunc ((ModuleOfModuleAlgebra.unMkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) v))
-    (commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
+    (by exact commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
 
 open HeisenbergAlgebra Filter in
 lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_lgen_apply
@@ -133,7 +144,7 @@ lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_lgen_apply
                       • ModuleOfModuleAlgebra.unMkAddHom 𝕜 _ V v))) := by
   apply sugawaraRepresentation_lgen_apply _
     ((fun v ↦ htrunc ((ModuleOfModuleAlgebra.unMkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) v)))
-    (commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
+    (by exact commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
 
 open HeisenbergAlgebra Filter in
 lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_cgen_apply
@@ -143,7 +154,7 @@ lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_cgen_apply
     sugawaraRepresentationOfModuleUeaHeisenbergAlgebra 𝕜 htrunc hc (.cgen 𝕜) v = v := by
   have key := sugawaraRepresentation_cgen _
     ((fun v ↦ htrunc ((ModuleOfModuleAlgebra.unMkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) v)))
-    (commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
+    (by exact commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
   simpa [sugawaraRepresentationOfModuleUeaHeisenbergAlgebra] using congr_arg (fun A ↦ A v) key
 
 end auxiliary

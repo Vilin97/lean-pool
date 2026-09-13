@@ -3,12 +3,19 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.NSubring
+module
+
+public import LeanPool.AndersonConjecture.Jensen.NSubring
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Polynomial.Cardinal
-import Mathlib.Order.BourbakiWitt
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
 import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
 import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Transcendental Extension of N-subrings
@@ -19,6 +26,8 @@ ideal yields a new N-subring.
 
 Loepp, "Constructing local generic formal fibers", 1997, Lemma 11.
 -/
+
+@[expose] public section
 
 
 noncomputable section

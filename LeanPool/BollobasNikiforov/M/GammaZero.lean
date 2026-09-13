@@ -3,12 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
+public import LeanPool.BollobasNikiforov.M.Schur
 import LeanPool.BollobasNikiforov.CP.Closed
-import LeanPool.BollobasNikiforov.M.Schur
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Topology.Order.Basic
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # The `γ = 0` perturbation
@@ -22,6 +21,8 @@ coming from edges to `y*`, and therefore converges as `ε ↓ 0` (SC20).
 Closedness of the CP cone upgrades SC18 on the enlargements to CP of the
 original `M`, including the case `p = 0` (SC21).
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

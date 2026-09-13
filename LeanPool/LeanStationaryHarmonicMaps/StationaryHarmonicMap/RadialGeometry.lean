@@ -3,12 +3,17 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
 import Mathlib.Analysis.InnerProductSpace.Calculus
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Radial Geometry
 -/
+
+@[expose] public section
 
 noncomputable section
 

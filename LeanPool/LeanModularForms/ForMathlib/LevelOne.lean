@@ -3,13 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Analysis.Complex.AbsMax
-import Mathlib.NumberTheory.Modular
-import LeanPool.LeanModularForms.ForMathlib.QExpansion
-import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
-import LeanPool.LeanModularForms.ForMathlib.Identities
-import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
+public import Mathlib.Analysis.Complex.AbsMax
+public import Mathlib.NumberTheory.Modular
+public import LeanPool.LeanModularForms.ForMathlib.QExpansion
+public import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
+public import LeanPool.LeanModularForms.ForMathlib.Identities
+public import Mathlib.NumberTheory.ModularForms.LevelOne.Basic
+
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Level one modular forms
 
@@ -19,8 +25,4 @@ TODO: Add finite-dimensionality of these spaces of modular forms.
 
 -/
 
-open UpperHalfPlane ModularGroup SlashInvariantForm ModularForm Complex
-  CongruenceSubgroup Real Function SlashInvariantFormClass ModularFormClass Periodic
-
-local notation "𝕢" => qParam
-
+@[expose] public section

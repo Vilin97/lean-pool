@@ -3,7 +3,10 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryMap
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryMap
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Main monotonicity theorem
@@ -12,6 +15,8 @@ This file exports the witness-style public theorem.  All radial, coarea,
 cutoff, and boundary routes are internal scaffolding hidden behind the
 stationary Sobolev map package.
 -/
+
+@[expose] public section
 
 noncomputable section
 

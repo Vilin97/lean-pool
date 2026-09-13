@@ -7,6 +7,7 @@ module
 
 public import LeanPool.MisereGames.Form.Misere.Outcome
 public import LeanPool.MisereGames.GameForm
+import Mathlib.Tactic.Bound.Init
 
 /-!
 Misere combinatorial games.

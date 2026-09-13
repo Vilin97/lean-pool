@@ -3,8 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurve
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurve
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+import Mathlib.Analysis.Calculus.Deriv.ZPow
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.DivergenceTheorem
 
 /-!
 # Sector Curve PV Lemmas
@@ -20,6 +31,8 @@ model sector-curve defined in `SectorCurve.lean`.
 * `pv_sector_negative_power` -- Equation (3.4): PV of `z^{-n}` is 0 under angle condition
 * `generalizedWindingNumber_sectorCurve` -- winding number equals `alpha / (2 * pi)`
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

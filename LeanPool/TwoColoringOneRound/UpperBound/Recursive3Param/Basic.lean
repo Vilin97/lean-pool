@@ -3,10 +3,10 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.Definitions
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+public import LeanPool.TwoColoringOneRound.Definitions
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 The “three-parameter recursive cutoff” construction (a radius-1 factor-of-i.i.d. triple rule).
@@ -15,6 +15,8 @@ This file defines the explicit rule (as a `ClassicalAlgorithm`) for a convenient
 parameters `(t, t1, t2)`. Later files will prove the quantitative bound
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

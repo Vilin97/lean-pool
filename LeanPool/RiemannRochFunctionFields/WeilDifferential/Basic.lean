@@ -6,8 +6,9 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.Genus.Basic
-public import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
-public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import LeanPool.RiemannRochFunctionFields.AdeleSpace.FilterChain
+import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Weil differentials and the duality theorem

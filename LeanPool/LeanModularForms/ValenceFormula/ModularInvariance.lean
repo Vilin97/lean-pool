@@ -3,10 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.Definitions
-import Mathlib.Analysis.Complex.Convex
-import Mathlib.NumberTheory.ModularForms.Identities
+public import LeanPool.LeanModularForms.ValenceFormula.Definitions
 
 /-!
 # Modular Invariance of Vanishing Order
@@ -19,6 +18,8 @@ We also provide:
 * `fdBox` and `modularForm_finitely_many_zeros_in_fdBox` — finiteness of zeros
 * Cusp nonvanishing (`exists_height_cusp_nonvanishing`)
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular

@@ -5,9 +5,14 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.ClassRepresentatives
-public import LeanPool.Odlyzko.CompletedZeta.FractionalShapeTheta
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+
 public import LeanPool.Odlyzko.Theta.TraceDualIdeal
+public import Mathlib.RingTheory.ClassGroup.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

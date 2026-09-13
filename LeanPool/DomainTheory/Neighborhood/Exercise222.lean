@@ -3,11 +3,15 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Lattice
-import Mathlib.Order.Directed
+public import Mathlib.Order.Directed
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Set.BooleanAlgebra
+public import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # Exercise 2.22 (Scott 1981, PRG-19) — the abstract representation theorem
@@ -48,6 +52,8 @@ of `C.Nonempty`, finite-set induction). This is documented and expected per the
 exercise's framing
 ("for set theorists").
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise222
 

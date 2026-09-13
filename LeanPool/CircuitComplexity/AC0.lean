@@ -3,8 +3,10 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.AC0.Defs
-import LeanPool.CircuitComplexity.XOR
+module
+
+public import LeanPool.CircuitComplexity.AC0.Defs
+public import LeanPool.CircuitComplexity.XOR
 
 /-! # AC0 — The AC0 Complexity Class
 
@@ -15,6 +17,8 @@ This module re-exports the AC0 definitions and main results.
 * `InAC0` — predicate: the family is in AC0 (constant depth, polynomial size,
   unbounded fan-in AND/OR)
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

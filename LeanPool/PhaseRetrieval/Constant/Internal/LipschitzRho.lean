@@ -16,9 +16,15 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   - `rho_pointwise_lower` (Corollary 2.4b)
   - `rho_le_norm`         (Corollary 2.5)
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # LipschitzRho -/
+
+@[expose] public section
 
 
 open Complex Real

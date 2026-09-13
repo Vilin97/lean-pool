@@ -3,12 +3,13 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.KeplerOrbit
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
-import Mathlib.Analysis.Normed.Operator.Banach
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.Tactic.FieldSimp
+public import LeanPool.PoincareThreeBody.KeplerOrbit
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Joint analyticity of Kepler's equation
@@ -18,6 +19,8 @@ anomaly for fixed eccentricity.  Poincaré's coefficient argument also needs ana
 on eccentricity.  We obtain it by applying the analytic inverse-function theorem to the triangular
 map `(e, E) ↦ (e, E - e sin E)`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

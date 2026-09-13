@@ -3,9 +3,18 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
@@ -13,9 +22,11 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
+@[expose] public section
+
 
 namespace GaleStewartGame.BorelDet.Zero
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}

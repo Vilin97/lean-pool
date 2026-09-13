@@ -3,17 +3,23 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Order.Filter.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Group.Pi.Basic
+public import Mathlib.Order.Filter.Defs
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Order.AbsoluteValue.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Order.Filter.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Order.Filter.Basic
 -/
 
-open Finset Real Filter
+@[expose] public section
+
+open Finset Filter
 open scoped BigOperators
 
 namespace Filter

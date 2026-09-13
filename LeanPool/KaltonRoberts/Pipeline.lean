@@ -13,12 +13,18 @@ and expander recombination to the final distance bound.
 
 **Reference**: Sections 3 and 5 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.Numerical
-import LeanPool.KaltonRoberts.Collections
-import LeanPool.KaltonRoberts.Lemmas
+module
+
+public import LeanPool.KaltonRoberts.Collections
 import LeanPool.KaltonRoberts.Intersections
+import LeanPool.KaltonRoberts.Numerical
 import LeanPool.KaltonRoberts.Pippenger
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pipeline from intersections to the final bound
@@ -26,6 +32,8 @@ import LeanPool.KaltonRoberts.Pippenger
 Interfaces connecting weighted collections through mixed intersections and
 expander recombination to the final distance bound.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

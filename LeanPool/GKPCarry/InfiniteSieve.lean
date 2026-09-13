@@ -3,10 +3,20 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import LeanPool.GKPCarry.UnitCarryCounting
+public import LeanPool.GKPCarry.PowerResidues
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import LeanPool.GKPCarry.GKPCharacterization
 import LeanPool.GKPCarry.InfiniteSlices
-import LeanPool.GKPCarry.UnitCarryCounting
 import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Data.Fintype.Card
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # An exact all-depth modular sieve for GKP carries
@@ -21,6 +31,8 @@ This is an exact infinite family of certified cases.  The uncertified classes
 at each finite depth may acquire carries later; this theorem neither decides
 them nor proves the universal GKP conjecture.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

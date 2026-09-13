@@ -8,14 +8,14 @@ Authors: Rado Kirov
 Blueprint unit: meromorphic-trace. The planar trace atom `traceZk h k w` (trace of `h` along
 `z ↦ z ^ k`), file 4 of the design's 6-file plan.
 -/
-import Mathlib.Analysis.Complex.RemovableSingularity
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.RingTheory.RootsOfUnity.Complex
-import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
-import Mathlib.Algebra.Field.GeomSum
-import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
+module
+
+public import LeanPool.JacobianDiffgeo.MappingDegree.RootCounting
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
-import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.RingTheory.RootsOfUnity.Complex
 
 /-!
 # The planar trace atom `traceZk` (meromorphic-trace, cluster 2)
@@ -45,6 +45,8 @@ manifold content, independent of `ToP1`/`OrderMultiplicity`/`ArgumentPrinciple`.
   `w ^ s' * traceZk r k w` with NO second growth bound), `traceZk_zpow` on the finitely many
   monomials, and residue-calculus's presentation-independent `laurentCoeffAt` characterization.
 -/
+
+@[expose] public section
 
 open Filter Set Topology Metric Function
 

@@ -3,11 +3,18 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.K
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
+public import Mathlib.Order.ConditionallyCompleteLattice.Basic
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Basic -/
+
+@[expose] public section
 
 
 

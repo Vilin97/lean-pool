@@ -3,11 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-import Mathlib.Analysis.Complex.LocallyUniformLimit
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
 import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Forster 13.2: Dolbeault's lemma on an open disk (`Jacobian/Dbar/SolveDisk.lean`)
@@ -20,6 +22,8 @@ sub-balls via `cauchyTransform` of a cutoff of `g` (13.1), then correct each `fâ
 sum of the power series of the (holomorphic) difference `f_{n+1} - fâ‚™`, chosen small enough
 that the corrected sequence converges locally uniformly to a solution on the whole disk.
 -/
+
+@[expose] public section
 
 open MeasureTheory Metric Set Complex Filter Topology
 open scoped Convolution ContDiff NNReal

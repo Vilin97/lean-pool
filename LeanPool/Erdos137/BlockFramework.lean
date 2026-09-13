@@ -3,9 +3,13 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Finiteness
-import LeanPool.Erdos137.Base
+public import LeanPool.Erdos137.Base
+import Mathlib.Algebra.BigOperators.Associated
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: the parametric `g`-block framework (unifying `g = 3` and `g = 5`)
@@ -92,6 +96,8 @@ So: the crude route gives a fully explicit constant at a worse exponent; the smo
 sharper exponent only via the unformalized Mertens reading. The crude `g = 3` instance recovers the
 recorded `not_powerful_of_large` threshold `n > k^6` exactly.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

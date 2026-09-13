@@ -3,22 +3,18 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Probability.ConditionalProbability
-import Mathlib.Probability.Kernel.IonescuTulcea.Traj
-import Mathlib.Probability.Kernel.Defs
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Order.Interval.Finset.Defs
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.Probability.Process.Filtration
-import Mathlib.Logic.Function.Defs
-import Mathlib.Probability.ProbabilityMassFunction.Basic
+module
+
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Probability.Kernel.Composition.Comp
 
 /-!
 # LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 -/
 
-open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
+@[expose] public section
+
+open MeasureTheory MeasureTheory.Measure ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function
 
 namespace ProbabilityTheory

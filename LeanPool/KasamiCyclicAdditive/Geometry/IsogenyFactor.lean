@@ -3,8 +3,14 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
+public import Mathlib.RingTheory.Coprime.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Factoring `1 + π^k` through a prime-to-3 automorphism
@@ -20,6 +26,8 @@ and it is all abstract: this file is a calculation in a `ℤ`-module equipped
 with an endomorphism `π` satisfying `π² = [-2]`.  No field, curve, Frobenius
 map or algebraic closure appears.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.Isogeny
 

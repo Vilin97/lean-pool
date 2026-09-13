@@ -3,9 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.Geometry.Manifold.Riemannian.Basic
-import Mathlib.MeasureTheory.Integral.Lebesgue.Add
+public import Mathlib.Geometry.Manifold.Riemannian.Basic
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz`
@@ -21,6 +21,8 @@ Riemannian `edist` on `M`).
 - `RellichKondrachov.Geometry.Manifold.Riemannian.`
   `lipschitzOnWith_symm_extChartAt_ofRiemannianMetric`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

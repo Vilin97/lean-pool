@@ -3,10 +3,12 @@ Copyright (c) 2026 Ben Cassie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ben Cassie
 -/
+module
 
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import LeanPool.Kuramoto.GradientFlow
 
 /-!
 # Weighted Kuramoto model
@@ -14,6 +16,8 @@ import LeanPool.Kuramoto.GradientFlow
 The weighted Kuramoto potential and vector field, where coupling strengths are given by a
 matrix `W`. For the gradient identity the coupling matrix is assumed symmetric.
 -/
+
+@[expose] public section
 
 open Real Finset
 

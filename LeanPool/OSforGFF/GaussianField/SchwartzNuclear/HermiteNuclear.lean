@@ -3,8 +3,12 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteTensorProduct
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteTensorProduct
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # DyninMityaginSpace Instance for Schwartz Space
@@ -18,6 +22,8 @@ isomorphism `SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq` constructed in
 - `schwartzDyninMityaginSpace`: the `DyninMityaginSpace` instance for Schwartz space
   on any nontrivial finite-dimensional real normed space.
 -/
+
+@[expose] public section
 
 noncomputable section
 

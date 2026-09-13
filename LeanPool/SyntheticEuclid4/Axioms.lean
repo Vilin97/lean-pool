@@ -3,12 +3,18 @@ Copyright (c) 2026 André Hernandez-Espiet, Vladimir Sedlacek. All rights reserv
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Set.Finite.Basic
+module
+
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Finite.Defs
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 Axioms of synthetic geometry
 -/
+
+@[expose] public section
 
 /-! Universes for points lines and circles-/
 universe u

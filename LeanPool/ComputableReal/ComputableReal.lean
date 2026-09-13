@@ -3,7 +3,10 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import LeanPool.ComputableReal.ComputableRSeq
+module
+
+public import LeanPool.ComputableReal.ComputableRSeq
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
 /-!
 # The quotient field of interval-Cauchy sequences
@@ -14,6 +17,8 @@ field, and linear order structures. The ring operations are executable interval
 arithmetic; inversion and the comparison `Decidable` instances go through the
 classical `ComputableℝSeq.sign` and are `noncomputable`.
 -/
+
+@[expose] public section
 
 /-- Computable reals, defined as the quotient of ComputableℝSeq sequences -- sequences with
   Cauchy sequences of lower and upper bounds that converge to the same value -- by the equivalence
@@ -194,7 +199,8 @@ theorem val_nsmul (x : Computableℝ) (n : ℕ) : (n • x).val = n • x.val :=
 
 section safeInv
 
-private def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
+/-- Identify nonzero computable reals with the quotient of their nonzero representatives. -/
+def nzQuotEquiv := Equiv.subtypeQuotientEquivQuotientSubtype
     (fun x : ComputableℝSeq ↦ x.val ≠ 0)
     (fun x : Computableℝ ↦ x ≠ 0)
     (fun _ ↦ ⟨
@@ -208,10 +214,10 @@ private def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
 
 /-- Auxiliary inverse definition that operates on the nonzero Computableℝ values. -/
 noncomputable def safeInv' : { x : Computableℝ // x ≠ 0 } → { x : Computableℝ // x ≠ 0 } :=
-  fun v ↦ nz_quot_equiv.invFun <| Quotient.map _ fun x y h₁ ↦ by
+  fun v ↦ nzQuotEquiv.invFun <| Quotient.map ComputableℝSeq.invNz fun x y h₁ ↦ by
     change (ComputableℝSeq.invNz x).val.val = (ComputableℝSeq.invNz y).val.val
     rw [ComputableℝSeq.val_invNz x, ComputableℝSeq.val_invNz y, h₁]
-  (nz_quot_equiv.toFun v)
+  (nzQuotEquiv.toFun v)
 
 /-- Inverse of a nonzero Computableℝ, safe (terminating) as long as x is nonzero. -/
 noncomputable irreducible_def safeInv (hnz : x ≠ 0) : Computableℝ := safeInv' ⟨x, hnz⟩
@@ -220,7 +226,7 @@ noncomputable irreducible_def safeInv (hnz : x ≠ 0) : Computableℝ := safeInv
 theorem safeInv_val (hnz : x ≠ 0) : (x.safeInv hnz).val = x.val⁻¹ := by
   let ⟨x',hx'⟩ := Quotient.exists_rep x
   subst hx'
-  have : (nz_quot_equiv { val := ⟦x'⟧, property := hnz : { x : Computableℝ // x ≠ 0 } }) =
+  have : (nzQuotEquiv { val := ⟦x'⟧, property := hnz : { x : Computableℝ // x ≠ 0 } }) =
       ⟦{ val := x', property := (by
         rw [show (0 : Computableℝ) = ⟦0⟧ by rfl] at hnz
         contrapose! hnz
@@ -228,7 +234,7 @@ theorem safeInv_val (hnz : x ≠ 0) : (x.safeInv hnz).val = x.val⁻¹ := by
       )}⟧ := by
     apply Equiv.subtypeQuotientEquivQuotientSubtype_mk
   rw [safeInv, safeInv', val, Equiv.toFun_as_coe, Equiv.invFun_as_coe, Quotient.lift_mk, this,
-    Quotient.map_mk, nz_quot_equiv, Equiv.subtypeQuotientEquivQuotientSubtype_symm_mk,
+    Quotient.map_mk, nzQuotEquiv, Equiv.subtypeQuotientEquivQuotientSubtype_symm_mk,
     Quotient.lift_mk, ComputableℝSeq.val_invNz]
 
 end safeInv

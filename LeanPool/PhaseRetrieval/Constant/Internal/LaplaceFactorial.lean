@@ -18,23 +18,16 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   - `exp_phi_le_factorial` (Theorem 2.9)
   - `monomial_integral_bound` (Corollary 2.10)
 -/
+module
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Stirling
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.Convex.Deriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.NatFactorial
 import Mathlib.Tactic.NormNum.Parity
 
 /-! # LaplaceFactorial -/
+
+@[expose] public section
 
 
 open Real MeasureTheory Set

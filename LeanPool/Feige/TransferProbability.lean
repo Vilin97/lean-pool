@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.Probability.Distributions.Exponential
+module
+
+public import Mathlib.Probability.Distributions.Exponential
 
 /-!
 # Exponential tail formulas used by the transfer identity
@@ -13,6 +15,8 @@ behind the local exponential transfer step.  They are stated for Mathlib's
 rate-one exponential measure.  In particular, the strict and non-strict
 tails agree, since this measure has no atoms.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

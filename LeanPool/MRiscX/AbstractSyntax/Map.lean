@@ -12,6 +12,9 @@ These maps are converted from
           and Hri{\c{t}}cu, C{\u{a}}t{\u{a}}lin and Sj{\"o}berg, Vilhelm and Yorgey, Brent},
   journal={Webpage: http://www. cis. upenn. edu/bcpierce/sf/current/index. html},
 -/
+module
+
+@[expose] public section
 
 /--
 Total map as recursive type with a key type α and value of type β.

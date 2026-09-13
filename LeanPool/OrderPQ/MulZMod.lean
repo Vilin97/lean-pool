@@ -3,13 +3,27 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
-import LeanPool.OrderPQ.PrimeOrder
-import Mathlib.Data.ZMod.Aut
-import Mathlib.RingTheory.ZMod.UnitsCyclic
+module
+
+public import Mathlib.Data.ZMod.Aut
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Group.TypeTags.Finite
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Data.ZMod.Units
+import Mathlib.RingTheory.IntegralDomain
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # LeanPool.OrderPQ.MulZMod
 -/
+
+@[expose] public section
 
 section MulZMod
 

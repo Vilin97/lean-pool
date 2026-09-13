@@ -3,7 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
 import LeanPool.BooleanIsoperimetry.ConwayGuyHeight
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Conway--Guy normalized chamber rigidity
@@ -12,6 +20,8 @@ This file packages the concrete Conway--Guy principal relations and triangular
 corrections as a `FirstCoordinateRecurrence`.  The separate height identity
 supplies the one remaining arithmetic input.
 -/
+
+@[expose] public section
 
 namespace BooleanIsoperimetry.CoherentGap
 

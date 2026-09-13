@@ -3,7 +3,18 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.Defs
+module
+
+public import LeanPool.CompositionAlgebras.Composition.Defs
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Module
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!
@@ -50,6 +61,8 @@ The named results are the four listed above plus their inputs: `cstar_mul_mul`
 
 Substrate for the two Hurwitz theorems. It states neither of them.
 -/
+
+@[expose] public section
 
 namespace CompositionAlgebra
 

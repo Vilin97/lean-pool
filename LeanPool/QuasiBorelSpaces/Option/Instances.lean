@@ -3,16 +3,18 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Data.Option.Basic
-import Mathlib.Order.BoundedOrder.Basic
-import Mathlib.Order.Defs.PartialOrder
+public import Mathlib.Order.BoundedOrder.Basic
+public import Aesop.BuiltinRules
 
 /-!
 # LeanPool.QuasiBorelSpaces.Option.Instances
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Option.Instances`.
 -/
+
+@[expose] public section
 
 
 variable {A : Type*}

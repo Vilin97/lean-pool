@@ -3,8 +3,12 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.BlockFramework
+public import LeanPool.Erdos137.BlockFramework
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: the sextic (`g = 6`) crude block route — sharp threshold `n > k^3`
@@ -38,6 +42,8 @@ squarefree-counting reduction.
 The ONLY hypothesis is `BlockRadLB6` (the `g = 6` instance of `BlockRadLBg`); it is a premise, not
 an `axiom`, so it does not appear in any axiom footprint.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

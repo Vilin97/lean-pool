@@ -3,10 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
-import Mathlib.NumberTheory.ModularForms.Basic
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
+public import Mathlib.NumberTheory.ModularForms.SlashInvariantForms
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Hecke Operators on Modular Forms
@@ -34,6 +36,8 @@ anti-involution preserving `Γ` and fixing every double coset (`GL_pair_onHeckeC
 
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.4, Prop 3.30
 -/
+
+@[expose] public section
 
 open Matrix Matrix.SpecialLinearGroup Subgroup.Commensurable Pointwise
 open HeckeRing DoubleCoset HeckeRing.GLn

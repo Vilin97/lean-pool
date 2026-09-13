@@ -3,8 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
+public import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
 import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # PL fillings of intrinsic polygonal face boundaries
@@ -14,6 +18,8 @@ standard triangular frontier onto a simple polygonal circle.  `IntrinsicFaceExte
 that this map is genuinely PL on one named finite subdivision.  Polygonal Schoenflies now fills
 it by a finite PL homeomorphism, without changing any shared-edge boundary values.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

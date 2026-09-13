@@ -3,7 +3,19 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
+module
+
+public import LeanPool.Clawristotle.Defs
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.Section3
+import LeanPool.Clawristotle.Section3Helpers
+import LeanPool.Clawristotle.Section4
+import LeanPool.Clawristotle.Section5
+import LeanPool.Clawristotle.Section7
 import LeanPool.Clawristotle.VMLInputDerive
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Abstract Theorem 4.2: Steady State Implies Maxwellian
@@ -17,6 +29,8 @@ Note that this formalization assumes a strictly non-relativistic framework where
 velocities $v \in \mathbb{R}^3$ are unbounded. This admits superluminal particles,
 but is the standard mathematical setting for the classical Landau equation.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

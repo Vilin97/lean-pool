@@ -7,8 +7,6 @@ module
 
 public import LeanPool.MisereGames.Form.Birthday
 public import LeanPool.MisereGames.GameForm
-public import LeanPool.MisereGames.Mathlib.NatOrdinal
-public import Mathlib.Data.Set.Defs
 
 /-!
 Misere combinatorial games.

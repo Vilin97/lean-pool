@@ -3,9 +3,18 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Defs
+public import LeanPool.LehmerE10.Defs
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import LeanPool.LehmerE10.Main
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # unimodularity and the reciprocal (Salem-pair) symmetry.
@@ -19,6 +28,8 @@ element as an integer lattice automorphism:
   come in a pair `{μ, 1/μ}`, so the spectral radius `μ` (Lehmer's number) has its inverse
   as a conjugate.  Equivalently, the Coxeter element and its inverse share a charpoly.
 -/
+
+@[expose] public section
 
 open Polynomial Matrix
 

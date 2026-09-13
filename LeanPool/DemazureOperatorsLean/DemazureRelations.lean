@@ -3,14 +3,18 @@ Copyright (c) 2026 Óscar Álvarez Sánchez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Óscar Álvarez Sánchez
 -/
+module
 
-import LeanPool.DemazureOperatorsLean.Demazure
-import LeanPool.DemazureOperatorsLean.DemazureAux
-import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
+public import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.DemazureOperatorsLean.DemazureRelations
 -/
+
+@[expose] public section
 
 noncomputable section
 open MvPolynomial

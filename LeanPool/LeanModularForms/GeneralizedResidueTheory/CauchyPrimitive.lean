@@ -3,10 +3,13 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Analysis.Calculus.MeanValue
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-import Mathlib.Analysis.Complex.HasPrimitives
+import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 
 
@@ -20,6 +23,8 @@ open set S via the segment integral F(z) = ∫₀¹ f(c + t(z-c))·(z-c) dt.
 
 * `holomorphic_convex_primitive` — holomorphic on convex open ⇒ has primitive
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

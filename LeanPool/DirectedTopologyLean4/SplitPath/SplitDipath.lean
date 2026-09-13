@@ -3,11 +3,17 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
+module
+
+public import LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
+public import LeanPool.DirectedTopologyLean4.Dipath
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
 -/
+
+@[expose] public section
 
 /- This file contains definitions for splitting a directed path `γ : Dipath x y` at some point
   `T : I` yielding two different directed paths:

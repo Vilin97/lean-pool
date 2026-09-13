@@ -3,13 +3,22 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
-import LeanPool.MRiscX.AbstractSyntax.MState
-import LeanPool.MRiscX.Semantics.Run
-import LeanPool.MRiscX.Util.BasicTheorems
+module
 
+public import LeanPool.MRiscX.Semantics.Run
+
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Data.Set.Defs
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import LeanPool.MRiscX.Util.BasicTheorems
+import Mathlib.Algebra.Group.Nat.Defs
 import Mathlib.Data.Set.Basic
-import Lean.Elab.Command
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 Basic theorems
@@ -21,6 +30,8 @@ All these lemmata are added to the simp command with
 the `@[simp]`. This can shorten proofs because lean
 can apply these theorems with simp automatically.
 -/
+
+@[expose] public section
 
 
 namespace MState

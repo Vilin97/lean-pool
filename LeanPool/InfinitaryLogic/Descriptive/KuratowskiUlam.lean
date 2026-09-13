@@ -3,9 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.Topology.Baire.BaireMeasurable
-import Mathlib.Topology.Baire.Lemmas
-import Mathlib.Topology.Bases
+module
+
+public import Mathlib.Topology.Baire.BaireMeasurable
 
 /-!
 # Kuratowski–Ulam: meager sections give a meager set
@@ -34,6 +34,8 @@ in the Baire space `X` are non-meager, some such `x₁` lies in `G`. Then
 `H ⊆ {y | (x₁, y) ∈ A} ∪ {y | (x₁, y) ∈ M}` is meager, contradicting that `Y` is a Baire
 space.
 -/
+
+@[expose] public section
 
 open Set Filter Topology TopologicalSpace
 

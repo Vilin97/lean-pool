@@ -3,9 +3,10 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import Mathlib.Data.Finsupp.Defs
-import Mathlib.Data.Set.Countable
+public import Mathlib.Data.Finsupp.Defs
+public import Mathlib.Data.Set.Countable
 
 /-!
 # Countable closure under triangular dependencies
@@ -14,6 +15,8 @@ For a code `c`, `dependency c` is the countable set of basis coordinates occurri
 prepared sequence.  Because code indices are injective, closing a countable set under all codes
 whose indices it contains still takes only countably many new coordinates at each finite stage.
 -/
+
+@[expose] public section
 
 open Set
 

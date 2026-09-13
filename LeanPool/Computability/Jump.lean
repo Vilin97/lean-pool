@@ -3,9 +3,16 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import LeanPool.Computability.Encoding
-import Mathlib.Computability.Reduce
-import Mathlib.Computability.Halting
+module
+
+public import LeanPool.Computability.Encoding
+public import LeanPool.Computability.TuringDegree
+public import Mathlib.Computability.RE
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The Jump Operator
@@ -18,6 +25,8 @@ We identify partial recursive functions with recursively enumerable sets by taki
 if `f : ℕ →. ℕ`, then `dom f : Set ℕ` is `{n | n ∈ f.Dom}`. These are the terms in which the jump
 theorems are stated.
 -/
+
+@[expose] public section
 
 open scoped Computability
 

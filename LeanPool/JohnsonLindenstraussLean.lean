@@ -3,19 +3,20 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
+module
 
-import LeanPool.JohnsonLindenstraussLean.ChiSquared
-import LeanPool.JohnsonLindenstraussLean.EndToEnd
-import LeanPool.JohnsonLindenstraussLean.GaussianTail
-import LeanPool.JohnsonLindenstraussLean.InnerProduct
-import LeanPool.JohnsonLindenstraussLean.Lemma
-import LeanPool.JohnsonLindenstraussLean.NormPreservation
-import LeanPool.JohnsonLindenstraussLean.Projection
-import LeanPool.JohnsonLindenstraussLean.QJL
-import LeanPool.JohnsonLindenstraussLean.QJLDistortion
-import LeanPool.JohnsonLindenstraussLean.Rotation
-import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
-import LeanPool.JohnsonLindenstraussLean.Verify
+public import LeanPool.JohnsonLindenstraussLean.ChiSquared
+public import LeanPool.JohnsonLindenstraussLean.EndToEnd
+public import LeanPool.JohnsonLindenstraussLean.GaussianTail
+public import LeanPool.JohnsonLindenstraussLean.InnerProduct
+public import LeanPool.JohnsonLindenstraussLean.Lemma
+public import LeanPool.JohnsonLindenstraussLean.NormPreservation
+public import LeanPool.JohnsonLindenstraussLean.Projection
+public import LeanPool.JohnsonLindenstraussLean.QJL
+public import LeanPool.JohnsonLindenstraussLean.QJLDistortion
+public import LeanPool.JohnsonLindenstraussLean.Rotation
+public import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+public import LeanPool.JohnsonLindenstraussLean.Verify
 
 /-!
 # The Johnson–Lindenstrauss Lemma and Quantized JL
@@ -27,6 +28,8 @@ Main declarations: `JL.johnson_lindenstrauss`, `JL.johnson_lindenstrauss_pointse
 Tags: dimensionality-reduction, random-projection, johnson-lindenstrauss, gaussian, quantization
 MSC: 68W20, 60G15, 68P05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

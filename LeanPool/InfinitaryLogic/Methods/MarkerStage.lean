@@ -3,13 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+public import Mathlib.SetTheory.Cardinal.Aleph
+import LeanPool.InfinitaryLogic.Combinatorics.FiniteArityErdosRadoInduction
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 import Mathlib.Data.Finset.Sort
 import Mathlib.SetTheory.Cardinal.Regular
-import LeanPool.InfinitaryLogic.Combinatorics.FiniteArityErdosRadoInduction
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-import LeanPool.InfinitaryLogic.Methods.ConstantSupport
-import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
 /-!
 # The Marker stage: finite-fragment support extraction and Erdős–Rado certification
 
@@ -87,6 +88,8 @@ branch/index choice by coloring support tuples inside the certificate), `C7` via
 witness index (enabled by the finite-Henkin-support invariant — see the Layer 5 audit
 note), then the Henkin construction/model-existence adapter decision.
 -/
+
+@[expose] public section
 
 universe u
 

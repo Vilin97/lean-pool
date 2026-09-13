@@ -3,17 +3,18 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
+public import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.SpectralPositivity.Matrix.MetzlerExp
-import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.Analysis.Normed.Algebra.MatrixExponential
-import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.Algebra.Group.Pi.Units
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # M-matrix Inverse Positivity (strict + non-strict)
@@ -49,6 +50,8 @@ This file provides both forms:
   to the 2D mass gap.
 * `graphops-qft` consumes the strict version for resolvent positivity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

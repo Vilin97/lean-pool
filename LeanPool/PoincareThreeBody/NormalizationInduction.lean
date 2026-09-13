@@ -3,8 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.AnalyticMinors
+public import LeanPool.PoincareThreeBody.AnalyticMinors
+public import LeanPool.PoincareThreeBody.AnalyticNormalization
+import LeanPool.PoincareThreeBody.Analytic
+import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Iterated Poincaré normalization
@@ -14,6 +20,8 @@ each step one subtracts a function of the Hamiltonian and divides by the mass.  
 expansions then express the original candidate as a function of the Hamiltonian modulo an
 arbitrarily high power of the mass parameter.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

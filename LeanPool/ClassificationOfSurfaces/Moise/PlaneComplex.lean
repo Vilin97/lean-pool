@@ -3,13 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Analysis.Convex.Topology
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
 import Mathlib.Analysis.Convex.Between
-import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.Normed.Affine.AddTorsor
-import Mathlib.LinearAlgebra.AffineSpace.Independent
-import Mathlib.Topology.LocallyFinite
-import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
 
 /-!
 # Finite simplicial complexes in the plane
@@ -28,6 +27,8 @@ overlap in an open region).
 it is affine on every face of some subdivision.  A generic continuous map is *not* PL on any
 complex with a 2-face, in contrast to the vacuous `IsPLOnSimplexes` this replaces.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -242,7 +243,7 @@ theorem segment_subset_of_midpoint_mem_openSegment
         mul_nonneg hu.1.le (sub_nonneg.mpr hb1)
       exfalso
       norm_num at hparam
-      nlinarith
+      nlinarith only [hleft, hright, hparam]
   have endpoints_mem (h : a ≤ 0 ∧ 1 ≤ b) :
       P ∈ segment ℝ A B ∧ Q ∈ segment ℝ A B := by
     have hab : a ≤ b := (h.1.trans (by norm_num : (0 : ℝ) ≤ 1)).trans h.2
@@ -292,12 +293,12 @@ theorem endpoint_secondCoords_eq_zero_of_two_axis_points {a b x y : Plane}
   simp only [Fin.isValue, AffineMap.lineMap_apply_module, PiLp.add_apply, PiLp.smul_apply,
     smul_eq_mul, hy0] at htCoord
   have hprod : (s - t) * (b 1 - a 1) = 0 := by
-    nlinarith
+    nlinarith only [hsCoord, htCoord]
   have hba : b 1 = a 1 := by
     exact sub_eq_zero.mp ((mul_eq_zero.mp hprod).resolve_left (sub_ne_zero.mpr hst))
   have ha : a 1 = 0 := by
     rw [hba] at hsCoord
-    nlinarith
+    nlinarith only [hsCoord]
   exact ⟨ha, hba.trans ha⟩
 
 /-- A finite simplicial complex of affine simplexes in the plane: finitely many vertices at
@@ -574,32 +575,16 @@ noncomputable abbrev toPlaneComplex : PlaneComplex where
       rw [hparent] at hxparent
       have hSI : AffineIndependent ℝ
           ((↑) : (S.image M.position) → Plane) := by
-        let e : S ≃ S.image M.position := Equiv.ofBijective
-          (fun v => ⟨M.position v, Finset.mem_image.mpr ⟨v, v.2, rfl⟩⟩)
-          ⟨fun a b hab => Subtype.ext (M.position_injective (congrArg Subtype.val hab)), by
-            rintro ⟨p, hp⟩
-            obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-            exact ⟨⟨v, hv⟩, rfl⟩⟩
-        have heq : ((↑) : (S.image M.position) → Plane) ∘ e =
-            (fun v : S => M.position v) := by rfl
-        have hmono : AffineIndependent ℝ (((↑) : (S.image M.position) → Plane) ∘ e) := by
-          rw [heq]
-          exact M.affineIndependent_triangle S hS
-        exact (affineIndependent_equiv e).mp hmono
+        refine affineIndependent_finset_coe (M.affineIndependent_triangle S hS) ?_
+        intro p hp
+        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
+        exact ⟨⟨v, hv⟩, rfl⟩
       have hTI : AffineIndependent ℝ
           ((↑) : (T.image M.position) → Plane) := by
-        let e : T ≃ T.image M.position := Equiv.ofBijective
-          (fun v => ⟨M.position v, Finset.mem_image.mpr ⟨v, v.2, rfl⟩⟩)
-          ⟨fun a b hab => Subtype.ext (M.position_injective (congrArg Subtype.val hab)), by
-            rintro ⟨p, hp⟩
-            obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-            exact ⟨⟨v, hv⟩, rfl⟩⟩
-        have heq : ((↑) : (T.image M.position) → Plane) ∘ e =
-            (fun v : T => M.position v) := by rfl
-        have hmono : AffineIndependent ℝ (((↑) : (T.image M.position) → Plane) ∘ e) := by
-          rw [heq]
-          exact M.affineIndependent_triangle T hT
-        exact (affineIndependent_equiv e).mp hmono
+        refine affineIndependent_finset_coe (M.affineIndependent_triangle T hT) ?_
+        intro p hp
+        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
+        exact ⟨⟨v, hv⟩, rfl⟩
       have hsImage : s.image M.position ⊆ S.image M.position :=
         Finset.image_subset_image hsS
       have hSTImage : (S ∩ T).image M.position ⊆ S.image M.position :=
@@ -612,9 +597,7 @@ noncomputable abbrev toPlaneComplex : PlaneComplex where
         · simpa only [Finset.coe_image] using hx.1
         · simpa only [Finset.coe_image] using hxparent
       have hsST : s ∩ (S ∩ T) = s ∩ T := by
-        ext v
-        simp only [Finset.mem_inter]
-        aesop
+        rw [← Finset.inter_assoc, Finset.inter_eq_left.mpr hsS]
       rw [hsST] at hxfirst
       have hsTImage : (s ∩ T).image M.position ⊆ T.image M.position :=
         Finset.image_subset_image Finset.inter_subset_right
@@ -626,9 +609,7 @@ noncomputable abbrev toPlaneComplex : PlaneComplex where
         rw [Finset.image_inter _ _ M.position_injective, hsecond]
         exact ⟨hxfirst, by simpa only [Finset.coe_image] using hx.2⟩
       have hinter : (s ∩ T) ∩ t = s ∩ t := by
-        ext v
-        simp only [Finset.mem_inter]
-        aesop
+        rw [Finset.inter_assoc, Finset.inter_eq_right.mpr htT]
       rw [hinter] at hxsecond
       simpa only [Finset.coe_image] using hxsecond
     · intro x hx

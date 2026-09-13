@@ -3,9 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
-import Mathlib.Analysis.Calculus.ImplicitContDiff
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
+public import Mathlib.Analysis.Calculus.ImplicitContDiff
 import Mathlib.Analysis.Calculus.LocalExtr.Basic
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
@@ -15,6 +16,8 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 IFT-based proof that the nearest-point projection is C¹ at every point of
 the submanifold S.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric NNReal
 

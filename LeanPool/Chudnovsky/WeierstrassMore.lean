@@ -3,8 +3,15 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Liouville
+public import LeanPool.Chudnovsky.Liouville
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The zeros of ℘′ and the factorization of ℘′²
@@ -21,6 +28,8 @@ These results are proved here elementarily; the distinctness of `e₁, e₂, e�
 characterisation of the zeros of `℘'` use the third Liouville theorem (from
 `LeanPool.Chudnovsky.Liouville`) as a pinned interface.
 -/
+
+@[expose] public section
 
 noncomputable section
 

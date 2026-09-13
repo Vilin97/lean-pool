@@ -12,13 +12,19 @@ a fresh Henkin implication.  Here the implication uses the total
 capture-avoiding substitution from `CaptureAvoiding`; freshness is required
 only for the conservative-extension proof, not for the public operation.
 -/
-import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
+public import Mathlib.Data.Countable.Defs
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
+import LeanPool.MatchingLogic.EntryIII.Alpha
 import LeanPool.MatchingLogic.EntryIII.Lindenbaum
-import Mathlib.Data.Countable.Defs
 
 /-!
 # MatchingLogic.EntryIII.Witnessed
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

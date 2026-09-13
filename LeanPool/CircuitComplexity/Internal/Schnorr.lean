@@ -3,10 +3,12 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
+
+public import LeanPool.CircuitComplexity.XOR
+public import LeanPool.CircuitComplexity.Internal.CircDesc
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Tactic.IntervalCases
-import LeanPool.CircuitComplexity.XOR
-import LeanPool.CircuitComplexity.Internal.CircDesc
 
 
 /-! # Internal: Schnorr's Lower Bound for XOR Circuits
@@ -16,6 +18,8 @@ The public definitions (`Schnorr.xorBool`, `Schnorr.xorBool_flip`,
 `Schnorr.xorBool_essential`) are in `Circ.XOR`. The public theorem
 `schnorr_lower_bound_circuit` is accessible through `Circ.Schnorr`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

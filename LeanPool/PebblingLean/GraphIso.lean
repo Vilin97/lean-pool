@@ -3,8 +3,10 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import LeanPool.PebblingLean.Basic
+public import LeanPool.PebblingLean.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Transport across graph isomorphisms
@@ -13,6 +15,8 @@ The recursive upper bound is naturally proved on Cartesian products.  To apply
 those product constructions to hypercubes, we need a lightweight way to move
 pebbling distributions and solvability statements across graph isomorphisms.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

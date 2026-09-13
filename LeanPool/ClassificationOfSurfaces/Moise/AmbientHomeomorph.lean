@@ -3,8 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-import Mathlib.Topology.Piecewise
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 
 /-!
 # Extending a homeomorphism of a closed planar patch
@@ -13,6 +14,8 @@ Moise's elementary free-triangle move is first constructed on a finite polygonal
 the move fixes the patch frontier, it extends to an ambient homeomorphism by the identity.  This
 file proves that pasting step independently of the particular triangulated patch.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

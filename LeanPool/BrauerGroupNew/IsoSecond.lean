@@ -3,15 +3,26 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
-import LeanPool.BrauerGroupNew.ToSecond
+public import LeanPool.BrauerGroupNew.Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
+public import LeanPool.BrauerGroupNew.ToSecond
+public import Mathlib.RingTheory.SimpleModule.Basic
+import LeanPool.BrauerGroupNew.Wedderburn
+import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.IsoSecond
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.IsoSecond`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 
@@ -592,49 +603,12 @@ lemma exists_simple_module_directSum [IsGalois F K] :
     Nonempty (C ≃ₗ[C] ι →₀ S) := by
   obtain ⟨S, _, _, _, ι, ⟨iso⟩⟩ := directSum_simple_module_over_simple_ring F C C
   refine ⟨S, inferInstance, inferInstance, inferInstance, ι, ?_, ⟨iso⟩⟩
-  haveI infinite : Module.Finite C (ι →₀ S) := Module.Finite.equiv iso
-  letI : Module F S := Module.compHom S (algebraMap F C)
-  haveI : LinearMap.CompatibleSMul C (ι →₀ S) F C := by
-    constructor
-    intro l f x
-    change _ = algebraMap F C f • l x
-    rw [← map_smul]
-    congr 1
-    apply val_injective
-    simp only [val_smul, smul_eq_mul, val_mul]
-    induction x.val using Finsupp.induction_linear with
-    | zero => simp
-    | add f g _ _ => simp_all [smul_add]
-    | single σ c =>
-      simp only [Finsupp.smul_single, Algebra.algebraMap_eq_smul_one, val_smul, val_one,
-        map_one_fst_of_isMulCocycle₂ Fact.out, Pi.mul_apply, Units.val_mul, mul_inv_rev,
-        mulLinearMap_single_single, one_mul, AlgEquiv.one_apply, Algebra.smul_mul_assoc]
-      rw [mul_comm _ c, mul_assoc c, ← smul_mul_assoc, ← mul_assoc ((β (1, 1)).1⁻¹ * _),
-        mul_assoc (β (1, 1)).1⁻¹, inv_mul_cancel₀ (by simp), _root_.mul_one]
-      field_simp
-  let iso' : C ≃ₗ[F] (ι →₀ S) := iso.restrictScalars F
-  haveI : IsScalarTower F C (ι →₀ S) := by
-    constructor
-    intro f c x
-    change _ = algebraMap F C f • _ • x
-    rw [Algebra.smul_def, mul_smul]
-  haveI : Module.Finite F (ι →₀ S) := Module.Finite.trans C (ι →₀ S)
-  have eq := LinearEquiv.finrank_eq iso'
-  -- rw [M_F_dim, pow_three] at eq
-  refine (@Cardinal.lt_aleph0_iff_fintype ι).1 ?_ |>.some
-  apply_fun ((↑) : ℕ → Cardinal) at eq
-  rw [finrank_eq_rank, finrank_eq_rank, rank_finsupp F S ι] at eq
-  have ineq : Module.rank F C < Cardinal.aleph0 := by
-    rw [rank_lt_aleph0_iff]; infer_instance
-  rw [eq] at ineq
-  simp only [Cardinal.lift_id] at ineq
-  have : Nontrivial S := IsSimpleModule.nontrivial C S
-  have ineq2 := @Cardinal.le_mul_left (Cardinal.mk ι) (Module.rank F S)
-    (by
-      suffices 0 < Module.rank F S by exact Ne.symm (ne_of_lt this)
-      apply rank_pos)
-  rw [mul_comm] at ineq2
-  exact lt_of_le_of_lt ineq2 ineq
+  haveI : Module.Finite C (ι →₀ S) := Module.Finite.equiv iso
+  haveI : Nontrivial S := IsSimpleModule.nontrivial C S
+  haveI : Finite ι := by
+    obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := C) (M := ι →₀ S)
+    exact finite_of_span_finite_eq_top_finsupp s.finite_toSet hs
+  exact Fintype.ofFinite ι
 
 variable [IsGalois F K]
 
@@ -741,14 +715,8 @@ lemma dim_endCSM : (finrank F K)^2 =
 
 /-- Move the matrix algebra description from the opposite algebra back to `C`. -/
 def CIsoAux'' :
-    C ≃ₐ[F] (Matrix (Fin (Fintype.card ι)) (Fin (Fintype.card ι)) (Module.End C SM))ᵐᵒᵖ where
-  toFun c := op <| CIsoAux' (op c)
-  invFun m := (CIsoAux'.symm m.unop).unop
-  left_inv c := by simp only [unop_op, AlgEquiv.symm_apply_apply]
-  right_inv m := by simp only [op_unop, AlgEquiv.apply_symm_apply]
-  map_mul' c c' := by simp [op_mul, map_mul]
-  map_add' c c' := by simp [op_add, map_add]
-  commutes' f := by simp [Algebra.algebraMap_eq_smul_one]
+    C ≃ₐ[F] (Matrix (Fin (Fintype.card ι)) (Fin (Fintype.card ι)) (Module.End C SM))ᵐᵒᵖ :=
+  AlgEquiv.opComm.symm CIsoAux'
 
 /-- The final matrix-algebra model for the product cross-product algebra. -/
 def CIso : C ≃ₐ[F] (Matrix (Fin (Fintype.card ι)) (Fin (Fintype.card ι)) (Module.End C SM)ᵐᵒᵖ) :=
@@ -758,44 +726,12 @@ variable (α β) in
 lemma M_directSum : ∃ (ιM : Type) (_ : Fintype ιM), Nonempty (M α β ≃ₗ[C] ιM →₀ SM) := by
   obtain ⟨ιM, ⟨iso⟩⟩ := directSum_simple_module_over_simple_ring' F C (M α β) SM
   refine ⟨ιM, ?_, ⟨iso⟩⟩
-  haveI : LinearMap.CompatibleSMul C (ιM →₀ SM) F C := by
-    constructor
-    intro l f x
-    change _ = algebraMap F C f • l x
-    rw [← map_smul]
-    congr 1
-    apply val_injective
-    simp [Algebra.algebraMap_eq_smul_one]
-  let iso' : M α β ≃ₗ[F] (ιM →₀ SM) := iso.restrictScalars F
-  haveI : IsScalarTower F C (ιM →₀ SM) := by
-    constructor
-    intro f c x
-    change _ = algebraMap F C f • _ • x
-    rw [Algebra.smul_def, mul_smul]
   haveI : Module.Finite C (ιM →₀ SM) := Module.Finite.equiv iso
-  haveI : Module.Finite F (ιM →₀ SM) := Module.Finite.trans C (ιM →₀ SM)
-  have eq := LinearEquiv.finrank_eq iso'
-  rw [M_F_dim, pow_three] at eq
-  refine (@Cardinal.lt_aleph0_iff_fintype ιM).1 ?_ |>.some
-  apply_fun ((↑) : ℕ → Cardinal) at eq
-  simp only [Nat.cast_mul] at eq
-  rw [finrank_eq_rank, finrank_eq_rank, rank_finsupp F SM ιM] at eq
-  have ineq : Module.rank F K < Cardinal.aleph0 := by
-    rw [Module.rank_lt_aleph0_iff]; infer_instance
-  replace ineq : Module.rank F K * (Module.rank F K * Module.rank F K) < Cardinal.aleph0 := by
-    apply Cardinal.mul_lt_aleph0
-    · assumption
-    apply Cardinal.mul_lt_aleph0 <;>
-    assumption
-  rw [eq] at ineq
-  simp only [Cardinal.lift_id] at ineq
-  have : Nontrivial SM := IsSimpleModule.nontrivial C SM
-  have ineq2 := @Cardinal.le_mul_left (Cardinal.mk ιM) (Module.rank F SM)
-    (by
-      suffices 0 < Module.rank F SM by exact Ne.symm (ne_of_lt this)
-      apply rank_pos)
-  rw [mul_comm] at ineq2
-  exact lt_of_le_of_lt ineq2 ineq
+  haveI : Nontrivial SM := IsSimpleModule.nontrivial C SM
+  haveI : Finite ιM := by
+    obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := C) (M := ιM →₀ SM)
+    exact finite_of_span_finite_eq_top_finsupp s.finite_toSet hs
+  exact Fintype.ofFinite ιM
 
 variable (α β) in
 /-- The finite index set for the simple-module decomposition of `M`. -/
@@ -852,34 +788,8 @@ def MIsoPow' : M α β ≃ₗ[F] Fin (finrank F K * Fintype.card ι) → SM :=
 variable (α β) in
 /-- Conjugation by `MIsoPow` identifies endomorphism algebras over `C`. -/
 def endCMIso :
-    Module.End C (M α β) ≃ₐ[F] Module.End C (Fin (finrank F K * Fintype.card ι) → SM) where
-  toFun x := (MIsoPow α β) ∘ₗ x ∘ₗ (MIsoPow α β).symm
-  invFun x := (MIsoPow α β).symm ∘ₗ x ∘ₗ (MIsoPow α β)
-  left_inv x := by
-    simp only [← LinearMap.comp_assoc, LinearEquiv.comp_coe, LinearEquiv.self_trans_symm,
-      LinearEquiv.refl_toLinearMap, LinearMap.id_comp]
-    simp only [LinearMap.comp_assoc, LinearEquiv.comp_coe, LinearEquiv.self_trans_symm,
-      LinearEquiv.refl_toLinearMap, LinearMap.comp_id]
-  right_inv x := by
-    simp only [← LinearMap.comp_assoc, LinearEquiv.comp_coe, LinearEquiv.symm_trans_self,
-      LinearEquiv.refl_toLinearMap, LinearMap.id_comp]
-    simp only [LinearMap.comp_assoc, LinearEquiv.comp_coe, LinearEquiv.symm_trans_self,
-      LinearEquiv.refl_toLinearMap, LinearMap.comp_id]
-  map_mul' x y := by
-    refine DFunLike.ext _ _ fun z ↦ ?_
-    simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply, Module.End.mul_apply,
-      LinearEquiv.symm_apply_apply]
-  map_add' x y := by
-    refine DFunLike.ext _ _ fun z ↦ ?_
-    simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply, LinearMap.add_apply,
-      map_add]
-  commutes' f := by
-    refine DFunLike.ext _ _ fun z ↦ ?_
-    simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      Module.algebraMap_end_apply]
-    change  (MIsoPow' α β) (f • (MIsoPow' α β).symm z) = _
-    rw [map_smul]
-    simp [LinearEquiv.apply_symm_apply]
+    Module.End C (M α β) ≃ₐ[F] Module.End C (Fin (finrank F K * Fintype.card ι) → SM) :=
+  (MIsoPow α β).conjAlgEquiv F
 
 instance : NeZero (finrank F K * Fintype.card ι) := by
   constructor
@@ -918,18 +828,8 @@ def φ1 : (A ⊗[F] B)ᵐᵒᵖ ≃ₐ[F] Module.End C (M α β) :=
 
 open MulOpposite in
 /-- The tensor product algebra as the opposite of the endomorphism algebra of `M`. -/
-def φ2 : (A ⊗[F] B) ≃ₐ[F] (Module.End C (M α β))ᵐᵒᵖ where
-  toFun a := op <| φ1 (op a)
-  invFun g := (φ1.symm g.unop).unop
-  left_inv x := by simp
-  right_inv x := by simp
-  map_mul' := by intros; simp
-  map_add' := by intros; simp
-  commutes' f := by
-    simp only [Algebra.TensorProduct.algebraMap_apply, MulOpposite.algebraMap_apply, op_inj]
-    rw [Algebra.algebraMap_eq_smul_one, ← smul_tmul', op_smul, ← (φ0 (α := α) (β := β)).commutes f,
-      Algebra.algebraMap_eq_smul_one]
-    rfl
+def φ2 : (A ⊗[F] B) ≃ₐ[F] (Module.End C (M α β))ᵐᵒᵖ :=
+  AlgEquiv.opComm.symm φ1
 
 /-- The tensor product algebra as an opposite matrix algebra over `End_C(SM)`. -/
 def φ3 :

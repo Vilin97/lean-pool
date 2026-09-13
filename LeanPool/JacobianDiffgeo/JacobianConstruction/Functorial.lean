@@ -3,8 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Basic
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # The `→ₜ+` functoriality substrate, wrapped through the `ULift` shell (§9.4)
@@ -20,6 +22,8 @@ the *specific* `T` for a given holomorphic `f : X → Y` (via pullback-of-forms)
 blueprint unit currently owns "pullback of holomorphic `1`-forms along a holomorphic map" — see
 this unit's final report for the flag to the orchestrator.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

@@ -3,7 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import LeanPool.GKPCarry.Definitions
 import LeanPool.GKPCarry.ModularPrefix
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Kernel-checked bounded C3 certificate
@@ -11,11 +17,45 @@ import LeanPool.GKPCarry.ModularPrefix
 The Boolean certificates cover `27 ≤ m ≤ 6560` over the five ranges on which
 the ternary length is constant. Within each range, modular residues are advanced
 by multiplication by four, so only the first power is computed from scratch.
+Residue tests stop scanning ternary digits as soon as two twos have been found.
 Their soundness is transported through proved modular exponentiation and ternary
 prefix lemmas, yielding the headline carry theorem at the end of this file.
 -/
 
+@[expose] public section
+
 namespace GKPCarry
+
+/-- Test whether the ternary expansion contains at least `required` twos,
+stopping as soon as enough have been found. -/
+def hasAtLeastTernaryTwos : (required n : ℕ) → Bool
+  | 0, _ => true
+  | required + 1, n =>
+      if hzero : n = 0 then false
+      else if n % 3 = 2 then hasAtLeastTernaryTwos required (n / 3)
+      else hasAtLeastTernaryTwos (required + 1) (n / 3)
+termination_by _ n => n
+decreasing_by all_goals exact Nat.div_lt_self (Nat.pos_of_ne_zero hzero) (by decide)
+
+/-- The digit scanner is equivalent to counting twos in the canonical ternary expansion. -/
+theorem hasAtLeastTernaryTwos_eq_true (required n : ℕ) :
+    hasAtLeastTernaryTwos required n = true ↔ required ≤ (Nat.digits 3 n).count 2 := by
+  induction n using Nat.strong_induction_on generalizing required with
+  | h n ih =>
+      cases required with
+      | zero => simp [hasAtLeastTernaryTwos]
+      | succ required =>
+          by_cases hzero : n = 0
+          · subst n
+            simp [hasAtLeastTernaryTwos]
+          · have hpositive : 0 < n := Nat.pos_of_ne_zero hzero
+            have hdiv : n / 3 < n := Nat.div_lt_self hpositive (by decide)
+            rw [hasAtLeastTernaryTwos]
+            simp only [hzero, ↓reduceDIte]
+            rw [Nat.digits_def' (by decide) hpositive, List.count_cons]
+            by_cases hdigit : n % 3 = 2
+            · simpa [hdigit] using ih (n / 3) hdiv required
+            · simpa [hdigit] using ih (n / 3) hdiv (required + 1)
 
 private lemma powMod_succ (base exponent modulus : ℕ) :
     powMod base (exponent + 1) modulus =
@@ -29,17 +69,11 @@ private lemma powMod_add (base left right modulus : ℕ) :
   rw [powMod_eq_pow_mod, powMod_eq_pow_mod, powMod_eq_pow_mod, pow_add,
     Nat.mod_mul_mod, Nat.mul_mod_mod]
 
-/-- Advance a residue by `count` multiplications by four. -/
-private def finiteAdvance (modulus residue : ℕ) : ℕ → ℕ
-  | 0 => residue
-  | count + 1 =>
-      finiteAdvance modulus (4 * residue % modulus) count
-
 /-- Check `count` consecutive residues. -/
 private def finiteCheckBlock (modulus residue : ℕ) : ℕ → Bool
   | 0 => true
   | count + 1 =>
-      decide (2 ≤ (Nat.digits 3 residue).count 2) &&
+      hasAtLeastTernaryTwos 2 residue &&
         finiteCheckBlock modulus (4 * residue % modulus) count
 
 /-- Compute the residue after `blocks` blocks without a deep recursive term. -/
@@ -51,25 +85,14 @@ private def finiteCheckBlocks (modulus residue : ℕ) : ℕ → Bool
   | 0 => true
   | blocks + 1 =>
       finiteCheckBlock modulus residue 64 &&
-        finiteCheckBlocks modulus (finiteAdvance modulus residue 64) blocks
+        finiteCheckBlocks modulus (finiteAdvanceBlocks modulus residue 1) blocks
 
 private def finiteCheck (lower count digitLength : ℕ) : Bool :=
   let modulus := 3 ^ (6 * digitLength)
-  let blocks := finiteCheckBlocks modulus (powMod 4 lower modulus) (count / 64)
-  let residue := finiteAdvanceBlocks modulus (powMod 4 lower modulus) (count / 64)
+  let initial := powMod 4 lower modulus
+  let blocks := finiteCheckBlocks modulus initial (count / 64)
+  let residue := finiteAdvanceBlocks modulus initial (count / 64)
   blocks && finiteCheckBlock modulus residue (count % 64)
-
-private lemma finiteAdvance_sound
-    {modulus residue lower count : ℕ}
-    (hresidue : residue = powMod 4 lower modulus) :
-    finiteAdvance modulus residue count = powMod 4 (lower + count) modulus := by
-  induction count generalizing lower residue with
-  | zero => simpa [finiteAdvance] using hresidue
-  | succ count ih =>
-      have hnext : 4 * residue % modulus = powMod 4 (lower + 1) modulus := by
-        rw [hresidue, powMod_succ]
-      rw [finiteAdvance]
-      simpa [Nat.add_assoc, Nat.add_comm 1 count] using ih hnext
 
 private lemma finiteCheckBlock_sound
     {modulus residue lower count : ℕ}
@@ -80,7 +103,7 @@ private lemma finiteCheckBlock_sound
   induction count generalizing lower residue with
   | zero => omega
   | succ count ih =>
-      change (decide (2 ≤ (Nat.digits 3 residue).count 2) &&
+      change (hasAtLeastTernaryTwos 2 residue &&
         finiteCheckBlock modulus (4 * residue % modulus) count) = true at hcheck
       rw [Bool.and_eq_true] at hcheck
       have hnext : 4 * residue % modulus = powMod 4 (lower + 1) modulus := by
@@ -88,9 +111,7 @@ private lemma finiteCheckBlock_sound
       intro m hlower hupper
       by_cases hm : m = lower
       · subst m
-        simpa [hresidue] using
-          (show 2 ≤ (Nat.digits 3 residue).count 2 by
-            simpa only [decide_eq_true_eq] using hcheck.1)
+        simpa [hresidue] using (hasAtLeastTernaryTwos_eq_true 2 residue).mp hcheck.1
       · exact ih hnext hcheck.2 (by omega) (by omega)
 
 private lemma finiteAdvanceBlocks_sound
@@ -111,11 +132,11 @@ private lemma finiteCheckBlocks_sound
   | zero => omega
   | succ blocks ih =>
       change (finiteCheckBlock modulus residue 64 &&
-        finiteCheckBlocks modulus (finiteAdvance modulus residue 64) blocks) = true at hcheck
+        finiteCheckBlocks modulus (finiteAdvanceBlocks modulus residue 1) blocks) = true at hcheck
       rw [Bool.and_eq_true] at hcheck
-      have hnext : finiteAdvance modulus residue 64 =
+      have hnext : finiteAdvanceBlocks modulus residue 1 =
           powMod 4 (lower + 64) modulus := by
-        exact finiteAdvance_sound hresidue
+        simpa using (finiteAdvanceBlocks_sound (blocks := 1) hresidue)
       intro m hlower hupper
       by_cases hfirst : m < lower + 64
       · exact finiteCheckBlock_sound hresidue hcheck.1 hlower hfirst
@@ -152,34 +173,34 @@ private lemma ternaryLength_eq_of_pow_bounds
         (by decide) m).mpr hlower
     omega
 
-private theorem finiteCheck_length_four : finiteCheck 27 54 4 = true := by decide
-private theorem finiteCheck_length_five : finiteCheck 81 162 5 = true := by decide
-private theorem finiteCheck_length_six_a : finiteCheck 243 256 6 = true := by decide
-private theorem finiteCheck_length_six_b : finiteCheck 499 230 6 = true := by decide
-private theorem finiteCheck_length_seven_a : finiteCheck 729 256 7 = true := by decide
-private theorem finiteCheck_length_seven_b : finiteCheck 985 256 7 = true := by decide
-private theorem finiteCheck_length_seven_c : finiteCheck 1241 256 7 = true := by decide
-private theorem finiteCheck_length_seven_d : finiteCheck 1497 256 7 = true := by decide
-private theorem finiteCheck_length_seven_e : finiteCheck 1753 256 7 = true := by decide
-private theorem finiteCheck_length_seven_f : finiteCheck 2009 178 7 = true := by decide
-private theorem finiteCheck_length_eight_a : finiteCheck 2187 256 8 = true := by decide
-private theorem finiteCheck_length_eight_b : finiteCheck 2443 256 8 = true := by decide
-private theorem finiteCheck_length_eight_c : finiteCheck 2699 256 8 = true := by decide
-private theorem finiteCheck_length_eight_d : finiteCheck 2955 256 8 = true := by decide
-private theorem finiteCheck_length_eight_e : finiteCheck 3211 256 8 = true := by decide
-private theorem finiteCheck_length_eight_f : finiteCheck 3467 256 8 = true := by decide
-private theorem finiteCheck_length_eight_g : finiteCheck 3723 256 8 = true := by decide
-private theorem finiteCheck_length_eight_h : finiteCheck 3979 256 8 = true := by decide
-private theorem finiteCheck_length_eight_i : finiteCheck 4235 256 8 = true := by decide
-private theorem finiteCheck_length_eight_j : finiteCheck 4491 256 8 = true := by decide
-private theorem finiteCheck_length_eight_k : finiteCheck 4747 256 8 = true := by decide
-private theorem finiteCheck_length_eight_l : finiteCheck 5003 256 8 = true := by decide
-private theorem finiteCheck_length_eight_m : finiteCheck 5259 256 8 = true := by decide
-private theorem finiteCheck_length_eight_n : finiteCheck 5515 256 8 = true := by decide
-private theorem finiteCheck_length_eight_o : finiteCheck 5771 256 8 = true := by decide
-private theorem finiteCheck_length_eight_p : finiteCheck 6027 256 8 = true := by decide
-private theorem finiteCheck_length_eight_q : finiteCheck 6283 256 8 = true := by decide
-private theorem finiteCheck_length_eight_r : finiteCheck 6539 22 8 = true := by decide
+private theorem finiteCheck_length_four : finiteCheck 27 54 4 = true := by decide +kernel
+private theorem finiteCheck_length_five : finiteCheck 81 162 5 = true := by decide +kernel
+private theorem finiteCheck_length_six_a : finiteCheck 243 256 6 = true := by decide +kernel
+private theorem finiteCheck_length_six_b : finiteCheck 499 230 6 = true := by decide +kernel
+private theorem finiteCheck_length_seven_a : finiteCheck 729 256 7 = true := by decide +kernel
+private theorem finiteCheck_length_seven_b : finiteCheck 985 256 7 = true := by decide +kernel
+private theorem finiteCheck_length_seven_c : finiteCheck 1241 256 7 = true := by decide +kernel
+private theorem finiteCheck_length_seven_d : finiteCheck 1497 256 7 = true := by decide +kernel
+private theorem finiteCheck_length_seven_e : finiteCheck 1753 256 7 = true := by decide +kernel
+private theorem finiteCheck_length_seven_f : finiteCheck 2009 178 7 = true := by decide +kernel
+private theorem finiteCheck_length_eight_a : finiteCheck 2187 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_b : finiteCheck 2443 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_c : finiteCheck 2699 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_d : finiteCheck 2955 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_e : finiteCheck 3211 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_f : finiteCheck 3467 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_g : finiteCheck 3723 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_h : finiteCheck 3979 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_i : finiteCheck 4235 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_j : finiteCheck 4491 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_k : finiteCheck 4747 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_l : finiteCheck 5003 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_m : finiteCheck 5259 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_n : finiteCheck 5515 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_o : finiteCheck 5771 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_p : finiteCheck 6027 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_q : finiteCheck 6283 256 8 = true := by decide +kernel
+private theorem finiteCheck_length_eight_r : finiteCheck 6539 22 8 = true := by decide +kernel
 
 private theorem finiteModularCertificate_length_six
     {m : ℕ} (hlower : 243 ≤ m) (hupper : m ≤ 728) :

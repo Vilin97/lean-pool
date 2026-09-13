@@ -3,22 +3,30 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import LeanPool.AndersonConjecture.Basic
+public import Mathlib.RingTheory.KrullDimension.Basic
+import LeanPool.AndersonConjecture.AdicKerEval
 import LeanPool.AndersonConjecture.AdicLocal
 import LeanPool.AndersonConjecture.AdicNoetherian
 import LeanPool.AndersonConjecture.QuasiCompleteRing.Complete
-import Mathlib.Order.BourbakiWitt
 import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
 import Mathlib.RingTheory.AdicCompletion.Noetherian
 import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
 import Mathlib.RingTheory.KrullDimension.Field
 import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing
 
 Imported Lean Pool material for `LeanPool.AndersonConjecture.QuasiCompleteRing.QuasiCompleteRing`.
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 

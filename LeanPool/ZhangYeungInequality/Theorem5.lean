@@ -3,12 +3,11 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 import LeanPool.ZhangYeungInequality.CopyLemma
-import LeanPool.ZhangYeungInequality.Delta
-import LeanPool.ZhangYeungInequality.EntropyRegion
 import LeanPool.ZhangYeungInequality.Prelude
-import LeanPool.ZhangYeungInequality.Theorem3
 
 /-!
 # Theorem 5, the `n + 2`-variable Zhang-Yeung generalization
@@ -54,6 +53,8 @@ Shannon entropy, mutual information, non-Shannon information inequality, Zhang-Y
 conditional
 independence
 -/
+
+@[expose] public section
 
 namespace ZhangYeung
 

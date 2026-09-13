@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Refinement
-import Mathlib.Algebra.Colimit.Module
+public import LeanPool.JacobianDiffgeo.Cech.Refinement
+public import Mathlib.Algebra.Colimit.Module
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `H¹(D)` as a directed colimit (CC8, D1)
@@ -25,6 +28,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.5, §5).
 `subsingleton_H1_of_good` below (the direction actually needed downstream, via good-cover
 cofinality) does not need 12.4 and is proved here.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module

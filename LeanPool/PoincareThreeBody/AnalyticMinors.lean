@@ -3,11 +3,18 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DifferentialDependence
-import LeanPool.PoincareThreeBody.ParameterDomainTopology
+public import LeanPool.PoincareThreeBody.DifferentialDependence
+public import LeanPool.PoincareThreeBody.ParameterDomainTopology
+public import LeanPool.PoincareThreeBody.PoincareSet
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.LeadingObstruction
+import LeanPool.PoincareThreeBody.MixedPartials
 import Mathlib.Analysis.Analytic.Order
-import Mathlib.Analysis.Analytic.Uniqueness
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Analyticity and flatness of differential minors
@@ -17,6 +24,8 @@ coordinate minor vanishes at zero.  This file proves the analytic consequences: 
 analytic mass germs, infinite-order vanishing makes them locally zero, and the identity principle
 propagates that equality along any connected collision-free mass fiber.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

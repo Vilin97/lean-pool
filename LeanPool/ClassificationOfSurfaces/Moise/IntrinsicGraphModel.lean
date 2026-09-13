@@ -3,9 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicGraphPL
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
-import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # A conforming plane model of an intrinsic replacement graph
@@ -16,6 +17,8 @@ turns all replacement edges into one plane graph complex.  The original embeddin
 transferred to that plane complex and the ordinary plane one-skeleton approximation theorem can
 be applied at an arbitrary tolerance.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -73,13 +76,14 @@ private theorem replacementSegmentFace_has_endpoints
 noncomputable def replacementSegmentLeft
     (q : K.ReplacementSegmentFace
       (hcont := hcont) (hinj := hinj) (D := D) (C := C)) : Plane :=
-  Classical.choose (K.replacementSegmentFace_has_endpoints q)
+  Classical.choose (private_decl% (K.replacementSegmentFace_has_endpoints q))
 
 /-- Second endpoint of a selected replacement segment. -/
 noncomputable def replacementSegmentRight
     (q : K.ReplacementSegmentFace
       (hcont := hcont) (hinj := hinj) (D := D) (C := C)) : Plane :=
-  Classical.choose (Classical.choose_spec (K.replacementSegmentFace_has_endpoints q))
+  Classical.choose
+    (Classical.choose_spec (private_decl% (K.replacementSegmentFace_has_endpoints q)))
 
 theorem replacementSegment_eq_cellCarrier
     (q : K.ReplacementSegmentFace
@@ -87,7 +91,7 @@ theorem replacementSegment_eq_cellCarrier
     segment ℝ (K.replacementSegmentLeft q) (K.replacementSegmentRight q) =
       (K.replacementArc hcont hinj D C q.1).completeTarget.cellCarrier q.2.1 := by
   exact (Classical.choose_spec
-    (Classical.choose_spec (K.replacementSegmentFace_has_endpoints q))).symm
+    (Classical.choose_spec (private_decl% (K.replacementSegmentFace_has_endpoints q)))).symm
 
 /-- Union of all selected segment faces over all complete replacement edges. -/
 def replacementGraphCarrier : Set Plane :=

@@ -3,30 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.TN.Basic
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.BigOperators.Ring.Finset
+public import LeanPool.BollobasNikiforov.TN.Basic
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
 import Mathlib.Analysis.SpecificLimits.Basic
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Fintype.Perm
 import Mathlib.Data.Fintype.Sort
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Block
-import Mathlib.Data.Real.Basic
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Logic.Equiv.Fin.Basic
-import Mathlib.Order.Interval.Finset.Fin
-import Mathlib.Order.Monotone.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Topology.Instances.Matrix
-import Mathlib.Topology.Instances.Real.Lemmas
-import Mathlib.Topology.Order.Basic
 
 /-!
 # Truncated and unrestricted square kernels
@@ -35,6 +19,8 @@ This file records the elementary algebraic facts about the kernels
 `(t - a)²` and `(t - a)₊²` used for total nonnegativity. The positive
 part is `max · 0`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

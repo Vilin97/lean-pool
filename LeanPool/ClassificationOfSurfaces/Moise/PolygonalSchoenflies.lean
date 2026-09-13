@@ -3,10 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalCrosscut
+public import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
+public import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
 import LeanPool.ClassificationOfSurfaces.Moise.PLMoves
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalCrosscut
 import Mathlib.Analysis.LocallyConvex.Separation
+import Mathlib.Topology.Algebra.Module.Cardinality
 
 /-!
 # The Schoenflies theorem for polygons
@@ -22,6 +27,8 @@ Statements following Moise, *Geometric Topology in Dimensions 2 and 3*:
 Only the polygonal case is stated.  The full Schoenflies theorem (Moise Ch. 9) comes *after* the
 triangulation theorem in Moise and is not on this route's critical path.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

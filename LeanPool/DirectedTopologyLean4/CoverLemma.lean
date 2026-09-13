@@ -3,12 +3,14 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import Mathlib.Topology.MetricSpace.Basic
+module
+
+public import LeanPool.DirectedTopologyLean4.Fraction
 import Mathlib.Topology.MetricSpace.Pseudo.Real
-import Mathlib.Topology.UnitInterval
-import LeanPool.DirectedTopologyLean4.Fraction
 
 /-! ### Auxiliary lemmas -/
+
+@[expose] public section
 
 /-
   This file contains two applications of the Lebesgue Number Lemma:

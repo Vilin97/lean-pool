@@ -3,15 +3,18 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.Data.Matrix.Basis
-import Mathlib.RingTheory.TensorProduct.Basic
+public import Mathlib.Data.Matrix.Basis
+public import Mathlib.RingTheory.TensorProduct.Basic
 
 /-!
 # LeanPool.BrauerGroupNew.MatrixEquivTensor
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.MatrixEquivTensor`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

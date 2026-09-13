@@ -3,11 +3,19 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.LogPiece
+public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import Mathlib.Analysis.Meromorphic.Order
 import LeanPool.JacobianDiffgeo.Abel.ChartSupported
-import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
+import LeanPool.JacobianDiffgeo.Abel.LogPiece
+import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
 import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import Mathlib.Analysis.Complex.RemovableSingularity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the per-link construction (design §4.1 steps 5-7, link layer)
@@ -35,6 +43,8 @@ plus a factor limit pin `meromorphicOrderAt`, via mathlib's removable-singularit
 `tendsto_ne_zero_iff_meromorphicOrderAt_eq_zero`) and the `dbar` finite product rule
 `wirtingerDbar_finset_prod`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory Filter Topology

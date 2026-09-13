@@ -3,10 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Coordinates
-import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+public import LeanPool.LocalComplexGeometry.Germs.Coordinates
+public import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Coordinate pullback of local set germs
@@ -15,6 +17,8 @@ The analytic Nullstellensatz is invariant under invertible complex-linear
 coordinates.  This file records that invariance at the predicate-germ level,
 without evaluating abstract function germs away from the origin.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology
@@ -36,7 +40,7 @@ private theorem continuousLinearMap_tendsto_zero {n m : ℕ}
 def localSetGermPullback {n m : ℕ}
     (L : ComplexEuclidean n →L[ℂ] ComplexEuclidean m) :
     LocalSetGerm m → LocalSetGerm n :=
-  fun Z ↦ Z.compTendsto L (continuousLinearMap_tendsto_zero L)
+  fun Z ↦ Z.compTendsto L (private_decl% (continuousLinearMap_tendsto_zero L))
 
 @[simp]
 theorem localSetGermPullback_top {n m : ℕ}
@@ -64,7 +68,7 @@ theorem localSetGermPullback_mono {n m : ℕ}
     ((P ∘ L : ComplexEuclidean n → Prop) : LocalSetGerm n) ≤
       ((Q ∘ L : ComplexEuclidean n → Prop) : LocalSetGerm n)
   rw [Filter.Germ.coe_le]
-  exact (continuousLinearMap_tendsto_zero L).eventually hPQ
+  exact (private_decl% (continuousLinearMap_tendsto_zero L)).eventually hPQ
 
 @[simp]
 theorem localSetGermPullback_zeroLocus {n m : ℕ}

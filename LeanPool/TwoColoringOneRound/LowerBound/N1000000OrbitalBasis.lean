@@ -3,19 +3,25 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+public import Mathlib.LinearAlgebra.Matrix.Defs
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.FinCases
-import Mathlib.Data.Matrix.Basic
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

@@ -3,10 +3,20 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+public import LeanPool.JacobianDiffgeo.PeriodLattice.Discreteness
+import LeanPool.JacobianDiffgeo.Abel.OfCurveInj
+import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
+import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
 import LeanPool.JacobianDiffgeo.CechCount.Count
-import LeanPool.JacobianDiffgeo.Abel
-import LeanPool.JacobianDiffgeo.PeriodLattice
+import LeanPool.JacobianDiffgeo.PeriodLattice.FullRank
+import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The final gate, closed: ungated exports (cechcount unit)
@@ -30,6 +40,8 @@ gate of the project was reduced to. This file records the ungated finals:
 * `Jacobian.ofCurve_inj` — the Abel–Jacobi map is injective for `0 < genus X`,
   with no remaining hypotheses (the challenge's `ofCurve_inj`, ungated).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Complex.SubMean
-import Mathlib.Analysis.Complex.Poisson
+module
+
+public import Mathlib.Analysis.Complex.Poisson
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
 import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 
 /-!
@@ -36,6 +38,8 @@ Mathlib anchors (pinned commit `905b9581`):
   (`Mathlib/Analysis/InnerProductSpace/Harmonic/`,
   `Mathlib/Analysis/Complex/Harmonic/`).
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Real
 
@@ -83,6 +87,9 @@ theorem poissonKernel_continuousOn_sphere (hw : w ∈ ball c R) :
   have h : ContinuousAt
       (fun z : ℂ ↦ (‖z - c‖ ^ 2 - ‖w - c‖ ^ 2) / ‖(z - c) - (w - c)‖ ^ 2) z :=
     ContinuousAt.div (by fun_prop) (by fun_prop) hne
+  rw [show poissonKernel c w =
+    (fun z : ℂ ↦ (‖z - c‖ ^ 2 - ‖w - c‖ ^ 2) / ‖(z - c) - (w - c)‖ ^ 2) from
+      funext (poissonKernel_def c w)]
   exact h.continuousWithinAt
 
 /-- Unit mass of the Poisson kernel. -/

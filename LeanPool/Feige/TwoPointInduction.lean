@@ -3,8 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ChainInsertion
-import LeanPool.Feige.ChainMeasure
+module
+
+public import LeanPool.Feige.ChainMeasure
 
 /-!
 # Finite expectations in the two-point calibration argument
@@ -12,6 +13,8 @@ import LeanPool.Feige.ChainMeasure
 This file defines the independent product expectation and the rejection
 payoff used by the ordered insertion proof.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

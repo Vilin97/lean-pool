@@ -3,13 +3,9 @@ Copyright (c) 2026 Tetsuya Ishiu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tetsuya Ishiu
 -/
+module
 
-import Mathlib.Data.Set.Basic
-import Mathlib.ModelTheory.Basic
-import Mathlib.ModelTheory.Syntax
-import Mathlib.ModelTheory.Semantics
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.Tactic.Cases
+public import Mathlib.ModelTheory.Semantics
 import LeanPool.FoZfc.FixedSnoc
 
 /-!
@@ -39,6 +35,8 @@ import LeanPool.FoZfc.FixedSnoc
 - The symbols for Or and And, ∨' and ∧', are defined.
 
 -/
+
+@[expose] public section
 
 open FirstOrder
 open FirstOrder.Language

@@ -3,8 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.WPTBridge.Division
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
 
 /-!
 # Uniqueness in analytic Weierstrass division
@@ -12,6 +16,8 @@ import LeanPool.LocalComplexGeometry.WPTBridge.Division
 This file proves germ-level uniqueness of the analytic quotient and the
 finite-degree remainder coefficients.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

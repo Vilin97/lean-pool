@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
+
+public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
+public import Mathlib.Analysis.InnerProductSpace.Dual
 import Mathlib.Analysis.Normed.Module.WeakDual
-import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-import Mathlib.Analysis.InnerProductSpace.Dual
 
 /-!
 # Weak compactness of Hilbert closed balls
@@ -21,6 +23,8 @@ This is a “Riesz + Banach–Alaoglu” bridge:
 This lemma is a key building block for developing compact/self-adjoint spectral theory in a
 Hilbert setting while keeping `packages/mathlib_extensions/` mathlib-only.
 -/
+
+@[expose] public section
 
 namespace CompactSpectral
 

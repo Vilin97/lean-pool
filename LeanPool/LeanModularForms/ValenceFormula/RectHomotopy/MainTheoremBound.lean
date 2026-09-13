@@ -3,10 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
 import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDerivBounds
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDiff
 import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmooth
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Uniform derivative bound for the homotopy
@@ -14,6 +18,8 @@ import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopySmo
 Proves a uniform bound `‖deriv_t H(t,s)‖ ≤ 5` for all `(t,s) ∈ [0,5] × [0,1]`,
 handling each segment case and the non-differentiable fallback.
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

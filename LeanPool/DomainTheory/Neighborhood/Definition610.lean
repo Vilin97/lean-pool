@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
 
 /-!
 # Lecture VI — Definition 6.10 (Scott 1981, PRG-19): the subsystem relation `D ◁
@@ -45,6 +46,8 @@ Propositions 6.11 (the subsystems of `E` form a domain) and 6.12 (a `D ◁ E` yi
 a projection
 pair `i, j`) build on this relation and are formalized separately.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

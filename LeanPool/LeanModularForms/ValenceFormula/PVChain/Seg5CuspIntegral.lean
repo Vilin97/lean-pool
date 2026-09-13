@@ -3,14 +3,17 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
-import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.LogDerivFTC
+public import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
 import LeanPool.LeanModularForms.ForMathlib.QExpansion
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Seg5 Cusp Integral
@@ -35,6 +38,8 @@ circle integral using the factorization `F(q) = q^m · g(q)`:
 * `seg5_logDeriv_integral_value_bridge` — bridge to the form used in
     `PVChain.Assembly`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

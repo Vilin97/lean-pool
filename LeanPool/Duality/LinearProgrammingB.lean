@@ -3,14 +3,25 @@ Copyright (c) 2026 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak
 -/
+module
+
+public import LeanPool.Duality.LinearProgramming
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.LinearAlgebra.Matrix.DotProduct
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 import Mathlib.Tactic.Peel
-import LeanPool.Duality.LinearProgramming
 
 /-!
 We prove properties of "normal" linear programs as a corollary of properties of extended
 linear programs. The only exception is the weak duality theorem, which is proved separately,
 to allow weaker assumptions.
 -/
+
+@[expose] public section
 
 
 /-- Linear program in the standard form. Variables are of type `J`. Conditions are indexed by

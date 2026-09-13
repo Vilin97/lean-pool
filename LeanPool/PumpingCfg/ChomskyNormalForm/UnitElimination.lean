@@ -3,9 +3,10 @@ Copyright (c) 2024 Alexander Loitzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl
 -/
-import Mathlib.Computability.ContextFreeGrammar
-import Mathlib.Data.Finset.Prod
-import LeanPool.PumpingCfg.ChomskyNormalForm.EmptyElimination
+module
+
+public import Mathlib.Data.Finset.Prod
+public import LeanPool.PumpingCfg.ChomskyNormalForm.EmptyElimination
 
 /-!
 # Unit Elimination
@@ -29,6 +30,8 @@ the original.
    Languages, and Computation (3rd Edition). Addison-Wesley Longman Publishing Co., Inc., USA.]
    [Hopcroft et al. 2006]
 -/
+
+@[expose] public section
 
 universe uN uT
 namespace ContextFreeGrammar

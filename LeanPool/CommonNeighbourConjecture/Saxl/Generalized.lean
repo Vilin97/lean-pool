@@ -3,8 +3,12 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import LeanPool.CommonNeighbourConjecture.Saxl.Basic
+public import LeanPool.CommonNeighbourConjecture.Saxl.Basic
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.NeZero
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Generalized Saxl adjacency
@@ -14,6 +18,8 @@ first two positions of an ordered base.  This file shows that the order is
 irrelevant: generalized adjacency is exactly membership of two distinct
 vertices in a common set-like base of the required size.
 -/
+
+@[expose] public section
 
 namespace Saxl
 

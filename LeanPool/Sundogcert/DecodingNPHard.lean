@@ -3,13 +3,12 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import Mathlib.Data.Matrix.Mul
-import Mathlib.InformationTheory.Hamming
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.InformationTheory.Hamming
+public import Mathlib.Data.ZMod.Defs
 import Mathlib.Data.ZMod.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import LeanPool.Sundogcert.Certificate
 
 /-!
   Sundogcert/DecodingNPHard.lean — the DEDUCTIVE CORE of NP-hardness of SYNDROME DECODING
@@ -58,6 +57,8 @@ import LeanPool.Sundogcert.Certificate
   operation for COVERING (odd-cover) — unlike subset-sum, which needs integer carries and is WRONG
   over GF(2).  The connection lemma makes the odd-cover ⇔ syndrome=allOnes equivalence explicit.
 -/
+
+@[expose] public section
 
 open Matrix Finset
 

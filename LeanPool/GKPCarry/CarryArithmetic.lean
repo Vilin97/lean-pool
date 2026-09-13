@@ -3,11 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import LeanPool.GKPCarry.Definitions
+public import LeanPool.GKPCarry.Statement
 import LeanPool.GKPCarry.BinaryReduction
-import LeanPool.GKPCarry.Definitions
-import Lean.Elab.Tactic.Omega
+import LeanPool.GKPCarry.Kummer
 import Mathlib.Data.Nat.Digits.Lemmas
-import Mathlib.Tactic.IntervalCases
 
 /-!
 # Arithmetic correctness of the ternary doubling transducer
@@ -16,6 +18,8 @@ The transducer in `GKPCarry.Definitions` counts outgoing carries while doubling
 a little-endian ternary word.  This file proves that, on the canonical ternary
 digits of `n`, twice that count is exactly Kummer's ternary digit excess.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

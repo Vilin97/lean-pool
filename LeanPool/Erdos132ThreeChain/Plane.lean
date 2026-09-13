@@ -3,8 +3,16 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132ThreeChain.Basic
+public import LeanPool.Erdos132ThreeChain.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Planarity constraints on squared distances
@@ -21,6 +29,8 @@ identity in the coordinates of the points involved, so each is proved by `ring`.
 * `gram3_det_eq_zero` is the same singularity written directly in inner products; together
   with `sq_nonneg_combo` it supplies the five-point obstruction.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

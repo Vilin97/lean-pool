@@ -3,21 +3,19 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
-import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
-import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-import LeanPool.JacobianDiffgeo.ResidueCalculus.PrincipalPart
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import LeanPool.JacobianDiffgeo.ResidueCalculus.IntegralBridge
+import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.MeasureTheory.Function.Jacobian
+import Mathlib.MeasureTheory.Measure.Haar.Unique
 import Mathlib.RingTheory.Complex
 import Mathlib.RingTheory.Norm.Transitivity
-import Mathlib.Topology.Algebra.Module.Determinant
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Haar.Unique
-import Mathlib.MeasureTheory.Group.MeasurableEquiv
 
 /-!
 # The annulus Stokes identity and the smeared residue theorem
@@ -41,6 +39,8 @@ against the `[0,2π]` circle parametrization), we apply
 rectangle) — a shorter route to the same identity, using the same mathlib machinery flagged as
 the design's own R2 fallback.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Metric
 open scoped Real

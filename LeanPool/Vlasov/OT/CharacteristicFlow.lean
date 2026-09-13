@@ -3,12 +3,15 @@ Copyright (c) 2026 Joseph K. Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph K. Miller
 -/
+module
+
+public import LeanPool.Vlasov.Basic
+public import LeanPool.Vlasov.OT.Coupling
+public import Mathlib.Analysis.ODE.Gronwall
+import LeanPool.Vlasov.ForMathlib.PicardLindelof
 import Mathlib.Algebra.Order.Field.GeomSum
 import Mathlib.Analysis.Calculus.ParametricIntegral
 import Mathlib.MeasureTheory.Integral.Prod
-import LeanPool.Vlasov.Basic
-import LeanPool.Vlasov.ForMathlib.PicardLindelof
-import LeanPool.Vlasov.OT.Coupling
 
 /-!
 # Characteristic flow for the Vlasov ODE + Lagrangian-Eulerian equivalence
@@ -43,6 +46,8 @@ differentiation-under-integral check that is not in Mathlib.
 
 See `formalize/DESIGN.md` (in the source repository) for the overall design.
 -/
+
+@[expose] public section
 
 namespace Vlasov
 

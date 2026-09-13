@@ -3,10 +3,11 @@ Copyright (c) 2026 Carles Marín. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Carles Marín
 -/
+module
 
-import LeanPool.ConnesKreimer.Coassoc
-import LeanPool.ConnesKreimer.Core
-import LeanPool.ConnesKreimer.PowerSeriesLogMul
+public import LeanPool.ConnesKreimer.Coassoc
+public import LeanPool.ConnesKreimer.Core
+public import LeanPool.ConnesKreimer.PowerSeriesLogMul
 
 /-!
 # Connes-Kreimer Hopf algebra of rooted trees
@@ -18,6 +19,8 @@ Main declarations: `CK.instCKHopf`, `CK.instHabHopf`, `CK.eulerian1_idem_ab`
 Tags: hopf-algebras, rooted-trees, renormalization, combinatorics
 MSC: 16T05, 05C05, 81T15
 -/
+
+@[expose] public section
 
 /-!
 Top-level import for the Connes-Kreimer / Foissy Hopf algebra development.

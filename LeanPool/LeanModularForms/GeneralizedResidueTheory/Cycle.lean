@@ -3,9 +3,18 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.GeneralizedResidueTheorem
-import Mathlib.Data.Finsupp.Defs
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.DixonProof
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Contour Cycles
@@ -32,6 +41,8 @@ contour integration and winding numbers extended by linearity.
   Tendsto).
 * `windingNumberCycle_isInt` -- winding number integrality.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Interval

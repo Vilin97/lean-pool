@@ -3,9 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
 
 /-!
 # Reconstruction from weighted `ℓ¹` coefficients
@@ -15,6 +16,8 @@ reconstructs the original ambient formal multilinear series wherever the
 change-of-origin expansion converges.  A second theorem identifies the result
 with any function represented by that series on a ball.
 -/
+
+@[expose] public section
 
 
 open scoped ENNReal NNReal Topology

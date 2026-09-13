@@ -3,9 +3,14 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
+module
+
+public import LeanPool.BruhatTits.Graph.Graph
+public import LeanPool.BruhatTits.Lattice.Quotient
+public import LeanPool.BruhatTits.Utils.LinearAlgebra
+public import Mathlib.LinearAlgebra.Projectivization.Basic
+import LeanPool.BruhatTits.Utils.ValuationRings
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-import Mathlib.RingTheory.DiscreteValuationRing.Basic
-import LeanPool.BruhatTits.Graph.Tree
 
 /-!
 # Proof that the Bruhat-Tits tree is regular
@@ -21,6 +26,8 @@ vertex has the same finite number of neighbours. Furthermore we show that this n
 - `BruhatTits.btgraph_regular` : The Bruhat-Tits Tree is `q + 1`-regular, where `q` is the
   cardinality of `R ⧸ 𝓂 R`.
 -/
+
+@[expose] public section
 
 open Module
 
@@ -201,7 +208,8 @@ def linesQuotientEquiv (L : Lattice R) :
   left_inv M := by simp only [OrderIso.symm_apply_apply, Subtype.coe_eta]
   right_inv M := by simp only [ne_eq, OrderIso.apply_symm_apply, Subtype.coe_eta]
 
-private def Lattice.submoduleNeAndNeEquivLtAndLt (L : Lattice R) :
+/-- Identify nontrivial quotient submodules with lattices strictly between the two bounds. -/
+def Lattice.submoduleNeAndNeEquivLtAndLt (L : Lattice R) :
     { M : { M : Submodule R L.M // maximalIdeal R • ⊤ ≤ M } // M ≠ ⊥ ∧ M ≠ ⊤ } ≃
       { M : Submodule R (Fin 2 → K) // maximalIdeal R • L.M < M ∧ M < L.M } where
   toFun M := ⟨Submodule.map L.M.subtype M.val.val, by

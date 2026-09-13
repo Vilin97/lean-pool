@@ -3,9 +3,19 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
+module
+
+public import LeanPool.Lentil.Tactics.Basic
+import Aesop.Frontend.Tactic
+import Aesop.Main
 import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
+import LeanPool.Lentil.Utils.MiscLemmas
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-! Theorems about big operators (e.g., `⋀`, `⋁`). -/
+
+@[expose] public section
 
 open Classical LentilLib
 

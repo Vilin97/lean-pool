@@ -11,9 +11,19 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   alignment argument used to pass from the real-anchored local theorem in
   `LocalCore.lean` to an existential unit-phase formulation.
 -/
+module
+
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.PhaseRetrieval.Constant.Internal.LocalCore
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # LocalHelpers -/
+
+@[expose] public section
 
 
 open FockSPR MeasureTheory Complex Real Polynomial Finset

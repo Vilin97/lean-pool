@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132N14.HopfPannwitz
-import LeanPool.Erdos132N14.RegularTridecagon
+module
+
+public import LeanPool.Erdos132N14.RegularTridecagon
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Published inputs for the conditional fourteen-point theorem
@@ -21,6 +23,8 @@ Szöllősi--Östergård paper. The classification interface is Theorem 16 of tha
 paper and returns only a genuine Euclidean distance-scaling similarity to one
 of the three explicit coordinate templates.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132N14
 

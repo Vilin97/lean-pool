@@ -3,15 +3,17 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.RoseTree.Defs
-import LeanPool.QuasiBorelSpaces.RoseTree.Basic
+public import LeanPool.QuasiBorelSpaces.RoseTree.Defs
 
 /-!
 # LeanPool.QuasiBorelSpaces.Rose.Encoding
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Rose.Encoding`.
 -/
+
+@[expose] public section
 
 
 namespace Rose
@@ -38,7 +40,7 @@ def mk (x : A) (xs : List (Encoding A)) : Encoding A where
 def fold (mk : A → List B → B) : Encoding A → B
   | ⟨⟨(), xs⟩, k⟩ => mk
     (k [])
-    (List.ofFn fun i ↦ fold mk ⟨xs[i], fun is ↦ k (i :: is)⟩)
+    (List.ofFn fun i : Fin xs.length ↦ fold mk ⟨xs[i], fun is ↦ k (i :: is)⟩)
   decreasing_by
     simp only [Fin.getElem_fin, Sigma.mk.sizeOf_spec, sizeOf_default, Nat.add_zero, mk.sizeOf_spec,
       Unit.sizeOf, Nat.reduceAdd, Nat.add_lt_add_iff_left]

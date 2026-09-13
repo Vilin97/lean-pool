@@ -3,22 +3,20 @@ Copyright (c) 2026 Michał Dobranowski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Dobranowski
 -/
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.GroupWithZero.Nat
+public import Mathlib.Tactic.ToDual
 import Mathlib.Algebra.Order.BigOperators.Group.List
-import Mathlib.Data.Nat.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Utils
@@ -26,6 +24,8 @@ import Mathlib.Tactic.Abel
 Utility lemmas for the Apportionment library: a positivity criterion for the sum of a
 vector of natural numbers, and a closed form for the sum of a length-four vector.
 -/
+
+@[expose] public section
 
 /-- A vector of natural numbers has positive sum iff at least one component is positive. -/
 lemma sum_pos_iff_exists_pos {n : ℕ} {v : Vector ℕ n} :

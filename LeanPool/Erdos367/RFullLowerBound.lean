@@ -3,20 +3,19 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
+public import Mathlib.Data.Nat.Factorization.Defs
 import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Algebra.Ring.GeomSum
 import Mathlib.Data.Finsupp.SMul
-import Mathlib.Data.Nat.Factorization.Defs
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Zify
-import Aesop
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős #367: r-full part and the odd-r extension
@@ -30,6 +29,8 @@ Main theorem: for odd r ≥ 1 and q ≥ 2, with n = (q^r - 1)^r,
   (iii) B_r(n) · B_r(n+1) ≥ n · q^r,
   (iv)  (B_r(n) · B_r(n+1))^r > n^{r+1}.
 -/
+
+@[expose] public section
 
 namespace RFullOdd
 

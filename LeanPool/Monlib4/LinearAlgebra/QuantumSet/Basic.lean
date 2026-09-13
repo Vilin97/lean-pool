@@ -3,19 +3,22 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Orthonormal
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Data.Complex.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.Tactic.Ring
-import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
+public import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
+public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
+public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.Preq.StarAlgEquiv
+public import Mathlib.LinearAlgebra.Basis.MulOpposite
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.RingTheory.Coalgebra.CoassocSimps
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
 import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Quantum Sets
@@ -26,6 +29,8 @@ the base quantum set on `ℂ`, modular inner-product identities, the coalgebra
 comultiplication on `ℂ`, and the `Psi`/`Upsilon` equivalences used by
 downstream quantum-graph files.
 -/
+
+@[expose] public section
 
 /-- A star algebra over `ℂ` equipped with a real-parameter modular automorphism group. -/
 class starAlgebra (A : Type _) extends

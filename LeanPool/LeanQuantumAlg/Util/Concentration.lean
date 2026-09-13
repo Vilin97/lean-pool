@@ -6,10 +6,7 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import Mathlib.Probability.Moments.Variance
-public import Mathlib.MeasureTheory.Integral.Bochner.Basic
-public import Mathlib.Tactic.Common
 /-!
 # Probabilistic exponential concentration
 

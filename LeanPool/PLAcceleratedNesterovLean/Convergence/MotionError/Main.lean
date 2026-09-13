@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 
 /-!
 # Motion Error Step 1: Gradient Bound from L-Smoothness
@@ -15,6 +16,8 @@ Since π(x'_n) ∈ M and ∇f(π(x'_n)) = 0, L-smoothness gives:
 Combined with ‖e_n‖² ≤ C_coer/μ' · L_n from coercivity:
   ‖g_n‖ ≤ L · √(C_coer/μ') · √L_n =: C_g · √L_n
 -/
+
+@[expose] public section
 
 noncomputable section
 

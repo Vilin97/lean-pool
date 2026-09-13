@@ -3,9 +3,12 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.ThreeGap.SimultaneousApprox
 import LeanPool.ThreeGap.ModTwoGrowth
-import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Euclidean growth inequality (instantiating the any-norm mod-2 theorem)
@@ -22,6 +25,8 @@ homogeneity come for free from that being a (continuous) linear equivalence.
 
 Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimApprox
 

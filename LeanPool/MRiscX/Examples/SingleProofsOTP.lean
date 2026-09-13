@@ -3,19 +3,23 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Elab.CodeElaborator
-import LeanPool.MRiscX.Semantics.Specification
-import LeanPool.MRiscX.Delab.DelabCode
-import LeanPool.MRiscX.Elab.HoareElaborator
+module
+
+public import LeanPool.MRiscX.Hoare.HoareCore
 import LeanPool.MRiscX.Hoare.HoareRules
+import LeanPool.MRiscX.Semantics.MsTheory
+import LeanPool.MRiscX.Semantics.Specification
+import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 import LeanPool.MRiscX.Util.BasicTheorems
-import LeanPool.MRiscX.Tactics.CodeProofTactics
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # SingleProofsOTP
 
 This module provides the per-instruction lemmas of the One-Time-Pad proof.
 -/
+
+@[expose] public section
 
 attribute [local implicit_reducible] Registers Memory
 

@@ -3,20 +3,25 @@ Copyright (c) 2026 Bhavik Mehta, Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Arend Mellendijk
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Data.Nat.GCD.BigOperators
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Order.CompletePartialOrder
 
+public import Mathlib.RingTheory.Radical.Basic
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
 import LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Data.Nat.GCD.BigOperators
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # LeanPool.ABCExceptions.Section2
 -/
+
+@[expose] public section
 
 open Finset UniqueFactorizationMonoid
 
@@ -52,9 +57,8 @@ theorem Finset.mem_abcExceptionsBelow (ε : ℝ) (X : ℕ) (a b c : ℕ) :
 @[gcongr]
 lemma Finset.abcExceptionsBelow_mono_right {ε : ℝ} {X Y : ℕ} (hXY : X ≤ Y) :
     abcExceptionsBelow ε X ⊆ abcExceptionsBelow ε Y := by
-  rintro ⟨a, b, c⟩
-  simp +contextual
-  omega
+  exact Finset.filter_subset_filter _
+    (Finset.Icc_subset_Icc le_rfl ⟨hXY, hXY, hXY⟩)
 
 @[gcongr]
 lemma Finset.abcExceptionsBelow_mono_left {ε₁ ε₂ : ℝ} {X : ℕ} (hε : ε₁ ≤ ε₂) :
@@ -344,7 +348,7 @@ This is $$S^*_{α,β,γ}(X)$$ in the paper and blueprint.
 noncomputable def refinedCountTriplesStar (α β γ : ℝ) (X : ℕ) : ℕ := #(dyadicPoints α β γ X)
 
 /-- The set over which we take the supremum in lemma 2.2. -/
-private noncomputable def indexSet (ε : ℝ) (X : ℕ) : Finset (ℕ × ℕ × ℕ × ℕ) :=
+noncomputable def indexSet (ε : ℝ) (X : ℕ) : Finset (ℕ × ℕ × ℕ × ℕ) :=
   (Finset.Icc 0 (Nat.log 2 X)) ×ˢ (Finset.Icc 0 (Nat.log 2 X)) ×ˢ
   (Finset.Icc 0 (Nat.log 2 X)) ×ˢ (Finset.Icc 1 (Nat.log 2 X+1)) |>.filter fun ⟨i, j, k, n⟩ ↦
     i + j + k ≤ (1 - ε) * n
@@ -712,7 +716,7 @@ private theorem hd_pos : 0 < d := by
   rw [hd, Nat.floor_pos]
   nlinarith only [two_lt_eps_inv]
 
-private instance hd_ne_zero : NeZero d := by
+instance hd_ne_zero : NeZero d := by
   simp_rw [neZero_iff]
   apply ne_of_gt hd_pos
 
@@ -908,7 +912,8 @@ private theorem c_le_X_pow : c ≤ (X : ℝ) ^ ε := calc
     · norm_cast
       linarith
 
-private noncomputable def KIndex : Fin d := Fin.ofNat d (K - 1)
+/-- The distinguished index `K - 1`, viewed in `Fin d`. -/
+noncomputable def KIndex : Fin d := Fin.ofNat d (K - 1)
 
 @[simp]
 private theorem KIndex_val_add_one : KIndex.val + 1 = K := by
@@ -1178,12 +1183,12 @@ theorem exists_nice_factorization'
     · exact c_le_pow
     gcongr
     · norm_cast
-    · linarith [sq_nonneg ε]
+    · linarith only [sq_nonneg ε]
   · rw [Nat.le_floor_iff]
     · apply c_le_pow.trans
       gcongr _ ^ ?_
       · norm_cast
-      · nlinarith
+      · nlinarith only [hε, hε_pos]
     positivity
   · rw [sub_eq_add_neg, Real.rpow_add, Real.rpow_neg, mul_inv_le_iff₀]
     · apply hsim.1.trans (rad_n_le.trans _)
@@ -1360,7 +1365,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
           · simp only [Real.rpow_one]
             trans 2 * (c₂ *(∏ i, (w i : ℝ) ^ (i.val + 1)))
             · norm_cast
-              simp_all
+              rwa [← c_eq_c_mul_prod]
             · rw [← mul_assoc, mul_comm 2, mul_assoc]
               gcongr
           · apply Real.rpow_pos_of_pos
@@ -1406,7 +1411,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
     · apply fun i ↦ (similar_pow_log (hu_pos i))
     · apply fun i ↦ (similar_pow_log (hv_pos i))
     · apply fun i ↦ (similar_pow_log (hw_pos i))
-    · simp_all
+    · rwa [← a_eq_c_mul_prod, ← b_eq_c_mul_prod, ← c_eq_c_mul_prod]
     · apply coprime_mul_prod_aux _ _ (a_eq_c_mul_prod ▸ b_eq_c_mul_prod ▸ hab) <;> omega
     · apply coprime_mul_prod_aux _ _ (a_eq_c_mul_prod ▸ c_eq_c_mul_prod ▸ hac) <;> omega
     · apply coprime_mul_prod_aux _ _ (b_eq_c_mul_prod ▸ c_eq_c_mul_prod ▸ hbc) <;> omega

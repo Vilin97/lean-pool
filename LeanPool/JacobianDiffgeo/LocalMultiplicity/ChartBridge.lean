@@ -7,11 +7,11 @@ Authors: Rado Kirov
 /-
 Blueprint unit: local-multiplicity (CC4). Chart bridge: `inChartAt` and transitions.
 -/
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Geometry.Manifold.ContMDiff.Atlas
-import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Order.Filter.EventuallyConst
+module
+
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Order.Filter.EventuallyConst
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
 
 /-!
 # Chart bridge for local multiplicity
@@ -29,6 +29,8 @@ import Mathlib.Order.Filter.EventuallyConst
 * `RS.trans_mem_maximalAtlas` — the maximal atlas is stable under `≫ₕ` with a groupoid element.
 * `RS.map_nhdsNE` — an `OpenPartialHomeomorph` maps `𝓝[≠] x` to `𝓝[≠] (e x)` on its source.
 -/
+
+@[expose] public section
 
 open Filter Set OpenPartialHomeomorph
 open scoped ContDiff Manifold Topology

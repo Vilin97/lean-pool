@@ -3,10 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
+public import Mathlib.Geometry.Manifold.Riemannian.PathELength
+public import Mathlib.Topology.VectorBundle.Riemannian
 import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
 import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian`
@@ -25,6 +28,8 @@ measure on the fixed compact supports used by the manifold Rellich glue.
 - `RellichKondrachov.Geometry.Manifold.Sobolev.RiemannianFiniteChartData`
 - `RellichKondrachov.Geometry.Manifold.Sobolev.exists_riemannianFiniteChartData`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

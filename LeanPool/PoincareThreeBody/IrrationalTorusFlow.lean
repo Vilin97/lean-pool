@@ -3,11 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
+public import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
 import Mathlib.Topology.Instances.Irrational
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
-import Mathlib.Tactic.FunProp
 
 /-!
 # Irrational rotating flows on the two-torus
@@ -16,6 +17,8 @@ The rotating Kepler frequency has the form `(ω, -1)`.  When `ω` is irrational,
 on the angle torus.  This file proves directly that a continuous invariant of that flow is
 constant, using irrational rotations on a circle.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -5,9 +5,9 @@ Authors: Violeta Hernández Palacios
 -/
 module
 
-public import Mathlib.Order.Lattice.Nat
-public import Mathlib.SetTheory.Ordinal.Family
-import Mathlib.Tactic.Abel
+public import Mathlib.SetTheory.Ordinal.Basic
+import Mathlib.SetTheory.Ordinal.Family
+import Mathlib.Tactic.NormNum.Basic
 
 /-!
 Misere combinatorial games.

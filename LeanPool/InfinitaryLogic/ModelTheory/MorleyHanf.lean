@@ -3,6 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import Mathlib.SetTheory.Cardinal.Aleph
 import LeanPool.InfinitaryLogic.Conditional.MorleyHanfSchemaDischarge
 /-!
 # The Morley–Hanf theorem: public facade and corollaries
@@ -25,6 +29,8 @@ together with the corollaries packaged here:
 * `morley_hanf_theory` — every countable `L_{ω₁ω}`-theory with a model of size `≥ ℶ_{ω₁}` has
   arbitrarily large models (via `Theoryω.conjunction`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

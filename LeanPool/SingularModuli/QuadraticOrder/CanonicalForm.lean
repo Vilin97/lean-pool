@@ -3,8 +3,10 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Prime
+public import LeanPool.SingularModuli.QuadraticOrder.Basic
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Layer 2b: Canonical Form for ideals of `QuadraticOrder` — scaffolding
@@ -38,6 +40,8 @@ The arithmetic content (index `= p^m`, existence and uniqueness of
 canonical forms) is developed in subsequent PRs on top of this
 scaffolding.
 -/
+
+@[expose] public section
 
 namespace QuadraticOrder
 

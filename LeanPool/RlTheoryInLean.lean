@@ -3,14 +3,16 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
+module
 
-import LeanPool.RlTheoryInLean.Analysis
-import LeanPool.RlTheoryInLean.Data
-import LeanPool.RlTheoryInLean.Defs
-import LeanPool.RlTheoryInLean.MeasureTheory
-import LeanPool.RlTheoryInLean.Order
-import LeanPool.RlTheoryInLean.Probability
-import LeanPool.RlTheoryInLean.StochasticApproximation
+public import LeanPool.RlTheoryInLean.Analysis
+public import LeanPool.RlTheoryInLean.Data
+public import LeanPool.RlTheoryInLean.Defs
+public import LeanPool.RlTheoryInLean.MeasureTheory
+public import LeanPool.RlTheoryInLean.Order
+public import LeanPool.RlTheoryInLean.Probability
+public import LeanPool.RlTheoryInLean.StochasticApproximation
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # RL Theory in Lean
@@ -22,6 +24,8 @@ Main declarations: `StochasticMatrix.stationary_distribution_exists`
 Tags: probability, reinforcement-learning, stochastic-matrices
 MSC: 62L20, 60J10
 -/
+
+@[expose] public section
 
 /-!
 ## Provenance

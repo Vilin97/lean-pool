@@ -3,9 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
+
+public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Real.Basic
 
 
 /-!
@@ -22,6 +25,8 @@ calculations.
 - `uniformDistribution`: the constant function `1 / |α|`.
 - `IsUniform`: predicate asserting a function is uniform.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 

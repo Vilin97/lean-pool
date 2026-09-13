@@ -3,8 +3,13 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.AnalyticNormalization
+public import LeanPool.PoincareThreeBody.AnalyticNormalization
+public import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+public import LeanPool.PoincareThreeBody.PoincareSet
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The first Poincaré coefficient-normalization cycle
@@ -14,6 +19,8 @@ of the Kepler Hamiltonian.  This file transfers that action-space statement to a
 ellipse and instantiates the removable mass quotient.  It is the complete local setup for one
 iteration of Poincaré's subtract-and-divide argument.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

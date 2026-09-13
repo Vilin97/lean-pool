@@ -3,8 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Lattices
+public import LeanPool.Chudnovsky.Lattices
+import LeanPool.Chudnovsky.Liouville
 
 /-!
 # Fourier expansions: the lattice ↔ modular-forms bridge
@@ -24,6 +26,8 @@ final product formula `fouriersigma` stated here is unaffected.
 
 All statements in this file are fully proved.
 -/
+
+@[expose] public section
 
 noncomputable section
 

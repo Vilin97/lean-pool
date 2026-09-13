@@ -3,8 +3,10 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.ZeroOutside
+public import LeanPool.GrothendieckVanishing.CohomologyAPI
 
 /-!
 # Generated subsheaves via coproduct images
@@ -22,6 +24,8 @@ sections.
 * `TopCat.Presheaf.allSectionMap` — the canonical coproduct map from all
   `zeroOutsideInt` generators of `F`, together with its `Epi` instance.
 -/
+
+@[expose] public section
 
 universe u
 
@@ -75,7 +79,8 @@ abbrev SectionIndex {C : Type*} [Category C] {FC : C → C → Type*} {CC : C �
     (F : TopCat.Presheaf C X) :=
   Σ U : Opens X, ToType (F.obj (op U))
 
-private noncomputable def sectionHom {X : TopCat.{u}}
+/-- The presheaf morphism associated to a section. -/
+noncomputable def sectionHom {X : TopCat.{u}}
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)
     (σ : SectionIndex F) :
     TopCat.Sheaf.zeroOutsideInt σ.1 ⟶ sheafOfIsSheaf hF :=

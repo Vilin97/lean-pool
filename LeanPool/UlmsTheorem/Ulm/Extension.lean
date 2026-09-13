@@ -3,11 +3,21 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
+public import Mathlib.RingTheory.TwoSidedIdeal.Operations
+
+public import Mathlib.Algebra.Module.Torsion.Basic
+
+public import Mathlib.RingTheory.FractionalIdeal.Basic
+
+public import Mathlib.CategoryTheory.Types.Basic
+
+public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
+public import LeanPool.UlmsTheorem.Ulm.Pure
+public import Mathlib.RingTheory.Finiteness.Defs
 import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-import LeanPool.UlmsTheorem.PGroups.UlmInvariants
-import LeanPool.UlmsTheorem.Ulm.Pure
 
 /-!
 # Extension lemmas for Ulm's theorem
@@ -16,6 +26,8 @@ This file contains the one-generator extension interface used in the hard
 direction of Ulm's theorem, formulated against the classical invariants
 `dim_{ℤ/pℤ}(P_α / P_{α+1})`.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

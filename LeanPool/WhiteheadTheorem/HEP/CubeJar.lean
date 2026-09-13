@@ -3,14 +3,17 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.HEP.Cofibration
-import LeanPool.WhiteheadTheorem.HEP.Retract
-import LeanPool.WhiteheadTheorem.Shapes.Cube
+public import LeanPool.WhiteheadTheorem.HEP.Cofibration
+public import LeanPool.WhiteheadTheorem.HEP.Retract
+public import LeanPool.WhiteheadTheorem.Auxiliary
 
 /-!
 This file proves that the pair `(∂𝕀 n, ⊔𝕀 n)` has the homotopy extension property for `n ≥ 1`.
 -/
+
+@[expose] public section
 
 open scoped Topology Topology.Homotopy unitInterval
 

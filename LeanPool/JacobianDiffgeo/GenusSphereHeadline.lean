@@ -3,8 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.GenusSphereHeadline.Basic
+public import LeanPool.JacobianDiffgeo.GenusSphereHeadline.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # genus-zero-headline (#30): `genus X = 0 ↔ X ≃ₜ S²`
@@ -28,3 +32,5 @@ direction's finisher: `RS.homeoSphere_of_exists_simple_pole`). **Unit COMPLETE**
   `classical`). **This is a direct alias target for final assembly**: no further wrapping should
   be needed to slot it into the challenge file.
 -/
+
+@[expose] public section

@@ -3,8 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Cochains
+public import LeanPool.JacobianDiffgeo.Cech.Cochains
+import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `H⁰(𝒰,D) ≃ L(D)` (CC8, proof plan §6.1)
@@ -15,6 +19,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.3).
 * `h0EquivLinSysOn`: `H⁰(𝒰,D) ≃ Γ(Ω, O_D)` — CC8's "definitionally easy" `H⁰ = L(D)`.
 * `h0Equiv`: the global form `H⁰(𝒰,D) ≃ L(D)` for covers of `X`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech

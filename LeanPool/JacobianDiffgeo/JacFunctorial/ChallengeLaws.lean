@@ -3,9 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
-import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
+public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Challenge-signature functoriality laws and the projection formula (jacobian-functoriality §9)
@@ -24,6 +28,8 @@ Unit: jacobian-functoriality. The remaining challenge exports
 
 Same-universe convention throughout (see `PeriodMaps.lean`'s universe warning).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Module

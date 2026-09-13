@@ -3,12 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import Mathlib.Data.Set.Finite.Powerset
-import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
-import LeanPool.Incompleteness.Foundation.Modal.Complement
+public import LeanPool.Incompleteness.Foundation.Modal.MaximalConsistentSet
+public import LeanPool.Incompleteness.Foundation.Modal.Complement
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
+import Mathlib.Data.Finset.Powerset
 
 /-! # ComplementClosedConsistentFinset -/
+
+@[expose] public section
 
 
 namespace LO

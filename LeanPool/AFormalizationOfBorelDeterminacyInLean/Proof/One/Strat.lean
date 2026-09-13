@@ -3,8 +3,13 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+
+import all LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+import Mathlib.Tactic.Linarith.Frontend
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
@@ -12,9 +17,11 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
+@[expose] public section
+
 
 namespace GaleStewartGame.BorelDet.One
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}

@@ -3,16 +3,19 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.Algebra.Ring.Idempotent
-import LeanPool.ArtinWedderburn.PrimeRing
-import LeanPool.ArtinWedderburn.CornerRing
+module
+
+public import LeanPool.ArtinWedderburn.PrimeRing
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.RingTheory.Artinian.Defs
 import LeanPool.ArtinWedderburn.MatrixUnits
-import LeanPool.ArtinWedderburn.Idempotents
 import LeanPool.ArtinWedderburn.NiceIdeals
-import LeanPool.ArtinWedderburn.Auxiliary
-import Mathlib.RingTheory.SimpleModule.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.RingTheory.SimpleRing.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # The Artin–Wedderburn theorem
@@ -21,6 +24,8 @@ The classical Artin–Wedderburn theorem: a nontrivial prime artinian ring is
 ring-isomorphic to a matrix ring over a division ring. Specialised to a simple
 ring it yields the same conclusion.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

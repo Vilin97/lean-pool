@@ -3,9 +3,12 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+import LeanPool.Chudnovsky.Ramanujan
 import Mathlib.Algebra.GCDMonoid.IntegrallyClosed
+import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
 
 /-!
 # The modular polynomial `Φ_m ∈ ℤ[X, Y]` and Kronecker's lemma (Phase C, chunks B6–B7)
@@ -81,6 +84,8 @@ The `(B8)` CM relation `∃ i, j τ₁₆₃ = f m i τ₁₆₃` that feeds bot
 lives in `CMRelations.lean` (a two-line Möbius computation), consumed via `diagPhiZ_eval_eq_zero`
 / `PhiQ_eval_j_root`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

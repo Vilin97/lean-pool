@@ -3,17 +3,20 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.Nat
-import LeanPool.QuasiBorelSpaces.Pi
-import LeanPool.QuasiBorelSpaces.Subtype
+public import LeanPool.QuasiBorelSpaces.Hom
+public import LeanPool.QuasiBorelSpaces.Pi
+public import LeanPool.QuasiBorelSpaces.Subtype
+public import LeanPool.QuasiBorelSpaces.Basic
 
 /-!
 # LeanPool.QuasiBorelSpaces.Functor
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Functor`.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace
 
@@ -69,7 +72,7 @@ attribute [reducible, instance] Sequence.quasiBorelSpace
 
 /-- The composition of a `Functor` with a `Sequence`. -/
 structure Comp (F) [Functor F] (S) [Sequence S] (n : ℕ) where
-  private mk ::
+  mk ::
   /-- The underlying element of `F (S n)`. -/
   get : F (S n)
 
@@ -147,7 +150,8 @@ lemma toFun_eq_coe (f : Limit S) : toFun f = ⇑f := rfl
 @[simp]
 lemma project_coe (n) (f : Limit S) : Sequence.project n (f (n + 1)) = f n := f.property n
 
-private def toSubtype {S} [Sequence S] (x : Limit S)
+/-- View a sequence limit as a compatible family of coordinates. -/
+def toSubtype {S} [Sequence S] (x : Limit S)
     : { f : ∀ n, S n // ∀ n, Sequence.project n (f (n + 1)) = f n } :=
   ⟨x.toFun, x.property⟩
 
@@ -172,19 +176,25 @@ lemma isHom_coe
 
 end Limit
 
-private structure Bundle.{u} : Type _ where
+universe u
+
+/-- A type bundled with its quasi-Borel space structure. -/
+structure Bundle : Type _ where
+  /-- The underlying type of a bundled quasi-Borel space. -/
   Carrier : Type u
+  /-- The quasi-Borel structure on the bundled carrier. -/
   [quasiBorelSpace : QuasiBorelSpace Carrier]
 
 attribute [local instance] Bundle.quasiBorelSpace
 
-private def Iter₀ (F) [Functor F] : ℕ → Bundle
+/-- Iterate the functor starting at the one-point quasi-Borel space. -/
+def Iter₀ (F) [Functor F] : ℕ → Bundle
   | 0 => .mk PUnit
   | n + 1 => .mk (F (Iter₀ F n).Carrier)
 
 /-- The `Sequence` obtained by iterating a `Functor`. -/
 structure Iter (F) [Functor F] (n : ℕ) : Type* where
-  private mk ::
+  mk ::
   /-- The underlying element at the `n`th iterate. -/
   get : (Iter₀ F n).Carrier
 
@@ -204,10 +214,10 @@ lemma isHom_mk {n} : IsHom (mk (F := F) (n := n)) := by
   simp only [isHom_to_lift, isHom_id']
 
 /-- The underlying-value projection as a quasi-Borel homomorphism. -/
-private def getHom {n} : Iter F n →𝒒 (Iter₀ F n).Carrier := .mk get
+def getHom {n} : Iter F n →𝒒 (Iter₀ F n).Carrier := .mk get
 
 /-- The wrapper constructor as a quasi-Borel homomorphism. -/
-private def mkHom {n} : (Iter₀ F n).Carrier →𝒒 Iter F n := .mk mk
+def mkHom {n} : (Iter₀ F n).Carrier →𝒒 Iter F n := .mk mk
 
 private lemma getHom_comp_mkHom {n} :
     (getHom (F := F) (n := n)).comp (mkHom (F := F) (n := n)) = .id := by
@@ -255,7 +265,8 @@ lemma unsucc_succ {n} (x : F (Iter F n)) : unsucc (succ x) = x := by
 lemma succ_injective {n} {x y : F (Iter F n)} (h : succ x = succ y) : x = y := by
   rw [← unsucc_succ x, ← unsucc_succ y, h]
 
-private def project : ∀ n, Iter F (n + 1) →𝒒 Iter F n
+/-- The projection between successive iterates of the functor. -/
+def project : ∀ n, Iter F (n + 1) →𝒒 Iter F n
   | 0 => .mk fun _ ↦ .zero
   | n + 1 => succ.comp ((Functor.map (project n)).comp unsucc)
 
@@ -313,7 +324,7 @@ end Continuous
 
 /-- The greatest fixed point of a `Functor`. -/
 structure Nu (F) [Functor F] where
-  private mk ::
+  mk ::
   /-- The underlying compatible sequence of finite iterates. -/
   get : Limit (Iter F)
 
@@ -330,8 +341,9 @@ lemma isHom_get : IsHom (get (F := F)) :=
 lemma isHom_mk : IsHom (mk (F := F)) := by
   simp only [isHom_to_lift (A := Nu F), isHom_id']
 
+/-- Shift a compatible family to a family in the functor-composed sequence. -/
 @[simps]
-private def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
+def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
   toFun x := {
     toFun n := .mk (Iter.unsucc (x (n + 1)))
     property n := by
@@ -343,8 +355,9 @@ private def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
       rw [this]
   }
 
+/-- Recover a compatible family from the functor-composed sequence. -/
 @[simps -fullyApplied]
-private def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
+def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
   toFun x := {
     toFun
       | 0 => .zero

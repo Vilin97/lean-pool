@@ -11,7 +11,9 @@ Modifications: split crossed-product transport into a reusable module, added
 continuous-coefficient closure and nonadditive homeomorphic transport, and
 changed imports and namespace. Paper: §3. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductTransport
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductTransport
 import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
 
 /-!
@@ -24,6 +26,8 @@ same von Neumann closure as all continuous coefficients, and an equivariant
 measure-preserving homeomorphism transports that closure. The homeomorphism is
 not required to preserve the addition on either compact group.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace CrossedProduct
@@ -177,7 +181,8 @@ local instance haarProbabilityTarget
     (Y : HaarProbabilityAction K Ξ) : IsProbabilityMeasure Y.measure :=
   Y.probability
 
-private def crossedFiberwiseOperatorContinuousLinearMap
+/-- Apply a bounded operator to each fibre of a square-summable family. -/
+def crossedFiberwiseOperatorContinuousLinearMap
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] :
     (E →L[ℂ] E) →L[ℂ]
       (lp (fun _ : K ↦ E) 2 →L[ℂ] lp (fun _ : K ↦ E) 2) := by

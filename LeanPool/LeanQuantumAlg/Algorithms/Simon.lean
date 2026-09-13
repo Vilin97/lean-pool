@@ -6,10 +6,11 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import Mathlib.Data.ZMod.Basic
-public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 public import LeanPool.LeanQuantumAlg.Core.Cost
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.ZMod.Defs
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Simon's problem

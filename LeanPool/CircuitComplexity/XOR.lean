@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Basic
+module
+
+public import LeanPool.CircuitComplexity.Basic
 
 /-! # XOR (Parity) Function
 
@@ -18,6 +20,8 @@ This module defines the N-input XOR function and its key properties.
 * `Schnorr.xorBool_flip` — flipping any input bit flips XOR
 * `Schnorr.xorBool_essential` — XOR depends on all inputs
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

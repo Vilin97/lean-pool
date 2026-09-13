@@ -3,13 +3,14 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Data.Complex.Basic
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import Mathlib.LinearAlgebra.Matrix.Kronecker
-import Mathlib.Tactic.Common
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
+module
+
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
  # Almost Hermitian Matrices
@@ -18,6 +19,8 @@ import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
 
  We say a matrix `x` is `is_almost_hermitian` if there exists some scalar `α ∈ ℂ`.
 -/
+
+@[expose] public section
 
 
 namespace Matrix
@@ -96,7 +99,7 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
       rw [← mul_left_inj' hβ', inv_mul_cancel₀ hβ', ← Complex.normSq_eq_conj_mul_self]
       norm_cast
       simp_rw [Complex.normSq_eq_norm_sq, ← Complex.norm_pow, hβ]
-      exact Hα'.symm
+      simpa only [RCLike.sqrt_normSq_eq_norm] using Hα'.symm
     have hαβ : β * α⁻¹ = β⁻¹ := by
       rw [← hβ, pow_two, mul_inv, ← mul_assoc, mul_inv_cancel₀ hβ', one_mul]
     use β

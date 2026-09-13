@@ -6,7 +6,6 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!

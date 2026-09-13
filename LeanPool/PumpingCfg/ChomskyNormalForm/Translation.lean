@@ -3,12 +3,10 @@ Copyright (c) 2024 Alexander Loitzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl
 -/
-import Mathlib.Computability.ContextFreeGrammar
-import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
-import LeanPool.PumpingCfg.ChomskyNormalForm.EmptyElimination
-import LeanPool.PumpingCfg.ChomskyNormalForm.UnitElimination
-import LeanPool.PumpingCfg.ChomskyNormalForm.TerminalRestriction
-import LeanPool.PumpingCfg.ChomskyNormalForm.LengthRestriction
+module
+
+public import LeanPool.PumpingCfg.ChomskyNormalForm.TerminalRestriction
+public import LeanPool.PumpingCfg.ChomskyNormalForm.LengthRestriction
 
 /-!
 # Chomsky Normal Form Translation
@@ -34,6 +32,8 @@ original language (except for the empty string)
    Languages, and Computation (3rd Edition). Addison-Wesley Longman Publishing Co., Inc., USA.]
    [Hopcroft et al. 2006]
 -/
+
+@[expose] public section
 
 universe uN
 

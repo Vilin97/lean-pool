@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
+module
+
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Basic
+public import Mathlib.RingTheory.Ideal.Height
 import Mathlib.Analysis.Normed.Ring.Lemmas
 import Mathlib.RingTheory.DedekindDomain.Dvr
-import Mathlib.RingTheory.Ideal.AssociatedPrime.Basic
 import Mathlib.RingTheory.KrullDimension.PID
 import Mathlib.RingTheory.Localization.Cardinality
 
@@ -20,6 +22,8 @@ An A-extension preserves primality and cardinality bounds.
 * Heitmann, "Characterization of completions of UFDs", 1993.
 * Jensen, "Completions of UFDs with semi-local formal fibers", 2006.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,12 +3,20 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Data.Sign.Defs
-import Mathlib.Tactic.Rify
+module
 
-import LeanPool.ComputableReal.AuxLemmas
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+
+public import Mathlib.Data.Rat.Cast.Order
+
+public import Mathlib.Algebra.Order.Archimedean.Basic
+
+public import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Data.Sign.Defs
+
+public import LeanPool.ComputableReal.AuxLemmas
+public import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.Rify
 
 /-!
 # Interval-Cauchy real sequences
@@ -26,6 +34,8 @@ sense. Addition, negation, and multiplication are executable interval arithmetic
 `sign` (and hence inversion and division, which need a nonzero witness) is defined
 classically and is `noncomputable`.
 -/
+
+@[expose] public section
 
 namespace QInterval
 

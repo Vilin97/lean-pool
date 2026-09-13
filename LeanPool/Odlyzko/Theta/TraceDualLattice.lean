@@ -8,8 +8,7 @@ module
 public import LeanPool.Odlyzko.Theta.PoissonSummation
 public import LeanPool.Odlyzko.Theta.TraceDualIdeal
 public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
-public import Mathlib.NumberTheory.NumberField.Discriminant.Basic
-public import Mathlib.RingTheory.Trace.Basic
+import Mathlib.NumberTheory.NumberField.Discriminant.Basic
 
 /-! TODO: Add doc-string. -/
 

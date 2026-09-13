@@ -3,7 +3,9 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Winston Yin, Joseph K. Miller
 -/
-import Mathlib.Analysis.ODE.PicardLindelof
+module
+
+public import Mathlib.Analysis.ODE.PicardLindelof
 
 /-!
 # Picard-Lindelöf with explicit confinement conjunct (vendored from Mathlib)
@@ -43,6 +45,8 @@ conclusion only grows).
 `exists_vlasov_extend_one_window` threads the confinement conjunct through
 to Helper 1, `vlasov_window_confinement`).
 -/
+
+@[expose] public section
 
 namespace IsPicardLindelof
 

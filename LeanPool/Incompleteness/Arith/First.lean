@@ -3,10 +3,16 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.CodedTheory
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Representation
 import LeanPool.Incompleteness.Arith.D1
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # First -/
+
+@[expose] public section
 
 
 

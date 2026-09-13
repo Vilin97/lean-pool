@@ -12,14 +12,18 @@ Modifications: extracted the generic measure-to-invariant-vector spine and
 made the Zhou detector and spectral construction explicit inputs; moved the
 dual-action and energy guards to their first consumers. See the upstream PORT_MAP.md.
 -/
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Topology.Algebra.PontryaginDual
-import Mathlib.Topology.ContinuousMap.CompactlySupported
-import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtension
+module
+
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Topology.Algebra.PontryaginDual
+public import Mathlib.Topology.ContinuousMap.CompactlySupported
+public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtension
 
 /-!
 The spectral criterion component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

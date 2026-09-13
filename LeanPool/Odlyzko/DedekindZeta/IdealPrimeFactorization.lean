@@ -5,8 +5,11 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.RingTheory.DedekindDomain.Factorization
 public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Rat.Floor
+import Mathlib.Tactic.Continuity.Init
 
 /-! TODO: Add doc-string. -/
 

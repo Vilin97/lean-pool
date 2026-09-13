@@ -3,9 +3,14 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
-import LeanPool.DomainTheory.Neighborhood.Example12
+public import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.Example12
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Set.Insert
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.SetLike
 
 /-!
 # Exercise 4.12 (Scott 1981, PRG-19, Lecture IV)
@@ -30,6 +35,8 @@ Uses `Classical.choice` only through Example 1.2's finite `fin_cases`/`simp`
 classification, exactly
 as that file does.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise412
 

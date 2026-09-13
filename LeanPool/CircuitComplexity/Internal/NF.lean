@@ -3,8 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.NF.Defs
-import LeanPool.CircuitComplexity.AON.Defs
+module
+
+public import LeanPool.CircuitComplexity.NF.Defs
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fintype.BigOperators
 
 /-! # Internal: Normal Form Proof Machinery
@@ -22,6 +25,8 @@ This internal module contains the proof infrastructure for CNF/DNF:
 
 The public interface re-exports the main theorems from `Circ.NF`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

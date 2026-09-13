@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
 import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Rellich
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise`
@@ -17,6 +19,8 @@ This module sets up the `L²`-range codomain restrictions and applies Euclidean 
 (on Lebesgue `volume`) after transporting along the `L²` equivalences from
 `RellichKondrachovRiemannian.Transport`.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -83,7 +87,8 @@ open RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean
 
 variable (i : dR.d.ι)
 
-private noncomputable def eL2RangeChartVol (i : dR.d.ι)
+/-- Embed the local square-integrable range using the chart volume measure. -/
+noncomputable def eL2RangeChartVol (i : dR.d.ι)
     (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F] :
     let μM :=
       RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure (I := I) (M := M)

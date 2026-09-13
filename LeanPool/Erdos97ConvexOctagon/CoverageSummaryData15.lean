@@ -3,11 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageData15
-import LeanPool.Erdos97ConvexOctagon.CoverageSummaryDataTypes
+public import LeanPool.Erdos97ConvexOctagon.CoverageData15
+public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryDataTypes
 
 /-! # Lightweight coverage summaries, buckets 120–127 -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence
 

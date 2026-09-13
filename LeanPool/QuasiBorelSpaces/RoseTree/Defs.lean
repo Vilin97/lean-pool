@@ -3,17 +3,17 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.TypeStar
-import Mathlib.Logic.Equiv.List
-import Mathlib.Logic.Encodable.Basic
+public import Mathlib.Logic.Equiv.List
 
 /-!
 # LeanPool.QuasiBorelSpaces.RoseTree.Defs
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.RoseTree.Defs`.
 -/
+
+@[expose] public section
 
 
 universe u

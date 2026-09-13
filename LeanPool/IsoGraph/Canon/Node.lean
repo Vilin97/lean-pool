@@ -3,9 +3,15 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Autos
+public import LeanPool.IsoGraph.Canon.Autos
 import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Nodes of the search tree
@@ -25,6 +31,8 @@ It packages the facts that the recursion needs about a node it is sitting at:
   pointwise, which is exactly the hypothesis `reach_child_auto` needs and exactly what
   `usableAutos` filters for.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

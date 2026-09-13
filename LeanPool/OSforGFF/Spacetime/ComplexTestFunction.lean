@@ -3,14 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
 
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Topology.Algebra.Module.Multilinear.Basic
+public import LeanPool.OSforGFF.Spacetime.Basic
 import Mathlib.Analysis.Complex.OperatorNorm
-
-import LeanPool.OSforGFF.Spacetime.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 ## Complex Test Function Linearity
@@ -35,6 +34,8 @@ and their pairings with field configurations.
 These results are essential for proving bilinearity of Schwinger functions
 and other quantum field theory constructions.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory
 
@@ -86,11 +87,7 @@ lemma ω_re_decompose_linear
     -- Evaluate pointwise scalar multiplication and addition
     simp only [add_apply, smul_apply, smul_eq_mul, reCLM_apply,
       add_re, mul_re, imCLM_apply]
-    -- Switch CLMs to the scalar functions and finish with the algebraic identity
-    change Complex.re (t * f x + s * g x)
-        = t.re * Complex.re (f x) - t.im * Complex.im (f x)
-          + s.re * Complex.re (g x) - s.im * Complex.im (g x)
-    simpa using re_of_complex_combination t s (f x) (g x)
+    ring
   -- Apply ω (a real-linear functional) to both sides
   simp_all
 
@@ -119,11 +116,7 @@ lemma ω_im_decompose_linear
     -- Evaluate pointwise scalar multiplication and addition
     simp only [add_apply, smul_apply, smul_eq_mul, imCLM_apply,
       add_im, mul_im, reCLM_apply]
-    -- Switch CLMs to scalar functions and finish with the algebraic identity
-    change Complex.im (t * f x + s * g x)
-        = t.re * Complex.im (f x) + t.im * Complex.re (f x)
-          + s.re * Complex.im (g x) + s.im * Complex.re (g x)
-    simpa using im_of_complex_combination t s (f x) (g x)
+    ring
   -- Apply ω (a real-linear functional) to both sides
   simp_all
 

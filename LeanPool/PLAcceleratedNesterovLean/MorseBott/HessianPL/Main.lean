@@ -3,9 +3,12 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
 import LeanPool.PLAcceleratedNesterovLean.MorseBott.HessianPL.Basics
-import Mathlib.Topology.Order.Compact
+import Mathlib.Analysis.Calculus.ContDiff.Comp
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 /-!
 # Hessian coercivity from PŁ — main theorems
@@ -13,6 +16,8 @@ import Mathlib.Topology.Order.Compact
 Proves `muPL_norm_sq_bound` and `hessian_coercive_on_orthogonal_of_MuPL_impl`,
 establishing that the Hessian is μ-coercive on ker(Hess)⊥ under the PŁ condition.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Submodule Asymptotics
 

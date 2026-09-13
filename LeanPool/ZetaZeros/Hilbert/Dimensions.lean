@@ -5,7 +5,14 @@ Authors: Kenny Lau
 -/
 module
 
-public import LeanPool.ZetaZeros.Hilbert.Basis
+public import LeanPool.ZetaZeros.Hilbert.Subspaces
+import LeanPool.ZetaZeros.Hilbert.Basis
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.RingTheory.Finiteness.Prod
 
 /-!
 # The dimension gap between the first two subspaces

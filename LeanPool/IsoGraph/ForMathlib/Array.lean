@@ -3,11 +3,16 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import Mathlib.Data.List.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Tactic.ToDual
 import Mathlib.Data.List.Nodup
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lemmas about arrays and `getElem!`
@@ -16,6 +21,8 @@ Statements that mention nothing from this development.  They were proved here be
 something in the library needed them, and they are collected in `ForMathlib` so that they
 can be contributed upstream, or deleted when Mathlib grows its own.
 -/
+
+@[expose] public section
 
 
 theorem array_extD {α : Type _} [Inhabited α] {a b : Array α} (hs : a.size = b.size)

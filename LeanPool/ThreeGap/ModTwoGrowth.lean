@@ -3,11 +3,12 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.SimultaneousApprox
+public import LeanPool.ThreeGap.SimultaneousApprox
+public import Mathlib.Analysis.Normed.Ring.Lemmas
 import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Data.Fintype.Pigeonhole
-import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The any-norm growth inequality via the mod-2 pigeonhole (Lagarias II, Theorem 6)
@@ -32,6 +33,8 @@ five-distance theorem.
 
 Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimApprox
 

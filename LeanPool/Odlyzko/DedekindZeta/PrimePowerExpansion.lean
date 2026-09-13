@@ -5,14 +5,14 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.DedekindZeta.LocalFactor
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
 public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealFactor
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
-public import Mathlib.Analysis.Calculus.LogDeriv
-public import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
-public import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
-public import Mathlib.Topology.Algebra.InfiniteSum.Real
+public import Mathlib.NumberTheory.NumberField.DedekindZeta
+public import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
+import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
+import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

@@ -3,8 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.WordClosures
-import Lean.Elab.Tactic.Omega
+module
+
+public import LeanPool.Erdos132ConvexK3.WordClosures
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Thirteen-word assembly
@@ -15,6 +22,8 @@ four corresponding closure theorems through one word-indexed family.  The
 final section separately records the stronger global reduction still needed
 to obtain the source-facing convex theorem.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

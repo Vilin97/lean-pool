@@ -3,22 +3,18 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Topology.Metrizable.Urysohn
-import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
-import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveControlledApproximation
+public import LeanPool.ClassificationOfSurfaces.Moise.RelativeSynchronizedArrangement
 import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveFanAffine
+import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
 import LeanPool.ClassificationOfSurfaces.Moise.EmbeddedComplexValence
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMarkedFan
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveControlledApproximation
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
-import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalFamilyPolyhedron
-import LeanPool.ClassificationOfSurfaces.Moise.RelativeSynchronizedArrangement
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Topology.Metrizable.Urysohn
 
 /-!
 # The Radó chart induction
@@ -44,6 +40,8 @@ This file provides the honest objects for that induction:
 * `moise_triangulation_of_boundaries` — the finite induction and final geometric realization.
 -/
 
+@[expose] public section
+
 open scoped Manifold
 
 namespace LeanEval
@@ -52,6 +50,25 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 open InvarianceOfDomain
+
+-- Compare subcomplexes in their shared ambient mesh before specializing to each arrangement.
+private theorem TriangleMesh.baryEval_eq_iff_of_triangles_subset (R : TriangleMesh)
+    {F G : Finset (Finset R.Vertex)} (hF : F ⊆ R.triangles) (hG : G ⊆ R.triangles)
+    (x : GeometricRealization R.Vertex F) (y : GeometricRealization R.Vertex G) :
+    R.toPlaneComplex.baryEval x.1 = R.toPlaneComplex.baryEval y.1 ↔ x.1 = y.1 := by
+  let xR : GeometricRealization R.Vertex R.triangles :=
+    ⟨x.1, x.2.1, by
+      obtain ⟨t, ht, hxt⟩ := x.2.2
+      exact ⟨t, hF ht, hxt⟩⟩
+  let yR : GeometricRealization R.Vertex R.triangles :=
+    ⟨y.1, y.2.1, by
+      obtain ⟨t, ht, hyt⟩ := y.2.2
+      exact ⟨t, hG ht, hyt⟩⟩
+  constructor
+  · intro hxy
+    exact congrArg Subtype.val (R.isEmbedding_coordinateEmbed.injective
+      (show R.coordinateEmbed xR = R.coordinateEmbed yR from hxy))
+  · exact congrArg R.toPlaneComplex.baryEval
 
 /-- A finite two-dimensional complex embedded in `S`, not necessarily covering it.  The
 realization is computed from the combinatorial data (as in `GeometricTriangulation`), so the
@@ -2546,26 +2563,15 @@ theorem patchMeshes_coordinateEmbed_eq_iff (k : ChartKind)
         (Q.patchNewMesh k).coordinateEmbed y ↔
       (x : (Q.patchOldMesh k).Vertex → ℝ) =
         (y : (Q.patchNewMesh k).Vertex → ℝ) := by
-  let R := PolygonalFamily.synchronizedArrangement (Q.patchFacePolygon k)
-    (patchTriangleMesh k)
-  let xR : GeometricRealization R.Vertex R.triangles :=
-    ⟨x.1, x.2.1, by
-      obtain ⟨t, ht, hxt⟩ := x.2.2
-      refine ⟨t, ?_, hxt⟩
-      exact (PolygonalFamily.selectedSynchronizedMesh_triangle_mem
-        (Q.patchFacePolygon k) (patchTriangleMesh k) (fun _ ↦ True)).mp ht |>.1⟩
-  let yR : GeometricRealization R.Vertex R.triangles :=
-    ⟨y.1, y.2.1, by
-      obtain ⟨t, ht, hyt⟩ := y.2.2
-      refine ⟨t, ?_, hyt⟩
-      exact (PolygonalFamily.targetSynchronizedMesh_triangle_mem
-        (Q.patchFacePolygon k) (patchTriangleMesh k)).mp ht |>.1⟩
-  constructor
-  · intro hxy
-    have hR : R.coordinateEmbed xR = R.coordinateEmbed yR := hxy
-    exact congrArg Subtype.val (R.isEmbedding_coordinateEmbed.injective hR)
-  · intro hxy
-    exact congrArg (fun z ↦ R.toPlaneComplex.baryEval z) hxy
+  refine TriangleMesh.baryEval_eq_iff_of_triangles_subset
+    (PolygonalFamily.synchronizedArrangement (Q.patchFacePolygon k) (patchTriangleMesh k))
+    ?_ ?_ x y
+  · intro t ht
+    exact ((PolygonalFamily.selectedSynchronizedMesh_triangle_mem
+      (Q.patchFacePolygon k) (patchTriangleMesh k) (fun _ ↦ True)).mp ht).1
+  · intro t ht
+    exact ((PolygonalFamily.targetSynchronizedMesh_triangle_mem
+      (Q.patchFacePolygon k) (patchTriangleMesh k)).mp ht).1
 
 /-- If the retained source coordinates land in a closed model region, the whole replacement
 support does too. -/
@@ -2837,26 +2843,14 @@ theorem synchronizedPatchMeshes_coordinateEmbed_eq_iff (k : ChartKind)
         (synchronizedPatchNewMesh k J).coordinateEmbed y ↔
       (x : (synchronizedPatchOldMesh k J).Vertex → ℝ) =
         (y : (synchronizedPatchNewMesh k J).Vertex → ℝ) := by
-  let R := PolygonalFamily.synchronizedArrangement J k.patchComplex.toTriangleMesh
-  let xR : GeometricRealization R.Vertex R.triangles :=
-    ⟨x.1, x.2.1, by
-      obtain ⟨t, ht, hxt⟩ := x.2.2
-      refine ⟨t, ?_, hxt⟩
-      exact (PolygonalFamily.selectedSynchronizedMesh_triangle_mem J
-        k.patchComplex.toTriangleMesh
-        (fun _ ↦ True)).mp ht |>.1⟩
-  let yR : GeometricRealization R.Vertex R.triangles :=
-    ⟨y.1, y.2.1, by
-      obtain ⟨t, ht, hyt⟩ := y.2.2
-      refine ⟨t, ?_, hyt⟩
-      exact (PolygonalFamily.targetSynchronizedMesh_triangle_mem J
-        k.patchComplex.toTriangleMesh).mp ht |>.1⟩
-  constructor
-  · intro hxy
-    have hR : R.coordinateEmbed xR = R.coordinateEmbed yR := hxy
-    exact congrArg Subtype.val (R.isEmbedding_coordinateEmbed.injective hR)
-  · intro hxy
-    exact congrArg (fun z ↦ R.toPlaneComplex.baryEval z) hxy
+  refine TriangleMesh.baryEval_eq_iff_of_triangles_subset
+    (PolygonalFamily.synchronizedArrangement J k.patchComplex.toTriangleMesh) ?_ ?_ x y
+  · intro t ht
+    exact ((PolygonalFamily.selectedSynchronizedMesh_triangle_mem J
+      k.patchComplex.toTriangleMesh (fun _ ↦ True)).mp ht).1
+  · intro t ht
+    exact ((PolygonalFamily.targetSynchronizedMesh_triangle_mem J
+      k.patchComplex.toTriangleMesh).mp ht).1
 
 /-- Transport the finite polygonal member of a synchronized patch weld to the surface. -/
 noncomputable def synchronizedPatchOldSurfaceEmbed
@@ -3036,24 +3030,13 @@ theorem meshes_coordinateEmbed_eq_iff (J : ι → PolygonalCircle) (N : Triangle
     (oldMesh J N).coordinateEmbed x = (newMesh J N).coordinateEmbed y ↔
       (x : (oldMesh J N).Vertex → ℝ) =
         (y : (newMesh J N).Vertex → ℝ) := by
-  let R := PolygonalFamily.synchronizedArrangement J N
-  let xR : GeometricRealization R.Vertex R.triangles :=
-    ⟨x.1, x.2.1, by
-      obtain ⟨t, ht, hxt⟩ := x.2.2
-      refine ⟨t, ?_, hxt⟩
-      exact (PolygonalFamily.selectedSynchronizedMesh_triangle_mem J N
-        (fun _ ↦ True)).mp ht |>.1⟩
-  let yR : GeometricRealization R.Vertex R.triangles :=
-    ⟨y.1, y.2.1, by
-      obtain ⟨t, ht, hyt⟩ := y.2.2
-      refine ⟨t, ?_, hyt⟩
-      exact (PolygonalFamily.targetSynchronizedMesh_triangle_mem J N).mp ht |>.1⟩
-  constructor
-  · intro hxy
-    have hR : R.coordinateEmbed xR = R.coordinateEmbed yR := hxy
-    exact congrArg Subtype.val (R.isEmbedding_coordinateEmbed.injective hR)
-  · intro hxy
-    exact congrArg (fun z ↦ R.toPlaneComplex.baryEval z) hxy
+  refine TriangleMesh.baryEval_eq_iff_of_triangles_subset
+    (PolygonalFamily.synchronizedArrangement J N) ?_ ?_ x y
+  · intro t ht
+    exact ((PolygonalFamily.selectedSynchronizedMesh_triangle_mem J N
+      (fun _ ↦ True)).mp ht).1
+  · intro t ht
+    exact ((PolygonalFamily.targetSynchronizedMesh_triangle_mem J N).mp ht).1
 
 /-- Transport the selected polygonal member of an arbitrary synchronized weld to the surface. -/
 noncomputable def oldSurfaceEmbed
@@ -3370,27 +3353,13 @@ theorem meshes_coordinateEmbed_eq_iff
         (newMesh J N lines).coordinateEmbed y ↔
       (x : (oldMesh J N lines).Vertex → ℝ) =
         (y : (newMesh J N lines).Vertex → ℝ) := by
-  let R := PolygonalFamily.relativeSynchronizedArrangement J N lines
-  let xR : GeometricRealization R.Vertex R.triangles :=
-    ⟨x.1, x.2.1, by
-      obtain ⟨t, ht, hxt⟩ := x.2.2
-      refine ⟨t, ?_, hxt⟩
-      exact
-        (PolygonalFamily.selectedRelativeSynchronizedMesh_triangle_mem
-          J N lines (fun _ ↦ True)).mp ht |>.1⟩
-  let yR : GeometricRealization R.Vertex R.triangles :=
-    ⟨y.1, y.2.1, by
-      obtain ⟨t, ht, hyt⟩ := y.2.2
-      refine ⟨t, ?_, hyt⟩
-      exact
-        (PolygonalFamily.targetRelativeSynchronizedMesh_triangle_mem
-          J N lines).mp ht |>.1⟩
-  constructor
-  · intro hxy
-    have hR : R.coordinateEmbed xR = R.coordinateEmbed yR := hxy
-    exact congrArg Subtype.val (R.isEmbedding_coordinateEmbed.injective hR)
-  · intro hxy
-    exact congrArg (fun z ↦ R.toPlaneComplex.baryEval z) hxy
+  refine TriangleMesh.baryEval_eq_iff_of_triangles_subset
+    (PolygonalFamily.relativeSynchronizedArrangement J N lines) ?_ ?_ x y
+  · intro t ht
+    exact ((PolygonalFamily.selectedRelativeSynchronizedMesh_triangle_mem
+      J N lines (fun _ ↦ True)).mp ht).1
+  · intro t ht
+    exact ((PolygonalFamily.targetRelativeSynchronizedMesh_triangle_mem J N lines).mp ht).1
 
 /-- The `oldSurfaceEmbed` declaration. -/
 noncomputable def oldSurfaceEmbed

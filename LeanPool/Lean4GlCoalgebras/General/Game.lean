@@ -3,9 +3,17 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import LeanPool.Lean4GlCoalgebras.Pdl.Game
-import LeanPool.Lean4GlCoalgebras.General.Proof
+public import LeanPool.Lean4GlCoalgebras.Pdl.Game
+public import LeanPool.Lean4GlCoalgebras.General.Proof
+public import Mathlib.Data.Finset.Powerset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Finite.Basic
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! ## The GL-proof game.
 
@@ -13,6 +21,8 @@ Builder-Prover game for constructive counter-models/proofs. Builder gets a rule 
 plays an applicable sequent `Γ` in order to construct a counter-model. Prover get a sequent `Γ` and
 plays rule applications `R` in order to construct a proof.
 -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 

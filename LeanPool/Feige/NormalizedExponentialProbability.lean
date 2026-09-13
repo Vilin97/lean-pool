@@ -3,8 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.NormalizedExponential
-import Mathlib.MeasureTheory.Integral.IntegrableOn
+module
+
+public import LeanPool.Feige.NormalizedExponential
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.MeasureTheory.Integral.Pi
 
 /-!
 # Probability normalization for independent unit exponentials
@@ -12,6 +15,8 @@ import Mathlib.MeasureTheory.Integral.IntegrableOn
 This module supplies the product-density normalization needed to turn the
 normalized-exponential integral identity into a probability-law statement.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory

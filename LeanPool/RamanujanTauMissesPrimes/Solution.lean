@@ -3,26 +3,20 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.BigOperators.Associated
 import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Data.Nat.Factorization.PrimePow
 import Mathlib.Data.Set.Card.Arithmetic
-import Mathlib.Algebra.BigOperators.Associated
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # LeanPool.RamanujanTauMissesPrimes.Solution
 -/
+
+@[expose] public section
 
 open Filter Asymptotics
 
@@ -2635,19 +2629,21 @@ lemma E4_pos_fiber_ncard_le_two (X : ℝ) (hX : 4 < X) (x : ℕ+)
               (↑u : ℝ) ≤ Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)}.ncard := hvia
       _ ≤ 2 := ncard_pos_int_in_interval_lt_two _ _ hlen
 
-private def pos_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
+/-- Positive integer square roots in the interval determined by `X` and `x`. -/
+def posFiber (X : ℝ) (x : ℕ+) : Set ℤ :=
   {u : ℤ | 0 < u ∧ (↑u : ℝ) ^ 2 ≥ 5 * (↑↑x : ℝ) ^ 22 - 4 * X ∧
             (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}
 
-private def neg_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
+/-- Negative integer square roots in the interval determined by `X` and `x`. -/
+def negFiber (X : ℝ) (x : ℕ+) : Set ℤ :=
   {u : ℤ | u < 0 ∧ (↑u : ℝ) ^ 2 ≥ 5 * (↑↑x : ℝ) ^ 22 - 4 * X ∧
             (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}
 
 lemma neg_maps_to_pos (X : ℝ) (x : ℕ+) :
-    ∀ u ∈ neg_fiber X x, -u ∈ pos_fiber X x := by
+    ∀ u ∈ negFiber X x, -u ∈ posFiber X x := by
   intro u hu
-  simp only [neg_fiber, Set.mem_ofPred_eq] at hu
-  simp only [pos_fiber, Set.mem_ofPred_eq]
+  simp only [negFiber, Set.mem_ofPred_eq] at hu
+  simp only [posFiber, Set.mem_ofPred_eq]
   obtain ⟨hu_neg, hu_lb, hu_ub⟩ := hu
   refine ⟨neg_pos.mpr hu_neg, ?_, ?_⟩
   · rwa [Int.cast_neg, neg_sq]
@@ -2662,9 +2658,9 @@ private lemma int_abs_le_ceil_sqrt (y : ℤ) (M : ℝ) (_hM : 0 ≤ M)
     _ ≤ ↑⌈Real.sqrt M⌉ := Int.le_ceil _
 
 lemma pos_fiber_subset_Icc (X : ℝ) (x : ℕ+) :
-    pos_fiber X x ⊆ Set.Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉ := by
+    posFiber X x ⊆ Set.Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉ := by
   intro u hu
-  simp only [pos_fiber, Set.mem_ofPred_eq] at hu
+  simp only [posFiber, Set.mem_ofPred_eq] at hu
   obtain ⟨hu_pos, _, hu_sq_le⟩ := hu
   constructor
   · omega
@@ -2676,7 +2672,7 @@ lemma pos_fiber_subset_Icc (X : ℝ) (x : ℕ+) :
     rwa [abs_of_pos hu_pos] at h_abs
 
 lemma pos_fiber_finite (X : ℝ) (x : ℕ+) :
-    (pos_fiber X x).Finite := (Set.finite_Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉).subset
+    (posFiber X x).Finite := (Set.finite_Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉).subset
     (pos_fiber_subset_Icc X x)
 
 lemma E4_neg_fiber_ncard_le_pos_fiber (X : ℝ) (x : ℕ+) :
@@ -2686,7 +2682,7 @@ lemma E4_neg_fiber_ncard_le_pos_fiber (X : ℝ) (x : ℕ+) :
               (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}.ncard := by
   have h1 := neg_maps_to_pos X x
   have h2 := pos_fiber_finite X x
-  change (neg_fiber X x).ncard ≤ (pos_fiber X x).ncard
+  change (negFiber X x).ncard ≤ (posFiber X x).ncard
   exact Set.ncard_le_ncard_of_injOn Neg.neg
     (fun u hu => h1 u hu)
     (neg_injective.injOn)

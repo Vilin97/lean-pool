@@ -3,10 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Geometry.Manifold.PartitionOfUnity
 import LeanPool.JacobianDiffgeo.Surface.Bridges
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Geometry.Manifold.PartitionOfUnity
 
 /-!
 # CC7: the `𝓘(ℝ, ℂ)` bridge — real smoothness from holomorphy
@@ -28,6 +28,8 @@ instance. This file provides, once and for all:
   `contMDiffOn_real_of_holomorphicOn`;
 * `exists_smoothPartitionOfUnity` on a compact T2 surface.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

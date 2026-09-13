@@ -3,8 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+public import LeanPool.JacobianDiffgeo.Cech.WindowRank
+import LeanPool.JacobianDiffgeo.Cech.SixTerm
 import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.Finiteness.Schwartz
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The χ ledger (`finiteness-and-chi`, gated file 3/3)
@@ -25,6 +32,8 @@ Unit: finiteness-and-chi (`docs/design/finiteness-and-chi.md` §8).
   `docs/design/canonical-forms.md` §D9 records.
 * `l_mono`/`l_le_l_add_degree`/`h1_le_of_le`/`h1_le_h1_add_degree`: monotonicity corollaries.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology TopologicalSpace RS.Cech

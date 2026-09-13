@@ -3,9 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
 
 /-!
 # Coercivity Step 1: Extract Component Bounds from Lyapunov Definition
@@ -20,6 +20,8 @@ Then from u_n = P⊥v_n + √μ' e_n (triangle inequality):
 
 And T_n := ‖P v_n‖ ≤ √(L_n/λ).
 -/
+
+@[expose] public section
 
 noncomputable section
 

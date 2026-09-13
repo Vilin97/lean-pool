@@ -6,3 +6,4 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real

@@ -12,7 +12,13 @@ Sections 4–5 of the companion paper.
 
 All comparisons are between rational numbers and are therefore decidable.
 -/
-import LeanPool.KaltonRoberts.Defs
+module
+
+public import LeanPool.KaltonRoberts.Defs
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Numerical verification for the Kalton-Roberts bound
@@ -20,6 +26,8 @@ import LeanPool.KaltonRoberts.Defs
 Exact rational-arithmetic verifications for the parameter choices used in the
 final bound.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

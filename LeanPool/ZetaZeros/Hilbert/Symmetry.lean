@@ -6,6 +6,8 @@ Authors: Kenny Lau
 module
 
 public import LeanPool.ZetaZeros.Hilbert.Defs
+public import LeanPool.ZetaZeros.Defs
+import LeanPool.ZetaZeros.Meta.Attr
 
 /-!
 # Symmetry of the twisted functions

@@ -3,12 +3,13 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
+public import LeanPool.PoincareThreeBody.ResonantOrbit
+import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.Averaging
-import LeanPool.PoincareThreeBody.ResonantOrbit
 import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Tactic.Ring
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # The resonant disturbing average
@@ -17,6 +18,8 @@ Rotating the inertial ellipse by an orientation phase produces the phase family 
 torus. We define the first-order disturbing function on this family and its average over the common
 period. Nonconstancy of this average is the concrete perturbative input in Poincaré's argument.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

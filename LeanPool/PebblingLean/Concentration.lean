@@ -3,11 +3,14 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import LeanPool.PebblingLean.FiniteProbability
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.PebblingLean.FiniteProbability
+import Mathlib.Analysis.Convex.Jensen
+import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Finite concentration inequalities
@@ -17,6 +20,8 @@ This file proves the finite Markov/Chernoff mechanism in that setting, with
 real-valued expectations so that exponential moment bounds can be stated
 directly.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

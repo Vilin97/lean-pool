@@ -3,14 +3,22 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.Theorem5
+public import LeanPool.ZhangYeungInequality.Theorem5
+
+public import Mathlib.MeasureTheory.MeasurableSpace.Defs
+
+public import Mathlib.Data.Nat.Notation
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.Test.Theorem5
 
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Test.Theorem5`.
 -/
+
+@[expose] public section
 
 namespace ZhangYeungTest
 

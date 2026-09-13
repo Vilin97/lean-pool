@@ -3,12 +3,16 @@ Copyright (c) 2026 Dan Clemens Posch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Clemens Posch
 -/
-import LeanPool.KahnKalai.Basic
+module
+
+public import LeanPool.KahnKalai.Basic
 
 /-!
 Cover-cost calculus for Tran–Vu: the infimum is a minimum, subadditivity,
 empty-family / empty-set evaluation, and `⊆`-minimals.
 -/
+
+@[expose] public section
 
 open Finset
 

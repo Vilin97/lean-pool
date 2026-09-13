@@ -3,7 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Surface.Harmonic
+module
+
+public import LeanPool.Rado.Surface.Harmonic
+public import LeanPool.Rado.Complex.Dirichlet
+import LeanPool.Rado.Complex.Poisson
 import Mathlib.Analysis.Complex.Harmonic.Poisson
 
 /-!
@@ -18,6 +22,8 @@ upper envelope of a Perron family is harmonic
 (`IsPerronFamily.surfaceHarmonicOn_perronSup`; Anghel–Stan Theorem 6, Hubbard
 Prop. 1.2.3).
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 

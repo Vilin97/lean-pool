@@ -3,10 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
-import Mathlib.MeasureTheory.Measure.AEMeasurable
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure`
@@ -17,6 +16,8 @@ For chart-based Sobolev spaces on a manifold `M`, it is convenient to transport 
 on `M` to a measure on the model space `E` using `extChartAt`. This file defines the resulting
 measures and records basic finiteness instances needed by the Euclidean Sobolev baseline.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

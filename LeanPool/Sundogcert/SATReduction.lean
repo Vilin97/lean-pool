@@ -3,15 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.SATNPHard
-import LeanPool.Sundogcert.VarWheel
-import LeanPool.Sundogcert.ClauseGadget
-import LeanPool.Sundogcert.MatchingNPHard
-import Mathlib.Data.Fintype.Sum
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.EquivFin
+public import LeanPool.Sundogcert.SATNPHard
+public import LeanPool.Sundogcert.MatchingNPHard
 
 /-!
   Sundogcert/SATReduction.lean — MILESTONE 4 of the `3SAT ≤ 3DM` marathon: the GLOBAL ASSEMBLY
@@ -69,7 +64,9 @@ import Mathlib.Data.Fintype.EquivFin
   `[propext, Classical.choice, Quot.sound]` on the four audited results.
 -/
 
-open Sundog.SATNPHard Sundog.VarWheel Sundog.ClauseGadget Sundog.MatchingNPHard
+@[expose] public section
+
+open Sundog.SATNPHard Sundog.MatchingNPHard
 
 namespace Sundog.SATReduction
 

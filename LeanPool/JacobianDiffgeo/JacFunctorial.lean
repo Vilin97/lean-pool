@@ -3,18 +3,21 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
-import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
-import LeanPool.JacobianDiffgeo.JacFunctorial.Density
-import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
-import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
-import LeanPool.JacobianDiffgeo.JacFunctorial.TraceCoeff
-import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
-import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
-import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
-import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
-import LeanPool.JacobianDiffgeo.JacFunctorial.ChallengeLaws
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackIntegral
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Density
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PeriodMaps
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
+public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceCoeff
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
+public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceLaws
+public import LeanPool.JacobianDiffgeo.JacFunctorial.TraceIntegral
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
+public import LeanPool.JacobianDiffgeo.JacFunctorial.ChallengeLaws
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # `jacobian-functoriality` (unit root)
@@ -126,3 +129,5 @@ reference chart and cancels a provably-nonzero transition factor. Anyone needing
 `ofCurve_contMDiff` already need. Everything else in this unit (both maps, all four
 functoriality laws, `pushforward_pullback`) is gate-free.
 -/
+
+@[expose] public section

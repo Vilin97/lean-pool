@@ -3,14 +3,16 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Init.Data.Nat.Lemmas
 
 /-!
 # LeanPool.LeanPolyABC.Lib.Max3
 
 Imported Lean Pool material for `LeanPool.LeanPolyABC.Lib.Max3`.
 -/
+
+@[expose] public section
 
 namespace Nat
 

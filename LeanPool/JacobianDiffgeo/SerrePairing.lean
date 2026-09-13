@@ -3,10 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
-import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
-import LeanPool.JacobianDiffgeo.SerrePairing.Duality
+public import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
+public import LeanPool.JacobianDiffgeo.SerrePairing.Pairing
+public import LeanPool.JacobianDiffgeo.SerrePairing.Duality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # serre-duality-cech: the Serre pairing at the Čech level (namespace `RS`/`RS.SerrePairing`)
@@ -133,3 +136,5 @@ spike-verified here) and citing `exists_tail_pair_ne_zero`'s shape directly; `Ta
   gets both inequalities for free from its own `resEquiv` bijectivity instead, so this export is
   offered but not required.
 -/
+
+@[expose] public section

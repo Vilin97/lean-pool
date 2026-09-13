@@ -3,11 +3,17 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.Basic.Ind
-import Mathlib.Logic.Nonempty
+public import LeanPool.Incompleteness.Arithmetization.Basic.Ind
+public import LeanPool.Incompleteness.Arithmetization.Basic.PeanoMinus
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.Order.Sub.Basic
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # IOpen -/
+
+@[expose] public section
 
 
 namespace LO
@@ -546,7 +552,7 @@ macro_rules
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander pair]
-def pairUnexpander : Lean.PrettyPrinter.Unexpander
+meta def pairUnexpander : Lean.PrettyPrinter.Unexpander
   | `($_ $term $term2) => `(⟪$term, $term2⟫)
   | _ => throw ()
 

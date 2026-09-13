@@ -3,8 +3,16 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.Polish
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+public import LeanPool.InfinitaryLogic.Descriptive.StructureSpace
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+import LeanPool.InfinitaryLogic.Descriptive.Measurable
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Generic Satisfaction Measurability for Carrier-Parametric Structure Spaces
 
@@ -24,6 +32,8 @@ This file proves that satisfaction of Lω₁ω formulas is measurable on
   measurable on `StructureSpaceOn L α`.
 - `modelsOfOn_measurableSet`: Satisfaction of any Lω₁ω sentence is measurable.
 -/
+
+@[expose] public section
 
 universe u v u'
 
@@ -48,7 +58,7 @@ variable [L.IsRelational] {α : Type*}
 
 /-- The set of codes in `StructureSpaceOn L α` where a bounded formula is realized,
 given variable assignments. -/
-private def ModelsOfBoundedOn
+def ModelsOfBoundedOn
     {β : Type u'} {n : ℕ}
     (φ : L.BoundedFormulaω β n) (v : β → α) (xs : Fin n → α) :
     Set (StructureSpaceOn L α) :=

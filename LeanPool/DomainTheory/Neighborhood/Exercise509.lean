@@ -3,9 +3,18 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise407
-import Mathlib.Tactic.Ring
+public import LeanPool.DomainTheory.Neighborhood.Exercise407
+public import LeanPool.DomainTheory.Neighborhood.Theorem41
+public import LeanPool.DomainTheory.Neighborhood.Exercise408
+public import LeanPool.DomainTheory.Neighborhood.Exercise411
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Exercise 5.9 (Scott 1981, PRG-19, Lecture V)
@@ -36,6 +45,8 @@ leastness.
 
 All maps and elements are choice-free; the equalities use only the order on `|𝒟|`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 
@@ -88,10 +99,7 @@ theorem commuting_least_common_fixed {f g : ApproximableMap V V} (hcomm : f.comp
   have haw : a ≤ w := fixElement_le_of_toElementMap_le f (le_of_eq hfw)
   exact fixAbove_least g ha_le haw (le_of_eq hgw)
 
-/-- `f.iterElem (n+1) = f(fⁿ(⊥))`. -/
-theorem iterElem_succ (f : ApproximableMap V V) (n : ℕ) :
-    f.iterElem (n + 1) = f.toElementMap (f.iterElem n) := by
-  rw [iterElem_eq_iterate, iterElem_eq_iterate, Function.iterate_succ', Function.comp_apply]
+
 
 theorem iterElem_zero' (f : ApproximableMap V V) : f.iterElem 0 = V.bot := by
   rw [iterElem_eq_iterate, Function.iterate_zero_apply]
@@ -149,11 +157,7 @@ theorem fixElement_eq_of_commuting_bot {f g : ApproximableMap V V} (hcomm : f.co
   · exact fixElement_le_of_toElementMap_le f (le_of_eq hffixg)
   · exact fixElement_le_of_toElementMap_le g (le_of_eq hgfixf)
 
-/-- `fⁿ(⊥) ⊑ fix(f)`. -/
-theorem iterElem_le_fixElement (f : ApproximableMap V V) (n : ℕ) :
-    f.iterElem n ≤ f.fixElement := by
-  rw [fixElement_eq_iSupDirected f]
-  exact NeighborhoodSystem.le_iSupDirected f.iterElem _ n
+
 
 /-- `(f²)ⁿ(⊥) = f^{2n}(⊥)`. -/
 theorem comp_self_iterElem (f : ApproximableMap V V) (n : ℕ) :

@@ -3,22 +3,23 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0
+import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSi
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

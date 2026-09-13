@@ -3,10 +3,16 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+public import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
 import LeanPool.InfinitaryLogic.Methods.ConstantSurgery
 import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantGeneralization
-import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
-import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
+import Mathlib.Data.Set.Finite.Lattice
 /-!
 # The budgeted labelled pair (issue #15, side-labelled restart)
 
@@ -51,6 +57,8 @@ adaptation:
 Stern's model-theoretic forcing proof is identified as the semantic dual, but its exact invariant is
 **unverified** — the paper has not been read.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -2558,22 +2566,23 @@ def budgetedPairConsistencyProperty
     (hr₂ : (sentenceJConsts (L' := L) (J := ℕ) r₂).Finite) :
     ConsistencyPropertyEqOn (GenU r₁ r₂) where
   sets := {S | BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S}
-  subset_U := fun _ hS => budgetedPairMem_subset_U hS
-  C0_no_falsum := fun _ hS => budgetedPairMem_C0_no_falsum hS
-  C0_no_contradiction := fun _ hS φ => budgetedPairMem_C0_no_contradiction hS φ
-  C1_imp := fun _ hS φ ψ hmem => budgetedPairMem_C1_imp hS φ ψ hmem
-  C1_neg_imp := fun _ hS φ ψ hmem => budgetedPairMem_C1_neg_imp hS φ ψ hmem
-  C2_not_not := fun _ hS φ hmem => budgetedPairMem_C2_not_not hS φ hmem
-  C3_iInf := fun _ hS φs hmem k => budgetedPairMem_C3_iInf hS φs hmem k
-  C3_neg_iInf := fun _ hS φs hmem => budgetedPairMem_C3_neg_iInf hS φs hmem
-  C4_iSup := fun _ hS φs hmem => budgetedPairMem_C4_iSup hS φs hmem
-  C4_neg_iSup := fun _ hS φs hmem k => budgetedPairMem_C4_neg_iSup hS φs hmem k
-  eq_refl := fun _ hS c => budgetedPairMem_eq_refl hS c
-  eq_symm := fun _ hS a b hmem => budgetedPairMem_eq_symm hS a b hmem
-  eq_trans := fun _ hS a b d hab hbd => budgetedPairMem_eq_trans hS a b d hab hbd
-  rel_congr := fun _ hS _ Rr g i b hrel heq => budgetedPairMem_rel_congr hS Rr g i b hrel heq
-  all_inst := fun _ hS φ hmem c => budgetedPairMem_all_inst hS φ hmem c
-  neg_all_witness := fun _ hS φ hmem => budgetedPairMem_neg_all_witness hr₁ hr₂ hS φ hmem
+  subset_U := fun _ hS => by exact budgetedPairMem_subset_U hS
+  C0_no_falsum := fun _ hS => by exact budgetedPairMem_C0_no_falsum hS
+  C0_no_contradiction := fun _ hS φ => by exact budgetedPairMem_C0_no_contradiction hS φ
+  C1_imp := fun _ hS φ ψ hmem => by exact budgetedPairMem_C1_imp hS φ ψ hmem
+  C1_neg_imp := fun _ hS φ ψ hmem => by exact budgetedPairMem_C1_neg_imp hS φ ψ hmem
+  C2_not_not := fun _ hS φ hmem => by exact budgetedPairMem_C2_not_not hS φ hmem
+  C3_iInf := fun _ hS φs hmem k => by exact budgetedPairMem_C3_iInf hS φs hmem k
+  C3_neg_iInf := fun _ hS φs hmem => by exact budgetedPairMem_C3_neg_iInf hS φs hmem
+  C4_iSup := fun _ hS φs hmem => by exact budgetedPairMem_C4_iSup hS φs hmem
+  C4_neg_iSup := fun _ hS φs hmem k => by exact budgetedPairMem_C4_neg_iSup hS φs hmem k
+  eq_refl := fun _ hS c => by exact budgetedPairMem_eq_refl hS c
+  eq_symm := fun _ hS a b hmem => by exact budgetedPairMem_eq_symm hS a b hmem
+  eq_trans := fun _ hS a b d hab hbd => by exact budgetedPairMem_eq_trans hS a b d hab hbd
+  rel_congr := fun _ hS _ Rr g i b hrel heq => by
+    exact budgetedPairMem_rel_congr hS Rr g i b hrel heq
+  all_inst := fun _ hS φ hmem c => by exact budgetedPairMem_all_inst hS φ hmem c
+  neg_all_witness := fun _ hS φ hmem => by exact budgetedPairMem_neg_all_witness hr₁ hr₂ hS φ hmem
 
 end FamilyFields
 

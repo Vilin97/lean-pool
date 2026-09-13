@@ -10,13 +10,17 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the measure-counting lemmas and made the paper-specific
 exhaustion an input. See the upstream PORT_MAP.md.
 -/
+module
+
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Order.CompletePartialOrder
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Order.CompletePartialOrder
 
 /-!
 The spectral detection component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

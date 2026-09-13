@@ -3,12 +3,14 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.End
 import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 
 /-!
 
@@ -17,6 +19,8 @@ import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
 This file contains some basic results on the inner product space on finite dimensional C*-algebras.
 
 -/
+
+@[expose] public section
 
 
 open scoped TensorProduct

@@ -3,7 +3,15 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.TorusDefs
+module
+
+public import LeanPool.Clawristotle.TorusDefs
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Torus Integration Lemmas
@@ -11,6 +19,8 @@ import LeanPool.Clawristotle.TorusDefs
 Box integral machinery, integration by parts on T³, curl integral vanishing,
 and the energy method proof that harmonic functions on T³ are constant.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real Filter
 

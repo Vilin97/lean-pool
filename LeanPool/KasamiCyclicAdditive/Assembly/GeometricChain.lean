@@ -3,18 +3,19 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteAverage
-import LeanPool.KasamiCyclicAdditive.Counting.Definitions
-import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
-import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
-import LeanPool.KasamiCyclicAdditive.Phase.RootCount
-import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
-import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
+public import LeanPool.KasamiCyclicAdditive.Geometry.RootEquation
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
 import LeanPool.KasamiCyclicAdditive.Geometry.EvenCase
+import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
+import LeanPool.KasamiCyclicAdditive.Phase.PowerMap
+import LeanPool.KasamiCyclicAdditive.Phase.RootCount
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteAverage
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The assembled Kasami chain
@@ -37,6 +38,8 @@ inverting the prime-to-3 isogeny factor `G` on `E(K)` directly
 (`PointFrobenius.exists_gMap_preimage`) and then taking a single `(1 + π)`
 preimage over `AlgebraicClosure K`.
 -/
+
+@[expose] public section
 
 open Finset
 open KasamiCyclicAdditive.FermatCubic KasamiCyclicAdditive.PointFrobenius WeierstrassCurve

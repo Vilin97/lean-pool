@@ -3,17 +3,20 @@ Copyright (c) 2026 jjaassoonn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: jjaassoonn
 -/
+module
 
+public import Mathlib.RingTheory.PowerSeries.Inverse
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.AlgebraicTopology.SimplexCategory.Basic
 import Mathlib.Analysis.Normed.Field.Lemmas
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Nat.Totient
 import Mathlib.Data.Rat.Star
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.PowerSeries.Inverse
-import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.LinearAlgebra.Matrix.Block
+import Mathlib.Logic.Equiv.PartialEquiv
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Combinatorial coefficient formulas and nonnegativity (Theorems 2 and 3)
@@ -23,6 +26,8 @@ Demazure-multiplicity paper: explicit Cauchy-product and matrix-inverse formulas
 for the generating-function coefficients and their nonnegativity via a
 Dyck-path counting model.
 -/
+
+@[expose] public section
 
 namespace Biswal.Theorem23
 

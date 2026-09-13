@@ -3,10 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
+public import LeanPool.Erdos97ConvexOctagon.Incidence
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Lightweight legal-row search data -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence
 
@@ -17,7 +24,8 @@ structure SearchRowChoice where
   /-- Packed unordered-pair bits selected together by the row. -/
   pairMask : UInt64
 
-private def searchRowChoices0 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 0. -/
+def searchRowChoices0 : Array SearchRowChoice :=
   #[⟨30, 270015488⟩, ⟨46, 539503616⟩, ⟨78, 1078479872⟩, ⟨142, 2156432384⟩, ⟨54, 137442112512⟩,
   ⟨86, 274883171328⟩, ⟨150, 549765288960⟩, ⟨102, 70368750494720⟩, ⟨166, 140737498883072⟩,
   ⟨198, 36028797031597056⟩, ⟨58, 138244274176⟩, ⟨90, 276220106752⟩, ⟨154, 552171771904⟩,
@@ -29,7 +37,8 @@ private def searchRowChoices0 : Array SearchRowChoice :=
   ⟨184, 141427635912704⟩, ⟨216, 36029625142345728⟩, ⟨232, 36239907009593344⟩,
   ⟨240, 36240865324171264⟩]
 
-private def searchRowChoices1 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 1. -/
+def searchRowChoices1 : Array SearchRowChoice :=
   #[⟨29, 270008348⟩, ⟨45, 539492396⟩, ⟨77, 1078460492⟩, ⟨141, 2156396684⟩, ⟨53, 137442099252⟩,
   ⟨85, 274883149908⟩, ⟨149, 549765251220⟩, ⟨101, 70368750469220⟩, ⟨165, 140737498841252⟩,
   ⟨197, 36028797031547076⟩, ⟨57, 138244259896⟩, ⟨89, 276220084312⟩, ⟨153, 552171733144⟩,
@@ -41,7 +50,8 @@ private def searchRowChoices1 : Array SearchRowChoice :=
   ⟨184, 141427635912704⟩, ⟨216, 36029625142345728⟩, ⟨232, 36239907009593344⟩,
   ⟨240, 36240865324171264⟩]
 
-private def searchRowChoices2 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 2. -/
+def searchRowChoices2 : Array SearchRowChoice :=
   #[⟨27, 268441626⟩, ⟨43, 536881194⟩, ⟨75, 1073760330⟩, ⟨139, 2147518602⟩, ⟨51, 137438965810⟩,
   ⟨83, 274877927506⟩, ⟨147, 549755850898⟩, ⟨99, 70368744202338⟩, ⟨163, 140737488396450⟩,
   ⟨195, 36028797019013314⟩, ⟨57, 138244259896⟩, ⟨89, 276220084312⟩, ⟨153, 552171733144⟩,
@@ -53,7 +63,8 @@ private def searchRowChoices2 : Array SearchRowChoice :=
   ⟨184, 141427635912704⟩, ⟨216, 36029625142345728⟩, ⟨232, 36239907009593344⟩,
   ⟨240, 36240865324171264⟩]
 
-private def searchRowChoices3 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 3. -/
+def searchRowChoices3 : Array SearchRowChoice :=
   #[⟨23, 1053718⟩, ⟨39, 2106406⟩, ⟨71, 4211782⟩, ⟨135, 8422534⟩, ⟨51, 137438965810⟩,
   ⟨83, 274877927506⟩, ⟨147, 549755850898⟩, ⟨99, 70368744202338⟩, ⟨163, 140737488396450⟩,
   ⟨195, 36028797019013314⟩, ⟨53, 137442099252⟩, ⟨85, 274883149908⟩, ⟨149, 549765251220⟩,
@@ -65,7 +76,8 @@ private def searchRowChoices3 : Array SearchRowChoice :=
   ⟨180, 141424694657024⟩, ⟨212, 36029621666316288⟩, ⟨228, 36239903266177024⟩,
   ⟨240, 36240865324171264⟩]
 
-private def searchRowChoices4 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 4. -/
+def searchRowChoices4 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨39, 2106406⟩, ⟨71, 4211782⟩, ⟨135, 8422534⟩, ⟨43, 536881194⟩, ⟨75, 1073760330⟩,
   ⟨139, 2147518602⟩, ⟨99, 70368744202338⟩, ⟨163, 140737488396450⟩, ⟨195, 36028797019013314⟩,
   ⟨45, 539492396⟩, ⟨77, 1078460492⟩, ⟨141, 2156396684⟩, ⟨101, 70368750469220⟩,
@@ -76,7 +88,8 @@ private def searchRowChoices4 : Array SearchRowChoice :=
   ⟨226, 36239903251554304⟩, ⟨108, 70370361606144⟩, ⟨172, 140740183719936⟩,
   ⟨204, 36028800253296640⟩, ⟨228, 36239903266177024⟩, ⟨232, 36239907009593344⟩]
 
-private def searchRowChoices5 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 5. -/
+def searchRowChoices5 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨23, 1053718⟩, ⟨71, 4211782⟩, ⟨135, 8422534⟩, ⟨27, 268441626⟩, ⟨75, 1073760330⟩,
   ⟨139, 2147518602⟩, ⟨83, 274877927506⟩, ⟨147, 549755850898⟩, ⟨195, 36028797019013314⟩,
   ⟨29, 270008348⟩, ⟨77, 1078460492⟩, ⟨141, 2156396684⟩, ⟨85, 274883149908⟩, ⟨149, 549765251220⟩,
@@ -87,7 +100,8 @@ private def searchRowChoices5 : Array SearchRowChoice :=
   ⟨156, 552181694464⟩, ⟨204, 36028800253296640⟩, ⟨212, 36029621666316288⟩,
   ⟨216, 36029625142345728⟩]
 
-private def searchRowChoices6 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 6. -/
+def searchRowChoices6 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨23, 1053718⟩, ⟨39, 2106406⟩, ⟨135, 8422534⟩, ⟨27, 268441626⟩, ⟨43, 536881194⟩,
   ⟨139, 2147518602⟩, ⟨51, 137438965810⟩, ⟨147, 549755850898⟩, ⟨163, 140737488396450⟩,
   ⟨29, 270008348⟩, ⟨45, 539492396⟩, ⟨141, 2156396684⟩, ⟨53, 137442099252⟩, ⟨149, 549765251220⟩,
@@ -97,7 +111,8 @@ private def searchRowChoices6 : Array SearchRowChoice :=
   ⟨170, 140740172752896⟩, ⟨178, 141424683167744⟩, ⟨60, 138247929856⟩, ⟨156, 552181694464⟩,
   ⟨172, 140740183719936⟩, ⟨180, 141424694657024⟩, ⟨184, 141427635912704⟩]
 
-private def searchRowChoices7 : Array SearchRowChoice :=
+/-- Packed search-row choices for vertex 7. -/
+def searchRowChoices7 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨23, 1053718⟩, ⟨39, 2106406⟩, ⟨71, 4211782⟩, ⟨27, 268441626⟩, ⟨43, 536881194⟩,
   ⟨75, 1073760330⟩, ⟨51, 137438965810⟩, ⟨83, 274877927506⟩, ⟨99, 70368744202338⟩, ⟨29, 270008348⟩,
   ⟨45, 539492396⟩, ⟨77, 1078460492⟩, ⟨53, 137442099252⟩, ⟨85, 274883149908⟩,

@@ -3,16 +3,10 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Nat.Factorization.Defs
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Conditional upper bound on B₂ via a radical lower bound (Erdős #367)
@@ -33,6 +27,8 @@ consecutive integers — as an **explicit hypothesis** (`RadLB`).
 * `B2_upper_bound` (conditional on `RadLB`): for every `ε > 0` there is `C' > 0` with
   `B2 (F k n) ≤ C' * n ^ (2 + ε)` for all `n ≥ 1`.
 -/
+
+@[expose] public section
 
 namespace GeneralK
 

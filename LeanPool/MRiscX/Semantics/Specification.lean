@@ -3,17 +3,26 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Semantics.MsTheory
-import LeanPool.MRiscX.Tactics.SpecificationTactics
+module
+
+public import LeanPool.MRiscX.Hoare.HoareCore
 import LeanPool.MRiscX.Elab.HoareElaborator
-import LeanPool.MRiscX.Elab.CodeElaborator
-import LeanPool.MRiscX.Delab.DelabHoare
+import LeanPool.MRiscX.Semantics.MsTheory
+import LeanPool.MRiscX.Tactics.GeneralCustomTactics
+import LeanPool.MRiscX.Tactics.SpecificationTactics
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.Order.ZeroLEOne
+import Mathlib.Data.Set.Insert
+import Std.Tactic.BVDecide.Normalize.BitVec
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Specification
 
 This module provides the per-instruction Hoare specifications.
 -/
+
+@[expose] public section
 open Lean Elab Tactic
 
 /-

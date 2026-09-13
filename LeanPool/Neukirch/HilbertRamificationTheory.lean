@@ -3,36 +3,23 @@ Copyright (c) 2023 Hu Yongle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hu Yongle
 -/
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
+module
+
+
+public import LeanPool.Neukirch.ExtensionOfDedekindDomains
+public import Mathlib.NumberTheory.NumberField.Basic
 import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.NumberTheory.NumberField.Norm
-import Mathlib.LinearAlgebra.Dimension.DivisionRing
-import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 import Mathlib.RingTheory.RamificationInertia.Basic
-import Mathlib.FieldTheory.Galois.IsGaloisGroup
-import Mathlib.NumberTheory.RamificationInertia.Ramification
-import Mathlib.NumberTheory.RamificationInertia.Inertia
-
-import LeanPool.Neukirch.ExtensionOfDedekindDomains
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.Neukirch.HilbertRamificationTheory
 
 Imported Lean Pool material for `LeanPool.Neukirch.HilbertRamificationTheory`.
 -/
+
+@[expose] public section
 
 open Algebra
 

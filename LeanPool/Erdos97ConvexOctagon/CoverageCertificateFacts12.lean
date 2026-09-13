@@ -3,47 +3,54 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData02
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData02
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Bounded coverage-certificate computation facts -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Root audit for fixed branch (0, 12). -/
 theorem coverageBranchRoot_0_12 :
     branchClaimRootValidB 0 12 (.patternTwo 0) = true := by
-  rfl
+  decide +kernel
 
 /-- Root audit for fixed branch (4, 30). -/
 theorem coverageBranchRoot_4_30 :
     branchClaimRootValidB 4 30 (.patternTwo 0) = true := by
-  rfl
+  decide +kernel
 
 /-- Root audit for fixed branch (1, 34). -/
 theorem coverageBranchRoot_1_34 :
     branchClaimRootValidB 1 34 (.search branchClaims1Row34) = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (1, 33), starting at 64. -/
 theorem coverageBranchNodes_1_33_00064 :
     nodeClaimChunkValidB branchClaims1Row33 64 64 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (1, 33), starting at 128. -/
 theorem coverageBranchNodes_1_33_00128 :
     nodeClaimChunkValidB branchClaims1Row33 128 64 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (1, 33), starting at 192. -/
 theorem coverageBranchNodes_1_33_00192 :
     nodeClaimChunkValidB branchClaims1Row33 192 40 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (1, 34), starting at 0. -/
 theorem coverageBranchNodes_1_34_00000 :
     nodeClaimChunkValidB branchClaims1Row34 0 64 = true := by
-  rfl
+  decide +kernel
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage

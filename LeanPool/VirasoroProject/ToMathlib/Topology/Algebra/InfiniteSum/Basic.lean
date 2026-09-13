@@ -3,12 +3,16 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
+module
+
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import LeanPool.VirasoroProject.ToMathlib.Topology.Order
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum.Basic
 -/
+
+@[expose] public section
 
 section
 

@@ -3,7 +3,17 @@ Copyright (c) 2026 Nathan Pflueger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
-import LeanPool.DemazureProduct.Reduction
+module
+
+public import LeanPool.DemazureProduct.Submodular
+public import LeanPool.DemazureProduct.Utils
+import LeanPool.DemazureProduct.ReducedProducts
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Transpositions
@@ -14,6 +24,8 @@ $\triangleleft$. Its main purpose is to prove Theorem 8.7 from
 Theorem A and the theorem labeled `thm:resL`, which describe the special case of $\sigma_S$ for
 $S = \{n\}$ a singleton.
 -/
+
+@[expose] public section
 
 namespace LeanPool.DemazureProduct
 
@@ -103,8 +115,8 @@ private lemma sigmaFun_asp (S : Set ℤ) : isAsp (sigmaFun S) := by
 for $n \in S$. -/
 noncomputable def sigma (S : Set ℤ) (hS : NoConsecutive S) : AspPerm where
   func := sigmaFun S
-  bijective := ⟨sigmaFun_injective hS, sigmaFun_surjective hS⟩
-  asp := sigmaFun_asp S
+  bijective := by exact ⟨sigmaFun_injective hS, sigmaFun_surjective hS⟩
+  asp := by exact sigmaFun_asp S
 
 @[simp] private lemma sigma_apply (S : Set ℤ) (hS : NoConsecutive S) (n : ℤ) :
     sigma S hS n = sigmaFun S n := rfl
@@ -848,7 +860,7 @@ private lemma residual_sigma_eq_self (α : AspPerm) (S : Set ℤ) (hS : NoConsec
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 1/4.* -/
 theorem starSigma (α : AspPerm) (S : Set ℤ) (hS : NoConsecutive S) :
     α ⋆ sigma S hS =
-        α * sigma (risingSet α S) (noConsecutive_risingSet α hS) := by
+        α * sigma (risingSet α S) (by exact noConsecutive_risingSet α hS) := by
   -- Proof written by GPT 5.5.
   let R := risingSet α S
   let F := fallingSet α S
@@ -887,7 +899,7 @@ theorem starSigma (α : AspPerm) (S : Set ℤ) (hS : NoConsecutive S) :
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 2/4.* -/
 theorem residualSigma (α : AspPerm) (S : Set ℤ) (hS : NoConsecutive S) :
     α ◃ sigma S hS =
-        α * sigma (fallingSet α S) (noConsecutive_fallingSet α hS) := by
+        α * sigma (fallingSet α S) (by exact noConsecutive_fallingSet α hS) := by
   -- Proof written by GPT 5.5.
   let R := risingSet α S
   let F := fallingSet α S

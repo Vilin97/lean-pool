@@ -3,8 +3,18 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 5.8 (Scott 1981, PRG-19, §5) — combinatory completeness
@@ -70,6 +80,8 @@ Everything is **data**; the combinators are built from `idMap`, `curry`, `proj`,
 `eval` and are
 choice-free.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise508
 
