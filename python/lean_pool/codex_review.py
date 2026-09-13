@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -195,7 +196,7 @@ def run_codex(request: dict, directory: Path) -> dict:
     if process.returncode:
         raise RuntimeError(f"Codex exited {process.returncode}: {stderr[-2000:]}")
     envelope = json.loads((directory / "answer.json").read_text())
-    payload = json.loads(envelope["review_json"])
+    payload = decode_review_json(envelope["review_json"])
     if not isinstance(payload, dict) or not payload:
         raise ValueError("Codex did not return a review object")
     usage = extract_usage(stdout)
@@ -205,6 +206,22 @@ def run_codex(request: dict, directory: Path) -> dict:
         "effort": request["effort"],
         "usage": usage,
     }
+
+
+def decode_review_json(source: str) -> Any:
+    """Preserve literal Lean/LaTeX backslashes in otherwise valid model JSON."""
+    try:
+        return json.loads(source)
+    except json.JSONDecodeError as error:
+        if error.msg != "Invalid \\escape":
+            raise
+    # Consume valid escape pairs intact, including already escaped backslashes.
+    repaired = re.sub(
+        r'\\(?:["\\/bfnrtu]|([^"\\/bfnrtu]))',
+        lambda match: "\\\\" + match[1] if match[1] else match[0],
+        source,
+    )
+    return json.loads(repaired)
 
 
 def stop_codex(process: subprocess.Popen) -> None:

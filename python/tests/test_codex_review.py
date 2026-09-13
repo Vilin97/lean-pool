@@ -256,3 +256,31 @@ def test_azure_partial_usage_labels_partial_estimate():
     )
     assert "**Estimated cost:** $1.0500" in footer
     assert "partial" in footer
+
+
+def test_review_json_preserves_literal_mathematical_backslashes():
+    """An invalid JSON escape must not lose completed mathematical evidence."""
+    raw = (
+        r'{"verdict":"discuss","evidence":"\lambda x => x; '
+        r'\\proper; \nline; \"quote\"; \set"}'
+    )
+    result = codex_review.decode_review_json(raw)
+    assert result == {
+        "verdict": "discuss",
+        "evidence": '\\lambda x => x; \\proper; \nline; "quote"; \\set',
+    }
+
+
+@pytest.mark.parametrize(
+    "source", [r'{"evidence":"\u123"}', '{"verdict":"pass"', r'{"x":\broken}']
+)
+def test_review_json_other_malformed_output_still_fails(source):
+    """Backslash handling cannot invent missing structure or repair other errors."""
+    with pytest.raises(json.JSONDecodeError):
+        codex_review.decode_review_json(source)
+
+
+def test_valid_review_json_is_unchanged():
+    """Valid escapes and Unicode keep their ordinary JSON meanings."""
+    payload = {"verdict": "pass", "evidence": '\\lambda\n"quoted"\tλ'}
+    assert codex_review.decode_review_json(json.dumps(payload)) == payload
