@@ -115,7 +115,8 @@ def valAddEquiv : CrossProductAlgebra f ≃+ (Gal(K, F) →₀ K) where
 @[simp]
 lemma val_finsuppSum {α M : Type*} [AddCommMonoid M] (g : α →₀ M)
     (h : α → M → CrossProductAlgebra f) :
-    (g.sum h).val = g.sum (fun a m ↦ (h a m).val) := map_finsuppSum valAddEquiv ..
+    (g.sum h).val = g.sum (fun a m ↦ (h a m).val) :=
+  map_finsuppSum (valAddEquiv (f := f)).toAddMonoidHom g h
 
 instance [Semiring R] [Module R K] : Module R (CrossProductAlgebra f) :=
   val_injective.module _ valAddEquiv.toAddMonoidHom val_smul
@@ -156,14 +157,16 @@ variable (f) in
 @[simp]
 lemma mulLinearMap_single_single (c d : K) (σ τ : Gal(K, F)) :
     mulLinearMap f (.single σ c) (.single τ d) = .single (σ * τ) (c * σ d * f (σ, τ)) := by
-  simp [mulLinearMap]
+  simp only [mulLinearMap, Finsupp.lsum_single, LinearMap.coe_mk, AddHom.coe_mk]
 
 variable (f) in
 @[simp]
 lemma mulLinearMap_single_left_apply (c : K) (σ : Gal(K, F)) (x : Gal(K, F) →₀ K)
     (τ : Gal(K, F)) :
     mulLinearMap f (.single σ c) x τ = c * σ (x (σ⁻¹ * τ)) * f (σ, σ⁻¹ * τ) := by
-  classical simp +contextual [mulLinearMap, Finsupp.single_apply, ← eq_inv_mul_iff_mul_eq]
+  classical
+  rw [mulLinearMap, Finsupp.lsum_single]
+  simp +contextual [Finsupp.single_apply, ← eq_inv_mul_iff_mul_eq]
 
 variable (f) in
 @[simp]
@@ -192,21 +195,13 @@ variable [Fact <| IsMulCocycle₂ f]
 
 instance monoid : Monoid (CrossProductAlgebra f) where
   one_mul := by
-    rintro ⟨x⟩
-    ext : 1
-    dsimp
-    induction x using Finsupp.induction_linear with
-    | zero => simp
-    | add => simp [*]
-    | single σ a => simp [map_one_fst_of_isMulCocycle₂ Fact.out σ, mul_right_comm _ a]
+    intro x
+    ext σ
+    simp [map_one_fst_of_isMulCocycle₂ Fact.out σ, mul_right_comm]
   mul_one := by
-    rintro ⟨x⟩
-    ext : 1
-    dsimp
-    induction x using Finsupp.induction_linear with
-    | zero => simp
-    | add => simp [*]
-    | single σ a => simp [map_one_snd_of_isMulCocycle₂ Fact.out σ]
+    intro x
+    ext σ
+    simp [map_one_snd_of_isMulCocycle₂ Fact.out σ]
   mul_assoc := by
     rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
     ext : 1
@@ -282,16 +277,8 @@ def incl : K →ₐ[F] CrossProductAlgebra f where
   commutes' _ := by ext; simp [Algebra.algebraMap_eq_smul_one]
 
 lemma smul_eq_incl_mul (k : K) (x : CrossProductAlgebra f) : k • x = incl f k * x := by
-  obtain ⟨x⟩ := x
-  ext : 1
-  dsimp
-  induction x using Finsupp.induction_linear with
-  | zero => simp
-  | add => simp [*]
-  | single σ b => simp only [Finsupp.smul_single, smul_eq_mul, incl_apply, val_smul, val_one,
-    mulLinearMap_single_single, one_mul, AlgEquiv.one_apply, mul_right_comm _ _ b,
-    map_one_fst_of_isMulCocycle₂ Fact.out σ, ne_eq, Units.ne_zero, not_false_eq_true,
-    inv_mul_cancel_right₀]
+  ext σ
+  simp [incl_apply, map_one_fst_of_isMulCocycle₂ Fact.out σ, mul_right_comm]
 
 instance [CommSemiring R] [Algebra R K] :
     IsScalarTower R (CrossProductAlgebra f) (CrossProductAlgebra f) where
@@ -308,19 +295,12 @@ def of (σ : Gal(K, F)) : (CrossProductAlgebra f)ˣ where
     ext : 1
     simp only [Units.val_inv_eq_inv_val, mk_mul_mk, mulLinearMap_single_single, mul_inv_cancel,
       map_mul, map_inv₀, one_mul, val_one]
-    congr
-    convert congr((σ (f (σ⁻¹, σ)))⁻¹ * (σ (f (1, 1)))⁻¹ * (f (1, 1))⁻¹ *
-      $((Fact.out : IsMulCocycle₂ f) σ σ⁻¹ σ)) using 1
-    · simp [map_one_fst_of_isMulCocycle₂ Fact.out σ, mul_assoc]
-    · calc
-          (f (1, 1) : K)⁻¹
-      _ = σ (f (1, 1)) * (σ (f (1, 1)))⁻¹ * σ (f (σ⁻¹, σ)) *
-            (σ (f (σ⁻¹, σ)))⁻¹ * (f (1, 1))⁻¹ := by
-        simp [← map_inv₀, ← map_mul]
-      _ = (σ (f (σ⁻¹, σ)))⁻¹ * (σ (f (1, 1)))⁻¹ * (f (1, 1))⁻¹ *
-            (σ (f (σ⁻¹, σ)) * σ (f (1, 1))) := by
-        group
-      _ = _ := by simp [map_one_snd_of_isMulCocycle₂ Fact.out σ]
+    congr 1
+    rw [← mul_inv, ← div_eq_inv_mul, ← one_div (f (1, 1) : K)]
+    apply (div_eq_div_iff (by simp) (Units.ne_zero _)).2
+    simpa [map_one_fst_of_isMulCocycle₂ Fact.out σ,
+      map_one_snd_of_isMulCocycle₂ Fact.out σ, mul_comm] using
+      congr(($((Fact.out : IsMulCocycle₂ f) σ σ⁻¹ σ)).val)
   inv_val := by
     ext : 1
     simp only [Units.val_inv_eq_inv_val, mk_mul_mk, mulLinearMap_single_single, inv_mul_cancel,
@@ -485,7 +465,9 @@ variable (I) in
 map. -/
 private lemma coe_equivQuotient (hI) : (equivQuotient I hI).toLinearMap = I.ringCon.mkL K := by
   refine basis.ext fun σ ↦ ?_
-  simp [equivQuotient, basis, CrossProductAlgebra.basis, RingCon.mkL, quotientBasis]
+  change (quotientBasis I hI).repr.symm (basis.repr (basis σ)) = _
+  rw [Basis.repr_self, Basis.repr_symm_single_one]
+  simp only [quotientBasis, Basis.coe_mk, comp_apply]
 
 instance : IsSimpleRing (CrossProductAlgebra f) := by
   refine ⟨⟨fun I ↦ Classical.or_iff_not_imp_right.2 fun hI ↦ ?_⟩⟩
