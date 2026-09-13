@@ -196,7 +196,7 @@ For all sufficiently large configurations, the neighbourhood graph associated wi
 The four substantive assumptions are parity, a Dirac condition with quantitative slack, a pairwise
 codegree bound, and a vertex-incidence bound. -/
 theorem lemma107K2_holds :
-    ∀ (ρ : ℝ) (k : ℕ), 0 < ρ → ρ < 1 → 0 < k → ∃ n₀ : ℕ,
+    ∀ (ρ : ℝ) (k : ℕ), 0 < ρ → 0 < k → ∃ n₀ : ℕ,
       ∀ {V : Type} [DecidableEq V] (H : Finset (Sym2 V)) (S U W : Finset V),
         n₀ ≤ S.card → (∀ e ∈ H, ¬ e.IsDiag) → H ⊆ cliqueEdges S → U ⊆ S → W ⊆ S →
         Disjoint U W → (S.card : ℝ) / (k : ℝ) - 1 ≤ (W.card : ℝ) →
@@ -211,7 +211,7 @@ theorem lemma107K2_holds :
         ∃ Mx : V → Finset (Finset V),
           (∀ x ∈ U, GoodMatching H W x (Mx x)) ∧
           (U : Set V).Pairwise (fun x y => Disjoint (famEdges (Mx x)) (famEdges (Mx y))) := by
-  intro ρ k hρ hρ1 hk
+  intro ρ k hρ hk
   have hkR : (0 : ℝ) < k := by exact_mod_cast hk
   have hk1 : (1 : ℝ) ≤ (k : ℝ) := by exact_mod_cast hk
   have hsq : 0 < Real.sqrt ρ := Real.sqrt_pos.2 hρ

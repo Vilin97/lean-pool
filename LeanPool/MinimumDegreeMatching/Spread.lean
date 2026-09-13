@@ -510,20 +510,18 @@ theorem exists_spread_involution {R : Type*} [Field R] [LinearOrder R]
       ∑ y ∈ N, w y (f y) ≤ (1 / ((t : R) + 1)) * ∑ y ∈ N, ∑ z ∈ N, w y z := by
   classical
   set A : Finset (Sym2 V) := N.sym2.filter fun e => e ∈ G.edgeSet with hA
-  obtain ⟨f, hf, hbound⟩ :=
-    exists_isMatchingOn_weight (N := N) hEven w (fun y _ z _ => hw y z) t A fun v hv => by
-      rw [hA, nbhdOn_graph hv]; exact hdeg v hv
-  refine ⟨f, hf.mapsTo, hf.invol, hf.ne, fun a ha => ?_, ?_⟩
-  · have := (mem_filter.1 (mem_nbhdOn.1 (hf.adj a ha)).2.2).2
-    simpa using this
-  · have hmono : ∑ y ∈ N, ∑ z ∈ nbhdOn A N y, w y z ≤ ∑ y ∈ N, ∑ z ∈ N, w y z :=
-      Finset.sum_le_sum fun y _ =>
-        Finset.sum_le_sum_of_subset_of_nonneg nbhdOn_subset fun z _ _ => hw y z
-    have hkey : ((t : R) + 1) * ∑ y ∈ N, w y (f y) ≤ ∑ y ∈ N, ∑ z ∈ N, w y z := hbound.trans hmono
-    have hpos : (0 : R) < (t : R) + 1 :=
-      add_pos_of_nonneg_of_pos (Nat.cast_nonneg t) zero_lt_one
-    rw [one_div, inv_mul_eq_div, le_div_iff₀ hpos, mul_comm]
-    exact hkey
+  have hdegA : ∀ v ∈ N,
+      N.card / 2 + t ≤ ((N.filter fun z => s(v, z) ∈ A).erase v).card := by
+    intro v hv
+    change N.card / 2 + t ≤ (nbhdOn A N v).card
+    rw [hA, nbhdOn_graph hv]
+    exact hdeg v hv
+  obtain ⟨f, hmap, hinv, hfne, hadj, hbound⟩ :=
+    exists_spread_involution_of_edgeSet hEven hdegA w hw
+  refine ⟨f, hmap, hinv, hfne, fun a ha => ?_, hbound⟩
+  have haA := hadj a ha
+  rw [hA] at haA
+  simpa using (mem_filter.1 haA).2
 
 
 omit [DecidableEq V] in
