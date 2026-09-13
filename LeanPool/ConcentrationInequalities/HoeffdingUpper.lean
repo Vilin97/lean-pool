@@ -32,6 +32,23 @@ open MeasureTheory ProbabilityTheory Finset
 
 namespace Contrib.Hoeffding
 
+/-- Centering a finite family moves the sum of expectations to the threshold. -/
+private lemma centered_sum_event {Ω : Type*} [MeasureSpace Ω] {n : ℕ}
+    (X : Fin n → Ω → ℝ) (t : ℝ) :
+    {ω | (∑ i, X i ω) ≥ (∑ i, ∫ ω, X i ω ∂ℙ) + t} =
+      {ω | t ≤ ∑ i, (X i ω - ∫ ω, X i ω ∂ℙ)} := by
+  ext ω
+  simp only [Set.mem_ofPred_eq, Finset.sum_sub_distrib]
+  constructor <;> intro h <;> linarith
+
+/-- The variance sum for `n` unit-interval summands gives Hoeffding's exponent. -/
+private lemma hoeffding_exponent (n : ℕ) (t : ℝ) :
+    -t ^ 2 / (2 * ∑ _i : Fin n, (((2 : NNReal) ^ 2)⁻¹)) = -2 * t ^ 2 / (n : ℝ) := by
+  simp
+  by_cases hn : n = 0
+  · simp [hn]
+  · field_simp
+
 /-- **Hoeffding upper tail.** For finitely many independent random variables `X i` on a probability
 space, each valued in `[0,1]`, the sum exceeds its mean by `t ≥ 0` with probability at most
 `exp(−2t²/n)`.
@@ -67,18 +84,10 @@ theorem hoeffding_upper {Ω : Type*} [MeasureSpace Ω]
     calc
       (ℙ : Measure Ω).real {ω | (∑ i, X i ω) ≥ (∑ i, ∫ ω, X i ω ∂ℙ) + t}
           = (ℙ : Measure Ω).real {ω | t ≤ ∑ i, Y i ω} := by
-              congr 1
-              ext ω
-              simp only [Set.mem_ofPred_eq, Y]
-              rw [Finset.sum_sub_distrib]
-              constructor <;> intro h <;> linarith
+              rw [centered_sum_event]
       _ ≤ Real.exp (-t ^ 2 / (2 * ∑ i : Fin n, (((2 : NNReal) ^ 2)⁻¹))) := hbound
       _ = Real.exp (-2 * t ^ 2 / (n : ℝ)) := by
-        congr 1
-        simp
-        by_cases hn : n = 0
-        · simp [hn]
-        · field_simp
+        rw [hoeffding_exponent]
   rw [← ENNReal.ofReal_toReal (measure_ne_top ℙ _)]
   exact ENNReal.ofReal_le_ofReal hreal
 

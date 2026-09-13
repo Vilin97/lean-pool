@@ -128,16 +128,22 @@ lemma integrable_exp_add_compProd {η : Kernel (Ω' × Ω) Ω''} [IsZeroOrMarkov
     rwa [ENNReal.coe_ofNat, Measure.comp_compProd_comm, Measure.snd,
       memLp_map_measure_iff hp.1 measurable_snd.aemeasurable] at hp
 
-/-- Tower-property additivity of variance factors for two consecutive kernel increments. -/
-lemma add_compProd {η : Kernel (Ω' × Ω) Ω''} [IsZeroOrMarkovKernel η]
+/-- Multiplying two compatible sub-gamma estimates adds their variance factors. -/
+private lemma mgf_mul_exp_le_add {a t : ℝ}
+    (ha : a ≤ exp ((V : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t)))) :
+    a * exp ((W : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) ≤
+      exp (((V + W : ℝ≥0) : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) := by
+  calc
+    a * exp ((W : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) ≤
+        exp ((V : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) *
+          exp ((W : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) := by gcongr
+    _ = _ := by rw [← exp_add, NNReal.coe_add]; congr 1; ring
+
+/-- Additivity for an `s`-finite first kernel. -/
+private lemma add_compProd_of_isSFiniteKernel {η : Kernel (Ω' × Ω) Ω''}
+    [IsZeroOrMarkovKernel η] [IsSFiniteKernel κ]
     (hX : Kernel.HasSubgammaMGF X V c κ ν) (hY : Kernel.HasSubgammaMGF Y W c η (ν ⊗ₘ κ)) :
     Kernel.HasSubgammaMGF (fun p ↦ X p.1 + Y p.2) (V + W) c (κ ⊗ₖ η) ν := by
-  by_cases hκ : IsSFiniteKernel κ
-  swap
-  · rw [Kernel.compProd_of_not_isSFiniteKernel_left _ _ hκ]
-    refine ⟨by simp, ?_⟩
-    filter_upwards with ω t ht htc
-    simpa [mgf] using exp_nonneg ((V + W : ℝ≥0) * t ^ 2 / (2 * (1 - (c : ℝ) * t)))
   let hsum_int := integrable_exp_add_compProd hX hY
   refine ⟨hsum_int, ?_⟩
   have hsum_ae : ∀ᵐ ω' ∂ν, ∀ t,
@@ -167,14 +173,20 @@ lemma add_compProd {η : Kernel (Ω' × Ω) Ω''} [IsZeroOrMarkovKernel η]
       filter_upwards [hy] with x hx
       exact mul_le_mul_of_nonneg_left hx (by positivity)
   _ ≤ exp (((V + W : ℝ≥0) : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) := by
-    rw [integral_mul_const, NNReal.coe_add]
-    calc
-      mgf X (κ ω') t * exp ((W : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t)))
-          ≤ exp ((V : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) *
-              exp ((W : ℝ) * t ^ 2 / (2 * (1 - (c : ℝ) * t))) := by
-            gcongr
-            exact hX_mgf t ht htc
-      _ = _ := by rw [← exp_add]; congr 1; ring
+    rw [integral_mul_const]
+    exact mgf_mul_exp_le_add (hX_mgf t ht htc)
+
+/-- Tower-property additivity of variance factors for two consecutive kernel increments. -/
+lemma add_compProd {η : Kernel (Ω' × Ω) Ω''} [IsZeroOrMarkovKernel η]
+    (hX : Kernel.HasSubgammaMGF X V c κ ν) (hY : Kernel.HasSubgammaMGF Y W c η (ν ⊗ₘ κ)) :
+    Kernel.HasSubgammaMGF (fun p ↦ X p.1 + Y p.2) (V + W) c (κ ⊗ₖ η) ν := by
+  by_cases hκ : IsSFiniteKernel κ
+  · let _ := hκ
+    exact add_compProd_of_isSFiniteKernel hX hY
+  · rw [Kernel.compProd_of_not_isSFiniteKernel_left _ _ hκ]
+    refine ⟨by simp, ?_⟩
+    filter_upwards with ω t ht htc
+    simpa [mgf] using exp_nonneg ((V + W : ℝ≥0) * t ^ 2 / (2 * (1 - (c : ℝ) * t)))
 
 /-- Additivity in the usual sequential-kernel formulation. -/
 lemma add_of_indep {η : Kernel Ω Ω''} [IsZeroOrMarkovKernel η]

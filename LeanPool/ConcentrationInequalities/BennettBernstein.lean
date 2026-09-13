@@ -456,6 +456,26 @@ theorem mgf_le_bennett [IsProbabilityMeasure μ] {X : Ω → ℝ} {V b t : ℝ}
     (V * (Real.exp (t * b) - 1 - t * b) / b ^ 2)
 
 
+/-- Bennett's exponent is bounded by the corresponding sub-gamma exponent. -/
+private lemma bennett_exponent_le_subgamma {V b t : ℝ} (hb : 0 < b) (ht : 0 ≤ t)
+    (htb : t * b < 3) (hV : 0 ≤ V) :
+    V * (Real.exp (t * b) - 1 - t * b) / b ^ 2 ≤
+      V * t ^ 2 / (2 * (1 - b / 3 * t)) := by
+  have hbernstein := exp_sub_one_sub_le_bernstein (mul_nonneg ht hb.le) htb
+  have hb2 : 0 < b ^ 2 := sq_pos_of_pos hb
+  have hb3eq : 1 - b / 3 * t = 1 - t * b / 3 := by ring
+  rw [hb3eq]
+  have hineq : (t * b) ^ 2 / (2 * (1 - t * b / 3)) / b ^ 2 =
+      t ^ 2 / (2 * (1 - t * b / 3)) := by
+    field_simp [hb.ne']
+  calc
+    V * (Real.exp (t * b) - 1 - t * b) / b ^ 2 =
+        V * ((Real.exp (t * b) - 1 - t * b) / b ^ 2) := by ring
+    _ ≤ V * ((t * b) ^ 2 / (2 * (1 - t * b / 3)) / b ^ 2) := by
+      exact mul_le_mul_of_nonneg_left (div_le_div_of_nonneg_right hbernstein hb2.le) hV
+    _ = V * (t ^ 2 / (2 * (1 - t * b / 3))) := by rw [hineq]
+    _ = V * t ^ 2 / (2 * (1 - t * b / 3)) := by ring
+
 /-- A bounded-above centered random variable with second moment at most `V` is sub-gamma with
 variance factor `V` and scale `b / 3`. -/
 theorem hasSubgammaMGF_of_bounded_above [IsProbabilityMeasure μ] {X : Ω → ℝ} {V b : ℝ}
@@ -472,32 +492,10 @@ theorem hasSubgammaMGF_of_bounded_above [IsProbabilityMeasure μ] {X : Ω → �
     nlinarith [htc]
   have hbennett := mgf_le_bennett hbpos ht hX0 hb hvar hXint hXsqint (hexpint t ht hb3)
   have htbeq : t * b < 3 := by rwa [lt_div_iff₀ hbpos] at hb3
-  have ubeqn : 0 ≤ t * b := mul_nonneg ht (le_of_lt hbpos)
-  have berenstein := exp_sub_one_sub_le_bernstein ubeqn htbeq
-  have hden : 0 < 1 - b / 3 * t := by linarith
-  have hexp_ge : rexp (t * b) - 1 - t * b ≥ 0 := by
-    have := Real.add_one_le_exp (t * b)
-    linarith
-  have hb2 : 0 < b ^ 2 := sq_pos_of_pos hbpos
-  have hberenstein' : V * (rexp (t * b) - 1 - t * b) / b ^ 2 ≤
-      V * t ^ 2 / (2 * (1 - b / 3 * t)) := by
-    have hb3eq : 1 - b / 3 * t = 1 - t * b / 3 := by ring
-    rw [hb3eq]
-    have hineq : (t * b) ^ 2 / (2 * (1 - t * b / 3)) / b ^ 2 = t ^ 2 / (2 * (1 - t * b / 3)) := by
-      field_simp [hbpos.ne']
-    by_cases hV : V ≥ 0
-    · calc V * (rexp (t * b) - 1 - t * b) / b ^ 2
-        = V * ((rexp (t * b) - 1 - t * b) / b ^ 2) := by ring
-      _ ≤ V * ((t * b) ^ 2 / (2 * (1 - t * b / 3)) / b ^ 2) := by
-          apply mul_le_mul_of_nonneg_left _ hV
-          exact div_le_div_of_nonneg_right berenstein hb2.le
-      _ = V * (t ^ 2 / (2 * (1 - t * b / 3))) := by rw [hineq]
-      _ = V * t ^ 2 / (2 * (1 - t * b / 3)) := by ring
-    · -- V < 0 case is impossible: μ[X²] ≥ 0 and μ[X²] ≤ V, so V ≥ 0
-      have hXsq_nonneg : 0 ≤ μ[fun ω => (X ω) ^ 2] := integral_nonneg_of_ae (by
-        filter_upwards with ω
-        exact sq_nonneg _)
-      linarith
-  exact le_trans hbennett (Real.exp_le_exp.mpr hberenstein')
+  have hXsq : 0 ≤ μ[fun ω => (X ω) ^ 2] := integral_nonneg_of_ae (by
+    filter_upwards with ω
+    exact sq_nonneg _)
+  exact hbennett.trans (Real.exp_le_exp.mpr
+    (bennett_exponent_le_subgamma hbpos ht htbeq (hXsq.trans hvar)))
 
 end Contrib.Bennett
