@@ -400,28 +400,15 @@ lemma polyP_natDegree_le (n : ℕ) : (polyP ℝ n).natDegree ≤ n / 2 := by
 lemma polyP_chebyshev_rescale (n : ℕ) (z : ℝ) (hz : z ≠ 0) :
     (2 * z) ^ n * Polynomial.eval (1 / (4 * z ^ 2)) (polyP ℝ n) =
     Polynomial.eval z (Polynomial.Chebyshev.U ℝ ↑n) := by
-  induction n using Nat.strong_induction_on with
-  | h n ih =>
-    match n with
-    | 0 | 1 => norm_num [polyP]
-    | (n + 2) =>
-      have h₁ := ih n
-      have h₂ := ih (n + 1)
-      have h₃ : n < n + 2 := by omega
-      have h₄ : n + 1 < n + 2 := by omega
-      simp [polyP] at *
-      simp_all [pow_add, pow_one, pow_two, mul_assoc]
-      field_simp [hz, Polynomial.eval_add, Polynomial.eval_sub, Polynomial.eval_mul,
-        Polynomial.eval_pow, Polynomial.eval_C, Polynomial.eval_X] at *
-      ring_nf at *
-      norm_num at *
-      simp_all
-      ring_nf at *
-      norm_num at *
-      field_simp [hz] at *
-      ring_nf at *
-      norm_num at *
-      linarith
+  induction n using Nat.twoStepInduction with
+  | zero | one => norm_num [polyP]
+  | more n ih1 ih2 =>
+    simp only [Nat.cast_add, Nat.cast_one] at ih2
+    rw [polyP_succ_succ, Nat.cast_add, Nat.cast_ofNat, Polynomial.Chebyshev.U_add_two]
+    simp only [Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_ofNat, Polynomial.eval_X]
+    rw [← ih1, ← ih2, pow_add, pow_succ]
+    field_simp
+    ring
 
 lemma angle_lt_pi_div_two (m k : ℕ) (_hm : 2 ≤ m) (hk_bound : 2 * k < m + 1) :
     ↑k * Real.pi / (↑m + 1) < Real.pi / 2 := by
@@ -719,32 +706,30 @@ lemma polyP_eval_nonpos_at_bad_index (m k j₀ : ℕ) (hm : 2 ≤ m)
     (hr_param : 1 / (2 * Real.sqrt r) = Real.cos (↑k * Real.pi / (↑m + 1)))
     (h_sin : Real.sin ((↑j₀ + 1) * (↑k * Real.pi / (↑m + 1))) ≤ 0) :
     Polynomial.eval r (polyP ℝ j₀) ≤ 0 := by
-  set θ := ↑k * Real.pi / (↑m + 1) with hθ_def
+  let θ := ↑k * Real.pi / (↑m + 1)
   have h₁ : (0 : ℝ) < ↑k * Real.pi / (↑m + 1) := by positivity
   have h₂ := angle_lt_pi_div_two m k (by omega) hk_bound
   have hcos_pos : 0 < Real.cos θ :=
-    Real.cos_pos_of_mem_Ioo ⟨by linarith, h₂⟩
+    Real.cos_pos_of_mem_Ioo ⟨by linarith only [h₁, h₂], h₂⟩
   have hcos_ne : Real.cos θ ≠ 0 := ne_of_gt hcos_pos
-  have hr_eq : r = 1 / (4 * Real.cos θ ^ 2) := by grind
+  have hr_eq : r = 1 / (4 * Real.cos θ ^ 2) := by
+    rw [← hr_param, div_pow, mul_pow, Real.sq_sqrt hr_pos.le]
+    field_simp
+    ring
   have hrescale := polyP_chebyshev_rescale j₀ (Real.cos θ) hcos_ne
   rw [hr_eq]
   have hU := Polynomial.Chebyshev.U_real_cos θ (↑j₀)
-  have hsin_pos : 0 < Real.sin θ := by
-    apply Real.sin_pos_of_pos_of_lt_pi (by positivity)
-    have : (k : ℝ) / ((m : ℝ) + 1) < 1 := by
-      rw [div_lt_one (by positivity)]
-      exact_mod_cast (show k < m + 1 by omega)
-    calc (k : ℝ) * Real.pi / (↑m + 1) = (k / (↑m + 1)) * Real.pi := by ring
-      _ < 1 * Real.pi := by gcongr
-      _ = Real.pi := one_mul _
+  have hsin_pos : 0 < Real.sin θ :=
+    Real.sin_pos_of_pos_of_lt_pi h₁ (h₂.trans (half_lt_self Real.pi_pos))
   have h2cos_pos : 0 < (2 * Real.cos θ) ^ j₀ := by positivity
-  have hprod_pos : 0 < (2 * Real.cos θ) ^ j₀ * Real.sin θ := mul_pos h2cos_pos hsin_pos
   simp only [Int.cast_natCast] at hU
   have key : (2 * Real.cos θ) ^ j₀ *
       Polynomial.eval (1 / (4 * Real.cos θ ^ 2)) (polyP ℝ j₀) *
       Real.sin θ = Real.sin ((↑j₀ + 1) * θ) := by
-    nlinarith [hrescale, hU]
-  nlinarith [h_sin, key, hprod_pos]
+    rw [hrescale]
+    exact hU
+  exact nonpos_of_mul_nonpos_right
+    (nonpos_of_mul_nonpos_left (key.le.trans h_sin) hsin_pos) h2cos_pos
 
 lemma polyP_roots_pos (m : ℕ) (_hm : 2 ≤ m) (x : ℝ)
     (hx : Polynomial.eval x (polyP ℝ m) = 0) : 0 < x := by
@@ -1720,20 +1705,16 @@ lemma multiset_prod_inv_bound
       hroots_ge α (Multiset.mem_cons_of_mem hα)
     obtain ⟨C_s, D_s, hC_s, hbound_s⟩ := ih hs_pos hs_ge
     have hbound_a := single_factor_inv_pow_bound a ρ₁ k ha_pos hρ₁_pos hk ha_ge
-    simp only at hbound_a
     have hbound_a' : ∀ r, |(PowerSeries.coeff r)
         (((↑(1 - Polynomial.C (1/a) * Polynomial.X : Polynomial ℝ) : PowerSeries ℝ) ^ k)⁻¹)| ≤
         1 * (↑r + 1) ^ (k - 1) * (1/ρ₁) ^ r := by
-      simp_all
+      simpa only [one_mul] using hbound_a
     have hq_pos : (0 : ℝ) < 1 / ρ₁ := by positivity
     obtain ⟨C', D', hC', hbound'⟩ := ps_mul_coeff_bound _ _ 1 C_s (k - 1) D_s (1/ρ₁)
       one_pos hC_s hq_pos hbound_a' hbound_s
     refine ⟨C', D', hC', ?_⟩
     intro r
-    change |(PowerSeries.coeff r) (Multiset.map (fun α =>
-      (((↑(1 - Polynomial.C (1/α) * Polynomial.X : Polynomial ℝ) : PowerSeries ℝ) ^ k)⁻¹))
-      (a ::ₘ s)).prod| ≤ _
-    simp_all
+    simpa only [F, Multiset.map_cons, Multiset.prod_cons] using hbound' r
 
 lemma X_sub_C_eq_neg_C_mul_L (α : ℝ) (hα : 0 < α) :
     Polynomial.X - Polynomial.C α =
