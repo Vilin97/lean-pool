@@ -81,12 +81,13 @@ theorem close_up_two_gen_coprime
      intersection_close_up from KrullDomain.lean for the main case. -/
   by_cases hy₂_zero : (↑y₂ : T) = 0
   · have hc' : (c : T) ∈ Ideal.span {(y₁ : T)} := by
-      simp_all
+      simpa only [hy₂_zero, Ideal.span_pair_zero] using hc
     obtain ⟨c', hcc'⟩ := Ideal.mem_span_singleton.mp (close_up_dvd R y₁ c hc')
     refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, c', ?_⟩
     have heq : c - c' * y₁ = 0 := by rw [hcc', mul_comm, sub_self]
     change c - c' * y₁ ∈ Ideal.span {y₂}
-    simp_all
+    rw [heq]
+    exact Ideal.zero_mem _
   have hy₂_ne : (↑y₂ : T) ≠ 0 := hy₂_zero
   by_cases hM_bot : IsLocalRing.maximalIdeal T = ⊥
   · have hR_field : IsLocalRing.maximalIdeal R.carrier = ⊥ := by
@@ -95,7 +96,8 @@ theorem close_up_two_gen_coprime
       by_contra h
       have hmem : y₂ ∈ IsLocalRing.maximalIdeal R.carrier :=
         (IsLocalRing.mem_maximalIdeal _).mpr h
-      simp_all
+      rw [hR_field, Ideal.mem_bot] at hmem
+      exact hy₂_ne (congrArg Subtype.val hmem)
     refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, 0, ?_⟩
     change c - 0 * y₁ ∈ Ideal.span {y₂}
     simp only [zero_mul, sub_zero]
@@ -105,7 +107,7 @@ theorem close_up_two_gen_coprime
     exact Submodule.mem_top
   by_cases hy₁_zero : (↑y₁ : T) = 0
   · have hc_span_y₂ : (c : T) ∈ Ideal.span {(y₂ : T)} := by
-      simp_all
+      simpa only [hy₁_zero, Ideal.span_insert_zero] using hc
     have := close_up_dvd R y₂ c hc_span_y₂
     obtain ⟨q, hq⟩ := Ideal.mem_span_singleton.mp this
     refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, 0, ?_⟩
@@ -162,8 +164,7 @@ theorem close_up_two_gen_key
     rw [Ideal.mem_span_singleton] at hc_pR
     obtain ⟨c', hcc'⟩ := hc_pR
     have hp_ne : (p : T) ≠ 0 := fun h => hp.ne_zero (Subtype.val_injective h)
-    have hpc : (c : T) = (p : T) * (c' : T) := by
-      simp_all
+    have hpc : (c : T) = (p : T) * (c' : T) := congrArg Subtype.val hcc'
     have hc'_ab : (c' : T) ∈ Ideal.span {(a : T), (b : T)} := by
       obtain ⟨u₁, u₂, hu⟩ := Submodule.mem_span_pair.mp hc
       rw [hpa, hpb, smul_eq_mul, smul_eq_mul] at hu
@@ -171,22 +172,18 @@ theorem close_up_two_gen_key
         rw [← hpc, ← hu]
         ring
       exact Submodule.mem_span_pair.mpr ⟨u₁, u₂, by
-        simp_all⟩
+        simpa only [smul_eq_mul] using (mul_left_cancel₀ hp_ne heq).symm⟩
     by_cases ha : a = 0
     · subst ha
-      have hc'_b : (c' : T) ∈ Ideal.span {(b : T)} :=
-        (Ideal.span_le.mpr (fun x hx => by
-          rcases Set.mem_insert_iff.mp hx with rfl | h
-          · simp_all
-          · exact Ideal.subset_span h)) hc'_ab
+      have hc'_b : (c' : T) ∈ Ideal.span {(b : T)} := by
+        simpa only [ZeroMemClass.coe_zero, Ideal.span_insert_zero] using hc'_ab
       have hc'R := close_up_dvd R b c' hc'_b
       refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, 0, ?_⟩
       simp only [zero_mul, sub_zero]
       rw [Ideal.mem_span_singleton] at hc'R ⊢
       obtain ⟨q, hq⟩ := hc'R
       refine ⟨⟨(q : T), q.2⟩, Subtype.ext ?_⟩
-      have hc'_val : (c' : T) = (b : T) * (q : T) := by
-        simp_all
+      have hc'_val : (c' : T) = (b : T) * (q : T) := congrArg Subtype.val hq
       simp only [Subring.coe_mul]
       rw [hpc, hc'_val, mul_assoc]
     · have hdvd : DvdNotUnit a (p * a) := ⟨ha, ⟨p, hp.not_isUnit, mul_comm p a⟩⟩
@@ -229,26 +226,19 @@ theorem close_up_two_gen
       ∃ (hle : R.carrier ≤ S.carrier),
         (⟨(c : T), hle c.2⟩ : S.carrier) ∈
           Ideal.span {⟨(y₁ : T), hle y₁.2⟩, ⟨(y₂ : T), hle y₂.2⟩} := by
-  obtain ⟨t₁, t₂, hc_eq⟩ := Submodule.mem_span_pair.mp hc
-  -- Reduce to finding x₁ ∈ S with c - x₁·y₁ ∈ span{y₂}
-  suffices key : ∃ S : NSubring T, IsAExtension R S ∧
-      ∃ (hle : R.carrier ≤ S.carrier) (x₁ : S.carrier),
-        (⟨(c : T), hle c.2⟩ : S.carrier) - x₁ * ⟨(y₁ : T), hle y₁.2⟩ ∈
-          Ideal.span {⟨(y₂ : T), hle y₂.2⟩} by
-    obtain ⟨S, hAext, hle, x₁, hrem⟩ := key
-    refine ⟨S, hAext, hle, ?_⟩
-    rw [Ideal.mem_span_singleton] at hrem
-    obtain ⟨x₂, hx₂⟩ := hrem
-    set y₁_S := (⟨(y₁ : T), hle y₁.2⟩ : S.carrier)
-    set y₂_S := (⟨(y₂ : T), hle y₂.2⟩ : S.carrier)
-    have hc_eq : (⟨(c : T), hle c.2⟩ : S.carrier) = x₁ * y₁_S + x₂ * y₂_S := by
-      linear_combination hx₂
-    rw [hc_eq]
-    exact Ideal.add_mem _
-      (Ideal.mul_mem_left _ x₁ (Ideal.subset_span (Set.mem_insert _ _)))
-      (Ideal.mul_mem_left _ x₂ (Ideal.subset_span (Set.mem_insert_iff.mpr (Or.inr rfl))))
-  exact close_up_two_gen_key R y₁ y₂ c hc
+  obtain ⟨S, hAext, hle, x₁, hrem⟩ := close_up_two_gen_key R y₁ y₂ c hc
     hM_not_assoc hAss_ht hR_card hT_card
+  refine ⟨S, hAext, hle, ?_⟩
+  rw [Ideal.mem_span_singleton] at hrem
+  obtain ⟨x₂, hx₂⟩ := hrem
+  set y₁_S := (⟨(y₁ : T), hle y₁.2⟩ : S.carrier)
+  set y₂_S := (⟨(y₂ : T), hle y₂.2⟩ : S.carrier)
+  have hc_eq : (⟨(c : T), hle c.2⟩ : S.carrier) = x₁ * y₁_S + x₂ * y₂_S := by
+    linear_combination hx₂
+  rw [hc_eq]
+  exact Ideal.add_mem _
+    (Ideal.mul_mem_left _ x₁ (Ideal.subset_span (Set.mem_insert _ _)))
+    (Ideal.mul_mem_left _ x₂ (Ideal.subset_span (Set.mem_insert_iff.mpr (Or.inr rfl))))
 
 /-!
 ## General case: n generators (induction)
@@ -275,19 +265,7 @@ lemma exists_prime_mem_of_ne_bot_closeup {S : Type*} [CommRing S]
     [UniqueFactorizationMonoid S]
     (Q : Ideal S) [hQ : Q.IsPrime] (hQ_ne_bot : Q ≠ ⊥) :
     ∃ q : S, Prime q ∧ q ∈ Q := by
-  obtain ⟨a, haQ, ha_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hQ_ne_bot
-  have ha_nu : ¬IsUnit a := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q haQ hu)
-  suffices ∀ x : S, x ≠ 0 → ¬IsUnit x → x ∈ Q → ∃ q : S, Prime q ∧ q ∈ Q from
-    this a ha_ne ha_nu haQ
-  intro x
-  apply wellFounded_dvdNotUnit.induction x
-  intro x ih hx_ne hx_nu hxQ
-  obtain ⟨p, hp_irr, hp_dvd⟩ := WfDvdMonoid.exists_irreducible_factor hx_nu hx_ne
-  obtain ⟨b, hxpb⟩ := hp_dvd
-  rcases hQ.mem_or_mem (show p * b ∈ Q from hxpb ▸ hxQ) with hp_Q | hb_Q
-  · exact ⟨p, hp_irr.prime, hp_Q⟩
-  · have hb_ne : b ≠ 0 := right_ne_zero_of_mul (hxpb ▸ hx_ne)
-    have hb_nu : ¬IsUnit b := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q hb_Q hu)
-    exact ih b ⟨hb_ne, p, hp_irr.prime.not_isUnit, by rw [hxpb, mul_comm]⟩ hb_ne hb_nu hb_Q
+  obtain ⟨q, hq_mem, hq_prime⟩ := hQ.exists_mem_prime_of_ne_bot hQ_ne_bot
+  exact ⟨q, hq_prime, hq_mem⟩
 
 end
