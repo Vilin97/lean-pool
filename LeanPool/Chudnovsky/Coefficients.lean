@@ -61,16 +61,18 @@ private lemma jwert_real_bound {e : ℝ}
   have he2nn : 0 ≤ e ^ 2 := sq_nonneg e
   -- enclosures for `g = 1 - 240e + 2160e²`
   have hGLg : (1 - 240 * 3.80898093700765233822623151648e-18 : ℝ)
-      ≤ 1 - 240 * e + 2160 * e ^ 2 := by linarith
+      ≤ 1 - 240 * e + 2160 * e ^ 2 := by linarith only [hU, he2nn]
   have hgGH : 1 - 240 * e + 2160 * e ^ 2 ≤
       (1 - 240 * 3.80898093700765233822623151647e-18
-        + 2160 * (3.80898093700765233822623151648e-18) ^ 2 : ℝ) := by linarith
+        + 2160 * (3.80898093700765233822623151648e-18) ^ 2 : ℝ) := by linarith only [hL, he2U]
   have hGLpos : (0 : ℝ) < 1 - 240 * 3.80898093700765233822623151648e-18 := by norm_num
   have hgpos : 0 < 1 - 240 * e + 2160 * e ^ 2 := lt_of_lt_of_le hGLpos hGLg
   -- enclosures for `h = 1 + e - e²`
   have hHLh : (1 + 3.80898093700765233822623151647e-18
-      - (3.80898093700765233822623151648e-18) ^ 2 : ℝ) ≤ 1 + e - e ^ 2 := by linarith
-  have hhHH : 1 + e - e ^ 2 ≤ (1 + 3.80898093700765233822623151648e-18 : ℝ) := by linarith
+      - (3.80898093700765233822623151648e-18) ^ 2 : ℝ) ≤ 1 + e - e ^ 2 := by
+    linarith only [hL, he2U]
+  have hhHH : 1 + e - e ^ 2 ≤ (1 + 3.80898093700765233822623151648e-18 : ℝ) := by
+    linarith only [hU, he2nn]
   have hHLpos : (0 : ℝ) < 1 + 3.80898093700765233822623151647e-18
       - (3.80898093700765233822623151648e-18) ^ 2 := by norm_num
   have hhpos : 0 < 1 + e - e ^ 2 := lt_of_lt_of_le hHLpos hHLh
@@ -116,7 +118,8 @@ private lemma jwert_real_bound {e : ℝ}
           (1 + 3.80898093700765233822623151648e-18) ^ 24) := by
     norm_num
   rw [abs_lt]
-  constructor <;> [linarith [hSlower, hLoNum]; linarith [hSupper, hUpNum]]
+  exact ⟨by linarith only [hLoNum.trans_le hSlower],
+    by linarith only [hSupper.trans_lt hUpNum]⟩
 
 /-- Milla's `jwert2` at `N = 163`, from the integrality input `1728·J(τ₁₆₃) ∈ ℤ` as an
 explicit hypothesis: the singular value `1728·J(τ₁₆₃) = −640320³`. -/
@@ -136,9 +139,8 @@ theorem jwert_τ₁₆₃_of (hjm : ∃ m : ℤ, 1728 * J τ₁₆₃ = (m : ℂ
     ring
   have hRreal : (1 + 240 * (-e + 9 * (-e) ^ 2)) ^ 3 / ((-e) * (1 - (-e) - (-e) ^ 2) ^ 24)
       = -((1 - 240 * e + 2160 * e ^ 2) ^ 3 / (e * (1 + e - e ^ 2) ^ 24)) := by
-    rw [show (1 + 240 * (-e + 9 * (-e) ^ 2)) ^ 3 = (1 - 240 * e + 2160 * e ^ 2) ^ 3 from by ring,
-      show ((-e) * (1 - (-e) - (-e) ^ 2) ^ 24) = -(e * (1 + e - e ^ 2) ^ 24) from by ring,
-      div_neg]
+    simp only [neg_sq, sub_neg_eq_add, neg_mul, div_neg,
+      show 1 + 240 * (-e + 9 * e ^ 2) = 1 - 240 * e + 2160 * e ^ 2 from by ring]
   have hJt_eq : 1728 * Jtilde τ₁₆₃ =
       ((-((1 - 240 * e + 2160 * e ^ 2) ^ 3 / (e * (1 + e - e ^ 2) ^ 24)) : ℝ) : ℂ) := by
     rw [hJt_eq0, hRreal]
@@ -154,9 +156,8 @@ theorem jwert_τ₁₆₃_of (hjm : ∃ m : ℤ, 1728 * J τ₁₆₃ = (m : ℂ
   have hJJt : ‖1728 * J τ₁₆₃ - 1728 * Jtilde τ₁₆₃‖ < 0.2 := theonaeherJ hτ
   have hchain : ‖1728 * J τ₁₆₃ - (-640320 ^ 3 : ℂ)‖ < 1 := by
     calc ‖1728 * J τ₁₆₃ - (-640320 ^ 3 : ℂ)‖
-        = ‖(1728 * J τ₁₆₃ - 1728 * Jtilde τ₁₆₃)
-            + (1728 * Jtilde τ₁₆₃ - (-640320 ^ 3 : ℂ))‖ := by congr 1; ring
-      _ ≤ _ := norm_add_le _ _
+        ≤ ‖1728 * J τ₁₆₃ - 1728 * Jtilde τ₁₆₃‖
+            + ‖1728 * Jtilde τ₁₆₃ - (-640320 ^ 3 : ℂ)‖ := norm_sub_le_norm_sub_add_norm_sub _ _ _
       _ < 0.2 + 1 / 2 := add_lt_add hJJt hnorm_Jt
       _ < 1 := by norm_num
   -- an integer within `< 1` of `−640320³` equals it
@@ -210,38 +211,38 @@ private lemma s2tilde_real_bound {e pv sv : ℝ}
   have he2nn : 0 ≤ e ^ 2 := sq_nonneg e
   -- num = 1 − 240e + 2160e²
   have hnumL : (1 - 240 * 3.80898093700765233822623151648e-18 : ℝ)
-      ≤ 1 - 240 * e + 2160 * e ^ 2 := by linarith
+      ≤ 1 - 240 * e + 2160 * e ^ 2 := by linarith only [heU, he2nn]
   have hnumH : 1 - 240 * e + 2160 * e ^ 2 ≤
       (1 - 240 * 3.80898093700765233822623151647e-18
-        + 2160 * (3.80898093700765233822623151648e-18) ^ 2 : ℝ) := by linarith
+        + 2160 * (3.80898093700765233822623151648e-18) ^ 2 : ℝ) := by linarith only [heL, he2U]
   have hnumpos : 0 < 1 - 240 * e + 2160 * e ^ 2 := lt_of_lt_of_le (by norm_num) hnumL
   -- den = 1 + 504e − 16632e²
   have hdenL : (1 + 504 * 3.80898093700765233822623151647e-18
       - 16632 * (3.80898093700765233822623151648e-18) ^ 2 : ℝ)
-      ≤ 1 + 504 * e - 16632 * e ^ 2 := by linarith
+      ≤ 1 + 504 * e - 16632 * e ^ 2 := by linarith only [heL, he2U]
   have hdenH :
       1 + 504 * e - 16632 * e ^ 2 ≤ (1 + 504 * 3.80898093700765233822623151648e-18 : ℝ) := by
-    linarith
+    linarith only [heU, he2nn]
   have hdenpos : 0 < 1 + 504 * e - 16632 * e ^ 2 := lt_of_lt_of_le (by norm_num) hdenL
   -- w = 3/(pv·(sv/2)); `wH` (from `πL, sL`) is the max, `wL` (from `πU, sU`) the min
   have hwH : 3 / (pv * (sv / 2))
       ≤ (3 / (3.14159265358979323846 * (12.7671453348037046617 / 2)) : ℝ) :=
     div_le_div_of_nonneg_left (by norm_num) (by positivity)
-      (mul_le_mul hpL.le (by linarith) (by norm_num) hp_pos.le)
+      (mul_le_mul hpL.le (by linarith only [hsL]) (by norm_num) hp_pos.le)
   have hwL : (3 / (3.14159265358979323847 * (12.7671453348037046618 / 2)) : ℝ)
       ≤ 3 / (pv * (sv / 2)) :=
     div_le_div_of_nonneg_left (by norm_num) hpsv
-      (mul_le_mul hpU.le (by linarith) (by positivity) (by norm_num))
+      (mul_le_mul hpU.le (by linarith only [hsU]) (by positivity) (by norm_num))
   -- Z = 1 + 24e − 72e² − w : lower bound subtracts `wH`, upper bound subtracts `wL`
   have hZL : (1 + 24 * 3.80898093700765233822623151647e-18
       - 72 * (3.80898093700765233822623151648e-18) ^ 2
       - 3 / (3.14159265358979323846 * (12.7671453348037046617 / 2)) : ℝ)
-      ≤ 1 + 24 * e - 72 * e ^ 2 - 3 / (pv * (sv / 2)) := by linarith
+      ≤ 1 + 24 * e - 72 * e ^ 2 - 3 / (pv * (sv / 2)) := by linarith only [heL, he2U, hwH]
   have hZH : 1 + 24 * e - 72 * e ^ 2 - 3 / (pv * (sv / 2)) ≤
       (1 + 24 * 3.80898093700765233822623151648e-18
         - 72 * (3.80898093700765233822623151647e-18) ^ 2
         - 3 / (3.14159265358979323847 * (12.7671453348037046618 / 2)) : ℝ) := by
-    linarith
+    linarith only [heU, he2L, hwL]
   have hZpos : 0 < 1 + 24 * e - 72 * e ^ 2 - 3 / (pv * (sv / 2)) :=
     lt_of_lt_of_le (by norm_num) hZL
   -- num·Z rational enclosures
@@ -276,7 +277,7 @@ private lemma s2tilde_real_bound {e pv sv : ℝ}
             - 72 * (3.80898093700765233822623151648e-18) ^ 2
             - 3 / (3.14159265358979323846 * (12.7671453348037046617 / 2)))
           * 10996566783048 := by norm_num
-    linarith
+    exact hD.trans_lt (hnum.trans_le hb)
   have hhi : (1 - 240 * e + 2160 * e ^ 2) * (1 + 24 * e - 72 * e ^ 2 - 3 / (pv * (sv / 2)))
         * 10996566783048 / (1 + 504 * e - 16632 * e ^ 2) < (9351571368960 : ℝ) + 1 / 2 := by
     rw [div_lt_iff₀ hdenpos]
@@ -291,9 +292,9 @@ private lemma s2tilde_real_bound {e pv sv : ℝ}
         * 10996566783048
         < (9351571368960 + 1 / 2 : ℝ) * (1 + 504 * 3.80898093700765233822623151647e-18
           - 16632 * (3.80898093700765233822623151648e-18) ^ 2) := by norm_num
-    linarith
+    exact hb.trans_lt (hnum.trans_le hD)
   rw [abs_lt]
-  constructor <;> linarith
+  exact ⟨by linarith only [hlo], by linarith only [hhi]⟩
 
 /-- Milla's `s2nenner`/`satzhilfszahlen` at `N = 163`, from the integrality and
 rationality inputs as explicit hypotheses: `s₂(τ₁₆₃) = 77265280/90856689`. -/
