@@ -1680,6 +1680,17 @@ import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
 import LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
 import LeanPool.ForwardEuler
 import LeanPool.ForwardEuler.Main
+import LeanPool.FourAP
+import LeanPool.FourAP.Basic
+import LeanPool.FourAP.Binary
+import LeanPool.FourAP.Completion
+import LeanPool.FourAP.Construction
+import LeanPool.FourAP.Extension
+import LeanPool.FourAP.Glue
+import LeanPool.FourAP.Limit
+import LeanPool.FourAP.Main
+import LeanPool.FourAP.Splice
+import LeanPool.FourAP.Words
 import LeanPool.FriezePatterns
 import LeanPool.FriezePatterns.Chapter1
 import LeanPool.FriezePatterns.Chapter2
