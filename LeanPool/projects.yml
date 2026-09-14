@@ -587,45 +587,54 @@ projects:
       - "46L10"
       - "20F65"
       - "22D10"
-  - slug: even-graph-cycle-decomposition
-    title: Even graphs are edge-disjoint unions of cycles
+  - slug: concentration-inequalities
+    title: Bennett--Bernstein, Freedman, and Hoeffding concentration inequalities
     summary: >-
-      Decomposes every finite loopless edge set with even degree at each vertex into edge-disjoint
-      simple cycles and derives a simultaneous fixed-point-free pairing of incident edges.
-    branch: graph theory and combinatorics
-    entry_module: LeanPool.EvenGraphCycles
+      Develops variance-sensitive sub-gamma moment-generating-function estimates, Bennett and
+      Bernstein bounds, a Freedman--Bernstein upper tail for finite adapted sums, conditional and
+      independent-variable Hoeffding inequalities.
+    branch: probability theory and probabilistic combinatorics
+    entry_module: LeanPool.ConcentrationInequalities
     authors:
       - Juan Pablo Traverso Gianini
       - Aristotle
     source:
       title: >-
-        Reusable even-graph cycle decomposition accompanying Linear-Error Clique Partitions of
-        Split Graphs via Structured Triangle Packing
+        Reusable concentration-inequality components accompanying Linear-Error Clique Partitions
+        of Split Graphs via Structured Triangle Packing
       authors:
         - Juan Pablo Traverso Gianini
-      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/b3423f3e8c8db7c2d1b279673293ef3079faf903/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Contrib/EvenGraphCycles.lean
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/b3423f3e8c8db7c2d1b279673293ef3079faf903/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Contrib/FreedmanBernstein.lean
       github_repo: jtraverso/erdos-81-chordal-clique-partitions
     license: Apache-2.0
     status: verified
     provenance: AI
     main_declarations:
-      - Finset.exists_cycleDecomp
-      - Finset.exists_edge_pairing_of_even
+      - Contrib.Freedman.subgamma_bernstein_tail
     main_results:
-      - declaration: Finset.exists_cycleDecomp
+      - declaration: Contrib.Bennett.hasSubgammaMGF_of_bounded_above
         informal: >-
-          Every finite loopless edge set whose degree is even at every vertex is the edge-disjoint
-          union of simple cycles of length at least three.
-      - declaration: Finset.exists_edge_pairing_of_even
+          A centered real random variable bounded above by a positive constant, with bounded second
+          moment, satisfies a Bennett--Bernstein sub-gamma moment-generating-function estimate.
+      - declaration: Contrib.Freedman.subgamma_bernstein_tail
         informal: >-
-          If every vertex has even degree, then the incident edges at every vertex admit a
-          simultaneous fixed-point-free involutive pairing.
+          A finite adapted sum of conditionally sub-gamma increments satisfies the corresponding
+          variance-sensitive Freedman--Bernstein upper-tail bound.
+      - declaration: Contrib.ConditionalHoeffding.hasCondSubgaussianMGF_of_mem_Icc
+        informal: >-
+          A bounded random variable with zero conditional expectation satisfies a conditional
+          Hoeffding sub-Gaussian moment-generating-function estimate.
+      - declaration: Contrib.Hoeffding.hoeffding_upper
+        informal: >-
+          A sum of finitely many independent random variables valued in the unit interval exceeds
+          its mean by t with probability at most exp(-2 t squared divided by the number of terms).
     tags:
-      - graph-theory
-      - eulerian-graphs
-      - cycle-decompositions
+      - probability-theory
+      - concentration-inequalities
+      - martingales
     msc:
-      - "05C45"
+      - "60E15"
+      - "60G42"
   - slug: erdos81-paper-i-contrib
     title: Finitely generated cones and finite LP duality
     summary: >-
@@ -8457,3 +8466,42 @@ projects:
     - 35Q30
     - 35Q31
     - 35B44
+  - slug: even-graph-cycle-decomposition
+    title: Even graphs are edge-disjoint unions of cycles
+    summary: >-
+      Decomposes every finite loopless edge set with even degree at each vertex into edge-disjoint
+      simple cycles and derives a simultaneous fixed-point-free pairing of incident edges.
+    branch: graph theory and combinatorics
+    entry_module: LeanPool.EvenGraphCycles
+    authors:
+      - Juan Pablo Traverso Gianini
+      - Aristotle
+    source:
+      title: >-
+        Reusable even-graph cycle decomposition accompanying Linear-Error Clique Partitions of
+        Split Graphs via Structured Triangle Packing
+      authors:
+        - Juan Pablo Traverso Gianini
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/b3423f3e8c8db7c2d1b279673293ef3079faf903/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Contrib/EvenGraphCycles.lean
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Finset.exists_cycleDecomp
+      - Finset.exists_edge_pairing_of_even
+    main_results:
+      - declaration: Finset.exists_cycleDecomp
+        informal: >-
+          Every finite loopless edge set whose degree is even at every vertex is the edge-disjoint
+          union of simple cycles of length at least three.
+      - declaration: Finset.exists_edge_pairing_of_even
+        informal: >-
+          If every vertex has even degree, then the incident edges at every vertex admit a
+          simultaneous fixed-point-free involutive pairing.
+    tags:
+      - graph-theory
+      - eulerian-graphs
+      - cycle-decompositions
+    msc:
+      - "05C45"

@@ -668,6 +668,11 @@ import LeanPool.ComputableReal.SpecialFunctions.Basic
 import LeanPool.ComputableReal.SpecialFunctions.Exp
 import LeanPool.ComputableReal.SpecialFunctions.Pi
 import LeanPool.ComputableReal.SpecialFunctions.Sqrt
+import LeanPool.ConcentrationInequalities
+import LeanPool.ConcentrationInequalities.BennettBernstein
+import LeanPool.ConcentrationInequalities.ConditionalHoeffding
+import LeanPool.ConcentrationInequalities.FreedmanBernstein
+import LeanPool.ConcentrationInequalities.HoeffdingUpper
 import LeanPool.ConnesKreimer
 import LeanPool.ConnesKreimer.Coassoc
 import LeanPool.ConnesKreimer.Core
