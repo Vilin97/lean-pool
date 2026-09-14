@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.KStatistic
+module
+
+public import LeanPool.Feige.KStatistic
 import LeanPool.Feige.TransferProbability
 
 /-!
@@ -13,6 +15,8 @@ This module isolates the elementary push-forward identity relating the
 `NNReal` model of a unit exponential to Mathlib's real-valued exponential
 measure.
 -/
+
+@[expose] public section
 
 open Set MeasureTheory ProbabilityTheory
 

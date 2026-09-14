@@ -3,11 +3,19 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
-import LeanPool.Erdos97ConvexOctagon.RowMasks
+public import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
+public import LeanPool.Erdos97ConvexOctagon.RowMasks
+public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Soundness and completeness of lightweight legal-row search data -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence
 
@@ -41,7 +49,8 @@ theorem searchRowChoices_complete (centre : Vertex) :
     (rowOptions centre).reverse =
       List.ofFn (fun index : Fin 35 =>
         packedRow (searchRowChoiceAt centre index).rowMask) := by
-  fin_cases centre <;> decide
+  revert centre
+  decide +kernel
 
 /-- Every mathematical incidence row occurs at one lightweight search index. -/
 theorem exists_searchRowChoiceIndex (Q : OctagonIncidence) (centre : Vertex) :
@@ -58,7 +67,8 @@ theorem exists_searchRowChoiceIndex (Q : OctagonIncidence) (centre : Vertex) :
 theorem searchRowChoiceAt_pairMask (centre : Vertex) (index : Fin 35) :
     (searchRowChoiceAt centre index).pairMask =
       rowPairMask (searchRowChoiceAt centre index).rowMask := by
-  fin_cases centre <;> fin_cases index <;> rfl
+  revert centre index
+  decide +kernel
 
 /-- The centre-two row table uses exactly the public fixed-branch ordering. -/
 theorem searchRowChoiceAt_two_mask (index : Fin 35) :

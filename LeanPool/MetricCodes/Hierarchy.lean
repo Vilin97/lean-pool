@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.HarmonicAnalysis
+public import LeanPool.MetricCodes.HarmonicAnalysis
 
 /-!
 # Spherical-code hierarchy
 
 General spectral bounds, localization, compactification, and strict hierarchy estimates.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -530,11 +533,13 @@ open scoped InnerProductSpace
 
 namespace SpherePacking
 
-private def spherePointEmbedding_metriccodes2_d60650ef (n : ℕ) : MetricCodes.Sphere n ↪
+/-- The inclusion of unit sphere points into the ambient Euclidean space. -/
+def spherePointEmbedding (n : ℕ) : MetricCodes.Sphere n ↪
   Euclidean n :=
   ⟨Subtype.val, Subtype.val_injective⟩
 
-private def attachedSphereEmbedding_metriccodes2_d60650ef {n : ℕ} {s : ℝ}
+/-- The embedding of a spherical code's attached point set into the unit sphere. -/
+def attachedSphereEmbedding {n : ℕ} {s : ℝ}
     (C : SphericalCode n s) :
     {x : Euclidean n // x ∈ C.points} ↪ MetricCodes.Sphere n where
   toFun x := ⟨x.1, C.unit_norm x.1 x.2⟩
@@ -558,7 +563,7 @@ private theorem codesSphericalCode_ext_metriccodes2_d60650ef {n : ℕ} {s : ℝ}
 /-- The to codes used in the spherical-code argument. -/
 def SphericalCode.toCodes {n : ℕ} {s : ℝ}
     (C : SphericalCode n s) : MetricCodes.SphericalCode n s where
-  points := C.points.attach.map (attachedSphereEmbedding_metriccodes2_d60650ef C)
+  points := C.points.attach.map (attachedSphereEmbedding C)
   inner_le := by
     intro x hx y hy hxy
     obtain ⟨x', _, hx'⟩ := Finset.mem_map.mp hx
@@ -573,7 +578,7 @@ def SphericalCode.toCodes {n : ℕ} {s : ℝ}
 /-- The of codes used in the spherical-code argument. -/
 def SphericalCode.ofCodes {n : ℕ} {s : ℝ}
     (C : MetricCodes.SphericalCode n s) : SphericalCode n s where
-  points := C.points.map (spherePointEmbedding_metriccodes2_d60650ef n)
+  points := C.points.map (spherePointEmbedding n)
   unit_norm := by
     intro x hx
     obtain ⟨x', _, rfl⟩ := Finset.mem_map.mp hx
@@ -604,7 +609,7 @@ private def sphericalCodeEquiv (n : ℕ) (s : ℝ) :
   left_inv := by
     intro C
     apply sphericalCode_ext_metriccodes2_d60650ef
-    change (C.toCodes.points.map (spherePointEmbedding_metriccodes2_d60650ef n)) = C.points
+    change (C.toCodes.points.map (spherePointEmbedding n)) = C.points
     ext x
     constructor
     · intro hx
@@ -616,7 +621,7 @@ private def sphericalCodeEquiv (n : ℕ) (s : ℝ) :
     · intro hx
       let w : {u : Euclidean n // u ∈ C.points} := ⟨x, hx⟩
       let z : MetricCodes.Sphere n :=
-        attachedSphereEmbedding_metriccodes2_d60650ef C w
+        attachedSphereEmbedding C w
       exact Finset.mem_map.mpr ⟨z,
         Finset.mem_map.mpr ⟨w, Finset.mem_attach _ _, rfl⟩, rfl⟩
   right_inv := by
@@ -625,7 +630,7 @@ private def sphericalCodeEquiv (n : ℕ) (s : ℝ) :
     ext x
     change
       x ∈ (SphericalCode.ofCodes C).points.attach.map
-        (attachedSphereEmbedding_metriccodes2_d60650ef (SphericalCode.ofCodes C)) ↔
+        (attachedSphereEmbedding (SphericalCode.ofCodes C)) ↔
         x ∈ C.points
     constructor
     · intro hx
@@ -1074,10 +1079,12 @@ section
 open Filter Topology
 open scoped BigOperators Topology
 
-private def appendAmbient {r : ℕ} (a : Fin (r + 1) → ℝ) : Fin (r + 2) → ℝ :=
+/-- Extend the ambient parameter row by appending a zero coordinate. -/
+def appendAmbient {r : ℕ} (a : Fin (r + 1) → ℝ) : Fin (r + 2) → ℝ :=
   Fin.snoc a 0
 
-private def appendStabilizer {r : ℕ} (b : Fin r → ℝ) (ε : ℝ) : Fin (r + 1) → ℝ :=
+/-- Extend the stabilizer parameter row by appending the coordinate `ε`. -/
+def appendStabilizer {r : ℕ} (b : Fin r → ℝ) (ε : ℝ) : Fin (r + 1) → ℝ :=
   Fin.snoc b ε
 
 theorem interlacing_append {r : ℕ}
@@ -1133,7 +1140,8 @@ theorem lagrangeWeight_append_castSucc {r : ℕ}
     lagrangeDenominator_append_castSucc]
   field_simp [hquad, hden]
 
-private def appendSpectralLoss {r : ℕ}
+/-- The weighted spectral loss coefficient associated with appending a stabilizer parameter. -/
+def appendSpectralLoss {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : ℝ :=
   ∑ i : Fin (r + 1),
     lagrangeWeight a b i * spectralAtom (a i) /
@@ -1185,7 +1193,8 @@ theorem Phi_append {r : ℕ}
                 mul_zero, Real.logb_zero, sub_self]
               ring
 
-private def scaleCoordinate (c u : ℝ) : ℝ :=
+/-- The square-root coordinate change that scales the quadratic weight `u * (1 + u)` by `c`. -/
+def scaleCoordinate (c u : ℝ) : ℝ :=
   (Real.sqrt (1 + 4 * c * (u * (1 + u))) - 1) / 2
 
 theorem scaleCoordinate_nonneg {c u : ℝ}
@@ -1243,10 +1252,12 @@ theorem scaleCoordinate_pos {c u : ℝ} (hc : 0 < c) (hu : 0 < u) :
     scaleCoordinate_strictMonoOn hc (show (0 : ℝ) ∈ Set.Ici 0 by simp) (show u ∈ Set.Ici 0 from
       hu.le) hu
 
-private def scaleAmbient {r : ℕ} (c : ℝ) (a : Fin (r + 1) → ℝ) : Fin (r + 1) → ℝ :=
+/-- Apply the quadratic-weight scaling coordinate change to every ambient parameter. -/
+def scaleAmbient {r : ℕ} (c : ℝ) (a : Fin (r + 1) → ℝ) : Fin (r + 1) → ℝ :=
   fun i => scaleCoordinate c (a i)
 
-private def scaleStabilizer {r : ℕ} (c : ℝ) (b : Fin r → ℝ) : Fin r → ℝ :=
+/-- Apply the quadratic-weight scaling coordinate change to every stabilizer parameter. -/
+def scaleStabilizer {r : ℕ} (c : ℝ) (b : Fin r → ℝ) : Fin r → ℝ :=
   fun i => scaleCoordinate c (b i)
 
 theorem Interlacing.scale {r : ℕ}
@@ -1406,7 +1417,8 @@ theorem spectralAtom_scale_sub_lower_bound {c u : ℝ}
   dsimp [x, Q, q] at hfractions hfactor hsq ⊢
   linarith
 
-private def scalingGainCoefficient {r : ℕ}
+/-- The positive weighted coefficient controlling the spectral gain under parameter scaling. -/
+def scalingGainCoefficient {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : ℝ :=
   ∑ i : Fin (r + 1),
     lagrangeWeight a b i *
@@ -1451,7 +1463,8 @@ theorem Gamma_scale_sub_lower_bound {r : ℕ}
   dsimp [scaleAmbient]
   convert hweighted using 1 <;> ring
 
-private def appendSpectralLossUpper {r : ℕ}
+/-- The reciprocal quadratic-weight sum bounding the spectral loss from appending a parameter. -/
+def appendSpectralLossUpper {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : ℝ :=
   ∑ i : Fin (r + 1),
     lagrangeWeight a b i / (2 * ((a i) * (1 + (a i))))
@@ -1509,7 +1522,8 @@ theorem append_scaled_spectralLoss_le {r : ℕ}
     mul_nonneg (mul_nonneg he hweight.le)
       (sub_nonneg.mpr hatom.le)]
 
-private def compensatedScalingSlope {r : ℕ}
+/-- The scaling slope chosen to exceed the upper bound on the appended spectral loss. -/
+def compensatedScalingSlope {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : ℝ :=
   (appendSpectralLossUpper a b + 1) / scalingGainCoefficient a b
 
@@ -1521,7 +1535,8 @@ theorem compensatedScalingSlope_pos {r : ℕ}
   exact div_pos (by linarith [appendSpectralLossUpper_pos h hlast])
     (scalingGainCoefficient_pos h hlast)
 
-private def compensatedScalingFactor {r : ℕ}
+/-- The parameter scaling factor compensating for an appended stabilizer coordinate `ε`. -/
+def compensatedScalingFactor {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) (ε : ℝ) : ℝ :=
   1 + compensatedScalingSlope a b * (ε * (1 + ε))
 
@@ -1594,7 +1609,8 @@ theorem scaleCoordinate_compensated_differentiableAt_zero {r : ℕ}
   unfold scaleCoordinate
   exact ((hinner.sqrt hrad).sub_const 1).div_const 2
 
-private def compensatedPhiPath {r : ℕ}
+/-- The entropy objective evaluated along the compensated parameter-scaling path. -/
+def compensatedPhiPath {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) (ε : ℝ) : ℝ :=
   Phi (scaleAmbient (compensatedScalingFactor a b ε) a)
     (scaleStabilizer (compensatedScalingFactor a b ε) b)
@@ -1798,7 +1814,9 @@ theorem Interlacing.Phi_nonneg_refinement {r : ℕ}
     simpa only [sphericalEntropy, sub_nonneg, ge_iff_le, add_zero, Real.logb_one, mul_zero,
       Real.logb_zero, sub_self] using hmono
 
-private def levelRateSet (r : ℕ) (s : ℝ) : Set ℝ :=
+/-- The entropy values of rank-`r` interlacing certificates whose spectral value strictly
+exceeds `s`. -/
+def levelRateSet (r : ℕ) (s : ℝ) : Set ℝ :=
   {R | ∃ (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ),
     Interlacing a b ∧ s < 2 * Gamma a b ∧ R = Phi a b}
 
@@ -1878,7 +1896,8 @@ theorem localizedEnvelope_lt_of_minimizer
     _ = MetricCodes.Spherical.SidelnikovLocalization.localizedEnvelope κ s :=
       hmin.symm
 
-private def openingAmbient {r : ℕ}
+/-- Subtract `x` from the first ambient entry, then set the last ambient entry to `z`. -/
+def openingAmbient {r : ℕ}
     (a : Fin (r + 1) → ℝ) (x z : ℝ) : Fin (r + 1) → ℝ :=
   Function.update
     (Function.update a 0 (a 0 - x)) (Fin.last r) z
@@ -1896,7 +1915,8 @@ theorem zero_ne_last_of_level_pos {r : ℕ} (hr : 0 < r) :
   simp only [Fin.coe_ofNat_eq_mod, Nat.zero_mod, Fin.val_last] at hval
   omega
 
-private def ScaledOpeningDerivative (η : ℝ) (f g : ℝ → ℝ) : Prop :=
+/-- Equality of initial values together with derivatives at zero related by the factor `η`. -/
+def ScaledOpeningDerivative (η : ℝ) (f g : ℝ → ℝ) : Prop :=
   f 0 = g 0 ∧ ∃ d : ℝ, HasDerivAt f (η * d) 0 ∧ HasDerivAt g d 0
 
 theorem ScaledOpeningDerivative.const (η k : ℝ) :
@@ -2097,7 +2117,8 @@ theorem lagrangeWeight_opening_scaledDerivative {r : ℕ}
     exact h.lagrangeDenominator_ne_zero i
   simpa only using hnum.div hden (by simpa [zero_pow (by norm_num : 2 ≠ 0)] using hnonzero)
 
-private def openingRegularGamma {r : ℕ}
+/-- The spectral sum over the regular ambient entries along the boundary-opening path. -/
+def openingRegularGamma {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) (η t : ℝ) : ℝ :=
   ∑ i : Fin r,
     lagrangeWeight (openingAmbient a (η * t) (t ^ 2)) b i.castSucc *
@@ -2359,7 +2380,8 @@ theorem eventually_Phi_opening_lt {r : ℕ}
   have hphi := Phi_opening_eq (b := b) hr hzero η t
   linarith
 
-private def openingContractionSpeed {r : ℕ}
+/-- The positive opening speed bounded using the derivative of the regular spectral sum. -/
+def openingContractionSpeed {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : ℝ :=
   lagrangeWeight a b (Fin.last r) /
     (2 * (|deriv (openingRegularGamma a b 1) 0| + 1))
@@ -3010,10 +3032,13 @@ theorem tendsto_sphericalEntropy_sub_of_ratio
   simp only [Function.comp_apply]
   ring
 
-private def normalizedBoundaryQuadratic (s u : ℝ) : ℝ :=
+/-- The boundary quadratic expressed in the reciprocal-scale parameter used for
+compactification. -/
+def normalizedBoundaryQuadratic (s u : ℝ) : ℝ :=
   1 + u - (s / 2) * (u + 2) * Real.sqrt (1 + u)
 
-private def normalizedBoundaryDegree (s u : ℝ) : ℝ :=
+/-- The square-root solution of the normalized boundary quadratic equation. -/
+def normalizedBoundaryDegree (s u : ℝ) : ℝ :=
   (Real.sqrt (u ^ 2 + 4 * normalizedBoundaryQuadratic s u) - u) / 2
 
 theorem sqrt_degree_mul_one_add_eq
@@ -3116,7 +3141,8 @@ section
 open Filter Topology
 open scoped BigOperators Topology
 
-private def compactifiedHierarchyCoordinate (u : ℝ) : ℝ := (1 + u)⁻¹
+/-- The compactifying coordinate transformation `u ↦ 1 / (1 + u)`. -/
+def compactifiedHierarchyCoordinate (u : ℝ) : ℝ := (1 + u)⁻¹
 
 theorem compactifiedHierarchyCoordinate_mem_Ioc {u : ℝ} (hu : 0 ≤ u) :
     compactifiedHierarchyCoordinate u ∈ Set.Ioc (0 : ℝ) 1 := by
@@ -3229,15 +3255,19 @@ theorem levelRate_minimizing_sequence_bddAbove {r : ℕ}
     Phi (a k) (b k) ≤ Phi (a 0) (b 0) :=
   hanti (Nat.zero_le k)
 
-private abbrev HierarchyCompactIndex (r : ℕ) := Fin (r + 1) ⊕ Fin r
+/-- The combined index type for the ambient and stabilizer coordinates of a fixed hierarchy
+level. -/
+abbrev HierarchyCompactIndex (r : ℕ) := Fin (r + 1) ⊕ Fin r
 
-private def compactifiedHierarchyTuple {r : ℕ}
+/-- The tuple obtained by compactifying all ambient and stabilizer parameters. -/
+def compactifiedHierarchyTuple {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) :
     HierarchyCompactIndex r → ℝ :=
   Sum.elim (fun i => compactifiedHierarchyCoordinate (a i))
     (fun i => compactifiedHierarchyCoordinate (b i))
 
-private def hierarchyCompactCube (r : ℕ) : Set (HierarchyCompactIndex r → ℝ) :=
+/-- The unit cube containing the compactified ambient and stabilizer parameter tuples. -/
+def hierarchyCompactCube (r : ℕ) : Set (HierarchyCompactIndex r → ℝ) :=
   Set.univ.pi (fun _ => Set.Icc (0 : ℝ) 1)
 
 theorem compactifiedHierarchyTuple_mem_cube {r : ℕ}
@@ -3411,7 +3441,9 @@ section
 
 open Set Filter Topology
 
-private def FixedLevelCompactifiedCertificateClosure (r : ℕ) : Prop :=
+/-- Closure of the fixed-level rate bound under convergent spectral thresholds and entropy upper
+bounds. -/
+def FixedLevelCompactifiedCertificateClosure (r : ℕ) : Prop :=
   ∀ {s R : ℝ}, 0 < s → s < 1 →
     ∀ (u : ℕ → ℝ)
       (a : ℕ → Fin (r + 1) → ℝ)
@@ -3482,11 +3514,13 @@ section
 open Filter Topology
 open scoped BigOperators Topology
 
-private def prependAmbient {r : ℕ} (u : ℝ) (a : Fin (r + 1) → ℝ) :
+/-- Extend the ambient parameter row by prepending `u`. -/
+def prependAmbient {r : ℕ} (u : ℝ) (a : Fin (r + 1) → ℝ) :
     Fin (r + 2) → ℝ :=
   Fin.cons u a
 
-private def prependStabilizer {r : ℕ} (v : ℝ) (b : Fin r → ℝ) :
+/-- Extend the stabilizer parameter row by prepending `v`. -/
+def prependStabilizer {r : ℕ} (v : ℝ) (b : Fin r → ℝ) :
     Fin (r + 1) → ℝ :=
   Fin.cons v b
 
@@ -4153,7 +4187,8 @@ section
 
 open scoped BigOperators
 
-private def WeakInterlacing {r : ℕ}
+/-- Interlacing with non-strict inequalities and a nonnegative final ambient coordinate. -/
+def WeakInterlacing {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : Prop :=
   0 ≤ a (Fin.last r) ∧
     ∀ i : Fin r, b i ≤ a i.castSucc ∧ a i.succ ≤ b i
@@ -4207,7 +4242,8 @@ theorem WeakInterlacing.drop_second {r : ℕ}
         | succ i =>
             simpa only [Fin.tail, Fin.castSucc_succ, Fin.cons_succ] using h.2 i.succ.succ
 
-private def hierarchyStieltjesRatio {r : ℕ}
+/-- The ratio of stabilizer and ambient products of shifted quadratic weights. -/
+def hierarchyStieltjesRatio {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) (t : ℝ) : ℝ :=
   (∏ i : Fin r, (t + ((b i) * (1 + (b i))))) /
     (∏ i : Fin (r + 1), (t + ((a i) * (1 + (a i)))))
@@ -4527,12 +4563,14 @@ section
 open Set Filter Topology
 open scoped BigOperators Topology
 
-private def compactifiedAmbientSuffix {r k j : ℕ}
+/-- The ambient suffix remaining after the first `k` compactified coordinates are removed. -/
+def compactifiedAmbientSuffix {r k j : ℕ}
     (h : k + j = r) (A : Fin (r + 1) → ℝ) :
     Fin (j + 1) → ℝ :=
   fun i => A ⟨k + i.val, by omega⟩
 
-private def compactifiedStabilizerSuffix {r k j : ℕ}
+/-- The stabilizer suffix remaining after the first `k` compactified coordinates are removed. -/
+def compactifiedStabilizerSuffix {r k j : ℕ}
     (h : k + j = r) (B : Fin r → ℝ) :
     Fin j → ℝ :=
   fun i => B ⟨k + i.val, by omega⟩
@@ -5037,7 +5075,8 @@ section
 
 open scoped BigOperators
 
-private def compactifiedEscapingRatioProduct {r k j : ℕ}
+/-- The product of the first `k` compactified escaping-coordinate ratios. -/
+def compactifiedEscapingRatioProduct {r k j : ℕ}
     (hkj : k + j = r) (d : Fin r → ℝ) : ℝ :=
   ∏ i : Fin k, d ⟨i.val, by omega⟩
 
@@ -5956,7 +5995,9 @@ theorem compactified_certificate_residual_threshold_le
     hφ hthreshold hfeasible hspectral
   nlinarith
 
-private def FixedLevelForwardCompactifiedResidualLimit (r : ℕ) : Prop :=
+/-- Subsequential compactification of fixed-level families with bounded entropy into a residual
+hierarchy. -/
+def FixedLevelForwardCompactifiedResidualLimit (r : ℕ) : Prop :=
   ∀ {C : ℝ}
     (a : ℕ → Fin (r + 1) → ℝ)
     (b : ℕ → Fin r → ℝ),
@@ -6472,7 +6513,8 @@ theorem levelRate_succ_lt
     (fun A B hAB hstrict hlevels =>
       levelRate_le_compactified_datum hs hs' hc A B hAB hstrict hlevels)
 
-private def oneRowBoundaryObjective (s a : ℝ) : ℝ :=
+/-- The one-row boundary entropy difference between the ambient and boundary degrees. -/
+def oneRowBoundaryObjective (s a : ℝ) : ℝ :=
   MetricCodes.sphericalEntropy a -
     MetricCodes.sphericalEntropy (MetricCodes.Spherical.boundaryDegree s a)
 
@@ -7188,7 +7230,9 @@ section
 open Filter Topology
 open scoped BigOperators Topology
 
-private def closedHierarchyRateSet (s : ℝ) : Set ℝ :=
+/-- The entropy values of interlacing certificates at any rank satisfying the closed spectral
+constraint. -/
+def closedHierarchyRateSet (s : ℝ) : Set ℝ :=
   {z | ∃ (r : ℕ) (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ),
     Interlacing a b ∧ s ≤ 2 * Gamma a b ∧ z = Phi a b}
 
@@ -7353,7 +7397,8 @@ end
 section
 
 
-private def compactificationCapFactor (s t : ℝ) : ℝ :=
+/-- The square-root contraction factor comparing the cap thresholds `s` and `t`. -/
+def compactificationCapFactor (s t : ℝ) : ℝ :=
   Real.sqrt ((1 - s) / (1 - t))
 
 theorem compactificationCapFactor_pos
@@ -7493,7 +7538,8 @@ end
 section
 
 
-private def GenuineCompactifiedHierarchyTransfer : Prop :=
+/-- Transfer of a finite hierarchy certificate to the variational bound after cap contraction. -/
+def GenuineCompactifiedHierarchyTransfer : Prop :=
   ∀ {r : ℕ} {s c : ℝ},
     0 < c → c < 1 →
     ∀ (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ),

@@ -3,7 +3,9 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+module
+
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.RingTheory.Flat.Basic
 import Mathlib.RingTheory.TensorProduct.Free
 
@@ -13,6 +15,8 @@ import Mathlib.RingTheory.TensorProduct.Free
 This file ports auxiliary results about finite intermediate fields inside an algebraic
 closure and tensor products over their directed union.
 -/
+
+@[expose] public section
 
 suppress_compilation
 
@@ -154,11 +158,10 @@ theorem inter_tensor_union :
   induction x using TensorProduct.induction_on with
   |zero => simp
   |tmul x a =>
-    have fin0: FiniteDimensional K K⟮x⟯ := IntermediateField.adjoin.finiteDimensional (by
-      observe : IsAlgebraic K x
-      exact Algebra.IsIntegral.isIntegral x)
+    have finite_adjoin : FiniteDimensional K K⟮x⟯ :=
+      IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral x)
     exact Submodule.mem_sSup_of_directed (SetOfFinite_nonempty K K_bar A) (is_direct K K_bar A) |>.2
-      ⟨intermediateTensor K K_bar A K⟮x⟯, ⟨⟨⟨K⟮x⟯, fin0⟩, rfl⟩,
+      ⟨intermediateTensor K K_bar A K⟮x⟯, ⟨⟨⟨K⟮x⟯, finite_adjoin⟩, rfl⟩,
         ⟨(⟨x, IntermediateField.mem_adjoin_simple_self K x⟩ ⊗ₜ a), by simp⟩⟩⟩
   |add x y hx hy =>
   apply AddMemClass.add_mem <;> assumption
@@ -357,70 +360,21 @@ lemma comm_square :
   rfl
 
 lemma isoRestrict_map_one : isoRestrict' n k k⁻ A iso 1 = 1 := by
-  /-
-        isoRestrict
-  ℒ ⊗_k A -----> M_n(ℒ)
-    | inclusion    | inclusion'
-    v              v
-  k⁻ ⊗_k A -----> M_n(k⁻)
-            iso
-
-  Want to show isoRestrict 1 = 1
-  inclusion' ∘ isoRestrict = iso ∘ inclusion
-  inclusion' (isoRestrict 1) = iso (inclusion 1) = 1 = inclusion' 1
-  since inclusion' is injective, isoRestrict 1 = 1
-  -/
-  have eq := congr($(comm_square n k k_bar A iso) 1)
-  conv_rhs at eq =>
-    rw [LinearMap.comp_apply]
-    change (LinearMap.restrictScalars (@Subtype k_bar fun x ↦ x ∈ ℒ)) iso.toLinearEquiv.toLinearMap
-      (inclusion n k k_bar A iso 1)
-    erw [show (inclusion n k k_bar A iso 1) = 1 from rfl, map_one iso]
-  refine inclusion'_injective n k k_bar A iso (eq.trans ?_)
-  rw [_root_.map_one]
+  apply inclusion'_injective n k k_bar A iso
+  calc
+    _ = iso (inclusion n k k_bar A iso 1) :=
+      LinearMap.congr_fun (comm_square n k k_bar A iso) 1
+    _ = _ := by simp
 
 lemma isoRestrict_map_mul (x y : ℒ ⊗[k] A) :
     isoRestrict' n k k⁻ A iso (x * y) =
     isoRestrict' n k k⁻ A iso x * isoRestrict' n k k⁻ A iso y := by
-  /-
-        isoRestrict
-  ℒ ⊗_k A -----> M_n(ℒ)
-    | inclusion    | inclusion'
-    v              v
-  k⁻ ⊗_k A -----> M_n(k⁻)
-            iso
-
-  Want to show isoRestrict (x * y) = isoRestrict x * isoRestrict y
-  inclusion' ∘ isoRestrict = iso ∘ inclusion
-  inclusion' (isoRestrict (x * y)) = iso (inclusion (x * y)) = iso (inclusion x) * iso (inclusion y)
-    = inclusion' (isoRestrict x) * inclusion' (isoRestrict y)
-    = inclusion' (isoRestrict x * isoRestrict y)
-  since inclusion' is injective, isoRestrict (x * y) = isoRestrict x * isoRestrict y
-
-  -/
-  have eq := congr($(comm_square n k k_bar A iso) (x * y))
-  conv_rhs at eq =>
-    rw [LinearMap.comp_apply]
-    erw [_root_.map_mul (f := inclusion n k k_bar A iso), _root_.map_mul (f := iso)]
-  have eq₁ := congr($(comm_square n k k_bar A iso) x)
-  have eq₂ := congr($(comm_square n k k_bar A iso) y)
-  simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply, AlgHom.toLinearMap_apply,
-    AlgEquiv.toLinearEquiv_toLinearMap, LinearMap.coe_restrictScalars] at eq₁ eq₂
   apply inclusion'_injective n k k_bar A iso
-  calc
-    (inclusion' n k k_bar A iso) ((isoRestrict' n k k_bar A iso) (x * y)) =
-        iso ((inclusion n k k_bar A iso) x) * iso ((inclusion n k k_bar A iso) y) := by
-      change
-        ((inclusion' n k k_bar A iso).toLinearMap ∘ₗ ↑(isoRestrict' n k k_bar A iso)) (x * y) =
-          iso ((inclusion n k k_bar A iso) x) * iso ((inclusion n k k_bar A iso) y)
-      exact eq
-    _ = (inclusion' n k k_bar A iso) ((isoRestrict' n k k_bar A iso) x) *
-        (inclusion' n k k_bar A iso) ((isoRestrict' n k k_bar A iso) y) := by
-      rw [eq₁, eq₂]
-      rfl
-    _ = (inclusion' n k k_bar A iso)
-        ((isoRestrict' n k k_bar A iso) x * (isoRestrict' n k k_bar A iso) y) := by
-      rw [_root_.map_mul]
+  have commutes (z : ℒ ⊗[k] A) :
+      inclusion' n k k_bar A iso (isoRestrict' n k k_bar A iso z) =
+        iso (inclusion n k k_bar A iso z) :=
+    LinearMap.congr_fun (comm_square n k k_bar A iso) z
+  simp only [map_mul, commutes]
 
 /-- The restricted algebra equivalence over the finite intermediate field `ℒ`. -/
 def isoRestrict : ℒ ⊗[k] A ≃ₐ[ℒ] Matrix (Fin n) (Fin n) ℒ :=

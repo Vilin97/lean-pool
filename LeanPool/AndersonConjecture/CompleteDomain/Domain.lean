@@ -3,10 +3,14 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.Ideal.Maps
 import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.RingTheory.Ideal.Quotient.Operations
 import Mathlib.RingTheory.MvPowerSeries.Inverse
-import Mathlib.RingTheory.MvPowerSeries.Substitution
 
 /-!
 # The Complete Local Domain T
@@ -14,6 +18,8 @@ import Mathlib.RingTheory.MvPowerSeries.Substitution
 Construction of T = C[[x,y,z]]/(x^2 - yz) and the proof that
 T is an integral domain.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -69,27 +75,20 @@ lemma conjI_le_ker_ψ : conjI ≤ RingHom.ker ψHom.toRingHom := by
 
 lemma anderson_gen_ne_zero : (X (0 : Fin 3) : MvPowerSeries (Fin 3) ℂ) ^ 2 -
     X 1 * X 2 ≠ 0 := by
+  have hdegrees : Finsupp.single (0 : Fin 3) 2 ≠
+      Finsupp.single 1 1 + Finsupp.single 2 1 := by
+    intro h
+    have h0 := DFunLike.congr_fun h 0
+    simp only [Finsupp.add_apply, Finsupp.single_eq_same, Finsupp.single_eq_of_ne
+      (by decide : (0 : Fin 3) ≠ 1), Finsupp.single_eq_of_ne
+      (by decide : (0 : Fin 3) ≠ 2), zero_add] at h0
+    omega
   intro h
-  have h1 := congr_arg (MvPowerSeries.coeff (R := ℂ) (Finsupp.single (0 : Fin 3) 2)) h
-  simp only [map_sub, map_zero] at h1
-  rw [MvPowerSeries.coeff_X_pow] at h1
-  simp only [ite_true] at h1
-  rw [MvPowerSeries.coeff_mul] at h1
-  simp only [MvPowerSeries.coeff_X] at h1
-  have : ∀ p ∈ Finset.antidiagonal (Finsupp.single (0 : Fin 3) 2),
-    (if p.1 = Finsupp.single 1 1 then (1 : ℂ) else 0) *
-    (if p.2 = Finsupp.single 2 1 then 1 else 0) = 0 := by
-    intro ⟨a, b⟩ hab
-    rw [Finset.mem_antidiagonal] at hab
-    by_cases ha : a = Finsupp.single 1 1
-    · simp only [ha, ite_true]
-      by_cases hb : b = Finsupp.single 2 1
-      · exfalso
-        have h0 := congr_fun (congr_arg DFunLike.coe hab) (0 : Fin 3)
-        simp [ha, hb, Finsupp.add_apply] at h0
-      · simp [hb]
-    · simp [ha]
-  simp_all
+  have hcoeff := congrArg (coeff (R := ℂ) (Finsupp.single (0 : Fin 3) 2)) h
+  rw [map_sub, map_zero, coeff_X_pow] at hcoeff
+  simp only [ite_true, X_def,
+    monomial_mul_monomial, one_mul, coeff_monomial, ite_eq_right hdegrees,
+    sub_zero, one_ne_zero] at hcoeff
 
 /-- The factored map ψbar : T → ℂ[[u,v]]. -/
 noncomputable def ψBar : T →+* MvPowerSeries (Fin 2) ℂ :=
@@ -118,23 +117,12 @@ def divQ (f : MvPowerSeries (Fin 3) ℂ) : MvPowerSeries (Fin 3) ℂ :=
   fun n => ∑ k ∈ Finset.range (min (n 1) (n 2) + 1),
     f (mkFin3 (n 0 + 2 + 2 * k) (n 1 - k) (n 2 - k))
 
-/-- Key coefficient relation: the sum Σ_{k=0}^{min(m₁,m₂)} f(m₀+2k, m₁-k, m₂-k)
-  equals a coefficient of ψHom(f) at the monomial u^{m₀+2m₁} v^{m₀+2m₂}. -/
+/-- Substitution sends a monomial with degree `d` to
+`u^(d₀ + 2d₁) * v^(d₀ + 2d₂)`. -/
 lemma ψMap_prod_eq (d : Fin 3 →₀ ℕ) :
     d.prod (fun s n => ψMap s ^ n) =
     MvPowerSeries.monomial (mkFin2 (d 0 + 2 * d 1) (d 0 + 2 * d 2)) (1 : ℂ) := by
-  have hprod : d.prod (fun s n => ψMap s ^ n) =
-      (ψMap 0 ^ (d 0)) * (ψMap 1 ^ (d 1)) * (ψMap 2 ^ (d 2)) := by
-    rw [Finsupp.prod]
-    rw [Finset.prod_subset (Finset.subset_univ _) (fun i _ hi => by
-      simp_all)]
-    have huniv : (Finset.univ : Finset (Fin 3)) = {0, 1, 2} := by decide
-    rw [huniv]
-    rw [Finset.prod_insert (show (0 : Fin 3) ∉ ({1, 2} : Finset (Fin 3)) by decide)]
-    rw [Finset.prod_insert (show (1 : Fin 3) ∉ ({2} : Finset (Fin 3)) by decide)]
-    rw [Finset.prod_singleton]
-    ring
-  rw [hprod]
+  rw [Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fin.prod_univ_three]
   change ((MvPowerSeries.X 0 * MvPowerSeries.X 1 : MvPowerSeries (Fin 2) ℂ) ^ d 0 *
     ((MvPowerSeries.X 0) ^ 2) ^ d 1 *
     ((MvPowerSeries.X 1) ^ 2) ^ d 2) = _
@@ -238,14 +226,36 @@ lemma ψHom_coeff_sum
   rw [ite_eq_left hcond]
   rfl
 
-/-- Key lemma: ψbar is injective. This is equivalent to ker ψHom = conjI.
+/-- Removing the first term of a substitution fiber gives the shifted quotient coefficient. -/
+private lemma divQ_recurrence (f : MvPowerSeries (Fin 3) ℂ) (a b c : ℕ) :
+    f (mkFin3 a b c) =
+      (∑ k ∈ Finset.range (min b c + 1), f (mkFin3 (a + 2 * k) (b - k) (c - k))) -
+      if 1 ≤ b ∧ 1 ≤ c then divQ f (mkFin3 a (b - 1) (c - 1)) else 0 := by
+  by_cases h : 1 ≤ b ∧ 1 ≤ c
+  · rw [ite_eq_left h]
+    simp only [divQ, mkFin3_zero, mkFin3_one, mkFin3_two]
+    rw [show min (b - 1) (c - 1) + 1 = min b c from by omega,
+      Finset.sum_range_succ']
+    simp only [mul_zero, add_zero, Nat.sub_zero]
+    have hterms : ∀ k ∈ Finset.range (min b c),
+        f (mkFin3 (a + 2 * (k + 1)) (b - (k + 1)) (c - (k + 1))) =
+        f (mkFin3 (a + 2 + 2 * k) (b - 1 - k) (c - 1 - k)) := by
+      intro k _
+      congr 1
+      rw [mkFin3_inj]
+      omega
+    rw [Finset.sum_congr rfl hterms]
+    exact eq_sub_of_add_eq (add_comm _ _)
+  · have hmin : min b c = 0 := by omega
+    simp only [ite_eq_right h, hmin, zero_add, Finset.sum_range_one, mul_zero,
+      add_zero, Nat.sub_zero, sub_zero]
 
-**Proof sketch:** View ℂ[[x,y,z]] ≅ ℂ[[y,z]][[x]] via the ring equiv.
-Under this decomposition, every f can be written uniquely as q·(x²-yz) + (a + bx).
-If ψ(f) = 0 then ψ(a + bx) = a(u²,v²) + b(u²,v²)·uv = 0.
-The terms a(u²,v²) use only even-even degree monomials while b(u²,v²)·uv uses
-only odd-odd degree monomials, so both must be zero. Since g ↦ g(u²,v²) is
-injective, a = b = 0, hence f = q·(x²-yz) ∈ conjI. -/
+/-- The factored substitution is injective because `ψHom` has kernel `conjI`.
+
+The coefficients of `divQ f` telescope along the substitution fibers. For `x`-degree
+at least two, this gives the coefficient of `f` directly. For degrees zero and one,
+`ψHom_coeff_sum` identifies the remaining sum with a coefficient of `ψHom f`,
+which vanishes when `f` is in the kernel. -/
 lemma ψBar_injective : Function.Injective ψBar := by
   apply RingHom.lift_injective_of_ker_le_ideal
   intro f hf
@@ -260,127 +270,39 @@ lemma ψBar_injective : Function.Injective ψBar := by
   have hgen_eq : (MvPowerSeries.X (0 : Fin 3) : MvPowerSeries (Fin 3) ℂ) ^ 2 -
       MvPowerSeries.X 1 * MvPowerSeries.X 2 =
       MvPowerSeries.monomial d₀ (1 : ℂ) - MvPowerSeries.monomial d₁₂ 1 := by
-    congr 1
-    · exact MvPowerSeries.X_pow_eq 0 2
-    · rw [show (MvPowerSeries.X (1 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
-          MvPowerSeries.monomial (Finsupp.single 1 1) 1 from by
-        rw [← MvPowerSeries.X_pow_eq (1 : Fin 3) 1]
-        simp,
-        show (MvPowerSeries.X (2 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
-          MvPowerSeries.monomial (Finsupp.single 2 1) 1 from by
-        rw [← MvPowerSeries.X_pow_eq (2 : Fin 3) 1]
-        simp,
-        MvPowerSeries.monomial_mul_monomial, one_mul]
+    rw [X_pow_eq, X_def, X_def, monomial_mul_monomial, one_mul]
   ext m
   rw [hgen_eq, sub_mul]
   simp only [map_sub, MvPowerSeries.coeff_monomial_mul, one_mul]
-  have hd₀_iff : d₀ ≤ m ↔ 2 ≤ m 0 := by
-    simp only [d₀, Finsupp.le_iff, Finsupp.support_single _ (by omega : (2 : ℕ) ≠ 0),
-      Finset.mem_singleton, forall_eq, Finsupp.single_eq_same]
+  have hd₀_iff : d₀ ≤ m ↔ 2 ≤ m 0 := Finsupp.single_le_iff
   have hd₁₂_iff : d₁₂ ≤ m ↔ 1 ≤ m 1 ∧ 1 ≤ m 2 := by
     constructor
     · intro h
-      have h1 : d₁₂ 1 = 1 := by simp [d₁₂, Finsupp.add_apply]
-      have h2 : d₁₂ 2 = 1 := by simp [d₁₂, Finsupp.add_apply]
-      exact ⟨h1 ▸ h 1, h2 ▸ h 2⟩
+      exact ⟨by simpa [d₁₂] using h 1, by simpa [d₁₂] using h 2⟩
     · intro ⟨h1, h2⟩ i
-      show d₁₂ i ≤ m i
-      simp only [d₁₂, Finsupp.add_apply]
-      fin_cases i <;> simp <;> omega
-  -- Case on m 0 ≥ 2
+      fin_cases i <;> simp [d₁₂] <;> omega
+  have hsub : m - d₁₂ = mkFin3 (m 0) (m 1 - 1) (m 2 - 1) := by
+    ext i
+    fin_cases i <;> simp [d₁₂, Finsupp.tsub_apply, mkFin3]
+  simp only [hd₀_iff, hd₁₂_iff, coeff_apply, hsub]
+  have hrec := divQ_recurrence f (m 0) (m 1) (m 2)
+  rw [← mkFin3_ext m] at hrec
   by_cases hm0 : 2 ≤ m 0
-  · -- m 0 ≥ 2: telescoping
-    rw [ite_eq_left (hd₀_iff.mpr hm0)]
-    have sub0 : (m - d₀) 0 = m 0 - 2 := by simp [Finsupp.tsub_apply, d₀]
-    have sub1 : (m - d₀) 1 = m 1 := by simp [Finsupp.tsub_apply, d₀]
-    have sub2 : (m - d₀) 2 = m 2 := by simp [Finsupp.tsub_apply, d₀]
-    have hdivQ0 : MvPowerSeries.coeff (m - d₀) (divQ f) =
+  · rw [ite_eq_left hm0]
+    have hdivQ0 : divQ f (m - d₀) =
         ∑ k ∈ Finset.range (min (m 1) (m 2) + 1),
-        f (mkFin3 (m 0 + 2 * k) (m 1 - k) (m 2 - k)) := by
-      change divQ f (m - d₀) = _
-      simp only [divQ, sub0, sub1, sub2, show m 0 - 2 + 2 = m 0 from by omega]
+          f (mkFin3 (m 0 + 2 * k) (m 1 - k) (m 2 - k)) := by
+      simp only [divQ, Finsupp.tsub_apply, d₀, Finsupp.single_eq_same,
+        Finsupp.single_eq_of_ne (by decide : (1 : Fin 3) ≠ 0),
+        Finsupp.single_eq_of_ne (by decide : (2 : Fin 3) ≠ 0), Nat.sub_zero,
+        Nat.sub_add_cancel hm0]
     rw [hdivQ0]
-    by_cases hm12 : 1 ≤ m 1 ∧ 1 ≤ m 2
-    · rw [ite_eq_left (hd₁₂_iff.mpr hm12)]
-      have s0' : (m - d₁₂) 0 = m 0 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
-      have s1' : (m - d₁₂) 1 = m 1 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
-      have s2' : (m - d₁₂) 2 = m 2 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
-      have hdivQ12 : MvPowerSeries.coeff (m - d₁₂) (divQ f) =
-          ∑ k ∈ Finset.range (min (m 1 - 1) (m 2 - 1) + 1),
-          f (mkFin3 (m 0 + 2 + 2 * k) (m 1 - 1 - k) (m 2 - 1 - k)) := by
-        change divQ f (m - d₁₂) = _
-        simp only [divQ, s0', s1', s2']
-      rw [hdivQ12, show min (m 1 - 1) (m 2 - 1) = min (m 1) (m 2) - 1 from by omega]
-      -- Telescoping: peel off k=0 from first sum, remaining terms cancel
-      conv_lhs => rw [show (MvPowerSeries.coeff m) f = f m from rfl]
-      conv_lhs => rw [mkFin3_ext m]
-      set N := min (m 1) (m 2)
-      have hN : 1 ≤ N := by omega
-      rw [show N - 1 + 1 = N from by omega]
-      rw [show N + 1 = N.succ from rfl, Finset.sum_range_succ']
-      simp only [mul_zero, add_zero, Nat.sub_zero]
-      have hterms : ∀ k ∈ Finset.range N,
-          f (mkFin3 (m 0 + 2 * (k + 1)) (m 1 - (k + 1)) (m 2 - (k + 1))) =
-          f (mkFin3 (m 0 + 2 + 2 * k) (m 1 - 1 - k) (m 2 - 1 - k)) := by
-        intro k _
-        congr 1
-        rw [mkFin3_inj]
-        refine ⟨by ring, ?_, ?_⟩ <;> omega
-      rw [Finset.sum_congr rfl hterms]
-      ring
-    · push Not at hm12
-      rw [ite_eq_right (fun h => by
-                    simp_all)]
-      simp only [sub_zero]
-      have hmin0 : min (m 1) (m 2) = 0 := by
-        by_cases h : 1 ≤ m 1
-        · simp_all
-        · omega
-      rw [hmin0, show (0 : ℕ) + 1 = 1 from rfl]
-      simp only [Finset.sum_range_one, mul_zero, add_zero, Nat.sub_zero]
-      change f m = f (mkFin3 (m 0) (m 1) (m 2))
-      rw [← mkFin3_ext]
-  · -- m 0 < 2 (m 0 ≤ 1)
-    have hm0' : m 0 ≤ 1 := by omega
-    rw [ite_eq_right (fun h => by
-                  simp_all)]
-    simp only [zero_sub]
+    exact hrec
+  · rw [ite_eq_right hm0]
     have hψ_sum : ∑ k ∈ Finset.range (min (m 1) (m 2) + 1),
         f (mkFin3 (m 0 + 2 * k) (m 1 - k) (m 2 - k)) = 0 := by
-      rw [ψHom_coeff_sum f (m 0) (m 1) (m 2) hm0', hψ0, map_zero]
-    by_cases hm12 : 1 ≤ m 1 ∧ 1 ≤ m 2
-    · rw [ite_eq_left (hd₁₂_iff.mpr hm12)]
-      change f m = -(divQ f (m - d₁₂))
-      simp only [divQ]
-      have s0 : (m - d₁₂) 0 = m 0 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
-      have s1 : (m - d₁₂) 1 = m 1 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
-      have s2 : (m - d₁₂) 2 = m 2 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
-      rw [s0, s1, s2]
-      rw [show min (m 1 - 1) (m 2 - 1) + 1 = min (m 1) (m 2) from by omega]
-      -- From hψ_sum, peel off first term
-      rw [Finset.sum_range_succ'] at hψ_sum
-      simp only [mul_zero, add_zero, Nat.sub_zero] at hψ_sum
-      suffices ∀ k ∈ Finset.range (min (m 1) (m 2)),
-          f (mkFin3 (m 0 + 2 * (k + 1)) (m 1 - (k + 1)) (m 2 - (k + 1))) =
-          f (mkFin3 (m 0 + 2 + 2 * k) (m 1 - 1 - k) (m 2 - 1 - k)) by
-        rw [Finset.sum_congr rfl this] at hψ_sum
-        exact (congr_arg f (mkFin3_ext m)).trans (eq_neg_of_add_eq_zero_right hψ_sum)
-      intro k _
-      congr 1
-      rw [mkFin3_inj]
-      refine ⟨by ring, ?_, ?_⟩ <;> omega
-    · push Not at hm12
-      rw [ite_eq_right (fun h => by
-                    simp_all)]
-      simp only [neg_zero]
-      have : min (m 1) (m 2) = 0 := by
-        by_cases h : 1 ≤ m 1
-        · simp_all
-        · omega
-      rw [this, show (0 : ℕ) + 1 = 1 from rfl] at hψ_sum
-      simp only [Finset.sum_range_one, mul_zero, add_zero, Nat.sub_zero] at hψ_sum
-      change f m = 0
-      exact (congr_arg f (mkFin3_ext m)).trans hψ_sum
+      rw [ψHom_coeff_sum f (m 0) (m 1) (m 2) (by omega), hψ0, map_zero]
+    rwa [hψ_sum] at hrec
 
 end T_isDomain_proof
 

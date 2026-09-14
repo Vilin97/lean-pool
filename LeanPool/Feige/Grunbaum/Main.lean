@@ -3,11 +3,15 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-import LeanPool.Feige.Grunbaum.ProbabilityCore
-import LeanPool.Feige.Grunbaum.TruncationConcavity
+module
+
+public import LeanPool.Feige.Grunbaum.ProbabilityCore
+public import LeanPool.Feige.Grunbaum.TruncationConcavity
 import LeanPool.Feige.Grunbaum.FinalBridge
-import Mathlib.MeasureTheory.Measure.MeasureSpace
-import Mathlib.MeasureTheory.Measure.Restrict
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Grünbaum's centroid halfspace theorem
@@ -16,6 +20,8 @@ This file closes the geometric, measure-theoretic, and Jensen layers of the
 proof.  The public theorem `grunbaum_centroid_halfspace` has only the
 assumptions in the mathematical statement.
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal Topology

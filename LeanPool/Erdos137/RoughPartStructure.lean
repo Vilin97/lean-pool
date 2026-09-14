@@ -3,9 +3,15 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Base
+public import LeanPool.Erdos137.Finiteness
+public import Mathlib.Algebra.Squarefree.Basic
 import LeanPool.Erdos137.TaoPoint
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.Nat.Squarefree
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #137: term-level rough-part structure in a very bad interval
@@ -16,6 +22,8 @@ the part supported on primes `p ≥ k` is itself powerful. A prime `p ≥ k` div
 anatomy behind Tao's "very bad interval" language. No abc, no radical lower bound, no analytic
 number theory.
 -/
+
+@[expose] public section
 
 namespace Erdos137
 

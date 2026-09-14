@@ -5,7 +5,9 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
+public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Regression theorems via Riemann–Roch

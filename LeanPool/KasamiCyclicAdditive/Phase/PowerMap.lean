@@ -3,12 +3,16 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Basic facts: the power map `x ↦ x^D` and the group `μ₃(K)`
 -/
+
+@[expose] public section
 
 open Finset
 

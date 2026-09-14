@@ -3,12 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.DistanceGeometry.Defs
-import LeanPool.DistanceGeometry.Schoenberg
-import LeanPool.DistanceGeometry.SchoenbergHard
-import LeanPool.DistanceGeometry.Trilateration
-import LeanPool.DistanceGeometry.CayleyMengerVolume
+public import LeanPool.DistanceGeometry.Defs
+public import LeanPool.DistanceGeometry.Schoenberg
+public import LeanPool.DistanceGeometry.SchoenbergHard
+public import LeanPool.DistanceGeometry.Trilateration
+public import LeanPool.DistanceGeometry.CayleyMengerVolume
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Euclidean Distance Geometry
@@ -20,6 +22,8 @@ Main declarations: `DistanceGeometry.schoenberg`, `DistanceGeometry.trilateratio
 Tags: distance-geometry, euclidean-geometry, linear-algebra, cayley-menger
 MSC: 51K05, 52C99, 15A18
 -/
+
+@[expose] public section
 
 /-!
 This project develops three parts of finite Euclidean distance geometry: both

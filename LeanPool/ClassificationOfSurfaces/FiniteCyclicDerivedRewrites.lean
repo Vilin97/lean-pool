@@ -3,7 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalization
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Derived Gallier--Xu word rewrites
@@ -17,6 +23,8 @@ normalization proof.  It starts with proof-producing infrastructure for one-face
 
 These lemmas keep intermediate validity witnesses out of the public derived-chain APIs.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -803,12 +811,9 @@ private theorem first_rewriteCertificate {n : ℕ} (a b c : Fin n)
       a ∉ ([SignedDart.neg b, SignedDart.neg c] ++ Y).map edgeOfDart := by
     simp [edgeOfDart, hab, hac, haY]
   constructor
-  · exact Crosscap.adjacentTarget_isSurfaceValid a
-      (X ++ [.pos b, .pos c]) ([.neg b, .neg c] ++ Y)
+  · exact Crosscap.adjacentTarget_isSurfaceValid a _ _
   · intro validP validQ
-    exact Crosscap.adjacentNormalizationEquivalent a
-      (X ++ [.pos b, .pos c]) ([.neg b, .neg c] ++ Y)
-      haFirstX haFirstY validP validQ
+    exact Crosscap.adjacentNormalizationEquivalent a _ _ haFirstX haFirstY validP validQ
 
 -- Rotation after the first rewrite is independent of the chosen validity witnesses.
 private theorem first_rotationCertificate {n : ℕ} (a b c : Fin n)
@@ -883,19 +888,13 @@ theorem normalizationEquivalent {n : ℕ} (a b c : Fin n)
     (first_rewriteCertificate a b c X Y hab hac haX haY).trans
       (first_rotationCertificate a b c X Y)
   let chain₂ := chain₁.trans
-    (negativeCrosscap_rewriteCertificate b
-      ([.neg c] ++ Y ++ [.pos a] ++ [.neg c])
-      (inverseWord X ++ [.pos a]) hbSecondX hbSecondY)
+    (negativeCrosscap_rewriteCertificate b _ _ hbSecondX hbSecondY)
   let chain₃ := chain₂.trans (second_rotationCertificate a b c X Y)
   let chain₄ := chain₃.trans
-    (negativeCrosscap_rewriteCertificate c
-      (Y ++ [.pos a]) ([.neg b, .neg b, .neg a] ++ X)
-      hcThirdX hcThirdY)
+    (negativeCrosscap_rewriteCertificate c _ _ hcThirdX hcThirdY)
   let chain₅ := chain₄.trans (third_rotationCertificate a b c X Y)
   let chain := chain₅.trans
-    (crosscap_rewriteCertificate a
-      ([.pos b, .pos b] ++ Y) ([.neg c, .neg c] ++ inverseWord X)
-      haFourthX haFourthY)
+    (crosscap_rewriteCertificate a _ _ haFourthX haFourthY)
   exact chain.normalizationEquivalent validSource validTarget
 
 end HandleToCrosscaps

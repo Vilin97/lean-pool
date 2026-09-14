@@ -3,24 +3,28 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Fin.Basic
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Preimage
-import Mathlib.Data.Finset.Sort
-import Mathlib.Order.Filter.Ultrafilter.Defs
-import Mathlib.Logic.Encodable.Basic
-import Mathlib.Computability.Primrec.List
-import Mathlib.Computability.Partrec
+public import Mathlib.Algebra.CharZero.Defs
+
+public import Mathlib.Data.Vector.Basic
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Set.Finite.Range
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Data.Finset.Union
+public import Mathlib.Data.PFun
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Logic.Equiv.List
+public import Mathlib.Order.Preorder.Chain
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Ring.Nat
 import Mathlib.Data.List.GetD
-import Mathlib.Data.Set.Finite.Range
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.TautoSet
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
+
+@[expose] public section
 
 
 namespace Nat
@@ -99,12 +103,12 @@ open Lean PrettyPrinter Delaborator SubExpr
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Matrix.vecEmpty]
-def unexpandVecEmpty : Unexpander
+meta def unexpandVecEmpty : Unexpander
   | `($(_)) => `(![])
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Matrix.vecCons]
-def unexpandVecCons : Unexpander
+meta def unexpandVecCons : Unexpander
   | `($(_) $a ![])      => `(![$a])
   | `($(_) $a ![$as,*]) => `(![$a, $as,*])
   | _                   => throw ()

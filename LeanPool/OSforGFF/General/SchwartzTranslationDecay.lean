@@ -3,17 +3,14 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Analysis.Convolution
-import Mathlib.Topology.ContinuousMap.ZeroAtInfty
-import Mathlib.Topology.Order.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Covering.Besicovitch
 import Mathlib.MeasureTheory.Group.Integral
-import Mathlib.Analysis.Normed.Operator.Mul -- For ContinuousLinearMap.mul
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-!
 # Schwartz Bilinear Translation Decay
@@ -45,7 +42,9 @@ Apply this pattern three times:
 - Reed-Simon Vol. II, Ch. X (decay of correlations)
 -/
 
-open MeasureTheory Complex SchwartzMap Filter Convolution Set Function Metric
+@[expose] public section
+
+open MeasureTheory Complex SchwartzMap Filter Set Function Metric
 open scoped Real Topology Pointwise
 
 noncomputable section

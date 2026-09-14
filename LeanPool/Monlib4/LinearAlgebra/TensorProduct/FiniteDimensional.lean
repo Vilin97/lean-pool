@@ -3,16 +3,11 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Algebra.Star.TensorProduct
-import Mathlib.RingTheory.TensorProduct.Finite
-import LeanPool.Monlib4.LinearAlgebra.IsReal
-import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.Lemmas
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
 
 /-!
 
@@ -22,6 +17,8 @@ This file defines the star operation on a tensor product of finite-dimensional
 star modules and proves compatibility lemmas for tensor-product maps.
 
 -/
+
+@[expose] public section
 
 
 open scoped TensorProduct BigOperators

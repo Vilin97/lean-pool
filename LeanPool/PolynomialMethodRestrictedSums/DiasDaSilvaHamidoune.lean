@@ -3,15 +3,13 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Common
-import Aesop
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+public import Mathlib.Algebra.Field.ZMod
 import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!
@@ -23,6 +21,8 @@ sums of `s` distinct elements of a subset of `ZMod p`.
 The main theorem of this file was originally proved by Aristotle
 (Lean v4.24.0, project request uuid 7257b62c-6371-4fa8-a5b5-ea19029f0f1f).
 -/
+
+@[expose] public section
 
 open MvPolynomial
 
@@ -117,13 +117,9 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
         induction i using Fin.induction with
         | zero => unfold compressedSizes; aesop
         | succ i ih =>
-          unfold compressedSizes
-          simp_all only [Order.add_one_le_iff, Fin.val_castSucc, Fin.val_succ]
-          split
-          next i_1 heq => simp_all only [Fin.zero_eta, Fin.succ_ne_zero]
-          next i_1 i_2 hi heq =>
-            simp_all only [Nat.succ_eq_add_one]
-            rcases i with ⟨ _ | i, hi ⟩ <;> simp_all +decide [ Nat.sub_sub ]
+          rw [compressedSizes_succ, ih]
+          simp only [Fin.val_castSucc, Fin.val_succ]
+          omega
       -- Apply Theorem 3.2 with the given parameters.
       have h_apply_theorem :
           (restrictedSumSet k (fun _ => A)).card ≥ min p ((∑ i : Fin (k + 1),

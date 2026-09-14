@@ -3,17 +3,12 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Tauto
-import Aesop
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+public import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!
@@ -25,6 +20,8 @@ in terms of the "compressed sizes" of the summand sets.
 The main theorem of this file was originally proved by Aristotle
 (Lean v4.24.0, project request uuid 08cb15be-5c46-4619-9dbf-e523d453b544).
 -/
+
+@[expose] public section
 
 open MvPolynomial
 

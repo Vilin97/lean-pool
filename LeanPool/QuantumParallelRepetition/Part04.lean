@@ -3,11 +3,14 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part03
-import Mathlib.Analysis.Convex.SpecificFunctions.Pow
+public import LeanPool.QuantumParallelRepetition.Part03
+public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
 
 /-! # Quantum parallel repetition, part 04 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -24,23 +27,27 @@ open scoped BigOperators
 abbrev SourceRemainingCoordinate {n : ℕ} (D : Finset (Fin n)) :=
   ↥(Finset.univ \ D)
 
-private abbrev SourceRemainingPermutation {n : ℕ} (D : Finset (Fin n)) :=
+/-- A permutation of the coordinates outside the revealed set. -/
+abbrev SourceRemainingPermutation {n : ℕ} (D : Finset (Fin n)) :=
   Equiv.Perm (SourceRemainingCoordinate D)
 
-private def sourceRemainingPermutationRank
+/-- Rank the remaining coordinates in the order determined by the permutation. -/
+def sourceRemainingPermutationRank
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D) :
     SourceRemainingCoordinate D ≃ Fin (Finset.univ \ D).card :=
   π.symm.trans (Finset.equivFin (Finset.univ \ D))
 
-private def sourceRemainingPermutationCoordinateSubtype
+/-- The remaining coordinate at a given permutation rank, with membership evidence. -/
+def sourceRemainingPermutationCoordinateSubtype
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) :
     SourceRemainingCoordinate D :=
   (sourceRemainingPermutationRank D π).symm k
 
-private def sourceRemainingPermutationCoordinate
+/-- The coordinate at a given rank in the permutation of unrevealed coordinates. -/
+def sourceRemainingPermutationCoordinate
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin (Finset.univ \ D).card) : Fin n :=
@@ -62,7 +69,8 @@ private theorem sourceRemainingPermutationCoordinate_not_mem
   have h := (sourceRemainingPermutationCoordinateSubtype D π k).property
   exact (Finset.mem_sdiff.mp h).2
 
-private def sourceRemainingPermutationPrefixSubtype
+/-- The remaining coordinates whose permutation ranks precede the cutoff. -/
+def sourceRemainingPermutationPrefixSubtype
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin ((Finset.univ \ D).card + 1)) :
@@ -71,7 +79,8 @@ private def sourceRemainingPermutationPrefixSubtype
   exact Finset.univ.filter fun i =>
     (sourceRemainingPermutationRank D π i).val < k.val
 
-private def sourceRemainingPermutationPrefix
+/-- The coordinates preceding the cutoff in the remaining permutation. -/
+def sourceRemainingPermutationPrefix
     {n : ℕ} (D : Finset (Fin n))
     (π : SourceRemainingPermutation D)
     (k : Fin ((Finset.univ \ D).card + 1)) : Finset (Fin n) := by
@@ -1027,7 +1036,8 @@ theorem conditionedBobCoordinateEffect_sum
         simp only [hb.symm, and_false, ↓reduceIte]
     _ = _ := by simp only [and_true]
 
-private def fullHistoryAliceCoordinateEffect
+/-- Alice's coordinate effect averaged over the questions hidden by the history. -/
+def fullHistoryAliceCoordinateEffect
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n))
     (h : FullSubsetHistory X Y n D L)
@@ -1039,7 +1049,8 @@ private def fullHistoryAliceCoordinateEffect
       conditionedAliceCoordinateEffect G n S D α
         (fullHistoryAliceQuestion h hidden) i a
 
-private def fullHistoryBobCoordinateEffect
+/-- Bob's coordinate effect averaged over the questions hidden by the history. -/
+def fullHistoryBobCoordinateEffect
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n))
     (h : FullSubsetHistory X Y n D L)
@@ -1051,7 +1062,8 @@ private def fullHistoryBobCoordinateEffect
       conditionedBobCoordinateEffect G n S D β
         (fullHistoryBobQuestion h hidden) i b
 
-private def fullCoordinateAliceRefinementEffect
+/-- Alice's coordinate effect after extending the history with the new question. -/
+def fullCoordinateAliceRefinementEffect
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -1060,7 +1072,8 @@ private def fullCoordinateAliceRefinementEffect
   fullHistoryAliceCoordinateEffect G n S D (insert i L)
     (fullCoordinateNewHistory D L i r x) α i a
 
-private def fullCoordinateBobRefinementEffect
+/-- Bob's coordinate effect for the selected question and previous history. -/
+def fullCoordinateBobRefinementEffect
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -2366,7 +2379,8 @@ theorem exactFiberQuestionWeight_rectangle
       G n D seed history x y xs xs' ys ys'
       ha ha' hb hb')
 
-private def exactFiberAliceMarginal
+/-- The question-fiber weight summed over Bob's full question vector. -/
+def exactFiberAliceMarginal
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -2375,7 +2389,8 @@ private def exactFiberAliceMarginal
   ∑ ys : Fin n → Y,
     exactFiberQuestionWeight G n D seed history x y xs ys
 
-private def exactFiberBobMarginal
+/-- The question-fiber weight summed over Alice's full question vector. -/
+def exactFiberBobMarginal
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (seed : ExactRemainingSeed D)
@@ -3528,19 +3543,26 @@ open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-private structure SourceHistoryFlag
+/-- A remaining permutation, its reveal position and history, and the selected answers. -/
+structure SourceHistoryFlag
     (X Y A B : Type*)
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     {n : ℕ} (D : Finset (Fin n)) where
+  /-- The order in which the remaining coordinates are revealed. -/
   permutation : SourceRemainingPermutation D
+  /-- The rank of the coordinate currently being revealed. -/
   position : Fin (Finset.univ \ D).card
+  /-- The revealed history for the chosen permutation prefix and coordinate. -/
   history : FullCoordinateRevealHistory X Y n D
     (sourceRemainingPermutationPrefix D permutation position.castSucc)
     (sourceRemainingPermutationCoordinate D permutation position)
+  /-- Alice's answers on the already selected coordinates. -/
   aliceAnswer : {i : Fin n // i ∈ D} → A
+  /-- Bob's answers on the already selected coordinates. -/
   bobAnswer : {i : Fin n // i ∈ D} → B
 
-private abbrev SourceHistoryFlagTuple
+/-- A nested tuple representation of a source history flag. -/
+abbrev SourceHistoryFlagTuple
     (X Y A B : Type*)
     {n : ℕ} (D : Finset (Fin n)) :=
   Σ π : SourceRemainingPermutation D,
@@ -3551,7 +3573,8 @@ private abbrev SourceHistoryFlagTuple
       ({i : Fin n // i ∈ D} → A) ×
       ({i : Fin n // i ∈ D} → B)
 
-private def sourceHistoryFlagEquiv
+/-- Convert between a bundled source history flag and its nested tuple representation. -/
+def sourceHistoryFlagEquiv
     {n : ℕ} (D : Finset (Fin n)) :
     SourceHistoryFlag X Y A B D ≃ SourceHistoryFlagTuple X Y A B D where
   toFun r := ⟨r.permutation, r.position,
@@ -3563,7 +3586,7 @@ private def sourceHistoryFlagEquiv
     rcases t with ⟨π, k, r, α, β⟩
     rfl
 
-private noncomputable instance sourceHistoryFlagFintype
+noncomputable instance sourceHistoryFlagFintype
     {n : ℕ} (D : Finset (Fin n)) :
     Fintype (SourceHistoryFlag X Y A B D) := by
   classical
@@ -3595,12 +3618,14 @@ private theorem sourceHistoryFlag_sum
       simp only [sourceHistoryFlagEquiv, Equiv.symm_mk, Equiv.coe_fn_mk, Fintype.sum_sigma,
         Fintype.sum_prod_type]
 
-private def sourceHistoryPermutationPositionWeight
+/-- The uniform weight of a remaining permutation and position pair. -/
+def sourceHistoryPermutationPositionWeight
     {n : ℕ} (D : Finset (Fin n)) : ℝ :=
   1 / ((Fintype.card (SourceRemainingPermutation D) : ℝ) *
     ((Finset.univ \ D).card : ℝ))
 
-private def sourceHistoryRaw
+/-- The unnormalized weight of a source history flag, including the selected wins. -/
+def sourceHistoryRaw
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (r : SourceHistoryFlag X Y A B D) : ℝ :=
@@ -4487,7 +4512,8 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-private def sourceHistoryAcceptedQuestionMass
+/-- The Born mass of winning answers for the flag's selected question pair. -/
+def sourceHistoryAcceptedQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n)) (D : Finset (Fin n))
     (r : SourceHistoryFlag X Y A B D)

@@ -3,12 +3,14 @@ Copyright (c) 2026 Jose Fonollosa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jose Fonollosa
 -/
+module
 
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Data.Nat.Log
-import Mathlib.Data.Nat.ModEq
 import Mathlib.Data.Nat.SuccPred
 import Mathlib.Tactic.NormNum.Ineq
 import Mathlib.Tactic.Ring.RingNF
@@ -41,6 +43,8 @@ Contents:
 * `nmin_eq` — the main theorem `Nmin(n) = 2^n − 2^⌊log₂ n⌋` — **complete,
   no axioms beyond propext / Classical.choice / Quot.sound**
 -/
+
+@[expose] public section
 
 namespace MinModulus
 

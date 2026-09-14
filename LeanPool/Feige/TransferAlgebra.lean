@@ -3,10 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.Data.Real.Basic
+module
+
+public import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Ring
 
 /-!
 # Algebraic part of the exponential transfer identity
@@ -24,6 +25,8 @@ imply the final factorized transfer identity.  No order or probabilistic
 hypotheses are needed for these implications; only the denominators have to
 be nonzero.
 -/
+
+@[expose] public section
 
 namespace Feige
 

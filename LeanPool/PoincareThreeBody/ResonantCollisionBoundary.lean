@@ -3,10 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
+public import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.FinCases
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # The apoapsis collision boundary of an interior resonance
@@ -15,6 +16,8 @@ For resonant semimajor axes between `1 / 2` and `1`, increasing eccentricity rea
 primary before the parabolic limit.  This file identifies the boundary eccentricity, apoapsis
 time, and orientation at which the limiting ellipse meets the primary exactly.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

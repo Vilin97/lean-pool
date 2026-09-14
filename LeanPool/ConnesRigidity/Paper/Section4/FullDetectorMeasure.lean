@@ -3,11 +3,15 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.AChartDetectorMeasure
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.AChartDetectorMeasure
 
 /-!
 Full §4 detector union for Zhou's compact dual. Paper: §4.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFullDetectorMeasure

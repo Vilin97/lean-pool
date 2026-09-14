@@ -3,15 +3,18 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Data.Matrix.Mul
-import Mathlib.Tactic.Linarith.Frontend
-import Mathlib.Tactic.Ring.RingNF
+module
 
-import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Matrix.Mul
+
+public import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # LeanPool.RlTheoryInLean.Data.Matrix.Mul
 -/
+
+@[expose] public section
 
 open Finset Real
 

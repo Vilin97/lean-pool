@@ -3,8 +3,9 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.EntropyRegion
+public import LeanPool.ZhangYeungInequality.EntropyRegion
 import LeanPool.ZhangYeungInequality.Theorem3
 
 /-!
@@ -150,6 +151,8 @@ Shannon entropy, non-Shannon information inequality, Zhang-Yeung, Shannon
 incompleteness, entropic
 region
 -/
+
+@[expose] public section
 
 namespace ZhangYeung
 

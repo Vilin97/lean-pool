@@ -3,15 +3,11 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
+public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Const
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Integral.Lebesgue.Add
-import Mathlib.Order.OmegaCompletePartialOrder
-import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Const
-import Mathlib.MeasureTheory.MeasurableSpace.Defs
-import Mathlib.Data.ENNReal.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 
 
 /-!
@@ -21,6 +17,8 @@ This file is a placeholder for lemmas about `OmegaCompletePartialOrder`.
 As the library grows, compatibility helpers specific to this project can
 be added here.
 -/
+
+@[expose] public section
 
 namespace OmegaCompletePartialOrder
 

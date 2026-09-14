@@ -3,9 +3,12 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
+public import LeanPool.Sundogcert.ThreeDMReindex
+public import LeanPool.Sundogcert.SATReduction
 import LeanPool.Sundogcert.SATReductionIncidence
-import LeanPool.Sundogcert.ThreeDMReindex
+import LeanPool.Sundogcert.VarWheel
 
 /-!
   Sundogcert/SATReductionReverse.lean — MILESTONE 7 of the `3SAT ≤ 3DM` marathon: the REVERSE
@@ -48,6 +51,8 @@ import LeanPool.Sundogcert.ThreeDMReindex
   Axiom-clean (no `native_decide`; the only `decide` is the data-level Prop-membership read).
   Expect `[propext, Classical.choice, Quot.sound]` on both `reverse` and the helper.
 -/
+
+@[expose] public section
 
 open Sundog.SATReduction Sundog.SATNPHard Sundog.VarWheel
 open Sundog.SATReductionIncidence Sundog.ThreeDMReindex

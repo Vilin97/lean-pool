@@ -3,22 +3,17 @@ Copyright (c) 2026 Makoto Yamashita. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Makoto Yamashita
 -/
+module
 
-import Lean.Elab.Tactic.Omega
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Data.Real.Basic
+public import Mathlib.LinearAlgebra.Matrix.Defs
+import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Data.Matrix.Basic
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Primal-dual LP data and HSDE notation
@@ -34,6 +29,8 @@ Lean-reading hints for beginners:
 * `simp only [...]` rewrites only by the listed rules.  It is safer than bare
   `simp` in a long proof because the simplification set does not change silently.
 -/
+
+@[expose] public section
 
 noncomputable section
 

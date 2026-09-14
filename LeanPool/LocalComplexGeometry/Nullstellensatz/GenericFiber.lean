@@ -3,17 +3,13 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
-import LeanPool.LocalComplexGeometry.Germs.Ring
-import Mathlib.Algebra.CharP.Algebra
-import Mathlib.FieldTheory.Perfect
-import Mathlib.LinearAlgebra.Dimension.Localization
-import Mathlib.RingTheory.Algebraic.Integral
-import Mathlib.RingTheory.Finiteness.Quotient
-import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
-import Mathlib.RingTheory.Localization.Integral
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import LeanPool.LocalComplexGeometry.FiniteProjection.PreparedQuotient
+public import LeanPool.LocalComplexGeometry.Germs.Ring
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import Mathlib.FieldTheory.Separable
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # The generic fibre of a prepared prime quotient
@@ -26,6 +22,8 @@ finite extension, in which the last-coordinate class has a nonzero separable
 minimal polynomial.  The last section clears all coefficients of that
 minimal polynomial back to the contracted quotient.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry
@@ -364,6 +362,18 @@ theorem aeval_contractedPreparedPolynomial {d : ℕ}
     aeval_preparedGermPolynomial]
   simp only [Ideal.Quotient.mkₐ_eq_mk]
 
+private theorem aeval_genericPolynomialMap
+    (p : Polynomial (ContractedGermQuotient P)) :
+    Polynomial.aeval (genericLastCoordinate P)
+        (p.map (algebraMap (ContractedGermQuotient P) (ContractedFractionField P))) =
+      algebraMap (AmbientGermQuotient P) (AmbientFractionField P)
+        (Polynomial.aeval (lastCoordinateQuotientClass P) p) := by
+  rw [Polynomial.aeval_map_algebraMap]
+  change Polynomial.aeval
+      (algebraMap (AmbientGermQuotient P) (AmbientFractionField P)
+        (lastCoordinateQuotientClass P)) p = _
+  rw [Polynomial.aeval_algebraMap_apply]
+
 @[simp]
 theorem aeval_genericRemainderPolynomial {d : ℕ}
     (r : Fin d → HolomorphicGerm n) :
@@ -371,12 +381,7 @@ theorem aeval_genericRemainderPolynomial {d : ℕ}
         (genericRemainderPolynomial P r) =
       algebraMap (AmbientGermQuotient P) (AmbientFractionField P)
         (Ideal.Quotient.mk P (WPTBridge.remainderPolynomialGerm r)) := by
-  rw [genericRemainderPolynomial, Polynomial.aeval_map_algebraMap]
-  change Polynomial.aeval
-      (algebraMap (AmbientGermQuotient P) (AmbientFractionField P)
-        (lastCoordinateQuotientClass P))
-      (contractedRemainderPolynomial P r) = _
-  rw [Polynomial.aeval_algebraMap_apply,
+  rw [genericRemainderPolynomial, aeval_genericPolynomialMap,
     aeval_contractedRemainderPolynomial]
 
 @[simp]
@@ -387,12 +392,7 @@ theorem aeval_genericPreparedPolynomial {d : ℕ}
         (genericPreparedPolynomial P a ha) =
       algebraMap (AmbientGermQuotient P) (AmbientFractionField P)
         (Ideal.Quotient.mk P (WPTBridge.preparedPolynomialGerm a ha)) := by
-  rw [genericPreparedPolynomial, Polynomial.aeval_map_algebraMap]
-  change Polynomial.aeval
-      (algebraMap (AmbientGermQuotient P) (AmbientFractionField P)
-        (lastCoordinateQuotientClass P))
-      (contractedPreparedPolynomial P a ha) = _
-  rw [Polynomial.aeval_algebraMap_apply,
+  rw [genericPreparedPolynomial, aeval_genericPolynomialMap,
     aeval_contractedPreparedPolynomial]
 
 /-- The prepared polynomial annihilates the generic last-coordinate class. -/
@@ -448,7 +448,7 @@ theorem mem_prime_iff_genericRemainder_aeval_eq_zero {d : ℕ}
     apply Ideal.Quotient.eq_zero_iff_mem.mp
     apply IsFractionRing.injective (AmbientGermQuotient P)
       (AmbientFractionField P)
-    simpa using hh
+    simpa only [map_zero] using hh
 
 /-- The two fraction fields form a finite-dimensional extension whenever `P`
 contains the prepared monic equation. -/

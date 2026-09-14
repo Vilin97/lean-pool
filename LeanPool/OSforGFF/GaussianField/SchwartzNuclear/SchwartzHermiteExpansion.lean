@@ -3,14 +3,14 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.Basic
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteFunctions
+import Mathlib.Analysis.Calculus.SmoothSeries
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 import Mathlib.Analysis.PSeries
-import Mathlib.Topology.Algebra.InfiniteSum.Module
-import Mathlib.Analysis.Distribution.TemperateGrowth
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteFunctions
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Schwartz Hermite Expansion (1D)
@@ -42,6 +42,8 @@ to be exported:
 - `deriv_hermiteFunction` (derivative identity)
 - `hermiteFunction_contDiff` (smoothness)
 -/
+
+@[expose] public section
 
 open MeasureTheory Real SchwartzMap
 open scoped BigOperators

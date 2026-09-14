@@ -3,8 +3,22 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.DixonProof
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.HomologicalCauchy.Meromorphic
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.CPVExistence
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.HigherOrderAssembly
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing.CPVHelpers
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Generalized Residue Theorem -- Public API
@@ -25,6 +39,8 @@ All proofs delegate to the machinery in `HomologicalCauchy.lean` and
 * Hungerbuhler-Wasem, *The generalized residue theorem*, arXiv:1808.00997v2,
   Theorem 3.3.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

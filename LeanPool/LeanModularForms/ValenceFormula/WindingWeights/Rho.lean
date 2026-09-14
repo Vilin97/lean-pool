@@ -3,10 +3,18 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
-import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
 import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
+import LeanPool.LeanModularForms.ContourIntegral.WindingNumber
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.ArcCalculus
+import LeanPool.LeanModularForms.ValenceFormula.TrigLemmas
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Winding Number Weight at ρ
@@ -19,6 +27,8 @@ around the elliptic point ρ = e^{2πi/3}.
 * `pv_integral_at_rho_tendsto` — PV integral converges to -iπ/3
 * `gWN_fdBoundary_H_at_rho` — gWN = -1/6 at ρ
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

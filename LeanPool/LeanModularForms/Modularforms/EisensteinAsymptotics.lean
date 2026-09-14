@@ -6,9 +6,12 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.SerreDerivativeSlash
-public import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
-public import Mathlib.Analysis.Real.Pi.Bounds
+public import LeanPool.LeanModularForms.Modularforms.Derivative
+import LeanPool.LeanModularForms.ForMathlib.AtImInfty
+import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import LeanPool.LeanModularForms.Modularforms.SerreDerivativeSlash
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-! # EisensteinAsymptotics -/
 

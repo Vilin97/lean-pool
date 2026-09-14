@@ -7,7 +7,6 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-! # RiemannZetalems -/

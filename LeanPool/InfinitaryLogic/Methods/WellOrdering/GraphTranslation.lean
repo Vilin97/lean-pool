@@ -3,8 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.SymbolCountability
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.Undefinability
 import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.Descent
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.MarkExtension
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.SymbolCountability
 /-!
 # The arbitrary-language graph translation (issue #12, the final transport)
 
@@ -24,6 +30,8 @@ The four public **arbitrary-language** endpoints of issue #12 live here:
 `exists_model_relPreserving` (Marker Theorem 4.26), `wellFounded_boundedness`,
 `wellOrder_type_boundedness` (Marker Corollary 4.27), and `wellOrdering_undefinable`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

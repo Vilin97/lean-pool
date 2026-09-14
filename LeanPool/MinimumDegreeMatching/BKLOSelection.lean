@@ -3,13 +3,17 @@ Copyright (c) 2026 Juan Pablo Traverso Giannini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Giannini, Aristotle
 -/
-import LeanPool.MinimumDegreeMatching.BKLOInfrastructure
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+public import LeanPool.MinimumDegreeMatching.BKLOInfrastructure
+public import Mathlib.Data.Real.Basic
+import LeanPool.MinimumDegreeMatching.Spread
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Deterministic simultaneous matching selection
@@ -18,6 +22,8 @@ A pessimistic-estimator sweep chooses perfect matchings in overlapping apex neig
 keeping all previously selected matching edges disjoint. This is the deterministic core used for
 the `r = 2` specialization of BKLO Lemma 10.7.
 -/
+
+@[expose] public section
 
 open Finset
 

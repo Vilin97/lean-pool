@@ -3,7 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
+public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts00
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts01
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts02
@@ -14,6 +17,8 @@ import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts06
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts07
 
 /-! # Global validity of dense certificate summaries -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

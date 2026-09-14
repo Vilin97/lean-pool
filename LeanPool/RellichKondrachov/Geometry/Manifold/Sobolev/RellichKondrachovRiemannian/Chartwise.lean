@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
 import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Rellich
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
+import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise`
@@ -17,6 +19,8 @@ This module sets up the `L²`-range codomain restrictions and applies Euclidean 
 (on Lebesgue `volume`) after transporting along the `L²` equivalences from
 `RellichKondrachovRiemannian.Transport`.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -83,7 +87,8 @@ open RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean
 
 variable (i : dR.d.ι)
 
-private noncomputable def eL2RangeChartVol (i : dR.d.ι)
+/-- Embed the local square-integrable range using the chart volume measure. -/
+noncomputable def eL2RangeChartVol (i : dR.d.ι)
     (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F] :
     let μM :=
       RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure (I := I) (M := M)
@@ -420,6 +425,48 @@ private lemma l2EquivVolumeOnRhoSupportImage'_coeFn_ae_eq (i : dR.d.ι) (F : Typ
       (c₁ := cVolChart) (c₂ := cChartVol) hcVolChart hcChartVol hvol_le hμ_le hp f)
 
 omit [T2Space M] [I.Boundaryless] in
+private lemma l2ChartToVolumeOnRhoSupportImage_eq_of_support_subset (i : dR.d.ι)
+    {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] (g : E → F) :
+    let μM := Riemannian.riemannianVolumeMeasure (I := I) (M := M)
+    let μchart := FiniteChartData.chartMeasure (d := dR.d) (I := I) μM i
+    let K := FiniteChartData.rhoSupportImage (d := dR.d) (I := I) i
+    ∀ (x : E →₂[μchart] F) (y : E →₂[(volume : Measure E)] F),
+      (x : E → F) =ᵐ[μchart] g → (y : E → F) =ᵐ[(volume : Measure E)] g →
+      Function.support g ⊆ K →
+      l2ChartToVolumeOnRhoSupportImage (dR := dR) (I := I) i F x = y := by
+  classical
+  intro μM μchart K x y hx hy hsupp
+  have hKm : MeasurableSet K := rhoSupportImage_measurable (dR := dR) (I := I) i
+  let r : (E →₂[μchart] F) →L[ℝ] (E →₂[μchart.restrict K] F) :=
+    Lp.changeMeasureL (μ := μchart) (ν := μchart.restrict K) (E := F)
+      (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞)) (by simp)
+      (restrict_le_one_smul μchart K) (by simp)
+  let e := l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := F)
+  let ez := Lp.extendByZeroₗᵢ (μ := (volume : Measure E)) (E := F)
+    (p := (2 : ℝ≥0∞)) (s := K) hKm
+  have hr : (r x : E → F) =ᵐ[μchart.restrict K] g :=
+    (Lp.changeMeasureL_coeFn_ae_eq (μ := μchart) (ν := μchart.restrict K) (E := F)
+      (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞)) (by simp)
+      (restrict_le_one_smul μchart K) (by simp) x).trans (ae_restrict_of_ae hx)
+  have habs : (volume : Measure E).restrict K ≪ μchart.restrict K :=
+    Measure.absolutelyContinuous_of_le_smul
+      (volume_restrict_rhoSupportImage_le_chartMeasure (dR := dR) (I := I) i)
+  have he : (e (r x) : E → F) =ᵐ[(volume : Measure E).restrict K] g :=
+    (l2EquivVolumeOnRhoSupportImage'_coeFn_ae_eq (dR := dR) (I := I) i F (r x)).trans
+      (habs.ae_le hr)
+  have hInd : K.indicator (fun z => (e (r x) : E → F) z) =ᵐ[(volume : Measure E)] g := by
+    filter_upwards [ae_imp_of_ae_restrict he] with z hz
+    by_cases hzK : z ∈ K
+    · simpa only [Set.indicator_of_mem hzK] using hz hzK
+    · rw [Set.indicator_of_notMem hzK]
+      exact (Function.notMem_support.mp (fun hzSupp => hzK (hsupp hzSupp))).symm
+  have hez : (ez (e (r x)) : E → F) =ᵐ[(volume : Measure E)]
+      K.indicator fun z => (e (r x) : E → F) z :=
+    Lp.extendByZeroₗᵢ_ae_eq (μ := (volume : Measure E)) (p := (2 : ℝ≥0∞))
+      (s := K) (hs := hKm) (f := e (r x))
+  exact Lp.ext (hez.trans (hInd.trans hy.symm))
+
+omit [T2Space M] [I.Boundaryless] in
 private lemma l2ChartToVolumeOnRhoSupportImage_toL2_of_tsupport_subset (i : dR.d.ι)
     (g : ↥(C1c (E := E))) :
     let μM :=
@@ -430,96 +477,11 @@ private lemma l2ChartToVolumeOnRhoSupportImage_toL2_of_tsupport_subset (i : dR.d
       l2ChartToVolumeOnRhoSupportImage (dR := dR) (I := I) (i := i) (F := ℝ)
           (toL2 (μ := μchart) (E := E) g) =
         toL2 (μ := (volume : Measure E)) (E := E) g := by
-  classical
   intro μM μchart K htsupp
-  have hKm : MeasurableSet K := rhoSupportImage_measurable (dR := dR) (I := I) i
-  have hsupp : Function.support g.1 ⊆ K :=
-    support_subset_of_tsupport_subset (g := g.1) (K := K) htsupp
-  -- Abbreviate the chart- and volume-side `L²` elements of `g`.
-  let x : E →₂[μchart] ℝ :=
-    toL2 (μ := μchart) (E := E) g
-  let y : E →₂[(volume : Measure E)] ℝ :=
-    toL2 (μ := (volume : Measure E)) (E := E) g
-  -- `x` is represented by `g` a.e. under `μchart`, hence also under `μchart.restrict K`.
-  have hx : (x : E → ℝ) =ᵐ[μchart] g.1 := by
-    have hxmem : MeasureTheory.MemLp g.1 (2 : ℝ≥0∞) μchart := by
-      simpa using
-        (memLp_of_mem_C1c
-          (μ := μchart) (E := E) (f := g.1) g.2)
-    exact hxmem.coeFn_toLp
-  have hxK : (x : E → ℝ) =ᵐ[μchart.restrict K] g.1 :=
-    MeasureTheory.ae_restrict_of_ae (s := K) hx
-  -- Expand `l2ChartToVolumeOnRhoSupportImage` and chase AE equalities.
-  dsimp [l2ChartToVolumeOnRhoSupportImage]
-  -- `r : L²(μchart) → L²(μchart.restrict K)` is `changeMeasureL`.
-  have hν_le : μchart.restrict K ≤ (1 : ℝ≥0∞) • μchart := by
-    simpa using (Measure.restrict_le_self (μ := μchart) (s := K))
-  let r :
-      (E →₂[μchart] ℝ) →L[ℝ] (E →₂[μchart.restrict K] ℝ) :=
-    MeasureTheory.Lp.changeMeasureL
-      (μ := μchart) (ν := μchart.restrict K) (E := ℝ) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞))
-      (by simp) (by simpa using (Measure.restrict_le_self (μ := μchart) (s := K))) (by simp)
-  let e : (E →₂[μchart.restrict K] ℝ) ≃L[ℝ] (E →₂[(volume : Measure E).restrict K] ℝ) :=
-    l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := ℝ)
-  let ez :
-      (E →₂[(volume : Measure E).restrict K] ℝ) →ₗᵢ[ℝ] (E →₂[(volume : Measure E)] ℝ) :=
-    MeasureTheory.Lp.extendByZeroₗᵢ (μ := (volume : Measure E)) (E := ℝ) (p := (2 : ℝ≥0∞)) (s := K)
-      hKm
-  have hr : (r x : E → ℝ) =ᵐ[μchart.restrict K] (x : E → ℝ) := by
-    simpa [r] using
-      (MeasureTheory.Lp.changeMeasureL_coeFn_ae_eq (μ := μchart) (ν := μchart.restrict K) (E := ℝ)
-        (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞)) (by simp) hν_le (by simp) x)
-  have hrg : (r x : E → ℝ) =ᵐ[μchart.restrict K] g.1 :=
-    hr.trans hxK
-  have hvol_le :
-      (volume : Measure E).restrict K ≤
-        (((((volume : Measure E) (Metric.closedBall (0 : E) 1)) /
-                  ((μH[(Module.finrank ℝ E : ℝ)] : Measure E) (Metric.closedBall (0 : E) 1))) *
-                ((dR.Cfwd i : ℝ≥0∞) ^ (Module.finrank ℝ E : ℝ))) •
-            μchart.restrict K) := by
-    simpa [μM, μchart, K] using
-      volume_restrict_rhoSupportImage_le_chartMeasure (dR := dR) (I := I) (i := i)
-  have habs : (volume : Measure E).restrict K ≪ μchart.restrict K :=
-    Measure.absolutelyContinuous_of_le_smul hvol_le
-  have hrgVol : (r x : E → ℝ) =ᵐ[(volume : Measure E).restrict K] g.1 :=
-    habs.ae_le hrg
-  have he : (e (r x) : E → ℝ) =ᵐ[(volume : Measure E).restrict K] (r x : E → ℝ) := by
-    -- Use the specialized lemma for `l2EquivVolumeOnRhoSupportImage'`.
-    simpa [e, μM, μchart, K] using
-      (l2EquivVolumeOnRhoSupportImage'_coeFn_ae_eq (dR := dR) (I := I) (i := i) (F := ℝ) (f := r x))
-  have heg : (e (r x) : E → ℝ) =ᵐ[(volume : Measure E).restrict K] g.1 :=
-    he.trans hrgVol
-  have hInd :
-      K.indicator (fun z : E => (e (r x) : E → ℝ) z) =ᵐ[(volume : Measure E)] g.1 := by
-    refine indicator_ae_eq_of_ae_eq_restrict (μ := (volume : Measure E)) (K := K)
-        (f := fun z : E => (e (r x) : E → ℝ) z) (g := g.1) ?_ ?_ heg hsupp
-    · exact (MeasureTheory.Lp.aestronglyMeasurable (e (r x))).aemeasurable
-    · have hgmem : MeasureTheory.MemLp g.1 (2 : ℝ≥0∞) ((volume : Measure E).restrict K) := by
-        simpa using
-          (memLp_of_mem_C1c
-            (μ := (volume : Measure E).restrict K) (E := E) (f := g.1) g.2)
-      exact hgmem.1.aemeasurable
-  have hez :
-      ((ez (e (r x)) : E →₂[(volume : Measure E)] ℝ) : E → ℝ) =ᵐ[(volume : Measure E)]
-        K.indicator fun z : E => (e (r x) : E → ℝ) z := by
-    simpa [ez] using
-      (MeasureTheory.Lp.extendByZeroₗᵢ_ae_eq (μ := (volume : Measure E)) (p := (2 : ℝ≥0∞))
-        (s := K) (hs := hKm) (f := e (r x)))
-  -- Conclude by `Lp.ext` on `volume`.
-  apply Lp.ext
-  have hy : (y : E → ℝ) =ᵐ[(volume : Measure E)] g.1 := by
-    have hymem : MeasureTheory.MemLp g.1 (2 : ℝ≥0∞) (volume : Measure E) := by
-      simpa using
-        (memLp_of_mem_C1c
-          (μ := (volume : Measure E)) (E := E) (f := g.1) g.2)
-    exact hymem.coeFn_toLp
-  have hT :
-      (l2ChartToVolumeOnRhoSupportImage (dR := dR) (I := I) (i := i) (F := ℝ) x : E → ℝ) =ᵐ[
-          (volume : Measure E)
-        ] K.indicator fun z : E => (e (r x) : E → ℝ) z := by
-    -- This is definitional: `l2ChartToVolumeOnRhoSupportImage` is `ez ∘ e ∘ r`.
-    simpa [l2ChartToVolumeOnRhoSupportImage, r, e, ez] using hez
-  exact hT.trans (hInd.trans hy.symm)
+  exact l2ChartToVolumeOnRhoSupportImage_eq_of_support_subset (dR := dR) (I := I) i g.1
+    _ _ (memLp_of_mem_C1c (μ := μchart) g.2).coeFn_toLp
+    (memLp_of_mem_C1c (μ := (volume : Measure E)) g.2).coeFn_toLp
+    (support_subset_of_tsupport_subset g.1 htsupp)
 
 omit [T2Space M] [I.Boundaryless] in
 private lemma l2ChartToVolumeOnRhoSupportImage_toL2Grad_of_tsupport_subset (i : dR.d.ι)
@@ -532,119 +494,11 @@ private lemma l2ChartToVolumeOnRhoSupportImage_toL2Grad_of_tsupport_subset (i : 
       l2ChartToVolumeOnRhoSupportImage (dR := dR) (I := I) (i := i) (F := E)
           (toL2Grad (μ := μchart) (E := E) g) =
         toL2Grad (μ := (volume : Measure E)) (E := E) g := by
-  classical
   intro μM μchart K htsupp
-  have hKm : MeasurableSet K := rhoSupportImage_measurable (dR := dR) (I := I) i
-  -- Support of the gradient is contained in `K`.
-  have htsuppGrad :
-      tsupport
-          (grad (E := E) g.1) ⊆ K := by
-    exact
-      (tsupport_grad_subset
-          (E := E) (f := g.1)).trans
-        htsupp
-  have hsuppGrad : Function.support
-        (grad (E := E) g.1) ⊆ K :=
-    support_subset_of_tsupport_subset (g :=
-      grad (E := E) g.1) (K := K) htsuppGrad
-  let x : E →₂[μchart] E :=
-    toL2Grad (μ := μchart) (E := E) g
-  let y : E →₂[(volume : Measure E)] E :=
-    toL2Grad (μ := (volume : Measure E)) (E := E) g
-  have hx : (x : E → E) =ᵐ[μchart]
-        grad (E := E) g.1 := by
-    have hxmem :
-        MeasureTheory.MemLp
-          (grad (E := E) g.1)
-          (2 : ℝ≥0∞) μchart := by
-      simpa using
-        (memLp_grad_of_mem_C1c
-          (μ := μchart) (E := E) (f := g.1) g.2)
-    exact hxmem.coeFn_toLp
-  have hxK :
-      (x : E → E) =ᵐ[μchart.restrict K]
-        grad (E := E) g.1 :=
-    MeasureTheory.ae_restrict_of_ae (s := K) hx
-  have hν_le : μchart.restrict K ≤ (1 : ℝ≥0∞) • μchart := by
-    simpa using (Measure.restrict_le_self (μ := μchart) (s := K))
-  let r :
-      (E →₂[μchart] E) →L[ℝ] (E →₂[μchart.restrict K] E) :=
-    MeasureTheory.Lp.changeMeasureL
-      (μ := μchart) (ν := μchart.restrict K) (E := E) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞))
-      (by simp) (by simpa using (Measure.restrict_le_self (μ := μchart) (s := K))) (by simp)
-  let e : (E →₂[μchart.restrict K] E) ≃L[ℝ] (E →₂[(volume : Measure E).restrict K] E) :=
-    l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := E)
-  let ez :
-      (E →₂[(volume : Measure E).restrict K] E) →ₗᵢ[ℝ] (E →₂[(volume : Measure E)] E) :=
-    MeasureTheory.Lp.extendByZeroₗᵢ (μ := (volume : Measure E)) (E := E) (p := (2 : ℝ≥0∞)) (s := K)
-      hKm
-  have hr : (r x : E → E) =ᵐ[μchart.restrict K] (x : E → E) := by
-    simpa [r] using
-      (MeasureTheory.Lp.changeMeasureL_coeFn_ae_eq (μ := μchart) (ν := μchart.restrict K) (E := E)
-        (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞)) (by simp) hν_le (by simp) x)
-  have hrg :
-      (r x : E → E) =ᵐ[μchart.restrict K]
-        grad (E := E) g.1 :=
-    hr.trans hxK
-  have hvol_le :
-      (volume : Measure E).restrict K ≤
-        (((((volume : Measure E) (Metric.closedBall (0 : E) 1)) /
-                  ((μH[(Module.finrank ℝ E : ℝ)] : Measure E) (Metric.closedBall (0 : E) 1))) *
-                ((dR.Cfwd i : ℝ≥0∞) ^ (Module.finrank ℝ E : ℝ))) •
-            μchart.restrict K) := by
-    simpa [μM, μchart, K] using
-      volume_restrict_rhoSupportImage_le_chartMeasure (dR := dR) (I := I) (i := i)
-  have habs : (volume : Measure E).restrict K ≪ μchart.restrict K :=
-    Measure.absolutelyContinuous_of_le_smul hvol_le
-  have hrgVol :
-      (r x : E → E) =ᵐ[(volume : Measure E).restrict K]
-        grad (E := E) g.1 :=
-    habs.ae_le hrg
-  have he : (e (r x) : E → E) =ᵐ[(volume : Measure E).restrict K] (r x : E → E) := by
-    simpa [e, μM, μchart, K] using
-      (l2EquivVolumeOnRhoSupportImage'_coeFn_ae_eq (dR := dR) (I := I) (i := i) (F := E) (f := r x))
-  have heg :
-      (e (r x) : E → E) =ᵐ[(volume : Measure E).restrict K]
-        grad (E := E) g.1 :=
-    he.trans hrgVol
-  have hInd :
-      K.indicator (fun z : E => (e (r x) : E → E) z) =ᵐ[(volume : Measure E)]
-        grad (E := E) g.1 := by
-    refine indicator_ae_eq_of_ae_eq_restrict (μ := (volume : Measure E)) (K := K)
-        (f := fun z : E => (e (r x) : E → E) z)
-        (g := grad (E := E) g.1) ?_ ?_ heg hsuppGrad
-    · exact (MeasureTheory.Lp.aestronglyMeasurable (e (r x))).aemeasurable
-    · have hgmem :
-          MeasureTheory.MemLp
-            (grad (E := E) g.1)
-            (2 : ℝ≥0∞) ((volume : Measure E).restrict K) := by
-        simpa using
-          (memLp_grad_of_mem_C1c
-            (μ := (volume : Measure E).restrict K) (E := E) (f := g.1) g.2)
-      exact hgmem.1.aemeasurable
-  have hez :
-      ((ez (e (r x)) : E →₂[(volume : Measure E)] E) : E → E) =ᵐ[(volume : Measure E)]
-        K.indicator fun z : E => (e (r x) : E → E) z := by
-    simpa [ez] using
-      (MeasureTheory.Lp.extendByZeroₗᵢ_ae_eq (μ := (volume : Measure E)) (p := (2 : ℝ≥0∞))
-        (s := K) (hs := hKm) (f := e (r x)))
-  apply Lp.ext
-  have hy : (y : E → E) =ᵐ[(volume : Measure E)]
-        grad (E := E) g.1 := by
-    have hymem :
-        MeasureTheory.MemLp
-          (grad (E := E) g.1)
-          (2 : ℝ≥0∞) (volume : Measure E) := by
-      simpa using
-        (memLp_grad_of_mem_C1c
-          (μ := (volume : Measure E)) (E := E) (f := g.1) g.2)
-    exact hymem.coeFn_toLp
-  have hT :
-      (l2ChartToVolumeOnRhoSupportImage (dR := dR) (I := I) (i := i) (F := E) x : E → E) =ᵐ[
-          (volume : Measure E)
-        ] K.indicator fun z : E => (e (r x) : E → E) z := by
-    simpa [l2ChartToVolumeOnRhoSupportImage, r, e, ez] using hez
-  exact hT.trans (hInd.trans hy.symm)
+  exact l2ChartToVolumeOnRhoSupportImage_eq_of_support_subset (dR := dR) (I := I) i
+    (grad (E := E) g.1) _ _ (memLp_grad_of_mem_C1c (μ := μchart) g.2).coeFn_toLp
+    (memLp_grad_of_mem_C1c (μ := (volume : Measure E)) g.2).coeFn_toLp
+    (support_subset_of_tsupport_subset _ ((tsupport_grad_subset (f := g.1)).trans htsupp))
 
 omit [T2Space M] in
 private lemma chartTargetToVolumeTarget_h1GraphChart (i : dR.d.ι)
@@ -752,56 +606,13 @@ private lemma projToVolumeTarget_mem_euclidean_h1 (i : dR.d.ι)
     projToVolumeTarget (dR := dR) (I := I) (i := i) (x.1 : FiniteChartData.h1Target (d := dR.d) (I
       := I) μM) ∈
       (h1 (μ := (volume : Measure E)) (E := E) : Set _) := by
-  classical
   intro μM μchart K
-  let A : Set (FiniteChartData.h1Target (d := dR.d) (I := I) μM) :=
-    (LinearMap.range (FiniteChartData.h1Graph (d := dR.d) (I := I) (μ := μM)) : Set _)
-  have hx_closure : (x.1 : FiniteChartData.h1Target (d := dR.d) (I := I) μM) ∈ closure A := by
-    simp only [FiniteChartData.h1, A]
-    exact x.2
-  let T :
-      (FiniteChartData.h1Target (d := dR.d) (I := I) μM) →L[ℝ]
-        (↥(E →₂[(volume : Measure E)] ℝ) × ↥(E →₂[(volume : Measure E)] E)) :=
-    projToVolumeTarget (dR := dR) (I := I) (i := i)
-  have hTmem : T x.1 ∈ closure (Set.image T A) :=
-    mem_closure_image (f := T) (s := A) (x := x.1) (T.continuous.continuousAt) hx_closure
-  have hImage :
-      Set.image T A ⊆
-        (h1 (μ := (volume : Measure E)) (E := E) : Set _) := by
-    intro y hy
-    rcases hy with ⟨z, hzA, rfl⟩
-    rcases hzA with ⟨f, rfl⟩
-    -- Use the graph compatibility lemma for `projToVolumeTarget` on generators.
-    have :
-        T (FiniteChartData.h1Graph (d := dR.d) (I := I) (μ := μM) f) ∈
-          LinearMap.range
-            (graph (μ := (volume : Measure E)) (E := E)) := by
-      let g :
-          ↥(C1c (E := E)) :=
-        ⟨FiniteChartData.localize (d := dR.d) (I := I) f.1 i,
-          FiniteChartData.localize_mem_C1c (d := dR.d) (I := I) (f := f.1) f.2 i⟩
-      refine ⟨g, ?_⟩
-      simpa [T, g, μM, μchart, K] using
-        (projToVolumeTarget_h1Graph (dR := dR) (I := I) (i := i) f).symm
-    exact (Submodule.le_topologicalClosure _ ) this
-  have hClosed :
-      IsClosed
-        (h1 (μ := (volume : Measure E)) (E := E) :
-          Set (↥(E →₂[(volume : Measure E)] ℝ) × ↥(E →₂[(volume : Measure E)] E))) := by
-    simpa using
-      (isClosed_h1 (μ := (volume : Measure E)) (E := E))
-  have hx_closure_h1 :
-      T x.1 ∈
-        closure
-          (h1 (μ := (volume : Measure E)) (E := E) :
-            Set (↥(E →₂[(volume : Measure E)] ℝ) × ↥(E →₂[(volume : Measure E)] E))) :=
-    (closure_mono hImage) hTmem
-  have :
-      T x.1 ∈
-        (h1 (μ := (volume : Measure E)) (E := E) :
-          Set (↥(E →₂[(volume : Measure E)] ℝ) × ↥(E →₂[(volume : Measure E)] E))) := by
-    simpa [hClosed.closure_eq] using hx_closure_h1
-  simpa [T] using this
+  let T := projToVolumeTarget (dR := dR) (I := I) i
+  have hClosed := (isClosed_h1 (μ := (volume : Measure E)) (E := E)).preimage T.continuous
+  refine closure_minimal ?_ hClosed x.2
+  rintro _ ⟨f, rfl⟩
+  apply Submodule.le_topologicalClosure
+  exact ⟨_, (projToVolumeTarget_h1Graph (dR := dR) (I := I) i f).symm⟩
 
 omit [T2Space M] [I.Boundaryless] in
 private lemma projToVolumeTarget_fst_mem_extendByZero_range (i : dR.d.ι)
@@ -924,149 +735,33 @@ omit [T2Space M] in
   classical
   intro μM
   let μchart := FiniteChartData.chartMeasure (d := dR.d) (I := I) μM i
-  let K : Set E := FiniteChartData.rhoSupportImage (d := dR.d) (I := I) i
-  -- Abbreviations for the relevant `extendByZero` maps.
-  let eChart :=
-    MeasureTheory.Lp.extendByZeroₗᵢ (μ := μchart) (E := ℝ) (p := (2 : ℝ≥0∞)) (s := K)
-      (rhoSupportImage_measurable (dR := dR) (I := I) i)
-  let eVol :=
-    MeasureTheory.Lp.extendByZeroₗᵢ (μ := (volume : Measure E)) (E := ℝ) (p := (2 : ℝ≥0∞)) (s := K)
-      (rhoSupportImage_measurable (dR := dR) (I := I) i)
-  -- The chartwise `L²` component.
-  let u : (E →₂[μchart] ℝ) := (FiniteChartData.h1ToChartL2 (d := dR.d) (I := I) (μ := μM) i) x
-  -- `h1ToChartL2Range` is a codomain restriction of `h1ToChartL2`, so its underlying value is `u`.
-  have hz_coe :
-      ((h1ToChartL2Range (dR := dR) (I := I) (i := i)) x : (E →₂[μchart] ℝ)) = u := by
-    -- `simp` can unfold the codomain restriction, but we also unfold `μM` so both sides match.
-    simp [h1ToChartL2Range, u, μM]
-  -- Identify the preimage in the restricted `L²` space corresponding to `u` under `extendByZero`.
-  let uK : (E →₂[μchart.restrict K] ℝ) :=
-    (LinearIsometry.equivRange eChart).symm ((h1ToChartL2Range (dR := dR) (I := I) (i := i)) x)
-  have heChart_uK : (eChart uK : (E →₂[μchart] ℝ)) = u := by
-    -- Use `apply_symm_apply` in the range equivalence.
-    have :
-        (LinearIsometry.equivRange eChart) uK =
-          (h1ToChartL2Range (dR := dR) (I := I) (i := i)) x := by
-      simp only [uK]
-      exact (LinearIsometry.equivRange eChart).apply_symm_apply
-          ((h1ToChartL2Range (dR := dR) (I := I) (i := i)) x)
-    -- Coerce to `L²(μchart)` and simplify.
-    have hcoe := congrArg Subtype.val this
-    rw [hz_coe] at hcoe
-    exact hcoe
-  -- The `changeMeasureL` used in `l2ChartToVolumeOnRhoSupportImage` from `μchart` to
-  -- `μchart.restrict K`.
-  let cm :
-      (E →₂[μchart] ℝ) →L[ℝ] (E →₂[μchart.restrict K] ℝ) :=
-    MeasureTheory.Lp.changeMeasureL
-      (μ := μchart) (ν := μchart.restrict K) (E := ℝ) (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞))
-      (by simp) (restrict_le_one_smul (μ := μchart) (s := K))
-      (by simp)
-  -- `uK` is the same as `changeMeasureL` applied to `u`, since `u` is supported in `K`.
-  have huK_eq : uK = cm u := by
-    -- Show `uK =ᵐ[μchart.restrict K] u` (by restricting the `extendByZero` AE equality), then
-    -- compare
-    -- to `cm u =ᵐ[μchart.restrict K] u`.
-    have hu_indicator :
-        (u : E → ℝ) =ᵐ[μchart] K.indicator fun x => uK x := by
-      -- `extendByZero` is `indicator` a.e.
-      have hAE :
-          ((eChart uK : (E →₂[μchart] ℝ)) : E → ℝ) =ᵐ[μchart]
-            K.indicator fun x => uK x := by
-        simpa [eChart] using
-          (MeasureTheory.Lp.extendByZeroₗᵢ_ae_eq (μ := μchart) (E := ℝ) (p := (2 : ℝ≥0∞)) (s := K)
-            (rhoSupportImage_measurable (dR := dR) (I := I) i) uK)
-      -- Rewrite `eChart uK` as `u`.
-      have hu_eq : ((eChart uK : (E →₂[μchart] ℝ)) : E → ℝ) =ᵐ[μchart] u := by
-        -- `heChart_uK` is equality in `L²`, hence a.e. equality.
-        rw [heChart_uK]
-      -- Combine.
-      exact hu_eq.symm.trans hAE
-    have hu_on : ∀ᵐ x : E ∂μchart, x ∈ K → u x = uK x := by
-      filter_upwards [hu_indicator] with x hx hxK
-      have : K.indicator (fun y => uK y) x = uK x := by simp [Set.indicator_of_mem, hxK]
-      -- On `K`, the indicator equals the function itself.
-      simpa [this] using hx
-    have hu_restrict : (u : E → ℝ) =ᵐ[μchart.restrict K] fun x => uK x :=
-      (ae_restrict_iff' (μ := μchart) (s := K)
-        (rhoSupportImage_measurable (dR := dR) (I := I) i)).2 hu_on
-    have hcm_ae :
-        (cm u : E → ℝ) =ᵐ[μchart.restrict K] u :=
-      MeasureTheory.Lp.changeMeasureL_coeFn_ae_eq (μ := μchart) (ν := μchart.restrict K) (E := ℝ)
-        (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞))
-        (by simp)
-        (restrict_le_one_smul (μ := μchart) (s := K))
-        (by simp) u
-    refine MeasureTheory.Lp.ext (μ := μchart.restrict K) (E := ℝ) (p := (2 : ℝ≥0∞)) ?_
-    -- Compare almost everywhere representatives on the restricted measure.
-    have : (uK : E → ℝ) =ᵐ[μchart.restrict K] (cm u : E → ℝ) :=
-      hu_restrict.symm.trans hcm_ae.symm
-    exact this
-  -- Compute both sides as `extendByZero` of the same restricted-volume witness.
-  -- Left side: unfold the range equivalence and use `huK_eq` to identify the restricted witness.
-  have hL :
-      (↑((eL2RangeChartVol (dR := dR) (I := I) (i := i) (F := ℝ))
-            ((h1ToChartL2Range (dR := dR) (I := I) (i := i)) x)) : (E →₂[(volume : Measure E)] ℝ)) =
-        eVol
-          ((l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := ℝ)) uK) := by
-    -- Unfold the definition of the `extendByZero`-range equivalence.
-    -- The resulting expression is exactly `extendByZero` after `l2EquivVolumeOnRhoSupportImage'`
-    -- applied to the
-    -- canonical `equivRange` preimage `uK`.
-    simp [eL2RangeChartVol, l2ExtendByZeroRangeEquivVolumeOnRhoSupportImage',
-      MeasureTheory.Lp.extendByZeroRangeEquivOfRestrictChangeMeasureEquiv, eChart, eVol, uK,
-      l2EquivVolumeOnRhoSupportImage']
-  -- Right side: `projToVolumeTarget` is `chartTargetToVolumeTarget ∘ proj`, and the scalar
-  -- component is
-  -- exactly `l2ChartToVolumeOnRhoSupportImage` applied to the chartwise `L²` value `u`.
-  have hR :
-      ((projToVolumeTarget (dR := dR) (I := I) (i := i) (x.1 : FiniteChartData.h1Target (d := dR.d)
-        (I := I) μM))).1 =
-        eVol
-          ((l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := ℝ)) (cm u)) := by
-    -- Reduce to the definition of `l2ChartToVolumeOnRhoSupportImage` applied to the chartwise
-    -- scalar component.
-    have hu' : ((x.1 : FiniteChartData.h1Target (d := dR.d) (I := I) μM) i).1 = u := by
-      -- `u` is exactly the `i`-th scalar coordinate of `x`.
-      simp [u, FiniteChartData.h1ToChartL2, FiniteChartData.h1ToChart,
-        ContinuousLinearMap.proj_apply]
-    -- Expand `projToVolumeTarget` and rewrite the scalar component using `hu'`.
-    -- Then unfold `l2ChartToVolumeOnRhoSupportImage` and align the `changeMeasureL` proof terms via
-    -- `changeMeasureL_congr`.
-    simp only [projToVolumeTarget, chartTargetToVolumeTarget,
-      l2ChartToVolumeOnRhoSupportImage, ContinuousLinearMap.comp_apply,
-      ContinuousLinearMap.proj_apply, ContinuousLinearMap.prod_apply,
-      ContinuousLinearMap.coe_fst', hu', ContinuousLinearEquiv.coe_coe,
-      LinearIsometry.coe_toContinuousLinearMap, ContinuousLinearMap.coe_snd', cm]
-    -- Discharge the remaining definitional mismatch in `changeMeasureL`.
-    refine congrArg
-      eVol ?_
-    refine congrArg (l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := ℝ)) ?_
-    -- `changeMeasureL` is independent of proof arguments.
-    exact
-      congrArg (fun T => T u)
-        (MeasureTheory.Lp.changeMeasureL_congr (μ := μchart) (ν := μchart.restrict K) (E := ℝ)
-          (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞))
-          (hc₁ := (by simp))
-          (hc₂ := _)
-          (hν₁ := restrict_le_one_smul (μ := μchart) (s := K))
-          (hν₂ := _)
-          (hp₁ := (by simp))
-          (hp₂ := _))
-  -- Combine: align the restricted witness and conclude.
-  calc
-    ↑((eL2RangeChartVol (dR := dR) (I := I) (i := i) (F := ℝ))
-          ((h1ToChartL2Range (dR := dR) (I := I) (i := i)) x)) =
-        eVol
-          ((l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := ℝ)) uK) := by
-          simp [hL]
-    _ =
-        eVol
-          ((l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) (i := i) (F := ℝ)) (cm u)) := by
-          simp [huK_eq]
-    _ = ((projToVolumeTarget (dR := dR) (I := I) (i := i)
-          (x.1 : FiniteChartData.h1Target (d := dR.d) (I := I) μM))).1 := by
-          exact hR.symm
+  let K := FiniteChartData.rhoSupportImage (d := dR.d) (I := I) i
+  have hKm : MeasurableSet K := rhoSupportImage_measurable (dR := dR) (I := I) i
+  let eChart := Lp.extendByZeroₗᵢ (μ := μchart) (E := ℝ) (p := (2 : ℝ≥0∞)) (s := K) hKm
+  let eVol := Lp.extendByZeroₗᵢ (μ := (volume : Measure E)) (E := ℝ)
+    (p := (2 : ℝ≥0∞)) (s := K) hKm
+  let z := h1ToChartL2Range (dR := dR) (I := I) i x
+  let uK := (LinearIsometry.equivRange eChart).symm z
+  let cm := Lp.changeMeasureL (μ := μchart) (ν := μchart.restrict K) (E := ℝ)
+    (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞)) (by simp)
+    (restrict_le_one_smul μchart K) (by simp)
+  have heChart_uK : eChart uK = (z : E →₂[μchart] ℝ) :=
+    congrArg Subtype.val ((LinearIsometry.equivRange eChart).apply_symm_apply z)
+  have huK_eq : uK = cm (z : E →₂[μchart] ℝ) := by
+    have hz : ((z : E →₂[μchart] ℝ) : E → ℝ) =ᵐ[μchart] K.indicator (fun t => uK t) := by
+      rw [← heChart_uK]
+      exact Lp.extendByZeroₗᵢ_ae_eq hKm uK
+    have hzK : ((z : E →₂[μchart] ℝ) : E → ℝ) =ᵐ[μchart.restrict K] uK :=
+      Filter.EventuallyEq.trans (ae_restrict_of_ae hz) (indicator_ae_eq_restrict hKm)
+    exact Lp.ext (hzK.symm.trans
+      (Lp.changeMeasureL_coeFn_ae_eq (μ := μchart) (ν := μchart.restrict K) (E := ℝ)
+        (p := (2 : ℝ≥0∞)) (c := (1 : ℝ≥0∞)) (by simp)
+        (restrict_le_one_smul μchart K) (by simp) (z : E →₂[μchart] ℝ)).symm)
+  change eVol (l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) i ℝ uK) =
+    eVol (l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) i ℝ
+      (cm (z : E →₂[μchart] ℝ)))
+  exact congrArg (fun u => eVol (l2EquivVolumeOnRhoSupportImage' (dR := dR) (I := I) i ℝ u))
+    huK_eq
 
 /-!
 ### Compactness: chartwise `H¹ → L²` contribution

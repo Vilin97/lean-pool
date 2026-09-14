@@ -6,10 +6,13 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.VarianceFormula
-public import Mathlib.Algebra.Lie.Matrix
-public import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The full algebra `gl(2ⁿ)` as a dynamical Lie algebra: an exponential barren plateau

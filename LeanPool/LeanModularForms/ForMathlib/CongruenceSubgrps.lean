@@ -3,12 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Data.Real.Basic
+public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
 import Mathlib.GroupTheory.Archimedean
-import Mathlib.LinearAlgebra.Matrix.Integer
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
-import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
 
 /-!
 # Congruence subgroups
@@ -19,6 +17,8 @@ natural number.
 It also contains basic results about congruence subgroups.
 
 -/
+
+@[expose] public section
 
 open Matrix.SpecialLinearGroup Matrix ModularGroup CongruenceSubgroup
 

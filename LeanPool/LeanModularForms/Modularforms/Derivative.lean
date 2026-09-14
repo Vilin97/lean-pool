@@ -8,9 +8,11 @@ module
 
 public import LeanPool.LeanModularForms.Modularforms.MDifferentiableFunProp
 
-public import LeanPool.LeanModularForms.Modularforms.Eisenstein
-public import Mathlib.Analysis.Calculus.DiffContOnCl
-public import Mathlib.Analysis.Complex.Liouville
+import LeanPool.LeanModularForms.ForMathlib.AtImInfty
+import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import LeanPool.LeanModularForms.Modularforms.SummableLems
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.Liouville
 
 /-! # Derivative -/
 

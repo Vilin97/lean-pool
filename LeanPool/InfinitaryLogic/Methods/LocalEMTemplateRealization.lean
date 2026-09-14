@@ -3,14 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
-import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Nat.Nth
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Lattice
-import Mathlib.Order.Hom.Basic
-import Mathlib.Order.WellFounded
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
+public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
+public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Order.Lattice.Nat
 /-!
 # The local EM template-realization bridge
 
@@ -70,6 +69,8 @@ part of the pure local stack guarded by `check_local_boundary.sh`'s EM-free root
 **Conditional-free** (checked by the same script), leaving `TailTemplateRealizable` itself to a
 downstream Conditional-touching file.
 -/
+
+@[expose] public section
 
 universe u v
 

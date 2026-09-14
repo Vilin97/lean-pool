@@ -3,19 +3,20 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
+module
+
+public import Mathlib.MeasureTheory.Integral.Average
+public import Mathlib.Probability.CDF
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.Analysis.Convex.Integral
-import Mathlib.MeasureTheory.Integral.Average
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
-import Mathlib.Probability.CDF
-import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 # Probability lemmas for Grünbaum's inequality
 -/
+
+@[expose] public section
 
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal Topology

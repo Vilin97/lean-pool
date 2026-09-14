@@ -3,10 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
-import LeanPool.JacobianDiffgeo.CanonicalForms
-import Mathlib.LinearAlgebra.Finsupp.LSum
+public import LeanPool.JacobianDiffgeo.SerrePairing.TailSpace
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # `pair`: the Serre pairing (Miranda's `Res_ω`), purely algebraic (serre-duality-cech, §2 D2)
@@ -34,6 +36,8 @@ canonical-forms — `MForm.laurentCoeffAt` is additive/`ℂ`-linear in the class
 via representatives + residue-calculus's `laurentCoeffAt_fun_add`/`_const_mul`/`_zero_fun`
 (coordination note filed to `docs/requests/canonical-forms.md`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

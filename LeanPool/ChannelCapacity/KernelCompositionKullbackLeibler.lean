@@ -3,11 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.InformationTheory.KullbackLeibler.Basic
-import Mathlib.Probability.Kernel.CompProdEqIff
+module
 
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-import Mathlib.Probability.Kernel.RadonNikodym
+public import Mathlib.InformationTheory.KullbackLeibler.Basic
+
+public import Mathlib.Probability.Kernel.RadonNikodym
+import Mathlib.Probability.Kernel.CompProdEqIff
 
 /-!
 # Kullback-Leibler divergence and kernel composition products
@@ -35,6 +36,8 @@ The last two lemmas complement the existing composition-product Radon-Nikodym an
 infrastructure in Mathlib, where the mixed-left-measure and additive chain-rule statements are
 already available.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal

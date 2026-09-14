@@ -3,14 +3,22 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Combinatorics.Nullstellensatz
-import Mathlib.Data.Int.Star
-import Mathlib.Data.Nat.Prime.Factorial
+public import Mathlib.Algebra.Field.ZMod
+meta import Lean.Meta.Tactic.NormCast
 import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Nat.Choose.Sum
+import Mathlib.Data.Nat.Prime.Factorial
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The Cauchy-Davenport theorem
@@ -18,6 +26,8 @@ import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
 Derives the Cauchy-Davenport theorem `cauchy_davenport` on sumsets in `ZMod p`
 from the Alon-Nathanson-Ruzsa polynomial method.
 -/
+
+@[expose] public section
 
 open Finsupp
 open scoped Finset

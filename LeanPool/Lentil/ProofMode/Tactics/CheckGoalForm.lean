@@ -3,7 +3,14 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
+module
+
+public meta import LeanPool.Lentil.ProofMode.Basic
+
+public meta import Lean.Elab.SyntheticMVars
 import LeanPool.Lentil.ProofMode.Basic
+
+public meta section
 
 namespace TLA.ProofMode
 

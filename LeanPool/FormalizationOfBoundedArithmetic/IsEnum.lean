@@ -6,16 +6,21 @@ Authors: ruplet
 
 -- Source: the example from https://lean-lang.org/doc/reference/latest/Type-Classes/Deriving-Instances/
 -- extended with case for empty type
+module
+
+public import Mathlib.Data.Finite.Defs
+public import Aesop.BuiltinRules
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
 import Lean.Elab.Deriving.Basic
-import Mathlib.Logic.IsEmpty.Basic
-import Mathlib.Logic.Equiv.Defs
-import Mathlib.Data.Finite.Defs
-import Mathlib.Data.List.Nodup
 import Mathlib.Data.List.OfFn
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 -/
+
+@[expose] public section
 
 open Lean Elab Parser Term Command
 

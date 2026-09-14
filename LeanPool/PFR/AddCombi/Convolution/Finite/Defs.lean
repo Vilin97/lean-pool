@@ -7,18 +7,20 @@ Authors: Yaël Dillies
 module
 public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Notation.Indicator
 public import LeanPool.PFR.AddCombi.Mathlib.Combinatorics.Additive.Energy
-public import Mathlib.Algebra.Group.Action.Pointwise.Finset
 public import Mathlib.Algebra.Group.Translate
 public import Mathlib.Algebra.Star.Conjneg
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Data.Complex.Basic
-public import Mathlib.Data.NNReal.Star
 
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.GroupWithZero.Indicator
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Algebra.Group.Pointwise.Finset.Density
-public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Algebra.BigOperators.Expect
+public import Mathlib.Algebra.Star.SelfAdjoint
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Field.IsField
+import Mathlib.Algebra.Group.Pointwise.Finset.Density
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Convolution in the compact normalisation

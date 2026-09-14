@@ -3,9 +3,13 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
+module
+
+public import LeanPool.BruhatTits.Lattice.Basic
+public import LeanPool.BruhatTits.Utils.RingHom
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import LeanPool.BruhatTits.Cartan.Uniqueness
-import LeanPool.BruhatTits.Lattice.Basic
-import LeanPool.BruhatTits.Utils.Matrix
+import LeanPool.BruhatTits.Utils.ValuationRings
 
 /-!
 # Distance on lattices and vertices
@@ -36,6 +40,8 @@ graph.
 - `BruhatTits.dist_symm`: The distance function is symmetric.
 - `BruhatTits.dist_inv_isSimilar`: The distance function is invariant under homothety.
 -/
+
+@[expose] public section
 
 open Module
 

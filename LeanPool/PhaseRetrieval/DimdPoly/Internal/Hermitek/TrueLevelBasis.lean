@@ -12,16 +12,18 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
 
   This file now carries the previously split circle and bridge API directly.
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
-import Mathlib.Analysis.InnerProductSpace.Subspace
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.MeasureTheory.Integral.Gamma
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.Definitions
 import Mathlib.Analysis.Complex.Isometry
-import Mathlib.Algebra.Polynomial.Coeff
-import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.MeasureTheory.Integral.Gamma
 
 /-! # TrueLevelBasis -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset

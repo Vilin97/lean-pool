@@ -3,7 +3,9 @@ Copyright (c) 2024 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
-import Mathlib.Computability.ContextFreeGrammar
+module
+
+public import Mathlib.Computability.ContextFreeGrammar
 
 /-!
 # Extra lemmas about context-free grammars
@@ -14,6 +16,8 @@ Mathlib release pinned here: the step-counting derivation relation
 `ContextFreeGrammar.DerivesIn` with its induction principles and splitting
 lemmas, plus a few facts about `ContextFreeGrammar.Produces`.
 -/
+
+@[expose] public section
 
 universe uT
 

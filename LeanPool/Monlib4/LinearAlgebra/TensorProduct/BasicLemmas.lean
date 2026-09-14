@@ -3,15 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Algebra.Algebra.Bilinear
+public import Mathlib.LinearAlgebra.TensorProduct.Basis
+public import Mathlib.RingTheory.TensorProduct.Maps
 import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.LinearAlgebra.TensorProduct.Basis
-import Mathlib.RingTheory.TensorProduct.Maps
 
 /-!
 # Some lemmas about `tensor_product`
 -/
+
+@[expose] public section
 
 open scoped TensorProduct BigOperators
 

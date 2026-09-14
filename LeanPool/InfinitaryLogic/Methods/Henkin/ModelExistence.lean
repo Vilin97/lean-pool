@@ -3,7 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.ConsistencyProperty
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
 /-!
 # Model Existence Theorem
@@ -21,6 +24,8 @@ that belongs to a consistency property has a countable model.
 - [Mar16], Theorem 4.1.2
 - [Kei71]
 -/
+
+@[expose] public section
 
 universe u v w
 

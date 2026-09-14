@@ -3,8 +3,15 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise617
+public import LeanPool.DomainTheory.Neighborhood.Exercise617
+import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 6.17 part 2 (Scott 1981, PRG-19) — the generalization `Cₐ ≅ 𝟙 + Σₐ Cₐ`
@@ -35,6 +42,8 @@ prepending the letter `a`. Everything is the alphabet-generic copy of `Example44
 and the data
 (`Cn`, `consMapN`) stays choice-free.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise617Gen
 

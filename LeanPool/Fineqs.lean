@@ -3,8 +3,14 @@ Copyright (c) 2026 Stefan Barańczuk, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stefan Barańczuk, Aristotle
 -/
+module
 
-import LeanPool.Fineqs.Main
+public import LeanPool.Fineqs.Main
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # FinEqs - reducing equations defining a subset of n-space over a finite field
@@ -16,6 +22,8 @@ Main declarations: `LeanPool.Fineqs.theorem_1`, `LeanPool.Fineqs.prop_1`
 Tags: number-theory, finite-fields, algebraic-geometry
 MSC: 14G15, 11T06
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import Mathlib.ModelTheory.Basic
 /-!
 # Relationalization of a language: the graph language and its structures (Craig Layer 3, Unit 1)
 
@@ -29,6 +31,8 @@ computation.
 * `baseRelSym`/`graphRelSym` σ-embeddings, their injectivity and cross-disjointness;
 * `relSym` and the intersection identity `relSym_inter`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -68,7 +72,7 @@ variable {L : Language.{0, 0}}
 /-- Realization of a graph-language relation symbol in the graph expansion of an `L`-structure:
 base relations unchanged, and `G_f(xs, y)` reads `f(xs) = y` (the first `n` coordinates feed `f`,
 the last is its value). -/
-private def graphRelMap (M : Type) [L.Structure M] :
+def graphRelMap (M : Type) [L.Structure M] :
     ∀ {n : ℕ}, GraphRelation L n → (Fin n → M) → Prop
   | _, .base r, v => Structure.RelMap r v
   | _, .graph f, v => Structure.funMap f (Fin.init v) = v (Fin.last _)

@@ -3,10 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import Mathlib.Analysis.Complex.HasPrimitives
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
-import Mathlib.Analysis.Calculus.Deriv.Inv
 
 /-!
 # The planar log-branch atom (`abel-weak-solutions`, D2 / §6.1)
@@ -24,6 +27,8 @@ imports (matches `Path/Planar.lean`'s hygiene). Two facts:
   containing no singularity of the transported function at all — no winding-number/homotopy
   machinery needed).
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 

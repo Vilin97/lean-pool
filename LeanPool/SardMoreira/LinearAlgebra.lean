@@ -3,26 +3,18 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.Dimension.LinearMap
+public import Mathlib.LinearAlgebra.Dimension.LinearMap
+public import Mathlib.Data.Real.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.LinearAlgebra.Prod
-import Mathlib.LinearAlgebra.Quotient.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # LeanPool.SardMoreira.LinearAlgebra
 -/
+
+@[expose] public section
 
 open Function
 open Module (finrank)

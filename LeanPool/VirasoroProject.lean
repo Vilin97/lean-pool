@@ -3,27 +3,33 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
+module
 
-import LeanPool.VirasoroProject.CentralExtension
-import LeanPool.VirasoroProject.CyclicTripleSum
-import LeanPool.VirasoroProject.FockSpace
-import LeanPool.VirasoroProject.FockSpaceSugawara
-import LeanPool.VirasoroProject.HeisenbergAlgebra
-import LeanPool.VirasoroProject.IndexTri
-import LeanPool.VirasoroProject.IsCentralExtension
-import LeanPool.VirasoroProject.LieAlgebraModuleUEA
-import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
-import LeanPool.VirasoroProject.LieCohomologySmallDegree
-import LeanPool.VirasoroProject.LieVerma
-import LeanPool.VirasoroProject.SectionSES
-import LeanPool.VirasoroProject.Sugawara
-import LeanPool.VirasoroProject.ToMathlib
-import LeanPool.VirasoroProject.VermaModule
-import LeanPool.VirasoroProject.VirasoroAlgebra
-import LeanPool.VirasoroProject.VirasoroCocycle
-import LeanPool.VirasoroProject.VirasoroVerma
-import LeanPool.VirasoroProject.WittAlgebra
-import LeanPool.VirasoroProject.WittAlgebraCohomology
+public import LeanPool.VirasoroProject.CentralExtension
+public import LeanPool.VirasoroProject.CyclicTripleSum
+public import LeanPool.VirasoroProject.FockSpace
+public import LeanPool.VirasoroProject.FockSpaceSugawara
+public import LeanPool.VirasoroProject.HeisenbergAlgebra
+public import LeanPool.VirasoroProject.IndexTri
+public import LeanPool.VirasoroProject.IsCentralExtension
+public import LeanPool.VirasoroProject.LieAlgebraModuleUEA
+public import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
+public import LeanPool.VirasoroProject.LieCohomologySmallDegree
+public import LeanPool.VirasoroProject.LieVerma
+public import LeanPool.VirasoroProject.SectionSES
+public import LeanPool.VirasoroProject.Sugawara
+public import LeanPool.VirasoroProject.ToMathlib
+public import LeanPool.VirasoroProject.VermaModule
+public import LeanPool.VirasoroProject.VirasoroAlgebra
+public import LeanPool.VirasoroProject.VirasoroCocycle
+public import LeanPool.VirasoroProject.VirasoroVerma
+public import LeanPool.VirasoroProject.WittAlgebra
+public import LeanPool.VirasoroProject.WittAlgebraCohomology
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Virasoro Project
@@ -35,3 +41,5 @@ Main declarations: `VirasoroProject.VirasoroAlgebra`, `VirasoroProject.sugawaraR
 Tags: representation-theory, lie-algebras, mathematical-physics, virasoro-algebra
 MSC: 17B68, 17B56, 81R10
 -/
+
+@[expose] public section

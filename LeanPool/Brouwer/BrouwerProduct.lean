@@ -3,7 +3,15 @@ Copyright (c) 2026 Math_XMUM. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math_XMUM
 -/
+module
+
+public import Mathlib.Analysis.Convex.StdSimplex
 import LeanPool.Brouwer.Brouwer
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Brouwer's fixed-point theorem on a product of simplices
@@ -13,6 +21,8 @@ a finite product of standard simplices. A continuous retraction collapses the bi
 simplex onto the product, so a fixed point of a continuous self-map of the product
 is obtained from the single-simplex theorem.
 -/
+
+@[expose] public section
 
 open Filter
 

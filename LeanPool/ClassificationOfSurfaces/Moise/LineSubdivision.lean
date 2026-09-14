@@ -3,10 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
-import Mathlib.Analysis.Convex.Segment
-import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
-import Mathlib.LinearAlgebra.AffineSpace.Combination
+module
+
+public import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
+
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 import Mathlib.Order.Fin.Finset
 
 /-!
@@ -16,6 +17,8 @@ Moise Chapter 2 cuts a polygonal region by the finitely many lines containing it
 file develops that construction from its local primitive: when an affine functional has opposite
 signs at the endpoints of an edge, its zero gives the new subdivision vertex on that edge.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -2064,7 +2067,6 @@ theorem strictMeshFor_triangles (v : Fin 3 → M.Vertex)
   simp [strictMeshFor, strictPatternTriangles, referenceSplitMesh,
     referenceSplitTriangles, TriangleMesh.reindex, TriangleMesh.mapAffineEquiv,
     strictVerticesEmbedding]
-  rfl
 
 theorem edgeMeshFor_triangles (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
@@ -2074,7 +2076,6 @@ theorem edgeMeshFor_triangles (v : Fin 3 → M.Vertex)
   simp [edgeMeshFor, edgePatternTriangles, referenceEdgeSplitMesh,
     referenceEdgeSplitTriangles, TriangleMesh.reindex, TriangleMesh.mapAffineEquiv,
     edgeVerticesEmbedding]
-  rfl
 
 theorem strictNegativeMeshFor_monochromatic (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
@@ -2555,60 +2556,100 @@ noncomputable def localMeshTriangles (t : M.Triangle) :
     M.refinedMeshTriangles f (M.unchangedMeshFor f (M.orderedVertex t)
       (M.orderedVertex_affineIndependent t)) rfl
 
+/-- Eliminate the local model choice once, without unfolding the certified meshes. -/
+@[elab_as_elim] private theorem localMeshTriangles_cases (t : M.Triangle)
+    {P : Finset (Finset (M.RefinedVertex f)) → Prop}
+    (positiveStrict : ∀ o : M.PositiveStrictOrdering f t,
+      P (M.strictMeshFor f (M.orderedVertex t ∘ o.perm)
+        (M.orderedVertex_perm_affineIndependent t o.perm)
+        o.positive o.negative_one o.negative_two).triangles)
+    (negativeStrict : ∀ o : M.NegativeStrictOrdering f t,
+      P (M.strictNegativeMeshFor f (M.orderedVertex t ∘ o.perm)
+        (M.orderedVertex_perm_affineIndependent t o.perm)
+        o.negative o.positive_one o.positive_two).triangles)
+    (positiveEdge : ∀ o : M.PositiveEdgeOrdering f t,
+      P (M.edgeMeshFor f (M.orderedVertex t ∘ o.perm)
+        (M.orderedVertex_perm_affineIndependent t o.perm) o.positive o.negative).triangles)
+    (negativeEdge : ∀ o : M.NegativeEdgeOrdering f t,
+      P (M.edgeNegativeMeshFor f (M.orderedVertex t ∘ o.perm)
+        (M.orderedVertex_perm_affineIndependent t o.perm) o.negative o.positive).triangles)
+    (unchanged : ¬Nonempty (M.PositiveStrictOrdering f t) →
+      ¬Nonempty (M.NegativeStrictOrdering f t) →
+      ¬Nonempty (M.PositiveEdgeOrdering f t) →
+      ¬Nonempty (M.NegativeEdgeOrdering f t) →
+      P (M.unchangedMeshFor f (M.orderedVertex t)
+        (M.orderedVertex_affineIndependent t)).triangles) :
+    P (M.localMeshTriangles f t) := by
+  classical
+  unfold localMeshTriangles
+  split_ifs with hp hn hep hen
+  · exact positiveStrict (Classical.choice hp)
+  · exact negativeStrict (Classical.choice hn)
+  · exact positiveEdge (Classical.choice hep)
+  · exact negativeEdge (Classical.choice hen)
+  · exact unchanged hp hn hep hen
+
 theorem card_of_mem_localMeshTriangles (t : M.Triangle)
     {s : Finset (M.RefinedVertex f)} (hs : s ∈ M.localMeshTriangles f t) : s.card = 3 := by
-  classical
-  unfold localMeshTriangles at hs
-  split_ifs at hs with hp hn hep hen
-  · exact (M.strictMeshFor f _ _ _ _ _).card_triangle s hs
-  · exact (M.strictNegativeMeshFor f _ _ _ _ _).card_triangle s hs
-  · exact (M.edgeMeshFor f _ _ _ _).card_triangle s hs
-  · exact (M.edgeNegativeMeshFor f _ _ _ _).card_triangle s hs
-  · exact (M.unchangedMeshFor f _ _).card_triangle s hs
+  revert hs
+  refine M.localMeshTriangles_cases f t ?_ ?_ ?_ ?_ ?_
+  · intro o hs
+    exact (M.strictMeshFor f _ _ _ _ _).card_triangle s hs
+  · intro o hs
+    exact (M.strictNegativeMeshFor f _ _ _ _ _).card_triangle s hs
+  · intro o hs
+    exact (M.edgeMeshFor f _ _ _ _).card_triangle s hs
+  · intro o hs
+    exact (M.edgeNegativeMeshFor f _ _ _ _).card_triangle s hs
+  · intro _ _ _ _ hs
+    exact (M.unchangedMeshFor f _ _).card_triangle s hs
 
 theorem affineIndependent_of_mem_localMeshTriangles (t : M.Triangle)
     {s : Finset (M.RefinedVertex f)} (hs : s ∈ M.localMeshTriangles f t) :
     AffineIndependent ℝ fun v : s => (v.1 : Plane) := by
-  classical
-  unfold localMeshTriangles at hs
-  split_ifs at hs with hp hn hep hen
-  · exact (M.strictMeshFor f _ _ _ _ _).affineIndependent_triangle s hs
-  · exact (M.strictNegativeMeshFor f _ _ _ _ _).affineIndependent_triangle s hs
-  · exact (M.edgeMeshFor f _ _ _ _).affineIndependent_triangle s hs
-  · exact (M.edgeNegativeMeshFor f _ _ _ _).affineIndependent_triangle s hs
-  · exact (M.unchangedMeshFor f _ _).affineIndependent_triangle s hs
+  revert hs
+  refine M.localMeshTriangles_cases f t ?_ ?_ ?_ ?_ ?_
+  · intro o hs
+    exact (M.strictMeshFor f _ _ _ _ _).affineIndependent_triangle s hs
+  · intro o hs
+    exact (M.strictNegativeMeshFor f _ _ _ _ _).affineIndependent_triangle s hs
+  · intro o hs
+    exact (M.edgeMeshFor f _ _ _ _).affineIndependent_triangle s hs
+  · intro o hs
+    exact (M.edgeNegativeMeshFor f _ _ _ _).affineIndependent_triangle s hs
+  · intro _ _ _ _ hs
+    exact (M.unchangedMeshFor f _ _).affineIndependent_triangle s hs
 
 theorem localMeshTriangles_monochromatic (t : M.Triangle) :
     M.RefinedTrianglesMonochromatic f (M.localMeshTriangles f t) := by
   classical
-  unfold localMeshTriangles
-  split_ifs with hp hn hep hen
-  all_goals simp only [refinedMeshTriangles]
-  · let o := Classical.choice hp
+  refine M.localMeshTriangles_cases f t ?_ ?_ ?_ ?_ ?_
+  · intro o
     rw [M.strictMeshFor_triangles]
     apply M.strictPattern_monochromatic_positive
-    · simpa [o, strictVertices, Function.comp_apply] using o.positive.le
-    · simpa [o, strictVertices, Function.comp_apply] using o.negative_one.le
-    · simpa [o, strictVertices, Function.comp_apply] using o.negative_two.le
+    · simpa [strictVertices, Function.comp_apply] using o.positive.le
+    · simpa [strictVertices, Function.comp_apply] using o.negative_one.le
+    · simpa [strictVertices, Function.comp_apply] using o.negative_two.le
     · rw [M.strictVertices_f]
       simp
     · rw [M.strictVertices_f]
       simp
-  · let o := Classical.choice hn
+  · intro o
     exact M.strictNegativeMeshFor_monochromatic f _ _
       o.negative o.positive_one o.positive_two
-  · let o := Classical.choice hep
+  · intro o
     rw [M.edgeMeshFor_triangles]
     apply M.edgePattern_monochromatic_positive
-    · simpa [o, edgeVertices, Function.comp_apply] using o.positive.le
-    · simpa [o, edgeVertices, Function.comp_apply] using o.negative.le
+    · simpa [edgeVertices, Function.comp_apply] using o.positive.le
+    · simpa [edgeVertices, Function.comp_apply] using o.negative.le
     · rw [M.edgeVertices_f f _ o.positive o.negative o.zero]
       rfl
     · rw [M.edgeVertices_f f _ o.positive o.negative o.zero]
       rfl
-  · let o := Classical.choice hen
+  · intro o
     exact M.edgeNegativeMeshFor_monochromatic f _ _ o.negative o.positive o.zero
-  · have hpair := pairwise_nonnegative_of_no_orderings M f t hp hn hep hen
+  · intro hp hn hep hen
+    have hpair := pairwise_nonnegative_of_no_orderings M f t hp hn hep hen
     have hsign := same_closed_side_of_pairwise_products hpair.1 hpair.2.1 hpair.2.2
     intro s hs
     unfold unchangedMeshFor at hs
@@ -2638,10 +2679,9 @@ theorem local_child_vertex_old_or_zero (t : M.Triangle)
     {x : M.RefinedVertex f} (hx : x ∈ s) :
     (∃ v ∈ t.1, (x : Plane) = M.position v) ∨ f (x : Plane) = 0 := by
   classical
-  unfold localMeshTriangles at hs
-  split_ifs at hs with hp hn hep hen
-  all_goals simp only [refinedMeshTriangles] at hs
-  · let o := Classical.choice hp
+  revert hs
+  refine M.localMeshTriangles_cases f t ?_ ?_ ?_ ?_ ?_
+  · intro o hs
     rw [M.strictMeshFor_triangles] at hs
     obtain ⟨i, rfl⟩ := exists_index_of_mem_strictPattern _ hs hx
     fin_cases i
@@ -2654,7 +2694,7 @@ theorem local_child_vertex_old_or_zero (t : M.Triangle)
     · right
       rw [M.strictVertices_f]
       rfl
-  · let o := Classical.choice hn
+  · intro o hs
     unfold strictNegativeMeshFor at hs
     obtain ⟨r, hr, rfl⟩ := Finset.mem_image.mp hs
     obtain ⟨y, hy, rfl⟩ := Finset.mem_map.mp hx
@@ -2680,7 +2720,7 @@ theorem local_child_vertex_old_or_zero (t : M.Triangle)
         (by simpa using o.negative) (by simpa using o.positive_one)
         (by simpa using o.positive_two) 4
       simpa using h
-  · let o := Classical.choice hep
+  · intro o hs
     rw [M.edgeMeshFor_triangles] at hs
     obtain ⟨i, rfl⟩ := exists_index_of_mem_edgePattern _ hs hx
     fin_cases i
@@ -2690,7 +2730,7 @@ theorem local_child_vertex_old_or_zero (t : M.Triangle)
     · right
       rw [M.edgeVertices_f f _ o.positive o.negative o.zero]
       rfl
-  · let o := Classical.choice hen
+  · intro o hs
     unfold edgeNegativeMeshFor at hs
     obtain ⟨r, hr, rfl⟩ := Finset.mem_image.mp hs
     obtain ⟨y, hy, rfl⟩ := Finset.mem_map.mp hx
@@ -2706,7 +2746,8 @@ theorem local_child_vertex_old_or_zero (t : M.Triangle)
       have h := M.edgeVertices_f (-f) (M.orderedVertex t ∘ o.perm)
         (by simpa using o.negative) (by simpa using o.positive) (by simpa using o.zero) 3
       simpa using h
-  · unfold unchangedMeshFor at hs
+  · intro _ _ _ _ hs
+    unfold unchangedMeshFor at hs
     obtain ⟨r, hr, rfl⟩ := Finset.mem_image.mp hs
     have hr : r = Finset.univ := Finset.mem_singleton.mp hr
     subst r
@@ -2719,10 +2760,8 @@ theorem localMeshTriangles_support (t : M.Triangle) :
       convexHull ℝ (((↑) : M.RefinedVertex f → Plane) '' (s : Set (M.RefinedVertex f)))) =
       convexHull ℝ (M.position '' (t.1 : Set M.Vertex)) := by
   classical
-  unfold localMeshTriangles
-  split_ifs with hp hn hep hen
-  · let o := Classical.choice hp
-    dsimp only [Function.comp_apply]
+  refine M.localMeshTriangles_cases f t ?_ ?_ ?_ ?_ ?_
+  · intro o
     have h := M.strictMeshFor_support f (M.orderedVertex t ∘ o.perm)
       (M.orderedVertex_perm_affineIndependent t o.perm)
       o.positive o.negative_one o.negative_two
@@ -2730,8 +2769,7 @@ theorem localMeshTriangles_support (t : M.Triangle) :
       o.positive o.negative_one o.negative_two).toPlaneComplex_support] at h
     rw [M.range_orderedVertex_perm t o.perm] at h
     exact h
-  · let o := Classical.choice hn
-    dsimp only [Function.comp_apply]
+  · intro o
     have h := M.strictNegativeMeshFor_support f (M.orderedVertex t ∘ o.perm)
       (M.orderedVertex_perm_affineIndependent t o.perm)
       o.negative o.positive_one o.positive_two
@@ -2739,23 +2777,22 @@ theorem localMeshTriangles_support (t : M.Triangle) :
       o.negative o.positive_one o.positive_two).toPlaneComplex_support] at h
     rw [M.range_orderedVertex_perm t o.perm] at h
     exact h
-  · let o := Classical.choice hep
-    dsimp only [Function.comp_apply]
+  · intro o
     have h := M.edgeMeshFor_support f (M.orderedVertex t ∘ o.perm)
       (M.orderedVertex_perm_affineIndependent t o.perm) o.positive o.negative
     rw [(M.edgeMeshFor f (M.orderedVertex t ∘ o.perm) _
       o.positive o.negative).toPlaneComplex_support] at h
     rw [M.range_orderedVertex_perm t o.perm] at h
     exact h
-  · let o := Classical.choice hen
-    dsimp only [Function.comp_apply]
+  · intro o
     have h := M.edgeNegativeMeshFor_support f (M.orderedVertex t ∘ o.perm)
       (M.orderedVertex_perm_affineIndependent t o.perm) o.negative o.positive
     rw [(M.edgeNegativeMeshFor f (M.orderedVertex t ∘ o.perm) _
       o.negative o.positive).toPlaneComplex_support] at h
     rw [M.range_orderedVertex_perm t o.perm] at h
     exact h
-  · simp only [unchangedMeshFor, TriangleMesh.reindex, TriangleMesh.single,
+  · intro _ _ _ _
+    simp only [unchangedMeshFor, TriangleMesh.reindex, TriangleMesh.single,
       oldVerticesEmbedding]
     have h := M.unchangedMeshFor_support f (M.orderedVertex t)
       (M.orderedVertex_affineIndependent t)
@@ -2770,14 +2807,18 @@ theorem localMeshTriangles_inter (t : M.Triangle)
         convexHull ℝ (((↑) : M.RefinedVertex f → Plane) '' (u : Set (M.RefinedVertex f))) =
       convexHull ℝ (((↑) : M.RefinedVertex f → Plane) ''
         ((s ∩ u : Finset (M.RefinedVertex f)) : Set (M.RefinedVertex f))) := by
-  classical
-  unfold localMeshTriangles at hs hu
-  split_ifs at hs hu with hp hn hep hen
-  · exact (M.strictMeshFor f _ _ _ _ _).triangle_inter s hs u hu
-  · exact (M.strictNegativeMeshFor f _ _ _ _ _).triangle_inter s hs u hu
-  · exact (M.edgeMeshFor f _ _ _ _).triangle_inter s hs u hu
-  · exact (M.edgeNegativeMeshFor f _ _ _ _).triangle_inter s hs u hu
-  · exact (M.unchangedMeshFor f _ _).triangle_inter s hs u hu
+  revert hs hu
+  refine M.localMeshTriangles_cases f t ?_ ?_ ?_ ?_ ?_
+  · intro o hs hu
+    exact (M.strictMeshFor f _ _ _ _ _).triangle_inter s hs u hu
+  · intro o hs hu
+    exact (M.strictNegativeMeshFor f _ _ _ _ _).triangle_inter s hs u hu
+  · intro o hs hu
+    exact (M.edgeMeshFor f _ _ _ _).triangle_inter s hs u hu
+  · intro o hs hu
+    exact (M.edgeNegativeMeshFor f _ _ _ _).triangle_inter s hs u hu
+  · intro _ _ _ _ hs hu
+    exact (M.unchangedMeshFor f _ _).triangle_inter s hs u hu
 
 theorem convexHull_child_subset_parent (t : M.Triangle)
     {s : Finset (M.RefinedVertex f)} (hs : s ∈ M.localMeshTriangles f t) :

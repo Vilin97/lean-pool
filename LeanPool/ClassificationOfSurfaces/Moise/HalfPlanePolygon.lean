@@ -3,8 +3,16 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ChartExtraction
-import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.ChartExtraction
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
+import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
+import Mathlib.Analysis.Normed.Affine.AddTorsor
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Polygonal disks in a half-plane
@@ -13,6 +21,8 @@ The bordered Radó step approximates the one-skeleton inside the closed right ha
 file records the elementary but important consequence: once the replacement polygon stays in
 that half-plane, its bounded Schoenflies filling stays there as well.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

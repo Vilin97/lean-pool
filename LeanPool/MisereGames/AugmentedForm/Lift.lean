@@ -7,7 +7,7 @@ module
 
 public import LeanPool.MisereGames.AugmentedForm
 public import LeanPool.MisereGames.Form.Misere.Outcome
-public import LeanPool.MisereGames.Form.Misere.Adjoint
+public import LeanPool.MisereGames.Form.Adjoint
 
 /-!
 Misere combinatorial games.

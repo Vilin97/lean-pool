@@ -3,12 +3,11 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import Mathlib.Topology.KrullDimension
-import Mathlib.Topology.Category.TopCat.Basic
-import Mathlib.Topology.Sets.Opens
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Ring
+public import Mathlib.Topology.KrullDimension
+public import Mathlib.Topology.Category.TopCat.Basic
+import Mathlib.Tactic.Ring.RingNF
 /-!
 # Topological Krull Dimension
 
@@ -33,6 +32,8 @@ API for topological Krull dimension on irreducible spaces.
   space of positive finite Krull dimension, there exists a proper closed subset of
   strictly smaller dimension
 -/
+
+@[expose] public section
 
 universe u
 

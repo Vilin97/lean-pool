@@ -7,8 +7,11 @@ Authors: Rado Kirov
 /-
 Blueprint unit: local-multiplicity (CC4). Planar analytic k-th root.
 -/
+module
+
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Local analytic k-th root
@@ -20,6 +23,8 @@ Route (design §5.1): with `a := u z₀ ≠ 0`, set `r z := exp (log a / k) * ex
 Only `log (u z / a)` (value near `1`, inside `slitPlane`) needs *analyticity* of `log`;
 `exp (log a) = a` holds for every nonzero constant, so no case split on `arg (u z₀)` is needed.
 -/
+
+@[expose] public section
 
 open Filter Complex
 open scoped Topology

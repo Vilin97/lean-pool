@@ -3,10 +3,19 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
+public import Mathlib.Data.Finite.Sum
+
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Tree
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.GL
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Tree
 import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitation
 
 /-! # MDP -/
+
+@[expose] public section
 
 
 namespace LO

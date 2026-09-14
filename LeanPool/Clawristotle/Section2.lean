@@ -3,7 +3,11 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
+module
+
+public import LeanPool.Clawristotle.Defs
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Entropy Dissipation Identity (Section 2)
@@ -11,6 +15,8 @@ import LeanPool.Clawristotle.Defs
 Properties of the Landau collision matrix: evenness, positive semidefiniteness,
 the symmetrized weak form, and the entropy dissipation identity D(f) as a double integral.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

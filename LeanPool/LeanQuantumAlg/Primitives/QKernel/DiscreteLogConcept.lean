@@ -6,11 +6,8 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic
-public import Mathlib.Data.ZMod.Basic
 public import Mathlib.Data.Real.Basic
-public import Mathlib.Tactic.Common
 /-!
 # The discrete-logarithm concept class and its secret-homogeneity
 

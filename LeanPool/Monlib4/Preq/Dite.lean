@@ -3,14 +3,16 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Logic.Basic
-import Mathlib.Algebra.Group.Defs
-import Mathlib.Algebra.Star.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Basic
+module
+
+public import Mathlib.Algebra.Star.Basic
+public import Mathlib.LinearAlgebra.TensorProduct.Defs
 
 /-!
  # Some stuff on dites
 -/
+
+@[expose] public section
 
 theorem ite_eq_ite_iff {α : Type _} (a b c : α) :
     (∀ {p : Prop} [hp : Decidable p], @ite α p hp a c

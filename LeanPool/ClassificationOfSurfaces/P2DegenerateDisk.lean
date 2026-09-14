@@ -3,9 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.DiskSquare
-import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
-import LeanPool.ClassificationOfSurfaces.WeightedCircle
+module
+
+public import LeanPool.ClassificationOfSurfaces.DiskSquare
+public import LeanPool.ClassificationOfSurfaces.SphereCarrierGeometry
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The one-sided-degenerate P2 disk model
@@ -23,6 +28,8 @@ on which squaring has no nontrivial antipodal pair.  Its image is star-shaped at
 scaled copy receives the monogon, while the other child fills the collar between that copy and
 the full teardrop.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

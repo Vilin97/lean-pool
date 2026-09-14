@@ -3,13 +3,20 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
-import LeanPool.PolynomialMethodRestrictedSums.CauchyDavenportTheorem
-import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
-import LeanPool.PolynomialMethodRestrictedSums.DiasDaSilvaHamidoune
-import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
-import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+public import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+public import LeanPool.PolynomialMethodRestrictedSums.CauchyDavenportTheorem
+public import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
+public import LeanPool.PolynomialMethodRestrictedSums.DiasDaSilvaHamidoune
+public import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+public import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The polynomial method and restricted sums of congruence classes
@@ -21,6 +28,8 @@ Main declarations: `ANR_polynomial_method`, `cauchy_davenport`, `dias_da_silva_h
 Tags: combinatorics, polynomial-method, alon-tarsi, restricted-sums, congruence-classes
 MSC: 11B30, 11B75, 11P70
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

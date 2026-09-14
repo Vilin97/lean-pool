@@ -3,10 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.Certificates
+public import LeanPool.Erdos97ConvexOctagon.Certificates
 
 /-! # Fast validation of certificates against packed incidence tables -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence
 
@@ -28,12 +31,14 @@ def packedComponentTreeB
   | first :: remaining =>
       decide (first = root) && packedExtendsTreeB code {root} remaining
 
-private def packedTreeLabelledEdgeB
+/-- Test whether a packed code selects an edge incident to the given component. -/
+def packedTreeLabelledEdgeB
     (code : UInt64) (component : List Vertex) (a b : Vertex) : Bool :=
   (decide (a ∈ component) && packedSelectsB code a b) ||
     (decide (b ∈ component) && packedSelectsB code b a)
 
-private def packedResidualValidB (code payload : UInt64) : Bool :=
+/-- Check the residual certificate encoded by a packed code and payload. -/
+def packedResidualValidB (code payload : UInt64) : Bool :=
   let classIndex := payloadClass payload
   let forward := decodeMap (payloadForwardCode payload)
   let inverse := decodeMap (payloadInverseCode payload)

@@ -3,8 +3,18 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Subset
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
@@ -12,9 +22,11 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
+@[expose] public section
+
 
 namespace GaleStewartGame.BorelDet.Zero
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
@@ -51,7 +63,7 @@ attribute [simp_lengths] bodyTake_x takeLift_x_coe
 lemma losable_of_losable_not_lost n (hL : (takeLift y n).Losable)
   (h' : ∀ m, ¬ (takeLift y m).Lost) m (hm : hL.2.num ≤ m + 1) : (takeLift y m).Losable := by
   have hc m : (takeLift y m).ConLong := by
-    have := (bodyTake y m).conLong_or_lost; tauto
+    exact (bodyTake y m).conLong_or_lost.resolve_right (fun ⟨_, hLost⟩ ↦ h' m hLost)
   use hc m; by_cases hW : WinningPrefix (takeLift y m).game Player.one
     ((body.take (2 * k + 2 + m) y).val.drop (2 * k + 1))
   · exact hW
@@ -232,12 +244,13 @@ lemma lost_of_body_lost (hy : ⟨y.val, body_mono (subtree_sub _) y.prop⟩ ∉ 
   rw [← Subtype.val_injective.mem_set_image,
     ← (isClosed_image_payoff.mp hyp.closed).closure_eq,
     mem_closure_iff_nhds_basis (hasBasis_principalOpen y.val)] at hy
-  conv at hy => simp
+  simp only [Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right,
+    not_forall, not_exists, not_and, forall_exists_index] at hy
   obtain ⟨x, hx1, hx2⟩ := hy; use x.length
   apply TreeLift.lost_of_lost'; unfold Lift.Lost'
   rw [wonPosition_iff_disjoint, ← Set.subset_empty_iff]
   intro z ⟨h1, h2⟩
-  conv at h1 => simp
+  simp only [TreeLift.lift_toPreLift, TreeLift.preLift_x_coe, bodyTake_x, body.take_coe] at h1
   conv at h2 => simp
   apply hx2 z
   · exact h2.2

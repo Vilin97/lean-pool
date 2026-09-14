@@ -3,8 +3,16 @@ Copyright (c) 2026 Makoto Yamashita. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Makoto Yamashita
 -/
+module
 
-import LeanPool.HSDInteriorPointLP.LocalNeighborhoodEstimates
+public import LeanPool.HSDInteriorPointLP.LocalNeighborhoodEstimates
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Fixed YTM convergence ingredients
@@ -19,6 +27,8 @@ That older interface was removed because the generated-algorithm interface in
 `GeneratedConvergence.lean` constructs the iterates recursively and makes the
 algorithm dependency clearer.
 -/
+
+@[expose] public section
 noncomputable section
 
 open scoped BigOperators

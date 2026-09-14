@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+module
+
+public import Mathlib.ModelTheory.LanguageMap
 /-!
 # The functional witness language (issue #10, Unit 1 part 1)
 
@@ -21,6 +23,8 @@ occurrence, and realization lemmas; the common tagged language
 witness, and right witness symbols; the tagged symbol-image sets; and their pairwise
 disjointness (the combinatorial half of the Unit-1 occurrence gate).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

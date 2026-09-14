@@ -3,10 +3,16 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
 import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.GCD.BigOperators
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Prime Decomposition of Hecke Ring Elements
@@ -32,6 +38,8 @@ Every `T(a₁,...,aₙ)` factors into a product of p-power `T`-elements via copr
 
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2
 -/
+
+@[expose] public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset
 
@@ -181,7 +189,8 @@ end RpSubring
 
 section FullFactorization
 
-private def ppowClosureSet (n : ℕ) [NeZero n] : Set (HeckeAlgebra n) :=
+/-- The Hecke elements represented by monotone prime-power diagonal matrices. -/
+def ppowClosureSet (n : ℕ) [NeZero n] : Set (HeckeAlgebra n) :=
   { f | ∃ (p : ℕ) (_hp : p.Prime) (e : Fin n → ℕ) (_hmono : Monotone e),
     f = TElem (ppowDiag n p e) }
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import LeanPool.EventStructures.Basic
-import LeanPool.EventStructures.Configuration
-import LeanPool.EventStructures.Computation
+module
+
+public import LeanPool.EventStructures.Computation
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Logs and compatibility
@@ -14,6 +15,8 @@ This module defines logged events and the log of a configuration (events that
 have a minimal conflict with some event outside the configuration), and the
 notion of a computation being compatible with a log.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

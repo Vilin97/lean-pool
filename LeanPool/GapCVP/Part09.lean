@@ -3,21 +3,24 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.GapCVP.Part08
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Data.Int.Star
-import Mathlib.FieldTheory.RatFunc.AsPolynomial
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
-import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
-import Mathlib.RingTheory.Polynomial.Resultant.Basic
-import Mathlib.RingTheory.Polynomial.Vieta
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
+public import LeanPool.GapCVP.Part08
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Data.Int.Star
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
+public import Mathlib.RingTheory.Polynomial.Resultant.Basic
+public import Mathlib.RingTheory.Polynomial.Vieta
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
 
 /-! # GapCVP proof, part 09 -/
+
+@[expose] public section
 
 noncomputable section
 

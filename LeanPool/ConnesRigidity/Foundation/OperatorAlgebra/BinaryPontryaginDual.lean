@@ -10,14 +10,18 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the binary character-coordinate layer and changed
 carrier names and namespace for Zhou §§3-4. See the upstream PORT_MAP.md.
 -/
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
+public import Mathlib.Topology.Algebra.PontryaginDual
+public import Mathlib.Topology.Instances.ZMod
 import Mathlib.Algebra.Module.StablyFree.Basic
-import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
-import Mathlib.Topology.Algebra.PontryaginDual
-import Mathlib.Topology.Instances.ZMod
 
 /-!
 The binary pontryagin dual component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace BinaryPontryaginDual

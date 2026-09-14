@@ -3,10 +3,17 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
-import Mathlib.Algebra.BigOperators.GroupWithZero.Action
-import Mathlib.Algebra.Module.Submodule.Basic
-import Mathlib.LinearAlgebra.Finsupp.LinearCombination
-import Mathlib.LinearAlgebra.Span.Defs
+module
+
+public import Mathlib.Algebra.BigOperators.GroupWithZero.Action
+public import Mathlib.Algebra.Module.Submodule.Basic
+public import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+public import Mathlib.LinearAlgebra.Span.Defs
+
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # Span compatibility imports
@@ -16,3 +23,5 @@ that declaration is available in current Mathlib from
 `Mathlib.LinearAlgebra.Finsupp.LinearCombination`, so this file is kept as an
 import-compatible shim.
 -/
+
+@[expose] public section

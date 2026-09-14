@@ -3,10 +3,11 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini and Aristotle contributors. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
+module
 
-import LeanPool.MinimumDegreeMatching.Basic
-import LeanPool.MinimumDegreeMatching.Spread
-import LeanPool.MinimumDegreeMatching.BKLO
+public import LeanPool.MinimumDegreeMatching.Basic
+public import LeanPool.MinimumDegreeMatching.Spread
+public import LeanPool.MinimumDegreeMatching.BKLO
 
 /-!
 # BKLO simultaneous perfect matchings and spread matchings

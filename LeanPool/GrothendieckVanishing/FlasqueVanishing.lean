@@ -3,10 +3,11 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import Mathlib.CategoryTheory.Abelian.Injective.Resolution
-import LeanPool.GrothendieckVanishing.CohomologyAPI
+public import LeanPool.GrothendieckVanishing.CohomologyAPI
 import LeanPool.GrothendieckVanishing.ZeroOutside
+import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
 /-!
 # Flasque sheaf theory and cohomological vanishing
@@ -31,6 +32,8 @@ adapted from Brian Nugent's Mathlib PR #35790.
 
 Generic `Sheaf.H` and `Ext` API lives in `CohomologyAPI.lean`.
 -/
+
+@[expose] public section
 
 universe u
 

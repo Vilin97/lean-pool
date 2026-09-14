@@ -6,15 +6,14 @@ Authors: AddCombi contributors
 
 module
 
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Notation.Indicator
-public import Mathlib.Algebra.Order.Group.Indicator
 public import Mathlib.Algebra.Order.ZeroLEOne
+public import Mathlib.Algebra.Notation.Indicator
+import Mathlib.Algebra.Order.Group.Indicator
 
 /-!
 # Ordered indicator functions
 -/
 
-open scoped Indicator
 
 namespace Set
 variable {α M : Type*} [Zero M] [One M]

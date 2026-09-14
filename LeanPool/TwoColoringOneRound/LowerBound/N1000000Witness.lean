@@ -3,18 +3,27 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+public import Aesop.BuiltinRules
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 -/
 
+@[expose] public section
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Witness
 
-open Distributed2Coloring.LowerBound.N1000000Data
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev masks : Array Nat :=

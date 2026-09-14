@@ -7,9 +7,10 @@ Authors: PFR contributors
 module
 
 public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Data.Set.Card
-public import LeanPool.PFR.Mathlib.LinearAlgebra.Basis.VectorSpace
-public import LeanPool.PFR.RhoFunctional
+public import Mathlib.Algebra.Module.Prod
+public import Mathlib.Algebra.Module.Submodule.Defs
+import LeanPool.PFR.Mathlib.LinearAlgebra.Basis.VectorSpace
+import LeanPool.PFR.RhoFunctional
 
 /-!
 # The homomorphism form of PFR

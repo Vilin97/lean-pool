@@ -3,12 +3,20 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.Finiteness.H1Finite
+import LeanPool.JacobianDiffgeo.Forms.Finiteness
 import LeanPool.JacobianDiffgeo.PlanarStokes.CompactSupport
-import LeanPool.JacobianDiffgeo.TailDuality
-import LeanPool.JacobianDiffgeo.LaurentTail
-import LeanPool.JacobianDiffgeo.DolbeaultComparison
+import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
+import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the Serre functional (design §4.3, routing decision #2's "honest integration atom")
@@ -45,6 +53,8 @@ checkable against the weak-solution packaging (`LogPiece.lean`/`UpgradeDischarge
 concrete planar Stokes/residue computations — the shape `DolbeaultBridge.lean`'s abstract
 residue-pairing hypothesis does not directly offer.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory
@@ -680,8 +690,7 @@ theorem pairingDual_injective (PU : SurfPoU X) : Function.Injective (pairingDual
   rw [injective_iff_map_eq_zero]
   intro θ hθ
   refine eq_zero_of_pairing_conjForm_eq_zero PU θ ?_
-  have happ := congrArg (fun φ => φ (RS.H01.mk (conjForm θ))) hθ
-  simpa [pairingDual, pairingH01_mk] using happ
+  exact LinearMap.congr_fun hθ (RS.H01.mk (conjForm θ))
 
 /-! ## The gated dimension count and the integral-pairing bridge -/
 
@@ -695,9 +704,7 @@ theorem finrank_H01_eq_genus
   have e1 : RS.LaurentTail.H1Tail (0 : RS.Divisor X) ≃ₗ[ℂ] RS.H01 X :=
     (RS.LaurentTail.H1Tail.equivOfSurjective (0 : RS.Divisor X) hsurj).trans
       RS.dolbeaultEquiv
-  have h2 : Module.finrank ℂ (RS.LaurentTail.H1Tail (0 : RS.Divisor X)) = genus X :=
-    RS.TailDuality.h1T_zero_eq_genus
-  rw [← e1.finrank_eq, h2]
+  exact e1.finrank_eq.symm.trans RS.TailDuality.h1T_zero_eq_genus
 
 /-- **The integral-pairing Dolbeault bridge** (the Serre-functional replacement for
 `DolbeaultBridge.lean`'s abstract statement): if a smooth `(0,1)`-form pairs to zero against
@@ -707,7 +714,7 @@ theorem exists_dbar_of_forall_pairing_eq_zero (PU : SurfPoU X)
     (hsurj : Function.Surjective (RS.LaurentTail.tailToH1 (0 : RS.Divisor X)))
     {η : RS.Form01 X} (h : ∀ θ : RS.Form1 X, pairing PU η θ = 0) :
     ∃ u : RS.SmoothC X, RS.dbar u = η := by
-  rw [← RS.H01.mk_eq_zero_iff]
+  apply RS.H01.mk_eq_zero_iff.1
   have : FiniteDimensional ℂ (RS.H01 X) := RS.finiteDimensional_H01
   have hfr : Module.finrank ℂ (RS.Form1 X) = Module.finrank ℂ (Module.Dual ℂ (RS.H01 X)) := by
     rw [Subspace.dual_finrank_eq, finrank_H01_eq_genus hsurj]
@@ -715,11 +722,9 @@ theorem exists_dbar_of_forall_pairing_eq_zero (PU : SurfPoU X)
   have hsurjPsi : Function.Surjective (pairingDual PU) :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hfr).mp
       (pairingDual_injective PU)
-  rw [← Module.forall_dual_apply_eq_zero_iff ℂ]
+  apply (Module.forall_dual_apply_eq_zero_iff ℂ _).mp
   intro φ
   obtain ⟨θ, rfl⟩ := hsurjPsi φ
-  change pairingH01 PU θ (RS.H01.mk η) = 0
-  rw [pairingH01_mk]
   exact h θ
 
 /-- **The single remaining gate, reformulated as a pure dimension count**: `tailToH1 0` is
@@ -733,26 +738,17 @@ theorem tailToH1_zero_surjective_iff_finrank_le :
   constructor
   · intro hsurj
     have e1 := RS.LaurentTail.H1Tail.equivOfSurjective (0 : RS.Divisor X) hsurj
-    rw [← e1.finrank_eq]
-    exact le_of_eq RS.TailDuality.h1T_zero_eq_genus
+    exact (e1.finrank_eq.symm.trans RS.TailDuality.h1T_zero_eq_genus).le
   · intro hle
     have hinj := RS.LaurentTail.H1Tail.toH1_injective (0 : RS.Divisor X)
     have hgen : Module.finrank ℂ (RS.LaurentTail.H1Tail (0 : RS.Divisor X)) = genus X :=
       RS.TailDuality.h1T_zero_eq_genus
     have hfr : Module.finrank ℂ (RS.LaurentTail.H1Tail (0 : RS.Divisor X))
-        = Module.finrank ℂ (RS.Cech.H1 (0 : RS.Divisor X)) := by
-      refine le_antisymm ?_ ?_
-      · exact LinearMap.finrank_le_finrank_of_injective hinj
-      · rw [hgen]
-        exact hle
+        = Module.finrank ℂ (RS.Cech.H1 (0 : RS.Divisor X)) :=
+      (LinearMap.finrank_le_finrank_of_injective hinj).antisymm (hle.trans_eq hgen.symm)
     have hsurj' : Function.Surjective (RS.LaurentTail.H1Tail.toH1 (0 : RS.Divisor X)) :=
       (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hfr).mp hinj
-    intro ξ
-    obtain ⟨c, hc⟩ := hsurj' ξ
-    obtain ⟨z, rfl⟩ := RS.LaurentTail.H1Tail.mk_surjective (0 : RS.Divisor X) c
-    refine ⟨z, ?_⟩
-    rw [← RS.LaurentTail.H1Tail.toH1_mk]
-    exact hc
+    exact hsurj'.comp (RS.LaurentTail.H1Tail.mk_surjective (0 : RS.Divisor X))
 
 end RS.Abel
 

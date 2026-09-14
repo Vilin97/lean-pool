@@ -3,19 +3,20 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang. All 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
+module
 
-import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.Data.PNat.Prime
+public import Mathlib.Analysis.Normed.Group.Real
+public import Mathlib.Data.Nat.Squarefree
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Analysis.SpecialFunctions.Log.Summable
-import Mathlib.Data.Int.CardIntervalMod
-import Mathlib.Data.Nat.ChineseRemainder
-import Mathlib.Data.PNat.Prime
-import Mathlib.Data.Rat.Star
 import Mathlib.NumberTheory.SumPrimeReciprocals
 
 /-! ## Counting functions for joint conditions -/
+
+@[expose] public section
 
 namespace LeanPool.DeadEnds
 

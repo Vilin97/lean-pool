@@ -5,8 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.ConeGaussianInterchange
-public import LeanPool.Odlyzko.CompletedZeta.UnitDecomposition
+public import LeanPool.Odlyzko.CompletedZeta.UnitAveragedGaussian
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+import Mathlib.RingTheory.Flat.TorsionFree
 
 /-! TODO: Add doc-string. -/
 

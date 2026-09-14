@@ -3,9 +3,17 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.WellOrderClass
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.WellOrderClass
+public import LeanPool.InfinitaryLogic.Lomega1omega.InfiniteAxiom
+import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
 import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
-import LeanPool.InfinitaryLogic.Lomega1omega.InfiniteAxiom
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.FinCases
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # From coded well-orders to models: the defect bridge
 
@@ -32,6 +40,8 @@ That second consumer is why `isWellOrder_of_realize_of_modelsOf_subset` is the p
 - `isWellOrder_of_realize_of_modelsOf_subset`: containment form of the bridge.
 - `isWellOrder_of_realize`: the equality-form corollary.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

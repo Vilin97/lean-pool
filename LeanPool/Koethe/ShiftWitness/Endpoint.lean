@@ -3,21 +3,14 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.Algebra.Defs
-import Mathlib.Algebra.Algebra.NonUnitalSubalgebra
+module
+
+public import Mathlib.Algebra.Algebra.Unitization
+public import Mathlib.LinearAlgebra.Matrix.Ideal
+public import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Algebra.Algebra.Subalgebra.Unitization
-import Mathlib.Algebra.Algebra.Unitization
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Module.Defs
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.LinearAlgebra.Matrix.Ideal
-import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.Nilpotent.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.TwoSidedIdeal.Kernel
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
 /-!
 # A nil ideal with a nonnilpotent two-by-two matrix
 
@@ -25,6 +18,8 @@ A fixed vector for `a₀ + t a₁ + t² a₂` yields a companion matrix with a
 nonzero eigenvalue after inverting `1 - a₀`. Squaring puts every entry in the
 nil ideal. No matrix-nilness principle is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

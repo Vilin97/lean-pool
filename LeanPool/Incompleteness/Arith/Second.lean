@@ -3,12 +3,21 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
+public import LeanPool.Incompleteness.ToFoundation.Basic
+public import LeanPool.Incompleteness.Arith.Theory
+import LeanPool.Incompleteness.Arith.D1
 import LeanPool.Incompleteness.Arith.D3
-import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
-import LeanPool.Incompleteness.ToFoundation.Basic
+import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # Second -/
+
+@[expose] public section
 
 
 noncomputable section «lp_nc_section_1»

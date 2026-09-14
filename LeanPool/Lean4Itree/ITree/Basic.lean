@@ -3,9 +3,9 @@ Copyright (c) 2026 Paul Mure, Joonhyup Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Mure, Joonhyup Lee
 -/
-import Mathlib.Data.QPF.Univariate.Basic
-import Mathlib.Data.Vector3
-import LeanPool.Lean4Itree.ITree.Utils
+module
+
+public import LeanPool.Lean4Itree.ITree.Utils
 
 /-!
 # Coinductive interaction trees
@@ -16,6 +16,8 @@ with its constructors (`ret`, `tau`, `vis`), the dependent matcher `dMatchOn`,
 injectivity lemmas for the constructors, and the bisimulation equality `IEq`
 that is proven to coincide with propositional equality (`ieq_iff_eq`).
 -/
+
+@[expose] public section
 
 namespace Lean4Itree
 

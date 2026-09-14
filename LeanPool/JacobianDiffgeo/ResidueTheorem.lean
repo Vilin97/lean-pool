@@ -3,13 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
-import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
-import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
-import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
-import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
-import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.RationalOnP1
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.MFormCompat
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.Calibrated
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.P1Assembly
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.Reduction
+public import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # residue-theorem (namespaces `RS`/`RS.P1`) — HEADLINE CLOSED
@@ -92,3 +95,5 @@ Area-Gluing atom of §3–5 was NOT built, as instructed).
 * **canonical-forms**: `MFormCompat.lean`'s three lemmas are upstream candidates (requested
   at design time in `docs/design/residue-theorem.md` §11).
 -/
+
+@[expose] public section

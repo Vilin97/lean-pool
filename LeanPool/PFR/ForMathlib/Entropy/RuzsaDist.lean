@@ -6,11 +6,20 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
-public import LeanPool.PFR.ForMathlib.Entropy.Group
 public import LeanPool.PFR.ForMathlib.Entropy.Kernel.RuzsaDist
-public import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
-public import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Dirac
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
 
 /-!
 # Ruzsa distance

@@ -3,22 +3,26 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
-import Mathlib.Analysis.Distribution.TemperedDistribution
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
-import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-import Mathlib.Probability.Distributions.Gaussian.Real
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
+module
+
+import Mathlib.Analysis.Normed.Lp.SmoothApprox
+
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Basic
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Definitions
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 import LeanPool.PhaseRetrieval.Constant.Internal.RotationalAveraging
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.MeasureTheory.Function.LpSpace.DomAct.Continuous
+import Mathlib.MeasureTheory.Measure.RegularityCompacts
 
 /-! # ImportedAnalyticInputs -/
+
+@[expose] public section
 
 
 noncomputable section
@@ -1350,8 +1354,9 @@ private theorem sub_const_antilipschitz {d : Nat} (a : RealVec d) :
 /-- `schwartzCompSubConstCLM`: schwartz Comp Sub Const CLM. -/
 noncomputable def schwartzCompSubConstCLM {d : Nat} (a : RealVec d) :
     SchwartzMap (RealVec d) ℂ →L[ℂ] SchwartzMap (RealVec d) ℂ :=
-  SchwartzMap.compCLMOfAntilipschitz ℂ (sub_const_hasTemperateGrowth a)
-    (sub_const_antilipschitz a)
+  SchwartzMap.compCLMOfAntilipschitz ℂ (K := 1) (g := fun x : RealVec d => x - a)
+    (by exact sub_const_hasTemperateGrowth a)
+    (by exact sub_const_antilipschitz a)
 
 @[simp] theorem schwartzCompSubConstCLM_apply {d : Nat} (a : RealVec d)
     (f : SchwartzMap (RealVec d) ℂ) :
@@ -1509,10 +1514,10 @@ private theorem integrable_stft_kernel_schwartz_realVec {d : Nat}
   · refine Filter.Eventually.of_forall ?_
     intro t
     have hslice : Integrable (fun y : RealVec d => ‖h (t - y)‖ ^ 2) μ := by
-      simpa [μ] using integrable_norm_sq_translate_sub_schwartz_realVec h t
-    simpa [K, mul_comm, μ] using hslice.const_mul (‖f t‖ ^ 2)
+      exact integrable_norm_sq_translate_sub_schwartz_realVec h t
+    exact hslice.const_mul (‖f t‖ ^ 2)
   · have hf_sq : Integrable (fun t : RealVec d => ‖f t‖ ^ 2) μ := by
-      simpa [μ] using integrable_norm_sq_schwartz_realVec f
+      exact integrable_norm_sq_schwartz_realVec f
     have h_outer :
         (fun t : RealVec d => ∫ y : RealVec d, ‖K (t, y)‖ ∂μ) =
           fun t : RealVec d => ‖f t‖ ^ 2 * ∫ y : RealVec d, ‖h y‖ ^ 2 ∂μ := by
@@ -1526,7 +1531,7 @@ private theorem integrable_stft_kernel_schwartz_realVec {d : Nat}
         _ = ‖f t‖ ^ 2 * ∫ y : RealVec d, ‖h y‖ ^ 2 ∂μ :=
           integral_stft_kernel_slice_schwartz_realVec h f t
     rw [h_outer]
-    simpa [mul_comm] using hf_sq.const_mul (∫ y : RealVec d, ‖h y‖ ^ 2 ∂μ)
+    exact hf_sq.mul_const (∫ y : RealVec d, ‖h y‖ ^ 2 ∂μ)
 
 private theorem integral_norm_sq_stft_slice_schwartz_realVec {d : Nat}
     (h f : SchwartzMap (RealVec d) ℂ) (x : RealVec d) :
@@ -1661,11 +1666,8 @@ private theorem autocorr_kernel_integrable_schwartz_realVec {d : Nat}
   let B : RealVec d × RealVec d → ℂ := fun p =>
     h (p.1 - p.2) * star (h (p.1 + x - p.2))
   have hA : Integrable A μ := signal_autocorr_integrable_schwartz_realVec f x
-  have hB : ∀ᵐ t ∂μ, Integrable (fun y : RealVec d => A t * B (t, y)) μ := by
-    refine Filter.Eventually.of_forall ?_
-    intro t
-    simpa [A, B, sub_eq_add_neg, add_comm, add_left_comm, add_assoc, mul_assoc,
-      mul_left_comm, mul_comm, μ] using
+  have hB : ∀ᵐ t ∂μ, Integrable (fun y : RealVec d => A t * B (t, y)) μ :=
+    Filter.Eventually.of_forall fun t =>
       (window_autocorr_integrable_schwartz_realVec h t x).const_mul (A t)
   have hmeas : AEStronglyMeasurable (fun p : RealVec d × RealVec d => A p.1 * B p)
       (μ.prod μ) := by fun_prop
@@ -1676,7 +1678,7 @@ private theorem autocorr_kernel_integrable_schwartz_realVec {d : Nat}
     let C : ℝ := ∫ y : RealVec d, ‖h (-y) * star (h (x - y))‖ ∂μ
     have hC : ∀ t : RealVec d, ∫ y : RealVec d, ‖B (t, y)‖ ∂μ = C := by
       intro t
-      simpa [B, C, μ] using integral_window_autocorr_norm_schwartz_realVec h t x
+      exact integral_window_autocorr_norm_schwartz_realVec h t x
     have houter : Integrable (fun t : RealVec d => ∫ y : RealVec d,
         ‖A t‖ * ‖B (t, y)‖ ∂μ) μ := by
       have hconst : ∀ t : RealVec d,
@@ -1684,19 +1686,10 @@ private theorem autocorr_kernel_integrable_schwartz_realVec {d : Nat}
         intro t
         calc
           ∫ y : RealVec d, ‖A t‖ * ‖B (t, y)‖ ∂μ
-              = ‖A t‖ * ∫ y : RealVec d, ‖B (t, y)‖ ∂μ := by
-                simpa using
-                  (MeasureTheory.integral_const_mul
-                    (r := ‖A t‖)
-                    (f := fun y : RealVec d => ‖B (t, y)‖)
-                    (μ := μ))
+              = ‖A t‖ * ∫ y : RealVec d, ‖B (t, y)‖ ∂μ := integral_const_mul _ _
           _ = ‖A t‖ * C := by rw [hC t]
-      have houterEq :
-          (fun t : RealVec d => ∫ y : RealVec d, ‖A t‖ * ‖B (t, y)‖ ∂μ) =
-            fun t : RealVec d => ‖A t‖ * C := by
-        funext t
-        exact hconst t
-      simpa [houterEq, mul_comm] using hA_norm.const_mul C
+      simp_rw [hconst]
+      exact hA_norm.mul_const C
     convert houter using 1
     ext t
     apply integral_congr_ae
@@ -1929,7 +1922,7 @@ private theorem modulateL2_mem {d : Nat} (ω : RealVec d) (f : L2Real d) :
 
 /-- `modulateL2`: modulate L2. -/
 noncomputable def modulateL2 {d : Nat} (ω : RealVec d) (f : L2Real d) : L2Real d :=
-  (modulateL2_mem ω f).toLp
+  (private_decl% (modulateL2_mem ω f)).toLp
     (fun t : RealVec d => modulationPhase ω t * (f : RealVec d -> ℂ) t)
 
 theorem modulateL2_coeFn {d : Nat} (ω : RealVec d) (f : L2Real d) :
@@ -2585,9 +2578,9 @@ private theorem stftRep_tendsto_schwartzApprox_pointwise {d : Nat}
   let fN : Nat → L2Real d := fun n =>
     (schwartzApproxRealVec (MeasureTheory.Lp.memLp f) n).toLp 2 μ
   have hhN : Tendsto hN atTop (nhds h) := by
-    simpa [hN, μ] using schwartzApproxRealVec_toLp_tendsto h
+    exact schwartzApproxRealVec_toLp_tendsto h
   have hfN : Tendsto fN atTop (nhds f) := by
-    simpa [fN, μ] using schwartzApproxRealVec_toLp_tendsto f
+    exact schwartzApproxRealVec_toLp_tendsto f
   rw [tendsto_iff_dist_tendsto_zero]
   refine squeeze_zero (fun _ => dist_nonneg) ?_ (cross_norm_bound_tendsto_zero hhN hfN)
   intro n
@@ -2812,19 +2805,18 @@ private theorem lpNorm_stftRep_tendsto_schwartzApprox {d : Nat}
           2 (MeasureTheory.volume : MeasureTheory.Measure (PhaseSpace d)))
       atTop (nhds 0) := by
   let μ : MeasureTheory.Measure (RealVec d) := MeasureTheory.volume
-  let μP : MeasureTheory.Measure (PhaseSpace d) := MeasureTheory.volume
   let hN : Nat → L2Real d := fun n =>
     (schwartzApproxRealVec (MeasureTheory.Lp.memLp h) n).toLp 2 μ
   let fN : Nat → L2Real d := fun n =>
     (schwartzApproxRealVec (MeasureTheory.Lp.memLp f) n).toLp 2 μ
   have hhN : Tendsto hN atTop (nhds h) := by
-    simpa [hN, μ] using schwartzApproxRealVec_toLp_tendsto h
+    exact schwartzApproxRealVec_toLp_tendsto h
   have hfN : Tendsto fN atTop (nhds f) := by
-    simpa [fN, μ] using schwartzApproxRealVec_toLp_tendsto f
+    exact schwartzApproxRealVec_toLp_tendsto f
   refine squeeze_zero (fun _ => MeasureTheory.lpNorm_nonneg) ?_
     (cross_norm_bound_tendsto_zero hhN hfN)
   intro n
-  simpa [hN, fN, μ, μP] using lpNorm_stftRep_sub_le (hN n) h (fN n) f
+  exact lpNorm_stftRep_sub_le (hN n) h (fN n) f
 
 private theorem lpNorm_mul_le_real
     {α : Type*} [MeasurableSpace α] {μ : MeasureTheory.Measure α} {f g : α → ℝ}
@@ -2906,9 +2898,9 @@ private theorem lpNorm_stftRep_sq_sub_tendsto_zero {d : Nat}
   let Bₙ : Nat → PhaseSpace d → ℝ := fun n ξ => ‖Fₙ n ξ - F ξ‖
   let Cₙ : Nat → ℝ := fun n => ‖fN n‖ * ‖hN n‖ + ‖f‖ * ‖h‖
   have hhN : Tendsto hN atTop (nhds h) := by
-    simpa [hN, μ] using schwartzApproxRealVec_toLp_tendsto h
+    exact schwartzApproxRealVec_toLp_tendsto h
   have hfN : Tendsto fN atTop (nhds f) := by
-    simpa [fN, μ] using schwartzApproxRealVec_toLp_tendsto f
+    exact schwartzApproxRealVec_toLp_tendsto f
   have hdiff :
       Tendsto
         (fun n : Nat => MeasureTheory.lpNorm (fun ξ : PhaseSpace d => Fₙ n ξ - F ξ) 2 μP)
@@ -3048,7 +3040,7 @@ private theorem ambiguityRep_tendsto_schwartzApprox {d : Nat}
   let fN : Nat → L2Real d := fun n =>
     (schwartzApproxRealVec (MeasureTheory.Lp.memLp f) n).toLp 2 μ
   have hfN : Tendsto fN atTop (nhds f) := by
-    simpa [fN, μ] using schwartzApproxRealVec_toLp_tendsto f
+    exact schwartzApproxRealVec_toLp_tendsto f
   rw [tendsto_iff_dist_tendsto_zero]
   refine squeeze_zero (fun _ => dist_nonneg) ?_ (cross_norm_bound_tendsto_zero hfN hfN)
   intro n
@@ -3224,7 +3216,8 @@ private lemma moyal_slice_collapse {d : Nat}
             (h (t - y) * star (h (t + x - y))) * modulationPhase ω y := by
           refine integral_congr_ae ?_
           filter_upwards with t
-          simp [stftSliceSchwartz_apply, mul_left_comm, mul_comm]
+          simp only [stftSliceSchwartz_apply, star_mul, star_star]
+          ring
 
 -- The vector Schwartz Moyal proof is one long Fubini/phase-normalization calc.
 private theorem symplecticFourier_stft_sq_schwartz_realVec {d : Nat}

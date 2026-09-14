@@ -6,13 +6,13 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquation
-public import LeanPool.Odlyzko.CompletedZeta.GammaFactor
-public import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Topology.Algebra.InfiniteSum.Order
+public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealFactor
+import LeanPool.Odlyzko.CompletedZeta.TotallyComplex
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealEulerProduct
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
+import Mathlib.Analysis.SpecialFunctions.Log.Summable
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Vertical Lower Bound

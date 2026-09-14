@@ -3,8 +3,10 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import Mathlib.Data.Finset.Basic
-import Mathlib.Order.WellFounded
+module
+
+public import Mathlib.Data.Finset.Empty
+import Mathlib.Data.Finset.Insert
 
 /-!
 # Minimal elements of finite posets
@@ -13,6 +15,8 @@ Auxiliary lemmas used by the rollback development: every nonempty finite subset
 of a partial order with well-founded strict order (or, constructively, of any
 partial order) has a minimal element.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

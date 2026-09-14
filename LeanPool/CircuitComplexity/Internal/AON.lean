@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.AON.Defs
+module
+
+public import LeanPool.CircuitComplexity.AON.Defs
 
 /-! # Internal: AND/OR/NOT Completeness Proof
 
@@ -11,6 +13,8 @@ This internal module proves functional completeness of `Basis.unboundedAON`
 via DNF (disjunctive normal form) construction. The basis definitions are
 in `Circ.AON.Defs`; this module is re-exported through `Circ.AON`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 
@@ -34,7 +38,7 @@ For each of the `2^N` possible inputs `s` (decoded via `Nat.testBit`),
 internal gate `i` is the indicator AND for `s` when `f s = true`, or a
 trivially-false 0-input OR otherwise. The single output OR gate disjoins
 all internal gates. -/
-private def AONFor.mkGate {N : Nat} (f : BitString N → Bool) (i : Fin (2 ^ N)) :
+def AONFor.mkGate {N : Nat} (f : BitString N → Bool) (i : Fin (2 ^ N)) :
     Gate Basis.unboundedAON (N + 2 ^ N) :=
   if f (fun j => i.val.testBit j.val) then
     { op := .and, fanIn := N, arityOk := trivial,
@@ -65,7 +69,7 @@ def AONFor {N : Nat} [NeZero N] (f : BitString N → Bool) :
     { op := .or, fanIn := 2 ^ N, arityOk := trivial,
       inputs := fun j => (j.natAdd N),
       negated := fun _ => false }
-  acyclic := AONFor.mkGate_acyclic f
+  acyclic := private AONFor.mkGate_acyclic f
 
 private lemma AONFor_wireValue_gate {N : Nat} [NeZero N] (f : BitString N → Bool)
     (x : BitString N) (i : Fin (2 ^ N)) :
@@ -223,28 +227,30 @@ theorem AONFor_is_Correct {N : Nat} [NeZero N] (f : BitString N → Bool) :
 /-- Internal gate for the multi-output DNF circuit.
 Gate `idx` encodes output bit `j = idx / 2^N` and indicator index `i = idx % 2^N`.
 If `f(bitstring i)[j] = true`, it's an AND indicator gate; otherwise a trivially-false OR gate. -/
-private def AONForM_j {N M : Nat} (idx : Fin (M * 2 ^ N)) : Fin M :=
+def aonOutputIndex {N M : Nat} (idx : Fin (M * 2 ^ N)) : Fin M :=
   ⟨idx.val / 2 ^ N, Nat.div_lt_of_lt_mul (Nat.mul_comm M (2^N) ▸ idx.isLt)⟩
 
-private def AONForM_i {N : Nat} {M : Nat} (idx : Fin (M * 2 ^ N)) : Fin (2 ^ N) :=
+/-- The input assignment index encoded by a gate position. -/
+def aonInputIndex {N : Nat} {M : Nat} (idx : Fin (M * 2 ^ N)) : Fin (2 ^ N) :=
   ⟨idx.val % 2 ^ N, Nat.mod_lt _ (Nat.two_pow_pos N)⟩
 
-private def AONForM_mkGate {N M : Nat} (f : BitString N → BitString M) (idx : Fin (M * 2 ^ N)) :
+/-- The conjunction gate for an output coordinate and an input assignment. -/
+def aonGate {N M : Nat} (f : BitString N → BitString M) (idx : Fin (M * 2 ^ N)) :
     Gate Basis.unboundedAON (N + M * 2 ^ N) :=
-  if f (fun k => (AONForM_i idx).val.testBit k.val) (AONForM_j idx) then
+  if f (fun k => (aonInputIndex idx).val.testBit k.val) (aonOutputIndex idx) then
     { op := .and, fanIn := N, arityOk := trivial,
       inputs := fun k => ⟨k.val, by omega⟩,
-      negated := fun k => !((AONForM_i idx).val.testBit k.val) }
+      negated := fun k => !((aonInputIndex idx).val.testBit k.val) }
   else
     { op := .or, fanIn := 0, arityOk := trivial,
       inputs := Fin.elim0,
       negated := Fin.elim0 }
 
 private lemma AONForM_mkGate_acyclic {N M : Nat} (f : BitString N → BitString M)
-    (idx : Fin (M * 2 ^ N)) (k : Fin (AONForM_mkGate f idx).fanIn) :
-    ((AONForM_mkGate f idx).inputs k).val < N + idx.val := by
-  revert k; unfold AONForM_mkGate
-  cases f (fun k => (AONForM_i idx).val.testBit k.val) (AONForM_j idx)
+    (idx : Fin (M * 2 ^ N)) (k : Fin (aonGate f idx).fanIn) :
+    ((aonGate f idx).inputs k).val < N + idx.val := by
+  revert k; unfold aonGate
+  cases f (fun k => (aonInputIndex idx).val.testBit k.val) (aonOutputIndex idx)
   · intro k; exact Fin.elim0 k
   · intro k; simp; omega
 
@@ -264,12 +270,12 @@ an indicator AND gate (or a trivially-false gate). Each output OR gate
 disjoins the `2^N` gates for its output bit. -/
 def AONForM {N M : Nat} [NeZero N] [NeZero M] (f : BitString N → BitString M) :
     Circuit Basis.unboundedAON N M (M * 2 ^ N) where
-  gates := AONForM_mkGate f
+  gates := aonGate f
   outputs j :=
     { op := .or, fanIn := 2 ^ N, arityOk := trivial,
-      inputs := fun k => ⟨N + j.val * 2 ^ N + k.val, AONForM_output_bound j k⟩,
+      inputs := fun k => ⟨N + j.val * 2 ^ N + k.val, by exact AONForM_output_bound j k⟩,
       negated := fun _ => false }
-  acyclic := AONForM_mkGate_acyclic f
+  acyclic := private AONForM_mkGate_acyclic f
 
 private lemma AONForM_wireValue_input {N M : Nat} [NeZero N] [NeZero M]
     (f : BitString N → BitString M) (x : BitString N) (k : Fin N) :
@@ -280,7 +286,7 @@ private lemma AONForM_wireValue_input {N M : Nat} [NeZero N] [NeZero M]
 private lemma AONForM_wireValue_gate {N M : Nat} [NeZero N] [NeZero M]
     (f : BitString N → BitString M) (x : BitString N) (idx : Fin (M * 2 ^ N)) :
     (AONForM f).wireValue x ⟨N + idx.val, by omega⟩ =
-      (AONForM_mkGate f idx).eval ((AONForM f).wireValue x) := by
+      (aonGate f idx).eval ((AONForM f).wireValue x) := by
   have hge : ¬ ((⟨N + idx.val, by omega⟩ : Fin (N + M * 2 ^ N)).val < N) := by simp
   rw [Circuit.wireValue_ge _ _ _ hge]
   congr 1; simp only [AONForM]; congr 1; exact Fin.ext (by simp)
@@ -288,37 +294,37 @@ private lemma AONForM_wireValue_gate {N M : Nat} [NeZero N] [NeZero M]
 private lemma AONForM_mkGate_eval_false {N M : Nat}
     (f : BitString N → BitString M) (idx : Fin (M * 2 ^ N))
     (wv : BitString (N + M * 2 ^ N))
-    (hfi : f (fun k => (AONForM_i idx).val.testBit k.val) (AONForM_j idx) = false) :
-    (AONForM_mkGate f idx).eval wv = false := by
-  unfold AONForM_mkGate Gate.eval
+    (hfi : f (fun k => (aonInputIndex idx).val.testBit k.val) (aonOutputIndex idx) = false) :
+    (aonGate f idx).eval wv = false := by
+  unfold aonGate Gate.eval
   simp [hfi, Basis.unboundedAON, AONOp.eval, Fin.foldl_zero]
 
 private lemma AONForM_mkGate_eval_true_iff {N M : Nat}
     (f : BitString N → BitString M) (idx : Fin (M * 2 ^ N))
     (wv : BitString (N + M * 2 ^ N))
-    (hfi : f (fun k => (AONForM_i idx).val.testBit k.val) (AONForM_j idx) = true) :
-    (AONForM_mkGate f idx).eval wv = true ↔
-      ∀ k : Fin N, wv ⟨k.val, by omega⟩ = ((AONForM_i idx).val.testBit k.val) := by
-  have hmk : AONForM_mkGate f idx =
+    (hfi : f (fun k => (aonInputIndex idx).val.testBit k.val) (aonOutputIndex idx) = true) :
+    (aonGate f idx).eval wv = true ↔
+      ∀ k : Fin N, wv ⟨k.val, by omega⟩ = ((aonInputIndex idx).val.testBit k.val) := by
+  have hmk : aonGate f idx =
     { op := .and, fanIn := N, arityOk := trivial,
       inputs := fun k => ⟨k.val, by omega⟩,
-      negated := fun k => !((AONForM_i idx).val.testBit k.val) } := by
-    unfold AONForM_mkGate; simp [hfi]
+      negated := fun k => !((aonInputIndex idx).val.testBit k.val) } := by
+    unfold aonGate; simp [hfi]
   rw [hmk]; simp only [Gate.eval, Basis.unboundedAON, AONOp.eval]
   rw [foldl_band_eq_true]
   exact ⟨fun h k => (xor_not_eq_true_iff _ _).mp (h k),
          fun h k => (xor_not_eq_true_iff _ _).mpr (h k)⟩
 
--- Helper: relate index `j * 2^N + k` to `AONForM_i` and `AONForM_j`
+-- Helper: relate index `j * 2^N + k` to `aonInputIndex` and `aonOutputIndex`
 private lemma AONForM_i_of_add {N M : Nat} (j : Fin M) (k : Fin (2 ^ N))
     (h : j.val * 2 ^ N + k.val < M * 2 ^ N) :
-    AONForM_i (⟨j.val * 2 ^ N + k.val, h⟩ : Fin (M * 2 ^ N)) = k := by
-  ext; simp [AONForM_i, Nat.mod_eq_of_lt k.isLt]
+    aonInputIndex (⟨j.val * 2 ^ N + k.val, h⟩ : Fin (M * 2 ^ N)) = k := by
+  ext; simp [aonInputIndex, Nat.mod_eq_of_lt k.isLt]
 
 private lemma AONForM_j_of_add {N M : Nat} (j : Fin M) (k : Fin (2 ^ N))
     (h : j.val * 2 ^ N + k.val < M * 2 ^ N) :
-    AONForM_j (⟨j.val * 2 ^ N + k.val, h⟩ : Fin (M * 2 ^ N)) = j := by
-  ext; simp only [AONForM_j, Fin.val_mk]
+    aonOutputIndex (⟨j.val * 2 ^ N + k.val, h⟩ : Fin (M * 2 ^ N)) = j := by
+  ext; simp only [aonOutputIndex, Fin.val_mk]
   rw [show j.val * 2^N + k.val = k.val + 2^N * j.val from by rw [Nat.mul_comm j.val]; omega]
   rw [Nat.add_mul_div_left _ _ (Nat.two_pow_pos N), Nat.div_eq_of_lt k.isLt]; simp
 
@@ -329,11 +335,11 @@ private def AONForM_idx {N M : Nat} (j : Fin M) (k : Fin (2 ^ N)) :
     have := AONForM_output_bound (N := N) j k; omega⟩
 
 private lemma AONForM_idx_i {N M : Nat} (j : Fin M) (k : Fin (2 ^ N)) :
-    AONForM_i (AONForM_idx j k) = k :=
+    aonInputIndex (AONForM_idx j k) = k :=
   AONForM_i_of_add j k _
 
 private lemma AONForM_idx_j {N M : Nat} (j : Fin M) (k : Fin (2 ^ N)) :
-    AONForM_j (AONForM_idx j k) = j :=
+    aonOutputIndex (AONForM_idx j k) = j :=
   AONForM_j_of_add j k _
 
 /-- The multi-output DNF circuit correctly computes `f`. -/
@@ -347,8 +353,8 @@ theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
   -- Now the goal involves Fin.foldl over wireValues at output wires
   -- We need to connect wireValue to mkGate eval
   have key : ∀ k : Fin (2^N),
-    (AONForM f).wireValue x ⟨N + j.val * 2 ^ N + k.val, AONForM_output_bound j k⟩ =
-    (AONForM_mkGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x) := by
+    (AONForM f).wireValue x ⟨N + j.val * 2 ^ N + k.val, by exact AONForM_output_bound j k⟩ =
+    (aonGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x) := by
     intro k
     have h := AONForM_wireValue_gate f x (AONForM_idx j k)
     simp only [AONForM_idx] at h
@@ -356,23 +362,23 @@ theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
     exact h
   -- Rewrite the foldl body
   suffices hsuff : Fin.foldl (2 ^ N) (fun acc k =>
-    acc || (AONForM_mkGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x)) false = f x j by
+    acc || (aonGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x)) false = f x j by
     convert hsuff using 2
     ext acc k
     congr 1; exact key k
   -- Now prove the suffices
   have h_iff : (Fin.foldl (2 ^ N) (fun acc k =>
-    acc || (AONForM_mkGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x)) false = true) ↔
+    acc || (aonGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x)) false = true) ↔
     (f x j = true) := by
     rw [foldl_bor_eq_true]
     constructor
     · -- Some gate fires → f x j = true
       rintro ⟨k, hk⟩
       -- Use AONForM_idx_i and AONForM_idx_j to simplify
-      have hi : AONForM_i (AONForM_idx j k) = k := AONForM_idx_i j k
-      have hj' : AONForM_j (AONForM_idx j k) = j := AONForM_idx_j j k
-      by_cases hfk : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val)
-        (AONForM_j (AONForM_idx j k)) = true
+      have hi : aonInputIndex (AONForM_idx j k) = k := AONForM_idx_i j k
+      have hj' : aonOutputIndex (AONForM_idx j k) = j := AONForM_idx_j j k
+      by_cases hfk : f (fun p => (aonInputIndex (AONForM_idx j k)).val.testBit p.val)
+        (aonOutputIndex (AONForM_idx j k)) = true
       · rw [AONForM_mkGate_eval_true_iff f _ _ hfk] at hk
         rw [hi, hj'] at hfk
         have hxeq : ∀ p : Fin N, x p = k.val.testBit p.val := by
@@ -381,15 +387,15 @@ theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
         have : f x j = f (fun p => k.val.testBit p.val) j := congr_arg (· j)
           (congr_arg f (funext hxeq))
         rw [this]; exact hfk
-      · have hfk' : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val)
-            (AONForM_j (AONForM_idx j k)) = false := Bool.not_eq_true _ |>.mp hfk
+      · have hfk' : f (fun p => (aonInputIndex (AONForM_idx j k)).val.testBit p.val)
+            (aonOutputIndex (AONForM_idx j k)) = false := Bool.not_eq_true _ |>.mp hfk
         exact absurd (AONForM_mkGate_eval_false f _ _ hfk' ▸ hk) Bool.false_ne_true
     · -- f x j = true → some gate fires
       intro hfx
       obtain ⟨m, hm⟩ := exists_testBit_encode N x
       refine ⟨m, ?_⟩
-      have hfm : f (fun p => (AONForM_i (AONForM_idx j m)).val.testBit p.val)
-        (AONForM_j (AONForM_idx j m)) = true := by
+      have hfm : f (fun p => (aonInputIndex (AONForM_idx j m)).val.testBit p.val)
+        (aonOutputIndex (AONForM_idx j m)) = true := by
         rw [AONForM_idx_i, AONForM_idx_j]
         convert hfx using 1; congr 1; funext p; exact hm p
       rw [AONForM_mkGate_eval_true_iff f _ _ hfm]
@@ -398,7 +404,7 @@ theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
   -- Close by Bool case analysis
   cases hfx : f x j <;>
     cases hfold : Fin.foldl (2 ^ N) (fun acc k =>
-      acc || (AONForM_mkGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x)) false <;>
+      acc || (aonGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x)) false <;>
     simp_all
 
 instance : CompleteBasis Basis.unboundedAON where

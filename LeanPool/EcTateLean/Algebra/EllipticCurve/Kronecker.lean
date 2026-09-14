@@ -3,19 +3,29 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import Mathlib.Data.Int.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Int.Notation
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.NeZero
+import Mathlib.Algebra.Order.ZeroLEOne
 import Mathlib.Data.Nat.Basic
-import Mathlib.Logic.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Data.Nat.Order.Lemmas
-import Mathlib.Data.Nat.ModEq
+import Mathlib.Order.RelClasses
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.Push
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker`.
 -/
+
+@[expose] public section
 
 open Nat
 

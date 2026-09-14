@@ -3,17 +3,25 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Algebra.Algebra.Defs
-import Mathlib.Data.List.Sort
-import Mathlib.Tactic.Linarith
-import LeanPool.ErdosTuzaValtr.Config.Defs
+public import LeanPool.ErdosTuzaValtr.Config.Defs
+import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
+import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+import Mathlib.Data.List.Chain
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Config.Lemmas
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Config.Lemmas`.
 -/
+
+@[expose] public section
 
 
 variable {α : Type _} [LinearOrder α] {C : Config α}

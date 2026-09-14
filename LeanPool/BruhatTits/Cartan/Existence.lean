@@ -3,13 +3,13 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Utils.RingHom
-import LeanPool.BruhatTits.Utils.Matrix
-import LeanPool.BruhatTits.Utils.Misc
+module
+
+public import LeanPool.BruhatTits.Utils.RingHom
+public import LeanPool.BruhatTits.Utils.Matrix
+public import LeanPool.BruhatTits.Utils.Misc
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import LeanPool.BruhatTits.Utils.ValuationRings
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.LinearAlgebra.Matrix.IsDiag
-import Mathlib.LinearAlgebra.Matrix.Transvection
 
 /-!
 
@@ -26,13 +26,15 @@ There is an analogue where one uses decreasing powers instead, both versions are
 mathematics. We only show the "increasing" version.
 
 Most of the linear algebra preparations below are for arbitrary valuation rings.
-Only from line 628 onwards we specialize to DVRs.
+In the final section we specialize to DVRs.
 
 ## Implementation details
 
 This is inspired by the file https://leanprover-community.github.io/mathlib4_docs/Mathlib/LinearAlgebra/Matrix/Transvection.html.
 
 -/
+
+@[expose] public section
 
 open Module
 
@@ -446,43 +448,23 @@ lemma exists_trafo_isNormalBlock (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K
   have hg' : v (g' (Sum.inr ()) (Sum.inr ())) = g'.coeffsSup v := hagb
   let k₁ := colEliminator g' hg' * a
   let k₂ := b * rowEliminator g' hg'
-  use k₁
-  use k₂
+  have hproduct : (k₁.val : Matrix _ _ K) * g * (k₂.val : Matrix _ _ K) =
+      (colEliminator g' hg').val.map R.subtype * g' *
+        (rowEliminator g' hg').val.map R.subtype := by
+    simp only [k₁, k₂, Units.val_mul, Matrix.map_mul, g', mul_assoc]
+  refine ⟨k₁, k₂, ?_⟩
+  rw [hproduct]
   refine ⟨⟨⟨?_, ?_⟩, ?_⟩, ?_⟩
-  · ext j _
-    simp only [Units.val_mul, Matrix.map_mul, Matrix.zero_apply, k₁, k₂]
-    convert_to
-      ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val) (Sum.inl j)
-        (Sum.inr ()) = 0
-    · simp only [toBlocks₁₂, of_apply, g']
-      group
-    · apply colEliminator_mul_rowEliminator_lastCol
-  · ext _ j
-    simp only [Units.val_mul, Matrix.map_mul, Matrix.zero_apply, k₁, k₂]
-    convert_to
-      ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val) (Sum.inr ())
-        (Sum.inl j) = 0
-    · simp only [toBlocks₂₁, of_apply, g']
-      group
-    · apply colEliminator_mul_rowEliminator_lastRow
-  · simp only [Units.val_mul, Matrix.map_mul, k₁, k₂]
-    convert_to
-      v (((colEliminator g' hg').val * g' * (rowEliminator g' hg').val) (Sum.inr ())
-        (Sum.inr ())) =
-        ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val).coeffsSup v
-    · simp only [g']
-      group
-    · simp only [g']
-      group
-    · rw [colEliminator_mul_rowEliminator_coeffs_sup]
-      rwa [colEliminator_mul_rowEliminator_last_last]
-  · simp only [Units.val_mul, Matrix.map_mul, k₁, k₂]
-    convert_to ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val).coeffsSup v =
-        g.coeffsSup v
-    · simp only [g']
-      group
-    · rw [colEliminator_mul_rowEliminator_coeffs_sup]
-      exact hagbv
+  · ext j u
+    cases u
+    exact colEliminator_mul_rowEliminator_lastCol g' hg' j
+  · ext u j
+    cases u
+    exact colEliminator_mul_rowEliminator_lastRow g' hg' j
+  · rw [colEliminator_mul_rowEliminator_coeffs_sup]
+    rwa [colEliminator_mul_rowEliminator_last_last]
+  · rw [colEliminator_mul_rowEliminator_coeffs_sup]
+    exact hagbv
 
 /-- A matrix is monotone diagonal if it is diagonal and the coefficients on the diagonal
 have monotonically increasing valuations. -/
@@ -530,50 +512,37 @@ lemma exists_trafo_isDiag_induction_step (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕
     rw [Matrix.ext_iff_blocks]
     simp only [toBlocks_fromBlocks₁₁, hh.isTwoBlockDiagonal.left, toBlocks_fromBlocks₁₂,
       hh.isTwoBlockDiagonal.right, toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂, true_and, g', h]
-  convert_to IsBlockMonotoneDiag (R := R) ((l₁'.val : Matrix _ _ K) * g' * (l₂'.val : Matrix _ _ K))
-    ∧ ((l₁'.val : Matrix _ _ K) * g' * (l₂'.val : Matrix _ _ K)).coeffsSup v = g.coeffsSup v
-  · simp only [g']
-    group
-  · simp only [g']
-    group
-  · rw [he]
-    refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
-    · simp only [GL.val_diagonalBlocks, Units.val_one, l₁', l₂']
-      rw [Matrix.fromBlocks_map, Matrix.fromBlocks_multiply, Matrix.fromBlocks_map,
-        Matrix.fromBlocks_multiply]
-      simp only [map_zero, Matrix.map_zero, Matrix.mul_zero, add_zero, Matrix.zero_mul,
-        _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one]
-      apply Matrix.IsDiag.fromBlocks hl.isDiag
-      · apply isDiag_of_subsingleton
-    · intro i j hij
-      simp only [GL.val_diagonalBlocks, Units.val_one, l₁', l₂']
-      rw [Matrix.fromBlocks_map, Matrix.fromBlocks_multiply, Matrix.fromBlocks_map,
-        Matrix.fromBlocks_multiply]
-      simp only [map_zero, Matrix.map_zero, Matrix.mul_zero, add_zero, Matrix.zero_mul,
-        _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one,
-        fromBlocks_apply₁₁]
-      apply hl.monotone hij
-    · simp only [GL.val_diagonalBlocks, Units.val_one, l₁', l₂']
-      rw [Matrix.fromBlocks_map, Matrix.fromBlocks_multiply, Matrix.fromBlocks_map,
-        Matrix.fromBlocks_multiply]
-      simp only [map_zero, Matrix.map_zero, Matrix.mul_zero, add_zero, Matrix.zero_mul,
-        _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one,
-        fromBlocks_apply₂₂]
-      simp only [g', coeffs_sup_fromBlocks, coeffs_sup_zero]
-      simp only [zero_le, sup_of_le_left]
-      rw [hv, coeffs_sup_unique (n := Unit)]
-      simp only [toBlocks₂₂, of_apply, hh.monotone, coeffs_sup_toBlock₁₁_le_coeffs_sup,
-        sup_of_le_right, h, g']
-    · simp only [GL.val_diagonalBlocks, Units.val_one, l₁', l₂']
-      rw [Matrix.fromBlocks_map, Matrix.fromBlocks_multiply, Matrix.fromBlocks_map,
-        Matrix.fromBlocks_multiply]
-      simp only [map_zero, Matrix.map_zero, Matrix.mul_zero, add_zero, Matrix.zero_mul,
-        _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one]
-      simp only [toBlocks₂₂, coeffs_sup_fromBlocks, hv, coeffs_sup_zero, zero_le, sup_of_le_left,
-        coeffs_sup_unique (n := Unit), PUnit.default_eq_unit, of_apply, hh.monotone, hvc,
-        sup_eq_right, h, g']
-      rw [← hvc]
-      exact coeffs_sup_toBlock₁₁_le_coeffs_sup v _
+  have hproduct :
+      l₁'.val.map R.subtype * h₁.val.map R.subtype * g *
+          (h₂.val.map R.subtype * l₂'.val.map R.subtype) =
+        l₁'.val.map R.subtype * g' * l₂'.val.map R.subtype := by
+    simp only [g', mul_assoc]
+  rw [hproduct]
+  have hblock : l₁'.val.map R.subtype * g' * l₂'.val.map R.subtype =
+      Matrix.fromBlocks (l₁.val.map R.subtype * h * l₂.val.map R.subtype) 0 0
+        g'.toBlocks₂₂ := by
+    rw [he]
+    simp only [GL.val_diagonalBlocks, Units.val_one, l₁', l₂']
+    rw [Matrix.fromBlocks_map, Matrix.fromBlocks_multiply, Matrix.fromBlocks_map,
+      Matrix.fromBlocks_multiply]
+    simp only [map_zero, Matrix.map_zero, Matrix.mul_zero, add_zero, Matrix.zero_mul,
+      _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one,
+      toBlocks_fromBlocks₂₂]
+  rw [hblock]
+  refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
+  · exact Matrix.IsDiag.fromBlocks hl.isDiag (isDiag_of_subsingleton _)
+  · intro i j hij
+    exact hl.monotone hij
+  · simp only [fromBlocks_apply₂₂, g', coeffs_sup_fromBlocks, coeffs_sup_zero]
+    simp only [zero_le, sup_of_le_left]
+    rw [hv, coeffs_sup_unique (n := Unit)]
+    simp only [toBlocks₂₂, of_apply, hh.monotone, coeffs_sup_toBlock₁₁_le_coeffs_sup,
+      sup_of_le_right, h, g']
+  · simp only [toBlocks₂₂, coeffs_sup_fromBlocks, hv, coeffs_sup_zero, zero_le, sup_of_le_left,
+      coeffs_sup_unique (n := Unit), PUnit.default_eq_unit, of_apply, hh.monotone, hvc,
+      sup_eq_right, h, g']
+    rw [← hvc]
+    exact coeffs_sup_toBlock₁₁_le_coeffs_sup v _
 
 lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
     ∃ (k₁ k₂ : GL (Fin k) R),
@@ -593,33 +562,24 @@ lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
       let g' : Matrix (Fin n ⊕ Unit) (Fin n ⊕ Unit) K :=
         Matrix.reindex e e g
       obtain ⟨k₁', k₂', hk, hc⟩ := exists_trafo_isDiag_induction_step g' ih
-      use GL.reindex e.symm k₁'
-      use GL.reindex e.symm k₂'
-      convert_to IsMonotoneDiag (n := Fin ↑(n + 1)) (R := R)
-          (Matrix.reindex e.symm e.symm (k₁'.val * g' * k₂'.val)) ∧
-          (Matrix.reindex e.symm e.symm
-            ((k₁'.val : Matrix _ _ K) * g' * (k₂'.val : Matrix _ _ K))).coeffsSup v
-            = g.coeffsSup v
-      · simp only [GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
+      have hproduct :
+          (GL.reindex e.symm k₁').val.map R.subtype * g *
+              (GL.reindex e.symm k₂').val.map R.subtype =
+            Matrix.reindex e.symm e.symm
+              (k₁'.val.map R.subtype * g' * k₂'.val.map R.subtype) := by
+        simp only [GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
-        rw [Matrix.submatrix_map, Matrix.submatrix_map, Matrix.submatrix_submatrix]
-        apply iff_of_eq
-        congr
-        rw [Equiv.symm_comp_self, Matrix.submatrix_id_id]
-      · simp only [GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
-        rw [Matrix.submatrix_mul _ _ e e e e.bijective]
-        rw [Matrix.submatrix_mul _ _ e e e e.bijective]
-        rw [Matrix.submatrix_map, Matrix.submatrix_map, Matrix.submatrix_submatrix]
-        apply iff_of_eq
-        congr
-        rw [Equiv.symm_comp_self, Matrix.submatrix_id_id]
-      · refine ⟨⟨?_, ?_⟩, ?_⟩
-        · simp only [reindex_apply, Equiv.symm_symm]
-          apply IsDiag.submatrix hk.isDiag (Equiv.injective e)
-        · simp only [reindex_apply, Equiv.symm_symm, submatrix_apply]
-          apply monotone_of_isBlockMonotoneDiag _ hk
-        · simp only [g', coeffs_sup_reindex, hc]
+        rw [Matrix.submatrix_map, Matrix.submatrix_map, Matrix.submatrix_submatrix,
+          Equiv.symm_comp_self, Matrix.submatrix_id_id]
+      refine ⟨GL.reindex e.symm k₁', GL.reindex e.symm k₂', ?_⟩
+      rw [hproduct]
+      refine ⟨⟨?_, ?_⟩, ?_⟩
+      · simp only [reindex_apply, Equiv.symm_symm]
+        apply IsDiag.submatrix hk.isDiag (Equiv.injective e)
+      · simp only [reindex_apply, Equiv.symm_symm, submatrix_apply]
+        apply monotone_of_isBlockMonotoneDiag _ hk
+      · simp only [g', coeffs_sup_reindex, hc]
 
 -- From here onwards we work with a DVR
 

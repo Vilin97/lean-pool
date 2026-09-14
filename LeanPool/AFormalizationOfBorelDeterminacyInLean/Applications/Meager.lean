@@ -3,16 +3,21 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
+public import Mathlib.Topology.Baire.BaireMeasurable
+public import Mathlib.Order.Heyting.Regular
+public import Mathlib.Topology.Sets.Opens
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
 import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.RegularOpen
-import Mathlib.Topology.Baire.BaireMeasurable
-import Mathlib.Topology.Baire.Lemmas
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Meager
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 variable {X Y : Type*} [tX : TopologicalSpace X] [tY : TopologicalSpace Y]

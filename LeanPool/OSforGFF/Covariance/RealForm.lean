@@ -3,23 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
 
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Factorial.DoubleFactorial
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Data.Complex.Basic
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Covariance.Position
-import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-import LeanPool.OSforGFF.Covariance.Momentum
+public import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
+public import LeanPool.OSforGFF.Covariance.Position
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # Real Covariance Form and Square Root Propagator Embedding
@@ -34,6 +23,8 @@ square root propagator embedding theorem.
 - `freeCovarianceFormR_continuous`: Continuity of the quadratic form f ↦ C(f,f)
 - `freeCovarianceFormR_pos`: Positivity of the quadratic form
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Matrix
 open scoped Real InnerProductSpace BigOperators ComplexConjugate
@@ -370,7 +361,7 @@ lemma embeddingMap_norm_sq (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
             conv_rhs => arg 2; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
 
 /-- ℝ-linear view of the Lp multiplication CLM (avoiding `restrictScalars`). -/
-private noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fact (0 < m)] :
+noncomputable def momentumWeightSqrtMathlibMulCLMReal (m : ℝ) [Fact (0 < m)] :
     Lp ℂ 2 (volume : Measure SpaceTime) →L[ℝ]
       Lp ℂ 2 (volume : Measure SpaceTime) where
   toLinearMap :=
@@ -383,7 +374,7 @@ private noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fac
 /-- Continuous linear map obtained by composing the proven building blocks. -/
 noncomputable def embeddingMapCLM (m : ℝ) [Fact (0 < m)] :
     TestFunction →L[ℝ] Lp ℂ 2 (volume : Measure SpaceTime) :=
-  ((momentumWeightSqrt_mathlib_mul_CLM_real m).comp (schwartzToL2CLMReal m)).comp
+  ((momentumWeightSqrtMathlibMulCLMReal m).comp (schwartzToL2CLMReal m)).comp
     ((fourierTransformCLMReal).comp toComplexCLM)
 
 lemma embeddingMapCLM_apply (m : ℝ) [Fact (0 < m)] (f : TestFunction) :

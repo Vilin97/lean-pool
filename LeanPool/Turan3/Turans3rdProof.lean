@@ -3,19 +3,11 @@ Copyright (c) 2026 Rodrigo Gutierrez, Yves Jäckle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rodrigo Gutierrez, Yves Jäckle
 -/
+module
 
-import Mathlib.Combinatorics.SimpleGraph.Clique
-import Mathlib.Combinatorics.SimpleGraph.DegreeSum
-import Mathlib.Data.Sym.Card
-import Mathlib.Data.NNReal.Basic
+public import Mathlib.Combinatorics.SimpleGraph.Clique
+public import Mathlib.Data.NNReal.Defs
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-import Mathlib.Tactic.WLOG
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
 
 /-!
 # Turán's theorem (the "Book" weighting proof)
@@ -28,6 +20,8 @@ upper bound `(1/2)(1 - 1/(p-1)) n²` on the number of edges.
 
 All declarations live in the `Turan3` namespace.
 -/
+
+@[expose] public section
 
 namespace Turan3
 
@@ -2506,12 +2500,10 @@ theorem finale_bound {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMa
 /-- Defines the uniform vertex weight function that asisngs all vertices the same weight 1 /|V| -/
 noncomputable
 def UnivFun [Nonempty α] : FunToMax G where
-  w := fun _ => 1 / #univ
-  h_w := (by
-    rw [sum_const]
-    simp only [one_div, nsmul_eq_mul]
-    rw [mul_inv_cancel₀]
-    simp only [card_univ, ne_eq, Nat.cast_eq_zero, Fintype.card_ne_zero, not_false_eq_true])
+  w := fun _ => 1 / Fintype.card α
+  h_w := by
+    change (∑ _ : α, (1 / Fintype.card α : NNReal)) = 1
+    simp [nsmul_eq_mul, Fintype.card_ne_zero]
 
 omit [DecidableEq α] in
 /--

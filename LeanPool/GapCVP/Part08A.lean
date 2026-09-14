@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.GapCVP.Part07
-import Mathlib.FieldTheory.Finite.GaloisField
-import Mathlib.FieldTheory.PrimitiveElement
-import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.LinearAlgebra.Vandermonde
+public import LeanPool.GapCVP.Part07
+public import Mathlib.FieldTheory.Finite.GaloisField
+public import Mathlib.FieldTheory.PrimitiveElement
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.LinearAlgebra.Vandermonde
 
 /-! # GapCVP proof, part 08 -/
+
+@[expose] public section
 
 noncomputable section
 

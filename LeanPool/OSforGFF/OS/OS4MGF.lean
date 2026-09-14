@@ -3,51 +3,15 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
 
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.Distribution.TemperateGrowth
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Integral.MeanInequalities
-import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Topology.Algebra.InfiniteSum.NatInt
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.FunProp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Tauto
-import Mathlib.Tactic.ApplyFun
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Choose
-import Mathlib.Tactic.SimpRw
-import Mathlib.Tactic.SuppressCompilation
-import Mathlib.Tactic.Use
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Polyrith
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Generalize
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Algebra.Order.Chebyshev
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Schwinger.Defs
-import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Spacetime.TimeTranslation
 import LeanPool.OSforGFF.Measure.IsGaussian
 import LeanPool.OSforGFF.OS.OS2Invariance
-import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-import LeanPool.OSforGFF.Spacetime.TimeTranslation
-import LeanPool.OSforGFF.OS.Axioms
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # OS4 — Shared Infrastructure
@@ -59,6 +23,8 @@ Shared lemmas for os4Clustering and OS4Ergodicity:
 - Joint MGF factorization: 𝔼[e^{⟨ω,f+T_{−s}g⟩}] = E_f · E_g · exp(S₂(f, T_{−s}g))
 - Exponential bound: |e^z − 1| ≤ |z| · e^{|z|}
 -/
+
+@[expose] public section
 
 open MeasureTheory Real
 open TopologicalSpace

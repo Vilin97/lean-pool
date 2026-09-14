@@ -3,19 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.Integral.IntegrableOn
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.ENNReal.Holder
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Schwinger.Defs
-import LeanPool.OSforGFF.Measure.Construct
+public import LeanPool.OSforGFF.Measure.Construct
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 ## Gaussian Moments and n-Point Integrability
@@ -38,6 +31,8 @@ hence integrable.
 This generalizes `gaussian_pairing_product_integrable_free_core` to arbitrary n,
 providing a unified foundation for all Schwinger function computations.
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Finset
 open TopologicalSpace SchwartzMap

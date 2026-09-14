@@ -3,15 +3,24 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Hoare.HoareCore
-import LeanPool.MRiscX.Elab.CodeElaborator
-import LeanPool.MRiscX.Parser.HoareSyntax
+module
+
+public import LeanPool.MRiscX.Elab.CodeElaborator
+public import LeanPool.MRiscX.Hoare.EvalLabelInHoare
+public import LeanPool.MRiscX.Hoare.HoareAssignmentElab
+public import LeanPool.MRiscX.Parser.HoareSyntax
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+public import LeanPool.MRiscX.Hoare.HoareCore
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # HoareElaborator
 
 This module provides the elaborator for MRiscX Hoare-triple syntax.
 -/
+
+public meta section
 
 
 open Lean Meta Elab

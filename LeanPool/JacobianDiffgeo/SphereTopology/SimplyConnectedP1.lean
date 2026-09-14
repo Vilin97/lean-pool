@@ -3,12 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.ProjectiveLine
-import LeanPool.JacobianDiffgeo.Path
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Topology.Compactification.OnePoint.Basic
+import LeanPool.JacobianDiffgeo.Path.Perturb
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Charts
+import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
 import Mathlib.Analysis.Convex.Contractible
-import Mathlib.Topology.Connected.LocallyPathConnected
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `SimplyConnectedSpace (OnePoint ℂ)` (CC-sphere-topology, design §2)
@@ -33,6 +37,8 @@ Main declarations:
 * `RS.SphereTopology.simplyConnectedSpace_of_homeoOnePoint` (homeomorphism transfer).
 * `RS.SphereTopology.simplyConnectedSpace_sphere` (the challenge sphere model).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Topology OnePoint RS RS.P1

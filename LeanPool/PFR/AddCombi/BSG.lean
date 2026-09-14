@@ -5,18 +5,20 @@ Authors: Yaël Dillies, Bhavik Mehta
 -/
 
 module
-public import LeanPool.PFR.AddCombi.Mathlib.Combinatorics.Additive.Energy
-public import Mathlib.Data.Real.Basic
 
-public import LeanPool.PFR.AddCombi.Convolution.Finite.Order
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.GroupWithZero.Indicator
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Algebra.Group.Pointwise.Finset.Density
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Data.Finset.CastCard
-public import Mathlib.Data.NNRat.BigOperators
-public import Mathlib.Tactic.Positivity
+public import LeanPool.PFR.AddCombi.Convolution.Finite.Defs
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Data.Real.Star
+import LeanPool.PFR.AddCombi.Convolution.Finite.Order
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.GroupWithZero.Indicator
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi
+import LeanPool.PFR.AddCombi.Mathlib.Data.Finset.Density
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Balog-Szemerédi-Gowers theorem

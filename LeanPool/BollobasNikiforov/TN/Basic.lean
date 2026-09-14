@@ -3,14 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Real.Basic
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Order.Fin.Basic
-import Mathlib.Tactic.Ring
+public import Mathlib.Data.Real.Basic
+public import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!
 # Total nonnegativity
@@ -23,6 +19,8 @@ Cauchy–Binet is proved only for a product with middle dimension `3`, by
 enumerating the `C(3, r)` strictly increasing maps `Fin r → Fin 3`
 (`r = 0,1,2,3`) and using rank for `r > 3`.
 -/
+
+@[expose] public section
 
 open Function Matrix
 

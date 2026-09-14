@@ -3,13 +3,16 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
-import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+public import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # The prepared divisor is associate to the regularized germ
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

@@ -3,10 +3,13 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part02
+public import LeanPool.QuantumParallelRepetition.Part02
 
 /-! # Quantum parallel repetition, part 03 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -29,14 +32,15 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 attribute [local instance] Classical.propDecidable
 
-private def dSVDensityRationalPhysicalProjector
+/-- The accepting effect of the left projective threshold measurement. -/
+def dSVDensityRationalPhysicalProjector
     {d N : ℕ} (w : ℝ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     Matrix (Fin d) (Fin d) ℂ :=
   (dSVDensityRationalLeftProjectiveThresholdPOVM
     w N k ξ).effect true
 
-private theorem dSVDensityRationalPhysicalProjector_pos
+theorem dSVDensityRationalPhysicalProjector_pos
     {d N : ℕ} (w : ℝ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     (dSVDensityRationalPhysicalProjector w ξ k).PosSemidef :=
@@ -53,7 +57,7 @@ private theorem dSVDensityRationalPhysicalProjector_projective
     w N k (dSVSoftBobLeftReducedDensity ξ)
     (dSVSoftBobLeftReducedDensity_posSemidef ξ) true
 
-private theorem dSVDensityRationalPhysicalProjector_complement_pos
+theorem dSVDensityRationalPhysicalProjector_complement_pos
     {d N : ℕ} (w : ℝ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     (1 - dSVDensityRationalPhysicalProjector w ξ k).PosSemidef :=
@@ -62,7 +66,8 @@ private theorem dSVDensityRationalPhysicalProjector_complement_pos
     (dSVDensityRationalPhysicalProjector_pos w ξ k)
     (dSVDensityRationalPhysicalProjector_projective w ξ k)
 
-private def dSVDensityRationalPhysicalGlobalPOVM
+/-- The binary measurement combining the accepting projectors over the threshold grid. -/
+def dSVDensityRationalPhysicalGlobalPOVM
     {d N : ℕ} (w : ℝ)
     (ξ : BipartiteUnitVector d) :
     POVM Bool (DSVUniformDensityThresholdLocalIndex N d) :=
@@ -345,14 +350,15 @@ section
 open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
-private def dSVDensityRationalCompleteProjectiveThresholdProjector
+/-- The accepting projector at the specified threshold in the complete measurement. -/
+def dSVDensityRationalCompleteProjectiveThresholdProjector
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     Matrix (Fin d) (Fin d) ℂ :=
   (dSVDensityRationalLeftProjectiveThresholdPOVM
     w N k ξ).effect true
 
-private theorem dSVDensityRationalCompleteProjectiveThresholdProjector_pos
+theorem dSVDensityRationalCompleteProjectiveThresholdProjector_pos
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
     (dSVDensityRationalCompleteProjectiveThresholdProjector
@@ -388,7 +394,7 @@ private theorem dSVDensityRationalCompleteProjectiveThresholdEffect_false
   rw [Fintype.sum_bool, add_comm] at complete
   exact eq_sub_of_add_eq complete
 
-private theorem
+theorem
     dSVDensityRationalCompleteProjectiveThresholdProjector_complement_pos
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (k : Fin N) :
@@ -844,14 +850,15 @@ theorem dSVDensityRationalCanonicalAcceptedTarget_ne_zero
       width grid ξ
   nlinarith
 
-private def dSVDensityRationalCanonicalNormalizedTarget
+/-- Normalize the canonical accepted target vector. -/
+def dSVDensityRationalCanonicalNormalizedTarget
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     EuclideanSpace ℂ (Fin d × Fin d) :=
   NormedSpace.normalize
     (dSVDensityRationalCanonicalAcceptedTarget w N ξ)
 
-private theorem dSVDensityRationalCanonicalNormalizedTarget_norm
+theorem dSVDensityRationalCanonicalNormalizedTarget_norm
     {d N : ℕ} {w : ℝ} (width : 0 < w) (grid : 0 < N)
     (fine : (d : ℝ) / (N : ℝ) < 1 / (w + 1))
     (ξ : BipartiteUnitVector d) :
@@ -2022,7 +2029,8 @@ section
 open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
-private def dSVDensityRationalCanonicalPrefixMask
+/-- The diagonal mask selecting accepted threshold and spectral coordinates. -/
+def dSVDensityRationalCanonicalPrefixMask
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     Matrix (DSVUniformDensityThresholdLocalIndex N d)
@@ -3080,7 +3088,8 @@ theorem dSVDensityRationalPublicLogRankBucket_log_sub_lt
     have integer_order := (abs_lt.mp bucket_bounds).2
     linarith [rank_bounds.2, other_bounds.1]
 
-private def dSVDensityRationalPublicLogRankBucketFiber
+/-- The nonzero ranks assigned to the given logarithmic bucket and public phase. -/
+def dSVDensityRationalPublicLogRankBucketFiber
     {N B : ℕ} (Q : ℕ) (phase : Fin B) (label : Option ℕ) :
     Finset (Fin (N + 1)) :=
   Finset.univ.filter fun r : Fin (N + 1) =>
@@ -3309,7 +3318,8 @@ theorem dSVDensityRationalLocalSpectralPairHistory_apply_norm_sq
     inv_pow, dSVUniformDensityThresholdRaw_norm_sq]
   ring
 
-private def dSVDensityRationalMixedCanonicalCrossMatrix
+/-- The transposed eigenbasis overlap, repeated on each threshold block. -/
+def dSVDensityRationalMixedCanonicalCrossMatrix
     {d : ℕ} (N : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     Matrix (DSVUniformDensityThresholdLocalIndex N d)
@@ -3674,7 +3684,8 @@ theorem dSVDensityRationalMixedCanonicalSpectralOutcome_eq
   exact dSVDensityRationalMixedCanonicalProjectorMatrix_eq
     w N ξ ζ
 
-private def dSVDensityRationalPublicLogBilateralPureTensor
+/-- Tensor two bipartite vectors while grouping each player's indices together. -/
+def dSVDensityRationalPublicLogBilateralPureTensor
     {ι κ : Type*}
     (v : EuclideanSpace ℂ (ι × ι))
     (u : EuclideanSpace ℂ (κ × κ)) :
@@ -3727,7 +3738,8 @@ abbrev DSVDensityRationalPublicLogPhaseHistoryLocalIndex
     (B N d L : ℕ) :=
   Fin B × DSVUniformDensityThresholdWholeHistoryLocalIndex N d L
 
-private def dSVDensityRationalPublicLogPhasePureSource
+/-- The shared history state tensored with the public-phase EPR state. -/
+def dSVDensityRationalPublicLogPhasePureSource
     (B N d L : ℕ) :
     EuclideanSpace ℂ
       (DSVDensityRationalPublicLogPhaseHistoryLocalIndex B N d L ×
@@ -3768,7 +3780,8 @@ private theorem dSVDensityRationalPublicLogPhasePureSource_norm
   nlinarith [norm_nonneg
     (dSVDensityRationalPublicLogPhasePureSource B N d L)]
 
-private def dSVDensityRationalPublicLogPhaseHarmonicPureSource
+/-- Adjoin the harmonic embezzlement state to the public-phase history source. -/
+def dSVDensityRationalPublicLogPhaseHarmonicPureSource
     (B N d L m : ℕ) :
     EuclideanSpace ℂ
       ((DSVDensityRationalPublicLogPhaseHistoryLocalIndex
@@ -3817,11 +3830,13 @@ private theorem dSVDensityRationalPublicLogPhaseHarmonicPureSource_norm
     (dSVDensityRationalPublicLogPhaseHarmonicPureSource
       B N d L m)]
 
-private abbrev DSVDensityRationalPublicLogPhaseCatalystIndex
+/-- The public-phase label paired with the residual whole-history catalyst index. -/
+abbrev DSVDensityRationalPublicLogPhaseCatalystIndex
     (B N d L : ℕ) :=
   Fin B × DSVUniformDensityThresholdWholeHistoryCatalystIndex N d L
 
-private def dSVDensityRationalPublicLogPhaseTargetSplitEquiv
+/-- Separate the target coordinate while retaining the phase in the catalyst index. -/
+def dSVDensityRationalPublicLogPhaseTargetSplitEquiv
     (B N d L : ℕ) :
     DSVDensityRationalPublicLogPhaseHistoryLocalIndex B N d L ≃
       (Fin d ×
@@ -4080,7 +4095,8 @@ open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 
 attribute [local instance] Classical.propDecidable
 
-private def dSVDensityRationalHeterogeneousActualAcceptSet
+/-- The stages whose actual history coordinates satisfy their acceptance predicates. -/
+def dSVDensityRationalHeterogeneousActualAcceptSet
     {β : Type*} {L : ℕ}
     (accepted : Fin L → β → Prop)
     (history : Fin (L + 1) → β) : Finset (Fin L) := by
@@ -4152,7 +4168,8 @@ theorem dSVDensityRationalHeterogeneousActualFirstAccepted_zero_iff
     simpa [hits,
       dSVDensityRationalHeterogeneousActualAcceptSet] using hit
 
-private def dSVDensityRationalHeterogeneousActualFirstAcceptEquiv
+/-- Swap the zero flag with the first accepted stage, retaining the history. -/
+def dSVDensityRationalHeterogeneousActualFirstAcceptEquiv
     {β : Type*} {L : ℕ}
     (accepted : Fin L → β → Prop) :
     Equiv.Perm (Σ _ : Fin (L + 1), Fin (L + 1) → β) where
@@ -6641,7 +6658,8 @@ open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-private def fullCoordinateAliceQuestionFilter
+/-- Alice's history filter after revealing the selected coordinate's question. -/
+def fullCoordinateAliceQuestionFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -6650,7 +6668,8 @@ private def fullCoordinateAliceQuestionFilter
   fullHistoryAliceFilter G n S D (insert i L)
     (fullCoordinateNewHistory D L i r x) α
 
-private def fullCoordinateAliceMeanFilter
+/-- Alice's history filter before the new question is revealed. -/
+def fullCoordinateAliceMeanFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -6659,7 +6678,8 @@ private def fullCoordinateAliceMeanFilter
   fullHistoryAliceFilter G n S D L
     (fullCoordinateOldHistory D L i r y) α
 
-private def fullCoordinateBobQuestionFilter
+/-- Bob's history filter for the selected question and the previously revealed history. -/
+def fullCoordinateBobQuestionFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)
@@ -7067,7 +7087,8 @@ theorem conditionalAlice_matrixLogEntropy_gap_posSemidef
     (G.conditionalXGivenY_sum y hy)
     rfl hH
 
-private def fullCoordinateAliceEntropyIncrement
+/-- The averaged entropy increment between Alice's question and mean filters. -/
+def fullCoordinateAliceEntropyIncrement
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)

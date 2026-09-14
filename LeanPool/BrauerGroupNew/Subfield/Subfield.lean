@@ -3,16 +3,24 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
+public import LeanPool.BrauerGroupNew.Subfield.Defs
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import LeanPool.BrauerGroupNew.DoubleCentralizer
 import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Basic
-import LeanPool.BrauerGroupNew.Subfield.Defs
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.Subfield.Subfield
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Subfield`.
 -/
+
+@[expose] public section
 
 universe u
 

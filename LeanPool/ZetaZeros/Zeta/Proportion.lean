@@ -5,7 +5,10 @@ Authors: Kenny Lau
 -/
 module
 
-public import LeanPool.ZetaZeros.Zeta.Asymptotics
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # The final asymptotic passage

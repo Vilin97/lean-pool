@@ -3,9 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Skyscraper
-import LeanPool.JacobianDiffgeo.Cech.WindowRank
+public import LeanPool.JacobianDiffgeo.Cech.Skyscraper
+public import LeanPool.JacobianDiffgeo.Cech.WindowRank
+import LeanPool.JacobianDiffgeo.Cech.Injectivity
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The six-term skyscraper fragment (CC8, D7, proof plan §6.9(c)-(g))
@@ -39,6 +45,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.7, §6.9).
   `0 → L(D) → L(D') → Window D D' → H¹(D) → H¹(D') → 0`.
 -/
 
+@[expose] public section
+
 open scoped ContDiff Manifold Topology
 open Set Filter TopologicalSpace RS.Cech
 
@@ -53,23 +61,17 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 components all satisfy the `D`-bound gives a `Z1 D`-cocycle. -/
 theorem C1.retype_mem_Z1' {f : C1 D' 𝒰} (hf : f ∈ Z1 D' 𝒰) (hmem : f.MemLD D) :
     C1.retype f hmem ∈ Z1 D 𝒰 := by
-  rw [mem_Z1_iff]
+  apply (mem_Z1_iff D 𝒰 _).2
   intro t
-  apply Subtype.ext
-  have hcoe : (d1 D 𝒰 (C1.retype f hmem) t :
-      RS.MeroGermOn X ((𝒰.U t.1 ⊓ 𝒰.U t.2.1 ⊓ 𝒰.U t.2.2 : Opens X) : Set X)) =
-      (d1 D' 𝒰 f t :
-      RS.MeroGermOn X ((𝒰.U t.1 ⊓ 𝒰.U t.2.1 ⊓ 𝒰.U t.2.2 : Opens X) : Set X)) := rfl
-  rw [hcoe, (mem_Z1_iff D' 𝒰 f).1 hf t]
-  simp
+  exact Subtype.ext (congrArg (fun z : RS.LinSysOn D' _ => z.val)
+    ((mem_Z1_iff D' 𝒰 f).1 hf t))
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- The `D`-inclusion of a retyped `Z1 D 𝒰` class recovers the original `Z1 D' 𝒰` class. -/
 theorem h1CoverIncl_mk_retype (h : D ≤ D') {f : C1 D' 𝒰} (hf : f ∈ Z1 D' 𝒰) (hmem : f.MemLD D) :
     h1CoverIncl D 𝒰 h (H1Cover.mk D 𝒰 ⟨C1.retype f hmem, C1.retype_mem_Z1' hf hmem⟩) =
       H1Cover.mk D' 𝒰 ⟨f, hf⟩ := by
-  rw [h1CoverIncl_mk]
-  congr 1
+  rfl
 
 /-! ### Small order arithmetic helpers -/
 
@@ -368,26 +370,6 @@ theorem memLD_d0_smul (a : ℂ) {g : C0 D' 𝒰} (hg : (d0 D' 𝒰 g).MemLD D) :
   rw [map_smul]
   exact hg.smul a
 
-/-! ### `mlClass` is refinement-stable (§6.9(a), `mlClass_res`) -/
-
-omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
-theorem mlClass_res {𝒰 𝒱 : FinCover (⊤ : Opens X)} (τ : Fin 𝒱.n → Fin 𝒰.n)
-    (hτ : IsRefIdx 𝒰 𝒱 τ) (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g).MemLD D)
-    (hgr : (d0 D' 𝒱 (resC0 D' τ hτ g)).MemLD D) :
-    mlClass 𝒱 (resC0 D' τ hτ g) hgr = mlClass 𝒰 g hg := by
-  have hcomm : resC1 D' τ hτ (d0 D' 𝒰 g) = d0 D' 𝒱 (resC0 D' τ hτ g) :=
-    LinearMap.congr_fun (resC1_comp_d0 D' τ hτ) g
-  have hkey : (⟨C1.retype (d0 D' 𝒱 (resC0 D' τ hτ g)) hgr, C1.retype_mem_Z1 hgr⟩ : Z1 D 𝒱) =
-      resZ1 D τ hτ ⟨C1.retype (d0 D' 𝒰 g) hg, C1.retype_mem_Z1 hg⟩ := by
-    apply Subtype.ext
-    rw [resZ1_apply_coe]
-    funext p
-    apply Subtype.ext
-    rw [C1.retype_apply_coe, ← congrFun hcomm p]
-    rfl
-  simp only [mlClass]
-  rw [hkey, ← resH1_mk, toH1_resH1]
-
 variable [T2Space X] [CompactSpace X]
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -416,29 +398,26 @@ theorem memLD_of_isAdapted {𝒲 : FinCover (⊤ : Opens X)} (hadapt : 𝒲.IsAd
 -- `diffSupp D D'`, represented by a genuine `Z1 D`-cocycle (retyping across the finite set where
 -- `D ≠ D'` costs nothing since cocycles vanish there anyway).
 omit [T2Space X] [CompactSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
-/-- Pushing a cocycle to a refinement does not change its colimit class. Split out for the same
-budget reason as `H1Incl_toH1_retype`. -/
+/-- Pushing a cocycle to a refinement does not change its colimit class. -/
 private theorem toH1_mk_resZ1 {𝒰₀ 𝒲 : FinCover (⊤ : Opens X)} (τ : Fin 𝒲.n → Fin 𝒰₀.n)
     (hτ : IsRefIdx 𝒰₀ 𝒲 τ) (f' : Z1 D' 𝒰₀) :
     toH1 D' 𝒲 (H1Cover.mk D' 𝒲 (resZ1 D' τ hτ f')) = toH1 D' 𝒰₀ (H1Cover.mk D' 𝒰₀ f') := by
-  rw [← resH1_mk, toH1_resH1 D' τ hτ]
+  exact toH1_resH1 D' τ hτ (H1Cover.mk D' 𝒰₀ f')
 
 omit [T2Space X] [CompactSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- `H1Incl` sends the retyped class of a `D`-bounded `D'`-cocycle back to the cocycle's own
-class. Split out of `H1Incl_surjective`: these two rewrites go through `H1Cover`'s direct-limit
-types and, kept inline, push that proof past the default heartbeat budget. -/
+class. -/
 private theorem H1Incl_toH1_retype (h : D ≤ D') {𝒲 : FinCover (⊤ : Opens X)} (g : Z1 D' 𝒲)
     (hmemld : (g : C1 D' 𝒲).MemLD D) :
     H1Incl D h (toH1 D 𝒲 (H1Cover.mk D 𝒲
         ⟨C1.retype (g : C1 D' 𝒲) hmemld, C1.retype_mem_Z1' g.2 hmemld⟩)) =
       toH1 D' 𝒲 (H1Cover.mk D' 𝒲 g) := by
-  rw [H1Incl_toH1, h1CoverIncl_mk_retype h g.2 hmemld]
+  exact H1Incl_toH1 D h 𝒲 _
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem H1Incl_surjective (h : D ≤ D') : Function.Surjective (H1Incl D h) := by
   intro ξ'
-  obtain ⟨𝒰₀, f'c, hf'c⟩ := exists_rep D' ξ'
-  obtain ⟨f', hf'⟩ := H1Cover.mk_surjective D' 𝒰₀ f'c
+  refine H1.induction_on_cocycles ξ' (fun 𝒰₀ f' => ?_)
   obtain ⟨𝒲, hle, hadapt, -⟩ := exists_adapted_refinement 𝒰₀ (diffSupp D D')
     (fun _ _ => trivial) (fun _ => ⊤) (fun _ _ => trivial)
   -- opaque refinement index: `toH1_resH1` holds for any of them, and leaving
@@ -449,7 +428,9 @@ theorem H1Incl_surjective (h : D ≤ D') : Function.Surjective (H1Incl D h) := b
   have hmemld : (g' : C1 D' 𝒲).MemLD D := memLD_of_isAdapted hadapt hgmem
   refine ⟨toH1 D 𝒲 (H1Cover.mk D 𝒲 ⟨C1.retype (g' : C1 D' 𝒲) hmemld,
     C1.retype_mem_Z1' hgmem hmemld⟩), ?_⟩
-  rw [H1Incl_toH1_retype h g' hmemld, hg'_def, toH1_mk_resZ1 τ hτspec f', hf', hf'c]
+  exact (H1Incl_toH1_retype h g' hmemld).trans
+    ((congrArg (fun z => toH1 D' 𝒲 (H1Cover.mk D' 𝒲 z)) hg'_def).trans
+      (toH1_mk_resZ1 τ hτspec f'))
 
 /-! ### `Realizes` (§6.9(c), D7): the pointwise-`ord` realization predicate -/
 
@@ -566,9 +547,10 @@ theorem mlClass_eq_of_realizes {𝒰 𝒰' : FinCover (⊤ : Opens X)} {g : C0 D
   have hG' : (d0 D' (𝒰.meet 𝒰') (resC0 D' τ' hτ' g')).MemLD D := memLD_d0_res hg' τ' hτ'
   have hrG : Realizes (𝒰.meet 𝒰') (resC0 D' τ hτ g) w := hr.res τ hτ
   have hrG' : Realizes (𝒰.meet 𝒰') (resC0 D' τ' hτ' g') w := hr'.res τ' hτ'
-  rw [← mlClass_res τ hτ g hg hG, ← mlClass_res τ' hτ' g' hg' hG']
-  set G := resC0 D' τ hτ g with hGdef
-  set G' := resC0 D' τ' hτ' g' with hG'def
+  refine (mlClass_res τ hτ g hg hG).symm.trans
+    (Eq.trans ?_ (mlClass_res τ' hτ' g' hg' hG'))
+  let G := resC0 D' τ hτ g
+  let G' := resC0 D' τ' hτ' g'
   -- the connecting `D`-cochain: `G - G'` is componentwise `D`-bounded
   have hmemk : ∀ k : Fin (𝒰.meet 𝒰').n,
       ((G k : RS.MeroGermOn X ((𝒰.meet 𝒰').U k : Set X)) -
@@ -633,7 +615,7 @@ theorem mlClass_eq_of_realizes {𝒰 𝒰' : FinCover (⊤ : Opens X)} {g : C0 D
           (G' p.1 : RS.MeroGermOn X ((𝒰.meet 𝒰').U p.1 : Set X)))
     rw [map_sub, map_sub]
     abel
-  rw [mlClass, mlClass, hz]
+  exact congrArg (toH1 D (𝒰.meet 𝒰')) hz
 
 /-! ### `exists_realization` (§6.9(c)) -/
 
@@ -764,7 +746,8 @@ theorem exists_realization (_h : D ≤ D') (w : Window D D') :
 
 /-! ### The connecting map `windowConnect` (§6.9(d)) -/
 
-private noncomputable def windowConnectRaw (h : D ≤ D') (w : Window D D') : H1 D :=
+/-- The first-cohomology class associated to a section in the divisor window. -/
+noncomputable def windowConnectRaw (h : D ≤ D') (w : Window D D') : H1 D :=
   mlClass (exists_realization h w).choose (exists_realization h w).choose_spec.choose
     (exists_realization h w).choose_spec.choose_spec.choose
 
@@ -809,8 +792,8 @@ theorem windowConnect_spec (h : D ≤ D') (w : Window D D') {𝒰 : FinCover (�
 theorem H1Incl_windowConnect (h : D ≤ D') (w : Window D D') :
     H1Incl D h (windowConnect h w) = 0 := by
   obtain ⟨𝒰, g, hg, hr, -⟩ := exists_realization h w
-  rw [windowConnect_spec h w hg hr]
-  exact H1Incl_mlClass h g hg
+  exact (congrArg (H1Incl D h) (windowConnect_spec h w hg hr)).trans
+    (H1Incl_mlClass h g hg)
 
 /-! ### Exactness (§6.9(e)/(f)) -/
 
@@ -920,13 +903,13 @@ vector. -/
 theorem exact_windowConnect_H1Incl (h : D ≤ D') :
     Function.Exact (windowConnect h) (H1Incl D h) := by
   intro ξ
+  refine H1.induction_on_cocycles ξ (fun 𝒱 f => ?_)
   constructor
   · intro hξ
-    obtain ⟨𝒱, c, hc⟩ := exists_rep D ξ
-    obtain ⟨f, rfl⟩ := H1Cover.mk_surjective D 𝒱 c
     have hincl0 : h1CoverIncl D 𝒱 h (H1Cover.mk D 𝒱 f) = 0 := by
       apply toH1_injective D' 𝒱
-      rw [map_zero, ← H1Incl_toH1, hc, hξ]
+      exact ((H1Incl_toH1 D h 𝒱 (H1Cover.mk D 𝒱 f)).symm.trans hξ).trans
+        (toH1 D' 𝒱).map_zero.symm
     rw [h1CoverIncl_mk, H1Cover.mk_eq_zero_iff] at hincl0
     obtain ⟨g', hg'd0⟩ := hincl0
     have hg'd0' : d0 D' 𝒱 g' = inclC1 D 𝒱 h (f : C1 D 𝒱) := by
@@ -934,10 +917,6 @@ theorem exact_windowConnect_H1Incl (h : D ≤ D') :
     have hmemld : (d0 D' 𝒱 g').MemLD D := by
       intro p
       rw [hg'd0']
-      change (Submodule.inclusion (RS.Cech.linSysOn_mono h) ((f : C1 D 𝒱) p) :
-        RS.MeroGermOn X ((𝒱.U p.1 ⊓ 𝒱.U p.2 : Opens X) : Set X)) ∈
-        RS.LinSysOn D ((𝒱.U p.1 ⊓ 𝒱.U p.2 : Opens X) : Set X)
-      rw [Submodule.coe_inclusion]
       exact ((f : C1 D 𝒱) p).2
     -- read off the window vector of `g'` via tail approximation
     have hbase : ∀ q : diffSupp D D', ∃ (i : Fin 𝒱.n) (_ : (q : X) ∈ 𝒱.U i)
@@ -1035,9 +1014,8 @@ theorem exact_windowConnect_H1Incl (h : D ≤ D') :
         RS.MeroGermOn X ((𝒱.U p.1 ⊓ 𝒱.U p.2 : Opens X) : Set X)) =
         ((f : C1 D 𝒱) p : RS.MeroGermOn X ((𝒱.U p.1 ⊓ 𝒱.U p.2 : Opens X) : Set X))
       rw [Submodule.coe_inclusion]
-    rw [mlClass, hfz]
-    exact hc
-  · rintro ⟨w, rfl⟩
-    exact H1Incl_windowConnect h w
+    exact congrArg (fun z => toH1 D 𝒱 (H1Cover.mk D 𝒱 z)) hfz
+  · rintro ⟨w, hw⟩
+    exact (congrArg (H1Incl D h) hw).symm.trans (H1Incl_windowConnect h w)
 
 end RS.Cech

@@ -3,12 +3,18 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fin.Basic
+public import Mathlib.Data.Fintype.Pi
+
+public import Mathlib.Logic.Basic
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.Group.Nat.Defs
+public import Mathlib.Tactic.ToDual
 import Mathlib.Data.Fin.VecNotation
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Logic.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.SetLike
 
 /-!
   Sundogcert/VarWheel.lean — MILESTONE 2 of the `3SAT ≤ 3DM` marathon.
@@ -49,6 +55,8 @@ import Mathlib.Logic.Basic
   `Prop`, but does not auto-resolve through the `def`).  This locks the two-cover claim at `m = 3`
   by kernel `decide` — AXIOM-CLEAN (no `Lean.ofReduceBool`; we use `decide`, never `native_decide`).
 -/
+
+@[expose] public section
 
 namespace Sundog.VarWheel
 

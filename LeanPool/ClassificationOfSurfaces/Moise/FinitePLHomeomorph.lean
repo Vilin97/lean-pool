@@ -3,8 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
 
 /-!
 # Finite PL homeomorphisms on compact plane polyhedra
@@ -13,6 +16,8 @@ This is the concrete PL category needed by Moise Chapters 5 and 6.  A witness re
 finite source complex on which an ambient homeomorphism is affine facewise.  Common subdivision
 and pullback make these witnesses closed under symmetry and composition.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

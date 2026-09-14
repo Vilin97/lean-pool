@@ -3,9 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import Mathlib.Combinatorics.Digraph.Basic
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Order.Lattice.Nat
+module
+
+public import Mathlib.Combinatorics.Digraph.Basic
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Order.Lattice.Nat
 
 /-! # Basic digraph definitions
 
@@ -18,6 +20,8 @@ Depth-reduction-specific machinery (canonical labeling, acyclicity
 arguments, edge partitions by first-differing bit, etc.) lives in
 `Circ.Internal.Valiant`.
 -/
+
+@[expose] public section
 
 namespace Digraph
 

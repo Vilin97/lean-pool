@@ -6,15 +6,13 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.DedekindZeta.IdealPrimeFactorization
-public import LeanPool.Odlyzko.DedekindZeta.IdealSeries
 public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealFactor
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
-public import Mathlib.Data.Nat.Factorization.Basic
-public import Mathlib.Data.Nat.Prime.Nth
-public import Mathlib.Logic.Equiv.Set
-public import Mathlib.NumberTheory.EulerProduct.Basic
 public import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
-public import Mathlib.Topology.Algebra.InfiniteSum.Constructions
+public import Mathlib.Data.Nat.Nth
+public import Mathlib.NumberTheory.NumberField.DedekindZeta
+import LeanPool.Odlyzko.DedekindZeta.IdealSeries
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
+import Mathlib.NumberTheory.EulerProduct.Basic
 
 /-! TODO: Add doc-string. -/
 

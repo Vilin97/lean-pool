@@ -11,16 +11,19 @@ Modifications: extracted the minimal group, representation, regular-factor,
 and tracial-equivalence vocabulary; changed namespace and narrowed the
 interface to arXiv:2608.02327. See the upstream PORT_MAP.md.
 -/
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.CStarAlgebra.Module.Constructions
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Analysis.VonNeumannAlgebra.Basic
-import Mathlib.Dynamics.Flow
+module
+
+public import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.Analysis.InnerProductSpace.Positive
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Analysis.VonNeumannAlgebra.Basic
 
 /-!
 The core component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

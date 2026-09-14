@@ -10,16 +10,20 @@ multipliers generate the continuous-coefficient crossed closure by uniform
 Stone--Weierstrass density; the fiber shear transports that closure and hence
 the two regular group factors.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.GroupVacuum
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectGeneratorTransport
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FactorWitness
+public import Mathlib.Analysis.CStarAlgebra.ContinuousMap
 import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.CrossedProductFactorTransport
-import LeanPool.ConnesRigidity.Paper.Section3.GroupVacuum
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectGeneratorTransport
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FactorWitness
+import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
 
 /-!
 The factor closure component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFactorClosure

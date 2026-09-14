@@ -3,6 +3,9 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
+
+public import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
 /-!
@@ -11,6 +14,8 @@ import Mathlib.Algebra.Order.Archimedean.Real.Basic
 Small helper lemmas about `CauSeq` suprema/infima and about Cauchy sequences
 converging to a real number, used in the construction of computable reals.
 -/
+
+@[expose] public section
 
 theorem abs_ite_le [AddCommGroup α] [LinearOrder α] [IsOrderedAddMonoid α] (x : α) :
     abs x = if 0 ≤ x then x else -x := by

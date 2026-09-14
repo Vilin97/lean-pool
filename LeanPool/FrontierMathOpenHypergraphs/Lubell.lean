@@ -3,41 +3,20 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
+public import Mathlib.NumberTheory.Harmonic.Defs
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import LeanPool.FrontierMathOpenHypergraphs.Substitution
+import all LeanPool.FrontierMathOpenHypergraphs.Uniform
 import Batteries.Tactic.OpenPrivate
-import Mathlib.Algebra.GCDMonoid.Finset
-import Mathlib.Algebra.Order.Group.Multiset
-import Mathlib.Analysis.Convex.Jensen
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Data.Fintype.Fin
-import Mathlib.Data.Nat.Cast.Field
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Nat.Choose.Cast
-import Mathlib.Data.Nat.Choose.Sum
-import Mathlib.Data.Nat.Log
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Multiset.Replicate
-import Mathlib.NumberTheory.Harmonic.Defs
 import Mathlib.NumberTheory.Harmonic.Bounds
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Order.Filter.AtTopBot.Tendsto
-import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Mathlib.Topology.Order.LiminfLimsup
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import LeanPool.FrontierMathOpenHypergraphs.Basic
-import LeanPool.FrontierMathOpenHypergraphs.Substitution
-import LeanPool.FrontierMathOpenHypergraphs.Uniform
 
 /-!
 # Lubell frames and asymptotic context
 -/
+
+@[expose] public section
 
 namespace HypergraphLowerBound
 
@@ -60,7 +39,7 @@ noncomputable def lubellMultiplicity (t j : ℕ) : ℕ :=
 noncomputable def lubellCap (t : ℕ) : Fin t → ℕ := Function.const (Fin t) (M t)
 
 /-- Embed a `j`-subset of `[t]` into the type of support patterns. -/
-private def supportPatternEmbedding {t j : ℕ} (hj : 2 ≤ j) :
+def supportPatternEmbedding {t j : ℕ} (hj : 2 ≤ j) :
     {S // S ∈ (((Finset.univ : Finset (Fin t)).powersetCard j).val)} ↪ SupportPattern t where
   toFun := fun S =>
     ⟨S.1, by

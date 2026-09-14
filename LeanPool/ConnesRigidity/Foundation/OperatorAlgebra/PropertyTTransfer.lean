@@ -10,14 +10,17 @@ data records the subgroup, normality, finite index, and the two quotient
 identifications used in Proposition 4.8. It does not encode the conclusion
 as an implication field.
 -/
-import LeanPool.ConnesRigidity.Core
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
 import LeanPool.ConnesRigidity.Porting.CoreTransfer
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FiniteIndex
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
 
 /-!
 The property t transfer component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

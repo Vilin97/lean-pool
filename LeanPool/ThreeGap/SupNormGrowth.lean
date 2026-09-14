@@ -3,11 +3,15 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.SimultaneousApprox
+public import LeanPool.ThreeGap.SimultaneousApprox
 import LeanPool.ThreeGap.ChevallierGapBound
+import Mathlib.Data.EReal.Operations
 import Mathlib.Data.Fintype.Pigeonhole
-import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The sup-norm growth inequality via the orthant pigeonhole (fully proven)
@@ -31,6 +35,8 @@ survey (§2.4.1, attributed to Lagarias):
 
 No convex geometry, no kissing number — purely the pigeonhole. Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimApprox
 

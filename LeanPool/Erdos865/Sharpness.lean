@@ -3,10 +3,15 @@ Copyright (c) 2026 Ricky Cipollini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ricky Cipollini
 -/
-import LeanPool.Erdos865.Defs
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Erdos865.Defs
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Sharpness of the 5/8 bound (Erdős 865, §5)
@@ -14,6 +19,8 @@ import Mathlib.Tactic.Ring
 The construction `A = [M,2M] ∪ [4M,8M]` is triple-free of size `5M + 2`, so for `N = 8M`
 one has `8·|A| = 5·N + 16`, showing the constant `5/8` is optimal.
 -/
+
+@[expose] public section
 
 open Finset
 

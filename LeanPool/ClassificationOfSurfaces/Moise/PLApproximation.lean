@@ -3,14 +3,17 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
-import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
-import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
+public import LeanPool.ClassificationOfSurfaces.Moise.FinitePLHomeomorph
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalCrosscut
 import LeanPool.ClassificationOfSurfaces.Moise.Anchors
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
+import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
+import LeanPool.ClassificationOfSurfaces.Moise.NoRetraction
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalSchoenflies
 import Mathlib.Analysis.Complex.Tietze
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # PL approximation of homeomorphisms
@@ -34,6 +37,8 @@ The full Jordan curve theorem (Ch. 4) is not used by these theorems: Thm. 6.2 ne
 broken-line connectivity (Ch. 1), and Thm. 6.3 needs the polygonal theorems of Ch. 2-3 through
 the combinatorial Schoenflies theorem.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

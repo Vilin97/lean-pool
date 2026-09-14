@@ -3,6 +3,10 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Finite.Defs
 import Mathlib.Data.Fintype.Pigeonhole
 
 /-!
@@ -19,6 +23,8 @@ is kept here rather than in either of them.
 
 Upstream target: `Mathlib/Data/Fintype/Pigeonhole.lean`.
 -/
+
+@[expose] public section
 
 /-- **Infinite pigeonhole.** A sequence `f : ℕ → κ` with `κ` finite takes some value `k` on an
 infinite set of indices. -/

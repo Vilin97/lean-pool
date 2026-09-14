@@ -3,6 +3,12 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Order.Monotone.Defs
 import Mathlib.Data.Nat.Nth
 
 /-!
@@ -22,6 +28,8 @@ what turns the `Set`-valued conclusion of `infinite_ramsey` into the sequence fo
 
 Upstream target: `Mathlib/Data/Nat/Nth.lean`.
 -/
+
+@[expose] public section
 
 /-- **Enumeration bridge.** Every infinite set of naturals is the range of its (unique) strictly
 monotone enumeration. This recovers, from a set-valued carrier `X`, the enumeration `N` on which

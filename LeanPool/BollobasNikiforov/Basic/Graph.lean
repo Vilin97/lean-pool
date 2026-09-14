@@ -3,10 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Combinatorics.SimpleGraph.Clique
-import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Data.Real.Basic
+public import Mathlib.Combinatorics.SimpleGraph.Clique
+public import Mathlib.Data.Real.Basic
 
 /-!
 # Elementary clique-number facts
@@ -18,6 +18,8 @@ isolate the edgeless `ω = 1` case. The Turán factor is the coefficient
 This module is copied, up to the namespace, from `SqOmega/Graph.lean` in
 <https://github.com/ShengtongZhang-alt/SqOmega> (Liu, Tang, Zhang).
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

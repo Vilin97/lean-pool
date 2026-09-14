@@ -3,11 +3,15 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.ConcreteClosure
-import LeanPool.Wallace.CountableDisjointization
-import LeanPool.Wallace.FusionSchedule
+public import LeanPool.Wallace.ConcreteClosure
+public import LeanPool.Wallace.CountableDisjointization
 import LeanPool.Wallace.BoundedIndependentMap
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The concrete countable block schedule around one nonzero vector
@@ -17,6 +21,8 @@ matter to the local fusion.  They form a countable type.  This module disjointiz
 almost-disjoint labels, selects the unique active code at each block label, and defines the
 finite independent set presented to bounded deletion at that stage.
 -/
+
+@[expose] public section
 
 open Set
 

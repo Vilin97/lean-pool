@@ -3,11 +3,17 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.AChartDetectorMeasure
+public import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
 import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetectorBridge
 
 /-!
 Finite detector sets for the raw Zhou split extensions. Paper: §4.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperSpectralFiniteDetection

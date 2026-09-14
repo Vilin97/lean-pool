@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
 /-!
 # Support-parameterized inseparability and the C7 closure step (issue #8 kernel gate)
 
@@ -19,6 +21,8 @@ pair at support `insert c A` abstracts, via the acceptance lemmas, to a separato
 existential pair at support `A`. The full inseparability consistency-property instance and the
 Henkin model existence belong to tranche 2.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

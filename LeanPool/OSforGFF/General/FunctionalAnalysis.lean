@@ -3,12 +3,18 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Analysis.Convolution
+public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+
+public import Mathlib.MeasureTheory.Function.Holder
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
 
 /-!
@@ -61,9 +67,10 @@ focusing on integrability, Schwartz function properties, and L² embeddings.
 - `sub_const_hasTemperateGrowth`: Translation has temperate growth
 -/
 
+@[expose] public section
+
 open MeasureTheory NNReal ENNReal Complex
 open TopologicalSpace Measure
-open scoped FourierTransform
 
 noncomputable section
 
@@ -151,18 +158,11 @@ complex Lp functions, with support on the real subspace.
 noncomputable def liftMeasureRealToComplex
     (dμ_real : ProbabilityMeasure (Lp ℝ 2 μ)) :
     ProbabilityMeasure (Lp ℂ 2 μ) :=
-  let dμ_complex_measure : Measure (Lp ℂ 2 μ) :=
-    Measure.map embeddingRealToComplex dμ_real
-  have h_ae : AEMeasurable embeddingRealToComplex dμ_real := by
+  ⟨Measure.map embeddingRealToComplex dμ_real, by
+    apply isProbabilityMeasure_map
     apply Continuous.aemeasurable
     unfold embeddingRealToComplex composedFunction
-    have :
-        Continuous
-          (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) :=
-      Complex.ofRealCLM_continuous_compLp
-    exact this
-  have h_is_prob := isProbabilityMeasure_map h_ae
-  ⟨dμ_complex_measure, h_is_prob⟩
+    exact Complex.ofRealCLM_continuous_compLp⟩
 
 end LiftMeasure
 

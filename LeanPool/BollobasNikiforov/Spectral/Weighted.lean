@@ -3,18 +3,15 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Spectral.Perron
-import LeanPool.BollobasNikiforov.Basic.Spectrum
-import LeanPool.BollobasNikiforov.Basic.Inner
-import LeanPool.BollobasNikiforov.Basic.Graph
+public import LeanPool.BollobasNikiforov.Spectral.Perron
+public import LeanPool.BollobasNikiforov.Basic.Graph
+public import LeanPool.BollobasNikiforov.CP.Basic
+public import LeanPool.BollobasNikiforov.M.Basic
 import LeanPool.BollobasNikiforov.M.Main
 import LeanPool.BollobasNikiforov.MS.Basic
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Rank-at-most-two spectral slice of a symmetric nonnegative matrix
@@ -26,6 +23,8 @@ satisfies `⟨B, X⟩ = ⟨X, X⟩ = F B` and is a Gram matrix of planar vectors
 the closed right half-plane. If `B` is zero-diagonal and supported on `E(G)`,
 the Motzkin–Straus bound on `M X` yields `F B ≤ turanFactor G * ⟨B, B⟩`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

@@ -3,9 +3,16 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.Rationality
+public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.Ramanujan
+import LeanPool.Chudnovsky.SingularModuli.CMRelations
 import LeanPool.Chudnovsky.SingularModuli.Kronecker
+import LeanPool.Chudnovsky.SingularModuli.Rationality
+import LeanPool.Chudnovsky.SingularModuli.Valence
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Masser's Theorem A1 at `τ₁₆₃`: rationality of `s₂` (Phase C, statement 3)
@@ -53,6 +60,8 @@ Everything, unconditionally:
 
 The top-level deliverable is `masser_s₂_rational : ∃ r : ℚ, s₂ τ₁₆₃ = r`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -703,11 +712,15 @@ classification for the primitive form `(1, −1, 41)` its norm form gives
 /-- The only integer solutions of `p² − pk + 41k² = 163` are `±(1, 2)`. -/
 private lemma masser_norm_form_solve {p k : ℤ} (h : p * p - p * k + 41 * (k * k) = 163) :
     (p = 1 ∧ k = 2) ∨ (p = -1 ∧ k = -2) := by
-  have hk1 : -2 ≤ k := by nlinarith [sq_nonneg (2 * p - k), sq_nonneg (k + 2), sq_nonneg (k - 2)]
-  have hk2 : k ≤ 2 := by nlinarith [sq_nonneg (2 * p - k), sq_nonneg (k + 2), sq_nonneg (k - 2)]
-  have hp1 : -13 ≤ p := by nlinarith [sq_nonneg (2 * p - k), sq_nonneg k]
-  have hp2 : p ≤ 13 := by nlinarith [sq_nonneg (2 * p - k), sq_nonneg k]
-  interval_cases k <;> interval_cases p <;> omega
+  -- Completing the square in each variable bounds the finite search.
+  have hk : |k| ≤ 2 := abs_le_of_sq_le_sq
+    (by nlinarith only [h, sq_nonneg (2 * p - k)]) (by norm_num)
+  have hp : |p| ≤ 13 := abs_le_of_sq_le_sq
+    (by nlinarith only [h, sq_nonneg (p - 82 * k)]) (by norm_num)
+  have hfinite : ∀ p ∈ Finset.Icc (-13 : ℤ) 13, ∀ k ∈ Finset.Icc (-2 : ℤ) 2,
+      p * p - p * k + 41 * (k * k) = 163 →
+        (p = 1 ∧ k = 2) ∨ (p = -1 ∧ k = -2) := by decide +kernel
+  exact hfinite p (Finset.mem_Icc.mpr (abs_le.mp hp)) k (Finset.mem_Icc.mpr (abs_le.mp hk)) h
 
 /-- Structured version of `fixes_of_coset` retaining the matrix entries: if `γ ∈ SL(2,ℤ)`
 sends the coset point `Aτ = (eτ′ + f)/g` to `τ′`, the integer matrix `γ·[[e,f],[0,g]]`

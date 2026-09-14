@@ -3,10 +3,13 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Data.Sign.Defs
-import LeanPool.VirasoroProject.LieAlgebraModuleUEA
-import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
-import LeanPool.VirasoroProject.VermaModule
+module
+
+public import Mathlib.Data.Sign.Defs
+public import LeanPool.VirasoroProject.LieAlgebraModuleUEA
+public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
+public import LeanPool.VirasoroProject.VermaModule
+public import Mathlib.Order.CompletePartialOrder
 
 /-!
 # Verma modules for Lie algebras with triangular decomposition
@@ -55,6 +58,8 @@ algebras (see the file `VermaModule.lean`).
 Verma module, Lie algebra, representation
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

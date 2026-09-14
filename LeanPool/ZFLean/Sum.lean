@@ -3,17 +3,23 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Basic
-import LeanPool.ZFLean.Booleans
-import LeanPool.ZFLean.Integers
-import LeanPool.ZFLean.Functions
+public import Mathlib.Data.NNRat.Defs
+
+public import LeanPool.ZFLean.Functions
+import LeanPool.ZFLean.Tactics
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ZFLean.Sum
 
 Imported Lean Pool material for `LeanPool.ZFLean.Sum`.
 -/
+
+@[expose] public section
 
 universe u v
 
@@ -220,7 +226,8 @@ noncomputable abbrev the {S : ZFSet} (S_nemp : S ≠ ∅) (x : Option S) : {x //
 
 
 open Classical in
-private noncomputable def into {T : ZFSet} : Option T → _root_.Option {x // x ∈ T} := fun x ↦
+/-- Convert a set-theoretic option to a Lean option of members of the underlying set. -/
+noncomputable def into {T : ZFSet} : Option T → _root_.Option {x // x ∈ T} := fun x ↦
   if hx : x = none then .none else .some <| Classical.choose <| Or.resolve_left (casesOn x) hx
 
 theorem _root_.ZFSet.Option.some.injEq
@@ -288,7 +295,8 @@ noncomputable def instEquivZFOptionOption {T : ZFSet} :
 
 
 
-private def outof {T : ZFSet} : _root_.Option {x // x ∈ T} → Option T
+/-- Convert a Lean option of set members to the set-theoretic option encoding. -/
+def outof {T : ZFSet} : _root_.Option {x // x ∈ T} → Option T
   | .some ⟨x, hx⟩ => some ⟨x, hx⟩
   | .none => none
 

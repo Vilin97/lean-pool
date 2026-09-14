@@ -5,9 +5,18 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
 
 /- Public aggregate for the source-faithful entry-point (iii) development. -/
-import LeanPool.MatchingLogic.EntryIII.Conclusion
-import LeanPool.MatchingLogic.EntryIII.Regression
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Conclusion
+public import LeanPool.MatchingLogic.EntryIII.Regression
+
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # MatchingLogic.EntryIII.All
 -/
+
+@[expose] public section

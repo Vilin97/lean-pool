@@ -3,10 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
 import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
-import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
-import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphAxioms
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BackTranslate
 /-!
 # Signed occurrences through the relationalization layer (issue #14, Unit 6 — the D6 gate)
 
@@ -43,6 +46,8 @@ and still disappear harmlessly.  Composing the two gates gives the exact base-po
 for Craig's graph antecedent `(graphAxioms F).and (relationalizeFormula r)` and consequent
 `(graphAxioms F).imp (relationalizeFormula r)`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

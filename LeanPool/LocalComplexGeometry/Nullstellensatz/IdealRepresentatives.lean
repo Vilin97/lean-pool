@@ -3,9 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Representatives
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+public import LeanPool.LocalComplexGeometry.Germs.Representatives
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.ZeroSetGerms
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Representatives of a finite ideal generating family
@@ -14,6 +17,8 @@ Noetherianity supplies a chosen finite generating set for every ideal.  This
 file chooses analytic representatives of those generators and records the
 exact pointwise predicate representing the ideal's local zero-set germ.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

@@ -6,20 +6,17 @@ Authors: OpenAI, Dean Cureton
 
 module
 
-public import Mathlib.Algebra.MvPolynomial.PDeriv
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Data.Fintype.CardEmbedding
-public import Mathlib.Data.Nat.BitIndices
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Algebra
-public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
 public import Mathlib.LinearAlgebra.Matrix.MvPolynomial
 public import Mathlib.LinearAlgebra.Matrix.Permanent
 import Mathlib.LinearAlgebra.Vandermonde
-import Mathlib.Logic.Equiv.Embedding
 import Mathlib.RingTheory.AlgebraicIndependent.AlgebraicClosure
-public import Mathlib.RingTheory.AlgebraicIndependent.Basic
 import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
 public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Algebra.MvPolynomial.PDeriv
+import Mathlib.Data.Nat.BitIndices
 
 /-!
 # Quartic-over-logarithmic lower bound for rational permanent formulas
@@ -1463,9 +1460,7 @@ private theorem normalizedFractionalMatrix_entry_mem_adjoin
       (projectiveMatrixGenerators M ij : Set E)
     change normalizedFractionalMatrix M ij a b ∈
       projectiveMatrixGenerators M ij
-    change normalizedFractionalMatrix M ij a b ∈
-      (Finset.univ.erase ij).image
-        (fun ab => normalizedFractionalMatrix M ij ab.1 ab.2)
+    unfold projectiveMatrixGenerators
     exact Finset.mem_image.mpr
       ⟨(a, b), Finset.mem_erase.mpr ⟨hab, Finset.mem_univ _⟩, rfl⟩
 
@@ -2939,51 +2934,30 @@ private theorem MatchingCrossData.assemble_injective
     {T A B : Type*} :
     Function.Injective
       (MatchingCrossData.assemble (T := T) (A := A) (B := B)) := by
-  classical
   intro c d h
   have hrows : c.rows = d.rows := by
     apply Function.Embedding.ext
     intro t
     apply Sum.inr_injective
-    calc
-      Sum.inr (c.rows t) = c.assemble (.inl t) :=
-        (MatchingCrossData.assemble_inl c t).symm
-      _ = d.assemble (.inl t) := DFunLike.congr_fun h (.inl t)
-      _ = Sum.inr (d.rows t) :=
-        MatchingCrossData.assemble_inl d t
+    simpa only [MatchingCrossData.assemble_inl] using
+      congrArg (fun e : T ⊕ A ≃ T ⊕ B => e (.inl t)) h
   have hcols : c.cols = d.cols := by
     apply Function.Embedding.ext
     intro t
     apply Sum.inr_injective
-    calc
-      Sum.inr (c.cols t) = c.assemble.symm (.inl t) :=
-        (MatchingCrossData.assemble_symm_inl c t).symm
-      _ = d.assemble.symm (.inl t) := by rw [h]
-      _ = Sum.inr (d.cols t) :=
-        MatchingCrossData.assemble_symm_inl d t
-  cases c with
-  | mk cr cc ce =>
-      cases d with
-      | mk dr dc de =>
-          change cr = dr at hrows
-          subst dr
-          change cc = dc at hcols
-          subst dc
-          congr 1
-          apply Equiv.ext
-          intro a
-          apply Subtype.ext
-          apply Sum.inr_injective
-          calc
-            Sum.inr (ce a).1 =
-                (MatchingCrossData.mk cr cc ce).assemble (.inr a.1) :=
-              (MatchingCrossData.assemble_remainder
-                (MatchingCrossData.mk cr cc ce) a).symm
-            _ = (MatchingCrossData.mk cr cc de).assemble (.inr a.1) :=
-              DFunLike.congr_fun h (.inr a.1)
-            _ = Sum.inr (de a).1 :=
-              MatchingCrossData.assemble_remainder
-                (MatchingCrossData.mk cr cc de) a
+    simpa only [MatchingCrossData.assemble_symm_inl] using
+      congrArg (fun e : T ⊕ A ≃ T ⊕ B => e.symm (.inl t)) h
+  obtain ⟨cr, cc, ce⟩ := c
+  obtain ⟨dr, dc, de⟩ := d
+  cases hrows
+  cases hcols
+  congr 1
+  apply Equiv.ext
+  intro a
+  apply Subtype.ext
+  apply Sum.inr_injective
+  simpa only [MatchingCrossData.assemble_remainder] using
+    congrArg (fun e : T ⊕ A ≃ T ⊕ B => e (.inr a.1)) h
 
 private noncomputable def MatchingCrossData.toPermutation
     {T A B : Type*} (c : MatchingCrossData T A B) :
@@ -3914,8 +3888,8 @@ private theorem matching_leftWeightedAvoidingInjectionSum
     fun rho => ∏ u : ↥P, p (rho u).1 ^ (2 ^ (u.1 : ℕ))
   have h := sum_sumEmbedding_left_weight
     (β := ↥Q) (γ := {j : Fin m // j ≠ b}) w
-  simpa [w, matchingAvoidingInjectionSum,
-    matching_card_omitted_external] using h
+  simpa only [w, matchingAvoidingInjectionSum, matching_card_omitted_external,
+    Fintype.card_coe, Function.Embedding.trans_apply, Function.Embedding.inl_apply] using h
 
 private theorem matching_rightWeightedAvoidingInjectionSum
     {F : Type*} [CommSemiring F] {ell m : ℕ}
@@ -3930,8 +3904,8 @@ private theorem matching_rightWeightedAvoidingInjectionSum
     fun rho => ∏ v : ↥Q, q (rho v).1 ^ (2 ^ (v.1 : ℕ))
   have h := sum_sumEmbedding_right_weight
     (α := ↥P) (γ := {j : Fin m // j ≠ a}) w
-  simpa [w, matchingAvoidingInjectionSum,
-    matching_card_omitted_external] using h
+  simpa only [w, matchingAvoidingInjectionSum, matching_card_omitted_external,
+    Fintype.card_coe, Function.Embedding.trans_apply, Function.Embedding.inr_apply] using h
 
 private noncomputable def matchingCrossWeight
     {F : Type*} [CommMonoid F] {ell m : ℕ}

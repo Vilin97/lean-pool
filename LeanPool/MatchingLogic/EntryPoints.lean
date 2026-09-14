@@ -12,12 +12,18 @@ Corollary 15 with (L) and (S) assumed. But (S) is not an assumption in this
 development -- `soundness` (in `Soundness.lean`) proves it -- so it can be
 supplied rather than hypothesised. That is what this file records.
 -/
-import LeanPool.MatchingLogic.Soundness
+module
+
+public import LeanPool.MatchingLogic.ProofSystem
 import LeanPool.MatchingLogic.Completeness
+import LeanPool.MatchingLogic.Soundness
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # MatchingLogic.EntryPoints
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

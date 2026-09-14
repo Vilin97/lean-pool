@@ -3,7 +3,14 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
+module
+
+public import LeanPool.Feige.InsertionCommonLaw
+public import LeanPool.Feige.InsertionK
+public import LeanPool.Feige.Lemma43Insertion
 import LeanPool.Feige.InsertionEdgeRealization
+import LeanPool.Feige.Lemma43ArbitraryBase
+import LeanPool.Feige.NNRealExponentialLaw
 
 /-!
 # The terminal law in the insertion argument
@@ -11,6 +18,8 @@ import LeanPool.Feige.InsertionEdgeRealization
 The common variable on the terminal edge is the sum of the negative old
 coordinates, with the distinguished positive exponential removed.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

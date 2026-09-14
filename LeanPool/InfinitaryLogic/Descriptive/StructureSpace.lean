@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-import Mathlib.ModelTheory.Basic
+module
+
+public import Mathlib.ModelTheory.Basic
 /-!
 # Coding Space for Countable Structures
 
@@ -29,6 +30,8 @@ while `RelQuery L` and `StructureSpace L` specialize to carrier ℕ.
 - `StructureSpaceOn.toStructure_ofStructure`: Round-trip from structure to code to structure
   preserves relation satisfaction.
 -/
+
+@[expose] public section
 
 universe u v
 

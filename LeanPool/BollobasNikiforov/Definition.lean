@@ -3,8 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Combinatorics.SimpleGraph.LapMatrix
+public import Mathlib.Analysis.Matrix.Spectrum
+public import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
+public import Mathlib.Combinatorics.SimpleGraph.LapMatrix
 
 /-!
 # Adjacency eigenvalues
@@ -14,6 +17,8 @@ unordered family is indexed by the vertex type, so algebraic multiplicity is
 counted automatically. The ordered family is Mathlib's antitone
 `eigenvalues₀`, which is the paper's `λ₁ ≥ ⋯ ≥ λₙ` with `λ₁` at index `0`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

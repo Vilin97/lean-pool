@@ -3,16 +3,23 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import LeanPool.ZFLean.Rationals
-import LeanPool.ZFLean.Booleans
+public import LeanPool.ZFLean.Booleans
+public import LeanPool.ZFLean.Basic
+public import LeanPool.ZFLean.Integers
 import LeanPool.ZFLean.Tactics
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ZFLean.Functions
 
 Imported Lean Pool material for `LeanPool.ZFLean.Functions`.
 -/
+
+@[expose] public section
 
 namespace ZFSet
 
@@ -604,47 +611,14 @@ theorem _root_.ZFSet.fapply.def {f A B : ZFSet} (hf : f.IsPFunc A B) {x : ZFSet}
 
 theorem _root_.ZFSet.IsInjective.apply_inj
     {f A B : ZFSet} (hf : IsFunc A B f) (inj : f.IsInjective) :
-    Function.Injective @ᶻf := by classical
+    Function.Injective @ᶻf := by
   rintro ⟨x, x_dom⟩ ⟨y, y_dom⟩ h
-  have x_A : x ∈ A := by rwa [is_func_dom_eq hf] at x_dom
-  have y_A : y ∈ A := by rwa [is_func_dom_eq hf] at y_dom
-  obtain ⟨pair_x_ε, unq_fx⟩ := Classical.choose_spec <| hf.right x x_A
-  obtain ⟨pair_y_ε, unq_fy⟩ := Classical.choose_spec <| hf.right y y_A
-  congr
-  unfold fapply at h
-  injection h with h
-  generalize_proofs hpf hpf' at h
-  have choose_eq_x :
-      Classical.choose (hf.right x x_A) = Classical.choose hpf := by
-    congr
-    funext w
-    rw [propext_iff]
-    constructor
-    · rintro ⟨pair_x_w, unq_w⟩
-      obtain ⟨_, _, _, l, eq⟩ := mem_prod.mp <| hf.left pair_x_w
-      rcases pair_inj.mp eq with ⟨rfl, rfl⟩
-      exact ⟨l, pair_x_w⟩
-    · rintro ⟨_, pair_x_w⟩
-      obtain ⟨a, pair_x_a, unq_a⟩ := hf.right x x_A
-      exact ⟨pair_x_w, by intro w' pair_x_w'; rw [unq_a w' pair_x_w', unq_a w pair_x_w]⟩
-  have choose_eq_y :
-      Classical.choose (hf.right y y_A) = Classical.choose hpf' := by
-    congr
-    funext w
-    rw [propext_iff]
-    constructor
-    · rintro ⟨pair_y_w, unq_w⟩
-      obtain ⟨_, _, _, l, eq⟩ := mem_prod.mp <| hf.left pair_y_w
-      rcases pair_inj.mp eq with ⟨rfl, rfl⟩
-      exact ⟨l, pair_y_w⟩
-    · rintro ⟨_, pair_y_w⟩
-      obtain ⟨a,pair_y_a,unq_a⟩ := hf.right y y_A
-      exact ⟨pair_y_w, by intro w' pair_y_w'; rw [unq_a w' pair_y_w', unq_a w pair_y_w]⟩
-  apply inj x y (Classical.choose <| hf.right x x_A) x_A y_A
-  · exact choose_eq_x ▸ fapply_mem_range (is_func_is_pfunc hf) x_dom
-  · exact pair_x_ε
-  · rw [choose_eq_x, h, ← choose_eq_y]
-    exact pair_y_ε
+  apply Subtype.ext
+  apply inj x y (@ᶻf ⟨x, x_dom⟩) (by rwa [is_func_dom_eq hf] at x_dom)
+    (by rwa [is_func_dom_eq hf] at y_dom) (fapply_mem_range (is_func_is_pfunc hf) x_dom)
+    (fapply.def (is_func_is_pfunc hf) x_dom)
+  rw [h]
+  exact fapply.def (is_func_is_pfunc hf) y_dom
 
 theorem _root_.ZFSet.IsPFunc.exists_unique_of_mem_dom {f A B : ZFSet}
   (hf : f.IsPFunc A B) {x : ZFSet} (hx : x ∈ f.Dom) :
@@ -740,19 +714,19 @@ def lambda (dom : ZFSet) (ran : ZFSet) (exp : ZFSet → ZFSet) : ZFSet :=
 
 open Lean Parser Term
 /-- Imported ZFLean declaration. -/
-def funZType : Parser :=
+meta def funZType : Parser :=
   ":" >> ppSpace >> termParser leadPrec >> ppSpace >>
     unicodeSymbol "→" "->" >> ppSpace >> termParser leadPrec
 /-- Imported ZFLean declaration. -/
-def funZAlts : Parser :=
+meta def funZAlts : Parser :=
   "|" >> ppSpace >> Term.ident >> ppSpace >> unicodeSymbol "↦" "=>" >> ppSpace >> termParser
 
 /-- Parser for the domain, codomain, binder, and body of ZF function notation. -/
-def basicFunZ : Parser := leading_parser (withAnonymousAntiquot := false)
+meta def basicFunZ : Parser := leading_parser (withAnonymousAntiquot := false)
   ppGroup (ppSpace >> funZType) >> funZAlts
 
 /-- Parser for ZF lambda notation. -/
-@[term_parser] def funZ := leading_parser:maxPrec
+@[term_parser] meta def funZ := leading_parser:maxPrec
   ppAllowUngrouped >> unicodeSymbol "λᶻ" "funᶻ" >> basicFunZ
 
 /--
@@ -1303,16 +1277,11 @@ theorem Image_of_composition_self_inv_of_bijective {f A B : ZFSet} {f_is_func : 
 theorem fapply_inv_of_bijective {A B : ZFSet} {f : ZFSet} {hf : IsFunc A B f}
   (f_bij : f.IsBijective hf) {x y : ZFSet} (hx : x ∈ A) (hy : y ∈ B) :
     @ᶻf ⟨x, by rwa [is_func_dom_eq]⟩ = y → @ᶻf⁻¹ ⟨y, by rwa [is_func_dom_eq]⟩ = x := by
-  intro rfl
-  conv_lhs =>
-    rw [←fapply_composition (inv_is_func_of_bijective f_bij) hf hx,
-      fapply_eq_Image_singleton
-        (IsFunc_of_composition_IsFunc (inv_is_func_of_bijective f_bij) hf) hx]
-    conv =>
-      enter [1,1]
-      rw [←fcomp.eq_def _ _ (inv_is_func_of_bijective f_bij) hf,
-        composition_self_inv_of_bijective f_bij]
-    rw [←fapply_eq_Image_singleton Id.IsFunc hx, fapply_Id hx]
+  intro h
+  have hxy := fapply.def (is_func_is_pfunc hf) (by rwa [is_func_dom_eq hf] : x ∈ f.Dom)
+  rw [h] at hxy
+  exact congrArg Subtype.val
+    (fapply.of_pair (is_func_is_pfunc (inv_is_func_of_bijective f_bij)) ((mem_inv hf.1).mpr hxy))
 
 theorem fapply_inv_of_bijective_iff {A B : ZFSet} {f : ZFSet} {hf : IsFunc A B f}
   (f_bij : f.IsBijective hf) {x y : ZFSet} (hx : x ∈ A) (hy : y ∈ B) :
@@ -1321,15 +1290,10 @@ theorem fapply_inv_of_bijective_iff {A B : ZFSet} {f : ZFSet} {hf : IsFunc A B f
     mp := fapply_inv_of_bijective f_bij hx hy
     mpr := by
       intro h
-      have := fapply_inv_of_bijective (inv_bijective_of_bijective f_bij) hy hx h
-      conv_lhs at this =>
-        rw [fapply_eq_Image_singleton
-          (inv_is_func_of_bijective (inv_bijective_of_bijective f_bij)) hx]
-        conv =>
-          enter [1,1]
-          rw [inv_involutive]
-        rw [←fapply_eq_Image_singleton hf hx]
-      exact this
+      have hyx := fapply.def (is_func_is_pfunc (inv_is_func_of_bijective f_bij))
+        (by rwa [is_func_dom_eq (inv_is_func_of_bijective f_bij)] : y ∈ (f⁻¹).Dom)
+      rw [h, mem_inv] at hyx
+      exact congrArg Subtype.val (fapply.of_pair (is_func_is_pfunc hf) hyx)
 
 /--
 A set is finite if it is equinumerous to a (ZF) natural number, i.e.
@@ -2247,104 +2211,10 @@ noncomputable def fprod {A B A' B' : ZFSet} (f g : ZFSet)
 @[zfun]
 theorem fprod_is_func {A B A' B' φ ψ : ZFSet} (hφ : A.IsFunc A' φ) (hψ : B.IsFunc B' ψ) :
   (A.prod B).IsFunc (A'.prod B') (fprod φ ψ) := by
-  and_intros
-  · intro z hz
-    simp only [fprod, mem_prod, mem_lambda, existsAndEq, and_true] at hz
-    obtain ⟨a', b', a, b, rfl, ⟨aA, bB⟩, ⟨a'A', b'B'⟩, eq⟩ := hz
-    rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨aA, bB⟩)),
-      pair_inj] at eq
-    obtain ⟨rfl, rfl⟩ := eq
-    let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
-    let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
-    simp only [mem_prod, pair_inj, exists_eq_right_right', π₁_pair, π₂_pair]
-    and_intros
-    · exact aA
-    · exact bB
-    · apply fapply_mem_range
-    · apply fapply_mem_range
-  · intro z hz
-    rw [mem_prod] at hz
-    obtain ⟨a, ha, b, hb, rfl⟩ := hz
-    let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
-    let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
-    use φa.pair ψb
-    and_intros <;> beta_reduce
-    · simp_rw [fprod, lambda_spec, pair_mem_prod]
-      rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)), pair_inj]
-      and_intros
-      · exact ha
-      · exact hb
-      · apply fapply_mem_range
-      · apply fapply_mem_range
-      · simp only [π₁_pair]
-        rfl
-      · simp only [π₂_pair]
-        rfl
-    · intro y hy
-      simp_rw [fprod, lambda_spec, pair_mem_prod, π₁_pair, π₂_pair] at hy
-      rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))] at hy
-      exact hy.2.2
-
-theorem fprod_bijective_of_bijective {A B A' B' φ ψ : ZFSet}
-  {hφ : A.IsFunc A' φ} {hψ : B.IsFunc B' ψ}
-  (φ_bij : φ.IsBijective) (ψ_bij : ψ.IsBijective) :
-    (fprod φ ψ).IsBijective := by
-  and_intros
-  · intro x y z hx hy hz xy yz
-    simp only [fprod, mem_prod, mem_lambda, pair_inj, existsAndEq, and_true,
-      exists_eq_left'] at xy yz
-    obtain ⟨⟨a, ha, b, hb, rfl⟩, -, rfl⟩ := xy
-    obtain ⟨⟨c, hc, d, hd, rfl⟩, -, eq⟩ := yz
-    rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)),
-        dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨hc, hd⟩)),
-        pair_inj] at eq
-    simp only [π₁_pair, SetLike.coe_eq_coe, π₂_pair] at eq
-    obtain ⟨φa_eq_φc, ψb_eq_ψd⟩ := eq
-    rw [pair_inj]
-    and_intros
-    · obtain ⟨⟩ := IsInjective.apply_inj hφ φ_bij.1 φa_eq_φc
-      rfl
-    · obtain ⟨⟩ := IsInjective.apply_inj hψ ψ_bij.1 ψb_eq_ψd
-      rfl
-  · intro y hy
-    rw [mem_prod] at hy
-    obtain ⟨a', ha', b', hb', rfl⟩ := hy
-    let φ_inv_a' : ZFSet := fapply φ⁻¹ (is_func_is_pfunc <| inv_is_func_of_bijective φ_bij)
-      ⟨a', by rwa [is_func_dom_eq (inv_is_func_of_bijective φ_bij)]⟩
-    let ψ_inv_b' : ZFSet := fapply ψ⁻¹ (is_func_is_pfunc <| inv_is_func_of_bijective ψ_bij)
-      ⟨b', by rwa [is_func_dom_eq (inv_is_func_of_bijective ψ_bij)]⟩
-    use φ_inv_a'.pair ψ_inv_b'
-    and_intros
-    · rw [pair_mem_prod]
-      and_intros
-      · apply fapply_mem_range
-      · apply fapply_mem_range
-    · simp only [fprod, mem_prod, lambda_spec, pair_inj, exists_eq_right_right', π₁_pair, π₂_pair]
-      and_intros
-      · apply fapply_mem_range
-      · apply fapply_mem_range
-      · exact ha'
-      · exact hb'
-      · rw [dite_eq_left_of_eq_true
-          (eq_true (by rw [pair_mem_prod]; and_intros <;> apply fapply_mem_range)),
-          pair_inj]
-        and_intros
-        · rw [←fapply_composition hφ (inv_is_func_of_bijective φ_bij) ha',
-            fapply_eq_Image_singleton
-              (IsFunc_of_composition_IsFunc hφ (inv_is_func_of_bijective φ_bij)) ha']
-          conv =>
-            enter [2, 1, 1]
-            change φ ∘ᶻ φ⁻¹
-            rw [composition_inv_self_of_bijective φ_bij]
-          rw [←fapply_eq_Image_singleton Id.IsFunc ha', fapply_Id ha']
-        · rw [←fapply_composition hψ (inv_is_func_of_bijective ψ_bij) hb',
-            fapply_eq_Image_singleton
-              (IsFunc_of_composition_IsFunc hψ (inv_is_func_of_bijective ψ_bij)) hb']
-          conv =>
-            enter [2, 1, 1]
-            change ψ ∘ᶻ ψ⁻¹
-            rw [composition_inv_self_of_bijective ψ_bij]
-          rw [←fapply_eq_Image_singleton Id.IsFunc hb', fapply_Id hb']
+  apply lambda_isFunc
+  intro z hz
+  rw [dite_eq_left hz, pair_mem_prod]
+  exact ⟨fapply_mem_range _ _, fapply_mem_range _ _⟩
 
 theorem mem_fprod {A B C D f g x : ZFSet} {hf : A.IsFunc C f} {hg : B.IsFunc D g} :
   x ∈ fprod f g ↔ ∃ (a b : ZFSet) (ha : a ∈ A) (hb : b ∈ B),
@@ -2382,6 +2252,41 @@ theorem pair_mem_fprod {A B C D f g x y : ZFSet} {hf : A.IsFunc C f} {hg : B.IsF
   rw [mem_fprod]
   simp only [pair_inj, exists_and_left]
 
+theorem fprod_injective_of_injective {A B A' B' φ ψ : ZFSet}
+  {hφ : A.IsFunc A' φ} {hψ : B.IsFunc B' ψ}
+  (φ_inj : φ.IsInjective) (ψ_inj : ψ.IsInjective) :
+    (fprod φ ψ).IsInjective := by
+  intro x y z hx hy hz xy yz
+  simp only [fprod, mem_prod, mem_lambda, pair_inj, existsAndEq, and_true,
+    exists_eq_left'] at xy yz
+  obtain ⟨⟨a, ha, b, hb, rfl⟩, -, rfl⟩ := xy
+  obtain ⟨⟨c, hc, d, hd, rfl⟩, -, eq⟩ := yz
+  rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)),
+      dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨hc, hd⟩)), pair_inj] at eq
+  simp only [π₁_pair, SetLike.coe_eq_coe, π₂_pair] at eq
+  obtain ⟨φa_eq_φc, ψb_eq_ψd⟩ := eq
+  rw [pair_inj]
+  and_intros
+  · obtain ⟨⟩ := IsInjective.apply_inj hφ φ_inj φa_eq_φc
+    rfl
+  · obtain ⟨⟩ := IsInjective.apply_inj hψ ψ_inj ψb_eq_ψd
+    rfl
+
+theorem fprod_bijective_of_bijective {A B A' B' φ ψ : ZFSet}
+  {hφ : A.IsFunc A' φ} {hψ : B.IsFunc B' ψ}
+  (φ_bij : φ.IsBijective) (ψ_bij : ψ.IsBijective) :
+    (fprod φ ψ).IsBijective := by
+  refine ⟨fprod_injective_of_injective φ_bij.1 ψ_bij.1, ?_⟩
+  intro y hy
+  obtain ⟨a', ha', b', hb', rfl⟩ := mem_prod.mp hy
+  obtain ⟨a, ha, haa'⟩ := φ_bij.2 a' ha'
+  obtain ⟨b, hb, hbb'⟩ := ψ_bij.2 b' hb'
+  refine ⟨a.pair b, pair_mem_prod.mpr ⟨ha, hb⟩, pair_mem_fprod.mpr ?_⟩
+  refine ⟨a, b, ha, hb, rfl, ?_⟩
+  exact congrArg₂ pair
+    (congrArg Subtype.val (fapply.of_pair (is_func_is_pfunc hφ) haa')).symm
+    (congrArg Subtype.val (fapply.of_pair (is_func_is_pfunc hψ) hbb')).symm
+
 @[simp]
 theorem fapply_fprod {A B C D f g a b : ZFSet} (hf : A.IsFunc C f) (hg : B.IsFunc D g)
   (ha : a ∈ A) (hb : b ∈ B) :
@@ -2390,23 +2295,9 @@ theorem fapply_fprod {A B C D f g a b : ZFSet} (hf : A.IsFunc C f) (hg : B.IsFun
     let fa : ZFSet := @ᶻf ⟨a, by rwa [is_func_dom_eq hf]⟩
     let gb : ZFSet := @ᶻg ⟨b, by rwa [is_func_dom_eq hg]⟩
     fa.pair gb := by
-  conv =>
-    enter [1]
-    rw [fapply_eq_Image_singleton (fprod_is_func hf hg) (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)]
-    dsimp [fprod]
-    rw [
-      ←fapply_eq_Image_singleton
-        (lambda_isFunc
-          (fun h ↦ by
-            rw [dite_eq_left_of_eq_true (eq_true h), pair_mem_prod]
-            and_intros <;> apply fapply_mem_range))
-        (by rw [pair_mem_prod]; exact ⟨ha, hb⟩),
-      fapply_lambda (fun h ↦ by
-        rw [dite_eq_left_of_eq_true (eq_true h), pair_mem_prod]
-        and_intros <;> apply fapply_mem_range)
-        (by rw [pair_mem_prod]; exact ⟨ha, hb⟩),
-      dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))]
-    simp only [π₁_pair, π₂_pair]
+  exact congrArg Subtype.val
+    (fapply.of_pair (is_func_is_pfunc (fprod_is_func hf hg))
+      (pair_mem_fprod.mpr ⟨a, b, ha, hb, rfl, rfl⟩))
 
 open ZFSet Classical in
 theorem composition_fprod_Image_bijective {A B A' B' φ ψ : ZFSet}
@@ -2425,44 +2316,10 @@ theorem composition_fprod_Image_bijective {A B A' B' φ ψ : ZFSet}
       simp only [pair_inj, mem_powerset, existsAndEq, and_true, exists_eq_left'] at x_z y_z
       obtain ⟨_, _, rfl⟩ := x_z
       obtain ⟨_, _, eq⟩ := y_z
-      rw [ZFSet.ext_iff] at eq
-      simp only [mem_Image, mem_prod, and_congr_right_iff, forall_exists_index, and_imp] at eq
-      ext1 z
-      constructor <;> intro hz
-      · obtain ⟨a, ha, b, hb, rfl⟩ := ‹x ⊆ A.prod B› hz |> mem_prod.mp
-        let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
-        let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
-        specialize eq (φa.pair ψb) φa (fapply_mem_range _ _) ψb (fapply_mem_range _ _) rfl
-        have := eq.mp ⟨a.pair b, hz, ?_⟩
-        · obtain ⟨p, hp, p_def⟩ := this
-          simp_rw [φ_ψ, pair_mem_fprod, pair_inj] at p_def
-          obtain ⟨a', b', ha', hb', rfl, φa_φa', ψb_ψb'⟩ := p_def
-          rw [←Subtype.ext_iff] at φa_φa' ψb_ψb'
-          obtain ⟨⟩ := IsInjective.apply_inj hφ φ_bij.1 φa_φa'
-          obtain ⟨⟩ := IsInjective.apply_inj hψ ψ_bij.1 ψb_ψb'
-          exact hp
-        · simp_rw [φ_ψ, pair_mem_fprod, pair_inj]
-          simp only [exists_and_left, exists_and_right, existsAndEq, and_true, exists_eq_left']
-          and_intros
-          · use ha
-          · use hb
-      · obtain ⟨a, ha, b, hb, rfl⟩ := ‹y ⊆ A.prod B› hz |> mem_prod.mp
-        let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
-        let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
-        specialize eq (φa.pair ψb) φa (fapply_mem_range _ _) ψb (fapply_mem_range _ _) rfl
-        have := eq.mpr ⟨a.pair b, hz, ?_⟩
-        · obtain ⟨p, hp, p_def⟩ := this
-          simp_rw [φ_ψ, pair_mem_fprod, pair_inj] at p_def
-          obtain ⟨a', b', ha', hb', rfl, φa_φa', ψb_ψb'⟩ := p_def
-          rw [←Subtype.ext_iff] at φa_φa' ψb_ψb'
-          obtain ⟨⟩ := IsInjective.apply_inj hφ φ_bij.1 φa_φa'
-          obtain ⟨⟩ := IsInjective.apply_inj hψ ψ_bij.1 ψb_ψb'
-          exact hp
-        · simp_rw [φ_ψ, pair_mem_fprod, pair_inj]
-          simp only [exists_and_left, exists_and_right, existsAndEq, and_true, exists_eq_left']
-          and_intros
-          · use ha
-          · use hb
+      have h := congrArg (fun S ↦ Image _ S (inv_is_func_of_bijective hφ_ψ).1) eq
+      rw [Image_of_composition_inv_self_of_bijective hφ_ψ ‹x ⊆ A.prod B›,
+        Image_of_composition_inv_self_of_bijective hφ_ψ ‹y ⊆ A.prod B›] at h
+      exact h
     · intro Y hY
       rw [mem_powerset] at hY
       use φ_ψ⁻¹[Y]
@@ -2483,25 +2340,5 @@ theorem composition_fprod_Image_bijective {A B A' B' φ ψ : ZFSet}
     intro z hz
     rw [mem_Image] at hz
     exact hz.1
-
-theorem fprod_injective_of_injective {A B A' B' φ ψ : ZFSet}
-  {hφ : A.IsFunc A' φ} {hψ : B.IsFunc B' ψ}
-  (φ_inj : φ.IsInjective) (ψ_inj : ψ.IsInjective) :
-    (fprod φ ψ).IsInjective := by
-  intro x y z hx hy hz xy yz
-  simp only [fprod, mem_prod, mem_lambda, pair_inj, existsAndEq, and_true,
-    exists_eq_left'] at xy yz
-  obtain ⟨⟨a, ha, b, hb, rfl⟩, -, rfl⟩ := xy
-  obtain ⟨⟨c, hc, d, hd, rfl⟩, -, eq⟩ := yz
-  rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)),
-      dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨hc, hd⟩)), pair_inj] at eq
-  simp only [π₁_pair, SetLike.coe_eq_coe, π₂_pair] at eq
-  obtain ⟨φa_eq_φc, ψb_eq_ψd⟩ := eq
-  rw [pair_inj]
-  and_intros
-  · obtain ⟨⟩ := IsInjective.apply_inj hφ φ_inj φa_eq_φc
-    rfl
-  · obtain ⟨⟩ := IsInjective.apply_inj hψ ψ_inj ψb_eq_ψd
-    rfl
 
 end ZFSet

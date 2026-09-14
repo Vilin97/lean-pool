@@ -3,11 +3,10 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.BigOperators.Pi
+public import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Analysis.Real.Sqrt
-import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Completely positive matrices
@@ -15,6 +14,8 @@ import Mathlib.LinearAlgebra.Matrix.PosDef
 A real matrix is completely positive if it is a finite sum of rank-one
 matrices `vecMulVec p p` with entrywise nonnegative `p`.
 -/
+
+@[expose] public section
 
 open Matrix
 

@@ -7,12 +7,7 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.Basic
 public import LeanPool.RiemannRochFunctionFields.LocalResidue
-public import Mathlib.Algebra.Order.GroupWithZero.Canonical
-public import Mathlib.Algebra.Polynomial.Eval.Subring
-public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
-public import Mathlib.RingTheory.DedekindDomain.AdicValuation
-public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
-public import Mathlib.RingTheory.Polynomial.Tower
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Riemann–Roch spaces `L(D)`
@@ -488,27 +483,23 @@ theorem finiteDimensional_add_single_one (D : DivisorA k K) (v : PlaceA k K)
     let e : (ringOfIntegers k K ⧸ v.asIdeal) ≃ₗ[k] v.asIdeal.ResidueField :=
       finiteResidueFieldEquiv k K v
     let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
-    let : Module.Finite k f.range := inferInstance
-    have hqker : Module.Finite k
-        (RRspace k K (D + Finsupp.single (Sum.inl v) 1) ⧸ f.ker) :=
-      Module.Finite.equiv f.quotKerEquivRange.symm
+    let : Module.Finite k f.range :=
+      FiniteDimensional.of_injective f.range.subtype f.range.subtype_injective
     have hqp : Module.Finite k
         (RRspace k K (D + Finsupp.single (Sum.inl v) 1) ⧸ p) := by
-      exact Module.Finite.equiv (Submodule.quotEquivOfEq f.ker p
-        (finiteLocalResidueMap_ker k K D v))
+      rw [show p = f.ker from (finiteLocalResidueMap_ker k K D v).symm]
+      exact Module.Finite.equiv f.quotKerEquivRange.symm
     exact Module.Finite.of_submodule_quotient p
   · let f := infiniteLocalResidueMap k K D v
     let e : (infiniteIntegers k K ⧸ v.asIdeal) ≃ₗ[k] v.asIdeal.ResidueField :=
       infiniteResidueFieldEquiv k K v
     let : FiniteDimensional k v.asIdeal.ResidueField := e.finiteDimensional
-    let : Module.Finite k f.range := inferInstance
-    have hqker : Module.Finite k
-        (RRspace k K (D + Finsupp.single (Sum.inr v) 1) ⧸ f.ker) :=
-      Module.Finite.equiv f.quotKerEquivRange.symm
+    let : Module.Finite k f.range :=
+      FiniteDimensional.of_injective f.range.subtype f.range.subtype_injective
     have hqp : Module.Finite k
         (RRspace k K (D + Finsupp.single (Sum.inr v) 1) ⧸ p) := by
-      exact Module.Finite.equiv (Submodule.quotEquivOfEq f.ker p
-        (infiniteLocalResidueMap_ker k K D v))
+      rw [show p = f.ker from (infiniteLocalResidueMap_ker k K D v).symm]
+      exact Module.Finite.equiv f.quotKerEquivRange.symm
     exact Module.Finite.of_submodule_quotient p
 
 theorem finiteDimensional_add_single_nat (D : DivisorA k K) (v : PlaceA k K)
@@ -561,10 +552,7 @@ theorem finrankRRspaceDiff_single_nat_le (D : DivisorA k K) (v : PlaceA k K)
         ext f
         simp
       rw [hp]
-      have h := Submodule.finrank_quotient_add_finrank
-        (⊤ : Submodule k (RRspace k K D))
-      simp only [finrank_top] at h
-      omega
+      exact le_of_eq Module.finrank_zero_of_subsingleton
   | succ n ih =>
       let M := D + Finsupp.single v (n : ℤ)
       let N := M + Finsupp.single v 1
@@ -646,10 +634,7 @@ theorem finrankRRspaceDiff_add_effective_le (D E : DivisorA k K)
         ext f
         simp
       rw [hp, deg_zero]
-      have h := Submodule.finrank_quotient_add_finrank
-        (⊤ : Submodule k (RRspace k K D))
-      simp only [finrank_top] at h
-      omega
+      exact le_of_eq Module.finrank_zero_of_subsingleton
   | single_add a b f ha hb ih =>
       have hfa : f a = 0 := Finsupp.notMem_support_iff.mp ha
       have hff : IsEffective k K f := by

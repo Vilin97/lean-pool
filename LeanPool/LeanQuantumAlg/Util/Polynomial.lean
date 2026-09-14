@@ -6,11 +6,12 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import Mathlib.Algebra.Polynomial.Degree.Lemmas
-public import Mathlib.Algebra.Polynomial.Roots
-public import Mathlib.Order.Interval.Set.Infinite
-public import LeanPool.LeanQuantumAlg.Util.Complex
+public import Mathlib.Algebra.Polynomial.Reverse
+public import Mathlib.Analysis.Complex.Exponential
+import LeanPool.LeanQuantumAlg.Util.Complex
+import Mathlib.Algebra.Polynomial.Roots
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Polynomial helper lemmas (quantum-free)

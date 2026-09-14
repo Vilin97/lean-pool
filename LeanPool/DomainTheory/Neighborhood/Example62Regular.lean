@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Computability.MyhillNerode
+public import Mathlib.Computability.MyhillNerode
 
 /-!
 # Example 6.2 (Scott 1981, PRG-19, §6) — eventually-periodic trees and regular
@@ -54,6 +55,8 @@ content is entirely the combinatorics-on-words / automata correspondence,
 orthogonal to the
 neighbourhood-system machinery.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

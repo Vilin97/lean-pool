@@ -3,16 +3,17 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Fintype.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 /-!
 Overlap types for ordered pairs of vertices can be encoded as `3×3` partial permutation matrices.
 We represent such a matrix as a `Nat` bitmask with 9 bits in row-major order.
@@ -20,6 +21,8 @@ We represent such a matrix as a `Nat` bitmask with 9 bits in row-major order.
 This file provides the core combinatorial operations needed to compute the orbital-algebra structure
 constants for fixed `n` (eventually instantiated to `n = 10^6`).
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

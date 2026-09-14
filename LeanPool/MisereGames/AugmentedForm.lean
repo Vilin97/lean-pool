@@ -5,9 +5,10 @@ Authors: Alfie Davies, Tomasz Maciosowski
 -/
 module
 
-public import LeanPool.MisereGames.Form
 public import LeanPool.MisereGames.GameForm
-public import LeanPool.MisereGames.Form.Misere.Outcome
+public import Mathlib.Data.Countable.Small
+import Mathlib.Logic.UnivLE
+import Mathlib.Tactic.Bound.Init
 
 /-!
 Misere combinatorial games.

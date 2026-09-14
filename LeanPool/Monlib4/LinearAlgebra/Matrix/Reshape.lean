@@ -3,7 +3,9 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
 
 /-!
 
@@ -13,6 +15,8 @@ This defines the identification between `Mₙₓₘ(R)` and `Rⁿˣᵐ` (see `ma
 and shows some obvious properties of this identification.
 
 -/
+
+@[expose] public section
 
 
 namespace Matrix

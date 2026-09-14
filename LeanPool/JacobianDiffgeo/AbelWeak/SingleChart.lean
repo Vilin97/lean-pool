@@ -3,10 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
-import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
-import Mathlib.Analysis.Calculus.BumpFunction.Basic
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
 
 /-!
 # The single-chart weak solution (`abel-weak-solutions`, §6.2-6.3)
@@ -25,6 +29,8 @@ rational function (near `c`) to the constant `1` (far from `c`), with **no match
 beyond `Set.EqOn`-rewriting** on the transition annulus (the same shape the design's §6.2 step 1
 describes).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set Filter Topology

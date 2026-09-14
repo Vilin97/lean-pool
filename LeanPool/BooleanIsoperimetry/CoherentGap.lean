@@ -3,8 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Basic
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Real.Basic
 
 /-!
 # Coherent-gap certificates
@@ -23,6 +27,8 @@ consecutive gaps in the Conway--Guy subset-sum order.
 The open-problem context and the exact boundary of this formalization are
 recorded separately in the Construct research notes.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

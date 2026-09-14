@@ -3,11 +3,12 @@ Copyright (c) 2026 Abdullah Uyu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abdullah Uyu
 -/
+module
 
-import LeanPool.Desargues.Basic
-import LeanPool.Desargues.Morphism
-import LeanPool.Desargues.PV
-import LeanPool.Desargues.Structure
+public import LeanPool.Desargues.Basic
+public import LeanPool.Desargues.Morphism
+public import LeanPool.Desargues.PV
+public import LeanPool.Desargues.Structure
 
 /-!
 # Axiomatic projective geometry (Faure–Frölicher)
@@ -19,6 +20,8 @@ Main declarations: `Basic.ProjectiveGeometry`, `Basic.centralProjection`, `Basic
 Tags: projective-geometry, incidence-geometry, geometry
 MSC: 51A05, 51A30
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

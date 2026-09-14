@@ -3,6 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.MaxPowDiv
+public import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
@@ -11,6 +17,8 @@ import Mathlib.NumberTheory.Padics.PadicVal.Basic
 This module specializes Kummer's theorem to `Nat.centralBinom`, providing the
 arithmetic bridge used by the odd-prime carry enumerator.
 -/
+
+@[expose] public section
 
 namespace OddPrimeValuationDistribution
 

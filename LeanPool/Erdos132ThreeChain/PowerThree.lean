@@ -3,12 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132ThreeChain.Basic
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Data.Int.GCD
+public import Mathlib.Data.Real.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
 import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Arithmetic of powers of three
@@ -17,6 +22,8 @@ The four-point catalogue reduces to a handful of Diophantine facts about powers 
 This file isolates them.  Everything is stated over `ℤ`; the geometric files produce the
 corresponding real equations and transfer them by `exact_mod_cast`.
 -/
+
+@[expose] public section
 
 namespace Erdos132ThreeChain
 

@@ -3,10 +3,21 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import Mathlib.RingTheory.AdicCompletion.Basic
+
+public import LeanPool.AndersonConjecture.Jensen.KrullDomain.AdjoinLocSet
 import LeanPool.AndersonConjecture.Jensen.KrullDomain.LocUFD
 import LeanPool.AndersonConjecture.Jensen.KrullDomain.Nagata
 import LeanPool.AndersonConjecture.Jensen.KrullDomain.Prime
-import Mathlib.Order.BourbakiWitt
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.RingTheory.UniqueFactorizationDomain.Kaplansky
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Krull domain construction: UFD proof
@@ -18,6 +29,8 @@ from the product y_1 * y_2 is a UFD
 Nagata's criterion then
 gives that S itself is a UFD.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -60,22 +73,14 @@ include T in theorem build_R_prime_in_S
   have hS_sub_eq' : (S_sub : Set T) = S_carrier := hS_sub_eq
   have hunit : ∀ (a : T), a ∉ IsLocalRing.maximalIdeal T → IsUnit a :=
     fun a ha => IsLocalRing.notMem_maximalIdeal.mp ha
-  have hRbar_one : (1 : T) ∈ Rbar :=
-    ⟨⟨C 1, 0, by simp⟩, ⟨C 1, 0, by simp⟩⟩
   have hRbar_mul : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ * t₂ ∈ Rbar :=
     fun t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩ =>
       ⟨(fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
         ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                              ring⟩) x₁ y₂ t₁ t₂ h₁₁ h₂₁,
+                              exact mul_mul_mul_comm _ _ _ _⟩) x₁ y₂ t₁ t₂ h₁₁ h₂₁,
        (fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
         ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                              ring⟩) x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
-  have hALS_mul : ∀ (x' : T) (y' : R.carrier) (t₁ t₂ : T),
-      t₁ ∈ adjoinLocSetY R x' y' → t₂ ∈ adjoinLocSetY R x' y' →
-      t₁ * t₂ ∈ adjoinLocSetY R x' y' := by
-    intro x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩
-    exact ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                                ring⟩
+                              exact mul_mul_mul_comm _ _ _ _⟩) x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
   have hp_ne : (⟨(↑p : T), hR_le p.2⟩ : S_sub) ≠ 0 := by
     intro h
     exact hp.ne_zero (R.carrier.subtype_injective (congrArg Subtype.val h))
@@ -95,7 +100,6 @@ include T in theorem build_R_prime_in_S
     have : ab * ac = (b * bb) * (c * bc) := by rw [hb_eq, hc_eq]
     rw [this, show (b * bb) * (c * bc) = b * c * (bb * bc) from by ring,
       hbc_T, show (↑p : T) * d * (bb * bc) = (↑p : T) * (d * bb * bc) from by ring]
-  have hab_ac_Rbar := hRbar_mul ab ac hab_Rbar hac_Rbar
   have hcop := hcoprime p hp
   suffices h : (∃ e₁ ∈ Rbar, ab = (↑p : T) * e₁) ∨ (∃ e₂ ∈ Rbar, ac = (↑p : T) * e₂) by
     rcases h with ⟨e₁, he₁_Rbar, hab_pe₁⟩ | ⟨e₂, he₂_Rbar, hac_pe₂⟩
@@ -110,7 +114,7 @@ include T in theorem build_R_prime_in_S
         have h1 : b * bb = (↑p : T) * e₁ := by rw [hb_eq, hab_pe₁]
         calc b = b * bb * ↑ubb⁻¹ := by rw [← hubb, mul_assoc, ubb.mul_inv, mul_one]
           _ = (↑p : T) * e₁ * ↑ubb⁻¹ := by rw [h1]
-          _ = (↑p : T) * (e₁ * ↑ubb⁻¹) := by ring
+          _ = (↑p : T) * (e₁ * ↑ubb⁻¹) := mul_assoc _ _ _
       exact ⟨⟨e₁ * ↑ubb⁻¹, hw_mem⟩, Subtype.ext hb_pe⟩
     · right
       have hbc_unit := hunit bc hbc_notM
@@ -123,7 +127,7 @@ include T in theorem build_R_prime_in_S
         have h1 : c * bc = (↑p : T) * e₂ := by rw [hc_eq, hac_pe₂]
         calc c = c * bc * ↑ubc⁻¹ := by rw [← hubc, mul_assoc, ubc.mul_inv, mul_one]
           _ = (↑p : T) * e₂ * ↑ubc⁻¹ := by rw [h1]
-          _ = (↑p : T) * (e₂ * ↑ubc⁻¹) := by ring
+          _ = (↑p : T) * (e₂ * ↑ubc⁻¹) := mul_assoc _ _ _
       exact ⟨⟨e₂ * ↑ubc⁻¹, hw_mem⟩, Subtype.ext hc_pe⟩
   have hd_carrier : d ∈ S_carrier := hS_sub_eq' ▸ hd_mem
   obtain ⟨a_d, b_d, had_Rbar, hbd_Rbar, hbd_notM, hd_eq⟩ := hd_carrier
@@ -135,41 +139,24 @@ include T in theorem build_R_prime_in_S
   have hacbd_Rbar : ac * b_d ∈ Rbar := hRbar_mul ac b_d hac_Rbar hbd_Rbar
   have hadbbbc_Rbar : a_d * bb * bc ∈ Rbar :=
     hRbar_mul _ _ (hRbar_mul a_d bb had_Rbar hbb_Rbar) hbc_Rbar
-  push Not at hcop
-  by_cases hpy₂ : p ∣ y₂
-  · have hpy₁ : ¬ p ∣ y₁ := fun h => hcop h hpy₂
-    have := prime_in_adjoinLocSet R x₂ y₁ p hx₂_trans hp hpy₁
-      ab (ac * b_d) (a_d * bb * bc)
-      hab_Rbar.2 (hALS_mul x₂ y₁ ac b_d hac_Rbar.2 hbd_Rbar.2)
-      (hALS_mul x₂ y₁ _ _ (hALS_mul x₂ y₁ a_d bb had_Rbar.2 hbb_Rbar.2) hbc_Rbar.2)
-      hcleared
-    rcases this with ⟨e, he_A₂, hab_eq⟩ | ⟨e, he_A₂, hacbd_eq⟩
-    · left
-      exact ⟨e, hR_prime_div_Rbar p hp ab hab_Rbar e hab_eq, hab_eq⟩
-    · have he_Rbar := hR_prime_div_Rbar p hp (ac * b_d) hacbd_Rbar e hacbd_eq
-      obtain ⟨ubd, hubd⟩ := hunit b_d hbd_notM
+  suffices hdiv : (∃ e : T, ab = (↑p : T) * e) ∨
+      (∃ e : T, ac * b_d = (↑p : T) * e) by
+    rcases hdiv with ⟨e, hab_eq⟩ | ⟨e, hacbd_eq⟩
+    · exact Or.inl ⟨e, hR_prime_div_Rbar p hp ab hab_Rbar e hab_eq, hab_eq⟩
+    · obtain ⟨ubd, hubd⟩ := hunit b_d hbd_notM
       have hac_eq : ac = (↑p : T) * (e * ↑ubd⁻¹) := by
         calc ac = ac * b_d * ↑ubd⁻¹ := by rw [← hubd, mul_assoc, ubd.mul_inv, mul_one]
           _ = (↑p : T) * e * ↑ubd⁻¹ := by rw [hacbd_eq]
-          _ = (↑p : T) * (e * ↑ubd⁻¹) := by ring
-      right
-      exact ⟨e * ↑ubd⁻¹, hR_prime_div_Rbar p hp ac hac_Rbar _ hac_eq, hac_eq⟩
-  · have := prime_in_adjoinLocSet R x₁ y₂ p hx₁_trans hp hpy₂
-      ab (ac * b_d) (a_d * bb * bc)
-      hab_Rbar.1 (hALS_mul x₁ y₂ ac b_d hac_Rbar.1 hbd_Rbar.1)
-      (hALS_mul x₁ y₂ _ _ (hALS_mul x₁ y₂ a_d bb had_Rbar.1 hbb_Rbar.1) hbc_Rbar.1)
-      hcleared
-    rcases this with ⟨e, he_A₁, hab_eq⟩ | ⟨e, he_A₁, hacbd_eq⟩
-    · left
-      exact ⟨e, hR_prime_div_Rbar p hp ab hab_Rbar e hab_eq, hab_eq⟩
-    · have he_Rbar := hR_prime_div_Rbar p hp (ac * b_d) hacbd_Rbar e hacbd_eq
-      obtain ⟨ubd', hubd'⟩ := hunit b_d hbd_notM
-      have hac_eq : ac = (↑p : T) * (e * ↑ubd'⁻¹) := by
-        calc ac = ac * b_d * ↑ubd'⁻¹ := by rw [← hubd', mul_assoc, ubd'.mul_inv, mul_one]
-          _ = (↑p : T) * e * ↑ubd'⁻¹ := by rw [hacbd_eq]
-          _ = (↑p : T) * (e * ↑ubd'⁻¹) := by ring
-      right
-      exact ⟨e * ↑ubd'⁻¹, hR_prime_div_Rbar p hp ac hac_Rbar _ hac_eq, hac_eq⟩
+          _ = (↑p : T) * (e * ↑ubd⁻¹) := mul_assoc _ _ _
+      exact Or.inr ⟨e * ↑ubd⁻¹, hR_prime_div_Rbar p hp ac hac_Rbar _ hac_eq, hac_eq⟩
+  by_cases hpy₂ : p ∣ y₂
+  · have hpy₁ : ¬ p ∣ y₁ := fun h => hcop ⟨h, hpy₂⟩
+    exact (prime_in_adjoinLocSet R x₂ y₁ p hx₂_trans hp hpy₁
+      ab (ac * b_d) (a_d * bb * bc) hab_Rbar.2 hacbd_Rbar.2 hadbbbc_Rbar.2 hcleared).imp
+      (fun ⟨e, _, he⟩ => ⟨e, he⟩) (fun ⟨e, _, he⟩ => ⟨e, he⟩)
+  · exact (prime_in_adjoinLocSet R x₁ y₂ p hx₁_trans hp hpy₂
+      ab (ac * b_d) (a_d * bb * bc) hab_Rbar.1 hacbd_Rbar.1 hadbbbc_Rbar.1 hcleared).imp
+      (fun ⟨e, _, he⟩ => ⟨e, he⟩) (fun ⟨e, _, he⟩ => ⟨e, he⟩)
 
 
 
@@ -273,14 +260,6 @@ private def build_loc_away_ufd_proof
     rw [show s = ι y₁ * ι y₂ from rfl,
       map_mul] at this
     exact isUnit_of_mul_isUnit_right this
-  have hy₁_unit :
-      IsUnit (algebraMap S_sub
-        (Localization.Away s) (ι y₁)) := by
-    have := IsLocalization.Away.algebraMap_isUnit
-      (S := Localization.Away s) (x := s)
-    rw [show s = ι y₁ * ι y₂ from rfl,
-      map_mul] at this
-    exact isUnit_of_mul_isUnit_left this
   let : Algebra (Polynomial R.carrier)
       (Localization.Away s) := φ.toAlgebra
   let M : Submonoid (Polynomial R.carrier) :=
@@ -472,47 +451,6 @@ private def build_ufd_proof_proof
     UniqueFactorizationMonoid S_sub ) := ⟨by
   have : IsDomain R.carrier := NSubring.isDomain R
   have : UniqueFactorizationMonoid R.carrier := R.isUFD
-  set Rbar := intersectionSet R x₁ x₂ y₁ y₂
-  have hRbar_one : (1 : T) ∈ Rbar :=
-    ⟨⟨C 1, 0, by simp⟩, ⟨C 1, 0, by simp⟩⟩
-  have hRbar_add : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ + t₂ ∈ Rbar := by
-    intro t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩
-    constructor
-    · obtain ⟨f₁, n₁, hf₁⟩ := h₁₁
-      obtain ⟨f₂, n₂, hf₂⟩ := h₂₁
-      refine ⟨f₁ * C (y₂ ^ n₂) + f₂ * C (y₂ ^ n₁), n₁ + n₂, ?_⟩
-      have key : (t₁ + t₂) * (↑y₂ : T) ^ (n₁ + n₂) =
-          t₁ * (↑y₂ : T) ^ n₁ * (↑y₂ : T) ^ n₂ +
-          t₂ * (↑y₂ : T) ^ n₂ * (↑y₂ : T) ^ n₁ := by rw [pow_add]
-                                                     ring
-      rw [key, hf₁, hf₂, map_add, map_mul, map_mul, aeval_C, aeval_C]
-      simp only [show algebraMap R.carrier T = R.carrier.subtype
-        from rfl, Subring.coe_subtype, map_pow]
-    · obtain ⟨f₁, n₁, hf₁⟩ := h₁₂
-      obtain ⟨f₂, n₂, hf₂⟩ := h₂₂
-      refine ⟨f₁ * C (y₁ ^ n₂) + f₂ * C (y₁ ^ n₁), n₁ + n₂, ?_⟩
-      have key : (t₁ + t₂) * (↑y₁ : T) ^ (n₁ + n₂) =
-          t₁ * (↑y₁ : T) ^ n₁ * (↑y₁ : T) ^ n₂ +
-          t₂ * (↑y₁ : T) ^ n₂ * (↑y₁ : T) ^ n₁ := by rw [pow_add]
-                                                     ring
-      rw [key, hf₁, hf₂, map_add, map_mul, map_mul, aeval_C, aeval_C]
-      simp only [show algebraMap R.carrier T = R.carrier.subtype
-        from rfl, Subring.coe_subtype, map_pow]
-  have hRbar_mul : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ * t₂ ∈ Rbar :=
-    fun t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩ =>
-      ⟨(fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
-        ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                              ring⟩) x₁ y₂ t₁ t₂ h₁₁ h₂₁,
-       (fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
-        ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                              ring⟩) x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
-  have hS_mem_rep : ∀ s : S_sub, ∃ (a b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
-      b ∉ IsLocalRing.maximalIdeal T ∧ (s : T) * b = a := by
-    intro s
-    have := s.2
-    change s.1 ∈ (S_sub : Set T) at this
-    rw [hS_sub_eq] at this
-    exact this
   rw [UniqueFactorizationMonoid.iff_exists_prime_mem_of_isPrime]
   intro P hP_ne_bot hP_prime
   let ι : R.carrier →+* S_sub := Subring.inclusion hR_le
@@ -862,29 +800,15 @@ include T in theorem build_primes_preserved
     {t : T | ∃ (a : T) (b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
       b ∉ IsLocalRing.maximalIdeal T ∧ t * b = a}
   have hS_sub_eq' : (S_sub : Set T) = S_carrier := hS_sub_eq
-  have hunit : ∀ (a : T), a ∉ IsLocalRing.maximalIdeal T → IsUnit a :=
-    fun a ha => IsLocalRing.notMem_maximalIdeal.mp ha
-  have hRbar_one : (1 : T) ∈ Rbar :=
-    ⟨⟨C 1, 0, by simp⟩, ⟨C 1, 0, by simp⟩⟩
   have hRbar_mul : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ * t₂ ∈ Rbar :=
     fun t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩ =>
       ⟨(fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
         ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                              ring⟩) x₁ y₂ t₁ t₂ h₁₁ h₂₁,
+                              exact mul_mul_mul_comm _ _ _ _⟩) x₁ y₂ t₁ t₂ h₁₁ h₂₁,
        (fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
         ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                              ring⟩) x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
-  have hALS_mul : ∀ (x' : T) (y' : R.carrier) (t₁ t₂ : T),
-      t₁ ∈ adjoinLocSetY R x' y' → t₂ ∈ adjoinLocSetY R x' y' →
-      t₁ * t₂ ∈ adjoinLocSetY R x' y' := by
-    intro x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩
-    exact ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
-                                ring⟩
+                              exact mul_mul_mul_comm _ _ _ _⟩) x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
   set r' : S_sub := ⟨(r : T), hR_le r.2⟩ with hr'_def
-  have hr'_ne : r' ≠ 0 := by
-    intro h
-    have h0 : (r : T) = (0 : T) := congrArg Subtype.val h
-    exact hr.ne_zero (R.carrier.subtype_injective h0)
   have hr'_nu : ¬IsUnit r' := by
     intro hu
     have hr_M : (r : T) ∈ IsLocalRing.maximalIdeal T := by

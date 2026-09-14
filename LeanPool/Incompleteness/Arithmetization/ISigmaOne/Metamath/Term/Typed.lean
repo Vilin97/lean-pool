@@ -3,14 +3,18 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Functions
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Functions
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-!
 
 # Typed Formalized IsSemiterm/Term
 
 -/
+
+@[expose] public section
 
 noncomputable section «lp_nc_section_1»
 

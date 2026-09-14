@@ -3,8 +3,16 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Data.Set.Basic
-import Mathlib.Data.List.OfFn
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Data.Set.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Set.Operations
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # Safety-liveness decomposition
@@ -12,6 +20,8 @@ import Mathlib.Data.List.OfFn
 We prove that every linear-time property decomposes as the intersection of a
 safety property and a liveness property, following Alpern and Schneider.
 -/
+
+@[expose] public section
 
 namespace SafetyLivenessDecomposition
 

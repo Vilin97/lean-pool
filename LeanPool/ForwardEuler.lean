@@ -3,8 +3,9 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Aristotle
 -/
+module
 
-import LeanPool.ForwardEuler.Main
+public import LeanPool.ForwardEuler.Main
 
 /-!
 # Forward Euler Method
@@ -16,6 +17,8 @@ Main declarations: `ODE.EulerMethod.dist_path_le`, `ODE.EulerMethod.tendsto_path
 Tags: numerical-analysis, ordinary-differential-equations, numerical-methods
 MSC: 65L05, 34A45
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

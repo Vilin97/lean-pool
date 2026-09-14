@@ -3,25 +3,23 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
-import Mathlib.Analysis.Complex.Harmonic.Analytic
-import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
-import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
-import Mathlib.Analysis.Normed.Module.WeakDual
-import Mathlib.MeasureTheory.Measure.Support
-import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Topology.ContinuousMap.SecondCountableSpace
-import Mathlib.Topology.ContinuousMap.CompactlySupported
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.LinearCombination
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.Analysis.Normed.Module.WeakDual
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Analysis.SpecialFunctions.Complex.CircleMap
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Topology.ContinuousMap.Ordered
 import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
 import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszUnique
+import Mathlib.Analysis.Complex.Harmonic.Analytic
+import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
+import Mathlib.MeasureTheory.Measure.Support
+public import Mathlib.Topology.ContinuousMap.SecondCountableSpace
 
 /-!
 # The Herglotz–Riesz Representation Theorem
@@ -72,6 +70,8 @@ Ann. Sci. Éc. Norm. Supér., 28, 33–62.
 Herglotz theorem, Herglotz–Riesz theorem, Poisson integral, positive harmonic function,
 positive real part, unit disc
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanComplexAnalysis
 

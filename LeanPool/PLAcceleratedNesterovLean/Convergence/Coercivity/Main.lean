@@ -3,11 +3,11 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
 import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Core
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
 
 /-!
 # Lyapunov Coercivity
@@ -15,6 +15,8 @@ import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
 The Lyapunov function L_n controls the physical quantities ‖v_n‖² + μ'‖e_n‖²
 and the potential Ψ(x_n). The constants depend only on a = √(μ'·η).
 -/
+
+@[expose] public section
 
 noncomputable section
 

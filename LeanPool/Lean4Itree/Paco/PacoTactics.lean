@@ -3,8 +3,20 @@ Copyright (c) 2026 Paul Mure, Joonhyup Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Mure, Joonhyup Lee
 -/
-import Lean.Meta
-import Lean.Elab
+module
+
+public meta import Lean.Meta.ArgsPacker
+
+public meta import Lean.Meta.Tactic.Cleanup
+
+
+public meta import Lean.Meta.Tactic.Delta
+
+public meta import Lean.Elab.Tactic.Basic
+public meta import Lean.Meta.Tactic.Apply
+import Lean.Exception
+import Lean.Meta.ArgsPacker.Basic
+public meta import Lean.Meta.Tactic.Rewrite
 import LeanPool.Lean4Itree.Paco.PacoDefs
 
 /-!
@@ -15,6 +27,8 @@ The elaborators, macros and syntax that drive parameterized-coinduction proofs
 `ptop`, ...). These act on goals phrased with the parameterized least fixed
 point `plfp` and its accumulation principle `plfp_acc` from `PacoDefs`.
 -/
+
+public meta section
 
 namespace Lean4Itree
 

@@ -6,7 +6,6 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.UnitFundamentalDomain
-public import Mathlib.MeasureTheory.Integral.IntegrableOn
 
 /-! TODO: Add doc-string. -/
 

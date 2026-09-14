@@ -3,10 +3,14 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Main
-import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Definitions
+import Mathlib.Algebra.Order.Ring.Pow
+
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.Main
+public import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Definitions
 import LeanPool.CommonNeighbourConjecture.Saxl.Generalized
+import Mathlib.Data.Rat.Floor
 
 /-!
 # Internal implementation of the main theorem
@@ -14,6 +18,8 @@ import LeanPool.CommonNeighbourConjecture.Saxl.Generalized
 Construction parameters, bridge lemmas, and proof machinery used by the
 minimal public module `Examples.MainTheorems`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

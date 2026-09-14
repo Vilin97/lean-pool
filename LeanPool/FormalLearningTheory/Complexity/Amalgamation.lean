@@ -3,7 +3,12 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.Interpolation
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Interpolation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Amalgamation Preserves WellBehavedVCMeasTarget
@@ -31,6 +36,8 @@ The proof proceeds by:
 - BorelAnalyticBridge.lean (bridge theorem)
 - Interpolation.lean (piecewise concepts, interpClassFixed)
 -/
+
+@[expose] public section
 
 universe u
 

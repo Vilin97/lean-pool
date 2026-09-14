@@ -3,13 +3,14 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import LeanPool.PebblingLean.GraphIso
-import LeanPool.PebblingLean.Hypercube
-import LeanPool.PebblingLean.Product
-import LeanPool.PebblingLean.UpperBound
+public import LeanPool.PebblingLean.GraphIso
+public import LeanPool.PebblingLean.Product
+public import LeanPool.PebblingLean.UpperBound
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Fin.Embedding
+import Mathlib.Data.Finite.Prod
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Hypercubes as Cartesian products
@@ -18,6 +19,8 @@ This file starts the bridge from the abstract Cartesian-product pebbling theorem
 to hypercubes.  The first ingredient is the coordinate split
 `Q_{a+m} ≃ Q_a × Q_m`.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

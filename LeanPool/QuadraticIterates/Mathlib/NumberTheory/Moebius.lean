@@ -3,14 +3,14 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+module
+
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.RingTheory.Radical.Basic
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Sums of the Möbius function over divisors
@@ -21,6 +21,8 @@ sign partition of the divisors of a squarefree number.
 Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of some iterated
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
+
+@[expose] public section
 
 open ArithmeticFunction
 open scoped ArithmeticFunction.Moebius ArithmeticFunction.zeta

@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Product
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Data.Finite.Defs
 import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Finset.Basic
 
 /-!
 # Exercise 6.29 (Scott 1981, PRG-19, §6) — infinitary sum and product
@@ -74,6 +75,8 @@ the degeneracy `iotimes_only_master`/`iotimes_subsingleton` (a cardinality
 argument through Mathlib's
 classical `Set.Finite`). Both are flagged in their docstrings.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

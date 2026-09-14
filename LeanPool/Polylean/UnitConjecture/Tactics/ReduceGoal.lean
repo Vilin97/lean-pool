@@ -3,8 +3,12 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Lean
+public meta import Lean.Elab.Tactic.Basic
+public meta import Lean.Meta.Reduce
+
+public meta section
 
 open Lean Meta Elab Tactic Term
 

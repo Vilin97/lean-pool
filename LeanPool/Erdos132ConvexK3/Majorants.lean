@@ -3,9 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import Lean.Elab.Tactic.Omega
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Int.Notation
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.ToDual
+import Mathlib.Algebra.Order.Group.Unbundled.Basic
 import Mathlib.Algebra.Ring.Int.Defs
-import Mathlib.Data.Nat.Cast.Order.Ring
+import Mathlib.Data.Nat.Cast.Order.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # ErLV maximal-gap arithmetic for the convex three-distance argument
@@ -19,6 +27,8 @@ which the rank budget is `a + b ≤ 2`.
 Signed integers are used for arc differences.  Thus the case `L < 0`, where
 `u` precedes `y` in unwrapped order, is represented rather than discarded.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 

@@ -5,13 +5,11 @@ Authors: Tomasz Maciosowski
 -/
 module
 
-public import LeanPool.MisereGames.GameForm
-public import LeanPool.MisereGames.Form.Misere.Outcome
-public import LeanPool.MisereGames.Misere.PFree
 public import LeanPool.MisereGames.Misere.DeadEnding
 public import LeanPool.MisereGames.Misere.Quotients
-public import LeanPool.MisereGames.Misere.Closures
 public import LeanPool.MisereGames.Ruleset
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
 Misere combinatorial games.

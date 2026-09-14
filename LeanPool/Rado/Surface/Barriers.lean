@@ -3,8 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Surface.Perron
+module
+
+public import LeanPool.Rado.Surface.Perron
 import LeanPool.Rado.Complex.PlanarConnected
+import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 
 /-!
 # The two-disk configuration and its barriers
@@ -16,6 +19,8 @@ at `-4` (`configFamily`), and force nonconstancy of its upper envelope with
 two explicit log-barriers on the annuli `1 ≤ |ζ ∓ 4| ≤ 2`: values `≥ 3/4`
 resp. `≤ 1/4` at the witness points `±4 + 2^(1/4)`.
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 

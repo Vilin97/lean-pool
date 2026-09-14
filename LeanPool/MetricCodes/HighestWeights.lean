@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Interlacing
+public import LeanPool.MetricCodes.Interlacing
 
 /-!
 # Highest-weight identities
 
 Diamond relations, Lie irreducibility, and isotropic highest-weight constructions.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -168,7 +171,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankArbitraryRowBranchingOpera
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowFirstAxisIntertwining
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondGapShift
 
-private def diamondPathOperator {r n : ℕ}
+/-- The lowering polarization path followed by multiplication by its starting coordinate
+variable. -/
+def diamondPathOperator {r n : ℕ}
     (target : Fin (r + 1)) (k : Fin n)
     (S : Finset (Fin (r + 1))) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
@@ -183,7 +188,8 @@ private def diamondPathOperator {r n : ℕ}
       MvPolynomial.X (variableIndex (polarizationPathStart target S) k) *
         lowerPolarizationPath ((S.sort (· ≤ ·)) ++ [target]) p := rfl
 
-private def diamondOmittedRowOperator {r n : ℕ}
+/-- The weighted sum of diamond paths omitting a specified raised row. -/
+def diamondOmittedRowOperator {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target raised : Fin (r + 1)) (k : Fin n) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
@@ -323,7 +329,9 @@ open MetricCodes.Spherical.HigherYoungArbitraryRankInterlacingGapSchedule
 open MetricCodes.Spherical.HigherYoungArbitraryRankInterlacingLegalSchedule
 open MetricCodes.Spherical.ThreeRowYoungBranching
 
-private def DominantSameAxisDiamond (r n : ℕ) : Prop :=
+/-- Commutation of the two same-axis axial raises, with updated dominant weights, for every pair
+of rows. -/
+def DominantSameAxisDiamond (r n : ℕ) : Prop :=
   ∀ (lam : Fin (r + 1) → ℕ) (_ : Antitone lam)
     (i j : Fin (r + 1)) (_ : i < j) (k : Fin n)
     (p : PolynomialSpace r n),
@@ -332,7 +340,8 @@ private def DominantSameAxisDiamond (r n : ℕ) : Prop :=
       arbitraryRowAxialRaise (raiseWeight lam j) i k
         (arbitraryRowAxialRaise lam j k p)
 
-private def DominantSameAxisRowDiamond {r : ℕ} (n : ℕ)
+/-- The same-axis axial-raising diamond identity with the larger row fixed. -/
+def DominantSameAxisRowDiamond {r : ℕ} (n : ℕ)
     (row : Fin (r + 1)) : Prop :=
   ∀ (lam : Fin (r + 1) → ℕ) (_ : Antitone lam)
     (i : Fin (r + 1)) (_ : i < row) (k : Fin n)
@@ -513,7 +522,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowMickelssonWeightHomog
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowUnconditionalBranch
 open MetricCodes.Spherical.HigherRepresentationGraph
 
-private def canonicalAdjacentProjectedRaiseCoefficient
+/-- The adjacent projected raising coefficient computed from the canonical positive Fischer Gram
+data. -/
+def canonicalAdjacentProjectedRaiseCoefficient
     {r n : ℕ} (low : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (row : Fin (r + 2))
     (hlow : Interlaces low mu)
@@ -657,7 +668,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowFirstAxisIntertwining
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowMickelssonPathRecurrence
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondPathCommutator
 
-private def diamondPairResidual {r n : ℕ}
+/-- The paired diamond-path commutator residual after subtracting the shifted omitted-path
+terms. -/
+def diamondPairResidual {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target raised : Fin (r + 1)) (k : Fin n)
     (S : Finset (Fin (r + 1))) :
@@ -820,7 +833,9 @@ theorem polarization_axialCoordinate_mul_lowerPolarizationPath_sub
     polarization_lowerPolarizationPath_commutator]
   split_ifs <;> ring
 
-private def axialCoordinateLowerPath
+/-- A lowering polarization path followed by multiplication by the chosen starting axis
+coordinate. -/
+def axialCoordinateLowerPath
     {r n : ℕ} (start : Fin (r + 1)) (k : Fin n)
     (path : List (Fin (r + 1))) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
@@ -1010,11 +1025,13 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondFullCo
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondRootCommutator
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondSuffixRootCommute
 
-private def precedingDiamondSubset {r : ℕ}
+/-- The rows of a diamond subset lying strictly before the pivot. -/
+def precedingDiamondSubset {r : ℕ}
     (pivot : Fin (r + 1)) (S : Finset (Fin (r + 1))) :
     Finset (Fin (r + 1)) := S.filter (fun a => a < pivot)
 
-private def succeedingDiamondSubset {r : ℕ}
+/-- The rows of a diamond subset lying strictly after the pivot. -/
+def succeedingDiamondSubset {r : ℕ}
     (pivot : Fin (r + 1)) (S : Finset (Fin (r + 1))) :
     Finset (Fin (r + 1)) := S.filter (fun a => pivot < a)
 
@@ -1136,7 +1153,8 @@ theorem sort_insert_eq_preceding_cons_succeeding
   have hcanonical := (List.toFinset_sort (r := (· ≤ ·)) hnodup).mpr hsorted
   simpa only [hfin] using hcanonical
 
-private def omittedDiamondPrefix {r n : ℕ}
+/-- The axial lowering-path prefix with the pivot omitted. -/
+def omittedDiamondPrefix {r n : ℕ}
     (target : Fin (r + 1)) (k : Fin n)
     (S : Finset (Fin (r + 1)))
     (front : List (Fin (r + 1))) (next : Fin (r + 1)) :
@@ -1144,7 +1162,9 @@ private def omittedDiamondPrefix {r n : ℕ}
   axialCoordinateLowerPath
     (polarizationPathStart target S) k (front ++ [next])
 
-private def insertedDiamondPrefix {r n : ℕ}
+/-- The axial lowering-path prefix with the pivot inserted, followed by its connecting
+polarization. -/
+def insertedDiamondPrefix {r n : ℕ}
     (target pivot : Fin (r + 1)) (k : Fin n)
     (S : Finset (Fin (r + 1)))
     (front : List (Fin (r + 1))) (next : Fin (r + 1)) :
@@ -1186,7 +1206,8 @@ theorem diamondPathOperator_eq_insertedPrefix_comp_suffix
     lowerPolarizationPath_append_cons_apply front pivot (next :: tail)]
   rfl
 
-private def diamondPrefixResidual {r n : ℕ}
+/-- The commutator residual comparing the inserted and omitted diamond prefixes. -/
+def diamondPrefixResidual {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target pivot : Fin (r + 1)) (k : Fin n)
     (S : Finset (Fin (r + 1)))
@@ -1256,13 +1277,15 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowMickelssonPathCommuta
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondPathCommutator
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondGapDifference
 
-private def spectralPathCoeff {r : ℕ}
+/-- The signed product of spectrally shifted row gaps outside the selected path subset. -/
+def spectralPathCoeff {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (pivot : Fin (r + 1))
     (t : ℝ) (S : Finset (Fin (r + 1))) : ℝ :=
   (-1 : ℝ) ^ S.card *
     ∏ a ∈ precedingRows pivot \ S, (shiftedRowGap lam pivot a + t)
 
-private def spectralPathOperator {r n : ℕ}
+/-- The sum of diamond path operators weighted by their spectrally shifted coefficients. -/
+def spectralPathOperator {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (pivot target : Fin (r + 1)) (k : Fin n) (t : ℝ) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
@@ -1517,7 +1540,8 @@ theorem diamondSubset_eq_preceding_union_succeeding
     · exact ha
     · exact ha
 
-private def diamondSucceedingRows {r : ℕ}
+/-- The rows strictly between the pivot and the target. -/
+def diamondSucceedingRows {r : ℕ}
     (target pivot : Fin (r + 1)) : Finset (Fin (r + 1)) :=
   (precedingRows target).filter (fun a => pivot < a)
 
@@ -1555,7 +1579,8 @@ theorem diamondOmittedRows_eq_preceding_union_succeeding
       · exact (ne_of_gt hahigh) heq
       · exact hnot ⟨haS, hahigh⟩
 
-private def upperDiamondPathCoefficient {r : ℕ}
+/-- The signed product of row gaps contributed by the upper part of a diamond path. -/
+def upperDiamondPathCoefficient {r : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target pivot : Fin (r + 1))
     (S : Finset (Fin (r + 1))) : ℝ :=
@@ -1831,11 +1856,13 @@ theorem polarizationPathCoefficient_insert_union_factor
         ((mem_diamondSucceedingRows target pivot a).mp (hU ha)).2⟩
   rw [hupper, hself]
 
-private def diamondUpperSuffixNext {r : ℕ}
+/-- The first row in the sorted upper suffix, with the target appended as a final row. -/
+def diamondUpperSuffixNext {r : ℕ}
     (target : Fin (r + 1)) (U : Finset (Fin (r + 1))) : Fin (r + 1) :=
   ((U.sort (· ≤ ·)) ++ [target]).headD target
 
-private def diamondUpperSuffixTail {r : ℕ}
+/-- The remaining rows after removing the first row of the upper diamond suffix. -/
+def diamondUpperSuffixTail {r : ℕ}
     (target : Fin (r + 1)) (U : Finset (Fin (r + 1))) :
     List (Fin (r + 1)) :=
   ((U.sort (· ≤ ·)) ++ [target]).tail
@@ -1927,7 +1954,8 @@ theorem insertedDiamondPrefix_union_eq_lowerPath_comp_root
   rw [polarizationPathStart_insert_union_eq_lower_pivot
     target pivot L U hL hU]
 
-private def localSpectralDiamondResidual {r n : ℕ}
+/-- The local commutator residual for a diamond prefix ending at the next suffix row. -/
+def localSpectralDiamondResidual {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target pivot next : Fin (r + 1)) (k : Fin n)
     (L : Finset (Fin (r + 1))) :
@@ -1940,7 +1968,8 @@ private def localSpectralDiamondResidual {r n : ℕ}
     shiftedRowGap lam target pivot •
       (omitted.comp Z - Z.comp omitted)) - omitted.comp Z
 
-private def spectralDiamondPrefixResidual {r n : ℕ}
+/-- The spectral-path commutator residual associated with a diamond prefix and its next row. -/
+def spectralDiamondPrefixResidual {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target pivot next : Fin (r + 1)) (k : Fin n) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
@@ -1953,7 +1982,9 @@ private def spectralDiamondPrefixResidual {r n : ℕ}
     h • (offdiagonal.comp Z - Z.comp offdiagonal)) -
       offdiagonal.comp Z
 
-private def spectralDiamondResidualTransform {r n : ℕ}
+/-- The linear transformation combining diagonal and off-diagonal operators into a diamond
+residual. -/
+def spectralDiamondResidualTransform {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target pivot next : Fin (r + 1)) (k : Fin n) :
     ((PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n) ×
@@ -4013,7 +4044,8 @@ theorem sourceRowRoot_sourceHighestWeightPolynomial_upper {r : ℕ}
     sourceRowRoot_sourceLeadingMinor_upper i j hij k]
   simp only [smul_eq_mul, mul_zero, nsmul_zero]
 
-private def sourceDiagonalEvaluation {m : ℕ} : Fin m × Fin m → ℂ :=
+/-- The identity-matrix assignment to the source polynomial variables. -/
+def sourceDiagonalEvaluation {m : ℕ} : Fin m × Fin m → ℂ :=
   fun z => if z.1 = z.2 then 1 else 0
 
 theorem eval_sourceLeadingMinor {r : ℕ} (k : Fin (r + 1)) :
@@ -4432,7 +4464,8 @@ def operatorWordSpan
     (R : I → V →ₗ[K] V) (v : V) : Submodule K V :=
   Submodule.span K (Set.range (fun w : List I => rootOperatorWord R w v))
 
-private def operatorWordPairSpan
+/-- The sum of the operator-word cyclic submodules generated by two vectors. -/
+def operatorWordPairSpan
     {K V I : Type*} [Semiring K]
     [AddCommMonoid V] [Module K V]
     (R : I → V →ₗ[K] V) (v w : V) : Submodule K V :=
@@ -5125,7 +5158,8 @@ theorem sourceColumnRoot_sourceHighestWeightPolynomial_upper {r : ℕ}
     sourceColumnRoot_sourceLeadingMinor_upper i j hij k]
   simp only [smul_eq_mul, mul_zero, nsmul_zero]
 
-private def sourceHighestKernel {r : ℕ} (lam : Fin (r + 1) → ℕ) :
+/-- The simultaneous source row and column highest-weight equations for the weight `lam`. -/
+def sourceHighestKernel {r : ℕ} (lam : Fin (r + 1) → ℕ) :
     Submodule ℂ (SourceMatrix (r + 1)) :=
   (⨅ i : Fin (r + 1), LinearMap.ker
       ((sourceRowRoot i i).toLinearMap -
@@ -5181,7 +5215,9 @@ namespace HigherYoungAllRankSourceDiagonalBalance
 
 open MetricCodes.Spherical.HigherHarmonicYoung.BideterminantHighestLine
 
-private def sourceDiagonalExponent {m : ℕ} (lam : Fin m → ℕ) :
+/-- The exponent vector supported on diagonal entries, with diagonal multiplicities prescribed
+by `lam`. -/
+def sourceDiagonalExponent {m : ℕ} (lam : Fin m → ℕ) :
     Fin m × Fin m →₀ ℕ :=
   ∑ i : Fin m, Finsupp.single (i, i) (lam i)
 
@@ -5323,7 +5359,8 @@ open MetricCodes.Spherical.HigherHarmonicYoung.BideterminantHighestLine
 open MetricCodes.Spherical.HigherYoungAllRankSourceHighestKernel
 open MetricCodes.Spherical.HigherYoungAllRankSourceDiagonalBalance
 
-private def belowDiagonalWeight {m : ℕ} (z : Fin m × Fin m) : ℕ :=
+/-- The row-minus-column offset, truncated to zero on and above the diagonal. -/
+def belowDiagonalWeight {m : ℕ} (z : Fin m × Fin m) : ℕ :=
   z.1.val - z.2.val
 
 /-- The below diagonal mass used in the spherical-code argument. -/
@@ -5357,12 +5394,16 @@ theorem belowDiagonalMass_sub_single_add {m : ℕ}
     (d - Finsupp.single z 1) z 1
   simpa only [mul_one, heq] using hmass.symm
 
-private def upperRootTargetExponent {m : ℕ}
+/-- Move one exponent unit from the lower-triangular entry `(j, i)` to the diagonal entry `(i,
+i)`. -/
+def upperRootTargetExponent {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) (i j : Fin m) :
     Fin m × Fin m →₀ ℕ :=
   d - Finsupp.single (j, i) 1 + Finsupp.single (i, i) 1
 
-private def upperRootSourceExponent {m : ℕ}
+/-- The upper-root source exponent obtained by moving one unit between rows of the target
+exponent. -/
+def upperRootSourceExponent {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) (i j k : Fin m) :
     Fin m × Fin m →₀ ℕ :=
   upperRootTargetExponent d i j -
@@ -6365,7 +6406,8 @@ section
 open scoped BigOperators
 open MetricCodes.Spherical.HigherYoungTwoRowLieIrreducibility
 
-private def weightedPolynomialFiltration {σ : Type*} (weight : σ → ℕ) (k : ℕ) :
+/-- The polynomial submodule supported on monomials of weighted degree at most `k`. -/
+def weightedPolynomialFiltration {σ : Type*} (weight : σ → ℕ) (k : ℕ) :
     Submodule ℂ (MvPolynomial σ ℂ) :=
   MvPolynomial.restrictSupport ℂ
     {d : σ →₀ ℕ | Finsupp.weight weight d ≤ k}
@@ -6389,7 +6431,8 @@ theorem monomial_mem_weightedPolynomialFiltration {σ : Type*}
   · simp [hed]
   · exact (he rfl).elim
 
-private def strictWeightedPolynomialFiltration {σ : Type*}
+/-- The polynomial submodule supported on monomials of weighted degree strictly below `k`. -/
+def strictWeightedPolynomialFiltration {σ : Type*}
     (weight : σ → ℕ) (k : ℕ) : Submodule ℂ (MvPolynomial σ ℂ) :=
   MvPolynomial.restrictSupport ℂ
     {d : σ →₀ ℕ | Finsupp.weight weight d + 1 ≤ k}
@@ -6660,7 +6703,9 @@ def isotropicCoordinateGenerator {r n : ℕ} (h : 2 * (r + 1) ≤ n)
   simp only [isotropicCoordinateGenerator, variableIndex, Equiv.symm_apply_apply, not_lt_of_ge ht,
     ↓reduceDIte]
 
-private def inverseIsotropicCoordinateGenerator {r n : ℕ}
+/-- The polynomial substitution expressing an original coordinate in the inverse isotropic
+coordinates. -/
+def inverseIsotropicCoordinateGenerator {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) (v : Fin ((r + 1) * n)) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   let a := ((finProdFinEquiv (m := r + 1) (n := n)).symm v).1
@@ -6719,12 +6764,14 @@ private def inverseIsotropicCoordinateGenerator {r n : ℕ}
   simp only [inverseIsotropicCoordinateGenerator, variableIndex, Equiv.symm_apply_apply,
     not_lt_of_ge ht, ↓reduceDIte]
 
-private def isotropicCoordinateHom {r n : ℕ} (h : 2 * (r + 1) ≤ n) :
+/-- The algebra map substituting the isotropic coordinate generators. -/
+def isotropicCoordinateHom {r n : ℕ} (h : 2 * (r + 1) ≤ n) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ →ₐ[ℂ]
       MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   MvPolynomial.aeval (isotropicCoordinateGenerator h)
 
-private def inverseIsotropicCoordinateHom {r n : ℕ}
+/-- The algebra map substituting the inverse isotropic coordinate generators. -/
+def inverseIsotropicCoordinateHom {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ →ₐ[ℂ]
       MvPolynomial (Fin ((r + 1) * n)) ℂ :=

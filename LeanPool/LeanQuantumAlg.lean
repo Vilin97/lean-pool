@@ -12,6 +12,9 @@ public import LeanPool.LeanQuantumAlg.Core
 public import LeanPool.LeanQuantumAlg.Core.Components
 public import LeanPool.LeanQuantumAlg.Primitives
 public import LeanPool.LeanQuantumAlg.Algorithms
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Lean-QuantumAlg

@@ -3,16 +3,21 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
+module
 
-import LeanPool.Sabidussi.Color
-import LeanPool.Sabidussi.CyclicWord
-import LeanPool.Sabidussi.LocalPattern
-import LeanPool.Sabidussi.LoopGraphBridge
-import LeanPool.Sabidussi.LoopMultigraph
-import LeanPool.Sabidussi.OddBalance
-import LeanPool.Sabidussi.OrdinaryCircuit
-import LeanPool.Sabidussi.Parity
-import LeanPool.Sabidussi.Statement
+public import LeanPool.Sabidussi.Color
+public import LeanPool.Sabidussi.CyclicWord
+public import LeanPool.Sabidussi.LocalPattern
+public import LeanPool.Sabidussi.LoopGraphBridge
+public import LeanPool.Sabidussi.LoopMultigraph
+public import LeanPool.Sabidussi.OddBalance
+public import LeanPool.Sabidussi.OrdinaryCircuit
+public import LeanPool.Sabidussi.Parity
+public import LeanPool.Sabidussi.Statement
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Sabidussi's compatibility conjecture for Eulerian multigraphs
@@ -24,3 +29,5 @@ Main declarations: `Sabidussi.LoopMultigraph.loop_sabidussi_compatibility_ordina
 Tags: graph-theory, eulerian-graphs, circuit-decomposition, sabidussi
 MSC: 05C45
 -/
+
+@[expose] public section

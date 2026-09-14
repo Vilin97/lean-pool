@@ -3,8 +3,15 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+module
+
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Analysis.Complex.Order
 import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
 import Mathlib.RingTheory.Polynomial.Vieta
 
@@ -14,6 +21,8 @@ import Mathlib.RingTheory.Polynomial.Vieta
 Multisets `{b₀, …, bₙ₋₁}` attached to maps `b : Fin n → α` and symmetric-function
 machinery feeding the algebraic estimates of Niven's proof.
 -/
+
+@[expose] public section
 
 open Polynomial
 open Multiset

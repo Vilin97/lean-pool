@@ -3,9 +3,22 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.Definitions
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.BlockLocalization
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.DegreeBookkeeping
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ImportedAnalyticInputs
+import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnnuli
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # ProductAnnulusCircle -/
+
+@[expose] public section
 
 
 

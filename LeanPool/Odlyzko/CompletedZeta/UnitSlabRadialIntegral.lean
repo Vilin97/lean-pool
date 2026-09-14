@@ -6,7 +6,6 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadial
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-! TODO: Add doc-string. -/
 

@@ -3,10 +3,14 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.IncidenceChart
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.RationalKernel
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Frobenius as a group endomorphism of the Fermat cubic, and its kernel
@@ -34,6 +38,8 @@ module provides.
 at infinity `ptInf a`, or an affine Fermat point `pt w t`.  This is what lets
 the two charts of `FermatCubic` be used exhaustively.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.PointFrobenius
 
@@ -71,7 +77,7 @@ lemma curveCast_symm_some {W W' : WeierstrassCurve K} (h : W = W') {x y : K}
   subst h; rfl
 
 /-- The Frobenius `x ↦ x ^ 2`, as a `ℤ`-algebra map. -/
-private noncomputable def frobAlg (K : Type*) [Field K] [CharP K 2] : K →ₐ[ℤ] K :=
+noncomputable def frobAlg (K : Type*) [Field K] [CharP K 2] : K →ₐ[ℤ] K :=
   (frobenius K 2).toIntAlgHom
 
 omit [DecidableEq K] in

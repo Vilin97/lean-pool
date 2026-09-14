@@ -3,15 +3,18 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.ChannelCapacity.Capacity
-import Mathlib.MeasureTheory.Measure.Dirac
-import Mathlib.Probability.ProbabilityMassFunction.Constructions
+module
+
+public import Mathlib.Probability.ProbabilityMassFunction.Constructions
+public import LeanPool.ChannelCapacity.NonDegeneracy
 
 /-!
 # ChannelCapacity.Counterexample
 
 A finite counterexample showing that row separation does not imply injective prior pushforward.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

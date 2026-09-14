@@ -3,8 +3,21 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import LeanPool.CriticalPortraits.Core
+public import LeanPool.CriticalPortraits.Core
+public import LeanPool.CriticalPortraits.CycleLemma
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Algebra.Group.PUnit
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The `/d` denominator: `#level-canonical = C(N, d-1)/d` (all d), Mathlib, sorry-free.
@@ -18,6 +31,8 @@ the cycle-lemma bridge (`∃!` canonical rotation index per `(d-1)`-subset), ass
 bijection `{(d-1)-subsets} ≃ {canonical} × Fin d` (uniqueness of the canonical index supplies
 freeness for free), giving `card = #canonical * d`.
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits
 

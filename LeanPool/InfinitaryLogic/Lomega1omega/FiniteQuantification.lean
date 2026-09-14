@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # Finite quantifier blocks for Lω₁ω formulas
 
@@ -30,6 +32,8 @@ The environment in the realization lemmas is the plain `Fin.append xs ys` (well-
 `Fin.snoc (Fin.append xs ys) y = Fin.append xs (Fin.snoc ys y)` exchange. This is reusable
 syntax infrastructure independent of any particular application.
 -/
+
+@[expose] public section
 
 universe u v w u'
 

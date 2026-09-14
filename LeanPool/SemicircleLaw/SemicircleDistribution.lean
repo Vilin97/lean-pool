@@ -3,23 +3,14 @@ Copyright (c) 2026 FredRaj3. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FredRaj3
 -/
-import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+module
+
+public import Mathlib.Probability.Moments.Basic
+public import Mathlib.Combinatorics.Enumerative.Catalan.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Function.JacobianOneDim
-import Mathlib.MeasureTheory.Integral.IntegrableOn
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-import Mathlib.MeasureTheory.Measure.Dirac
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.MeasureTheory.Measure.WithDensity
-import Mathlib.MeasureTheory.Group.Integral
 import Mathlib.MeasureTheory.Measure.Haar.Unique
-import Mathlib.Probability.HasLaw
-import Mathlib.Probability.Moments.Basic
-import Mathlib.Probability.Moments.Variance
-import Mathlib.Combinatorics.Enumerative.Catalan.Basic
 
 /-!
 # Semicircle Distributions over `ℝ`
@@ -48,6 +39,8 @@ We define the real-valued Wigner semicircle distribution.
   distribution equals `v ^ n` times the `n`-th Catalan number.
 * `centralMoment_odd_semicircleReal`: the odd central moments of the semicircle distribution vanish.
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal Real ProbabilityTheory
 

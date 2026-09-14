@@ -3,20 +3,11 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import Mathlib.Algebra.Order.Ring.Nat
-import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Nat.Factorization.Defs
-import Mathlib.Data.Nat.PrimeFin
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.GCongr
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Erdős Problem #367 (k = 3 case), conditional on abc
@@ -29,6 +20,8 @@ We formalize:
   5. The abc conjecture (as a hypothesis)
   6. The main theorem:  B₂(n) · B₂(n+1) · B₂(n+2) ≤ C'_ε · n^{2+ε}
 -/
+
+@[expose] public section
 
 open Finset BigOperators Nat
 

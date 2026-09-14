@@ -3,9 +3,22 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.TriangularPreprocess
+public import LeanPool.Wallace.TriangularPreprocess
+public import Mathlib.Algebra.Ring.Rat
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.SetTheory.Cardinal.Finsupp
 import Mathlib.SetTheory.Cardinal.Rat
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Triangular preprocessing for the rational direct sum
@@ -17,6 +30,8 @@ independence selector from `Wallace.TriangularPreprocess`.
 
 No topology or character is assumed.
 -/
+
+@[expose] public section
 
 open Set
 open scoped Cardinal

@@ -8,8 +8,10 @@ Authors: Rado Kirov
 Blueprint unit: residue-calculus. Meromorphic germs and Laurent coefficients as linear
 functionals.
 -/
-import LeanPool.JacobianDiffgeo.ResidueCalculus.Residue
-import Mathlib.Order.Filter.Germ.Basic
+module
+
+public import Mathlib.Order.Filter.Germ.Basic
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.LaurentCoeff
 
 /-!
 # Germ packaging of meromorphic functions (residue-calculus)
@@ -21,6 +23,8 @@ on it — the currency for laurent-tails (CC8) and serre-duality-cech/tails.
 Main exports: `RS.MeromorphicGerm`, `RS.meromorphicGermsAt`, `RS.laurentCoeffL`, `RS.resL`,
 `RS.laurentCoeffL_mk`.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Function
 

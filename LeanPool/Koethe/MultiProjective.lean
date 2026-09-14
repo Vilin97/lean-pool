@@ -3,37 +3,21 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Group.Finsupp
-import Mathlib.Algebra.GroupWithZero.Nat
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.Algebra.MvPolynomial.Eval
+module
+
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Ideal.Height
 import Mathlib.Algebra.MvPolynomial.Monad
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Analysis.LocallyConvex.Basic
-import Mathlib.Data.Finsupp.Defs
-import Mathlib.Data.Nat.Notation
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.GroupTheory.GroupAction.Ring
-import Mathlib.LinearAlgebra.DFinsupp
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
 import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Adjoin.FG
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Ideal.BigOperators
-import Mathlib.RingTheory.Ideal.Maps
-import Mathlib.RingTheory.Ideal.Operations
-import Mathlib.RingTheory.Ideal.Span
 import Mathlib.RingTheory.Nullstellensatz
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.ByContra
-import Mathlib.Tactic.Choose
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.NormNum.Basic
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.SplitIfs
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Common zeros on products of projective planes
 
@@ -42,6 +26,8 @@ The multihomogeneity convention is coefficientwise, so the zero polynomial
 is homogeneous of every multidegree.  No projective intersection theorem is
 assumed as an axiom.
 -/
+
+@[expose] public section
 
 noncomputable section
 

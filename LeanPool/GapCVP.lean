@@ -3,8 +3,9 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.GapCVP.Part18
+public import LeanPool.GapCVP.Part18
 
 /-!
 # Polynomial-factor hardness of the closest vector problem
@@ -16,6 +17,8 @@ Main declarations: `GapCVP.Comparator.gapCVP400IsNPHard`
 Tags: computational-complexity, np-hardness, lattice-problems, coding-theory
 MSC: 68Q17, 68Q25, 11H06, 94B35
 -/
+
+@[expose] public section
 
 /-! # Polynomial-factor hardness of the closest vector problem -/
 

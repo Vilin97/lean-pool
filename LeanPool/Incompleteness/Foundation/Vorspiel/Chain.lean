@@ -3,13 +3,19 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import Mathlib.Data.Fintype.Card
+public import Aesop.BuiltinRules
+public import Batteries.Data.List.Basic
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Tactic.ToAdditive
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Fintype.EquivFin
 import Mathlib.Data.Fintype.List
-import Mathlib.Data.List.Chain
-import Mathlib.Data.Set.Finite.Basic
 
 /-! # Chain -/
+
+@[expose] public section
 
 
 namespace List

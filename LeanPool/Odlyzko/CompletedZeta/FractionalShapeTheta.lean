@@ -6,9 +6,7 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.RadialKernelFormula
-public import LeanPool.Odlyzko.Theta.PoissonSummation
 public import LeanPool.Odlyzko.Theta.TraceDualLattice
-public import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-! TODO: Add doc-string. -/
 

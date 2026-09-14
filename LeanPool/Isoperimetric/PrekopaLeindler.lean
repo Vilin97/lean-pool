@@ -3,8 +3,12 @@ Copyright (c) 2026 Jonathan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Ho
 -/
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+module
+
+public import Mathlib.MeasureTheory.Integral.Marginal
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.Isoperimetric.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-!
 # The Prékopa–Leindler inequality
@@ -14,6 +18,8 @@ proves the Prékopa–Leindler inequality on `ℝⁿ` (with `n = d + 1`). The pr
 proceeds by reducing to the one-dimensional case via the layer-cake formula and
 then induction on the dimension.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped Pointwise

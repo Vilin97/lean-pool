@@ -3,13 +3,18 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
+public import LeanPool.Redhill.Common.PairwiseCoprime
+public import LeanPool.Redhill.Common.VWPair
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.BigOperators.Ring.Nat
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
+import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.RingTheory.Coprime.Lemmas
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.IntervalCases
-import LeanPool.Redhill.Common.PairwiseCoprime
-import LeanPool.Redhill.Common.VWPair
 
 /-!
 # Definitions for the odd case
@@ -17,6 +22,8 @@ import LeanPool.Redhill.Common.VWPair
 The lower bound `s` for `primeChain` in `U` was originally `max 16 (F.sup id)`.
 This could be lowered because `strongSSC_vwTup` only requires `m ≤ s`, not `2m ≤ s`.
 -/
+
+@[expose] public section
 
 
 namespace OddCase

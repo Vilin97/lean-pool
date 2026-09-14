@@ -3,27 +3,20 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import LeanPool.OSforGFF.General.PositiveDefinite
-import LeanPool.OSforGFF.General.GaussianRBF
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Analysis.LocallyConvex.Basic
-import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import LeanPool.OSforGFF.Measure.NuclearSpace
-import Mathlib.Data.Matrix.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Analysis.InnerProductSpace.EuclideanDist
-import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import LeanPool.OSforGFF.General.PositiveDefinite
 -- Bochner library imports for proven Minlos theorem
+public import LeanPool.OSforGFF.Bochner.PositiveDefinite
+public import LeanPool.OSforGFF.Minlos.NuclearSpace
+public import Mathlib.Analysis.CStarAlgebra.Classes
+import LeanPool.OSforGFF.General.GaussianRBF
 import LeanPool.OSforGFF.Minlos.Main
-import LeanPool.OSforGFF.Bochner.PositiveDefinite
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Minlos Theorem and Gaussian Measure Construction
@@ -43,6 +36,8 @@ the proven Minlos theorem.
 - `minlos_gaussian_construction`: Minlos + Gaussian CF → probability measure
 - `gaussian_measure_symmetry`: covariance-preserving maps induce measure symmetries
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Matrix TopologicalSpace
 open BigOperators

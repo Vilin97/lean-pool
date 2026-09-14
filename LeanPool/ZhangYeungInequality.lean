@@ -3,16 +3,17 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.CopyLemma
-import LeanPool.ZhangYeungInequality.Delta
-import LeanPool.ZhangYeungInequality.EntropyRegion
-import LeanPool.ZhangYeungInequality.Prelude
-import LeanPool.ZhangYeungInequality.Theorem2
-import LeanPool.ZhangYeungInequality.Theorem3
-import LeanPool.ZhangYeungInequality.Theorem4
-import LeanPool.ZhangYeungInequality.Theorem5
-import LeanPool.ZhangYeungInequality.Test
+public import LeanPool.ZhangYeungInequality.CopyLemma
+public import LeanPool.ZhangYeungInequality.Delta
+public import LeanPool.ZhangYeungInequality.EntropyRegion
+public import LeanPool.ZhangYeungInequality.Prelude
+public import LeanPool.ZhangYeungInequality.Theorem2
+public import LeanPool.ZhangYeungInequality.Theorem3
+public import LeanPool.ZhangYeungInequality.Theorem4
+public import LeanPool.ZhangYeungInequality.Theorem5
+public import LeanPool.ZhangYeungInequality.Test
 
 /-!
 # The Zhang-Yeung non-Shannon information inequality
@@ -24,3 +25,5 @@ Main declarations: `ZhangYeung.zhangYeung`
 Tags: information-theory, entropy, non-shannon-inequality
 MSC: 94A17, 94A15
 -/
+
+@[expose] public section

@@ -3,12 +3,18 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
 import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.BoundaryHomotopyDiff
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
 import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheoremBound
 import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.MainTheoremDerivCont
 import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingProof
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Main winding number theorem for the fundamental domain boundary
@@ -16,6 +22,8 @@ import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.WindingProof
 The generalized winding number of `fdBoundary` around
 interior points equals -1 (clockwise).
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

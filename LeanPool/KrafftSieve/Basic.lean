@@ -13,8 +13,12 @@ Mathlib version: 8f9d9cff6bd728b17a24e163c9402775d9e6a365
 To cite Aristotle, tag @Aristotle-Harmonic on GitHub PRs/issues, and add as co-author to commits:
 Co-authored-by: Aristotle (Harmonic) <aristotle-harmonic@harmonic.fun>
 -/
+module
 
-import LeanPool.KrafftSieve.Defs
+public import LeanPool.KrafftSieve.Defs
+import Mathlib.NumberTheory.Bertrand
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.RealSqrt
 
 
 /-!
@@ -23,6 +27,8 @@ import LeanPool.KrafftSieve.Defs
 This module provides basic bounds and properties for the primes and the
 primorial $q(n)$ used throughout the Krafft Sieve formalization.
 -/
+
+@[expose] public section
 
 namespace KrafftSieve
 

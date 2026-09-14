@@ -3,13 +3,18 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Algebra.Order.BigOperators.Expect
 import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Group.Basic
 
 /-!
 # LeanPool.Zeta3Irrational.Bound
 -/
+
+@[expose] public section
 
 namespace LeanPool.Zeta3Irrational
 

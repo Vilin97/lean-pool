@@ -3,12 +3,17 @@ Copyright (c) 2026 Luka Opravš. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luka Opravš
 -/
+module
 
-import LeanPool.PolyaEnumerationTheorem.Basic
-import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
-import LeanPool.PolyaEnumerationTheorem.ReductionToFin
-import LeanPool.PolyaEnumerationTheorem.Concrete
-import LeanPool.PolyaEnumerationTheorem.StirlingFirstKindSum
+public import LeanPool.PolyaEnumerationTheorem.Basic
+public import LeanPool.PolyaEnumerationTheorem.PermutationAuxiliary
+public import LeanPool.PolyaEnumerationTheorem.ReductionToFin
+public import LeanPool.PolyaEnumerationTheorem.Concrete
+public import LeanPool.PolyaEnumerationTheorem.StirlingFirstKindSum
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Pólya's enumeration theorem
@@ -20,6 +25,8 @@ Main declarations: `LeanPool.PolyaEnumerationTheorem.polya_theorem`
 Tags: combinatorics, group-theory, enumeration
 MSC: 05A15, 20B30
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,9 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.UseSite
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.UseSite
+public import LeanPool.Erdos132ConvexK3.Geometry
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # Maximal-gap tail closure
@@ -17,6 +20,8 @@ the head has at most four offsets, while strict edge--diagonal comparison
 and same-half-plane two-circle uniqueness leave at most two tail slots (one
 under the strict anchor).
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -144,11 +149,8 @@ distances. -/
 theorem euclideanDist_eq_of_sqDist_eq
     {a b c d : Point ℝ} (h : sqDist a b = sqDist c d) :
     euclideanDist a b = euclideanDist c d := by
-  have habSq := euclideanDist_sq a b
-  have hcdSq := euclideanDist_sq c d
-  have habNonneg : 0 ≤ euclideanDist a b := dist_nonneg
-  have hcdNonneg : 0 ≤ euclideanDist c d := dist_nonneg
-  nlinarith
+  rw [← euclideanDist_sq, ← euclideanDist_sq] at h
+  exact (sq_eq_sq₀ dist_nonneg dist_nonneg).mp h
 
 /-- The second strict edge--diagonal inequality, obtained by rotating the
 four cyclic vertices once. -/
@@ -174,18 +176,13 @@ theorem far_arc_strict_center_comparison
     {x p u r : Point ℝ} (hquad : StrictConvexQuad x p u r)
     (hanchor : sqDist x u ≤ sqDist p u) : sqDist x r < sqDist p r := by
   have hed := edge_diagonal_inequality_rotated hquad
-  have hxuSq := euclideanDist_sq x u
-  have hpuSq := euclideanDist_sq p u
-  have hxrSq := euclideanDist_sq x r
-  have hprSq := euclideanDist_sq p r
-  have hxuNonneg : 0 ≤ euclideanDist x u := dist_nonneg
-  have hpuNonneg : 0 ≤ euclideanDist p u := dist_nonneg
-  have hxrNonneg : 0 ≤ euclideanDist x r := dist_nonneg
-  have hprNonneg : 0 ≤ euclideanDist p r := dist_nonneg
   have hxuLe : euclideanDist x u ≤ euclideanDist p u := by
-    nlinarith
-  have hdist : euclideanDist x r < euclideanDist p r := by linarith
-  nlinarith
+    rw [← euclideanDist_sq, ← euclideanDist_sq] at hanchor
+    exact (sq_le_sq₀ dist_nonneg dist_nonneg).mp hanchor
+  have hdist : euclideanDist x r < euclideanDist p r := by
+    linarith only [hed, hxuLe]
+  rw [← euclideanDist_sq, ← euclideanDist_sq]
+  exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr hdist
 
 /-- With exactly three ranked distances, a strict comparison has only the
 three ordered radius slots used in the project proof draft. -/
@@ -243,7 +240,7 @@ private theorem d3_d1_tail_slot_empty
         d₁ = sqDist (P p) (P (cyclicAdvance S.x k.val)) := hkSlot.2.2.symm
         _ = sqDist (P p) (P z) := by rw [hrz]
         _ = d₂ := hpz
-    linarith [S.classes.2.1]
+    exact (ne_of_gt S.classes.2.1) hd₁d₂
   · have hkltz : k.val < zoff := by omega
     have hquad := cyclic_strict_convex_quad_zero_offsets S.convex S.x
       (b := 1) (c := k.val) (d := zoff) (by omega)
@@ -259,16 +256,15 @@ private theorem d3_d1_tail_slot_empty
         euclideanDist (P S.x) (P (cyclicAdvance S.x k.val)) :=
       euclideanDist_eq_of_sqDist_eq (hxz.trans hkSlot.2.1.symm)
     have hdist : euclideanDist (P p) (P (cyclicAdvance S.x k.val)) <
-        euclideanDist (P p) (P z) := by linarith
-    have hprSq := euclideanDist_sq (P p) (P (cyclicAdvance S.x k.val))
-    have hpzSq := euclideanDist_sq (P p) (P z)
-    have hprNonneg : 0 ≤ euclideanDist (P p)
-        (P (cyclicAdvance S.x k.val)) := dist_nonneg
-    have hpzNonneg : 0 ≤ euclideanDist (P p) (P z) := dist_nonneg
+        euclideanDist (P p) (P z) := by
+      rw [hsameD₃] at hed'
+      exact (add_lt_add_iff_right _).mp hed'
     have hsquared : sqDist (P p) (P (cyclicAdvance S.x k.val)) <
-        sqDist (P p) (P z) := by nlinarith
+        sqDist (P p) (P z) := by
+      rw [← euclideanDist_sq, ← euclideanDist_sq]
+      exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr hdist
     rw [hkSlot.2.2, hpz] at hsquared
-    linarith [S.classes.2.1]
+    exact (not_lt_of_gt S.classes.2.1) hsquared
 
 /-- **Maximal-gap tail lemma (project proof-draft Lemma 4.1).**  Suppose `p = x + 1`,
 `u` is the first counterclockwise neighbor of `x + 3`, and `z` is the first
@@ -553,24 +549,20 @@ theorem d1_d3_opposite_sides_force_xu_top_two
     (hpz : sqDist (P p) (P z) = d₂) :
     sqDist (P x) (P u) = d₁ ∨ sqDist (P x) (P u) = d₂ := by
   have hed := edge_diagonal_inequality_rotated hquad
-  have hpuSq := euclideanDist_sq (P p) (P u)
-  have hpzSq := euclideanDist_sq (P p) (P z)
-  have hpuNonneg : 0 ≤ euclideanDist (P p) (P u) := dist_nonneg
-  have hpzNonneg : 0 ≤ euclideanDist (P p) (P z) := dist_nonneg
   have hpzLtPu : euclideanDist (P p) (P z) < euclideanDist (P p) (P u) := by
-    nlinarith [hClasses.2.1]
+    rw [← sq_lt_sq₀ (show 0 ≤ euclideanDist (P p) (P z) from dist_nonneg)
+      (show 0 ≤ euclideanDist (P p) (P u) from dist_nonneg)]
+    simpa only [euclideanDist_sq, hpz, hpu] using hClasses.2.1
   have hxzLtXu : euclideanDist (P x) (P z) < euclideanDist (P x) (P u) := by
-    linarith
-  have hxzSq := euclideanDist_sq (P x) (P z)
-  have hxuSq := euclideanDist_sq (P x) (P u)
-  have hxzNonneg : 0 ≤ euclideanDist (P x) (P z) := dist_nonneg
-  have hxuNonneg : 0 ≤ euclideanDist (P x) (P u) := dist_nonneg
-  have hsqGrow : sqDist (P x) (P z) < sqDist (P x) (P u) := by nlinarith
+    linarith only [hed, hpzLtPu]
+  have hsqGrow : sqDist (P x) (P z) < sqDist (P x) (P u) := by
+    rw [← euclideanDist_sq, ← euclideanDist_sq]
+    exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr hxzLtXu
   have hxuAdj := top_three_adjacent_of_strictly_longer hClasses hxzAdj hsqGrow
   rcases hxuAdj.2 with h₁ | h₂ | h₃
   · exact Or.inl h₁
   · exact Or.inr h₂
-  · linarith
+  · exact (ne_of_lt hsqGrow (hxz.trans h₃.symm)).elim
 
 /-- The rigid `(2,2)` ladders supply every hypothesis of the tail lemma and
 force `xu` into one of its two clauses. -/

@@ -3,7 +3,12 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import LeanPool.JohnsonLindenstraussLean.NormPreservation
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Defs
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Inner-product preservation (unquantized Gaussian-projection corollary)
@@ -21,6 +26,8 @@ quantized schemes (QJL / TurboQuant) are motivated by and compared against — i
 mechanism behind QJL's one-bit guarantee, which instead rests on the asymmetric sign-product
 identity (`JL/QJL.lean`).
 -/
+
+@[expose] public section
 
 open scoped RealInnerProductSpace
 

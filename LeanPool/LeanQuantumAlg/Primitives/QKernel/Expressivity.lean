@@ -6,11 +6,9 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Mathlib.Analysis.RCLike.Basic
-public import Mathlib.Tactic.Common
+public import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.InnerProductSpace.Basic
 /-!
 # Embedding quantum kernels: density-matrix realization (expressivity)
 

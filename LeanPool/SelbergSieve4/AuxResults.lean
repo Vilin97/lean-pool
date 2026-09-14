@@ -3,27 +3,20 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.NumberTheory.ArithmeticFunction.Defs
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-import Mathlib.NumberTheory.ArithmeticFunction.Zeta
-import LeanPool.SelbergSieve4.ForMathlib
-import LeanPool.SelbergSieve4.ForArithmeticFunction
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
-import Mathlib.Analysis.SpecialFunctions.NonIntegrable
-import Mathlib.Data.Nat.Prime.Basic
-import LeanPool.SelbergSieve4.Tactic.Multiplicativity
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.SumIntegralComparisons
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # LeanPool.SelbergSieve4.AuxResults
 -/
+
+@[expose] public section
 
 --import SelbergSieve.AesopDiv
 noncomputable section

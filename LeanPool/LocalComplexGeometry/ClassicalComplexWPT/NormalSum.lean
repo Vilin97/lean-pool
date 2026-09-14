@@ -3,9 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import Mathlib.Analysis.Analytic.ChangeOrigin
-import Mathlib.Analysis.Normed.Ring.InfiniteSum
+public import Mathlib.Analysis.Analytic.Basic
 
 /-!
 # Normally convergent families of formal multilinear series
@@ -15,6 +15,8 @@ the precise replacement needed here: absolute coefficient summability together
 with one common positive-radius majorant lets us exchange the family sum and
 the homogeneous-degree sum and produces a `HasFPowerSeriesOnBall` witness.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped ENNReal NNReal Topology

@@ -3,10 +3,10 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
-import Mathlib.RepresentationTheory.Irreducible
-import Mathlib.LinearAlgebra.Pi
+public import LeanPool.CommonNeighbourConjecture.Saxl.PermWreath.Action
+public import Mathlib.RepresentationTheory.Irreducible
 
 /-!
 # Irreducibility of permutation-wreath product actions
@@ -27,6 +27,8 @@ component irreducibility fills that coordinate, top transitivity transports it
 to every coordinate, and the finite sum of coordinate vectors fills the whole
 product module.
 -/
+
+@[expose] public section
 
 namespace Saxl
 

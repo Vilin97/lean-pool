@@ -6,10 +6,11 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Core.Cost
-public import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
-public import LeanPool.LeanQuantumAlg.Primitives.QSP
+public import LeanPool.LeanQuantumAlg.Core.Components.Control
+public import LeanPool.LeanQuantumAlg.Primitives.QSP.Fourier
+import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
+import LeanPool.LeanQuantumAlg.Util.Complex
 
 /-!
 # Controlled-unitary transformation (quantum phase processing / QET)

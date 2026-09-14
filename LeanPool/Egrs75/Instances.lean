@@ -3,8 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import Mathlib.Data.Finite.Defs
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Prime.Defs
 import LeanPool.Egrs75.MuFinish
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Nat.Totient
 import Mathlib.Tactic.NormNum.Prime
 
 /-!
@@ -15,6 +21,8 @@ smallest odd-prime pairs.  Purpose: machine-check that the hypotheses are
 satisfiable (no hidden vacuity) and that the closure is usable downstream.
 All three MUST be kernel-clean.
 -/
+
+@[expose] public section
 
 namespace Egrs75.SmokeProbe
 

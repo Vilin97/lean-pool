@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.RootComplex
+public import LeanPool.MetricCodes.RootComplex
 
 /-!
 # Weyl and root-complex identities
 
 Euler groupings, orthogonal denominator formulas, and all-rank Weyl evaluations.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -118,7 +121,9 @@ section
 open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def weightedExteriorRootEdgeAdjoint {r k : ℕ}
+/-- The adjoint root operator along an admissible wedge insertion, with its weight spaces
+identified. -/
+def weightedExteriorRootEdgeAdjoint {r k : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (T : AdmissibleRootWedge lam k)
     (α : PositiveRoot r) (hα : α ∉ T.val.val)
@@ -212,7 +217,8 @@ theorem weightedExteriorRootEdge_fischer_adjoint {r n k : ℕ}
     (p.val : PolynomialSpace r n)
     (q.val : PolynomialSpace r n)
 
-private def weightedExteriorRootEdgeAdjointAt {r k : ℕ}
+/-- Transport the adjoint insertion-edge operator to a specified equal target wedge. -/
+def weightedExteriorRootEdgeAdjointAt {r k : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (T : AdmissibleRootWedge lam k)
     (α : PositiveRoot r) (hα : α ∉ T.val.val)
@@ -304,7 +310,8 @@ section
 open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def rootAdmissibleErase {r k : ℕ}
+/-- Erase a root from an admissible wedge when the resulting signed weight remains nonnegative. -/
+def rootAdmissibleErase {r k : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam (k + 1))
     (α : PositiveRoot r) (hα : α ∈ S.val.val)
@@ -391,7 +398,9 @@ theorem rootAdmissibleInsert_eq_iff_erase {r k : ℕ}
   rw [LinearMap.comp_apply, LinearEquiv.coe_coe,
     jointHarmonicWeightCast_coe, weightedExteriorRootEdgeAdjoint_coe]
 
-private def weightedExteriorRootEdgeAdjointErase {r k : ℕ}
+/-- The adjoint insertion-edge operator viewed from the wedge with one root erased back to the
+original wedge. -/
+def weightedExteriorRootEdgeAdjointErase {r k : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam (k + 1))
     (α : PositiveRoot r) (hα : α ∈ S.val.val)
@@ -846,7 +855,8 @@ private theorem degreeZero_realExteriorRootSign_singleton_metriccodes2_89cbd172
   simp only [realExteriorRootSign, exteriorRootSign, Int.reduceNeg, Finset.filter_singleton,
     lt_self_iff_false, ↓reduceIte, Finset.card_empty, pow_zero, Int.cast_one]
 
-private def activeAdmissibleRootWedge {r : ℕ}
+/-- The admissible singleton wedge associated with an active positive root. -/
+def activeAdmissibleRootWedge {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (α : ActivePositiveRoot lam) :
     AdmissibleRootWedge lam 1 := by
   refine ⟨rootWedgeSingleton α.val, ?_⟩
@@ -1079,7 +1089,8 @@ namespace HigherWeylGramAlternantCoefficient
 open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRankMixedTraceRegularity
 
-private def weylTargetExponent {r : ℕ}
+/-- The exponent vector `lam i + r - i` used for the target Weyl coefficient. -/
+def weylTargetExponent {r : ℕ}
     (lam : Fin (r + 1) → ℕ) : Fin (r + 1) →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm fun i => lam i + r - i.val
 
@@ -1088,7 +1099,8 @@ private def weylTargetExponent {r : ℕ}
     weylTargetExponent lam i = lam i + r - i.val := by
   simp only [weylTargetExponent, Finsupp.equivFunOnFinite_symm_apply_apply]
 
-private def reversePermutationExponent {r : ℕ}
+/-- The reversed staircase exponent vector permuted by `σ`. -/
+def reversePermutationExponent {r : ℕ}
     (σ : Equiv.Perm (Fin (r + 1))) : Fin (r + 1) →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm fun i => r - (σ i).val
 
@@ -1097,7 +1109,8 @@ private def reversePermutationExponent {r : ℕ}
     reversePermutationExponent σ i = r - (σ i).val := by
   simp only [reversePermutationExponent, Finsupp.equivFunOnFinite_symm_apply_apply]
 
-private def boundedExponent {r B : ℕ}
+/-- Convert bounded finite coordinates to a finitely supported natural exponent vector. -/
+def boundedExponent {r B : ℕ}
     (d : Fin (r + 1) → Fin (B + 1)) : Fin (r + 1) →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm fun i => (d i).val
 
@@ -1115,7 +1128,9 @@ theorem boundedExponent_injective {r B : ℕ} :
   apply Fin.ext
   exact congrFun (congrArg DFunLike.coe h) i
 
-private def ambientBinomialPolynomial {r : ℕ}
+/-- The polynomial of coordinatewise bounded exponents with coefficients given by products of
+ambient binomial dimensions. -/
+def ambientBinomialPolynomial {r : ℕ}
     (n B : ℕ) : MvPolynomial (Fin (r + 1)) ℤ :=
   ∑ d : Fin (r + 1) → Fin (B + 1),
     MvPolynomial.monomial (boundedExponent d)
@@ -1144,7 +1159,8 @@ theorem coeff_ambientBinomialPolynomial_of_le {r n B : ℕ}
   · simp only [Finset.mem_univ, not_true_eq_false, MvPolynomial.coeff_monomial, ite_eq_right_iff,
       IsEmpty.forall_iff]
 
-private def gramPairExponent {r : ℕ}
+/-- The row-degree exponent vector of one Gram pair, counting each of its two coordinates. -/
+def gramPairExponent {r : ℕ}
     (z : UpperGramPair r) : Fin (r + 1) →₀ ℕ :=
   Finsupp.single z.val.1 1 + Finsupp.single z.val.2 1
 
@@ -1155,7 +1171,8 @@ private def gramPairExponent {r : ℕ}
   simp only [gramPairExponent, Finsupp.coe_add, Pi.add_apply, Finsupp.single_apply, eq_comm,
     gramPairRowDegree]
 
-private def gramFamilyExponent {r : ℕ}
+/-- The sum of the row-degree exponent vectors of a finite family of Gram pairs. -/
+def gramFamilyExponent {r : ℕ}
     (s : Finset (UpperGramPair r)) : Fin (r + 1) →₀ ℕ :=
   ∑ z ∈ s, gramPairExponent z
 
@@ -1165,7 +1182,8 @@ private def gramFamilyExponent {r : ℕ}
   simp only [gramFamilyExponent, Finsupp.coe_finsetSum, Finset.sum_apply, gramPairExponent_apply,
     gramFamilyRowDegree]
 
-private def gramEquationPolynomial (r : ℕ) :
+/-- The product of `1 - Xᵢ * Xⱼ` over the upper Gram pairs. -/
+def gramEquationPolynomial (r : ℕ) :
     MvPolynomial (Fin (r + 1)) ℤ :=
   ∏ z : UpperGramPair r,
     (1 - MvPolynomial.X z.val.1 * MvPolynomial.X z.val.2)
@@ -1262,7 +1280,8 @@ open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRankMixedTraceRegularity
 open MetricCodes.Spherical.HigherWeylGramAlternantCoefficient
 
-private def reversedWeylPolynomial (r : ℕ) :
+/-- The determinant alternant whose columns have powers in descending order from `r` to zero. -/
+def reversedWeylPolynomial (r : ℕ) :
     MvPolynomial (Fin (r + 1)) ℤ :=
   Matrix.det (Matrix.of fun i j : Fin (r + 1) =>
     (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ (r - j.val))
@@ -1643,7 +1662,8 @@ end HigherWeylGramOrthogonalJacobiTrudi
 
 namespace HigherWeylGeneralRowNormalization
 
-private def risingFactorProduct (M q : ℕ) : ℝ :=
+/-- The product of the `q` consecutive factors starting at `M + 1`, viewed as a real number. -/
+def risingFactorProduct (M q : ℕ) : ℝ :=
   ∏ a ∈ Finset.range q, (((M + a + 1 : ℕ) : ℝ))
 
 theorem risingFactorProduct_eq_ascFactorial (M q : ℕ) :
@@ -1735,7 +1755,9 @@ open MetricCodes.Spherical.HigherHierarchy
 open MetricCodes.Spherical.HigherWeylBinomialDeterminant
 open MetricCodes.Spherical.HigherWeylGeneralRowNormalization
 
-private def orthogonalRowScale {r : ℕ} (n : ℕ)
+/-- The orthogonal row normalization combining its complete-symmetric coefficient, linear
+factor, and rising-factor denominator. -/
+def orthogonalRowScale {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (i : Fin (r + 1)) : ℝ :=
   (orthogonalCompleteSymmetricCoefficient n
       ((lam i + Weyl.rowTail i : ℕ) : ℤ) : ℝ) *
@@ -1902,7 +1924,8 @@ namespace HigherWeylAllRankCommonInvariantPolynomial
 
 open Polynomial
 
-private def commonInvariantPolynomial (n : ℝ) (r k : ℕ) : Polynomial ℝ :=
+/-- The monic product of `k` shifted linear factors in the common quadratic invariant. -/
+def commonInvariantPolynomial (n : ℝ) (r k : ℕ) : Polynomial ℝ :=
   ∏ q ∈ Finset.range k,
     (X + C (((r : ℝ) - (q : ℝ)) * (n - (r : ℝ) - 2 + (q : ℝ))))
 
@@ -1950,7 +1973,9 @@ end HigherWeylAllRankCommonInvariantPolynomial
 
 namespace HigherWeylMiddleProductClosedForm
 
-private def middleProducts (n z : ℝ) : ℕ → (ℝ × ℝ)
+/-- The paired middle products generated by successively adjoining the two outer factors in each
+component. -/
+def middleProducts (n z : ℝ) : ℕ → (ℝ × ℝ)
   | 0 => ((n + z - 2) * (n + z - 1), (z - 1) * z)
   | j + 1 =>
       ((middleProducts n z j).1 *
@@ -1958,7 +1983,8 @@ private def middleProducts (n z : ℝ) : ℕ → (ℝ × ℝ)
        (middleProducts n z j).2 *
           ((z - (j : ℝ) - 2) * (z + (j : ℝ) + 1)))
 
-private def centeredProduct (x : ℝ) (j : ℕ) : ℝ :=
+/-- The product of consecutive factors from `x + j` down to `x - j - 1`. -/
+def centeredProduct (x : ℝ) (j : ℕ) : ℝ :=
   ∏ s ∈ Finset.range (2 * j + 2),
     (x + (j : ℝ) - (s : ℝ))
 
@@ -2378,7 +2404,9 @@ theorem orthogonalJacobiTrudiDimension_zero
   rw [orthogonalCompleteSymmetricCoefficient_of_neg n hneg]
   norm_num [orthogonalCompleteSymmetricCoefficient]
 
-private def middlePolynomials (n : ℝ) : ℕ → (Polynomial ℝ × Polynomial ℝ)
+/-- The recursively coupled pair of polynomials used to express the middle-product sum and
+difference. -/
+def middlePolynomials (n : ℝ) : ℕ → (Polynomial ℝ × Polynomial ℝ)
   | 0 =>
       (Polynomial.C (n - 1),
         Polynomial.C 2 * Polynomial.X +
@@ -2508,7 +2536,9 @@ theorem middlePolynomials_natDegree (n : ℝ) (j : ℕ) :
                   omega
                 _ = j + 1 + 1 := by omega
 
-private def orthogonalColumnPolynomial (n : ℝ) (r : ℕ)
+/-- The column polynomial formed from the common invariant factor and the first middle
+polynomial. -/
+def orthogonalColumnPolynomial (n : ℝ) (r : ℕ)
     (j : Fin (r + 1)) : Polynomial ℝ :=
   commonInvariantPolynomial n r (r - j.val) *
     (middlePolynomials n j.val).1
@@ -2521,7 +2551,8 @@ theorem orthogonalColumnPolynomial_natDegree_le
   · omega
   · exact (middlePolynomials_natDegree n j.val).1
 
-private def shiftedSquare {r : ℕ} (n : ℕ)
+/-- The quadratic invariant `z * (z + n - 2)` at the shifted row weight `z = lam i - i`. -/
+def shiftedSquare {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (i : Fin (r + 1)) : ℝ :=
   ((lam i : ℝ) - (i.val : ℝ)) *
     (((lam i : ℝ) - (i.val : ℝ)) + (n : ℝ) - 2)
@@ -2893,7 +2924,8 @@ theorem orthogonalJacobiTrudiMatrix_entry_of_factored_transport
   field_simp [hD]
   nlinarith [hfact]
 
-private def orthogonalReflectedBracket (n z : ℝ) (r j : ℕ) : ℝ :=
+/-- The difference of the two reflected factorial products in an orthogonal determinant entry. -/
+def orthogonalReflectedBracket (n z : ℝ) (r j : ℕ) : ℝ :=
   ((∏ q ∈ Finset.range (r - j),
       (z + (r : ℝ) - (q : ℝ))) *
     (∏ q ∈ Finset.range (2 * r + 2 - (r - j)),
@@ -3389,7 +3421,9 @@ theorem rootStructureConstant_lower_cross_sum {r n : ℕ}
       rw [sum_positiveRootOperator_eq_polarization_of_pair]
     · simp only [h, false_and, ↓reduceIte, zero_smul, Finset.sum_const_zero]
 
-private def positiveRootCartanOperator {r : ℕ} (n : ℕ) (α : PositiveRoot r) :
+/-- The difference of the diagonal row-polarization operators at the endpoints of a positive
+root. -/
+def positiveRootCartanOperator {r : ℕ} (n : ℕ) (α : PositiveRoot r) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
   polarization r n (positiveRootFirst α) (positiveRootFirst α) -
     polarization r n (positiveRootSecond α) (positiveRootSecond α)
@@ -3671,7 +3705,9 @@ theorem weightedExteriorActionDifferential_coboundary_apply_coe
     · simp only [map_zero, smul_zero]
   · rfl
 
-private def rootPolynomialActionCoboundaryDifferentialIncidence
+/-- The signed polynomial-action term obtained by erasing `α` and inserting `β`, or zero when
+either step is inadmissible. -/
+def rootPolynomialActionCoboundaryDifferentialIncidence
     {r n k : ℕ} (lam : Fin (r + 1) → ℕ)
     (f : RootJointHarmonicChain n lam (k + 1))
     (S : AdmissibleRootWedge lam (k + 1))
@@ -3708,7 +3744,9 @@ private def rootPolynomialActionCoboundaryDifferentialIncidence
     else 0
   else 0
 
-private def rootPolynomialActionDifferentialCoboundaryIncidence
+/-- The signed polynomial-action term obtained by inserting `β` and erasing `α`, or zero when
+either step is inadmissible. -/
+def rootPolynomialActionDifferentialCoboundaryIncidence
     {r n k : ℕ} (lam : Fin (r + 1) → ℕ)
     (f : RootJointHarmonicChain n lam (k + 1))
     (S : AdmissibleRootWedge lam (k + 1))
@@ -3830,7 +3868,8 @@ theorem sum_rootIncidence_pair_eq_diagonal_add_offDiagonal
     _ = _ := sum_rootIncidence_eq_diagonal_add_offDiagonal
       (fun a b => F a b + G b a)
 
-private def rootPolynomialActionHodgeDiagonalIncidence
+/-- The sum of the equal-root incidence terms in the polynomial-action Hodge operator. -/
+def rootPolynomialActionHodgeDiagonalIncidence
     {r n k : ℕ} (lam : Fin (r + 1) → ℕ)
     (f : RootJointHarmonicChain n lam (k + 1))
     (S : AdmissibleRootWedge lam (k + 1)) : PolynomialSpace r n :=
@@ -3838,7 +3877,8 @@ private def rootPolynomialActionHodgeDiagonalIncidence
     (rootPolynomialActionCoboundaryDifferentialIncidence lam f S α α +
       rootPolynomialActionDifferentialCoboundaryIncidence lam f S α α)
 
-private def rootPolynomialActionHodgeOffDiagonalIncidence
+/-- The sum of the distinct-root incidence terms in the polynomial-action Hodge operator. -/
+def rootPolynomialActionHodgeOffDiagonalIncidence
     {r n k : ℕ} (lam : Fin (r + 1) → ℕ)
     (f : RootJointHarmonicChain n lam (k + 1))
     (S : AdmissibleRootWedge lam (k + 1)) : PolynomialSpace r n :=
@@ -3969,7 +4009,9 @@ def rootSwapUpperStructureEdge {r k : ℕ}
       ⟨γ, rootAdmissibleSwap_upper_second_pos lam S α β γ hα hβ
         hadm hstructure⟩)
 
-private def rootSwapLowerStructureEdge {r k : ℕ}
+/-- The lowering root operator from a swapped wedge's weight space back to the original weight
+space, using a nonzero structure constant. -/
+def rootSwapLowerStructureEdge {r k : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α β γ : PositiveRoot r)
@@ -4285,7 +4327,9 @@ theorem weightedPositiveRootOperator_fischer_energy_ge_gap
       (p.val : PolynomialSpace r n))
   linarith
 
-private abbrev IncludedDescendingPositiveRoot {r k : ℕ}
+/-- Roots included in the wedge whose first endpoint has strictly larger weight than their
+second endpoint. -/
+abbrev IncludedDescendingPositiveRoot {r k : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k) :=
   {α : PositiveRoot r //
@@ -4309,7 +4353,9 @@ theorem includedDescendingPositiveRoot_first_pos
     0 < rootWedgeWeight lam S (positiveRootFirst α.val) := by
   omega
 
-private def includedDescendingPositiveRootOperator
+/-- The weighted lowering operator for an included root with strictly descending endpoint
+weights. -/
+def includedDescendingPositiveRootOperator
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : IncludedDescendingPositiveRoot lam S) :
@@ -4319,7 +4365,9 @@ private def includedDescendingPositiveRootOperator
   weightedPositiveRootOperator n (rootWedgeWeight lam S) α.val
     (includedDescendingPositiveRoot_first_pos lam S α)
 
-private def includedDescendingPositiveRootOperatorStar
+/-- The Fischer adjoint of the lowering operator for an included root with descending endpoint
+weights. -/
+def includedDescendingPositiveRootOperatorStar
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : IncludedDescendingPositiveRoot lam S) :
@@ -4347,7 +4395,9 @@ theorem includedDescendingPositiveRoot_fischer_adjoint
     (positiveRootFirst α.val) (positiveRootSecond α.val)
     (p.val : PolynomialSpace r n) (q.val : PolynomialSpace r n)
 
-private def includedDescendingPositiveRootFischerLaplacian
+/-- The finite Fischer root Laplacian summed over the included roots with descending endpoint
+weights. -/
+def includedDescendingPositiveRootFischerLaplacian
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k) :
     JointHarmonicWeightSpace n (rootWedgeWeight lam S) →ₗ[ℝ]
@@ -4498,7 +4548,9 @@ section
 open scoped BigOperators InnerProductSpace
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private abbrev IncludedNondescendingPositiveRoot {r k : ℕ}
+/-- Included roots whose first endpoint has positive weight no larger than the second endpoint's
+weight. -/
+abbrev IncludedNondescendingPositiveRoot {r k : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k) :=
   {α : PositiveRoot r //
@@ -4507,14 +4559,17 @@ private abbrev IncludedNondescendingPositiveRoot {r k : ℕ}
         rootWedgeWeight lam S (positiveRootFirst α) ≤
           rootWedgeWeight lam S (positiveRootSecond α)}
 
-private abbrev ExcludedActivePositiveRoot {r k : ℕ}
+/-- Roots absent from the wedge whose second endpoint has positive weight. -/
+abbrev ExcludedActivePositiveRoot {r k : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k) :=
   {α : PositiveRoot r //
     α ∉ S.val.val ∧
       0 < rootWedgeWeight lam S (positiveRootSecond α)}
 
-private def includedNondescendingPositiveRootOperator
+/-- The weighted lowering operator for an included root with positive, nondescending endpoint
+weights. -/
+def includedNondescendingPositiveRootOperator
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : IncludedNondescendingPositiveRoot lam S) :
@@ -4524,7 +4579,9 @@ private def includedNondescendingPositiveRootOperator
   weightedPositiveRootOperator n (rootWedgeWeight lam S) α.val
     α.property.2.1
 
-private def includedNondescendingPositiveRootOperatorStar
+/-- The Fischer adjoint of the lowering operator for an included root with nondescending
+endpoint weights. -/
+def includedNondescendingPositiveRootOperatorStar
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : IncludedNondescendingPositiveRoot lam S) :
@@ -4552,7 +4609,9 @@ theorem includedNondescendingPositiveRoot_fischer_adjoint
     (positiveRootFirst α.val) (positiveRootSecond α.val)
     (p.val : PolynomialSpace r n) (q.val : PolynomialSpace r n)
 
-private def includedNondescendingPositiveRootFischerLaplacian
+/-- The finite Fischer root Laplacian summed over the included roots with nondescending endpoint
+weights. -/
+def includedNondescendingPositiveRootFischerLaplacian
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k) :
     JointHarmonicWeightSpace n (rootWedgeWeight lam S) →ₗ[ℝ]
@@ -4566,7 +4625,8 @@ private def includedNondescendingPositiveRootFischerLaplacian
     (includedNondescendingPositiveRootOperator n lam S)
     (includedNondescendingPositiveRootOperatorStar n lam S)
 
-private def excludedActivePositiveRootOperator
+/-- The active raising operator for a root absent from the wedge. -/
+def excludedActivePositiveRootOperator
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : ExcludedActivePositiveRoot lam S) :
@@ -4577,7 +4637,8 @@ private def excludedActivePositiveRootOperator
   activePositiveRootRaise n (rootWedgeWeight lam S)
     ⟨α.val, α.property.2⟩
 
-private def excludedActivePositiveRootOperatorStar
+/-- The Fischer adjoint lowering operator for an active root absent from the wedge. -/
+def excludedActivePositiveRootOperatorStar
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : ExcludedActivePositiveRoot lam S) :
@@ -4605,7 +4666,8 @@ theorem excludedActivePositiveRoot_fischer_adjoint
   activePositiveRoot_fischer_adjoint
     (rootWedgeWeight lam S) ⟨α.val, α.property.2⟩ p q
 
-private def excludedActivePositiveRootFischerLaplacian
+/-- The finite Fischer root Laplacian summed over active roots absent from the wedge. -/
+def excludedActivePositiveRootFischerLaplacian
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k) :
     JointHarmonicWeightSpace n (rootWedgeWeight lam S) →ₗ[ℝ]
@@ -6594,7 +6656,9 @@ section
 open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def weightedRootBracketEdgeAdjoint {r k : ℕ}
+/-- The reverse weight-space identification for a wedge edge with nonzero root-bracket boundary
+coefficient. -/
+def weightedRootBracketEdgeAdjoint {r k : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam (k + 1))
     (T : AdmissibleRootWedge lam k)
@@ -7227,7 +7291,8 @@ section
 open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def rootWedgeErase {r k : ℕ}
+/-- Erase a specified member of a root wedge, reducing its cardinality by one. -/
+def rootWedgeErase {r k : ℕ}
     (S : RootWedge r (k + 1)) (α : PositiveRoot r)
     (hα : α ∈ S.val) : RootWedge r k := by
   refine ⟨S.val.erase α, ?_⟩

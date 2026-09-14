@@ -3,9 +3,17 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SigmaZeta
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Elliptic functions and the Liouville theorems
@@ -26,6 +34,8 @@ All statements in this file are fully proved (no `sorry`s). The second Liouville
 proved via a self-contained parallelogram residue theorem built from Mathlib's rectangle
 Cauchy--Goursat primitives.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -754,29 +764,25 @@ private lemma boundaryIntegral_sub_inv_ne_zero {L : PeriodPair} {v c : ℂ} {a b
     have h0' : ((t - a : ℝ) : ℂ) * L.ω₁ + ((0 - b : ℝ) : ℂ) * L.ω₂ = 0 := by
       push_cast
       linear_combination h0 + hc
-    exact hb.1.ne ((neg_eq_zero.mp (by simpa using (coord_eq_zero_of_eq_zero h0').2)).symm)
+    exact hb.1.ne (sub_eq_zero.mp (coord_eq_zero_of_eq_zero h0').2)
   have hne2 : ∀ t ∈ Set.Icc (0 : ℝ) 1, v + L.ω₁ + (t : ℂ) * L.ω₂ - c ≠ 0 := by
     intro t _ h0
     have h0' : ((1 - a : ℝ) : ℂ) * L.ω₁ + ((t - b : ℝ) : ℂ) * L.ω₂ = 0 := by
       push_cast
       linear_combination h0 + hc
-    exact ha.2.ne' (by
-      have := (coord_eq_zero_of_eq_zero h0').1
-      linarith [this])
+    exact ha.2.ne' (sub_eq_zero.mp (coord_eq_zero_of_eq_zero h0').1)
   have hne3 : ∀ t ∈ Set.Icc (0 : ℝ) 1, v + L.ω₂ + (t : ℂ) * L.ω₁ - c ≠ 0 := by
     intro t _ h0
     have h0' : ((t - a : ℝ) : ℂ) * L.ω₁ + ((1 - b : ℝ) : ℂ) * L.ω₂ = 0 := by
       push_cast
       linear_combination h0 + hc
-    exact hb.2.ne' (by
-      have := (coord_eq_zero_of_eq_zero h0').2
-      linarith [this])
+    exact hb.2.ne' (sub_eq_zero.mp (coord_eq_zero_of_eq_zero h0').2)
   have hne4 : ∀ t ∈ Set.Icc (0 : ℝ) 1, v + (t : ℂ) * L.ω₂ - c ≠ 0 := by
     intro t _ h0
     have h0' : ((0 - a : ℝ) : ℂ) * L.ω₁ + ((t - b : ℝ) : ℂ) * L.ω₂ = 0 := by
       push_cast
       linear_combination h0 + hc
-    exact ha.1.ne ((neg_eq_zero.mp (by simpa using (coord_eq_zero_of_eq_zero h0').1)).symm)
+    exact ha.1.ne (sub_eq_zero.mp (coord_eq_zero_of_eq_zero h0').1)
   -- the four positive edge integrals
   have hpos : ∀ (p ω : ℂ), (∀ t ∈ Set.Icc (0 : ℝ) 1, p + (t : ℂ) * ω - c ≠ 0) →
       0 < ∫ t in (0 : ℝ)..1, (Complex.normSq (p + (t : ℂ) * ω - c))⁻¹ := by
@@ -788,8 +794,7 @@ private lemma boundaryIntegral_sub_inv_ne_zero {L : PeriodPair} {v c : ℂ} {a b
       intro t ht
       exact Complex.normSq_pos.mpr (hne t ht) |>.ne'
     · intro t ht
-      have := Complex.normSq_pos.mpr (hne t (Set.mem_Icc_of_Ioo ht))
-      positivity
+      exact inv_pos.mpr (Complex.normSq_pos.mpr (hne t (Set.mem_Icc_of_Ioo ht)))
     · exact zero_lt_one
   -- the four cross-product constants
   have hD1 : (L.ω₁ * (starRingEnd ℂ) (v - c)).im = b * σ := by
@@ -827,18 +832,12 @@ private lemma boundaryIntegral_sub_inv_ne_zero {L : PeriodPair} {v c : ℂ} {a b
   have hI₂ : 0 < I₂ := hpos _ _ hne2
   have hI₃ : 0 < I₃ := hpos _ _ hne3
   have hI₄ : 0 < I₄ := hpos _ _ hne4
-  have hS : b * I₁ + (1 - a) * I₂ + (1 - b) * I₃ + a * I₄ > 0 := by
-    have := hb.1
-    have := ha.2
-    have := hb.2
-    have := ha.1
-    nlinarith [mul_pos hb.1 hI₁, mul_pos (sub_pos.mpr ha.2) hI₂,
-      mul_pos (sub_pos.mpr hb.2) hI₃, mul_pos ha.1 hI₄]
+  have hS : b * I₁ + (1 - a) * I₂ + (1 - b) * I₃ + a * I₄ > 0 :=
+    add_pos (add_pos (add_pos (mul_pos hb.1 hI₁) (mul_pos (sub_pos.mpr ha.2) hI₂))
+      (mul_pos (sub_pos.mpr hb.2) hI₃)) (mul_pos ha.1 hI₄)
   have him' : σ * (b * I₁ + (1 - a) * I₂ + (1 - b) * I₃ + a * I₄) = 0 := by
-    linarith [him]
-  rcases mul_eq_zero.mp him' with h | h
-  · exact hσne h
-  · linarith
+    linear_combination him
+  exact mul_ne_zero hσne (ne_of_gt hS) him'
 
 /-- `starRingEnd ℂ` commutes with interval integrals. -/
 private lemma intervalIntegral_conj {f : ℝ → ℂ} :

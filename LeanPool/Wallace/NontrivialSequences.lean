@@ -3,9 +3,13 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.SeparationInterface
+public import LeanPool.Wallace.SeparationInterface
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
 import Mathlib.Data.Nat.Nth
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Excluding nontrivial convergent sequences
@@ -18,6 +22,8 @@ same subsequence would converge to zero along the free ultrafilter.
 
 This observation avoids any separate oscillating-marker construction.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

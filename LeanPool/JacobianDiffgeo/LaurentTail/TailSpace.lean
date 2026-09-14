@@ -3,9 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech
-import Mathlib.Data.DFinsupp.Module
+public import LeanPool.JacobianDiffgeo.Cech.WindowRank
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Laurent tail spaces `TailAt p D` / `T D` (laurent-tails, design §2 D1/D2/D4, §4.1)
@@ -29,6 +31,8 @@ serre-duality-tails (`docs/requests/laurent-tails.md`, item 4) explicitly de-sco
 own `mulInto` (built directly on `T D`/`TailAt p D` from this file) supersedes `mulTail`, so this
 is a genuine scope relief, not a shortfall.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

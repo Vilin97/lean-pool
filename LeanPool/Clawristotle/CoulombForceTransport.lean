@@ -3,8 +3,15 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
+module
+
+public import LeanPool.Clawristotle.SchwartzDecayDefs
+public import LeanPool.Clawristotle.TorusInstance
 import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.IteratedDerivHelpers
 import LeanPool.Clawristotle.VelocityDecayInstance
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Force Transport and IBP Integrability for Coulomb
@@ -13,6 +20,8 @@ Proves integrability of the spatial transport term (v · ∇ₓf · log f), forc
 term ((E + v × B) · ∇ᵥf · log f), and force IBP terms for the Coulomb kernel.
 Uses Schwartz decay, log growth bounds, and the Lorentz force component bound.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

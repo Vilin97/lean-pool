@@ -6,8 +6,11 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.FirstEstimate
-public import LeanPool.PFR.SecondEstimate
+public import LeanPool.PFR.TauFunctional
+import LeanPool.PFR.FirstEstimate
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FourVariables
+import LeanPool.PFR.SecondEstimate
 
 /-!
 # Endgame
@@ -286,31 +289,9 @@ lemma sum_dist_diff_le [IsProbabilityMeasure (ℙ : Measure Ω)] [Module (ZMod 2
   -- Put everything together to bound the sum of the `c` terms
   have ineq7 : c[U|S # U|S] + c[V|S # V|S] + c[W|S # W|S] ≤
     3 * H[S; ℙ] - 3/2 * H[X₁; ℙ] -3/2 * H[X₂; ℙ] := by
-    have step₁ : c[U|S # U|S] ≤ H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2 :=
-      calc
-        _ = (d[p.X₀₁ # U|S] - d[p.X₀₁ # X₁]) + (d[p.X₀₂ # U|S] - d[p.X₀₂ # X₂]) := by ring
-        _ ≤ (H[S; ℙ] - H[X₁; ℙ])/2 + (H[S; ℙ] - H[X₂; ℙ])/2 := add_le_add ineq1 ineq2
-        _ = H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2 := by ring
-    have step₂ : c[V|S # V|S] ≤ H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2 :=
-      calc  c[V|S # V|S]
-        _ = d[p.X₀₁ # V|S] - d[p.X₀₁ # X₁] + (d[p.X₀₂ # V|S] - d[p.X₀₂ # X₂]) := by ring
-        _ ≤ (H[S; ℙ] - H[X₁; ℙ])/2 + (H[S; ℙ] - H[X₂; ℙ])/2 := add_le_add ineq3 ineq4
-        _ = H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2 := by ring
-    have step₃ : c[W|S # W|S] ≤ H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2 :=
-      calc c[W|S # W|S] = (d[X₀₁ # W | S] - d[X₀₁ # X₁]) + (d[X₀₂ # W' | S] - d[X₀₂ # X₂]) :=
-          by rw [dist_eq]
-        _ ≤ (H[S; ℙ] + H[W; ℙ] - H[X₁; ℙ] - H[W'; ℙ])/2
-          + (H[S; ℙ] + H[W'; ℙ] - H[X₂; ℙ] - H[W; ℙ])/2 := add_le_add ineq5 ineq6
-        _ = H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2 := by ring
-    calc c[U|S # U|S] + c[V|S # V|S] + c[W|S # W|S] ≤ (H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2) +
-      (H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2) + (H[S; ℙ] - (H[X₁; ℙ] + H[X₂; ℙ])/2) :=
-        add_le_add (add_le_add step₁ step₂) step₃
-    _ = 3 * H[S; ℙ] - 3/2 * H[X₁; ℙ] -3/2 * H[X₂; ℙ] := by ring
-  have h_indep' : iIndepFun ![X₁, X₂, X₂', X₁'] := by
-    refine .of_precomp (Equiv.swap (2 : Fin 4) 3).surjective ?_
-    convert h_indep using 1
-    ext x
-    fin_cases x; all_goals { aesop }
+    rw [dist_eq] at ineq6
+    linarith only [ineq1, ineq2, ineq3, ineq4, ineq5, ineq6]
+  have h_indep' : iIndepFun ![X₁, X₂, X₂', X₁'] := h_indep.reindex_four_abdc
   have ineq8 : 3 * H[S; ℙ] ≤ 3/2 * (H[X₁; ℙ] + H[X₂; ℙ]) + 3*(2+p.η)*k - 3*I₁ :=
     calc 3 * H[S; ℙ] ≤ 3 * (H[X₁; ℙ] / 2 + H[X₂; ℙ] / 2 + (2+p.η)*k - I₁) := by
           gcongr
@@ -502,15 +483,7 @@ theorem tau_strictly_decreases_aux [IsProbabilityMeasure (ℙ : Measure Ω)] [Mo
     (show Measurable W by fun_prop) (show Measurable S by fun_prop)
   have h1 := sum_condMutual_le p X₁ X₂ X₁' X₂' hX₁ hX₂ hX₁' hX₂' h₁ h₂ h_indep h_min
   have h2 := sum_dist_diff_le p X₁ X₂ X₁' X₂' hX₁ hX₂ hX₁' hX₂' h₁ h₂ h_indep h_min
-  have h_indep' : iIndepFun ![X₁, X₂, X₂', X₁'] := by
-    let σ : Fin 4 ≃ Fin 4 :=
-    { toFun := ![0, 1, 3, 2]
-      invFun := ![0, 1, 3, 2]
-      left_inv := by intro i; fin_cases i <;> rfl
-      right_inv := by intro i; fin_cases i <;> rfl }
-    refine .of_precomp σ.symm.surjective ?_
-    convert h_indep using 1
-    ext i; fin_cases i <;> rfl
+  have h_indep' : iIndepFun ![X₁, X₂, X₂', X₁'] := h_indep.reindex_four_abdc
   have h3 := first_estimate p X₁ X₂ X₁' X₂' hX₁ hX₂ hX₁' hX₂' h₁ h₂ h_indep' h_min
   have hk : 0 ≤ k := rdist_nonneg hX₁ hX₂
   rw [hpη] at *

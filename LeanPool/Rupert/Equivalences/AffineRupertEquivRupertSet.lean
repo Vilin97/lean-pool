@@ -3,10 +3,16 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import LeanPool.Rupert.Basic
-import LeanPool.Rupert.Set
-import LeanPool.Rupert.Affine
+public import LeanPool.Rupert.Basic
+public import LeanPool.Rupert.Set
+public import LeanPool.Rupert.Affine
+
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # LeanPool.Rupert.Equivalences.AffineRupertEquivRupertSet
@@ -14,6 +20,4 @@ import LeanPool.Rupert.Affine
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.AffineRupertEquivRupertSet`.
 -/
 
-proof_wanted affine_rupert_iff_rupert_set
-    (X : Set (EuclideanSpace ℝ (Fin 3))) :
-    IsAffineRupertSet X ↔ IsRupertSet X
+@[expose] public section

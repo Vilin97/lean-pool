@@ -3,20 +3,17 @@ Copyright (c) 2026 Ivan Kobe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Kobe
 -/
+module
 
-import LeanPool.FactorizationSystems.Examples
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Cospan
-import Mathlib.CategoryTheory.Limits.Types.Pullbacks
-import Mathlib.CategoryTheory.Limits.IsLimit
-import Mathlib.CategoryTheory.Iso
-import Mathlib.CategoryTheory.Types.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
+public import Mathlib.CategoryTheory.Limits.Types.Limits
+public import Mathlib.Tactic.Attr.Core
+import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 
 /-!
 # LeanPool.FactorizationSystems.Orthogonality
 -/
+
+@[expose] public section
 
 /-
 Given two morphisms l: A ⟶ B and r: X ⟶ Y in a category C, we say that l is left orthogonal to r
@@ -221,7 +218,7 @@ lemma hom_cospan_pullback_condition {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
 def isCartesianSquare {A B X Y : C} (S : square A B X Y) : Prop :=
-  IsIso (Limits.pullback.lift S.top S.left (by rw [S.comm]))
+  IsIso (Limits.pullback.lift S.top S.left S.comm.symm)
 
 /- The second characterization of orthogonality via the hom square in Set -/
 /-- Imported FactorizationSystems declaration. -/

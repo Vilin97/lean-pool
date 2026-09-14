@@ -3,9 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import Mathlib.Data.Nat.Choose.Central
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Nat.MaxPowDiv
+public import Mathlib.Data.Nat.Prime.Defs
 import LeanPool.OddPrimeValuationDistribution.Kummer
 import Mathlib.Data.Nat.Digits.Lemmas
-import Mathlib.Tactic.Ring
 
 /-!
 # Doubling carries in an arbitrary odd base
@@ -15,6 +20,8 @@ doubling transducer in that base and proves its arithmetic correctness.  When
 the base is prime, the carry count is exactly the prime-adic valuation of the
 central binomial coefficient.
 -/
+
+@[expose] public section
 
 namespace OddPrimeValuationDistribution
 

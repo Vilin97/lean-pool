@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
-import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+public import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+import Mathlib.Data.Set.Image
 
 /-!
 # Lecture III (§3) — the product system: Definitions 3.1, 3.3, Propositions 3.2,
@@ -53,6 +54,8 @@ substitution
 
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

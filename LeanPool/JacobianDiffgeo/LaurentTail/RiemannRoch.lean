@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
-import LeanPool.JacobianDiffgeo.Finiteness
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+public import LeanPool.JacobianDiffgeo.Finiteness
+
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Riemann–Roch bridge (laurent-tails, design §4.4) — DEFERRED, gated on `H1Tail.equiv` only
@@ -55,3 +60,5 @@ conjugating `Cech`'s own six-term fragment by `H1Tail.equiv`) — every proof is
 no new analysis, per the design doc §0/§6's own explicit recommendation not to re-derive
 Miranda's finiteness route independently.
 -/
+
+@[expose] public section

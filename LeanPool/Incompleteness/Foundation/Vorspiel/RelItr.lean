@@ -3,10 +3,18 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+public import Mathlib.Data.Rel
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Algebra.Group.Nat.Defs
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Tactic.SetLike
 
 /-! # RelItr -/
+
+@[expose] public section
 
 
 /-- Imported declaration from the Incompleteness formalization. -/

@@ -3,8 +3,17 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.XOR
+module
+
+public import LeanPool.CircuitComplexity.XOR
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Algebra.GroupWithZero.Nat
 import LeanPool.CircuitComplexity.Internal.Bridge
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! # Schnorr's Lower Bound for XOR Circuits
 
@@ -38,6 +47,8 @@ for single-output circuits).
 When `Basis.andOr2` is known to be complete, this yields a
 `sizeComplexity` bound via `schnorr_size_complexity`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

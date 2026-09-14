@@ -3,14 +3,24 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
-import LeanPool.Lean4GlCoalgebras.General.Game
-import LeanPool.Lean4GlCoalgebras.General.Soundness
+public import LeanPool.Lean4GlCoalgebras.General.Game
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+public import Mathlib.Algebra.Group.Nat.Even
+public import Mathlib.Data.Fin.Tuple.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! ## Prover winning the GL-game builds a GL-proof.
 
 If Prover has a winning strategy in the game starting from `Γ`, then there is a proof of `Γ`,
 proven in `prover_win_builds_proof`, all other definitions and proofs in this file are helpers. -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 
@@ -546,37 +556,37 @@ def builderMovePremises {Γ : Sequent} {strat : Strategy coalgebraGame Prover}
       | RuleApp.ax _ _ _ => []
       | RuleApp.or Δ φ1 φ2 φ_in =>
         if rep : (Δ \ {φ1 v φ2}) ∪ {φ1, φ2} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {φ1 v φ2}) ∪ {φ1, φ2}) Γ g (by convert rep; grind)]
               else
-                [nextNext g h (by convert rep; grind)
+                [nextNext (Δ := (Δ \ {φ1 v φ2}) ∪ {φ1, φ2}) g h (by convert rep; grind)
                   (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
       | RuleApp.and Δ φ1 φ2 φ_in =>
         if rep1 : (Δ \ {φ1 & φ2}) ∪ {φ1} ∈ Γs
           then
             if rep2 : (Δ \ {φ1 & φ2}) ∪ {φ2} ∈ Γs
               then
-                [repNext Γ g (by convert rep1; grind),
-                  repNext Γ g (by convert rep2; grind)]
+                [repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) Γ g (by convert rep1; grind),
+                  repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) Γ g (by convert rep2; grind)]
               else
-                [repNext Γ g (by convert rep1; grind),
-                  nextNext g h (by convert rep2; grind)
+                [repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) Γ g (by convert rep1; grind),
+                  nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) g h (by convert rep2; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
           else
             if rep2 : (Δ \ {φ1 & φ2}) ∪ {φ2} ∈ Γs
               then
-                [nextNext g h (by convert rep1; grind)
+                [nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) g h (by convert rep1; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp]),
-                  repNext Γ g (by convert rep2; grind)]
+                  repNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) Γ g (by convert rep2; grind)]
               else
-                [nextNext g h (by convert rep1; grind)
+                [nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ1}) g h (by convert rep1; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp]),
-                  nextNext g h (by convert rep2; grind)
+                  nextNext (Δ := (Δ \ {φ1 & φ2}) ∪ {φ2}) g h (by convert rep2; grind)
                     (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
       | RuleApp.box Δ φ φ_in =>
         if rep : (Δ \ {□φ}).D ∪ {φ} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {□φ}).D ∪ {φ}) Γ g (by convert rep; grind)]
           else
-            [nextNext g h (by convert rep; grind)
+            [nextNext (Δ := (Δ \ {□φ}).D ∪ {φ}) g h (by convert rep; grind)
               (by subst g_def; simp [RuleApp.sequents, builderRuleApp])]
 
 /-- If Prover has a winning strategy in the game starting from `Γ`, then there is a proof

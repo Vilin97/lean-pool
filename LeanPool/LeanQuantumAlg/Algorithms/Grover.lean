@@ -6,9 +6,7 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.AmplitudeAmplification
-public import LeanPool.LeanQuantumAlg.Core.Cost
 
 /-!
 # Grover search in the good/bad-plane model

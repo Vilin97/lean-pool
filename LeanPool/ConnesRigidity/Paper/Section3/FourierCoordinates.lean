@@ -8,12 +8,17 @@ Authors: Utensil Song
 Fourier transport from Zhou's actual compact dual to the raw coordinate Haar
 model. This is the kernel part of the §3 crossed-product bridge. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.FourierAction
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.FourierAction
+public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
 import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
 
 /-!
 The fourier coordinates component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFourierCoordinates

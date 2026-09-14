@@ -3,8 +3,16 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Module
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Module
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.Data.Finsupp.SMul
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Hecke Rings: Associativity
@@ -13,6 +21,8 @@ The `IsScalarTower` instance proving that the module action is compatible with m
 which is equivalent to associativity of multiplication in the Hecke ring. This is Shimura
 Proposition 3.4.
 -/
+
+@[expose] public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 

@@ -3,26 +3,20 @@ Copyright (c) 2026 Lua Viana Reis, Oliver Butterley, Pietro Monticone. All right
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lua Viana Reis, Oliver Butterley, Pietro Monticone
 -/
+module
 
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+public import Mathlib.MeasureTheory.MeasurableSpace.Invariants
+public import Mathlib.Dynamics.BirkhoffSum.Average
 import Mathlib.Algebra.Order.Group.PartialSups
-import Mathlib.Algebra.Order.SuccPred.PartialSups
 import Mathlib.Dynamics.BirkhoffSum.QuasiMeasurePreserving
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.MeasureTheory.MeasurableSpace.Invariants
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # LeanPool.PointwiseBirkhoff.Main
 -/
+
+@[expose] public section
 
 open scoped MeasureTheory
 
@@ -87,7 +81,7 @@ lemma birkhoffMax_measurable [MeasurableSpace α]
 
 open MeasureTheory Measure MeasurableSpace Filter Topology
 
-variable {α : Type*} [msα : MeasurableSpace α] (μ : Measure α := by volume_tac)
+variable {α : Type*} [msα : MeasurableSpace α] (μ : Measure α)
 
 /-- The supremum of `birkhoffSum f φ (n + 1) x` over `n : ℕ`. -/
 noncomputable def birkhoffSup (f : α → α) (φ : α → ℝ) (x : α) : EReal :=
@@ -215,11 +209,7 @@ variable {f : α → α} (hf : MeasurePreserving f μ μ)
 
 lemma iterates_integrable {i : ℕ} (hf : MeasurePreserving f μ μ) (hφ : Integrable φ μ) :
     Integrable (φ ∘ f^[i]) μ := by
-  apply (integrable_map_measure _ _).mp
-  · rwa [(hf.iterate i).map_eq]
-  · rw [(hf.iterate i).map_eq]
-    exact hφ.aestronglyMeasurable
-  exact (hf.iterate i).measurable.aemeasurable
+  exact (hf.iterate i).integrable_comp_of_integrable hφ
 
 lemma birkhoffSum_integrable (hf : MeasurePreserving f μ μ) (hφ : Integrable φ μ) :
     Integrable (birkhoffSum f φ n) μ :=
@@ -326,7 +316,7 @@ lemma limsup_birkhoffAverage_nonpos_of_condexp_neg (hf : MeasurePreserving f μ 
 
 /-- Conditional expectation of an observable onto the invariant measurable space of `f`. -/
 noncomputable def invCondexp
-    (μ : Measure α := by volume_tac) (f : α → α) (φ : α → ℝ) : α → ℝ :=
+    (μ : Measure α) (f : α → α) (φ : α → ℝ) : α → ℝ :=
   μ[φ | invariants f]
 
 theorem birkhoffErgodicTheorem_aux {ε : ℝ} (hε : 0 < ε) (hf : MeasurePreserving f μ μ)

@@ -3,12 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Data.Complex.Basic
+public import Mathlib.Data.Complex.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Algebra.Module.LinearMap.Defs
 
 /-!
 Positive Definite Functions
@@ -23,6 +24,8 @@ Key definitions:
 Key lemmas:
 - `isPositiveDefinite_precomp_linear`: Composition with linear map preserves PD
 -/
+
+@[expose] public section
 
 open Complex
 open BigOperators

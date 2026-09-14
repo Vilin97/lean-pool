@@ -6,7 +6,9 @@ Authors: Kenny Lau
 module
 
 public import LeanPool.ZetaZeros.Hilbert.Subspaces
-public import LeanPool.ZetaZeros.Hilbert.Symmetry
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Symmetry on `L²`, as a real subspace

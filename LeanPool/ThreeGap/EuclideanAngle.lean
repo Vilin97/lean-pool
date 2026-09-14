@@ -3,9 +3,9 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
 
 /-!
 # The separation → angle crux for the Euclidean growth inequality
@@ -39,6 +39,8 @@ Math.
 This file isolates the fully-proven angular crux; the packing count on top of it is the remaining
 geometric step (sharp form = Romanov). Axiom-clean; elementary.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.EuclideanAngle
 

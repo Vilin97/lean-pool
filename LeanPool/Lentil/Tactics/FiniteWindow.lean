@@ -3,8 +3,18 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
-import LeanPool.Lentil.Tactics.Basic
+module
+
+public meta import LeanPool.Lentil.Tactics.Basic
+
+public meta import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Nat
+public meta import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Core
+
+public import LeanPool.Lentil.Tactics.Basic
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
+
+@[expose] public section
 
 open Lean
 
@@ -368,8 +378,17 @@ instance hasFiniteWindowExists {σ : Type u} {α : Sort v} (p : α → pred σ) 
     HasFiniteWindow (tlaExists p) n where
   finite := finiteWindowExists p n fun _ => finiteWindowOfHasFiniteWindow
 
+/-- Natural-number addition reduction for finite-window normalization. -/
+dsimproc_decl finiteWindowReduceNatAdd ((_ + _ : Nat)) := Nat.reduceAdd
+/-- Natural-number comparison reduction for finite-window normalization. -/
+simproc_decl finiteWindowReduceNatLe ((_ : Nat) ≤ _) := Nat.reduceLeDiff
+/-- Definitional conditional reduction for finite-window normalization. -/
+dsimproc_decl finiteWindowDReduceIte (ite _ _ _) := dreduceIte
+/-- Conditional simplification for finite-window normalization. -/
+simproc_decl finiteWindowReduceIte (ite _ _ _) := reduceIte
+
 attribute [tla_finite_window_def]
-  Nat.max_def Nat.reduceAdd Nat.reduceLeDiff
+  Nat.max_def finiteWindowReduceNatAdd finiteWindowReduceNatLe
   IteratedForall
   HasFiniteWindow.finite
   finiteWindowOfHasFiniteWindow
@@ -389,11 +408,11 @@ attribute [tla_finite_window_def]
   IteratedHomPred.mkForall IteratedHomPred.mkExists
   IteratedHomPred.mkBinder
 
-attribute [tla_finite_window_def ↓] dreduceIte reduceIte
+attribute [tla_finite_window_def ↓] finiteWindowDReduceIte finiteWindowReduceIte
 
 open Elab Tactic Meta
 
-private def finiteWindowOf (p : Expr) : MetaM (Expr × Nat) := do
+private meta def finiteWindowOf (p : Expr) : MetaM (Expr × Nat) := do
   let win ← mkFreshExprMVar (some (mkConst ``Nat))
   let instTy ← mkAppM ``HasFiniteWindow #[p, win]
   let inst ←
@@ -405,7 +424,7 @@ private def finiteWindowOf (p : Expr) : MetaM (Expr × Nat) := do
     | throwError "tlaFiniteWindow: synthesized finite window did not reduce to a numeral: {win}"
   return (inst, n)
 
-private def introFiniteStates (n : Nat) : TacticM Unit := do
+private meta def introFiniteStates (n : Nat) : TacticM Unit := do
   for idx in 0...n do
     discard <| introFresh (stateName idx)
 where

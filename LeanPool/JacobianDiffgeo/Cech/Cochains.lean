@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Covers
-import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.Cech.Covers
+public import LeanPool.JacobianDiffgeo.Meromorphic.LinearSystem
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Čech cochains, coboundary maps, `Z¹`/`B¹`/`H¹(𝒰,D)` (CC8, D5/D6)
@@ -19,6 +22,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.2).
 * `C0`/`C1`/`C2` (full-product cochains, D5), `d0`/`d1` (coboundary), `d1_comp_d0`.
 * `Z1`/`B1`/`H1Cover` — the cover-level Čech `H¹(𝒰,D)`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -143,58 +148,18 @@ theorem d1_comp_d0 : (d1 D 𝒰) ∘ₗ (d0 D 𝒰) = 0 := by
   intro f
   funext t
   obtain ⟨i, j, k⟩ := t
-  simp only [LinearMap.comp_apply, d1_apply, d0_apply, LinearMap.zero_apply]
-  have e1 : LinSysOn.restrictL D (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U j ⊓ 𝒰.U k)
-      (LinSysOn.restrictL D (inf_le_right : 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U k) (f k)) =
-      LinSysOn.restrictL D
-        (le_trans (le_inf (inf_le_left.trans inf_le_right) inf_le_right) inf_le_right :
-          𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U k) (f k) :=
-    restrictL_restrictL D inf_le_right _ _ (f k)
-  have e2 : LinSysOn.restrictL D (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U j ⊓ 𝒰.U k)
-      (LinSysOn.restrictL D (inf_le_left : 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U j) (f j)) =
-      LinSysOn.restrictL D
-        (le_trans (le_inf (inf_le_left.trans inf_le_right) inf_le_right) inf_le_left :
-          𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U j) (f j) :=
-    restrictL_restrictL D inf_le_left _ _ (f j)
-  have e3 : LinSysOn.restrictL D (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i ⊓ 𝒰.U k)
-      (LinSysOn.restrictL D (inf_le_right : 𝒰.U i ⊓ 𝒰.U k ≤ 𝒰.U k) (f k)) =
-      LinSysOn.restrictL D
-        (le_trans (le_inf (inf_le_left.trans inf_le_left) inf_le_right) inf_le_right :
-          𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U k) (f k) :=
-    restrictL_restrictL D inf_le_right _ _ (f k)
-  have e4 : LinSysOn.restrictL D (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i ⊓ 𝒰.U k)
-      (LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U k ≤ 𝒰.U i) (f i)) =
-      LinSysOn.restrictL D
-        (le_trans (le_inf (inf_le_left.trans inf_le_left) inf_le_right) inf_le_left :
-          𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i) (f i) :=
-    restrictL_restrictL D inf_le_left _ _ (f i)
-  have e5 : LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i ⊓ 𝒰.U j)
-      (LinSysOn.restrictL D (inf_le_right : 𝒰.U i ⊓ 𝒰.U j ≤ 𝒰.U j) (f j)) =
-      LinSysOn.restrictL D
-        (le_trans inf_le_left inf_le_right : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U j) (f j) :=
-    restrictL_restrictL D inf_le_right _ _ (f j)
-  have e6 : LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i ⊓ 𝒰.U j)
-      (LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U j ≤ 𝒰.U i) (f i)) =
-      LinSysOn.restrictL D
-        (le_trans inf_le_left inf_le_left : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i) (f i) :=
-    restrictL_restrictL D inf_le_left _ _ (f i)
-  simp only [map_sub]
-  rw [e1, e2, e3, e4, e5, e6]
-  have p1 : (le_trans (le_inf (inf_le_left.trans inf_le_right) inf_le_right) inf_le_right :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U k) =
-      (le_trans (le_inf (inf_le_left.trans inf_le_left) inf_le_right) inf_le_right :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U k) := rfl
-  have p2 : (le_trans (le_inf (inf_le_left.trans inf_le_right) inf_le_right) inf_le_left :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U j) =
-      (le_trans inf_le_left inf_le_right : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U j) := rfl
-  have p3 : (le_trans (le_inf (inf_le_left.trans inf_le_left) inf_le_right) inf_le_left :
-        𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i) =
-      (le_trans inf_le_left inf_le_left : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k ≤ 𝒰.U i) := rfl
-  rw [p1, p2, p3, Pi.zero_apply]
+  let W : Opens X := 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k
+  have hi : W ≤ 𝒰.U i := inf_le_left.trans inf_le_left
+  have hj : W ≤ 𝒰.U j := inf_le_left.trans inf_le_right
+  have hk : W ≤ 𝒰.U k := inf_le_right
+  have hij : W ≤ 𝒰.U i ⊓ 𝒰.U j := inf_le_left
+  have hik : W ≤ 𝒰.U i ⊓ 𝒰.U k := le_inf hi hk
+  have hjk : W ≤ 𝒰.U j ⊓ 𝒰.U k := le_inf hj hk
+  simp only [LinearMap.comp_apply, d1_apply, d0_apply, LinearMap.zero_apply, Pi.zero_apply,
+    map_sub]
+  rw [restrictL_restrictL D inf_le_right hjk hk, restrictL_restrictL D inf_le_left hjk hj,
+    restrictL_restrictL D inf_le_right hik hk, restrictL_restrictL D inf_le_left hik hi,
+    restrictL_restrictL D inf_le_right hij hj, restrictL_restrictL D inf_le_left hij hi]
   abel
 
 /-! ### `Z1`, `B1`, `H1Cover` -/
@@ -222,9 +187,7 @@ theorem B1_le_Z1 : B1 D 𝒰 ≤ Z1 D 𝒰 := by
   exact LinearMap.congr_fun (d1_comp_d0 D 𝒰) x
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
-theorem mem_Z1_iff (f : C1 D 𝒰) : f ∈ Z1 D 𝒰 ↔ ∀ t, d1 D 𝒰 f t = 0 := by
-  rw [Z1, LinearMap.mem_ker]
-  exact ⟨fun h t => congrFun h t, fun h => funext h⟩
+theorem mem_Z1_iff (f : C1 D 𝒰) : f ∈ Z1 D 𝒰 ↔ ∀ t, d1 D 𝒰 f t = 0 := funext_iff
 
 /-- The Čech `H¹(𝒰,D)` at cover level. Reducible (`abbrev`) for the same reason as `C0/C1/C2`. -/
 noncomputable abbrev H1Cover : Type _ := Z1 D 𝒰 ⧸ (B1 D 𝒰).comap (Z1 D 𝒰).subtype
@@ -237,9 +200,7 @@ theorem H1Cover.mk_surjective : Function.Surjective (H1Cover.mk D 𝒰) := Submo
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem H1Cover.mk_eq_zero_iff (f : Z1 D 𝒰) :
-    H1Cover.mk D 𝒰 f = 0 ↔ (f : C1 D 𝒰) ∈ B1 D 𝒰 := by
-  rw [H1Cover.mk, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, Submodule.mem_comap]
-  rfl
+    H1Cover.mk D 𝒰 f = 0 ↔ (f : C1 D 𝒰) ∈ B1 D 𝒰 := Submodule.Quotient.mk_eq_zero _
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem subsingleton_h1Cover_iff : Subsingleton (H1Cover D 𝒰) ↔ Z1 D 𝒰 ≤ B1 D 𝒰 := by
@@ -251,18 +212,9 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem Z1.ord_diag {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) (i : Fin 𝒰.n) {x : X}
     (hx : x ∈ (𝒰.U i ⊓ 𝒰.U i : Opens X)) :
     (f (i, i) : RS.MeroGermOn X ((𝒰.U i ⊓ 𝒰.U i : Opens X) : Set X)).ord x = ⊤ := by
-  have hzero : d1 D 𝒰 f (i, i, i) = 0 := (mem_Z1_iff D 𝒰 f).1 hf (i, i, i)
-  rw [d1_apply] at hzero
-  have hcollapse : LinSysOn.restrictL D
-        (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
-          𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i ≤ 𝒰.U i ⊓ 𝒰.U i) (f (i, i))
-      - LinSysOn.restrictL D
-        (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
-          𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i ≤ 𝒰.U i ⊓ 𝒰.U i) (f (i, i))
-      + LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i ≤ 𝒰.U i ⊓ 𝒰.U i) (f (i, i))
-      = LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i ≤ 𝒰.U i ⊓ 𝒰.U i) (f (i, i)) := by
-    abel
-  rw [hcollapse] at hzero
+  have hzero : LinSysOn.restrictL D
+      (inf_le_left : 𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i ≤ 𝒰.U i ⊓ 𝒰.U i) (f (i, i)) = 0 := by
+    simpa only [d1_apply, sub_self, zero_add] using (mem_Z1_iff D 𝒰 f).1 hf (i, i, i)
   have hxx : x ∈ (𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i : Opens X) := ⟨hx, hx.2⟩
   have := ord_restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i ≤ 𝒰.U i ⊓ 𝒰.U i) hxx (f (i, i))
   rw [hzero] at this

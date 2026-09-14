@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos132N14.Main
+public import LeanPool.Erdos132N14.Main
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # A Conditional Fourteen-Point Case of Erdős Problem 132
@@ -16,6 +18,8 @@ Main declarations: `LeanPool.Erdos132N14.erdos132_for_fourteen_of_published_inpu
 Tags: discrete-geometry, few-distance-sets, erdos-problems, planar-configurations
 MSC: 52C10, 05D99
 -/
+
+@[expose] public section
 
 /-!
 # A conditional fourteen-point case of Erdős Problem 132

@@ -3,9 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Conditional.MorleyHanfTransfer
+module
+
+public import LeanPool.InfinitaryLogic.Conditional.MorleyHanfTransfer
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
 import LeanPool.InfinitaryLogic.Methods.SchemaLocalEMSource
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 /-!
 # The Morley–Hanf theorem, discharged
 
@@ -26,6 +29,8 @@ is expanded back to `L'[[J]]` — missing functions act arbitrarily, missing rel
 constants pass through; the degenerate `IsEmpty J` case is served by the source model itself.
 So: **`ℶ_{ω₁}` is a Hanf bound for every `L_{ω₁ω}` sentence, unconditionally.**
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

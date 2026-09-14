@@ -3,13 +3,18 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
+module
+
+public import Mathlib.Data.Real.Basic
+public import Mathlib.Data.Fintype.Powerset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.Data.Real.Basic
 
 /-!
 General lemmas not specific to analysis of Boolean functions.
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanBooleanfun.BooleanFun
 

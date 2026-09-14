@@ -5,9 +5,9 @@ Authors: Alfie Davies, Tomasz Maciosowski
 -/
 module
 
-public import LeanPool.MisereGames.Form.Misere.Outcome
-public import LeanPool.MisereGames.GameForm
 public import LeanPool.MisereGames.Misere.Hereditary.MaintenanceProviso
+import LeanPool.MisereGames.Form.Birthday
+import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
 Misere combinatorial games.

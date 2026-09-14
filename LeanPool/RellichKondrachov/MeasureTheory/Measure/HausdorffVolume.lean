@@ -3,10 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.Hausdorff
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.MeasureTheory.Measure.OpenPos
+public import Mathlib.MeasureTheory.Measure.Hausdorff
 
 /-!
 # `RellichKondrachov.MeasureTheory.Measure.HausdorffVolume`
@@ -20,6 +19,8 @@ Using uniqueness of Haar measures, we record the resulting proportionality
 `μH[finrank] = c • volume` on general `E`, which is the form needed for transferring `L²` and
 compactness statements across equivalent measures.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 

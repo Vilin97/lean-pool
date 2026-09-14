@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ChainFromBoolean
+module
+
+public import LeanPool.Feige.ChainFromBoolean
 
 /-!
 # Probability measures carried by maximal chains
@@ -13,6 +15,8 @@ probability mass function on the levels of a maximal chain.  This file
 packages its expectation and relates the indicator of a threshold rejection
 event to `rejectedMass`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

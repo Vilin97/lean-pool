@@ -3,8 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise315
+public import LeanPool.DomainTheory.Neighborhood.Exercise315
+import Mathlib.Order.BooleanAlgebra.Set
 
 /-!
 # Exercise 3.16 (Scott 1981, PRG-19, §3) — the infinite iterate `𝒟^∞`
@@ -49,6 +51,8 @@ Everything is **choice-free in spirit**; the classical content is only what is
 inherited from the
 project's `Element.ext`/`prodEquiv` machinery, as elsewhere in §3.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

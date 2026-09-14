@@ -3,18 +3,21 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Rates
-import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
-import Mathlib.Analysis.InnerProductSpace.Trace
-import Mathlib.RingTheory.MvPolynomial.EulerIdentity
-import Mathlib.Topology.MetricSpace.CoveringNumbers
+public import LeanPool.MetricCodes.Rates
+public import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
+public import Mathlib.Analysis.InnerProductSpace.Trace
+public import Mathlib.RingTheory.MvPolynomial.EulerIdentity
+public import Mathlib.Topology.MetricSpace.CoveringNumbers
 
 /-!
 # Harmonic analysis for spherical codes
 
 Harmonic polynomial, Gegenbauer, Perron, and adjacent-channel constructions.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -175,11 +178,13 @@ structure SphericalCode (n : ℕ) (s : ℝ) where
   inner_le : ∀ x ∈ points, ∀ y ∈ points, x ≠ y →
     ⟪x, y⟫_ℝ ≤ s
 
-private def PositiveDefiniteKernel {α : Type*} (K : α → α → ℝ) : Prop :=
+/-- Nonnegativity of every finite weighted quadratic form of the kernel. -/
+def PositiveDefiniteKernel {α : Type*} (K : α → α → ℝ) : Prop :=
   ∀ (C : Finset α) (w : α → ℝ),
     0 ≤ ∑ x ∈ C, ∑ y ∈ C, w x * w y * K x y
 
-private def unitSphere (n : ℕ) : Set (Euclidean n) :=
+/-- The unit sphere in the Euclidean space of dimension `n`. -/
+def unitSphere (n : ℕ) : Set (Euclidean n) :=
   {x | ‖x‖ = 1}
 
 theorem weighted_gram_sum_eq_norm_sq {α E : Type*}
@@ -302,7 +307,8 @@ theorem harmonicPolynomial_euler {n k : ℕ}
   exact (mem_harmonicHomogeneousSubmodule (p : MvPolynomial (Fin n) ℝ)).mp
     p.property |>.1
 
-private def finiteHilbertSchmidtKernel {α ι F E : Type*}
+/-- The Hilbert–Schmidt Gram kernel of a family of linear maps, computed in the basis `b`. -/
+def finiteHilbertSchmidtKernel {α ι F E : Type*}
     [Fintype ι]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -404,7 +410,8 @@ theorem finiteHilbertSchmidtKernel_three_channel
         (∑ i : ι, ⟪R x (basis i), R y (basis i)⟫_ℝ) := by
       simp_rw [Finset.sum_add_distrib, Finset.mul_sum]
 
-private def mixedHilbertSchmidtKernel
+/-- The Hilbert–Schmidt kernel of the compositions `A x ∘ (B x).adjoint`. -/
+def mixedHilbertSchmidtKernel
     {α ι F E G : Type*} [Fintype ι]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -426,13 +433,16 @@ open scoped BigOperators
 
 namespace Gegenbauer
 
-private def recurrenceDenominator (n i : ℕ) : ℝ :=
+/-- The common denominator `i + n - 2` in the normalized Gegenbauer recurrence. -/
+def recurrenceDenominator (n i : ℕ) : ℝ :=
   (i : ℝ) + (n : ℝ) - 2
 
-private def forwardCoefficient (n i : ℕ) : ℝ :=
+/-- The coefficient of `X * normalized n i` in the Gegenbauer recurrence. -/
+def forwardCoefficient (n i : ℕ) : ℝ :=
   (2 * (i : ℝ) + (n : ℝ) - 2) / recurrenceDenominator n i
 
-private def backwardCoefficient (n i : ℕ) : ℝ :=
+/-- The coefficient of the preceding polynomial in the Gegenbauer recurrence. -/
+def backwardCoefficient (n i : ℕ) : ℝ :=
   (i : ℝ) / recurrenceDenominator n i
 
 /-- The normalized used in the spherical-code argument. -/
@@ -640,7 +650,9 @@ theorem jacobiCoefficient_pos {n k i : ℕ}
     have h₄ : 0 < 2 * (i : ℝ) + (n : ℝ) := by linarith
     exact mul_pos (mul_pos (mul_pos h₁ h₂) h₃) h₄
 
-private def jacobiMatrix (n k L : ℕ) :
+/-- The symmetric tridiagonal matrix with Gegenbauer Jacobi coefficients between adjacent
+degrees. -/
+def jacobiMatrix (n k L : ℕ) :
     Matrix (Fin (L - k + 1)) (Fin (L - k + 1)) ℝ :=
   fun p q =>
     if p.val + 1 = q.val then
@@ -701,7 +713,8 @@ def directionalDerivative (n : ℕ) (x : Euclidean n) :
   simp only [directionalDerivative, LinearMap.coe_sum, LinearMap.coe_smul, Derivation.coeFn_coe,
     Finset.sum_apply, Pi.smul_apply]
 
-private def directionalDerivation (n : ℕ) (x : Euclidean n) :
+/-- Directional differentiation of multivariate polynomials, bundled as a derivation. -/
+def directionalDerivation (n : ℕ) (x : Euclidean n) :
     Derivation ℝ (MvPolynomial (Fin n) ℝ)
       (MvPolynomial (Fin n) ℝ) :=
   ∑ i : Fin n, x i • MvPolynomial.pderiv i
@@ -1328,7 +1341,8 @@ theorem coefficientEmbedding_injective (n m : ℕ) :
   · rw [MvPolynomial.IsHomogeneous.coeff_eq_zero p.property ha,
       MvPolynomial.IsHomogeneous.coeff_eq_zero q.property ha]
 
-private def harmonicCoefficientEmbedding (n m : ℕ) :
+/-- The coefficient embedding restricted to homogeneous harmonic polynomials. -/
+def harmonicCoefficientEmbedding (n m : ℕ) :
     SpherePacking.harmonicHomogeneousSubmodule n m →ₗ[ℝ]
       CoefficientSpace n m :=
   (coefficientEmbedding n m).comp
@@ -1559,7 +1573,8 @@ theorem harmonicInner_eq_polynomialInner (n m : ℕ)
     apply hf
     simpa only [map_zero] using hzero
 
-@[implicit_reducible] private def harmonicInnerCore (n m : ℕ) :
+/-- The Fischer inner product core on harmonic polynomials, pulled back from coefficient space. -/
+@[implicit_reducible] def harmonicInnerCore (n m : ℕ) :
     InnerProductSpace.Core ℝ
       (SpherePacking.harmonicHomogeneousSubmodule n m) :=
   embeddingInnerCore (harmonicCoefficientEmbedding n m)
@@ -1575,7 +1590,8 @@ theorem tangentHarmonicSubmodule_le_harmonic
         SpherePacking.harmonicHomogeneousSubmodule n m
   exact inf_le_left
 
-private def tangentCoefficientEmbedding
+/-- The coefficient embedding restricted further to the tangent harmonic subspace at `x`. -/
+def tangentCoefficientEmbedding
     (n m : ℕ) (x : SpherePacking.Euclidean n) :
     SpherePacking.tangentHarmonicSubmodule n m x →ₗ[ℝ]
       CoefficientSpace n m :=
@@ -1598,7 +1614,8 @@ theorem tangent_finiteDimensional
     (tangentCoefficientEmbedding n m x)
     (tangentCoefficientEmbedding_injective n m x)
 
-private def tangentInner (n m : ℕ) (x : SpherePacking.Euclidean n)
+/-- The inner product on tangent harmonics induced by their coefficient embedding. -/
+def tangentInner (n m : ℕ) (x : SpherePacking.Euclidean n)
     (p q : SpherePacking.tangentHarmonicSubmodule n m x) : ℝ :=
   @inner ℝ (CoefficientSpace n m) _
     (tangentCoefficientEmbedding n m x p)
@@ -1624,7 +1641,8 @@ theorem tangentInner_eq_polynomialInner
         (q : MvPolynomial (Fin n) ℝ) := by
       exact harmonicInner_eq_polynomialInner n m hp hq
 
-@[implicit_reducible] private def tangentInnerCore
+/-- The inner product core induced by the injective tangent coefficient embedding. -/
+@[implicit_reducible] def tangentInnerCore
     (n m : ℕ) (x : SpherePacking.Euclidean n) :
     InnerProductSpace.Core ℝ
       (SpherePacking.tangentHarmonicSubmodule n m x) :=
@@ -1726,7 +1744,8 @@ theorem polynomialLaplacian_isHomogeneous {n m : ℕ}
   intro i hi
   exact (hp.pderiv (i := i)).pderiv (i := i)
 
-private def homogeneousExponentFinset (n m : ℕ) :
+/-- The finite set of exponent vectors of total degree `m` in `n` variables. -/
+def homogeneousExponentFinset (n m : ℕ) :
     Finset (Fin n →₀ ℕ) :=
   (Finset.univ : Finset (Fin n)).finsuppAntidiag m
 
@@ -1789,7 +1808,8 @@ theorem finrank_homogeneousSubmodule (n m : ℕ) :
     _ = (n + m - 1).choose m :=
       homogeneousExponentFinset_card n m
 
-private def homogeneousRadialMultiplication (n m : ℕ) :
+/-- Multiplication by the radial polynomial, from homogeneous degree `m` to degree `m + 2`. -/
+def homogeneousRadialMultiplication (n m : ℕ) :
     MvPolynomial.homogeneousSubmodule (Fin n) ℝ m →ₗ[ℝ]
       MvPolynomial.homogeneousSubmodule (Fin n) ℝ (m + 2) :=
   (LinearMap.mulLeft ℝ (radialPolynomial n)).restrict
@@ -1848,7 +1868,8 @@ theorem surjective_of_injective_inner_adjoint
   rw [hadj, LinearMap.finrank_range_adjoint,
     LinearMap.finrank_range_of_inj hinj]
 
-private def homogeneousLaplacian (n m : ℕ) :
+/-- The polynomial Laplacian restricted from homogeneous degree `m + 2` to degree `m`. -/
+def homogeneousLaplacian (n m : ℕ) :
     MvPolynomial.homogeneousSubmodule (Fin n) ℝ (m + 2) →ₗ[ℝ]
       MvPolynomial.homogeneousSubmodule (Fin n) ℝ m :=
   LinearMap.codRestrict
@@ -2415,7 +2436,8 @@ theorem polynomialLaplacian_axis_mul_for_tangent
   intro i hi
   exact MvPolynomial.C_mul'
 
-private def harmonicAxisProjectionDenominator (n k : ℕ) : ℝ :=
+/-- The denominator `2 * k + n` used to remove the radial part of an axis projection. -/
+def harmonicAxisProjectionDenominator (n k : ℕ) : ℝ :=
   2 * (k : ℝ) + (n : ℝ)
 
 theorem harmonicAxisProjectionDenominator_pos
@@ -3162,7 +3184,8 @@ theorem tendsto_nat_sequence_sub_cast_div
     rw [Nat.cast_sub hn, sub_div]
   simpa only [sub_zero] using hsub.congr' heq
 
-private def harmonicEntropyBase (u : ℝ) (N : ℕ → ℕ) (n : ℕ) : ℕ :=
+/-- The binomial coefficient bounding harmonic dimensions in the entropy estimate. -/
+def harmonicEntropyBase (u : ℝ) (N : ℕ → ℕ) (n : ℕ) : ℕ :=
   (⌊u * (n : ℝ)⌋₊ + (N n - 2)).choose ⌊u * (n : ℝ)⌋₊
 
 theorem harmonicEntropyBase_pos (u : ℝ) (N : ℕ → ℕ) (n : ℕ) :
@@ -3987,23 +4010,29 @@ section
 open Filter
 open scoped BigOperators InnerProductSpace
 
-private abbrev CertificateFibre (n k : ℕ) :=
+/-- The Euclidean model of the certificate fibre of dimension `Gegenbauer.fibreDimension n k`. -/
+abbrev CertificateFibre (n k : ℕ) :=
   Euclidean (Gegenbauer.fibreDimension n k)
 
-private abbrev CertificateAmbient (n k L : ℕ) :=
+/-- The Euclidean ambient space for the certificate truncated to degrees `k` through `L`. -/
+abbrev CertificateAmbient (n k L : ℕ) :=
   Euclidean (truncatedHarmonicDimension n k L)
 
-private def certificateFibreBasis (n k : ℕ) :
+/-- The standard orthonormal coordinate basis of the certificate fibre. -/
+def certificateFibreBasis (n k : ℕ) :
     OrthonormalBasis (Fin (Gegenbauer.fibreDimension n k)) ℝ
       (CertificateFibre n k) :=
   EuclideanSpace.basisFun (Fin (Gegenbauer.fibreDimension n k)) ℝ
 
-private def certificateAmbientBasis (n k L : ℕ) :
+/-- The standard orthonormal coordinate basis of the truncated certificate ambient space. -/
+def certificateAmbientBasis (n k L : ℕ) :
     OrthonormalBasis (Fin (truncatedHarmonicDimension n k L)) ℝ
       (CertificateAmbient n k L) :=
   EuclideanSpace.basisFun (Fin (truncatedHarmonicDimension n k L)) ℝ
 
-private def isometricPackingKernel {n k L : ℕ}
+/-- The Hilbert–Schmidt overlap kernel associated with a family of isometric certificate
+embeddings. -/
+def isometricPackingKernel {n k L : ℕ}
     (f : Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ] CertificateAmbient n k L)
     (x y : Euclidean n) : ℝ :=
@@ -4065,27 +4094,32 @@ theorem isometric_mixed_kernel_diag
   simp only [LinearMap.IsSymmetric.id, LinearMap.IsSymmetric.adjoint_eq, LinearMap.comp_id,
     LinearMap.trace_id]
 
-private abbrev CertificateDegreeAmbient (n k L : ℕ)
+/-- The Euclidean model for the harmonic degree `k + i.val` summand of the certificate. -/
+abbrev CertificateDegreeAmbient (n k L : ℕ)
     (i : Jacobi.Index k L) :=
   Euclidean (Gegenbauer.harmonicDimension n (k + i.val))
 
-private def finiteGramRecurrenceWeight
+/-- A Jacobi coordinate weighted by the square root of its harmonic degree dimension. -/
+def finiteGramRecurrenceWeight
     (n k L : ℕ) (v : Jacobi.Space k L)
     (i : Jacobi.Index k L) : ℝ :=
   Real.sqrt (Gegenbauer.harmonicDimension n (k + i.val) : ℝ) * v i
 
-private def finiteGramRecurrenceNormalization
+/-- The sum of the dimension-weighted Jacobi coordinates used to normalize fibre amplitudes. -/
+def finiteGramRecurrenceNormalization
     (n k L : ℕ) (v : Jacobi.Space k L) : ℝ :=
   ∑ i : Jacobi.Index k L, finiteGramRecurrenceWeight n k L v i
 
-private def finiteGramFibreAmplitude
+/-- The square root of a normalized recurrence weight, giving the amplitude of one degree fibre. -/
+def finiteGramFibreAmplitude
     (n k L : ℕ) (v : Jacobi.Space k L)
     (i : Jacobi.Index k L) : ℝ :=
   Real.sqrt
     (finiteGramRecurrenceWeight n k L v i /
       finiteGramRecurrenceNormalization n k L v)
 
-private def finiteGramFibreAmplitudeVector
+/-- The vector of normalized fibre amplitudes in the Euclidean Jacobi space. -/
+def finiteGramFibreAmplitudeVector
     (n k L : ℕ) (v : Jacobi.Space k L) : Jacobi.Space k L :=
   WithLp.toLp 2 (finiteGramFibreAmplitude n k L v)
 
@@ -4242,7 +4276,8 @@ structure FiniteGramCertificate (n k L : ℕ) where
         ⟪boundary x (certificateFibreBasis n k i),
           remainder y (certificateFibreBasis n k i)⟫_ℝ = 0
 
-private def auxiliaryFiniteGramKernel {n k L : ℕ}
+/-- The certificate overlap kernel multiplied by the inner-product shift `⟪x, y⟫ - s`. -/
+def auxiliaryFiniteGramKernel {n k L : ℕ}
     (certificate : FiniteGramCertificate n k L) (s : ℝ)
     (x y : Euclidean n) : ℝ :=
   (⟪x, y⟫_ℝ - s) *
@@ -4495,11 +4530,14 @@ open scoped BigOperators InnerProductSpace
 
 namespace HarmonicCertificateAssembly
 
-private abbrev DegreeBlockIndex (n k L : ℕ) :=
+/-- Coordinates indexed jointly by a truncated degree and a harmonic basis vector in that
+degree. -/
+abbrev DegreeBlockIndex (n k L : ℕ) :=
   Σ i : Jacobi.Index k L,
     Fin (Gegenbauer.harmonicDimension n (k + i.val))
 
-private abbrev DegreeBlockPi (n k L : ℕ) :=
+/-- The orthogonal product of the Euclidean harmonic degree summands. -/
+abbrev DegreeBlockPi (n k L : ℕ) :=
   PiLp 2 (fun i : Jacobi.Index k L =>
     CertificateDegreeAmbient n k L i)
 
@@ -4540,21 +4578,26 @@ theorem degreeBlockIndex_card
   simp only [Fintype.card_fin]
   exact degreeBlock_dimension_sum n k L hkl
 
-private def degreeBlockIndexEquiv
+/-- An enumeration of all degree-block coordinates by the truncated harmonic dimension. -/
+def degreeBlockIndexEquiv
     (n k L : ℕ) (hkl : k ≤ L) :
     DegreeBlockIndex n k L ≃
       Fin (truncatedHarmonicDimension n k L) :=
   Fintype.equivOfCardEq (by
     simpa only [Fintype.card_sigma, Fintype.card_fin] using degreeBlockIndex_card n k L hkl)
 
-private def degreeBlockReindex
+/-- The coordinate reindexing isometry from the degree-block basis to the certificate ambient
+space. -/
+def degreeBlockReindex
     (n k L : ℕ) (hkl : k ≤ L) :
     EuclideanSpace ℝ (DegreeBlockIndex n k L) ≃ₗᵢ[ℝ]
       CertificateAmbient n k L :=
   LinearIsometryEquiv.piLpCongrLeft 2 ℝ ℝ
     (degreeBlockIndexEquiv n k L hkl)
 
-private def degreeBlockSingle
+/-- The isometric inclusion of one degree summand into the orthogonal product of all degree
+blocks. -/
+def degreeBlockSingle
     (n k L : ℕ) (i : Jacobi.Index k L) :
     CertificateDegreeAmbient n k L i →ₗᵢ[ℝ]
       DegreeBlockPi n k L := by
@@ -4578,7 +4621,9 @@ private def degreeBlockSingle
       (fun j : Jacobi.Index k L =>
         CertificateDegreeAmbient n k L j) i v
 
-private def degreeBlockFlatten (n k L : ℕ) :
+/-- The isometry flattening the product of degree spaces into joint degree-and-coordinate
+indices. -/
+def degreeBlockFlatten (n k L : ℕ) :
     DegreeBlockPi n k L ≃ₗᵢ[ℝ]
       EuclideanSpace ℝ (DegreeBlockIndex n k L) :=
   (LinearIsometryEquiv.piLpCurry ℝ 2
@@ -4586,14 +4631,17 @@ private def degreeBlockFlatten (n k L : ℕ) :
       (_ : Fin (Gegenbauer.harmonicDimension n (k + i.val))) =>
         ℝ)).symm
 
-private def degreeBlockTransport
+/-- The isometry identifying the orthogonal product of degree blocks with the certificate
+ambient space. -/
+def degreeBlockTransport
     (n k L : ℕ) (hkl : k ≤ L) :
     DegreeBlockPi n k L →ₗᵢ[ℝ]
       CertificateAmbient n k L :=
   (degreeBlockReindex n k L hkl).toLinearIsometry.comp
     (degreeBlockFlatten n k L).toLinearIsometry
 
-private def degreeBlockInclusion
+/-- The inclusion of a single harmonic degree summand into the certificate ambient space. -/
+def degreeBlockInclusion
     (n k L : ℕ) (hkl : k ≤ L) (i : Jacobi.Index k L) :
     CertificateDegreeAmbient n k L i →ₗᵢ[ℝ]
       CertificateAmbient n k L :=
@@ -4633,7 +4681,8 @@ theorem degreeBlockInclusion_orthogonal
   rw [(degreeBlockTransport n k L hkl).inner_map_map]
   exact degreeBlockSingle_orthogonal n k L i j hij u v
 
-private def weightedDegreeLinearMap
+/-- The weighted sum of degree-fibre embeddings into mutually orthogonal ambient degree blocks. -/
+def weightedDegreeLinearMap
     (n k L : ℕ) (hkl : k ≤ L)
     (weights : Jacobi.Space k L)
     (degreeFibre : (i : Jacobi.Index k L) → Euclidean n →
@@ -4708,7 +4757,8 @@ theorem weightedDegreeLinearMap_inner_of_unit
   rw [weightedDegreeLinearMap_inner,
     Perron.unit_coordinate_sq_sum hweights, one_mul]
 
-private def weightedDegreeIsometry
+/-- The weighted degree embedding bundled as an isometry when the weight vector has unit norm. -/
+def weightedDegreeIsometry
     (n k L : ℕ) (hkl : k ≤ L)
     (weights : Jacobi.Space k L) (hweights : ‖weights‖ = 1)
     (degreeFibre : (i : Jacobi.Index k L) → Euclidean n →
@@ -4737,7 +4787,8 @@ private def weightedDegreeIsometry
         degreeBlockInclusion n k L hkl i (degreeFibre i x v) := by
   exact weightedDegreeLinearMap_apply n k L hkl weights degreeFibre x v
 
-private def harmonicPerronWeights
+/-- A chosen nonnegative unit eigenvector for the largest Gegenbauer Jacobi eigenvalue. -/
+def harmonicPerronWeights
     (n k L : ℕ) (hn : 3 ≤ n) : Jacobi.Space k L :=
   Classical.choose (Perron.exists_nonnegative_unit_topEigenvector
     hn k L)
@@ -4762,13 +4813,15 @@ theorem harmonicPerronWeights_nonneg
   (Classical.choose_spec
     (Perron.exists_nonnegative_unit_topEigenvector hn k L)).2.2 i
 
-private def harmonicRecurrenceWeight
+/-- The dimension-weighted recurrence coordinate of the chosen harmonic Perron eigenvector. -/
+def harmonicRecurrenceWeight
     (n k L : ℕ) (hn : 3 ≤ n)
     (i : Jacobi.Index k L) : ℝ :=
   finiteGramRecurrenceWeight n k L
     (harmonicPerronWeights n k L hn) i
 
-private def harmonicRecurrenceNormalization
+/-- The normalization sum for the recurrence weights of the harmonic Perron eigenvector. -/
+def harmonicRecurrenceNormalization
     (n k L : ℕ) (hn : 3 ≤ n) : ℝ :=
   finiteGramRecurrenceNormalization n k L
     (harmonicPerronWeights n k L hn)
@@ -4781,7 +4834,8 @@ theorem harmonicRecurrenceNormalization_pos
     (harmonicPerronWeights_unit n k L hn)
     (harmonicPerronWeights_nonneg n k L hn)
 
-private def harmonicFibreAmplitudes
+/-- The unit fibre-amplitude vector obtained from the harmonic Perron eigenvector. -/
+def harmonicFibreAmplitudes
     (n k L : ℕ) (hn : 3 ≤ n) : Jacobi.Space k L :=
   finiteGramFibreAmplitudeVector n k L
     (harmonicPerronWeights n k L hn)
@@ -4811,7 +4865,9 @@ theorem harmonicFibreAmplitudes_sq
     (harmonicPerronWeights_unit n k L hn)
     (harmonicPerronWeights_nonneg n k L hn) i
 
-private def harmonicWeightedFibre
+/-- The certificate fibre isometry assembled with amplitudes from the harmonic Perron
+eigenvector. -/
+def harmonicWeightedFibre
     (n k L : ℕ) (hn : 3 ≤ n) (hkl : k ≤ L)
     (degreeFibre : (i : Jacobi.Index k L) → Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ]
@@ -4839,20 +4895,25 @@ private def harmonicWeightedFibre
     (harmonicFibreAmplitudes_unit n k L hn)
     degreeFibre x v
 
-private def harmonicPolynomialEuclideanEquiv
+/-- An orthonormal coordinate identification of homogeneous harmonic polynomials with Euclidean
+space. -/
+def harmonicPolynomialEuclideanEquiv
     (n m : ℕ) (hn : 0 < n) :
     harmonicHomogeneousSubmodule n m ≃ₗᵢ[ℝ]
       Euclidean (Gegenbauer.harmonicDimension n m) :=
   ((stdOrthonormalBasis ℝ (harmonicHomogeneousSubmodule n m)).reindex
     (finCongr (finrank_harmonicHomogeneousSubmodule hn m))).repr
 
-private def harmonicDegreeEuclideanEquiv
+/-- The harmonic polynomial coordinate isometry for one degree of the truncated certificate. -/
+def harmonicDegreeEuclideanEquiv
     (n k L : ℕ) (hn : 0 < n) (i : Jacobi.Index k L) :
     harmonicHomogeneousSubmodule n (k + i.val) ≃ₗᵢ[ℝ]
       CertificateDegreeAmbient n k L i :=
   harmonicPolynomialEuclideanEquiv n (k + i.val) hn
 
-private def tangentPolynomialEuclideanEquiv
+/-- An orthonormal identification of tangent harmonics with the certificate fibre, using its
+dimension. -/
+def tangentPolynomialEuclideanEquiv
     (n k : ℕ) (x : Euclidean n)
     (hdimension :
       Module.finrank ℝ (tangentHarmonicSubmodule n k x) =
@@ -5206,7 +5267,9 @@ theorem solidHarmonicAxisLift_fischer_inner
         ihr, solidHarmonicAxisFischerScale_succ]
       ring
 
-private def solidHarmonicAxisPolynomialLift
+/-- The solid harmonic axis lift restricted from tangent harmonics to the target harmonic
+degree. -/
+def solidHarmonicAxisPolynomialLift
     {n : ℕ} (k r : ℕ) (x : Euclidean n) (hx : ‖x‖ = 1) :
     tangentHarmonicSubmodule n k x →ₗ[ℝ]
       harmonicHomogeneousSubmodule n (k + r) :=
@@ -5268,7 +5331,8 @@ def solidHarmonicAxisPolynomialIsometry
   field_simp [ne_of_gt hsqrt]
   rw [hsquare]
 
-private def harmonicReferenceUnitAxis
+/-- The first standard coordinate vector, chosen as a reference unit axis. -/
+def harmonicReferenceUnitAxis
     {n : ℕ} (hn : 0 < n) : Euclidean n :=
   EuclideanSpace.single (⟨0, hn⟩ : Fin n) (1 : ℝ)
 
@@ -5277,7 +5341,8 @@ private def harmonicReferenceUnitAxis
     ‖harmonicReferenceUnitAxis hn‖ = 1 := by
   simp only [harmonicReferenceUnitAxis, PiLp.norm_single, norm_one]
 
-private def unitHarmonicDegreeFibre
+/-- The isometric degree-fibre embedding obtained by a solid harmonic lift along a unit axis. -/
+def unitHarmonicDegreeFibre
     {n : ℕ} (hn : 3 ≤ n) (k L : ℕ)
     (i : Jacobi.Index k L)
     (x : Euclidean n) (hx : ‖x‖ = 1) :
@@ -5500,7 +5565,8 @@ theorem betaSq_sqrt_harmonicDimension
   push_cast
   convert h using 1 <;> ring_nf
 
-private def sourceChannelCoefficient
+/-- The squared Gegenbauer channel coefficient between adjacent source and target degrees. -/
+def sourceChannelCoefficient
     (n k L : ℕ) (m i : Jacobi.Index k L) : ℝ :=
   if i.val + 1 = m.val then
     Gegenbauer.alphaSq n k (k + i.val)
@@ -5840,18 +5906,23 @@ open scoped BigOperators InnerProductSpace
 
 namespace HarmonicCoordinateChannels
 
-private abbrev MatrixCoordinateIndex (n k L : ℕ) :=
+/-- The pair of ambient coordinate indices used to flatten a projection matrix. -/
+abbrev MatrixCoordinateIndex (n k L : ℕ) :=
   Σ _ : Fin (truncatedHarmonicDimension n k L),
     Fin (truncatedHarmonicDimension n k L)
 
-private abbrev ProjectionMatrixSpace (n k L : ℕ) :=
+/-- The Euclidean space of projection matrices, represented as a family of ambient column
+vectors. -/
+abbrev ProjectionMatrixSpace (n k L : ℕ) :=
   PiLp 2 (fun _ : Fin (truncatedHarmonicDimension n k L) =>
     CertificateAmbient n k L)
 
-private abbrev HarmonicRowChannelSpace (n k L : ℕ) :=
+/-- The Euclidean space of `n` ambient row-channel vectors. -/
+abbrev HarmonicRowChannelSpace (n k L : ℕ) :=
   PiLp 2 (fun _ : Fin n => CertificateAmbient n k L)
 
-private abbrev HarmonicDegreeRowChannelSpace
+/-- The row-channel space restricted to one harmonic degree summand. -/
+abbrev HarmonicDegreeRowChannelSpace
     (n k L : ℕ) (i : Jacobi.Index k L) :=
   PiLp 2 (fun _ : Fin n => CertificateDegreeAmbient n k L i)
 
@@ -5879,7 +5950,9 @@ theorem sourceChannelCoefficient_nonneg
     exact mul_nonneg hmatrix (Real.sqrt_nonneg _)
   nlinarith
 
-private def sourceAdjacentBlockCoefficient
+/-- The adjacent-block amplitude normalized by Perron recurrence weights and the top Jacobi
+eigenvalue. -/
+def sourceAdjacentBlockCoefficient
     (n k L : ℕ) (hn : 3 ≤ n)
     (target source : Jacobi.Index k L) : ℝ :=
   Real.sqrt
@@ -6029,14 +6102,17 @@ theorem sourceAdjacentBlockCoefficient_amplitude_sum
     sourceAdjacentBlockCoefficient_sq_sum hn hkl]
   simp only [one_mul, HarmonicCertificateAssembly.harmonicFibreAmplitudes_apply]
 
-private def harmonicDegreeBlockEquiv
+/-- The isometric equivalence between the orthogonal degree blocks and the certificate ambient
+space. -/
+def harmonicDegreeBlockEquiv
     (n k L : ℕ) (hkl : k ≤ L) :
     HarmonicCertificateAssembly.DegreeBlockPi n k L ≃ₗᵢ[ℝ]
       CertificateAmbient n k L :=
   (HarmonicCertificateAssembly.degreeBlockFlatten n k L).trans
     (HarmonicCertificateAssembly.degreeBlockReindex n k L hkl)
 
-private def harmonicDegreeAxisTensor
+/-- The linear map sending a degree vector `u` to the row family `a ↦ x a • u`. -/
+def harmonicDegreeAxisTensor
     (n k L : ℕ) (i : Jacobi.Index k L)
     (x : Euclidean n) :
     CertificateDegreeAmbient n k L i →ₗ[ℝ]
@@ -6092,11 +6168,13 @@ structure SourceAdjacentChannelData
                 n k L source target) •
             degreeFibre source x u
 
-private abbrev SourceTargetRowSpace (n k L : ℕ) :=
+/-- The orthogonal product of row-channel spaces over all target degrees. -/
+abbrev SourceTargetRowSpace (n k L : ℕ) :=
   PiLp 2 (fun target : Jacobi.Index k L =>
     HarmonicDegreeRowChannelSpace n k L target)
 
-private def sourceAdjacentTargetLinearMap
+/-- The weighted adjacent-channel map from source degree blocks to target row-channel blocks. -/
+def sourceAdjacentTargetLinearMap
     {n k L : ℕ} (hn : 3 ≤ n)
     (degreeFibre : (i : Jacobi.Index k L) → Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ]
@@ -6218,7 +6296,9 @@ theorem sourceAdjacentTargetLinearMap_inner
         one_mul]
       rw [PiLp.inner_apply]
 
-private def sourceAdjacentTargetIsometry
+/-- The adjacent source-to-target map bundled as an isometry using the channel inner-product
+identity. -/
+def sourceAdjacentTargetIsometry
     {n k L : ℕ} (hn : 3 ≤ n) (hkl : k < L)
     (degreeFibre : (i : Jacobi.Index k L) → Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ]
@@ -6229,7 +6309,8 @@ private def sourceAdjacentTargetIsometry
   (sourceAdjacentTargetLinearMap hn degreeFibre adjacent).isometryOfInner
     (sourceAdjacentTargetLinearMap_inner hn hkl degreeFibre adjacent)
 
-private def sourceTargetRowTransportLinearMap
+/-- The linear map that assembles target degree components separately in each ambient row. -/
+def sourceTargetRowTransportLinearMap
     (n k L : ℕ) (hkl : k ≤ L) :
     SourceTargetRowSpace n k L →ₗ[ℝ]
       HarmonicRowChannelSpace n k L where
@@ -6299,14 +6380,16 @@ theorem sourceTargetRowTransportLinearMap_inner
       intro target htarget
       rw [PiLp.inner_apply]
 
-private def sourceTargetRowTransport
+/-- The isometry assembling the target degree row blocks into ambient row channels. -/
+def sourceTargetRowTransport
     (n k L : ℕ) (hkl : k ≤ L) :
     SourceTargetRowSpace n k L →ₗᵢ[ℝ]
       HarmonicRowChannelSpace n k L :=
   (sourceTargetRowTransportLinearMap n k L hkl).isometryOfInner
     (sourceTargetRowTransportLinearMap_inner n k L hkl)
 
-private def sourceAdjacentHarmonicRow
+/-- The adjacent-channel isometry expressed in certificate ambient coordinates. -/
+def sourceAdjacentHarmonicRow
     {n k L : ℕ} (hn : 3 ≤ n) (hkl : k < L)
     (degreeFibre : (i : Jacobi.Index k L) → Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ]
@@ -6319,7 +6402,8 @@ private def sourceAdjacentHarmonicRow
       (harmonicDegreeBlockEquiv n k L
         (Nat.le_of_lt hkl)).symm.toLinearIsometry)
 
-private abbrev ProjectionChannelSpace (n k L : ℕ) :=
+/-- The orthogonal product of `n + 1` projection-matrix channels. -/
+abbrev ProjectionChannelSpace (n k L : ℕ) :=
   PiLp 2 (fun _ : Fin (n + 1) => ProjectionMatrixSpace n k L)
 
 /-- The harmonic axis tensor used in the spherical-code argument. -/
@@ -6570,7 +6654,9 @@ theorem sourceAdjacentHarmonicRow_inner_axis_fibre
     _ = _ := by
       rw [harmonicWeightedFibre_ambient_inner]
 
-private def spectralMatrixEmbeddingLinearMap
+/-- The linear embedding applying a row isometry to each matrix column, with a zero leading
+channel. -/
+def spectralMatrixEmbeddingLinearMap
     (n k L : ℕ)
     (row : CertificateAmbient n k L →ₗᵢ[ℝ]
       HarmonicRowChannelSpace n k L) :
@@ -6628,7 +6714,8 @@ theorem spectralMatrixEmbeddingLinearMap_inner
       ⟪M j, N j⟫_ℝ
   rw [← PiLp.inner_apply, row.inner_map_map]
 
-private def spectralMatrixEmbedding
+/-- The projection-matrix embedding bundled as an isometry into the enlarged channel space. -/
+def spectralMatrixEmbedding
     (n k L : ℕ)
     (row : CertificateAmbient n k L →ₗᵢ[ℝ]
       HarmonicRowChannelSpace n k L) :
@@ -6640,20 +6727,24 @@ private def spectralMatrixEmbedding
     rw [norm_eq_sqrt_real_inner, norm_eq_sqrt_real_inner,
       spectralMatrixEmbeddingLinearMap_inner n k L row]
 
-private abbrev ProjectionChannelIndex (n k L : ℕ) :=
+/-- Coordinates indexed by a channel and a pair of ambient matrix coordinates. -/
+abbrev ProjectionChannelIndex (n k L : ℕ) :=
   Σ _ : Fin (n + 1), MatrixCoordinateIndex n k L
 
-private def projectionChannelDimension (n k L : ℕ) : ℕ :=
+/-- The total number of coordinates in the projection channel space. -/
+def projectionChannelDimension (n k L : ℕ) : ℕ :=
   Fintype.card (ProjectionChannelIndex n k L)
 
-private def fibreProjection {n k L : ℕ}
+/-- The orthogonal projection onto the image of the isometric fibre embedding at `x`. -/
+def fibreProjection {n k L : ℕ}
     (f : Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ] CertificateAmbient n k L)
     (x : Euclidean n) :
     CertificateAmbient n k L →ₗ[ℝ] CertificateAmbient n k L :=
   (f x).toLinearMap ∘ₗ (f x).adjoint
 
-private def projectionMatrixFeature {n k L : ℕ}
+/-- The matrix columns of the fibre projection in the standard certificate ambient basis. -/
+def projectionMatrixFeature {n k L : ℕ}
     (f : Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ] CertificateAmbient n k L)
     (x : Euclidean n) : ProjectionMatrixSpace n k L :=
@@ -6669,14 +6760,16 @@ theorem projectionMatrixFeature_inner {n k L : ℕ}
       isometricPackingKernel f x y := by
   rfl
 
-private def projectionMatrixFlatten (n k L : ℕ) :
+/-- The isometry flattening a projection matrix into joint row-and-column coordinates. -/
+def projectionMatrixFlatten (n k L : ℕ) :
     ProjectionMatrixSpace n k L ≃ₗᵢ[ℝ]
       EuclideanSpace ℝ (MatrixCoordinateIndex n k L) :=
   (LinearIsometryEquiv.piLpCurry ℝ 2
     (fun (_ : Fin (truncatedHarmonicDimension n k L))
       (_ : Fin (truncatedHarmonicDimension n k L)) => ℝ)).symm
 
-private def projectionChannelFlatten (n k L : ℕ) :
+/-- The isometry flattening all projection channels into a single coordinate space. -/
+def projectionChannelFlatten (n k L : ℕ) :
     ProjectionChannelSpace n k L ≃ₗᵢ[ℝ]
       EuclideanSpace ℝ (ProjectionChannelIndex n k L) :=
   (LinearIsometryEquiv.piLpCongrRight 2
@@ -6685,14 +6778,17 @@ private def projectionChannelFlatten (n k L : ℕ) :
       (fun (_ : Fin (n + 1))
         (_ : MatrixCoordinateIndex n k L) => ℝ)).symm
 
-private def projectionChannelEuclideanEquiv (n k L : ℕ) :
+/-- The coordinate isometry from projection channels to Euclidean space of their total
+dimension. -/
+def projectionChannelEuclideanEquiv (n k L : ℕ) :
     ProjectionChannelSpace n k L ≃ₗᵢ[ℝ]
       Euclidean (projectionChannelDimension n k L) :=
   (projectionChannelFlatten n k L).trans
     (LinearIsometryEquiv.piLpCongrLeft 2 ℝ ℝ
       (Fintype.equivFin (ProjectionChannelIndex n k L)))
 
-private def rawLiftChannel {n k L : ℕ}
+/-- The axis-weighted projection-matrix feature, preceded by a zero channel. -/
+def rawLiftChannel {n k L : ℕ}
     (f : Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ] CertificateAmbient n k L)
     (x : Euclidean n) : ProjectionChannelSpace n k L :=
@@ -6745,11 +6841,13 @@ theorem rawLiftChannel_inner {n k L : ℕ}
       intro a ha
       simp only [RCLike.inner_apply, Real.ringHom_apply, mul_comm]
 
-private def firstFibreIndex (n k : ℕ) (hn : 3 ≤ n) :
+/-- The zero coordinate index in the nonempty certificate fibre. -/
+def firstFibreIndex (n k : ℕ) (hn : 3 ≤ n) :
     Fin (Gegenbauer.fibreDimension n k) :=
   ⟨0, Gegenbauer.fibreDimension_pos hn k⟩
 
-private def firstFibreVector (n k : ℕ) (hn : 3 ≤ n) :
+/-- The first standard orthonormal vector of the certificate fibre. -/
+def firstFibreVector (n k : ℕ) (hn : 3 ≤ n) :
     CertificateFibre n k :=
   certificateFibreBasis n k (firstFibreIndex n k hn)
 
@@ -6763,7 +6861,9 @@ private def firstFibreVector (n k : ℕ) (hn : 3 ≤ n) :
     EuclideanSpace.inner_single_left, Real.ringHom_apply, PiLp.single_apply, eq_comm, mul_ite,
     mul_one, mul_zero]
 
-private def rankOneChannelMap
+/-- The rank-one map extracting the first fibre coordinate and multiplying a prescribed channel
+vector. -/
+def rankOneChannelMap
     (n k L : ℕ) (hn : 3 ≤ n)
     (v : ProjectionChannelSpace n k L) :
     CertificateFibre n k →ₗ[ℝ] ProjectionChannelSpace n k L where
@@ -6800,7 +6900,8 @@ theorem rankOneChannelMap_kernel
   · simp only [Finset.mem_univ, not_true_eq_false, rankOneChannelMap_apply,
       firstFibreVector_inner_basis, ↓reduceIte, one_smul, IsEmpty.forall_iff]
 
-private def embeddedBulkChannel {n k L : ℕ}
+/-- The fibre projection feature transported into the channel space by an isometric embedding. -/
+def embeddedBulkChannel {n k L : ℕ}
     (embedding : ProjectionMatrixSpace n k L →ₗᵢ[ℝ]
       ProjectionChannelSpace n k L)
     (f : Euclidean n →
@@ -6953,7 +7054,8 @@ theorem sourceSpectralBulk_lift_inner
       rw [← Finset.mul_sum, ← PiLp.inner_apply,
         projectionMatrixFeature_inner]
 
-private def euclideanChannelFeatureMap
+/-- The rank-one channel feature map expressed in ordinary Euclidean coordinates. -/
+def euclideanChannelFeatureMap
     (n k L : ℕ) (hn : 3 ≤ n)
     (v : ProjectionChannelSpace n k L) :
     CertificateFibre n k →ₗ[ℝ]
@@ -7006,7 +7108,8 @@ theorem euclideanChannelFeatureMap_kernel
     _ = ⟪v x, v y⟫_ℝ :=
       rankOneChannelMap_kernel n k L hn v x y
 
-private def bulkCoordinateMap {n k L : ℕ}
+/-- The Euclidean feature map for an isometrically embedded bulk projection channel. -/
+def bulkCoordinateMap {n k L : ℕ}
     (hn : 3 ≤ n)
     (embedding : ProjectionMatrixSpace n k L →ₗᵢ[ℝ]
       ProjectionChannelSpace n k L)
@@ -7018,7 +7121,8 @@ private def bulkCoordinateMap {n k L : ℕ}
   euclideanChannelFeatureMap n k L hn
     (embeddedBulkChannel embedding f x)
 
-private def liftCoordinateMap {n k L : ℕ}
+/-- The Euclidean feature map for the axis-weighted lifted projection channel. -/
+def liftCoordinateMap {n k L : ℕ}
     (hn : 3 ≤ n)
     (f : Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ] CertificateAmbient n k L)
@@ -7145,7 +7249,8 @@ structure SpectralChannelRemainder
         ⟪boundary x (certificateFibreBasis n k i),
           remainder y (certificateFibreBasis n k i)⟫_ℝ = 0
 
-private def sourceSpectralResidual
+/-- The lifted coordinate map minus the prescribed spectral multiple of the bulk coordinate map. -/
+def sourceSpectralResidual
     {n k L : ℕ} (hn : 3 ≤ n)
     (fibre : Euclidean n →
       CertificateFibre n k →ₗᵢ[ℝ] CertificateAmbient n k L)
@@ -7286,13 +7391,16 @@ end HarmonicCoordinateChannels
 
 namespace HarmonicCoordinateOperators
 
-private abbrev HarmonicSpace (n m : ℕ) :=
+/-- The Fischer inner product space of homogeneous harmonic polynomials of degree `m`. -/
+abbrev HarmonicSpace (n m : ℕ) :=
   SpherePacking.harmonicHomogeneousSubmodule n m
 
-private abbrev CoordinateHarmonicSpace (n m : ℕ) :=
+/-- The orthogonal product of one harmonic polynomial space for each coordinate direction. -/
+abbrev CoordinateHarmonicSpace (n m : ℕ) :=
   PiLp 2 (fun _ : Fin n => HarmonicSpace n m)
 
-private def coordinateAxis (n : ℕ) (j : Fin n) : SpherePacking.Euclidean n :=
+/-- The standard unit vector in coordinate direction `j`. -/
+def coordinateAxis (n : ℕ) (j : Fin n) : SpherePacking.Euclidean n :=
   EuclideanSpace.single j (1 : ℝ)
 
 @[simp] theorem axisPolynomial_coordinateAxis
@@ -7312,7 +7420,8 @@ theorem directionalDerivative_coordinateAxis
   simp only [coordinateAxis, EuclideanSpace.single, directionalDerivative_apply, PiLp.single_apply,
     ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
 
-private def harmonicCoordinateDerivative
+/-- Coordinate differentiation restricted from harmonic degree `m + 1` to degree `m`. -/
+def harmonicCoordinateDerivative
     (n m : ℕ) (j : Fin n) :
     HarmonicSpace n (m + 1) →ₗ[ℝ] HarmonicSpace n m :=
   SpherePacking.harmonicDirectionalDerivative n m (coordinateAxis n j)
@@ -7329,7 +7438,8 @@ private def harmonicCoordinateDerivative
       (p : MvPolynomial (Fin n) ℝ) = _
   exact directionalDerivative_coordinateAxis n j p
 
-private def harmonicGradient (n m : ℕ) :
+/-- The vector of coordinate derivatives of a homogeneous harmonic polynomial. -/
+def harmonicGradient (n m : ℕ) :
     HarmonicSpace n (m + 1) →ₗ[ℝ]
       CoordinateHarmonicSpace n m where
   toFun p :=
@@ -7453,11 +7563,13 @@ theorem harmonicGradient_inner
     _ = ((m + 1 : ℕ) : ℝ) * ⟪p, q⟫_ℝ := by
       rw [hpq]
 
-private def harmonicCoordinateRaising (n m : ℕ) (j : Fin n) :
+/-- The Fischer adjoint of coordinate differentiation, raising the harmonic degree by one. -/
+def harmonicCoordinateRaising (n m : ℕ) (j : Fin n) :
     HarmonicSpace n m →ₗ[ℝ] HarmonicSpace n (m + 1) :=
   (harmonicCoordinateDerivative n m j).adjoint
 
-private def harmonicCoGradient (n m : ℕ) :
+/-- The vector of Fischer adjoint coordinate-raising operators. -/
+def harmonicCoGradient (n m : ℕ) :
     HarmonicSpace n m →ₗ[ℝ]
       CoordinateHarmonicSpace n (m + 1) where
   toFun p :=
@@ -7563,10 +7675,12 @@ theorem harmonicGradient_coGradient_orthogonal
       exact SpherePacking.fischer_polynomialInner_zero_right n
         (q : MvPolynomial (Fin n) ℝ)
 
-private def upperChannelDenominator (n m : ℕ) : ℝ :=
+/-- The factor `2 * m + n` used to normalize the upper and lower harmonic channels. -/
+def upperChannelDenominator (n m : ℕ) : ℝ :=
   2 * (m : ℝ) + (n : ℝ)
 
-private def upperChannelWeight (n m : ℕ) : ℝ :=
+/-- The squared norm factor `(m + 1) / (2 * m + n)` of the upper channel adjoint. -/
+def upperChannelWeight (n m : ℕ) : ℝ :=
   ((m + 1 : ℕ) : ℝ) / upperChannelDenominator n m
 
 theorem upperChannelDenominator_pos
@@ -7584,13 +7698,15 @@ theorem upperChannelWeight_pos
   · exact_mod_cast Nat.zero_lt_succ m
   · exact upperChannelDenominator_pos hn m
 
-private def upperChannelAdjoint (n m : ℕ) :
+/-- The harmonic gradient scaled by the inverse square root of the channel denominator. -/
+def upperChannelAdjoint (n m : ℕ) :
     HarmonicSpace n (m + 1) →ₗ[ℝ]
       CoordinateHarmonicSpace n m :=
   (Real.sqrt (upperChannelDenominator n m))⁻¹ •
     harmonicGradient n m
 
-private def upperChannel (n m : ℕ) :
+/-- The Fischer adjoint of the scaled harmonic gradient. -/
+def upperChannel (n m : ℕ) :
     CoordinateHarmonicSpace n m →ₗ[ℝ]
       HarmonicSpace n (m + 1) :=
   (upperChannelAdjoint n m).adjoint
@@ -7668,7 +7784,8 @@ def normalizedChannelIsometry
       rw [Real.sq_sqrt hc.le]
       simp only [ne_eq, ne_of_gt hc, not_false_eq_true, div_self, one_mul]
 
-private def upperChannelIsometry
+/-- The upper channel adjoint normalized to an isometry from harmonics to coordinate harmonics. -/
+def upperChannelIsometry
     {n : ℕ} (hn : 0 < n) (m : ℕ) :
     HarmonicSpace n (m + 1) →ₗᵢ[ℝ]
       CoordinateHarmonicSpace n m :=
@@ -7678,7 +7795,8 @@ private def upperChannelIsometry
     (upperChannelWeight_pos hn m)
     (upperChannelAdjoint_inner hn m)
 
-private def lowerChannelWeight (n m : ℕ) : ℝ :=
+/-- The squared norm factor `(m + n - 2) / (2 * m + n - 2)` of the lower channel adjoint. -/
+def lowerChannelWeight (n m : ℕ) : ℝ :=
   ((m : ℝ) + (n : ℝ) - 2) /
     (2 * (m : ℝ) + (n : ℝ) - 2)
 
@@ -7690,13 +7808,15 @@ theorem lowerChannelWeight_pos
   have hmreal : 0 ≤ (m : ℝ) := by positivity
   apply div_pos <;> linarith
 
-private def lowerChannelAdjoint (n m : ℕ) :
+/-- The harmonic co-gradient scaled by the inverse square root of the channel denominator. -/
+def lowerChannelAdjoint (n m : ℕ) :
     HarmonicSpace n m →ₗ[ℝ]
       CoordinateHarmonicSpace n (m + 1) :=
   (Real.sqrt (upperChannelDenominator n m))⁻¹ •
     harmonicCoGradient n m
 
-private def lowerChannel (n m : ℕ) :
+/-- The Fischer adjoint of the scaled harmonic co-gradient. -/
+def lowerChannel (n m : ℕ) :
     CoordinateHarmonicSpace n (m + 1) →ₗ[ℝ]
       HarmonicSpace n m :=
   (lowerChannelAdjoint n m).adjoint
@@ -7770,7 +7890,8 @@ theorem harmonicCoordinateMultiplication_derivative_sum
     Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul,
     add_nsmul]
 
-private def harmonicCoordinateRaisingZero
+/-- Coordinate multiplication restricted from constant harmonics to degree-one harmonics. -/
+def harmonicCoordinateRaisingZero
     (n : ℕ) (j : Fin n) :
     HarmonicSpace n 0 →ₗ[ℝ] HarmonicSpace n 1 := by
   refine (LinearMap.mulLeft ℝ
@@ -7862,7 +7983,8 @@ theorem harmonicCoordinateRaising_apply_polynomial
         directionalDerivative_coordinateAxis]
       simp only [harmonicAxisProjectionDenominator, upperChannelDenominator, add_tsub_cancel_right]
 
-private def lowerFischerGradientWeight (n m : ℕ) : ℝ :=
+/-- The Fischer squared norm factor for the harmonic co-gradient before channel normalization. -/
+def lowerFischerGradientWeight (n m : ℕ) : ℝ :=
   ((n + m : ℕ) : ℝ) -
     (upperChannelDenominator n (m - 1))⁻¹ * (2 * (m : ℝ))
 
@@ -8067,7 +8189,9 @@ theorem lowerChannelAdjoint_inner
           rw [Real.sq_sqrt hden.le]
           field_simp
 
-private def lowerChannelIsometry
+/-- The lower channel adjoint normalized to an isometry into the next coordinate-harmonic
+degree. -/
+def lowerChannelIsometry
     {n : ℕ} (hn : 3 ≤ n) (m : ℕ) :
     HarmonicSpace n m →ₗᵢ[ℝ]
       CoordinateHarmonicSpace n (m + 1) :=
@@ -8111,7 +8235,8 @@ def harmonicAxisTensor (n m : ℕ) (x : SpherePacking.Euclidean n) :
     intro j
     exact smul_comm (x j) c p
 
-private def solidHarmonicSource
+/-- The solid harmonic axis isometry followed by tensoring with the source axis. -/
+def solidHarmonicSource
     {n : ℕ} (hn : 3 ≤ n) (k r : ℕ)
     (x : SpherePacking.Euclidean n) (hx : ‖x‖ = 1) :
     SpherePacking.tangentHarmonicSubmodule n k x →ₗ[ℝ]
@@ -8223,7 +8348,9 @@ theorem solidHarmonicAxisLift_axis_pairing
     SpherePacking.fischer_polynomialInner_constant_mul_left,
     hrad, mul_zero, sub_zero]
 
-private def solidHarmonicSourceUpperCoefficient (n k r : ℕ) : ℝ :=
+/-- The coefficient of the upper-channel image of a solid harmonic source, in Fischer
+normalization. -/
+def solidHarmonicSourceUpperCoefficient (n k r : ℕ) : ℝ :=
   Real.sqrt (SpherePacking.solidHarmonicAxisFischerScale
       n k (r + 1)) /
     ((2 * (r : ℝ) + SpherePacking.harmonicAxisParameter n k - 2) *
@@ -8325,7 +8452,8 @@ theorem solidHarmonicSourceUpperCoefficient_pos
       (Real.sqrt_pos.mpr
         (upperChannelDenominator_pos (by omega : 0 < n) (k + r)))
 
-private def solidHarmonicSourceUpperIsometryCoefficient
+/-- The upper solid-harmonic source coefficient adjusted to the normalized channel isometry. -/
+def solidHarmonicSourceUpperIsometryCoefficient
     (n k r : ℕ) : ℝ :=
   solidHarmonicSourceUpperCoefficient n k r /
     Real.sqrt (upperChannelWeight n (k + r))
@@ -8582,7 +8710,9 @@ theorem lowerChannel_harmonicAxisTensor_inner
           SpherePacking.Fischer.polynomialInner_sum_left,
           Finset.mul_sum]
 
-private def solidHarmonicSourceLowerCoefficient (n k r : ℕ) : ℝ :=
+/-- The coefficient of the lower-channel image of a solid harmonic source, in Fischer
+normalization. -/
+def solidHarmonicSourceLowerCoefficient (n k r : ℕ) : ℝ :=
   (((r : ℝ) + 1) *
     ((r : ℝ) + SpherePacking.harmonicAxisParameter n k - 2) *
     Real.sqrt (SpherePacking.solidHarmonicAxisFischerScale n k r)) /
@@ -8662,7 +8792,8 @@ theorem lowerChannel_solidHarmonicSource
   field_simp [hsqrt, hsqrt_next, hsqrt_den]
   ring
 
-private def solidHarmonicSourceLowerIsometryCoefficient
+/-- The lower solid-harmonic source coefficient adjusted to the normalized channel isometry. -/
+def solidHarmonicSourceLowerIsometryCoefficient
     (n k r : ℕ) : ℝ :=
   solidHarmonicSourceLowerCoefficient n k r /
     Real.sqrt (lowerChannelWeight n (k + r))
@@ -8875,7 +9006,8 @@ open HarmonicCertificateAssembly
 open HarmonicCoordinateChannels
 open HarmonicCoordinateOperators
 
-private def harmonicDegreeCastLinearMap
+/-- The identity on underlying polynomials transported along an equality of harmonic degrees. -/
+def harmonicDegreeCastLinearMap
     (n r s : ℕ) (h : r = s) :
     HarmonicSpace n r →ₗ[ℝ] HarmonicSpace n s where
   toFun p := ⟨p.1, by simpa only [mem_harmonicHomogeneousSubmodule, h] using p.property⟩
@@ -8898,7 +9030,8 @@ theorem harmonicDegreeCastLinearMap_inner
     Fischer.harmonicInner_eq_polynomialInner]
   rfl
 
-private def harmonicDegreeCast
+/-- The isometric degree cast on harmonic polynomials. -/
+def harmonicDegreeCast
     (n r s : ℕ) (h : r = s) :
     HarmonicSpace n r →ₗᵢ[ℝ] HarmonicSpace n s :=
   (harmonicDegreeCastLinearMap n r s h).isometryOfInner
@@ -8951,7 +9084,8 @@ theorem transportedIsometry_adjoint
         (A.toLinearMap.adjoint z)
       simpa only [e.apply_symm_apply] using he.symm
 
-private def coordinateHarmonicDegreeCastLinearMap
+/-- The linear map applying the harmonic degree cast in every coordinate direction. -/
+def coordinateHarmonicDegreeCastLinearMap
     (n r s : ℕ) (h : r = s) :
     CoordinateHarmonicSpace n r →ₗ[ℝ]
       CoordinateHarmonicSpace n s where
@@ -8977,7 +9111,8 @@ theorem coordinateHarmonicDegreeCastLinearMap_inner
   intro a _
   exact (harmonicDegreeCast n r s h).inner_map_map (z a) (w a)
 
-private def coordinateHarmonicDegreeCast
+/-- The isometric degree cast on coordinate families of harmonic polynomials. -/
+def coordinateHarmonicDegreeCast
     (n r s : ℕ) (h : r = s) :
     CoordinateHarmonicSpace n r →ₗᵢ[ℝ]
       CoordinateHarmonicSpace n s :=
@@ -9009,7 +9144,9 @@ theorem coordinateHarmonicDegreeCast_axis
       x a • harmonicDegreeCast n r s h p
   exact (harmonicDegreeCast n r s h).map_smul (x a) p
 
-private def coordinateDegreeTransportLinearMap
+/-- The linear map expressing each coordinate harmonic polynomial in its degree-fibre Euclidean
+basis. -/
+def coordinateDegreeTransportLinearMap
     {n : ℕ} (hn : 3 ≤ n) (k L : ℕ)
     (i : Jacobi.Index k L) :
     CoordinateHarmonicSpace n (k + i.val) →ₗ[ℝ]
@@ -9041,7 +9178,8 @@ theorem coordinateDegreeTransportLinearMap_inner
   exact (harmonicDegreeEuclideanEquiv n k L
     (by omega) i).inner_map_map (z a) (w a)
 
-private def coordinateDegreeTransport
+/-- The coordinatewise harmonic-to-Euclidean degree transport bundled as an isometry. -/
+def coordinateDegreeTransport
     {n : ℕ} (hn : 3 ≤ n) (k L : ℕ)
     (i : Jacobi.Index k L) :
     CoordinateHarmonicSpace n (k + i.val) →ₗᵢ[ℝ]
@@ -9068,7 +9206,8 @@ theorem coordinateDegreeTransport_axis
   exact (harmonicDegreeEuclideanEquiv n k L
     (by omega) i).map_smul (x a) p
 
-private def upperAdjacentChannel
+/-- The normalized upper channel transported between adjacent Euclidean degree fibres. -/
+def upperAdjacentChannel
     {n : ℕ} (hn : 3 ≤ n) (k L : ℕ)
     (target source : Jacobi.Index k L)
     (hadjacent : target.val + 1 = source.val) :
@@ -9082,7 +9221,8 @@ private def upperAdjacentChannel
             (harmonicDegreeEuclideanEquiv n k L
               (by omega) source).symm.toLinearIsometry))
 
-private def lowerAdjacentChannel
+/-- The normalized lower channel transported between adjacent Euclidean degree fibres. -/
+def lowerAdjacentChannel
     {n : ℕ} (hn : 3 ≤ n) (k L : ℕ)
     (target source : Jacobi.Index k L)
     (hadjacent : source.val + 1 = target.val) :
@@ -9096,7 +9236,8 @@ private def lowerAdjacentChannel
         (harmonicDegreeEuclideanEquiv n k L
           (by omega) source).symm.toLinearIsometry))
 
-private def adjacentChannel
+/-- The appropriate upper or lower adjacent-degree channel, and zero for nonadjacent degrees. -/
+def adjacentChannel
     {n : ℕ} (hn : 3 ≤ n) (k L : ℕ)
     (target source : Jacobi.Index k L) :
     CertificateDegreeAmbient n k L source →ₗ[ℝ]
@@ -9217,7 +9358,8 @@ theorem adjacentChannel_orthogonal
         · simp only [LinearIsometry.coe_toLinearMap, LinearMap.zero_apply, inner_zero_right]
     · simp only [LinearMap.zero_apply, inner_zero_left]
 
-private def sourceTangentPolynomial
+/-- The tangent harmonic polynomial represented by a certificate fibre vector at a unit axis. -/
+def sourceTangentPolynomial
     {n : ℕ} (hn : 3 ≤ n) (k : ℕ)
     (x : Euclidean n) (hx : ‖x‖ = 1)
     (u : CertificateFibre n k) :

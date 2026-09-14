@@ -7,8 +7,14 @@ Authors: Rado Kirov
 /-
 Blueprint unit: mapping-degree. `F` is a covering map away from the (finite) branch locus.
 -/
-import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
-import Mathlib.Topology.Covering.Basic
+module
+
+public import LeanPool.JacobianDiffgeo.MappingDegree.Ramification
+public import Mathlib.Topology.Covering.Basic
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Covering structure off the branch locus
@@ -26,6 +32,8 @@ Downstream may further compose with mathlib's `IsCoveringMapOn.isCoveringMap_res
 (`Topology/Covering/Basic.lean`) for a genuine `IsCoveringMap` of the subtype restriction, and
 with `Topology/Homotopy/Lifting.lean` for path/homotopy lifting — no extra exports needed here.
 -/
+
+@[expose] public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

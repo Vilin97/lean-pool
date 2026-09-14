@@ -7,10 +7,13 @@ Authors: Rado Kirov
 /-
 Blueprint unit: mapping-degree. Basics: nonconstancy bridges, fibers, `fiberMultSum`.
 -/
-import LeanPool.JacobianDiffgeo.Surface
-import LeanPool.JacobianDiffgeo.LocalMultiplicity
-import Mathlib.Topology.DiscreteSubset
-import Mathlib.Algebra.BigOperators.Finprod
+module
+
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Mapping-degree basics
@@ -30,6 +33,8 @@ import Mathlib.Algebra.BigOperators.Finprod
 Surface perfectness (`(𝓝[≠] x).NeBot`) is NOT re-proved here: surfaces-and-charts already
 provides the instance `RS.nhdsNE_neBot` for any `ChartedSpace ℂ` space.
 -/
+
+@[expose] public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

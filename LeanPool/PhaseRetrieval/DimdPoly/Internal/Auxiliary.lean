@@ -3,9 +3,22 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
+module
+
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.PhaseStability
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # Auxiliary -/
+
+@[expose] public section
 
 
 open scoped BigOperators

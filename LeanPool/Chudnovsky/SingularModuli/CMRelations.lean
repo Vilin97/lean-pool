@@ -3,7 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
 import LeanPool.Chudnovsky.SingularModuli.FormReduction
 
 /-!
@@ -26,6 +29,8 @@ The matrix is `M_n = ![![n+1, −41],![1, n]]` (in the `(a,b,c,d)` convention `M
 Only elementary Möbius algebra is used; nothing here touches the modular polynomial `Φ_m`
 itself (that is `ModularPolynomialQ`, another track).
 -/
+
+@[expose] public section
 
 noncomputable section
 

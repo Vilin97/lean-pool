@@ -10,11 +10,15 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted into a separate namespace and changed source-module
 imports and namespace qualifications. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Core
+module
+
+public import LeanPool.ConnesRigidity.Core
 
 /-!
 The core transfer component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace OpenAIPort

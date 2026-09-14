@@ -3,11 +3,17 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
+module
+
+public import LeanPool.RiemannMappingTheorem.Cindex
 import LeanPool.RiemannMappingTheorem.Hurwitz
+import Mathlib.Analysis.Complex.RemovableSingularity
 
 /-!
 # LeanPool.RiemannMappingTheorem.DerivInj
 -/
+
+@[expose] public section
 
 open Complex Metric circleIntegral Topology Filter Set
 

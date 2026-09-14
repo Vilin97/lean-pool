@@ -3,9 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Data.Finsupp.Defs
-import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `Tail X`: free ambient Laurent-tail data, and `TailSpace D` (serre-duality-cech, §2 D1)
@@ -27,6 +29,8 @@ sibling unit laurent-tails independently discovered that a plain `def` wrapping 
 `scratch_ltails.lean`); using `abbrev` here sidesteps the issue entirely (reducible unfolding lets
 every `Finsupp` instance transport for free), so no manual instances are needed at all.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

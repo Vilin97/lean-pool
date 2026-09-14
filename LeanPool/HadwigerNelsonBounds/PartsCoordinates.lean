@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGeometry
+public import LeanPool.HadwigerNelsonBounds.PartsGeometry
 
 /-!
 # The 481 exact vertices in Parts' base graph
@@ -12,6 +13,8 @@ import LeanPool.HadwigerNelsonBounds.PartsGeometry
 The order and coordinates are transcribed from `JP/Pink/g481.vtx` in the
 Polymath 16 data archive accompanying Jaan Parts, arXiv:2010.12661.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

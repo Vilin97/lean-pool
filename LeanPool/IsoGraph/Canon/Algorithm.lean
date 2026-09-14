@@ -3,6 +3,7 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
 /-!
 # Canonical labelling of finite graphs (a compact "mini-nauty")
@@ -53,7 +54,7 @@ Two prunings make this fast:
 
 Note that hash collisions can only *weaken* pruning: an invariant path is used solely as the first
 component of a total order on leaves, and any isomorphism-invariant function works there.
--/
+-/@[expose] public section
 
 namespace IsoGraph
 namespace Canon
@@ -66,7 +67,7 @@ namespace Canon
 The constructor is private so callers cannot supply arrays with inconsistent dimensions or
 contents. Use `Graph.ofOracle`, which builds both representations from the same oracle. -/
 structure Graph where
-  private mk ::
+  mk ::
   /-- Number of vertices. -/
   n : Nat
   /-- `adj[v]![w]!` is `true` iff `v` and `w` are adjacent. -/
@@ -786,6 +787,8 @@ def dfsChildren (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UIn
   termination_by (fuel, verts.length + 1)
 
 end
+
+attribute [elab_as_elim] dfsNode.induct
 
 /-! ## Entry points -/
 

@@ -3,10 +3,14 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part09
+public import LeanPool.QuantumParallelRepetition.Part09
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 
 /-! # Quantum parallel repetition, part 10 -/
+
+@[expose] public section
 
 noncomputable section
 

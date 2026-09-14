@@ -5,13 +5,14 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.TestFunction.Amplitude
-public import LeanPool.Odlyzko.TestFunction.Bounds
-public import Mathlib.Analysis.Calculus.LHopital
-public import Mathlib.Analysis.Fourier.Convolution
 public import Mathlib.Analysis.Fourier.FourierTransform
-public import Mathlib.Analysis.Fourier.Inversion
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Sinc
+public import LeanPool.Odlyzko.TestFunction.Basic
+public import Mathlib.Analysis.Convolution
+import LeanPool.Odlyzko.TestFunction.Amplitude
+import LeanPool.Odlyzko.TestFunction.Bounds
+import LeanPool.Odlyzko.TestFunction.Fourier
+import Mathlib.Analysis.Calculus.LHopital
+import Mathlib.Analysis.Fourier.Convolution
 
 /-! TODO: Add doc-string. -/
 

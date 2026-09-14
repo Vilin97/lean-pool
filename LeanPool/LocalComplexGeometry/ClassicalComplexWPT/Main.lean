@@ -3,7 +3,9 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
 import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationUniqueness
 import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
 
@@ -13,6 +15,8 @@ import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PublicExistence
 This module assembles the general analytic existence construction and its full
 germ uniqueness theorem into the exact independently frozen public result.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

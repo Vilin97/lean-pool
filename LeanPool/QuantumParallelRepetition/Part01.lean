@@ -3,17 +3,20 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Analysis.CStarAlgebra.Module.Constructions
-import Mathlib.Analysis.InnerProductSpace.StarOrder
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.SpecificCodomains.Pi
-import Mathlib.Tactic.NormNum.RealSqrt
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.Analysis.InnerProductSpace.StarOrder
+public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.MeasureTheory.SpecificCodomains.Pi
+public import Mathlib.Tactic.NormNum.RealSqrt
 
 /-! # Quantum parallel repetition, part 01 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -178,7 +181,8 @@ namespace Strategy
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 variable {G : Game X Y A B}
 
-private def jointEffect (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
+/-- The tensor product of Alice's and Bob's effects for a joint outcome. -/
+def jointEffect (S : Strategy G) (x : X) (y : Y) (a : A) (b : B) :
     Matrix (S.Alice × S.Bob) (S.Alice × S.Bob) ℂ :=
   (S.aliceMeasurement x).effect a ⊗ₖ (S.bobMeasurement y).effect b
 
@@ -505,14 +509,18 @@ theorem posSemidef_blockDiagonal'
     _ = star (Matrix.blockDiagonal' K) * Matrix.blockDiagonal' K := by
           simp only [star_eq_conjTranspose, blockDiagonal'_conjTranspose, ← blockDiagonal'_mul]
 
-private abbrev mixtureAlice (S : J → Strategy G) := Σ j : J, (S j).Alice
+/-- Alice's direct-sum index, retaining the chosen component of the mixture. -/
+abbrev mixtureAlice (S : J → Strategy G) := Σ j : J, (S j).Alice
 
-private abbrev mixtureBob (S : J → Strategy G) := Σ j : J, (S j).Bob
+/-- Bob's direct-sum index, retaining the chosen component of the mixture. -/
+abbrev mixtureBob (S : J → Strategy G) := Σ j : J, (S j).Bob
 
-private abbrev mixtureMatched (S : J → Strategy G) :=
+/-- Joint indices whose two players use the same mixture component. -/
+abbrev mixtureMatched (S : J → Strategy G) :=
   Σ j : J, (S j).Alice × (S j).Bob
 
-private def mixtureMatchedIndex (S : J → Strategy G) :
+/-- Embed matching component indices into the product of the two direct sums. -/
+def mixtureMatchedIndex (S : J → Strategy G) :
     mixtureMatched S → mixtureAlice S × mixtureBob S
   | ⟨j, (a, b)⟩ => (⟨j, a⟩, ⟨j, b⟩)
 
@@ -530,12 +538,13 @@ private theorem mixtureMatchedIndex_injective (S : J → Strategy G) :
   subst d
   rfl
 
-private def mixtureEmbedding (S : J → Strategy G) :
+/-- The matrix embedding the matching component blocks into the joint space. -/
+def mixtureEmbedding (S : J → Strategy G) :
     Matrix (mixtureAlice S × mixtureBob S) (mixtureMatched S) ℂ := by
   classical
   exact fun q r => if q = mixtureMatchedIndex S r then 1 else 0
 
-private theorem mixtureEmbedding_isometry (S : J → Strategy G) :
+theorem mixtureEmbedding_isometry (S : J → Strategy G) :
     (mixtureEmbedding S)ᴴ * mixtureEmbedding S = 1 := by
   classical
   ext i j
@@ -561,12 +570,13 @@ private theorem mixtureEmbedding_compress (S : J → Strategy G)
     MonoidWithZeroHom.map_ite_one_zero, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq',
     Finset.mem_univ, ↓reduceIte, mul_ite, mul_one, mul_zero, submatrix_apply]
 
-private def mixtureBlockMatrix (p : J → ℝ) (S : J → Strategy G) :
+/-- The block-diagonal state matrix weighted by the mixture probabilities. -/
+def mixtureBlockMatrix (p : J → ℝ) (S : J → Strategy G) :
     Matrix (mixtureMatched S) (mixtureMatched S) ℂ :=
   Matrix.blockDiagonal' fun j => p j • (S j).state.matrix
 
 omit [Fintype J] in
-private theorem mixtureBlockMatrix_posSemidef
+theorem mixtureBlockMatrix_posSemidef
     [Finite J]
     (p : J → ℝ) (hp : ∀ j, 0 ≤ p j) (S : J → Strategy G) :
     (mixtureBlockMatrix p S).PosSemidef := by
@@ -575,7 +585,7 @@ private theorem mixtureBlockMatrix_posSemidef
   intro j
   exact (S j).state.positive.smul (hp j)
 
-private theorem mixtureBlockMatrix_trace
+theorem mixtureBlockMatrix_trace
     (p : J → ℝ) (S : J → Strategy G) :
     Matrix.trace (mixtureBlockMatrix p S) =
       (↑(∑ j : J, p j) : ℂ) := by
@@ -583,7 +593,8 @@ private theorem mixtureBlockMatrix_trace
   rw [Matrix.trace_blockDiagonal']
   simp only [trace_smul, DensityMatrix.trace_one, Complex.real_smul, mul_one, Complex.ofReal_sum]
 
-private def mixtureDensityMatrix (p : J → ℝ)
+/-- The density matrix of the mixture, supported on matching component blocks. -/
+def mixtureDensityMatrix (p : J → ℝ)
     (hp : ∀ j, 0 ≤ p j) (h_normalized : (∑ j : J, p j) = 1)
     (S : J → Strategy G) :
     DensityMatrix (mixtureAlice S × mixtureBob S) where
@@ -597,7 +608,8 @@ private def mixtureDensityMatrix (p : J → ℝ)
       Matrix.one_mul, mixtureBlockMatrix_trace, h_normalized]
     norm_num
 
-private def mixtureAlicePOVM (S : J → Strategy G) (x : X) :
+/-- Alice's measurement acting separately on each mixture component. -/
+def mixtureAlicePOVM (S : J → Strategy G) (x : X) :
     POVM A (mixtureAlice S) where
   effect a := Matrix.blockDiagonal' fun j =>
     ((S j).aliceMeasurement x).effect a
@@ -618,7 +630,8 @@ private def mixtureAlicePOVM (S : J → Strategy G) (x : X) :
     · simp only [Matrix.sum_apply, blockDiagonal'_apply, h, ↓reduceDIte, Finset.sum_const_zero,
         ne_eq, Sigma.mk.injEq, false_and, not_false_eq_true, one_apply_ne]
 
-private def mixtureBobPOVM (S : J → Strategy G) (y : Y) :
+/-- Bob's measurement acting separately on each mixture component. -/
+def mixtureBobPOVM (S : J → Strategy G) (y : Y) :
     POVM B (mixtureBob S) where
   effect b := Matrix.blockDiagonal' fun j =>
     ((S j).bobMeasurement y).effect b
@@ -639,7 +652,8 @@ private def mixtureBobPOVM (S : J → Strategy G) (y : Y) :
     · simp only [Matrix.sum_apply, blockDiagonal'_apply, h, ↓reduceDIte, Finset.sum_const_zero,
         ne_eq, Sigma.mk.injEq, false_and, not_false_eq_true, one_apply_ne]
 
-private def convexMixtureStrategy (p : J → ℝ)
+/-- A strategy that shares a component label and plays that component's strategy. -/
+def convexMixtureStrategy (p : J → ℝ)
     (hp : ∀ j, 0 ≤ p j) (h_normalized : (∑ j : J, p j) = 1)
     (S : J → Strategy G) : Strategy G where
   Alice := mixtureAlice S
@@ -2229,7 +2243,8 @@ theorem spectralSupportFunctional_isHermitian
   simpa only [Matrix.star_eq_conjTranspose] using
     (show star (e D) = e D by rw [← map_star, hDstar])
 
-private def spectralSupportInverse
+/-- Apply reciprocal eigenvalues to a positive matrix, with zero on its kernel. -/
+def spectralSupportInverse
     {d : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef) : Matrix d d ℂ :=
   spectralSupportFunctional F hF (fun x => x⁻¹)
@@ -2464,7 +2479,8 @@ open Matrix
 open scoped BigOperators ComplexOrder MatrixOrder
 
 
-private def purificationRangeProjection
+/-- The matrix `Γ F⁻¹ Γᴴ` formed using the inverse on the support of `F`. -/
+def purificationRangeProjection
     {d e : Type*} [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
     (Γ : Matrix e d ℂ) : Matrix e e ℂ :=
@@ -2530,7 +2546,8 @@ private theorem purificationRangeProjection_complement_posSemidef
   rw [hsquare] at hpositive
   exact hpositive
 
-private def purifiedRefinementCore
+/-- Transport an effect through the purification map and the support inverse. -/
+def purifiedRefinementCore
     {ι d e : Type*}
     [Fintype d] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
@@ -2583,7 +2600,8 @@ private theorem purifiedRefinementCore_sum
           Matrix.conjTranspose Γ := by
             rw [spectralSupportInverse_penrose]
 
-private def purifiedRefinedEffect
+/-- Complete the transported effects by assigning the unused range to outcome `a₀`. -/
+def purifiedRefinedEffect
     {ι d e : Type*} [DecidableEq ι]
     [Fintype d] [DecidableEq d]
      [DecidableEq e]
@@ -2594,7 +2612,7 @@ private def purifiedRefinedEffect
   purifiedRefinementCore F hF Γ effect a +
     if a = a₀ then 1 - purificationRangeProjection F hF Γ else 0
 
-private theorem purifiedRefinedEffect_posSemidef
+theorem purifiedRefinedEffect_posSemidef
     {ι d e : Type*} [DecidableEq ι]
     [Fintype d] [DecidableEq d]
     [Fintype e] [DecidableEq e]
@@ -2613,7 +2631,7 @@ private theorem purifiedRefinedEffect_posSemidef
   · exact purificationRangeProjection_complement_posSemidef F hF Γ hΓ
   · exact Matrix.PosSemidef.zero
 
-private theorem purifiedRefinedEffect_complete
+theorem purifiedRefinedEffect_complete
     {ι d e : Type*} [Fintype ι] [DecidableEq ι]
     [Fintype d] [DecidableEq d]
      [DecidableEq e]

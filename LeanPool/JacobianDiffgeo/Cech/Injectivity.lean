@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Colimit
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
 import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Forster 12.4: refinement maps are injective on `H¹` (CC8, D8, proof plan §6.7)
@@ -18,6 +21,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.4, §6.7).
   (via `Module.DirectLimit.of.zero_exact` + `resH1_injective`).
 * `subsingleton_H1_iff`: the colimit vanishes iff every cover-level `H¹` vanishes.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -46,6 +51,16 @@ noncomputable def injPatch (f : C1 D 𝒰) (g : C0 D 𝒱) (i : Fin 𝒰.n) (k :
     RS.LinSysOn D ((𝒰.U i ⊓ 𝒱.U k : Opens X) : Set X) :=
   LinSysOn.restrictL D (inf_le_inf (le_refl (𝒰.U i)) (hτ k)) (f (i, τ k)) -
     LinSysOn.restrictL D (inf_le_right : 𝒰.U i ⊓ 𝒱.U k ≤ 𝒱.U k) (g k)
+
+omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
+private theorem injPatch_restrict (f : C1 D 𝒰) (g : C0 D 𝒱) (i : Fin 𝒰.n)
+    (k : Fin 𝒱.n) {W : Opens X} (hW : W ≤ 𝒰.U i ⊓ 𝒱.U k)
+    (hWf : W ≤ 𝒰.U i ⊓ 𝒰.U (τ k)) (hWg : W ≤ 𝒱.U k) :
+    LinSysOn.restrictL D hW (injPatch D τ hτ f g i k) =
+      LinSysOn.restrictL D hWf (f (i, τ k)) - LinSysOn.restrictL D hWg (g k) := by
+  exact (map_sub (LinSysOn.restrictL D hW) _ _).trans
+    (congrArg₂ (· - ·) (restrictL_restrictL D _ hW hWf _)
+      (restrictL_restrictL D _ hW hWg _))
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem injPatch_compat {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) {g : C0 D 𝒱}
@@ -88,28 +103,13 @@ theorem injPatch_compat {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) {g : C0 D 𝒱}
   -- combine: the two restricted `injPatch`s agree on `Wraw`
   have key3 : LinSysOn.restrictL D hab (f (i, τ k)) - LinSysOn.restrictL D hWk (g k) =
       LinSysOn.restrictL D hac (f (i, τ l)) - LinSysOn.restrictL D hWl (g l) := by
-    have e : LinSysOn.restrictL D hab (f (i, τ k)) - LinSysOn.restrictL D hWk (g k) -
-        (LinSysOn.restrictL D hac (f (i, τ l)) - LinSysOn.restrictL D hWl (g l)) =
-        (LinSysOn.restrictL D hWl (g l) - LinSysOn.restrictL D hWk (g k)) -
-          LinSysOn.restrictL D hac (f (i, τ l)) + LinSysOn.restrictL D hab (f (i, τ k)) := by
-      abel
-    rw [key1] at e
-    exact sub_eq_zero.1 e
-  have hcoeK : LinSysOn.restrictL D hWA (injPatch D τ hτ f g i k) =
-      LinSysOn.restrictL D hab (f (i, τ k)) - LinSysOn.restrictL D hWk (g k) := by
-    unfold injPatch
-    rw [map_sub, restrictL_restrictL D (inf_le_inf (le_refl (𝒰.U i)) (hτ k)) hWA hab,
-      restrictL_restrictL D (inf_le_right : 𝒰.U i ⊓ 𝒱.U k ≤ 𝒱.U k) hWA hWk]
-  have hcoeL : LinSysOn.restrictL D hWB (injPatch D τ hτ f g i l) =
-      LinSysOn.restrictL D hac (f (i, τ l)) - LinSysOn.restrictL D hWl (g l) := by
-    unfold injPatch
-    rw [map_sub, restrictL_restrictL D (inf_le_inf (le_refl (𝒰.U i)) (hτ l)) hWB hac,
-      restrictL_restrictL D (inf_le_right : 𝒰.U i ⊓ 𝒱.U l ≤ 𝒱.U l) hWB hWl]
-  have key4 : LinSysOn.restrictL D hWA (injPatch D τ hτ f g i k) =
-      LinSysOn.restrictL D hWB (injPatch D τ hτ f g i l) := by
-    rw [hcoeK, hcoeL, key3]
-  have hval := congrArg Subtype.val key4
-  simpa only [restrictL_apply_coe] using hval
+    apply sub_eq_sub_iff_sub_eq_sub.2
+    have h := eq_neg_of_add_eq_zero_right key1
+    rw [neg_sub] at h
+    rw [h, sub_right_comm, sub_self, zero_sub, neg_sub]
+  have key4 := (injPatch_restrict D τ hτ f g i k hWA hab hWk).trans
+    (key3.trans (injPatch_restrict D τ hτ f g i l hWB hac hWl).symm)
+  exact congrArg Subtype.val key4
 
 /-- Glue the local candidates `injPatch D τ hτ f g i ·` (compatible by `injPatch_compat`) into a
 genuine section on the whole member `𝒰.U i` (Forster p. 99 / §6.7, sheaf axioms only). -/
@@ -119,12 +119,7 @@ theorem exists_injGlue {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) {g : C0 D 𝒱}
       LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒱.U k ≤ 𝒰.U i) ψ = injPatch D τ hτ f g i k := by
   set W : Fin 𝒱.n → Set X := fun k => ((𝒰.U i ⊓ 𝒱.U k : Opens X) : Set X) with hW_def
   have hWopen : ∀ k, IsOpen (W k) := fun k => (𝒰.U i ⊓ 𝒱.U k).isOpen
-  have hunion : (⋃ k, W k) = (𝒰.U i : Set X) := by
-    apply Set.Subset.antisymm
-    · exact Set.iUnion_subset fun k => inf_le_left
-    · intro x hx
-      obtain ⟨k, hk⟩ := 𝒱.covers x (𝒰.le_base i hx)
-      exact Set.mem_iUnion.2 ⟨k, hx, hk⟩
+  have hunion : (⋃ k, W k) = (𝒰.U i : Set X) := iUnion_inf_eq _ (𝒰.le_base i)
   obtain ⟨Φ, hΦ⟩ := RS.MeroGermOn.exists_glue hWopen
     (fun k => (injPatch D τ hτ f g i k : RS.MeroGermOn X (W k)))
     (fun k l => injPatch_compat D τ hτ hf hgeq i k l)
@@ -198,32 +193,11 @@ theorem d0_injGlue_eq_neg {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) {g : C0 D 𝒱}
     have hexpand : LinSysOn.restrictL D hjk (injPatch D τ hτ f g j k) -
         LinSysOn.restrictL D hik (injPatch D τ hτ f g i k) =
         LinSysOn.restrictL D hbc (f (j, τ k)) - LinSysOn.restrictL D hac (f (i, τ k)) := by
-      have e1 : LinSysOn.restrictL D hjk (injPatch D τ hτ f g j k) =
-          LinSysOn.restrictL D hbc (f (j, τ k)) -
-            LinSysOn.restrictL D hWk (g k) := by
-        unfold injPatch
-        rw [map_sub,
-          restrictL_restrictL D (inf_le_inf (le_refl (𝒰.U j)) (hτ k)) hjk hbc,
-          restrictL_restrictL D (inf_le_right : 𝒰.U j ⊓ 𝒱.U k ≤ 𝒱.U k) hjk hWk]
-      have e2 : LinSysOn.restrictL D hik (injPatch D τ hτ f g i k) =
-          LinSysOn.restrictL D hac (f (i, τ k)) -
-            LinSysOn.restrictL D hWk (g k) := by
-        unfold injPatch
-        rw [map_sub,
-          restrictL_restrictL D (inf_le_inf (le_refl (𝒰.U i)) (hτ k)) hik hac,
-          restrictL_restrictL D (inf_le_right : 𝒰.U i ⊓ 𝒱.U k ≤ 𝒱.U k) hik hWk]
-      rw [e1, e2]
-      abel
+      rw [injPatch_restrict D τ hτ f g j k hjk hbc hWk,
+        injPatch_restrict D τ hτ f g i k hik hac hWk, sub_sub_sub_cancel_right]
     have key1 := Z1.rel_res D hf i j (τ k) (le_inf hab hWtk) hbc hac hab
-    have hRHS : LinSysOn.restrictL D (inf_le_left : A ⊓ 𝒱.U k ≤ A) (-(f (i, j))) =
-        -LinSysOn.restrictL D hab (f (i, j)) := by
-      rw [map_neg]
-    rw [hLHS, hexpand, hRHS]
-    have e : LinSysOn.restrictL D hbc (f (j, τ k)) - LinSysOn.restrictL D hac (f (i, τ k)) =
-        LinSysOn.restrictL D hbc (f (j, τ k)) - LinSysOn.restrictL D hac (f (i, τ k)) +
-          LinSysOn.restrictL D hab (f (i, j)) - LinSysOn.restrictL D hab (f (i, j)) := by
-      abel
-    rw [e, key1, zero_sub]
+    rw [hLHS, hexpand, map_neg]
+    exact eq_neg_of_add_eq_zero_left key1
   have hglu : e' ((d0 D 𝒰 ψ (i, j) : RS.MeroGermOn X (A : Set X))) =
       e' ((-(f (i, j)) : RS.MeroGermOn X (A : Set X))) := by
     apply RS.MeroGermOn.glue_unique hW'open
@@ -258,12 +232,7 @@ theorem toH1_injective (𝒰 : FinCover (⊤ : Opens X)) : Function.Injective (t
   exact resH1_injective D (chosenRefIdx hij) (chosenRefIdx_spec hij) hz
 
 @[simp] theorem toH1_eq_zero_iff {𝒰 : FinCover (⊤ : Opens X)} (c : H1Cover D 𝒰) :
-    toH1 D 𝒰 c = 0 ↔ c = 0 := by
-  constructor
-  · intro h
-    exact toH1_injective D 𝒰 (h.trans (map_zero (toH1 D 𝒰)).symm)
-  · intro h
-    rw [h, map_zero]
+    toH1 D 𝒰 c = 0 ↔ c = 0 := (toH1_injective D 𝒰).eq_iff' (map_zero _)
 
 /-- The colimit `H1 D` vanishes iff every cover-level `H¹(𝒰,D)` vanishes. -/
 theorem subsingleton_H1_iff : Subsingleton (H1 D) ↔ ∀ 𝒰 : FinCover (⊤ : Opens X),

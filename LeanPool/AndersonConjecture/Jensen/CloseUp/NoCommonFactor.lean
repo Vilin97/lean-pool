@@ -3,8 +3,22 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+module
+
+public import LeanPool.AndersonConjecture.Jensen.NSubring
+public import Mathlib.RingTheory.AdicCompletion.Basic
+import LeanPool.AndersonConjecture.Jensen.Adjoin.Transcendental
+import LeanPool.AndersonConjecture.Jensen.Avoidance
+import LeanPool.AndersonConjecture.Jensen.CloseUp.Base
 import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+import Mathlib.Algebra.Polynomial.Cardinal
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.Encodable
+import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Close-up: no common factor
@@ -15,6 +29,8 @@ is that the ideal of the generators s' cannot be contained in
 any associated prime of height at most one, so the avoidance
 step applies directly.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -36,24 +52,10 @@ include T in theorem prime_height_le_one_mem_assoc
     refine ⟨⟨hP_prime, Ideal.span_le.mpr
       (Set.singleton_subset_iff.mpr hr₀_in_P)⟩, ?_⟩
     intro Q ⟨hQ_prime, hQ_le_span⟩ hQ_le_P
-    by_contra hPQ
-    have hQ_ne_P : Q ≠ P := fun h => hPQ (h ▸ le_refl _)
-    have hQ_ne_bot : Q ≠ ⊥ := by
-      intro h
-      simp_all
-    have hQ_lt_P : Q < P := lt_of_le_of_ne hQ_le_P hQ_ne_P
-    have h_bot_lt_Q : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
-    have h1 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ Q
-      Ideal.isPrime_bot hQ_prime h_bot_lt_Q
-    have h2 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ Q P
-      hQ_prime hP_prime hQ_lt_P
-    have h4 : (2 : ℕ∞) ≤ P.height :=
-      calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
-        _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-          simp_all
-        _ ≤ Q.height + 1 := by gcongr
-        _ ≤ P.height := h2
-    exact not_lt.mpr h4 (by exact_mod_cast hP_ht.trans_lt (by norm_num))
+    have hQ_ne_bot : Q ≠ ⊥ := fun h => hr₀T_ne
+      (Ideal.span_singleton_eq_bot.mp (bot_unique (hQ_le_span.trans_eq h)))
+    exact (@eq_of_prime_le_prime_height_le_one T _ _ Q P hQ_prime hP_prime
+      hQ_le_P hQ_ne_bot hP_ht).ge
   have hP_assoc : P ∈ associatedPrimes T (T ⧸ Ideal.span {(r₀ : T)}) := by
     open Module.associatedPrimes in
     have hsub :=
@@ -84,11 +86,12 @@ include T in theorem no_common_I_not_le_assoc
       intro x hx
       have h1 : x ∈ P.comap R.carrier.subtype :=
         Ideal.mem_comap.mpr (hgens_in_P x hx)
-      simp_all
+      simpa only [hcomap, Ideal.mem_bot] using h1
     have h_le_one : s'.card ≤ 1 :=
       Finset.card_le_one.mpr fun x hx y hy => by
         rw [hall_zero x hx, hall_zero y hy]
-    simp_all
+    rw [hs'_def, Finset.card_erase_of_mem ha_mem, hs_eq] at h_le_one
+    omega
   · have : (P.comap R.carrier.subtype).IsPrime :=
       hP_mem.isPrime.comap R.carrier.subtype
     obtain ⟨q, hq_prime, hq_Q⟩ :=

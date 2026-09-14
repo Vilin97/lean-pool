@@ -6,7 +6,10 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.CoordinateFree.WeilDifferential
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
+import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Basic
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Coordinate-free Riemann–Roch

@@ -3,9 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Window
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Cech.H0
 import LeanPool.JacobianDiffgeo.Cech.Injectivity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The Mittag-Leffler atom and the skyscraper fragment (CC8, D7, proof plan §6.9)
@@ -27,6 +31,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.7).
 (`mlClass_eq_of_realizes`), `exact_windowMap_windowConnect`, `exact_windowConnect_H1Incl` —
 is proved in `SixTerm.lean`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -56,15 +62,10 @@ theorem C1.retype_apply_coe (f : C1 D' 𝒰) (hf : f.MemLD D) (p : Fin 𝒰.n ×
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem C1.retype_mem_Z1 {g : C0 D' 𝒰} (hg : (d0 D' 𝒰 g).MemLD D) :
     C1.retype (d0 D' 𝒰 g) hg ∈ Z1 D 𝒰 := by
-  rw [mem_Z1_iff]
+  apply (mem_Z1_iff D 𝒰 _).2
   intro t
-  apply Subtype.ext
-  have hcoe : (d1 D 𝒰 (C1.retype (d0 D' 𝒰 g) hg) t :
-        RS.MeroGermOn X ((𝒰.U t.1 ⊓ 𝒰.U t.2.1 ⊓ 𝒰.U t.2.2 : Opens X) : Set X)) =
-      (d1 D' 𝒰 (d0 D' 𝒰 g) t :
-        RS.MeroGermOn X ((𝒰.U t.1 ⊓ 𝒰.U t.2.1 ⊓ 𝒰.U t.2.2 : Opens X) : Set X)) := rfl
-  rw [hcoe, (mem_Z1_iff D' 𝒰 (d0 D' 𝒰 g)).1 (B1_le_Z1 D' 𝒰 ⟨g, rfl⟩) t]
-  simp
+  exact Subtype.ext (congrArg (fun z : RS.LinSysOn D' _ => z.val)
+    ((mem_Z1_iff D' 𝒰 (d0 D' 𝒰 g)).1 (B1_le_Z1 D' 𝒰 ⟨g, rfl⟩) t))
 
 /-! ### The Mittag-Leffler atom -/
 
@@ -83,27 +84,9 @@ theorem mlClass_add (g g' : C0 D' 𝒰) (hg : (d0 D' 𝒰 g).MemLD D) (hg' : (d0
   have hval : C1.retype (d0 D' 𝒰 (g + g')) hgg' =
       (C1.retype (d0 D' 𝒰 g) hg : C1 D 𝒰) + C1.retype (d0 D' 𝒰 g') hg' := by
     funext p
-    apply Subtype.ext
-    change (C1.retype (d0 D' 𝒰 (g + g')) hgg' p :
-        RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X)) =
-      (C1.retype (d0 D' 𝒰 g) hg p : RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X)) +
-        (C1.retype (d0 D' 𝒰 g') hg' p :
-          RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X))
-    change RS.MeroGermOn.restrict inf_le_right
-          ((g p.2 : RS.MeroGermOn X (𝒰.U p.2 : Set X)) + (g' p.2 : RS.MeroGermOn X (𝒰.U p.2 : Set
-              X))) -
-        RS.MeroGermOn.restrict inf_le_left
-          ((g p.1 : RS.MeroGermOn X (𝒰.U p.1 : Set X)) + (g' p.1 : RS.MeroGermOn X (𝒰.U p.1 : Set
-              X))) =
-      (RS.MeroGermOn.restrict inf_le_right (g p.2 : RS.MeroGermOn X (𝒰.U p.2 : Set X)) -
-          RS.MeroGermOn.restrict inf_le_left (g p.1 : RS.MeroGermOn X (𝒰.U p.1 : Set X))) +
-        (RS.MeroGermOn.restrict inf_le_right (g' p.2 : RS.MeroGermOn X (𝒰.U p.2 : Set X)) -
-          RS.MeroGermOn.restrict inf_le_left (g' p.1 : RS.MeroGermOn X (𝒰.U p.1 : Set X)))
-    simp only [map_add]
-    abel
-  simp only [mlClass]
-  rw [← map_add, ← map_add]
-  exact congrArg (toH1 D 𝒰) (congrArg (H1Cover.mk D 𝒰) (Subtype.ext hval))
+    exact Subtype.ext (congrArg (fun c : C1 D' 𝒰 => (c p).val) ((d0 D' 𝒰).map_add g g'))
+  exact (congrArg ((toH1 D 𝒰).comp (H1Cover.mk D 𝒰)) (Subtype.ext hval)).trans
+    (((toH1 D 𝒰).comp (H1Cover.mk D 𝒰)).map_add _ _)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem mlClass_smul (a : ℂ) (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g).MemLD D)
@@ -111,34 +94,36 @@ theorem mlClass_smul (a : ℂ) (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g).MemLD D)
     mlClass 𝒰 (a • g) hag = a • mlClass 𝒰 g hg := by
   have hval : C1.retype (d0 D' 𝒰 (a • g)) hag = a • (C1.retype (d0 D' 𝒰 g) hg : C1 D 𝒰) := by
     funext p
-    apply Subtype.ext
-    change (C1.retype (d0 D' 𝒰 (a • g)) hag p :
-        RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X)) =
-      a • (C1.retype (d0 D' 𝒰 g) hg p : RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X))
-    change RS.MeroGermOn.restrict inf_le_right (a • (g p.2 : RS.MeroGermOn X (𝒰.U p.2 : Set X))) -
-        RS.MeroGermOn.restrict inf_le_left (a • (g p.1 : RS.MeroGermOn X (𝒰.U p.1 : Set X))) =
-      a • (RS.MeroGermOn.restrict inf_le_right (g p.2 : RS.MeroGermOn X (𝒰.U p.2 : Set X)) -
-        RS.MeroGermOn.restrict inf_le_left (g p.1 : RS.MeroGermOn X (𝒰.U p.1 : Set X)))
-    simp only [map_smul, smul_sub]
-  rw [mlClass, mlClass, ← map_smul]
-  exact congrArg (toH1 D 𝒰) (congrArg (H1Cover.mk D 𝒰) (Subtype.ext hval))
+    exact Subtype.ext (congrArg (fun c : C1 D' 𝒰 => (c p).val) ((d0 D' 𝒰).map_smul a g))
+  exact (congrArg ((toH1 D 𝒰).comp (H1Cover.mk D 𝒰)) (Subtype.ext hval)).trans
+    (((toH1 D 𝒰).comp (H1Cover.mk D 𝒰)).map_smul a _)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem H1Incl_mlClass (h : D ≤ D') (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g).MemLD D) :
     H1Incl D h (mlClass 𝒰 g hg) = 0 := by
-  rw [mlClass, H1Incl_toH1, h1CoverIncl_mk D h]
   have hz : H1Cover.mk D' 𝒰 (LinearMap.restrict (inclC1 D 𝒰 h) (fun _ hf => inclC1_mem_Z1 D h hf)
-      ⟨C1.retype (d0 D' 𝒰 g) hg, C1.retype_mem_Z1 hg⟩) = 0 := by
-    rw [H1Cover.mk_eq_zero_iff]
-    refine ⟨g, ?_⟩
-    rw [LinearMap.coe_restrict_apply]
-    funext p
-    apply Subtype.ext
-    change (Submodule.inclusion (RS.Cech.linSysOn_mono h)
-        (C1.retype (d0 D' 𝒰 g) hg p) : RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X)) =
-      (d0 D' 𝒰 g p : RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X))
-    rfl
-  rw [hz, map_zero]
+      ⟨C1.retype (d0 D' 𝒰 g) hg, C1.retype_mem_Z1 hg⟩) = 0 :=
+    (H1Cover.mk_eq_zero_iff D' 𝒰 _).2 ⟨g, rfl⟩
+  exact (H1Incl_toH1 D h 𝒰 _).trans
+    ((congrArg (toH1 D' 𝒰) ((h1CoverIncl_mk D h _).trans hz)).trans (toH1 D' 𝒰).map_zero)
+
+/-! ### `mlClass` is refinement-stable (§6.9(a), `mlClass_res`) -/
+
+omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
+/-- Refining the cover and restricting the realizing cochain preserves its Mittag-Leffler class. -/
+theorem mlClass_res {𝒰 𝒱 : FinCover (⊤ : Opens X)} (τ : Fin 𝒱.n → Fin 𝒰.n)
+    (hτ : IsRefIdx 𝒰 𝒱 τ) (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g).MemLD D)
+    (hgr : (d0 D' 𝒱 (resC0 D' τ hτ g)).MemLD D) :
+    mlClass 𝒱 (resC0 D' τ hτ g) hgr = mlClass 𝒰 g hg := by
+  symm
+  change toH1 D 𝒰 (H1Cover.mk D 𝒰 _) = toH1 D 𝒱 (H1Cover.mk D 𝒱 _)
+  rw [← toH1_resH1 D τ hτ, resH1_mk]
+  apply congrArg (toH1 D 𝒱)
+  apply congrArg (H1Cover.mk D 𝒱)
+  apply Subtype.ext
+  change C1.retype (resC1 D' τ hτ (d0 D' 𝒰 g)) _ = _
+  congr 1
+  exact LinearMap.congr_fun (resC1_comp_d0 D' τ hτ) g
 
 /-! ### The vanishing criterion (§6.9(b), `⇐` half)
 
@@ -153,39 +138,20 @@ theorem mlClass_eq_zero_of_exists (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g).MemLD D)
       ((g i : RS.MeroGermOn X (𝒰.U i : Set X)) -
         RS.MeroGermOn.restrict (𝒰.le_base i) (φ : RS.MeroGermOn X (Set.univ : Set X))).ord x) :
     mlClass 𝒰 g hg = 0 := by
-  set h : C0 D 𝒰 := fun i => ⟨(g i : RS.MeroGermOn X (𝒰.U i : Set X)) -
+  let h : C0 D 𝒰 := fun i => ⟨(g i : RS.MeroGermOn X (𝒰.U i : Set X)) -
       RS.MeroGermOn.restrict (𝒰.le_base i) (φ : RS.MeroGermOn X (Set.univ : Set X)),
-      fun hU x hx => hφ i x hx⟩ with hh_def
+      fun hU x hx => hφ i x hx⟩
+  let φ' : RS.LinSysOn D' ((⊤ : Opens X) : Set X) :=
+    ⟨φ, by rw [linSysOn_top_eq_linSys D']; exact φ.property⟩
+  have hdiff : d0 D' 𝒰 (g - toC0 D' 𝒰 φ') = d0 D' 𝒰 g := by
+    rw [map_sub, LinearMap.mem_ker.mp (toC0_mem_ker D' 𝒰 φ'), sub_zero]
   have hkey : C1.retype (d0 D' 𝒰 g) hg = d0 D 𝒰 h := by
     funext p
-    apply Subtype.ext
-    obtain ⟨i, j⟩ := p
-    change RS.MeroGermOn.restrict inf_le_right (g j : RS.MeroGermOn X _) -
-        RS.MeroGermOn.restrict inf_le_left (g i : RS.MeroGermOn X _) =
-      RS.MeroGermOn.restrict inf_le_right
-          ((g j : RS.MeroGermOn X _) -
-            RS.MeroGermOn.restrict (𝒰.le_base j) (φ : RS.MeroGermOn X (Set.univ : Set X))) -
-        RS.MeroGermOn.restrict inf_le_left
-          ((g i : RS.MeroGermOn X _) -
-            RS.MeroGermOn.restrict (𝒰.le_base i) (φ : RS.MeroGermOn X (Set.univ : Set X)))
-    simp only [map_sub]
-    -- proofs supplied explicitly: `rw`/`simp` will not instantiate a metavariable sitting in a
-    -- proof-valued argument of `MeroGermOn.restrict`
-    rw [RS.MeroGermOn.restrict_restrict (𝒰.le_base j) inf_le_right
-        (φ : RS.MeroGermOn X (Set.univ : Set X)),
-      RS.MeroGermOn.restrict_restrict (𝒰.le_base i) inf_le_left
-        (φ : RS.MeroGermOn X (Set.univ : Set X))]
-    have hcancel : RS.MeroGermOn.restrict (inf_le_right.trans (𝒰.le_base j))
-        (φ : RS.MeroGermOn X (Set.univ : Set X)) =
-        RS.MeroGermOn.restrict (inf_le_left.trans (𝒰.le_base i))
-          (φ : RS.MeroGermOn X (Set.univ : Set X)) := rfl
-    rw [hcancel]
-    abel
-  rw [mlClass]
+    exact Subtype.ext (congrArg (fun c : C1 D' 𝒰 => (c p).val) hdiff.symm)
   have hz : H1Cover.mk D 𝒰 (⟨C1.retype (d0 D' 𝒰 g) hg, C1.retype_mem_Z1 hg⟩ : Z1 D 𝒰) = 0 := by
     rw [H1Cover.mk_eq_zero_iff]
     exact ⟨h, hkey.symm⟩
-  rw [hz, map_zero]
+  exact (congrArg (toH1 D 𝒰) hz).trans (toH1 D 𝒰).map_zero
 
 /-! ### The vanishing criterion (§6.9(b), `⇒` half): now unlocked by `toH1_injective` (12.4). -/
 
@@ -200,45 +166,16 @@ theorem mlClass_eq_zero_iff (h : D ≤ D') (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g)
   · rintro ⟨φ, hφ⟩
     exact mlClass_eq_zero_of_exists g hg φ hφ
   intro hz
-  rw [mlClass] at hz
   have hz' : H1Cover.mk D 𝒰 (⟨C1.retype (d0 D' 𝒰 g) hg, C1.retype_mem_Z1 hg⟩ : Z1 D 𝒰) = 0 :=
-    toH1_injective D 𝒰 (by rw [hz, map_zero])
+    toH1_injective D 𝒰 (hz.trans (toH1 D 𝒰).map_zero.symm)
   rw [H1Cover.mk_eq_zero_iff] at hz'
   obtain ⟨hc, hhc⟩ := hz'
-  -- `hhc : d0 D 𝒰 hc = C1.retype (d0 D' 𝒰 g) hg` (as `C1 D 𝒰` elements).
-  have hincl_retype : ∀ p : Fin 𝒰.n × Fin 𝒰.n,
-      Submodule.inclusion (RS.Cech.linSysOn_mono h) (C1.retype (d0 D' 𝒰 g) hg p) =
-        d0 D' 𝒰 g p := by
-    intro p
-    apply Subtype.ext
-    rw [Submodule.coe_inclusion, C1.retype_apply_coe]
-  set k : C0 D' 𝒰 :=
-      fun i => (g i) - Submodule.inclusion (RS.Cech.linSysOn_mono h) (hc i) with hk_def
+  let k : C0 D' 𝒰 :=
+    fun i => (g i) - Submodule.inclusion (RS.Cech.linSysOn_mono h) (hc i)
   have hk0 : d0 D' 𝒰 k = 0 := by
-    funext p
-    obtain ⟨i, j⟩ := p
-    show d0 D' 𝒰 k (i, j) = (0 : C1 D' 𝒰) (i, j)
-    rw [Pi.zero_apply, d0_apply]
-    have step1 : LinSysOn.restrictL D' (inf_le_right : 𝒰.U i ⊓ 𝒰.U j ≤ 𝒰.U j) (k j) -
-        LinSysOn.restrictL D' (inf_le_left : 𝒰.U i ⊓ 𝒰.U j ≤ 𝒰.U i) (k i) =
-        (LinSysOn.restrictL D' inf_le_right (g j) - LinSysOn.restrictL D' inf_le_left (g i)) -
-        (Submodule.inclusion (RS.Cech.linSysOn_mono h) (LinSysOn.restrictL D inf_le_right (hc j)) -
-          Submodule.inclusion (RS.Cech.linSysOn_mono h)
-              (LinSysOn.restrictL D inf_le_left (hc i))) := by
-      change LinSysOn.restrictL D' inf_le_right
-            (g j - Submodule.inclusion (RS.Cech.linSysOn_mono h) (hc j)) -
-          LinSysOn.restrictL D' inf_le_left
-            (g i - Submodule.inclusion (RS.Cech.linSysOn_mono h) (hc i)) = _
-      rw [map_sub, map_sub, inclusion_restrictL_comm D inf_le_right h (hc j),
-        inclusion_restrictL_comm D inf_le_left h (hc i)]
-      abel
-    rw [step1]
-    have step2 : Submodule.inclusion (RS.Cech.linSysOn_mono h)
-        (LinSysOn.restrictL D inf_le_right (hc j)) -
-        Submodule.inclusion (RS.Cech.linSysOn_mono h) (LinSysOn.restrictL D inf_le_left (hc i)) =
-        Submodule.inclusion (RS.Cech.linSysOn_mono h) (d0 D 𝒰 hc (i, j)) := by
-      rw [d0_apply, map_sub]
-    rw [step2, congrFun hhc (i, j), hincl_retype, d0_apply, sub_self]
+    change d0 D' 𝒰 (g - inclC0 D 𝒰 h hc) = 0
+    rw [map_sub]
+    exact sub_eq_zero.mpr (congrArg (inclC1 D 𝒰 h) hhc).symm
   obtain ⟨ψ, hψ⟩ := toC0'_surjective D' 𝒰 ⟨k, hk0⟩
   have hψ' : toC0 D' 𝒰 ψ = k := congrArg Subtype.val hψ
   have hψi : ∀ i, LinSysOn.restrictL D' (𝒰.le_base i) ψ = k i := fun i =>
@@ -247,17 +184,14 @@ theorem mlClass_eq_zero_iff (h : D ≤ D') (g : C0 D' 𝒰) (hg : (d0 D' 𝒰 g)
     have hψ2 := ψ.2
     rwa [← linSysOn_top_eq_linSys D']
   refine ⟨⟨(ψ : RS.MeroGermOn X (Set.univ : Set X)), hmemφ⟩, fun i x hx => ?_⟩
-  have hrel : (k i : RS.MeroGermOn X (𝒰.U i : Set X)) =
-      (g i : RS.MeroGermOn X (𝒰.U i : Set X)) -
-        (Submodule.inclusion (RS.Cech.linSysOn_mono h) (hc i) : RS.MeroGermOn X (𝒰.U i : Set X)) :=
-            by
-    change ((g i - Submodule.inclusion (RS.Cech.linSysOn_mono h) (hc i) : RS.LinSysOn D' _) :
-      RS.MeroGermOn X (𝒰.U i : Set X)) = _
-    rw [Submodule.coe_sub]
   change (-(D x : ℤ) : WithTop ℤ) ≤
       ((g i : RS.MeroGermOn X (𝒰.U i : Set X)) -
         RS.MeroGermOn.restrict (𝒰.le_base i) (ψ : RS.MeroGermOn X (Set.univ : Set X))).ord x
-  rw [← restrictL_apply_coe, hψi i, hrel, sub_sub_cancel, Submodule.coe_inclusion]
+  rw [← restrictL_apply_coe, hψi i]
+  change (-(D x : ℤ) : WithTop ℤ) ≤
+    ((g i : RS.MeroGermOn X (𝒰.U i : Set X)) -
+      ((g i : RS.MeroGermOn X (𝒰.U i : Set X)) - (hc i : RS.MeroGermOn X (𝒰.U i : Set X)))).ord x
+  rw [sub_sub_cancel]
   exact (RS.mem_linSysOn_iff_of_isOpen (𝒰.U i).isOpen).1 (hc i).2 x hx
 
 end RS.Cech

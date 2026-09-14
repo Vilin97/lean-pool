@@ -3,26 +3,20 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.SpecialFunctions.Sqrt
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Algebra.BigOperators.Associated
 import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Data.Nat.Factorization.PrimePow
 import Mathlib.Data.Set.Card.Arithmetic
-import Mathlib.Algebra.BigOperators.Associated
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # LeanPool.RamanujanTauMissesPrimes.Solution
 -/
+
+@[expose] public section
 
 open Filter Asymptotics
 
@@ -1983,8 +1977,6 @@ lemma E2_x_fifth_le (K : ℝ) (hK : 0 < K)
     (X : ℝ) (hX : 2 < X)
     (p : ℕ+ × ℤ) (hp : p ∈ E2Set X) :
     ((p.1 : ℕ) : ℝ) ^ 5 ≤ 8 * K ^ 4 * X ^ 10 := by
-  have hysq_int := E2_y_sq_le X (p.1 : ℕ) p hp le_rfl
-  have hy_abs_int := int_abs_le_of_sq_le p.2 ((p.1 : ℕ) ^ 11 + ⌊X⌋₊) (by exact_mod_cast hysq_int)
   have hy_ne : p.2 ≠ 0 := E2_y_ne_zero X hX p hp
   have hysq_lt : (p.2 : ℝ) ^ 2 < 2 * ((p.1 : ℕ) : ℝ) ^ 11 := E2_ysq_lt_2x11 X hX p hp
   obtain ⟨hx_gt, hd_lb, hd_ub⟩ := hp
@@ -1999,15 +1991,14 @@ lemma E2_x_fifth_le (K : ℝ) (hK : 0 < K)
   have hx_pos : 0 < (p.1 : ℕ) := p.1.pos
   have hmax := E2_abc_applied K hK hK_abc (p.1 : ℕ) hx_pos p.2 hy_ne d hd_pos hd_eq
   have hysq_le_d : (p.2 : ℝ) ^ 2 ≤ ((p.1 : ℕ) : ℝ) ^ 11 + (d : ℝ) := by
-    suffices h : (p.2 : ℝ) ^ 2 - ((p.1 : ℕ) : ℝ) ^ 11 ≤ (d : ℝ) by linarith
-    rw [show (d : ℝ) = ((|(↑↑p.1 : ℤ) ^ 11 - p.2 ^ 2| : ℤ) : ℝ) by exact_mod_cast hd_eq]; push_cast
-    linarith [abs_nonneg (((p.1 : ℕ) : ℝ) ^ 11 - (p.2 : ℝ) ^ 2),
-              abs_sub_comm (((p.1 : ℕ) : ℝ) ^ 11) ((p.2 : ℝ) ^ 2),
-              le_abs_self ((p.2 : ℝ) ^ 2 - ((p.1 : ℕ) : ℝ) ^ 11)]
+    rw [show (d : ℝ) = |((p.1 : ℕ) : ℝ) ^ 11 - (p.2 : ℝ) ^ 2| by exact_mod_cast hd_eq]
+    apply (sub_le_iff_le_add').mp
+    rw [abs_sub_comm]
+    exact le_abs_self _
   have hy_abs_pos : 0 < |(p.2 : ℝ)| := abs_pos.mpr (Int.cast_ne_zero.mpr hy_ne)
   have hx_ge1 : (1 : ℝ) ≤ ((p.1 : ℕ) : ℝ) := by exact_mod_cast hx_pos
   have hd_pos_real : (0 : ℝ) < (d : ℝ) := Nat.cast_pos.mpr hd_pos
-  have hX_pos : (0 : ℝ) < X := by linarith
+  have hX_pos : (0 : ℝ) < X := lt_trans zero_lt_two hX
   exact E2_x_fifth_le_of_max_bound K hK X hX_pos ((p.1 : ℕ) : ℝ) hx_ge1
     |(p.2 : ℝ)| hy_abs_pos (d : ℝ) hd_pos_real hd_le_X
     (by rw [sq_abs]; exact hysq_lt) (by rw [sq_abs]; exact hysq_le_d)
@@ -2635,19 +2626,21 @@ lemma E4_pos_fiber_ncard_le_two (X : ℝ) (hX : 4 < X) (x : ℕ+)
               (↑u : ℝ) ≤ Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)}.ncard := hvia
       _ ≤ 2 := ncard_pos_int_in_interval_lt_two _ _ hlen
 
-private def pos_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
+/-- Positive integer square roots in the interval determined by `X` and `x`. -/
+def posFiber (X : ℝ) (x : ℕ+) : Set ℤ :=
   {u : ℤ | 0 < u ∧ (↑u : ℝ) ^ 2 ≥ 5 * (↑↑x : ℝ) ^ 22 - 4 * X ∧
             (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}
 
-private def neg_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
+/-- Negative integer square roots in the interval determined by `X` and `x`. -/
+def negFiber (X : ℝ) (x : ℕ+) : Set ℤ :=
   {u : ℤ | u < 0 ∧ (↑u : ℝ) ^ 2 ≥ 5 * (↑↑x : ℝ) ^ 22 - 4 * X ∧
             (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}
 
 lemma neg_maps_to_pos (X : ℝ) (x : ℕ+) :
-    ∀ u ∈ neg_fiber X x, -u ∈ pos_fiber X x := by
+    ∀ u ∈ negFiber X x, -u ∈ posFiber X x := by
   intro u hu
-  simp only [neg_fiber, Set.mem_ofPred_eq] at hu
-  simp only [pos_fiber, Set.mem_ofPred_eq]
+  simp only [negFiber, Set.mem_ofPred_eq] at hu
+  simp only [posFiber, Set.mem_ofPred_eq]
   obtain ⟨hu_neg, hu_lb, hu_ub⟩ := hu
   refine ⟨neg_pos.mpr hu_neg, ?_, ?_⟩
   · rwa [Int.cast_neg, neg_sq]
@@ -2662,9 +2655,9 @@ private lemma int_abs_le_ceil_sqrt (y : ℤ) (M : ℝ) (_hM : 0 ≤ M)
     _ ≤ ↑⌈Real.sqrt M⌉ := Int.le_ceil _
 
 lemma pos_fiber_subset_Icc (X : ℝ) (x : ℕ+) :
-    pos_fiber X x ⊆ Set.Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉ := by
+    posFiber X x ⊆ Set.Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉ := by
   intro u hu
-  simp only [pos_fiber, Set.mem_ofPred_eq] at hu
+  simp only [posFiber, Set.mem_ofPred_eq] at hu
   obtain ⟨hu_pos, _, hu_sq_le⟩ := hu
   constructor
   · omega
@@ -2676,7 +2669,7 @@ lemma pos_fiber_subset_Icc (X : ℝ) (x : ℕ+) :
     rwa [abs_of_pos hu_pos] at h_abs
 
 lemma pos_fiber_finite (X : ℝ) (x : ℕ+) :
-    (pos_fiber X x).Finite := (Set.finite_Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉).subset
+    (posFiber X x).Finite := (Set.finite_Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉).subset
     (pos_fiber_subset_Icc X x)
 
 lemma E4_neg_fiber_ncard_le_pos_fiber (X : ℝ) (x : ℕ+) :
@@ -2686,7 +2679,7 @@ lemma E4_neg_fiber_ncard_le_pos_fiber (X : ℝ) (x : ℕ+) :
               (↑u : ℝ) ^ 2 ≤ 5 * (↑↑x : ℝ) ^ 22 + 4 * X}.ncard := by
   have h1 := neg_maps_to_pos X x
   have h2 := pos_fiber_finite X x
-  change (neg_fiber X x).ncard ≤ (pos_fiber X x).ncard
+  change (negFiber X x).ncard ≤ (posFiber X x).ncard
   exact Set.ncard_le_ncard_of_injOn Neg.neg
     (fun u hu => h1 u hu)
     (neg_injective.injOn)
@@ -3948,7 +3941,7 @@ lemma reduction_lemma_core (R : RamanujanTau) (habc : ABC) (h54 : Proposition54 
   obtain ⟨C₃, hC₃, X₃, hX₃, h_k3⟩ := k_ge3_contribution R h54
   obtain ⟨X₁, hX₁, h_k1⟩ := k1_contribution_abc R habc
   obtain ⟨X₂, hX₂, h_k2⟩ := k2_contribution_abc R habc
-  refine ⟨C₃ + 3, by linarith, max (max X₁ (max X₂ X₃)) 1, by positivity, ?_⟩
+  refine ⟨C₃ + 3, by positivity, max (max X₁ (max X₂ X₃)) 1, by positivity, ?_⟩
   intro X hX
   have hX_pos : 1 < X := lt_of_le_of_lt (le_max_right _ _) hX
   have hX1 : X₁ < X := lt_of_le_of_lt (le_max_of_le_left (le_max_left _ _)) hX
@@ -3960,24 +3953,21 @@ lemma reduction_lemma_core (R : RamanujanTau) (habc : ABC) (h54 : Proposition54 
   have hk1 := h_k1 X hX1
   have hk2 := h_k2 X hX2
   have hk3 := h_k3 X hX3
-  have h_one_le : (1 : ℝ) ≤ X ^ ((13 : ℝ) / 22) := by
-    rw [show (1 : ℝ) = 1 ^ ((13 : ℝ) / 22) by simp]
-    exact Real.rpow_le_rpow (by linarith) (le_of_lt hX_pos) (by positivity)
-  have hX_pos' : (0 : ℝ) < X := by linarith
+  have h_one_le : (1 : ℝ) ≤ X ^ ((13 : ℝ) / 22) :=
+    Real.one_le_rpow hX_pos.le (by norm_num)
+  have hX_pos' : (0 : ℝ) < X := lt_trans zero_lt_one hX_pos
   have hmul_nn : (0 : ℝ) ≤ X ^ ((1 : ℝ) / 2) * Real.log X :=
     mul_nonneg (Real.rpow_nonneg hX_pos'.le _) (Real.log_nonneg hX_pos.le)
-  set T := X ^ ((1 : ℝ) / 2) * Real.log X +
-    X ^ ((13 : ℝ) / 22) + X ^ ((6 : ℝ) / 11) +
-    (E2 X : ℝ) + (E4 X : ℝ)
   have hS_bound : (S R X : ℝ) ≤ 2 * X ^ ((13 : ℝ) / 22) + (E2 X : ℝ) + (E4 X : ℝ) +
-      X ^ ((6 : ℝ) / 11) + C₃ * (X ^ ((1 : ℝ) / 2) * Real.log X) := by linarith
-  have hT_def : T = X ^ ((1 : ℝ) / 2) * Real.log X + X ^ ((13 : ℝ) / 22) +
-    X ^ ((6 : ℝ) / 11) + (E2 X : ℝ) + (E4 X : ℝ) := rfl
-  nlinarith [mul_nonneg (le_of_lt hC₃) hmul_nn,
-             mul_nonneg (le_of_lt hC₃) (Real.rpow_nonneg hX_pos'.le ((13 : ℝ) / 22)),
-             mul_nonneg (le_of_lt hC₃) (Real.rpow_nonneg hX_pos'.le ((6 : ℝ) / 11)),
-             mul_nonneg (le_of_lt hC₃) (Nat.cast_nonneg (E2 X)),
-             mul_nonneg (le_of_lt hC₃) (Nat.cast_nonneg (E4 X))]
+      X ^ ((6 : ℝ) / 11) + C₃ * (X ^ ((1 : ℝ) / 2) * Real.log X) := by
+    linarith only [hS, hk1, hk2, hk3, h_one_le]
+  have h13 := Real.rpow_nonneg hX_pos'.le ((13 : ℝ) / 22)
+  have h6 := Real.rpow_nonneg hX_pos'.le ((6 : ℝ) / 11)
+  have hE2 : (0 : ℝ) ≤ E2 X := Nat.cast_nonneg _
+  have hE4 : (0 : ℝ) ≤ E4 X := Nat.cast_nonneg _
+  linarith only [hS_bound, hmul_nn, h13, h6, hE2, hE4,
+    mul_nonneg hC₃.le h13, mul_nonneg hC₃.le h6,
+    mul_nonneg hC₃.le hE2, mul_nonneg hC₃.le hE4]
 theorem reduction_lemma (habc : ABC) (h54 : Proposition54 R) :
     ∃ C : ℝ, 0 < C ∧ ∃ X₀ : ℝ, 0 < X₀ ∧
       ∀ X : ℝ, X₀ < X →
@@ -5061,12 +5051,12 @@ lemma abc_bound_E2_core (habc : ABC) (η : ℝ) (hη : 0 < η) :
   have hε_pos : (0 : ℝ) < ε := by positivity
   have hε_le_tenth : ε ≤ 1/10 := min_le_left _ _
   have hε_le_eta4 : ε ≤ η/4 := min_le_right _ _
-  have hε_lt : ε < 9/13 := by linarith
+  have hε_lt : ε < 9/13 := by linarith only [hε_le_tenth]
   obtain ⟨Cx, hCx_pos, X₁, hX₁_pos, hxbound⟩ := E2_x_bound_from_abc habc ε hε_pos hε_lt
   set exp := ((4 : ℝ) + 2 * ε) / (9 - 13 * ε) with hexp_def
   have hexp_strict : exp < (4 : ℝ) / 9 + η :=
     exponent_comparison_strict η ε hη hε_pos hε_le_eta4 hε_le_tenth
-  have hCx1_pos : (0 : ℝ) < Cx + 1 := by linarith
+  have hCx1_pos : (0 : ℝ) < Cx + 1 := by positivity
   obtain ⟨X₂, hX₂_pos, hCx_absorb⟩ := eventually_rpow_ge_const hCx1_pos hexp_strict
   refine ⟨8, by positivity, max (max X₁ X₂) 3, by positivity, fun X hX => ?_⟩
   have hX₁_lt : X₁ < X :=
@@ -5074,16 +5064,17 @@ lemma abc_bound_E2_core (habc : ABC) (η : ℝ) (hη : 0 < η) :
   have hX₂_lt : X₂ < X :=
     lt_of_le_of_lt (le_trans (le_max_right _ _) (le_max_left _ _)) hX
   have hX3 : (3 : ℝ) ≤ X := le_of_lt (lt_of_le_of_lt (le_max_right _ _) hX)
-  have hX2 : (2 : ℝ) < X := by linarith
-  have hX_pos : (0 : ℝ) < X := by linarith
+  have hX2 : (2 : ℝ) < X := by linarith only [hX3]
+  have hX_pos : (0 : ℝ) < X := lt_trans zero_lt_two hX2
   have hB_pos : (0 : ℝ) < Cx * X ^ exp := by positivity
   have step1 := E2_ncard_le_via_fibers X (Cx * X ^ exp)
     hX2 hB_pos (E2_fiber_bound X hX2) (hxbound X hX₁_lt)
   have hCx_le : Cx + 1 ≤ X ^ ((4 : ℝ) / 9 + η - exp) := hCx_absorb X hX₂_lt
   have hkey : (Cx + 1) * X ^ exp ≤ X ^ ((4 : ℝ) / 9 + η) :=
     rpow_diff_mul_rpow_le hX_pos hCx_le
-  have hexp_nonneg : (0 : ℝ) ≤ exp := div_nonneg (by linarith) (by linarith)
-  have hXexp_ge1 : (1 : ℝ) ≤ X ^ exp := Real.one_le_rpow (by linarith) hexp_nonneg
+  have hexp_nonneg : (0 : ℝ) ≤ exp :=
+    div_nonneg (by linarith only [hε_pos]) (by linarith only [hε_lt])
+  have hXexp_ge1 : (1 : ℝ) ≤ X ^ exp := Real.one_le_rpow (by linarith only [hX3]) hexp_nonneg
   calc (E2 X : ℝ)
       ≤ 4 * (Cx * X ^ exp + 1) := step1
     _ ≤ 4 * (Cx * X ^ exp + 1 * X ^ exp) := by
@@ -5092,7 +5083,8 @@ lemma abc_bound_E2_core (habc : ABC) (η : ℝ) (hη : 0 < η) :
     _ = 4 * ((Cx + 1) * X ^ exp) := by ring
     _ ≤ 4 * X ^ ((4 : ℝ) / 9 + η) := by gcongr
     _ ≤ 8 * X ^ ((4 : ℝ) / 9 + η) := by
-      nlinarith [Real.rpow_nonneg (le_of_lt hX_pos) ((4 : ℝ) / 9 + η)]
+      exact mul_le_mul_of_nonneg_right (by norm_num : (4 : ℝ) ≤ 8)
+        (Real.rpow_nonneg hX_pos.le _)
 theorem abc_bound_E2 (habc : ABC) (η : ℝ) (hη : 0 < η) :
     ∃ C : ℝ, 0 < C ∧ ∃ X₀ : ℝ, 0 < X₀ ∧
       ∀ X : ℝ, X₀ < X →

@@ -3,7 +3,9 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.Order.Monoid.NatCast
 import Mathlib.Algebra.Ring.Nat
@@ -13,6 +15,8 @@ import Mathlib.Algebra.Ring.Nat
 
 These are used when proving the subsum condition in the odd case.
 -/
+
+@[expose] public section
 
 
 namespace Nat

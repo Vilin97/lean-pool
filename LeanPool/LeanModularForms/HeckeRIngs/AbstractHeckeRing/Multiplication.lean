@@ -3,8 +3,20 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Basic
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Basic
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
+public import Mathlib.Order.CompletePartialOrder
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Finsupp.SMulWithZero
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Hecke Rings: Multiplication
@@ -13,6 +25,8 @@ Shimura's multiplicity `heckeMultiplicity`, the multiplication finsupp `m`, the 
 on `𝕋 P ℤ`,
 and the `NonUnitalNonAssocSemiring` instance. Proves that `HeckeCoset.one` is the identity element.
 -/
+
+@[expose] public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 
@@ -109,8 +123,8 @@ of their product `H(σ_i τ_j)H`. -/
 noncomputable def mulMap (g₁ g₂ : P.Δ)
     (i : decompQuot P g₁ × decompQuot P g₂) : HeckeCoset P :=
   ⟦⟨i.1.out * g₁ * (i.2.out * g₂),
-    Submonoid.mul_mem _ (mul_mem_delta P.H P.Δ i.1.out g₁ P.h₀)
-      (mul_mem_delta P.H P.Δ i.2.out g₂ P.h₀)⟩⟧
+    Submonoid.mul_mem _ (by exact mul_mem_delta P.H P.Δ i.1.out g₁ P.h₀)
+      (by exact mul_mem_delta P.H P.Δ i.2.out g₂ P.h₀)⟩⟧
 
 /-- Shimura's multiplicity (Proposition 3.2): `heckeMultiplicity(g₁, g₂, d)` counts pairs
 `(i,j)` such that `σᵢ τⱼ H = ξ H`. -/

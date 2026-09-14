@@ -6,8 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.MeasureTheory.Measure.Prokhorov
 public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import Mathlib.MeasureTheory.Measure.Prokhorov
 
 /-!
 # The tau functional

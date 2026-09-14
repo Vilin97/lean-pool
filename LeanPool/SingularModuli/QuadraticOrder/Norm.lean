@@ -3,8 +3,9 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Basic
+public import LeanPool.SingularModuli.QuadraticOrder.Basic
 
 /-!
 # The norm form on `O_d`
@@ -28,6 +29,8 @@ which exhibit `N` as an honest multiplicative norm `α ↦ α·alphaConj`. The e
 agrees with the thesis; the route via `tauConj` is a Lean-idiomatic
 reformulation.
 -/
+
+@[expose] public section
 
 namespace QuadraticOrder
 

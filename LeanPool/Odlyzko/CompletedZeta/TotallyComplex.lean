@@ -5,8 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.GammaFactor
-public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+public import LeanPool.Odlyzko.CompletedZeta.Defs
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
+import LeanPool.Odlyzko.CompletedZeta.GammaFactor
 
 /-! TODO: Add doc-string. -/
 

@@ -9,9 +9,12 @@ public import LeanPool.MisereGames.GameGraph
 public import LeanPool.MisereGames.Misere.Stride
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Linarith
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 Misere combinatorial games.

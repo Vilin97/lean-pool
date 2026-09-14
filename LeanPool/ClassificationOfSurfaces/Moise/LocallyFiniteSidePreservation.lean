@@ -3,7 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFinitePLApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFinitePLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.PLApproximation
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Side preservation for locally finite face fillings
@@ -13,6 +17,8 @@ replacement polygon.  This file propagates that information along every replacem
 argument is the same connected-side argument used in Moise Chapter 6: an edge can cross a
 polygonal boundary only where the corresponding abstract edge meets the face.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

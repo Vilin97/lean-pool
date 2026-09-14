@@ -3,33 +3,20 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.Order.Interval.Finset.Defs
-import Mathlib.MeasureTheory.MeasurableSpace.Instances
-import Mathlib.MeasureTheory.Function.L1Space.Integrable
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.Topology.Defs.Basic
-import Mathlib.Topology.UniformSpace.Matrix
-import Mathlib.Topology.MetricSpace.Contracting
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Logic.Function.Defs
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Topology.MetricSpace.ProperSpace
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.Topology.UniformSpace.Cauchy
-import Mathlib.Topology.Bornology.Basic
-import Mathlib.Topology.Sequences
-import Mathlib.Analysis.Normed.Lp.WithLp
-import Mathlib.Analysis.Normed.Lp.PiLp
-import Mathlib.Analysis.Convex.StdSimplex
+module
 
-import Mathlib.NumberTheory.FrobeniusNumber
-import LeanPool.RlTheoryInLean.Data.Matrix.Mul
+public import Mathlib.Topology.MetricSpace.Contracting
+public import Mathlib.Analysis.Normed.Lp.PiLp
+
+public import Mathlib.NumberTheory.FrobeniusNumber
+import Mathlib.Analysis.RCLike.Lemmas
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
 -/
+
+@[expose] public section
 
 open Finset NNReal WithLp Matrix PiLp Nat ContractingWith Metric Bornology Filter Function
 open scoped BigOperators

@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.KContinuity
+module
+
+public import LeanPool.Feige.KContinuity
 import LeanPool.Feige.TransferProbability
 
 /-!
@@ -15,6 +17,8 @@ coordinates.  This file supplies the atomlessness calculation for the
 nonnegative exponential law and then applies the product decomposition of a
 finite `Option`-indexed product.
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory ProbabilityTheory Set

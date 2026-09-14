@@ -3,17 +3,20 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Hierarchy
-import Mathlib.Algebra.MvPolynomial.Funext
-import Mathlib.Algebra.MvPolynomial.Monad
-import Mathlib.Analysis.InnerProductSpace.TensorProduct
+public import LeanPool.MetricCodes.Hierarchy
+public import Mathlib.Algebra.MvPolynomial.Funext
+public import Mathlib.Algebra.MvPolynomial.Monad
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
 
 /-!
 # Representation-theoretic foundations
 
 Associated Gegenbauer systems, harmonic Young spaces, and higher projection graphs.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -28,7 +31,9 @@ open scoped BigOperators Nat
 
 namespace AssociatedGegenbauer
 
-private def normalizedSequence (n : ℕ) (hn : 2 ≤ n) : Polynomial.Sequence ℝ where
+/-- The normalized Gegenbauer polynomials bundled as a polynomial sequence with degree equal to
+the index. -/
+def normalizedSequence (n : ℕ) (hn : 2 ≤ n) : Polynomial.Sequence ℝ where
   elems' := SpherePacking.Gegenbauer.normalized n
   degree_eq' := by
     intro i
@@ -46,7 +51,8 @@ theorem normalizedSequence_leadingCoeff_isUnit
   exact Polynomial.leadingCoeff_ne_zero.mpr
     (Polynomial.Sequence.ne_zero (normalizedSequence n hn) i)
 
-private def normalizedBasis (n : ℕ) (hn : 2 ≤ n) :
+/-- The basis of real polynomials given by the normalized Gegenbauer sequence. -/
+def normalizedBasis (n : ℕ) (hn : 2 ≤ n) :
     Basis ℕ ℝ (Polynomial ℝ) :=
   (normalizedSequence n hn).basis
     (normalizedSequence_leadingCoeff_isUnit n hn)
@@ -56,11 +62,14 @@ def coefficient (n : ℕ) (hn : 2 ≤ n)
     (r : ℕ) (p : Polynomial ℝ) : ℝ :=
   ((normalizedBasis n hn).repr p) r
 
-private def derivativeValue (n i j : ℕ) (t : ℝ) : ℝ :=
+/-- Evaluate the `j`th derivative of the degree-`i` normalized Gegenbauer polynomial at `t`. -/
+def derivativeValue (n i j : ℕ) (t : ℝ) : ℝ :=
   ((Polynomial.derivative^[j])
     (SpherePacking.Gegenbauer.normalized n i)).eval t
 
-private def generatorTerm (n i k : ℕ) (t : ℝ) (l : ℕ) : Polynomial ℝ :=
+/-- The `l`th shifted-power term in the associated Gegenbauer generator, with its derivative and
+combinatorial coefficient. -/
+def generatorTerm (n i k : ℕ) (t : ℝ) (l : ℕ) : Polynomial ℝ :=
   Polynomial.C
     (((k.choose l : ℕ) : ℝ) ^ 2 *
       (l.factorial : ℝ) *
@@ -68,7 +77,8 @@ private def generatorTerm (n i k : ℕ) (t : ℝ) (l : ℕ) : Polynomial ℝ :=
       derivativeValue n i (2 * k - l) t) *
     (Polynomial.C t + Polynomial.X) ^ l
 
-private def generator (n i k : ℕ) (t : ℝ) : Polynomial ℝ :=
+/-- The sum of the generator terms normalized by `k!` times the `k`th derivative at one. -/
+def generator (n i k : ℕ) (t : ℝ) : Polynomial ℝ :=
   Polynomial.C
       (((k.factorial : ℝ) * derivativeValue n i k 1)⁻¹) *
     ∑ l ∈ Finset.range (k + 1), generatorTerm n i k t l
@@ -471,7 +481,8 @@ def polarization (r n : ℕ) (i j : Fin (r + 1)) :
     {r n : ℕ} (i : Fin (r + 1)) :
     polarization r n i i = rowEuler r n i := rfl
 
-private def rowWeightSubmodule {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
+/-- The simultaneous row-Euler eigenspace with eigenvalues specified by `lam`. -/
+def rowWeightSubmodule {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
     Submodule ℝ (PolynomialSpace r n) :=
   ⨅ i : Fin (r + 1),
     (rowEuler r n i - (lam i : ℝ) • LinearMap.id).ker
@@ -495,7 +506,8 @@ def traceFreeSubmodule (r n : ℕ) :
       ∀ i j : Fin (r + 1), traceOperator r n i j p = 0 := by
   simp only [traceFreeSubmodule, Submodule.mem_iInf, LinearMap.mem_ker, traceOperator_apply]
 
-private def highestWeightSubmodule (r n : ℕ) :
+/-- The intersection of the kernels of the upper-row polarization operators. -/
+def highestWeightSubmodule (r n : ℕ) :
     Submodule ℝ (PolynomialSpace r n) :=
   ⨅ i : Fin (r + 1), ⨅ j : Fin (r + 1), ⨅ (_ : i < j),
     (polarization r n i j).ker
@@ -544,10 +556,12 @@ instance harmonicYoungSpace_finiteDimensional
       (Fin ((r + 1) * n)) ℝ (∑ i, lam i) =>
         (z : PolynomialSpace r n)) hpq
 
-private abbrev RowEuclideanSpace (r n : ℕ) :=
+/-- The Euclidean product of `r + 1` rows, each with `n` coordinates. -/
+abbrev RowEuclideanSpace (r n : ℕ) :=
   PiLp 2 (fun _ : Fin (r + 1) => SpherePacking.Euclidean n)
 
-private def rowEuclideanEquiv (r n : ℕ) :
+/-- The isometry regrouping a flat Euclidean coordinate vector into its rows. -/
+def rowEuclideanEquiv (r n : ℕ) :
     SpherePacking.Euclidean ((r + 1) * n) ≃ₗᵢ[ℝ]
       RowEuclideanSpace r n :=
   (LinearIsometryEquiv.piLpCongrLeft 2 ℝ ℝ
@@ -570,7 +584,8 @@ theorem rowEuclideanEquiv_symm_apply
     ((rowEuclideanEquiv r n).apply_symm_apply x)
   simpa only [rowEuclideanEquiv_apply] using h
 
-private def blockIsometry {r n : ℕ}
+/-- Apply the same Euclidean isometry independently to every row of a flat coordinate vector. -/
+def blockIsometry {r n : ℕ}
     (U : SpherePacking.Euclidean n ≃ₗᵢ[ℝ]
       SpherePacking.Euclidean n) :
     SpherePacking.Euclidean ((r + 1) * n) ≃ₗᵢ[ℝ]
@@ -646,14 +661,17 @@ theorem blockIsometry_single
   · rw [row_of_single_ne i h j heq, map_zero]
     rfl
 
-private def polynomialAction {r n : ℕ}
+/-- The polynomial algebra action induced by applying the orthogonal transformation to every
+row. -/
+def polynomialAction {r n : ℕ}
     (U : SpherePacking.Euclidean n ≃ₗᵢ[ℝ]
       SpherePacking.Euclidean n) :
     PolynomialSpace r n ≃ₐ[ℝ] PolynomialSpace r n :=
   MetricCodes.Spherical.OrthogonalPolynomialTransport.polynomialEquiv
     (blockIsometry (r := r) U)
 
-private def rowVector {r n : ℕ} (i : Fin (r + 1))
+/-- Embed a Euclidean vector into row `i`, with every other row zero. -/
+def rowVector {r n : ℕ} (i : Fin (r + 1))
     (v : SpherePacking.Euclidean n) :
     SpherePacking.Euclidean ((r + 1) * n) :=
   (rowEuclideanEquiv r n).symm (PiLp.single 2 i v)
@@ -830,7 +848,8 @@ theorem youngHomogeneousEmbedding_injective {r n : ℕ}
     (fun z : SpherePacking.Fischer.Homogeneous ((r + 1) * n) (∑ i, lam i) =>
       (z : PolynomialSpace r n)) h
 
-private def youngCoefficientEmbedding {r n : ℕ}
+/-- The Fischer coefficient embedding restricted to the harmonic Young space of weight `lam`. -/
+def youngCoefficientEmbedding {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) lam →ₗ[ℝ]
       SpherePacking.Fischer.CoefficientSpace
@@ -846,7 +865,8 @@ theorem youngCoefficientEmbedding_injective {r n : ℕ}
     ((r + 1) * n) (∑ i, lam i)).comp
       (youngHomogeneousEmbedding_injective lam)
 
-private def youngFischerInner {r n : ℕ}
+/-- The Fischer inner product of harmonic Young polynomials through their homogeneous embedding. -/
+def youngFischerInner {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (p q : HarmonicYoungSpace (n := n) lam) : ℝ :=
   SpherePacking.Fischer.homogeneousInner
@@ -865,7 +885,9 @@ theorem youngFischerInner_eq_polynomialInner {r n : ℕ}
       (youngHomogeneousEmbedding lam p)
       (youngHomogeneousEmbedding lam q)
 
-@[implicit_reducible] private def youngFischerCore {r n : ℕ}
+/-- The inner product core on the harmonic Young space induced by its injective coefficient
+embedding. -/
+@[implicit_reducible] def youngFischerCore {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     InnerProductSpace.Core ℝ (HarmonicYoungSpace (n := n) lam) :=
   SpherePacking.Fischer.embeddingInnerCore
@@ -1087,7 +1109,9 @@ theorem polynomialAction_symm_apply_apply {r n : ℕ}
   exact DFunLike.congr_fun hcomp p
 
 
-private def youngOrthogonalLinearEquiv {r n : ℕ}
+/-- The linear equivalence on harmonic Young space induced by the rowwise orthogonal polynomial
+action. -/
+def youngOrthogonalLinearEquiv {r n : ℕ}
     (U : SpherePacking.Euclidean n ≃ₗᵢ[ℝ]
       SpherePacking.Euclidean n)
     (lam : Fin (r + 1) → ℕ) :
@@ -1131,14 +1155,18 @@ section
 
 open scoped BigOperators InnerProductSpace
 
-private def youngCoefficientRange {r n : ℕ}
+/-- The subspace of Fischer coefficients arising from harmonic Young polynomials of weight
+`lam`. -/
+def youngCoefficientRange {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     Submodule ℝ
       (SpherePacking.Fischer.CoefficientSpace
         ((r + 1) * n) (∑ i, lam i)) :=
   LinearMap.range (youngCoefficientEmbedding lam)
 
-private def youngProjection {r n : ℕ}
+/-- Project coefficient space orthogonally onto the harmonic Young coefficient range and recover
+its polynomial. -/
+def youngProjection {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     SpherePacking.Fischer.CoefficientSpace
         ((r + 1) * n) (∑ i, lam i) →ₗ[ℝ]
@@ -1232,7 +1260,8 @@ def projectedCoordinateLower {r n : ℕ}
   (youngHomogeneousProjection mu).comp
     (rowDirectionalHomogeneous mu lam hdeg i v)
 
-private def youngCoefficientIsometry {r n : ℕ}
+/-- The harmonic Young coefficient embedding bundled as a linear isometry. -/
+def youngCoefficientIsometry {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) lam →ₗᵢ[ℝ]
       SpherePacking.Fischer.CoefficientSpace
@@ -1299,7 +1328,8 @@ theorem youngHomogeneousProjection_inner {r n : ℕ}
   exact SpherePacking.Fischer.homogeneousInner_eq_polynomialInner
     ((r + 1) * n) (∑ i, lam i) v (youngHomogeneousEmbedding lam p)
 
-private def youngHomogeneousAction {r n : ℕ}
+/-- The rowwise orthogonal polynomial action restricted to homogeneous degree `k`. -/
+def youngHomogeneousAction {r n : ℕ}
     (U : SpherePacking.Euclidean n ≃ₗᵢ[ℝ]
       SpherePacking.Euclidean n)
     (k : ℕ) :
@@ -2129,7 +2159,8 @@ namespace HigherRepresentationGraph
 /-- The ambient weight used in the spherical-code argument. -/
 abbrev AmbientWeight (r : ℕ) := Fin (r + 1) → ℕ
 
-private abbrev StabilizerWeight (r : ℕ) := Fin r → ℕ
+/-- A stabilizer weight with `r` natural-number coordinates. -/
+abbrev StabilizerWeight (r : ℕ) := Fin r → ℕ
 
 /-- The interlaces used in the spherical-code argument. -/
 def Interlaces {r : ℕ}
@@ -2159,7 +2190,9 @@ def raise {r : ℕ} (lam : AmbientWeight r)
     (i : Fin (r + 1)) : AmbientWeight r :=
   fun j => if j = i then lam j + 1 else lam j
 
-private def Adjacent {r : ℕ} (lam ν : AmbientWeight r) : Prop :=
+/-- Adjacency of ambient weights when either is obtained from the other by raising one
+coordinate. -/
+def Adjacent {r : ℕ} (lam ν : AmbientWeight r) : Prop :=
   ∃ i : Fin (r + 1), ν = raise lam i ∨ lam = raise ν i
 
 theorem Adjacent.symm {r : ℕ} {lam ν : AmbientWeight r}
@@ -2575,7 +2608,8 @@ theorem weight_pos (i : I) : 0 < A.weight i := by
     (Real.sqrt_pos.2 (by exact_mod_cast A.dimension_pos i))
     (A.eigenvector_pos i)
 
-private def normalization : ℝ := ∑ i, A.weight i
+/-- The sum of the positive vertex weights used to normalize the graph amplitudes. -/
+def normalization : ℝ := ∑ i, A.weight i
 
 theorem normalization_pos [Nonempty I] : 0 < A.normalization := by
   unfold normalization
@@ -2656,7 +2690,8 @@ theorem weighted_eigenvector_equation (source : I) :
                   A.eigenvector source)
           ring
 
-private def amplitude (i : I) : ℝ :=
+/-- The square root of the vertex weight divided by the total weight. -/
+def amplitude (i : I) : ℝ :=
   Real.sqrt (A.weight i / A.normalization)
 
 theorem amplitude_pos [Nonempty I] (i : I) : 0 < A.amplitude i := by
@@ -2710,7 +2745,8 @@ theorem fibre_orthogonal {i j : I} (hij : i ≠ j) (x y : X) :
             simp only [Matrix.mul_assoc]
     _ = 0 := by rw [A.block_orthogonal i j hij]; simp only [Matrix.zero_mul, Matrix.mul_zero]
 
-private def combinedFibre (x : X) : Matrix (Fin D) (Fin d) ℝ :=
+/-- The sum of the fibre matrices weighted by their normalized amplitudes. -/
+def combinedFibre (x : X) : Matrix (Fin D) (Fin d) ℝ :=
   ∑ i, A.amplitude i • A.fibre i x
 
 private theorem weighted_matrix_transpose_mul_metriccodes2_81758290
@@ -2745,7 +2781,8 @@ theorem combinedFibre_isometry [Nonempty I] (x : X) :
     one_smul] using
     congrArg (fun r : ℝ => r • (1 : Matrix (Fin d) (Fin d) ℝ)) hsum
 
-private def combinedProjection (x : X) : Matrix (Fin D) (Fin D) ℝ :=
+/-- The projection matrix obtained by multiplying the combined fibre matrix by its transpose. -/
+def combinedProjection (x : X) : Matrix (Fin D) (Fin D) ℝ :=
   A.combinedFibre x * (A.combinedFibre x)ᵀ
 
 theorem combinedProjection_symmetric (x : X) :
@@ -2767,13 +2804,16 @@ theorem combinedProjection_trace [Nonempty I] (x : X) :
     Matrix.trace_one]
   simp only [Fintype.card_fin]
 
-private def projectionFamily [Nonempty I] : MetricCodes.ProjectionFamily X D d where
+/-- The projection family assembled from the weighted orthogonal fibres. -/
+def projectionFamily [Nonempty I] : MetricCodes.ProjectionFamily X D d where
   projection := A.combinedProjection
   symmetric := A.combinedProjection_symmetric
   idempotent := A.combinedProjection_idempotent
   trace_eq := A.combinedProjection_trace
 
-private def edgeCoefficient (target source : I) : ℝ :=
+/-- The edge-channel coefficient scaled by the target-to-source amplitude ratio and the square
+root of the eigenvalue. -/
+def edgeCoefficient (target source : I) : ℝ :=
   Real.sqrt (A.probability target source) * A.amplitude target /
     (Real.sqrt A.eigenvalue * A.amplitude source)
 
@@ -2794,7 +2834,8 @@ theorem edgeCoefficient_sq_sum [Nonempty I] (source : I) :
     (mul_ne_zero A.eigenvalue_pos.ne'
       (pow_ne_zero _ (A.amplitude_pos source).ne'))
 
-private def assembledChannel : Matrix (Fin Q) (Fin D) ℝ :=
+/-- The sum of all edge channels weighted by their edge coefficients. -/
+def assembledChannel : Matrix (Fin Q) (Fin D) ℝ :=
   ∑ e : I × I, A.edgeCoefficient e.1 e.2 • A.channel e.1 e.2
 
 theorem edgeCoefficient_smul_channelGram
@@ -3039,7 +3080,8 @@ theorem remainder_transpose_mul [Nonempty I] (x y : X) :
           (A.combinedProjection x * A.combinedProjection y) i j := by ring
     _ = _ := by rw [hroot]
 
-private def matrixFeature (M : Matrix (Fin Q) (Fin D) ℝ) :
+/-- The Euclidean vector of matrix entries used for the graph's Hilbert–Schmidt features. -/
+def matrixFeature (M : Matrix (Fin Q) (Fin D) ℝ) :
     EuclideanSpace ℝ (Fin Q × Fin D) :=
   WithLp.toLp 2 (fun i : Fin Q × Fin D => M i.1 i.2)
 
@@ -3052,7 +3094,8 @@ theorem matrixFeature_inner (M N : Matrix (Fin Q) (Fin D) ℝ) :
     Matrix.transpose_apply, Fintype.sum_prod_type]
   rw [Finset.sum_comm]
 
-private def remainderFeature (x : X) :
+/-- The Euclidean matrix-entry feature of the graph remainder at `x`. -/
+def remainderFeature (x : X) :
     EuclideanSpace ℝ (Fin Q × Fin D) :=
   matrixFeature (A.remainder x)
 
@@ -3179,13 +3222,16 @@ variable [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 variable [NormedAddCommGroup F] [InnerProductSpace ℝ F]
   [FiniteDimensional ℝ F]
 
-private abbrev euclideanBasis_metriccodes2_851911c7 (T : Type*)
+/-- The standard orthonormal basis indexed by the finite dimension of the real inner product
+space. -/
+abbrev euclideanBasis (T : Type*)
     [NormedAddCommGroup T] [InnerProductSpace ℝ T]
     [FiniteDimensional ℝ T] :
     OrthonormalBasis (Fin (Module.finrank ℝ T)) ℝ T :=
   stdOrthonormalBasis ℝ T
 
-private def coordinateMatrix_metriccodes2_851911c7 {U T : Type*}
+/-- The matrix of a linear map in the standard orthonormal bases of its source and target. -/
+def coordinateMatrix {U T : Type*}
     [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     [FiniteDimensional ℝ U]
     [NormedAddCommGroup T] [InnerProductSpace ℝ T]
@@ -3193,8 +3239,8 @@ private def coordinateMatrix_metriccodes2_851911c7 {U T : Type*}
     (f : U →ₗ[ℝ] T) :
     Matrix (Fin (Module.finrank ℝ T))
       (Fin (Module.finrank ℝ U)) ℝ :=
-  LinearMap.toMatrix (euclideanBasis_metriccodes2_851911c7 U).toBasis
-    (euclideanBasis_metriccodes2_851911c7 T).toBasis f
+  LinearMap.toMatrix (euclideanBasis U).toBasis
+    (euclideanBasis T).toBasis f
 
 private theorem coordinateMatrix_adjoint_metriccodes2_851911c7 {U T : Type*}
     [NormedAddCommGroup U] [InnerProductSpace ℝ U]
@@ -3202,12 +3248,12 @@ private theorem coordinateMatrix_adjoint_metriccodes2_851911c7 {U T : Type*}
     [NormedAddCommGroup T] [InnerProductSpace ℝ T]
     [FiniteDimensional ℝ T]
     (f : U →ₗ[ℝ] T) :
-    coordinateMatrix_metriccodes2_851911c7 f.adjoint = (coordinateMatrix_metriccodes2_851911c7
+    coordinateMatrix f.adjoint = (coordinateMatrix
       f)ᵀ := by
-  simpa only [coordinateMatrix_metriccodes2_851911c7,
+  simpa only [coordinateMatrix,
     Matrix.conjTranspose_eq_transpose_of_trivial] using
-    LinearMap.toMatrix_adjoint (euclideanBasis_metriccodes2_851911c7 U)
-      (euclideanBasis_metriccodes2_851911c7 T) f
+    LinearMap.toMatrix_adjoint (euclideanBasis U)
+      (euclideanBasis T) f
 
 private theorem coordinateMatrix_comp_metriccodes2_851911c7 {U T Z : Type*}
     [NormedAddCommGroup U] [InnerProductSpace ℝ U]
@@ -3217,18 +3263,18 @@ private theorem coordinateMatrix_comp_metriccodes2_851911c7 {U T Z : Type*}
     [NormedAddCommGroup Z] [InnerProductSpace ℝ Z]
     [FiniteDimensional ℝ Z]
     (f : T →ₗ[ℝ] Z) (g : U →ₗ[ℝ] T) :
-    coordinateMatrix_metriccodes2_851911c7 (f.comp g) =
-      coordinateMatrix_metriccodes2_851911c7 f * coordinateMatrix_metriccodes2_851911c7 g := by
+    coordinateMatrix (f.comp g) =
+      coordinateMatrix f * coordinateMatrix g := by
   exact LinearMap.toMatrix_comp
-    (euclideanBasis_metriccodes2_851911c7 U).toBasis (euclideanBasis_metriccodes2_851911c7
+    (euclideanBasis U).toBasis (euclideanBasis
       T).toBasis
-    (euclideanBasis_metriccodes2_851911c7 Z).toBasis f g
+    (euclideanBasis Z).toBasis f g
 
 private theorem coordinateMatrix_id_metriccodes2_851911c7 {T : Type*}
     [NormedAddCommGroup T] [InnerProductSpace ℝ T]
     [FiniteDimensional ℝ T] :
-    coordinateMatrix_metriccodes2_851911c7 (LinearMap.id : T →ₗ[ℝ] T) = 1 := by
-  exact LinearMap.toMatrix_id (euclideanBasis_metriccodes2_851911c7 T).toBasis
+    coordinateMatrix (LinearMap.id : T →ₗ[ℝ] T) = 1 := by
+  exact LinearMap.toMatrix_id (euclideanBasis T).toBasis
 
 /-- The to finite data used in the spherical-code argument. -/
 def toFiniteData (G : RealizedHilbertGraph I X E V F) :
@@ -3237,28 +3283,28 @@ def toFiniteData (G : RealizedHilbertGraph I X E V F) :
       (Module.finrank ℝ F) where
   dimension := G.dimension
   dimension_pos := G.dimension_pos
-  block i := coordinateMatrix_metriccodes2_851911c7 (G.block i)
+  block i := coordinateMatrix (G.block i)
   block_symmetric i := by
     rw [← coordinateMatrix_adjoint_metriccodes2_851911c7, G.block_adjoint]
   block_idempotent i := by
     rw [← coordinateMatrix_comp_metriccodes2_851911c7, G.block_idempotent]
   block_orthogonal i j hij := by
     rw [← coordinateMatrix_comp_metriccodes2_851911c7, G.block_orthogonal i j hij]
-    simp only [coordinateMatrix_metriccodes2_851911c7, map_zero]
+    simp only [coordinateMatrix, map_zero]
   block_complete := by
     change
       (∑ i, LinearMap.toMatrix
-        (euclideanBasis_metriccodes2_851911c7 V).toBasis (euclideanBasis_metriccodes2_851911c7
+        (euclideanBasis V).toBasis (euclideanBasis
           V).toBasis
         (G.block i)) = 1
     rw [← map_sum, G.block_complete,
       LinearMap.toMatrix_id]
   block_trace i := by
-    unfold coordinateMatrix_metriccodes2_851911c7
+    unfold coordinateMatrix
     rw [← LinearMap.trace_eq_matrix_trace ℝ
-      (euclideanBasis_metriccodes2_851911c7 V).toBasis]
+      (euclideanBasis V).toBasis]
     exact G.block_trace i
-  fibre i x := coordinateMatrix_metriccodes2_851911c7 (G.fibre i x).toLinearMap
+  fibre i x := coordinateMatrix (G.fibre i x).toLinearMap
   fibre_isometry i x := by
     rw [← coordinateMatrix_adjoint_metriccodes2_851911c7, ←
       coordinateMatrix_comp_metriccodes2_851911c7,
@@ -3266,37 +3312,37 @@ def toFiniteData (G : RealizedHilbertGraph I X E V F) :
   fibre_support i x := by
     rw [← coordinateMatrix_comp_metriccodes2_851911c7, G.fibre_support]
   correlation := G.correlation
-  axis x := coordinateMatrix_metriccodes2_851911c7 (G.axis x)
+  axis x := coordinateMatrix (G.axis x)
   axis_inner x y := by
     rw [← coordinateMatrix_adjoint_metriccodes2_851911c7, ←
       coordinateMatrix_comp_metriccodes2_851911c7,
       G.axis_inner]
     change
-      LinearMap.toMatrix (euclideanBasis_metriccodes2_851911c7 V).toBasis
-        (euclideanBasis_metriccodes2_851911c7 V).toBasis
+      LinearMap.toMatrix (euclideanBasis V).toBasis
+        (euclideanBasis V).toBasis
         (G.correlation x y • (LinearMap.id : V →ₗ[ℝ] V)) = _
     rw [map_smul, LinearMap.toMatrix_id]
   probability := G.probability
   probability_nonneg := G.probability_nonneg
   balance := G.balance
   channel target source :=
-    coordinateMatrix_metriccodes2_851911c7 (G.channel target source)
+    coordinateMatrix (G.channel target source)
   channel_isometry target source := by
     rw [← coordinateMatrix_adjoint_metriccodes2_851911c7, ←
       coordinateMatrix_comp_metriccodes2_851911c7,
       G.channel_isometry]
-    split_ifs <;> simp [coordinateMatrix_metriccodes2_851911c7]
+    split_ifs <;> simp [coordinateMatrix]
   channel_orthogonal target source target' source' h := by
     rw [← coordinateMatrix_adjoint_metriccodes2_851911c7, ←
       coordinateMatrix_comp_metriccodes2_851911c7,
       G.channel_orthogonal target source target' source' h]
-    simp only [coordinateMatrix_metriccodes2_851911c7, map_zero]
+    simp only [coordinateMatrix, map_zero]
   channel_axis target source j x := by
     rw [← coordinateMatrix_adjoint_metriccodes2_851911c7, ←
       coordinateMatrix_comp_metriccodes2_851911c7,
       ← coordinateMatrix_comp_metriccodes2_851911c7, LinearMap.comp_assoc,
       G.channel_axis]
-    split_ifs <;> simp [coordinateMatrix_metriccodes2_851911c7]
+    split_ifs <;> simp [coordinateMatrix]
   eigenvalue := G.eigenvalue
   eigenvalue_pos := G.eigenvalue_pos
   eigenvector := G.eigenvector
@@ -3306,7 +3352,8 @@ def toFiniteData (G : RealizedHilbertGraph I X E V F) :
 
 end RealizedHilbertGraph
 
-private def codePoints {n : ℕ} {s : ℝ}
+/-- The points of a spherical code bundled with their unit-norm proofs. -/
+def codePoints {n : ℕ} {s : ℝ}
     (C : SpherePacking.SphericalCode n s) :
     Finset (SpherePoint n) := by
   classical
@@ -3846,7 +3893,8 @@ namespace YoungPolynomialFrame
 
 variable {r n : ℕ} {lam : Fin (r + 1) → ℕ} {ι : Type*}
 
-private def vector (F : YoungPolynomialFrame n lam ι) (i : ι) :
+/-- The harmonic Young vector obtained from a frame polynomial and its defining certificates. -/
+def vector (F : YoungPolynomialFrame n lam ι) (i : ι) :
     HarmonicYoungSpace (n := n) lam :=
   ⟨F.polynomial i, (mem_harmonicYoungSubmodule lam _).2
     ⟨F.homogeneous i, F.rowEuler i, F.traceFree i,
@@ -4110,7 +4158,8 @@ def homogeneousTraceFreeSubmodule (r n m : ℕ) :
   change (p : PolynomialSpace r n) ∈ traceFreeSubmodule r n ↔ _
   exact mem_traceFreeSubmodule (p : PolynomialSpace r n)
 
-private def homogeneousTraceFreeCoefficientEmbedding (r n m : ℕ) :
+/-- The coefficient embedding restricted to homogeneous trace-free polynomials. -/
+def homogeneousTraceFreeCoefficientEmbedding (r n m : ℕ) :
     homogeneousTraceFreeSubmodule r n m →ₗ[ℝ]
       SpherePacking.Fischer.CoefficientSpace ((r + 1) * n) m :=
   (SpherePacking.Fischer.coefficientEmbedding ((r + 1) * n) m).comp
@@ -4124,12 +4173,15 @@ theorem homogeneousTraceFreeCoefficientEmbedding_injective
     ((r + 1) * n) m).comp
       (homogeneousTraceFreeSubmodule r n m).subtype_injective
 
-private def homogeneousTraceFreeCoefficientRange (r n m : ℕ) :
+/-- The range of the homogeneous trace-free coefficient embedding. -/
+def homogeneousTraceFreeCoefficientRange (r n m : ℕ) :
     Submodule ℝ
       (SpherePacking.Fischer.CoefficientSpace ((r + 1) * n) m) :=
   LinearMap.range (homogeneousTraceFreeCoefficientEmbedding r n m)
 
-private def simultaneousHarmonicCoefficientProjection (r n m : ℕ) :
+/-- Orthogonally project coefficient space to the homogeneous trace-free range and recover the
+polynomial. -/
+def simultaneousHarmonicCoefficientProjection (r n m : ℕ) :
     SpherePacking.Fischer.CoefficientSpace ((r + 1) * n) m →ₗ[ℝ]
       homogeneousTraceFreeSubmodule r n m := by
   let e := homogeneousTraceFreeCoefficientEmbedding r n m
@@ -4248,7 +4300,8 @@ theorem polarization_isHomogeneous_harmonicLift {r n m : ℕ}
         (MvPolynomial.isHomogeneous_X ℝ (variableIndex i k)).mul (hp.pderiv (i := variableIndex
           j k))
 
-private def homogeneousPolarization (r n m : ℕ)
+/-- The row polarization operator restricted to homogeneous degree `m`. -/
+def homogeneousPolarization (r n m : ℕ)
     (i j : Fin (r + 1)) :
     SpherePacking.Fischer.Homogeneous ((r + 1) * n) m →ₗ[ℝ]
       SpherePacking.Fischer.Homogeneous ((r + 1) * n) m :=
@@ -4275,7 +4328,8 @@ theorem homogeneousPolarization_mem_traceFree {r n m : ℕ}
       (p : PolynomialSpace r n)
       ((mem_traceFreeSubmodule _).mpr hp))
 
-private def traceFreeHomogeneousPolarization (r n m : ℕ)
+/-- The row polarization operator restricted further to homogeneous trace-free polynomials. -/
+def traceFreeHomogeneousPolarization (r n m : ℕ)
     (i j : Fin (r + 1)) :
     homogeneousTraceFreeSubmodule r n m →ₗ[ℝ]
       homogeneousTraceFreeSubmodule r n m :=
@@ -5061,11 +5115,13 @@ theorem finrank_harmonicYoung_pos_of_complexWitness {r n : ℕ}
   exact Module.finrank_pos_iff_exists_ne_zero.mpr
     (exists_nonzero_harmonicYoung_of_complexWitness w)
 
-private def nullEvenCoordinate {m n : ℕ} (hn : 2 * m ≤ n)
+/-- The even coordinate `2 * i` in the ambient space reserved for a null-coordinate pair. -/
+def nullEvenCoordinate {m n : ℕ} (hn : 2 * m ≤ n)
     (i : Fin m) : Fin n :=
   ⟨2 * i.val, by have hi := i.isLt; omega⟩
 
-private def nullOddCoordinate {m n : ℕ} (hn : 2 * m ≤ n)
+/-- The odd coordinate `2 * i + 1` in the ambient space reserved for a null-coordinate pair. -/
+def nullOddCoordinate {m n : ℕ} (hn : 2 * m ≤ n)
     (i : Fin m) : Fin n :=
   ⟨2 * i.val + 1, by have hi := i.isLt; omega⟩
 
@@ -5101,7 +5157,9 @@ theorem nullEvenCoordinate_ne_nullOddCoordinate {m n : ℕ}
   dsimp [nullEvenCoordinate, nullOddCoordinate] at hval
   omega
 
-private def nullCoordinateCoefficient {m n : ℕ} (hn : 2 * m ≤ n)
+/-- The complex coefficients `1` and `I` on the even and odd coordinates of a null pair, and
+zero elsewhere. -/
+def nullCoordinateCoefficient {m n : ℕ} (hn : 2 * m ≤ n)
     (i : Fin m) (k : Fin n) : ℂ :=
   if k = nullEvenCoordinate hn i then 1
   else if k = nullOddCoordinate hn i then Complex.I
@@ -5321,7 +5379,9 @@ theorem nullRowLinearForm_eq_even_add_I_odd {r m n : ℕ}
           add_zero]
   simp_rw [hsplit, Finset.sum_add_distrib, Fintype.sum_ite_eq']
 
-private def nullRetraction {r m n : ℕ} (hn : 2 * m ≤ n) :
+/-- The polynomial retraction retaining the selected even coordinates as variables and sending
+the other coordinates to zero. -/
+def nullRetraction {r m n : ℕ} (hn : 2 * m ≤ n) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ →ₐ[ℂ]
       MvPolynomial (Fin (r + 1) × Fin m) ℂ :=
   MvPolynomial.aeval fun z =>
@@ -5603,7 +5663,8 @@ def minorIndex {r : ℕ} (k : Fin (r + 1))
     (i : Fin (k.val + 1)) : Fin (r + 1) :=
   ⟨i.val, by have := i.isLt; have := k.isLt; omega⟩
 
-private def leadingMinor {r n : ℕ} (h : 2 * (r + 1) ≤ n)
+/-- The determinant of the leading `(k + 1)`-square matrix of isotropic variables. -/
+def leadingMinor {r n : ℕ} (h : 2 * (r + 1) ≤ n)
     (k : Fin (r + 1)) : MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   Matrix.det (Matrix.of fun i j : Fin (k.val + 1) =>
     isotropicVariable h (minorIndex k i) (minorIndex k j))
@@ -7067,7 +7128,9 @@ namespace ThreeRowYoungBranching
 open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.GelfandTsetlin
 
-private def transverseVariableIndex {r n : ℕ}
+/-- Embed a row-variable index into the larger array with one additional row and one additional
+coordinate. -/
+def transverseVariableIndex {r n : ℕ}
     (a : Fin ((r + 1) * n)) : Fin ((r + 2) * (n + 1)) :=
   let z := finProdFinEquiv.symm a
   variableIndex (r := r + 1) z.1.castSucc z.2.castSucc
@@ -7255,7 +7318,8 @@ theorem transversePolynomial_mem_harmonicYoung {r n : ℕ}
             rw [polarization_transversePolynomial_castSucc,
               hp.2.2.2 i j hij', map_zero]
 
-private def appendZeroYoungEmbedding {r n : ℕ}
+/-- Embed harmonic Young space by appending a zero weight and adding a transverse coordinate. -/
+def appendZeroYoungEmbedding {r n : ℕ}
     (mu : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) mu →ₗ[ℝ]
       HarmonicYoungSpace (n := n + 1) (appendZeroWeight mu) where
@@ -7272,7 +7336,8 @@ private def appendZeroYoungEmbedding {r n : ℕ}
     exact map_smul (transversePolynomial n) c
       (p : PolynomialSpace r n)
 
-private def appendZeroYoungIsometry {r n : ℕ}
+/-- The transverse embedding with an appended zero weight, bundled as a linear isometry. -/
+def appendZeroYoungIsometry {r n : ℕ}
     (mu : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) mu →ₗᵢ[ℝ]
       HarmonicYoungSpace (n := n + 1) (appendZeroWeight mu) :=
@@ -7294,7 +7359,9 @@ private def appendZeroYoungIsometry {r n : ℕ}
           (p : PolynomialSpace r n) (q : PolynomialSpace r n)
       _ = ⟪p, q⟫_ℝ := (young_inner_eq_polynomialInner mu p q).symm)
 
-private def zeroRowVariableIndex {r n : ℕ}
+/-- Embed a row-variable index into the larger array with one additional row and the same
+coordinate dimension. -/
+def zeroRowVariableIndex {r n : ℕ}
     (a : Fin ((r + 1) * n)) : Fin ((r + 2) * n) :=
   let z := finProdFinEquiv.symm a
   variableIndex (r := r + 1) z.1.castSucc z.2
@@ -7475,7 +7542,9 @@ theorem zeroRowPolynomial_mem_harmonicYoung_iff {r n : ℕ}
           map_zero]
   · exact zeroRowPolynomial_mem_harmonicYoung mu p
 
-private def appendZeroRowEmbedding {r n : ℕ}
+/-- Embed harmonic Young space by appending a zero row weight while retaining the coordinate
+dimension. -/
+def appendZeroRowEmbedding {r n : ℕ}
     (mu : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) mu →ₗ[ℝ]
       HarmonicYoungSpace (n := n) (appendZeroWeight mu) where
@@ -7543,7 +7612,8 @@ theorem appendZeroRowEmbedding_surjective {r n : ℕ}
   apply Subtype.ext
   exact hq'
 
-private def appendZeroRowIsometry {r n : ℕ}
+/-- The embedding that appends a zero row weight, bundled as a linear isometry. -/
+def appendZeroRowIsometry {r n : ℕ}
     (mu : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) mu →ₗᵢ[ℝ]
       HarmonicYoungSpace (n := n) (appendZeroWeight mu) :=
@@ -8074,7 +8144,9 @@ instance jointHarmonicWeightSpace_finiteDimensional
     (jointHarmonicWeightSubmodule n lam).subtype
     (jointHarmonicWeightSubmodule n lam).subtype_injective
 
-private def jointHarmonicWeightHomogeneousEmbedding {r : ℕ}
+/-- Regard a joint harmonic weight polynomial as homogeneous of degree equal to the sum of its
+row weights. -/
+def jointHarmonicWeightHomogeneousEmbedding {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     JointHarmonicWeightSpace n lam →ₗ[ℝ]
       SpherePacking.Fischer.Homogeneous ((r + 1) * n) (∑ i, lam i) where
@@ -8098,7 +8170,8 @@ theorem jointHarmonicWeightHomogeneousEmbedding_injective
       ((r + 1) * n) (∑ i, lam i) =>
         (z : PolynomialSpace r n)) h
 
-private def jointHarmonicWeightCoefficientEmbedding {r : ℕ}
+/-- The Fischer coefficient embedding of the joint harmonic weight space. -/
+def jointHarmonicWeightCoefficientEmbedding {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     JointHarmonicWeightSpace n lam →ₗ[ℝ]
       SpherePacking.Fischer.CoefficientSpace
@@ -8415,7 +8488,8 @@ abbrev YoungGramRadialWeightQuotient {r : ℕ}
   (youngMultihomogeneousSubmodule n lam) ⧸
     youngGramRadialWeightSubmodule n lam
 
-private def youngMultihomogeneousHomogeneousEmbedding {r : ℕ}
+/-- Regard a polynomial of the prescribed row multidegrees as homogeneous of their total degree. -/
+def youngMultihomogeneousHomogeneousEmbedding {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     youngMultihomogeneousSubmodule n lam →ₗ[ℝ]
       SpherePacking.Fischer.Homogeneous
@@ -8439,7 +8513,8 @@ theorem youngMultihomogeneousHomogeneousEmbedding_injective
       ((r + 1) * n) (∑ i, lam i) =>
         (z : PolynomialSpace r n)) hpq
 
-private def youngMultihomogeneousCoefficientEmbedding {r : ℕ}
+/-- The Fischer coefficient embedding restricted to the prescribed row multidegrees. -/
+def youngMultihomogeneousCoefficientEmbedding {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     youngMultihomogeneousSubmodule n lam →ₗ[ℝ]
       SpherePacking.Fischer.CoefficientSpace
@@ -8456,7 +8531,9 @@ theorem youngMultihomogeneousCoefficientEmbedding_injective
     ((r + 1) * n) (∑ i, lam i)).comp
       (youngMultihomogeneousHomogeneousEmbedding_injective n lam)
 
-@[implicit_reducible] private def youngMultihomogeneousFischerCore
+/-- The inner product core on row-multihomogeneous polynomials induced by their coefficient
+embedding. -/
+@[implicit_reducible] def youngMultihomogeneousFischerCore
     {r : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     InnerProductSpace.Core ℝ (youngMultihomogeneousSubmodule n lam) :=
   SpherePacking.Fischer.embeddingInnerCore

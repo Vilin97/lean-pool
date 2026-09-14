@@ -3,13 +3,17 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.StrictLocalInsertion
-import LeanPool.Feige.ConditionalTwoPointCalibration
+module
+
+public import LeanPool.Feige.ConditionalTwoPointCalibration
 import LeanPool.Feige.BoundaryNull
+import LeanPool.Feige.StrictLocalInsertion
 
 /-!
 # Removing strict positivity from the finite two-point bound
 -/
+
+@[expose] public section
 
 open Filter Topology
 

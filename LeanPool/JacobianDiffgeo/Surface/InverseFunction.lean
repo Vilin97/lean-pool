@@ -3,9 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
+public import Mathlib.Geometry.Manifold.MFDeriv.Defs
 import LeanPool.JacobianDiffgeo.Surface.Bridges
 import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.Geometry.Manifold.ContMDiff.NormedSpace
 import Mathlib.Geometry.Manifold.MFDeriv.Basic
 
 /-!
@@ -25,6 +31,8 @@ Unit: surfaces-and-charts (`docs/design/surfaces-and-charts.md` §3.5; Forster 2
 The planar input is mathlib's analytic inverse function theorem
 (`AnalyticAt.analyticAt_localInverse`, `HasStrictFDerivAt.toOpenPartialHomeomorph`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology IsManifold

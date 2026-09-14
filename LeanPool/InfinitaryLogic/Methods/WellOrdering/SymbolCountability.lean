@@ -3,8 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.WellOrdering.Undefinability
+module
+
+public import LeanPool.InfinitaryLogic.Methods.WellOrdering.GapWitness
 import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.ModelExtraction
 /-!
 # Removing symbol countability (issue #12, the sublanguage wrapper)
 
@@ -22,6 +25,8 @@ relation survives the restriction):
 `[L.IsRelational]` remains — it is consumed by the quotient term model, and its removal is
 the separate arbitrary-function-language graph translation, not this wrapper.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

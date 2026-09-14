@@ -3,12 +3,15 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import Mathlib.Analysis.Normed.Group.Basic
-import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
+public import Mathlib.Analysis.Normed.Group.Constructions
+public import Mathlib.Analysis.Normed.Group.Real
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Simultaneous Diophantine approximation: the remainder-vector difference inequality
@@ -36,6 +39,8 @@ fit) is Ermakov's Lemmas 1–2, the cited geometric completion. Norm-agnostic: h
 
 Axiom-clean; elementary.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.SimApprox
 
