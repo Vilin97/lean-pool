@@ -7,6 +7,7 @@ Authors: OpenAI, Sidharth Hariharan, Gareth Ma, Dean Cureton
 module
 
 import all LeanPool.SpherePacking.SaddleAnalysis
+public import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
@@ -1481,7 +1482,7 @@ private noncomputable def saddleGaussianTailSet (R : ℝ) : Set ℝ :=
 private theorem saddleGaussianTailSet_measurable (R : ℝ) :
     MeasurableSet (saddleGaussianTailSet R) := by
   unfold saddleGaussianTailSet
-  exact measurableSet_le measurable_const measurable_abs
+  exact measurableSet_le measurable_const _root_.continuous_abs.measurable
 
 private theorem saddleGaussian_cubic_tail_integral_le
     {k R : ℝ} (hk : 6 ≤ k) (hR : 0 ≤ R) :

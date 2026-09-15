@@ -507,13 +507,13 @@ instance instSMulSubmoduleSubtypeMemSubringForallLeanPool :
     SMul (GL ι K) (Submodule R (ι → K)) where
   smul g M := Submodule.map ((toLin g).val : (ι → K) →ₗ[R] ι → K) M
 
-lemma smul_def (g : GL ι K) (M : Submodule R (ι → K)) :
+lemma smul_submodule_def (g : GL ι K) (M : Submodule R (ι → K)) :
     g • M = Submodule.map (g.val.mulVecLin : (ι → K) →ₗ[R] ι → K) M :=
   rfl
 
 lemma mem_smul (g : GL ι K) (M : Submodule R (ι → K)) (x : ι → K) :
     x ∈ g • M ↔ ∃ y ∈ M, g.val *ᵥ y = x := by
-  rw [smul_def]
+  rw [smul_submodule_def]
   simp
 
 open Pointwise in
@@ -530,10 +530,10 @@ lemma diagonal_smul (f : ι → Kˣ) (M : Submodule R (ι → K)) (hf : ∀ i j,
 instance instMulActionSubmoduleSubtypeMemSubringForallLeanPool :
     MulAction (GL ι K) (Submodule R (ι → K)) where
   one_smul M := by
-    rw [smul_def]
+    rw [smul_submodule_def]
     simp_all
   mul_smul g h M := by
-    simp_rw [smul_def]
+    simp_rw [smul_submodule_def]
     ext
     simp
 

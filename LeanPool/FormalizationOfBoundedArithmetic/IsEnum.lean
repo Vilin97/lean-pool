@@ -7,9 +7,9 @@ Authors: ruplet
 -- Source: the example from https://lean-lang.org/doc/reference/latest/Type-Classes/Deriving-Instances/
 -- extended with case for empty type
 import Lean.Elab.Deriving.Basic
-import Mathlib.Logic.IsEmpty.Basic
+import Mathlib.Basic.IsEmpty.Basic
 import Mathlib.Logic.Equiv.Defs
-import Mathlib.Data.Finite.Defs
+import Mathlib.Basic.Finite.Defs
 import Mathlib.Data.List.Nodup
 import Mathlib.Data.List.OfFn
 

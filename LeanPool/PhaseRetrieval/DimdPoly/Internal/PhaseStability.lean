@@ -94,12 +94,7 @@ private theorem lpNorm_congr_ae {α E : Type*} [MeasurableSpace α] [NormedAddCo
     {f g : α → E} {p : ENNReal} {μ : Measure α} (hfg : f =ᵐ[μ] g) :
     lpNorm f p μ = lpNorm g p μ := by
   unfold lpNorm
-  have hmeas : AEStronglyMeasurable f μ ↔ AEStronglyMeasurable g μ :=
-    aestronglyMeasurable_congr hfg
-  by_cases hf : AEStronglyMeasurable f μ
-  · have hg : AEStronglyMeasurable g μ := hmeas.mp hf
-    simp [hf, hg, eLpNorm_congr_ae hfg]
-  · simp_all
+  rw [eLpNorm_congr_ae hfg]
 
 private theorem gaussianL2Norm_eq_lpNorm
     {d : Nat} {α : Type*} [NormedAddCommGroup α]
@@ -127,7 +122,7 @@ theorem evalPkappa_lpNorm_eq_norm
     lpNorm (evalPkappa kappa F) 2 (gammaD d)
         = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) :=
           (gaussianL2Norm_eq_lpNorm (evalPkappa kappa F)
-            (memLp_two_evalPkappa hd kappa F).1).symm
+            (memLp_two_evalPkappa hd kappa F).aestronglyMeasurable).symm
     _ = ‖F‖ := by
           have hpow :
               (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) =
@@ -141,7 +136,7 @@ theorem evalPkappaL2_norm
     ‖evalPkappaL2 kappa F‖ = ‖F‖ := by
   rw [evalPkappaL2_eq_toLp hd kappa F,
     MeasureTheory.Lp.norm_toLp,
-    MeasureTheory.toReal_eLpNorm (memLp_two_evalPkappa hd kappa F).1]
+    MeasureTheory.toReal_eLpNorm]
   exact evalPkappa_lpNorm_eq_norm hd kappa F
 
 theorem evalPkappaL2_sub

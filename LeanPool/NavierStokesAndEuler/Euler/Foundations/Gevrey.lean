@@ -6,7 +6,7 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 public import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Algebra.Order.Star.Real

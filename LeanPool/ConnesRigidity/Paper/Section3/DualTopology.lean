@@ -162,9 +162,7 @@ theorem continuous_character_quadratic_eval (c : PaperKernel.C) :
     exact (character_coordinate_eval χ a i).symm
   have hq : ∀ x : TensorAA, Continuous (fun χ => qfun (zfun χ) x) := by
     intro x
-    refine TensorProduct.induction_on x ?_ ?_ ?_
-    · simpa [qfun] using
-        (continuous_const : Continuous (fun _ : CharacterSpace => (0 : k)))
+    refine TensorProduct.inductionOn x ?_ ?_
     · intro a b
       dsimp [qfun]
       have h := ((hcoord a (Sum.inl 0)).mul (hcoord b (Sum.inr 0))).add

@@ -122,7 +122,7 @@ theorem fourier_directional_norm (d n : ℕ) (v : Domain d)
     simp only [smul_apply,
       SchwartzMap.smulLeftCLM_apply_apply ht, norm_smul]
     have hc : ‖(2 * Real.pi * Complex.I : ℂ)‖ = 2 * Real.pi := by
-      simp [Real.pi_pos.le]
+      simp
     rw [hc, ih, pow_succ, pow_succ]
     ring
 
@@ -133,7 +133,8 @@ noncomputable def normLp (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
 
 theorem norm_normLp (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
     ‖normLp d f‖ = ‖f.toLp 2‖ := by
-  simp only [normLp, Lp.norm_toLp, eLpNorm_norm, SchwartzMap.norm_toLp]
+  simp only [normLp, Lp.norm_toLp, eLpNorm_norm _ f.continuous.aestronglyMeasurable,
+    SchwartzMap.norm_toLp]
 
 theorem coe_normLp (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
     (normLp d f : Domain d → ℝ) =ᵐ[volume] (fun x => ‖f x‖) :=

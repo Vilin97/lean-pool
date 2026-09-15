@@ -39,10 +39,9 @@ private lemma inv_norm_bounded_integrable
     have h_inv_ball : IntegrableOn (fun w => ‖v - w‖⁻¹) (Metric.closedBall v 1) := by
       rw [← integrable_indicator_iff measurableSet_closedBall] at *
       convert hK_local.comp_sub_left v using 1
-      · rfl
-      · ext w
-        simp only [Set.indicator, Metric.mem_closedBall, dist_eq_norm, sub_zero,
-          norm_sub_rev v w]
+      ext w
+      simp only [Set.indicator, Metric.mem_closedBall, dist_eq_norm, sub_zero,
+        norm_sub_rev v w]
     exact (h_inv_ball.const_mul M).mono'
       ((Measurable.aestronglyMeasurable (Measurable.inv
         (measurable_norm.comp (measurable_const.sub measurable_id')))).mul

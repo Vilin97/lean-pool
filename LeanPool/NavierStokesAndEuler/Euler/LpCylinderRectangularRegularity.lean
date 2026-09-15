@@ -175,7 +175,7 @@ theorem mixedMultiplier_bound (n : ℕ) (C : ℝ)
     calc
       _ ≤ ‖iteratedFDeriv ℝ n f a.1‖ * ∏ _i : Fin n, (1 : ℝ) := by
         apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-        exact Finset.prod_le_prod (fun _ _ => norm_nonneg _)
+        exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
           (fun _ _ => ContinuousLinearMap.norm_fst_le ℝ Space ℝ)
       _ ≤ C := by simpa only [Finset.prod_const_one,mul_one] using hb a.1
   have hleft := ContinuousLinearMap.norm_iteratedFDeriv_comp_left (𝕜 := ℝ) (E := LiftTangent)

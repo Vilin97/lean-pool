@@ -979,7 +979,7 @@ theorem weight_iteratedFDeriv_two_le {R : ℝ} (hR : 0 < R) (x : Space) :
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
       calc
         ∏ _ : Fin 2, ‖weightDilation R‖ ≤ ∏ _ : Fin 2, R⁻¹ :=
-          Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun _ _ => norm_weightDilation_le hR)
+          Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun _ _ => norm_weightDilation_le hR)
         _ = (R⁻¹) ^ 2 := by simp
     _ ≤ weightSecondDerivativeConstant * (R⁻¹) ^ 2 :=
       mul_le_mul_of_nonneg_right (baseWeight_iteratedFDeriv_two_le _) (by positivity)
@@ -1554,7 +1554,7 @@ theorem uniformFiniteEnergy_of_compact_slab {T : ℝ} {u : VelocityField}
   have hLp : MemLp (fun x : Space => u (t, x)) 2 volume :=
     (CompactTimeIntegral.continuous_slice hu.continuousOn ht).memLp_of_hasCompactSupport
       (hasCompactSupport_slice hK hsupp ht)
-  refine ⟨(memLp_two_iff_integrable_sq_norm hLp.1).1 hLp, ?_⟩
+  refine ⟨(memLp_two_iff_integrable_sq_norm hLp.aestronglyMeasurable).1 hLp, ?_⟩
   have hbound : (∫ x : Space, ‖u (t, x)‖ ^ 2) ≤ max C 0 :=
     (le_abs_self _).trans ((hC t ht).trans (le_max_left _ _))
   exact mul_le_mul_of_nonneg_left hbound (by norm_num : (0 : ℝ) ≤ 1 / 2)

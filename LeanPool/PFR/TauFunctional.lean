@@ -192,8 +192,7 @@ lemma is_tau_min (h : tauMinimizes p X₁ X₂) (h1 : Measurable X₁') (h2 : Me
   let ν₂ := (ℙ : Measure Ω'₂).map X₂'
   have B : τ[X₁' # X₂' | p] = τ[id; ν₁ # id; ν₂ | p] :=
     (identDistrib_id_right h1.aemeasurable).tau_eq p (identDistrib_id_right h2.aemeasurable)
-  convert h ν₁ ν₂ (Measure.isProbabilityMeasure_map h1.aemeasurable)
-    (Measure.isProbabilityMeasure_map h2.aemeasurable)
+  convert h ν₁ ν₂ inferInstance inferInstance
 
 omit [IsProbabilityMeasure (ℙ : Measure Ω₀₁)] [IsProbabilityMeasure (ℙ : Measure Ω₀₂)] [Finite G]
   [IsProbabilityMeasure (ℙ : Measure Ω)] in

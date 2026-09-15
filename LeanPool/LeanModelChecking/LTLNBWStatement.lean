@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
 import Mathlib.Data.Set.Basic
-import Mathlib.Data.Finite.Defs
-
+import Mathlib.Basic.Finite.Defs
 /-!
 # Linear Temporal Logic and Büchi automata
 

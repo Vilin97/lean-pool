@@ -64,8 +64,7 @@ lemma landau_flux_integrable_coulomb
           · exact ((hf_smooth.continuous_fderiv (by norm_num)).eval_const
               (Pi.single j 1)).aestronglyMeasurable
       convert h_int.1.mul_const ((vGrad f v) j) |>.sub (h_int.2.const_mul (f v)) using 2
-      · rfl
-      · simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]; ring
+      simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]; ring
     intro i j
     refine (h_inv i j).norm.mono' ?_ ?_
     · refine AEStronglyMeasurable.mul ?_ ?_

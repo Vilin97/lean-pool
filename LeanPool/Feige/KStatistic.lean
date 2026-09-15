@@ -43,8 +43,8 @@ noncomputable instance nnexpMeasure.isProbabilityMeasure :
     IsProbabilityMeasure nnexpMeasure := by
   let : IsProbabilityMeasure (expMeasure 1) :=
     isProbabilityMeasure_expMeasure zero_lt_one
-  exact Measure.isProbabilityMeasure_map
-    (μ := expMeasure 1) measurable_real_toNNReal.aemeasurable
+  unfold nnexpMeasure
+  infer_instance
 
 /-- The joint law of `E₀` and an `ι`-indexed family of independent
 rate-one exponentials. -/

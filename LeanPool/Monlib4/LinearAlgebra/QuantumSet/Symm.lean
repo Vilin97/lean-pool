@@ -327,7 +327,7 @@ theorem symmMap_eq_self_tfae (f : B →ₗ[ℂ] B) (gns : hB.k = 0) :
         ∀ x y : B, counit (f x * y) = (counit (x * f y) : ℂ)] := by
   tfae_have 1 ↔ 2 := by rw [← LinearEquiv.eq_symm_apply, eq_comm]
   tfae_have 1 ↔ 3 := by rw [symmMap_apply, LinearMap.adjoint_eq_iff]
-  have := List.TFAE.out (symmMap_eq_conj_modAut_tfae f) 1 2
+  have := List.TFAE.out (symmMap_eq_conj_modAut_tfae f) 2 3
   simp only [gns, neg_zero, starAlgebra.modAut_zero, AlgEquiv.one_toLinearMap,
     LinearMap.one_comp, LinearMap.comp_one] at this
   tfae_finish

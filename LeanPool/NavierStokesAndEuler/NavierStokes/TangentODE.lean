@@ -186,7 +186,7 @@ theorem linear_uniform_lipschitz {a b : ℝ} (hab : a ≤ b)
   have hC0 : 0 ≤ C := (norm_nonneg (A a)).trans (hC a ⟨le_rfl, hab⟩)
   refine ⟨⟨C, hC0⟩, fun t ht => LipschitzWith.of_dist_le_mul fun x y => ?_⟩
   rw [dist_add_right]
-  exact ((A t).lipschitz.dist_le_mul x y).trans
+  exact ((A t).lipschitzWith.dist_le_mul x y).trans
     (mul_le_mul_of_nonneg_right (hC t ht) dist_nonneg)
 
 /-- Actual existence for a continuous-coefficient inhomogeneous linear ODE

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Combinatorics.SimpleGraph.LapMatrix
 
 /-!

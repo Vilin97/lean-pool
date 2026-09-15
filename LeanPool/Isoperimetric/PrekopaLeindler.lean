@@ -504,7 +504,7 @@ def append {d : ℕ} (x : Fin d → ℝ) (t : Fin 1 → ℝ) : Fin (d + 1) → �
 @[fun_prop]
 lemma append_measurable {d : ℕ} (x : Fin d → ℝ) : Measurable (append x) := by
   unfold append
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro
   split
   · fun_prop
@@ -514,7 +514,7 @@ lemma append_measurable {d : ℕ} (x : Fin d → ℝ) : Measurable (append x) :=
 @[fun_prop]
 lemma append_measurable' {d : ℕ} (t : Fin 1 → ℝ) : Measurable (fun x : Fin d → ℝ ↦ append x t) := by
   unfold append
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro
   split
   · fun_prop

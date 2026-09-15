@@ -205,7 +205,6 @@ lemma entropy_comap_equiv [MeasurableSingletonClass T]
   rw [entropy_comap]
   · exact f.measurableEmbedding
   · rw [← MeasurableEquiv.coe_toEquiv, Equiv.range_eq_univ]
-    exact Filter.EventuallyEq.rfl
   · exact FiniteSupport.comap_equiv f
 
 lemma entropy_comap_swap [MeasurableSingletonClass T]

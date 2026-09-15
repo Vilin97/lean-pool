@@ -46,7 +46,8 @@ theorem integrable_exp_mul_abs (t : ℝ) :
   have hdom : Integrable (fun x : ℝ => rexp (t * x) + rexp (-t * x)) (gaussianReal 0 1) :=
     (integrable_exp_mul_gaussianReal t).add (integrable_exp_mul_gaussianReal (-t))
   refine hdom.mono' ?_ ?_
-  · exact (measurable_exp.comp ((measurable_const.mul measurable_id.abs))).aestronglyMeasurable
+  · exact (measurable_exp.comp
+      (measurable_const.mul continuous_abs.measurable)).aestronglyMeasurable
   · filter_upwards with x
     rw [Real.norm_eq_abs, abs_of_nonneg (Real.exp_pos _).le]
     have h1 : (0 : ℝ) ≤ rexp (t * x) := (Real.exp_pos _).le

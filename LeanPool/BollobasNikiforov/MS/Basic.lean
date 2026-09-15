@@ -8,7 +8,6 @@ import LeanPool.BollobasNikiforov.Basic.Graph
 import LeanPool.BollobasNikiforov.Basic.Inner
 import LeanPool.BollobasNikiforov.CP.Basic
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
@@ -30,6 +29,45 @@ open Matrix
 open scoped Matrix
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
+
+/-! ### The standard simplex
+
+Mathlib's set-valued `stdSimplex` was deprecated in favour of the bundled type
+`Convexity.StdSimplex`. The Motzkin–Straus argument below perturbs a vector
+inside the simplex and compares it against the ambient quadratic form, so it
+works with the set of vectors rather than with a bundled carrier. -/
+
+/-- The standard simplex in `ι → 𝕜`: the vectors with nonnegative coordinates
+summing to `1`. -/
+def stdSimplex (𝕜 : Type*) [AddCommMonoid 𝕜] [PartialOrder 𝕜] [One 𝕜]
+    (ι : Type*) [Fintype ι] : Set (ι → 𝕜) :=
+  {f | (∀ i, 0 ≤ f i) ∧ ∑ i, f i = 1}
+
+/-- Each vertex `Pi.single i 1` lies in the standard simplex. -/
+lemma single_mem_stdSimplex {ι : Type*} [Fintype ι] [DecidableEq ι] (i : ι) :
+    Pi.single i (1 : ℝ) ∈ stdSimplex ℝ ι := by
+  refine ⟨fun j => ?_, by simp⟩
+  rw [Pi.single_apply]
+  split_ifs <;> norm_num
+
+/-- Every coordinate of a point of the standard simplex lies in `[0, 1]`. -/
+lemma stdSimplex_subset_Icc (ι : Type*) [Fintype ι] :
+    stdSimplex ℝ ι ⊆ Set.Icc 0 1 := fun _ hf =>
+  ⟨fun i => hf.1 i, fun i =>
+    (Finset.single_le_sum (fun j _ => hf.1 j) (Finset.mem_univ i)).trans_eq hf.2⟩
+
+lemma isClosed_stdSimplex (ι : Type*) [Fintype ι] : IsClosed (stdSimplex ℝ ι) := by
+  have : stdSimplex ℝ ι =
+      (⋂ i, {f : ι → ℝ | 0 ≤ f i}) ∩ {f : ι → ℝ | ∑ i, f i = 1} := by
+    ext f
+    simp [stdSimplex, Set.mem_iInter]
+  rw [this]
+  exact (isClosed_iInter fun i => isClosed_le continuous_const (continuous_apply i)).inter
+    (isClosed_eq (by fun_prop) continuous_const)
+
+/-- The standard simplex is compact: it is a closed subset of the unit cube. -/
+lemma isCompact_stdSimplex (ι : Type*) [Fintype ι] : IsCompact (stdSimplex ℝ ι) :=
+  IsCompact.of_isClosed_subset isCompact_Icc (isClosed_stdSimplex ι) (stdSimplex_subset_Icc ι)
 
 /-! ### MS05 — Cauchy–Schwarz on a block of size `k` -/
 
@@ -198,13 +236,13 @@ lemma adjMatrix_quadratic_add_smul_single_sub_single
 omit [DecidableEq V] in
 lemma stdSimplex_nonempty [Nonempty V] : (stdSimplex ℝ V).Nonempty := by
   classical
-  exact ⟨Pi.single (Classical.arbitrary V) 1, single_mem_stdSimplex ℝ _⟩
+  exact ⟨Pi.single (Classical.arbitrary V) 1, single_mem_stdSimplex _⟩
 
 omit [DecidableEq V] in
 lemma exists_isMaxOn_adjMatrix_quadratic [Nonempty V] :
     ∃ y, y ∈ stdSimplex ℝ V ∧
       IsMaxOn (fun y : V → ℝ => y ⬝ᵥ G.adjMatrix ℝ *ᵥ y) (stdSimplex ℝ V) y :=
-  (isCompact_stdSimplex ℝ V).exists_isMaxOn stdSimplex_nonempty
+  (isCompact_stdSimplex V).exists_isMaxOn stdSimplex_nonempty
     continuous_adjMatrix_quadratic.continuousOn
 
 omit [DecidableEq V] in

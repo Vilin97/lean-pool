@@ -155,7 +155,7 @@ theorem rapidDecay_withSeminorms :
   ⟨rfl⟩
 
 instance instIsTopologicalAddGroup : IsTopologicalAddGroup RapidDecaySeq :=
-  rapidDecay_withSeminorms.topologicalAddGroup
+  rapidDecay_withSeminorms.isTopologicalAddGroup
 
 instance instContinuousSMul : ContinuousSMul ℝ RapidDecaySeq :=
   rapidDecay_withSeminorms.continuousSMul

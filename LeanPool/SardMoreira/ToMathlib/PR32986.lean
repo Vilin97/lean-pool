@@ -25,7 +25,7 @@ open MeasureTheory Measure Metric
 
 instance IsLocallyFiniteMeasure.prod {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
     [MeasurableSpace X] [MeasurableSpace Y] (μ : Measure X) (ν : Measure Y)
-    [IsLocallyFiniteMeasure μ] [IsLocallyFiniteMeasure ν] :
+    [IsLocallyFiniteMeasure μ] [IsLocallyFiniteMeasure ν] [SFinite ν] :
     IsLocallyFiniteMeasure (μ.prod ν) where
   finiteAtNhds := by
     rintro ⟨x, y⟩

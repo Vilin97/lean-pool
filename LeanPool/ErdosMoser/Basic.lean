@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Max
 import Mathlib.Data.Finset.Powerset
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.NormNum
 
 /-!

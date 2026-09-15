@@ -88,7 +88,8 @@ lemma norm_iteratedFDeriv_proj_sq_le (j : Fin 3) (i : ℕ) (hi : 1 ≤ i)
     ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun w => by
       simp only [one_mul]; exact norm_le_pi_norm w j
   have hpj_eq : (fun w : Fin 3 → ℝ => w j) = (pj : (Fin 3 → ℝ) →L[ℝ] ℝ) := rfl
-  have hpj_sq : ‖pj‖ * ‖pj‖ ≤ 1 := mul_le_one₀ hpj_le (norm_nonneg pj) hpj_le
+  have hpj_sq : ‖pj‖ * ‖pj‖ ≤ 1 :=
+    (mul_le_of_le_one_left (norm_nonneg pj) hpj_le).trans hpj_le
   refine le_trans hleib ?_
   by_cases h3 : 3 ≤ i
   · refine le_trans (Finset.sum_nonpos fun s hs => ?_) (by positivity)
