@@ -25,8 +25,11 @@ from __future__ import annotations
 
 import argparse
 import logging
+import re
 import sys
 from pathlib import Path
+
+from lean_pool.exposition.source_text import code_view
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +40,26 @@ CARD_PREFIX = "  - slug: "
 RESOLVABLE = frozenset({INDEX, REGISTRY})
 
 
+def _uses_module_system(source: str) -> bool:
+    """Detect a module header in either current version of a conflicted index."""
+    conflict = re.compile(
+        r"^<<<<<<<[^\n]*\n(?P<ours>.*?)"
+        r"(?:^\|{7}[^\n]*\n.*?)?^=======\n"
+        r"(?P<theirs>.*?)^>>>>>>>[^\n]*(?:\n|$)",
+        re.MULTILINE | re.DOTALL,
+    )
+    # Keep shared text in both versions so comments spanning a conflict remain
+    # comments, while a malformed comment on one side cannot mask the other.
+    return any(
+        re.search(
+            r"^\s*module(?:\s|$)",
+            code_view(conflict.sub(lambda match: match[side], source)),
+            re.MULTILINE,
+        )
+        for side in ("ours", "theirs")
+    )
+
+
 def render_index(root: Path) -> str:
     """Regenerate the ``mk_all`` index from the Lean files on disk."""
     pool = root / "LeanPool"
@@ -45,7 +68,14 @@ def render_index(root: Path) -> str:
         + str(path.relative_to(pool)).removesuffix(".lean").replace("/", ".")
         for path in pool.rglob("*.lean")
     )
-    return "".join(f"import {module}\n" for module in modules)
+    index = root / INDEX
+    existing = index.read_text(encoding="utf-8") if index.exists() else ""
+    uses_modules = _uses_module_system(existing)
+    header = "module  -- shake: keep-all --deprecated_module: ignore\n\n"
+    prefix = "public " if uses_modules else ""
+    return (header if uses_modules else "") + "".join(
+        f"{prefix}import {module}\n" for module in modules
+    )
 
 
 def split_cards(text: str) -> tuple[str, list[tuple[str, str]]]:
