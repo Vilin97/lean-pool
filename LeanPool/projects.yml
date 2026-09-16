@@ -1,4 +1,45 @@
 projects:
+  - slug: four-ap-free-permutation
+    title: A 4AP-free permutation of the positive integers
+    summary: >-
+      Formalizes Boon Suan Ho's construction of a permutation of the positive
+      integers with no four-term arithmetic progression as a subsequence,
+      proving the binary-order lemmas, extension lemma, and computable limit.
+    branch: additive combinatorics
+    entry_module: LeanPool.FourAP
+    authors:
+      - Boon Suan Ho
+    source:
+      title: A 4AP-free permutation of the positive integers
+      authors:
+        - Boon Suan Ho
+      arxiv: '2609.12780'
+      url: https://github.com/boonsuan/4ap
+      github_repo: boonsuan/4ap
+      commit: 4630aefbbcb7f6537aceaeb1afac8dd3af455871
+    license: MIT
+    status: verified
+    provenance: human
+    main_declarations:
+      - FourAP.exists_fourAPFree_positive_permutation
+    main_results:
+      - declaration: FourAP.exists_fourAPFree_positive_permutation
+        informal: >-
+          There exists a bijection of the positive integers such that no four
+          increasing positions map to a nonconstant four-term arithmetic
+          progression, including negative common differences.
+      - declaration: FourAP.explicitPositivePermutation_apFree
+        informal: >-
+          The explicit computable positive-integer permutation constructed in
+          the development has the stated four-term progression avoidance property.
+    tags:
+      - additive-combinatorics
+      - arithmetic-progressions
+      - Erdos-problem-196
+      - permutations
+    msc:
+      - 11B25
+      - 05D10
   - slug: koethe-conjecture-disproof
     title: Disproof of the Köthe conjecture (Krempa's matrix form)
     summary: >-
