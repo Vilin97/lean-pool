@@ -1448,6 +1448,7 @@ import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
 import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
 import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
 import LeanPool.ErdosTuzaValtr.Main.Main
+import LeanPool.EvenGraphCycles
 import LeanPool.EventStructures
 import LeanPool.EventStructures.Basic
 import LeanPool.EventStructures.Computation
