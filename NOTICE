@@ -47,6 +47,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/CompositionAlgebras       https://github.com/ehrlich-b/composition-algebras
   LeanPool/Computability             https://github.com/tannerduve/computability
   LeanPool/ComputableReal            https://github.com/Timeroot/computableReal
+  LeanPool/ConcentrationInequalities https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/ConnesKreimer             https://github.com/karlesmarin/connes-kreimer-lean
   LeanPool/ConnesRigidity            https://github.com/utensil/connes-rigidity
   LeanPool/CramerWold                https://github.com/Lemmy00/lean-pool
