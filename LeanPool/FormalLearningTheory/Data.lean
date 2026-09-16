@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
 import LeanPool.FormalLearningTheory.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Basic
 
 /-!

@@ -366,8 +366,7 @@ lemma small_comm_square (e : A ≃ₐ[R] B) :
       (e.toLinearEquiv.conjAlgEquiv R).toAlgHom.comp (AlgHom.mulLeftRight R A) := by
   apply AlgHom.ext
   intro a
-  induction a using TensorProduct.induction_on with
-  | zero => simp
+  induction a with
   | tmul a a' =>
     ext
     simp [AlgHom.mulLeftRight_apply, LinearEquiv.conjAlgEquiv]

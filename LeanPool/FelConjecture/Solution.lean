@@ -201,12 +201,9 @@ lemma partition_sum {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S
     (fun k => (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)))
   rw [← h]
   congr 1
-  · congr 1
-    ext k
-    simp only [Finset.mem_filter, decide_eq_true_eq]
-  · congr 1
-    ext k
-    simp only [Finset.mem_filter, Bool.not_eq_true', decide_eq_false_iff_not]
+  congr 1
+  ext k
+  simp
 
 lemma filter_not_carrier_eq_gaps {S : NumericalSemigroup} (n : ℕ) :
     (Finset.range (n + 1)).filter (fun k => !(Classical.propDecidable (k ∈ S.carrier)).decide) =

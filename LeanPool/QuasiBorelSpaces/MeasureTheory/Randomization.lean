@@ -131,9 +131,8 @@ private lemma unpackI_packI
 
 private instance [StandardBorelSpace A]
     {μ : Measure A} [IsProbabilityMeasure μ]
-    : IsProbabilityMeasure (μ.map packI) := by
-  apply Measure.isProbabilityMeasure_map
-  fun_prop
+    : IsProbabilityMeasure (μ.map packI) :=
+  inferInstance
 
 /-- The function `det μ` is a function such that `volume.map (det μ) = μ`. -/
 noncomputable def det [StandardBorelSpace A] (μ : Measure A) [IsProbabilityMeasure μ] : I → A :=
@@ -206,8 +205,8 @@ lemma eq_detf_volume
     simp only [Measure.map_zero]
   have : NeZero μ := ⟨hμ⟩
   change map (((μ Set.univ)⁻¹ • μ).det ∘ normalize) (_ • comap normalize volume) = μ
-  simp only [ne_eq, measure_ne_top, not_false_eq_true, ENNReal.ofReal_toReal, Measure.map_smul]
-  rw [← map_map, MeasurableEmbedding.map_comap]
+  simp only [ne_eq, measure_ne_top, not_false_eq_true, ENNReal.ofReal_toReal]
+  rw [Measure.map_smul _ (by fun_prop), ← map_map, MeasurableEmbedding.map_comap]
   · have : 0 < (μ Set.univ).toReal := by
       rw [(by simp : 0 = ENNReal.toReal 0), ENNReal.toReal_lt_toReal]
       · simp only [measure_univ_pos, ne_eq, hμ, not_false_eq_true]

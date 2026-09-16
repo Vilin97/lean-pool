@@ -9,9 +9,9 @@ import LeanPool.BollobasNikiforov.M.Config
 import LeanPool.BollobasNikiforov.TN.Truncated
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathlib.LinearAlgebra.Matrix.SchurComplement
 import Mathlib.Logic.Equiv.Fin.Basic
@@ -675,6 +675,7 @@ lemma det_smul_row_col {n : Type*} [Fintype n] [DecidableEq n]
       (of fun i j ↦ u i * v j * A i j) =
         of fun i j ↦ u i * (v j * A i j) := by
     ext i j
+    simp only [of_apply]
     ring
   have hcol : (of fun i j ↦ v j * A i j).det = (∏ j, v j) * A.det :=
     det_mul_row v A

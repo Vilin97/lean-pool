@@ -55,8 +55,6 @@ theorem continuousAt_poissonBracket_comp
   unfold poissonBracket
   convert ((hdf0.mul hdg2).sub (hdf2.mul hdg0)).add
       ((hdf1.mul hdg3).sub (hdf3.mul hdg1)) using 1
-  funext argument
-  rfl
 
 /-- The exact challenge hypotheses imply the explicit first homological equation at every point
 of an interior resonant Kepler ellipse. -/

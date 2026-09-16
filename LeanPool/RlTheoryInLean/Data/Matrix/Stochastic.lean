@@ -14,7 +14,7 @@ import Mathlib.Topology.MetricSpace.Contracting
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Logic.Function.Defs
 import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Topology.MetricSpace.ProperSpace
 import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.UniformSpace.Cauchy
@@ -22,7 +22,6 @@ import Mathlib.Topology.Bornology.Basic
 import Mathlib.Topology.Sequences
 import Mathlib.Analysis.Normed.Lp.WithLp
 import Mathlib.Analysis.Normed.Lp.PiLp
-import Mathlib.Analysis.Convex.StdSimplex
 
 import Mathlib.NumberTheory.FrobeniusNumber
 import LeanPool.RlTheoryInLean.Data.Matrix.Mul
@@ -67,13 +66,17 @@ abbrev Simplex (S : Type u) [Fintype S] := {x : l1Space S | StochasticVec x.ofLp
 instance (x : ↑(Simplex S)) : @StochasticVec S _ x.val.ofLp := x.property
 
 instance : IsClosed (Simplex S) := by
+  have hclosed : IsClosed ((⋂ s, {f : S → ℝ | 0 ≤ f s}) ∩ {f : S → ℝ | ∑ s, f s = 1}) :=
+    (isClosed_iInter fun s => isClosed_le continuous_const (continuous_apply s)).inter
+      (isClosed_eq (by fun_prop) continuous_const)
   have hsimplex : {x : l1Space S | StochasticVec x.ofLp} =
-      {x : l1Space S | x.ofLp ∈ stdSimplex ℝ S} := by
+      WithLp.ofLp ⁻¹' ((⋂ s, {f : S → ℝ | 0 ≤ f s}) ∩ {f : S → ℝ | ∑ s, f s = 1}) := by
     ext x
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_inter_iff, Set.mem_iInter]
     exact ⟨fun h => ⟨h.nonneg, h.rowsum⟩, fun h => ⟨h.1, h.2⟩⟩
   change IsClosed {x : l1Space S | StochasticVec x.ofLp}
   rw [hsimplex]
-  exact (isClosed_stdSimplex ℝ S).preimage (PiLp.continuous_ofLp 1 _)
+  exact hclosed.preimage (PiLp.continuous_ofLp 1 _)
 
 instance : CompleteSpace (Simplex S) := IsClosed.completeSpace_coe
 

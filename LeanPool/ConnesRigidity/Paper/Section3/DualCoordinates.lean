@@ -189,8 +189,7 @@ theorem partialToDual_left_inverse (f : Module.Dual k AVStar) :
     partialToDual (dualTensorToPartial f) = f := by
   apply LinearMap.ext
   intro x
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro a φ
     rfl
   · intro x y hx hy

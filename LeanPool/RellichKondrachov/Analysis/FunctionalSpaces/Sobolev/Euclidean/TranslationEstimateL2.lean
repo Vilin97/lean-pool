@@ -297,8 +297,16 @@ lemma enorm_translateL2_sub_toL2_le (a : E) (f : ↥(C1c (E := E))) :
     -- Expand the definition of `eLpNorm` at exponent `2`.
     have h2_ne0 : (2 : ℝ≥0∞) ≠ 0 := by simp
     have h2_netop : (2 : ℝ≥0∞) ≠ ∞ := by simp
-    simp_rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
-      h2_ne0 h2_netop, ENNReal.toReal_ofNat] at *
+    have hcont : Continuous f.1 := f.2.1.continuous
+    have hAEsub :
+        MeasureTheory.AEStronglyMeasurable (fun x : E => f.1 (x + a) - f.1 x) μ :=
+      ((hcont.comp (continuous_id.add continuous_const)).sub hcont).aestronglyMeasurable
+    have hAEgrad :
+        MeasureTheory.AEStronglyMeasurable (fun x : E => grad (E := E) f.1 x) μ :=
+      (memLp_grad_of_mem_C1c (μ := μ) (E := E) f.2).aestronglyMeasurable
+    simp_rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal h2_ne0 h2_netop hAEsub,
+      MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal h2_ne0 h2_netop hAEgrad,
+      ENNReal.toReal_ofNat]
     -- It suffices to compare the squared integrals.
     have hsq := lintegral_enorm_sub_sq_le (μ := μ) a f
     -- Take the `1/2` power on both sides and simplify.

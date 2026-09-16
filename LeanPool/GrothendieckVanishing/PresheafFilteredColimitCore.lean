@@ -39,7 +39,7 @@ theorem isSheaf_of_isColimit_of_isSheaf
   obtain ⟨t, ht⟩ := (NoetherianSpace.isCompact (↑(iSup U) : Set X)).elim_finite_subcover
     (fun i ↦ ↑(U i)) (fun i ↦ (U i).isOpen) (by simp [Opens.coe_iSup])
   have hsup_le : iSup U ≤ ⨆ i ∈ t, U i := by
-    rw [SetLike.le_def]
+    rw [IsConcreteLE.le_iff]
     intro x hx
     obtain ⟨i, hi, hxi⟩ := Set.mem_iUnion₂.mp (ht hx)
     exact Opens.mem_iSup.mpr ⟨i, Opens.mem_iSup.mpr ⟨hi, hxi⟩⟩
@@ -560,7 +560,7 @@ theorem sheafH_filtered_colimit_comparison_succ_compatibility
   rw [show (sheafHFilteredColimitSuccShiftDomainIso Ysh n h_mid_n h_mid_succ).hom =
       (HasColimit.isoOfNatIso (sheafHFilteredColimitSuccShiftNatIso Ysh n
         h_mid_n h_mid_succ)).hom from rfl]
-  rw [HasColimit.isoOfNatIso_ι_hom_assoc]
+  rw [HasColimit.ι_isoOfNatIso_hom_assoc]
   rw [colimit_ι_sheafH_filtered_colimit_comparison]
   rw [show
       colimit.ι (sheafHFilteredColimitSuccQuotient Ysh ⋙ sheafCohomologyFunctor X n) j ≫

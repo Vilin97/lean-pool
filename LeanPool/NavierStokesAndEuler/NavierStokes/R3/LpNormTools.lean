@@ -41,8 +41,11 @@ theorem lpNorm_congr_ae {p : ℝ≥0∞} {f g : Space → E}
 
 theorem lpNorm_mono_of_norm_le_ae {p : ℝ≥0∞} {f : Space → E} {g : Space → F}
     (hg : MemLp g p volume) (hfg : ∀ᵐ x ∂volume, ‖f x‖ ≤ ‖g x‖) :
-    comparisonLpNorm p f ≤ comparisonLpNorm p g :=
-  ENNReal.toReal_mono hg.eLpNorm_lt_top.ne (eLpNorm_mono_ae hfg)
+    comparisonLpNorm p f ≤ comparisonLpNorm p g := by
+  by_cases hf : AEStronglyMeasurable f volume
+  · exact ENNReal.toReal_mono hg.eLpNorm_lt_top.ne (eLpNorm_mono_ae hf hfg)
+  · simpa only [comparisonLpNorm, eLpNorm_of_not_aestronglyMeasurable hf,
+      ENNReal.toReal_top] using lpNorm_nonneg p g
 
 theorem lpNorm_mono_of_norm_le {p : ℝ≥0∞} {f : Space → E} {g : Space → F}
     (hg : MemLp g p volume) (hfg : ∀ x, ‖f x‖ ≤ ‖g x‖) :
@@ -57,7 +60,7 @@ theorem lpNorm_add_le {p : ℝ≥0∞} (hp1 : 1 ≤ p) {f g : Space → E}
         (eLpNorm f p volume + eLpNorm g p volume).toReal :=
       ENNReal.toReal_mono
         (ENNReal.add_ne_top.mpr ⟨hf.eLpNorm_lt_top.ne, hg.eLpNorm_lt_top.ne⟩)
-        (eLpNorm_add_le hf.aestronglyMeasurable hg.aestronglyMeasurable hp1)
+        (eLpNorm_add_le hp1)
     _ = comparisonLpNorm p f + comparisonLpNorm p g :=
       ENNReal.toReal_add hf.eLpNorm_lt_top.ne hg.eLpNorm_lt_top.ne
 
@@ -69,7 +72,7 @@ theorem lpNorm_const_smul {𝕜 : Type*} [NormedField 𝕜] [NormedSpace 𝕜 E]
 
 theorem lpNorm_one_eq_integral_norm {f : Space → E} (hf : Integrable f volume) :
     comparisonLpNorm 1 f = ∫ x : Space, ‖f x‖ := by
-  rw [comparisonLpNorm, eLpNorm_one_eq_lintegral_enorm,
+  rw [comparisonLpNorm, eLpNorm_one_eq_lintegral_enorm hf.aestronglyMeasurable,
     integral_norm_eq_lintegral_enorm hf.aestronglyMeasurable]
 
 theorem lpNorm_two_sq_eq_l2Sq [InnerProductSpace ℝ E] {f : Space → E}

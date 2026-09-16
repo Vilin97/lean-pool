@@ -941,7 +941,7 @@ def transportProperCone (Cost : m → n → ℝ) :
           rw [Finset.mul_sum]
         · change (c : ℝ) * ((∑ i, ∑ j, Cost i j * P i j) + s)
               = (∑ i, ∑ j, Cost i j * ((c : ℝ) * P i j)) + (c : ℝ) * s
-          simp_rw [mul_add, Finset.mul_sum]; ring }
+          simp_rw [mul_add, Finset.mul_sum]; ring_nf }
   isClosed' := isClosed_transport_cone Cost
 
 /-- **Per-ε Farkas separation.**  Given the optimal plan `P` (primal value `V = ⟨Cost,P⟩`),
@@ -1157,10 +1157,8 @@ theorem finiteRange_transportation_dual
   set Cost : hTfin.toFinset → hSfin.toFinset → ℝ := fun i j => c (i : α) (j : α) with hCost_def
   have ha_nn : ∀ i, 0 ≤ a i := fun _ => ENNReal.toReal_nonneg
   have hb_nn : ∀ j, 0 ≤ b j := fun _ => ENNReal.toReal_nonneg
-  have hμP : IsProbabilityMeasure (Measure.map T μ) :=
-    Measure.isProbabilityMeasure_map hT.aemeasurable
-  have hνP : IsProbabilityMeasure (Measure.map S ν) :=
-    Measure.isProbabilityMeasure_map hS.aemeasurable
+  have hμP : IsProbabilityMeasure (Measure.map T μ) := inferInstance
+  have hνP : IsProbabilityMeasure (Measure.map S ν) := inferInstance
   -- atom decompositions of the finite-range pushforwards
   have hμmap : Measure.map T μ
       = ∑ x ∈ hTfin.toFinset, (Measure.map T μ {x}) • Measure.dirac x := by
@@ -1648,8 +1646,8 @@ theorem wassersteinCostCoupling_le_dual
   obtain ⟨S, hS, hSfin, hScost⟩ :=
     exists_finiteRange_map_cost_le c hc_nonneg hc_le_dist ν x₀ hν_cm
       ((ε : ℝ) / 4) hε4
-  have : IsProbabilityMeasure (Measure.map T μ) := Measure.isProbabilityMeasure_map hT.aemeasurable
-  have : IsProbabilityMeasure (Measure.map S ν) := Measure.isProbabilityMeasure_map hS.aemeasurable
+  have : IsProbabilityMeasure (Measure.map T μ) := inferInstance
+  have : IsProbabilityMeasure (Measure.map S ν) := inferInstance
   set q : ℝ≥0∞ := ENNReal.ofReal ((ε : ℝ) / 4) with hq
   -- triangle through the two approximants
   have htri1 := wassersteinCostCoupling_triangle c hc_triangle hc_cont.measurable

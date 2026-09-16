@@ -7,6 +7,7 @@ Authors: Antoine du Fresne von Hohenesche
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Matrix.BilinearForm
+import Mathlib.Algebra.MvPolynomial.CommRing
 import Mathlib.RingTheory.MvPolynomial.Basic
 import Mathlib.Data.Sym.Card
 
@@ -530,22 +531,22 @@ lemma bilinear_form_vanishes_on_orthogonal_complement
       f a * (eval ((Fin.append a.1 b.1) ∘ Fin.cast (by rw [two_mul])) p) * g b
       = ∑ m ∈ p.support, f a *
           (eval ((Fin.append a.1 b.1) ∘ Fin.cast (by rw [two_mul]))
-            (monomial m (coeff m p))) * g b := by
+            (monomial m (p.coeff m))) * g b := by
     intro a b
     conv_lhs => rw [p.as_sum, map_sum]
     rw [Finset.mul_sum, Finset.sum_mul]
   simp only [Finset.univ_eq_attach, hexp]
   have h_swap : ∑ b : A, ∑ a : A, ∑ m ∈ p.support, f a * (eval ((Fin.append a.1 b.1)
-      ∘ Fin.cast (by rw [two_mul])) (monomial m (coeff m p))) * g b =
+      ∘ Fin.cast (by rw [two_mul])) (monomial m (p.coeff m))) * g b =
       ∑ b : A, ∑ m ∈ p.support, ∑ a : A,
       f a * (eval ((Fin.append a.1 b.1)
-      ∘ Fin.cast (by rw [two_mul])) (monomial m (coeff m p))) * g b := by
+      ∘ Fin.cast (by rw [two_mul])) (monomial m (p.coeff m))) * g b := by
     apply Finset.sum_congr rfl
     intro b _
     rw [Finset.sum_comm]
   rw [Finset.sum_comm]
   change ∑ b : A, ∑ a : A, ∑ m ∈ p.support, f a * (eval ((Fin.append a.1 b.1)
-  ∘ Fin.cast (by rw [two_mul])) (monomial m (coeff m p))) * g b = 0
+  ∘ Fin.cast (by rw [two_mul])) (monomial m (p.coeff m))) * g b = 0
   rw [h_swap, Finset.sum_comm]
   -- It then suffices to show that each term in the rewritten sum is 0.
   apply Finset.sum_eq_zero
@@ -561,9 +562,9 @@ lemma bilinear_form_vanishes_on_orthogonal_complement
   have monomial_eq_smul_monomial (n : Fin (2 * d) →₀ ℕ) (a : F) :
     monomial n a = a • monomial n 1 := by simp [smul_monomial]
   rw [monomial_eq_smul_monomial]
-  have h_eq : (∑ a : A, ∑ b : A, f a * (coeff m p *
+  have h_eq : (∑ a : A, ∑ b : A, f a * (p.coeff m *
   ((eval a.1 (monomial m_left 1)) * eval b.1 (monomial m_right 1))) * g b)
-  = coeff m p * (∑ a : A, f a * eval a.1 (monomial m_left 1)) *
+  = p.coeff m * (∑ a : A, f a * eval a.1 (monomial m_left 1)) *
   (∑ b : A, g b * eval b.1 (monomial m_right 1)) := by
     rw [mul_assoc, Finset.sum_mul, Finset.mul_sum]
     apply Finset.sum_congr rfl
@@ -610,7 +611,6 @@ lemma bilinear_form_vanishes_on_orthogonal_complement
         Finset.sum_ite_eq, Finset.mem_univ, ite_true,
         mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Pi.basisFun_repr] at h_orth
         convert h_orth
-        rfl
       simp only [Finset.univ_eq_attach] at h_S_left
       rw [h_S_left]
       simp only [mul_zero, zero_mul]
@@ -707,9 +707,9 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
     let S2 := p.support.filter (fun m => s < (m_left m).support.sum (fun i => m_left m i))
     -- We define M1 and M2 corresponding to S1 and S2.
     let M1 : Matrix A A F := fun a b => ∑ m ∈ S1,
-      (coeff m p) * eval a.1 (monomial (m_left m) 1) * eval b.1 (monomial (m_right m) 1)
+      (p.coeff m) * eval a.1 (monomial (m_left m) 1) * eval b.1 (monomial (m_right m) 1)
     let M2 : Matrix A A F := fun a b => ∑ m ∈ S2,
-      (coeff m p) * eval a.1 (monomial (m_left m) 1) * eval b.1 (monomial (m_right m) 1)
+      (p.coeff m) * eval a.1 (monomial (m_left m) 1) * eval b.1 (monomial (m_right m) 1)
     have h_M_eq : M = M1 + M2 := by
       ext a b
       rw [Matrix.add_apply]
@@ -727,7 +727,7 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
           · intro h
             rcases h with h | h <;> exact h.1
         · intro m hm
-          rw [← mul_one (coeff m p)]; simp only [← smul_eq_mul]; rw [← smul_monomial]
+          rw [← mul_one (p.coeff m)]; simp only [← smul_eq_mul]; rw [← smul_monomial]
           simp only [smul_eval]
           -- Here we use the preliminary lemma `eval_split` to show that
           -- eval (x, y) m = eval x m_left * eval y m_right.
@@ -750,7 +750,7 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
     have h_rank1 : M1.rank ≤ dim A s := by
       rw [dim]
       have h_cols (b) : (fun a => M1 a b) ∈ LinearMap.range (evalMapRestricted A s) := by
-        let P := ∑ m ∈ S1, (coeff m p *
+        let P := ∑ m ∈ S1, (p.coeff m *
         eval b.1 (monomial (m_right m) (1 : F))) • monomial (m_left m) (1 : F)
         have hP : P ∈ restrictTotalDegree (Fin d) F s := by
           apply Submodule.sum_mem
@@ -759,7 +759,7 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
           apply Submodule.smul_mem
           rw [mem_restrictTotalDegree, totalDegree_monomial (m_left m) one_ne_zero]
           · exact hm.2
-        have h_eval : (fun a => ∑ m ∈ S1, coeff m p *
+        have h_eval : (fun a => ∑ m ∈ S1, p.coeff m *
         eval a.1 (monomial (m_left m) (1 : F)) *
         eval b.1 (monomial (m_right m) (1 : F))) = evalMapRestricted A s ⟨P, hP⟩ := by
           ext a
@@ -789,7 +789,7 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
       rw [← Matrix.rank_transpose, dim]
       let W := LinearMap.range (evalMapRestricted A s)
       have h_rows (a) : (fun b => M2 a b) ∈ LinearMap.range (evalMapRestricted A s) := by
-        let P := ∑ m ∈ S2, (coeff m p *
+        let P := ∑ m ∈ S2, (p.coeff m *
         eval a.1 (monomial (m_left m) (1 : F))) • monomial (m_right m) (1 : F)
         have hP : P ∈ restrictTotalDegree (Fin d) F s := by
           apply Submodule.sum_mem
@@ -815,7 +815,7 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
             rw [h_dR] at h_deg_m
             zify at *
             linarith
-        have h_eval : (fun b => ∑ m ∈ S2, coeff m p *
+        have h_eval : (fun b => ∑ m ∈ S2, p.coeff m *
         eval a.1 (monomial (m_left m) (1 : F)) * eval b.1 (monomial (m_right m) (1 : F)))
         = evalMapRestricted A s ⟨P, hP⟩ := by
           ext b

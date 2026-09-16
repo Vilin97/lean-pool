@@ -317,8 +317,7 @@ theorem card_true_of_flip_sensitive {N : Nat} (hN : 1 ≤ N)
     rw [show Fintype.card (BitString N) = 2 ^ N from by
       rw [Fintype.card_fun, Fintype.card_bool, Fintype.card_fin]] at h
     convert h using 2
-    simp only [S_false]
-    congr 1; ext x; cases f x <;> simp
+    simp only [S_false, Bool.not_eq_true]
   -- 2 * S_true.card = 2^N, so S_true.card = 2^{N-1}
   have : 2 ^ N = 2 * 2 ^ (N - 1) := by
     cases N with

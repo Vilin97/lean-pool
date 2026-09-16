@@ -31,8 +31,6 @@ theorem hasDerivAt_binEntropy (x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
       (HasDerivAt.mul (hasDerivAt_id x |> HasDerivAt.const_sub 1)
         (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub 1)
           (by linarith : (1 - x) ≠ 0))) using 1
-  · rfl
-  · rfl
   · ext y
     simp [Pi.mul_apply, Pi.sub_apply, id_eq]
   · simp [id_eq]
@@ -49,8 +47,6 @@ theorem hasDerivAt_h_entropy_second (θ x : ℝ) (hx : 0 < x) (hxθ : x < θ) :
       (HasDerivAt.mul (hasDerivAt_id x |> HasDerivAt.const_sub θ)
         (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub θ)
           (by linarith : (θ - x) ≠ 0))) using 1
-  · rfl
-  · rfl
   · ext y
     simp [Pi.mul_apply, Pi.sub_apply, id_eq]
   · simp [id_eq]
@@ -68,8 +64,6 @@ theorem hasDerivAt_neg_entropy_scaled (r x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
         (HasDerivAt.mul (hasDerivAt_const x r) (hasDerivAt_id x |> HasDerivAt.const_sub 1))
         (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub 1)
           (by linarith : (1 - x) ≠ 0))) using 1
-  · rfl
-  · rfl
   · ext y
     simp [Pi.mul_apply, Pi.add_apply, id_eq]
   · simp [id_eq]
@@ -85,8 +79,6 @@ theorem hasDerivAt_binEntropy_deriv (x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
       (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub 1)
         (by linarith : (1 - x) ≠ 0))
       (Real.hasDerivAt_log hx.ne') using 1
-  · rfl
-  · rfl
   · ext y
     rfl
   · simp [id_eq, one_div, sub_eq_add_neg]
@@ -98,8 +90,6 @@ theorem hasDerivAt_h_entropy_second_deriv (θ x : ℝ) (hx : 0 < x) (hxθ : x < 
       (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub θ)
         (by linarith : (θ - x) ≠ 0))
       (Real.hasDerivAt_log hx.ne') using 1
-  · rfl
-  · rfl
   · ext y
     rfl
   · simp [id_eq, one_div, sub_eq_add_neg]
@@ -110,10 +100,7 @@ theorem hasDerivAt_neg_entropy_scaled_deriv (r x : ℝ) (hx : 0 < x) (hx1 : x < 
     HasDerivAt.const_mul r
       (HasDerivAt.sub (Real.hasDerivAt_log hx.ne')
         (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub 1) (by linarith))) using 1
-  · rfl
-  · rfl
-  · simp_all
-  · ring_nf
+  ring_nf
 
 /-! ## Derivative of Phi -/
 
@@ -184,8 +171,6 @@ theorem hasDerivAt_Phi (r θ x : ℝ) (hx : 0 < x) (hxθ : x < θ) (hx1 : x < 1)
             (hasDerivAt_const x 0))
           (hasDerivAt_const x 0))
         (hasDerivAt_const x 0) using 1
-    · rfl
-    · rfl
     · ext y
       simp [Pi.add_apply]
       ring
@@ -213,13 +198,9 @@ theorem hasDerivAt_Phi_second (r θ x : ℝ) (hx : 0 < x) (hxθ : x < θ) (hx1 :
           (r / θ * Real.log (r / θ) - r * Real.log r -
             (r / θ - r) * Real.log (r / θ - r))))
       (hasDerivAt_neg_entropy_scaled_deriv r x hx hx1) using 1
-  · rfl
-  · rfl
-  · ext y
-    simp [Pi.add_apply]
-  · unfold Phi''
-    field_simp [hx.ne', sub_ne_zero.mpr hx1.ne', sub_ne_zero.mpr hxθ.ne']
-    ring
+  unfold Phi''
+  field_simp [hx.ne', sub_ne_zero.mpr hx1.ne', sub_ne_zero.mpr hxθ.ne']
+  ring
 
 /-! ## Generic ConvexOn for Phi -/
 

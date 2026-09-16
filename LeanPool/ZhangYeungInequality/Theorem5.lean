@@ -182,8 +182,8 @@ private lemma mutualInfo_add_n_way_inequality
       let Btuple : Ω → (∀ k : Fin (n + 1), β k) := fun ω k => B k ω
       have hBinit : ∀ k : Fin n, Measurable (Binit k) := fun k => hB k.castSucc
       have hBlast : Measurable Blast := hB (Fin.last n)
-      have hBinitTuple : Measurable BinitTuple := measurable_pi_lambda _ hBinit
-      have hBtuple : Measurable Btuple := measurable_pi_lambda _ hB
+      have hBinitTuple : Measurable BinitTuple := Measurable.of_eval hBinit
+      have hBtuple : Measurable Btuple := Measurable.of_eval hB
       have h_tail := ih (β := fun k => β k.castSucc) (B := Binit) hBinit
       let pack : (∀ k : Fin (n + 1), β k) → (∀ k : Fin n,
         β k.castSucc) × β (Fin.last n) :=
@@ -274,7 +274,7 @@ theorem _root_.ZhangYeung.theorem5
   intro _hn
   let Xtuple : Ω → (∀ j : Fin n, S j) := fun ω j => X j ω
   let ZU : Ω → S_Z × S_U := fun ω => (Z ω, U ω)
-  have hXtuple : Measurable Xtuple := measurable_pi_lambda _ hX
+  have hXtuple : Measurable Xtuple := Measurable.of_eval hX
   have hZU : Measurable ZU := hZ.prodMk hU
   obtain ⟨Ω', mΩ', Xprime, Xstar, V, ν, hν, hXprime, hXstar, hV, hCond, hFirst, hSecond⟩ :=
     condIndep_copies Xtuple ZU hXtuple hZU μ

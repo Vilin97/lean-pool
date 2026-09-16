@@ -7,7 +7,7 @@ import Mathlib.Algebra.Order.Star.Basic
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Data.Fintype.Pi
 import Mathlib.Algebra.Star.Pi
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 
 /-!
   # pi.star_ordered_ring

@@ -8,7 +8,6 @@ import LeanPool.BollobasNikiforov.Basic.Graph
 import LeanPool.BollobasNikiforov.Basic.Inner
 import LeanPool.BollobasNikiforov.CP.Basic
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Linarith
@@ -28,6 +27,36 @@ namespace BollobasNikiforov
 
 open Matrix
 open scoped Matrix
+
+/-! ### The standard simplex
+
+Mathlib replaced its set-valued `stdSimplex` by the bundled type
+`Convexity.StdSimplex`. Motzkin–Straus maximizes the adjacency quadratic form
+*on a subset of* `V → ℝ`, so the set form is kept here. -/
+
+/-- The standard simplex in `V → ℝ`: the vectors with nonnegative coordinates
+summing to `1`. -/
+def stdSimplex (V : Type*) [Fintype V] : Set (V → ℝ) :=
+  {y | (∀ i, 0 ≤ y i) ∧ ∑ i, y i = 1}
+
+lemma isCompact_stdSimplex (V : Type*) [Fintype V] : IsCompact (stdSimplex V) := by
+  have hnonneg : IsClosed {y : V → ℝ | ∀ i, 0 ≤ y i} := by
+    have hiInter : {y : V → ℝ | ∀ i, 0 ≤ y i} = ⋂ i : V, {y : V → ℝ | 0 ≤ y i} := by
+      ext y; simp
+    rw [hiInter]
+    exact isClosed_iInter fun i => isClosed_le continuous_const (continuous_apply i)
+  have htotal : IsClosed {y : V → ℝ | ∑ i, y i = 1} :=
+    isClosed_eq (by fun_prop) continuous_const
+  have hclosed : IsClosed (stdSimplex V) := by
+    have hinter : stdSimplex V = {y : V → ℝ | ∀ i, 0 ≤ y i} ∩ {y : V → ℝ | ∑ i, y i = 1} := rfl
+    rw [hinter]
+    exact hnonneg.inter htotal
+  have hsubset : stdSimplex V ⊆ Set.Icc 0 1 := by
+    intro y hy
+    refine ⟨fun i => hy.1 i, fun i => ?_⟩
+    calc y i ≤ ∑ j, y j := Finset.single_le_sum (fun j _ => hy.1 j) (Finset.mem_univ i)
+      _ = 1 := hy.2
+  exact IsCompact.of_isClosed_subset isCompact_Icc hclosed hsubset
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
@@ -106,9 +135,9 @@ lemma sum_e_sub_e {i j : V} :
   simp
 
 lemma add_smul_e_sub_e_mem_stdSimplex {i j : V} (hne : i ≠ j)
-    {y : V → ℝ} (hy : y ∈ stdSimplex ℝ V) {t : ℝ}
+    {y : V → ℝ} (hy : y ∈ stdSimplex V) {t : ℝ}
     (hti : 0 ≤ y i + t) (htj : 0 ≤ y j - t) :
-    y + t • (e i - e j) ∈ stdSimplex ℝ V := by
+    y + t • (e i - e j) ∈ stdSimplex V := by
   refine ⟨fun k => ?_, ?_⟩
   · rw [add_smul_e_sub_e_apply hne]
     split_ifs
@@ -196,30 +225,31 @@ lemma adjMatrix_quadratic_add_smul_single_sub_single
 /-! ### MS03 — a maximizer with clique support -/
 
 omit [DecidableEq V] in
-lemma stdSimplex_nonempty [Nonempty V] : (stdSimplex ℝ V).Nonempty := by
-  classical
-  exact ⟨Pi.single (Classical.arbitrary V) 1, single_mem_stdSimplex ℝ _⟩
+lemma stdSimplex_nonempty [Nonempty V] : (stdSimplex V).Nonempty := by
+  have hcard : (0 : ℝ) < Fintype.card V := Nat.cast_pos.mpr Fintype.card_pos
+  refine ⟨fun _ => (Fintype.card V : ℝ)⁻¹, fun _ => inv_nonneg.mpr (Nat.cast_nonneg _), ?_⟩
+  rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_inv_cancel₀ hcard.ne']
 
 omit [DecidableEq V] in
 lemma exists_isMaxOn_adjMatrix_quadratic [Nonempty V] :
-    ∃ y, y ∈ stdSimplex ℝ V ∧
-      IsMaxOn (fun y : V → ℝ => y ⬝ᵥ G.adjMatrix ℝ *ᵥ y) (stdSimplex ℝ V) y :=
-  (isCompact_stdSimplex ℝ V).exists_isMaxOn stdSimplex_nonempty
+    ∃ y, y ∈ stdSimplex V ∧
+      IsMaxOn (fun y : V → ℝ => y ⬝ᵥ G.adjMatrix ℝ *ᵥ y) (stdSimplex V) y :=
+  (isCompact_stdSimplex V).exists_isMaxOn stdSimplex_nonempty
     continuous_adjMatrix_quadratic.continuousOn
 
 omit [DecidableEq V] in
 /-- **MS03.** The adjacency quadratic attains its maximum on the simplex, and
 some maximizer is supported on a clique. -/
 lemma exists_isMaxOn_adjMatrix_quadratic_isClique_support [Nonempty V] :
-    ∃ y, y ∈ stdSimplex ℝ V ∧
-      IsMaxOn (fun y : V → ℝ => y ⬝ᵥ G.adjMatrix ℝ *ᵥ y) (stdSimplex ℝ V) y ∧
+    ∃ y, y ∈ stdSimplex V ∧
+      IsMaxOn (fun y : V → ℝ => y ⬝ᵥ G.adjMatrix ℝ *ᵥ y) (stdSimplex V) y ∧
       G.IsClique {v | y v ≠ 0} := by
   classical
   set f : (V → ℝ) → ℝ := fun y => y ⬝ᵥ G.adjMatrix ℝ *ᵥ y
   obtain ⟨y0, hy0, hmax0⟩ := exists_isMaxOn_adjMatrix_quadratic (G := G)
-  have hind : ∀ n : ℕ, ∀ y : V → ℝ, y ∈ stdSimplex ℝ V → IsMaxOn f (stdSimplex ℝ V) y →
+  have hind : ∀ n : ℕ, ∀ y : V → ℝ, y ∈ stdSimplex V → IsMaxOn f (stdSimplex V) y →
       (Finset.univ.filter (fun v => y v ≠ 0)).card = n →
-      ∃ z, z ∈ stdSimplex ℝ V ∧ IsMaxOn f (stdSimplex ℝ V) z ∧
+      ∃ z, z ∈ stdSimplex V ∧ IsMaxOn f (stdSimplex V) z ∧
         G.IsClique {v | z v ≠ 0} := by
     intro n
     induction n using Nat.strong_induction_on with
@@ -258,7 +288,7 @@ lemma exists_isMaxOn_adjMatrix_quadratic_isClique_support [Nonempty V] :
             exact hyj.ne'
           · rw [show t = -y i from ite_eq_right hδ]
             exact neg_ne_zero.2 hyi.ne'
-        have hy' : y + t • (e i - e j) ∈ stdSimplex ℝ V :=
+        have hy' : y + t • (e i - e j) ∈ stdSimplex V :=
           add_smul_e_sub_e_mem_stdSimplex hne hy hti htj
         have hquad :=
           adjMatrix_quadratic_add_smul_single_sub_single hnad hne y t hti htj
@@ -276,7 +306,7 @@ lemma exists_isMaxOn_adjMatrix_quadratic_isClique_support [Nonempty V] :
         have hyj' : (y + t • (e i - e j)) j = 0 := by
           rw [add_smul_e_sub_e_apply hne, ite_eq_right hne.symm, ite_eq_left rfl, htj0]
           ring
-        have hmax' : IsMaxOn f (stdSimplex ℝ V) (y + t • (e i - e j)) := by
+        have hmax' : IsMaxOn f (stdSimplex V) (y + t • (e i - e j)) := by
           intro z hz
           have heq : f (y + t • (e i - e j)) = f y := by
             simp [hf', hδ0]
@@ -358,7 +388,7 @@ lemma adjMatrix_quadratic_eq_sum_sq_sub_of_isClique
 
 omit [DecidableEq V] in
 lemma adjMatrix_quadratic_le_turanFactor_of_isClique_support
-    {y : V → ℝ} (hy : y ∈ stdSimplex ℝ V)
+    {y : V → ℝ} (hy : y ∈ stdSimplex V)
     (hc : G.IsClique {v | y v ≠ 0}) :
     y ⬝ᵥ G.adjMatrix ℝ *ᵥ y ≤ turanFactor G := by
   set s := Finset.univ.filter (fun v => y v ≠ 0)
@@ -399,7 +429,7 @@ lemma adjMatrix_quadratic_le_turanFactor_of_isClique_support
 
 omit [DecidableEq V] in
 lemma adjMatrix_quadratic_le_turanFactor_of_mem_stdSimplex
-    [Nonempty V] {y : V → ℝ} (hy : y ∈ stdSimplex ℝ V) :
+    [Nonempty V] {y : V → ℝ} (hy : y ∈ stdSimplex V) :
     y ⬝ᵥ G.adjMatrix ℝ *ᵥ y ≤ turanFactor G := by
   obtain ⟨z, hz, hmax, hc⟩ := exists_isMaxOn_adjMatrix_quadratic_isClique_support (G := G)
   exact (hmax hy).trans (adjMatrix_quadratic_le_turanFactor_of_isClique_support hz hc)
@@ -427,7 +457,7 @@ lemma motzkinStraus {y : V → ℝ} (hy : ∀ i, 0 ≤ y i) :
     have hσpos : 0 < σ :=
       lt_of_le_of_ne (Finset.sum_nonneg fun i _ => hy i) (Ne.symm h0)
     set z : V → ℝ := σ⁻¹ • y
-    have hz : z ∈ stdSimplex ℝ V := by
+    have hz : z ∈ stdSimplex V := by
       refine ⟨fun i => mul_nonneg (inv_nonneg.2 hσpos.le) (hy i), ?_⟩
       change ∑ i, σ⁻¹ * y i = 1
       rw [← Finset.mul_sum, inv_mul_cancel₀ h0]

@@ -53,7 +53,8 @@ theorem postcomp_sobolevNorm_le (s : ℕ) (L : F →L[ℝ] G) (hL : ‖L‖ ≤ 
   intro w _
   rw [iteratedFieldDerivative_postcomp period L w f hf]
   apply ENNReal.toReal_mono (hfL2 n (by have := Finset.mem_range.1 hn; omega) w).eLpNorm_ne_top
-  apply eLpNorm_mono
+  apply eLpNorm_mono (L.continuous.comp_aestronglyMeasurable
+    (hfL2 n (by have := Finset.mem_range.1 hn; omega) w).aestronglyMeasurable)
   intro x
   have h := L.le_opNorm (iteratedFieldDerivative period w f x)
   exact h.trans ((mul_le_mul_of_nonneg_right hL (norm_nonneg _)).trans_eq (one_mul _))
@@ -101,9 +102,15 @@ theorem vector_eLpNorm_le_sum_coordinates (q : ℕ) (f : LiftDomain period → D
     (hf : ∀ i : Fin q, MemLp (fun x => f x i) 2 (liftMeasure period)) :
     eLpNorm f 2 (liftMeasure period) ≤ ∑ i : Fin q, eLpNorm (fun x => f x i) 2 (liftMeasure period)
         := by
+  have hfm : AEStronglyMeasurable f (liftMeasure period) := by
+    have h : AEStronglyMeasurable (fun x => EuclideanSpace.equiv (Fin q) ℝ (f x))
+        (liftMeasure period) :=
+      (aemeasurable_pi_iff.2 fun i =>
+        (hf i).aestronglyMeasurable.aemeasurable).aestronglyMeasurable
+    simpa using (EuclideanSpace.equiv (Fin q) ℝ).symm.continuous.comp_aestronglyMeasurable h
   have hA : eLpNorm f 2 (liftMeasure period) ≤
       eLpNorm (fun x => ∑ i : Fin q, ‖f x i‖) 2 (liftMeasure period) := by
-    apply eLpNorm_mono
+    apply eLpNorm_mono hfm
     intro x
     rw [Real.norm_of_nonneg (Finset.sum_nonneg (fun _ _ => norm_nonneg _))]
     exact norm_le_sum_coordinates q (f x)
@@ -111,9 +118,11 @@ theorem vector_eLpNorm_le_sum_coordinates (q : ℕ) (f : LiftDomain period → D
     funext x
     simp
   rw [he] at hA
-  have hB := eLpNorm_sum_le
-    (fun i (_ : i ∈ (Finset.univ : Finset (Fin q))) => (hf i).1.norm) (by norm_num : (1 : ℝ≥0∞) ≤ 2)
-  simpa only [eLpNorm_norm] using hA.trans hB
+  have hB : eLpNorm (∑ i : Fin q, (fun x => ‖f x i‖)) 2 (liftMeasure period) ≤
+      ∑ i : Fin q, eLpNorm (fun x => f x i) 2 (liftMeasure period) :=
+    (eLpNorm_sum_le (by norm_num : (1 : ℝ≥0∞) ≤ 2)).trans_eq
+      (Finset.sum_congr rfl fun i _ => eLpNorm_norm _ (hf i).aestronglyMeasurable)
+  exact hA.trans hB
 
 theorem vector_word_L2_le_sum_coordinates {s n : ℕ} (hn : n ≤ s) (q : ℕ) (w : Fin n → Fin 4)
     (f : LiftDomain period → Domain q) (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))

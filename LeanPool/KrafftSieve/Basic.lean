@@ -107,9 +107,9 @@ theorem q_bound (n : ℕ) (hn : n ≥ 1) : 6 * n^2 + 10 * n + 3 < q n := by
       have h_q_large : q n ≥ 5 ^ (Nat.log 2 n) := by
         have h_q_large : q n ≥ 5 ^ (Finset.card (Finset.filter (fun p => 5 ≤ p ∧ p.Prime)
         (Finset.range (6 * n + 2)))) := by
-          exact le_trans ( by norm_num ) ( Finset.prod_le_prod' fun x hx =>
+          exact le_trans ( by norm_num ) ( Finset.prod_le_prod fun x hx =>
             show x ≥ 5 from Finset.mem_filter.mp hx |>.2.1 ) |> le_trans <|
-            Finset.prod_le_prod_of_subset_of_one_le' ( Finset.filter_subset_filter _ <|
+            Finset.prod_le_prod_of_subset_of_one_le ( Finset.filter_subset_filter _ <|
             Finset.range_mono <| Nat.le_refl _ ) fun x hx _ => Nat.one_le_iff_ne_zero.mpr <|
             Nat.Prime.ne_zero <| Finset.mem_filter.mp hx |>.2.2
         refine le_trans ?_ h_q_large
@@ -173,10 +173,12 @@ theorem q_bound (n : ℕ) (hn : n ≥ 1) : 6 * n^2 + 10 * n + 3 < q n := by
             rw [ pow_succ' ]; linarith
           nlinarith only [ hn_large, Nat.div_add_mod n 2, Nat.mod_lt n two_pos, h_exp_growth,
             ‹5 ^ Nat.log 2 n ≥ 5 ^ ( Nat.log 2 ( n / 2 ) + 1 ) › ]
-        · have : Nat.log 2 n ≥ 29 := Nat.le_log_of_pow_le ( by decide ) ( by linarith )
-          ( have : Nat.log 2 n ≤ 29 := Nat.le_of_lt_succ ( Nat.log_lt_of_lt_pow ( by linarith )
-            ( by linarith ) ); interval_cases Nat.log 2 n; norm_num at * )
-          nlinarith only [ hn, hn_large ]
+        · have hn_lt : n < 2 ^ 30 := not_le.mp hn_large
+          have hlog : Nat.log 2 n = 29 :=
+            Nat.log_eq_of_pow_le_of_lt_pow ( by norm_num; omega ) hn_lt
+          have hn_lt' : n < 1073741824 := by norm_num at hn_lt; exact hn_lt
+          rw [ hlog ]
+          nlinarith only [ hn_lt', Nat.zero_le n ]
       exact h_exp_growth n hn_large.le
 
 end

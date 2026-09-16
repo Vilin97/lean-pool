@@ -74,7 +74,7 @@ lemma rFullPart_dvd (r m : ℕ) (hm : m ≠ 0) : rFullPart r m ∣ m := by
     unfold rFullPart
     simpa [Finsupp.prod, Finset.prod_ite] using
       (Finset.prod_congr rfl fun x hx => by
-        simp_all)
+        rw [Finsupp.filter_apply, ite_eq_left (Finset.mem_filter.mp hx).2])
   conv_rhs => rw [← Nat.prod_factorization_pow_eq_self hm]
   exact h_factorization.symm ▸
     Finset.prod_dvd_prod_of_dvd _ _ fun p hp => by

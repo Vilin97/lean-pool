@@ -107,7 +107,7 @@ theorem mp {L : Language} {α β} {m : ℕ} {φ : L.BoundedFormula α m}
 by
   induction φ with
   | falsum =>
-    constructor
+    exact IsQF.falsum
   | equal lhs rhs =>
     simp only [relabelEquiv, mapTermRelEquiv, Equiv.coe_refl, Equiv.refl_symm, Equiv.coe_fn_mk,
       mapTermRel, Term.relabelEquiv_apply]
@@ -330,7 +330,7 @@ end of_notfalsum
 theorem neq {a n} (t1 t2 : L.Term (a ⊕ Fin n))
   : (t1 ≠' t2).IsDelta0 :=
 by
-  constructor
+  apply IsDelta0.imp
   · apply equal
   · apply bot
 
@@ -355,15 +355,15 @@ by
   induction h generalizing b with
   | bdEx t hphi ih =>
     rw [iBdEx'.relabelEquiv]
-    constructor
+    apply IsDelta0.bdEx
     exact ih (g.sumCongr (_root_.Equiv.refl _))
   | bdAll t hphi ih =>
     rw [iBdAll'.relabelEquiv]
-    constructor
+    apply IsDelta0.bdAll
     exact ih (g.sumCongr (_root_.Equiv.refl _))
   | imp pre post ihpre ihpost =>
     rw [relabelEquiv.imp]
-    constructor
+    apply IsDelta0.imp
     · exact ihpre g
     · exact ihpost g
   | of_isQF f =>

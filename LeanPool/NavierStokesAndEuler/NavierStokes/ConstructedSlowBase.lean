@@ -993,14 +993,12 @@ theorem prefixVelocity_eq_profiles {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       (BaseResidual.prefixSwirl J h C d) (t, x) 0 = _
     rw [AxisymmetricFields.velocity_zero _ _ _ _ hH hK, ← hf, ← hv]
     norm_num [AxisymmetricResidual.pack, ProblemStatement.coordinateVector, PiLp.single_apply]
-    norm_num [Fin.ext_iff]
     dsimp only [AxisymmetricFields.profilePoint]
     field_simp [hs.ne']
   · change AxisymmetricFields.velocity (BaseResidual.prefixStream J h C d)
       (BaseResidual.prefixSwirl J h C d) (t, x) 1 = _
     rw [AxisymmetricFields.velocity_one _ _ _ _ hH hK, ← hf, ← hv]
     norm_num [AxisymmetricResidual.pack, ProblemStatement.coordinateVector, PiLp.single_apply]
-    norm_num [Fin.ext_iff]
     dsimp only [AxisymmetricFields.profilePoint]
     field_simp [hs.ne']; ring
   · change AxisymmetricFields.velocity (BaseResidual.prefixStream J h C d)

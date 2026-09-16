@@ -2050,6 +2050,11 @@ local instance sourceJointCoverVolume_isAddHaar (n : ℕ) :
     (volume : Measure (TorusCharacters.LogSpace n))
     (volume : Measure ℂ)
 
+local instance sourceJointCoverVolume_isNegInvariant (n : ℕ) :
+    Measure.IsNegInvariant
+      (volume : Measure (SourceJointComplexCover n)) :=
+  Measure.IsAddHaarMeasure.isNegInvariant_of_regular _
+
 private def sourceJointRadialNormSq {n : ℕ}
     (q : SourceJointComplexCover n) : ℝ :=
   (∑ i : Fin n, Complex.normSq (q.1 i)) + Complex.normSq q.2
@@ -4681,7 +4686,7 @@ private theorem integral_momentTorusRepresentative_normSq
           (MeasureTheory.L2.inner_def f f).symm
       _ = ((‖s‖ ^ 2 : ℝ) : ℂ) := by
         rw [inner_self_eq_norm_sq_to_K]
-        simp only [Complex.coe_algebraMap, Submodule.coe_norm, Complex.ofReal_pow, f]
+        simp only [Complex.coe_algebraMap, ← Submodule.norm_coe, Complex.ofReal_pow, f]
   exact Complex.ofReal_injective hcomplex
 
 private theorem integral_momentTorusRepresentative_jetBasis

@@ -83,8 +83,13 @@ theorem pow_dvd_rFullPart (M d : ℕ) (hM : 0 < M) (hd : d ^ 3 ∣ M) :
     d ^ 3 ∣ rFullPart 3 M := by
   rw [ ← Nat.factorization_le_iff_dvd ] at *;
   · intro q; by_cases hq : Nat.Prime q <;> simp_all +decide ;
-    have := hd q; simp_all +decide [ rFullPart_factorization ] ;
-    grind;
+    have hval : padicValNat q (rFullPart 3 M)
+        = if 3 ≤ padicValNat q M then padicValNat q M else 0 := by
+      rw [← Nat.factorization_def (rFullPart 3 M) hq, rFullPart_factorization,
+        Nat.factorization_def M hq]
+    have hdq := hd q
+    simp only [Finsupp.smul_apply, smul_eq_mul, Nat.factorization_def, hq] at hdq
+    split_ifs at hval <;> omega
   · aesop;
   · positivity;
   · aesop;

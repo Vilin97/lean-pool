@@ -5,8 +5,8 @@ Authors: Shengtong Zhang
 -/
 
 import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Order.Fin.Basic

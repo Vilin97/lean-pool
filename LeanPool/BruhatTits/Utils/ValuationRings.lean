@@ -282,7 +282,7 @@ lemma zaddVal'_eq_iff (n : ℤ) (x : Kˣ) :
     obtain ⟨y, hy⟩ := zaddVal'_spec ϖ hϖ x
     nth_rw 1 [← hu] at hy
     rw [Units.ext_iff] at hy
-    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, Subring.coe_subtype,
+    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, Subring.coe_subtype,
       Units.val_zpow_eq_zpow_val, Units.val_mk0] at hy
     apply unit_mul_zpow_congr_zpow hϖ hϖ y u
     exact hy.symm
@@ -303,7 +303,7 @@ lemma zaddVal_eq_iff (n : ℤ) (x : Kˣ) :
     obtain ⟨p, hp, y, hy⟩ := zaddVal_spec (R := R) x
     nth_rw 1 [← hu] at hy
     rw [Units.ext_iff] at hy
-    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, Subring.coe_subtype,
+    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, Subring.coe_subtype,
       Units.val_zpow_eq_zpow_val, Units.val_mk0] at hy
     apply unit_mul_zpow_congr_zpow hp hϖ y u
     exact hy.symm

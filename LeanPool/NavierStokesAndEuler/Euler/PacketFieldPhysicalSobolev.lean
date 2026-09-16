@@ -113,7 +113,7 @@ theorem WordBound.raw_graph_tensor_lpNorm_le (hG : G.WordBound q R A 0)
   have he : lpNorm (iteratedFDeriv ℝ n (G.toFieldTower.physicalPointField k m t)) 2 volume =
       ‖G.toFieldTower.physicalTensorValue k m n t‖ := by
     rw [Lp.norm_def,eLpNorm_congr_ae (G.toFieldTower.physicalTensorValue_ae k m n t),
-      toReal_eLpNorm (G.toFieldTower.physicalTensor_memLp k m n t).aestronglyMeasurable]
+      toReal_eLpNorm]
   change lpNorm (iteratedFDeriv ℝ n (G.toFieldTower.physicalPointField k m t)) 2 volume ≤ _
   rw [he]
   exact (G.toFieldTower.physicalTensorValue_norm_le k m n t).trans

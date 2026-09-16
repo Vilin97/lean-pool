@@ -64,10 +64,11 @@ theorem cube_memLp {f : Space → E} (h6 : MemLp f 6 volume) :
 
 theorem cube_norm {f : Space → E} (h6 : MemLp f 6 volume) :
     lpNorm (fun x => ‖f x‖^3) 2 volume=(lpNorm f 6 volume)^3 := by
-  have he := eLpNorm_norm_rpow (μ := (volume : Measure Space)) (p := 2) f (q := 3) (by norm_num)
+  have he := eLpNorm_norm_rpow (μ := (volume : Measure Space)) (p := 2) f
+    h6.aestronglyMeasurable (q := 3) (by norm_num)
   norm_num at he
-  rw [← toReal_eLpNorm (cube_memLp h6).aestronglyMeasurable,he,ENNReal.toReal_pow,
-    toReal_eLpNorm h6.aestronglyMeasurable]
+  rw [← toReal_eLpNorm (f := fun x => ‖f x‖ ^ 3) (p := 2) (μ := (volume : Measure Space)),
+    he, ENNReal.toReal_pow, toReal_eLpNorm]
 
 private theorem square_domination (a z : ℝ) (ha : 0 < a) (hz : 0 ≤ z) :
     z^2 ≤ a*z+a⁻¹*z^3 := by
@@ -131,12 +132,13 @@ theorem memLp_four {f : Space → E} (h2 : MemLp f 2 volume) (h6 : MemLp f 6 vol
   norm_num at h
   exact h (square_memLp h2 h6)
 
-theorem norm_four_sq {f : Space → E} (h2 : MemLp f 2 volume) (h6 : MemLp f 6 volume) :
+theorem norm_four_sq {f : Space → E} (h2 : MemLp f 2 volume) (_h6 : MemLp f 6 volume) :
     (lpNorm f 4 volume)^2=lpNorm (fun x => ‖f x‖^2) 2 volume := by
-  have he := eLpNorm_norm_rpow (μ := (volume : Measure Space)) (p := 2) f (q := 2) (by norm_num)
+  have he := eLpNorm_norm_rpow (μ := (volume : Measure Space)) (p := 2) f
+    h2.aestronglyMeasurable (q := 2) (by norm_num)
   norm_num at he
-  rw [← toReal_eLpNorm (square_memLp h2 h6).aestronglyMeasurable,he,ENNReal.toReal_pow,
-    toReal_eLpNorm (memLp_four h2 h6).aestronglyMeasurable]
+  rw [← toReal_eLpNorm (f := fun x => ‖f x‖ ^ 2) (p := 2) (μ := (volume : Measure Space)),
+    he, ENNReal.toReal_pow, toReal_eLpNorm]
 
 theorem norm_four_le_two {f : Space → E} (h2 : MemLp f 2 volume) (h6 : MemLp f 6 volume)
     (a : ℝ) (ha : 0 ≤ a) (h2a : lpNorm f 2 volume ≤ a) (h6a : lpNorm f 6 volume ≤ a) :
@@ -153,8 +155,8 @@ theorem smooth_four_bound (f : Space → V) (hf : ContDiff ℝ ∞ f)
       2*(lpNorm f 2 volume+(sobolevConstant : ℝ)*lpNorm (fderiv ℝ f) 2 volume) := by
   have h6 := memLp_six f hf hL hD
   have h6b : lpNorm f 6 volume ≤ (sobolevConstant : ℝ)*lpNorm (fderiv ℝ f) 2 volume := by
-    simpa only [toReal_eLpNorm hf.continuous.aestronglyMeasurable,
-      toReal_eLpNorm hD.aestronglyMeasurable] using norm_six_le f hf hL hD
+    simpa only [toReal_eLpNorm,
+      toReal_eLpNorm] using norm_six_le f hf hL hD
   refine ⟨memLp_four hL h6,norm_four_le_two hL h6 _
     (add_nonneg lpNorm_nonneg (mul_nonneg sobolevConstant.coe_nonneg lpNorm_nonneg)) ?_ ?_⟩
   · exact le_add_of_nonneg_right (mul_nonneg sobolevConstant.coe_nonneg lpNorm_nonneg)
@@ -173,10 +175,10 @@ theorem smooth_product_h1 (f : Space → ℝ) (g : Space → V)
     norm_num [ENNReal.toReal_add,ENNReal.toReal_inv]⟩
   have h4f := smooth_four_bound f hf hfL hfD
   have h4g := smooth_four_bound g hg hgL hgD
-  refine ⟨h4g.1.smul h4f.1,?_⟩
+  refine ⟨h4f.1.smul h4g.1,?_⟩
   calc
     _ ≤ lpNorm (fun x => ‖f x‖*‖g x‖) 2 volume := by
-      apply lpNorm_mono_real (h4g.1.norm.mul' h4f.1.norm)
+      apply lpNorm_mono_real (h4f.1.norm.fun_mul h4g.1.norm)
       intro x
       exact (norm_smul (f x) (g x)).le
     _ ≤ lpNorm f 4 volume*lpNorm g 4 volume := lpNorm_norm_mul_le h4f.1 h4g.1

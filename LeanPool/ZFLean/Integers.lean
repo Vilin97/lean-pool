@@ -1151,31 +1151,20 @@ instance : Coe ZFInt {x // x ∈ Int} := ⟨instEquivZFIntInt.toFun⟩
 instance : Coe {x // x ∈ Int} ZFInt := ⟨instEquivZFIntInt.invFun⟩
 theorem _root_.ZFSet.instEquivZFIntInt.mono_iff (x y : { x // x ∈ Int.{u} }) :
   instEquivZFIntInt.{u}.invFun x < instEquivZFIntInt.{u}.invFun y ↔ x < y := by
+  dsimp only [instEquivZFIntInt]
+  generalize Classical.choice ZFInt.exists_mono_bij_zero_eq.{u} = c
+  obtain ⟨f, bij, mono, -⟩ := c
+  have hx : f ((Equiv.ofBijective f bij).invFun x) = x :=
+    (Equiv.ofBijective f bij).apply_symm_apply x
+  have hy : f ((Equiv.ofBijective f bij).invFun y) = y :=
+    (Equiv.ofBijective f bij).apply_symm_apply y
   constructor
   · intro h
-    dsimp [instEquivZFIntInt] at h
-    split at h
-    rename_i f' f bij mono eq; clear f' eq
-    unfold Equiv.ofBijective at h
-    dsimp at h
-    have := mono.1
-      (Function.surjInv (Function.Bijective.surjective bij) x)
-      (Function.surjInv (Function.Bijective.surjective bij) y) |>.mpr h
-    iterate 2 rw [Function.rightInverse_surjInv (Function.Bijective.surjective bij)] at this
-    exact this
+    have := (mono _ _).mpr h
+    rwa [hx, hy] at this
   · intro h
-    dsimp [instEquivZFIntInt]
-    split
-    rename_i f' f bij mono eq; clear f' eq
-    let f' := Function.surjInv (Function.Bijective.surjective bij)
-    have mono' : ∀ x y, f' x < f' y ↔ x < y := by
-      intro x y
-      have := mono.1 (f' x) (f' y)
-      iterate 2 rw [Function.rightInverse_surjInv (Function.Bijective.surjective bij)] at this
-      exact this.symm
-    unfold Equiv.ofBijective
-    dsimp
-    exact mono' x y |>.mpr h
+    refine (mono _ _).mp ?_
+    rwa [hx, hy]
 instance : Preorder {x // x ∈ Int} where
   le x y := ZFInt.instPartialOrder.le x y
   le_refl x := ZFInt.instLinearOrder.le_refl x

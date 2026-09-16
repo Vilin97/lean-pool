@@ -86,7 +86,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
     have h_A_neg_zero : 1 ≤ A.card := Finset.one_le_card.mpr hA
     have h_B_neg_zero : 1 ≤ B.card := Finset.one_le_card.mpr hB
     rw [Nat.add_comm, Nat.add_sub_assoc h_A_neg_zero, add_comm,← Nat.add_sub_assoc h_B_neg_zero]
-  have h_coeff_ne_zero : coeff (equivFunOnFinite.symm cs) ((∑ i : Fin 2, X i) ^ m * h_poly) ≠ 0 :=
+  have h_coeff_ne_zero : ((∑ i : Fin 2, X i) ^ m * h_poly).coeff (equivFunOnFinite.symm cs) ≠ 0 :=
       by
     simp only [h_poly, mul_one, Fin.sum_univ_two]
     rw [add_pow]
@@ -109,7 +109,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
           dsimp [m]
           have h2 : 0 < p := hp.pos
           omega
-      · simp only [X, monomial_pow, monomial_mul]
+      · simp only [X, monomial_pow, monomial_mul_monomial]
         rw [coeff_monomial]
         rw [ite_eq_left]
         · rw [one_pow, one_pow, one_mul]; exact one_ne_zero
@@ -121,7 +121,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
       intro b hb_range h_ne
       rw [show (↑(m.choose b) : MvPolynomial (Fin 2) (ZMod p)) = C (m.choose b : ZMod p) by simp]
       rw [mul_comm, coeff_C_mul]
-      simp only [X, monomial_pow, monomial_mul]
+      simp only [X, monomial_pow, monomial_mul_monomial]
       rw [coeff_monomial]
       rw [ite_eq_right]
       · simp -- 0 *  = 0

@@ -7,7 +7,7 @@ import Mathlib.Algebra.Algebra.Defs
 import Mathlib.Algebra.Field.Defs
 import Mathlib.Algebra.Notation.Pi.Defs
 import Mathlib.Algebra.Polynomial.Basic
-import Mathlib.Data.Countable.Basic
+import Mathlib.Basic.Countable.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Matrix.Mul

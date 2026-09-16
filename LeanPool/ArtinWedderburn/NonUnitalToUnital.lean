@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 import Mathlib.Algebra.Ring.Basic
-import Mathlib.Algebra.Ring.MinimalAxioms
 
 /-!
 # Promoting a non-unital ring with a unit element to a unital ring
@@ -31,14 +30,10 @@ variable (is_right_unit : ∀ x : R, x * e = x)
 /-- Promote a non-unital ring `R` with a two-sided identity `e` to a unital `Ring R`. -/
 @[reducible]
 def nonUnitalWEIsRing : Ring R :=
-  @Ring.ofMinimalAxioms R (by exact inferInstance) (by exact inferInstance) (by exact inferInstance)
-    (by exact inferInstance) (by exact eOne e)
-    (by intro a b c; rw [add_assoc])
-    (by intro a; exact AddZeroClass.zero_add a)
-    (by intro a; exact neg_add_cancel a)
-    (by intro a b c; exact mul_assoc a b c)
-    is_left_unit is_right_unit
-    (by intro a b c; exact LeftDistribClass.left_distrib a b c)
-    (by intro a b c; exact RightDistribClass.right_distrib a b c)
+  -- Reusing the ambient `NonUnitalRing` structure keeps the additive operations definitionally
+  -- equal to the ones instance search finds on a subring, which `Ring.ofMinimalAxioms` would not.
+  { (inferInstance : NonUnitalRing R), eOne e with
+    one_mul := is_left_unit
+    mul_one := is_right_unit }
 
 end LeanPool.ArtinWedderburn

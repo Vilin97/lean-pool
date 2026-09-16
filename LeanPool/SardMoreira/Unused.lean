@@ -61,8 +61,10 @@ namespace Submodule
 variable {R M N : Type*} [Semiring R] [AddCommMonoid M] [Module R M]
   [AddCommMonoid N] [Module R N]
 
-/-- Linear equivalence between a product submodule and the product of submodules. -/
-def prodEquiv
+/-- Linear equivalence between a product submodule and the product of submodules.
+
+Primed to avoid a clash with `Submodule.prodEquiv`, which Mathlib has since absorbed. -/
+def prodEquiv'
     (s : Submodule R M) (t : Submodule R N) : s.prod t ≃ₗ[R] s × t :=
   { (Equiv.Set.prod (s : Set M) (t : Set N)) with
     map_add' _ _ := rfl
@@ -126,7 +128,7 @@ theorem iteratedFDerivWithin_comp_of_eventually
   refine .symm <| (hgu.comp hfu (mapsTo_image _ _)).eq_iteratedFDerivWithin_of_uniqueDiffOn le_rfl
     hu (mem_of_mem_nhdsWithin ha hau) |>.trans ?_
   refine iteratedFDerivWithin_congr_set (hus.eventuallyLE.antisymm ?_) _
-  exact set_eventuallyLE_iff_mem_inf_principal.mpr hau
+  exact eventuallySubset_iff_mem_inf_principal.mpr hau
 
 end ContDiff
 
@@ -169,7 +171,8 @@ theorem length_eq_one_iff (hn : n ≠ 0) : c.length = 1 ↔ c = single n hn := b
     rw [funext_iff, Fin.forall_fin_one]
     simpa using hsum
   obtain rfl : emb = fun _ ↦ id := by
-    rw [funext_iff, Fin.forall_fin_one, ← (emb_strictMono 0).range_inj strictMono_id]
+    rw [funext_iff, Fin.forall_fin_one,
+      ← (emb_strictMono 0).range_inj_of_wellFoundedLT strictMono_id]
     simpa [eq_univ_iff_forall, Fin.exists_fin_one] using cover
   rfl
 

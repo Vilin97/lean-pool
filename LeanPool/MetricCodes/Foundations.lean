@@ -4129,8 +4129,6 @@ theorem binaryWeight_binaryTranslate {n : ℕ} (x y : BinaryWord n) :
     binaryWeight (binaryTranslate x y) = hammingDist x y := by
   unfold binaryWeight hammingDist _root_.hammingDist
   congr 1
-  ext i
-  simp only [binaryTranslate, bne_iff_ne, ne_eq, mem_filter, mem_univ, true_and]
 
 private def weightShell (n w : ℕ) : Finset (BinaryWord n) :=
   Finset.univ.filter fun x => binaryWeight x = w

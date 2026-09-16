@@ -309,9 +309,18 @@ lemma targetSet_freq_source_count_bound
     (b := (Finset.image (fun v : sourceVertices C i =>
       perItemMatch edge C threshold hexp hfreq i v) Finset.univ).card)
     (Finset.card_le_card ?_) ?_
-  · intro w hw; simp_all +decide [ targetSet ];
-    obtain ⟨ a, b, hw ⟩ := hw; split_ifs at hw <;> simp_all +decide [ edgePiece ];
-    grind +suggestions;
+  · intro w hw
+    simp_all +decide only [targetSet, Finset.product_eq_sprod, Finset.univ_product_univ,
+      Finset.mem_biUnion, Finset.mem_univ, true_and, Prod.exists, Finset.mem_filter,
+      Finset.univ_eq_attach, Finset.mem_image, Finset.mem_attach, Subtype.exists]
+    obtain ⟨ a, b, hw ⟩ := hw
+    split_ifs at hw with hedge
+    · simp +decide only [edgePiece, Finset.mem_filter, and_exists_self] at hw
+      obtain ⟨ hi, hb ⟩ := hw
+      exact ⟨ a, Finset.mem_filter.mpr ⟨ Finset.mem_univ a, hi ⟩, by
+        rw [ ← hedge, ← hb ]
+        exact (assignLabel_spec edge C threshold hexp hfreq a i hi).symm ⟩
+    · simp at hw
   · exact Finset.card_image_le.trans ( by simp +decide )
 
 /-

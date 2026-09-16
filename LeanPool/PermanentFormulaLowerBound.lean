@@ -849,7 +849,7 @@ variable {Y : Type u} {Z : Type v} {F : Type w} [Field F]
 
 private noncomputable def coefficientPolynomial
     (f : MvPolynomial (Y ⊕ Z) F) (α : Y →₀ ℕ) : MvPolynomial Z F :=
-  MvPolynomial.coeff α (MvPolynomial.sumAlgEquiv F Y Z f)
+  (MvPolynomial.sumAlgEquiv F Y Z f).coeff α
 
 private noncomputable def coefficientField (f : MvPolynomial (Y ⊕ Z) F) :
     IntermediateField F (FractionRing (MvPolynomial Z F)) :=
@@ -996,7 +996,7 @@ private theorem totalDegree_succ_le_of_mem_pderiv_support [CommSemiring F]
     (hm : m ∈ (MvPolynomial.pderiv i p).support) :
     Multiset.card (Finsupp.toMultiset m) + 1 ≤ p.totalDegree := by
   classical
-  have hmcoeff : MvPolynomial.coeff m (MvPolynomial.pderiv i p) ≠ 0 :=
+  have hmcoeff : (MvPolynomial.pderiv i p).coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
   have hparent : m + Finsupp.single i 1 ∈ p.support := by
     apply MvPolynomial.mem_support_iff.mpr
@@ -1026,7 +1026,7 @@ private theorem totalDegree_pderiv_lt_of_ne_zero [CommSemiring F]
 private theorem eq_C_of_forall_pderiv_eq_zero [Field F] [CharZero F]
     (p : MvPolynomial ι F)
     (hp : ∀ i : ι, MvPolynomial.pderiv i p = 0) :
-    p = MvPolynomial.C (MvPolynomial.coeff 0 p) := by
+    p = MvPolynomial.C (p.coeff 0) := by
   classical
   apply MvPolynomial.ext _ _
   intro m
@@ -1042,11 +1042,11 @@ private theorem eq_C_of_forall_pderiv_eq_zero [Field F] [CharZero F]
     let m' : ι →₀ ℕ := m - Finsupp.single i 1
     have hcancel : m' + Finsupp.single i 1 = m := by
       exact Finsupp.sub_add_single_one_cancel hi
-    have hder := congrArg (MvPolynomial.coeff m') (hp i)
-    rw [MvPolynomial.coeff_pderiv, hcancel, MvPolynomial.coeff_zero] at hder
+    have hder := congrArg (fun q : MvPolynomial ι F => q.coeff m') (hp i)
+    rw [MvPolynomial.coeff_pderiv, hcancel, AddMonoidAlgebra.coeff_zero] at hder
     have hcast : (↑(m' i) + 1 : F) ≠ 0 :=
       Nat.cast_add_one_ne_zero _
-    have hcoeff : MvPolynomial.coeff m p = 0 :=
+    have hcoeff : p.coeff m = 0 :=
       (mul_eq_zero.mp hder).resolve_right hcast
     simpa only [MvPolynomial.coeff_C, Ne.symm hm, ↓reduceIte] using hcoeff
 
@@ -1109,14 +1109,14 @@ private theorem polynomialCoefficientProjection_map_mul
   apply MvPolynomial.ext
   intro s
   have hcoeff (g : MvPolynomial ι E) (index : ι →₀ ℕ) :
-      MvPolynomial.coeff index (polynomialCoefficientProjection φ g) =
-        φ (MvPolynomial.coeff index g) := rfl
+      (polynomialCoefficientProjection φ g).coeff index =
+        φ (g.coeff index) := rfl
   simp only [hcoeff, MvPolynomial.coeff_mul,
     MvPolynomial.coeff_map, map_sum]
   apply Finset.sum_congr rfl
   intro a ha
   simpa [Algebra.smul_def] using
-    φ.map_smul (MvPolynomial.coeff a.1 q) (MvPolynomial.coeff a.2 f)
+    φ.map_smul (q.coeff a.1) (f.coeff a.2)
 
 private theorem polynomialCoefficientProjection_map
     (φ : E →ₗ[K] K)
@@ -1127,9 +1127,9 @@ private theorem polynomialCoefficientProjection_map
   apply MvPolynomial.ext
   intro s
   change
-    φ (MvPolynomial.coeff s (MvPolynomial.map (algebraMap K E) p)) =
-      MvPolynomial.coeff s p
-  simpa only [MvPolynomial.coeff_map] using hφ (MvPolynomial.coeff s p)
+    φ ((MvPolynomial.map (algebraMap K E) p).coeff s) =
+      p.coeff s
+  simpa only [MvPolynomial.coeff_map] using hφ (p.coeff s)
 
 private theorem polynomial_intersection_of_mul
     (f : MvPolynomial ι E) (p q : MvPolynomial ι K)
@@ -2129,13 +2129,13 @@ private theorem rational_skeleton_trdeg [Field F]
         IntermediateField.adjoin F (s : Set E)
     have hcoeff :
         algebraMap (IntermediateField.adjoin F (s : Set E)) E
-            (MvPolynomial.coeff α g) =
+            (g.coeff α) =
           algebraMap (MvPolynomial Z F) E
             (coefficientPolynomial p α) := by
       simpa [pY, MvPolynomial.coeff_map, coefficientPolynomial]
-        using congrArg (MvPolynomial.coeff α) hg
+        using congrArg (fun q : MvPolynomial Y E => q.coeff α) hg
     rw [← hcoeff]
-    exact (MvPolynomial.coeff α g).property
+    exact (g.coeff α).property
   exact
     TranscendenceBounds.trdeg_intermediateField_le_of_adjoin_card_le
       (coefficientField p) s hfield hcard
@@ -3604,7 +3604,7 @@ private theorem matchingPolynomialEvaluationMatrix_det_ne_zero
   apply mul_ne_zero
   · exact Matrix.det_vandermonde_ne_zero_iff.mpr hp
   · rw [Matrix.det_of_isUpperTriangular
-      (Matrix.matrixOfPolynomials_blockTriangular g
+      (Matrix.matrixOfPolynomials_isUpperTriangular g
         (fun d => (hdegree d).le))]
     apply Finset.prod_ne_zero_iff.mpr
     intro d _
@@ -4245,7 +4245,7 @@ private noncomputable def matchingRemainingIndexEquiv
   (Equiv.ofInjective
     (matchingRemainingIndexEmbedding e S a)
     (matchingRemainingIndexEmbedding e S a).injective).trans
-      (Equiv.setCongr (matchingRemainingIndexEmbedding_range e S a))
+      (Set.equivOfEq (matchingRemainingIndexEmbedding_range e S a))
 
 private noncomputable def matchingReducedEquiv
     {ell m : ℕ} (S : Finset (Fin ell ⊕ Fin ell))
@@ -5853,16 +5853,14 @@ private theorem coefficientPolynomial_rename_outside
           MvPolynomial.coeff_C, MvPolynomial.mapAlgHom_apply, AlgEquiv.toAlgHom_toRingHom,
             MvPolynomial.map_C,
           RingHom.coe_coe, L, R]
-  change MvPolynomial.coeff α
-    ((MvPolynomial.sumAlgEquiv F Y W)
+  change ((MvPolynomial.sumAlgEquiv F Y W)
       (MvPolynomial.renameEquiv F
-        (Equiv.sumCongr (Equiv.refl Y) e) f)) = _
-  change MvPolynomial.coeff α (L f) = _
+        (Equiv.sumCongr (Equiv.refl Y) e) f)).coeff α = _
+  change (L f).coeff α = _
   rw [h]
-  change MvPolynomial.coeff α
-    (MvPolynomial.map
+  change (MvPolynomial.map
       (MvPolynomial.renameEquiv F e).toRingHom
-      ((MvPolynomial.sumAlgEquiv F Y Z) f)) = _
+      ((MvPolynomial.sumAlgEquiv F Y Z) f)).coeff α = _
   rw [MvPolynomial.coeff_map]
   rfl
 

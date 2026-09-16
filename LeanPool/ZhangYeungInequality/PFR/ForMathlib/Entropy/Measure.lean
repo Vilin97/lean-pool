@@ -157,8 +157,15 @@ lemma ae_mem_of_finiteRange {μ : Measure Ω} {X : Ω
 
 instance finiteSupport_of_finiteRange {μ : Measure Ω} {X : Ω → S} [hX' : FiniteRange X] :
     FiniteSupport (μ.map X) := by
-  use hX'.toFinset
-  exact FiniteRange.null_of_compl μ X
+  by_cases hX : AEMeasurable X μ
+  · exact ⟨hX'.toFinset, FiniteRange.null_of_compl μ X hX⟩
+  -- Without measurability the pushforward is an arbitrary Dirac mass (or `0`), which is
+  -- still finitely supported.
+  rcases eq_or_ne μ 0 with rfl | hμ
+  · simp only [Measure.map_zero]
+    exact ⟨∅, by simp⟩
+  rw [Measure.map_of_not_aemeasurable_of_ne_zero hX hμ]
+  infer_instance
 
 instance finiteSupport_of_prod {μ : Measure S} [FiniteSupport μ] {ν : Measure T} [SigmaFinite ν]
     [FiniteSupport ν] :
@@ -588,11 +595,11 @@ lemma _root_.ProbabilityTheory.measureMutualInfo_univ_smul
   congr 1
   · congr 1
     · convert measureEntropy_univ_smul
-      simp only [Measure.map_smul]; congr; symm
+      rw [Measure.map_smul _ measurable_fst.aemeasurable]; congr; symm
       convert Measure.map_apply measurable_fst MeasurableSet.univ
       rw [Set.preimage_univ]
     · convert measureEntropy_univ_smul
-      simp only [Measure.map_smul]; congr; symm
+      rw [Measure.map_smul _ measurable_snd.aemeasurable]; congr; symm
       convert Measure.map_apply measurable_snd MeasurableSet.univ
       rw [Set.preimage_univ]
   convert measureEntropy_univ_smul
@@ -635,10 +642,8 @@ lemma _root_.ProbabilityTheory.measureMutualInfo_nonneg_aux
       μ.real {p} = (μ.map Prod.fst).real {p.1} * (μ.map Prod.snd).real {p.2}) := by
   rcases eq_zero_or_isProbabilityMeasure μ with rfl | hμ
   · simp
-  have : IsProbabilityMeasure (μ.map Prod.fst) :=
-    Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
-  have : IsProbabilityMeasure (μ.map Prod.snd) :=
-    Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+  have : IsProbabilityMeasure (μ.map Prod.fst) := inferInstance
+  have : IsProbabilityMeasure (μ.map Prod.snd) := inferInstance
   let E := μ.finiteSupport
   have hE := measure_compl_support μ
   classical

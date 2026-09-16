@@ -39,10 +39,10 @@ private lemma lpNorm_mono_real_ae {f : Ω → ℝ} {g : Ω → ℝ}
     (hg : MeasureTheory.MemLp g 2 μ) (hfg : ∀ᵐ x ∂μ, ‖f x‖ ≤ g x) :
     MeasureTheory.lpNorm f 2 μ ≤ MeasureTheory.lpNorm g 2 μ := by
   by_cases hf : AEStronglyMeasurable f μ
-  · rw [← MeasureTheory.toReal_eLpNorm hf,
-      ← MeasureTheory.toReal_eLpNorm hg.aestronglyMeasurable]
+  · rw [← MeasureTheory.toReal_eLpNorm,
+      ← MeasureTheory.toReal_eLpNorm]
     exact ENNReal.toNNReal_mono hg.eLpNorm_ne_top
-      (MeasureTheory.eLpNorm_mono_ae_real hfg)
+      (MeasureTheory.eLpNorm_mono_ae_real hf hfg)
   · simp_all
 
 omit [SigmaFinite μ] in
@@ -51,7 +51,7 @@ private lemma lpNorm_coe_l2 {E : Type*} [NormedAddCommGroup E]
     MeasureTheory.lpNorm (fun x : Ω => F x) 2 μ = ‖F‖ := by
   have hmeas : AEStronglyMeasurable (fun x : Ω => F x) μ := by fun_prop
   rw [MeasureTheory.Lp.norm_def]
-  exact (MeasureTheory.toReal_eLpNorm hmeas).symm
+  exact MeasureTheory.toReal_eLpNorm.symm
 
 omit [SigmaFinite μ] in
 private lemma lpNorm_norm_l2 (F : MeasureTheory.Lp ℂ 2 μ) :
@@ -203,17 +203,17 @@ theorem local_stability
     have hf0' : ‖f0‖ = 1 := by simpa [hF_norm] using hf0
     have hXnorm : ‖X‖ = ‖A‖ := by
       dsimp [X]
-      rw [MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm hX_mem.1]
+      rw [MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm]
       simpa [Xfun] using lpNorm_norm_l2 μ A
     have hYnorm : ‖Y‖ = ‖F‖ := by
       dsimp [Y]
-      rw [MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm hY_mem.1]
+      rw [MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm]
       simpa [Yfun] using lpNorm_norm_l2 μ F
     have hsubnorm : ‖X - Y‖ = defect h := by
       have hsub : X - Y = (hX_mem.sub hY_mem).toLp (Xfun - Yfun) := by
         dsimp [X, Y]
         exact (MeasureTheory.MemLp.toLp_sub hX_mem hY_mem).symm
-      rw [hsub, MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm (hX_mem.sub hY_mem).1]
+      rw [hsub, MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm]
       rfl
     have hsum_bound : ‖X + Y‖ ≤ 2 + ‖h‖ := by
       calc

@@ -24,8 +24,7 @@ theorem Algebra.TensorProduct.map_apply_map_apply {R : Type _} [CommSemiring R]
     (f : A →ₐ[R] B) (g : C →ₐ[R] D) (z : B →ₐ[R] E) (w : D →ₐ[R] F) (x : A ⊗[R] C) :
     (Algebra.TensorProduct.map z w) (Algebra.TensorProduct.map f g x) =
       Algebra.TensorProduct.map (z.comp f) (w.comp g) x :=
-x.induction_on
-  (map_zero _)
+x.inductionOn
   (fun a b => by simp only [Algebra.TensorProduct.map_tmul]; rfl)
   (fun a b ha hb => by simp only [map_add, ha, hb])
 
@@ -75,13 +74,11 @@ noncomputable def LinearEquiv.TensorProduct.map {R : Type _} [CommSemiring R] {A
   toFun x := _root_.TensorProduct.map f.toLinearMap g.toLinearMap x
   invFun x := _root_.TensorProduct.map f.symm.toLinearMap g.symm.toLinearMap x
   left_inv x := by
-    induction x using _root_.TensorProduct.induction_on with
-    | zero => simp
+    induction x using _root_.TensorProduct.inductionOn with
     | tmul a c => simp [_root_.TensorProduct.map_tmul]
     | add x y hx hy => simp [map_add, hx, hy]
   right_inv x := by
-    induction x using _root_.TensorProduct.induction_on with
-    | zero => simp
+    induction x using _root_.TensorProduct.inductionOn with
     | tmul a c => simp [_root_.TensorProduct.map_tmul]
     | add x y hx hy => simp [map_add, hx, hy]
   map_add' x y := (_root_.TensorProduct.map f.toLinearMap g.toLinearMap).map_add x y

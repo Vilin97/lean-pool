@@ -198,12 +198,9 @@ theorem quadratic_weight_lower_bound
   have hadd (x y : ι → F) :
       q.eval (x + y) = q.eval x + q.eval y + q.eval 0 + b x y := by
     rw [hq0]
-    simp only [QuadraticData.eval, b, Pi.add_apply, add_mul, mul_add,
-      Finset.sum_add_distrib]
-    have hthree : (3 : F) = 1 := by decide
-    have hc3 : q.constantTerm * 3 = q.constantTerm := by rw [hthree, mul_one]
-    ring_nf
-    try rw [hc3]
+    simp only [QuadraticData.eval, b, Pi.add_apply, mul_add, add_mul,
+      ← mul_assoc, Finset.sum_add_distrib]
+    linear_combination (-q.constantTerm) * (CharTwo.two_eq_zero (R := F))
   have hbadd (x y z : ι → F) : b (x + y) z = b x z + b y z := by
     dsimp [b]
     simp only [add_mul, mul_add]

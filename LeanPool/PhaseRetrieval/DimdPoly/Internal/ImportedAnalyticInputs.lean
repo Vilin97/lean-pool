@@ -1052,7 +1052,7 @@ private theorem exists_schwartz_lpNorm_sub_le_realVec {d : Nat}
   have hg₃' :
       MeasureTheory.eLpNorm (f - (s : RealVec d -> ℂ)) 2 μ ≤ ENNReal.ofReal ε := hg₃
   refine ⟨s, ?_⟩
-  rw [← MeasureTheory.toReal_eLpNorm hs.aestronglyMeasurable]
+  rw [← MeasureTheory.toReal_eLpNorm]
   exact (ENNReal.toReal_le_toReal hs.eLpNorm_ne_top (by simp)).mpr hg₃' |>.trans_eq
     (ENNReal.toReal_ofReal hε.le)
 
@@ -1206,7 +1206,7 @@ private theorem schwartzApproxRealVec_toLp_tendsto {d : Nat} (f : L2Real d) :
             rw [MeasureTheory.Lp.edist_toLp_toLp]
       _ = MeasureTheory.lpNorm
             ((s : RealVec d -> ℂ) - (f : RealVec d -> ℂ)) 2 μ := by
-            rw [MeasureTheory.toReal_eLpNorm hsub.aestronglyMeasurable]
+            rw [MeasureTheory.toReal_eLpNorm]
   have hraw :
       Tendsto
         (fun n : Nat =>
@@ -1403,7 +1403,8 @@ private theorem stftRep_schwartz_eq_fourier_apply {d : Nat}
         fun t : RealVec d => h (t - x) := by
     simpa [Function.comp_def] using
       (MeasureTheory.measurePreserving_sub_right
-        (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) x).quasiMeasurePreserving.ae_eq
+        (MeasureTheory.volume : MeasureTheory.Measure (RealVec d))
+          x).quasiMeasurePreserving.ae_eq_comp
         (h.coeFn_toLp 2 (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)))
   filter_upwards [hf_ae, hh_ae] with t hft hht
   rw [hft, hht]
@@ -1941,7 +1942,8 @@ theorem norm_modulateL2 {d : Nat} (ω : RealVec d) (f : L2Real d) :
     ‖modulateL2 ω f‖ = ‖f‖ := by
   rw [MeasureTheory.Lp.norm_def, MeasureTheory.Lp.norm_def]
   apply congrArg ENNReal.toReal
-  apply MeasureTheory.eLpNorm_congr_norm_ae
+  refine MeasureTheory.eLpNorm_congr_norm_ae (MeasureTheory.Lp.aestronglyMeasurable _)
+    (MeasureTheory.Lp.aestronglyMeasurable _) ?_
   filter_upwards [modulateL2_coeFn ω f] with t hmod
   rw [hmod, norm_mul, modulationPhase_norm]
   simp
@@ -1970,8 +1972,7 @@ private theorem tendsto_lintegral_filter_of_dominated_convergence_ae
   · refine h_lim.mono fun a h_lim => ?_
     apply @Tendsto.comp _ _ _ (fun n => x (n + k)) fun n => F n a
     · assumption
-    rw [tendsto_add_atTop_iff_nat]
-    assumption
+    rwa [tendsto_add_atTop_iff_nat]
 
 private theorem modulation_eLpNorm_tendsto_zero {d : Nat} (f : L2Real d) (ω0 : RealVec d) :
     Tendsto
@@ -2037,7 +2038,7 @@ private theorem modulation_eLpNorm_tendsto_zero {d : Nat} (f : L2Real d) (ω0 : 
         (p := (2 : ℝ≥0∞))
         (μ := (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)))
         (f := fun t : RealVec d => (2 : ℂ) * (f : RealVec d -> ℂ) t)
-        (by norm_num) (by norm_num) hmul_mem.2).ne
+        (by norm_num) (by norm_num) hmul_mem).ne
     · exact Filter.Eventually.of_forall fun t => by
         have hphase : Tendsto (fun ω : RealVec d => modulationPhase ω t) (𝓝 ω0)
             (𝓝 (modulationPhase ω0 t)) := by
@@ -2080,8 +2081,19 @@ private theorem modulation_eLpNorm_tendsto_zero {d : Nat} (f : L2Real d) (ω0 : 
       ENNReal.continuous_rpow_const
     simpa [Function.comp_def, ENNReal.zero_rpow_of_pos (by norm_num : 0 < (1 / (2 : ℝ)))] using
       (hpow_cont.tendsto (0 : ℝ≥0∞)).comp hInt
-  simpa [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞)] using hpow
+  have hmeas : ∀ ω : RealVec d, AEStronglyMeasurable
+      (fun t : RealVec d =>
+        modulationPhase ω t * (f : RealVec d -> ℂ) t -
+          modulationPhase ω0 t * (f : RealVec d -> ℂ) t)
+      (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := fun ω =>
+    ((Continuous.aestronglyMeasurable (by
+      unfold modulationPhase
+      fun_prop)).mul hf.aestronglyMeasurable).sub
+      ((Continuous.aestronglyMeasurable (by
+        unfold modulationPhase
+        fun_prop)).mul hf.aestronglyMeasurable)
+  simpa [fun ω : RealVec d => MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
+      (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞) (hmeas ω)] using hpow
 
 theorem continuous_modulateL2_apply {d : Nat} (f : L2Real d) :
     Continuous fun ω : RealVec d => modulateL2 ω f := by
@@ -2146,7 +2158,9 @@ theorem ambiguityRep_eq_lpPairing
 theorem edist_modulateL2 {d : Nat} (ω : RealVec d) (f g : L2Real d) :
     edist (modulateL2 ω f) (modulateL2 ω g) = edist f g := by
   rw [MeasureTheory.Lp.edist_def, MeasureTheory.Lp.edist_def]
-  apply MeasureTheory.eLpNorm_congr_norm_ae
+  refine MeasureTheory.eLpNorm_congr_norm_ae
+    ((MeasureTheory.Lp.aestronglyMeasurable _).sub (MeasureTheory.Lp.aestronglyMeasurable _))
+    ((MeasureTheory.Lp.aestronglyMeasurable _).sub (MeasureTheory.Lp.aestronglyMeasurable _)) ?_
   filter_upwards [
     modulateL2_coeFn ω f,
     modulateL2_coeFn ω g] with t hmf hmg
@@ -2180,7 +2194,9 @@ theorem continuous_modulateL2 {d : Nat} {X : Type*} [TopologicalSpace X]
 theorem edist_star_L2 {d : Nat} (f g : L2Real d) :
     edist (star f) (star g) = edist f g := by
   rw [MeasureTheory.Lp.edist_def, MeasureTheory.Lp.edist_def]
-  apply MeasureTheory.eLpNorm_congr_norm_ae
+  refine MeasureTheory.eLpNorm_congr_norm_ae
+    ((MeasureTheory.Lp.aestronglyMeasurable _).sub (MeasureTheory.Lp.aestronglyMeasurable _))
+    ((MeasureTheory.Lp.aestronglyMeasurable _).sub (MeasureTheory.Lp.aestronglyMeasurable _)) ?_
   filter_upwards [
     MeasureTheory.Lp.coeFn_star f,
     MeasureTheory.Lp.coeFn_star g] with t hf hg
@@ -2205,7 +2221,8 @@ theorem norm_star_L2 {d : Nat} (f : L2Real d) :
     ‖star f‖ = ‖f‖ := by
   rw [MeasureTheory.Lp.norm_def, MeasureTheory.Lp.norm_def]
   apply congrArg ENNReal.toReal
-  apply MeasureTheory.eLpNorm_congr_norm_ae
+  refine MeasureTheory.eLpNorm_congr_norm_ae (MeasureTheory.Lp.aestronglyMeasurable _)
+    (MeasureTheory.Lp.aestronglyMeasurable _) ?_
   filter_upwards [MeasureTheory.Lp.coeFn_star f] with t hf
   rw [hf]
   simp only [Pi.star_apply]
@@ -2620,7 +2637,8 @@ private theorem eLpNorm_stftRep_le {d : Nat} (h f : L2Real d) :
   have hliminf :
       MeasureTheory.eLpNorm F 2 μP ≤
         atTop.liminf (fun n : Nat => MeasureTheory.eLpNorm (Fₙ n) 2 μP) :=
-    MeasureTheory.Lp.eLpNorm_lim_le_liminf_eLpNorm hmeas F hpoint
+    MeasureTheory.Lp.eLpNorm_lim_le_liminf_eLpNorm hmeas F
+      (stftRep_aestronglyMeasurable h f) hpoint
   have hprod :
       Tendsto
         (fun n : Nat =>
@@ -2683,8 +2701,7 @@ private theorem stftRep_sq_integrable {d : Nat} (h f : L2Real d) :
     ENNReal.ofReal_lt_top
   have hfin : MeasureTheory.eLpNorm (stftRep h f) 2 μP < ⊤ :=
     lt_of_le_of_lt (eLpNorm_stftRep_le h f) hfinite_rhs
-  have hmem : MeasureTheory.MemLp (stftRep h f) 2 μP :=
-    ⟨stftRep_aestronglyMeasurable h f, hfin⟩
+  have hmem : MeasureTheory.MemLp (stftRep h f) 2 μP := hfin
   exact (MeasureTheory.memLp_two_iff_integrable_sq_norm
     (stftRep_aestronglyMeasurable h f)).mp hmem
 
@@ -2703,7 +2720,7 @@ private theorem lpNorm_coeFn_L2Real_eq_norm {d : Nat} (f : L2Real d) :
     MeasureTheory.lpNorm (f : RealVec d -> ℂ) 2
       (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) = ‖f‖ := by
   rw [MeasureTheory.Lp.norm_def,
-    MeasureTheory.toReal_eLpNorm (MeasureTheory.Lp.memLp f).aestronglyMeasurable]
+    MeasureTheory.toReal_eLpNorm]
 
 private theorem lpNorm_stftRep_le_lpNorm {d : Nat} (h f : L2Real d) :
     MeasureTheory.lpNorm (stftRep h f) 2
@@ -2714,7 +2731,7 @@ private theorem lpNorm_stftRep_le_lpNorm {d : Nat} (h f : L2Real d) :
           (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := by
   let μP : MeasureTheory.Measure (PhaseSpace d) := MeasureTheory.volume
   have hmem : MeasureTheory.MemLp (stftRep h f) 2 μP := stftRep_memLp h f
-  rw [← MeasureTheory.toReal_eLpNorm hmem.aestronglyMeasurable]
+  rw [← MeasureTheory.toReal_eLpNorm]
   simpa using
     (ENNReal.toReal_le_toReal hmem.eLpNorm_ne_top ENNReal.ofReal_ne_top).mpr
       (eLpNorm_stftRep_le h f)
@@ -2834,7 +2851,7 @@ private theorem lpNorm_mul_le_real
   have hmem : MeasureTheory.MemLp (fun x => f x * g x) 1 μ := by
     refine MeasureTheory.MemLp.ae_eq ?_ (hg.mul hf)
     filter_upwards with x
-    simp [Pi.mul_apply]
+    simp [Pi.mul_apply, mul_comm]
   rw [MeasureTheory.lpNorm_one_eq_integral_norm hmem.aestronglyMeasurable]
   have hpq : Real.HolderConjugate 2 2 := by constructor <;> norm_num
   have hf_abs : MeasureTheory.MemLp (fun x => |f x|) (ENNReal.ofReal (2 : ℝ)) μ := by
@@ -2855,7 +2872,7 @@ private theorem lpNorm_mul_le_real
     norm_num at h
     have h' := congrArg ENNReal.toReal h
     rw [ENNReal.toReal_ofReal (by positivity),
-      MeasureTheory.toReal_eLpNorm hf.aestronglyMeasurable] at h'
+      MeasureTheory.toReal_eLpNorm] at h'
     simpa [Real.norm_eq_abs] using h'.symm
   have hg_lp :
       (∫ x, |g x| ^ (2 : ℝ) ∂μ) ^ (1 / (2 : ℝ)) =
@@ -2865,7 +2882,7 @@ private theorem lpNorm_mul_le_real
     norm_num at h
     have h' := congrArg ENNReal.toReal h
     rw [ENNReal.toReal_ofReal (by positivity),
-      MeasureTheory.toReal_eLpNorm hg.aestronglyMeasurable] at h'
+      MeasureTheory.toReal_eLpNorm] at h'
     simpa [Real.norm_eq_abs] using h'.symm
   have hleft :
       ∫ x, ‖f x * g x‖ ∂μ = ∫ x, |f x| * |g x| ∂μ := by
@@ -2943,7 +2960,7 @@ private theorem lpNorm_stftRep_sq_sub_tendsto_zero {d : Nat}
   have hHmem : MeasureTheory.MemLp (fun ξ : PhaseSpace d => Aₙ n ξ * Bₙ n ξ) 1 μP := by
     refine MeasureTheory.MemLp.ae_eq ?_ (hBmem.mul hAmem)
     filter_upwards with ξ
-    simp [Pi.mul_apply]
+    simp [Pi.mul_apply, mul_comm]
   have hpoint : ∀ ξ : PhaseSpace d, ‖Dₙ n ξ‖ ≤ Aₙ n ξ * Bₙ n ξ := by
     intro ξ
     have hsum_nonneg : 0 ≤ ‖Fₙ n ξ‖ + ‖F ξ‖ := by positivity

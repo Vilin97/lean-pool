@@ -60,8 +60,8 @@ lemma ψ_kills_gen : ψHom ((X 0) ^ 2 - (X 1) * (X 2)) = 0 := by
   ring
 
 lemma conjI_le_ker_ψ : conjI ≤ RingHom.ker ψHom.toRingHom := by
-  rw [show conjI = Ideal.span {(X (0 : Fin 3) : MvPowerSeries (Fin 3) ℂ) ^ 2 -
-    X 1 * X 2} from rfl, Ideal.span_le]
+  rw [show conjI = Ideal.span {((X (0 : Fin 3) : MvPowerSeries (Fin 3) ℂ) ^ 2 -
+    X 1 * X 2)} from rfl, Ideal.span_le]
   intro x hx
   simp only [Set.mem_singleton_iff] at hx
   subst hx

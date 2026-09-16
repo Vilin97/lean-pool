@@ -128,7 +128,10 @@ If a function is partial recursive, then it is recursive in every partial functi
 -/
 lemma recursiveIn_of_partrec (pF : Nat.Partrec f) : RecursiveIn O f := by
   induction pF with
-  | zero | succ | left | right => constructor
+  | zero => exact .zero
+  | succ => exact .succ
+  | left => exact .left
+  | right => exact .right
   | pair _ _ ih₁ ih₂ => exact RecursiveIn.pair ih₁ ih₂
   | comp _ _ ih₁ ih₂ => exact RecursiveIn.comp ih₁ ih₂
   | prec _ _ ih₁ ih₂ => exact RecursiveIn.prec ih₁ ih₂
@@ -251,7 +254,10 @@ theorem recursiveIn_mono {O₁ O₂ : Set (ℕ →. ℕ)} (hsub : O₁ ⊆ O₂)
       RecursiveIn O₁ g → RecursiveIn O₂ g := by
   intro hg
   induction hg with
-  | zero | succ | left | right => constructor
+  | zero => exact .zero
+  | succ => exact .succ
+  | left => exact .left
+  | right => exact .right
   | oracle g hg => exact RecursiveIn.oracle g (hsub hg)
   | pair _ _ ih₁ ih₂ => exact RecursiveIn.pair ih₁ ih₂
   | comp _ _ ih₁ ih₂ => exact RecursiveIn.comp ih₁ ih₂
@@ -261,7 +267,10 @@ theorem recursiveIn_mono {O₁ O₂ : Set (ℕ →. ℕ)} (hsub : O₁ ⊆ O₂)
 theorem RecursiveIn_subst {O O' : Set (ℕ →. ℕ)} {f : ℕ →. ℕ} (hf : RecursiveIn O f)
     (hO : ∀ g, g ∈ O → RecursiveIn O' g) : RecursiveIn O' f := by
   induction hf with
-  | zero | succ | left | right => constructor
+  | zero => exact .zero
+  | succ => exact .succ
+  | left => exact .left
+  | right => exact .right
   | oracle g hg => exact hO g hg
   | pair _ _ ihf ihg => exact .pair ihf ihg
   | comp _ _ ihf ihg => exact .comp ihf ihg

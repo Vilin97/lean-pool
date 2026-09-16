@@ -37,8 +37,7 @@ lemma paper_avStar_coeff_sl3 (s : SpecialLinear.SL3) (u : PaperKernel.AVStar)
       (avStarAction s (1 : PaperKernel.Q) u)) i =
       sl3AAction s
         ((TensorProduct.equivFinsuppOfBasisRight paperVStarBasis u) i) := by
-  refine TensorProduct.induction_on u ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn u ?_ ?_
   · intro a f
     simp [avStarAction, paperVStarBasis]
   · intro x y hx hy
@@ -144,8 +143,7 @@ lemma paperContractRight_basisCoord
     (p : PaperKernel.OrderedBasisIndex) (x : PaperKernel.TensorAA) :
     paperContractRight (PaperKernel.orderedBasis.coord p) x =
       (TensorProduct.equivFinsuppOfBasisRight PaperKernel.orderedBasis x) p := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp
+  induction x using TensorProduct.inductionOn with
   | tmul a b =>
       simp [Module.Basis.coord_apply]
   | add x y hx hy =>
@@ -164,8 +162,7 @@ lemma paperContractRight_equivariant
       (sl3AAction (Matrix.SpecialLinearGroup.transvection hij a) b) = φ b := by
     intro b
     exact paper_ordered_coord_transvection_invariant hij (Ne.symm hr) a b
-  induction x using TensorProduct.induction_on with
-  | zero => simp [paperContractRight]
+  induction x using TensorProduct.inductionOn with
   | tmul u v =>
       have hv := hφ v
       change (orderedBasis.repr

@@ -521,7 +521,7 @@ private def close_up_aux_no_common_nonzero_proof
       have hf_bar_ne : f.map (φ P) ≠ 0 := by
         intro h_eq
         apply h_neg
-        have h := congr_fun (congr_arg Polynomial.coeff h_eq) i
+        have h := congrArg (fun g => Polynomial.coeff g i) h_eq
         simp only [Polynomial.coeff_map, Polynomial.coeff_zero] at h
         exact Ideal.mem_comap.mpr (Ideal.Quotient.eq_zero_iff_mem.mp h)
       have hP_in_C_main : P ∈ C_main := by

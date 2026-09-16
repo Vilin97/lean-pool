@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.Basic.Real.Basic
 import Mathlib.Combinatorics.SimpleGraph.Clique
 import Mathlib.Combinatorics.SimpleGraph.Finite
-import Mathlib.Data.Real.Basic
 
 /-!
 # Elementary clique-number facts

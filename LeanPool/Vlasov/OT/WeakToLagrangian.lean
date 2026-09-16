@@ -390,7 +390,8 @@ lemma measure_eq_of_forall_Cc_integral_eq {μ ν : Measure (PhaseSpace d)}
     rw [show (volume : Measure (PhaseSpace d)) = (volume : Measure (PhysSpace d)).prod volume from
       Measure.volume_eq_prod _ _]
     infer_instance
-  have hvolReg : (volume : Measure (PhaseSpace d)).Regular := inferInstance
+  have hvolReg : (volume : Measure (PhaseSpace d)).Regular :=
+    Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure volume
   have hμreg : μ.Regular := inferInstance
   have hνreg : ν.Regular := inferInstance
   -- Reduce `μ = ν` to equality of integrals against continuous compactly-supported `g`.
@@ -3112,7 +3113,7 @@ lemma convolveField_window_setup
   intro σ hσ
   have : IsProbabilityMeasure (f σ) := (hf_mom σ hσ).1
   have hprob_m : IsProbabilityMeasure (spatialMarginal (f σ)) :=
-    Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+    (Measure.isProbabilityMeasure_map_iff measurable_fst.aemeasurable).mpr inferInstance
   -- ‖·‖ integrable wrt the spatial marginal (from the finite first moment of f σ)
   have h_y_int : Integrable (fun y : PhysSpace d => ‖y‖) (spatialMarginal (f σ)) := by
     unfold spatialMarginal
@@ -3252,7 +3253,8 @@ theorem weakEvolution_test_C1c_On
     rw [show (volume : Measure (PhaseSpace d)) = (volume : Measure (PhysSpace d)).prod volume from
       Measure.volume_eq_prod _ _]
     infer_instance
-  have hvolReg : (volume : Measure (PhaseSpace d)).Regular := inferInstance
+  have hvolReg : (volume : Measure (PhaseSpace d)).Regular :=
+    Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure volume
   -- mollifier family (shrinking bumps); copy of #9's
   set φ : ℕ → ContDiffBump (0 : PhaseSpace d) :=
     fun n => ⟨1 / (n + 2), 2 / (n + 2), by positivity, by
@@ -4318,7 +4320,7 @@ theorem frozenFlow_inverse_On
     intro s hs x_pt
     have : IsProbabilityMeasure (f s) := (hf_mom s hs).1
     have : IsProbabilityMeasure (spatialMarginal (f s)) :=
-      Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+      (Measure.isProbabilityMeasure_map_iff measurable_fst.aemeasurable).mpr inferInstance
     have h_aesm : AEStronglyMeasurable (fun y : PhysSpace d => gradW (x_pt - y))
         (spatialMarginal (f s)) :=
       (hL.continuous.comp (continuous_const.sub continuous_id)).aestronglyMeasurable
@@ -4366,7 +4368,7 @@ theorem frozenFlow_inverse_On
   have hρ'_prob : ∀ s, IsProbabilityMeasure (ρ' s) := by
     intro s
     have : IsProbabilityMeasure (f (clampT s)) := (hf_mom (clampT s) (hclampT_mem s)).1
-    exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+    exact (Measure.isProbabilityMeasure_map_iff measurable_fst.aemeasurable).mpr inferInstance
   have h_int' : ∀ s (x : PhysSpace d), Integrable (fun y => gradW (x - y)) (ρ' s) :=
     fun s x => h_int_win (clampT s) (hclampT_mem s) x
   have hf_cont' : ∀ x, Continuous (fun s => convolveFunctionMeasure gradW (ρ' s) x) :=
@@ -4617,7 +4619,7 @@ theorem weak_eq_frozenField_pushforward_On
   have hρ'_prob : ∀ t, IsProbabilityMeasure (ρ' t) := by
     intro t
     have : IsProbabilityMeasure (f (clampT t)) := (hf_mom (clampT t) (hclampT_mem t)).1
-    exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+    exact (Measure.isProbabilityMeasure_map_iff measurable_fst.aemeasurable).mpr inferInstance
   have h_int' : ∀ t (x : PhysSpace d), Integrable (fun y => gradW (x - y)) (ρ' t) :=
     fun t x => h_int_window (clampT t) (hclampT_mem t) x
   -- `ρ'`-flavoured velocity ODE on `Ioo 0 T` (clamp = id there, so the field is unchanged).
@@ -4645,7 +4647,7 @@ theorem weak_eq_frozenField_pushforward_On
     (hΦ_meas t ht).aemeasurable
   have hmap_prob :
       IsProbabilityMeasure (Measure.map (fun z : PhaseSpace d => (charX t z, charV t z)) (f 0)) :=
-    Measure.isProbabilityMeasure_map hΦt_aem
+    inferInstance
   refine measure_eq_of_forall_Cc_integral_eq (fun φ hφ hφc => ?_)
   rw [integral_map hΦt_aem hφ.continuous.aestronglyMeasurable]
   exact weak_eq_frozenField_pushforward_dualCore W gradW hgradW L hL f T hT hf_weak hf_mom hf_narrow
@@ -4696,7 +4698,7 @@ theorem weak_isLagrangianVlasovSolutionOn
   have hρ_prob : ∀ t ∈ Set.Icc (0 : ℝ) T, IsProbabilityMeasure (spatialMarginal (f t)) := by
     intro t ht
     have : IsProbabilityMeasure (f t) := (hf_mom t ht).1
-    exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+    exact (Measure.isProbabilityMeasure_map_iff measurable_fst.aemeasurable).mpr inferInstance
   have hsetup := convolveField_window_setup gradW L hL f T hf_mom M_ρ hM_ρ
     (‖gradW 0‖ + (L : ℝ) * M_ρ) rfl
   have h_y_int : ∀ t ∈ Set.Icc (0 : ℝ) T,
@@ -4720,15 +4722,33 @@ theorem weak_isLagrangianVlasovSolutionOn
       hf_cont_deriv M_ρ hM_ρ_nn hM_ρ charX charV hflow hinit hcontIcc hderivIco
   -- Assemble the localized Lagrangian witness.
   refine ⟨hf_weak, charX, charV, hflow, hpush, ?_, hcontIcc⟩
-  -- AEMeasurability of the flow at each window time, from the pushforward identity: a
-  -- non-measurable map would force `Measure.map _ (f 0) = 0 ≠ f s` (the latter a probability).
-  intro s hs
-  have hfs_prob : IsProbabilityMeasure (f s) := (hf_mom s hs).1
-  by_contra hcon
-  have h0 : f s = 0 := by
-    rw [hpush s hs]; exact Measure.map_of_not_aemeasurable hcon
-  have hone : (f s) Set.univ = 1 := measure_univ
-  rw [h0] at hone
-  simp at hone
+  -- AEMeasurability of the flow at each window time: the vector field is Lipschitz in the
+  -- phase-space variable, so Gronwall makes `z ↦ (charX s z, charV s z)` Lipschitz, hence
+  -- measurable.  `charFlow_measurable_via_gronwall` wants the frozen curve universally in `t`,
+  -- so feed it the `[0,T]`-clamp of `ρ^f`, which agrees with `ρ^f` on the window.
+  set ρ'' : ℝ → Measure (PhysSpace d) := fun t => spatialMarginal (f (max 0 (min t T)))
+    with hρ''_def
+  have hclamp_mem : ∀ t, max 0 (min t T) ∈ Set.Icc (0 : ℝ) T := fun t =>
+    ⟨le_max_left _ _, max_le hT.le (min_le_right _ _)⟩
+  have hρ''_eq : ∀ t ∈ Set.Icc (0 : ℝ) T, ρ'' t = spatialMarginal (f t) := by
+    intro t ht
+    simp only [hρ''_def, min_eq_left ht.2, max_eq_right ht.1]
+  have hρ''_prob : ∀ t, IsProbabilityMeasure (ρ'' t) := by
+    intro t
+    rw [hρ''_def]
+    exact hρ_prob _ (hclamp_mem t)
+  have h_int'' : ∀ t (x_pt : PhysSpace d),
+      Integrable (fun y => gradW (x_pt - y)) (ρ'' t) := by
+    intro t x_pt
+    rw [hρ''_def]
+    exact h_int _ (hclamp_mem t) x_pt
+  have h_meas := charFlow_measurable_via_gronwall gradW L hL ρ'' h_int'' charX charV T hT.le
+    hinit hcontIcc (fun z t ht => by
+      have hmem : t ∈ Set.Icc (0 : ℝ) T := Set.Ico_subset_Icc_self ht
+      have hd := hderivIco z t ht
+      rwa [show vlasovVectorField gradW ρ'' t (charX t z, charV t z)
+            = vlasovVectorField gradW (fun u => spatialMarginal (f u)) t (charX t z, charV t z) from
+          by simp only [vlasovVectorField, hρ''_eq t hmem]])
+  exact fun s hs => (h_meas s hs).aemeasurable
 
 end Vlasov

@@ -696,7 +696,7 @@ theorem assignment_row_bound {α : Type*} [Fintype α]
       intro p _
       cases σ p <;> simp [localRow]
     _ ≤ ∏ _ ∈ assignmentSupport σ, Real.exp ((k : ℝ) / (z - 1)) := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro p _
         exact add_nonneg zero_le_one
           (div_nonneg hk1 (hz1.le.trans (sub_le_sub_right (hsize p) 1)))
@@ -1096,7 +1096,7 @@ theorem eulerProduct_comparison (N : ℕ) {r : ℝ} (hr : 0 ≤ r) :
   calc
     _ ≤ ∏ p ∈ N.primesLE,
         (1 - (p : ℝ) ^ (-(1 + r)))⁻¹ * Real.exp (2 * r * Real.log p / p) := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro p hp
         apply inv_nonneg.mpr
         apply sub_nonneg.mpr
@@ -1181,7 +1181,7 @@ lemma eulerProduct_pos (N : ℕ) {σ : ℝ} (hσ : 0 < σ) : 0 < eulerProduct N 
 /-- The finite Euler product decreases as its positive exponent increases. -/
 lemma eulerProduct_antitone (N : ℕ) {σ τ : ℝ} (hσ : 0 < σ) (hστ : σ ≤ τ) :
     eulerProduct N τ ≤ eulerProduct N σ := by
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro p hp
     exact inv_nonneg.mpr (sub_nonneg.mpr (Real.rpow_lt_one_of_one_lt_of_neg
       (by exact_mod_cast (Nat.mem_primesLE.mp hp).2.one_lt) (by linarith)).le)
@@ -1248,7 +1248,7 @@ theorem divisorEulerMoment_ge_eulerProduct {Z Y : ℕ} (hZY : Z ≤ Y) {t : ℝ}
   apply mul_le_mul_of_nonneg_right _ (eulerProduct_pos Z (by linarith)).le
   rw [auxiliaryProduct, divisorEulerMoment_primeProduct _
     (fun _ hp => auxiliaryPrimes_prime hp)]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro p hp
     exact (inv_pos.mpr (sub_pos.mpr (Real.rpow_lt_one_of_one_lt_of_neg
       (by exact_mod_cast (auxiliaryPrimes_prime hp).one_lt) (by linarith)))).le
@@ -1529,7 +1529,7 @@ lemma divisorEulerMoment_tilt (ps : Finset ℕ) (hps : ∀ p ∈ ps, p.Prime)
     divisorEulerMoment (∏ p ∈ ps, p) γ ≤
       divisorEulerMoment (∏ p ∈ ps, p) 0 *
         Real.exp (E * γ * ∑ p ∈ ps, Real.log p / p) := by
-  have h := Finset.prod_le_prod (s := ps)
+  have h := Finset.prod_le_prod₀ (s := ps)
     (f := fun p : ℕ => 1 + (p : ℝ) ^ γ / ((p : ℝ) - 1))
     (g := fun p : ℕ => (1 + 1 / ((p : ℝ) - 1)) * Real.exp (E * γ * Real.log p / p))
     (fun p hp => by
@@ -2571,7 +2571,7 @@ lemma integerAverage_bounded_periodic_weight {ι : Type*} [Fintype ι]
       mod_invariant_of_dvd (Nat.dvd_lcm_right _ _) (f j) (hmod j)]
   · intro n
     rw [abs_mul]
-    exact mul_le_one₀ (hf i n) (abs_nonneg _) (hf j n)
+    exact (mul_le_of_le_one_left (abs_nonneg _) (hf i n)).trans (hf j n)
 
 /-- The residues of `n` modulo the prime divisors of `P`. -/
 def residueVector (P n : ℕ) : (p : PrimeIndex P) → Fin p.val :=
@@ -2629,14 +2629,14 @@ lemma abs_productBasis_le_one {α : Type*} [Fintype α] {Ω J : α → Type*}
     (f : (p : α) → J p → Ω p → ℝ) (hf : ∀ p i t, |f p i t| ≤ 1)
     (σ : (p : α) → J p) (t : (p : α) → Ω p) : |productBasis f σ t| ≤ 1 := by
   rw [productBasis, Finset.abs_prod]
-  exact Finset.prod_le_one (fun _ _ => abs_nonneg _) (fun p _ => hf p _ _)
+  exact Finset.prod_le_one₀ (fun _ _ => abs_nonneg _) (fun p _ => hf p _ _)
 
 /-- Coefficients bounded by one give tuple amplitudes bounded by one. -/
 lemma tupleAmplitude_abs_le {P k : ℕ}
     (h : ∀ d ∈ P.divisors, |coefficient P d| ≤ 1) (r : DivisorTuple P k) :
     |tupleAmplitude r| ≤ 1 := by
   rw [tupleAmplitude, Finset.abs_prod]
-  exact Finset.prod_le_one (fun _ _ => abs_nonneg _)
+  exact Finset.prod_le_one₀ (fun _ _ => abs_nonneg _)
     (fun i _ => h _ (r i).property)
 
 /-- Every assigned prime divides the assignment product. -/
@@ -3752,7 +3752,7 @@ lemma eulerProduct_left_comparison (N : ℕ) {t : ℝ} (ht : 0 ≤ t) (ht' : t �
   calc
     _ ≤ ∏ p ∈ N.primesLE, (1 - (p : ℝ) ^ (-(1 : ℝ)))⁻¹ *
         Real.exp (smoothEulerConstant * ((p : ℝ) ^ t - 1) / p) := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro p hp
         exact inv_nonneg.mpr (sub_nonneg.mpr (Real.rpow_lt_one_of_one_lt_of_neg
           (by exact_mod_cast (Nat.mem_primesLE.mp hp).2.one_lt) (by linarith)).le)

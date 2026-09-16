@@ -40,11 +40,9 @@ def release : L ⊗[k] A →ₐ[L] L ⊗[K] (K ⊗[k] A) where
     AddMonoidHom.toZeroHom_coe, TensorProduct.liftAddHom_tmul, AddMonoidHom.coe_mk,
     ZeroHom.coe_mk]
   map_mul' x y := by
-    induction x using TensorProduct.induction_on with
-    | zero => simp only [zero_mul, ZeroHom.toFun_eq_coe, map_zero, AddMonoidHom.toZeroHom_coe]
+    induction x with
     | tmul l a =>
-      induction y using TensorProduct.induction_on with
-      | zero => simp only [mul_zero, ZeroHom.toFun_eq_coe, map_zero, AddMonoidHom.toZeroHom_coe]
+      induction y with
       | tmul l' a' =>
         simp only [Algebra.TensorProduct.tmul_mul_tmul, ZeroHom.toFun_eq_coe,
           AddMonoidHom.toZeroHom_coe]
@@ -81,8 +79,7 @@ def absorbAddHom : L ⊗[K] (K ⊗[k] A) →+ L ⊗[k] A :=
     toFun l := absorbMap k K L A l
     map_zero' := by
       ext x
-      induction x using TensorProduct.induction_on with
-      | zero => simp only [map_zero]
+      induction x with
       | tmul x a =>
         change (x • 0) ⊗ₜ a = 0
         simp only [smul_zero, TensorProduct.zero_tmul]
@@ -90,8 +87,7 @@ def absorbAddHom : L ⊗[K] (K ⊗[k] A) →+ L ⊗[k] A :=
         simp_all only [AddMonoidHom.zero_apply, map_add, add_zero]
     map_add' := fun x y ↦ by
       ext z
-      induction z using TensorProduct.induction_on with
-      | zero => simp only [map_zero]
+      induction z with
       | tmul m a =>
         change (m • (x + y)) ⊗ₜ a = (m • x) ⊗ₜ a + (m • y) ⊗ₜ a
         simp only [smul_add, TensorProduct.add_tmul]
@@ -99,8 +95,7 @@ def absorbAddHom : L ⊗[K] (K ⊗[k] A) →+ L ⊗[k] A :=
         simp only [AddMonoidHom.add_apply] at hz hw
         simp only [map_add, AddMonoidHom.add_apply, hz, hw]
   } (fun r l a ↦ by
-    induction a using TensorProduct.induction_on with
-    | zero => simp only [AddMonoidHom.coe_mk, ZeroHom.coe_mk, map_zero, smul_zero]
+    induction a with
     | tmul m a =>
       simp only [AddMonoidHom.coe_mk, ZeroHom.coe_mk, TensorProduct.smul_tmul']
       change (m • (r • l)) ⊗ₜ a = ((r • m) • l) ⊗ₜ a
@@ -118,21 +113,17 @@ def absorb : L ⊗[K] (K ⊗[k] A) →ₐ[L] L ⊗[k] A where
     rw [one_smul]
   map_mul' := fun x y ↦ by
     simp only [ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe]
-    induction x using TensorProduct.induction_on with
-    | zero => simp only [zero_mul, map_zero]
+    induction x with
     | add x' y' hx hy => simp only [add_mul, map_add, hx, hy]
     | tmul l ka =>
-    induction y using TensorProduct.induction_on with
-    | zero => simp only [mul_zero, map_zero]
+    induction y with
     | add x y hx hy => simp only [mul_add, map_add, hx, hy]
     | tmul l' ka' =>
     simp only [Algebra.TensorProduct.tmul_mul_tmul]
-    induction ka' using TensorProduct.induction_on with
-    | zero => simp only [mul_zero, TensorProduct.tmul_zero, map_zero]
+    induction ka' with
     | add x y hx hy => simp only [mul_add, TensorProduct.tmul_add, map_add, hx, hy]
     | tmul k' a =>
-    induction ka using TensorProduct.induction_on with
-    | zero => simp only [zero_mul, TensorProduct.tmul_zero, map_zero]
+    induction ka with
     | add x y hx hy => simp only [add_mul, TensorProduct.tmul_add, map_add, hx, hy]
     | tmul k1 a1 =>
     simp only [Algebra.TensorProduct.tmul_mul_tmul]
@@ -151,8 +142,7 @@ def absorbEqv : L ⊗[k] A ≃ₐ[L] L ⊗[K] (K ⊗[k] A) where
   toFun := release k K L A
   invFun := absorb k K L A
   left_inv := fun x ↦ by
-    induction x using TensorProduct.induction_on with
-    | zero => simp only [map_zero]
+    induction x with
     | tmul l a =>
       change (absorb k K L A) (l ⊗ₜ[K] (1 ⊗ₜ a)) = _
       change (1 • l) ⊗ₜ _ = _
@@ -160,11 +150,9 @@ def absorbEqv : L ⊗[k] A ≃ₐ[L] L ⊗[K] (K ⊗[k] A) where
     | add x y hx hy =>
       simp only [map_add, hx, hy]
   right_inv := fun x ↦ by
-    induction x using TensorProduct.induction_on with
-    | zero => simp only [map_zero]
+    induction x with
     | tmul l ka =>
-      induction ka using TensorProduct.induction_on with
-      | zero => simp only [TensorProduct.tmul_zero, map_zero]
+      induction ka with
       | tmul k' a =>
         change (release k K L A) ((k' • l) ⊗ₜ a) = _
         change (k' • l) ⊗ₜ[K] (1 ⊗ₜ a) = _

@@ -793,8 +793,7 @@ lemma configLEE_quad (v : Option (Fin k) → ℝ) :
   have hD : ∑ i, s i * configD t ρ x i * v (some i) ^ 2 =
       ∑ i, s i * v (some i) ^ 2 +
         ∑ i, s i * configH t ρ x i * v (some i) ^ 2 := by
-    simp only [configD, mul_add, add_mul, sum_add_distrib, mul_assoc]
-    ring
+    simp only [configD, mul_add, add_mul, sum_add_distrib, mul_assoc, one_mul]
   rw [hD]
   ring
 

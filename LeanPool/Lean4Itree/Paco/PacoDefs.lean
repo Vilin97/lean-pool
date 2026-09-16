@@ -126,7 +126,7 @@ theorem plfp_init [Lean.Order.CompleteLattice α] {f : α → α} (hm : monotone
   apply rel_antisymm <;>
   (apply le_sup; intros; apply Lean.Order.sup_le; intros; rename_i h; apply h) <;>
   (rename_i h' _; apply rel_trans _ h'; simp only) <;>
-  (rw [meet_comm, meet_top] <;> apply rel_refl)
+  (rw [CompleteLattice.meet_comm, CompleteLattice.meet_top] <;> apply rel_refl)
 
 theorem plfp_unfold [Lean.Order.CompleteLattice α] {f : α → α} (hm : monotone f) :
   plfp f (hm := hm) r = f (uplfp f (hm := hm) r) := by

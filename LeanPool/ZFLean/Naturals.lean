@@ -6,6 +6,7 @@ Authors: Vincent Trélat
 
 import LeanPool.ZFLean.Basic
 import Mathlib.Algebra.Ring.Defs
+import Mathlib.Order.WellFounded
 import Mathlib.Tactic.Ring
 
 /-! # ZFC Natural numbers
@@ -263,7 +264,7 @@ theorem succ_wf' : @WellFounded ZFSet (fun x y => insert x x = y) := by
   · exact succ_subrelation_mem'
   · exact mem_wf
 
-open Function in
+open scoped Function in
 theorem mem_wf' : @WellFounded ZFNat (·.1 ∈ ·.1) := by
   have : (fun x y : ZFNat => x.1 ∈ y.1) = ((fun x y : ZFSet => x ∈ y) on Subtype.val) := rfl
   rw [this]
@@ -572,7 +573,7 @@ The recursion principle for sets in `Nat`. This principle is meant to be used fo
 purposes only.
 -/
 def rec' {motive : ZFSet → Sort u} (n : ZFSet) (h : n ∈ Nat)
-  (zero : motive ∅) (succ : Π x ∈ Nat, motive x → motive (insert x x)) : motive n := by
+  (zero : motive ∅) (succ : ∀ x ∈ Nat, motive x → motive (insert x x)) : motive n := by
   apply succ_wf.fix (C := fun x => motive x.val) (x := ⟨n, h⟩)
   intro x ih
   by_cases x_eq_0 : x = 0
@@ -587,7 +588,7 @@ def rec' {motive : ZFSet → Sort u} (n : ZFSet) (h : n ∈ Nat)
 
 /-- Provides the base case of the recursion principle for sets in `Nat`. -/
 theorem rec'_zero {motive : ZFSet → Sort u}
-  (zero : motive ∅) (succ : Π x ∈ Nat, motive x → motive (insert x x)) :
+  (zero : motive ∅) (succ : ∀ x ∈ Nat, motive x → motive (insert x x)) :
   ZFNat.rec' ∅ zero_in_Nat zero succ = zero := by
     unfold ZFNat.rec' WellFounded.fix
     beta_reduce
@@ -597,7 +598,7 @@ theorem rec'_zero {motive : ZFSet → Sort u}
 
 /-- Provides the inductive step of the recursion principle for sets in `Nat`. -/
 theorem rec'_succ {motive : ZFSet → Sort u} (n : ZFSet) (n_Nat : n ∈ Nat)
-  (zero : motive ∅) (succ : Π x ∈ Nat, motive x → motive (insert x x)) :
+  (zero : motive ∅) (succ : ∀ x ∈ Nat, motive x → motive (insert x x)) :
   rec' (insert n n) (succ_mem_Nat' n_Nat) zero succ = succ n n_Nat (rec' n n_Nat zero succ) := by
     unfold ZFNat.rec' WellFounded.fix
     beta_reduce
@@ -625,7 +626,7 @@ definitions over natural numbers to be defined in a more natural way.
 -/
 @[induction_eliminator]
 def rec {motive : ZFNat → Sort u} (n : ZFNat)
-  (zero : motive 0) (succ : Π x, motive x → motive (succ x)) : motive n := by classical
+  (zero : motive 0) (succ : ∀ x, motive x → motive (succ x)) : motive n := by classical
   let ⟨n, hn⟩ := n
   let motive' (x : ZFSet) := if hx : x ∈ Nat then motive ⟨x, hx⟩ else unreachable!
   have : motive' n = motive ⟨n, hn⟩ := dite_eq_left hn
@@ -646,7 +647,7 @@ theorem induction_is_rec_into_Prop {motive : ZFNat → Prop} :
   induction = ZFNat.rec (motive := motive) := rfl
 
 theorem rec_zero {motive : ZFNat → Sort u}
-  (zero : motive 0) (succ : Π x, motive x → motive (succ x)) :
+  (zero : motive 0) (succ : ∀ x, motive x → motive (succ x)) :
   rec 0 zero succ = zero := by
   unfold ZFNat.rec
   dsimp
@@ -655,7 +656,7 @@ theorem rec_zero {motive : ZFNat → Sort u}
   apply eqRec_heq_self
 
 theorem rec_succ {motive : ZFNat → Sort u} (n : ZFNat)
-  (zero : motive 0) (succ' : Π x, motive x → motive (succ x)) :
+  (zero : motive 0) (succ' : ∀ x, motive x → motive (succ x)) :
   rec (succ n) zero succ' = succ' n (ZFNat.rec n zero succ') := by
   rcases n with ⟨n, hn⟩
   simp only [ZFNat.rec, succ, ZFNat.rec'_succ n hn]

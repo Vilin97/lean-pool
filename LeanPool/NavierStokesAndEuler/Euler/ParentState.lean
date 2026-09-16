@@ -279,7 +279,7 @@ theorem partitionCoefficient_bound (c : OrderedFinpartition n) (t : K) (x : Vect
     _ ≤ ‖v‖ * ∏ i, ‖iteratedFDeriv ℝ (c.partSize i) (Y t) x‖ :=
       c.norm_compAlongOrderedFinpartition_le _ _
     _ ≤ ‖v‖ * partitionBound D c := mul_le_mul_of_nonneg_left
-      (Finset.prod_le_prod (fun _ _ => norm_nonneg _)
+      (Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
         (fun i _ => hB (c.partSize i) (c.partSize_pos i) (c.partSize_le i) t x)) (norm_nonneg _)
     _ = _ := mul_comm _ _
 
@@ -417,6 +417,7 @@ theorem compositionTensorLp_norm_le :
   have hA : eLpNorm (iteratedFDeriv ℝ n (g ∘ f)) 2 volume ≤
       (β : ℝ≥0∞)*eLpNorm (fun x => ∑ i : Fin (n+1), ‖iteratedFDeriv ℝ i.val g (f x)‖) 2 volume := by
     apply eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul
+      (compositionTensor_memLp f g hf hg n D hD hjet hmp hLp).aestronglyMeasurable
     filter_upwards [] with x
     apply NNReal.coe_le_coe.mp
     change ‖iteratedFDeriv ℝ n (g ∘ f) x‖ ≤ ((n.factorial : ℝ)*D^n) *
@@ -428,14 +429,15 @@ theorem compositionTensorLp_norm_le :
     funext x
     simp only [Finset.sum_apply]
   rw [he] at hA
-  have hB := eLpNorm_sum_le (fun i (_ : i ∈ (Finset.univ : Finset (Fin (n+1)))) =>
-    (composedJetNorm_memLp f g n hmp hLp i).aestronglyMeasurable)
-    (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+  have hB := eLpNorm_sum_le (μ := (volume : Measure Vector3))
+    (f := fun i : Fin (n+1) => (fun x => ‖iteratedFDeriv ℝ i.val g (f x)‖))
+    (s := (Finset.univ : Finset (Fin (n+1)))) (by norm_num : (1 : ℝ≥0∞) ≤ 2)
   have hc (i : Fin (n+1)) : eLpNorm (fun x => ‖iteratedFDeriv ℝ i.val g (f x)‖) 2 volume =
       eLpNorm (iteratedFDeriv ℝ i.val g) 2 volume := by
     change eLpNorm ((fun y => ‖iteratedFDeriv ℝ i.val g y‖) ∘ f) 2 volume = _
     rw [eLpNorm_comp_measurePreserving (hLp i (by
-        omega)).aestronglyMeasurable.norm hmp,eLpNorm_norm]
+        omega)).aestronglyMeasurable.norm hmp,
+      eLpNorm_norm _ (hLp i (by omega)).aestronglyMeasurable]
   simp_rw [hc] at hB
   have hAB : eLpNorm (iteratedFDeriv ℝ n (g ∘ f)) 2 volume ≤
       (β : ℝ≥0∞)*∑ i : Fin (n+1), eLpNorm (iteratedFDeriv ℝ i.val g) 2 volume := by

@@ -39,8 +39,7 @@ instance terminalCommonLaw_isProbability {n : ℕ}
     (β : Fin (n + 1) → ℝ) :
     IsProbabilityMeasure (terminalCommonLaw β) := by
   unfold terminalCommonLaw
-  exact Measure.isProbabilityMeasure_map
-    (measurable_terminalCommonSignedSum β).aemeasurable
+  infer_instance
 
 theorem terminalCommonLaw_Ioi_zero {n : ℕ}
     (β : Fin (n + 1) → ℝ) (hβ : ∀ i, 0 < β i) :

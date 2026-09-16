@@ -411,8 +411,9 @@ theorem lpNorm_two_fderiv_rieszTest_le (i j : Fin 3) (ψ : ComplexTest) :
     _ ≤ ∑ k : Fin 3, comparisonLpNorm 2 (fun x : Space =>
         ‖Comparison.partialD k (rieszTest i j ψ) x‖) :=
       lpNorm_two_fin3_sum_le _ (fun k => (memLp_partial_rieszTest i j ψ k).norm)
-    _ = ∑ k : Fin 3, comparisonLpNorm 2 (Comparison.partialD k (rieszTest i j ψ)) := by
-      simp only [comparisonLpNorm, eLpNorm_norm]
+    _ = ∑ k : Fin 3, comparisonLpNorm 2 (Comparison.partialD k (rieszTest i j ψ)) :=
+      Finset.sum_congr rfl fun k _ => congrArg ENNReal.toReal
+        (eLpNorm_norm _ (memLp_partial_rieszTest i j ψ k).aestronglyMeasurable)
     _ ≤ ∑ k : Fin 3, comparisonLpNorm 2 (Comparison.partialD k (fun y => ψ y)) := by
       exact Finset.sum_le_sum fun k _ => lpNorm_two_partial_rieszTest_le i j ψ k
     _ ≤ ∑ _k : Fin 3, comparisonLpNorm 2 (fderiv ℝ (fun y => ψ y)) := by

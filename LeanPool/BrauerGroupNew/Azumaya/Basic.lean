@@ -45,8 +45,7 @@ lemma IsCentral.left_of_tensor (B C : Type*)
     obtain ⟨b, hb0, hb⟩ := hx
     rw [Subalgebra.mem_center_iff] at hb0 ⊢
     intro bc
-    induction bc using TensorProduct.induction_on with
-    | zero => simp
+    induction bc with
     | tmul b' c =>
       subst hb
       simp only [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]

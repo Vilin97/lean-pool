@@ -142,7 +142,7 @@ private lemma StandardLP.toValidELP.isSolution_iff (P : StandardLP I J R) (x : J
 
 private lemma StandardLP.toValidELP_reaches_iff (P : StandardLP I J R) (r : R) :
     P.toValidELP.Reaches r ↔ P.Reaches r := by
-  peel with x
+  refine exists_congr fun x => ?_
   apply and_congr
   · apply StandardLP.toValidELP.isSolution_iff
   · exact P.toE_dotProduct_apply x ▸ EF.coe_eq_coe_iff

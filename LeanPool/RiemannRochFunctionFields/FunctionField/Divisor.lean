@@ -65,7 +65,7 @@ place at infinity of `k(X)`. -/
 theorem placeDegree_infinite_eq_inertiaDeg
     (v : IsDedekindDomain.HeightOneSpectrum (infiniteIntegers k K)) :
     placeDegree k K (Sum.inr v) =
-      (v.asIdeal.under (inftyValuationSubring k)).inertiaDeg' v.asIdeal := by
+      v.asIdeal.inertiaDeg (inftyValuationSubring k) := by
   let A := inftyValuationSubring k
   let S := infiniteIntegers k K
   let p : Ideal A := v.asIdeal.under A
@@ -81,13 +81,13 @@ theorem placeDegree_infinite_eq_inertiaDeg
     rw [hp]
     exact inftyValuationSubring.finiteDimensionalResidueField k
   let : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := by
-    have hfin := Ideal.inertiaDeg'_pos p v.asIdeal
-    rw [Ideal.inertiaDeg'_algebraMap] at hfin
+    have hfin := Ideal.inertiaDeg_pos v.asIdeal A
+    rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal] at hfin
     exact FiniteDimensional.of_finrank_pos hfin
   let : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  change Module.finrank k (S ⧸ v.asIdeal) = p.inertiaDeg' v.asIdeal
-  rw [Ideal.inertiaDeg'_algebraMap]
+  change Module.finrank k (S ⧸ v.asIdeal) = v.asIdeal.inertiaDeg A
+  rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal]
   have htower := Module.finrank_mul_finrank k (A ⧸ p) (S ⧸ v.asIdeal)
   have hbase : Module.finrank k (A ⧸ p) = 1 := by
     rw [hp]
@@ -101,7 +101,7 @@ theorem placeDegree_finite_eq_base_mul_inertiaDeg
     (v : IsDedekindDomain.HeightOneSpectrum (ringOfIntegers k K)) :
     placeDegree k K (Sum.inl v) =
       Module.finrank k (k[X] ⧸ v.asIdeal.under k[X]) *
-        (v.asIdeal.under k[X]).inertiaDeg' v.asIdeal := by
+        v.asIdeal.inertiaDeg k[X] := by
   let S := ringOfIntegers k K
   let p : Ideal k[X] := v.asIdeal.under k[X]
   let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
@@ -114,14 +114,14 @@ theorem placeDegree_finite_eq_base_mul_inertiaDeg
   let : FiniteDimensional k (k[X] ⧸ p) :=
     finite_of_finite_type_of_isJacobsonRing k _
   let : FiniteDimensional (k[X] ⧸ p) (S ⧸ v.asIdeal) := by
-    have hfin := Ideal.inertiaDeg'_pos p v.asIdeal
-    rw [Ideal.inertiaDeg'_algebraMap] at hfin
+    have hfin := Ideal.inertiaDeg_pos v.asIdeal k[X]
+    rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal] at hfin
     exact FiniteDimensional.of_finrank_pos hfin
   let : IsScalarTower k (k[X] ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   change Module.finrank k (S ⧸ v.asIdeal) =
-    Module.finrank k (k[X] ⧸ p) * p.inertiaDeg' v.asIdeal
-  rw [Ideal.inertiaDeg'_algebraMap]
+    Module.finrank k (k[X] ⧸ p) * v.asIdeal.inertiaDeg k[X]
+  rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal]
   exact (Module.finrank_mul_finrank k (k[X] ⧸ p) (S ⧸ v.asIdeal)).symm
 
 /-- The relative ideal norm of a finite coordinate prime has exponent equal to its inertia
@@ -130,7 +130,7 @@ hypothesis. -/
 theorem relNorm_asIdeal_finite
     (v : IsDedekindDomain.HeightOneSpectrum (ringOfIntegers k K)) :
     Ideal.relNorm k[X] v.asIdeal =
-      (v.asIdeal.under k[X]) ^ (v.asIdeal.under k[X]).inertiaDeg' v.asIdeal := by
+      (v.asIdeal.under k[X]) ^ v.asIdeal.inertiaDeg k[X] := by
   let S := ringOfIntegers k K
   let : Algebra k[X] (FractionRing S) := inferInstance
   let : FaithfulSMul k[X] (FractionRing S) := inferInstance
@@ -157,7 +157,7 @@ theorem relNorm_asIdeal_infinite
     (v : IsDedekindDomain.HeightOneSpectrum (infiniteIntegers k K)) :
     Ideal.relNorm (inftyValuationSubring k) v.asIdeal =
       (v.asIdeal.under (inftyValuationSubring k)) ^
-        (v.asIdeal.under (inftyValuationSubring k)).inertiaDeg' v.asIdeal := by
+        v.asIdeal.inertiaDeg (inftyValuationSubring k) := by
   let A := inftyValuationSubring k
   let S := infiniteIntegers k K
   let : Algebra A (FractionRing S) := inferInstance
@@ -182,7 +182,7 @@ theorem relNorm_asIdeal_infinite
 /-- Weighted factor degree on the finite chart is preserved by relative ideal norm. -/
 theorem finite_factorDegree_eq_relNorm (I : Ideal (ringOfIntegers k K)) (hI : I ≠ ⊥) :
     ((UniqueFactorizationMonoid.normalizedFactors I).map fun P =>
-      Module.finrank k (k[X] ⧸ P.under k[X]) * (P.under k[X]).inertiaDeg' P).sum =
+      Module.finrank k (k[X] ⧸ P.under k[X]) * P.inertiaDeg k[X]).sum =
     ((UniqueFactorizationMonoid.normalizedFactors (Ideal.relNorm k[X] I)).map fun p =>
       Module.finrank k (k[X] ⧸ p)).sum := by
   let S := ringOfIntegers k K
@@ -210,7 +210,7 @@ omit [Algebra k[X] K] [IsScalarTower k[X] k⟮X⟯ K] in
 theorem infinite_factorDegree_eq_relNorm
     (I : Ideal (infiniteIntegers k K)) (hI : I ≠ ⊥) :
     ((UniqueFactorizationMonoid.normalizedFactors I).map fun P =>
-      (P.under (inftyValuationSubring k)).inertiaDeg' P).sum =
+      P.inertiaDeg (inftyValuationSubring k)).sum =
     ((UniqueFactorizationMonoid.normalizedFactors
       (Ideal.relNorm (inftyValuationSubring k) I)).map fun _ => 1).sum := by
   let A := inftyValuationSubring k
@@ -393,11 +393,11 @@ theorem infinite_intNorm_div_eq_norm (x : Kˣ) (n : infiniteIntegers k K)
 
 /-- The ideal-valued weight whose restriction to finite height-one primes is `placeDegree`. -/
 noncomputable def finiteIdealWeight (P : Ideal (ringOfIntegers k K)) : ℕ :=
-  Module.finrank k (k[X] ⧸ P.under k[X]) * (P.under k[X]).inertiaDeg' P
+  Module.finrank k (k[X] ⧸ P.under k[X]) * P.inertiaDeg k[X]
 
 /-- The ideal-valued weight whose restriction to infinite height-one primes is `placeDegree`. -/
 noncomputable def infiniteIdealWeight (P : Ideal (infiniteIntegers k K)) : ℕ :=
-  (P.under (inftyValuationSubring k)).inertiaDeg' P
+  P.inertiaDeg (inftyValuationSubring k)
 
 /-- The finite-chart contribution of a principal divisor is the degree at infinity of the field
 norm. -/
@@ -497,12 +497,12 @@ theorem infinitePrincipalDegree_eq_neg_intDegree_norm (x : Kˣ) :
   have hnormdZ := congrArg (fun m : ℕ => (m : ℤ)) hnormd
   have hupn :
       ((((UniqueFactorizationMonoid.normalizedFactors (Ideal.span {n})).map
-        (fun P => (P.under (inftyValuationSubring k)).inertiaDeg' P)).sum : ℕ) : ℤ) =
+        (fun P => P.inertiaDeg (inftyValuationSubring k))).sum : ℕ) : ℤ) =
           -RatFunc.intDegree (qn : k⟮X⟯) :=
     hnormnZ.trans hbaseqn
   have hupd :
       ((((UniqueFactorizationMonoid.normalizedFactors (Ideal.span {(d : S)})).map
-        (fun P => (P.under (inftyValuationSubring k)).inertiaDeg' P)).sum : ℕ) : ℤ) =
+        (fun P => P.inertiaDeg (inftyValuationSubring k))).sum : ℕ) : ℤ) =
           -RatFunc.intDegree (qd : k⟮X⟯) :=
     hnormdZ.trans hbaseqd
   change

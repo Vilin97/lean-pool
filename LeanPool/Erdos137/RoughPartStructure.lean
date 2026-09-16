@@ -35,12 +35,12 @@ def RoughPartAbove (k m : ℕ) : ℕ :=
 
 lemma smoothPartBelow_pos (k m : ℕ) : 1 ≤ SmoothPartBelow k m := by
   unfold SmoothPartBelow
-  exact Finset.one_le_prod' fun p hp =>
+  exact Finset.one_le_prod fun p hp =>
     Nat.one_le_pow _ _ (Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hp)).pos
 
 lemma roughPartAbove_pos (k m : ℕ) : 1 ≤ RoughPartAbove k m := by
   unfold RoughPartAbove
-  exact Finset.one_le_prod' fun p hp =>
+  exact Finset.one_le_prod fun p hp =>
     Nat.one_le_pow _ _ (Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hp)).pos
 
 lemma roughPartAbove_ne_zero (k m : ℕ) : RoughPartAbove k m ≠ 0 :=
@@ -64,7 +64,8 @@ lemma factorization_roughPartAbove (k m p : ℕ) :
       if p ∈ m.primeFactors.filter (fun q => ¬ q < k) then m.factorization p else 0 := by
   unfold RoughPartAbove
   rw [Nat.factorization_prod (by
-    simp_all)]
+    intro q hq
+    exact pow_ne_zero _ (Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hq)).ne_zero)]
   rw [Finset.sum_apply']
   by_cases hp : p ∈ m.primeFactors.filter (fun q => ¬ q < k)
   · rw [ite_eq_left hp]

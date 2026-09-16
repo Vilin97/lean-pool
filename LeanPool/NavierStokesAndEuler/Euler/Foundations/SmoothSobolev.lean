@@ -49,7 +49,7 @@ theorem fourier_pureDerivative_norm (d n : ℕ) (v : Domain d)
     simp only [smul_apply,
       SchwartzMap.smulLeftCLM_apply_apply ht, norm_smul]
     have hc : ‖(2 * Real.pi * Complex.I : ℂ)‖ = 2 * Real.pi := by
-      simp [Real.pi_pos.le]
+      simp
     rw [hc, ih, pow_succ, pow_succ]
     ring
 
@@ -61,7 +61,8 @@ noncomputable def normLp (d : ℕ) (f : 𝓢(Domain d, F)) :
 omit [CompleteSpace F] in
 theorem norm_normLp (d : ℕ) (f : 𝓢(Domain d, F)) :
     ‖normLp d f‖ = ‖f.toLp 2‖ := by
-  simp only [normLp, Lp.norm_toLp, eLpNorm_norm, SchwartzMap.norm_toLp]
+  simp only [normLp, Lp.norm_toLp,
+    eLpNorm_norm _ (f.memLp 2 volume).aestronglyMeasurable, SchwartzMap.norm_toLp]
 
 omit [CompleteSpace F] in
 theorem coe_normLp (d : ℕ) (f : 𝓢(Domain d, F)) :
@@ -179,8 +180,9 @@ theorem derivativeMagnitude_L2_le (s : ℕ) (f : Domain 3 → F)
   have hA : eLpNorm (derivativeMagnitude s f) 2 volume ≤
       ∑ j ∈ Finset.range (s+1), eLpNorm (iteratedFDeriv ℝ j f) 2 volume := by
     rw [he]
-    simpa only [eLpNorm_norm] using eLpNorm_sum_le (fun j hj =>
-      (hfL2 j (by have := Finset.mem_range.1 hj; omega)).1.norm) (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+    exact (eLpNorm_sum_le (by norm_num : (1 : ℝ≥0∞) ≤ 2)).trans_eq
+      (Finset.sum_congr rfl fun j hj => eLpNorm_norm _
+        (hfL2 j (by have := Finset.mem_range.1 hj; omega)).aestronglyMeasurable)
   have hfin (j : ℕ) (hj : j ∈ Finset.range (s+1)) : eLpNorm (iteratedFDeriv ℝ j f) 2 volume ≠ ⊤ :=
     (hfL2 j (by have := Finset.mem_range.1 hj; omega)).eLpNorm_ne_top
   have hB := ENNReal.toReal_mono (ENNReal.sum_ne_top.2 hfin) hA
@@ -269,14 +271,16 @@ theorem localize_pureDerivative_L2_le (n : ℕ) (i : Fin 3) (f : Domain 3 → F)
     simp only [PiLp.norm_single, norm_one, Finset.prod_const_one, mul_one] at hA
     exact hA.trans (localize_tensor_bound n f hf x z)
   have hA := eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul (μ := (volume : Measure (Domain 3)))
+    ((pureDerivative 3 n (EuclideanSpace.single i 1)
+      (localize f hf x)).memLp 2 volume).aestronglyMeasurable
     (Filter.Eventually.of_forall hb) 2
   have hfin : (unitBumpCoefficient n : ℝ≥0∞) *
       eLpNorm (fun z => derivativeMagnitude n f (x+z)) 2 volume ≠ ⊤ := by finiteness
   have hB := ENNReal.toReal_mono hfin hA
   have he : eLpNorm (fun z => derivativeMagnitude n f (x+z)) 2 volume =
       eLpNorm (derivativeMagnitude n f) 2 volume := by
-    simpa only [Function.comp_def] using eLpNorm_comp_measurePreserving (p := (2 : ℝ≥0∞)) hq.1
-        htrans
+    simpa only [Function.comp_def] using
+      eLpNorm_comp_measurePreserving (p := (2 : ℝ≥0∞)) hq.aestronglyMeasurable htrans
   rw [he] at hB
   simp only [ENNReal.toReal_mul, ENNReal.coe_toReal] at hB
   rw [SchwartzMap.norm_toLp]
@@ -369,7 +373,9 @@ theorem coordinateDerivative_H2_le_H3 (i : Fin 3) (f : Domain 3 → F)
     intro j hj
     have hj3 : j+1 ≤ 3 := by have := Finset.mem_range.1 hj; omega
     have hB := ENNReal.toReal_mono (hfL2 (j+1) hj3).eLpNorm_ne_top
-      (eLpNorm_mono (coordinateDerivative_tensor_bound j i f hf))
+      (eLpNorm_mono
+        (coordinateDerivative_tensor_memLp (j := j) i f hf (hfL2 (j+1) hj3)).aestronglyMeasurable
+        (coordinateDerivative_tensor_bound j i f hf))
     have hC : (eLpNorm (iteratedFDeriv ℝ (j+1) f) 2 volume).toReal ≤ tensorSobolevNorm 3 f :=
       Finset.single_le_sum (f := fun k => (eLpNorm (iteratedFDeriv ℝ k f) 2 volume).toReal)
         (fun _ _ => ENNReal.toReal_nonneg) (Finset.mem_range.2 (by omega))
@@ -439,7 +445,10 @@ theorem complexification_sobolevNorm (q s : ℕ) (f : Domain 3 → Domain q)
   apply Finset.sum_congr rfl
   intro j _
   congr 1
-  exact eLpNorm_congr_norm_ae (Filter.Eventually.of_forall (complexification_tensor_norm q j f hf))
+  exact eLpNorm_congr_norm_ae
+    (((complexify q).contDiff.comp hf).continuous_iteratedFDeriv (by simp)).aestronglyMeasurable
+    (hf.continuous_iteratedFDeriv (by simp)).aestronglyMeasurable
+    (Filter.Eventually.of_forall (complexification_tensor_norm q j f hf))
 
 /-- Real vector-valued H³ to C¹ on R³, for general smooth functions with actual L² derivatives. -/
 theorem real_smooth_fderiv_le_H3 (q : ℕ) (f : Domain 3 → Domain q) (hf : ContDiff ℝ ∞ f)

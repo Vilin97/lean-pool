@@ -131,7 +131,7 @@ theorem Convex.isPathConnected_diff_countable {s : Set ℂ} (hs : Convex ℝ s) 
     apply inter_subset_inter_left
     rw [sub_eq_add_neg _ x]
     refine (segment_inter_eq_endpoint_of_linearIndependent_of_ne ?_ htt'.symm c).subset
-    convert hy.units_smul ![-1, 1] <;> [skip; rfl; rfl]
+    convert! hy.units_smul ![-1, 1]
     simp [← List.ofFn_inj]
   -- pick `t` in `Ioo (-ρ) ρ` outside both countable exceptional sets.
   have hopen : IsOpen (Ioo (-ρ) ρ) := isOpen_Ioo

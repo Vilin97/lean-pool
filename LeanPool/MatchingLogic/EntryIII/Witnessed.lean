@@ -14,7 +14,7 @@ only for the conservative-extension proof, not for the public operation.
 -/
 import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
 import LeanPool.MatchingLogic.EntryIII.Lindenbaum
-import Mathlib.Data.Countable.Defs
+import Mathlib.Basic.Countable.Defs
 
 /-!
 # MatchingLogic.EntryIII.Witnessed

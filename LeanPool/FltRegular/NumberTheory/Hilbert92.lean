@@ -117,12 +117,12 @@ lemma lemma2 [Module A G] (S : systemOfUnits p G s) (hs : S.IsFundamental)
       · rw [Finsupp.mapDomain_of_notMem_range, zero_add, hij]
         rwa [← this]
       · obtain ⟨j, rfl⟩ := not_imp_comm.mp this.mpr hij
-        rw [Finsupp.mapDomain_apply Fin.succAbove_right_injective, add_zero,
+        rw [Finsupp.mapDomain_apply_of_injective Fin.succAbove_right_injective, add_zero,
           Finsupp.comapDomain_apply]
     have := S'.isMaximal p hp G hf
     suffices Submodule.span A (Set.range S.units) < Submodule.span A (Set.range S'.units) by
       exact (hs.maximal' _ _ _ S').not_gt <| AddSubgroup.index_strictAnti ‹_›
-    rw [SetLike.lt_iff_le_and_exists]
+    rw [IsConcreteLE.lt_iff_le_and_exists]
     constructor
     · rw [Submodule.span_le]
       rintro _ ⟨j, rfl⟩
@@ -226,8 +226,8 @@ def relativeUnitsMap (σ : K →ₐ[k] K) : RelativeUnits k K →* RelativeUnits
     ((QuotientGroup.mk' _).comp (Units.map (galRestrictHom (𝓞 k) k K (𝓞 K) σ)))
   rintro _ ⟨i, rfl⟩
   simp only [MonoidHom.mem_ker, MonoidHom.coe_comp, QuotientGroup.coe_mk', Function.comp_apply,
-    QuotientGroup.eq_one_iff, MonoidHom.mem_range, Units.ext_iff, Units.coe_map, MonoidHom.coe_coe,
-    AlgHom.commutes, exists_apply_eq_apply]
+    QuotientGroup.eq_one_iff, MonoidHom.mem_range, Units.ext_iff, Units.coe_map,
+    MonoidHom.coe_ofClass, AlgHom.commutes, exists_apply_eq_apply]
 
 lemma relativeUnitsMap_mk (σ : K →ₐ[k] K) (x : (𝓞 K)ˣ) :
     relativeUnitsMap σ (QuotientGroup.mk x) =
@@ -235,7 +235,7 @@ lemma relativeUnitsMap_mk (σ : K →ₐ[k] K) (x : (𝓞 K)ˣ) :
 
 private lemma relativeUnitsMap_addMonoidEndRingEquivInt_apply
     (σ : K →ₐ[k] K) (x : (𝓞 K)ˣ) :
-    (addMonoidEndRingEquivInt _ (MulEquiv.Monoid.End (relativeUnitsMap σ)))
+    (addMonoidEndRingEquivInt _ (MulEquiv.monoidEnd _ (relativeUnitsMap σ)))
       (Additive.ofMul (QuotientGroup.mk x)) =
       Additive.ofMul (QuotientGroup.mk
         (Units.map (galRestrictHom (𝓞 k) k K (𝓞 K) σ) x)) := by
@@ -280,7 +280,7 @@ include σ hp hKL hσ in
 open Polynomial in
 lemma isTors' [IsGalois k K] : Module.IsTorsionBySet ℤ[X]
     (Module.AEval' (addMonoidEndRingEquivInt _
-      (MulEquiv.Monoid.End <| relativeUnitsMapHom <|
+      (MulEquiv.monoidEnd _ <| relativeUnitsMapHom <|
         ((AlgEquiv.algHomUnitsEquiv _ _).symm σ).val)))
     (Ideal.span {cyclotomic p ℤ}) := by
   classical
@@ -307,8 +307,8 @@ lemma isTors' [IsGalois k K] : Module.IsTorsionBySet ℤ[X]
   rw [sum_ofMul_quotient_mk_eq_zero_iff, QuotientGroup.eq_one_iff]
   use Units.map (RingOfIntegers.norm k) x
   ext
-  simp only [Units.coe_map, MonoidHom.coe_coe, RingOfIntegers.coe_algebraMap_norm, Units.coe_prod,
-    Algebra.norm_eq_prod_automorphisms]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass, RingOfIntegers.coe_algebraMap_norm,
+    Units.coe_prod, Algebra.norm_eq_prod_automorphisms]
   rw [← hKL, ← IsGalois.card_aut_eq_finrank,
     ← orderOf_eq_card_of_forall_mem_zpowers hσ, ← Fin.prod_univ_eq_prod_range,
     ← (finEquivZPowers <| isOfFinOrder_of_finite _).symm.prod_comp]
@@ -522,7 +522,7 @@ lemma Hilbert92_aux1 (n : ℕ) (H : Fin n → Additive (𝓞 K)ˣ) (ν : (𝓞 k
   simp only [toMul_sum, toMul_zsmul, zpow_neg, Units.val_mul, Units.coe_prod, map_mul, map_prod,
     Units.coe_zpow, map_mul, map_prod, Algebra.norm_zpow]
   rw [← map_zpow, Units.coe_map_inv]
-  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
   have hcoe1 :
       algebraMap (𝓞 k) k (((ν ^ p) ^ a)⁻¹).1 = ((((ν : 𝓞 k) : k) ^ p) ^ a)⁻¹ := by
     change ((Units.map (algebraMap (𝓞 k) k : (𝓞 k) →* k)) _).1 = _
@@ -552,7 +552,7 @@ instance relativeUnitsModule : Module A G := by
 lemma relativeUnitsModule_zeta_smul (x) :
     (zeta p) • mkG x = mkG (Units.map (galRestrictHom (𝓞 k) k K (𝓞 K) σ) x) := by
   let φ := (addMonoidEndRingEquivInt _
-      (MulEquiv.Monoid.End <| relativeUnitsMap <| ((AlgEquiv.algHomUnitsEquiv _ _).symm σ).val))
+      (MulEquiv.monoidEnd _ <| relativeUnitsMap <| ((AlgEquiv.algHomUnitsEquiv _ _).symm σ).val))
   change QuotientAddGroup.mk ((Module.AEval'.of φ).symm <|
     Polynomial.X (R := ℤ) • Module.AEval'.of φ (Additive.ofMul (QuotientGroup.mk x))) = _
   simp only [Module.AEval.of_symm_smul, Polynomial.aeval_X,
@@ -589,7 +589,7 @@ lemma u_lemma2 (u v : (𝓞 K)ˣ) (hu : u = v / (σ v : K)) :
   congr
   rw [eq_div_iff_mul_eq']
   ext
-  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, map_mul,
+  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, map_mul,
     algebraMap_galRestrictHom_apply, hu]
   exact div_mul_cancel₀ _ (by simp)
 
@@ -687,7 +687,7 @@ lemma almostHilbert92 (hpodd : p ≠ 2) : ∃ η : (𝓞 K)ˣ, Algebra.norm k (�
   obtain ⟨S, hS⟩ := Hilbert91 p (K := K) (k := k) hp hKL σ hσ
   have NE_p_pow : (Units.map (algebraMap (𝓞 k) (𝓞 K)).toMonoidHom NE) = E ^ p := by
     ext
-    simp only [RingHom.toMonoidHom_eq_coe, Units.coe_map, MonoidHom.coe_coe,
+    simp only [RingHom.toMonoidHom_eq_coe, Units.coe_map, MonoidHom.coe_ofClass,
       RingOfIntegers.coe_eq_algebraMap, Units.val_pow_eq_pow_val, map_pow]
     rw [← map_pow] at hE
     refine Hilbert92_aux2 p hp hKL σ hσ E _ hE ?_ hpodd
@@ -751,7 +751,7 @@ lemma almostHilbert92 (hpodd : p ≠ 2) : ∃ η : (𝓞 K)ˣ, Algebra.norm k (�
                 ← mul_pow] at NE_p_pow
               apply_fun ((↑) : (𝓞 K)ˣ → K) at NE_p_pow
               simp only [RingHom.toMonoidHom_eq_coe, Units.val_pow_eq_pow_val, Units.val_mul,
-                Units.coe_map_inv, MonoidHom.coe_coe, Units.val_one] at NE_p_pow
+                Units.coe_map_inv, MonoidHom.coe_ofClass, Units.val_one] at NE_p_pow
               have : NeZero p := ⟨hp.pos.ne'⟩
               obtain ⟨i, -, e⟩ := hν''.eq_pow_of_pow_eq_one NE_p_pow
               use ((ν ^ p ^ h) ^ i * ε')
@@ -762,7 +762,7 @@ lemma almostHilbert92 (hpodd : p ≠ 2) : ∃ η : (𝓞 K)ˣ, Algebra.norm k (�
               ((algebraMap (𝓞 k) (𝓞 K) (ε'' : 𝓞 k) : 𝓞 K) : K) =
                 algebraMap k K (ε'' : k) := rfl
           simp only [Nat.succ_sub_succ_eq_sub, tsub_zero, ← map_pow, hε'',
-            RingHom.toMonoidHom_eq_coe, Units.coe_map, MonoidHom.coe_coe,
+            RingHom.toMonoidHom_eq_coe, Units.coe_map, MonoidHom.coe_ofClass,
             hε''coe, AlgEquiv.commutes] at hE
           replace hE : (algebraMap k K) (((ν : 𝓞 k) : k) ^ p ^ h) = 1 := by
             rwa [div_self (by simp)] at hE

@@ -311,13 +311,16 @@ theorem allpos_has_pos_eigenvec (hn : Nonempty n)
     have h2 : IsClosed { v : n → ℝ | ∑ i, v i = 1 } :=
       isClosed_eq (continuous_finsetSum _ fun i _ => continuous_apply i) continuous_const
     exact h1.inter h2
-  -- S ⊆ stdSimplex
-  have hS_sub : S ⊆ stdSimplex ℝ n := by
+  -- S ⊆ [0, 1]: entries are nonnegative and each is bounded by the total sum
+  have hS_sub : S ⊆ Set.Icc (0 : n → ℝ) 1 := by
     intro v ⟨hv_lb, hv_sum⟩
-    exact ⟨fun i => le_trans (le_of_lt hε_pos) (hv_lb i), hv_sum⟩
+    have hv_nn : ∀ i, 0 ≤ v i := fun i => le_trans (le_of_lt hε_pos) (hv_lb i)
+    refine ⟨hv_nn, fun i => ?_⟩
+    calc v i ≤ ∑ j, v j := Finset.single_le_sum (fun j _ => hv_nn j) (Finset.mem_univ i)
+      _ = 1 := hv_sum
   -- S is compact
   have hS_compact : IsCompact S :=
-    (isCompact_stdSimplex ℝ n).of_isClosed_subset hS_closed hS_sub
+    isCompact_Icc.of_isClosed_subset hS_closed hS_sub
   -- Step 2: ψ(v) = Bv / ‖Bv‖₁ maps the standard simplex into S
   -- For v ∈ stdSimplex: v ≥ 0, ∑v = 1, v ≠ 0
   -- (Bv)_i ≥ c·∑v = c > 0, so ‖Bv‖₁ > 0 and ψ(v)_i = (Bv)_i/‖Bv‖₁

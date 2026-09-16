@@ -93,8 +93,7 @@ lemma _root_.Subalgebra.centralizer_range_includeLeft_eq_center_tensorProduct [M
   · rintro ⟨w, rfl⟩
     rw [Subalgebra.mem_centralizer_iff]
     rintro _ ⟨x, rfl⟩
-    induction w using TensorProduct.induction_on with
-    | zero => simp
+    induction w with
     | tmul b c =>
       simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Algebra.TensorProduct.includeLeft_apply,
         Algebra.TensorProduct.map_tmul, coe_val, AlgHom.coe_id, id_eq,

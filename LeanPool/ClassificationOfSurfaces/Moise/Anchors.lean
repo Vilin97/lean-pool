@@ -284,19 +284,19 @@ theorem standardTriangleCircle_carrier :
       change x ∈ segment ℝ (standardTriangleVertex 0)
         (standardTriangleVertex ((0 : ZMod 3) + (1 : ZMod 3))) at hi
       rw [show (0 : ZMod 3) + (1 : ZMod 3) = 1 by decide] at hi
-      convert hi using 1; rfl
+      convert hi using 1
     · refine ⟨0, ?_⟩
       rw [hface0]
       change x ∈ segment ℝ (standardTriangleVertex 1)
         (standardTriangleVertex ((1 : ZMod 3) + (1 : ZMod 3))) at hi
       rw [show (1 : ZMod 3) + (1 : ZMod 3) = 2 by decide] at hi
-      convert hi using 1; rfl
+      convert hi using 1
     · refine ⟨1, ?_⟩
       rw [hface1, segment_symm]
       change x ∈ segment ℝ (standardTriangleVertex 2)
         (standardTriangleVertex ((2 : ZMod 3) + (1 : ZMod 3))) at hi
       rw [show (2 : ZMod 3) + (1 : ZMod 3) = 0 by decide] at hi
-      convert hi using 1; rfl
+      convert hi using 1
   · rintro ⟨i, hi⟩
     have hcases : ∀ j : Fin 3, j = 0 ∨ j = 1 ∨ j = 2 := by decide
     rcases hcases i with rfl | rfl | rfl
@@ -305,7 +305,7 @@ theorem standardTriangleCircle_carrier :
       change x ∈ segment ℝ (standardTriangleVertex 1)
         (standardTriangleVertex ((1 : ZMod 3) + (1 : ZMod 3)))
       rw [show (1 : ZMod 3) + (1 : ZMod 3) = 2 by decide]
-      convert hi using 1; rfl
+      convert hi using 1
     · rw [hface1] at hi
       refine ⟨2, ?_⟩
       change x ∈ segment ℝ (standardTriangleVertex 2)
@@ -317,7 +317,7 @@ theorem standardTriangleCircle_carrier :
       change x ∈ segment ℝ (standardTriangleVertex 0)
         (standardTriangleVertex ((0 : ZMod 3) + (1 : ZMod 3)))
       rw [show (0 : ZMod 3) + (1 : ZMod 3) = 1 by decide]
-      convert hi using 1; rfl
+      convert hi using 1
 
 /-- **Positive anchor** for `PlaneComplex`: the closed standard triangle as a simplicial
 complex, with the seven nonempty subsets of its three vertices as faces. -/

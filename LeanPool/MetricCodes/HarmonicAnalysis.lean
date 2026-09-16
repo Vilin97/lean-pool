@@ -950,9 +950,9 @@ theorem multiFactorial_add_single {n : ℕ}
 
 theorem coeff_pderiv (n : ℕ) (i : Fin n) (a : MultiIndex n)
     (p : MvPolynomial (Fin n) ℝ) :
-    MvPolynomial.coeff a (MvPolynomial.pderiv i p) =
+    (MvPolynomial.pderiv i p).coeff a =
       ((a i + 1 : ℕ) : ℝ) *
-        MvPolynomial.coeff (a + Finsupp.single i 1) p := by
+        p.coeff (a + Finsupp.single i 1) := by
   classical
   induction p using MvPolynomial.induction_on' with
   | monomial b c =>
@@ -987,20 +987,20 @@ theorem coeff_pderiv (n : ℕ) (i : Fin n) (a : MultiIndex n)
             · simp only [add_tsub_cancel_right]
           simp only [hba, ↓reduceIte, Nat.cast_add, Nat.cast_one, hne, mul_zero]
   | add p q hp hq =>
-      simp only [map_add, MvPolynomial.coeff_add, hp, hq]
+      simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq]
       ring
 
 /-- The polynomial inner used in the spherical-code argument. -/
 def polynomialInner (n : ℕ)
     (p q : MvPolynomial (Fin n) ℝ) : ℝ :=
   Finsupp.sum (AddMonoidAlgebra.coeff p) fun a c =>
-    multiFactorial a * c * MvPolynomial.coeff a q
+    multiFactorial a * c * q.coeff a
 
 @[simp] theorem polynomialInner_monomial (n : ℕ)
     (a : MultiIndex n) (c : ℝ)
     (q : MvPolynomial (Fin n) ℝ) :
     polynomialInner n (MvPolynomial.monomial a c) q =
-      multiFactorial a * c * MvPolynomial.coeff a q := by
+      multiFactorial a * c * q.coeff a := by
   unfold polynomialInner
   rw [MvPolynomial.sum_monomial_eq]
   simp only [mul_zero, zero_mul]
@@ -1021,7 +1021,7 @@ theorem polynomialInner_add_right (n : ℕ)
     polynomialInner n p (q + r) =
       polynomialInner n p q + polynomialInner n p r := by
   unfold polynomialInner
-  simp only [MvPolynomial.sum_def, MvPolynomial.coeff_add]
+  simp only [MvPolynomial.sum_def, AddMonoidAlgebra.coeff_add, Finsupp.add_apply]
   simp_rw [mul_add]
   rw [Finset.sum_add_distrib]
 
@@ -1034,29 +1034,29 @@ theorem polynomialInner_comm (n : ℕ)
   calc
     (∑ a ∈ p.support,
       multiFactorial a *
-        MvPolynomial.coeff a p * MvPolynomial.coeff a q) =
+        p.coeff a * q.coeff a) =
       ∑ a ∈ p.support ∪ q.support,
         multiFactorial a *
-          MvPolynomial.coeff a p * MvPolynomial.coeff a q := by
+          p.coeff a * q.coeff a := by
           apply Finset.sum_subset Finset.subset_union_left
           intro a ha hnot
-          have hzero : MvPolynomial.coeff a p = 0 :=
+          have hzero : p.coeff a = 0 :=
             MvPolynomial.notMem_support_iff.mp hnot
           simp only [hzero, mul_zero, zero_mul]
     _ = ∑ a ∈ q.support ∪ p.support,
         multiFactorial a *
-          MvPolynomial.coeff a q * MvPolynomial.coeff a p := by
+          q.coeff a * p.coeff a := by
           rw [Finset.union_comm]
           apply Finset.sum_congr rfl
           intro a ha
           ring
     _ = ∑ a ∈ q.support,
         multiFactorial a *
-          MvPolynomial.coeff a q * MvPolynomial.coeff a p := by
+          q.coeff a * p.coeff a := by
           symm
           apply Finset.sum_subset Finset.subset_union_left
           intro a ha hnot
-          have hzero : MvPolynomial.coeff a q = 0 :=
+          have hzero : q.coeff a = 0 :=
             MvPolynomial.notMem_support_iff.mp hnot
           simp only [hzero, mul_zero, zero_mul]
 
@@ -1069,11 +1069,11 @@ theorem polynomialInner_self_nonneg (n : ℕ)
   intro a ha
   calc
     0 ≤ multiFactorial a *
-        (MvPolynomial.coeff a p) ^ 2 :=
+        (p.coeff a) ^ 2 :=
       mul_nonneg (multiFactorial_pos a).le
-        (sq_nonneg (MvPolynomial.coeff a p))
+        (sq_nonneg (p.coeff a))
     _ = multiFactorial a *
-        MvPolynomial.coeff a p * MvPolynomial.coeff a p := by
+        p.coeff a * p.coeff a := by
       ring
 
 theorem polynomialInner_self_pos (n : ℕ)
@@ -1083,15 +1083,15 @@ theorem polynomialInner_self_pos (n : ℕ)
   rw [MvPolynomial.sum_def]
   apply Finset.sum_pos
   · intro a ha
-    have hcoeff : MvPolynomial.coeff a p ≠ 0 :=
+    have hcoeff : p.coeff a ≠ 0 :=
       MvPolynomial.mem_support_iff.mp ha
     calc
       0 < multiFactorial a *
-          (MvPolynomial.coeff a p) ^ 2 :=
+          (p.coeff a) ^ 2 :=
         mul_pos (multiFactorial_pos a)
           (sq_pos_of_ne_zero hcoeff)
       _ = multiFactorial a *
-          MvPolynomial.coeff a p * MvPolynomial.coeff a p := by
+          p.coeff a * p.coeff a := by
         ring
   · exact MvPolynomial.support_nonempty.mpr hp
 
@@ -1103,8 +1103,7 @@ theorem polynomialInner_self_pos (n : ℕ)
     by_contra hp
     exact (ne_of_gt (polynomialInner_self_pos n hp)) h
   · rintro rfl
-    simp only [polynomialInner, AddMonoidAlgebra.coeff_zero, MvPolynomial.coeff_zero, mul_zero,
-      Finsupp.sum_fun_zero]
+    simp only [polynomialInner, AddMonoidAlgebra.coeff_zero, Finsupp.sum_zero_index]
 
 theorem polynomialInner_smul_left (n : ℕ) (c : ℝ)
     (p q : MvPolynomial (Fin n) ℝ) :
@@ -1115,8 +1114,8 @@ theorem polynomialInner_smul_left (n : ℕ) (c : ℝ)
       rw [MvPolynomial.smul_monomial,
         polynomialInner_monomial, polynomialInner_monomial]
       change
-        multiFactorial a * (c * d) * MvPolynomial.coeff a q =
-          c * (multiFactorial a * d * MvPolynomial.coeff a q)
+        multiFactorial a * (c * d) * q.coeff a =
+          c * (multiFactorial a * d * q.coeff a)
       ring
   | add p q hp hq =>
       rw [smul_add, polynomialInner_add_left,
@@ -1154,8 +1153,8 @@ theorem polynomialInner_sum_right {ι : Type*} (n : ℕ)
       ∑ i ∈ s, polynomialInner n p (f i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simp only [polynomialInner, Finset.sum_empty, MvPolynomial.coeff_zero, mul_zero,
-               Finsupp.sum_fun_zero, MvPolynomial.sum_def]
+  | empty => simp only [polynomialInner, Finset.sum_empty, AddMonoidAlgebra.coeff_zero,
+               Finsupp.coe_zero, Pi.zero_apply, mul_zero, Finsupp.sum_fun_zero]
   | @insert i s hi ih =>
       rw [Finset.sum_insert hi, polynomialInner_add_right,
         ih, Finset.sum_insert hi]
@@ -1264,50 +1263,41 @@ def coefficientEmbedding (n m : ℕ) :
   toFun p :=
     WithLp.toLp 2 fun a : DegreeIndex n m =>
       Real.sqrt (multiFactorial (a : MultiIndex n)) *
-        MvPolynomial.coeff (a : MultiIndex n)
-          (p : MvPolynomial (Fin n) ℝ)
+        (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n)
   map_add' p q := by
     ext a
     change
       Real.sqrt (multiFactorial (a : MultiIndex n)) *
-          MvPolynomial.coeff (a : MultiIndex n)
-            ((p : MvPolynomial (Fin n) ℝ) +
-              (q : MvPolynomial (Fin n) ℝ)) =
+          ((p : MvPolynomial (Fin n) ℝ) +
+              (q : MvPolynomial (Fin n) ℝ)).coeff (a : MultiIndex n) =
         Real.sqrt (multiFactorial (a : MultiIndex n)) *
-            MvPolynomial.coeff (a : MultiIndex n)
-              (p : MvPolynomial (Fin n) ℝ) +
+            (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) +
           Real.sqrt (multiFactorial (a : MultiIndex n)) *
-            MvPolynomial.coeff (a : MultiIndex n)
-              (q : MvPolynomial (Fin n) ℝ)
-    rw [MvPolynomial.coeff_add]
+            (q : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n)
+    rw [AddMonoidAlgebra.coeff_add, Finsupp.add_apply]
     ring
   map_smul' c p := by
     ext a
     change
       Real.sqrt (multiFactorial (a : MultiIndex n)) *
-        MvPolynomial.coeff (a : MultiIndex n)
-          (c • (p : MvPolynomial (Fin n) ℝ)) =
+        (c • (p : MvPolynomial (Fin n) ℝ)).coeff (a : MultiIndex n) =
       c *
         (Real.sqrt (multiFactorial (a : MultiIndex n)) *
-          MvPolynomial.coeff (a : MultiIndex n)
-            (p : MvPolynomial (Fin n) ℝ))
+          (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n))
     rw [MvPolynomial.coeff_smul]
     change
       Real.sqrt (multiFactorial (a : MultiIndex n)) *
-        (c * MvPolynomial.coeff (a : MultiIndex n)
-          (p : MvPolynomial (Fin n) ℝ)) =
+        (c * (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n)) =
       c *
         (Real.sqrt (multiFactorial (a : MultiIndex n)) *
-          MvPolynomial.coeff (a : MultiIndex n)
-            (p : MvPolynomial (Fin n) ℝ))
+          (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n))
     ring
 
 @[simp] theorem coefficientEmbedding_apply (n m : ℕ)
     (p : Homogeneous n m) (a : DegreeIndex n m) :
     coefficientEmbedding n m p a =
       Real.sqrt (multiFactorial (a : MultiIndex n)) *
-        MvPolynomial.coeff (a : MultiIndex n)
-          (p : MvPolynomial (Fin n) ℝ) := rfl
+        (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) := rfl
 
 theorem coefficientEmbedding_injective (n m : ℕ) :
     Function.Injective (coefficientEmbedding n m) := by
@@ -1354,10 +1344,8 @@ theorem homogeneousInner_eq_sum (n m : ℕ)
     homogeneousInner n m p q =
       ∑ a : DegreeIndex n m,
         multiFactorial (a : MultiIndex n) *
-          MvPolynomial.coeff (a : MultiIndex n)
-            (p : MvPolynomial (Fin n) ℝ) *
-          MvPolynomial.coeff (a : MultiIndex n)
-            (q : MvPolynomial (Fin n) ℝ) := by
+          (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) *
+          (q : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) := by
   unfold homogeneousInner
   rw [PiLp.inner_apply]
   simp only [Real.inner_apply, coefficientEmbedding_apply]
@@ -1367,17 +1355,13 @@ theorem homogeneousInner_eq_sum (n m : ℕ)
     (multiFactorial_pos (a : MultiIndex n)).le
   calc
     (Real.sqrt (multiFactorial (a : MultiIndex n)) *
-      MvPolynomial.coeff (a : MultiIndex n)
-        (p : MvPolynomial (Fin n) ℝ)) *
+      (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n)) *
       (Real.sqrt (multiFactorial (a : MultiIndex n)) *
-        MvPolynomial.coeff (a : MultiIndex n)
-          (q : MvPolynomial (Fin n) ℝ)) =
+        (q : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n)) =
       (Real.sqrt (multiFactorial (a : MultiIndex n)) *
         Real.sqrt (multiFactorial (a : MultiIndex n))) *
-      MvPolynomial.coeff (a : MultiIndex n)
-        (p : MvPolynomial (Fin n) ℝ) *
-      MvPolynomial.coeff (a : MultiIndex n)
-        (q : MvPolynomial (Fin n) ℝ) := by ring
+      (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) *
+      (q : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) := by ring
     _ = _ := by rw [Real.mul_self_sqrt hw]
 
 theorem homogeneousInner_eq_polynomialInner (n m : ℕ)
@@ -1394,14 +1378,14 @@ theorem homogeneousInner_eq_polynomialInner (n m : ℕ)
     (∑ a : DegreeIndex n m,
       (fun b : MultiIndex n =>
         multiFactorial b *
-          MvPolynomial.coeff b (p : MvPolynomial (Fin n) ℝ) *
-          MvPolynomial.coeff b (q : MvPolynomial (Fin n) ℝ))
+          (p : MvPolynomial (Fin n) ℝ).coeff b *
+          (q : MvPolynomial (Fin n) ℝ).coeff b)
         (a : MultiIndex n)) = _
   rw [Finset.sum_coe_sort (degreeIndices n m)
     (fun b : MultiIndex n =>
       multiFactorial b *
-        MvPolynomial.coeff b (p : MvPolynomial (Fin n) ℝ) *
-        MvPolynomial.coeff b (q : MvPolynomial (Fin n) ℝ))]
+        (p : MvPolynomial (Fin n) ℝ).coeff b *
+        (q : MvPolynomial (Fin n) ℝ).coeff b)]
   symm
   apply Finset.sum_subset
   · intro a ha
@@ -1411,8 +1395,7 @@ theorem homogeneousInner_eq_polynomialInner (n m : ℕ)
       (MvPolynomial.IsHomogeneous.coeff_eq_zero p.property hdeg)
   · intro a ha hnot
     have hzero :
-        MvPolynomial.coeff a
-          (p : MvPolynomial (Fin n) ℝ) = 0 :=
+        (p : MvPolynomial (Fin n) ℝ).coeff a = 0 :=
       MvPolynomial.notMem_support_iff.mp hnot
     rw [hzero]
     ring
@@ -1460,8 +1443,7 @@ theorem homogeneousInner_eq_polynomialInner (n m : ℕ)
     (a : DegreeIndex n m) :
     harmonicCoefficientEmbedding n m p a =
       Real.sqrt (multiFactorial (a : MultiIndex n)) *
-        MvPolynomial.coeff (a : MultiIndex n)
-          (p : MvPolynomial (Fin n) ℝ) := rfl
+        (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) := rfl
 
 /-- The harmonic inner used in the spherical-code argument. -/
 def harmonicInner (n m : ℕ)
@@ -1475,10 +1457,8 @@ theorem harmonicInner_eq_sum (n m : ℕ)
     harmonicInner n m p q =
       ∑ a : DegreeIndex n m,
         multiFactorial (a : MultiIndex n) *
-          MvPolynomial.coeff (a : MultiIndex n)
-            (p : MvPolynomial (Fin n) ℝ) *
-          MvPolynomial.coeff (a : MultiIndex n)
-            (q : MvPolynomial (Fin n) ℝ) := by
+          (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) *
+          (q : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) := by
   unfold harmonicInner
   rw [PiLp.inner_apply]
   simp only [Real.inner_apply, harmonicCoefficientEmbedding_apply]
@@ -1488,17 +1468,13 @@ theorem harmonicInner_eq_sum (n m : ℕ)
     (multiFactorial_pos (a : MultiIndex n)).le
   calc
     (Real.sqrt (multiFactorial (a : MultiIndex n)) *
-      MvPolynomial.coeff (a : MultiIndex n)
-        (p : MvPolynomial (Fin n) ℝ)) *
+      (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n)) *
       (Real.sqrt (multiFactorial (a : MultiIndex n)) *
-        MvPolynomial.coeff (a : MultiIndex n)
-          (q : MvPolynomial (Fin n) ℝ)) =
+        (q : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n)) =
       (Real.sqrt (multiFactorial (a : MultiIndex n)) *
         Real.sqrt (multiFactorial (a : MultiIndex n))) *
-      MvPolynomial.coeff (a : MultiIndex n)
-        (p : MvPolynomial (Fin n) ℝ) *
-      MvPolynomial.coeff (a : MultiIndex n)
-        (q : MvPolynomial (Fin n) ℝ) := by ring
+      (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) *
+      (q : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) := by ring
     _ = _ := by rw [Real.mul_self_sqrt hw]
 
 theorem harmonicInner_eq_polynomialInner (n m : ℕ)
@@ -1983,7 +1959,7 @@ theorem polynomialLaplacian_eq_zero_of_isHomogeneous_le_one
   have hconst :
       MvPolynomial.pderiv i p =
         MvPolynomial.C
-          (MvPolynomial.coeff 0 (MvPolynomial.pderiv i p)) :=
+          ((MvPolynomial.pderiv i p).coeff 0) :=
     MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp hdeg
   rw [hconst, MvPolynomial.pderiv_C]
 
@@ -2364,7 +2340,7 @@ theorem directionalDerivative_eq_zero_of_isHomogeneous_zero
   have hdeg : p.totalDegree = 0 :=
     (MvPolynomial.totalDegree_zero_iff_isHomogeneous
       (Fin n)).mpr hp
-  have hconst : p = MvPolynomial.C (MvPolynomial.coeff 0 p) :=
+  have hconst : p = MvPolynomial.C (p.coeff 0) :=
     MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp hdeg
   rw [hconst, directionalDerivative_apply]
   simp only [MvPolynomial.derivation_C, smul_zero, Finset.sum_const_zero]
@@ -2372,7 +2348,8 @@ theorem directionalDerivative_eq_zero_of_isHomogeneous_zero
 theorem fischer_polynomialInner_zero_right
     (n : ℕ) (p : MvPolynomial (Fin n) ℝ) :
     Fischer.polynomialInner n p 0 = 0 := by
-  simp only [Fischer.polynomialInner, MvPolynomial.coeff_zero, mul_zero, Finsupp.sum_fun_zero]
+  simp only [Fischer.polynomialInner, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply,
+    mul_zero, Finsupp.sum_fun_zero]
 
 theorem fischer_polynomialInner_sub_left
     (n : ℕ) (p q r : MvPolynomial (Fin n) ℝ) :

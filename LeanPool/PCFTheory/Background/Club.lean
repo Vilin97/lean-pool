@@ -311,7 +311,8 @@ theorem inter {Ϟ : Ordinal.{u}} (hCof : ℵ₀ < Ϟ.cof) {C D : Set Ordinal}
     · have hne : C ∉ ({D} : Set (Set Ordinal)) := by simp [h]
       rw [show ({C, D} : Set (Set Ordinal)) = insert C {D} from rfl,
         Cardinal.mk_insert hne, mk_singleton]
-      rw [show ((1 : Cardinal.{u + 1}) + 1) = Cardinal.lift.{u + 1, u} 2 by simp; norm_num,
+      rw [show ((1 : Cardinal.{u + 1}) + 1) = Cardinal.lift.{u + 1, u} 2 by
+          rw [Cardinal.lift_ofNat, one_add_one_eq_two],
         Cardinal.lift_lt]
       exact two_lt_aleph0.trans hCof
 

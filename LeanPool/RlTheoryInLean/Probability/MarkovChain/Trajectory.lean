@@ -80,7 +80,7 @@ noncomputable def trajProb
     apply measurable_pi_iff.mpr
     intro x
     apply measurable_id
-  let init := M.init.map hf.aemeasurable
+  let init := M.init.map f
   haveI : IsProbabilityMeasure init.1 := init.2
   let prob := init.1.bind κ
   exact ⟨prob, inferInstance⟩

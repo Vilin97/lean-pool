@@ -238,11 +238,12 @@ master. -/
 /-- Choice-free three-way split of a tag `n ∈ {0, 1, ≥2}` (via `Nat.decEq`, not
 classical `em`). -/
 theorem tag_trichotomy (n : ℕ) : n = 0 ∨ n = 1 ∨ (n ≠ 0 ∧ n ≠ 1) := by
-  rcases Nat.decEq n 0 with h | h
-  · rcases Nat.decEq n 1 with h' | h'
-    · exact Or.inr (Or.inr ⟨h, h'⟩)
-    · exact Or.inr (Or.inl h')
-  · exact Or.inl h
+  cases Nat.decEq n 0 with
+  | isFalse h =>
+    cases Nat.decEq n 1 with
+    | isFalse h' => exact Or.inr (Or.inr ⟨h, h'⟩)
+    | isTrue h' => exact Or.inr (Or.inl h')
+  | isTrue h => exact Or.inl h
 
 section Sum
 

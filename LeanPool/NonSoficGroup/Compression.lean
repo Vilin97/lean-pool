@@ -3589,7 +3589,7 @@ private def sourceConjugatedAlphaUElement
   apply alphaZero_prefixElementaryGroup_le
   rw [← compressionU_map_alphaPrefixElementaryGroup]
   refine ⟨g.val, g.property, ?_⟩
-  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply]
+  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply]
 
 private def sourceConjugatedAlphaVElement
     (g : prefixElementaryGroup alphaPrefixCode) :
@@ -3599,7 +3599,7 @@ private def sourceConjugatedAlphaVElement
   apply alphaZero_prefixElementaryGroup_le
   rw [← compressionV_map_alphaPrefixElementaryGroup]
   refine ⟨g.val, g.property, ?_⟩
-  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply]
+  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply]
 
 private theorem sourceCompressionUElement_conjugates_alpha
     (g : prefixElementaryGroup alphaPrefixCode) :

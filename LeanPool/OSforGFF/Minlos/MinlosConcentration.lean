@@ -316,7 +316,7 @@ lemma pushforward_charfun_eq
     ∫ y : Fin k → ℝ, exp (I * ↑(∑ j, v j * y j))
       ∂(ν.map (fun ω j => ω (e j))) = Φ (∑ j, v j • e j) := by
   have hg : Measurable (fun ω : E → ℝ => (fun j => ω (e j) : Fin k → ℝ)) :=
-    measurable_pi_lambda _ (fun j => measurable_pi_apply (e j))
+    Measurable.of_eval (fun j => measurable_pi_apply (e j))
   rw [integral_map hg.aemeasurable (Continuous.aestronglyMeasurable (by fun_prop))]
   exact h_cf_joint k v e
 
@@ -847,10 +847,10 @@ private lemma joint_kernel_bound_finite
   let toLp := MeasurableEquiv.toLp (p := 2) (X := Fin (n + 1) → ℝ)
   let eval_z : (E → ℝ) → V := fun ω => toLp (fun j => ω (z j))
   have h_meas_z : Measurable eval_z :=
-    toLp.measurable.comp (measurable_pi_lambda _ (fun j => measurable_pi_apply (z j)))
+    toLp.measurable.comp (Measurable.of_eval (fun j => measurable_pi_apply (z j)))
   let μ := ν.map eval_z
   have h_prob : IsProbabilityMeasure μ :=
-    Measure.isProbabilityMeasure_map h_meas_z.aemeasurable
+    inferInstanceAs (IsProbabilityMeasure (ν.map eval_z))
   let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
   -- Step 1: Coordinate access: (eval_z ω) i = ω (z i)
   have h_coord : ∀ (ω : E → ℝ) (i : Fin (n + 1)), (eval_z ω) i = ω (z i) := fun _ _ => rfl
@@ -1290,10 +1290,10 @@ private lemma tail_bound_uniform_gaussian_average
   let toLp := MeasurableEquiv.toLp (p := 2) (X := Fin (k + 1) → ℝ)
   let eval_e : (E → ℝ) → V := fun ω => toLp (fun j => ω (e j))
   have h_meas_e : Measurable eval_e :=
-    toLp.measurable.comp (measurable_pi_lambda _ (fun j => measurable_pi_apply (e j)))
+    toLp.measurable.comp (Measurable.of_eval (fun j => measurable_pi_apply (e j)))
   let μ := ν.map eval_e
   have h_prob : IsProbabilityMeasure μ :=
-    Measure.isProbabilityMeasure_map h_meas_e.aemeasurable
+    inferInstanceAs (IsProbabilityMeasure (ν.map eval_e))
   let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
   have h_coord : ∀ (ω : E → ℝ) (i : Fin (k + 1)), (eval_e ω) i = ω (e i) := fun _ _ => rfl
   have h_inner_V : ∀ (ω : E → ℝ) (v : V),

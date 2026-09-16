@@ -45,7 +45,7 @@ theorem taylorComp_partition_bound
     _ ≤ ‖Q c.length‖*∏ i, ‖P (c.partSize i)‖ := c.norm_compAlongOrderedFinpartition_le _ _
     _ ≤ ‖Q c.length‖*innerPartitionBound B R c := by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-      exact Finset.prod_le_prod (fun i _ => norm_nonneg _)
+      exact Finset.prod_le_prod₀ (fun i _ => norm_nonneg _)
         (fun i _ => hP _ (c.partSize_pos i) (c.partSize_le i))
     _ = _ := mul_comm _ _
 
@@ -82,13 +82,12 @@ theorem composition_memLp_and_bound
   have he : (fun x => ∑ c : OrderedFinpartition n, H c x) = ∑ c : OrderedFinpartition n, H c := by
     funext x
     simp only [Finset.sum_apply]
-  have hsumNorm := eLpNorm_sum_le
-    (fun c (_ : c ∈ (Finset.univ : Finset (OrderedFinpartition n))) => (hHLp
-        c).aestronglyMeasurable)
+  have hsumNorm := eLpNorm_sum_le (μ := μ) (f := H)
+    (s := (Finset.univ : Finset (OrderedFinpartition n)))
     (by norm_num : (1 : ℝ≥0∞) ≤ 2)
   have hLpNorm : eLpNorm (fun x => (Q (φ x)).taylorComp (P x) n) 2 μ ≤
       ∑ c : OrderedFinpartition n, eLpNorm (H c) 2 μ := by
-    apply (eLpNorm_mono_ae_real (Filter.Eventually.of_forall hdom)).trans
+    apply (eLpNorm_mono_ae_real hcomp (Filter.Eventually.of_forall hdom)).trans
     rw [he]
     exact hsumNorm
   have hreal := ENNReal.toReal_mono
@@ -100,7 +99,8 @@ theorem composition_memLp_and_bound
     have hfun : H c = innerPartitionBound B R c • ((fun y => ‖Q y c.length‖) ∘ φ) := rfl
     rw [hfun, eLpNorm_const_smul,
       eLpNorm_comp_measurePreserving (hQLp c.length c.length_le).aestronglyMeasurable.norm hφ,
-      eLpNorm_norm, ENNReal.toReal_mul, toReal_enorm,
+      eLpNorm_norm _ (hQLp c.length c.length_le).aestronglyMeasurable,
+      ENNReal.toReal_mul, toReal_enorm,
       Real.norm_of_nonneg (innerPartitionBound_nonneg B R hB hR c)]
   simp_rw [hHnorm] at hreal
   calc

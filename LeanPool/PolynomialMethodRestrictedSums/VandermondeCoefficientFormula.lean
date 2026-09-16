@@ -415,8 +415,8 @@ private lemma sum_X_pow_eq_multinomial_sum (m : ℕ) :
 
 lemma coeff_term (c : Fin (k + 1) → ℕ) (m : ℕ) (σ : Equiv.Perm (Fin (k + 1)))
     (h_sum : ∑ i, c i = m + ((k + 1).choose 2)) :
-    MvPolynomial.coeff (toFinsupp c) (
-        (∑ i : Fin (k + 1), X i) ^ m * ∏ i : Fin (k + 1), X i ^ (σ i : ℕ)) =
+    ((∑ i : Fin (k + 1), X i) ^ m * ∏ i : Fin (k + 1), X i ^ (σ i : ℕ)).coeff
+        (toFinsupp c) =
     if (∀ i, σ i ≤ c i) then (m.factorial : ℚ) / ∏ i : Fin (k + 1),
         ((c i - (σ i : ℕ)).factorial : ℚ) else 0 := by
       rw [MvPolynomial.coeff_mul]
@@ -508,7 +508,7 @@ lemma coeff_term (c : Fin (k + 1) → ℕ) (m : ℕ) (σ : Equiv.Perm (Fin (k + 
                       MvPolynomial.monomial (∑ i, Finsupp.single i (σ i : ℕ)) 1 := by
                     induction (Finset.univ : Finset (Fin (k + 1))) using Finset.induction
                     · simp_all only [prod_empty, sum_empty, monomial_zero', C_1]
-                    · simp_all only [not_false_eq_true, prod_insert, monomial_mul, mul_one,
+                    · simp_all only [not_false_eq_true, prod_insert, monomial_mul_monomial, mul_one,
                           sum_insert]
                   simp_all only [coeff_monomial, ite_eq_right_iff, one_ne_zero, imp_false,
                       Decidable.not_not]
@@ -562,19 +562,18 @@ end AristotleLemmas
 
 theorem Vandermonde_coefficient_formula (c : Fin (k + 1) → ℕ) (m : ℕ)
     (h_sum : ∑ i : Fin (k + 1), c i = m + ((k + 1).choose 2)) :
-    MvPolynomial.coeff (toFinsupp c)
-      ((∑ i : Fin (k + 1), X i) ^ m *
-       ∏ i : Fin (k + 1), ∏ j : Fin (k + 1), if j < i then (X i - X j) else 1)
+    ((∑ i : Fin (k + 1), X i) ^ m *
+       ∏ i : Fin (k + 1), ∏ j : Fin (k + 1), if j < i then (X i - X j) else 1).coeff
+      (toFinsupp c)
     = expectedValue c m := by
   -- The coefficient of $X^c$ in $P$ is the sum over $\sigma$ of $\text{sgn}(\sigma)$ times the
   -- coefficient of $X^c$ in $(\sum X_i)^m \prod_i X_i^{\sigma(i)}$.
-  have h_coeff : MvPolynomial.coeff (toFinsupp c) (
-      (∑ i, MvPolynomial.X i) ^ m * ∏ i,
+  have h_coeff : ((∑ i, MvPolynomial.X i) ^ m * ∏ i,
       (∏ j,
-          if j < i then (MvPolynomial.X i - MvPolynomial.X j) else 1))
+          if j < i then (MvPolynomial.X i - MvPolynomial.X j) else 1)).coeff (toFinsupp c)
               = ∑ σ : Equiv.Perm (Fin (k + 1)), ((σ.sign : ℤ) : ℚ)
-                  * MvPolynomial.coeff (toFinsupp c) ((∑ i, MvPolynomial.X i) ^ m * ∏ i,
-                      (MvPolynomial.X i) ^ (σ i : ℕ)) := by
+                  * ((∑ i, MvPolynomial.X i) ^ m * ∏ i,
+                      (MvPolynomial.X i) ^ (σ i : ℕ)).coeff (toFinsupp c) := by
     -- The Vandermonde determinant is equal to the sum over permutations of the sign of the
     -- permutation times the product of x^((i)).
     have h_vandermonde : ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
