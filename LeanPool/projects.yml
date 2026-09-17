@@ -1495,6 +1495,37 @@ projects:
     msc:
       - "30C35"
       - "30C20"
+  - slug: archon-firstproof-results
+    title: Archon-FirstProof-Results
+    summary: Collects formal solutions from the Archon FirstProof benchmark, including polynomial and graph-theoretic results.
+    branch: problem-solving mathematics
+    entry_module: LeanPool.ArchonFirstProofResults
+    authors:
+      - FrenzyMath
+    source:
+      arxiv: "2602.05192"
+      github_repo: frenzymath/Archon-FirstProof-Results
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Problem4.harmonic_mean_inequality_full
+      - Problem6.exists_eps_light_subset
+    main_results:
+      - declaration: Problem4.harmonic_mean_inequality_full
+        informal: Proves the benchmark harmonic-mean inequality for real-rooted polynomial transforms.
+      - declaration: Problem6.exists_eps_light_subset
+        informal: Proves the benchmark light-subset existence theorem in the graph Laplacian setting.
+    tags:
+      - polynomials
+      - analysis
+      - combinatorics
+      - linear-algebra
+      - graph-theory
+    msc:
+      - "26D15"
+      - "05C50"
+      - "15A42"
   - slug: erdos1196
     title: Primitive Sets Above x (Erdos Problem 1196)
     summary: Formalizes Math Inc.'s proof around primitive sets above x for Erdos Problem 1196.
@@ -3339,6 +3370,46 @@ projects:
     msc:
       - "11A41"
       - "11D75"
+  - slug: synthetic-euclid
+    title: "Synthetic Euclidean geometry: Euclid's Elements Book I"
+    summary: Formalizes Book I of Euclid's Elements via an axiomatic synthetic-geometry system (incidence, betweenness, congruence, and area), culminating in the Pythagorean theorem and its converse.
+    branch: synthetic euclidean geometry
+    entry_module: LeanPool.SyntheticEuclid4
+    authors:
+      - André Hernandez-Espiet
+      - Vladimir Sedlacek
+    source:
+      title: "A formal system for Euclid's Elements"
+      authors:
+        - Jeremy Avigad
+        - Edward Dean
+        - John Mumma
+      doi: "10.1017/S1755020309990098"
+      url: "https://github.com/ah1112/synthetic_euclid_4"
+      github_repo: ah1112/synthetic_euclid_4
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - SyntheticEuclid4.pythagoras
+      - SyntheticEuclid4.pythagoras_converse
+    main_results:
+      - declaration: SyntheticEuclid4.IncidenceGeometry
+        informal: The axiomatic class of synthetic Euclidean geometry, bundling points, lines, circles, and the incidence, betweenness, congruence, and area primitives with Euclid's axioms.
+      - declaration: SyntheticEuclid4.square_of_len
+        informal: Constructs a square on a given segment off a given line.
+      - declaration: SyntheticEuclid4.pythagoras_construct
+        informal: Constructs the three squares and parallelograms on the sides of a triangle used in the proof of the Pythagorean theorem.
+      - declaration: SyntheticEuclid4.pythagoras
+        informal: Euclid I.47, the Pythagorean theorem, that the square on the hypotenuse of a right triangle equals the sum of the squares on the other two sides.
+      - declaration: SyntheticEuclid4.pythagoras_converse
+        informal: Euclid I.48, the converse of the Pythagorean theorem, that a triangle whose square areas satisfy the Pythagorean relation has a right angle.
+    tags:
+      - euclidean-geometry
+      - synthetic-geometry
+      - pythagorean-theorem
+    msc:
+      - "51M04"
   - slug: flean
     title: "Flean: Floating-Point Numbers in Lean"
     summary: Formalizes a configurable model of floating-point numbers in Lean 4, including normal and subnormal representations, conversions between rationals and floats, round-trip correctness, and rounding error bounds.
