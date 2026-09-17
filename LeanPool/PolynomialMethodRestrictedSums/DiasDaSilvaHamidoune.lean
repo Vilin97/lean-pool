@@ -4,14 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
 
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Common
-import Aesop
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+import Mathlib.Algebra.Field.ZMod
 import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!
