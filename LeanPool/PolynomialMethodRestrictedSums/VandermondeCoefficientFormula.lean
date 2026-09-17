@@ -113,7 +113,10 @@ lemma det_fallingFactorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
               <;> norm_num [Polynomial.natDegree_sub_eq_left_of_natDegree_lt]
           exact fun i hi => Polynomial.X_sub_C_ne_zero _
         replace h_poly := congr_arg (Polynomial.eval (c i : ℚ)) h_poly
-        simp_all? +decide [Polynomial.eval_prod, Polynomial.eval_finsetSum]
+        simp_all +decide only [map_natCast, Polynomial.eval_prod, Polynomial.eval_sub,
+          Polynomial.eval_X, Polynomial.eval_natCast, Polynomial.eval_finsetSum,
+          Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow, map_one,
+          one_mul]
         unfold fallingFactorial
         simp_all only [Nat.cast_ite, Nat.cast_one, Nat.cast_prod]
         split
@@ -298,9 +301,11 @@ lemma symmetricSumFixed_eq_expectedValue (c : Fin (k + 1) → ℕ) (m : ℕ) :
       · convert det_fallingFactorial_eq_det_vandermonde c |> Eq.symm
       · rw [Finset.mul_sum _ _ _]; exact Finset.sum_congr rfl fun _ _ =>
           by rw [h_fallingFactorial]; split_ifs <;> ring
-    rw [h_def, h_final]
-    norm_num [Finset.mul_sum _ _ _, mul_assoc, mul_comm, mul_left_comm, div_eq_mul_inv,
-        Finset.prod_eq_zero_iff, Nat.factorial_ne_zero]
+    have hfactorials : (∏ i, ((c i).factorial : ℚ)) ≠ 0 := by
+      norm_num [Finset.prod_eq_zero_iff, Nat.factorial_ne_zero]
+    rw [h_def, h_final, mul_left_comm, mul_div_cancel_left₀ _ hfactorials, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun σ _ => ?_
+    split_ifs <;> ring
 
 /-- Multinomial expansion of $(\sum_i X_i)^m$ as a sum over weak compositions of `m`.
 Extracted from `coeff_term` to keep that proof under the 200-line limit. -/

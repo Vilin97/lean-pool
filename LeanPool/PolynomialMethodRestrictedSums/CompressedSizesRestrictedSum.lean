@@ -212,10 +212,14 @@ For any sequence b, the compressed sizes sequence is component-wise less than or
 follows immediately from the definition involving min.
 -/
 lemma compressedSizes_le {k : ℕ} {b : Fin (k + 1) → ℕ} : ∀ i, compressedSizes b i ≤ b i := by
-  intro i
-  obtain ⟨i, ih⟩ := i
-  unfold compressedSizes
-  cases i <;> aesop
+  rintro ⟨i, hi⟩
+  cases i with
+  | zero =>
+    rw [compressedSizes]
+    exact le_rfl
+  | succ i =>
+    rw [compressedSizes]
+    exact min_le_right _ _
 
 /-
 The value of compressedSizes at index i + 1 is min(compressedSizes b i - 1, b (i + 1)) by
@@ -224,12 +228,8 @@ definition.
 lemma compressedSizes_succ {k : ℕ} {b : Fin (k + 1) → ℕ} (i : Fin k) :
     compressedSizes b (Fin.succ i) = min (compressedSizes b (Fin.castSucc i) - 1) (
         b (Fin.succ i)) := by
-      cases i
-      simp_all only [Fin.succ_mk, Fin.castSucc_mk];
-      -- By definition of compressedSizes, we have compressedSizes b (i + 1) = min
-      -- (compressedSizes
-      -- b i - 1) (b (i + 1)).
-      rw [compressedSizes]
+  rcases i with ⟨i, hi⟩
+  rw [Fin.succ_mk, Fin.castSucc_mk, compressedSizes]
 
 /-
 If the last element of the compressed sizes sequence is positive, then all elements are positive.
@@ -290,22 +290,12 @@ Since the last term is positive by hypothesis, the sequence is valid.
 lemma compressedSizes_is_valid {k : ℕ} {b : Fin (k + 1) → ℕ}
     (h_last_pos : compressedSizes b (Fin.last k) > 0) :
     ValidSeq k (compressedSizes b) := by
-      refine ⟨ ?_, h_last_pos ⟩;
-      -- We proceed by induction on $j - i$.
-      intro i j hij
-      induction j using Fin.induction generalizing i with
-      | zero => tauto
-      | succ j ih =>
-        rcases lt_or_eq_of_le ( show i ≤ Fin.castSucc j from Nat.le_of_lt_succ hij ) with h | h
-        · exact (compressedSizes_succ j).symm ▸ lt_of_le_of_lt ( min_le_left _ _ ) (
-              Nat.lt_of_le_of_lt ( Nat.sub_le _ _ ) ( ih _ h ) );
-        · subst h
-          rcases min_cases ( compressedSizes b ( Fin.castSucc j ) - 1 ) (
-              b ( Fin.succ j ) ) with ⟨ left, right ⟩ | ⟨ left, right ⟩
-          · rw [compressedSizes_succ j, left]
-            exact Nat.sub_lt (compressedSizes_pos h_last_pos _) Nat.one_pos
-          · rw [compressedSizes_succ j, left]
-            exact right.trans_le ( Nat.sub_le _ _ )
+  refine ⟨?_, h_last_pos⟩
+  apply Fin.strictAnti_iff_succ_lt.mpr
+  intro i
+  rw [compressedSizes_succ]
+  exact lt_of_le_of_lt (min_le_left _ _)
+    (Nat.sub_lt (compressedSizes_pos h_last_pos _) Nat.one_pos)
 
 end AristotleLemmas
 

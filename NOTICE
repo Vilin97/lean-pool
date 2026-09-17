@@ -77,6 +77,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/ErdosMoser                https://github.com/lyfar/erdos-moser-distinct-subset-sums-lean
   LeanPool/ErdosTuzaValtr            https://github.com/jcpaik/erdos-tuza-valtr
   LeanPool/EventStructures           https://github.com/vikraman/event-structures
+  LeanPool/ExpChaotic                https://github.com/LR-UK/exp-chaotic
   LeanPool/Feige                     https://github.com/pengzhang91/Feige
   LeanPool/Fineqs                    https://github.com/nasqret/fineqs
   LeanPool/FiniteGraphFundamentalGroup
@@ -106,6 +107,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/KasamiCyclicAdditive      https://github.com/dsm054/kasami_cyclic_additive
   LeanPool/Koethe                    https://github.com/tadamcz/koethe
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
+  LeanPool/LanguageGeneration        https://github.com/xiaoyulics/language-generation-characterization
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
   LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
   LeanPool/LeanComplexAnalysis       https://github.com/seb488/LeanComplexAnalysis
@@ -119,6 +121,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/LongGapsBetweenPrimes     https://github.com/openai/LongGapsBetweenPrimes
   LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
   LeanPool/MRiscX                    https://github.com/JulsDE/MRiscX
+  LeanPool/MassFormula               https://github.com/0stellensatz/MassFormula
   LeanPool/MatchingLogic             https://github.com/eveil-labs/matching-logic-lean
   LeanPool/MetricCodes               https://github.com/openai/ten-proofs
   LeanPool/MinModulusUniqueMultisetSum
@@ -127,6 +130,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/MisereGames               https://github.com/t4ccer/misere-games
   LeanPool/Monlib4                   https://github.com/themathqueen/monlib4
   LeanPool/Monsky                    https://github.com/dhyan-aranha/Monsky
+  LeanPool/MooreBound                https://github.com/woutercvb/wewantmoore
   LeanPool/MoserLatticeColorings     https://github.com/lyfar/moser-lattice-colorings-lean
   LeanPool/MulticolorTriangleRamsey  https://github.com/openai/ten-proofs
   LeanPool/NashWilliams              https://github.com/yannpequignot/TwoBQO
@@ -172,6 +176,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/SingularModuli            https://github.com/ElodinLaarz/lean-thesis
   LeanPool/SpectralPositivity        https://github.com/mrdouglasny/spectral-positivity
   LeanPool/SpherePacking             https://github.com/openai/ten-proofs
+  LeanPool/SumDifferenceExponent     https://github.com/linhaowei1/sum-diff-proof
   LeanPool/SumsThreeSquares          https://github.com/pitmonticone/SumsThreeSquares
   LeanPool/Sundogcert                https://github.com/humiliati/sundogcert
   LeanPool/SyntheticEuclid4          https://github.com/ah1112/synthetic_euclid_4
@@ -208,6 +213,7 @@ MIT permission notice that follows them.
   LeanPool/Brouwer                   https://github.com/math-xmum/Brouwer
       Copyright (c) 2025 Math_XMUM
 
+  LeanPool/Chvatal                   https://github.com/boonsuan/chvatal
   LeanPool/CommonNeighbourConjecture https://github.com/alunik/common-neighbour-conjecture
   LeanPool/CutAndProject             https://github.com/dkunert/cut-and-project
       Copyright (c) 2026 Dirk Kunert
@@ -230,6 +236,7 @@ MIT permission notice that follows them.
       template text "Copyright (c) [year] [fullname]"; the repository owner of
       record is "ruplet".
 
+  LeanPool/FourAP                    https://github.com/boonsuan/4ap
   LeanPool/HSDInteriorPointLP        https://github.com/makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming
   LeanPool/KaltonRoberts             https://github.com/boonsuan/KaltonRoberts
   LeanPool/Kuramoto                  https://github.com/velvetmonkey/kuramoto-lean

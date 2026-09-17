@@ -50,22 +50,12 @@ lemma sum_fin_two {M : Type*} [AddCommMonoid M] (f : Fin 2 → M) :
 -- 2.  ZMod p
 lemma binomial_coeff_ne_zero_mod_p (n k : ℕ) (hp : p.Prime) (h_k : k ≤ n) (h_n : n < p) :
     (Nat.choose n k : ZMod p) ≠ 0 := by
-  -- 1.  ≠   ... = ...
-  rw [ne_eq]
-  -- 2.  ZMod p  = 0  (p ∣ n.choose k)
-  rw [CharP.cast_eq_zero_iff (ZMod p) p]
-  -- 3.  p  n.choose k
-  intro h_dvd
-  -- 4.  p ∣ n.choose k → p ∣ n!
-  have key : n.choose k ∣ n.factorial := by
+  rw [ne_eq, CharP.cast_eq_zero_iff (ZMod p) p]
+  intro hdiv
+  have hchoose : n.choose k ∣ n.factorial := by
     rw [← Nat.choose_mul_factorial_mul_factorial h_k, mul_assoc, mul_comm]
     exact Nat.dvd_mul_left _ _
-  have h_dvd_fact : p ∣ n.factorial := dvd_trans h_dvd key
-  -- 5.  p ∣ n!  p ≤ n
-  rw [Nat.Prime.dvd_factorial hp] at h_dvd_fact
-  linarith
-
-
+  exact h_n.not_ge (hp.dvd_factorial.mp (dvd_trans hdiv hchoose))
 
 /-- The sumset `A + B = { a + b | a ∈ A, b ∈ B }` as a `Finset`. -/
 def sumset {α : Type*} [Add α] [DecidableEq α] (A B : Finset α) : Finset α :=

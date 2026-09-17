@@ -1,4 +1,71 @@
 projects:
+  - slug: sum-difference-exponent
+    title: The optimal exponent relating sumsets and difference sets
+    summary: >-
+      For a finite integer set A with at least two elements, proves that
+      C(A) = log(|A+A|/|A|) / log(|A-A|/|A|) is strictly below 2, while
+      explicit finite sets have exponents tending to 2. Thus 2 is the
+      supremum and is never attained. Also gives an explicit witness within
+      10^(-999) of 2. This imports the upstream base-39 row-and-column
+      variant, not the paper's base-12 automaton construction or its
+      quantitative cardinality estimates. Supporting infrastructure includes
+      injective digit expansions and the strict Pluennecke-Petridis
+      equality argument for finite integer sets.
+    branch: additive combinatorics
+    entry_module: LeanPool.SumDifferenceExponent
+    authors:
+      - Haowei Lin
+      - Shanda Li
+    source:
+      title: Settling the Optimal Exponent Relating Sumsets and Difference Sets
+      authors:
+        - Haowei Lin
+        - Shanda Li
+      arxiv: '2607.27199'
+      url: https://github.com/linhaowei1/sum-diff-proof
+      github_repo: linhaowei1/sum-diff-proof
+      commit: f53f84223b48457ac922836b661227309d9340c3
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SumDifferenceExponent.sSup_admissibleExponents
+    main_results:
+      - declaration: SumDifferenceExponent.growthExponent_lt_two
+        informal: >-
+          For every finite set A of integers with at least two elements,
+          log(|A+A|/|A|) / log(|A-A|/|A|) is strictly less than 2.
+      - declaration: SumDifferenceExponent.tendsto_growthExponent_approximatingSet
+        informal: >-
+          The growth exponents of the explicit finite integer sets
+          approximatingSet l converge to 2 as l tends to infinity; these
+          sets have at least two elements whenever l is positive.
+      - declaration: SumDifferenceExponent.isLUB_admissibleExponents
+        informal: >-
+          The number 2 is the least upper bound of the growth exponents of
+          all finite integer sets with at least two elements.
+      - declaration: SumDifferenceExponent.sSup_admissibleExponents
+        informal: >-
+          The supremum of the growth exponents of all finite integer sets
+          with at least two elements equals 2.
+      - declaration: SumDifferenceExponent.supremum_not_attained
+        informal: >-
+          No finite integer set with at least two elements has growth
+          exponent equal to 2.
+      - declaration: SumDifferenceExponent.quantitative_example
+        informal: >-
+          The explicitly defined finite integer set quantitativeSet has
+          growth exponent strictly between 2 - 10^(-999) and 2.
+    tags:
+      - additive-combinatorics
+      - sumsets
+      - difference-sets
+      - Pluennecke-Ruzsa
+      - optimal-exponents
+    msc:
+      - 11B13
+      - 11B30
+      - 05D10
   - slug: four-ap-free-permutation
     title: A 4AP-free permutation of the positive integers
     summary: >-
@@ -8507,3 +8574,385 @@ projects:
     - 35Q30
     - 35Q31
     - 35B44
+  - slug: exponential-chaos
+    title: Chaos and the Julia set of the complex exponential
+    summary: >-
+      Formalizes the dynamics of z ↦ exp(z): escaping points, points with dense
+      forward orbit, and repelling periodic points are dense in the complex
+      plane; the map is chaotic in Devaney's sense and its Julia set is the
+      whole plane. The development proves eventual covering of every compact
+      set omitting zero, constructs contracting inverse branches, and rules
+      out every locally uniform spherical subsequential limit on nonempty
+      open sets. It includes general normal-sequence restriction lemmas,
+      quantitative open mapping, and a two-target obstruction for arbitrary
+      separated uniform codomains. The Lean proofs were primarily generated
+      by AI under Lasse Rempe's direction. The initial six-lemma architecture
+      adapts John Harrison's HOL Light formalization, credited with its
+      retained BSD notice in the entry module.
+    branch: complex dynamics
+    entry_module: LeanPool.ExpChaotic
+    authors:
+      - Lasse Rempe
+    source:
+      title: 'The Exponential Map is Chaotic: An Invitation to Transcendental Dynamics'
+      authors:
+        - Zhaiming Shen
+        - Lasse Rempe-Gillen
+      arxiv: '1408.1129'
+      doi: 10.4169/amer.math.monthly.122.10.919
+      url: https://github.com/LR-UK/exp-chaotic
+      github_repo: LR-UK/exp-chaotic
+      commit: 303b2d3d1121ebc3a86399de8f1e71c17a8b6dd8
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ExpChaotic.devaney_chaotic
+      - ExpChaotic.juliaSet_exp
+    main_results:
+      - declaration: ExpChaotic.devaney_chaotic
+        informal: >-
+          The complex exponential is continuous, has dense periodic points,
+          and the monoid action generated by its iterates is topologically
+          transitive on the complex plane.
+      - declaration: ExpChaotic.juliaSet_exp
+        informal: >-
+          The Julia set of the complex exponential is the whole plane, where
+          the Fatou set is defined by local normality of sphere-valued
+          iterates with arbitrary locally uniform sphere-valued limits.
+      - declaration: ExpChaotic.dense_repellingPeriodicSet
+        informal: >-
+          Points p with a positive period n and derivative norm
+          greater than one for the nth exponential iterate are dense in
+          the complex plane.
+      - declaration: ExpChaotic.eventually_covers_compact
+        informal: >-
+          For every nonempty open set U in the complex plane and every
+          compact set K omitting zero, all sufficiently large iterates of
+          the exponential map send U onto a set containing K.
+      - declaration: ExpChaotic.dense_escapingSet
+        informal: >-
+          Points whose forward exponential orbit eventually leaves every
+          centered Euclidean ball are dense in the complex plane.
+      - declaration: ExpChaotic.not_countable_denseOrbitSet
+        informal: >-
+          The set of complex points with dense forward exponential orbit
+          is uncountable.
+      - declaration: ExpChaotic.not_tendstoLocallyUniformly_sphericalExpIterate
+        informal: >-
+          On every nonempty open set in the complex plane, no strictly
+          increasing subsequence of exponential iterates converges locally
+          uniformly to any function into the Riemann sphere.
+    tags:
+      - complex-dynamics
+      - exponential-map
+      - julia-sets
+      - chaos
+      - holomorphic-functions
+    msc:
+      - 37F10
+      - 30D05
+  - slug: chvatal-conjecture
+    title: Chvátal's conjecture and sharp Boolean correlation
+    summary: >-
+      Formalizes Chang, Liu, and Liu's proof that a hereditary family on a
+      finite nonempty ground set has a largest intersecting subfamily that is
+      a star. Develops the sharp Boolean Fourier correlation inequality,
+      its antipodal and quadratic forms, sharpness examples, and the
+      weighted star theorem for nonnegative decreasing weights.
+    branch: extremal combinatorics
+    entry_module: LeanPool.Chvatal
+    authors:
+      - Boon Suan Ho
+      - Chvatal formalization contributors
+    source:
+      title: A proof of Chvátal's conjecture via a sharp correlation inequality
+      authors:
+        - Fan Chang
+        - Hong Liu
+        - Miao Liu
+      arxiv: '2609.19123v1'
+      url: https://github.com/boonsuan/chvatal
+      github_repo: boonsuan/chvatal
+      commit: c19ed3aaac9e42d446f963a862d39d8a09eddbf9
+      announcement_date: '2026-09-17T03:58:22Z'
+      announcement_url: https://github.com/boonsuan/chvatal/commit/c46f715af9d400523eb0d4c9c0d2335abbdc9fdd
+      notes: >-
+        GPT-6 generated the formalization under Boon Suan Ho's direction;
+        the mathematical proof is due to Chang, Liu, and Liu. No human expert
+        review or source-author endorsement is claimed. The upstream MIT
+        copyright and permission notice is retained in every imported file.
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Chvatal.chvatal
+      - Chvatal.sharp_correlation
+    main_results:
+      - declaration: Chvatal.chvatal
+        informal: >-
+          Every intersecting subfamily A of a hereditary finite family D
+          on a finite nonempty ground type has cardinality at most that
+          of some star of D.
+      - declaration: Chvatal.exists_largest_intersecting_star
+        informal: >-
+          One star of D is itself intersecting and simultaneously dominates
+          all intersecting subfamilies of the hereditary family D in size,
+          on a finite nonempty ground type.
+      - declaration: Chvatal.sharp_correlation
+        informal: >-
+          For increasing Boolean functions f and g on any finite cube, the
+          sum of squared Fourier coefficients of g weighted by the largest
+          influence of f on each nonempty index is at most the harmonic
+          mean of Cov(f,g) and Cov(f,g*), with zero-denominator value zero.
+      - declaration: Chvatal.two_spectral_le_quadratic_covariance
+        informal: >-
+          For increasing Boolean f and g and every real t, twice their
+          squared Fourier energy over index pairs with odd intersection is
+          bounded by t^2 Cov(f,g) + (1-t)^2 Cov(f,g*).
+      - declaration: Chvatal.antipodal_correlation
+        informal: >-
+          If g is also self-dual and the finite coordinate type is nonempty,
+          Cov(f,g) is at least one quarter of f's minimum coordinate influence.
+      - declaration: Chvatal.andFunction_sharp
+        informal: >-
+          The AND function attains equality in the sharp correlation bound
+          for every increasing Boolean second function, including constants.
+      - declaration: Chvatal.exists_largest_weighted_intersecting_star
+        informal: >-
+          For any nonnegative antitone real weight on subsets of a finite
+          nonempty ground type, one full-cube star is intersecting and its
+          total weight dominates every intersecting family.
+    tags:
+      - extremal-combinatorics
+      - intersecting-families
+      - Fourier-analysis
+    msc:
+      - 05D05
+      - 60E15
+  - slug: asymptotic-moore-bound
+    title: Asymptotically attaining the Moore bound
+    summary: >-
+      Proves that, for each fixed positive diameter k, the largest order of a
+      finite simple graph with maximum degree at most d and extended diameter
+      at most k is asymptotic to d^k as d tends to infinity. Constructs regular
+      halved-flag graphs over every finite field, with exact order and diameter,
+      a sharp degree cap, and matching asymptotics through all prime powers.
+      Also proves the corresponding lower-limit bound for the edge extremum
+      defined using line-graph diameter. Reusable infrastructure includes common
+      bases for complete flags, odd-even sorting routes, exact flag enumeration,
+      projective-line completion counts, and bipartite graph expansion. The
+      analytic bridge retains the Wiener-Ikehara and prime-counting dependency
+      closure from the Apache-2.0 PrimeNumberTheoremAnd project. The paper
+      describes AI-assisted formalization supervised by the human authors.
+    branch: extremal graph theory
+    entry_module: LeanPool.MooreBound
+    authors:
+      - Wouter Cames van Batenburg
+      - Samuel Korsky
+      - PrimeNumberTheoremAnd contributors
+    source:
+      title: Asymptotically attaining the Moore bound
+      authors:
+        - Wouter Cames van Batenburg
+        - Samuel Korsky
+      arxiv: '2608.03965'
+      url: https://github.com/woutercvb/wewantmoore
+      github_repo: woutercvb/wewantmoore
+      commit: d59bd80ea93fabb9faf769e790ab47692645e022
+      announcement: https://arxiv.org/abs/2608.03965v1
+      announcement_date: '2026-08-04T17:30:09Z'
+      release: https://github.com/woutercvb/wewantmoore/releases/tag/v1.0
+      release_date: '2026-08-05T01:19:30Z'
+      third_party_url: https://github.com/AlexKontorovich/PrimeNumberTheoremAnd
+      third_party_commit: 0c7abf7be7765dc5ffd21afc1c37b018199ec3c9
+      third_party_license: Apache-2.0
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - MooreBound.DegreeDiameter.theorem_1_1
+    main_results:
+      - declaration: MooreBound.DegreeDiameter.theorem_1_1
+        informal: >-
+          For each positive natural k, n(k,d)/d^k tends to 1 as the natural
+          degree bound d tends to infinity. Here n(k,d) is the maximum number
+          of vertices of a finite simple graph with maximum degree at most d
+          and extended diameter at most k.
+      - declaration: MooreBound.DegreeDiameter.corollary_1_2
+        informal: >-
+          For each natural ell at least 2, the lower limit of h(ell,d)/d^ell
+          is at least 1. Here h(ell,d) is one plus the maximum number of edges
+          of a finite simple graph with maximum degree at most d whose line
+          graph has extended diameter at most ell.
+      - declaration: MooreBound.DegreeDiameter.proposition_3_1
+        informal: >-
+          For every positive k and prime power q, the concrete halved-flag graph
+          is regular, has order [2k+1]_q!/(q+1)^k, degree at most
+          (q+1)^k((q+1)^k-1), and extended diameter exactly k. Along all prime
+          powers q tending to infinity, its actual degree divided by this cap
+          and its order divided by the kth power of its actual degree both
+          tend to 1.
+      - declaration: MooreBound.DegreeDiameter.alternating_route
+        informal: >-
+          Any two complete flags in an n-dimensional vector space over a
+          division ring admit an n-step route that changes only ranks of the
+          prescribed alternating parity at each step.
+      - declaration: MooreBound.prime_between
+        informal: >-
+          For every positive real epsilon, every sufficiently large real x
+          admits a prime strictly between x and (1+epsilon)x.
+    tags:
+      - graph-theory
+      - finite-geometry
+      - asymptotics
+      - prime-number-theorem
+    msc:
+      - '05C35'
+      - '05B25'
+      - '11N05'
+  - slug: language-generation-characterization
+    title: Finite witnesses and the width hierarchy for language generation
+    summary: >-
+      Characterizes generation in the limit for arbitrary families of infinite
+      languages over any countably infinite universe by finite positive witnesses.
+      Ordered-history generators admit a single set-driven normalization, chosen
+      before the target language. The separation-width invariant takes every value
+      0, 1, 2, ..., omega, omega+1; generation is equivalent to width at most omega.
+      Reusable infrastructure includes locking witnesses, positive separation,
+      bounded diagonal capture over arbitrary universes, transport under equivalences,
+      and finite-query normalization on natural numbers. The formalized scope is
+      the semantic characterization and hierarchy, not the paper's additional
+      density-one or Turing-computability results in Appendices D and E.
+    branch: formal language theory and learning theory
+    entry_module: LeanPool.LanguageGeneration
+    authors:
+      - Xiaoyu Li
+      - Andi Han
+      - Jiaojiao Jiang
+      - Junbin Gao
+      - Shuangping Li
+      - Peng Zhang
+    source:
+      title: 'Characterizing Language Generation in the Limit: Finite Witnesses and a Separation-Width Hierarchy'
+      authors:
+        - Xiaoyu Li
+        - Andi Han
+        - Jiaojiao Jiang
+        - Junbin Gao
+      arxiv: '2609.10525'
+      url: https://github.com/xiaoyulics/language-generation-characterization
+      github_repo: xiaoyulics/language-generation-characterization
+      commit: 4f7d3f2148017ae15135ba39ddc4d655bb175ab6
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GenLimit.FiniteWitness.Simplified.ordinary_iff_finiteWitnesses
+    main_results:
+      - declaration: GenLimit.FiniteWitness.Simplified.ordinary_iff_finiteWitnesses
+        informal: >-
+          For any family H of infinite languages over a countably infinite universe,
+          there exists one ordered-history generator that eventually outputs an
+          unseen target element on every exact presentation of every target in H
+          if and only if H admits a finite positive witness assignment whose
+          nonempty active subfamilies always have infinite common intersection.
+      - declaration: GenLimit.FiniteWitness.Simplified.universal_normalization
+        informal: >-
+          Every ordered-history generator over a countably infinite universe has
+          one set-driven normalization that locks on every infinite target on
+          which the original generator succeeds on all exact presentations.
+          The normalization is chosen before the target.
+      - declaration: GenLimit.FiniteWitness.ordinary_iff_width
+        informal: >-
+          A family of infinite languages over a countably infinite universe is
+          generatable in the limit exactly when its separation width is at most omega.
+      - declaration: GenLimit.FiniteWitness.full_range
+        informal: >-
+          Over every countably infinite universe, every value in
+          WithTop (WithTop Nat), representing 0, 1, 2, ..., omega, omega+1,
+          is the separation width of some family of infinite languages.
+      - declaration: GenLimit.FiniteWitness.bounded_capture
+        informal: >-
+          Over an arbitrary universe, every sequence of uniformly bounded finite
+          sets has infinitely many terms contained in one set D such that D
+          contains none of a prescribed countable list of infinite cores.
+      - declaration: GenLimit.FiniteWitness.executable_universal_normalization
+        informal: >-
+          The finite-search normalization on natural numbers locks on every
+          infinite language on which the supplied generator eventually succeeds
+          on every exact presentation. This is a semantic correctness theorem
+          for the defined procedure, without a formal Turing-computability claim.
+    tags:
+      - language-generation
+      - learning-theory
+      - finite-witnesses
+      - combinatorics
+    msc:
+      - 68Q32
+      - 68Q45
+  - slug: serre-mass-formula
+    title: Serre's mass formula for totally ramified local-field extensions
+    summary: >-
+      Proves both of Serre's mass formulas for totally ramified separable
+      extensions of a nonarchimedean local field of any positive degree,
+      together with the discriminant bound, tame-ramification criterion,
+      finiteness dichotomy, convergence, and automorphism-weighted orbit count.
+      The proof develops Eisenstein monogenicity, quantitative Newton-Hensel
+      lifting, local constancy of root counts, and Haar measures of lattices
+      over discrete valuation rings.
+    branch: local fields and ramification theory
+    entry_module: LeanPool.MassFormula
+    authors:
+      - Hyeon Seung-Hyeon
+    source:
+      title: Une «formule de masse» pour les extensions totalement ramifiées de degré donné d'un corps local
+      authors:
+        - Jean-Pierre Serre
+      url: https://gallica.bnf.fr/ark:/12148/bpt6k6234149b/f323.item
+      github_repo: 0stellensatz/MassFormula
+      commit: 7fa41a621f724f110183904d3fd19c6730a932ad
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - MassFormula.tsum_one_div_q_pow_c
+    main_results:
+      - declaration: MassFormula.tsum_one_div_q_pow_c
+        informal: >-
+          For every nonarchimedean local field K with residue-field cardinality q
+          and every positive integer n, the sum of q^(-c(L)) over the totally
+          ramified degree-n subextensions L of a separable closure of K is n,
+          where c(L) is the discriminant exponent minus n plus one.
+      - declaration: MassFormula.tsum_one_div_w_mul_q_pow_c
+        informal: >-
+          For every nonarchimedean local field K, positive n, and set of
+          representatives of K-isomorphism classes of totally ramified separable
+          degree-n extensions, the sum of 1/(|Aut_K(L)| q^c(L)) is one.
+      - declaration: MassFormula.sigma_infinite_iff
+        informal: >-
+          For positive n, the set of totally ramified separable degree-n subextensions is infinite
+          exactly when K and its residue field have the same characteristic p
+          and p divides n.
+      - declaration: MassFormula.sub_one_le_d
+        informal: For positive n, the discriminant exponent of a totally ramified degree-n extension is at least n-1.
+      - declaration: MassFormula.c_eq_zero_iff
+        informal: >-
+          For positive n and a totally ramified degree-n extension, the wild discriminant exponent
+          vanishes exactly when the residue characteristic does not divide n.
+      - declaration: MassFormula.summable_one_div_q_pow_c
+        informal: For positive n, the real-valued series of the unweighted mass terms is summable.
+      - declaration: MassFormula.ncard_isomorphic_mul_w
+        informal: >-
+          For a nonarchimedean local field K and a totally ramified separable
+          extension L of positive degree n, the number of K-isomorphic copies of L
+          inside a separable closure, multiplied by |Aut_K(L)|, is n.
+    tags:
+      - number-theory
+      - local-fields
+      - ramification
+      - discriminants
+      - haar-measure
+    msc:
+      - 11S15
+      - 11S05

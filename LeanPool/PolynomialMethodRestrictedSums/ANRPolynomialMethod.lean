@@ -117,11 +117,11 @@ lemma constructionPolynomial_vanishes
 /-- Lemma 2.1.2 : The product polynomial ∏_{e∈E} (∑X_i - C e) is always nonzero -/
 lemma productPolynomial_ne_zero (k : ℕ) (E : Multiset (ZMod p)) :
     productPolynomial k E ≠ 0 := by
-      by_contra h
-      by_cases hE : E.card = 0 <;> simp_all? +decide [productPolynomial]
-      obtain ⟨a, haE, ha⟩ := h
-      replace ha := congr_arg (MvPolynomial.eval (fun i => if i = 0 then a + 1 else 0)) ha
-      norm_num [sumXPolynomial] at ha
+  unfold productPolynomial
+  intro hzero
+  obtain ⟨e, _, h⟩ := Multiset.mem_map.mp (Multiset.prod_eq_zero_iff.mp hzero)
+  have heval := congrArg (MvPolynomial.eval (fun i => if i = 0 then e + 1 else 0)) h
+  simp [sumXPolynomial] at heval
 
 /-- Lemma 2.1.3.1 : About total degree of sumX -/
 lemma totalDegree_sumX_sub_C_first {p k : ℕ} [Fact (Nat.Prime p)] (a : ZMod p) :
@@ -144,11 +144,6 @@ lemma totalDegree_sumX_sub_C_first {p k : ℕ} [Fact (Nat.Prime p)] (a : ZMod p)
 /-- Lemma 2.1.3.2 : Another version of the previous lemma -/
 lemma totalDegree_sumX_sub_C_second (e : ZMod p) :
     totalDegree (∑ i : Fin (k + 1), X i - C e) = 1 := by
-  have :
-      (∑ i : Fin (k + 1), X i - C e) =
-          (sumXPolynomial : MvPolynomial (Fin (k + 1)) (ZMod p)) - C e := by
-    simp [sumXPolynomial]
-  rw [this]
   exact totalDegree_sumX_sub_C_first e
 
 /-- Lemma 2.1.3.3 : The total degree of the product polynomial ∏_{e∈E} (∑X_i - C e) is equal to |E|
@@ -256,7 +251,8 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
       obtain ⟨left, right⟩ := h
       subst right
       norm_num [MvPolynomial.totalDegree]
-      intro b hb; contrapose! hb; simp_all? +decide [MvPolynomial.coeff_sum, MvPolynomial.coeff_X]
+      intro b hb; contrapose! hb; simp_all +decide only [zero_add, coeff_sum, coeff_X,
+        Finset.sum_boole]
       rw [Finset.card_eq_zero.mpr] <;> aesop
     · rw [Finset.sum_subset (Finset.subset_univ snd.support)] <;> aesop
   · -- the case fst ≠ 0: simplify the C-coeff to 0 and reduce to a disjunction
@@ -858,8 +854,9 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
           · rw [elimination_polynomial_eval_eq_zero A i x (a i), sub_zero]
             simp +decide [MvPolynomial.eval_monomial]
             ring_nf
-            simp? +decide [Finsupp.single_apply,
-                Finset.prod_eq_prod_sdiff_singleton_mul (Finset.mem_univ i), mul_assoc, ← pow_succ']
+            simp +decide only [single_apply,
+              Finset.prod_eq_prod_sdiff_singleton_mul (Finset.mem_univ i), ↓reduceIte,
+              mul_assoc, ← pow_succ']
             rw [← pow_add, Nat.sub_add_cancel (by linarith)]
             exact congrArg₂ _ (Finset.prod_congr rfl fun j hj => by
             simp_all only [Finset.mem_sdiff, Finset.mem_univ, Finset.mem_singleton, true_and]
@@ -915,7 +912,10 @@ lemma exists_remainder (Q : MvPolynomial (Fin (k + 1)) (ZMod p))
                 exact hQ_deg ▸ Finset.le_sup (f := fun s => s.sum fun x n => n) hm) Q' (by
                 linarith)
               subst hQ_deg
-              simp_all
+              obtain ⟨R, hRdegree, hReval, hRcoeff⟩ :=
+                Classical.byContradiction fun hR => ih hR rfl
+              exact ⟨R, hRdegree, fun x hx => (hReval x hx).trans (hQ'_eval x hx),
+                hRcoeff.trans hQ'_coeff⟩
             · use MvPolynomial.monomial m 1
               simp_all (config := {decide := Bool.true}) only [degreeOf_eq_sup, Finset.sup_le_iff,
                 MvPolynomial.mem_support_iff, ne_eq, not_exists, not_and, imp_false, gt_iff_lt,
@@ -954,13 +954,12 @@ lemma coeff_target_eq_zero_of_vanishes_on_grid
     (hQ_deg : Q.totalDegree ≤ ∑ i, c i)
     (hQ_vanishes : ∀ x, (∀ i, x i ∈ A i) → eval x Q = 0) :
     coeff (Finsupp.equivFunOnFinite.symm c) Q = 0 := by
-      -- Apply `exists_remainder` to $Q$ to get $R$.
-      obtain ⟨R, hR⟩ := exists_remainder Q A c hA hQ_deg
-      -- By `eq_zero_of_eval_zero_at_prod_finset`, $R = 0$.
-      have hR_zero : R = 0 :=
-        _root_.eq_zero_of_eval_zero_at_prod_finset R A (fun i => by linarith [hR.1 i, hA i])
-          fun x hx => by simp [hR.2.1 x hx, hQ_vanishes x hx]
-      aesop
+  obtain ⟨R, hdegree, heval, hcoeff⟩ := exists_remainder Q A c hA hQ_deg
+  have hzero : R = 0 :=
+    _root_.eq_zero_of_eval_zero_at_prod_finset R A
+      (fun i => hA i ▸ Nat.lt_succ_of_le (hdegree i))
+      (fun x hx => (heval x hx).trans (hQ_vanishes x hx))
+  rw [← hcoeff, hzero, coeff_zero]
 
 /--
 Lemma 2.1.11 : If two polynomials P and Q are equal or their difference has a total degree less
@@ -975,21 +974,14 @@ lemma coeff_mul_eq_of_degree_bound
     (h_diff : P = Q ∨ (P - Q).totalDegree < m) :
     coeff (Finsupp.equivFunOnFinite.symm c) (h * P) =
     coeff (Finsupp.equivFunOnFinite.symm c) (h * Q) := by
-      cases h_diff with
-      | inl h_1 =>
-        subst h_1
-        simp_all only
-      | inr h_2 => ?_
-      -- Since $P - Q$ has a total degree less than $m$, $h * (P - Q)$ has a total degree less than
-      -- $h.totalDegree + m$.
-      have h_total_degree : (h * (P - Q)).totalDegree < h.totalDegree + m :=
-        lt_of_le_of_lt (totalDegree_mul h (P - Q)) (by linarith)
-      -- Since the total degree of $h * (P - Q)$ is less than the sum of $c_i$, the coefficient of
-      -- the monomial $c$ in $h * (P - Q)$ must be zero.
-      have h_coeff_zero : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (h * (P - Q)) = 0 :=
-        coeff_equivFun_eq_zero_of_totalDegree_lt _ c (h_deg ▸ h_total_degree)
-      simp_all? +decide [mul_sub]
-      exact eq_of_sub_eq_zero h_coeff_zero
+  rcases h_diff with rfl | h_diff
+  · rfl
+  · have hdegree : (h * (P - Q)).totalDegree < ∑ i, c i := by
+      rw [← h_deg]
+      exact lt_of_le_of_lt (totalDegree_mul _ _) (Nat.add_lt_add_left h_diff _)
+    have hcoeff := coeff_equivFun_eq_zero_of_totalDegree_lt _ c hdegree
+    rw [mul_sub, coeff_sub] at hcoeff
+    exact sub_eq_zero.mp hcoeff
 
 /--
 Lemma 2.1.12 : The total degree of the difference between the product of linear terms and the
@@ -1260,8 +1252,7 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
           exact h_coeff_eq _ _ h_diff_deg |> Eq.symm
         apply h_coeff
         rw [mul_comm, h_coeff_eq]
-        apply_rules [coeff_target_eq_zero_of_vanishes_on_grid]
-        exact hQ_total_deg.le
+        exact coeff_target_eq_zero_of_vanishes_on_grid Q A c hA hQ_total_deg.le hQ_zero
     -- Since Q vanishes on the grid, the coefficient of the target monomial in Q is zero,
     -- contradicting hQ_coeff.
     have hQ_coeff_zero :
