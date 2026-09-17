@@ -6115,6 +6115,13 @@ import LeanPool.SpherePacking.RadialConstruction
 import LeanPool.SpherePacking.SaddleAnalysis
 import LeanPool.SteinhausThreeGap
 import LeanPool.SteinhausThreeGap.Basic
+import LeanPool.SumDifferenceExponent
+import LeanPool.SumDifferenceExponent.Basic
+import LeanPool.SumDifferenceExponent.Column
+import LeanPool.SumDifferenceExponent.Construction
+import LeanPool.SumDifferenceExponent.Limit
+import LeanPool.SumDifferenceExponent.Main
+import LeanPool.SumDifferenceExponent.Quantitative
 import LeanPool.SumsThreeSquares
 import LeanPool.SumsThreeSquares.MinkowskiConvex
 import LeanPool.SumsThreeSquares.SumThreeSquares
