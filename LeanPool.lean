@@ -1707,8 +1707,6 @@ import LeanPool.FormalizationOfBoundedArithmetic.V0
 import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddAssoc
 import LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
 import LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
-import LeanPool.ForwardEuler
-import LeanPool.ForwardEuler.Main
 import LeanPool.FourAP
 import LeanPool.FourAP.Basic
 import LeanPool.FourAP.Binary
@@ -6190,10 +6188,6 @@ import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
 import LeanPool.SingularModuli.QuadraticOrder.Prime.Split
 import LeanPool.SingularModuli.QuadraticOrder.RootCounting
 import LeanPool.SingularModuli.QuadraticOrder.Verification
-import LeanPool.SpecialNumbers
-import LeanPool.SpecialNumbers.Euclidian
-import LeanPool.SpecialNumbers.Eulerian
-import LeanPool.SpecialNumbers.Sylvester
 import LeanPool.SpectralPositivity
 import LeanPool.SpectralPositivity.Matrix.MMatrixInverse
 import LeanPool.SpectralPositivity.Matrix.MetzlerExp
