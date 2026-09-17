@@ -1,82 +1,71 @@
 projects:
-  - slug: chvatal-conjecture
-    title: Chvátal's conjecture and sharp Boolean correlation
+  - slug: sum-difference-exponent
+    title: The optimal exponent relating sumsets and difference sets
     summary: >-
-      Formalizes Chang, Liu, and Liu's proof that a hereditary family on a
-      finite nonempty ground set has a largest intersecting subfamily that is
-      a star. Develops the sharp Boolean Fourier correlation inequality,
-      its antipodal and quadratic forms, sharpness examples, and the
-      weighted star theorem for nonnegative decreasing weights.
-    branch: extremal combinatorics
-    entry_module: LeanPool.Chvatal
+      For a finite integer set A with at least two elements, proves that
+      C(A) = log(|A+A|/|A|) / log(|A-A|/|A|) is strictly below 2, while
+      explicit finite sets have exponents tending to 2. Thus 2 is the
+      supremum and is never attained. Also gives an explicit witness within
+      10^(-999) of 2. This imports the upstream base-39 row-and-column
+      variant, not the paper's base-12 automaton construction or its
+      quantitative cardinality estimates. Supporting infrastructure includes
+      injective digit expansions and the strict Pluennecke-Petridis
+      equality argument for finite integer sets.
+    branch: additive combinatorics
+    entry_module: LeanPool.SumDifferenceExponent
     authors:
-      - Boon Suan Ho
-      - Chvatal formalization contributors
+      - Haowei Lin
+      - Shanda Li
     source:
-      title: A proof of Chvátal's conjecture via a sharp correlation inequality
+      title: Settling the Optimal Exponent Relating Sumsets and Difference Sets
       authors:
-        - Fan Chang
-        - Hong Liu
-        - Miao Liu
-      arxiv: '2609.19123v1'
-      url: https://github.com/boonsuan/chvatal
-      github_repo: boonsuan/chvatal
-      commit: c19ed3aaac9e42d446f963a862d39d8a09eddbf9
-      announcement_date: '2026-09-17T03:58:22Z'
-      announcement_url: https://github.com/boonsuan/chvatal/commit/c46f715af9d400523eb0d4c9c0d2335abbdc9fdd
-      notes: >-
-        GPT-6 generated the formalization under Boon Suan Ho's direction;
-        the mathematical proof is due to Chang, Liu, and Liu. No human expert
-        review or source-author endorsement is claimed. The upstream MIT
-        copyright and permission notice is retained in every imported file.
-    license: MIT
+        - Haowei Lin
+        - Shanda Li
+      arxiv: '2607.27199'
+      url: https://github.com/linhaowei1/sum-diff-proof
+      github_repo: linhaowei1/sum-diff-proof
+      commit: f53f84223b48457ac922836b661227309d9340c3
+    license: Apache-2.0
     status: verified
     provenance: AI
     main_declarations:
-      - Chvatal.chvatal
-      - Chvatal.sharp_correlation
+      - SumDifferenceExponent.sSup_admissibleExponents
     main_results:
-      - declaration: Chvatal.chvatal
+      - declaration: SumDifferenceExponent.growthExponent_lt_two
         informal: >-
-          Every intersecting subfamily A of a hereditary finite family D
-          on a finite nonempty ground type has cardinality at most that
-          of some star of D.
-      - declaration: Chvatal.exists_largest_intersecting_star
+          For every finite set A of integers with at least two elements,
+          log(|A+A|/|A|) / log(|A-A|/|A|) is strictly less than 2.
+      - declaration: SumDifferenceExponent.tendsto_growthExponent_approximatingSet
         informal: >-
-          One star of D is itself intersecting and simultaneously dominates
-          all intersecting subfamilies of the hereditary family D in size,
-          on a finite nonempty ground type.
-      - declaration: Chvatal.sharp_correlation
+          The growth exponents of the explicit finite integer sets
+          approximatingSet l converge to 2 as l tends to infinity; these
+          sets have at least two elements whenever l is positive.
+      - declaration: SumDifferenceExponent.isLUB_admissibleExponents
         informal: >-
-          For increasing Boolean functions f and g on any finite cube, the
-          sum of squared Fourier coefficients of g weighted by the largest
-          influence of f on each nonempty index is at most the harmonic
-          mean of Cov(f,g) and Cov(f,g*), with zero-denominator value zero.
-      - declaration: Chvatal.two_spectral_le_quadratic_covariance
+          The number 2 is the least upper bound of the growth exponents of
+          all finite integer sets with at least two elements.
+      - declaration: SumDifferenceExponent.sSup_admissibleExponents
         informal: >-
-          For increasing Boolean f and g and every real t, twice their
-          squared Fourier energy over index pairs with odd intersection is
-          bounded by t^2 Cov(f,g) + (1-t)^2 Cov(f,g*).
-      - declaration: Chvatal.antipodal_correlation
+          The supremum of the growth exponents of all finite integer sets
+          with at least two elements equals 2.
+      - declaration: SumDifferenceExponent.supremum_not_attained
         informal: >-
-          If g is also self-dual and the finite coordinate type is nonempty,
-          Cov(f,g) is at least one quarter of f's minimum coordinate influence.
-      - declaration: Chvatal.andFunction_sharp
+          No finite integer set with at least two elements has growth
+          exponent equal to 2.
+      - declaration: SumDifferenceExponent.quantitative_example
         informal: >-
-          The AND function attains equality in the sharp correlation bound
-          for every increasing Boolean second function, including constants.
-      - declaration: Chvatal.exists_largest_weighted_intersecting_star
-        informal: >-
-          For any nonnegative antitone real weight on subsets of a finite
-          nonempty ground type, one full-cube star is intersecting and its
-          total weight dominates every intersecting family.
+          The explicitly defined finite integer set quantitativeSet has
+          growth exponent strictly between 2 - 10^(-999) and 2.
     tags:
-      - extremal-combinatorics
-      - intersecting-families
-      - Fourier-analysis
+      - additive-combinatorics
+      - sumsets
+      - difference-sets
+      - Pluennecke-Ruzsa
+      - optimal-exponents
     msc:
-      - 05D05
-      - 60E15
+      - 11B13
+      - 11B30
+      - 05D10
   - slug: four-ap-free-permutation
     title: A 4AP-free permutation of the positive integers
     summary: >-
@@ -8585,3 +8574,81 @@ projects:
     - 35Q30
     - 35Q31
     - 35B44
+  - slug: chvatal-conjecture
+    title: Chvátal's conjecture and sharp Boolean correlation
+    summary: >-
+      Formalizes Chang, Liu, and Liu's proof that a hereditary family on a
+      finite nonempty ground set has a largest intersecting subfamily that is
+      a star. Develops the sharp Boolean Fourier correlation inequality,
+      its antipodal and quadratic forms, sharpness examples, and the
+      weighted star theorem for nonnegative decreasing weights.
+    branch: extremal combinatorics
+    entry_module: LeanPool.Chvatal
+    authors:
+      - Boon Suan Ho
+      - Chvatal formalization contributors
+    source:
+      title: A proof of Chvátal's conjecture via a sharp correlation inequality
+      authors:
+        - Fan Chang
+        - Hong Liu
+        - Miao Liu
+      arxiv: '2609.19123v1'
+      url: https://github.com/boonsuan/chvatal
+      github_repo: boonsuan/chvatal
+      commit: c19ed3aaac9e42d446f963a862d39d8a09eddbf9
+      announcement_date: '2026-09-17T03:58:22Z'
+      announcement_url: https://github.com/boonsuan/chvatal/commit/c46f715af9d400523eb0d4c9c0d2335abbdc9fdd
+      notes: >-
+        GPT-6 generated the formalization under Boon Suan Ho's direction;
+        the mathematical proof is due to Chang, Liu, and Liu. No human expert
+        review or source-author endorsement is claimed. The upstream MIT
+        copyright and permission notice is retained in every imported file.
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Chvatal.chvatal
+      - Chvatal.sharp_correlation
+    main_results:
+      - declaration: Chvatal.chvatal
+        informal: >-
+          Every intersecting subfamily A of a hereditary finite family D
+          on a finite nonempty ground type has cardinality at most that
+          of some star of D.
+      - declaration: Chvatal.exists_largest_intersecting_star
+        informal: >-
+          One star of D is itself intersecting and simultaneously dominates
+          all intersecting subfamilies of the hereditary family D in size,
+          on a finite nonempty ground type.
+      - declaration: Chvatal.sharp_correlation
+        informal: >-
+          For increasing Boolean functions f and g on any finite cube, the
+          sum of squared Fourier coefficients of g weighted by the largest
+          influence of f on each nonempty index is at most the harmonic
+          mean of Cov(f,g) and Cov(f,g*), with zero-denominator value zero.
+      - declaration: Chvatal.two_spectral_le_quadratic_covariance
+        informal: >-
+          For increasing Boolean f and g and every real t, twice their
+          squared Fourier energy over index pairs with odd intersection is
+          bounded by t^2 Cov(f,g) + (1-t)^2 Cov(f,g*).
+      - declaration: Chvatal.antipodal_correlation
+        informal: >-
+          If g is also self-dual and the finite coordinate type is nonempty,
+          Cov(f,g) is at least one quarter of f's minimum coordinate influence.
+      - declaration: Chvatal.andFunction_sharp
+        informal: >-
+          The AND function attains equality in the sharp correlation bound
+          for every increasing Boolean second function, including constants.
+      - declaration: Chvatal.exists_largest_weighted_intersecting_star
+        informal: >-
+          For any nonnegative antitone real weight on subsets of a finite
+          nonempty ground type, one full-cube star is intersecting and its
+          total weight dominates every intersecting family.
+    tags:
+      - extremal-combinatorics
+      - intersecting-families
+      - Fourier-analysis
+    msc:
+      - 05D05
+      - 60E15
