@@ -8652,6 +8652,84 @@ projects:
     msc:
       - 37F10
       - 30D05
+  - slug: chvatal-conjecture
+    title: Chvátal's conjecture and sharp Boolean correlation
+    summary: >-
+      Formalizes Chang, Liu, and Liu's proof that a hereditary family on a
+      finite nonempty ground set has a largest intersecting subfamily that is
+      a star. Develops the sharp Boolean Fourier correlation inequality,
+      its antipodal and quadratic forms, sharpness examples, and the
+      weighted star theorem for nonnegative decreasing weights.
+    branch: extremal combinatorics
+    entry_module: LeanPool.Chvatal
+    authors:
+      - Boon Suan Ho
+      - Chvatal formalization contributors
+    source:
+      title: A proof of Chvátal's conjecture via a sharp correlation inequality
+      authors:
+        - Fan Chang
+        - Hong Liu
+        - Miao Liu
+      arxiv: '2609.19123v1'
+      url: https://github.com/boonsuan/chvatal
+      github_repo: boonsuan/chvatal
+      commit: c19ed3aaac9e42d446f963a862d39d8a09eddbf9
+      announcement_date: '2026-09-17T03:58:22Z'
+      announcement_url: https://github.com/boonsuan/chvatal/commit/c46f715af9d400523eb0d4c9c0d2335abbdc9fdd
+      notes: >-
+        GPT-6 generated the formalization under Boon Suan Ho's direction;
+        the mathematical proof is due to Chang, Liu, and Liu. No human expert
+        review or source-author endorsement is claimed. The upstream MIT
+        copyright and permission notice is retained in every imported file.
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Chvatal.chvatal
+      - Chvatal.sharp_correlation
+    main_results:
+      - declaration: Chvatal.chvatal
+        informal: >-
+          Every intersecting subfamily A of a hereditary finite family D
+          on a finite nonempty ground type has cardinality at most that
+          of some star of D.
+      - declaration: Chvatal.exists_largest_intersecting_star
+        informal: >-
+          One star of D is itself intersecting and simultaneously dominates
+          all intersecting subfamilies of the hereditary family D in size,
+          on a finite nonempty ground type.
+      - declaration: Chvatal.sharp_correlation
+        informal: >-
+          For increasing Boolean functions f and g on any finite cube, the
+          sum of squared Fourier coefficients of g weighted by the largest
+          influence of f on each nonempty index is at most the harmonic
+          mean of Cov(f,g) and Cov(f,g*), with zero-denominator value zero.
+      - declaration: Chvatal.two_spectral_le_quadratic_covariance
+        informal: >-
+          For increasing Boolean f and g and every real t, twice their
+          squared Fourier energy over index pairs with odd intersection is
+          bounded by t^2 Cov(f,g) + (1-t)^2 Cov(f,g*).
+      - declaration: Chvatal.antipodal_correlation
+        informal: >-
+          If g is also self-dual and the finite coordinate type is nonempty,
+          Cov(f,g) is at least one quarter of f's minimum coordinate influence.
+      - declaration: Chvatal.andFunction_sharp
+        informal: >-
+          The AND function attains equality in the sharp correlation bound
+          for every increasing Boolean second function, including constants.
+      - declaration: Chvatal.exists_largest_weighted_intersecting_star
+        informal: >-
+          For any nonnegative antitone real weight on subsets of a finite
+          nonempty ground type, one full-cube star is intersecting and its
+          total weight dominates every intersecting family.
+    tags:
+      - extremal-combinatorics
+      - intersecting-families
+      - Fourier-analysis
+    msc:
+      - 05D05
+      - 60E15
   - slug: pdl-craig-interpolation
     title: Craig interpolation and Beth definability for propositional dynamic logic
     summary: >-
