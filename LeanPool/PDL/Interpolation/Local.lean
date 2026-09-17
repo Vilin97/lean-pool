@@ -204,6 +204,43 @@ theorem localRuleApp_does_not_increase_jvoc (lra : LocalRuleApp) :
         · rw [Olf.change_some] at h
           exact hres x (by rw [Finset.fvoc_union, Finset.mem_union]; exact Or.inr h)
 
+/-- Vocabulary control depends only on the child interpolants and the rule's
+vocabulary bound, independently of which side is loaded. -/
+private theorem childInterpolant_voc {C : Finset Sequent} {X : Sequent}
+    (subθs : ∀ c ∈ C, PartInterpolant c) (hC : ∀ Y ∈ C, jvoc Y ⊆ jvoc X)
+    {φ : Formula}
+    (hφ : φ ∈ (Finset.image (fun c ↦ (subθs c.1 c.2).1) C.attach).pdlSort) :
+    φ.voc ⊆ jvoc X := by
+  rw [Formula.mem_pdlSort] at hφ
+  simp only [Finset.mem_image, Finset.mem_attach, true_and, Subtype.exists] at hφ
+  rcases hφ with ⟨Y, hY, rfl⟩
+  exact fun _ hn => hC Y hY ((subθs Y hY).prop.1 hn)
+
+private theorem satisfiable_neg_dis_union {X I : Finset Formula}
+    (h : satisfiable ({~ dis I.pdlSort} ∪ X)) :
+    satisfiable (X ∪ I.image Formula.neg) := by
+  rcases h with ⟨W, M, w, hw⟩
+  refine ⟨W, M, w, ?_⟩
+  have hdis : ¬ evaluate M w (dis I.pdlSort) := hw (~ dis I.pdlSort) (by simp)
+  rw [disEval] at hdis
+  push Not at hdis
+  intro φ hφ
+  rcases Finset.mem_union.mp hφ with hφ | hφ
+  · exact hw φ (Finset.mem_union_right _ hφ)
+  · rcases Finset.mem_image.mp hφ with ⟨θ, hθ, rfl⟩
+    exact hdis θ (Formula.mem_pdlSort.mpr hθ)
+
+private theorem satisfiable_con_union {X I : Finset Formula}
+    (h : satisfiable ({con I.pdlSort} ∪ X)) : satisfiable (X ∪ I) := by
+  rcases h with ⟨W, M, w, hw⟩
+  refine ⟨W, M, w, ?_⟩
+  have hcon : evaluate M w (con I.pdlSort) := hw _ (by simp)
+  rw [conEval] at hcon
+  intro φ hφ
+  rcases Finset.mem_union.mp hφ with hφ | hφ
+  · exact hw φ (Finset.mem_union_right _ hφ)
+  · exact hcon φ (Formula.mem_pdlSort.mpr hφ)
+
 /-- Maehara interpolation for a oneSidedL local rule. -/
 private theorem localInterpolantStep_oneSidedL (L R : Finset Formula) (o : Olf) (Lcond : Finset
   Formula)
@@ -225,26 +262,12 @@ private theorem localInterpolantStep_oneSidedL (L R : Finset Formula) (o : Olf) 
   · intro n n_in_inter
     rw [in_voc_dis] at n_in_inter
     rcases n_in_inter with ⟨φ, φ_in, n_in_voc_φ⟩
-    rw [Formula.mem_pdlSort] at φ_in
-    simp only [Finset.mem_image, Finset.mem_attach, true_and, Subtype.exists, interSet] at φ_in
-    rcases φ_in with ⟨Y, Y_in, def_φ⟩
-    apply localRuleApp_does_not_increase_jvoc _ Y Y_in
-    subst def_φ
-    exact (subθs Y Y_in).prop.1 n_in_voc_φ
+    exact childInterpolant_voc subθs (localRuleApp_does_not_increase_jvoc
+      ({ L := L, R := R, O := o, Lcond := Lcond, ress := ress_1,
+          lr := LocalRule.oneSidedL orule YS_def, C := C, hC := hC,
+          preconditionProof := precondProof } : LocalRuleApp)) φ_in n_in_voc_φ
   · rintro nInter_L_sat
-    have LI_sat : satisfiable (Sequent.left (L, R, o) ∪ interSet.image Formula.neg) := by
-      rcases nInter_L_sat with ⟨W, M, w, w_nInter_L⟩
-      refine ⟨W, M, w, ?_⟩
-      have w_ndis : ¬ evaluate M w (dis interSet.pdlSort) :=
-        w_nInter_L (~ dis interSet.pdlSort) (by simp)
-      rw [disEval] at w_ndis
-      push Not at w_ndis
-      intro φ φ_in
-      rcases Finset.mem_union.mp φ_in with h | h
-      · exact w_nInter_L φ (Finset.mem_union_right _ h)
-      · rcases Finset.mem_image.mp h with ⟨θ, θ_in, def_φ⟩
-        subst def_φ
-        exact w_ndis θ (Formula.mem_pdlSort.mpr θ_in)
+    have LI_sat := satisfiable_neg_dis_union nInter_L_sat
     have := oneSidedL_sat_down ⟨L,R,o⟩ precondProof.1 orule YS_def LI_sat
     rcases this with ⟨⟨L', R', o'⟩, c_in, W, M, w, w_⟩
     have c_in' : ((L', R', o') : Sequent) ∈ C := hC ▸ def_rule ▸ c_in
@@ -298,12 +321,10 @@ private theorem localInterpolantStep_oneSidedR (L R : Finset Formula) (o : Olf) 
   · intro n n_in_inter
     rw [in_voc_con] at n_in_inter
     rcases n_in_inter with ⟨φ, φ_in, n_in_voc_φ⟩
-    rw [Formula.mem_pdlSort] at φ_in
-    simp only [Finset.mem_image, Finset.mem_attach, true_and, Subtype.exists, interSet] at φ_in
-    rcases φ_in with ⟨Y, Y_in, def_φ⟩
-    apply localRuleApp_does_not_increase_jvoc _ Y Y_in
-    subst def_φ
-    exact (subθs Y Y_in).prop.1 n_in_voc_φ
+    exact childInterpolant_voc subθs (localRuleApp_does_not_increase_jvoc
+      ({ L := L, R := R, O := o, Rcond := Rcond, ress := ress_1,
+          lr := LocalRule.oneSidedR orule YS_def, C := C, hC := hC,
+          preconditionProof := precondProof } : LocalRuleApp)) φ_in n_in_voc_φ
   · rintro ⟨W, M, w, w_⟩
     have w_ncon : ¬ evaluate M w (con interSet.pdlSort) :=
       w_ (~ con interSet.pdlSort) (by simp)
@@ -326,15 +347,7 @@ private theorem localInterpolantStep_oneSidedR (L R : Finset Formula) (o : Olf) 
     · rw [same_L] at h
       exact w_ φ (Finset.mem_union_right _ h)
   · rintro inter_R_sat
-    have RI_sat : satisfiable (Sequent.right (L, R, o) ∪ interSet) := by
-      rcases inter_R_sat with ⟨W, M, w, w_Inter_R⟩
-      refine ⟨W, M, w, ?_⟩
-      have w_con : evaluate M w (con interSet.pdlSort) := w_Inter_R _ (by simp)
-      rw [conEval] at w_con
-      intro φ φ_in
-      rcases Finset.mem_union.mp φ_in with h | h
-      · exact w_Inter_R φ (Finset.mem_union_right _ h)
-      · exact w_con φ (Formula.mem_pdlSort.mpr h)
+    have RI_sat := satisfiable_con_union inter_R_sat
     have := oneSidedR_sat_down ⟨L,R,o⟩ precondProof.2.1 orule YS_def RI_sat
     rcases this with ⟨⟨L', R', o'⟩, c_in, W, M, w, w_⟩
     have c_in' : ((L', R', o') : Sequent) ∈ C := hC ▸ def_rule ▸ c_in
@@ -376,26 +389,12 @@ private theorem localInterpolantStep_loadedL (L R : Finset Formula) (o : Olf) (r
   · intro n n_in_inter
     rw [in_voc_dis] at n_in_inter
     rcases n_in_inter with ⟨φ, φ_in, n_in_voc_φ⟩
-    rw [Formula.mem_pdlSort] at φ_in
-    simp only [Finset.mem_image, Finset.mem_attach, true_and, Subtype.exists, interSet] at φ_in
-    rcases φ_in with ⟨Y, Y_in, def_φ⟩
-    apply localRuleApp_does_not_increase_jvoc _ Y Y_in
-    subst def_φ
-    exact (subθs Y Y_in).prop.1 n_in_voc_φ
+    exact childInterpolant_voc subθs (localRuleApp_does_not_increase_jvoc
+      ({ L := L, R := R, O := o, Ocond := some (Sum.inl (~'χ)), ress := ress_1, lr :=
+          LocalRule.loadedL χ lrule YS_def,
+          C := C, hC := hC, preconditionProof := precondProof } : LocalRuleApp)) φ_in n_in_voc_φ
   · rintro nInter_L_sat
-    have LI_sat : satisfiable (Sequent.left (L, R, o) ∪ interSet.image Formula.neg) := by
-      rcases nInter_L_sat with ⟨W, M, w, w_nInter_L⟩
-      refine ⟨W, M, w, ?_⟩
-      have w_ndis : ¬ evaluate M w (dis interSet.pdlSort) :=
-        w_nInter_L (~ dis interSet.pdlSort) (by simp)
-      rw [disEval] at w_ndis
-      push Not at w_ndis
-      intro φ φ_in
-      rcases Finset.mem_union.mp φ_in with h | h
-      · exact w_nInter_L φ (Finset.mem_union_right _ h)
-      · rcases Finset.mem_image.mp h with ⟨θ, θ_in, def_φ⟩
-        subst def_φ
-        exact w_ndis θ (Formula.mem_pdlSort.mpr θ_in)
+    have LI_sat := satisfiable_neg_dis_union nInter_L_sat
     have := loadedL_sat_down ⟨L,R,o⟩ χ O_is_some lrule YS_def LI_sat
     rcases this with ⟨⟨L', R', o'⟩, c_in, W, M, w, w_⟩
     have c_in' : ((L', R', o') : Sequent) ∈ C := hC ▸ def_rule ▸ c_in
@@ -456,12 +455,10 @@ private theorem localInterpolantStep_loadedR (L R : Finset Formula) (o : Olf) (r
   · intro n n_in_inter
     rw [in_voc_con] at n_in_inter
     rcases n_in_inter with ⟨φ, φ_in, n_in_voc_φ⟩
-    rw [Formula.mem_pdlSort] at φ_in
-    simp only [Finset.mem_image, Finset.mem_attach, true_and, Subtype.exists, interSet] at φ_in
-    rcases φ_in with ⟨Y, Y_in, def_φ⟩
-    apply localRuleApp_does_not_increase_jvoc _ Y Y_in
-    subst def_φ
-    exact (subθs Y Y_in).prop.1 n_in_voc_φ
+    exact childInterpolant_voc subθs (localRuleApp_does_not_increase_jvoc
+      ({ L := L, R := R, O := o, Ocond := some (Sum.inr (~'χ)), ress := ress_1, lr :=
+          LocalRule.loadedR χ lrule YS_def,
+          C := C, hC := hC, preconditionProof := precondProof } : LocalRuleApp)) φ_in n_in_voc_φ
   · rintro ⟨W, M, w, w_⟩
     have w_ncon : ¬ evaluate M w (con interSet.pdlSort) :=
       w_ (~ con interSet.pdlSort) (by simp)
@@ -484,15 +481,7 @@ private theorem localInterpolantStep_loadedR (L R : Finset Formula) (o : Olf) (r
     · rw [same_L] at h
       exact w_ φ (Finset.mem_union_right _ h)
   · rintro inter_R_sat
-    have RI_sat : satisfiable (Sequent.right (L, R, o) ∪ interSet) := by
-      rcases inter_R_sat with ⟨W, M, w, w_Inter_R⟩
-      refine ⟨W, M, w, ?_⟩
-      have w_con : evaluate M w (con interSet.pdlSort) := w_Inter_R _ (by simp)
-      rw [conEval] at w_con
-      intro φ φ_in
-      rcases Finset.mem_union.mp φ_in with h | h
-      · exact w_Inter_R φ (Finset.mem_union_right _ h)
-      · exact w_con φ (Formula.mem_pdlSort.mpr h)
+    have RI_sat := satisfiable_con_union inter_R_sat
     have := loadedR_sat_down ⟨L,R,o⟩ χ O_is_some lrule YS_def RI_sat
     rcases this with ⟨⟨L', R', o'⟩, c_in, W, M, w, w_⟩
     have c_in' : ((L', R', o') : Sequent) ∈ C := hC ▸ def_rule ▸ c_in
