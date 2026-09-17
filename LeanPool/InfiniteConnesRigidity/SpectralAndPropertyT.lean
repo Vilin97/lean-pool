@@ -6,17 +6,11 @@ Authors: OpenAI, Dean Cureton
 
 module
 
-public import Mathlib.Algebra.Order.Module.PositiveLinearMap
 public import Mathlib.Analysis.CStarAlgebra.GelfandDuality
-public import Mathlib.Analysis.InnerProductSpace.Reproducing
 public import Mathlib.MeasureTheory.Integral.RieszMarkovKakutani.Real
 public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.Probability.ConditionalProbability
-public import Mathlib.Topology.ContinuousMap.CompactlySupported
-public import Mathlib.Topology.Algebra.LinearMapCompletion
 import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.Matrix.Order
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.ENatToNat
@@ -25,6 +19,8 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Metrizable.Urysohn
 import Std.Tactic.BVDecide.Normalize.Prop
 public import LeanPool.InfiniteConnesRigidity.CarryAndCrossedProduct
+import Mathlib.Analysis.InnerProductSpace.Reproducing
+import Mathlib.Topology.Algebra.LinearMapCompletion
 
 /-!
 # Spectral methods and property (T)
@@ -579,7 +575,7 @@ private theorem invariant_of_kernel_and_quotient
     π.IsInvariant ξ := by
   intro g
   obtain ⟨a, h, rfl⟩ := E.exists_kernel_mul_splitting g
-  rw [map_mul]
+  rw [MonoidHom.map_mul]
   change
     (π (E.inclusion (Multiplicative.ofAdd a)) : V →L[ℂ] V)
       ((π (E.splitting h) : V →L[ℂ] V) ξ) = ξ
@@ -1062,14 +1058,14 @@ private def quotientFixedOrthogonalIsometry
     change
       (↑(π (E.splitting h⁻¹) * π (E.splitting h)) :
         V →L[ℂ] V) x = x
-    rw [← map_mul, ← map_mul]
+    rw [← MonoidHom.map_mul, ← MonoidHom.map_mul]
     simp only [inv_mul_cancel, map_one, OneMemClass.coe_one, one_apply_eq_self]
   right_inv x := by
     apply Subtype.ext
     change
       (↑(π (E.splitting h) * π (E.splitting h⁻¹)) :
         V →L[ℂ] V) x = x
-    rw [← map_mul, ← map_mul]
+    rw [← MonoidHom.map_mul, ← MonoidHom.map_mul]
     simp only [mul_inv_cancel, map_one, OneMemClass.coe_one, one_apply_eq_self]
   map_add' x y := by
     apply Subtype.ext
@@ -1096,7 +1092,7 @@ private def quotientFixedOrthogonalIsometryHom
       (π (E.splitting (g * h)) : V →L[ℂ] V) x =
         (π (E.splitting g) : V →L[ℂ] V)
           ((π (E.splitting h) : V →L[ℂ] V) x)
-    rw [map_mul, map_mul]
+    rw [MonoidHom.map_mul, MonoidHom.map_mul]
     rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -1699,7 +1695,7 @@ private theorem quotient_preserves_kernelFixedSubmodule
   let b : A := (Multiplicative.toAdd (E.action h⁻¹)) a
   have haction : (Multiplicative.toAdd (E.action h)) b = a := by
     change (Multiplicative.toAdd (E.action h * E.action h⁻¹)) a = a
-    rw [← map_mul]
+    rw [← MonoidHom.map_mul]
     simp only [mul_inv_cancel, map_one, toAdd_one, AddAut.zero_apply]
   have hconj := E.conjugation h b
   rw [haction] at hconj
@@ -1717,12 +1713,12 @@ private theorem quotient_preserves_kernelFixedSubmodule
     (π (E.inclusion (Multiplicative.ofAdd a)) : V →L[ℂ] V)
         ((π (E.splitting h) : V →L[ℂ] V) x) =
       (π (E.inclusion (Multiplicative.ofAdd a) * E.splitting h) :
-        V →L[ℂ] V) x := by rw [map_mul]; rfl
+        V →L[ℂ] V) x := by rw [MonoidHom.map_mul]; rfl
     _ = (π (E.splitting h * E.inclusion (Multiplicative.ofAdd b)) :
         V →L[ℂ] V) x := by rw [hcomm]
     _ = (π (E.splitting h) : V →L[ℂ] V)
           ((π (E.inclusion (Multiplicative.ofAdd b)) : V →L[ℂ] V) x) := by
-        rw [map_mul]
+        rw [MonoidHom.map_mul]
         rfl
     _ = (π (E.splitting h) : V →L[ℂ] V) x := by rw [hfixed]
 
@@ -1749,7 +1745,7 @@ private theorem quotient_map_kernelFixedSubmodule
         ((π (E.splitting h⁻¹) : V →L[ℂ] V) x) = x
     have hop :
         π (E.splitting h) * π (E.splitting h⁻¹) = 1 := by
-      rw [← map_mul, ← map_mul]
+      rw [← MonoidHom.map_mul, ← MonoidHom.map_mul]
       simp only [mul_inv_cancel, map_one]
     have hx' := DFunLike.congr_fun
       (congrArg (fun U : unitary (V →L[ℂ] V) ↦ (U : V →L[ℂ] V)) hop) x
@@ -1867,12 +1863,12 @@ private theorem kernel_orbit_sub_norm
         E.inclusion (Multiplicative.ofAdd a) =
           E.inclusion (Multiplicative.ofAdd b) *
             E.inclusion (Multiplicative.ofAdd (a - b)) := by
-      rw [← map_mul]
+      rw [← MonoidHom.map_mul]
       apply congrArg E.inclusion
       apply Multiplicative.toAdd.injective
       change a = b + (a - b)
       abel
-    rw [hmul, map_mul]
+    rw [hmul, MonoidHom.map_mul]
     rfl
   rw [hfactor]
   exact Unitary.norm_map U z
@@ -2637,7 +2633,7 @@ theorem dualCharacterAction_mul
     χ (Multiplicative.ofAdd
       ((Multiplicative.toAdd (action h⁻¹))
         ((Multiplicative.toAdd (action g⁻¹)) (Multiplicative.toAdd a))))
-  rw [mul_inv_rev, map_mul]
+  rw [mul_inv_rev, MonoidHom.map_mul]
   rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -2788,7 +2784,7 @@ private theorem quotientOperatorConjugation_kernel
     (↑(π (E.splitting h) *
       π (E.inclusion (Multiplicative.ofAdd a)) *
       π ((E.splitting h)⁻¹)) : V →L[ℂ] V) = _
-  rw [← map_mul, ← map_mul, E.conjugation]
+  rw [← MonoidHom.map_mul, ← MonoidHom.map_mul, E.conjugation]
 
 omit [TopologicalSpace A] [DiscreteTopology A] in
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -2808,7 +2804,7 @@ private theorem quotientOperatorConjugation_generators_image
     rw [quotientOperatorConjugation_kernel]
     congr 3
     change (Multiplicative.toAdd (E.action h * E.action h⁻¹)) a = a
-    rw [← map_mul]
+    rw [← MonoidHom.map_mul]
     simp only [mul_inv_cancel, map_one, toAdd_one, AddAut.zero_apply]
 
 omit [TopologicalSpace A] [DiscreteTopology A] in
@@ -2883,7 +2879,7 @@ private def quotientSpectralOperatorConjugation
       (S : V →L[ℂ] V) (T : V →L[ℂ] V)
   map_star' T := by
     apply Subtype.ext
-    exact map_star (quotientOperatorConjugation E π h)
+    exact (quotientOperatorConjugation E π h).map_star'
       (T : V →L[ℂ] V)
   map_smul' c T := by
     apply Subtype.ext
@@ -3353,7 +3349,7 @@ private theorem kernelUnitary_preserves_closedConvexHull
         (Multiplicative.ofAdd a * Multiplicative.ofAdd b)) : V →L[ℂ] V) x =
         ((↑(π (E.inclusion (Multiplicative.ofAdd a)) *
             π (E.inclusion (Multiplicative.ofAdd b))) : V →L[ℂ] V)) x
-    rw [E.inclusion.map_mul, map_mul]
+    rw [E.inclusion.map_mul, MonoidHom.map_mul]
   have hhull : U '' convexHull ℝ orbit ⊆ convexHull ℝ orbit := by
     change U.toLinearMap '' convexHull ℝ orbit ⊆ convexHull ℝ orbit
     rw [LinearMap.image_convexHull]
@@ -3891,7 +3887,7 @@ def affineLinearIsometryHom
     rfl
   map_mul' g h := by
     ext x
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -3928,11 +3924,11 @@ theorem IsAffineFixed.normalizer_action
     group
   calc
     α (k : G) (α g x) = α ((k : G) * g) x := by
-      rw [map_mul]
+      rw [MonoidHom.map_mul]
       rfl
     _ = α (g * (k' : G)) x := by rw [hkg]
     _ = α g (α (k' : G) x) := by
-      rw [map_mul]
+      rw [MonoidHom.map_mul]
       rfl
     _ = α g x := by rw [hx k']
 
@@ -4002,7 +3998,7 @@ private def affineLinearStabilizer
   mul_mem' := by
     intro g h hg hh
     change (affineLinearRepresentation α (g * h) : V →L[ℂ] V) x = x
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     change (affineLinearRepresentation α g : V →L[ℂ] V)
       ((affineLinearRepresentation α h : V →L[ℂ] V) x) = x
     rw [hh, hg]
@@ -4014,7 +4010,7 @@ private def affineLinearStabilizer
           (affineLinearRepresentation α g⁻¹ : V →L[ℂ] V)
             ((affineLinearRepresentation α g : V →L[ℂ] V) x) := by rw [hg]
       _ = (affineLinearRepresentation α (g⁻¹ * g) : V →L[ℂ] V) x := by
-        rw [map_mul]
+        rw [MonoidHom.map_mul]
         rfl
       _ = x := by simp only [inv_mul_cancel, map_one, OneMemClass.coe_one, one_apply_eq_self]
 
@@ -4265,7 +4261,7 @@ private theorem actionPreKernelTranslation_mul_apply {G I : Type u} [Group G]
       Finsupp.domLCongr_single]
     change Finsupp.single (ρ (a * b) i.1, i.2) z =
       Finsupp.single (ρ a (ρ b i.1), i.2) z
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -4537,7 +4533,7 @@ def unitaryCocycleAffineAction
     intro x
     change π (g * h) x + b (g * h) =
       π g (π h x + b h) + b g
-    rw [map_mul, hb, map_add]
+    rw [MonoidHom.map_mul, hb, map_add]
     change π g (π h x) + (b g + π g (b h)) =
       (π g (π h x) + π g (b h)) + b g
     abel
@@ -4761,7 +4757,7 @@ theorem markedPairCocycle_mul
       markedPairCocycle R i₀ g +
         R.representation g (markedPairCocycle R i₀ h) := by
   unfold markedPairCocycle
-  rw [R.equivariant, map_mul]
+  rw [R.equivariant, MonoidHom.map_mul]
   change R.realization.vector (ρ g (ρ h i₀), i₀) =
     R.realization.vector (ρ g i₀, i₀) +
       R.realization.vector (ρ g (ρ h i₀), ρ g i₀)
@@ -5151,7 +5147,7 @@ private theorem markedAffineOrbitPoint_action
       α a (markedAffineOrbitPoint α x y i) := by
   change α (a * i.1) (if i.2 then x else y) =
     α a (α i.1 (if i.2 then x else y))
-  rw [map_mul]
+  rw [MonoidHom.map_mul]
   rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -5673,7 +5669,7 @@ private theorem unitary_mem_normalFixedSubmodule
   calc
     (π (n : G) : H →L[ℂ] H) ((π g : H →L[ℂ] H) x) =
         (π ((n : G) * g) : H →L[ℂ] H) x := by
-          rw [map_mul]
+          rw [MonoidHom.map_mul]
           rfl
     _ = (π (g * (n' : G)) : H →L[ℂ] H) x := by
       have heq : (n : G) * g = g * (g⁻¹ * (n : G) * g) := by
@@ -5683,7 +5679,7 @@ private theorem unitary_mem_normalFixedSubmodule
       rw [heq]
     _ = (π g : H →L[ℂ] H)
           ((π (n' : G) : H →L[ℂ] H) x) := by
-      rw [map_mul]
+      rw [MonoidHom.map_mul]
       rfl
     _ = (π g : H →L[ℂ] H) x := by rw [hx n']
 
@@ -5705,7 +5701,7 @@ theorem unitary_mem_normalFixedSubmodule_orthogonal
           ((π g : H →L[ℂ] H) x) := by
       congr 1
       change y = (↑(π g * π g⁻¹) : H →L[ℂ] H) y
-      rw [← map_mul]
+      rw [← MonoidHom.map_mul]
       simp only [mul_inv_cancel, map_one, OneMemClass.coe_one, one_apply_eq_self]
     _ = @inner ℂ H _
           ((π g⁻¹ : H →L[ℂ] H) y) x :=
@@ -5728,12 +5724,12 @@ def normalFixedOrthogonalLinearIsometryEquiv (g : G) :
   left_inv x := by
     apply Subtype.ext
     change (↑(π g⁻¹ * π g) : H →L[ℂ] H) x = x
-    rw [← map_mul]
+    rw [← MonoidHom.map_mul]
     simp only [inv_mul_cancel, map_one, OneMemClass.coe_one, one_apply_eq_self]
   right_inv x := by
     apply Subtype.ext
     change (↑(π g * π g⁻¹) : H →L[ℂ] H) x = x
-    rw [← map_mul]
+    rw [← MonoidHom.map_mul]
     simp only [mul_inv_cancel, map_one, OneMemClass.coe_one, one_apply_eq_self]
   map_add' x y := Subtype.ext
     (map_add (π g : H →L[ℂ] H) (x : H) (y : H))
@@ -5762,7 +5758,7 @@ def normalFixedOrthogonalRepresentation :
     apply Subtype.ext
     change (π (g * h) : H →L[ℂ] H) (x : H) =
       (π g : H →L[ℂ] H) ((π h : H →L[ℂ] H) (x : H))
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -6082,7 +6078,7 @@ private theorem affineSubgroupOrbit_image
   · rintro ⟨_, ⟨k, rfl⟩, rfl⟩
     refine ⟨n * k, ?_⟩
     change α ((n : G) * (k : G)) x = α (n : G) (α (k : G) x)
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     rfl
   · rintro ⟨k, rfl⟩
     let m : N := n⁻¹ * k
@@ -6090,7 +6086,7 @@ private theorem affineSubgroupOrbit_image
     calc
       α (n : G) (α (m : G) x) =
           α ((n : G) * (m : G)) x := by
-        rw [map_mul]
+        rw [MonoidHom.map_mul]
         rfl
       _ = α (k : G) x := by
         congr 1
@@ -6197,7 +6193,7 @@ private def realInnerCharacter (f : G →* Multiplicative V) (v : V) :
       (Multiplicative.toAdd (f (g * h)))).re =
         (@inner ℂ V _ v (Multiplicative.toAdd (f g))).re +
           (@inner ℂ V _ v (Multiplicative.toAdd (f h))).re
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     change (@inner ℂ V _ v
       (Multiplicative.toAdd (f g) + Multiplicative.toAdd (f h))).re = _
     rw [inner_add_right, Complex.add_re]
@@ -6242,7 +6238,7 @@ private def affineInvariantProjectionHom
           (affineLinearRepresentation α)).starProjection (α g 0) +
         (normalFixedSubmodule (⊤ : Subgroup G)
           (affineLinearRepresentation α)).starProjection (α h 0)
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     have hact : α g (α h 0) =
         (affineLinearRepresentation α g : V →L[ℂ] V) (α h 0) +
           α g 0 := by
@@ -6329,7 +6325,7 @@ def affineOrthogonalLinearHom
     change (affineLinearRepresentation α (g * h) : V →L[ℂ] V) x =
       (affineLinearRepresentation α g : V →L[ℂ] V)
         ((affineLinearRepresentation α h : V →L[ℂ] V) x)
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -6345,7 +6341,7 @@ theorem affineOrthogonalTranslation_mul
   apply Subtype.ext
   change α (g * h) 0 =
     α g 0 + (affineLinearRepresentation α g : V →L[ℂ] V) (α h 0)
-  rw [map_mul]
+  rw [MonoidHom.map_mul]
   change α g (α h 0) =
     α g 0 + (affineLinearRepresentation α g : V →L[ℂ] V) (α h 0)
   have he := (α g).map_vsub (α h 0) 0
@@ -6533,7 +6529,7 @@ def diagonalLinearIsometryHom
     funext n
     change (π (g * h) : V →L[ℂ] V) (x n) =
       (π g : V →L[ℂ] V) ((π h : V →L[ℂ] V) (x n))
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -6567,7 +6563,7 @@ def diagonalAffineAction
         ((π h : V →L[ℂ] V) (x n) +
           ((π h : V →L[ℂ] V) (v n) - v n)) +
         ((π g : V →L[ℂ] V) (v n) - v n)
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     change
       (π g : V →L[ℂ] V) ((π h : V →L[ℂ] V) (x n)) +
         ((π g : V →L[ℂ] V) ((π h : V →L[ℂ] V) (v n)) - v n) = _
@@ -6976,7 +6972,7 @@ def rankTwoLinearAction (A : Type) [CommRing A] :
     change Matrix.SpecialLinearGroup.toLin' (g * h) (Multiplicative.toAdd v) =
       Matrix.SpecialLinearGroup.toLin' g
         (Matrix.SpecialLinearGroup.toLin' h (Multiplicative.toAdd v))
-    rw [map_mul]
+    rw [MonoidHom.map_mul]
     rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -7790,7 +7786,7 @@ private theorem hasAffineGaussianRealization
       (Real.exp (-t * ‖α i x - α j x‖ ^ 2) : ℂ)
     have hd : ‖α (a * i) x - α (a * j) x‖ =
         ‖α i x - α j x‖ := by
-      rw [← dist_eq_norm, ← dist_eq_norm, map_mul, map_mul]
+      rw [← dist_eq_norm, ← dist_eq_norm, MonoidHom.map_mul, MonoidHom.map_mul]
       exact (α a).isometry.dist_eq (α i x) (α j x)
     rw [hd]
   let W := RKHS.OfKernel (CornulierUltralimit.scalarOperatorKernel K)
@@ -7912,7 +7908,7 @@ private theorem unitary_displacement_mul_le
     ‖(π (g * h) : V →L[ℂ] V) ξ - ξ‖ ≤
       ‖(π g : V →L[ℂ] V) ξ - ξ‖ +
         ‖(π h : V →L[ℂ] V) ξ - ξ‖ := by
-  rw [map_mul]
+  rw [MonoidHom.map_mul]
   change
     ‖(π g : V →L[ℂ] V) ((π h : V →L[ℂ] V) ξ) - ξ‖ ≤ _
   calc
@@ -8175,9 +8171,15 @@ private theorem rankTwoParabolicSpecialLinear_inr_root
       ElementaryRankTwoSemidirect A) k l = _
   fin_cases i <;> fin_cases j <;>
     fin_cases k <;> fin_cases l <;>
-    simp_all [rankTwoParabolicMatrix,
-      Matrix.reindex_apply, Matrix.fromBlocks, elementaryRankTwoRoot,
-      Matrix.SpecialLinearGroup.transvection_coe]
+    simp_all only [rankTwoParabolicMatrix, Nat.reduceAdd, fromBlocks, elementaryRankTwoRoot,
+      Fin.zero_eta, Fin.isValue, SemidirectProduct.right_inr,
+      SpecialLinearGroup.transvection_coe, SemidirectProduct.left_inr, toAdd_one,
+      rankTwoColumnBlock_zero, reindex_apply, submatrix_apply, finTwoPlusTwo_symm_zero, of_apply,
+      Sum.elim_inl, Matrix.add_apply, one_apply_eq, single_apply_same, Fin.reduceCastAdd,
+      Fin.mk_one, finTwoPlusTwo_symm_one, ne_eq, zero_ne_one, not_false_eq_true, one_apply_ne,
+      and_false, single_apply_of_ne, add_zero, Fin.reduceFinMk, finTwoPlusTwo_symm_two,
+      Sum.elim_inr, Matrix.zero_apply, Fin.reduceEq, finTwoPlusTwo_symm_three, one_ne_zero,
+      and_true, and_self, zero_add]
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem rankTwoParabolicSpecialLinear_inr_mem_integral
@@ -8217,7 +8219,7 @@ private theorem rankTwoParabolicSpecialLinear_inr_mem_integral
             elementaryRankTwo IntegralPolynomial) :
           ElementaryRankTwoSemidirect IntegralPolynomial) ∈
         integralElementarySubgroup
-      rw [hxy, map_mul, map_mul]
+      rw [hxy, MonoidHom.map_mul, MonoidHom.map_mul]
       exact integralElementarySubgroup.mul_mem ihx ihy
   | inv x hx ihx =>
       have hinv :
@@ -8238,7 +8240,7 @@ public
 theorem rankTwoParabolicSpecialLinear_mem_integral
     (x : ElementaryRankTwoSemidirect IntegralPolynomial) :
     rankTwoParabolicSpecialLinear x ∈ integralElementarySubgroup := by
-  rw [← SemidirectProduct.inl_left_mul_inr_right x, map_mul]
+  rw [← SemidirectProduct.inl_left_mul_inr_right x, MonoidHom.map_mul]
   apply integralElementarySubgroup.mul_mem
   · have hleft := rankTwoParabolicSpecialLinear_inl
       (Multiplicative.toAdd x.left)
@@ -8463,7 +8465,7 @@ private theorem integralRankTwoColumnEmbedding12_inl
   change integralElementaryReindexHom (Equiv.swap (0 : Index) 2)
       (integralRankTwoColumnEmbedding
         (SemidirectProduct.inl (Multiplicative.ofAdd v))) = _
-  rw [integralRankTwoColumnEmbedding_inl, map_mul,
+  rw [integralRankTwoColumnEmbedding_inl, MonoidHom.map_mul,
     integralElementaryReindexHom_root,
     integralElementaryReindexHom_root]
   have hzero : (Equiv.swap (0 : Index) 2) 0 = 2 := by decide
@@ -8482,7 +8484,7 @@ private theorem integralRankTwoRowEmbedding01_inl
   change integralElementaryTransposeInverseHom
       (integralRankTwoColumnEmbedding
         (SemidirectProduct.inl (Multiplicative.ofAdd v))) = _
-  rw [integralRankTwoColumnEmbedding_inl, map_mul,
+  rw [integralRankTwoColumnEmbedding_inl, MonoidHom.map_mul,
     integralElementaryTransposeInverseHom_root,
     integralElementaryTransposeInverseHom_root]
 
@@ -8497,7 +8499,7 @@ private theorem integralRankTwoRowEmbedding12_inl
   change integralElementaryTransposeInverseHom
       (integralRankTwoColumnEmbedding12
         (SemidirectProduct.inl (Multiplicative.ofAdd v))) = _
-  rw [integralRankTwoColumnEmbedding12_inl, map_mul,
+  rw [integralRankTwoColumnEmbedding12_inl, MonoidHom.map_mul,
     integralElementaryTransposeInverseHom_root,
     integralElementaryTransposeInverseHom_root]
 
