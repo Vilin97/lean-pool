@@ -230,6 +230,7 @@ MIT permission notice that follows them.
       template text "Copyright (c) [year] [fullname]"; the repository owner of
       record is "ruplet".
 
+  LeanPool/FourAP                    https://github.com/boonsuan/4ap
   LeanPool/HSDInteriorPointLP        https://github.com/makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming
   LeanPool/KaltonRoberts             https://github.com/boonsuan/KaltonRoberts
   LeanPool/Kuramoto                  https://github.com/velvetmonkey/kuramoto-lean
