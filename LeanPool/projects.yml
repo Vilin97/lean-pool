@@ -8956,6 +8956,38 @@ projects:
     msc:
       - 11S15
       - 11S05
+  - slug: schoenflies
+    title: Jordan–Schönflies theorem
+    summary: Formalizes the Jordan curve theorem and the extension of every homeomorphism between Jordan curves to a plane homeomorphism.
+    branch: geometric topology
+    entry_module: LeanPool.Schoenflies
+    authors:
+      - Álvaro Begué
+    source:
+      title: The Jordan–Schönflies theorem in Lean
+      url: https://github.com/alonamaloh/schoenflies-lean
+      github_repo: alonamaloh/schoenflies-lean
+      commit: 05a43d29cde026618777db3d4e4316204ccca237
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Schoenflies.jordan_schoenflies_of_homeomorph
+    main_results:
+      - declaration: Schoenflies.jordan_schoenflies_of_homeomorph
+        informal: Every homeomorphism between two Jordan curves in the plane extends to a self-homeomorphism of the plane.
+      - declaration: Schoenflies.jordan_schoenflies
+        informal: A homeomorphism between Jordan curves extends to a global homeomorphism agreeing with it on the source curve.
+      - declaration: Schoenflies.forall_isSeparating_of_isJordanCurve
+        informal: Every Jordan curve separates the plane into an inside and an outside region.
+    tags:
+      - jordan-curve
+      - schoenflies-theorem
+      - geometric-topology
+      - homeomorphism
+    msc:
+      - "57K10"
+      - "54C25"
   - slug: pdl-craig-interpolation
     title: Craig interpolation and Beth definability for propositional dynamic logic
     summary: >-
