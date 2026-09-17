@@ -121,6 +121,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/LongGapsBetweenPrimes     https://github.com/openai/LongGapsBetweenPrimes
   LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
   LeanPool/MRiscX                    https://github.com/JulsDE/MRiscX
+  LeanPool/MassFormula               https://github.com/0stellensatz/MassFormula
   LeanPool/MatchingLogic             https://github.com/eveil-labs/matching-logic-lean
   LeanPool/MetricCodes               https://github.com/openai/ten-proofs
   LeanPool/MinModulusUniqueMultisetSum
