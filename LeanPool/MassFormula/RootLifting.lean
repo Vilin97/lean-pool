@@ -10,7 +10,7 @@ module
 public import LeanPool.MassFormula.Defs
 public import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
 import LeanPool.MassFormula.Discriminant
-import LeanPool.MassFormula.EisensteinMonogenic
+public import LeanPool.MassFormula.EisensteinMonogenic
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.NumberTheory.ArithmeticFunction.Misc
 import Mathlib.RingTheory.DedekindDomain.IntegralClosure
@@ -441,29 +441,6 @@ lemma basisOfEisenstein_apply (hπ : Irreducible π) (hint : IsIntegral 𝒪[K] 
   rw [powerBasisOfEisenstein_gen] at h1
   exact h1
 
-omit [IsUniformAddGroup K] in
-/-- The constant coefficient of the Eisenstein minimal polynomial is an associate of the
-uniformizer. -/
-lemma associated_pi_coeff_zero (hπ : Irreducible π) (hint : IsIntegral 𝒪[K] x)
-    (hei : (minpoly 𝒪[K] x).IsEisensteinAt (Submodule.span 𝒪[K] {π})) :
-    Associated π ((minpoly 𝒪[K] x).coeff 0) := by
-  have hn : 0 < (minpoly 𝒪[K] x).natDegree := minpoly.natDegree_pos hint
-  have hdvd : π ∣ (minpoly 𝒪[K] x).coeff 0 := by
-    have h1 := hei.mem hn
-    rwa [Ideal.submodule_span_eq, Ideal.mem_span_singleton] at h1
-  obtain ⟨c, hc⟩ := hdvd
-  have hcunit : IsUnit c := by
-    by_contra hcu
-    apply hei.notMem
-    have hcmem : c ∈ Ideal.span {π} := by
-      have h1 : c ∈ IsLocalRing.maximalIdeal 𝒪[K] :=
-        (IsLocalRing.mem_maximalIdeal _).mpr (mem_nonunits_iff.mpr hcu)
-      rwa [hπ.maximalIdeal_eq] at h1
-    rw [Ideal.mem_span_singleton] at hcmem
-    obtain ⟨d, hd⟩ := hcmem
-    rw [Ideal.submodule_span_eq, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-    exact ⟨d, by rw [hc, hd]; ring⟩
-  exact ⟨hcunit.unit, by rw [IsUnit.unit_spec]; exact hc.symm⟩
 
 omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
 /-- `integralGen` is nonzero: were it zero, the constant coefficient of the Eisenstein polynomial

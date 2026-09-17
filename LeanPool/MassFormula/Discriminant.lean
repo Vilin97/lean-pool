@@ -356,23 +356,7 @@ private theorem norm_derivative_core {π : 𝒪[K]} (hπ : Irreducible π) {x : 
         = algebraMap ↥(integers L') ↥L' (Polynomial.aeval ξ P) := rfl
       _ = Polynomial.aeval x' P := h2.symm
   -- the associated-uniformizer structure of the constant coefficient
-  have hg₀π : π ∣ g.coeff 0 := by
-    have := hei.mem hn
-    rwa [Ideal.submodule_span_eq, Ideal.mem_span_singleton] at this
-  have hπg₀ : Associated π (g.coeff 0) := by
-    obtain ⟨c, hc⟩ := hg₀π
-    have hcunit : IsUnit c := by
-      by_contra hcu
-      apply hei.notMem
-      have hcmem : c ∈ Ideal.span {π} := by
-        have h1 : c ∈ IsLocalRing.maximalIdeal 𝒪[K] :=
-          (IsLocalRing.mem_maximalIdeal _).mpr (mem_nonunits_iff.mpr hcu)
-        rwa [hπ.maximalIdeal_eq] at h1
-      rw [Ideal.mem_span_singleton] at hcmem
-      obtain ⟨e, he⟩ := hcmem
-      rw [Ideal.submodule_span_eq, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-      exact ⟨e, by rw [hc, he]; ring⟩
-    exact ⟨hcunit.unit, by rw [IsUnit.unit_spec]; exact hc.symm⟩
+  have hπg₀ : Associated π (g.coeff 0) := associated_pi_coeff_zero hπ hint hei
   -- the constant coefficient sits in `(ξ) ^ n`
   have hb₀mem : algebraMap 𝒪[K] ↥(integers L') (g.coeff 0) ∈ Ideal.span {ξ} ^ n := by
     rw [Ideal.span_singleton_pow, Ideal.mem_span_singleton]
