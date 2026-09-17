@@ -8891,6 +8891,71 @@ projects:
     msc:
       - 68Q32
       - 68Q45
+  - slug: serre-mass-formula
+    title: Serre's mass formula for totally ramified local-field extensions
+    summary: >-
+      Proves both of Serre's mass formulas for totally ramified separable
+      extensions of a nonarchimedean local field of any positive degree,
+      together with the discriminant bound, tame-ramification criterion,
+      finiteness dichotomy, convergence, and automorphism-weighted orbit count.
+      The proof develops Eisenstein monogenicity, quantitative Newton-Hensel
+      lifting, local constancy of root counts, and Haar measures of lattices
+      over discrete valuation rings.
+    branch: local fields and ramification theory
+    entry_module: LeanPool.MassFormula
+    authors:
+      - Hyeon Seung-Hyeon
+    source:
+      title: Une «formule de masse» pour les extensions totalement ramifiées de degré donné d'un corps local
+      authors:
+        - Jean-Pierre Serre
+      url: https://gallica.bnf.fr/ark:/12148/bpt6k6234149b/f323.item
+      github_repo: 0stellensatz/MassFormula
+      commit: 7fa41a621f724f110183904d3fd19c6730a932ad
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - MassFormula.tsum_one_div_q_pow_c
+    main_results:
+      - declaration: MassFormula.tsum_one_div_q_pow_c
+        informal: >-
+          For every nonarchimedean local field K with residue-field cardinality q
+          and every positive integer n, the sum of q^(-c(L)) over the totally
+          ramified degree-n subextensions L of a separable closure of K is n,
+          where c(L) is the discriminant exponent minus n plus one.
+      - declaration: MassFormula.tsum_one_div_w_mul_q_pow_c
+        informal: >-
+          For every nonarchimedean local field K, positive n, and set of
+          representatives of K-isomorphism classes of totally ramified separable
+          degree-n extensions, the sum of 1/(|Aut_K(L)| q^c(L)) is one.
+      - declaration: MassFormula.sigma_infinite_iff
+        informal: >-
+          For positive n, the set of totally ramified separable degree-n subextensions is infinite
+          exactly when K and its residue field have the same characteristic p
+          and p divides n.
+      - declaration: MassFormula.sub_one_le_d
+        informal: For positive n, the discriminant exponent of a totally ramified degree-n extension is at least n-1.
+      - declaration: MassFormula.c_eq_zero_iff
+        informal: >-
+          For positive n and a totally ramified degree-n extension, the wild discriminant exponent
+          vanishes exactly when the residue characteristic does not divide n.
+      - declaration: MassFormula.summable_one_div_q_pow_c
+        informal: For positive n, the real-valued series of the unweighted mass terms is summable.
+      - declaration: MassFormula.ncard_isomorphic_mul_w
+        informal: >-
+          For a nonarchimedean local field K and a totally ramified separable
+          extension L of positive degree n, the number of K-isomorphic copies of L
+          inside a separable closure, multiplied by |Aut_K(L)|, is n.
+    tags:
+      - number-theory
+      - local-fields
+      - ramification
+      - discriminants
+      - haar-measure
+    msc:
+      - 11S15
+      - 11S05
   - slug: hopf-problem
     title: A complex structure on the six-sphere
     summary: >-
