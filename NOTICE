@@ -128,6 +128,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/MisereGames               https://github.com/t4ccer/misere-games
   LeanPool/Monlib4                   https://github.com/themathqueen/monlib4
   LeanPool/Monsky                    https://github.com/dhyan-aranha/Monsky
+  LeanPool/MooreBound                https://github.com/woutercvb/wewantmoore
   LeanPool/MoserLatticeColorings     https://github.com/lyfar/moser-lattice-colorings-lean
   LeanPool/MulticolorTriangleRamsey  https://github.com/openai/ten-proofs
   LeanPool/NashWilliams              https://github.com/yannpequignot/TwoBQO
