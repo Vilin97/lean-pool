@@ -8730,3 +8730,84 @@ projects:
     msc:
       - 05D05
       - 60E15
+  - slug: asymptotic-moore-bound
+    title: Asymptotically attaining the Moore bound
+    summary: >-
+      Proves that, for each fixed positive diameter k, the largest order of a
+      finite simple graph with maximum degree at most d and extended diameter
+      at most k is asymptotic to d^k as d tends to infinity. Constructs regular
+      halved-flag graphs over every finite field, with exact order and diameter,
+      a sharp degree cap, and matching asymptotics through all prime powers.
+      Also proves the corresponding lower-limit bound for the edge extremum
+      defined using line-graph diameter. Reusable infrastructure includes common
+      bases for complete flags, odd-even sorting routes, exact flag enumeration,
+      projective-line completion counts, and bipartite graph expansion. The
+      analytic bridge retains the Wiener-Ikehara and prime-counting dependency
+      closure from the Apache-2.0 PrimeNumberTheoremAnd project. The paper
+      describes AI-assisted formalization supervised by the human authors.
+    branch: extremal graph theory
+    entry_module: LeanPool.MooreBound
+    authors:
+      - Wouter Cames van Batenburg
+      - Samuel Korsky
+      - PrimeNumberTheoremAnd contributors
+    source:
+      title: Asymptotically attaining the Moore bound
+      authors:
+        - Wouter Cames van Batenburg
+        - Samuel Korsky
+      arxiv: '2608.03965'
+      url: https://github.com/woutercvb/wewantmoore
+      github_repo: woutercvb/wewantmoore
+      commit: d59bd80ea93fabb9faf769e790ab47692645e022
+      announcement: https://arxiv.org/abs/2608.03965v1
+      announcement_date: '2026-08-04T17:30:09Z'
+      release: https://github.com/woutercvb/wewantmoore/releases/tag/v1.0
+      release_date: '2026-08-05T01:19:30Z'
+      third_party_url: https://github.com/AlexKontorovich/PrimeNumberTheoremAnd
+      third_party_commit: 0c7abf7be7765dc5ffd21afc1c37b018199ec3c9
+      third_party_license: Apache-2.0
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - MooreBound.DegreeDiameter.theorem_1_1
+    main_results:
+      - declaration: MooreBound.DegreeDiameter.theorem_1_1
+        informal: >-
+          For each positive natural k, n(k,d)/d^k tends to 1 as the natural
+          degree bound d tends to infinity. Here n(k,d) is the maximum number
+          of vertices of a finite simple graph with maximum degree at most d
+          and extended diameter at most k.
+      - declaration: MooreBound.DegreeDiameter.corollary_1_2
+        informal: >-
+          For each natural ell at least 2, the lower limit of h(ell,d)/d^ell
+          is at least 1. Here h(ell,d) is one plus the maximum number of edges
+          of a finite simple graph with maximum degree at most d whose line
+          graph has extended diameter at most ell.
+      - declaration: MooreBound.DegreeDiameter.proposition_3_1
+        informal: >-
+          For every positive k and prime power q, the concrete halved-flag graph
+          is regular, has order [2k+1]_q!/(q+1)^k, degree at most
+          (q+1)^k((q+1)^k-1), and extended diameter exactly k. Along all prime
+          powers q tending to infinity, its actual degree divided by this cap
+          and its order divided by the kth power of its actual degree both
+          tend to 1.
+      - declaration: MooreBound.DegreeDiameter.alternating_route
+        informal: >-
+          Any two complete flags in an n-dimensional vector space over a
+          division ring admit an n-step route that changes only ranks of the
+          prescribed alternating parity at each step.
+      - declaration: MooreBound.prime_between
+        informal: >-
+          For every positive real epsilon, every sufficiently large real x
+          admits a prime strictly between x and (1+epsilon)x.
+    tags:
+      - graph-theory
+      - finite-geometry
+      - asymptotics
+      - prime-number-theorem
+    msc:
+      - '05C35'
+      - '05B25'
+      - '11N05'
