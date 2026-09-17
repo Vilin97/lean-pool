@@ -8911,6 +8911,85 @@ projects:
     msc:
       - "57K10"
       - "54C25"
+  - slug: pdl-craig-interpolation
+    title: Craig interpolation and Beth definability for propositional dynamic logic
+    summary: >-
+      Proves Craig interpolation for full propositional dynamic logic, including
+      tests and Kleene star, by constructing interpolants from uniform cyclic
+      tableaux. Interpolants use only atomic propositions and atomic programs
+      common to the two formulas. The development also proves the local Beth
+      definability property for a propositional letter, and supplies reusable
+      syntax, Kripke semantics, Fischer-Ladner closure, tableau soundness and
+      completeness, finite reachability and game-theoretic infrastructure.
+      The results assert existence; no executable extraction algorithm or
+      complexity bound is claimed. Human contributors and Aristotle jointly
+      developed the formalization. The completeness modules reuse the finite
+      game determinacy theorem already pooled in `LeanPool.Lean4GlCoalgebras`
+      instead of duplicating it.
+    branch: modal logic
+    entry_module: LeanPool.PDL
+    authors:
+      - PDL formalization contributors
+    contributors:
+      - Malvin Gattinger
+      - Madeleine Gignoux
+      - Noam Cohen
+      - Haitian Wang
+      - Wietse Bosman
+      - Xiaoshuang Yang
+      - Amos Nicodemus
+      - Andrés Goens
+      - DdosSantosGomes
+      - Eshel Yaron
+      - Dionysis Yusofy
+    source:
+      title: 'Propositional Dynamic Logic has Craig Interpolation: a tableau-based proof'
+      authors:
+        - Manfred Borzechowski
+        - Malvin Gattinger
+        - Helle Hvid Hansen
+        - Revantha Ramanayake
+        - Francisco Trucco Dalmas
+        - Yde Venema
+      arxiv: '2503.13276'
+      url: https://github.com/m4lvin/lean4-pdl
+      github_repo: m4lvin/lean4-pdl
+      commit: ec3b050e59cd829a350e92c512951a381a80cddd
+      announcement: https://leanprover.zulipchat.com/#narrow/channel/579630-Project-announcements/near/622297905
+      announcement_date: '2026-09-07T14:27:11Z'
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - PDL.interpolation
+      - PDL.beth
+    main_results:
+      - declaration: PDL.interpolation
+        informal: >-
+          If the implication from PDL formula phi to psi is valid in every
+          Kripke model, there exists a PDL formula theta whose atomic proposition
+          and program vocabulary is contained in the intersection of theirs,
+          such that phi implies theta and theta implies psi in every model.
+      - declaration: PDL.beth
+        informal: >-
+          If a PDL formula phi implicitly determines a propositional letter p
+          (all two-letter substitutions agree wherever both substituted formulas
+          hold), there is a formula psi using only phi's vocabulary other than p
+          such that phi entails that p is equivalent to psi.
+      - declaration: PDL.consIffSat
+        informal: >-
+          A free sequent is tableau-consistent if and only if it is satisfiable
+          in a Kripke model.
+    tags:
+      - modal-logic
+      - propositional-dynamic-logic
+      - craig-interpolation
+      - beth-definability
+      - tableaux
+    msc:
+      - 03B45
+      - 03B70
+      - 03F03
   - slug: finite-max-flow-min-cut
     title: Finite max-flow / min-cut
     summary: >-
