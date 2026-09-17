@@ -4,21 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
 
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Set
-import Mathlib.Tactic.Common
-import Aesop
-import Mathlib.Combinatorics.Nullstellensatz
-import Mathlib.RingTheory.Int.Basic
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Nat.Prime.Factorial
-import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
 import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+import Mathlib.Algebra.Field.ZMod
+import Mathlib.Algebra.MvPolynomial.Degrees
+import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Data.Nat.Prime.Factorial
+import Mathlib.RingTheory.Int.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Restricted sums of sets with distinct sizes
