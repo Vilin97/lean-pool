@@ -334,15 +334,12 @@ theorem exists_weighted_star_bound [Nonempty ι] {A : Family ι}
     _ ≤ ∑ j, spectralWeights B.indicator select j *
         ∑ x ∈ Family.star Finset.univ j, ω x :=
       weighted_star_mixture_bound hB select hselect ω hω hanti
-    _ ≤ ∑ j, spectralWeights B.indicator select j *
-        ∑ x ∈ Family.star Finset.univ i, ω x := by
-      apply Finset.sum_le_sum
-      intro j hj
-      exact mul_le_mul_of_nonneg_left (hi j hj) (spectralWeights_nonneg _ _ _)
-    _ = ∑ x ∈ Family.star Finset.univ i, ω x := by
-      rw [← Finset.sum_mul,
-        sum_spectralWeights (Family.isBoolean_indicator B) hB.isAntipodal.dual_indicator,
-        one_mul]
+    _ ≤ Finset.univ.sup' Finset.univ_nonempty
+        (fun j => ∑ x ∈ Family.star Finset.univ j, ω x) :=
+      star_mixture_le_max _ (spectralWeights_nonneg _ _)
+        (sum_spectralWeights (Family.isBoolean_indicator B) hB.isAntipodal.dual_indicator
+          select) ω
+    _ ≤ ∑ x ∈ Family.star Finset.univ i, ω x := Finset.sup'_le _ _ hi
 
 /-- The final maximum-attainment statement of Proposition 5.3: one star
 simultaneously dominates every intersecting family for a fixed nonnegative
