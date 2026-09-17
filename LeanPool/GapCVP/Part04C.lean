@@ -3,14 +3,11 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
-module
 
-public import LeanPool.GapCVP.Part04B
-public import LeanPool.GapCVP.StatementLifting
+import LeanPool.GapCVP.Part04B
+import LeanPool.GapCVP.StatementLifting
 
 /-! # GapCVP proof, part 04, continuation 03 -/
-
-@[expose] public section
 
 noncomputable section
 

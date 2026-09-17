@@ -3,18 +3,15 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
-module
 
-public import Mathlib.Algebra.Group.Translate
-public import Mathlib.Algebra.Module.ZLattice.Basic
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Computability.Language
-public import Mathlib.Computability.TuringMachine.Computable
+import Mathlib.Algebra.Group.Translate
+import Mathlib.Algebra.Module.ZLattice.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Computability.Language
+import Mathlib.Computability.TuringMachine.Computable
 
 /-! # GapCVP proof, part 01 -/
-
-@[expose] public section
 
 noncomputable section
 
