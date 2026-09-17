@@ -21,7 +21,7 @@ open Asymptotics Filter MeasureTheory AffineMap Set Metric
 theorem UniformSpace.Completion.hasFDerivAt_coe {𝕜 E : Type*}
     [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {a : E} :
     HasFDerivAt ((↑) : E → Completion E) (toComplL : E →L[𝕜] Completion E) a := by
-  simpa using (toComplL (𝕜 := 𝕜) (E := E)).hasFDerivAt
+  simpa using (toComplL (S := 𝕜) (α := E)).hasFDerivAt
 
 section NormedField
 

@@ -44,8 +44,8 @@ theorem homogeneous_sobolev (f : Space → Space)
     (hf.of_le (by simp)) hfc
   simpa only [sobolevConstant,
     NavierStokesAndEuler.SobolevThreeDimensional.sobolevConstant,
-    toReal_eLpNorm hf.continuous.aestronglyMeasurable,
-    toReal_eLpNorm (hf.continuous_fderiv (by simp)).aestronglyMeasurable] using h
+    toReal_eLpNorm,
+    toReal_eLpNorm] using h
 
 /-- A three-vector's Euclidean norm is at most the sum of its component norms. -/
 theorem norm_le_sum_coordinates (v : Space) : ‖v‖ ≤ ∑ i : Fin 3, ‖v i‖ := by
@@ -90,15 +90,18 @@ theorem lpNorm_norm_mul_le {E F : Type*} [NormedAddCommGroup E] [NormedAddCommGr
     {f : Space → E} {g : Space → F} {p q r : ℝ≥0∞} [ENNReal.HolderTriple p q r]
     (hf : MemLp f p volume) (hg : MemLp g q volume) :
     lpNorm (fun x => ‖f x‖ * ‖g x‖) r volume ≤ lpNorm f p volume * lpNorm g q volume := by
-  have h := eLpNorm_le_eLpNorm_mul_eLpNorm'_of_norm (p := p) (q := q) (r := r)
-    hf.aestronglyMeasurable hg.aestronglyMeasurable (fun a b => ‖a‖ * ‖b‖) 1
+  have hcont : Continuous (Function.uncurry (fun (a : E) (b : F) => ‖a‖ * ‖b‖)) :=
+    (continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)
+  have h := eLpNorm_le_eLpNorm_mul_eLpNorm_of_norm (p := p) (q := q) (r := r)
+    (fun a b => ‖a‖ * ‖b‖) 1 hcont
+    hf.aestronglyMeasurable hg.aestronglyMeasurable
     (Filter.Eventually.of_forall fun x => by simp)
   have hr := ENNReal.toReal_mono (by finiteness [hf.eLpNorm_ne_top, hg.eLpNorm_ne_top]) h
   have hm : AEStronglyMeasurable (fun x => ‖f x‖ * ‖g x‖) volume :=
     hf.aestronglyMeasurable.norm.mul hg.aestronglyMeasurable.norm
   simpa [ENNReal.toReal_mul, ENNReal.coe_toReal, NNReal.coe_one, one_mul,
-    toReal_eLpNorm hm,
-    toReal_eLpNorm hf.aestronglyMeasurable, toReal_eLpNorm hg.aestronglyMeasurable] using hr
+    toReal_eLpNorm,
+    toReal_eLpNorm, toReal_eLpNorm] using hr
 
 /-- Smooth compactly supported vector fields have square-integrable actual curl. -/
 theorem vectorCurl_memLp (f : Space → Space) (hf : ContDiff ℝ ∞ f)
@@ -129,8 +132,8 @@ theorem cutoff_curl_lpNorm_le (ψ : Space → ℝ) (φ : Space → Space)
     (hφ.fderiv_right (m := ∞) (by simp)).continuous.memLp_of_hasCompactSupport (hφc.fderiv ℝ)
   let a : Space → ℝ := fun x => ‖ψ x‖ * ‖fderiv ℝ φ x‖
   let b : Space → ℝ := fun x => ‖fderiv ℝ ψ x‖ * ‖φ x‖
-  have ha : MemLp a 2 volume := hφd.norm.mul' hψm.norm
-  have hb : MemLp b 2 volume := hφm.norm.mul' hψd.norm
+  have ha : MemLp a 2 volume := hψm.norm.fun_mul hφd.norm
+  have hb : MemLp b 2 volume := hψd.norm.fun_mul hφm.norm
   have hg : MemLp (fun x => 6 * (a x + b x)) 2 volume := (ha.add hb).const_mul 6
   calc
     lpNorm (vectorCurl (fun x => ψ x • φ x)) 2 volume ≤
@@ -208,7 +211,7 @@ theorem integral_cutoff_curl_bound (ψ : Space → ℝ) (φ : Space → Space)
     vectorCurl_memLp _ hprod hpc
   let v : Lp Space 2 (volume : Measure Space) := hm.toLp _
   have hv : ‖v‖ = lpNorm (vectorCurl (fun y => ψ y • φ y)) 2 volume := by
-    rw [Lp.norm_toLp, toReal_eLpNorm hm.aestronglyMeasurable]
+    rw [Lp.norm_toLp, toReal_eLpNorm]
   have he : (∫ x, inner ℝ (z x) (vectorCurl (fun y => ψ y • φ y) x)) = inner ℝ z v := by
     rw [L2.inner_def]
     apply integral_congr_ae

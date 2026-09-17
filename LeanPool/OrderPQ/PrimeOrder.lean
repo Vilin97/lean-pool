@@ -19,13 +19,13 @@ variable {G : Type*} [Group G] [IsSimpleGroup G]
 
 @[to_additive]
 lemma ne_bot_iff_eq_top_of_normal {H : Subgroup G} (h : H.Normal) : H ≠ ⊤ ↔ H = ⊥ := by
-  exact ne_iff_eq_of_or_and_ne (eq_bot_or_eq_top_of_normal H h).symm bot_ne_top.symm
+  exact ne_iff_eq_of_or_and_ne h.eq_bot_or_eq_top.symm bot_ne_top.symm
 
 @[to_additive]
 lemma monoidHom_injective_or_eq_one {H : Type*} [Group H] (φ : G →* H) :
     Function.Injective φ ∨ φ = 1 := by
   rw [← MonoidHom.ker_eq_bot_iff φ, ← MonoidHom.ker_eq_top_iff (f := φ)]
-  exact eq_bot_or_eq_top_of_normal φ.ker φ.normal_ker
+  exact φ.normal_ker.eq_bot_or_eq_top
 
 @[to_additive]
 lemma monoidHom_ne_one_iff_injective {H : Type*} [Group H] (φ : G →* H) :

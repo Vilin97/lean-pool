@@ -63,7 +63,8 @@ theorem PFunctor.M.unfold_corec'_left {P : PFunctor.{uA, uB}} {α : Type u}
   intros
   apply PFunctor.M.bisim (fun t1 t2 => t1 = PFunctor.M.corec _ (Sum.inl t2)) _ _ _ rfl
   intros t1 t2 h; subst h
-  simp only [PFunctor.M.dest_corec, PFunctor.map, h_eq]
+  rw [PFunctor.M.dest_corec, h_eq]
+  simp only [PFunctor.map]
   have ⟨a, g⟩ := t2.dest
   exact ⟨_, _, _, rfl, rfl, fun _ => rfl⟩
 
@@ -85,18 +86,18 @@ theorem PFunctor.M.unfold_corec' {P : PFunctor.{uA, uB}} {α : Type u}
     simp only
     conv => rhs; rw [← (PFunctor.M.mk_dest v)]
     congr
-    have ⟨a, g⟩ := v.dest
-    simp only; congr; funext i
+    funext i
+    simp only [PFunctor.Obj.snd_mk, Function.comp_apply]
     apply unfold_corec'_left _ (fun _ => rfl)
   | .inr ⟨a, g⟩ =>
     simp only; congr; funext i
-    simp only [Function.comp]
+    simp only [Function.comp, PFunctor.Obj.snd, PFunctor.Obj.fst]
     match g i with
     | .inl l =>
       simp only
       apply unfold_corec'_left _ (fun _ => rfl)
     | .inr r =>
-      simp only [PFunctor.M.corec', PFunctor.M.corec₁, PFunctor.map, Sum.bind, Function.id_comp]
+      rfl
 
 end Lean4Itree
 

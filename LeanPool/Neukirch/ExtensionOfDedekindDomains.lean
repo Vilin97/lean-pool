@@ -52,13 +52,11 @@ theorem ramificationIdx_algebra_tower_of_eq [IsDedekindDomain S] [IsDedekindDoma
 
 /-- Multiplicativity of the inertia degree in a tower of Dedekind domains, stated with the
 hypotheses used by the Hilbert ramification development. -/
-theorem inertiaDeg_algebra_tower_of_eq {p : Ideal R} {P : Ideal S} {I : Ideal T} [IsMaximal p]
-    [IsMaximal P] (hp : p = comap (algebraMap R S) P)
-    (hP : P = comap (algebraMap S T) I) : inertiaDeg' p I =
-    inertiaDeg' p P * inertiaDeg' P I :=
-  letI : P.LiesOver p := ⟨hp⟩
+theorem inertiaDeg_algebra_tower_of_eq {P : Ideal S} {I : Ideal T}
+    (hP : P = comap (algebraMap S T) I) : I.inertiaDeg R =
+    P.inertiaDeg R * I.inertiaDeg S :=
   letI : I.LiesOver P := ⟨hP⟩
-  inertiaDeg'_algebra_tower p P I
+  inertiaDeg_tower P I
 
 /-- The decomposition of a prime in a tower is `Nonsplit` when there is a unique prime above. -/
 class Nonsplit {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S) (p : Ideal R) : Prop where

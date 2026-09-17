@@ -361,11 +361,11 @@ omit [T2Space S] in
 coordinates. -/
 private theorem edgeSimplexInFace_apply
     (f : K.Face) (e : K.Edge) (hef : e.1 ⊆ K.faceVertices f)
-    (z : stdSimplex ℝ {v // v ∈ e.1}) (w : {v // v ∈ e.1}) :
+    (z : standardSimplex ℝ {v // v ∈ e.1}) (w : {v // v ∈ e.1}) :
     K.edgeSimplexInFace f e hef z ⟨w.1, hef w.2⟩ = z w := by
   have hcoords := congrFun (extendFaceCoordinates_map_subset hef z) w.1
   rw [extendFaceCoordinates_of_mem (K.faceVertices f)
-      (stdSimplex.map (fun v : {v // v ∈ e.1} ↦
+      (standardSimplex.map (fun v : {v // v ∈ e.1} ↦
         ⟨v.1, hef v.2⟩) z) (hef w.2),
     extendFaceCoordinates_of_mem e.1 z w.2] at hcoords
   exact hcoords
@@ -375,7 +375,7 @@ omit [T2Space S] in
 simplex into its incident face. -/
 private theorem edgeSimplexInFace_supportedOn_iff
     (f : K.Face) (e : K.Edge) (hef : e.1 ⊆ K.faceVertices f)
-    (b : Finset K.Vertex) (z : stdSimplex ℝ {v // v ∈ e.1}) :
+    (b : Finset K.Vertex) (z : standardSimplex ℝ {v // v ∈ e.1}) :
     (∀ v : {v // v ∈ K.faceVertices f}, v.1 ∉ b →
         K.edgeSimplexInFace f e hef z v = 0) ↔
       ∀ w : {w // w ∈ e.1}, w.1 ∉ b → z w = 0 := by
@@ -415,7 +415,7 @@ theorem edgeCoordZeroTrichotomy_of_facewiseCoordZeroExposed
       rw [← K.edge_eq_pair e]
       exact w.2
     simpa only [a, d, Finset.mem_insert, Finset.mem_singleton] using hw
-  have hzero (p : K.support) (z : stdSimplex ℝ {v // v ∈ e.1})
+  have hzero (p : K.support) (z : standardSimplex ℝ {v // v ∈ e.1})
       (hz : K.edgeMap e z = p.1) :
       G.map p 0 = 0 ↔
         ∀ w : {w // w ∈ e.1}, w.1 ∉ b →
@@ -447,7 +447,7 @@ theorem edgeCoordZeroTrichotomy_of_facewiseCoordZeroExposed
       ext y
       constructor
       · rintro ⟨⟨p, hp, rfl⟩, hpZero⟩
-        let z : stdSimplex ℝ {v // v ∈ e.1} := Classical.choose hp
+        let z : standardSimplex ℝ {v // v ∈ e.1} := Classical.choose hp
         have hz : K.edgeMap e z = p.1 := Classical.choose_spec hp
         have hzSupport :
             ∀ w : {w // w ∈ e.1}, w.1 ∉ b → z w = 0 :=
@@ -469,8 +469,8 @@ theorem edgeCoordZeroTrichotomy_of_facewiseCoordZeroExposed
               simp [show wa ≠ wd by
                 intro h; exact had (congrArg Subtype.val h)]
             _ = 1 := z.2.2
-        have hzVertex : z = stdSimplex.vertex wa := by
-          apply stdSimplex.ext
+        have hzVertex : z = standardSimplex.vertex wa := by
+          apply standardSimplex.ext
           funext w
           rcases hendpoints w with hw | hw
           · rw [show w = wa by apply Subtype.ext; exact hw]
@@ -496,16 +496,16 @@ theorem edgeCoordZeroTrichotomy_of_facewiseCoordZeroExposed
         let wa : {v // v ∈ e.1} := ⟨a, hae⟩
         change G.map p 0 = 0
         have hzedge :
-            K.edgeMap e (stdSimplex.vertex wa) = p.1 := by
+            K.edgeMap e (standardSimplex.vertex wa) = p.1 := by
           exact K.edgeMap_vertex_eq_vertexPoint e wa
-        apply (hzero p (stdSimplex.vertex wa) hzedge).mpr
+        apply (hzero p (standardSimplex.vertex wa) hzedge).mpr
         intro w hwb
         have hwa : w ≠ wa := by
           intro hw
           apply hwb
           rw [hw]
           exact hab
-        simp [stdSimplex.vertex, hwa]
+        simp [standardSimplex.vertex, hwa]
   · by_cases hdb : d ∈ b
     · right
       left
@@ -513,7 +513,7 @@ theorem edgeCoordZeroTrichotomy_of_facewiseCoordZeroExposed
       ext y
       constructor
       · rintro ⟨⟨p, hp, rfl⟩, hpZero⟩
-        let z : stdSimplex ℝ {v // v ∈ e.1} := Classical.choose hp
+        let z : standardSimplex ℝ {v // v ∈ e.1} := Classical.choose hp
         have hz : K.edgeMap e z = p.1 := Classical.choose_spec hp
         have hzSupport :
             ∀ w : {w // w ∈ e.1}, w.1 ∉ b → z w = 0 :=
@@ -535,8 +535,8 @@ theorem edgeCoordZeroTrichotomy_of_facewiseCoordZeroExposed
               simp [show wa ≠ wd by
                 intro h; exact had (congrArg Subtype.val h)]
             _ = 1 := z.2.2
-        have hzVertex : z = stdSimplex.vertex wd := by
-          apply stdSimplex.ext
+        have hzVertex : z = standardSimplex.vertex wd := by
+          apply standardSimplex.ext
           funext w
           rcases hendpoints w with hw | hw
           · rw [show w = wa by apply Subtype.ext; exact hw, hza]
@@ -562,21 +562,21 @@ theorem edgeCoordZeroTrichotomy_of_facewiseCoordZeroExposed
         let wd : {v // v ∈ e.1} := ⟨d, hde⟩
         change G.map p 0 = 0
         have hzedge :
-            K.edgeMap e (stdSimplex.vertex wd) = p.1 := by
+            K.edgeMap e (standardSimplex.vertex wd) = p.1 := by
           exact K.edgeMap_vertex_eq_vertexPoint e wd
-        apply (hzero p (stdSimplex.vertex wd) hzedge).mpr
+        apply (hzero p (standardSimplex.vertex wd) hzedge).mpr
         intro w hwb
         have hwd : w ≠ wd := by
           intro hw
           apply hwb
           rw [hw]
           exact hdb
-        simp [stdSimplex.vertex, hwd]
+        simp [standardSimplex.vertex, hwd]
     · right
       right
       apply Set.eq_empty_iff_forall_notMem.mpr
       rintro y ⟨⟨p, hp, rfl⟩, hpZero⟩
-      let z : stdSimplex ℝ {v // v ∈ e.1} := Classical.choose hp
+      let z : standardSimplex ℝ {v // v ∈ e.1} := Classical.choose hp
       have hz : K.edgeMap e z = p.1 := Classical.choose_spec hp
       have hzSupport :
           ∀ w : {w // w ∈ e.1}, w.1 ∉ b → z w = 0 :=

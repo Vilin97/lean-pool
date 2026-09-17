@@ -170,7 +170,7 @@ theorem faceChart_mem_frontier_of_extended_eq
         extendFaceCoordinates_of_notMem (K.faceVertices g) y hvNotG] at hc
       exact hc
     have hzero : (∑ v, x v) = 0 := by simp [hxzero]
-    have hone : (∑ v, x v) = 1 := stdSimplex.sum_eq_one x
+    have hone : (∑ v, x v) = 1 := standardSimplex.sum_eq_one x
     rw [hzero] at hone
     norm_num at hone
   have htwo : 2 ≤ (K.faceVertices f).card := by

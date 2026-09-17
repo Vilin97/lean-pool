@@ -79,9 +79,7 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
     have h3 : HasDerivAt (fun _ : ℝ => c) 0 t :=
       hasDerivAt_const t c
     convert h3.add h2 using 1
-    · rfl
-    · rfl
-    · ring
+    ring
   have hv_deriv : ∀ x ∈ Set.Ioo (min 0 1) (max 0 1),
       HasDerivAt v (v' x) x := by
     intro t ht
@@ -92,7 +90,6 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
       t (hγ_deriv t)
     simp only [smul_eq_mul] at h_chain
     convert h_chain using 1
-    · rfl
     · rfl
     · ring
   have hu'_int : IntervalIntegrable u' MeasureTheory.volume 0 1 :=

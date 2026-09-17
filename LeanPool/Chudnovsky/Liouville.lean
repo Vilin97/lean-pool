@@ -200,7 +200,7 @@ lemma residue_logDeriv_eq_order {f : ℂ → ℂ} {c : ℂ} (hf : MeromorphicAt 
     have hbase : DifferentiableAt ℂ (fun z : ℂ ↦ z - c) z := by fun_prop
     have hmulLog : logDeriv (fun z ↦ (z - c) ^ n * g z) z
         = logDeriv (fun z ↦ (z - c) ^ n) z + logDeriv g z :=
-      logDeriv_mul (f := fun z ↦ (z - c) ^ n) (g := g) z (zpow_ne_zero n hzc') hgz
+      logDeriv_fun_mul (f := fun z ↦ (z - c) ^ n) (g := g) z (zpow_ne_zero n hzc') hgz
         (hbase.zpow (Or.inl hzc')) hgdz
     rw [hmul, hmulLog]
     have hzpow : logDeriv (fun z ↦ (z - c) ^ n) z = (n : ℂ) * (z - c)⁻¹ := by

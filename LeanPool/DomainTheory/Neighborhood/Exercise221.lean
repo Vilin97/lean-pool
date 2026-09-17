@@ -108,9 +108,9 @@ theorem singleton_cone_nd (σ τ : Str) :
 theorem singleton_singleton_nd (σ τ : Str) :
     ({σ} : Set Str) ⊆ ({τ} : Set Str) ∨ ({τ} : Set Str) ⊆ ({σ} : Set Str) ∨
       ({σ} : Set Str) ∩ ({τ} : Set Str) = ∅ := by
-  rcases (inferInstance : Decidable (σ = τ)) with h | h
-  · simp_all
-  · subst h; exact Or.inl subset_rfl
+  cases (inferInstance : Decidable (σ = τ)) with
+  | isFalse h => simp_all
+  | isTrue h => subst h; exact Or.inl subset_rfl
 
 /-- **`𝒞` is pairwise nested-or-disjoint.** Cone/cone is the `𝔹` trichotomy; the
 mixed and

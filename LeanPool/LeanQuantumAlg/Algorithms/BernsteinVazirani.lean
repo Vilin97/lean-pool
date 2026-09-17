@@ -104,8 +104,6 @@ theorem bit_flipBit (x : Fin (2 ^ n)) (k k' : Fin n) :
   change (x.val ^^^ 2 ^ k.val).testBit k'.val = (bit x k' ^^ decide (k = k'))
   rw [Nat.testBit_xor, Nat.testBit_two_pow]
   congr 1
-  rw [decide_eq_decide]
-  exact Fin.val_inj
 
 theorem flipBit_flipBit (x : Fin (2 ^ n)) (k : Fin n) :
     flipBit (flipBit x k) k = x := by

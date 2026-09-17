@@ -170,7 +170,7 @@ lemma hasDerivAt_integral_of_analytic_mul (f : ℂ → ℂ) (hf : AnalyticOn ℂ
               HasDerivAt.add (hasDerivAt_const _ _) <|
                 HasDerivAt.mul (hasDerivAt_id _ |> HasDerivAt.ofReal_comp) <|
                   hasDerivAt_const _ _) using 1 <;>
-            first | rfl | (norm_num; try ring)
+            first | rfl | (norm_num; try ring1)
           norm_num at *
           refine lt_of_le_of_lt (norm_add_le _ _) ?_
           norm_num [abs_of_nonneg hx.1.le, abs_of_nonneg ht.1]
@@ -264,7 +264,7 @@ lemma hasDerivAt_primitiveOnBall (f : ℂ → ℂ)
         IsOpen.mem_nhds isOpen_ball <| ?_) |> DifferentiableAt.hasDerivAt) <|
           HasDerivAt.mul (hasDerivAt_id t |> HasDerivAt.ofReal_comp) <|
             hasDerivAt_const _ _) using 1 <;>
-      first | rfl | (norm_num; try ring)
+      first | rfl | (norm_num; try ring1)
     exact lt_of_le_of_lt (mul_le_of_le_one_left (norm_nonneg _) (
       abs_le.mpr ⟨by linarith [ht.1], by linarith [ht.2]⟩)) (by simpa using hz)
   have h_ftc_integral : ∫ t in (0 : ℝ)..1, (f (t * z) + t * z * deriv f (t * z)) =
@@ -383,9 +383,8 @@ lemma exists_log_of_analytic_nonzero_on_ball (f : ℂ → ℂ)
     intro z hz; rw [← hH_const z hz, mul_assoc, ← exp_add, neg_add_cancel, exp_zero, mul_one]
   obtain ⟨c, hc⟩ : ∃ c : ℂ, H 0 = exp c :=
     ⟨log (H 0), by rw [exp_log (mul_ne_zero (hf_ne_zero 0 (by norm_num)) (exp_ne_zero _))]⟩
-  refine ⟨fun z => c + g0 z, ?_, ?_⟩ <;> norm_num [hc] at *
-  · exact AnalyticOn.add analyticOn_const hg0_anal
-  · exact fun z hz => by rw [hf_eq z hz, exp_add]
+  refine ⟨fun z => c + g0 z, AnalyticOn.add analyticOn_const hg0_anal, fun z hz => ?_⟩
+  rw [exp_add, ← hc, hf_eq z hz]
 
 /--
 For any function `f` in `classS`, there exists an analytic function `h` on the unit disc such that

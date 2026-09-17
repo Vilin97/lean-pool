@@ -135,10 +135,10 @@ private theorem sigma_add_period_aux {ω η : ℂ} (hω : ω ∈ L.lattice) (hω
         rw [logDeriv_apply, hd.deriv, mul_comm, mul_div_assoc,
           div_self (Complex.exp_ne_zero _), mul_one]
       have hlogden : logDeriv den x = η + L.weierstrassZeta x := by
-        rw [hden, logDeriv_mul (f := fun z ↦ Complex.exp (η * (z + ω / 2)))
+        rw [hden, logDeriv_fun_mul (f := fun z ↦ Complex.exp (η * (z + ω / 2)))
           (g := L.weierstrassSigma) x (Complex.exp_ne_zero _) (L.weierstrassSigma_ne_zero hx)
           (hexpdiff x) (hσdiff x), hlogexp, L.logDeriv_weierstrassSigma x hx]
-      rw [hF, logDeriv_div x (hnum_ne x hx) (hden_ne x hx) (hnumdiff x) (hdendiff x),
+      rw [hF, logDeriv_fun_div x (hnum_ne x hx) (hden_ne x hx) (hnumdiff x) (hdendiff x),
         hlognum, hlogden, hquasi x hx]
       ring
     -- hence `deriv F = 0` on `Lᶜ`

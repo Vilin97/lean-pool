@@ -82,7 +82,7 @@ variable [AdaptiveSafety.IsAdmissible (K := K) (U := U)]
 /-- Relabeling a global adaptive fan simplex preserves the source-weighted affine sum. -/
 theorem adaptiveFanRelabel_source_sum_apply
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ
+    (x : standardSimplex ℝ
       {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f})
     (v : (K.safeSubdivision f.1.1).refined.Vertex) :
     (∑ p : {p // p ∈ K.adaptiveFanFaceVertices U hU f},
@@ -121,7 +121,7 @@ theorem adaptiveGlobalFanFaceMap_standardAffine_point
       b z v = ∑ p : {p // p ∈ K.adaptiveFanFaceVertices U hU f},
         z ((K.adaptiveFanFaceVertexEquiv U hU f).symm p) *
           (K.adaptiveFanVertexSource U hU f p).1 v) :
-    ∀ x : stdSimplex ℝ
+    ∀ x : standardSimplex ℝ
       {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f},
       ((K.safeSubdivision f.1.1).homeo
           (K.adaptiveFanSourcePoint U hU f
@@ -178,7 +178,7 @@ noncomputable def adaptiveGlobalFanMapStandardAffine
 
 /-- The standard simplex indexing a global adaptive fan face. -/
 abbrev adaptiveGlobalFanSimplex (hU : IsOpen U) (f : K.AdaptiveFanFace U hU) :=
-  stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}
+  standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}
 
 /-- The intrinsic-coordinate value of a global adaptive fan face map. -/
 noncomputable def adaptiveGlobalFanFaceMapValue
@@ -188,7 +188,7 @@ noncomputable def adaptiveGlobalFanFaceMapValue
 
 theorem adaptiveGlobalFanMapStandardAffine_apply
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ
+    (x : standardSimplex ℝ
       {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}) :
     K.adaptiveGlobalFanFaceMapValue hU f x =
       K.adaptiveGlobalFanMapStandardAffine hU f
@@ -236,7 +236,7 @@ barycentric weighted sum of the coordinates of its three geometric vertices.  Th
 supporting-face formula used by the bordered chart straightening. -/
 theorem adaptiveFanFaceMap_val_eq_vertex_sum
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     (K.adaptiveFanFaceMap U hU f x).1.1 =
       fun v ↦ ∑ p : {p // p ∈ K.adaptiveFanFaceVertices U hU f},
         x p * p.1.1 v := by
@@ -297,7 +297,7 @@ theorem adaptiveFanFaceMap_val_eq_vertex_sum
 the locally finite adaptive complex. -/
 theorem adaptiveGlobalFanFaceMap_val_eq_vertex_sum
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ
+    (x : standardSimplex ℝ
       {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}) :
     (K.adaptiveGlobalFanFaceMap U hU f x).1.1 =
       fun k ↦ ∑ v :
@@ -353,7 +353,7 @@ simplex face spanned by precisely those adaptive vertices which lie in the old c
 theorem adaptiveGlobalFanFaceMap_mem_faceCarrier_iff_supported
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
     (b : Finset K.Vertex)
-    (x : stdSimplex ℝ
+    (x : standardSimplex ℝ
       {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}) :
     (K.adaptiveGlobalFanFaceMap U hU f x).1 ∈ K.faceCarrier b ↔
       ∀ v :
@@ -496,7 +496,7 @@ theorem adaptiveGlobalFanFaceMap_exists_exposedFace
     ∃ d : Finset (K.AdaptiveFanVertex U hU),
       d ⊆ K.adaptiveGlobalFanFaceVertices U hU f ∧
         d.card ≤ 2 ∧
-        ∀ x : stdSimplex ℝ
+        ∀ x : standardSimplex ℝ
             {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f},
           ((K.adaptiveGlobalFanFaceMap U hU f x).1 ∈ K.faceCarrier b ↔
             ∀ v :

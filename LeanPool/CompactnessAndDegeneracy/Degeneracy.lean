@@ -2027,7 +2027,7 @@ private theorem choose_product_le_exp_binary_entropy
           ((population index : ℝ) *
             Real.binEntropy
               ((success index : ℝ) / (population index : ℝ))) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro index _
           positivity
         · intro index _
@@ -5644,13 +5644,9 @@ private theorem hammingRetentionMeasure_real_contains_finset
     rw [ProbabilityTheory.setBernoulli_apply']
     rw [hpreimage]
     rw [MeasureTheory.Measure.infinitePi_pi]
-    · simp only [Set.mem_univ, MeasureTheory.Measure.coe_add, MeasureTheory.Measure.coe_smul,
-        Pi.add_apply,
-        Pi.smul_apply, MeasurableSpace.measurableSet_top, MeasureTheory.Measure.dirac_apply',
-            Set.mem_singleton_iff,
-        Set.indicator_of_mem, Pi.one_apply, ENNReal.smul_one, eq_iff_iff, iff_true,
-            not_false_eq_true,
-        Set.indicator_of_notMem, smul_zero, add_zero, prod_const]
+    · simp only [Set.mem_univ, MeasurableSpace.measurableSet_top, Set.mem_singleton_iff,
+        eq_iff_iff, iff_true, not_false_eq_true,
+        ProbabilityTheory.bernoulliMeasure_apply_of_mem_of_notMem, prod_const]
     · intro vertex _
       measurability
   change

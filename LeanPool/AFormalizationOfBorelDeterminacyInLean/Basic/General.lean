@@ -73,6 +73,7 @@ universe u in
 lemma Cardinal.choose_injection {α β : Type u} (f : α → Set β) (h : ∀ a, #α ≤ #(f a)) :
     ∃ g : α → β, g.Injective ∧ ∀ a, g a ∈ f a := by
   let ⟨wo, hwo, hwol⟩ := Cardinal.exists_ord_eq α
+  have := hwo
   let recg (a : α) (recg : (b : α) → wo b a → β) : β :=
     (Set.nonempty_iff_ne_empty.mpr fun hf ↦
       not_le_of_gt (lt_of_lt_of_le (lt_of_le_of_lt
@@ -80,8 +81,8 @@ lemma Cardinal.choose_injection {α β : Type u} (f : α → Set β) (h : ∀ a,
         #(Set.range (uncurryProp recg)) ≤ _)
       (Cardinal.card_typein_lt (r := wo) a hwol)) (h a))
       (Cardinal.mk_le_mk_of_subset (Set.sdiff_eq_empty.mp hf))).some
-  refine ⟨hwo.fix (r := wo) recg, ?_, ?_⟩
+  refine ⟨WellFounded.fix' wo recg, ?_, ?_⟩
   · intro a a' he
     rcases trichotomous_of wo a a' with h | h | h <;> [symm at he; exact h; skip] <;>
-     (rw [hwo.fix_eq] at he; cases (equals_nonempty_some he.symm).2 ⟨⟨_, h⟩, rfl⟩)
-  · intro a; rw [hwo.fix_eq]; exact Set.sdiff_subset (Set.Nonempty.some_mem _)
+     (rw [WellFounded.fix'_eq] at he; cases (equals_nonempty_some he.symm).2 ⟨⟨_, h⟩, rfl⟩)
+  · intro a; rw [WellFounded.fix'_eq]; exact Set.sdiff_subset (Set.Nonempty.some_mem _)

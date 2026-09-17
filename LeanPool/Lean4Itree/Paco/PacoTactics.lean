@@ -262,6 +262,7 @@ elab_rules : tactic
       rewriteLocalWith mvarId decl.fvarId (← mkPlfpUnfoldProof decl.type)
 
 /-- Initialise a parameterized-coinduction proof from a fixed-point hypothesis `h`. -/
+@[tactic_alt Lean4Itree.tacticPinit]
 elab "pinit" " at " h:ident : tactic =>
   Tactic.withMainContext do
     let some hyp := (← getLCtx).findDecl? (λ ldecl =>

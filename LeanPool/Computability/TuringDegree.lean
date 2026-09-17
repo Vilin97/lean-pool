@@ -85,7 +85,10 @@ instance : Std.Refl TuringReducible where refl _ := .rfl
 
 theorem TuringReducible.trans (hg : f ≤ᵀ g) (hh : g ≤ᵀ h) : f ≤ᵀ h := by
   induction hg with
-  | zero | succ | left | right => constructor
+  | zero => exact .zero
+  | succ => exact .succ
+  | left => exact .left
+  | right => exact .right
   | oracle g' hg => rw [hg]; exact hh
   | pair _ _ ih₁ ih₂ => exact RecursiveIn.pair ih₁ ih₂
   | comp _ _ ih₁ ih₂ => exact RecursiveIn.comp ih₁ ih₂

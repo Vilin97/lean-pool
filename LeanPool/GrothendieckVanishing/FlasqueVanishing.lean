@@ -168,25 +168,26 @@ private abbrev underMk {X : TopCat.{u}} {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
     (t : F.obj.obj (op V)) (hVU : V ≤ U)
     (ht : ConcreteCategory.hom (g.hom.app (op V)) t =
       ConcreteCategory.hom (G.obj.map (homOfLE hVU).op) s) :
-    StructuredArrow ⟨op U, s⟩
+    StructuredArrow ((G.obj ⋙ CategoryTheory.forget AddCommGrpCat.{u}).elementsMk (op U) s)
       (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements :=
-  StructuredArrow.mk (S := ⟨op U, s⟩)
+  StructuredArrow.mk
+    (S := (G.obj ⋙ CategoryTheory.forget AddCommGrpCat.{u}).elementsMk (op U) s)
     (T := (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements)
-    (Y := ⟨op V, t⟩)
-    (CategoryOfElements.homMk _ _ (homOfLE hVU).op (by exact ht.symm))
+    (Y := (F.obj ⋙ CategoryTheory.forget AddCommGrpCat.{u}).elementsMk (op V) t)
+    (Functor.Elements.homMk (homOfLE hVU).op (by exact ht.symm))
 
 /-- Partial lifts of a section `s` along a morphism of sheaves. An object is an
 open `V`, a section over `V`, and the proof that it maps to `s |_ V`. -/
 private abbrev PartialLift {X : TopCat.{u}} {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
     (g : F ⟶ G) {U : Opens X} (s : G.obj.obj (op U)) :=
-  StructuredArrow ⟨op U, s⟩
+  StructuredArrow ((G.obj ⋙ CategoryTheory.forget AddCommGrpCat.{u}).elementsMk (op U) s)
     (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements
 
 private local instance partialLiftCategory {X : TopCat.{u}}
     {F G : TopCat.Sheaf AddCommGrpCat.{u} X} (g : F ⟶ G)
     {U : Opens X} (s : G.obj.obj (op U)) :
     Category.{u} (PartialLift g s) :=
-  CategoryTheory.instCategoryStructuredArrow
+  inferInstanceAs (Category (StructuredArrow _ _))
 
 private lemma chain_isCompatible_of_chain {X : TopCat.{u}}
     {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
@@ -194,10 +195,10 @@ private lemma chain_isCompatible_of_chain {X : TopCat.{u}}
     {c : Set (PartialLift g s)}
     (hchain : IsChain (fun x y ↦ Nonempty (y ⟶ x)) c) :
     TopCat.Presheaf.IsCompatible F.obj
-      (fun x : c ↦ x.1.right.1.unop)
-      (fun x : c ↦ x.1.right.2) := by
-  let cV : c → Opens X := fun x ↦ x.1.right.1.unop
-  let cs : (x : c) → F.obj.obj (op (cV x)) := fun x ↦ x.1.right.2
+      (fun x : c ↦ x.1.right.obj.unop)
+      (fun x : c ↦ x.1.right.val) := by
+  let cV : c → Opens X := fun x ↦ x.1.right.obj.unop
+  let cs : (x : c) → F.obj.obj (op (cV x)) := fun x ↦ x.1.right.val
   change TopCat.Presheaf.IsCompatible F.obj cV cs
   intro i j
   by_cases hij : i = j
@@ -206,17 +207,17 @@ private lemma chain_isCompatible_of_chain {X : TopCat.{u}}
   · have htotal := hchain i.property j.property (fun h ↦ hij (Subtype.ext h))
     rcases htotal with hji | hij'
     · rw [show (cV i).infLERight (cV j) =
-          (cV i).infLELeft (cV j) ≫ hji.some.right.val.unop from Subsingleton.elim _ _,
+          (cV i).infLELeft (cV j) ≫ hji.some.right.hom.unop from Subsingleton.elim _ _,
         op_comp, Functor.map_comp, CategoryTheory.comp_apply]
-      have hsec : ConcreteCategory.hom (F.obj.map hji.some.right.val) j.1.right.2 =
-          i.1.right.2 := CategoryOfElements.map_snd hji.some.right
+      have hsec : ConcreteCategory.hom (F.obj.map hji.some.right.hom) j.1.right.val =
+          i.1.right.val := hji.some.right.map_val
       exact congrArg (ConcreteCategory.hom (F.obj.map ((cV i).infLELeft (cV j)).op))
         hsec.symm
     · rw [show (cV i).infLELeft (cV j) =
-          (cV i).infLERight (cV j) ≫ hij'.some.right.val.unop from Subsingleton.elim _ _,
+          (cV i).infLERight (cV j) ≫ hij'.some.right.hom.unop from Subsingleton.elim _ _,
         op_comp, Functor.map_comp, CategoryTheory.comp_apply]
-      have hsec : ConcreteCategory.hom (F.obj.map hij'.some.right.val) i.1.right.2 =
-          j.1.right.2 := CategoryOfElements.map_snd hij'.some.right
+      have hsec : ConcreteCategory.hom (F.obj.map hij'.some.right.hom) i.1.right.val =
+          j.1.right.val := hij'.some.right.map_val
       exact congrArg (ConcreteCategory.hom (F.obj.map ((cV i).infLERight (cV j)).op)) hsec
 
 private lemma exists_glued_lift_upper_bound {X : TopCat.{u}}
@@ -225,25 +226,25 @@ private lemma exists_glued_lift_upper_bound {X : TopCat.{u}}
     {ι : Type*}
     (T : ι → PartialLift g s)
     (hcompat : TopCat.Presheaf.IsCompatible F.obj
-      (fun i ↦ (T i).right.1.unop) (fun i ↦ (T i).right.2)) :
+      (fun i ↦ (T i).right.obj.unop) (fun i ↦ (T i).right.val)) :
     ∃ y : PartialLift g s,
-      y.right.1.unop = iSup (fun i ↦ (T i).right.1.unop) ∧
+      y.right.obj.unop = iSup (fun i ↦ (T i).right.obj.unop) ∧
       ∀ i, Nonempty (y ⟶ T i) := by
-  let cV : ι → Opens X := fun i ↦ (T i).right.1.unop
-  let cs : (i : ι) → F.obj.obj (op (cV i)) := fun i ↦ (T i).right.2
+  let cV : ι → Opens X := fun i ↦ (T i).right.obj.unop
+  let cs : (i : ι) → F.obj.obj (op (cV i)) := fun i ↦ (T i).right.val
   have hcompat' : TopCat.Presheaf.IsCompatible F.obj cV cs := by
     simpa [cV, cs] using hcompat
   obtain ⟨t_gl, ht_gl, _⟩ := F.existsUnique_gluing cV cs hcompat'
-  have hVsup_le : iSup cV ≤ U := iSup_le fun i ↦ leOfHom (T i).hom.val.unop
+  have hVsup_le : iSup cV ≤ U := iSup_le fun i ↦ leOfHom (T i).hom.hom.unop
   have hgt : ConcreteCategory.hom (g.hom.app (op (iSup cV))) t_gl =
       ConcreteCategory.hom (G.obj.map (homOfLE hVsup_le).op) s := by
     apply map_glued_eq_of_local_eq g (fun j ↦ le_trans (le_iSup cV j) hVsup_le) ht_gl
     intro j
-    exact (CategoryOfElements.map_snd (T j).hom).symm
+    exact ((T j).hom.map_val).symm
   let y := underMk g s t_gl hVsup_le hgt
   refine ⟨y, rfl, fun i ↦ ?_⟩
   exact Nonempty.intro (StructuredArrow.homMk
-    (CategoryOfElements.homMk _ _ (homOfLE (le_iSup cV i)).op (by
+    (Functor.Elements.homMk (homOfLE (le_iSup cV i)).op (by
       change ConcreteCategory.hom (F.obj.map (homOfLE (le_iSup cV i)).op) t_gl = cs i
       exact ht_gl i))
     (by cat_disch))
@@ -260,20 +261,20 @@ private lemma under_extend_by_one_open {X : TopCat.{u}}
     (ht' : ConcreteCategory.hom (S.g.hom.app (op W)) t' =
       ConcreteCategory.hom (S.X₃.obj.map (homOfLE hWU).op) s)
     {x : X} (hxW : x ∈ W) :
-    ∃ y : PartialLift S.g s, Nonempty (y ⟶ t) ∧ x ∈ y.right.1.unop := by
-  let V₀ : Opens X := t.right.1.unop
-  let t₀ : S.X₂.obj.obj (op V₀) := t.right.2
-  have hV₀U : V₀ ≤ U := leOfHom t.hom.val.unop
+    ∃ y : PartialLift S.g s, Nonempty (y ⟶ t) ∧ x ∈ y.right.obj.unop := by
+  let V₀ : Opens X := t.right.obj.unop
+  let t₀ : S.X₂.obj.obj (op V₀) := t.right.val
+  have hV₀U : V₀ ≤ U := leOfHom t.hom.hom.unop
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
       ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s :=
-    (CategoryOfElements.map_snd t.hom).symm
+    (t.hom.map_val).symm
   obtain ⟨t'', hgt'', hcompat_patch⟩ :=
     exists_patch_of_shortExact hS hX₁_epi hV₀U hWU ht₀ ht'
   let T : Bool → PartialLift S.g s
     | false => t
     | true => underMk S.g s t'' hWU hgt''
   have hcompat_glue : TopCat.Presheaf.IsCompatible S.X₂.obj
-      (fun b ↦ (T b).right.1.unop) (fun b ↦ (T b).right.2) := by
+      (fun b ↦ (T b).right.obj.unop) (fun b ↦ (T b).right.val) := by
     apply bool_isCompatible_of_false_true_eq S.X₂.obj
     change
       ConcreteCategory.hom (S.X₂.obj.map (homOfLE (inf_le_right : V₀ ⊓ W ≤ W)).op) t'' =
@@ -304,19 +305,19 @@ theorem epi_app_of_shortExact_of_epi_restrictions {X : TopCat.{u}}
   obtain ⟨t, hmax⟩ := exists_maximal_of_chains_bounded
     (fun (c : Set (PartialLift S.g s)) hchain ↦ by
       have hcompat : TopCat.Presheaf.IsCompatible S.X₂.obj
-          (fun x : c ↦ x.1.right.1.unop) (fun x : c ↦ x.1.right.2) :=
+          (fun x : c ↦ x.1.right.obj.unop) (fun x : c ↦ x.1.right.val) :=
         chain_isCompatible_of_chain (g := S.g) (s := s) (c := c) hchain
       obtain ⟨ub, _, hub⟩ := exists_glued_lift_upper_bound S.g s (fun x : c ↦ x.1) hcompat
       exact ⟨ub, fun a ha ↦ hub ⟨a, ha⟩⟩)
     (fun {a b c : PartialLift S.g s} (hab : Nonempty (b ⟶ a))
       (hbc : Nonempty (c ⟶ b)) ↦
       ⟨hbc.some ≫ hab.some⟩)
-  let V₀ : Opens X := t.right.1.unop
-  let t₀ : S.X₂.obj.obj (op V₀) := t.right.2
-  have hV₀U : V₀ ≤ U := leOfHom t.hom.val.unop
+  let V₀ : Opens X := t.right.obj.unop
+  let t₀ : S.X₂.obj.obj (op V₀) := t.right.val
+  have hV₀U : V₀ ≤ U := leOfHom t.hom.hom.unop
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
       ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s :=
-    (CategoryOfElements.map_snd t.hom).symm
+    (t.hom.map_val).symm
   have hUleV₀ : U ≤ V₀ := by
     by_contra hnot
     have hlt : V₀ < U := lt_of_le_not_ge hV₀U hnot
@@ -326,7 +327,7 @@ theorem epi_app_of_shortExact_of_epi_restrictions {X : TopCat.{u}}
       under_extend_by_one_open (S := S) hS hX₁_epi
         s t W (leOfHom iWU) t' ht' hxW
     have h_back : Nonempty (t ⟶ y) := hmax y hyt
-    exact hxV₀ (leOfHom h_back.some.right.val.unop hxy)
+    exact hxV₀ (leOfHom h_back.some.right.hom.unop hxy)
   exact ⟨ConcreteCategory.hom (S.X₂.obj.map (homOfLE hUleV₀).op) t₀, by
     rw [S.g.hom.naturality_apply (homOfLE hUleV₀).op t₀, ht₀]
     rw [← CategoryTheory.comp_apply, ← S.X₃.obj.map_comp]

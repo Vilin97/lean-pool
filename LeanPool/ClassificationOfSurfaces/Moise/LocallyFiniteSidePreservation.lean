@@ -101,7 +101,7 @@ theorem edgeInSupport_subset_faceInSupport (f : K.Face) (e : K.Edge)
     edgeInSupport (K := K) e ⊆ faceInSupport (K := K) f := by
   rintro p ⟨q, rfl⟩
   obtain ⟨x, hx⟩ := q.2
-  let y := stdSimplex.map
+  let y := standardSimplex.map
     (fun v : {v // v ∈ e.1} ↦
       (⟨v.1, hef v.2⟩ : {w // w ∈ K.faceVertices f})) x
   refine ⟨y, ?_⟩

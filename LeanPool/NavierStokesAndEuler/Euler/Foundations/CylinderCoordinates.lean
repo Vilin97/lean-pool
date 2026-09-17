@@ -152,6 +152,11 @@ theorem chartSupport_cover : ({z : EulerSobolev.Domain 4 | |z 0| ≤ 2 * period}
     norm_num
     constructor <;> linarith
 
+omit [Fact (0 < period)] in
+theorem chartMeasure_absolutelyContinuous :
+    chartMeasure period ≪ (volume : Measure (Domain 4)) :=
+  Measure.absolutelyContinuous_sum_left fun _ => Measure.restrict_le_self.absolutelyContinuous
+
 theorem chartSupport_measure_le :
     volume.restrict (({z : EulerSobolev.Domain 4 | |z 0| ≤ 2 * period})) ≤ chartMeasure period :=
   (Measure.restrict_mono_set volume (chartSupport_cover period)).trans Measure.restrict_iUnion_le
@@ -173,23 +178,26 @@ theorem eLpNorm_cover_chart {F : Type*} [NormedAddCommGroup F]
       (6 : ℝ≥0∞) ^ (1/2 : ℝ) * eLpNorm f 2 (liftMeasure period) := by
   rw [eLpNorm_comp_measurePreserving (hf.smul_measure _)
     (euclideanCover_chart_measurePreserving period)]
-  rw [eLpNorm_smul_measure_of_ne_top (by norm_num)]
+  rw [eLpNorm_smul_measure_of_ne_top (by norm_num) _ _ hf]
   norm_num
 
 /-- A localized lift is controlled by the genuine cylinder norm, with explicit chart multiplicity.
 -/
 theorem eLpNorm_localized_le {F G : Type*} [NormedAddCommGroup F] [NormedAddCommGroup G]
     (f : LiftDomain period → F) (hf : AEStronglyMeasurable f (liftMeasure period))
-    (g : Domain 4 → G) (hsupp : Function.support g ⊆ ({z : EulerSobolev.Domain 4 | |z 0| ≤ 2 *
+    (g : Domain 4 → G) (hg : AEStronglyMeasurable g volume)
+    (hsupp : Function.support g ⊆ ({z : EulerSobolev.Domain 4 | |z 0| ≤ 2 *
         period}))
     (B : ℝ≥0) (hb : ∀ z, ‖g z‖ ≤ B * ‖f (euclideanCover period z)‖) :
     eLpNorm g 2 volume ≤ (B : ℝ≥0∞) * (6 : ℝ≥0∞) ^ (1/2 : ℝ) *
       eLpNorm f 2 (liftMeasure period) := by
-  rw [← eLpNorm_restrict_eq_of_support_subset hsupp]
+  rw [← eLpNorm_restrict_eq_of_support_subset hg hsupp]
   calc
     _ ≤ eLpNorm g 2 (chartMeasure period) := eLpNorm_mono_measure g (chartSupport_measure_le period)
     _ ≤ (B : ℝ≥0∞) * eLpNorm (f ∘ euclideanCover period) 2 (chartMeasure period) :=
-      eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul (Filter.Eventually.of_forall hb) 2
+      eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul
+        (hg.mono_ac (chartMeasure_absolutelyContinuous period))
+        (Filter.Eventually.of_forall hb) 2
     _ = _ := by rw [eLpNorm_cover_chart period f hf, mul_assoc]
 
 /-- The localized-lift estimate as an inequality between ordinary real L² norms. -/
@@ -199,7 +207,8 @@ theorem localized_L2_le {F : Type*} [NormedAddCommGroup F]
         period}))
     (B : ℝ≥0) (hb : ∀ z, ‖g z‖ ≤ B * ‖f (euclideanCover period z)‖) :
     ‖g.toLp 2‖ ≤ (B : ℝ) * (6 : ℝ) ^ (1/2 : ℝ) * ‖hf.toLp f‖ := by
-  have h := eLpNorm_localized_le period f hf.1 g hsupp B hb
+  have h := eLpNorm_localized_le period f hf.aestronglyMeasurable g
+    g.continuous.aestronglyMeasurable hsupp B hb
   have hfin : (B : ℝ≥0∞) * (6 : ℝ≥0∞) ^ (1/2 : ℝ) *
       eLpNorm f 2 (liftMeasure period) ≠ ⊤ := by
     finiteness

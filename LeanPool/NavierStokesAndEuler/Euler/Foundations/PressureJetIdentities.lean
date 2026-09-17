@@ -92,7 +92,10 @@ def map (L : LiftL2 period →L[ℝ] LiftL2 period)
   | .succ df lower hd => .succ (fun i => L (df i)) (fun i => map L hL (lower i))
       (fun i => by
         have h := L.hasFDerivAt.comp_hasDerivAt 0 (hd i)
-        convert h using 1 <;> first | rfl | (funext t; exact hL _ _))
+        convert h using 1
+        first
+        | rfl
+        | (funext t; exact hL _ _))
 
 theorem map_word {s n : ℕ} {f : LiftL2 period}
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f)

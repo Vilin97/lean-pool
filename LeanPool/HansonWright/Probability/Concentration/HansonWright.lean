@@ -65,10 +65,10 @@ lemma mgf_innerSL_stdGaussian {E : Type*} [NormedAddCommGroup E] [InnerProductSp
     mgf (fun x : E => inner ℝ v x) (stdGaussian E) t =
       exp (‖v‖ ^ 2 * t ^ 2 / 2) := by
   let L : StrongDual ℝ E := innerSL ℝ v
-  have hmap : (stdGaussian E).map L =
-      gaussianReal ((stdGaussian E)[L]) Var[L; stdGaussian E].toNNReal :=
-    IsGaussian.map_eq_gaussianReal L
-  have hmgf := mgf_gaussianReal hmap t
+  have hlaw : HasLaw L (gaussianReal ((stdGaussian E)[L]) Var[L; stdGaussian E].toNNReal)
+      (stdGaussian E) :=
+    ⟨L.continuous.measurable.aemeasurable, IsGaussian.map_eq_gaussianReal L⟩
+  have hmgf := mgf_gaussianReal hlaw t
   have hmean : (stdGaussian E)[L] = 0 := integral_strongDual_stdGaussian L
   have hvar : (Var[L; stdGaussian E].toNNReal : ℝ) = ‖v‖ ^ 2 := by
     rw [variance_dual_stdGaussian L]
@@ -163,7 +163,7 @@ lemma randomVector_aemeasurable {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω �
     (hX_meas : ∀ i, AEMeasurable (X i) μ) :
     AEMeasurable (randomVector X) μ := by
   exact (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurable.comp_aemeasurable
-    (aemeasurable_pi_lambda _ hX_meas)
+    (AEMeasurable.of_eval hX_meas)
 
 omit [MeasurableSpace Ω] in
 lemma measure_map_prod_map_of_aemeasurable {α β γ δ : Type*}
@@ -244,7 +244,7 @@ lemma subtypeMask_apply {n : ℕ} (s : Finset (Fin n)) (x : s → ℝ) (i : Fin 
 lemma measurable_subtypeMask {n : ℕ} (s : Finset (Fin n)) :
     Measurable (subtypeMask (n := n) s) := by
   exact (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurable.comp
-    (measurable_pi_lambda _ fun i => by
+    (Measurable.of_eval fun i => by
       by_cases hi : i ∈ s
       · simpa [hi] using
           (measurable_pi_apply (⟨i, hi⟩ : s) : Measurable fun x : s → ℝ => x ⟨i, hi⟩)
@@ -265,7 +265,7 @@ lemma coordinateMask_aemeasurable {μ : Measure Ω} {n : ℕ} (s : Finset (Fin n
     AEMeasurable (fun ω => coordinateMask s (randomVector X ω)) μ := by
   rw [← subtypeMask_subtype_randomVector s X]
   exact (measurable_subtypeMask s).aemeasurable.comp_aemeasurable
-    (aemeasurable_pi_lambda _ fun i => hX_meas i)
+    (AEMeasurable.of_eval fun i => hX_meas i)
 
 lemma coordinateMask_indepFun_compl {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω → ℝ}
     (h_indep : iIndepFun X μ) (hX_meas : ∀ i, AEMeasurable (X i) μ)
@@ -1433,7 +1433,7 @@ lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
     _ ≤ ∏ i : Fin (Module.finrank ℝ E),
           exp (2 * exp 1 *
             ((θ * hTpos.isSymmetric.eigenvalues rfl i) * 1 * exp 1)) := by
-          apply Finset.prod_le_prod
+          apply Finset.prod_le_prod₀
           · intro i _
             exact integral_nonneg_of_ae (ae_of_all _ fun x => exp_nonneg _)
           · intro i _
@@ -2238,10 +2238,6 @@ lemma integrable_exp_mul_prod_of_indepFun_hasSubgaussianMGF_of_le
     independentPair_pushforward h_indep hX.aemeasurable hY.aemeasurable
   have hg := exp_mul_snd_fst_aestronglyMeasurable θ
     (μ.map fun ω => (Y ω, X ω))
-  have : IsProbabilityMeasure (μ.map X) :=
-    MeasureTheory.Measure.isProbabilityMeasure_map hX.aemeasurable
-  have : IsProbabilityMeasure (μ.map Y) :=
-    MeasureTheory.Measure.isProbabilityMeasure_map hY.aemeasurable
   have hprod_int :
       Integrable (fun p : ℝ × ℝ => exp (θ * p.2 * p.1)) ((μ.map Y).prod (μ.map X)) :=
     integrable_exp_mul_snd_fst_prod_of_hasSubgaussianMGF_of_le
@@ -2266,10 +2262,6 @@ lemma integral_exp_mul_prod_le_of_indepFun_hasSubgaussianMGF_of_le
     independentPair_pushforward h_indep hX.aemeasurable hY.aemeasurable
   have hg := exp_mul_snd_fst_aestronglyMeasurable θ
     (μ.map fun ω => (Y ω, X ω))
-  have : IsProbabilityMeasure (μ.map X) :=
-    MeasureTheory.Measure.isProbabilityMeasure_map hX.aemeasurable
-  have : IsProbabilityMeasure (μ.map Y) :=
-    MeasureTheory.Measure.isProbabilityMeasure_map hY.aemeasurable
   have hprod_bound :
       ∫ p : ℝ × ℝ, exp (θ * p.2 * p.1) ∂((μ.map Y).prod (μ.map X)) ≤
         exp (exp 1 ^ 2 * C0 ^ 2 * θ ^ 2) :=

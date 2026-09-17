@@ -3779,7 +3779,8 @@ theorem log_kissing_a :
       Real.log (16 : ℝ) + Real.log kissingA :=
     Real.log_mul (by norm_num) (by norm_num [kissingA])
   have hpow : Real.log (16 : ℝ) = 4 * Real.log 2 := by
-    convert Real.log_pow (2 : ℝ) 4 using 1 <;> norm_num
+    convert Real.log_pow (2 : ℝ) 4 using 1
+    norm_num
   rw [hpow] at hmul
   linarith
 
@@ -3790,7 +3791,8 @@ theorem log_kissing_b :
       Real.log (256 : ℝ) + Real.log kissingB :=
     Real.log_mul (by norm_num) (by norm_num [kissingB])
   have hpow : Real.log (256 : ℝ) = 8 * Real.log 2 := by
-    convert Real.log_pow (2 : ℝ) 8 using 1 <;> norm_num
+    convert Real.log_pow (2 : ℝ) 8 using 1
+    norm_num
   have hinv : Real.log (1 / (256 * kissingB)) =
       -Real.log (256 * kissingB) := by
     rw [one_div, Real.log_inv]
@@ -4771,7 +4773,7 @@ instance betaMap_half_half_isProbabilityMeasure :
       (fun t : ℝ => t / 4)) := by
   let : IsProbabilityMeasure (betaMeasure (1 / 2 : ℝ) (1 / 2 : ℝ)) :=
     isProbabilityMeasureBeta (by norm_num) (by norm_num)
-  exact Measure.isProbabilityMeasure_map (by fun_prop)
+  infer_instance
 
 theorem arcsine_stieltjes_integrable {x : ℝ} (hx : 0 ≤ x) :
     Integrable (fun t : ℝ => x / (x + t))
@@ -4966,7 +4968,6 @@ theorem kissing_spectral_certificate :
     lagrangeDenominator,
     Fin.prod_univ_two]
     at h₀ h₁ h₂ ⊢
-  norm_num [Fin.ext_iff] at h₀ h₁ h₂ ⊢
   linarith
 
 theorem rational_log_lower {r lo : ℝ} (hr : 1 ≤ r) (m : ℕ)

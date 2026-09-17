@@ -458,6 +458,8 @@ theorem genericFractionField_finiteDimensional {d : ℕ}
     (ha0 : ∀ i, a i 0 = 0)
     (hmem : WPTBridge.preparedPolynomialGerm a ha ∈ P) :
     FiniteDimensional (ContractedFractionField P) (AmbientFractionField P) := by
+  -- Pinning the module structure keeps the instance search inside its heartbeat budget.
+  let : Module (ContractedGermQuotient P) (AmbientGermQuotient P) := Algebra.toModule
   let : Module.Finite (ContractedGermQuotient P) (AmbientGermQuotient P) :=
     ambientQuotient_moduleFinite a ha ha0 P hmem
   infer_instance

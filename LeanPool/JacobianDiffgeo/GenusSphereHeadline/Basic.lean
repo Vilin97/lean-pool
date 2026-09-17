@@ -20,7 +20,7 @@ note). Assembles the two already-built halves:
   connected, hence has vanishing holomorphic 1-forms).
 * **Forward** (`genus X = 0 ⇒ X ≃ₜ S²`): riemann-roch's `riemann_inequality` at `D := single P 1`
   under `genus X = 0` forces `l(single P 1) ≥ 2 > 1 = l(0)`, so `L(0) = span{1}` is a PROPER
-  subspace of `L(single P 1)` (`SetLike.exists_of_lt`, the `CanonicalForms/Existence.lean`
+  subspace of `L(single P 1)` (`IsConcreteLE.exists_of_lt`, the `CanonicalForms/Existence.lean`
   pattern) — any witness `φ` outside `L(0)` has `φ.ord ≥ -1` at `P`, `φ.ord ≥ 0` elsewhere
   (`mem_linSys_iff`), and `φ.ord P < 0` (else `φ` would be holomorphic everywhere, hence in
   `L(0) = span{1}` by `linSys_zero_eq_span_one`, contradiction); combined with `φ.ord P ≥ -1` this
@@ -68,7 +68,7 @@ theorem exists_simple_pole_of_genus_eq_zero (hg : genus X = 0) :
       rw [heq]
     rw [hl0] at hleq
     omega
-  obtain ⟨φ, hφD, hφ0⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+  obtain ⟨φ, hφD, hφ0⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
   rw [RS.linSys_zero_eq_span_one] at hφ0
   have hreg0 : ∀ x, x ≠ P → 0 ≤ φ.ord x := by
     intro x hx

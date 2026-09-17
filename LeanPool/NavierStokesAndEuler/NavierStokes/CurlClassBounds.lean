@@ -18,7 +18,7 @@ import Mathlib.Topology.Algebra.Module.PerfectSpace
 public import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualStability
 import LeanPool.NavierStokesAndEuler.NavierStokes.ResidualRegularity
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 public import Mathlib.Data.Fin.VecNotation
 import Mathlib.Algebra.GroupWithZero.Action.Pi
 import Mathlib.Data.Fintype.Basic

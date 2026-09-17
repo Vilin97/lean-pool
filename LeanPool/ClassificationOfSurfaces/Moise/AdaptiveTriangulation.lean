@@ -88,14 +88,14 @@ noncomputable def adaptiveFanFaceVertexEquiv (hU : IsOpen U)
 /-- Relabel a simplex on global used vertices as a simplex on the face's geometric vertices. -/
 noncomputable def adaptiveFanRelabelSimplex (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}) :
-    stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
-  stdSimplex.map (K.adaptiveFanFaceVertexEquiv U hU f) x
+    (x : standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}) :
+    standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
+  standardSimplex.map (K.adaptiveFanFaceVertexEquiv U hU f) x
 
 /-- Relabeling preserves the zero-extended coordinate at every global used vertex. -/
 theorem adaptiveFanRelabel_extended_apply (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f})
     (v : K.AdaptiveFanVertex U hU) :
     extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f)
         (K.adaptiveFanRelabelSimplex U hU f x) v.1 =
@@ -106,7 +106,7 @@ theorem adaptiveFanRelabel_extended_apply (hU : IsOpen U)
       (K.mem_adaptiveGlobalFanFaceVertices_iff U hU f v).mp hv
     rw [extendFaceCoordinates_of_mem _ _ hp,
       extendFaceCoordinates_of_mem _ _ hv]
-    simp only [adaptiveFanRelabelSimplex, stdSimplex.map_coe,
+    simp only [adaptiveFanRelabelSimplex, standardSimplex.map_coe,
       FunOnFinite.linearMap_apply_apply]
     let q : {q // q ∈ K.adaptiveGlobalFanFaceVertices U hU f} := ⟨v, hv⟩
     have hfilter : Finset.univ.filter
@@ -135,8 +135,8 @@ theorem adaptiveFanRelabel_extended_apply (hU : IsOpen U)
 /-- Equality of coordinates is invariant under relabeling a pair of adaptive fan faces. -/
 theorem adaptiveFanRelabel_extended_eq_iff (hU : IsOpen U)
     {f g : K.AdaptiveFanFace U hU}
-    {x : stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU g}} :
+    {x : standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU g}} :
     extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f)
         (K.adaptiveFanRelabelSimplex U hU f x) =
       extendFaceCoordinates (K.adaptiveFanFaceVertices U hU g)
@@ -169,14 +169,14 @@ theorem adaptiveFanRelabel_extended_eq_iff (hU : IsOpen U)
 /-- One adaptive fan face parametrized by its global used vertices. -/
 noncomputable def adaptiveGlobalFanFaceMap (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
-    stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f} → U :=
+    standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f} → U :=
   fun x ↦ K.adaptiveFanFaceMap U hU f (K.adaptiveFanRelabelSimplex U hU f x)
 
 theorem continuous_adaptiveGlobalFanFaceMap (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     Continuous (K.adaptiveGlobalFanFaceMap U hU f) :=
   (K.continuous_adaptiveFanFaceMap U hU f).comp
-    (stdSimplex.continuous_map (K.adaptiveFanFaceVertexEquiv U hU f))
+    (standardSimplex.continuous_map (K.adaptiveFanFaceVertexEquiv U hU f))
 
 /-- Relabeling a fan face by global vertices does not change its geometric range. -/
 theorem range_adaptiveGlobalFanFaceMap (hU : IsOpen U)
@@ -187,23 +187,23 @@ theorem range_adaptiveGlobalFanFaceMap (hU : IsOpen U)
   · rintro p ⟨x, rfl⟩
     exact Set.mem_range_self _
   · rintro p ⟨x, rfl⟩
-    let y := stdSimplex.map (K.adaptiveFanFaceVertexEquiv U hU f).symm x
+    let y := standardSimplex.map (K.adaptiveFanFaceVertexEquiv U hU f).symm x
     refine ⟨y, congrArg (K.adaptiveFanFaceMap U hU f) ?_⟩
-    change stdSimplex.map (K.adaptiveFanFaceVertexEquiv U hU f) y = x
+    change standardSimplex.map (K.adaptiveFanFaceVertexEquiv U hU f) y = x
     dsimp only [y]
-    rw [stdSimplex.map_comp_apply]
+    rw [standardSimplex.map_comp_apply]
     have he : (K.adaptiveFanFaceVertexEquiv U hU f : _ → _) ∘
         (K.adaptiveFanFaceVertexEquiv U hU f).symm = id := by
       funext z
       exact (K.adaptiveFanFaceVertexEquiv U hU f).apply_symm_apply z
-    rw [he, stdSimplex.map_id_apply]
+    rw [he, standardSimplex.map_id_apply]
 
 /- Combining relabeling with the geometric overlap theorem is expensive because all four local
 simplex index types are dependent.  Isolating it keeps construction of the complex inexpensive. -/
 theorem adaptiveFanRelabeledFaceMap_eq_iff (hU : IsOpen U)
     {f g : K.AdaptiveFanFace U hU}
-    {x : stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU g}} :
+    {x : standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU g}} :
     K.adaptiveGlobalFanFaceMap U hU f x =
         K.adaptiveGlobalFanFaceMap U hU g y ↔
       extendFaceCoordinates (K.adaptiveGlobalFanFaceVertices U hU f) x =

@@ -179,7 +179,7 @@ theorem adaptiveFanFirstVertex_ne_second (hU : IsOpen U)
 /-- The three distinguished fan weights sum to one. -/
 theorem adaptiveFanWeights_sum (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     x.1 (K.adaptiveFanCenterVertex U hU f) +
         x.1 (K.adaptiveFanFirstVertex U hU f) +
       x.1 (K.adaptiveFanSecondVertex U hU f) = 1 := by
@@ -201,24 +201,24 @@ theorem adaptiveFanWeights_sum (hU : IsOpen U)
 /-- The canonical interval parametrization of the resolved base of a fan triangle. -/
 noncomputable def adaptiveFanBaseSimplexPath (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) (r : Set.Icc (0 : ℝ) 1) :
-    stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} := by
+    standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} := by
   let a := K.adaptiveFanFirstVertex U hU f
   let b := K.adaptiveFanSecondVertex U hU f
-  let x := AffineMap.lineMap (stdSimplex.vertex a :
+  let x := AffineMap.lineMap (standardSimplex.vertex a :
       {p // p ∈ K.adaptiveFanFaceVertices U hU f} → ℝ)
-    (stdSimplex.vertex b :
+    (standardSimplex.vertex b :
       {p // p ∈ K.adaptiveFanFaceVertices U hU f} → ℝ) r.1
-  exact ⟨x, (convex_stdSimplex ℝ _).lineMap_mem
-    (stdSimplex.vertex a).2 (stdSimplex.vertex b).2 r.2⟩
+  exact ⟨x, (convex_standardSimplex ℝ _).lineMap_mem
+    (standardSimplex.vertex a).2 (standardSimplex.vertex b).2 r.2⟩
 
 theorem continuous_adaptiveFanBaseSimplexPath (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     Continuous (K.adaptiveFanBaseSimplexPath U hU f) := by
   apply Continuous.subtype_mk
   exact (AffineMap.lineMap (k := ℝ)
-    (stdSimplex.vertex (K.adaptiveFanFirstVertex U hU f) :
+    (standardSimplex.vertex (K.adaptiveFanFirstVertex U hU f) :
       {p // p ∈ K.adaptiveFanFaceVertices U hU f} → ℝ)
-    (stdSimplex.vertex (K.adaptiveFanSecondVertex U hU f) :
+    (standardSimplex.vertex (K.adaptiveFanSecondVertex U hU f) :
       {p // p ∈ K.adaptiveFanFaceVertices U hU f} → ℝ)).continuous_of_finiteDimensional.comp
         continuous_subtype_val
 
@@ -264,7 +264,7 @@ theorem continuous_adaptiveFanBaseSimplexPath (hU : IsOpen U)
 fan point away from the cone center. -/
 noncomputable def adaptiveFanNormalizedBaseParameter (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x.1 (K.adaptiveFanCenterVertex U hU f) < 1) :
     Set.Icc (0 : ℝ) 1 := by
   let d := 1 - x.1 (K.adaptiveFanCenterVertex U hU f)
@@ -283,15 +283,15 @@ noncomputable def adaptiveFanNormalizedBaseParameter (hU : IsOpen U)
 /-- The radial projection of a noncenter fan point to its resolved base interval. -/
 noncomputable def adaptiveFanNormalizedBasePoint (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x.1 (K.adaptiveFanCenterVertex U hU f) < 1) :
-    stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
+    standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
   K.adaptiveFanBaseSimplexPath U hU f
     (K.adaptiveFanNormalizedBaseParameter U hU f x hxCenter)
 
 @[simp] theorem adaptiveFanNormalizedBasePoint_apply_center (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x.1 (K.adaptiveFanCenterVertex U hU f) < 1) :
     K.adaptiveFanNormalizedBasePoint U hU f x hxCenter
         (K.adaptiveFanCenterVertex U hU f) = 0 := by
@@ -299,7 +299,7 @@ noncomputable def adaptiveFanNormalizedBasePoint (hU : IsOpen U)
 
 @[simp] theorem adaptiveFanNormalizedBasePoint_apply_second (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x.1 (K.adaptiveFanCenterVertex U hU f) < 1) :
     K.adaptiveFanNormalizedBasePoint U hU f x hxCenter
         (K.adaptiveFanSecondVertex U hU f) =
@@ -311,7 +311,7 @@ noncomputable def adaptiveFanNormalizedBasePoint (hU : IsOpen U)
 
 @[simp] theorem adaptiveFanNormalizedBasePoint_apply_first (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x.1 (K.adaptiveFanCenterVertex U hU f) < 1) :
     K.adaptiveFanNormalizedBasePoint U hU f x hxCenter
         (K.adaptiveFanFirstVertex U hU f) =
@@ -341,7 +341,7 @@ theorem adaptiveFanBaseSimplexPath_injective (hU : IsOpen U)
   intro r s hrs
   apply Subtype.ext
   have hcoord := congrArg
-    (fun x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} ↦
+    (fun x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} ↦
       x (K.adaptiveFanSecondVertex U hU f)) hrs
   simpa using hcoord
 
@@ -349,7 +349,7 @@ theorem adaptiveFanBaseSimplexPath_injective (hU : IsOpen U)
 refined realization before transporting back to the original complex. -/
 noncomputable def adaptiveFanSourcePoint (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     (K.safeSubdivision f.1.1).refined.realization := by
   classical
   let z : (K.safeSubdivision f.1.1).refined.Vertex → ℝ := fun v ↦
@@ -381,7 +381,7 @@ noncomputable def adaptiveFanSourcePoint (hU : IsOpen U)
 
 theorem adaptiveFanSourcePoint_mem_carrier (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     K.adaptiveFanSourcePoint U hU f x ∈
       (K.safeSubdivision f.1.1).refined.faceCarrier f.1.2.1.1 :=
   by
@@ -395,17 +395,17 @@ theorem adaptiveFanSourcePoint_mem_carrier (hU : IsOpen U)
 /-- The canonical line segment between two barycentric points of one fan face. -/
 noncomputable def adaptiveFanSimplexLineMap (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (r : Set.Icc (0 : ℝ) 1) :
-    stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
+    standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
   ⟨AffineMap.lineMap x.1 y.1 r.1,
-    (convex_stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}).lineMap_mem
+    (convex_standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}).lineMap_mem
       x.2 y.2 r.2⟩
 
 -- The affine source calculation expands three dependent finite sums.
 theorem adaptiveFanSourcePoint_simplexLineMap (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (r : Set.Icc (0 : ℝ) 1) :
     (K.adaptiveFanSourcePoint U hU f
       (K.adaptiveFanSimplexLineMap U hU f x y r)).1 =
@@ -435,13 +435,13 @@ theorem adaptiveFanSourcePoint_simplexLineMap (hU : IsOpen U)
 theorem adaptiveFanSourcePoint_vertex (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
     (p : {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
-    K.adaptiveFanSourcePoint U hU f (stdSimplex.vertex p) =
+    K.adaptiveFanSourcePoint U hU f (standardSimplex.vertex p) =
       K.adaptiveFanVertexSource U hU f p := by
   classical
   apply Subtype.ext
   funext v
-  change (∑ q, (stdSimplex.vertex p :
-        stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) q *
+  change (∑ q, (standardSimplex.vertex p :
+        standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) q *
       (K.adaptiveFanVertexSource U hU f q).1 v) =
         (K.adaptiveFanVertexSource U hU f p).1 v
   rw [Finset.sum_eq_single p]
@@ -513,7 +513,7 @@ theorem adaptiveFaceCenter_source_apply (t : K.AdaptiveFace U)
 weight. -/
 theorem adaptiveFanSourcePoint_opposite (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     (K.adaptiveFanSourcePoint U hU f x).1
       ((K.safeSubdivision f.1.1).refined.faceVertex f.1.2.1 (f.2.1 + 2)) =
       x.1 (K.adaptiveFanCenterVertex U hU f) / 3 := by
@@ -551,7 +551,7 @@ point in its ambient refined face.  At the coordinate opposite the fan base this
 equality. -/
 theorem adaptiveFanSourcePoint_faceVertex_lower_bound (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (i : ZMod 3) :
     x.1 (K.adaptiveFanCenterVertex U hU f) / 3 ≤
       (K.adaptiveFanSourcePoint U hU f x).1
@@ -586,7 +586,7 @@ theorem adaptiveFanSourcePoint_faceVertex_lower_bound (hU : IsOpen U)
 radial projection to the base. -/
 theorem adaptiveFanSourcePoint_eq_lineMap_normalizedBase (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x.1 (K.adaptiveFanCenterVertex U hU f) < 1) :
     (K.adaptiveFanSourcePoint U hU f x).1 =
       AffineMap.lineMap
@@ -697,7 +697,7 @@ theorem adaptiveEdgeIntervalSecond_parameter_le_first_of_lt
 /-- Zero cone-center weight places a fan source point on its resolved base edge. -/
 theorem adaptiveFanSourcePoint_mem_baseEdge_of_center_eq_zero
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0) :
     K.adaptiveFanSourcePoint U hU f x ∈
       (K.safeSubdivision f.1.1).refined.faceCarrier
@@ -713,7 +713,7 @@ theorem adaptiveFanSourcePoint_mem_baseEdge_of_center_eq_zero
 /-- When the cone-center weight vanishes, the two ordered base weights sum to one. -/
 theorem adaptiveFanBaseWeights_sum_of_center_eq_zero
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0) :
     x (K.adaptiveFanFirstVertex U hU f) +
       x (K.adaptiveFanSecondVertex U hU f) = 1 := by
@@ -830,7 +830,7 @@ theorem affineIndependent_adaptiveFanVertexSource_val (hU : IsOpen U)
 theorem affineCombination_injective_of_affineIndependent
     {ι E : Type*} [Fintype ι] [AddCommGroup E] [Module ℝ E]
     (source : ι → E) (hsource : AffineIndependent ℝ source) :
-    Function.Injective (fun x : stdSimplex ℝ ι ↦
+    Function.Injective (fun x : standardSimplex ℝ ι ↦
       Finset.univ.affineCombination ℝ source x) := by
   intro x y hxy
   have hweights := (hsource.affineCombination_eq_iff_eq x.2.2 y.2.2).mp hxy
@@ -839,7 +839,7 @@ theorem affineCombination_injective_of_affineIndependent
 theorem simplex_eq_of_weighted_sum_eq_of_affineIndependent
     {ι α : Type*} [Fintype ι]
     (source : ι → α → ℝ) (hsource : AffineIndependent ℝ source)
-    {x y : stdSimplex ℝ ι}
+    {x y : standardSimplex ℝ ι}
     (hxy : (fun v ↦ ∑ p, x p * source p v) =
       (fun v ↦ ∑ p, y p * source p v)) :
     x = y := by
@@ -854,14 +854,14 @@ theorem simplex_eq_of_weighted_sum_eq_of_affineIndependent
 /-- The coordinate function underlying an adaptive fan source point. -/
 theorem adaptiveFanSourcePoint_val (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     (K.adaptiveFanSourcePoint U hU f x).1 =
       (fun v ↦ ∑ p, x p * (K.adaptiveFanVertexSource U hU f p).1 v) := by
   rfl
 
 /-- The standard simplex parametrizing one adaptive fan face. -/
 abbrev adaptiveFanSimplex (hU : IsOpen U) (f : K.AdaptiveFanFace U hU) :=
-  stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}
+  standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}
 
 /-- The coordinate-valued source-point map used for injectivity. -/
 noncomputable def adaptiveFanSourcePointVal (hU : IsOpen U)
@@ -897,12 +897,12 @@ noncomputable def adaptiveFanFaceMap (hU : IsOpen U)
 theorem adaptiveFanFaceMap_vertex (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
     (p : {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
-    K.adaptiveFanFaceMap U hU f (stdSimplex.vertex p) = ⟨p.1,
+    K.adaptiveFanFaceMap U hU f (standardSimplex.vertex p) = ⟨p.1,
       K.adaptiveFaceCarrier_subset U f.1
         (K.adaptiveFanVertex_mem_carrier U hU f p.2)⟩ := by
   apply Subtype.ext
   change (K.safeSubdivision f.1.1).homeo
-      (K.adaptiveFanSourcePoint U hU f (stdSimplex.vertex p)) = p.1
+      (K.adaptiveFanSourcePoint U hU f (standardSimplex.vertex p)) = p.1
   rw [K.adaptiveFanSourcePoint_vertex U hU f p]
   exact (K.safeSubdivision f.1.1).homeo.apply_symm_apply p.1
 
@@ -920,8 +920,8 @@ theorem adaptiveFanCenterWeight_eq_of_faceMap_eq_of_tile_eq
     (hU : IsOpen U) (t : K.AdaptiveFace U)
     (i j : ZMod 3) (a : K.AdaptiveEdgeInterval U hU t i)
     (b : K.AdaptiveEdgeInterval U hU t j)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
     (hxy : K.adaptiveFanFaceMap U hU ⟨t, i, a⟩ x =
       K.adaptiveFanFaceMap U hU ⟨t, j, b⟩ y) :
     x.1 (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩) =
@@ -973,8 +973,8 @@ theorem adaptiveFanNormalizedBaseFaceMap_eq_of_same_tile
     (hU : IsOpen U) (t : K.AdaptiveFace U)
     (i j : ZMod 3) (a : K.AdaptiveEdgeInterval U hU t i)
     (b : K.AdaptiveEdgeInterval U hU t j)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
     (hxy : K.adaptiveFanFaceMap U hU ⟨t, i, a⟩ x =
       K.adaptiveFanFaceMap U hU ⟨t, j, b⟩ y)
     (hxCenter : x.1 (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩) < 1)
@@ -1147,14 +1147,14 @@ theorem adaptiveFanBasePath_val_eq_lineMap (hU : IsOpen U)
 theorem adaptiveFanBaseSimplexPath_zero (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     K.adaptiveFanBaseSimplexPath U hU f ⟨0, by simp⟩ =
-      stdSimplex.vertex (K.adaptiveFanFirstVertex U hU f) := by
+      standardSimplex.vertex (K.adaptiveFanFirstVertex U hU f) := by
   apply Subtype.ext
   simp [adaptiveFanBaseSimplexPath, AffineMap.lineMap_apply_module]
 
 theorem adaptiveFanBaseSimplexPath_one (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     K.adaptiveFanBaseSimplexPath U hU f ⟨1, by simp⟩ =
-      stdSimplex.vertex (K.adaptiveFanSecondVertex U hU f) := by
+      standardSimplex.vertex (K.adaptiveFanSecondVertex U hU f) := by
   apply Subtype.ext
   simp [adaptiveFanBaseSimplexPath, AffineMap.lineMap_apply_module]
 
@@ -1183,7 +1183,7 @@ theorem adaptiveFanBasePath_one (hU : IsOpen U)
 /-- A zero-center barycentric point is determined by its second base weight. -/
 theorem adaptiveFanBaseSimplexPath_eq_of_secondWeight (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (r : Set.Icc (0 : ℝ) 1)
     (hr : r.1 = x (K.adaptiveFanSecondVertex U hU f))
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0) :
@@ -1214,7 +1214,7 @@ theorem adaptiveFanBaseSimplexPath_eq_of_secondWeight (hU : IsOpen U)
 base-path parameter. -/
 theorem adaptiveFanBaseSimplexPath_secondWeight (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0) :
     K.adaptiveFanBaseSimplexPath U hU f
       ⟨x (K.adaptiveFanSecondVertex U hU f), ⟨x.2.1 _, by
@@ -1432,7 +1432,7 @@ theorem continuous_levelFaceEdgeParameter {n : ℕ}
 parameters with the two remaining simplex weights. -/
 theorem levelFaceEdgeParameter_adaptiveFanFaceMap_of_center_eq_zero
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0) :
     K.levelFaceEdgeParameter f.1.2.1 f.2.1
         (K.adaptiveFanFaceMap U hU f x).1 =
@@ -1468,7 +1468,7 @@ theorem levelFaceEdgeParameter_adaptiveFanFaceMap_of_center_eq_zero
 
 theorem levelFaceEdgeParameter_adaptiveFanFaceMap_mem_Icc_of_center_eq_zero
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0) :
     K.levelFaceEdgeParameter f.1.2.1 f.2.1
         (K.adaptiveFanFaceMap U hU f x).1 ∈ Set.Icc
@@ -1563,7 +1563,7 @@ theorem exists_adaptiveFanFaceMap_eq_of_mem_adaptiveFaceCarrier
     (hU : IsOpen U) (t : K.AdaptiveFace U) {p : K.realization}
     (hp : p ∈ K.adaptiveFaceCarrier U t) :
     ∃ i : ZMod 3, ∃ j : K.AdaptiveEdgeInterval U hU t i,
-      ∃ x : stdSimplex ℝ
+      ∃ x : standardSimplex ℝ
         {q // q ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, j⟩},
         K.adaptiveFanFaceMap U hU ⟨t, i, j⟩ x =
           ⟨p, K.adaptiveFaceCarrier_subset U t hp⟩ := by
@@ -1601,9 +1601,9 @@ theorem exists_adaptiveFanFaceMap_eq_of_mem_adaptiveFaceCarrier
   obtain ⟨r, hr, hrPlane⟩ := hpSegment
   let rIcc : Set.Icc (0 : ℝ) 1 := ⟨r, hr⟩
   let f : K.AdaptiveFanFace U hU := ⟨t, i, j⟩
-  let center : stdSimplex ℝ
+  let center : standardSimplex ℝ
       {q // q ∈ K.adaptiveFanFaceVertices U hU f} :=
-    stdSimplex.vertex (K.adaptiveFanCenterVertex U hU f)
+    standardSimplex.vertex (K.adaptiveFanCenterVertex U hU f)
   let base := K.adaptiveFanBaseSimplexPath U hU f s
   let x := K.adaptiveFanSimplexLineMap U hU f center base rIcc
   refine ⟨i, j, x, ?_⟩
@@ -1648,7 +1648,7 @@ theorem exists_adaptiveFanFaceMap_eq_of_mem_adaptiveFaceCarrier
 
 theorem levelFaceEdgeParameter_adaptiveFanFaceMap_mem_Ioo_of_center_eq_zero
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0)
     (hxFirst : 0 < x (K.adaptiveFanFirstVertex U hU f))
     (hxSecond : 0 < x (K.adaptiveFanSecondVertex U hU f)) :
@@ -1696,7 +1696,7 @@ theorem levelFaceEdgeParameter_adaptiveFanFaceMap_mem_Ioo_of_center_eq_zero
 boundary marks. -/
 theorem adaptiveFanFaceMap_not_mem_boundaryVertices_of_base_weights_pos
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0)
     (hxFirst : 0 < x (K.adaptiveFanFirstVertex U hU f))
     (hxSecond : 0 < x (K.adaptiveFanSecondVertex U hU f)) :
@@ -1719,8 +1719,8 @@ theorem adaptiveFanSide_eq_of_faceMap_eq_of_same_tile_of_base_weights_pos
     (hU : IsOpen U) (t : K.AdaptiveFace U)
     (i j : ZMod 3) (a : K.AdaptiveEdgeInterval U hU t i)
     (b : K.AdaptiveEdgeInterval U hU t j)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
     (hxy : K.adaptiveFanFaceMap U hU ⟨t, i, a⟩ x =
       K.adaptiveFanFaceMap U hU ⟨t, j, b⟩ y)
     (hxCenter : x (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩) = 0)
@@ -1774,8 +1774,8 @@ unless the interval indices are equal. -/
 theorem adaptiveFanInterval_eq_of_faceMap_eq_of_same_edge_of_base_weights_pos
     (hU : IsOpen U) (t : K.AdaptiveFace U) (i : ZMod 3)
     (a b : K.AdaptiveEdgeInterval U hU t i)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, b⟩}}
     (hxy : K.adaptiveFanFaceMap U hU ⟨t, i, a⟩ x =
       K.adaptiveFanFaceMap U hU ⟨t, i, b⟩ y)
     (hxCenter : x (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩) = 0)
@@ -1840,7 +1840,7 @@ theorem adaptiveFanBasePath_not_mem_boundaryVertices_of_mem_Ioo
 adaptive tile. -/
 theorem adaptiveFanFaceMap_mem_relInterior_of_center_pos (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : 0 < x (K.adaptiveFanCenterVertex U hU f)) :
     (K.adaptiveFanFaceMap U hU f x).1 ∈
       K.adaptiveFaceRelInterior U f.1 := by
@@ -1877,8 +1877,8 @@ the first triangle. -/
 theorem adaptiveFanCenterWeight_eq_zero_of_faceMap_eq_of_tile_ne
     (hU : IsOpen U) {f g : K.AdaptiveFanFace U hU}
     (hfg : f.1 ≠ g.1)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : K.adaptiveFanFaceMap U hU f x =
       K.adaptiveFanFaceMap U hU g y) :
     x (K.adaptiveFanCenterVertex U hU f) = 0 := by
@@ -1899,8 +1899,8 @@ earlier tile. -/
 theorem adaptiveFanLaterBaseEdge_subset_earlierTile_of_faceMap_eq
     (hU : IsOpen U) {f g : K.AdaptiveFanFace U hU}
     (hfg : f.1 ≠ g.1) (hlevel : f.1.1 ≤ g.1.1)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : K.adaptiveFanFaceMap U hU f x =
       K.adaptiveFanFaceMap U hU g y)
     (hyFirst : 0 < y (K.adaptiveFanFirstVertex U hU g))
@@ -1929,8 +1929,8 @@ adaptive hierarchy, then the entire second resolved interval lies in the first b
 theorem adaptiveFanLaterBasePath_subset_earlierBaseEdge_of_faceMap_eq
     (hU : IsOpen U) {f g : K.AdaptiveFanFace U hU}
     (hfg : f.1 ≠ g.1) (hlevel : f.1.1 ≤ g.1.1)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : K.adaptiveFanFaceMap U hU f x =
       K.adaptiveFanFaceMap U hU g y)
     (_ : 0 < x (K.adaptiveFanFirstVertex U hU f))
@@ -2165,8 +2165,8 @@ possibly with opposite order. -/
 theorem adaptiveFanBaseEndpoints_eq_or_swap_of_faceMap_eq
     (hU : IsOpen U) {f g : K.AdaptiveFanFace U hU}
     (hfg : f.1 ≠ g.1) (hlevel : f.1.1 ≤ g.1.1)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : K.adaptiveFanFaceMap U hU f x =
       K.adaptiveFanFaceMap U hU g y)
     (hxFirst : 0 < x (K.adaptiveFanFirstVertex U hU f))
@@ -2374,7 +2374,7 @@ theorem adaptiveFanBaseEndpoints_eq_or_swap_of_faceMap_eq
 /-- Extended coordinates of a fan triangle are the sum of its three vertex-weight spikes. -/
 theorem extendFaceCoordinates_adaptiveFanFace (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f) x =
       Pi.single (K.adaptiveFanCenterVertex U hU f).1
           (x (K.adaptiveFanCenterVertex U hU f)) +
@@ -2429,7 +2429,7 @@ theorem extendFaceCoordinates_adaptiveFanFace (hU : IsOpen U)
 the cone-center weight. -/
 theorem extendFaceCoordinates_eq_center_add_smul_normalizedBase (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) < 1) :
     extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f) x =
       Pi.single (K.adaptiveFanCenterVertex U hU f).1
@@ -2491,8 +2491,8 @@ parametrizations assign the same global barycentric coordinates. -/
 theorem adaptiveFanExtendedCoordinates_eq_of_faceMap_eq_of_tile_ne_of_base_weights_pos
     (hU : IsOpen U) {f g : K.AdaptiveFanFace U hU}
     (hfg : f.1 ≠ g.1) (hlevel : f.1.1 ≤ g.1.1)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : K.adaptiveFanFaceMap U hU f x =
       K.adaptiveFanFaceMap U hU g y)
     (hxFirst : 0 < x (K.adaptiveFanFirstVertex U hU f))
@@ -2576,7 +2576,7 @@ theorem adaptiveFanExtendedCoordinates_eq_of_faceMap_eq_of_tile_ne_of_base_weigh
 declared base vertices, both geometrically and in extended barycentric coordinates. -/
 theorem adaptiveFanEndpointData_of_center_eq_zero_of_not_base_weights_pos
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0)
     (hxNot : ¬(0 < x (K.adaptiveFanFirstVertex U hU f) ∧
       0 < x (K.adaptiveFanSecondVertex U hU f))) :
@@ -2599,7 +2599,7 @@ theorem adaptiveFanEndpointData_of_center_eq_zero_of_not_base_weights_pos
       K.adaptiveFanBaseSimplexPath_eq_of_secondWeight U hU f x rone
         hxSecond.symm hxCenter
     have hxVertex : x =
-        stdSimplex.vertex (K.adaptiveFanSecondVertex U hU f) := by
+        standardSimplex.vertex (K.adaptiveFanSecondVertex U hU f) := by
       simpa only [rone, K.adaptiveFanBaseSimplexPath_one U hU f] using hxPath.symm
     constructor
     · rw [hxVertex, K.adaptiveFanFaceMap_vertex U hU f]
@@ -2631,7 +2631,7 @@ theorem adaptiveFanEndpointData_of_center_eq_zero_of_not_base_weights_pos
       K.adaptiveFanBaseSimplexPath_eq_of_secondWeight U hU f x rzero
         hxSecond.symm hxCenter
     have hxVertex : x =
-        stdSimplex.vertex (K.adaptiveFanFirstVertex U hU f) := by
+        standardSimplex.vertex (K.adaptiveFanFirstVertex U hU f) := by
       simpa only [rzero, K.adaptiveFanBaseSimplexPath_zero U hU f] using hxPath.symm
     constructor
     · rw [hxVertex, K.adaptiveFanFaceMap_vertex U hU f]
@@ -2651,7 +2651,7 @@ theorem adaptiveFanEndpointData_of_center_eq_zero_of_not_base_weights_pos
 
 theorem adaptiveFanFaceMap_mem_boundaryVertices_of_center_zero_of_not_base_weights_pos
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0)
     (hxPos : ¬(0 < x (K.adaptiveFanFirstVertex U hU f) ∧
       0 < x (K.adaptiveFanSecondVertex U hU f))) :
@@ -2676,7 +2676,7 @@ def adaptiveFanFace (hU : IsOpen U) (t : K.AdaptiveFace U)
 /-- The simplex parametrizing a resolved fan face. -/
 abbrev adaptiveFanFaceSimplex (hU : IsOpen U) (t : K.AdaptiveFace U)
     (i : ZMod 3) (a : K.AdaptiveEdgeInterval U hU t i) :=
-  stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU
+  standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU
     (K.adaptiveFanFace U hU t i a)}
 
 -- Comparing boundary membership reduces to two fan faces with the same underlying tile.
@@ -2711,8 +2711,8 @@ theorem adaptiveFanExtendedCoordinates_eq_of_faceMap_eq_of_same_tile_of_center_e
     (hU : IsOpen U) (t : K.AdaptiveFace U)
     (i j : ZMod 3) (a : K.AdaptiveEdgeInterval U hU t i)
     (b : K.AdaptiveEdgeInterval U hU t j)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
     (hxy : K.adaptiveFanFaceMap U hU ⟨t, i, a⟩ x =
       K.adaptiveFanFaceMap U hU ⟨t, j, b⟩ y)
     (hxCenter : x (K.adaptiveFanCenterVertex U hU ⟨t, i, a⟩) = 0)
@@ -2789,8 +2789,8 @@ theorem adaptiveFanExtendedCoordinates_eq_of_faceMap_eq_of_same_tile
     (hU : IsOpen U) (t : K.AdaptiveFace U)
     (i j : ZMod 3) (a : K.AdaptiveEdgeInterval U hU t i)
     (b : K.AdaptiveEdgeInterval U hU t j)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
     (hxy : K.adaptiveFanFaceMap U hU ⟨t, i, a⟩ x =
       K.adaptiveFanFaceMap U hU ⟨t, j, b⟩ y) :
     extendFaceCoordinates (K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩) x =
@@ -2885,8 +2885,8 @@ compatibility theorem; endpoint points are the common boundary marks collected b
 theorem adaptiveFanExtendedCoordinates_eq_of_faceMap_eq_of_tile_ne
     (hU : IsOpen U) {f g : K.AdaptiveFanFace U hU}
     (hfg : f.1 ≠ g.1)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : K.adaptiveFanFaceMap U hU f x =
       K.adaptiveFanFaceMap U hU g y) :
     extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f) x =
@@ -3012,8 +3012,8 @@ theorem adaptiveFanExtendedCoordinates_eq_of_faceMap_eq_of_tile_ne
 /-- All adaptive fan faces use one global barycentric coordinate system on their overlaps. -/
 theorem adaptiveFanExtendedCoordinates_eq_of_faceMap_eq (hU : IsOpen U)
     {f g : K.AdaptiveFanFace U hU}
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : K.adaptiveFanFaceMap U hU f x = K.adaptiveFanFaceMap U hU g y) :
     extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f) x =
       extendFaceCoordinates (K.adaptiveFanFaceVertices U hU g) y := by
@@ -3032,8 +3032,8 @@ theorem adaptiveFanFaceMap_eq_of_extendedCoordinates_eq_of_same_tile
     (hU : IsOpen U) (t : K.AdaptiveFace U)
     (i j : ZMod 3) (a : K.AdaptiveEdgeInterval U hU t i)
     (b : K.AdaptiveEdgeInterval U hU t j)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩}}
     (hxy : extendFaceCoordinates (K.adaptiveFanFaceVertices U hU ⟨t, i, a⟩) x =
       extendFaceCoordinates (K.adaptiveFanFaceVertices U hU ⟨t, j, b⟩) y) :
     K.adaptiveFanFaceMap U hU ⟨t, i, a⟩ x =
@@ -3067,7 +3067,7 @@ theorem adaptiveFaceCenter_not_mem_adaptiveFanFaceVertices_of_ne
 vertices. -/
 theorem adaptiveFanFaceMap_val_eq_weightedVertices_of_center_eq_zero
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU)
-    (x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
+    (x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f})
     (hxCenter : x (K.adaptiveFanCenterVertex U hU f) = 0) :
     (K.adaptiveFanFaceMap U hU f x).1.1 =
       fun v ↦ ∑ p, x p * p.1.1 v := by
@@ -3123,8 +3123,8 @@ theorem adaptiveFanFaceMap_val_eq_weightedVertices_of_center_eq_zero
 common resolved boundary. -/
 theorem adaptiveFanFaceMap_eq_of_extendedCoordinates_eq_of_tile_ne
     (hU : IsOpen U) {f g : K.AdaptiveFanFace U hU} (hfg : f.1 ≠ g.1)
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f) x =
       extendFaceCoordinates (K.adaptiveFanFaceVertices U hU g) y) :
     K.adaptiveFanFaceMap U hU f x = K.adaptiveFanFaceMap U hU g y := by
@@ -3162,8 +3162,8 @@ theorem adaptiveFanFaceMap_eq_of_extendedCoordinates_eq_of_tile_ne
 /-- Equal global barycentric coordinates are sufficient for equality of adaptive fan images. -/
 theorem adaptiveFanFaceMap_eq_of_extendedCoordinates_eq (hU : IsOpen U)
     {f g : K.AdaptiveFanFace U hU}
-    {x : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
-    {y : stdSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
+    {x : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU f}}
+    {y : standardSimplex ℝ {p // p ∈ K.adaptiveFanFaceVertices U hU g}}
     (hxy : extendFaceCoordinates (K.adaptiveFanFaceVertices U hU f) x =
       extendFaceCoordinates (K.adaptiveFanFaceVertices U hU g) y) :
     K.adaptiveFanFaceMap U hU f x = K.adaptiveFanFaceMap U hU g y := by

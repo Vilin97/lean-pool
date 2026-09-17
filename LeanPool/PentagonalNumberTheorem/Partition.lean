@@ -66,7 +66,6 @@ theorem hasProd_powerSeriesMk_card_partition [IsTopologicalSemiring R] :
     (PowerSeries.mk fun n ↦ (Fintype.card n.Partition : R)) := by
   convert hasProd_powerSeriesMk_card_restricted R (fun _ ↦ True)
   · rfl
-  · simp
   · simp [restricted]
 
 theorem powerSeriesMk_card_partition_mul_tprod_one_sub_pow [IsTopologicalRing R] :

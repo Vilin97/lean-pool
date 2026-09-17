@@ -339,7 +339,7 @@ lemma of_mul_incl (σ : Gal(K, F)) (c : K) : of f σ * incl f c = incl f (σ c) 
   simp only [incl_apply, val_mul, val_of_val, val_smul, val_one, Finsupp.smul_single, smul_eq_mul,
     mulLinearMap_single_single, mul_one, map_mul, map_inv₀, one_mul,
     map_one_snd_of_isMulCocycle₂ Fact.out σ, AlgEquiv.smul_units_def, Units.coe_map,
-    MonoidHom.coe_coe, ne_eq, EmbeddingLike.map_eq_zero_iff, Units.ne_zero, not_false_eq_true,
+    MonoidHom.coe_ofClass, ne_eq, EmbeddingLike.map_eq_zero_iff, Units.ne_zero, not_false_eq_true,
     inv_mul_cancel_right₀, smul_one_mul]
 
 lemma sum_of (x : CrossProductAlgebra f) : x.val.sum (fun σ c ↦ c • (of f σ).val) = x := by

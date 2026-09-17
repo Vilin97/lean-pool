@@ -967,8 +967,11 @@ instance spectralOperatorAdjoin_isMulCommutative
     IsMulCommutative
       (StarAlgebra.adjoin ℂ (spectralOperatorGenerators E π)) := by
   apply StarAlgebra.isMulCommutative_adjoin
-  · exact fun _ hS _ hT ↦ spectralOperatorGenerators_commute E π hS hT
-  · intro S hS T hT
+  · intro S hS
+    exact ⟨spectralOperatorGenerators_commute E π
+      (star_mem_spectralOperatorGenerators E π hS) hS⟩
+  · exact fun _ hS _ hT _ ↦ spectralOperatorGenerators_commute E π hS hT
+  · intro S hS T hT _
     exact spectralOperatorGenerators_commute E π hS
       (star_mem_spectralOperatorGenerators E π hT)
 
@@ -976,14 +979,12 @@ instance spectralOperatorAlgebraCommCStarAlgebra
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) :
     CommCStarAlgebra (spectralOperatorAlgebra E π) := by
-  let commRingInstance : CommRing (spectralOperatorAlgebra E π) :=
-    StarSubalgebra.commRingTopologicalClosure _
-      (isMulCommutative_iff.mp
-        (spectralOperatorAdjoin_isMulCommutative E π))
+  have commInstance : IsMulCommutative (spectralOperatorAlgebra E π) :=
+    StarSubalgebra.isMulCommutative_topologicalClosure _
   let closedInstance : IsClosed (spectralOperatorAlgebra E π : Set (V →L[ℂ] V)) :=
     (StarAlgebra.adjoin ℂ
       (spectralOperatorGenerators E π)).isClosed_topologicalClosure
-  exact { mul_comm := mul_comm }
+  exact { mul_comm := mul_comm' }
 
 /--
 The `spectralKernelOperator` construction used in the Connes rigidity formalization.

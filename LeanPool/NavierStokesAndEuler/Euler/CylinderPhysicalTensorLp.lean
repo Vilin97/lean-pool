@@ -67,6 +67,7 @@ theorem physicalTensorLp_norm_le :
       (β : ℝ≥0∞)*eLpNorm (fun x => ∑ w : Fin n → Fin 4,
         ‖iteratedFieldDerivative P w f (cylinderGraph P k m x)‖) 2 volume := by
     apply eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul
+      (physicalTensor_memLp P k m f hf n u hu).aestronglyMeasurable
     filter_upwards [] with x
     apply NNReal.coe_le_coe.mp
     change ‖iteratedFDeriv ℝ n (physicalField P k m f) x‖ ≤
@@ -80,9 +81,12 @@ theorem physicalTensorLp_norm_le :
     funext x
     simp only [Finset.sum_apply]
   rw [he] at hA
-  have hB := eLpNorm_sum_le (fun w (_ : w ∈ (Finset.univ : Finset (Fin n → Fin 4))) =>
-    (graphWord_memLp P k m f n u hu w).1.norm) (by norm_num : (1 : ℝ≥0∞) ≤ 2)
-  simp only [eLpNorm_norm] at hB
+  have hB := eLpNorm_sum_le (p := 2) (μ := (volume : Measure Vector3))
+    (s := (Finset.univ : Finset (Fin n → Fin 4)))
+    (f := fun w x => ‖iteratedFieldDerivative P w f (cylinderGraph P k m x)‖)
+    (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+  simp only [fun w => eLpNorm_norm (p := 2) _
+    (graphWord_memLp P k m f n u hu w).aestronglyMeasurable] at hB
   have hfinit : (β : ℝ≥0∞) * ∑ w : Fin n → Fin 4,
       eLpNorm (fun x => iteratedFieldDerivative P w f (cylinderGraph P k m x)) 2 volume ≠ ⊤ := by
     apply ENNReal.mul_ne_top ENNReal.coe_ne_top

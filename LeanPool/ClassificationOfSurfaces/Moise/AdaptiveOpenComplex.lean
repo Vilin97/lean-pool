@@ -1262,7 +1262,7 @@ theorem levelFaceEdgeParameter_mem_Icc {n : ℕ} (t : K.LevelFace n)
     K.levelFaceEdgeParameter t i p ∈ Set.Icc (0 : ℝ) 1 := by
   obtain ⟨x, hx, rfl⟩ := hp
   rw [levelFaceEdgeParameter, (K.safeSubdivision n).homeo.symm_apply_apply]
-  exact mem_Icc_of_mem_stdSimplex x.2.1 _
+  exact mem_Icc_of_mem_standardSimplex x.2.1 _
 
 theorem boundaryEdgeVertexList_first_parameter (hU : IsOpen U)
     (t : K.AdaptiveFace U) (i : ZMod 3) :
@@ -1345,7 +1345,7 @@ theorem boundaryEdgeVertexList_last_parameter (hU : IsOpen U)
 
 /-- The equal-weight point of the standard simplex on an intrinsic face. -/
 noncomputable def faceCenterSimplex (t : K.Face) :
-    stdSimplex ℝ {v // v ∈ t.1} := by
+    standardSimplex ℝ {v // v ∈ t.1} := by
   let x : {v // v ∈ t.1} → ℝ := fun _ ↦ 1 / 3
   refine ⟨x, ?_, ?_⟩
   · intro v

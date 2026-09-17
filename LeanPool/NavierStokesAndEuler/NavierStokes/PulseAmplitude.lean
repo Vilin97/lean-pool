@@ -564,7 +564,7 @@ theorem rowMoment_bounds {a : ℝ} (ha : -1 ≤ a) (ha' : a ≤ 0) :
     have hlb : |Real.log x| ≤ 1 := abs_le.mpr ⟨by linarith, by linarith⟩
     have hh : |Real.log x * a| ≤ 1 := by
       rw [abs_mul]
-      exact mul_le_one₀ hlb (abs_nonneg a) hab
+      exact (mul_le_mul hlb hab (abs_nonneg a) zero_le_one).trans_eq (one_mul 1)
     rw [Real.rpow_def_of_pos hxpos]
     exact ⟨Real.exp_le_exp.mpr (abs_le.mp hh).1,
       Real.exp_le_exp.mpr (abs_le.mp hh).2⟩

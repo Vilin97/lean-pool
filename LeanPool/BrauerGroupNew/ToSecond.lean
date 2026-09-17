@@ -244,7 +244,7 @@ lemma conjFactorCompCoeff_inv (x : A.conjFactor σ) (y : A.conjFactor τ) (z : A
     A.ι ((conjFactorCompCoeff x y z)⁻¹) = z.1 * (y.1⁻¹ * x.1⁻¹) := by
   suffices eq : Units.map A.ι (conjFactorCompCoeffAsUnit x y z)⁻¹ = z.1 * (y.1⁻¹ * x.1⁻¹) by
     rw [Units.ext_iff] at eq
-    simp only [conjFactorCompCoeffAsUnit, Units.inv_mk, Units.coe_map, MonoidHom.coe_coe,
+    simp only [conjFactorCompCoeffAsUnit, Units.inv_mk, Units.coe_map, MonoidHom.coe_ofClass,
       AlgEquiv.mul_apply, Units.val_mul] at eq
     rw [← eq]
     congr 1
@@ -857,7 +857,7 @@ noncomputable def fromSnd :
             congr 1
             specialize hc σ τ
             simp only [AlgEquiv.smul_units_def, Pi.div_apply, Units.ext_iff, Units.val_mul,
-              Units.val_div_eq_div_val, Units.coe_map, MonoidHom.coe_coe] at hc
+              Units.val_div_eq_div_val, Units.coe_map, MonoidHom.coe_ofClass] at hc
             simp only [_root_.mul_assoc]
             congr 1
             rw [mul_comm (c σ).1, _root_.mul_assoc]

@@ -100,7 +100,7 @@ theorem wellOrder_type_boundedness (φ : L.Sentenceω) (lt : L.Relations 2)
       ∀ (M : Type) (inst : L.Structure M) (hreal : Sentenceω.Realize φ M),
         @Ordinal.type M (fun x y => RelMap lt ![x, y]) (hwo M inst hreal) < α := by
   obtain ⟨α, hα, hnochain⟩ := wellFounded_boundedness φ lt
-    (fun M inst h => letI := hwo M inst h; IsWellFounded.wf)
+    (fun M inst h => (hwo M inst h).wf)
   refine ⟨α, hα, fun M inst hreal => ?_⟩
   let := hwo M inst hreal
   by_contra hle

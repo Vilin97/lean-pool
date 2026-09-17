@@ -2599,7 +2599,7 @@ theorem edgeInSupport_nonempty (e : K.Edge) :
   have he : e.1.Nonempty := Finset.card_pos.mp (by rw [e.2.1]; norm_num)
   let v : {v // v ∈ e.1} := ⟨he.choose, he.choose_spec⟩
   let p : K.edgeCarrier e :=
-    ⟨K.edgeMap e (stdSimplex.vertex v), Set.mem_range_self _⟩
+    ⟨K.edgeMap e (standardSimplex.vertex v), Set.mem_range_self _⟩
   exact ⟨edgeToSupport (K := K) e p, Set.mem_range_self p⟩
 
 /-! ## The assembled locally finite replacement graph -/
@@ -3304,7 +3304,7 @@ theorem edgeImagesControlled_of_diam_lt_controlRadius {phi : K.support → ℝ}
 
 /-- Include a maximal face into the whole source support. -/
 def faceToSupport (f : K.Face)
-    (p : stdSimplex ℝ {v // v ∈ K.faceVertices f}) : K.support :=
+    (p : standardSimplex ℝ {v // v ∈ K.faceVertices f}) : K.support :=
   ⟨K.faceMap f p, Set.mem_iUnion.mpr ⟨f, Set.mem_range_self p⟩⟩
 
 theorem continuous_faceToSupport (f : K.Face) :

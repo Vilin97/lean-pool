@@ -355,9 +355,10 @@ theorem normalResidual_smooth (hm : ∀ t x, m.field t x ≠ 0)
     exact pow_ne_zero 2 (norm_ne_zero_iff.mpr (hm t (x.1+h.1)))
   have h := ((hm'.inner ℝ hF).sub ((contDiff_const (c := (2 : ℝ))).mul
     (hm'.inner ℝ (hM.clm_apply hA)))).div (hm'.inner ℝ hm') hd
-  convert h using 1 <;> first
-    | rfl
-    | (funext z; simp only [localFieldLift,normalResidual,real_inner_self_eq_norm_sq,Pi.div_apply])
+  convert h using 1
+  first
+  | rfl
+  | (funext z; simp only [localFieldLift,normalResidual,real_inner_self_eq_norm_sq,Pi.div_apply])
 
 /-- Pointwise tangency follows from the actual frame representation and continuity. -/
 theorem field_tangent

@@ -23,7 +23,7 @@ import Mathlib.Data.Finset.Sort
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Nth
 import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.ZMod.QuotientRing
 import Mathlib.NumberTheory.ArithmeticFunction.Defs
 import Mathlib.NumberTheory.Bertrand

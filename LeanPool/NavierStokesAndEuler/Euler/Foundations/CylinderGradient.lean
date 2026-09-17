@@ -109,7 +109,7 @@ theorem fieldFDeriv_L2_le_coordinate_sum (f : LiftDomain period → F)
   have hA : eLpNorm (fieldFDeriv period f) 2 (liftMeasure period) ≤
       eLpNorm (fun x => ∑ i : Fin 4, ‖fieldDerivative period (standardDirection i) f x‖) 2
           (liftMeasure period) := by
-    apply eLpNorm_mono
+    apply eLpNorm_mono (fieldFDeriv_memLp_of_coordinates period f hf hD).aestronglyMeasurable
     intro x
     rw [Real.norm_of_nonneg (Finset.sum_nonneg (fun _ _ => norm_nonneg _))]
     exact fieldFDeriv_norm_le_standard_sum period f x
@@ -117,9 +117,11 @@ theorem fieldFDeriv_L2_le_coordinate_sum (f : LiftDomain period → F)
       ∑ i : Fin 4, (fun x => ‖fieldDerivative period (standardDirection i) f x‖) := by
           funext x; simp
   rw [he] at hA
-  have hB := eLpNorm_sum_le (fun i (_ : i ∈ (Finset.univ : Finset (Fin 4))) => (hD i).1.norm)
+  have hB := eLpNorm_sum_le (p := 2) (μ := liftMeasure period)
+    (s := (Finset.univ : Finset (Fin 4)))
+    (f := fun i : Fin 4 => fun x => ‖fieldDerivative period (standardDirection i) f x‖)
     (by norm_num : (1 : ℝ≥0∞) ≤ 2)
-  simp only [eLpNorm_norm] at hB
+  simp only [fun i : Fin 4 => eLpNorm_norm (p := 2) _ (hD i).aestronglyMeasurable] at hB
   have hC := ENNReal.toReal_mono (ENNReal.sum_ne_top.2 (fun i _ => (hD i).eLpNorm_ne_top))
       (hA.trans hB)
   rw [ENNReal.toReal_sum (fun i _ => (hD i).eLpNorm_ne_top)] at hC

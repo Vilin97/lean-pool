@@ -6,7 +6,7 @@ Authors: Catskills Research Company
 
 import LeanPool.DomainTheory.Neighborhood.Approximable
 import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Lattice
+import Mathlib.Data.Set.Lattice.Indexed
 import Mathlib.Order.Directed
 
 /-!

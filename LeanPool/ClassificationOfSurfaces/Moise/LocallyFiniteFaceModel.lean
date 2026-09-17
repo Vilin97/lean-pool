@@ -36,17 +36,17 @@ theorem standardFaceBoundary_mem_region (p : StandardFaceBoundary) :
   standardTrianglePlaneComplex.isCompact_support.isClosed.frontier_subset p.2
 
 /-- One closed maximal face in its native simplex coordinates. -/
-abbrev ClosedFace (f : K.Face) := stdSimplex ℝ {v // v ∈ K.faceVertices f}
+abbrev ClosedFace (f : K.Face) := standardSimplex ℝ {v // v ∈ K.faceVertices f}
 
 /-- Reindex native face coordinates by the chosen cyclic `Fin 3` ordering. -/
 noncomputable def faceReindexToStandard (f : K.Face) (x : K.ClosedFace f) :
-    stdSimplex ℝ (Fin 3) := by
+    standardSimplex ℝ (Fin 3) := by
   refine ⟨fun i ↦ x (K.faceVertexEquiv f i), ?_, ?_⟩
   · exact fun i ↦ x.2.1 _
   · exact (K.faceVertexEquiv f).sum_comp (fun v ↦ x v) |>.trans x.2.2
 
 /-- Undo the cyclic coordinate reindexing. -/
-noncomputable def faceReindexFromStandard (f : K.Face) (z : stdSimplex ℝ (Fin 3)) :
+noncomputable def faceReindexFromStandard (f : K.Face) (z : standardSimplex ℝ (Fin 3)) :
     K.ClosedFace f := by
   refine ⟨fun v ↦ z ((K.faceVertexEquiv f).symm v), ?_, ?_⟩
   · exact fun v ↦ z.2.1 _
@@ -61,7 +61,7 @@ noncomputable def faceReindexFromStandard (f : K.Face) (z : stdSimplex ℝ (Fin 
   rw [(K.faceVertexEquiv f).apply_symm_apply]
 
 @[simp] theorem faceReindexToStandard_fromStandard (f : K.Face)
-    (z : stdSimplex ℝ (Fin 3)) :
+    (z : standardSimplex ℝ (Fin 3)) :
     K.faceReindexToStandard f (K.faceReindexFromStandard f z) = z := by
   apply Subtype.ext
   funext i
@@ -80,9 +80,9 @@ theorem continuous_faceReindexFromStandard (f : K.Face) :
   exact continuous_pi fun v ↦
     (continuous_apply ((K.faceVertexEquiv f).symm v)).comp continuous_subtype_val
 
-/-- Native face coordinates are canonically homeomorphic to `stdSimplex ℝ (Fin 3)`. -/
+/-- Native face coordinates are canonically homeomorphic to `standardSimplex ℝ (Fin 3)`. -/
 noncomputable def faceReindexHomeomorph (f : K.Face) :
-    K.ClosedFace f ≃ₜ stdSimplex ℝ (Fin 3) where
+    K.ClosedFace f ≃ₜ standardSimplex ℝ (Fin 3) where
   toFun := K.faceReindexToStandard f
   invFun := K.faceReindexFromStandard f
   left_inv := K.faceReindexFromStandard_toStandard f
@@ -92,17 +92,17 @@ noncomputable def faceReindexHomeomorph (f : K.Face) :
 
 /-- Insert a standard simplex point into the one-face intrinsic realization used by the
 standard plane triangle complex. -/
-noncomputable def standardSimplexToRealization (z : stdSimplex ℝ (Fin 3)) :
+noncomputable def standardSimplexToRealization (z : standardSimplex ℝ (Fin 3)) :
     standardTrianglePlaneComplex.toIntrinsic.realization :=
   ⟨z.1, z.2, ⟨Finset.univ, standardTriangle_univ_mem_cells, by simp⟩⟩
 
 /-- Forget the vacuous one-face support witness in the standard intrinsic realization. -/
 noncomputable def standardRealizationToSimplex
     (z : standardTrianglePlaneComplex.toIntrinsic.realization) :
-    stdSimplex ℝ (Fin 3) :=
+    standardSimplex ℝ (Fin 3) :=
   ⟨z.1, z.2.1⟩
 
-@[simp] theorem standardRealizationToSimplex_toRealization (z : stdSimplex ℝ (Fin 3)) :
+@[simp] theorem standardRealizationToSimplex_toRealization (z : standardSimplex ℝ (Fin 3)) :
     standardRealizationToSimplex (standardSimplexToRealization z) = z := rfl
 
 @[simp] theorem standardSimplexToRealization_toSimplex
@@ -114,7 +114,7 @@ noncomputable def standardRealizationToSimplex
 /-- The standard simplex and the canonical intrinsic realization of the standard triangle are
 the same topological simplex. -/
 noncomputable def standardSimplexRealizationHomeomorph :
-    stdSimplex ℝ (Fin 3) ≃ₜ standardTrianglePlaneComplex.toIntrinsic.realization where
+    standardSimplex ℝ (Fin 3) ≃ₜ standardTrianglePlaneComplex.toIntrinsic.realization where
   toFun := standardSimplexToRealization
   invFun := standardRealizationToSimplex
   left_inv := standardRealizationToSimplex_toRealization
@@ -252,7 +252,7 @@ theorem faceEdgeSourcePoint_mem_standardEdge (f : K.Face) (i : ZMod 3)
         Set (Fin 3)) =
       {standardTriangleVertex (K.faceEdgeFirstIndex f i),
         standardTriangleVertex (K.faceEdgeSecondIndex f i)} by
-    ext p; simp [eq_comm]]
+    ext p; simp]
   rw [convexHull_pair, segment_eq_image_lineMap]
   exact ⟨r, hr, rfl⟩
 
@@ -266,7 +266,7 @@ theorem faceEdgeSourcePoint_image_Icc (f : K.Face) (i : ZMod 3) :
         Set (Fin 3)) =
       {standardTriangleVertex (K.faceEdgeFirstIndex f i),
         standardTriangleVertex (K.faceEdgeSecondIndex f i)} by
-    ext p; simp [eq_comm]]
+    ext p; simp]
   rw [convexHull_pair, segment_eq_image_lineMap]
   rfl
 
@@ -331,16 +331,16 @@ theorem faceSide_endpoint_sum (f : K.Face) (i : ZMod 3)
 noncomputable def supportedOnEdgeToSimplex (f : K.Face) (e : K.Edge)
     (hef : e.1 ⊆ K.faceVertices f) (x : K.ClosedFace f)
     (_hx : ∀ v, v.1 ∉ e.1 → x v = 0) :
-    stdSimplex ℝ {v // v ∈ e.1} :=
+    standardSimplex ℝ {v // v ∈ e.1} :=
   K.edgeSimplexPath e
     ⟨x ⟨K.edgeSecond e, hef (K.edgeSecond_mem e)⟩,
-      mem_Icc_of_mem_stdSimplex x.2
+      mem_Icc_of_mem_standardSimplex x.2
         ⟨K.edgeSecond e, hef (K.edgeSecond_mem e)⟩⟩
 
 /-- Restrict a face-simplex point supported on side `i` to the corresponding edge simplex. -/
 noncomputable def faceSideToEdgeSimplex (f : K.Face) (i : ZMod 3)
     (x : K.ClosedFace f) (hx : x ∈ K.faceSide f i) :
-    stdSimplex ℝ {v // v ∈ (K.faceEdge f i).1} :=
+    standardSimplex ℝ {v // v ∈ (K.faceEdge f i).1} :=
   K.supportedOnEdgeToSimplex f (K.faceEdge f i)
     (K.faceEdge_subset_faceVertices f i) x hx
 
@@ -386,21 +386,21 @@ theorem faceMap_mem_edgeCarrier_of_mem_faceSide (f : K.Face) (i : ZMod 3)
 /-- Include edge-local simplex coordinates in any incident maximal face. -/
 noncomputable def edgeSimplexInFace (f : K.Face) (e : K.Edge)
     (hef : e.1 ⊆ K.faceVertices f)
-    (z : stdSimplex ℝ {v // v ∈ e.1}) : K.ClosedFace f :=
-  stdSimplex.map (fun v : {v // v ∈ e.1} ↦ ⟨v.1, hef v.2⟩) z
+    (z : standardSimplex ℝ {v // v ∈ e.1}) : K.ClosedFace f :=
+  standardSimplex.map (fun v : {v // v ∈ e.1} ↦ ⟨v.1, hef v.2⟩) z
 
 theorem faceMap_edgeSimplexInFace (f : K.Face) (e : K.Edge)
     (hef : e.1 ⊆ K.faceVertices f)
-    (z : stdSimplex ℝ {v // v ∈ e.1}) :
+    (z : standardSimplex ℝ {v // v ∈ e.1}) :
     K.faceMap f (K.edgeSimplexInFace f e hef z) = K.edgeMap e z :=
   (K.edgeMap_eq_faceMap e f hef z).symm
 
 theorem edgeSimplexInFace_supported (f : K.Face) (e : K.Edge)
     (hef : e.1 ⊆ K.faceVertices f)
-    (z : stdSimplex ℝ {v // v ∈ e.1})
+    (z : standardSimplex ℝ {v // v ∈ e.1})
     (v : {v // v ∈ K.faceVertices f}) (hv : v.1 ∉ e.1) :
     K.edgeSimplexInFace f e hef z v = 0 := by
-  simp only [edgeSimplexInFace, stdSimplex.map_coe,
+  simp only [edgeSimplexInFace, standardSimplex.map_coe,
     FunOnFinite.linearMap_apply_apply]
   have hempty : Finset.univ.filter
       (fun w : {w // w ∈ e.1} ↦

@@ -150,10 +150,8 @@ instance : Nonempty κω := by
 instance : Nonempty κωEquinumerousSubsets := ⟨κω, fun _ h => h, rfl⟩
 instance : Nonempty (ν.ToType) := by simp [ν]
 
-/-- The `s` declaration. -/
-def s (α : ν.ToType) : ℕ → κω := by
-  have s' (β : Set.Iio α) : ℕ → κω := s β.1
-  suffices {x : ℕ → κω | (∀ n, ↑(x n) ∈ X α) ∧ ∀ β, s' β ≠ x}.Nonempty from this.some
+private lemma exists_notMem_range {α : ν.ToType} (s' : Set.Iio α → ℕ → κω) :
+    {x : ℕ → κω | (∀ n, ↑(x n) ∈ X α) ∧ ∀ β, s' β ≠ x}.Nonempty := by
   convert_to ({x : ℕ → κω | ∀ n, ↑(x n) ∈ X α} \ Set.range s').Nonempty using 1
   · ext x; simp
   · apply sdiff_nonempty_of_mk_lt_mk
@@ -168,6 +166,11 @@ def s (α : ν.ToType) : ℕ → κω := by
       mul_eq_max_of_aleph0_le_left aleph0_le_κω (mk_ne_zero _),
       sup_le_iff, and_iff_right (self_le_power _ (by simp))]
     exact card_κωEquinumerousSubsets_le
+
+/-- The `s` declaration. -/
+def s (α : ν.ToType) : ℕ → κω := by
+  have s' (β : Set.Iio α) : ℕ → κω := s β.1
+  exact (exists_notMem_range s').some
 termination_by α
 decreasing_by exact β.2
 
@@ -178,14 +181,13 @@ lemma injective_s : Injective s := by
     · exact eq
     · exact this s_eq.symm (lt_of_le_of_ne (not_lt.mp lt) eq.symm) |>.symm
   · nth_rw 2 [s] at s_eq
-    generalize_proofs hβ at s_eq
-    dsimp only at hβ
+    generalize_proofs _ hβ at s_eq
     exact (hβ.some_mem.2 ⟨_, lt⟩ s_eq).elim
 
 lemma s_mem_X : ∀ α n, (s α n).1 ∈ X α := by
   intro α n
   simp only [s]
-  generalize_proofs hα
+  generalize_proofs _ hα
   exact hα.some_mem.1 n
 
 /-- The `f` declaration. -/
@@ -220,7 +222,7 @@ lemma exists_γ_and_X_eq {β H : M} (hβ : β ∈ κω) (hH : H ⊆ κω) (card_
 
 lemma f_s_eq_γ {α : ν.ToType} : ↑(f (s α)) = γ α := by
   rw [f, s]
-  generalize_proofs hne_ν hne_s γ_mem
+  generalize_proofs hne_ν _ hne_s γ_mem
   dsimp only
   congr 1
   suffices s α = hne_s.some by

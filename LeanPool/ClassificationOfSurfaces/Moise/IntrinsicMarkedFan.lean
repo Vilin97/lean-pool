@@ -1082,7 +1082,7 @@ theorem fanFirstVertex_ne_second (f : M.FanFace) :
 
 /-- The affine barycentric realization of one marked fan triangle inside its parent face. -/
 noncomputable def fanFaceMap (f : M.FanFace) :
-    stdSimplex ℝ {p // p ∈ M.fanFaceVertices f} → K.realization := by
+    standardSimplex ℝ {p // p ∈ M.fanFaceVertices f} → K.realization := by
   classical
   intro x
   let z : K.Vertex → ℝ := fun v ↦
@@ -1112,7 +1112,7 @@ noncomputable def fanFaceMap (f : M.FanFace) :
     rw [M.fanVertex_mem_faceCarrier f p.2 v hv, mul_zero]
 
 theorem fanFaceMap_mem_faceCarrier (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
     M.fanFaceMap f x ∈ K.faceCarrier f.1.1 := by
   classical
   intro v hv
@@ -1123,12 +1123,12 @@ theorem fanFaceMap_mem_faceCarrier (f : M.FanFace)
 
 theorem fanFaceMap_vertex (f : M.FanFace)
     (p : {p // p ∈ M.fanFaceVertices f}) :
-    M.fanFaceMap f (stdSimplex.vertex p) = p.1 := by
+    M.fanFaceMap f (standardSimplex.vertex p) = p.1 := by
   classical
   apply Subtype.ext
   funext v
-  change (∑ q, (stdSimplex.vertex p :
-      stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}) q * q.1.1 v) = p.1.1 v
+  change (∑ q, (standardSimplex.vertex p :
+      standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}) q * q.1.1 v) = p.1.1 v
   rw [Finset.sum_eq_single p]
   · simp
   · intro q _ hqp
@@ -1255,7 +1255,7 @@ theorem isEmbedding_fanFaceMap (f : M.FanFace) :
 
 /-- The three distinguished fan weights sum to one. -/
 theorem fanWeights_sum (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
     x.1 (M.fanCenterVertex f) +
         x.1 (M.fanFirstVertex f) +
       x.1 (M.fanSecondVertex f) = 1 := by
@@ -1276,16 +1276,16 @@ theorem fanWeights_sum (f : M.FanFace)
 /-- The canonical simplex path along the base of a marked fan triangle. -/
 noncomputable def fanBaseSimplexPath (f : M.FanFace)
     (r : Set.Icc (0 : ℝ) 1) :
-    stdSimplex ℝ {p // p ∈ M.fanFaceVertices f} := by
+    standardSimplex ℝ {p // p ∈ M.fanFaceVertices f} := by
   let a := M.fanFirstVertex f
   let b := M.fanSecondVertex f
   let x := AffineMap.lineMap
-    (stdSimplex.vertex a :
+    (standardSimplex.vertex a :
       {p // p ∈ M.fanFaceVertices f} → ℝ)
-    (stdSimplex.vertex b :
+    (standardSimplex.vertex b :
       {p // p ∈ M.fanFaceVertices f} → ℝ) r.1
-  exact ⟨x, (convex_stdSimplex ℝ _).lineMap_mem
-    (stdSimplex.vertex a).2 (stdSimplex.vertex b).2 r.2⟩
+  exact ⟨x, (convex_standardSimplex ℝ _).lineMap_mem
+    (standardSimplex.vertex a).2 (standardSimplex.vertex b).2 r.2⟩
 
 @[simp] theorem fanBaseSimplexPath_apply_first (f : M.FanFace)
     (r : Set.Icc (0 : ℝ) 1) :
@@ -1324,14 +1324,14 @@ noncomputable def fanBaseSimplexPath (f : M.FanFace)
 
 /-- The canonical affine segment between two points of one fan simplex. -/
 noncomputable def fanSimplexLineMap (f : M.FanFace)
-    (x y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (r : Set.Icc (0 : ℝ) 1) :
-    stdSimplex ℝ {p // p ∈ M.fanFaceVertices f} :=
+    standardSimplex ℝ {p // p ∈ M.fanFaceVertices f} :=
   ⟨AffineMap.lineMap x.1 y.1 r.1,
-    (convex_stdSimplex ℝ _).lineMap_mem x.2 y.2 r.2⟩
+    (convex_standardSimplex ℝ _).lineMap_mem x.2 y.2 r.2⟩
 
 theorem fanFaceMap_simplexLineMap (f : M.FanFace)
-    (x y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (r : Set.Icc (0 : ℝ) 1) :
     (M.fanFaceMap f (M.fanSimplexLineMap f x y r)).1 =
       AffineMap.lineMap (M.fanFaceMap f x).1
@@ -1368,7 +1368,7 @@ theorem fanBaseWeights_sum (f : M.FanFace) (r : Set.Icc (0 : ℝ) 1) :
 /-- A zero center weight puts a fan point on its declared base edge. -/
 theorem fanFaceMap_mem_baseEdge_of_center_eq_zero
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0) :
     M.fanFaceMap f x ∈ K.faceCarrier (K.faceEdge f.1 f.2.1).1 := by
   classical
@@ -1407,7 +1407,7 @@ theorem fanBasePath_mem_baseEdge (f : M.FanFace)
 /-- On a fan base, the global edge parameter is the affine combination of its endpoints. -/
 theorem edgeParameterValue_fanFaceMap_of_center_eq_zero
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0) :
     M.edgeParameterValue (K.faceEdge f.1 f.2.1) (M.fanFaceMap f x) =
       x (M.fanFirstVertex f) *
@@ -1575,7 +1575,7 @@ variable {K : IntrinsicTwoComplex} (M : K.EdgeMarking)
 theorem exists_fanFaceMap_eq_of_mem_faceCarrier
     (t : K.Face) {p : K.realization} (hp : p ∈ K.faceCarrier t.1) :
     ∃ i : ZMod 3, ∃ j : M.EdgeInterval (K.faceEdge t i),
-      ∃ x : stdSimplex ℝ {q // q ∈ M.fanFaceVertices ⟨t, i, j⟩},
+      ∃ x : standardSimplex ℝ {q // q ∈ M.fanFaceVertices ⟨t, i, j⟩},
         M.fanFaceMap ⟨t, i, j⟩ x = p := by
   let pClosed : K.ClosedFace t := ⟨p, hp⟩
   let cClosed : K.ClosedFace t :=
@@ -1611,8 +1611,8 @@ theorem exists_fanFaceMap_eq_of_mem_faceCarrier
   obtain ⟨r, hr, hrPlane⟩ := hpSegment
   let rIcc : Set.Icc (0 : ℝ) 1 := ⟨r, hr⟩
   let f : M.FanFace := ⟨t, i, j⟩
-  let center : stdSimplex ℝ {q // q ∈ M.fanFaceVertices f} :=
-    stdSimplex.vertex (M.fanCenterVertex f)
+  let center : standardSimplex ℝ {q // q ∈ M.fanFaceVertices f} :=
+    standardSimplex.vertex (M.fanCenterVertex f)
   let base := M.fanBaseSimplexPath f s
   let x := M.fanSimplexLineMap f center base rIcc
   refine ⟨i, j, x, ?_⟩
@@ -1646,7 +1646,7 @@ theorem exists_fanFaceMap_eq_of_mem_faceCarrier
 /-- The normalized parameter of the base point obtained by projecting away from the cone
 center. -/
 noncomputable def fanNormalizedBaseParameter (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) < 1) :
     Set.Icc (0 : ℝ) 1 := by
   let d := 1 - x (M.fanCenterVertex f)
@@ -1673,19 +1673,19 @@ noncomputable def fanNormalizedBaseParameter (f : M.FanFace)
 
 /-- Radial projection of a noncenter fan point to its base simplex. -/
 noncomputable def fanNormalizedBasePoint (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) < 1) :
-    stdSimplex ℝ {p // p ∈ M.fanFaceVertices f} :=
+    standardSimplex ℝ {p // p ∈ M.fanFaceVertices f} :=
   M.fanBaseSimplexPath f (M.fanNormalizedBaseParameter f x hxCenter)
 
 @[simp] theorem fanNormalizedBasePoint_apply_center (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) < 1) :
     M.fanNormalizedBasePoint f x hxCenter (M.fanCenterVertex f) = 0 :=
   M.fanBaseSimplexPath_apply_center f _
 
 @[simp] theorem fanNormalizedBasePoint_apply_second (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) < 1) :
     M.fanNormalizedBasePoint f x hxCenter (M.fanSecondVertex f) =
       x (M.fanSecondVertex f) / (1 - x (M.fanCenterVertex f)) := by
@@ -1693,7 +1693,7 @@ noncomputable def fanNormalizedBasePoint (f : M.FanFace)
   rfl
 
 @[simp] theorem fanNormalizedBasePoint_apply_first (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) < 1) :
     M.fanNormalizedBasePoint f x hxCenter (M.fanFirstVertex f) =
       x (M.fanFirstVertex f) / (1 - x (M.fanCenterVertex f)) := by
@@ -1719,7 +1719,7 @@ noncomputable def fanNormalizedBasePoint (f : M.FanFace)
 /-- A noncenter fan point is the affine combination of the cone center and its normalized
 base projection. -/
 theorem fanFaceMap_eq_lineMap_normalizedBase (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) < 1) :
     (M.fanFaceMap f x).1 =
       AffineMap.lineMap (K.faceCenter f.1).1
@@ -1761,7 +1761,7 @@ theorem fanFaceMap_eq_lineMap_normalizedBase (f : M.FanFace)
 
 /-- The coordinate opposite a fan base is exactly one third of the cone-center weight. -/
 theorem fanFaceMap_opposite (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
     (M.fanFaceMap f x).1 (K.faceVertex f.1 (f.2.1 + 2)) =
       x (M.fanCenterVertex f) / 3 := by
   classical
@@ -1807,7 +1807,7 @@ theorem fanFaceMap_opposite (f : M.FanFace)
 /-- A fan point lies on its declared base edge only if its cone-center weight vanishes. -/
 theorem fanCenterWeight_eq_zero_of_mem_baseEdge
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hx :
       M.fanFaceMap f x ∈
         K.faceCarrier (K.faceEdge f.1 f.2.1).1) :
@@ -1820,7 +1820,7 @@ theorem fanCenterWeight_eq_zero_of_mem_baseEdge
 
 /-- The center contribution is a lower bound for every parent-face barycentric coordinate. -/
 theorem fanFaceMap_faceVertex_lower_bound (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (i : ZMod 3) :
     x (M.fanCenterVertex f) / 3 ≤
       (M.fanFaceMap f x).1 (K.faceVertex f.1 i) := by
@@ -1845,8 +1845,8 @@ theorem fanCenterWeight_eq_of_faceMap_eq_of_parent_eq
     (t : K.Face) (i j : ZMod 3)
     (a : M.EdgeInterval (K.faceEdge t i))
     (b : M.EdgeInterval (K.faceEdge t j))
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, j, b⟩}}
     (hxy : M.fanFaceMap ⟨t, i, a⟩ x =
       M.fanFaceMap ⟨t, j, b⟩ y) :
     x (M.fanCenterVertex ⟨t, i, a⟩) =
@@ -1884,7 +1884,7 @@ theorem fanCenterWeight_eq_of_faceMap_eq_of_parent_eq
 
 /-- When the cone-center weight vanishes, the two base weights sum to one. -/
 theorem fanBaseWeights_sum_of_center_eq_zero (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0) :
     x (M.fanFirstVertex f) + x (M.fanSecondVertex f) = 1 := by
   have hsum := M.fanWeights_sum f x
@@ -1898,7 +1898,7 @@ theorem fanBaseWeights_sum_of_center_eq_zero (f : M.FanFace)
 consecutive marked parameters. -/
 theorem edgeParameterValue_fanFaceMap_mem_Ioo_of_center_eq_zero
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0)
     (hxFirst : 0 < x (M.fanFirstVertex f))
     (hxSecond : 0 < x (M.fanSecondVertex f)) :
@@ -1942,7 +1942,7 @@ theorem edgeParameterValue_fanFaceMap_mem_Ioo_of_center_eq_zero
 /-- A relative-interior point of a marked fan base is not one of the global marked points. -/
 theorem fanFaceMap_not_mem_points_of_center_zero_of_base_weights_pos
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0)
     (hxFirst : 0 < x (M.fanFirstVertex f))
     (hxSecond : 0 < x (M.fanSecondVertex f)) :
@@ -1961,7 +1961,7 @@ theorem fanFaceMap_not_mem_points_of_center_zero_of_base_weights_pos
 abstract edge. -/
 theorem fanFaceMap_mem_edgePath_image_Ioo_of_center_zero_of_base_weights_pos
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0)
     (hxFirst : 0 < x (M.fanFirstVertex f))
     (hxSecond : 0 < x (M.fanSecondVertex f)) :
@@ -1998,8 +1998,8 @@ theorem fanFaceMap_mem_edgePath_image_Ioo_of_center_zero_of_base_weights_pos
 in the first triangle. -/
 theorem fanCenterWeight_eq_zero_of_faceMap_eq_of_parent_ne
     {f g : M.FanFace} (hfg : f.1 ≠ g.1)
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
     (hxy : M.fanFaceMap f x = M.fanFaceMap g y) :
     x (M.fanCenterVertex f) = 0 := by
   apply le_antisymm
@@ -2033,7 +2033,7 @@ theorem fanCenterWeight_eq_zero_of_faceMap_eq_of_parent_ne
 /-- A fan point lying in a distinct old parent face has zero cone-center weight. -/
 theorem fanCenterWeight_eq_zero_of_mem_faceCarrier_of_parent_ne
     (f : M.FanFace) (g : K.Face) (hfg : f.1 ≠ g)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxg : M.fanFaceMap f x ∈ K.faceCarrier g.1) :
     x (M.fanCenterVertex f) = 0 := by
   apply le_antisymm
@@ -2065,7 +2065,7 @@ theorem fanCenterWeight_eq_zero_of_mem_faceCarrier_of_parent_ne
 /-- Extended coordinates of a marked fan triangle are the sum of its three vertex-weight
 spikes. -/
 theorem extendFaceCoordinates_fanFace (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}) :
     extendFaceCoordinates (M.fanFaceVertices f) x =
       Pi.single (M.fanCenterVertex f).1
           (x (M.fanCenterVertex f)) +
@@ -2120,7 +2120,7 @@ theorem extendFaceCoordinates_fanFace (f : M.FanFace)
 base vertices, both geometrically and in zero-extended barycentric coordinates. -/
 theorem fanEndpointData_of_center_eq_zero_of_not_base_weights_pos
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0)
     (hxNot : ¬(0 < x (M.fanFirstVertex f) ∧
       0 < x (M.fanSecondVertex f))) :
@@ -2142,7 +2142,7 @@ theorem fanEndpointData_of_center_eq_zero_of_not_base_weights_pos
     have hxCenter' : x.1 (M.fanCenterVertex f) = 0 := hxCenter
     have hxFirst' : x.1 (M.fanFirstVertex f) = 0 := hxFirst
     have hxSecond' : x.1 (M.fanSecondVertex f) = 1 := hxSecond
-    have hxVertex : x = stdSimplex.vertex (M.fanSecondVertex f) := by
+    have hxVertex : x = standardSimplex.vertex (M.fanSecondVertex f) := by
       apply Subtype.ext
       funext v
       have hv : v = M.fanCenterVertex f ∨
@@ -2177,7 +2177,7 @@ theorem fanEndpointData_of_center_eq_zero_of_not_base_weights_pos
     have hxCenter' : x.1 (M.fanCenterVertex f) = 0 := hxCenter
     have hxFirstOne' : x.1 (M.fanFirstVertex f) = 1 := hxFirstOne
     have hxSecond' : x.1 (M.fanSecondVertex f) = 0 := hxSecond
-    have hxVertex : x = stdSimplex.vertex (M.fanFirstVertex f) := by
+    have hxVertex : x = standardSimplex.vertex (M.fanFirstVertex f) := by
       apply Subtype.ext
       funext v
       have hv : v = M.fanCenterVertex f ∨
@@ -2203,8 +2203,8 @@ triangle that contains them.  Distinct old edges have disjoint open barycentric 
 on one old edge the global mark order determines a unique consecutive interval. -/
 theorem fanExtendedCoordinates_eq_of_faceMap_eq_of_center_zero_of_base_weights_pos
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
     (hxy : M.fanFaceMap f x = M.fanFaceMap g y)
     (hxCenter : x (M.fanCenterVertex f) = 0)
     (hyCenter : y (M.fanCenterVertex g) = 0)
@@ -2353,7 +2353,7 @@ theorem fanExtendedCoordinates_eq_of_faceMap_eq_of_center_zero_of_base_weights_p
 /-- A zero-center fan point outside the relative interior of its base is a global marked point. -/
 theorem fanFaceMap_mem_points_of_center_zero_of_not_base_weights_pos
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) = 0)
     (hxNot : ¬(0 < x (M.fanFirstVertex f) ∧
       0 < x (M.fanSecondVertex f))) :
@@ -2377,8 +2377,8 @@ theorem fanFaceMap_mem_points_of_center_zero_of_not_base_weights_pos
 coordinates. -/
 theorem fanExtendedCoordinates_eq_of_faceMap_eq_of_center_zero
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
     (hxy : M.fanFaceMap f x = M.fanFaceMap g y)
     (hxCenter : x (M.fanCenterVertex f) = 0)
     (hyCenter : y (M.fanCenterVertex g) = 0) :
@@ -2449,8 +2449,8 @@ theorem fanNormalizedBaseFaceMap_eq_of_same_parent
     (t : K.Face) (i j : ZMod 3)
     (a : M.EdgeInterval (K.faceEdge t i))
     (b : M.EdgeInterval (K.faceEdge t j))
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, j, b⟩}}
     (hxy : M.fanFaceMap ⟨t, i, a⟩ x =
       M.fanFaceMap ⟨t, j, b⟩ y)
     (hxCenter : x (M.fanCenterVertex ⟨t, i, a⟩) < 1)
@@ -2492,7 +2492,7 @@ theorem fanNormalizedBaseFaceMap_eq_of_same_parent
 coordinates. -/
 theorem extendFaceCoordinates_eq_center_add_smul_normalizedBase
     (f : M.FanFace)
-    (x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f})
+    (x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f})
     (hxCenter : x (M.fanCenterVertex f) < 1) :
     extendFaceCoordinates (M.fanFaceVertices f) x =
       Pi.single (M.fanCenterVertex f).1
@@ -2555,8 +2555,8 @@ theorem fanExtendedCoordinates_eq_of_faceMap_eq_of_same_parent
     (t : K.Face) (i j : ZMod 3)
     (a : M.EdgeInterval (K.faceEdge t i))
     (b : M.EdgeInterval (K.faceEdge t j))
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, i, a⟩}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, j, b⟩}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, i, a⟩}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices ⟨t, j, b⟩}}
     (hxy : M.fanFaceMap ⟨t, i, a⟩ x =
       M.fanFaceMap ⟨t, j, b⟩ y) :
     extendFaceCoordinates (M.fanFaceVertices ⟨t, i, a⟩) x =
@@ -2646,8 +2646,8 @@ theorem fanExtendedCoordinates_eq_of_faceMap_eq_of_same_parent
 /-- All marked fan faces use one global barycentric coordinate system on overlaps. -/
 theorem fanExtendedCoordinates_eq_of_faceMap_eq
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
     (hxy : M.fanFaceMap f x = M.fanFaceMap g y) :
     extendFaceCoordinates (M.fanFaceVertices f) x =
       extendFaceCoordinates (M.fanFaceVertices g) y := by
@@ -2809,12 +2809,12 @@ noncomputable def fanFaceVertexEquiv (f : M.FanFace) :
 
 /-- Relabel a simplex on global fan vertices as a simplex on geometric points. -/
 noncomputable def fanRelabelSimplex (f : M.FanFace)
-    (x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}) :
-    stdSimplex ℝ {p // p ∈ M.fanFaceVertices f} :=
-  stdSimplex.map (M.fanFaceVertexEquiv f) x
+    (x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}) :
+    standardSimplex ℝ {p // p ∈ M.fanFaceVertices f} :=
+  standardSimplex.map (M.fanFaceVertexEquiv f) x
 
 theorem fanRelabel_extended_apply (f : M.FanFace)
-    (x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f})
+    (x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f})
     (v : M.FanVertex) :
     extendFaceCoordinates (M.fanFaceVertices f)
         (M.fanRelabelSimplex f x) v.1 =
@@ -2825,7 +2825,7 @@ theorem fanRelabel_extended_apply (f : M.FanFace)
       (M.mem_globalFanFaceVertices_iff f v).mp hv
     rw [extendFaceCoordinates_of_mem _ _ hp,
       extendFaceCoordinates_of_mem _ _ hv]
-    simp only [fanRelabelSimplex, stdSimplex.map_coe,
+    simp only [fanRelabelSimplex, standardSimplex.map_coe,
       FunOnFinite.linearMap_apply_apply]
     let q : {q // q ∈ M.globalFanFaceVertices f} := ⟨v, hv⟩
     have hfilter : Finset.univ.filter
@@ -2854,8 +2854,8 @@ theorem fanRelabel_extended_apply (f : M.FanFace)
 
 theorem fanRelabel_extended_eq_iff
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
-    {y : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}} :
+    {x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
+    {y : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}} :
     extendFaceCoordinates (M.fanFaceVertices f)
         (M.fanRelabelSimplex f x) =
       extendFaceCoordinates (M.fanFaceVertices g)
@@ -2889,13 +2889,13 @@ theorem fanRelabel_extended_eq_iff
 
 /-- One marked fan face parametrized by the global used-vertex type. -/
 noncomputable def globalFanFaceMap (f : M.FanFace) :
-    stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f} → K.realization :=
+    standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f} → K.realization :=
   fun x ↦ M.fanFaceMap f (M.fanRelabelSimplex f x)
 
 theorem continuous_globalFanFaceMap (f : M.FanFace) :
     Continuous (M.globalFanFaceMap f) :=
   (M.continuous_fanFaceMap f).comp
-    (stdSimplex.continuous_map (M.fanFaceVertexEquiv f))
+    (standardSimplex.continuous_map (M.fanFaceVertexEquiv f))
 
 theorem range_globalFanFaceMap (f : M.FanFace) :
     Set.range (M.globalFanFaceMap f) = Set.range (M.fanFaceMap f) := by
@@ -2903,19 +2903,19 @@ theorem range_globalFanFaceMap (f : M.FanFace) :
   · rintro p ⟨x, rfl⟩
     exact Set.mem_range_self _
   · rintro p ⟨x, rfl⟩
-    let y := stdSimplex.map (M.fanFaceVertexEquiv f).symm x
+    let y := standardSimplex.map (M.fanFaceVertexEquiv f).symm x
     refine ⟨y, congrArg (M.fanFaceMap f) ?_⟩
-    change stdSimplex.map (M.fanFaceVertexEquiv f) y = x
+    change standardSimplex.map (M.fanFaceVertexEquiv f) y = x
     dsimp only [y]
-    rw [stdSimplex.map_comp_apply]
+    rw [standardSimplex.map_comp_apply]
     have he : (M.fanFaceVertexEquiv f : _ → _) ∘
         (M.fanFaceVertexEquiv f).symm = id := by
       funext z
       exact (M.fanFaceVertexEquiv f).apply_symm_apply z
-    rw [he, stdSimplex.map_id_apply]
+    rw [he, standardSimplex.map_id_apply]
 
 theorem globalFanFaceMap_mem_faceCarrier (f : M.FanFace)
-    (x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}) :
+    (x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}) :
     M.globalFanFaceMap f x ∈ K.faceCarrier f.1.1 :=
   M.fanFaceMap_mem_faceCarrier f (M.fanRelabelSimplex f x)
 
@@ -2935,7 +2935,7 @@ noncomputable def fanBarycentricAffine :
 /-- A globally relabeled fan-face map is affine evaluation at its actual intrinsic vertices. -/
 theorem globalFanFaceMap_val_eq_fanBarycentricAffine
     (f : M.FanFace)
-    (x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}) :
+    (x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}) :
     (M.globalFanFaceMap f x).1 =
       M.fanBarycentricAffine
         (extendFaceCoordinates (M.globalFanFaceVertices f) x) := by
@@ -2986,8 +2986,8 @@ theorem globalFanFaceMap_val_eq_fanBarycentricAffine
 /-- Equal zero-extended geometric-point coordinates give equal marked fan images. -/
 theorem fanFaceMap_eq_of_extendedCoordinates_eq
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
-    {y : stdSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
+    {x : standardSimplex ℝ {p // p ∈ M.fanFaceVertices f}}
+    {y : standardSimplex ℝ {p // p ∈ M.fanFaceVertices g}}
     (hxy : extendFaceCoordinates (M.fanFaceVertices f) x =
       extendFaceCoordinates (M.fanFaceVertices g) y) :
     M.fanFaceMap f x = M.fanFaceMap g y := by
@@ -2999,8 +2999,8 @@ theorem fanFaceMap_eq_of_extendedCoordinates_eq
 /-- Equal global fan coordinates are sufficient for equality of geometric images. -/
 theorem globalFanFaceMap_eq_of_extendedCoordinates_eq
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
-    {y : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}}
+    {x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
+    {y : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}}
     (hxy : extendFaceCoordinates (M.globalFanFaceVertices f) x =
       extendFaceCoordinates (M.globalFanFaceVertices g) y) :
     M.globalFanFaceMap f x = M.globalFanFaceMap g y :=
@@ -3011,8 +3011,8 @@ theorem globalFanFaceMap_eq_of_extendedCoordinates_eq
 barycentric coordinates. -/
 theorem globalFanExtendedCoordinates_eq_of_faceMap_eq
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
-    {y : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}}
+    {x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
+    {y : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}}
     (hxy : M.globalFanFaceMap f x = M.globalFanFaceMap g y) :
     extendFaceCoordinates (M.globalFanFaceVertices f) x =
       extendFaceCoordinates (M.globalFanFaceVertices g) y :=
@@ -3022,8 +3022,8 @@ theorem globalFanExtendedCoordinates_eq_of_faceMap_eq
 /-- Exact face-to-face compatibility of the globally relabeled marked fan family. -/
 theorem globalFanFaceMap_eq_iff
     {f g : M.FanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
-    {y : stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}} :
+    {x : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices f}}
+    {y : standardSimplex ℝ {v // v ∈ M.globalFanFaceVertices g}} :
     M.globalFanFaceMap f x = M.globalFanFaceMap g y ↔
       extendFaceCoordinates (M.globalFanFaceVertices f) x =
         extendFaceCoordinates (M.globalFanFaceVertices g) y :=

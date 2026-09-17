@@ -9,6 +9,7 @@ public import LeanPool.RiemannRochFunctionFields.Divisor
 public import Mathlib.NumberTheory.FunctionField
 public import Mathlib.RingTheory.Jacobson.Ring
 public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.RingTheory.RamificationInertia.Inertia
 public import Mathlib.RingTheory.Valuation.AlgebraInstances
 public import Mathlib.RingTheory.Valuation.Discrete.Basic
 public import Mathlib.RingTheory.Valuation.Discrete.RankOne
@@ -246,14 +247,15 @@ noncomputable def normalization (v : Place k K) :
 /-- The normalized `ℤᵐ⁰`-valued valuation associated to a coordinate-free place. -/
 noncomputable def valuation (v : Place k K) : Valuation K ℤᵐ⁰ :=
   v.toValuationSubring.valuation.restrict.map
-    v.normalization.toMonoidWithZeroHom v.normalization.toOrderIso.monotone
+    (OrderMonoidWithZeroHomClass.toOrderMonoidWithZeroHom v.normalization)
 
 /-- The normalized valuation is equivalent to the canonical valuation of the valuation
 subring. -/
 theorem valuation_isEquiv_canonical (v : Place k K) :
     v.valuation.IsEquiv v.toValuationSubring.valuation := by
   exact (Valuation.isEquiv_map_self_of_strictMono
-    v.normalization.toMonoidWithZeroHom v.normalization.strictMono).trans
+    (OrderMonoidWithZeroHomClass.toOrderMonoidWithZeroHom v.normalization)
+    v.normalization.injective).trans
       v.toValuationSubring.valuation.isEquiv_restrict.symm
 
 /-- Recovering the valuation subring from the normalized valuation gives the original place. -/
@@ -488,8 +490,8 @@ instance finiteDimensionalResidueFieldInfinite
     rw [hp]
     exact inftyValuationSubring.finiteDimensionalResidueField k
   let : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := by
-    have hfin := Ideal.inertiaDeg'_pos p v.asIdeal
-    rw [Ideal.inertiaDeg'_algebraMap] at hfin
+    have hfin := Ideal.inertiaDeg_pos v.asIdeal A
+    rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal] at hfin
     exact FiniteDimensional.of_finrank_pos hfin
   let : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
@@ -521,7 +523,7 @@ theorem principalDivisorA_apply_finite (x : Additive Kˣ)
     Finsupp.mapDomain Sum.inr
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inl v) = _
-  rw [Finsupp.mapDomain_apply Sum.inl_injective]
+  rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective]
   rw [Finsupp.mapDomain_of_notMem_range]
   · simp
   · rintro ⟨w, h⟩
@@ -539,7 +541,7 @@ theorem principalDivisorA_apply_infinite (x : Additive Kˣ)
     Finsupp.mapDomain Sum.inr
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inr v) = _
-  rw [Finsupp.mapDomain_apply Sum.inr_injective]
+  rw [Finsupp.mapDomain_apply_of_injective Sum.inr_injective]
   rw [Finsupp.mapDomain_of_notMem_range]
   · simp
   · rintro ⟨w, h⟩

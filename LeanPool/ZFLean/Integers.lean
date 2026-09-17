@@ -1151,11 +1151,13 @@ instance : Coe ZFInt {x // x ∈ Int} := ⟨instEquivZFIntInt.toFun⟩
 instance : Coe {x // x ∈ Int} ZFInt := ⟨instEquivZFIntInt.invFun⟩
 theorem _root_.ZFSet.instEquivZFIntInt.mono_iff (x y : { x // x ∈ Int.{u} }) :
   instEquivZFIntInt.{u}.invFun x < instEquivZFIntInt.{u}.invFun y ↔ x < y := by
+  dsimp only [instEquivZFIntInt]
+  set c := Classical.choice ZFInt.exists_mono_bij_zero_eq with c_def
+  clear_value c
+  clear c_def
+  obtain ⟨f, bij, mono⟩ := c
   constructor
   · intro h
-    dsimp [instEquivZFIntInt] at h
-    split at h
-    rename_i f' f bij mono eq; clear f' eq
     unfold Equiv.ofBijective at h
     dsimp at h
     have := mono.1
@@ -1164,9 +1166,6 @@ theorem _root_.ZFSet.instEquivZFIntInt.mono_iff (x y : { x // x ∈ Int.{u} }) :
     iterate 2 rw [Function.rightInverse_surjInv (Function.Bijective.surjective bij)] at this
     exact this
   · intro h
-    dsimp [instEquivZFIntInt]
-    split
-    rename_i f' f bij mono eq; clear f' eq
     let f' := Function.surjInv (Function.Bijective.surjective bij)
     have mono' : ∀ x y, f' x < f' y ↔ x < y := by
       intro x y

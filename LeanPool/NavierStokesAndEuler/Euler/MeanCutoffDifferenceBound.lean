@@ -30,7 +30,7 @@ theorem lpNorm_translated {E : Type*} [NormedAddCommGroup E]
   have hm := measurePreserving_add_right (volume : Measure Space) a
   have hfc : AEStronglyMeasurable (fun x => f (x+a)) volume :=
     hf.aestronglyMeasurable.comp_measurePreserving hm
-  rw [← toReal_eLpNorm hfc, ← toReal_eLpNorm hf.aestronglyMeasurable]
+  rw [← toReal_eLpNorm, ← toReal_eLpNorm]
   exact congrArg ENNReal.toReal (eLpNorm_comp_measurePreserving hf.aestronglyMeasurable hm)
 
 theorem cutoffBound_translate (χ : Cutoff) (a : Space) :
@@ -143,22 +143,22 @@ theorem lpNorm_le_bound_volume {E : Type*} [NormedAddCommGroup E]
     (hK : volume K ≠ (∞ : ℝ≥0∞)) (C : ℝ) (hC : 0 ≤ C)
     (hbound : ∀ x, ‖f x‖ ≤ C) (hzero : ∀ x ∉ K, f x = 0) (p : ℝ≥0∞) :
     lpNorm f p volume ≤ C * (volume K).toReal ^ (1 / p.toReal) := by
+  have hsupp : Function.support f ⊆ K := by
+    intro x hx
+    by_contra hxK
+    exact hx (hzero x hxK)
   have he : eLpNorm f p volume ≤ ENNReal.ofReal C * volume K ^ (1 / p.toReal) := by
+    rw [← eLpNorm_restrict_eq_of_support_subset hf hsupp]
     calc
-      _ ≤ eLpNorm (K.indicator (fun _ : Space => C)) p volume := by
-        apply eLpNorm_mono
-        intro x
-        by_cases hx : x ∈ K
-        · simpa only [Set.indicator_of_mem hx, Real.norm_eq_abs, abs_of_nonneg hC] using hbound x
-        · simp only [Set.indicator_of_notMem hx, hzero x hx, norm_zero, le_refl]
-      _ ≤ _ := by
-        simpa only [← ofReal_norm, Real.norm_eq_abs, abs_of_nonneg hC] using
-          (eLpNorm_indicator_const_le (μ := (volume : Measure Space)) (s := K) C p)
+      _ ≤ (volume.restrict K) Set.univ ^ p.toReal⁻¹ * ENNReal.ofReal C :=
+        eLpNorm_le_of_ae_bound hf.restrict (Filter.Eventually.of_forall hbound)
+      _ = ENNReal.ofReal C * volume K ^ (1 / p.toReal) := by
+        rw [Measure.restrict_apply_univ, one_div, mul_comm]
   have hfinite : ENNReal.ofReal C * volume K ^ (1 / p.toReal) ≠ (∞ : ℝ≥0∞) := by
     exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top
       (ENNReal.rpow_ne_top_of_nonneg (by positivity) hK)
   have H := ENNReal.toReal_mono hfinite he
-  simpa only [toReal_eLpNorm hf, ENNReal.toReal_mul, ENNReal.toReal_ofReal hC,
+  simpa only [toReal_eLpNorm, ENNReal.toReal_mul, ENNReal.toReal_ofReal hC,
     ENNReal.toReal_rpow] using H
 
 /-- The classical mean value inequality bounds a directional difference quotient uniformly. -/

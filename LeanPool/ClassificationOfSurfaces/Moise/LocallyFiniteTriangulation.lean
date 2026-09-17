@@ -33,28 +33,28 @@ namespace Moise
 
 /-- Extend barycentric coordinates on a finite face by zero to the global vertex type. -/
 def extendFaceCoordinates {V : Type*} [DecidableEq V] (t : Finset V)
-    (x : stdSimplex ℝ {v // v ∈ t}) : V → ℝ :=
+    (x : standardSimplex ℝ {v // v ∈ t}) : V → ℝ :=
   fun v ↦ if hv : v ∈ t then x ⟨v, hv⟩ else 0
 
 @[simp] theorem extendFaceCoordinates_of_mem {V : Type*} [DecidableEq V]
-    (t : Finset V) (x : stdSimplex ℝ {v // v ∈ t}) {v : V} (hv : v ∈ t) :
+    (t : Finset V) (x : standardSimplex ℝ {v // v ∈ t}) {v : V} (hv : v ∈ t) :
     extendFaceCoordinates t x v = x ⟨v, hv⟩ := by
   simp [extendFaceCoordinates, hv]
 
 @[simp] theorem extendFaceCoordinates_of_notMem {V : Type*} [DecidableEq V]
-    (t : Finset V) (x : stdSimplex ℝ {v // v ∈ t}) {v : V} (hv : v ∉ t) :
+    (t : Finset V) (x : standardSimplex ℝ {v // v ∈ t}) {v : V} (hv : v ∉ t) :
     extendFaceCoordinates t x v = 0 := by
   simp [extendFaceCoordinates, hv]
 
 theorem stdSimplex_map_subtypeVal_eq_extendFaceCoordinates
     {V : Type*} [Fintype V] [DecidableEq V] (t : Finset V)
-    (x : stdSimplex ℝ {v // v ∈ t}) :
-    (stdSimplex.map Subtype.val x : V → ℝ) = extendFaceCoordinates t x := by
+    (x : standardSimplex ℝ {v // v ∈ t}) :
+    (standardSimplex.map Subtype.val x : V → ℝ) = extendFaceCoordinates t x := by
   funext v
   by_cases hv : v ∈ t
   · let w : {w // w ∈ t} := ⟨v, hv⟩
     rw [extendFaceCoordinates_of_mem t x hv]
-    simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hfilter : Finset.univ.filter (fun q : {q // q ∈ t} ↦ q.1 = v) = {w} := by
       ext q
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
@@ -64,7 +64,7 @@ theorem stdSimplex_map_subtypeVal_eq_extendFaceCoordinates
     rw [hfilter]
     simp [w]
   · rw [extendFaceCoordinates_of_notMem t x hv]
-    simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hempty : Finset.univ.filter (fun w : {w // w ∈ t} ↦ w.1 = v) = ∅ := by
       ext w
       simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.notMem_empty,
@@ -75,16 +75,16 @@ theorem stdSimplex_map_subtypeVal_eq_extendFaceCoordinates
 
 theorem extendFaceCoordinates_map_subset
     {V : Type*} [DecidableEq V] {e t : Finset V}
-    (het : e ⊆ t) (x : stdSimplex ℝ {v // v ∈ e}) :
+    (het : e ⊆ t) (x : standardSimplex ℝ {v // v ∈ e}) :
     extendFaceCoordinates t
-        (stdSimplex.map (fun v : {v // v ∈ e} ↦ ⟨v.1, het v.2⟩) x) =
+        (standardSimplex.map (fun v : {v // v ∈ e} ↦ ⟨v.1, het v.2⟩) x) =
       extendFaceCoordinates e x := by
   funext v
   by_cases hve : v ∈ e
   · have hvt : v ∈ t := het hve
     rw [extendFaceCoordinates_of_mem t _ hvt,
       extendFaceCoordinates_of_mem e x hve]
-    simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     let w : {w // w ∈ e} := ⟨v, hve⟩
     have hfilter : Finset.univ.filter
         (fun q : {q // q ∈ e} ↦
@@ -104,7 +104,7 @@ theorem extendFaceCoordinates_map_subset
   · rw [extendFaceCoordinates_of_notMem e x hve]
     by_cases hvt : v ∈ t
     · rw [extendFaceCoordinates_of_mem t _ hvt]
-      simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+      simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
       have hempty : Finset.univ.filter
           (fun q : {q // q ∈ e} ↦
             (⟨q.1, het q.2⟩ : {q // q ∈ t}) = ⟨v, hvt⟩) = ∅ := by
@@ -150,9 +150,9 @@ noncomputable def finsetMapSubtypeEquiv
 noncomputable def relabelFaceSimplex
     {A B : Type*}
     (e : A ↪ B) (t : Finset A)
-    (x : stdSimplex ℝ {b // b ∈ t.map e}) :
-    stdSimplex ℝ {a // a ∈ t} :=
-  stdSimplex.map (finsetMapSubtypeEquiv e t).symm x
+    (x : standardSimplex ℝ {b // b ∈ t.map e}) :
+    standardSimplex ℝ {a // a ∈ t} :=
+  standardSimplex.map (finsetMapSubtypeEquiv e t).symm x
 
 /-- Face relabeling along an embedding is onto. -/
 theorem relabelFaceSimplex_surjective
@@ -161,15 +161,15 @@ theorem relabelFaceSimplex_surjective
     Function.Surjective (relabelFaceSimplex e t) := by
   classical
   intro x
-  refine ⟨stdSimplex.map (finsetMapSubtypeEquiv e t) x, ?_⟩
+  refine ⟨standardSimplex.map (finsetMapSubtypeEquiv e t) x, ?_⟩
   unfold relabelFaceSimplex
-  rw [stdSimplex.map_comp_apply]
+  rw [standardSimplex.map_comp_apply]
   have hcomp :
       (finsetMapSubtypeEquiv e t).symm ∘
           (finsetMapSubtypeEquiv e t) = id := by
     funext a
     exact (finsetMapSubtypeEquiv e t).symm_apply_apply a
-  rw [hcomp, stdSimplex.map_id_apply]
+  rw [hcomp, standardSimplex.map_id_apply]
 
 /-- Pulling coordinates back along a face relabeling preserves the coordinate at every
 original vertex. -/
@@ -177,7 +177,7 @@ theorem relabelFaceSimplex_extended_apply
     {A B : Type*}
     [DecidableEq A] [DecidableEq B]
     (e : A ↪ B) (t : Finset A)
-    (x : stdSimplex ℝ {b // b ∈ t.map e}) (a : A) :
+    (x : standardSimplex ℝ {b // b ∈ t.map e}) (a : A) :
     extendFaceCoordinates t (relabelFaceSimplex e t x) a =
       extendFaceCoordinates (t.map e) x (e a) := by
   classical
@@ -186,7 +186,7 @@ theorem relabelFaceSimplex_extended_apply
       Finset.mem_map.mpr ⟨a, ha, rfl⟩
     rw [extendFaceCoordinates_of_mem t _ ha,
       extendFaceCoordinates_of_mem (t.map e) _ hea]
-    simp only [relabelFaceSimplex, stdSimplex.map_coe,
+    simp only [relabelFaceSimplex, standardSimplex.map_coe,
       FunOnFinite.linearMap_apply_apply]
     let q : {b // b ∈ t.map e} := ⟨e a, hea⟩
     have hfilter :
@@ -227,8 +227,8 @@ zero-extended coordinate functions. -/
 theorem relabelFaceSimplex_extended_eq_iff
     {A B : Type*} [DecidableEq A] [DecidableEq B]
     (e : A ↪ B) {s t : Finset A}
-    {x : stdSimplex ℝ {b // b ∈ s.map e}}
-    {y : stdSimplex ℝ {b // b ∈ t.map e}} :
+    {x : standardSimplex ℝ {b // b ∈ s.map e}}
+    {y : standardSimplex ℝ {b // b ∈ t.map e}} :
     extendFaceCoordinates s (relabelFaceSimplex e s x) =
         extendFaceCoordinates t (relabelFaceSimplex e t y) ↔
       extendFaceCoordinates (s.map e) x =
@@ -262,7 +262,7 @@ theorem sum_extendFaceCoordinates_relabelFaceSimplex
     {A B : Type*} [Fintype A] [Fintype B]
     [DecidableEq A] [DecidableEq B]
     (e : A ↪ B) (t : Finset A)
-    (x : stdSimplex ℝ {b // b ∈ t.map e}) (F : B → ℝ) :
+    (x : standardSimplex ℝ {b // b ∈ t.map e}) (F : B → ℝ) :
     (∑ b : B, extendFaceCoordinates (t.map e) x b * F b) =
       ∑ a : A,
         extendFaceCoordinates t (relabelFaceSimplex e t x) a *
@@ -308,9 +308,9 @@ noncomputable def univMapSubtypeEquiv
 noncomputable def relabelUnivSimplex
     {A B : Type*} [Fintype A]
     (e : A ↪ B)
-    (x : stdSimplex ℝ {b // b ∈ (Finset.univ : Finset A).map e}) :
-    stdSimplex ℝ A :=
-  stdSimplex.map (univMapSubtypeEquiv e) x
+    (x : standardSimplex ℝ {b // b ∈ (Finset.univ : Finset A).map e}) :
+    standardSimplex ℝ A :=
+  standardSimplex.map (univMapSubtypeEquiv e) x
 
 /-- Pullback along an embedded whole finite vertex type is onto: its inverse simply pushes
 coordinates forward along the inverse equivalence onto the image. -/
@@ -320,22 +320,22 @@ theorem relabelUnivSimplex_surjective
     Function.Surjective (relabelUnivSimplex e) := by
   classical
   intro x
-  refine ⟨stdSimplex.map (univMapSubtypeEquiv e).symm x, ?_⟩
+  refine ⟨standardSimplex.map (univMapSubtypeEquiv e).symm x, ?_⟩
   unfold relabelUnivSimplex
-  rw [stdSimplex.map_comp_apply]
+  rw [standardSimplex.map_comp_apply]
   have hcomp :
       (univMapSubtypeEquiv e) ∘
           (univMapSubtypeEquiv e).symm = id := by
     funext a
     exact (univMapSubtypeEquiv e).apply_symm_apply a
-  rw [hcomp, stdSimplex.map_id_apply]
+  rw [hcomp, standardSimplex.map_id_apply]
 
 /-- The whole-type relabeling preserves the coordinate of every embedded source vertex. -/
 theorem relabelUnivSimplex_apply
     {A B : Type*} [Fintype A]
     [DecidableEq B]
     (e : A ↪ B)
-    (x : stdSimplex ℝ {b // b ∈ (Finset.univ : Finset A).map e})
+    (x : standardSimplex ℝ {b // b ∈ (Finset.univ : Finset A).map e})
     (a : A) :
     relabelUnivSimplex e x a =
       extendFaceCoordinates ((Finset.univ : Finset A).map e) x (e a) := by
@@ -343,7 +343,7 @@ theorem relabelUnivSimplex_apply
   let ea : {b // b ∈ (Finset.univ : Finset A).map e} :=
     ⟨e a, Finset.mem_map.mpr ⟨a, Finset.mem_univ a, rfl⟩⟩
   rw [extendFaceCoordinates_of_mem _ _ ea.2]
-  simp only [relabelUnivSimplex, stdSimplex.map_coe,
+  simp only [relabelUnivSimplex, standardSimplex.map_coe,
     FunOnFinite.linearMap_apply_apply]
   have hfilter :
       Finset.univ.filter
@@ -375,10 +375,10 @@ theorem relabelUnivSimplex_apply
 /-- An injective vertex map preserves the coordinate at each source vertex. -/
 theorem stdSimplex_map_embedding_apply
     {A B : Type*} [Fintype A] [Fintype B]
-    (e : A ↪ B) (x : stdSimplex ℝ A) (a : A) :
-    stdSimplex.map e x (e a) = x a := by
+    (e : A ↪ B) (x : standardSimplex ℝ A) (a : A) :
+    standardSimplex.map e x (e a) = x a := by
   classical
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   have hfilter :
       Finset.univ.filter (fun q : A ↦ e q = e a) = {a} := by
     ext q
@@ -391,11 +391,11 @@ theorem stdSimplex_map_embedding_apply
 /-- An injective vertex map has zero coordinate away from its image. -/
 theorem stdSimplex_map_embedding_apply_of_notMem_range
     {A B : Type*} [Fintype A] [Fintype B]
-    (e : A ↪ B) (x : stdSimplex ℝ A) {b : B}
+    (e : A ↪ B) (x : standardSimplex ℝ A) {b : B}
     (hb : b ∉ Set.range e) :
-    stdSimplex.map e x b = 0 := by
+    standardSimplex.map e x b = 0 := by
   classical
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
   have hfilter :
       Finset.univ.filter (fun q : A ↦ e q = b) = ∅ := by
     ext q
@@ -520,8 +520,8 @@ noncomputable def pushGeometricRealization
     GeometricRealization A F →
       GeometricRealization B (relabelFaceFamily e F) := by
   intro x
-  refine ⟨stdSimplex.map e ⟨x.1, x.2.1⟩,
-    (stdSimplex.map e ⟨x.1, x.2.1⟩).2, ?_⟩
+  refine ⟨standardSimplex.map e ⟨x.1, x.2.1⟩,
+    (standardSimplex.map e ⟨x.1, x.2.1⟩).2, ?_⟩
   obtain ⟨t, ht, hxt⟩ := x.2.2
   refine ⟨t.map e, Finset.mem_image.mpr ⟨t, ht, rfl⟩, ?_⟩
   intro b hb
@@ -585,7 +585,7 @@ noncomputable def pullGeometricRealization
     (e : A ↪ B) (F : Finset (Finset A))
     (x : GeometricRealization A F) :
     (pushGeometricRealization e F x).1 =
-      stdSimplex.map e ⟨x.1, x.2.1⟩ := rfl
+      standardSimplex.map e ⟨x.1, x.2.1⟩ := rfl
 
 @[simp] theorem pushGeometricRealization_apply_embedding
     {A B : Type*} [Fintype A] [Fintype B]
@@ -675,11 +675,11 @@ theorem continuous_pushGeometricRealization
   apply Continuous.subtype_mk
   have hin :
       Continuous fun x : GeometricRealization A F ↦
-        (⟨x.1, x.2.1⟩ : stdSimplex ℝ A) := by
+        (⟨x.1, x.2.1⟩ : standardSimplex ℝ A) := by
     apply Continuous.subtype_mk
     exact continuous_subtype_val
   exact continuous_subtype_val.comp
-    ((stdSimplex.continuous_map e).comp hin)
+    ((standardSimplex.continuous_map e).comp hin)
 
 theorem continuous_pullGeometricRealization
     {A B : Type*} [Fintype A] [Fintype B]
@@ -712,7 +712,7 @@ theorem sum_extendFaceCoordinates_relabelUnivSimplex
     {A B : Type*} [Fintype A] [Fintype B]
     [DecidableEq B]
     (e : A ↪ B)
-    (x : stdSimplex ℝ
+    (x : standardSimplex ℝ
       {b // b ∈ (Finset.univ : Finset A).map e})
     (F : B → ℝ) :
     (∑ b : B,
@@ -745,7 +745,7 @@ theorem sum_extendFaceCoordinates_relabelUnivSimplex
 coordinates over the underlying vertex set. -/
 theorem sum_attach_mul_eq_sum_extendFaceCoordinates
     {V : Type*} [DecidableEq V] (t : Finset V)
-  (x : stdSimplex ℝ {v // v ∈ t}) (F : V → ℝ) :
+  (x : standardSimplex ℝ {v // v ∈ t}) (F : V → ℝ) :
     (∑ v : {v // v ∈ t}, x v * F v.1) =
       ∑ v ∈ t, extendFaceCoordinates t x v * F v := by
   rw [Finset.univ_eq_attach]
@@ -762,7 +762,7 @@ theorem sum_attach_mul_eq_sum_extendFaceCoordinates
 function on the global vertex type. -/
 theorem sum_extendFaceCoordinates_eq_of_eq
     {V : Type*} [DecidableEq V] {s t : Finset V}
-    (x : stdSimplex ℝ {v // v ∈ s}) (y : stdSimplex ℝ {v // v ∈ t})
+    (x : standardSimplex ℝ {v // v ∈ s}) (y : standardSimplex ℝ {v // v ∈ t})
     (hxy : extendFaceCoordinates s x = extendFaceCoordinates t y)
     (F : V → ℝ) :
     (∑ v : {v // v ∈ s}, x v * F v.1) =
@@ -806,7 +806,7 @@ structure LocallyFiniteTriangleComplex (S : Type*) [TopologicalSpace S] where
   /-- Every declared global vertex occurs in a maximal face. -/
   vertex_used : ∀ v, ∃ f, v ∈ faceVertices f
   /-- Coordinate map of a closed triangle into the ambient space. -/
-  faceMap : ∀ f, stdSimplex ℝ {v // v ∈ faceVertices f} → S
+  faceMap : ∀ f, standardSimplex ℝ {v // v ∈ faceVertices f} → S
   /-- Each coordinate map is continuous. -/
   faceMap_continuous : ∀ f, Continuous (faceMap f)
   /-- Exact face-to-face compatibility and global injectivity, expressed in barycentric
@@ -841,12 +841,12 @@ theorem faceCarrier_nonempty (f : K.Face) : (K.faceCarrier f).Nonempty := by
     rw [h] at this
     simp at this
   let v : {v // v ∈ K.faceVertices f} := ⟨hne.choose, hne.choose_spec⟩
-  exact ⟨K.faceMap f (stdSimplex.vertex v), Set.mem_range_self _⟩
+  exact ⟨K.faceMap f (standardSimplex.vertex v), Set.mem_range_self _⟩
 
 theorem faceMap_injective (f : K.Face) : Function.Injective (K.faceMap f) := by
   intro x y hxy
   have hcoords := K.faceMap_eq_iff.mp hxy
-  apply stdSimplex.ext
+  apply standardSimplex.ext
   funext v
   have hv := congrFun hcoords v.1
   simpa only [extendFaceCoordinates_of_mem (K.faceVertices f) x v.2,
@@ -868,7 +868,7 @@ theorem isClosed_support [T2Space S] : IsClosed K.support :=
 theorem extendFaceCoordinates_vertex (f : K.Face) {v : K.Vertex}
     (hv : v ∈ K.faceVertices f) :
     extendFaceCoordinates (K.faceVertices f)
-        (stdSimplex.vertex ⟨v, hv⟩) = Pi.single v 1 := by
+        (standardSimplex.vertex ⟨v, hv⟩) = Pi.single v 1 := by
   funext w
   by_cases hwv : w = v
   · subst w
@@ -890,13 +890,13 @@ theorem mem_faceVertices_incidentFace (v : K.Vertex) :
 /-- The ambient point represented by a global vertex. -/
 noncomputable def vertexPoint (v : K.Vertex) : S :=
   K.faceMap (K.incidentFace v)
-    (stdSimplex.vertex ⟨v, K.mem_faceVertices_incidentFace v⟩)
+    (standardSimplex.vertex ⟨v, K.mem_faceVertices_incidentFace v⟩)
 
 /-- Every incident face parametrization sends a shared abstract vertex to the same ambient
 point. -/
 theorem faceMap_vertex_eq_vertexPoint (f : K.Face) {v : K.Vertex}
     (hv : v ∈ K.faceVertices f) :
-    K.faceMap f (stdSimplex.vertex ⟨v, hv⟩) = K.vertexPoint v := by
+    K.faceMap f (standardSimplex.vertex ⟨v, hv⟩) = K.vertexPoint v := by
   apply K.faceMap_eq_iff.mpr
   rw [K.extendFaceCoordinates_vertex f hv,
     K.extendFaceCoordinates_vertex (K.incidentFace v)
@@ -904,7 +904,7 @@ theorem faceMap_vertex_eq_vertexPoint (f : K.Face) {v : K.Vertex}
 
 theorem vertexPoint_in_faceCarrier (f : K.Face) {v : K.Vertex}
     (hv : v ∈ K.faceVertices f) : K.vertexPoint v ∈ K.faceCarrier f :=
-  ⟨stdSimplex.vertex ⟨v, hv⟩, K.faceMap_vertex_eq_vertexPoint f hv⟩
+  ⟨standardSimplex.vertex ⟨v, hv⟩, K.faceMap_vertex_eq_vertexPoint f hv⟩
 
 theorem vertexPoint_injective : Function.Injective K.vertexPoint := by
   intro v w hvw
@@ -1084,22 +1084,22 @@ theorem faceEdge_endpoint_order (f : K.Face) (i : ZMod 3) :
 
 /-- The standard one-simplex point at interval parameter `r`. -/
 noncomputable def edgeSimplexPath (e : K.Edge) (r : Set.Icc (0 : ℝ) 1) :
-    stdSimplex ℝ {v // v ∈ e.1} := by
+    standardSimplex ℝ {v // v ∈ e.1} := by
   let a : {v // v ∈ e.1} := ⟨K.edgeFirst e, K.edgeFirst_mem e⟩
   let b : {v // v ∈ e.1} := ⟨K.edgeSecond e, K.edgeSecond_mem e⟩
-  let x := AffineMap.lineMap (stdSimplex.vertex a : {v // v ∈ e.1} → ℝ)
-    (stdSimplex.vertex b : {v // v ∈ e.1} → ℝ) r.1
-  exact ⟨x, (convex_stdSimplex ℝ {v // v ∈ e.1}).lineMap_mem
-    (stdSimplex.vertex a).2 (stdSimplex.vertex b).2 r.2⟩
+  let x := AffineMap.lineMap (standardSimplex.vertex a : {v // v ∈ e.1} → ℝ)
+    (standardSimplex.vertex b : {v // v ∈ e.1} → ℝ) r.1
+  exact ⟨x, (convex_standardSimplex ℝ {v // v ∈ e.1}).lineMap_mem
+    (standardSimplex.vertex a).2 (standardSimplex.vertex b).2 r.2⟩
 
 theorem continuous_edgeSimplexPath (e : K.Edge) :
     Continuous (K.edgeSimplexPath e) := by
   apply Continuous.subtype_mk
   exact (AffineMap.lineMap (k := ℝ)
-    (stdSimplex.vertex
+    (standardSimplex.vertex
       (⟨K.edgeFirst e, K.edgeFirst_mem e⟩ : {v // v ∈ e.1}) :
         {v // v ∈ e.1} → ℝ)
-    (stdSimplex.vertex
+    (standardSimplex.vertex
       (⟨K.edgeSecond e, K.edgeSecond_mem e⟩ : {v // v ∈ e.1}) :
         {v // v ∈ e.1} → ℝ)).continuous_of_finiteDimensional.comp continuous_subtype_val
 
@@ -1136,7 +1136,7 @@ theorem edgeSimplexPath_injective (e : K.Edge) :
   intro r s hrs
   apply Subtype.ext
   have hcoord := congrArg
-    (fun x : stdSimplex ℝ {v // v ∈ e.1} =>
+    (fun x : standardSimplex ℝ {v // v ∈ e.1} =>
       x ⟨K.edgeSecond e, K.edgeSecond_mem e⟩) hrs
   simpa using hcoord
 
@@ -1154,38 +1154,38 @@ def edgeVertexToFace (e : K.Edge) :
   fun v ↦ ⟨v.1, K.edge_subset_faceVertices e v.2⟩
 
 theorem extendFaceCoordinates_map_edgeVertexToFace (e : K.Edge)
-    (x : stdSimplex ℝ {v // v ∈ e.1}) :
+    (x : standardSimplex ℝ {v // v ∈ e.1}) :
     extendFaceCoordinates (K.faceVertices (K.edgeFace e))
-        (stdSimplex.map (K.edgeVertexToFace e) x) =
+        (standardSimplex.map (K.edgeVertexToFace e) x) =
       extendFaceCoordinates e.1 x := by
   unfold edgeVertexToFace
   exact extendFaceCoordinates_map_subset (K.edge_subset_faceVertices e) x
 
 /-- Parametrization of a closed edge by its standard one-simplex. -/
-noncomputable def edgeMap (e : K.Edge) (x : stdSimplex ℝ {v // v ∈ e.1}) : S :=
-  K.faceMap (K.edgeFace e) (stdSimplex.map (K.edgeVertexToFace e) x)
+noncomputable def edgeMap (e : K.Edge) (x : standardSimplex ℝ {v // v ∈ e.1}) : S :=
+  K.faceMap (K.edgeFace e) (standardSimplex.map (K.edgeVertexToFace e) x)
 
 /-- The canonical interval parametrization of an ambient edge carrier. -/
 noncomputable def edgePath (e : K.Edge) (r : Set.Icc (0 : ℝ) 1) : S :=
   K.edgeMap e (K.edgeSimplexPath e r)
 
 theorem edgeMap_eq_faceMap (e : K.Edge) (f : K.Face)
-    (hef : e.1 ⊆ K.faceVertices f) (x : stdSimplex ℝ {v // v ∈ e.1}) :
+    (hef : e.1 ⊆ K.faceVertices f) (x : standardSimplex ℝ {v // v ∈ e.1}) :
     K.edgeMap e x = K.faceMap f
-      (stdSimplex.map (fun v : {v // v ∈ e.1} ↦ ⟨v.1, hef v.2⟩) x) := by
+      (standardSimplex.map (fun v : {v // v ∈ e.1} ↦ ⟨v.1, hef v.2⟩) x) := by
   apply K.faceMap_eq_iff.mpr
   calc
     extendFaceCoordinates (K.faceVertices (K.edgeFace e))
-        (stdSimplex.map (K.edgeVertexToFace e) x) =
+        (standardSimplex.map (K.edgeVertexToFace e) x) =
         extendFaceCoordinates e.1 x := by
           exact K.extendFaceCoordinates_map_edgeVertexToFace e x
     _ = extendFaceCoordinates (K.faceVertices f)
-        (stdSimplex.map (fun v : {v // v ∈ e.1} ↦ ⟨v.1, hef v.2⟩) x) :=
+        (standardSimplex.map (fun v : {v // v ∈ e.1} ↦ ⟨v.1, hef v.2⟩) x) :=
       (extendFaceCoordinates_map_subset hef x).symm
 
 theorem continuous_edgeMap (e : K.Edge) : Continuous (K.edgeMap e) :=
   (K.faceMap_continuous (K.edgeFace e)).comp
-    (stdSimplex.continuous_map (K.edgeVertexToFace e))
+    (standardSimplex.continuous_map (K.edgeVertexToFace e))
 
 theorem continuous_edgePath (e : K.Edge) : Continuous (K.edgePath e) :=
   (K.continuous_edgeMap e).comp (K.continuous_edgeSimplexPath e)
@@ -1197,13 +1197,13 @@ theorem edgeMap_injective (e : K.Edge) : Function.Injective (K.edgeMap e) := by
     calc
       extendFaceCoordinates e.1 x =
           extendFaceCoordinates (K.faceVertices (K.edgeFace e))
-            (stdSimplex.map (K.edgeVertexToFace e) x) := by
+            (standardSimplex.map (K.edgeVertexToFace e) x) := by
         exact (K.extendFaceCoordinates_map_edgeVertexToFace e x).symm
       _ = extendFaceCoordinates (K.faceVertices (K.edgeFace e))
-            (stdSimplex.map (K.edgeVertexToFace e) y) := hcoords
+            (standardSimplex.map (K.edgeVertexToFace e) y) := hcoords
       _ = extendFaceCoordinates e.1 y := by
         exact K.extendFaceCoordinates_map_edgeVertexToFace e y
-  apply stdSimplex.ext
+  apply standardSimplex.ext
   funext v
   have h := congrFun hcoords' v.1
   simpa only [extendFaceCoordinates_of_mem e.1 x v.2,
@@ -1218,9 +1218,9 @@ theorem range_edgeSimplexPath (e : K.Edge) :
   intro x
   let r : Set.Icc (0 : ℝ) 1 :=
     ⟨x ⟨K.edgeSecond e, K.edgeSecond_mem e⟩,
-      mem_Icc_of_mem_stdSimplex x.2 ⟨K.edgeSecond e, K.edgeSecond_mem e⟩⟩
+      mem_Icc_of_mem_standardSimplex x.2 ⟨K.edgeSecond e, K.edgeSecond_mem e⟩⟩
   refine ⟨r, ?_⟩
-  apply stdSimplex.ext
+  apply standardSimplex.ext
   funext v
   by_cases hvFirst : v.1 = K.edgeFirst e
   · have hv : v = ⟨K.edgeFirst e, K.edgeFirst_mem e⟩ := Subtype.ext hvFirst
@@ -1279,8 +1279,8 @@ theorem range_edgePath (e : K.Edge) :
     exact ⟨r, rfl⟩
 
 theorem edgeMap_vertex_eq_vertexPoint (e : K.Edge) (v : {v // v ∈ e.1}) :
-    K.edgeMap e (stdSimplex.vertex v) = K.vertexPoint v.1 := by
-  rw [edgeMap, stdSimplex.map_vertex]
+    K.edgeMap e (standardSimplex.vertex v) = K.vertexPoint v.1 := by
+  rw [edgeMap, standardSimplex.map_vertex]
   exact K.faceMap_vertex_eq_vertexPoint (K.edgeFace e)
     (K.edge_subset_faceVertices e v.2)
 
@@ -1294,10 +1294,10 @@ theorem edgeCarrier_inter_subset_sharedVertices {e d : K.Edge} (hed : e ≠ d) :
     calc
       extendFaceCoordinates e.1 x =
           extendFaceCoordinates (K.faceVertices (K.edgeFace e))
-            (stdSimplex.map (K.edgeVertexToFace e) x) :=
+            (standardSimplex.map (K.edgeVertexToFace e) x) :=
         (K.extendFaceCoordinates_map_edgeVertexToFace e x).symm
       _ = extendFaceCoordinates (K.faceVertices (K.edgeFace d))
-            (stdSimplex.map (K.edgeVertexToFace d) y) := hcoords₀
+            (standardSimplex.map (K.edgeVertexToFace d) y) := hcoords₀
       _ = extendFaceCoordinates d.1 y :=
         K.extendFaceCoordinates_map_edgeVertexToFace d y
   have hex : ∃ v : {v // v ∈ e.1}, 0 < x v := by
@@ -1358,8 +1358,8 @@ theorem edgeCarrier_inter_subset_sharedVertices {e d : K.Edge} (hed : e ≠ d) :
           exact hxzero w hw
         · simp
       _ = 1 := x.2.2
-  have hxvertex : x = stdSimplex.vertex v := by
-    apply stdSimplex.ext
+  have hxvertex : x = standardSimplex.vertex v := by
+    apply standardSimplex.ext
     funext w
     by_cases hwv : w = v
     · subst w
@@ -1377,8 +1377,8 @@ theorem edgeCarrier_inter_eq_sharedVertices {e d : K.Edge} (hed : e ≠ d) :
   rintro p ⟨v, hve, hvd, rfl⟩
   let ve : {w // w ∈ e.1} := ⟨v, hve⟩
   let vd : {w // w ∈ d.1} := ⟨v, hvd⟩
-  exact ⟨⟨stdSimplex.vertex ve, K.edgeMap_vertex_eq_vertexPoint e ve⟩,
-    ⟨stdSimplex.vertex vd, K.edgeMap_vertex_eq_vertexPoint d vd⟩⟩
+  exact ⟨⟨standardSimplex.vertex ve, K.edgeMap_vertex_eq_vertexPoint e ve⟩,
+    ⟨standardSimplex.vertex vd, K.edgeMap_vertex_eq_vertexPoint d vd⟩⟩
 
 theorem isCompact_edgeCarrier (e : K.Edge) : IsCompact (K.edgeCarrier e) :=
   isCompact_range (K.continuous_edgeMap e)
@@ -1386,7 +1386,7 @@ theorem isCompact_edgeCarrier (e : K.Edge) : IsCompact (K.edgeCarrier e) :=
 theorem edgeCarrier_subset_faceCarrier (e : K.Edge) :
     K.edgeCarrier e ⊆ K.faceCarrier (K.edgeFace e) := by
   rintro y ⟨x, rfl⟩
-  exact ⟨stdSimplex.map (K.edgeVertexToFace e) x, rfl⟩
+  exact ⟨standardSimplex.map (K.edgeVertexToFace e) x, rfl⟩
 
 /-- Edge carriers inherit local finiteness from the maximal-face carriers. -/
 theorem locallyFinite_edgeCarriers : LocallyFinite K.edgeCarrier := by
@@ -1414,22 +1414,22 @@ theorem locallyFinite_edgeCarriers : LocallyFinite K.edgeCarrier := by
 
 theorem edgeSimplexPath_zero (e : K.Edge) :
     K.edgeSimplexPath e ⟨0, by simp⟩ =
-      stdSimplex.vertex ⟨K.edgeFirst e, K.edgeFirst_mem e⟩ := by
-  apply stdSimplex.ext
+      standardSimplex.vertex ⟨K.edgeFirst e, K.edgeFirst_mem e⟩ := by
+  apply standardSimplex.ext
   let a : {v // v ∈ e.1} := ⟨K.edgeFirst e, K.edgeFirst_mem e⟩
   let b : {v // v ∈ e.1} := ⟨K.edgeSecond e, K.edgeSecond_mem e⟩
-  change AffineMap.lineMap (stdSimplex.vertex a : {v // v ∈ e.1} → ℝ)
-    (stdSimplex.vertex b : {v // v ∈ e.1} → ℝ) 0 = stdSimplex.vertex a
+  change AffineMap.lineMap (standardSimplex.vertex a : {v // v ∈ e.1} → ℝ)
+    (standardSimplex.vertex b : {v // v ∈ e.1} → ℝ) 0 = standardSimplex.vertex a
   simp [AffineMap.lineMap_apply_module]
 
 theorem edgeSimplexPath_one (e : K.Edge) :
     K.edgeSimplexPath e ⟨1, by simp⟩ =
-      stdSimplex.vertex ⟨K.edgeSecond e, K.edgeSecond_mem e⟩ := by
-  apply stdSimplex.ext
+      standardSimplex.vertex ⟨K.edgeSecond e, K.edgeSecond_mem e⟩ := by
+  apply standardSimplex.ext
   let a : {v // v ∈ e.1} := ⟨K.edgeFirst e, K.edgeFirst_mem e⟩
   let b : {v // v ∈ e.1} := ⟨K.edgeSecond e, K.edgeSecond_mem e⟩
-  change AffineMap.lineMap (stdSimplex.vertex a : {v // v ∈ e.1} → ℝ)
-    (stdSimplex.vertex b : {v // v ∈ e.1} → ℝ) 1 = stdSimplex.vertex b
+  change AffineMap.lineMap (standardSimplex.vertex a : {v // v ∈ e.1} → ℝ)
+    (standardSimplex.vertex b : {v // v ∈ e.1} → ℝ) 1 = standardSimplex.vertex b
   simp [AffineMap.lineMap_apply_module]
 
 theorem edgePath_zero (e : K.Edge) :
@@ -1481,7 +1481,7 @@ theorem vertexPoint_mem_edgeCarrier_iff (v : K.Vertex) (e : K.Edge) :
     simp [extendFaceCoordinates, hve] at h
   · intro hve
     let w : {w // w ∈ e.1} := ⟨v, hve⟩
-    exact ⟨stdSimplex.vertex w, K.edgeMap_vertex_eq_vertexPoint e w⟩
+    exact ⟨standardSimplex.vertex w, K.edgeMap_vertex_eq_vertexPoint e w⟩
 
 @[simp] theorem edgeParameter_vertexPoint_first (e : K.Edge) :
     K.edgeParameter e (K.vertexPoint (K.edgeFirst e))
@@ -1610,8 +1610,8 @@ theorem compactIntrinsic_face_mem [CompactSpace S] (f : K.Face) :
 /-- Restrict a global standard-simplex point supported on `t` to the coordinates indexed by
 `t`. -/
 noncomputable def restrictToFace [Fintype K.Vertex] (t : Finset K.Vertex)
-    (x : stdSimplex ℝ K.Vertex) (hx : ∀ v ∉ t, x v = 0) :
-    stdSimplex ℝ {v // v ∈ t} := by
+    (x : standardSimplex ℝ K.Vertex) (hx : ∀ v ∉ t, x v = 0) :
+    standardSimplex ℝ {v // v ∈ t} := by
   refine ⟨fun v ↦ x v.1, fun v ↦ x.2.1 v.1, ?_⟩
   calc
     ∑ v : {v // v ∈ t}, x v.1 = ∑ v ∈ t, x v := by
@@ -1623,7 +1623,7 @@ noncomputable def restrictToFace [Fintype K.Vertex] (t : Finset K.Vertex)
     _ = 1 := x.2.2
 
 theorem extendFaceCoordinates_restrictToFace [Fintype K.Vertex]
-    (t : Finset K.Vertex) (x : stdSimplex ℝ K.Vertex)
+    (t : Finset K.Vertex) (x : standardSimplex ℝ K.Vertex)
     (hx : ∀ v ∉ t, x v = 0) :
     extendFaceCoordinates t (K.restrictToFace t x hx) = x := by
   funext v
@@ -1735,10 +1735,10 @@ theorem range_compactEval [CompactSpace S] : Set.range K.compactEval = K.support
     exact ⟨K.restrictToFace _ ⟨x.1, x.2.1⟩ (K.supported_on_containingFace x), rfl⟩
   · intro y hy
     obtain ⟨f, z, rfl⟩ := Set.mem_iUnion.mp hy
-    let x0 : stdSimplex ℝ K.Vertex := stdSimplex.map Subtype.val z
+    let x0 : standardSimplex ℝ K.Vertex := standardSimplex.map Subtype.val z
     have hxSupport : ∀ v ∉ K.faceVertices f, x0 v = 0 := by
       intro v hv
-      simp only [x0, stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+      simp only [x0, standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
       have hempty :
           Finset.univ.filter (fun w : {w // w ∈ K.faceVertices f} ↦ w.1 = v) = ∅ := by
         ext w
@@ -1754,7 +1754,7 @@ theorem range_compactEval [CompactSpace S] : Set.range K.compactEval = K.support
     apply congrArg (K.faceMap f)
     ext w
     change x0 w.1 = z w
-    simp only [x0, stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    simp only [x0, standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hfilter :
         Finset.univ.filter
           (fun q : {q // q ∈ K.faceVertices f} ↦ q.1 = w.1) = {w} := by
@@ -1810,7 +1810,7 @@ noncomputable def onSupport [Finite K.Face] :
     K.onSupport.faceVertices f = K.faceVertices f := rfl
 
 @[simp] theorem onSupport_faceMap_val [Finite K.Face] (f : K.Face)
-    (x : stdSimplex ℝ {v // v ∈ K.faceVertices f}) :
+    (x : standardSimplex ℝ {v // v ∈ K.faceVertices f}) :
     (K.onSupport.faceMap f x).1 = K.faceMap f x := rfl
 
 /-- The support-restricted complex covers its ambient support subtype. -/
@@ -1842,11 +1842,11 @@ variable (K : IntrinsicTwoComplex)
 
 /-- Include the standard simplex on one maximal face into the global barycentric realization. -/
 noncomputable def faceStandardMap (t : K.Face)
-    (x : stdSimplex ℝ {v // v ∈ t.1}) : K.realization := by
-  let x0 : stdSimplex ℝ K.Vertex := stdSimplex.map Subtype.val x
+    (x : standardSimplex ℝ {v // v ∈ t.1}) : K.realization := by
+  let x0 : standardSimplex ℝ K.Vertex := standardSimplex.map Subtype.val x
   have hxSupport : ∀ v ∉ t.1, x0 v = 0 := by
     intro v hv
-    simp only [x0, stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    simp only [x0, standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hempty :
         Finset.univ.filter (fun w : {w // w ∈ t.1} ↦ w.1 = v) = ∅ := by
       ext w
@@ -1861,7 +1861,7 @@ noncomputable def faceStandardMap (t : K.Face)
 standard simplex. -/
 noncomputable def restrictToFaceSimplex (t : K.Face) (x : K.realization)
     (hx : ∀ v ∉ t.1, x.1 v = 0) :
-    stdSimplex ℝ {v // v ∈ t.1} := by
+    standardSimplex ℝ {v // v ∈ t.1} := by
   refine ⟨fun v ↦ x.1 v.1, fun v ↦ x.2.1.1 v.1, ?_⟩
   calc
     ∑ v : {v // v ∈ t.1}, x.1 v.1 = ∑ v ∈ t.1, x.1 v := by
@@ -1873,14 +1873,14 @@ noncomputable def restrictToFaceSimplex (t : K.Face) (x : K.realization)
     _ = 1 := x.2.1.2
 
 theorem faceStandardMap_val (t : K.Face)
-    (x : stdSimplex ℝ {v // v ∈ t.1}) :
+    (x : standardSimplex ℝ {v // v ∈ t.1}) :
     (K.faceStandardMap t x).1 = extendFaceCoordinates t.1 x := by
   funext v
   by_cases hv : v ∈ t.1
   · let w : {w // w ∈ t.1} := ⟨v, hv⟩
-    change (stdSimplex.map Subtype.val x : K.Vertex → ℝ) v = _
+    change (standardSimplex.map Subtype.val x : K.Vertex → ℝ) v = _
     rw [extendFaceCoordinates_of_mem t.1 x hv]
-    simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hfilter :
         Finset.univ.filter (fun q : {q // q ∈ t.1} ↦ q.1 = v) = {w} := by
       ext q
@@ -1890,9 +1890,9 @@ theorem faceStandardMap_val (t : K.Face)
       · exact fun h ↦ congrArg Subtype.val h
     rw [hfilter]
     simp [w]
-  · change (stdSimplex.map Subtype.val x : K.Vertex → ℝ) v = _
+  · change (standardSimplex.map Subtype.val x : K.Vertex → ℝ) v = _
     rw [extendFaceCoordinates_of_notMem t.1 x hv]
-    simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+    simp only [standardSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
     have hempty :
         Finset.univ.filter (fun w : {w // w ∈ t.1} ↦ w.1 = v) = ∅ := by
       ext w
@@ -1915,7 +1915,7 @@ theorem faceStandardMap_restrictToFaceSimplex (t : K.Face) (x : K.realization)
 
 theorem continuous_faceStandardMap (t : K.Face) : Continuous (K.faceStandardMap t) := by
   apply Continuous.subtype_mk
-  exact continuous_subtype_val.comp (stdSimplex.continuous_map Subtype.val)
+  exact continuous_subtype_val.comp (standardSimplex.continuous_map Subtype.val)
 
 /-- Regard a finite intrinsic complex with no unused vertices as a locally finite ambient
 triangle complex. -/

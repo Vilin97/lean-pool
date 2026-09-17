@@ -262,8 +262,8 @@ lemma _root_.BruhatTits.Lattice.valuation_det_eq_one_of_mem_stabilizer
   obtain ⟨h, rfl⟩ := MulAction.exists_smul_eq (GL (Fin 2) K) (Lattice.standard R) L
   rw [stabilizer_smul_standard_eq_map_conj_subtype_range] at hg
   obtain ⟨k, ⟨k, rfl⟩, rfl⟩ := hg
-  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply, map_mul, map_inv,
-    mul_inv_cancel_comm, Matrix.GeneralLinearGroup.val_det_apply,
+  simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply, map_mul,
+    map_inv, mul_inv_cancel_comm, Matrix.GeneralLinearGroup.val_det_apply,
     Matrix.GeneralLinearGroup.val_map_apply, Subring.coe_subtype, Subring.coe_det]
   rw [← valuation_eq_one_iff]
   exact Matrix.isUnits_det_units k
@@ -285,12 +285,11 @@ lemma _root_.Matrix.GL.mem_range_map_iff {R K : Type*} [CommRing R]
   simp only [map_mul, map_one]
   rw [hu]
   convert (Matrix.GeneralLinearGroup.det g).val_inv using 2
-  · change f (Matrix.det (Matrix.of r)) = _
-    rw [RingHom.map_det, Matrix.GeneralLinearGroup.val_det_apply]
-    congr 1
-    ext i j
-    simp [hr]
-  · exact (Units.inv_eq_val_inv _).symm
+  change f (Matrix.det (Matrix.of r)) = _
+  rw [RingHom.map_det, Matrix.GeneralLinearGroup.val_det_apply]
+  congr 1
+  ext i j
+  simp [hr]
 
 lemma mem_stabilizer_twist_iff_mem {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) R)
     (f : Fin 2 → ℤ) :

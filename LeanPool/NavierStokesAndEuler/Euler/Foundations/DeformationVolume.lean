@@ -39,7 +39,10 @@ theorem determinant_hasDerivAt (F M : ℝ → Matrix (Fin 3) (Fin 3) ℝ) (t : �
   have hd := h'.congr_deriv (g' := (M t).trace * (F t).det) (by
     simp only [Pi.mul_apply, mul_apply, Fin.sum_univ_three, trace, diag, det_fin_three]
     ring)
-  convert hd using 1 <;> first | rfl | (funext s; exact det_fin_three (F s))
+  convert hd using 1
+  first
+  | rfl
+  | (funext s; exact det_fin_three (F s))
 
 /-- A trace-free velocity gradient preserves the actual deformation determinant. -/
 theorem determinant_eq_one (F M : ℝ → Matrix (Fin 3) (Fin 3) ℝ) (a b : ℝ)

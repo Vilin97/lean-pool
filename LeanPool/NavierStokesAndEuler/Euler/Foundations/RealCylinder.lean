@@ -64,9 +64,11 @@ variable [Fact (0 < period)]
 
 theorem complexField_eLpNorm (f : LiftDomain period → ℝ) :
     eLpNorm (complexField period f) 2 (liftMeasure period) = eLpNorm f 2 (liftMeasure period) := by
-  apply eLpNorm_congr_norm_ae
-  filter_upwards [] with x
-  exact Complex.norm_real _
+  by_cases hf : AEStronglyMeasurable f (liftMeasure period)
+  · exact eLpNorm_congr_norm_ae (Complex.continuous_ofReal.comp_aestronglyMeasurable hf) hf
+      (Filter.Eventually.of_forall fun x => Complex.norm_real _)
+  · rw [eLpNorm_of_not_aestronglyMeasurable hf, eLpNorm_of_not_aestronglyMeasurable]
+    exact fun hc => hf (Complex.continuous_re.comp_aestronglyMeasurable hc)
 
 theorem complexField_memLp (f : LiftDomain period → ℝ) (hf : MemLp f 2 (liftMeasure period)) :
     MemLp (complexField period f) 2 (liftMeasure period) :=

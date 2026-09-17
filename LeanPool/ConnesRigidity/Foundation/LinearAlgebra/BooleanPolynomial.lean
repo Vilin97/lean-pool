@@ -204,6 +204,8 @@ theorem quadratic_weight_lower_bound
     have hc3 : q.constantTerm * 3 = q.constantTerm := by rw [hthree, mul_one]
     ring_nf
     try rw [hc3]
+    simp only [mul_comm (q.quadratic _ _)]
+    ring
   have hbadd (x y z : ι → F) : b (x + y) z = b x z + b y z := by
     dsimp [b]
     simp only [add_mul, mul_add]

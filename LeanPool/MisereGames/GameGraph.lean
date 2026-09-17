@@ -69,10 +69,10 @@ literature, such a game is called *loopfree* (see [Siegel, Definition 4.1 on p.
 34][siegel:CombinatorialGameTheory:2013]).
 -/
 protected class IsWellFounded (c : GameGraph α) where
-  wf (c) : IsWellFounded α fun a b => ∃ p, a ∈ c.moves p b
+  wf (c) : WellFounded fun a b => ∃ p, a ∈ c.moves p b
 
 omit Hl Hr in
-theorem IsWellFounded.of_subrelation (r : α → α → Prop) [IsWellFounded α r]
+theorem IsWellFounded.of_subrelation (r : α → α → Prop) [WellFounded r]
     (hr : ∀ a b p, a ∈ g.moves p b → r a b) : g.IsWellFounded := by
   refine ⟨Subrelation.isWellFounded (r := r) ?_⟩
   simpa only [Subrelation, forall_exists_index]
@@ -87,13 +87,13 @@ Left and Right sets.
 def moveRecOn {motive : α → Sort*} (x)
     (ind : Π x : α, (∀ p, Π y ∈ g.moves p x, motive y) → motive x) :
     motive x :=
-  (IsWellFounded.wf g).fix _ (fun x IH ↦ ind x fun _ _ h ↦ IH _ ⟨_, h⟩) x
+  (IsWellFounded.wf g).fix (fun x IH ↦ ind x fun _ _ h ↦ IH _ ⟨_, h⟩) x
 
 omit Hl Hr in
 theorem moveRecOn_eq {motive : α → Sort*} (x)
     (ind : Π x : α, (∀ p, Π y ∈ g.moves p x, motive y) → motive x) :
     g.moveRecOn x ind = ind x fun _ y _ ↦ g.moveRecOn y ind := by
-  rw [moveRecOn, IsWellFounded.fix_eq]
+  rw [moveRecOn, WellFounded.fix_eq]
   rfl
 
 variable {G : Type (u + 1)} [Form G]

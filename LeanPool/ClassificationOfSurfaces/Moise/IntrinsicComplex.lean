@@ -47,7 +47,7 @@ abbrev realization : Type :=
 
 /-- The closed barycentric carrier of a vertex set. -/
 def ambientFaceCarrier (t : Finset K.Vertex) : Set (K.Vertex → ℝ) :=
-  {x | x ∈ stdSimplex ℝ K.Vertex ∧ ∀ v ∉ t, x v = 0}
+  {x | x ∈ standardSimplex ℝ K.Vertex ∧ ∀ v ∉ t, x v = 0}
 
 /-- The carrier of a listed triangle as a subset of the realization. -/
 def faceCarrier (t : Finset K.Vertex) : Set K.realization :=
@@ -75,12 +75,12 @@ theorem faceCarrier_closed (t : Finset K.Vertex) : IsClosed (K.faceCarrier t) :=
   rw [K.faceCarrier_eq_preimage t]
   have hclosed : IsClosed (K.ambientFaceCarrier t) := by
     have hrepr : K.ambientFaceCarrier t =
-        stdSimplex ℝ K.Vertex ∩ ⋂ v ∈ {v : K.Vertex | v ∉ t},
+        standardSimplex ℝ K.Vertex ∩ ⋂ v ∈ {v : K.Vertex | v ∉ t},
           {x : K.Vertex → ℝ | x v = 0} := by
       ext x
       simp [ambientFaceCarrier]
     rw [hrepr]
-    exact (isClosed_stdSimplex ℝ K.Vertex).inter
+    exact (isClosed_standardSimplex ℝ K.Vertex).inter
       (isClosed_biInter fun v _ => isClosed_eq (continuous_apply v) continuous_const)
   exact hclosed.preimage continuous_subtype_val
 
@@ -307,7 +307,7 @@ theorem usedVertex_mem_parent (v : K.UsedVertex) : v.1 ∈ K.usedVertexParent v 
 
 /-- The canonical barycentric point of a used vertex. -/
 noncomputable def vertexPoint (v : K.UsedVertex) : K.realization :=
-  ⟨Pi.single v.1 1, single_mem_stdSimplex ℝ v.1, by
+  ⟨Pi.single v.1 1, single_mem_standardSimplex ℝ v.1, by
     refine ⟨K.usedVertexParent v, K.usedVertexParent_mem v, ?_⟩
     intro w hw
     have hwv : w ≠ v.1 := by
@@ -372,7 +372,7 @@ theorem edgeSecond_mem (e : K.Edge) : K.edgeSecond e ∈ e.1 := by
 /-- The canonical barycentric realization point associated to a vertex of an edge. -/
 noncomputable def edgeVertexPoint (e : K.Edge) (v : K.Vertex) (hv : v ∈ e.1) :
     K.realization :=
-  ⟨Pi.single v 1, single_mem_stdSimplex ℝ v, by
+  ⟨Pi.single v 1, single_mem_standardSimplex ℝ v, by
     refine ⟨K.edgeParent e, K.edgeParent_mem e, ?_⟩
     intro w hw
     have hwv : w ≠ v := by
@@ -456,7 +456,7 @@ theorem faceEdge_endpoint_order (t : K.Face) (i : ZMod 3) :
 noncomputable def edgePath (e : K.Edge) (r : Set.Icc (0 : ℝ) 1) : K.realization := by
   let x := AffineMap.lineMap (K.edgeFirstPoint e).1 (K.edgeSecondPoint e).1 r.1
   refine ⟨x, ?_, ?_⟩
-  · exact convex_stdSimplex ℝ K.Vertex |>.lineMap_mem
+  · exact convex_standardSimplex ℝ K.Vertex |>.lineMap_mem
       (K.edgeFirstPoint e).2.1 (K.edgeSecondPoint e).2.1 r.2
   · refine ⟨K.edgeParent e, K.edgeParent_mem e, ?_⟩
     intro w hw
@@ -558,7 +558,7 @@ theorem range_edgePath (e : K.Edge) :
       AffineMap.lineMap_apply_module, hvFirst, hvSecond]
   · intro hx
     let r : Set.Icc (0 : ℝ) 1 :=
-      ⟨x.1 (K.edgeSecond e), mem_Icc_of_mem_stdSimplex x.2.1 (K.edgeSecond e)⟩
+      ⟨x.1 (K.edgeSecond e), mem_Icc_of_mem_standardSimplex x.2.1 (K.edgeSecond e)⟩
     refine ⟨r, Subtype.ext ?_⟩
     funext v
     by_cases hvFirst : v = K.edgeFirst e

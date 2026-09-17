@@ -186,7 +186,7 @@ private lemma logDeriv_weierstrassSigmaTerm {z w : ℂ} (hw : w ≠ 0) (hzw : z 
     exact hA.add hB
   have d1 : deriv (fun z : ℂ ↦ 1 - z / w) z = -(1 / w) :=
     (((hasDerivAt_id z).div_const w).const_sub 1).deriv
-  have hmul := logDeriv_mul (f := fun z : ℂ ↦ 1 - z / w)
+  have hmul := logDeriv_fun_mul (f := fun z : ℂ ↦ 1 - z / w)
     (g := fun z : ℂ ↦ Complex.exp (z / w + z ^ 2 / (2 * w ^ 2))) z h1a (Complex.exp_ne_zero _)
     (by fun_prop) (by fun_prop)
   rw [show (fun z ↦ weierstrassSigmaTerm z w)
@@ -624,7 +624,7 @@ theorem logDeriv_weierstrassSigma (z : ℂ) (hz : z ∉ L.lattice) :
   have hmul : logDeriv L.weierstrassSigma z
       = logDeriv (fun z : ℂ ↦ z) z
         + logDeriv (fun z ↦ ∏' l : {l : L.lattice // l ≠ 0}, weierstrassSigmaTerm z (l.1 : ℂ)) z :=
-    logDeriv_mul (f := fun z : ℂ ↦ z)
+    logDeriv_fun_mul (f := fun z : ℂ ↦ z)
       (g := fun z ↦ ∏' l : {l : L.lattice // l ≠ 0}, weierstrassSigmaTerm z (l.1 : ℂ)) z hz0 hprodne
       differentiableAt_id (L.differentiable_tprod_weierstrassSigmaTerm z)
   rw [hmul, hlogP, logDeriv_id', weierstrassZeta]

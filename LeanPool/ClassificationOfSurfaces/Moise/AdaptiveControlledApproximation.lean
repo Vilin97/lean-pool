@@ -342,7 +342,7 @@ theorem edgeImage_diam_le_face_scale
     have hedgeFace : (L K U hU f hf phi hphi).edgeCarrier e ⊆
         (L K U hU f hf phi hphi).faceCarrier t := by
       rintro _ ⟨x, rfl⟩
-      refine ⟨stdSimplex.map (fun v : {v // v ∈ e.1} ↦
+      refine ⟨standardSimplex.map (fun v : {v // v ∈ e.1} ↦
         (⟨v.1, het v.2⟩ : {w // w ∈ (L K U hU f hf phi hphi).faceVertices t})) x, ?_⟩
       exact ((L K U hU f hf phi hphi).edgeMap_eq_faceMap e t het x).symm
     have hpyFace : py.1 ∈ (L K U hU f hf phi hphi).faceCarrier t :=

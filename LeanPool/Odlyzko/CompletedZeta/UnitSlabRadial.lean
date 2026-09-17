@@ -88,8 +88,7 @@ theorem nonnegativeRadialHalfSpace_ae_eq_positive :
         positiveRadialHalfSpace (K := K) := by
   rw [MeasureTheory.volume_pi]
   filter_upwards [Measure.ae_eval_ne (fun _ ↦ volume) w₀ 0] with y hy
-  simp only [nonnegativeRadialHalfSpace, positiveRadialHalfSpace]
-  apply propext
+  simp only [nonnegativeRadialHalfSpace, positiveRadialHalfSpace, mem_ofPred_eq, eq_iff_iff]
   constructor
   · intro h
     exact lt_of_le_of_ne h hy.symm
@@ -100,8 +99,7 @@ theorem nonnegativeUnitFundamentalParamSet_ae_eq_positive :
     nonnegativeUnitFundamentalParamSet (K := K) =ᵐ[
       (volume : Measure (mixedEmbedding.realSpace K))]
         positiveUnitFundamentalParamSet (K := K) :=
-  (ae_eq_refl (unitFundamentalParamSet K)).inter
-    nonnegativeRadialHalfSpace_ae_eq_positive
+  Filter.EventuallyEqSet.rfl.inter nonnegativeRadialHalfSpace_ae_eq_positive
 
 open Classical in
 theorem setIntegral_nonnegativeUnitFundamentalParamSet_eq_positive

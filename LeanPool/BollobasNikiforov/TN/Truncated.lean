@@ -5,6 +5,7 @@ Authors: Shengtong Zhang
 -/
 
 import LeanPool.BollobasNikiforov.TN.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecificLimits.Basic
@@ -14,7 +15,6 @@ import Mathlib.Data.Fintype.Perm
 import Mathlib.Data.Fintype.Sort
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Block
-import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Logic.Equiv.Fin.Basic
@@ -819,7 +819,7 @@ lemma injRearrange_comp {k m : ℕ} (S : StrictMonoFin k m) (π : Equiv.Perm (Fi
     injRearrange (S.2.injective.comp π.injective) = S := by
   have hu : Function.Injective (S.1 ∘ π) := S.2.injective.comp π.injective
   apply Subtype.ext
-  refine (StrictMono.range_inj (injRearrange hu).2 S.2).1 ?_
+  refine (StrictMono.range_inj_of_wellFoundedLT (injRearrange hu).2 S.2).1 ?_
   have h1 : Set.range (injRearrange hu).1 = ((univ.image (S.1 ∘ π) : Finset _) : Set _) := by
     simp only [injRearrange]
     exact range_orderEmbOfFin _ _

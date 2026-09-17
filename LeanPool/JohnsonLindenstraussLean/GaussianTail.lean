@@ -5,6 +5,7 @@ Authors: claytomode
 -/
 import Mathlib.Probability.Moments.SubGaussian
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.MeasureTheory.Order.Group.Lattice
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Calculus.DerivativeTest
 import LeanPool.JohnsonLindenstraussLean.SquaredGaussian

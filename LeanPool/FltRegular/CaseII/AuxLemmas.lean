@@ -89,7 +89,6 @@ lemma exists_not_dvd_spanSingleton_eq {R : Type*} [CommRing R] [IsDedekindDomain
               · exact hx.ne_zero
               · rw [Ne, Ideal.span_singleton_eq_bot]
                 exact hx.ne_zero
-            · rwa [Nat.pos_iff_ne_zero, ← Nat.one_le_iff_ne_zero]
           rwa [← e, mul_comm, ← dvd_gcd_mul_iff_dvd_mul, this, one_mul] at hb
   rw [isPrincipal_iff] at h
   obtain ⟨a, ha⟩ := h

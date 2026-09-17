@@ -403,12 +403,12 @@ private theorem explicitGaussianL2DistanceSq_phase_eq_l2_norm_sq
   have hdiff : MeasureTheory.MemLp (fun z => P z - θ.1 * Q z) 2 (explicitGamma d) :=
     hP.sub hθQ
   have hsqrt :=
-    sqrt_explicitGaussianL2DistanceSq_eq_lpNorm P (fun z => θ.1 * Q z) hdiff.1
+    sqrt_explicitGaussianL2DistanceSq_eq_lpNorm P (fun z => θ.1 * Q z) hdiff.aestronglyMeasurable
   have hnorm :
       ‖(hP.sub hθQ).toLp (fun z => P z - θ.1 * Q z)‖ =
         MeasureTheory.lpNorm (fun z => P z - θ.1 * Q z) 2 (explicitGamma d) := by
     rw [MeasureTheory.Lp.norm_toLp]
-    exact MeasureTheory.toReal_eLpNorm hdiff.1
+    exact MeasureTheory.toReal_eLpNorm
   have htoLp :
       (hP.sub hθQ).toLp (fun z => P z - θ.1 * Q z) =
         hP.toLp P - θ.1 • hQ.toLp Q := by
@@ -533,8 +533,8 @@ private theorem explicitClosure_subset_explicitSequentialClosure
             (⇑((hQn_mem n).toLp (Qn n)) - ⇑(hQ_mem.toLp Q)) 2 (explicitGamma d) =
           MeasureTheory.eLpNorm (fun z => Qn n z - Q z) 2 (explicitGamma d) :=
       MeasureTheory.eLpNorm_congr_ae hae
-    rw [sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hsub_mem.1,
-      ← MeasureTheory.toReal_eLpNorm hsub_mem.1, heLp]
+    rw [sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hsub_mem.aestronglyMeasurable,
+      ← MeasureTheory.toReal_eLpNorm, heLp]
   have hsqrt_tendsto :
       Filter.Tendsto
         (fun n => Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q))
@@ -599,9 +599,9 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
           Real.sqrt (explicitGaussianL2DistanceSq P (fun z => θ * Qn n z)) +
             δ n := by
       rw [sqrt_explicitGaussianL2DistanceSq_eq_lpNorm P (fun z => θ * Q z)
-          hPQθ_mem.1,
+          hPQθ_mem.aestronglyMeasurable,
         sqrt_explicitGaussianL2DistanceSq_eq_lpNorm P (fun z => θ * Qn n z)
-          hPQnθ_mem.1]
+          hPQnθ_mem.aestronglyMeasurable]
       have hdecomp :
           (fun z => P z - θ * Q z) =
             fun z => (P z - θ * Qn n z) + θ * (Qn n z - Q z) := by
@@ -627,7 +627,9 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       rw [hscale] at htri
       have hδ_eq :
           MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2 (explicitGamma d) =
-            δ n := by rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
+            δ n := by
+        rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q
+          hQnQ_mem.aestronglyMeasurable]
       rw [hδ_eq] at htri
       rw [show (fun z => P z - θ * Qn n z + θ * (Qn n z - Q z)) =
           (fun z => P z - θ * Qn n z) + fun z => θ * (Qn n z - Q z) from rfl]
@@ -655,8 +657,8 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
           MeasureTheory.MemLp (fun z => ‖Q z‖ - ‖Qn n z‖) 2
             (explicitGamma d) :=
         hQ_mem.norm.sub hQn_mem.norm
-      rw [sqrt_explicitModulusDistanceSq_eq_lpNorm P (Qn n) hmodQn_mem.1,
-        sqrt_explicitModulusDistanceSq_eq_lpNorm P Q hmodQ_mem.1]
+      rw [sqrt_explicitModulusDistanceSq_eq_lpNorm P (Qn n) hmodQn_mem.aestronglyMeasurable,
+        sqrt_explicitModulusDistanceSq_eq_lpNorm P Q hmodQ_mem.aestronglyMeasurable]
       change
         MeasureTheory.lpNorm (fun z => ‖P z‖ - ‖Qn n z‖) 2 (explicitGamma d) ≤
           MeasureTheory.lpNorm (fun z => ‖P z‖ - ‖Q z‖) 2 (explicitGamma d) +
@@ -686,10 +688,12 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
                 have h := abs_norm_sub_norm_le (Q z) (Qn n z)
                 simpa [Real.norm_eq_abs, norm_sub_rev] using h
           _ = MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2
-                (explicitGamma d) := by rw [MeasureTheory.lpNorm_norm hQnQ_mem.1]
+                (explicitGamma d) := by rw [MeasureTheory.lpNorm_norm hQnQ_mem.aestronglyMeasurable]
       have hδ_eq :
           MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2 (explicitGamma d) =
-            δ n := by rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
+            δ n := by
+        rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q
+          hQnQ_mem.aestronglyMeasurable]
       rw [hδ_eq] at hsecond
       exact htri.trans (add_le_add_right hsecond _)
     have hsqrt_total :

@@ -5,7 +5,7 @@ Authors: Dhyan Aranha, contributors
 -/
 
 import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Data.Real.Sign
+import Mathlib.Basic.Real.Sign
 import Mathlib.Tactic.Common
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum

@@ -432,8 +432,7 @@ theorem corner_ring_artinian [h_ar : IsArtinian R R] :
     IsArtinian (CornerSubring idem_e) (CornerSubring idem_e) := by
   unfold IsArtinian at *
   unfold WellFoundedLT at *
-  have Iacc : ∀ I : Ideal R, Acc (fun x y => x < y) I := fun I ↦ WellFounded.apply h_ar.wf I
-  apply IsWellFounded.mk
+  have Iacc : ∀ I : Ideal R, Acc (fun x y => x < y) I := fun I ↦ WellFounded.apply h_ar I
   have allacc : ∀ I : Ideal (CornerSubring idem_e), Acc (fun x y => x < y) I := by
     intro I
     have h : Acc (fun x y => x < y) (idealPush idem_e (idealLift idem_e I)) :=

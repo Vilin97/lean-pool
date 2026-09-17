@@ -7,7 +7,7 @@ Authors: QudeLeap Team
 module
 
 public import LeanPool.LeanQuantumAlg.Init
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!

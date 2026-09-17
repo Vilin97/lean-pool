@@ -626,7 +626,7 @@ lemma entropyFn_singleton (hX : ∀ i, Measurable (X i)) (i : Fin 4) :
   -- The joint RV is measurable: each coordinate `X j.1` is measurable.
   have h_meas : Measurable
       (fun ω : Ω => fun j : ({i} : Finset (Fin 4)) => X j.1 ω) :=
-    measurable_pi_lambda _ (fun j => hX j.1)
+    Measurable.of_eval (fun j => hX j.1)
   -- π ∘ joint = X i definitionally, so the composed entropy collapses.
   exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
@@ -659,7 +659,7 @@ lemma entropyFn_pair (hX : ∀ i, Measurable (X i))
       subst this; exact h₂
   have h_meas : Measurable
       (fun ω : Ω => fun k : ({i, j} : Finset (Fin 4)) => X k.1 ω) :=
-    measurable_pi_lambda _ (fun k => hX k.1)
+    Measurable.of_eval (fun k => hX k.1)
   -- π ∘ joint = ⟨X i, X j⟩ definitionally.
   exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
@@ -696,7 +696,7 @@ lemma entropyFn_triple (hX : ∀ i, Measurable (X i))
         subst this; exact h₃
   have h_meas : Measurable
       (fun ω : Ω => fun m : ({i, j, k} : Finset (Fin 4)) => X m.1 ω) :=
-    measurable_pi_lambda _ (fun m => hX m.1)
+    Measurable.of_eval (fun m => hX m.1)
   exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 omit [IsProbabilityMeasure μ] in
@@ -736,7 +736,7 @@ lemma entropyFn_quad (hX : ∀ i, Measurable (X i)) :
     · exact e4
   have h_meas : Measurable
       (fun ω : Ω => fun m : ({0, 1, 2, 3} : Finset (Fin 4)) => X m.1 ω) :=
-    measurable_pi_lambda _ (fun m => hX m.1)
+    Measurable.of_eval (fun m => hX m.1)
   exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 end EntropyFnEvaluation

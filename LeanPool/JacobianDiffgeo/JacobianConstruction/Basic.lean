@@ -105,7 +105,7 @@ example (h : genus X = 0) : Subsingleton (Jacobian X) := by
       (fun z => ULift.up (QuotientAddGroup.mk z) : (Fin (genus X) → ℂ) → Jacobian X) := by
     intro q
     obtain ⟨z, hz⟩ := QuotientAddGroup.mk_surjective q.down
-    exact ⟨z, ULift.ext _ _ hz⟩
+    exact ⟨z, ULift.ext hz⟩
   exact hsurj.subsingleton
 
 /-! ### Gated instances (§4–§6): hooks for period-lattice-rank -/

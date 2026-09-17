@@ -51,7 +51,7 @@ lemma GL.map_det (g : GL α R) : Matrix.GeneralLinearGroup.det (GL.map f g) =
     Units.map f (Matrix.GeneralLinearGroup.det g) := by
   ext
   simp only [map, RingHom.mapMatrix_apply, Units.inv_eq_val_inv, Matrix.coe_units_inv,
-    Matrix.GeneralLinearGroup.val_det_apply, Units.coe_map, MonoidHom.coe_coe]
+    Matrix.GeneralLinearGroup.val_det_apply, Units.coe_map, MonoidHom.coe_ofClass]
   symm
   apply RingHom.map_det
 
@@ -89,12 +89,11 @@ lemma GL.mem_range_map_iff {f : R →+* S} (hf : Function.Injective f)
   simp only [_root_.map_mul, _root_.map_one]
   rw [hu]
   convert (Matrix.GeneralLinearGroup.det g).val_inv using 2
-  · change f (Matrix.det (Matrix.of r)) = _
-    rw [RingHom.map_det, Matrix.GeneralLinearGroup.val_det_apply]
-    congr 1
-    ext i j
-    simp [hr]
-  · exact (Units.inv_eq_val_inv _).symm
+  change f (Matrix.det (Matrix.of r)) = _
+  rw [RingHom.map_det, Matrix.GeneralLinearGroup.val_det_apply]
+  congr 1
+  ext i j
+  simp [hr]
 
 variable {K : Type*} [CommRing K] (R : Subring K)
 

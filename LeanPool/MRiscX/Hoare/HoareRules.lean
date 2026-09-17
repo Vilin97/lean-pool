@@ -315,7 +315,7 @@ theorem S_LOOP {α : Type} [Preorder α] [WellFoundedLT α] :
         V s = v →
         ∃ s', weak s s' L_w L_b code ∧ Q s' ∧ s'.pc ∉ L_b
   have loop_correct_at : ∀ v, P v := by
-    let wf := (inferInstance : WellFoundedLT α).wf
+    have wf : WellFounded ((· < ·) : α → α → Prop) := inferInstance
     intro v0
     apply wf.induction v0
     intro v ih s h_code h_pc hI hV

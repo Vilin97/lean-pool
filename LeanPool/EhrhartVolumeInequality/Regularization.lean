@@ -2417,6 +2417,19 @@ private theorem tendsto_sourceJointTrueRadialSmoothed_of_upperSemicontinuousAt_a
         hf q hupper hε] with k hk
     linarith
 
+/-- `volume` on the cover is the product of the factor volumes, but instance search will not
+find the product instance from the `volume` form on its own, so name it here. -/
+private instance isAddLeftInvariant_volume_sourceJointComplexCover (n : ℕ) :
+    Measure.IsAddLeftInvariant (volume : Measure (SourceJointComplexCover n)) :=
+  Measure.prod.instIsAddLeftInvariant
+
+private instance isAddHaarMeasure_volume_sourceJointComplexCover (n : ℕ) :
+    Measure.IsAddHaarMeasure (volume : Measure (SourceJointComplexCover n)) where
+
+private instance isNegInvariant_volume_sourceJointComplexCover (n : ℕ) :
+    Measure.IsNegInvariant (volume : Measure (SourceJointComplexCover n)) :=
+  Measure.IsAddHaarMeasure.isNegInvariant_of_regular _
+
 private theorem contDiff_sourceJointTrueRadialSmoothed {n : ℕ}
     {f : SourceJointComplexCover n → ℝ}
     (hf : LocallyIntegrable f
@@ -4681,7 +4694,7 @@ private theorem integral_momentTorusRepresentative_normSq
           (MeasureTheory.L2.inner_def f f).symm
       _ = ((‖s‖ ^ 2 : ℝ) : ℂ) := by
         rw [inner_self_eq_norm_sq_to_K]
-        simp only [Complex.coe_algebraMap, Submodule.coe_norm, Complex.ofReal_pow, f]
+        simp only [Complex.coe_algebraMap, ← Submodule.norm_coe, Complex.ofReal_pow, f]
   exact Complex.ofReal_injective hcomplex
 
 private theorem integral_momentTorusRepresentative_jetBasis

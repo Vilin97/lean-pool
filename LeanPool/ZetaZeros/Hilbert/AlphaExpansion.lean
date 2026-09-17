@@ -1800,15 +1800,17 @@ theorem sum_sq_pairing_le_integral_norm_sq {lam : ℝ} {N : ℕ}
 
 /-- The tensor product of two `L²` functions is `L²` for the product measure. -/
 theorem memLp_tensor_two {alpha beta : Type*} [MeasurableSpace alpha] [MeasurableSpace beta]
-    {mu : Measure alpha} {nu : Measure beta}
+    {mu : Measure alpha} {nu : Measure beta} [SFinite nu]
     {f : alpha → ℂ} {g : beta → ℂ} (hf : MemLp f 2 mu) (hg : MemLp g 2 nu) :
     MemLp (fun p : alpha × beta => f p.1 * g p.2) 2 (mu.prod nu) := by
-  have h1 : Integrable (fun x => ‖f x‖ ^ 2) mu := (memLp_two_iff_integrable_sq_norm hf.1).mp hf
-  have h2 : Integrable (fun y => ‖g y‖ ^ 2) nu := (memLp_two_iff_integrable_sq_norm hg.1).mp hg
+  have h1 : Integrable (fun x => ‖f x‖ ^ 2) mu :=
+    (memLp_two_iff_integrable_sq_norm hf.aestronglyMeasurable).mp hf
+  have h2 : Integrable (fun y => ‖g y‖ ^ 2) nu :=
+    (memLp_two_iff_integrable_sq_norm hg.aestronglyMeasurable).mp hg
   have hmul : Integrable (fun z : alpha × beta => ‖f z.1‖ ^ 2 * ‖g z.2‖ ^ 2) (mu.prod nu) :=
     h1.mul_prod h2
   have hmeas : AEStronglyMeasurable (fun p : alpha × beta => f p.1 * g p.2) (mu.prod nu) :=
-    hf.1.comp_fst.mul hg.1.comp_snd
+    hf.aestronglyMeasurable.comp_fst.mul hg.aestronglyMeasurable.comp_snd
   rw [memLp_two_iff_integrable_sq_norm hmeas]
   refine hmul.congr ?_
   filter_upwards with z

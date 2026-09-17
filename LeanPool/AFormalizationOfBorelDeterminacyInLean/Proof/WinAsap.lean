@@ -71,7 +71,7 @@ lemma num_spec : (G.residual (x.take h.num)).ExistsWinning (p.residual (x.take h
   rw [← _root_.not_imp_self (a := _ ≤ _)] --change after update
   intro hn; apply Nat.find_le
   have h' := h.num_spec
-  rwa [List.take_of_length_le] at * <;> omega
+  rw [List.take_of_length_le] at * <;> first | assumption | omega
 --the choices of Exists.choose here just depend on x|n, not x
 lemma take_num {y} : (x ++ y).take h.num = x.take h.num := by simp
 lemma extend (y : List A) (h : WinningPrefix G p x) : WinningPrefix G p (x ++ y) :=

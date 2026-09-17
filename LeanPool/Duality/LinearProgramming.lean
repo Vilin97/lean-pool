@@ -611,7 +611,8 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
       | ⊥ =>
         refine ⟨⊥, ⟨xₚ, hxₚ, ?_⟩, bot_le⟩
         change hcx₀ to P.c ᵥ⬝ x₀ = ⊥
-        rwa [←dotWeig_eq_bot] at hcx₀ ⊢
+        rw [←dotWeig_eq_bot] at hcx₀ ⊢
+        assumption
       | ⊤ =>
         exfalso
         rw [hcx₀] at hx₀
@@ -637,9 +638,8 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
             rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hi] at hAx₀
             have zeros : (P.A ₘ* x₀) i + (0 : F∞) ≤ 0 := by
               convert hAx₀
-              · change 0 = 0 • -(toE bᵢ)
-                rw [←EF.coe_neg, EF.zero_smul_coe]
-              · rfl
+              change 0 = 0 • -(toE bᵢ)
+              rw [←EF.coe_neg, EF.zero_smul_coe]
             rw [add_zero] at zeros
             rw [Matrix.mulWeig_add, Matrix.mulWeig_smul k_pos, Pi.add_apply]
             apply add_le_of_le_of_nonpos

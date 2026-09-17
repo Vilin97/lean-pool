@@ -402,9 +402,9 @@ theorem relfinrank_succ_eq_finrank_adjoin (n : ℕ) (g : AlgebraicClosure ℚ �
         rw [hg (β ^ 2 + (a : AlgebraicClosure ℚ)), add_sub_cancel_right]
       rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq with h | h
       · rw [h]
-        exact SetLike.le_def.mp le_sup_right hgmem
+        exact IsConcreteLE.le_iff.mp le_sup_right hgmem
       · rw [h]
-        exact neg_mem (SetLike.le_def.mp le_sup_right hgmem)
+        exact neg_mem (IsConcreteLE.le_iff.mp le_sup_right hgmem)
     · refine IntermediateField.adjoin_le_iff.mpr ?_
       rintro x ⟨α, hα, rfl⟩
       exact IntermediateField.subset_adjoin ℚ _

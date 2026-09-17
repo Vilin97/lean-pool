@@ -43,13 +43,13 @@ namespace Countermodels
 
 /-- The one-face complex on three vertices realizes exactly the standard 2-simplex. -/
 theorem geometricRealization_single_face :
-    GeometricRealization (Fin 3) {Finset.univ} = stdSimplex ℝ (Fin 3) := by
+    GeometricRealization (Fin 3) {Finset.univ} = standardSimplex ℝ (Fin 3) := by
   ext x
   simp [GeometricRealization]
 
 /-- The standard 2-simplex carries a geometric triangulation with a single face. -/
 noncomputable def stdSimplexTriangulation :
-    GeometricTriangulation (stdSimplex ℝ (Fin 3)) where
+    GeometricTriangulation (standardSimplex ℝ (Fin 3)) where
   Vertex := Fin 3
   faces := {Finset.univ}
   faces_card := by

@@ -4752,7 +4752,7 @@ theorem Phi_isProbabilityMeasure {d : ℕ}
     (t : ℝ) :
     IsProbabilityMeasure (Phi charX f₀ t) := by
   unfold Phi
-  exact MeasureTheory.Measure.isProbabilityMeasure_map (h_meas t)
+  exact (Measure.isProbabilityMeasure_map_iff (h_meas t)).mpr inferInstance
 
 /-- Uniform first-moment bound on `Phi charX f₀` under a per-z position growth
 hypothesis `‖charX t z‖ ≤ C_T · (‖z‖ + 1)`.
@@ -6400,9 +6400,9 @@ theorem Phi_supW1_contraction {d : ℕ}
       ENNReal.ofReal C_T := by
     intro t ht
     have hΦρ_t : IsProbabilityMeasure (Measure.map (fun z => charX_ρ t z) f₀) :=
-      MeasureTheory.Measure.isProbabilityMeasure_map (h_meas_ρ t ht)
+      inferInstance
     have hΦσ_t : IsProbabilityMeasure (Measure.map (fun z => charX_σ t z) f₀) :=
-      MeasureTheory.Measure.isProbabilityMeasure_map (h_meas_σ t ht)
+      inferInstance
     -- W₁ is finite (probability + finite first moment).
     have h_W1_t_ne_top :
         wasserstein1 (Measure.map (fun z => charX_ρ t z) f₀)

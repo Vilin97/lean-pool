@@ -53,7 +53,7 @@ by
         rw [IsDelta0.of_open.not]
         constructor; constructor; constructor
         constructor; constructor
-      · constructor
+      · constructor!
         rw [IsDelta0.flip]
         rw [IsDelta0.display2]
         constructor; constructor; constructor
@@ -97,13 +97,13 @@ by
   unfold ind3 ind2 ind1 at ind
   specialize ind (by
     rw [IsDelta0.display2]
-    constructor
+    constructor!
     rw [IsDelta0.flip]
     rw [IsDelta0.display3]
-    constructor
-    · constructor
+    constructor!
+    · constructor!
       · constructor; constructor; constructor
-      · constructor; constructor
+      · constructor; constructor!
     · constructor; constructor; constructor
   )
   simpInduction at ind
@@ -446,7 +446,7 @@ by
   specialize ind (by
     rw [IsDelta0.display3]
     unfold ind1
-    constructor
+    constructor!
     · apply IsDelta0.of_isQF
       apply IsQF.inf
       · constructor; constructor

@@ -174,7 +174,10 @@ theorem product_hasDerivAt (A B : SmoothCoefficient period) (a : LiftTangent)
     simp [translatedCoefficient]
   rw [hop0] at hprod
   simp only [translationPath_zero, translation_zero] at hprod
-  convert hprod using 1 <;> first | rfl | exact add_comm _ _
+  convert hprod using 1
+  first
+  | rfl
+  | exact add_comm _ _
 
 theorem pressure_hasDerivAt (A B : SmoothCoefficient period) (a : LiftTangent)
     (hB : ∀ x, B.coefficient x = fieldDerivative period a A.coefficient x)
@@ -266,7 +269,10 @@ def add {n : ℕ} {f g : LiftL2 period}
   | .zero _, .zero _ => .zero (f + g)
   | .succ df Jd hJ, .succ dg Kd hK =>
     .succ (fun i => df i + dg i) (fun i => (Jd i).add (Kd i)) (fun i => by
-      convert (hJ i).add (hK i) using 1 <;> first | rfl | (funext t; simp))
+      convert (hJ i).add (hK i) using 1
+      first
+      | rfl
+      | (funext t; simp))
 
 /-- Subtraction preserves the actual strong derivatives recorded in a spatial jet. -/
 def sub {n : ℕ} {f g : LiftL2 period}
@@ -276,7 +282,10 @@ def sub {n : ℕ} {f g : LiftL2 period}
   | .zero _, .zero _ => .zero (f - g)
   | .succ df Jd hJ, .succ dg Kd hK =>
     .succ (fun i => df i - dg i) (fun i => (Jd i).sub (Kd i)) (fun i => by
-      convert (hJ i).sub (hK i) using 1 <;> first | rfl | (funext t; simp))
+      convert (hJ i).sub (hK i) using 1
+      first
+      | rfl
+      | (funext t; simp))
 
 theorem add_norm_le {n : ℕ} {f g : LiftL2 period}
     (J : SpatialJet period directions n f) (K : SpatialJet period directions n g) :

@@ -52,12 +52,11 @@ theorem exists_countable_defect_seed (h : ¬ IsWellOrder M r) :
       ∀ N : Set M, X ⊆ N → ¬ IsWellOrder ↥N fun x y : ↥N => r ↑x ↑y := by
   by_cases htri : Std.Trichotomous r
   · -- the relation must be ill-founded
-    have hwf : ¬ IsWellFounded M r := fun hwf => h (@IsWellOrder.mk M r hwf htri)
-    have hnwf : ¬ WellFounded r := fun hw => hwf ⟨hw⟩
+    have hnwf : ¬ WellFounded r := fun hw => h (@IsWellOrder.mk M r htri hw)
     rw [wellFounded_iff_isEmpty_descending_chain, not_isEmpty_iff] at hnwf
     obtain ⟨f, hf⟩ := hnwf.some
     refine ⟨Set.range f, Set.countable_range f, ⟨f 0, 0, rfl⟩, fun N hXN hwo => ?_⟩
-    exact (wellFounded_iff_isEmpty_descending_chain.mp hwo.toIsWellFounded.wf).false
+    exact (wellFounded_iff_isEmpty_descending_chain.mp hwo.wf).false
       ⟨fun n => (⟨f n, hXN ⟨n, rfl⟩⟩ : ↥N), fun n => hf n⟩
   · -- trichotomy fails: a two-element seed
     have hex : ∃ a b : M, ¬ r a b ∧ ¬ r b a ∧ a ≠ b := by
@@ -139,11 +138,11 @@ private theorem isWellOrder_of_realize_of_modelsOf_subset (lt : L.Relations 2) {
     rw [show (⇑N.subtype ∘ ![x, y]) = ![(x : M), (y : M)] from
       funext fun i => by fin_cases i <;> rfl] at h
     exact h.symm
-  refine hXdefect (N : Set M) hXN (@IsWellOrder.mk _ _ ⟨?_⟩ ⟨?_⟩)
-  · exact Subrelation.wf (fun {a b} hab => (hsub a b).mpr hab) hwoN.toIsWellFounded.wf
+  refine hXdefect (N : Set M) hXN (@IsWellOrder.mk _ _ ⟨?_⟩ ?_)
   · exact fun a b hab hba => Std.Trichotomous.trichotomous
       (r := fun x y : ↥N => @Structure.RelMap L ↥N _ 2 lt ![x, y]) a b
       (fun h => hab ((hsub a b).mp h)) (fun h => hba ((hsub b a).mp h))
+  · exact Subrelation.wf (fun {a b} hab => (hsub a b).mpr hab) hwoN.wf
 
 omit [Countable (Σ l, L.Relations l)] in
 /-- **The bridge**, equality form: if a sentence *defines* the well-order class on codes, then

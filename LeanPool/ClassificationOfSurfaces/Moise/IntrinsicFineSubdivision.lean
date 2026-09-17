@@ -385,8 +385,8 @@ theorem Subdivision.refl_meshLE (K : IntrinsicTwoComplex) :
   rw [dist_pi_le_iff zero_le_one]
   intro v
   rw [Real.dist_eq, abs_le]
-  have hxv := mem_Icc_of_mem_stdSimplex x.2.1 v
-  have hyv := mem_Icc_of_mem_stdSimplex y.2.1 v
+  have hxv := mem_Icc_of_mem_standardSimplex x.2.1 v
+  have hyv := mem_Icc_of_mem_standardSimplex y.2.1 v
   rcases hxv with ⟨hx0, hx1⟩
   rcases hyv with ⟨hy0, hy1⟩
   constructor <;> linarith

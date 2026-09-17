@@ -156,7 +156,7 @@ def homogeneousSystem (A : Coefficient a b E) : TangentODE.IntervalSystem E := {
   initial := 0
   field := fun t x => extend hab A t x
   lip := ‖A‖₊
-  lipschitz := fun t _ => (extend hab A t).lipschitz.weaken (A.norm_coe_le_norm _)
+  lipschitz := fun t _ => (extend hab A t).lipschitzWith.weaken (A.norm_coe_le_norm _)
   continuous := by
     have he : Continuous (fun t : Icc a b => extend hab A t) :=
       (continuous_extend hab A).comp continuous_subtype_val

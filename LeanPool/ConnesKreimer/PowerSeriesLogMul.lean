@@ -21,40 +21,32 @@ namespace PowerSeries
 variable {A : Type*} [CommRing A] [Algebra ℚ A]
 
 /-- `(1+X) · (log(1+X))' = 1`: the geometric-series identity behind the derivative of `log`. -/
-theorem one_add_X_mul_deriv_log : (1 + X : A⟦X⟧) * d⁄dX A (log A) = 1 := by
-  rw [deriv_log]
-  ext n
-  rw [add_mul, one_mul, map_add, coeff_one]
-  rcases Nat.eq_zero_or_pos n with hn | hn
-  · simp_all
-  · obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : n ≠ 0)
-    rw [coeff_succ_X_mul, coeff_mk, coeff_mk, ite_eq_right (Nat.succ_ne_zero m), ← map_add]
-    simp only [Nat.succ_eq_add_one]
-    rw [show ((-1 : ℚ) ^ (m + 1) + (-1) ^ m) = 0 by ring, map_zero]
+theorem one_add_X_mul_deriv_log : (1 + X : A⟦X⟧) * d⁄dX (log A) = 1 := by
+  rw [mul_comm, derivative_log_mul_one_add_X]
 
 /-- The derivative `(log(1+X))'` substituted at `h-1` is the inverse of `h`
 (for `h` with constant term `1`): `(log A)'.subst (h-1) * h = 1`. -/
 theorem deriv_log_subst_mul {h : A⟦X⟧} (hh : constantCoeff h = 1) :
-    (d⁄dX A (log A)).subst (h - 1) * h = 1 := by
+    (d⁄dX (log A)).subst (h - 1) * h = 1 := by
   have hS : HasSubst (h - 1 : A⟦X⟧) :=
     HasSubst.of_constantCoeff_zero' (by simp [hh])
   have hsub1 : (1 : A⟦X⟧).subst (h - 1) = 1 := by rw [← coe_substAlgHom hS, map_one]
   have hsub : (1 + X : A⟦X⟧).subst (h - 1) = h := by
     rw [subst_add hS, hsub1, subst_X hS]; ring
-  calc (d⁄dX A (log A)).subst (h - 1) * h
-      = h * (d⁄dX A (log A)).subst (h - 1) := by ring
-    _ = ((1 + X : A⟦X⟧).subst (h - 1)) * (d⁄dX A (log A)).subst (h - 1) := by rw [hsub]
-    _ = ((1 + X : A⟦X⟧) * d⁄dX A (log A)).subst (h - 1) := by rw [subst_mul hS]
+  calc (d⁄dX (log A)).subst (h - 1) * h
+      = h * (d⁄dX (log A)).subst (h - 1) := by ring
+    _ = ((1 + X : A⟦X⟧).subst (h - 1)) * (d⁄dX (log A)).subst (h - 1) := by rw [hsub]
+    _ = ((1 + X : A⟦X⟧) * d⁄dX (log A)).subst (h - 1) := by rw [subst_mul hS]
     _ = (1 : A⟦X⟧).subst (h - 1) := by rw [one_add_X_mul_deriv_log]
     _ = 1 := hsub1
 
 /-- The chain-rule form of the derivative of `logOf`: `(logOf h)' · h = h'`
 for `h` with constant term `1`. -/
 theorem deriv_logOf_mul {h : A⟦X⟧} (hh : constantCoeff h = 1) :
-    d⁄dX A (logOf h) * h = d⁄dX A h := by
+    d⁄dX (logOf h) * h = d⁄dX h := by
   have hS : HasSubst (h - 1 : A⟦X⟧) :=
     HasSubst.of_constantCoeff_zero' (by simp [hh])
-  have hd : d⁄dX A (logOf h) = (d⁄dX A (log A)).subst (h - 1) * d⁄dX A h := by
+  have hd : d⁄dX (logOf h) = (d⁄dX (log A)).subst (h - 1) * d⁄dX h := by
     rw [logOf_eq, derivative_subst hS, map_sub, Derivation.map_one_eq_zero, sub_zero]
   rw [hd, mul_right_comm, deriv_log_subst_mul hh, one_mul]
 
@@ -75,9 +67,9 @@ theorem logOf_mul [IsAddTorsionFree A] {f g : A⟦X⟧}
   · -- derivatives agree
     apply hcancel
     rw [map_add, add_mul, deriv_logOf_mul hfg]
-    have e1 : d⁄dX A (logOf f) * (f * g) = d⁄dX A f * g := by
+    have e1 : d⁄dX (logOf f) * (f * g) = d⁄dX f * g := by
       rw [← mul_assoc, deriv_logOf_mul hf]
-    have e2 : d⁄dX A (logOf g) * (f * g) = d⁄dX A g * f := by
+    have e2 : d⁄dX (logOf g) * (f * g) = d⁄dX g * f := by
       rw [mul_comm f g, ← mul_assoc, deriv_logOf_mul hg]
     rw [e1, e2, Derivation.leibniz]
     simp only [smul_eq_mul]

@@ -7,6 +7,7 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.Modularforms.Generators.Surjectivity
+public import Mathlib.Algebra.MvPolynomial.CommRing
 
 /-!
 # Generators of the graded ring of level 1 modular forms: Injectivity and main results
@@ -76,8 +77,8 @@ private lemma evalE₄E₆_component_eq (p : MvPolynomial (Fin 2) ℂ) (n : ℕ)
       (evalE₄E₆ q) (↑n : ℤ)
   suffices h : (evalE₄E₆ q) (↑n : ℤ) = 0 by rw [h, add_zero]
   rw [← MvPolynomial.support_sum_monomial_coeff q, map_sum,
-    show (∑ x ∈ q.support, evalE₄E₆ ((MvPolynomial.monomial x) (MvPolynomial.coeff x q))) (↑n : ℤ) =
-      ∑ x ∈ q.support, (evalE₄E₆ ((MvPolynomial.monomial x) (MvPolynomial.coeff x q))) (↑n : ℤ) from
+    show (∑ x ∈ q.support, evalE₄E₆ ((MvPolynomial.monomial x) (q.coeff x))) (↑n : ℤ) =
+      ∑ x ∈ q.support, (evalE₄E₆ ((MvPolynomial.monomial x) (q.coeff x))) (↑n : ℤ) from
       map_sum (DFinsupp.evalAddMonoidHom (↑n : ℤ)) _ _]
   apply Finset.sum_eq_zero
   intro d hd
@@ -113,7 +114,7 @@ private lemma whomog_unique_monomial {n : ℕ} (p : MvPolynomial (Fin 2) ℂ)
     (hp : MvPolynomial.IsWeightedHomogeneous E₄E₆Weight p n)
     (d₀ : Fin 2 →₀ ℕ) (hd₀ : Finsupp.weight E₄E₆Weight d₀ = n)
     (huniq : ∀ d : Fin 2 →₀ ℕ, Finsupp.weight E₄E₆Weight d = n → d = d₀) :
-    p = MvPolynomial.monomial d₀ (MvPolynomial.coeff d₀ p) := by
+    p = MvPolynomial.monomial d₀ (p.coeff d₀) := by
   ext d
   by_cases hd : d = d₀
   · subst hd; simp only [MvPolynomial.coeff_monomial, ↓reduceIte]
@@ -130,16 +131,16 @@ private lemma per_weight_injective_unique_monomial {n : ℕ} (p : MvPolynomial (
       (↑n : ℤ) ≠ 0) : p = 0 := by
   have hpc := whomog_unique_monomial p hp d₀ hd₀ huniq
   rw [hpc] at heval ⊢
-  rw [monomial_fin2_eq, show MvPolynomial.C (MvPolynomial.coeff d₀ p) *
+  rw [monomial_fin2_eq, show MvPolynomial.C (p.coeff d₀) *
     MvPolynomial.X (0 : Fin 2) ^ d₀ 0 * MvPolynomial.X (1 : Fin 2) ^ d₀ 1 =
-    MvPolynomial.C (MvPolynomial.coeff d₀ p) *
+    MvPolynomial.C (p.coeff d₀) *
     (MvPolynomial.X (0 : Fin 2) ^ d₀ 0 * MvPolynomial.X (1 : Fin 2) ^ d₀ 1)
     from mul_assoc _ _ _] at heval
   rw [map_mul, evalE₄E₆_C, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
     map_mul, map_pow, map_pow, evalE₄E₆_X0, evalE₄E₆_X1,
     DirectSum.smul_apply] at heval
   rcases smul_eq_zero.mp heval with hc | hmz
-  · rw [show MvPolynomial.monomial d₀ (MvPolynomial.coeff d₀ p) =
+  · rw [show MvPolynomial.monomial d₀ (p.coeff d₀) =
       MvPolynomial.monomial d₀ 0 from by rw [hc], MvPolynomial.monomial_zero]
   · exact absurd hmz hmf_ne
 
@@ -149,12 +150,12 @@ private lemma Delta_poly_isWeightedHomogeneous :
   simp only [MvPolynomial.smul_eq_C_mul]
   intro d hd
   simp only [MvPolynomial.coeff_C_mul, MvPolynomial.coeff_sub] at hd
-  by_cases hd3 : MvPolynomial.coeff d
-      (MvPolynomial.X (0 : Fin 2) ^ 3 : MvPolynomial (Fin 2) ℂ) ≠ 0
+  by_cases hd3 : (MvPolynomial.X (0 : Fin 2) ^ 3 :
+      MvPolynomial (Fin 2) ℂ).coeff d ≠ 0
   · exact ((MvPolynomial.isWeightedHomogeneous_X ℂ E₄E₆Weight (0 : Fin 2)).pow 3) hd3
   · push Not at hd3
-    by_cases hd6 : MvPolynomial.coeff d
-        (MvPolynomial.X (1 : Fin 2) ^ 2 : MvPolynomial (Fin 2) ℂ) ≠ 0
+    by_cases hd6 : (MvPolynomial.X (1 : Fin 2) ^ 2 :
+        MvPolynomial (Fin 2) ℂ).coeff d ≠ 0
     · exact ((MvPolynomial.isWeightedHomogeneous_X ℂ E₄E₆Weight (1 : Fin 2)).pow 2) hd6
     · push Not at hd6; simp only [hd3, hd6, sub_self, mul_zero, ne_eq, not_true] at hd
 
@@ -233,10 +234,10 @@ private lemma delta_piece_eq_monomial_sub
     h3, h2]
   congr 1
   · rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.X_pow_eq_monomial,
-      MvPolynomial.monomial_mul, one_mul, MvPolynomial.C_mul_monomial, mul_one]
+      MvPolynomial.monomial_mul_monomial, one_mul, MvPolynomial.C_mul_monomial, mul_one]
     exact congrArg (· c) (congrArg MvPolynomial.monomial hd_fin.symm)
   · rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.X_pow_eq_monomial,
-      MvPolynomial.monomial_mul, one_mul, MvPolynomial.C_mul_monomial, mul_one]
+      MvPolynomial.monomial_mul_monomial, one_mul, MvPolynomial.C_mul_monomial, mul_one]
 
 private lemma Finset.sum_lt_sum_of_replace {α : Type*} [DecidableEq α]
     (S S' : Finset α) (f : α → ℕ) (d d' : α)
@@ -265,11 +266,11 @@ private lemma Finset.sum_lt_sum_of_replace {α : Type*} [DecidableEq α]
 open Classical in
 private lemma mvpoly_support_after_reduction {σ R : Type*} [CommRing R] [DecidableEq σ]
     (p : MvPolynomial σ R) (d d' : σ →₀ ℕ) (c : R)
-    (hdd' : d ≠ d') (hc : MvPolynomial.coeff d p = c) :
+    (hdd' : d ≠ d') (hc : p.coeff d = c) :
     let delta := MvPolynomial.monomial d c - MvPolynomial.monomial d' c
     d ∉ (p - delta).support ∧ (p - delta).support ⊆ p.support.erase d ∪ {d'} := by
-  have hcoeff_d : MvPolynomial.coeff d
-      (p - (MvPolynomial.monomial d c - MvPolynomial.monomial d' c)) = 0 := by
+  have hcoeff_d : (p - (MvPolynomial.monomial d c -
+      MvPolynomial.monomial d' c)).coeff d = 0 := by
     rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_sub,
       MvPolynomial.coeff_monomial, MvPolynomial.coeff_monomial,
       ite_eq_left rfl, ite_eq_right hdd'.symm, sub_zero, hc, sub_self]
@@ -314,7 +315,7 @@ private lemma whomog_poly_Delta_decomp {n : ℕ} (hn12 : 12 ≤ n)
     have hwd : d 0 * 4 + d 1 * 6 = n := by
       have := hp (MvPolynomial.mem_support_iff.mp hd_mem)
       have := weight_eq_4a_6b d; omega
-    set c := MvPolynomial.coeff d p
+    set c := p.coeff d
     set delta_piece := MvPolynomial.C c * ((1728 : ℂ) • DeltaPoly *
       (MvPolynomial.X (0 : Fin 2) ^ (d 0 - 3) * MvPolynomial.X (1 : Fin 2) ^ (d 1)))
     set p' := p - delta_piece with hp'_def
@@ -406,7 +407,7 @@ private lemma coeff_zero_of_eval_zero {n : ℕ} (hn12 : 12 ≤ n)
   by_cases hr_empty : r.support = ∅
   · rwa [MvPolynomial.support_eq_empty] at hr_empty
   · obtain ⟨d₀, hd₀⟩ := Finset.nonempty_of_ne_empty hr_empty
-    have hr_mono : r = MvPolynomial.monomial d₀ (MvPolynomial.coeff d₀ r) := by
+    have hr_mono : r = MvPolynomial.monomial d₀ (r.coeff d₀) := by
       ext d
       by_cases hd : d = d₀
       · subst hd; simp only [MvPolynomial.coeff_monomial, ↓reduceIte]
@@ -416,7 +417,7 @@ private lemma coeff_zero_of_eval_zero {n : ℕ} (hn12 : 12 ≤ n)
         · rwa [MvPolynomial.mem_support_iff, not_not] at hd_supp
     have hwd₀ := hr (MvPolynomial.mem_support_iff.mp hd₀)
     have hwd₀' := weight_eq_4a_6b d₀; rw [hwd₀] at hwd₀'
-    set c := MvPolynomial.coeff d₀ r
+    set c := r.coeff d₀
     suffices hc : c = 0 by rw [hr_mono, hc, MvPolynomial.monomial_zero]
     set Q := qExpansionAddHom (show (0 : ℝ) < (1 : ℝ) by norm_num)
       (show (1 : ℝ) ∈ Γ(1).strictPeriods from by simp) (↑n)
@@ -521,7 +522,7 @@ private lemma per_weight_injective_zero
     (p : MvPolynomial (Fin 2) ℂ)
     (hp : MvPolynomial.IsWeightedHomogeneous E₄E₆Weight p 0)
     (heval : (evalE₄E₆ p) (0 : ℤ) = 0) : p = 0 := by
-  have hpc : p = MvPolynomial.C (MvPolynomial.coeff 0 p) := by
+  have hpc : p = MvPolynomial.C (p.coeff 0) := by
     ext d'
     simp only [MvPolynomial.coeff_C]
     by_cases hd' : 0 = d'

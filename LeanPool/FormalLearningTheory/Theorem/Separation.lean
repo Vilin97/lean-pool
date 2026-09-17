@@ -190,7 +190,7 @@ private lemma measurableSet_goodBlock_A
   have hL_meas : LearnEvalMeasurable L := MeasurableBatchLearner.eval_measurable
   have h_label : Measurable (fun p : (Fin n → X) × X =>
       fun i : Fin n => (p.1 i, c (p.1 i))) :=
-    measurable_pi_lambda _ (fun i =>
+    Measurable.of_eval (fun i =>
       ((measurable_pi_apply i).comp measurable_fst).prodMk
         (hc_meas.comp ((measurable_pi_apply i).comp measurable_fst)))
   have h_joint : Measurable (fun p : (Fin n → X) × X =>
@@ -563,7 +563,7 @@ private lemma majority_error_le_seven_rate_of_good_fraction
         simp only [Finset.card_univ, Fintype.card_fin] at hcomp2
         have hfilt_false : (Finset.univ.filter (fun j : Fin k => ¬hs j x = true)).card
             = (Finset.univ.filter (fun j : Fin k => hs j x = false)).card := by
-          congr 1; ext j; simp [Bool.not_eq_true]
+          congr 1
         rw [hwrongAll_def, hfilt_ne]
         omega
     have hwrong_split : wrongAll ≤ wrongGood + (k - good.card) := by

@@ -31,7 +31,7 @@ open PartialTriangulation.RelativeSynchronizedTarget
 
 private theorem extendFaceCoordinates_vertex {V : Type*} [DecidableEq V]
     (F : Finset V) (v : {v // v ∈ F}) :
-    extendFaceCoordinates F (stdSimplex.vertex v) = Pi.single v.1 1 := by
+    extendFaceCoordinates F (standardSimplex.vertex v) = Pi.single v.1 1 := by
   funext w
   by_cases hwv : w = v.1
   · subst w
@@ -44,7 +44,7 @@ private theorem extendFaceCoordinates_vertex {V : Type*} [DecidableEq V]
 
 private theorem simplex_apply_eq_one_of_extend_eq_single
     {V : Type*} [DecidableEq V] (F : Finset V)
-    (x : stdSimplex ℝ {v // v ∈ F}) (v : {v // v ∈ F})
+    (x : standardSimplex ℝ {v // v ∈ F}) (v : {v // v ∈ F})
     (h : extendFaceCoordinates F x = Pi.single v.1 1) :
     x v = 1 := by
   have hone := congrFun h v.1
@@ -53,7 +53,7 @@ private theorem simplex_apply_eq_one_of_extend_eq_single
 
 private theorem barycentricVertex_sum {V K : Type*} [Fintype V] [DecidableEq V]
     (F : Finset V) (v : {v // v ∈ F}) (point : V → K → ℝ) :
-    (fun k ↦ ∑ w : V, extendFaceCoordinates F (stdSimplex.vertex v) w * point w k) =
+    (fun k ↦ ∑ w : V, extendFaceCoordinates F (standardSimplex.vertex v) w * point w k) =
       point v.1 := by
   rw [extendFaceCoordinates_vertex]
   funext k
@@ -64,12 +64,12 @@ private theorem barycentricVertex_sum {V K : Type*} [Fintype V] [DecidableEq V]
   · simp
 
 private def simplexLineMap {V : Type*} [Fintype V]
-    (x y : stdSimplex ℝ V) (r : Set.Icc (0 : ℝ) 1) : stdSimplex ℝ V :=
+    (x y : standardSimplex ℝ V) (r : Set.Icc (0 : ℝ) 1) : standardSimplex ℝ V :=
   ⟨AffineMap.lineMap x.1 y.1 r.1,
-    (convex_stdSimplex ℝ V).lineMap_mem x.2 y.2 r.2⟩
+    (convex_standardSimplex ℝ V).lineMap_mem x.2 y.2 r.2⟩
 
 private theorem extendFaceCoordinates_simplexLineMap {V : Type*} [DecidableEq V]
-    (F : Finset V) (x y : stdSimplex ℝ {v // v ∈ F}) (r : Set.Icc (0 : ℝ) 1) :
+    (F : Finset V) (x y : standardSimplex ℝ {v // v ∈ F}) (r : Set.Icc (0 : ℝ) 1) :
     extendFaceCoordinates F (simplexLineMap x y r) =
       (1 - r.1) • extendFaceCoordinates F x + r.1 • extendFaceCoordinates F y := by
   funext v
@@ -92,20 +92,20 @@ private theorem extendFaceCoordinates_simplexLineMap_vertices_eq
     (a b : {v // v ∈ F}) (c d : {v // v ∈ G})
     (hac : a.1 = c.1) (hbd : b.1 = d.1) (r : Set.Icc (0 : ℝ) 1) :
     extendFaceCoordinates F
-        (simplexLineMap (stdSimplex.vertex a) (stdSimplex.vertex b) r) =
+        (simplexLineMap (standardSimplex.vertex a) (standardSimplex.vertex b) r) =
       extendFaceCoordinates G
-        (simplexLineMap (stdSimplex.vertex c) (stdSimplex.vertex d) r) := by
+        (simplexLineMap (standardSimplex.vertex c) (standardSimplex.vertex d) r) := by
   rw [extendFaceCoordinates_simplexLineMap, extendFaceCoordinates_simplexLineMap,
     extendFaceCoordinates_vertex, extendFaceCoordinates_vertex,
     extendFaceCoordinates_vertex, extendFaceCoordinates_vertex, hac, hbd]
 
 private theorem map_simplexLineMap_vertices {V W : Type*} [Fintype V] [DecidableEq V]
-    (map : stdSimplex ℝ V → W → ℝ) (point : V → W → ℝ)
-    (hline : ∀ (x y : stdSimplex ℝ V) (r : Set.Icc (0 : ℝ) 1),
+    (map : standardSimplex ℝ V → W → ℝ) (point : V → W → ℝ)
+    (hline : ∀ (x y : standardSimplex ℝ V) (r : Set.Icc (0 : ℝ) 1),
       map (simplexLineMap x y r) = AffineMap.lineMap (map x) (map y) r.1)
-    (hvertex : ∀ v, map (stdSimplex.vertex v) = point v)
+    (hvertex : ∀ v, map (standardSimplex.vertex v) = point v)
     (a b : V) (r : Set.Icc (0 : ℝ) 1) :
-    map (simplexLineMap (stdSimplex.vertex a) (stdSimplex.vertex b) r) =
+    map (simplexLineMap (standardSimplex.vertex a) (standardSimplex.vertex b) r) =
       AffineMap.lineMap (point a) (point b) r.1 := by
   rw [hline, hvertex, hvertex]
 
@@ -262,13 +262,13 @@ private theorem oldTarget_agree_of_local_evaluation
 private theorem exists_facePoint_eq_of_edgeParameter_between
     {K L : IntrinsicTwoComplex} (marking : K.EdgeMarking)
     (point : L.UsedVertex → K.realization)
-    (faceMap : (t : L.Face) → stdSimplex ℝ {v // v ∈ t.1} → K.realization)
-    (hline : ∀ (t : L.Face) (x y : stdSimplex ℝ {v // v ∈ t.1})
+    (faceMap : (t : L.Face) → standardSimplex ℝ {v // v ∈ t.1} → K.realization)
+    (hline : ∀ (t : L.Face) (x y : standardSimplex ℝ {v // v ∈ t.1})
       (r : Set.Icc (0 : ℝ) 1),
       (faceMap t (simplexLineMap x y r)).1 =
         AffineMap.lineMap (faceMap t x).1 (faceMap t y).1 r.1)
     (hvertex : ∀ (t : L.Face) (v : {v // v ∈ t.1}),
-      faceMap t (stdSimplex.vertex v) = point ⟨v.1, ⟨t.1, t.2, v.2⟩⟩)
+      faceMap t (standardSimplex.vertex v) = point ⟨v.1, ⟨t.1, t.2, v.2⟩⟩)
     (t : L.Face) (e : K.Edge) (a b : {v // v ∈ t.1})
     (p : K.realization)
     (haEdge : point ⟨a.1, ⟨t.1, t.2, a.2⟩⟩ ∈ K.faceCarrier e.1)
@@ -281,7 +281,7 @@ private theorem exists_facePoint_eq_of_edgeParameter_between
     (hab : marking.edgeParameterValue e
         (point ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) < marking.edgeParameterValue e
         (point ⟨b.1, ⟨t.1, t.2, b.2⟩⟩)) :
-    ∃ z : stdSimplex ℝ {v // v ∈ t.1}, faceMap t z = p := by
+    ∃ z : standardSimplex ℝ {v // v ∈ t.1}, faceMap t z = p := by
   let A := point ⟨a.1, ⟨t.1, t.2, a.2⟩⟩
   let B := point ⟨b.1, ⟨t.1, t.2, b.2⟩⟩
   let ar := marking.edgeParameterValue e A
@@ -295,12 +295,12 @@ private theorem exists_facePoint_eq_of_edgeParameter_between
     · rw [div_le_one hden]
       linarith
   let r : Set.Icc (0 : ℝ) 1 := ⟨r₀, hr₀⟩
-  let z := simplexLineMap (stdSimplex.vertex a) (stdSimplex.vertex b) r
+  let z := simplexLineMap (standardSimplex.vertex a) (standardSimplex.vertex b) r
   refine ⟨z, ?_⟩
   let q := faceMap t z
   have hqLine : q.1 = AffineMap.lineMap A.1 B.1 r.1 := by
     change (faceMap t (simplexLineMap
-      (stdSimplex.vertex a) (stdSimplex.vertex b) r)).1 = _
+      (standardSimplex.vertex a) (standardSimplex.vertex b) r)).1 = _
     rw [hline, hvertex, hvertex]
   have hqEdge : q ∈ K.faceCarrier e.1 := by
     intro k hk
@@ -340,14 +340,14 @@ private theorem subdivision_preimage_faceMap_eq_vertex_sum
     (hlift : ∀ u, R.homeo (lift u) = source (L.vertexPoint u))
     (hliftFace : ∀ (t : L.Face) (v : {v // v ∈ t.1}),
       lift ⟨v.1, ⟨t.1, t.2, v.2⟩⟩ ∈ R.refined.faceCarrier (parent t).1)
-    (hface : ∀ (t : L.Face) (x : stdSimplex ℝ {v // v ∈ t.1}),
+    (hface : ∀ (t : L.Face) (x : standardSimplex ℝ {v // v ∈ t.1}),
       R.homeo.symm (source (L.faceStandardMap t x)) ∈
         R.refined.faceCarrier (parent t).1)
-    (hsourceSum : ∀ (t : L.Face) (x : stdSimplex ℝ {v // v ∈ t.1}),
+    (hsourceSum : ∀ (t : L.Face) (x : standardSimplex ℝ {v // v ∈ t.1}),
       (source (L.faceStandardMap t x)).1 =
         ∑ v : {v // v ∈ t.1}, x v •
           (source (L.vertexPoint ⟨v.1, ⟨t.1, t.2, v.2⟩⟩)).1)
-    (t : L.Face) (x : stdSimplex ℝ {v // v ∈ t.1}) :
+    (t : L.Face) (x : standardSimplex ℝ {v // v ∈ t.1}) :
     (R.homeo.symm (source (L.faceStandardMap t x))).1 =
       ∑ v : {v // v ∈ t.1}, x v •
         (lift ⟨v.1, ⟨t.1, t.2, v.2⟩⟩).1 := by
@@ -525,7 +525,7 @@ private theorem fanRelabel_relabelFace_relabelUniv_apply
     (fanToOld : M.FanVertex ↪ Old)
     (oldToUsed :
       {v // v ∈ (M.globalFanFaceVertices f).map fanToOld} ↪ Used)
-    (x : stdSimplex ℝ
+    (x : standardSimplex ℝ
       {v // v ∈ (Finset.univ : Finset
         {v // v ∈ (M.globalFanFaceVertices f).map fanToOld}).map oldToUsed})
     (p : {p // p ∈ M.fanFaceVertices f}) :
@@ -704,7 +704,7 @@ private structure MixedLocalFanData where
   localVertexPoint : localComplex.UsedVertex → ambient.realization
   localVertexPoint_injective : Function.Injective localVertexPoint
   localFaceMap : (t : localComplex.Face) →
-    stdSimplex ℝ {v // v ∈ t.1} → ambient.realization
+    standardSimplex ℝ {v // v ∈ t.1} → ambient.realization
 
 private abbrev MixedLocalFanData.OutsideFanFace (M : MixedLocalFanData) :=
   {f : M.marking.FanFace // M.isOutside f}
@@ -759,7 +759,7 @@ private noncomputable abbrev MixedLocalFanData.mixedOldFaceVertices
 
 private noncomputable abbrev MixedLocalFanData.mixedOldFaceMap
     (M : MixedLocalFanData) (f : M.MixedOldFace) :
-    stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f} → M.ambient.realization :=
+    standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f} → M.ambient.realization :=
   match f with
   | Sum.inl t => fun x ↦
       M.localFaceMap t (relabelUnivSimplex (M.localFaceOldVertexEmbedding t) x)
@@ -782,11 +782,11 @@ private theorem MixedLocalFanData.mixedOldFaceVertices_card_three
 
 private theorem MixedLocalFanData.mixedOldFaceMap_val_of_local
     (M : MixedLocalFanData)
-    (hlocal : ∀ (t : M.localComplex.Face) (x : stdSimplex ℝ {v // v ∈ t.1}),
+    (hlocal : ∀ (t : M.localComplex.Face) (x : standardSimplex ℝ {v // v ∈ t.1}),
       (M.localFaceMap t x).1 = ∑ v : {v // v ∈ t.1}, x v •
         (M.localVertexPoint ⟨v.1, ⟨t.1, t.2, v.2⟩⟩).1)
     (f : M.MixedOldFace)
-    (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}) :
+    (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}) :
     (M.mixedOldFaceMap f x).1 = fun k ↦ ∑ v : M.OldVertex,
       extendFaceCoordinates (M.mixedOldFaceVertices f) x v * v.1.1 k := by
   rcases f with t | f
@@ -809,7 +809,7 @@ private theorem MixedLocalFanData.mixedOldFaceMap_val_of_local
 
 private theorem MixedLocalFanData.localMixedExtended_apply
     (M : MixedLocalFanData) (t : M.localComplex.Face)
-    (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)})
+    (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)})
     (u : M.localComplex.UsedVertex) :
     extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x
         (M.localOldVertexEmbedding u) =
@@ -849,8 +849,8 @@ private theorem MixedLocalFanData.localMixedExtended_apply
 private theorem faceStandardMap_comp_eq_iff
     {Z : Type*} (L : IntrinsicTwoComplex) (map : L.realization → Z)
     (hmap : Function.Injective map)
-    {t u : L.Face} {x : stdSimplex ℝ {v // v ∈ t.1}}
-    {y : stdSimplex ℝ {v // v ∈ u.1}} :
+    {t u : L.Face} {x : standardSimplex ℝ {v // v ∈ t.1}}
+    {y : standardSimplex ℝ {v // v ∈ u.1}} :
     map (L.faceStandardMap t x) = map (L.faceStandardMap u y) ↔
       extendFaceCoordinates t.1 x = extendFaceCoordinates u.1 y := by
   constructor
@@ -865,13 +865,13 @@ private theorem faceStandardMap_comp_eq_iff
 private theorem MixedLocalFanData.localMixedFaceMap_eq_iff_of_local
     (M : MixedLocalFanData)
     (hlocal : ∀ {t u : M.localComplex.Face}
-      {x : stdSimplex ℝ {v // v ∈ t.1}}
-      {y : stdSimplex ℝ {v // v ∈ u.1}},
+      {x : standardSimplex ℝ {v // v ∈ t.1}}
+      {y : standardSimplex ℝ {v // v ∈ u.1}},
       M.localFaceMap t x = M.localFaceMap u y ↔
         extendFaceCoordinates t.1 x = extendFaceCoordinates u.1 y)
     {t u : M.localComplex.Face}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}} :
+    {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}} :
     M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inl u) y ↔
       extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl u)) y := by
@@ -925,33 +925,33 @@ private structure MixedLocalFanCertificate (M : MixedLocalFanData) where
     Continuous (M.mixedOldFaceMap f)
   mixedOldFaceMap_val :
     ∀ (f : M.MixedOldFace)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}),
+      (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}),
       (M.mixedOldFaceMap f x).1 = fun k ↦ ∑ v : M.OldVertex,
         extendFaceCoordinates (M.mixedOldFaceVertices f) x v * v.1.1 k
   localMixedFaceMap_eq_iff :
     ∀ {t u : M.localComplex.Face}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}},
+      {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+      {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}},
       M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inl u) y ↔
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
           extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl u)) y
   fanMixedFaceMap_eq_iff :
     ∀ {f g : M.OutsideFanFace}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr g)}},
+      {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
+      {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr g)}},
       M.mixedOldFaceMap (Sum.inr f) x = M.mixedOldFaceMap (Sum.inr g) y ↔
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) x =
           extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr g)) y
   mixedOldFaceMap_eq_of_extendedCoordinates :
     ∀ {f g : M.MixedOldFace}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g}},
+      {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}}
+      {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g}},
       extendFaceCoordinates (M.mixedOldFaceVertices f) x =
           extendFaceCoordinates (M.mixedOldFaceVertices g) y →
         M.mixedOldFaceMap f x = M.mixedOldFaceMap g y
   localMixedFaceMap_mem_parent :
     ∀ (t : M.localComplex.Face)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}),
+      (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}),
       M.mixedOldFaceMap (Sum.inl t) x ∈ M.ambient.faceCarrier (parentFace t).1
   localVertexPoint_mem_parent :
     ∀ (t : M.localComplex.Face) (v : {v // v ∈ t.1}),
@@ -960,13 +960,13 @@ private structure MixedLocalFanCertificate (M : MixedLocalFanData) where
   localVertexPoint_mem_marking :
     ∀ v : M.localComplex.UsedVertex, M.localVertexPoint v ∈ M.marking.points
   positive_localVertex_mem_edge :
-    ∀ (t : M.localComplex.Face) (x : stdSimplex ℝ {v // v ∈ t.1})
+    ∀ (t : M.localComplex.Face) (x : standardSimplex ℝ {v // v ∈ t.1})
       (e : M.ambient.Edge),
       M.localFaceMap t x ∈ M.ambient.faceCarrier e.1 →
         ∀ (v : {v // v ∈ t.1}), 0 < x v →
           M.localVertexPoint ⟨v.1, ⟨t.1, t.2, v.2⟩⟩ ∈ M.ambient.faceCarrier e.1
   localFace_edgeParameter_eq_sum :
-    ∀ (t : M.localComplex.Face) (x : stdSimplex ℝ {v // v ∈ t.1})
+    ∀ (t : M.localComplex.Face) (x : standardSimplex ℝ {v // v ∈ t.1})
       (e : M.ambient.Edge),
       M.localFaceMap t x ∈ M.ambient.faceCarrier e.1 →
         M.marking.edgeParameterValue e (M.localFaceMap t x) =
@@ -985,7 +985,7 @@ private structure MixedLocalFanCertificate (M : MixedLocalFanData) where
       p ∈ M.ambient.faceCarrier (parentFace t).1 →
         ∃ u : M.localComplex.UsedVertex, M.localVertexPoint u = p
   localUsedVertex_mem_face_of_map_eq :
-    ∀ (t : M.localComplex.Face) (z : stdSimplex ℝ {v // v ∈ t.1})
+    ∀ (t : M.localComplex.Face) (z : standardSimplex ℝ {v // v ∈ t.1})
       (u : M.localComplex.UsedVertex),
       M.localFaceMap t z = M.localVertexPoint u → u.1 ∈ t.1
   exists_localFacePoint_eq_of_edgeParameter_between :
@@ -1004,26 +1004,26 @@ private structure MixedLocalFanCertificate (M : MixedLocalFanData) where
           (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) <
         M.marking.edgeParameterValue e
           (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
-      ∃ z : stdSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p
+      ∃ z : standardSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p
   mixedOldFaceMap_simplexLineMap :
     ∀ (f : M.MixedOldFace)
-      (x y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f})
+      (x y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f})
       (r : Set.Icc (0 : ℝ) 1),
       (M.mixedOldFaceMap f (simplexLineMap x y r)).1 =
         AffineMap.lineMap (M.mixedOldFaceMap f x).1 (M.mixedOldFaceMap f y).1 r.1
   mixedOldFaceMap_vertex :
     ∀ (f : M.MixedOldFace) (v : {v // v ∈ M.mixedOldFaceVertices f}),
-      M.mixedOldFaceMap f (stdSimplex.vertex v) = v.1.1
+      M.mixedOldFaceMap f (standardSimplex.vertex v) = v.1.1
   mixedLocalExtended_eq_single_of_map_eq_localVertex :
     ∀ (t : M.localComplex.Face)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)})
+      (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)})
       (u : M.localComplex.UsedVertex),
       M.mixedOldFaceMap (Sum.inl t) x = M.localVertexPoint u →
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
           Pi.single (M.localOldVertexEmbedding u) 1
   mixedFanExtended_eq_single_of_map_eq_fanVertex :
     ∀ (f : M.OutsideFanFace)
-      (y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)})
+      (y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)})
       (v : {p // p ∈ M.marking.fanFaceVertices f.1}),
       M.mixedOldFaceMap (Sum.inr f) y = v.1 →
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) y =
@@ -1043,8 +1043,8 @@ private structure LocalFanIntervalVertices
 private theorem MixedLocalFanCertificate.exists_localFanIntervalVertices
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     {t : M.localComplex.Face} {f : M.OutsideFanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
+    {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
     (hxy : M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inr f) y)
     (hyCenter :
       (M.marking.fanRelabelSimplex f.1
@@ -1151,8 +1151,8 @@ private theorem MixedLocalFanCertificate.exists_localFanIntervalVertices
 private theorem MixedLocalFanCertificate.localFanInterior_extendedCoordinates_eq
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     {t : M.localComplex.Face} {f : M.OutsideFanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
+    {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
     (hxy : M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inr f) y)
     (hyCenter :
       (M.marking.fanRelabelSimplex f.1
@@ -1230,9 +1230,9 @@ private theorem MixedLocalFanCertificate.localFanInterior_extendedCoordinates_eq
   let w₁Fan : {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)} :=
     ⟨M.fanOldVertexEmbedding gv₁, hw₁FanMem⟩
   let β := y₀ (M.marking.fanSecondVertex f.1)
-  let r : Set.Icc (0 : ℝ) 1 := ⟨β, y₀.2.1 _, stdSimplex.le_one y₀ _⟩
-  let xLine := simplexLineMap (stdSimplex.vertex w₀Local) (stdSimplex.vertex w₁Local) r
-  let yLine := simplexLineMap (stdSimplex.vertex w₀Fan) (stdSimplex.vertex w₁Fan) r
+  let r : Set.Icc (0 : ℝ) 1 := ⟨β, y₀.2.1 _, standardSimplex.le_one y₀ _⟩
+  let xLine := simplexLineMap (standardSimplex.vertex w₀Local) (standardSimplex.vertex w₁Local) r
+  let yLine := simplexLineMap (standardSimplex.vertex w₀Fan) (standardSimplex.vertex w₁Fan) r
   have hlineCoords :
       extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) xLine =
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) yLine :=
@@ -1246,7 +1246,7 @@ private theorem MixedLocalFanCertificate.localFanInterior_extendedCoordinates_eq
     dsimp only [yLine]
     calc
       (M.mixedOldFaceMap (Sum.inr f)
-          (simplexLineMap (stdSimplex.vertex w₀Fan) (stdSimplex.vertex w₁Fan) r)).1 =
+          (simplexLineMap (standardSimplex.vertex w₀Fan) (standardSimplex.vertex w₁Fan) r)).1 =
           AffineMap.lineMap w₀Fan.1.1.1 w₁Fan.1.1.1 r.1 := by
         apply map_simplexLineMap_vertices
           (fun z ↦ (M.mixedOldFaceMap (Sum.inr f) z).1) (fun v ↦ v.1.1)
@@ -1294,8 +1294,8 @@ private theorem MixedLocalFanCertificate.localFanInterior_extendedCoordinates_eq
 private theorem MixedLocalFanCertificate.localFanEndpoint_extendedCoordinates_eq
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     {t : M.localComplex.Face} {f : M.OutsideFanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
+    {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
     (hxy : M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inr f) y)
     (v : {p // p ∈ M.marking.fanFaceVertices f.1})
     (hvMark : v.1 ∈ M.marking.points)
@@ -1334,16 +1334,16 @@ private theorem MixedLocalFanCertificate.localFanEndpoint_extendedCoordinates_eq
 private theorem MixedLocalFanCertificate.localFanMixedFaceMap_eq_iff
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     {t : M.localComplex.Face} {f : M.OutsideFanFace}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}} :
+    {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}} :
     M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inr f) y ↔
       extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) y := by
   let mixedFaceSimplexLineMap
       (g : M.MixedOldFace)
-      (z w : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g})
+      (z w : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g})
       (r : Set.Icc (0 : ℝ) 1) :
-      stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g} :=
+      standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g} :=
     simplexLineMap z w r
   let x₀ := relabelUnivSimplex
     (M.localFaceOldVertexEmbedding t) x
@@ -1399,8 +1399,8 @@ private theorem MixedLocalFanCertificate.localFanMixedFaceMap_eq_iff
 private theorem MixedLocalFanCertificate.mixedOldFaceMap_eq_iff
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     {f g : M.MixedOldFace}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g}} :
+    {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g}} :
     M.mixedOldFaceMap f x = M.mixedOldFaceMap g y ↔
       extendFaceCoordinates (M.mixedOldFaceVertices f) x =
         extendFaceCoordinates (M.mixedOldFaceVertices g) y := by
@@ -1435,7 +1435,7 @@ private noncomputable abbrev MixedLocalFanData.mixedUsedFaceVertices
 
 private noncomputable abbrev MixedLocalFanData.mixedUsedFaceMap
     (M : MixedLocalFanData) (f : M.MixedOldFace) :
-    stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f} → M.ambient.realization :=
+    standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f} → M.ambient.realization :=
   fun x ↦ M.mixedOldFaceMap f
     (relabelUnivSimplex (M.mixedFaceUsedEmbedding f) x)
 
@@ -1451,11 +1451,11 @@ private theorem MixedLocalFanCertificate.continuous_mixedUsedFaceMap
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M) (f : M.MixedOldFace) :
     Continuous (M.mixedUsedFaceMap f) :=
   (C.continuous_mixedOldFaceMap f).comp
-    (stdSimplex.continuous_map (univMapSubtypeEquiv (M.mixedFaceUsedEmbedding f)))
+    (standardSimplex.continuous_map (univMapSubtypeEquiv (M.mixedFaceUsedEmbedding f)))
 
 private theorem MixedLocalFanData.mixedUsedExtended_apply
     (M : MixedLocalFanData) (f : M.MixedOldFace)
-    (x : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f})
+    (x : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f})
     (p : M.UsedOldVertex) :
     extendFaceCoordinates (M.mixedUsedFaceVertices f) x p =
       extendFaceCoordinates (M.mixedOldFaceVertices f)
@@ -1493,7 +1493,7 @@ private theorem MixedLocalFanData.mixedUsedExtended_apply
 private theorem MixedLocalFanCertificate.mixedUsedFaceMap_val
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     (f : M.MixedOldFace)
-    (x : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f}) :
+    (x : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f}) :
     (M.mixedUsedFaceMap f x).1 = fun k ↦ ∑ v : M.UsedOldVertex,
       extendFaceCoordinates (M.mixedUsedFaceVertices f) x v * v.1.1.1 k := by
   rw [show M.mixedUsedFaceMap f x = M.mixedOldFaceMap f
@@ -1523,8 +1523,8 @@ private theorem MixedLocalFanCertificate.mixedUsedFaceMap_val
 private theorem MixedLocalFanCertificate.mixedUsedFaceMap_eq_iff
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     {f g : M.MixedOldFace}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices g}} :
+    {x : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices f}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices g}} :
     M.mixedUsedFaceMap f x = M.mixedUsedFaceMap g y ↔
       extendFaceCoordinates (M.mixedUsedFaceVertices f) x =
         extendFaceCoordinates (M.mixedUsedFaceVertices g) y := by
@@ -1568,7 +1568,6 @@ private noncomputable abbrev MixedLocalFanCertificate.mixedOldComplex
       mem_map_univ (M.mixedFaceUsedEmbedding f) ⟨v.1, hvf⟩
     refine ⟨f, ?_⟩
     convert hvMem using 1
-    exact Subtype.ext rfl
   faceMap := M.mixedUsedFaceMap
   faceMap_continuous := C.continuous_mixedUsedFaceMap
   faceMap_eq_iff := C.mixedUsedFaceMap_eq_iff
@@ -1790,7 +1789,7 @@ private theorem MixedLocalFanCertificate.exists_oldPoint_of_local
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M)
     (localEval : M.localComplex.realization → M.ambient.realization)
     (hlocalFaceMap : ∀ (t : M.localComplex.Face)
-      (x : stdSimplex ℝ {v // v ∈ t.1}),
+      (x : standardSimplex ℝ {v // v ∈ t.1}),
       M.localFaceMap t x = localEval (M.localComplex.faceStandardMap t x))
     (z : M.localComplex.realization) :
     ∃ x : C.mixedOldComplex.compactIntrinsic.realization,
@@ -1801,7 +1800,7 @@ private theorem MixedLocalFanCertificate.exists_oldPoint_of_local
     C.mixedOldComplex.compactIntrinsic.vertexFintype
   obtain ⟨t, ht, hzt⟩ := z.2.2
   let tf : M.localComplex.Face := ⟨t, ht⟩
-  let x₀ : stdSimplex ℝ {v // v ∈ tf.1} :=
+  let x₀ : standardSimplex ℝ {v // v ∈ tf.1} :=
     M.localComplex.restrictToFaceSimplex tf z hzt
   have hx₀ : M.localComplex.faceStandardMap tf x₀ = z :=
     M.localComplex.faceStandardMap_restrictToFaceSimplex tf z hzt
@@ -1973,8 +1972,8 @@ private theorem MixedLocalFanCertificate.fanCenter_not_local
       M.ambient.faceCenter f.1.1 ∈ M.ambient.faceCarrier (C.parentFace tf).1 := by
     rw [← hcenterEq]
     exact hlocal
-  let xc : stdSimplex ℝ {p // p ∈ M.marking.fanFaceVertices f.1} :=
-    stdSimplex.vertex (M.marking.fanCenterVertex f.1)
+  let xc : standardSimplex ℝ {p // p ∈ M.marking.fanFaceVertices f.1} :=
+    standardSimplex.vertex (M.marking.fanCenterVertex f.1)
   have hxcCarrier :
       M.marking.fanFaceMap f.1 xc ∈ M.ambient.faceCarrier (C.parentFace tf).1 := by
     rw [M.marking.fanFaceMap_vertex f.1 (M.marking.fanCenterVertex f.1)]
@@ -1982,7 +1981,7 @@ private theorem MixedLocalFanCertificate.fanCenter_not_local
   have hzero := M.marking.fanCenterWeight_eq_zero_of_mem_faceCarrier_of_parent_ne
     f.1 (C.parentFace tf) (C.outside_parent_ne f tf) xc hxcCarrier
   have hone : xc (M.marking.fanCenterVertex f.1) = 1 := by
-    simp [xc, stdSimplex.vertex]
+    simp [xc, standardSimplex.vertex]
   rw [hone] at hzero
   exact one_ne_zero hzero
 
@@ -2063,15 +2062,15 @@ private theorem MixedLocalFanCertificate.fanFace_oldPoint_mem_baseEdge_of_common
               (Sum.inl ⟨uc, hnotLocal⟩) :=
         congrFun hcoords (Sum.inl ⟨uc, hnotLocal⟩)
       _ = 0 := htargetZero
-  let x₂ : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inr f)} :=
+  let x₂ : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inr f)} :=
     C.mixedOldComplex.restrictToFace
       (M.mixedUsedFaceVertices (Sum.inr f)) ⟨xb.1, xb.2.1⟩ hxb
-  let x₁ : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)} :=
+  let x₁ : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)} :=
     relabelUnivSimplex (M.mixedFaceUsedEmbedding (Sum.inr f)) x₂
-  let xG : stdSimplex ℝ {v // v ∈ M.marking.globalFanFaceVertices f.1} :=
+  let xG : standardSimplex ℝ {v // v ∈ M.marking.globalFanFaceVertices f.1} :=
     relabelFaceSimplex M.fanOldVertexEmbedding
       (M.marking.globalFanFaceVertices f.1) x₁
-  let x₀ : stdSimplex ℝ {p // p ∈ M.marking.fanFaceVertices f.1} :=
+  let x₀ : standardSimplex ℝ {p // p ∈ M.marking.fanFaceVertices f.1} :=
     M.marking.fanRelabelSimplex f.1 xG
   have hcenter : x₀ fc = 0 := by
     have hweight : x₀ fc = x₂ wc := by
@@ -2152,15 +2151,15 @@ private theorem MixedLocalFanCertificate.fanFace_oldPoint_mem_selected_of_common
   classical
   let : Fintype M.UsedOldVertex :=
     C.mixedOldComplex.compactIntrinsic.vertexFintype
-  let x₂ : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inr f)} :=
+  let x₂ : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inr f)} :=
     C.mixedOldComplex.restrictToFace
       (M.mixedUsedFaceVertices (Sum.inr f)) ⟨xb.1, xb.2.1⟩ hxb
-  let x₁ : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)} :=
+  let x₁ : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)} :=
     relabelUnivSimplex (M.mixedFaceUsedEmbedding (Sum.inr f)) x₂
-  let xG : stdSimplex ℝ {v // v ∈ M.marking.globalFanFaceVertices f.1} :=
+  let xG : standardSimplex ℝ {v // v ∈ M.marking.globalFanFaceVertices f.1} :=
     relabelFaceSimplex M.fanOldVertexEmbedding
       (M.marking.globalFanFaceVertices f.1) x₁
-  let x₀ : stdSimplex ℝ {p // p ∈ M.marking.fanFaceVertices f.1} :=
+  let x₀ : standardSimplex ℝ {p // p ∈ M.marking.fanFaceVertices f.1} :=
     M.marking.fanRelabelSimplex f.1 xG
   have hmap :
       C.mixedOldComplex.compactEval xb = M.marking.fanFaceMap f.1 x₀ := by
@@ -2241,7 +2240,7 @@ private theorem MixedLocalFanCertificate.localFace_relabel_agree
     (localMap : M.localComplex.realization → M.ambient.realization)
     (local_face_eval :
       ∀ (t : M.localComplex.Face)
-        (x : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inl t)}),
+        (x : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inl t)}),
         M.mixedUsedFaceMap (Sum.inl t) x =
           localMap (M.localComplex.faceStandardMap t
             (relabelUnivSimplex (M.localFaceOldVertexEmbedding t)
@@ -2269,12 +2268,12 @@ private theorem MixedLocalFanCertificate.localFace_relabel_agree
   classical
   let : Fintype M.UsedOldVertex :=
     C.mixedOldComplex.compactIntrinsic.vertexFintype
-  let x₂ : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inl tf)} :=
+  let x₂ : standardSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inl tf)} :=
     C.mixedOldComplex.restrictToFace
       (M.mixedUsedFaceVertices (Sum.inl tf)) ⟨xb.1, xb.2.1⟩ hxb
-  let x₁ : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl tf)} :=
+  let x₁ : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl tf)} :=
     relabelUnivSimplex (M.mixedFaceUsedEmbedding (Sum.inl tf)) x₂
-  let x₀ : stdSimplex ℝ {v // v ∈ tf.1} :=
+  let x₀ : standardSimplex ℝ {v // v ∈ tf.1} :=
     relabelUnivSimplex (M.localFaceOldVertexEmbedding tf) x₁
   let z : M.localComplex.realization := M.localComplex.faceStandardMap tf x₀
   apply agree_of_local xb yb z
@@ -3113,7 +3112,7 @@ private theorem chartCore_inter_protected_subset_interior_frontierGlue
                   ChartKind.halfDisk.modelRegion) : Plane) =
                 (c.chart ⟨z, hz⟩ : Plane) := by
             exact congrArg Subtype.val
-              (Equiv.setCongr_apply hmodel (c.chart ⟨z, hz⟩))
+              (Set.equivOfEq_apply hmodel (c.chart ⟨z, hz⟩))
           change
             z ∈ (modelWithCornersEuclideanHalfSpace 2).boundary S ↔
               (((Homeomorph.setCongr hmodel)
@@ -3376,7 +3375,7 @@ private structure ChartInductionGeometry
   source_injective : Function.Injective (ChartInductionGeometry.source P anchorLines)
   localFaceMap_val : ∀
       (t : (ChartInductionGeometry.localComplex P anchorLines).Face)
-      (x : stdSimplex ℝ {v // v ∈ t.1}),
+      (x : standardSimplex ℝ {v // v ∈ t.1}),
     ((ChartInductionGeometry.subdivision P).homeo.symm
       (ChartInductionGeometry.source P anchorLines
         ((ChartInductionGeometry.localComplex P anchorLines).faceStandardMap t x))).1 =
@@ -3632,7 +3631,7 @@ private theorem ChartInductionGeometry.canonicalLocalFaceMap_val
     (P : CrossingWeldPatchContext S c T A)
     (t : (ChartInductionGeometry.localComplex P
       (ChartInductionGeometry.canonicalAnchorLines P)).Face)
-    (x : stdSimplex ℝ {v // v ∈ t.1}) :
+    (x : standardSimplex ℝ {v // v ∈ t.1}) :
     ((ChartInductionGeometry.subdivision P).homeo.symm
       (ChartInductionGeometry.source P (ChartInductionGeometry.canonicalAnchorLines P)
         ((ChartInductionGeometry.localComplex P
@@ -3748,7 +3747,7 @@ private theorem ChartInductionGeometry.canonicalLocalFaceMap_simplexLineMap
     (P : CrossingWeldPatchContext S c T A)
     (t : (ChartInductionGeometry.localComplex P
       (ChartInductionGeometry.canonicalAnchorLines P)).Face)
-    (x y : stdSimplex ℝ {v // v ∈ t.1}) (r : Set.Icc (0 : ℝ) 1) :
+    (x y : standardSimplex ℝ {v // v ∈ t.1}) (r : Set.Icc (0 : ℝ) 1) :
     ((ChartInductionGeometry.subdivision P).homeo.symm
       (ChartInductionGeometry.source P (ChartInductionGeometry.canonicalAnchorLines P)
         ((ChartInductionGeometry.localComplex P
@@ -3798,7 +3797,7 @@ private theorem ChartInductionGeometry.canonicalLocalFaceMap_vertex
       (ChartInductionGeometry.source P (ChartInductionGeometry.canonicalAnchorLines P)
         ((ChartInductionGeometry.localComplex P
           (ChartInductionGeometry.canonicalAnchorLines P)).faceStandardMap t
-            (stdSimplex.vertex v))) =
+            (standardSimplex.vertex v))) =
       ChartInductionGeometry.canonicalLocalVertexPoint P
         ⟨v.1, ⟨t.1, t.2, v.2⟩⟩ := by
   apply Subtype.ext
@@ -3807,7 +3806,7 @@ private theorem ChartInductionGeometry.canonicalLocalFaceMap_vertex
   rw [Finset.sum_eq_single v]
   · simp
   · intro w _ hw
-    simp [stdSimplex.vertex, hw]
+    simp [standardSimplex.vertex, hw]
   · simp
 
 private theorem ChartInductionGeometry.exists_canonicalLocalVertex_eq_anchor
@@ -4061,7 +4060,7 @@ private theorem chartInduction_mixedOldComplex_support
     ChartInductionGeometry.source P G.anchorLines
   let OutsideFace := M.OutsideFanFace
   let outsideMap (f : OutsideFace) :
-      stdSimplex ℝ {v // v ∈ M.marking.globalFanFaceVertices f.1} →
+      standardSimplex ℝ {v // v ∈ M.marking.globalFanFaceVertices f.1} →
         T.toIntrinsic.realization :=
     fun x ↦ R.homeo (M.marking.globalFanFaceMap f.1 x)
   let K := C.mixedOldComplex M
@@ -4104,7 +4103,7 @@ private theorem chartInduction_mixedOldComplex_support
   · obtain ⟨z, hz⟩ := hpLocal
     obtain ⟨t, ht, hzt⟩ := z.2.2
     let tf : M.localComplex.Face := ⟨t, ht⟩
-    let x₀ : stdSimplex ℝ {v // v ∈ tf.1} :=
+    let x₀ : standardSimplex ℝ {v // v ∈ tf.1} :=
       M.localComplex.restrictToFaceSimplex tf z hzt
     have hx₀ : M.localComplex.faceStandardMap tf x₀ = z :=
       M.localComplex.faceStandardMap_restrictToFaceSimplex tf z hzt
@@ -5052,29 +5051,29 @@ private structure MixedMapCertificate (M : MixedLocalFanData) where
   mixedOldFaceVertices_card : ∀ f : M.MixedOldFace, (M.mixedOldFaceVertices f).card = 3
   continuous_mixedOldFaceMap : ∀ f : M.MixedOldFace, Continuous (M.mixedOldFaceMap f)
   mixedOldFaceMap_val : ∀ (f : M.MixedOldFace)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}),
+      (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}),
     (M.mixedOldFaceMap f x).1 = fun k ↦ ∑ v : M.OldVertex,
       extendFaceCoordinates (M.mixedOldFaceVertices f) x v * v.1.1 k
   localMixedFaceMap_eq_iff : ∀ {t u : M.localComplex.Face}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}},
+      {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}}
+      {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl u)}},
     M.mixedOldFaceMap (Sum.inl t) x = M.mixedOldFaceMap (Sum.inl u) y ↔
       extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl u)) y
   fanMixedFaceMap_eq_iff : ∀ {f g : M.OutsideFanFace}
-      {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
-      {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr g)}},
+      {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)}}
+      {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr g)}},
     M.mixedOldFaceMap (Sum.inr f) x = M.mixedOldFaceMap (Sum.inr g) y ↔
       extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) x =
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr g)) y
   mixedOldFaceMap_simplexLineMap : ∀ (f : M.MixedOldFace)
-      (x y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f})
+      (x y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f})
       (r : Set.Icc (0 : ℝ) 1),
     (M.mixedOldFaceMap f (simplexLineMap x y r)).1 =
       AffineMap.lineMap (M.mixedOldFaceMap f x).1 (M.mixedOldFaceMap f y).1 r.1
   mixedOldFaceMap_vertex : ∀ (f : M.MixedOldFace)
       (v : {v // v ∈ M.mixedOldFaceVertices f}),
-    M.mixedOldFaceMap f (stdSimplex.vertex v) = v.1.1
+    M.mixedOldFaceMap f (standardSimplex.vertex v) = v.1.1
 
 private theorem exists_canonicalMixedMapCertificate
     {S : Type*} [TopologicalSpace S]
@@ -5127,16 +5126,16 @@ private theorem exists_canonicalMixedMapCertificate
     · exact Rlevel.homeo.symm.continuous.comp
         (hsource₁Embedding.continuous.comp
           (localSourceComplex.continuous_faceStandardMap t |>.comp
-            (stdSimplex.continuous_map
+            (standardSimplex.continuous_map
               (univMapSubtypeEquiv
                 (localFaceOldVertexEmbedding t)))))
     · exact boundaryMarking.continuous_globalFanFaceMap f.1 |>.comp
-        (stdSimplex.continuous_map
+        (standardSimplex.continuous_map
           (finsetMapSubtypeEquiv fanOldVertexEmbedding
             (boundaryMarking.globalFanFaceVertices f.1)).symm)
   have localMixedExtended_apply
       (t : localSourceComplex.Face)
-      (x : stdSimplex ℝ
+      (x : standardSimplex ℝ
         {v // v ∈ mixedOldFaceVertices (Sum.inl t)})
       (u : localSourceComplex.UsedVertex) :
       extendFaceCoordinates
@@ -5148,9 +5147,9 @@ private theorem exists_canonicalMixedMapCertificate
     mixedData.localMixedExtended_apply t x u
   have localMixedFaceMap_eq_iff
       {t u : localSourceComplex.Face}
-      {x : stdSimplex ℝ
+      {x : standardSimplex ℝ
         {v // v ∈ mixedOldFaceVertices (Sum.inl t)}}
-      {y : stdSimplex ℝ
+      {y : standardSimplex ℝ
         {v // v ∈ mixedOldFaceVertices (Sum.inl u)}} :
       mixedOldFaceMap (Sum.inl t) x =
           mixedOldFaceMap (Sum.inl u) y ↔
@@ -5172,9 +5171,9 @@ private theorem exists_canonicalMixedMapCertificate
       (Rlevel.homeo.symm.injective.comp geometry.source_injective)
   have fanMixedFaceMap_eq_iff
       {f g : OutsideFanFace}
-      {x : stdSimplex ℝ
+      {x : standardSimplex ℝ
         {v // v ∈ mixedOldFaceVertices (Sum.inr f)}}
-      {y : stdSimplex ℝ
+      {y : standardSimplex ℝ
         {v // v ∈ mixedOldFaceVertices (Sum.inr g)}} :
       mixedOldFaceMap (Sum.inr f) x =
           mixedOldFaceMap (Sum.inr g) y ↔
@@ -5194,7 +5193,7 @@ private theorem exists_canonicalMixedMapCertificate
       fanOldVertexEmbedding
   have mixedOldFaceMap_val
       (f : MixedOldFace)
-      (x : stdSimplex ℝ {v // v ∈ mixedOldFaceVertices f}) :
+      (x : standardSimplex ℝ {v // v ∈ mixedOldFaceVertices f}) :
       (mixedOldFaceMap f x).1 =
         fun k ↦ ∑ v : OldVertex,
           extendFaceCoordinates (mixedOldFaceVertices f) x v *
@@ -5202,13 +5201,13 @@ private theorem exists_canonicalMixedMapCertificate
     mixedData.mixedOldFaceMap_val_of_local geometry.localFaceMap_val f x
   let mixedFaceSimplexLineMap
       (f : MixedOldFace)
-      (x y : stdSimplex ℝ {v // v ∈ mixedOldFaceVertices f})
+      (x y : standardSimplex ℝ {v // v ∈ mixedOldFaceVertices f})
       (r : Set.Icc (0 : ℝ) 1) :
-      stdSimplex ℝ {v // v ∈ mixedOldFaceVertices f} :=
+      standardSimplex ℝ {v // v ∈ mixedOldFaceVertices f} :=
     simplexLineMap x y r
   have extend_mixedFaceSimplexLineMap
       (f : MixedOldFace)
-      (x y : stdSimplex ℝ {v // v ∈ mixedOldFaceVertices f})
+      (x y : standardSimplex ℝ {v // v ∈ mixedOldFaceVertices f})
       (r : Set.Icc (0 : ℝ) 1) :
       extendFaceCoordinates (mixedOldFaceVertices f)
           (mixedFaceSimplexLineMap f x y r) =
@@ -5220,7 +5219,7 @@ private theorem exists_canonicalMixedMapCertificate
       (mixedOldFaceVertices f) x y r
   have mixedOldFaceMap_simplexLineMap
       (f : MixedOldFace)
-      (x y : stdSimplex ℝ {v // v ∈ mixedOldFaceVertices f})
+      (x y : standardSimplex ℝ {v // v ∈ mixedOldFaceVertices f})
       (r : Set.Icc (0 : ℝ) 1) :
       (mixedOldFaceMap f (mixedFaceSimplexLineMap f x y r)).1 =
         AffineMap.lineMap
@@ -5254,13 +5253,13 @@ private theorem exists_canonicalMixedMapCertificate
       (f : MixedOldFace)
       (v : {v // v ∈ mixedOldFaceVertices f}) :
       extendFaceCoordinates (mixedOldFaceVertices f)
-          (stdSimplex.vertex v) =
+          (standardSimplex.vertex v) =
         Pi.single v.1 1 :=
     extendFaceCoordinates_vertex (mixedOldFaceVertices f) v
   have mixedOldFaceMap_vertex
       (f : MixedOldFace)
       (v : {v // v ∈ mixedOldFaceVertices f}) :
-      mixedOldFaceMap f (stdSimplex.vertex v) = v.1.1 := by
+      mixedOldFaceMap f (standardSimplex.vertex v) = v.1.1 := by
     apply Subtype.ext
     rw [mixedOldFaceMap_val]
     exact barycentricVertex_sum
@@ -5272,7 +5271,7 @@ private theorem exists_canonicalMixedMapCertificate
 private theorem MixedMapCertificate.localExtended_eq_single
     {M : MixedLocalFanData} (C : MixedMapCertificate M)
     (t : M.localComplex.Face)
-    (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)})
+    (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)})
     (u : M.localComplex.UsedVertex)
     (hxu : M.mixedOldFaceMap (Sum.inl t) x = M.localVertexPoint u) :
     extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
@@ -5293,17 +5292,17 @@ private theorem MixedMapCertificate.localExtended_eq_single
     exact mem_map_univ (M.localFaceOldVertexEmbedding tu) uv
   let w : {v // v ∈ M.mixedOldFaceVertices (Sum.inl tu)} :=
     ⟨M.localOldVertexEmbedding u, huMem⟩
-  have hmapw : M.mixedOldFaceMap (Sum.inl tu) (stdSimplex.vertex w) =
+  have hmapw : M.mixedOldFaceMap (Sum.inl tu) (standardSimplex.vertex w) =
       M.localVertexPoint u := by
     calc
-      M.mixedOldFaceMap (Sum.inl tu) (stdSimplex.vertex w) =
+      M.mixedOldFaceMap (Sum.inl tu) (standardSimplex.vertex w) =
           w.1.1 := C.mixedOldFaceMap_vertex (Sum.inl tu) w
       _ = M.localVertexPoint u := rfl
   have hcoords := C.localMixedFaceMap_eq_iff.mp (hxu.trans hmapw.symm)
   calc
     extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl t)) x =
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inl tu))
-          (stdSimplex.vertex w) := hcoords
+          (standardSimplex.vertex w) := hcoords
     _ = Pi.single w.1 1 :=
       extendFaceCoordinates_vertex (M.mixedOldFaceVertices (Sum.inl tu)) w
     _ = Pi.single (M.localOldVertexEmbedding u) 1 := by rfl
@@ -5311,7 +5310,7 @@ private theorem MixedMapCertificate.localExtended_eq_single
 private theorem MixedMapCertificate.fanExtended_eq_single
     {M : MixedLocalFanData} (C : MixedMapCertificate M)
     (f : M.OutsideFanFace)
-    (y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)})
+    (y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)})
     (v : {p // p ∈ M.marking.fanFaceVertices f.1})
     (hyv : M.mixedOldFaceMap (Sum.inr f) y = v.1) :
     extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) y =
@@ -5327,16 +5326,16 @@ private theorem MixedMapCertificate.fanExtended_eq_single
     exact mem_finset_map M.fanOldVertexEmbedding _ hgvMem
   let w : {v // v ∈ M.mixedOldFaceVertices (Sum.inr f)} :=
     ⟨M.fanOldVertexEmbedding gv, hOldMem⟩
-  have hmapw : M.mixedOldFaceMap (Sum.inr f) (stdSimplex.vertex w) = v.1 := by
+  have hmapw : M.mixedOldFaceMap (Sum.inr f) (standardSimplex.vertex w) = v.1 := by
     calc
-      M.mixedOldFaceMap (Sum.inr f) (stdSimplex.vertex w) =
+      M.mixedOldFaceMap (Sum.inr f) (standardSimplex.vertex w) =
           w.1.1 := C.mixedOldFaceMap_vertex (Sum.inr f) w
       _ = v.1 := rfl
   have hcoords := C.fanMixedFaceMap_eq_iff.mp (hyv.trans hmapw.symm)
   calc
     extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f)) y =
         extendFaceCoordinates (M.mixedOldFaceVertices (Sum.inr f))
-          (stdSimplex.vertex w) := hcoords
+          (standardSimplex.vertex w) := hcoords
     _ = Pi.single w.1 1 :=
       extendFaceCoordinates_vertex (M.mixedOldFaceVertices (Sum.inr f)) w
     _ = Pi.single
@@ -5345,8 +5344,8 @@ private theorem MixedMapCertificate.fanExtended_eq_single
 private theorem MixedMapCertificate.map_eq_of_extendedCoordinates
     {M : MixedLocalFanData} (C : MixedMapCertificate M)
     {f g : M.MixedOldFace}
-    {x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}}
-    {y : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g}}
+    {x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices f}}
+    {y : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices g}}
     (hxy : extendFaceCoordinates (M.mixedOldFaceVertices f) x =
       extendFaceCoordinates (M.mixedOldFaceVertices g) y) :
     M.mixedOldFaceMap f x = M.mixedOldFaceMap g y := by
@@ -5356,17 +5355,17 @@ private theorem MixedMapCertificate.map_eq_of_extendedCoordinates
 private structure MixedLocalBarycentricCertificate
     (M : MixedLocalFanData) (parentFace : M.localComplex.Face → M.ambient.Face) where
   localMixedFaceMap_mem_parent : ∀ (t : M.localComplex.Face)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}),
+      (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}),
     M.mixedOldFaceMap (Sum.inl t) x ∈ M.ambient.faceCarrier (parentFace t).1
   localVertexPoint_mem_marking : ∀ v : M.localComplex.UsedVertex,
     M.localVertexPoint v ∈ M.marking.points
   positive_localVertex_mem_edge : ∀ (t : M.localComplex.Face)
-      (x : stdSimplex ℝ {v // v ∈ t.1}) (e : M.ambient.Edge),
+      (x : standardSimplex ℝ {v // v ∈ t.1}) (e : M.ambient.Edge),
     M.localFaceMap t x ∈ M.ambient.faceCarrier e.1 →
       ∀ (v : {v // v ∈ t.1}), 0 < x v →
         M.localVertexPoint ⟨v.1, ⟨t.1, t.2, v.2⟩⟩ ∈ M.ambient.faceCarrier e.1
   localFace_edgeParameter_eq_sum : ∀ (t : M.localComplex.Face)
-      (x : stdSimplex ℝ {v // v ∈ t.1}) (e : M.ambient.Edge),
+      (x : standardSimplex ℝ {v // v ∈ t.1}) (e : M.ambient.Edge),
     M.localFaceMap t x ∈ M.ambient.faceCarrier e.1 →
       M.marking.edgeParameterValue e (M.localFaceMap t x) =
         ∑ v : {v // v ∈ t.1}, x v * M.marking.edgeParameterValue e
@@ -5391,7 +5390,7 @@ private theorem exists_canonicalMixedLocalBarycentricCertificate
   have hcontains := ChartInductionGeometry.canonicalLocalFaceParent_contains_realization P
   have hlocalFaceMap := G.localFaceMap_val
   have hmemParent (t : L.Face)
-      (x : stdSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}) :
+      (x : standardSimplex ℝ {v // v ∈ M.mixedOldFaceVertices (Sum.inl t)}) :
       M.mixedOldFaceMap (Sum.inl t) x ∈
         R.refined.faceCarrier (G.localFaceParent t).1.1 := by
     let x₀ := relabelUnivSimplex (M.localFaceOldVertexEmbedding t) x
@@ -5411,7 +5410,7 @@ private theorem exists_canonicalMixedLocalBarycentricCertificate
     apply IntrinsicTwoComplex.EdgeMarking.subset_points_ofFinset
     apply Finset.mem_union_left
     exact Finset.mem_image.mpr ⟨v, Finset.mem_univ v, rfl⟩
-  have hpositive (t : L.Face) (x : stdSimplex ℝ {v // v ∈ t.1})
+  have hpositive (t : L.Face) (x : standardSimplex ℝ {v // v ∈ t.1})
       (e : R.refined.Edge) (hqEdge : M.localFaceMap t x ∈ R.refined.faceCarrier e.1)
       (v : {v // v ∈ t.1}) (hv : 0 < x v) :
       G.localVertexPoint ⟨v.1, ⟨t.1, t.2, v.2⟩⟩ ∈ R.refined.faceCarrier e.1 := by
@@ -5446,7 +5445,7 @@ private theorem exists_canonicalMixedLocalBarycentricCertificate
         exact htermLe
       · exact htermNonneg
     exact (mul_eq_zero.mp hprod).resolve_left hv.ne'
-  have hparameter (t : L.Face) (x : stdSimplex ℝ {v // v ∈ t.1})
+  have hparameter (t : L.Face) (x : standardSimplex ℝ {v // v ∈ t.1})
       (e : R.refined.Edge) (hqEdge : M.localFaceMap t x ∈ R.refined.faceCarrier e.1) :
       G.marking.edgeParameterValue e (M.localFaceMap t x) =
         ∑ v : {v // v ∈ t.1}, x v * G.marking.edgeParameterValue e
@@ -5468,7 +5467,7 @@ private theorem exists_canonicalMixedLocalBarycentricCertificate
 
 private structure MixedLocalInterpolationCertificate (M : MixedLocalFanData) where
   localUsedVertex_mem_face_of_map_eq : ∀ (t : M.localComplex.Face)
-      (z : stdSimplex ℝ {v // v ∈ t.1}) (u : M.localComplex.UsedVertex),
+      (z : standardSimplex ℝ {v // v ∈ t.1}) (u : M.localComplex.UsedVertex),
     M.localFaceMap t z = M.localVertexPoint u → u.1 ∈ t.1
   exists_localFacePoint_eq_of_edgeParameter_between : ∀
       (t : M.localComplex.Face) (e : M.ambient.Edge) (a b : {v // v ∈ t.1})
@@ -5485,7 +5484,7 @@ private structure MixedLocalInterpolationCertificate (M : MixedLocalFanData) whe
         (M.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) <
       M.marking.edgeParameterValue e
         (M.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩) →
-    ∃ z : stdSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p
+    ∃ z : standardSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p
 
 private theorem exists_canonicalMixedLocalInterpolationCertificate
     {S : Type*} [TopologicalSpace S]
@@ -5504,7 +5503,7 @@ private theorem exists_canonicalMixedLocalInterpolationCertificate
   have hsourceEmbedding := ChartInductionGeometry.canonicalSource_isEmbedding P
   have hlineMap := ChartInductionGeometry.canonicalLocalFaceMap_simplexLineMap P
   have hvertex := ChartInductionGeometry.canonicalLocalFaceMap_vertex P
-  have hused (t : L.Face) (z : stdSimplex ℝ {v // v ∈ t.1})
+  have hused (t : L.Face) (z : standardSimplex ℝ {v // v ∈ t.1})
       (u : L.UsedVertex) (hzu : M.localFaceMap t z = G.localVertexPoint u) :
       u.1 ∈ t.1 := by
     have hsource : source (L.faceStandardMap t z) = source (L.vertexPoint u) := by
@@ -5535,7 +5534,7 @@ private theorem exists_canonicalMixedLocalInterpolationCertificate
           (G.localVertexPoint ⟨a.1, ⟨t.1, t.2, a.2⟩⟩) <
         G.marking.edgeParameterValue e
           (G.localVertexPoint ⟨b.1, ⟨t.1, t.2, b.2⟩⟩)) :
-      ∃ z : stdSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p := by
+      ∃ z : standardSimplex ℝ {v // v ∈ t.1}, M.localFaceMap t z = p := by
     apply exists_facePoint_eq_of_edgeParameter_between G.marking G.localVertexPoint
       (fun u y ↦ M.localFaceMap u y)
     · intro u x y r

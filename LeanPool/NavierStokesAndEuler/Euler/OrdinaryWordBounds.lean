@@ -34,7 +34,7 @@ theorem jet_norm_le_word_sum (A : SmoothL2Field V) (n : ℕ) :
     ‖A.jetLp n‖ ≤ ∑ w : Fin n → Fin 3, ‖(wordField A w).toLp‖ := by
   let H : (Fin n → Fin 3) → Space → ℝ := fun w x => ‖(wordField A w).field x‖
   have hn (w : Fin n → Fin 3) : (eLpNorm (H w) 2 volume).toReal = ‖(wordField A w).toLp‖ := by
-    rw [field_norm,eLpNorm_norm]
+    rw [field_norm,eLpNorm_norm _ (wordField A w).memLp.aestronglyMeasurable]
   have h := (finite_domination (volume : Measure Space) univ (iteratedFDeriv ℝ n A.field)
     (A.integrable n).aestronglyMeasurable H (fun w _ => (wordField A w).memLp.norm) ?_).2
   · simpa only [norm_jetLp,hn] using h
@@ -76,7 +76,7 @@ theorem wordBound_map {s : ℕ} {M : ℝ} {A : SmoothL2Field V}
     (by simpa only [one_mul] using h n hn w))
 
 theorem field_lpNorm (A : SmoothL2Field V) : lpNorm A.field 2 volume = ‖A.toLp‖ := by
-  rw [field_norm,toReal_eLpNorm A.memLp.aestronglyMeasurable]
+  rw [field_norm,toReal_eLpNorm]
 
 theorem real_pointwise_H2 (A : SmoothL2Field Space) (x : Space) :
     ‖A.field x‖ ≤ smoothEmbeddingConstant*(∑ j ∈ range 3, ‖A.jetLp j‖) := by

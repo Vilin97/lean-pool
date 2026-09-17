@@ -28,7 +28,7 @@ variable {S : Type*} [TopologicalSpace S] (T : GeometricTriangulation S)
 private noncomputable def realizationVertex
     (v : T.Vertex) (f : T.Triangle) (hvf : v ∈ f.1) :
     T.realization :=
-  ⟨Pi.single v 1, single_mem_stdSimplex ℝ v, by
+  ⟨Pi.single v 1, single_mem_standardSimplex ℝ v, by
     refine ⟨f.1, f.2, ?_⟩
     intro w hw
     have hwv : w ≠ v := by
@@ -79,9 +79,9 @@ private noncomputable def approachPoint
         AffineMap.lineMap (k := ℝ)
           (Pi.single v (1 : ℝ) : T.Vertex → ℝ)
           (Pi.single w (1 : ℝ) : T.Vertex → ℝ) (approachRatio n) ∈
-          stdSimplex ℝ T.Vertex :=
-      (convex_stdSimplex ℝ T.Vertex).lineMap_mem
-        (single_mem_stdSimplex ℝ v) (single_mem_stdSimplex ℝ w) hr
+          standardSimplex ℝ T.Vertex :=
+      (convex_standardSimplex ℝ T.Vertex).lineMap_mem
+        (single_mem_standardSimplex ℝ v) (single_mem_standardSimplex ℝ w) hr
     refine ⟨hstd, f.1, f.2, ?_⟩
     intro u hu
     have huv : u ≠ v := fun h ↦ hu (h ▸ hvf)

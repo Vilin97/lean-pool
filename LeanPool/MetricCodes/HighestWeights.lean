@@ -3709,7 +3709,7 @@ theorem sourceRowDegree_eq_of_coeff_ne_zero {m : ℕ}
     (hp : ∀ i, sourceRowRoot i i p = (lam i : ℂ) • p)
     (d : Fin m × Fin m →₀ ℕ) (hd : p.coeff d ≠ 0)
     (i : Fin m) : sourceRowDegree d i = lam i := by
-  have hcoeff := congrArg (MvPolynomial.coeff d) (hp i)
+  have hcoeff := MvPolynomial.ext_iff.mp (hp i) d
   rw [coeff_sourceRowRoot_self, MvPolynomial.coeff_smul] at hcoeff
   have hmul :
       (sourceRowDegree d i : ℂ) * p.coeff d =
@@ -3722,7 +3722,7 @@ theorem sourceColumnDegree_eq_of_coeff_ne_zero {m : ℕ}
     (hp : ∀ i, sourceColumnRoot i i p = (lam i : ℂ) • p)
     (d : Fin m × Fin m →₀ ℕ) (hd : p.coeff d ≠ 0)
     (i : Fin m) : sourceColumnDegree d i = lam i := by
-  have hcoeff := congrArg (MvPolynomial.coeff d) (hp i)
+  have hcoeff := MvPolynomial.ext_iff.mp (hp i) d
   rw [coeff_sourceColumnRoot_self, MvPolynomial.coeff_smul] at hcoeff
   have hmul :
       (sourceColumnDegree d i : ℂ) * p.coeff d =
@@ -4090,7 +4090,8 @@ theorem polynomialImaginaryPart_complexification
   apply MvPolynomial.ext
   intro d
   simp only [polynomialComplexification_apply, coeff_polynomialImaginaryPart,
-    MvPolynomial.coeff_map, Complex.ofRealHom_eq_coe, Complex.ofReal_im, MvPolynomial.coeff_zero]
+    MvPolynomial.coeff_map, Complex.ofRealHom_eq_coe, Complex.ofReal_im,
+    AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
 
 theorem polynomialRealPart_complex_smul {r n : ℕ} (c : ℂ)
     (p : MvPolynomial (Fin ((r + 1) * n)) ℂ) :
@@ -4110,7 +4111,7 @@ theorem polynomialImaginaryPart_complex_smul {r n : ℕ} (c : ℂ)
   apply MvPolynomial.ext
   intro d
   simp only [coeff_polynomialImaginaryPart, MvPolynomial.coeff_smul, smul_eq_mul, Complex.mul_im,
-    MvPolynomial.coeff_add, coeff_polynomialRealPart]
+    AddMonoidAlgebra.coeff_add, Finsupp.add_apply, coeff_polynomialRealPart]
 
 /-- The polynomial complex span used in the spherical-code argument. -/
 def polynomialComplexSpan {r n : ℕ}
@@ -4174,9 +4175,11 @@ theorem polynomialComplexSpan_inf_eq_bot_of_inf_eq_bot
     apply MvPolynomial.ext
     intro d
     apply Complex.ext
-    · simpa only [MvPolynomial.coeff_zero, Complex.zero_re, coeff_polynomialRealPart] using
+    · simpa only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply, Complex.zero_re,
+        coeff_polynomialRealPart] using
         congrArg (fun p : PolynomialSpace r n => p.coeff d) hreal
-    · simpa only [MvPolynomial.coeff_zero, Complex.zero_im, coeff_polynomialImaginaryPart] using
+    · simpa only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply, Complex.zero_im,
+        coeff_polynomialImaginaryPart] using
         congrArg (fun p : PolynomialSpace r n => p.coeff d) himag
   simp only [hz0, zero_mem]
 
@@ -5395,10 +5398,10 @@ theorem upperRootTarget_coefficient_eq_zero {m : ℕ}
       if upperRootTargetExponent d i j (i, k) = 0 then 0
       else (upperRootTargetExponent d i j (j, k) + 1 : ℕ) •
         p.coeff (upperRootSourceExponent d i j k)) = 0 := by
-  have hcoeff := congrArg
-    (MvPolynomial.coeff (upperRootTargetExponent d i j)) hhighest
+  have hcoeff :=
+    MvPolynomial.ext_iff.mp hhighest (upperRootTargetExponent d i j)
   rw [sourceRowRoot_apply, MvPolynomial.coeff_sum] at hcoeff
-  simp only [MvPolynomial.coeff_zero] at hcoeff
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] at hcoeff
   convert hcoeff using 1
   apply Finset.sum_congr rfl
   intro k _
@@ -5587,7 +5590,8 @@ theorem eq_zero_of_upperRoots_of_massZero_coeff
           exact ih (belowDiagonalMass e) (by omega) e rfl
   apply MvPolynomial.ext
   intro d
-  simpa only [MvPolynomial.coeff_zero] using hcoeff (belowDiagonalMass d) d rfl
+  simpa only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] using
+    hcoeff (belowDiagonalMass d) d rfl
 
 theorem belowDiagonal_entry_eq_zero_of_mass_eq_zero {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ)

@@ -23,8 +23,10 @@ Lemmas from https://github.com/leanprover-community/mathlib4/pull/32986
 open scoped Topology Filter
 open MeasureTheory Measure Metric
 
+-- `SFinite ν` is required by `Measure.prod_prod_le`: without it `μ.prod ν` need not be the
+-- product measure at all, so no bound on the measure of a box is available.
 instance IsLocallyFiniteMeasure.prod {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
-    [MeasurableSpace X] [MeasurableSpace Y] (μ : Measure X) (ν : Measure Y)
+    [MeasurableSpace X] [MeasurableSpace Y] (μ : Measure X) (ν : Measure Y) [SFinite ν]
     [IsLocallyFiniteMeasure μ] [IsLocallyFiniteMeasure ν] :
     IsLocallyFiniteMeasure (μ.prod ν) where
   finiteAtNhds := by

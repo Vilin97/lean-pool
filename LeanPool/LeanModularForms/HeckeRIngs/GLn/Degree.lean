@@ -302,8 +302,13 @@ theorem upperTriRep_card_le_HeckeCoset_deg (a : Fin n → ℕ) (ha : ∀ i,
     (GLPair n).h₁ (diagMat_mem_posDetInt n a ha)
   have h_α_inv_comm : α⁻¹ ∈ Subgroup.Commensurable.commensurator H :=
     (Subgroup.Commensurable.commensurator H).inv_mem h_α_comm
-  have h_rel_ne : (ConjAct.toConjAct α⁻¹ • H).relIndex H ≠ 0 :=
-    ((Subgroup.Commensurable.commensurator_mem_iff H α⁻¹).mp h_α_inv_comm).1
+  have h_conj : MulAut.conj α⁻¹ • H = ConjAct.toConjAct α⁻¹ • H := by
+    ext x
+    simp only [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def,
+      ConjAct.ofConjAct_toConjAct, MulAut.smul_def, map_inv, inv_inv, MulAut.conj_apply]
+  have h_rel_ne : (ConjAct.toConjAct α⁻¹ • H).relIndex H ≠ 0 := by
+    have h1 := ((Subgroup.Commensurable.commensurator_mem_iff H α⁻¹).mp h_α_inv_comm).1
+    rwa [Subgroup.isFiniteRelIndex_iff_relIndex_ne_zero, h_conj] at h1
   have h_card_le : Fintype.card (UpperTriRep n a hdiv) ≤
       (ConjAct.toConjAct α⁻¹ • H).relIndex H :=
     upperTriRep_card_le_relIndex n a ha hdiv h_rel_ne

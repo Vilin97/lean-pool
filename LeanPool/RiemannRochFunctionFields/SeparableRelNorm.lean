@@ -6,6 +6,7 @@ Authors: Guanghao Li
 module
 
 public import Mathlib.RingTheory.Ideal.Norm.RelNorm
+public import Mathlib.RingTheory.RamificationInertia.Inertia
 public import Mathlib.FieldTheory.SeparableClosure
 
 /-!
@@ -36,7 +37,7 @@ theorem relNorm_eq_pow_of_isMaximal_of_isSeparable
     [@Algebra.IsSeparable (FractionRing R) (FractionRing S) _ _
       (FractionRing.liftAlgebra R (FractionRing S))]
     (P : Ideal S) (p : Ideal R) [P.LiesOver p] [P.IsMaximal] [p.IsMaximal] :
-    relNorm R P = p ^ p.inertiaDeg' P := by
+    relNorm R P = p ^ P.inertiaDeg R := by
   let K := FractionRing R
   let L := FractionRing S
   let : Algebra K L := FractionRing.liftAlgebra R L
@@ -62,6 +63,10 @@ theorem relNorm_eq_pow_of_isMaximal_of_isSeparable
   let : IsScalarTower R K L := FractionRing.isScalarTower_liftAlgebra R L
   let : IsScalarTower R K E := IsScalarTower.to₁₂₄ R K L E
   let : IsIntegralClosure T S E := integralClosure.isIntegralClosure S E
+  let : FaithfulSMul S E := (faithfulSMul_iff_algebraMap_injective S E).2 <|
+    (algebraMap L E).injective.comp (IsFractionRing.injective S L)
+  let : IsTorsionFree S E := FaithfulSMul.to_isTorsionFree S E
+  let : IsTorsionFree S T := Subalgebra.instIsTorsionFree (integralClosure S E)
   let : FaithfulSMul S T := (faithfulSMul_iff_algebraMap_injective S T).2 <| by
     intro x y hxy
     apply (algebraMap L E).injective.comp (IsFractionRing.injective S L)
@@ -117,7 +122,6 @@ theorem relNorm_eq_pow_of_isMaximal_of_isSeparable
   have h := relNorm_eq_pow_of_isPrime_isGalois Q p
   let : IsGalois (FractionRing S) (FractionRing T) :=
     IsGalois.tower_top_of_isGalois (FractionRing R) (FractionRing S) (FractionRing T)
-  rw [inertiaDeg'_eq_inertiaDeg p P]
   rwa [← relNorm_relNorm R S, relNorm_eq_pow_of_isPrime_isGalois Q P, map_pow,
     inertiaDeg_tower (R := R) P Q, pow_mul, pow_left_inj (inertiaDeg_pos Q S).ne'] at h
 
@@ -129,13 +133,13 @@ theorem sum_normalizedFactors_relNorm_of_isSeparable
     (I : Ideal S) (hI : I ≠ ⊥) (w : Ideal R → ℕ) :
     ((normalizedFactors (relNorm R I)).map w).sum =
       ((normalizedFactors I).map fun P =>
-        (P.under R).inertiaDeg' P * w (P.under R)).sum := by
+        P.inertiaDeg R * w (P.under R)).sum := by
   classical
   let : Algebra (FractionRing R) (FractionRing S) :=
     FractionRing.liftAlgebra R (FractionRing S)
   have aux : ∀ s : Multiset (Ideal S), (∀ P ∈ s, Prime P) →
       ((normalizedFactors (relNorm R s.prod)).map w).sum =
-        (s.map fun P => (P.under R).inertiaDeg' P * w (P.under R)).sum := by
+        (s.map fun P => P.inertiaDeg R * w (P.under R)).sum := by
     intro s hs
     induction s using Multiset.induction_on with
     | empty =>
@@ -155,7 +159,7 @@ theorem sum_normalizedFactors_relNorm_of_isSeparable
           intro hp
           have : P.LiesOver (⊥ : Ideal R) := hp ▸ (inferInstance : P.LiesOver p)
           exact hP0 (Ideal.eq_bot_of_liesOver_bot R P)
-        have hnorm : relNorm R P = p ^ p.inertiaDeg' P :=
+        have hnorm : relNorm R P = p ^ P.inertiaDeg R :=
           relNorm_eq_pow_of_isMaximal_of_isSeparable P p
         have hnormP0 : relNorm R P ≠ ⊥ := (relNorm_eq_bot_iff.not.mpr hP0)
         have hnorms0 : relNorm R s.prod ≠ ⊥ :=
@@ -172,11 +176,11 @@ theorem sum_normalizedFactors_relNorm_of_isSeparable
   calc
     ((normalizedFactors (relNorm R I)).map w).sum =
         ((normalizedFactors (relNorm R s.prod)).map w).sum := by rw [hsprod]
-    _ = (s.map fun P => (P.under R).inertiaDeg' P * w (P.under R)).sum := by
+    _ = (s.map fun P => P.inertiaDeg R * w (P.under R)).sum := by
       apply aux s
       intro P hP
       exact UniqueFactorizationMonoid.prime_of_normalized_factor P hP
     _ = ((normalizedFactors I).map fun P =>
-        (P.under R).inertiaDeg' P * w (P.under R)).sum := rfl
+        P.inertiaDeg R * w (P.under R)).sum := rfl
 
 end Ideal

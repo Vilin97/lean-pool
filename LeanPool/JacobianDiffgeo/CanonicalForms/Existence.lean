@@ -218,7 +218,7 @@ theorem exists_nonconstant_mero : ∃ f : ℳ X, ∀ c : ℂ, f ≠ algebraMap �
       rw [heq]
     rw [hl0] at hleq
     omega
-  obtain ⟨f, hfD, hf0⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+  obtain ⟨f, hfD, hf0⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
   rw [linSys_zero_eq_span_one] at hf0
   refine ⟨f, fun c hc => hf0 ?_⟩
   rw [hc, Algebra.algebraMap_eq_smul_one]

@@ -34,6 +34,10 @@ public import LeanPool.InfiniteConnesRigidity.UniversalLattice
 # Carry groups, duality, and crossed products
 -/
 
+-- `IsSimpleAddGroup` + `AddGroup.IsNilpotent` builds an `AddCommGroup` that is not the ring one,
+-- so for `F = ZMod 2` it shadows `Ring.toAddCommGroup` and blocks `Module F F`.
+attribute [-instance] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
 noncomputable section
 
 namespace ConnesRigidity
@@ -3662,12 +3666,10 @@ private theorem continuous_shiftedCarry_linear_pair_apply (n : ℕ) (b : B) :
   · intro u v _ _ hu hv
     simp_rw [map_add]
     convert hu.add hv using 1
-    all_goals rfl
   · intro a v _ hv
     simp_rw [map_smul, smul_eq_mul]
     convert (continuous_const : Continuous
       (fun _ : CarryGroup n × CarryGroup n => a)).mul hv using 1
-    all_goals rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem continuous_shiftedCarry_linear_self_apply (n : ℕ) (b : B) :
@@ -3690,11 +3692,9 @@ private theorem continuous_shiftedCarry_linear_self_apply (n : ℕ) (b : B) :
   · intro u v _ _ hu hv
     simp_rw [map_add]
     convert hu.add hv using 1
-    all_goals rfl
   · intro a v _ hv
     simp_rw [map_smul, smul_eq_mul]
     convert (continuous_const : Continuous (fun _ : CarryGroup n => a)).mul hv using 1
-    all_goals rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
@@ -4669,9 +4669,8 @@ private theorem quadraticRestriction_epsilon (n : ℕ) (v : V) :
     circle_four_twice_liftBit ((Multiplicative.toAdd q) (diagonal v))
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem quadraticPairing_range_le_quadraticRestriction_range (n : ℕ) :
-    quadraticPairing.range ≤ (quadraticRestriction n).range := by
-  rintro _ ⟨b, rfl⟩
+private theorem quadraticPairing_range_le_quadraticRestriction_range (n : ℕ) (b : B) :
+    quadraticPairing b ∈ (quadraticRestriction n).range := by
   rcases b with ⟨b, hb⟩
   change b ∈ Submodule.span F (Set.range square) at hb
   induction hb using Submodule.span_induction with
@@ -4843,8 +4842,13 @@ theorem sigma_characterization (n : ℕ) (η : E n) (q : Y) :
     ZMod.toCircle (q (sigma n η)) =
       Additive.toMul η
         (Multiplicative.ofAdd (⟨0, q⟩ : CarryGroup n)) := by
-  exact pointwisePontryaginDualEquiv_apply_character B
-    (quadraticRestriction n η) q
+  have hs : sigma n η = pointwisePontryaginDualEquiv B (quadraticRestriction n η) := rfl
+  have h := pointwisePontryaginDualEquiv_apply_character B (quadraticRestriction n η) q
+  have h2 : Additive.toMul (quadraticRestriction n η) (Multiplicative.ofAdd q) =
+      Additive.toMul η (Multiplicative.ofAdd (⟨0, q⟩ : CarryGroup n)) :=
+    PontryaginDual.map_apply (quadraticInclusionContinuous n)
+      (Additive.toMul η) (Multiplicative.ofAdd q)
+  rw [hs, h, h2]
 
 
 
@@ -4852,9 +4856,8 @@ theorem sigma_characterization (n : ℕ) (η : E n) (q : Y) :
 public
 theorem sigma_surjective (n : ℕ) : Function.Surjective (sigma n) := by
   intro b
-  have hb : quadraticPairing b ∈ quadraticPairing.range := ⟨b, rfl⟩
   obtain ⟨η, hη⟩ :=
-    quadraticPairing_range_le_quadraticRestriction_range n hb
+    quadraticPairing_range_le_quadraticRestriction_range n b
   refine ⟨η, ?_⟩
   change pointwisePontryaginDualEquiv B
     (quadraticRestriction n η) = b
@@ -5029,8 +5032,7 @@ private theorem normalizedAddHaar_preserving_addEquiv
   let μ := normalizedAddHaar A
   have : Measure.IsAddHaarMeasure (μ.map e) :=
     e.isAddHaarMeasure_map μ he heinv
-  have : IsProbabilityMeasure (μ.map e) :=
-    μ.isProbabilityMeasure_map he.measurable.aemeasurable
+  have : IsProbabilityMeasure (μ.map e) := inferInstance
   refine ⟨he.measurable, ?_⟩
   exact normalizedAddHaar_unique A (μ.map e)
 
@@ -5128,11 +5130,9 @@ private theorem continuous_shiftedCarry_right (n : ℕ) (ℓ : X) :
   · intro u v _ _ hu hv
     simp_rw [map_add]
     convert hu.add hv using 1
-    rfl
   · intro r v _ hv
     simp_rw [map_smul, smul_eq_mul]
     convert (continuous_const : Continuous (fun _ : X => r)).mul hv using 1
-    rfl
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem carryTranslation_measurePreserving (n : ℕ) (a : CarryGroup n) :
@@ -5164,8 +5164,7 @@ public
 instance carryHaar_isProbabilityMeasure (n : ℕ) :
     IsProbabilityMeasure (carryHaar n) := by
   unfold carryHaar
-  exact Measure.isProbabilityMeasure_map
-    (carryHomeomorph n).symm.continuous.measurable.aemeasurable
+  infer_instance
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
@@ -5798,7 +5797,8 @@ private theorem splitPontryaginCharacter_injective :
       (Multiplicative.ofAdd (ℓ, (0 : Y)))
     simpa only [Module.Dual.eval_apply, splitPontryaginCharacter_apply, LinearMap.zero_apply,
       add_zero] using hpoint
-  · apply Module.eval_apply_injective F
+  · have := Module.Free.of_divisionRing F ↥B
+    apply Module.eval_apply_injective F
     apply LinearMap.ext
     intro q
     apply ZMod.injective_toCircle
@@ -8236,8 +8236,7 @@ variable {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
 private theorem lp_infty_ae_norm_le (f : Lp ℂ ⊤ μ) :
     ∀ᵐ x ∂μ, ‖f x‖ ≤ ‖f‖ := by
   have hnorm : lpNorm (fun x => f x) ⊤ μ = ‖f‖ := by
-    rw [← toReal_eLpNorm (Lp.memLp f).aestronglyMeasurable,
-      Lp.norm_def]
+    rw [← toReal_eLpNorm, Lp.norm_def]
   simpa only [hnorm] using
     (ae_le_lpNorm_exponent_top (Lp.memLp f))
 

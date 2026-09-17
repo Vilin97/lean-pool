@@ -82,9 +82,11 @@ If `d ^ 3 ∣ M` (and `M > 0`), then `d ^ 3 ∣ rFullPart 3 M`.
 theorem pow_dvd_rFullPart (M d : ℕ) (hM : 0 < M) (hd : d ^ 3 ∣ M) :
     d ^ 3 ∣ rFullPart 3 M := by
   rw [ ← Nat.factorization_le_iff_dvd ] at *;
-  · intro q; by_cases hq : Nat.Prime q <;> simp_all +decide ;
-    have := hd q; simp_all +decide [ rFullPart_factorization ] ;
-    grind;
+  · intro q
+    have hrf := rFullPart_factorization 3 M q
+    have := hd q
+    by_cases hq : Nat.Prime q <;> simp_all +decide
+    grind
   · aesop;
   · positivity;
   · aesop;

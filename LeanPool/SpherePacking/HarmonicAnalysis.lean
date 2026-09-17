@@ -8,6 +8,8 @@ module
 
 import all LeanPool.SpherePacking.SaddleAnalysis
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
+import Mathlib.MeasureTheory.Order.Group.Lattice
 
 /-!
 # HarmonicAnalysis

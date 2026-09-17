@@ -530,7 +530,7 @@ private protected theorem tsum_le_reindex_surjection {φ : α → β} (hφ : Sur
     ∑' y, g y ≤ ∑' x, g (φ x) :=
   calc ∑' y, g y = ∑' y, g (φ (surjInv hφ y)) := by simp only [surjInv_eq hφ]
     _ ≤ ∑' x, g (φ x) :=
-      ENat.tsum_reindex_injective_le (injective_surjInv hφ) _
+      ENat.tsum_reindex_injective_le (injective_surjInv hφ) (fun x => g (φ x))
 
 private protected theorem tsum_reindex_bijection {φ : α → β} (hφ : φ.Bijective) (g : β → ℕ∞) :
     ∑' x, g (φ x) = ∑' y, g y :=
@@ -3206,7 +3206,7 @@ private lemma finite_reference_lattice_points_of_norm_bound (r : ℝ) :
   have hfinE : Set.Finite (Metric.closedBall (0 : (EuclideanSpace ℝ (Fin d))) r ∩
     (((SchwartzMap.referenceIntegerLattice d)).toAddSubgroup : Set (EuclideanSpace ℝ (Fin d)))) :=
     Metric.finite_isBounded_inter_isClosed DiscreteTopology.isDiscrete
-      Metric.isBounded_closedBall AddSubgroup.isClosed_of_discrete
+      Metric.isBounded_closedBall AddSubgroup.isClosed_of_discreteTopology
   let e : (SchwartzMap.referenceIntegerLattice d) ↪ (EuclideanSpace ℝ (Fin d)) := ⟨fun ℓ => (ℓ :
     (EuclideanSpace ℝ (Fin d))), Subtype.coe_injective⟩
   have hfin_pre : (e ⁻¹' (Metric.closedBall (0 : (EuclideanSpace ℝ (Fin d))) r ∩
@@ -4446,7 +4446,7 @@ private lemma summable_norm_on_translated_integral_lattice (f : 𝓢(EuclideanSp
         (Metric.closedBall (0 : EuclideanSpace ℝ (Fin d)) R ∩
           (Λ.toAddSubgroup : Set (EuclideanSpace ℝ (Fin d)))).Finite :=
       Metric.finite_isBounded_inter_isClosed DiscreteTopology.isDiscrete
-        Metric.isBounded_closedBall AddSubgroup.isClosed_of_discrete
+        Metric.isBounded_closedBall AddSubgroup.isClosed_of_discreteTopology
     let e : Λ ↪ EuclideanSpace ℝ (Fin d) :=
       ⟨fun ℓ => (ℓ : EuclideanSpace ℝ (Fin d)), Subtype.coe_injective⟩
     have hpreimage :

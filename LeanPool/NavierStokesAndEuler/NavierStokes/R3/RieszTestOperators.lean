@@ -412,7 +412,9 @@ theorem lpNorm_two_fderiv_rieszTest_le (i j : Fin 3) (ψ : ComplexTest) :
         ‖Comparison.partialD k (rieszTest i j ψ) x‖) :=
       lpNorm_two_fin3_sum_le _ (fun k => (memLp_partial_rieszTest i j ψ k).norm)
     _ = ∑ k : Fin 3, comparisonLpNorm 2 (Comparison.partialD k (rieszTest i j ψ)) := by
-      simp only [comparisonLpNorm, eLpNorm_norm]
+      simp only [comparisonLpNorm,
+        fun k : Fin 3 => eLpNorm_norm (p := 2) _
+          (memLp_partial_rieszTest i j ψ k).aestronglyMeasurable]
     _ ≤ ∑ k : Fin 3, comparisonLpNorm 2 (Comparison.partialD k (fun y => ψ y)) := by
       exact Finset.sum_le_sum fun k _ => lpNorm_two_partial_rieszTest_le i j ψ k
     _ ≤ ∑ _k : Fin 3, comparisonLpNorm 2 (fderiv ℝ (fun y => ψ y)) := by

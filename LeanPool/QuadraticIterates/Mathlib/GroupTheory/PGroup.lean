@@ -77,7 +77,11 @@ private theorem exists_ne_zero_orbit_const_mem {G : Type*} [Group G] [Finite G] 
   let mulActV : MulAction Gᵈᵐᵃ ↥V :=
     { smulV with
       one_smul := fun v ↦ by ext i; simp [hsmulV_coe]
-      mul_smul := fun g h v ↦ by ext i; simp [hsmulV_coe, mul_smul] }
+      mul_smul := fun g h v ↦ by
+        ext i
+        simp only [hsmulV_coe]
+        exact congrArg (v : ι → ZMod 2)
+          (mul_smul (DomMulAct.mk.symm h) (DomMulAct.mk.symm g) i) }
   let distribV : DistribMulAction Gᵈᵐᵃ ↥V :=
     { mulActV with
       smul_zero := fun g ↦ by ext i; simp [hsmulV_coe]

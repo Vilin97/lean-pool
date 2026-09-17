@@ -236,7 +236,7 @@ private theorem summable_sq_Phi_eval_wip
               (fun n : Nat => ‖phi1D (kappa q) n (z q)‖ ^ 2)) <=
         Finset.prod Finset.univ
           (fun q : Fin d =>
-            ∑' n : Nat, ‖phi1D (kappa q) n (z q)‖ ^ 2) := Finset.prod_le_prod
+            ∑' n : Nat, ‖phi1D (kappa q) n (z q)‖ ^ 2) := Finset.prod_le_prod₀
       (by
         intro q hq
         exact Finset.sum_nonneg fun n hn => sq_nonneg _)
@@ -1519,7 +1519,7 @@ private theorem evalPkappa_lpNorm_eq_norm_coeff_wip
             (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) := by
           symm
           exact gaussianL2Norm_eq_lpNorm_coeff_wip (evalPkappa kappa F)
-            (memLp_two_evalPkappa_coeff_wip hd kappa F).1
+            (memLp_two_evalPkappa_coeff_wip hd kappa F).aestronglyMeasurable
     _ = Real.sqrt
           (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) := by rw [hpow]
     _ = ‖F‖ := by
@@ -1576,7 +1576,7 @@ private theorem defect_lpNorm_eq_coeff_wip
   let _ := hd
   simpa [defect, defectFunctionPkappa_coeff_wip, Real.norm_eq_abs, sq_abs] using
     gaussianL2Norm_eq_lpNorm_coeff_wip (defectFunctionPkappa_coeff_wip kappa F G)
-      (memLp_two_defectFunctionPkappa_coeff_wip hd kappa F G).1
+      (memLp_two_defectFunctionPkappa_coeff_wip hd kappa F G).aestronglyMeasurable
 
 private theorem finite_head_bad_limit_eval_tendsto_wip
     {d : Nat} {kappa : MultiIndex d}
@@ -1712,7 +1712,7 @@ private theorem finite_head_bad_limit_defect_ae_tendsto_zero_wip
     MeasureTheory.tendstoInMeasure_of_tendsto_eLpNorm
       (p := (2 : ENNReal)) (μ := gammaD d)
       (f := f) (g := fun _ : Cd d => (0 : ℝ))
-      (by norm_num) hf_meas hzero_meas heLp_tendsto
+      (by norm_num) heLp_tendsto
   obtain ⟨ψ, hψ_strict, hψ_ae⟩ := hInMeasure.exists_seq_tendsto_ae
   refine ⟨ψ, hψ_strict, ?_⟩
   filter_upwards [hψ_ae] with z hz
@@ -1764,9 +1764,9 @@ private theorem finite_head_bad_limit_defect_quotient_ae_tendsto_zero_wip
           ENNReal.ofReal (1 / ((m + 1 : Nat) : ℝ)) := by
     intro m
     have hf_mem_m := hf_mem m
-    have hfin : MeasureTheory.eLpNorm (f m) 2 (gammaD d) ≠ ⊤ := by simpa using hf_mem_m.2.ne
+    have hfin : MeasureTheory.eLpNorm (f m) 2 (gammaD d) ≠ ⊤ := by simpa using hf_mem_m.ne
     refine (ENNReal.le_ofReal_iff_toReal_le hfin (by positivity)).2 ?_
-    rw [MeasureTheory.toReal_eLpNorm hf_mem_m.1, hf_eq m,
+    rw [MeasureTheory.toReal_eLpNorm, hf_eq m,
       MeasureTheory.lpNorm_const_smul]
     rw [← defect_lpNorm_eq_coeff_wip hd kappa F (t (φ m) • H (φ m))]
     have hratio :
@@ -1825,7 +1825,7 @@ private theorem finite_head_bad_limit_defect_quotient_ae_tendsto_zero_wip
     MeasureTheory.tendstoInMeasure_of_tendsto_eLpNorm
       (p := (2 : ENNReal)) (μ := gammaD d)
       (f := f) (g := fun _ : Cd d => (0 : ℝ))
-      (by norm_num) hf_meas hzero_meas heLp_tendsto
+      (by norm_num) heLp_tendsto
   obtain ⟨ψ, hψ_strict, hψ_ae⟩ := hInMeasure.exists_seq_tendsto_ae
   refine ⟨ψ, hψ_strict, ?_⟩
   filter_upwards [hψ_ae] with z hz

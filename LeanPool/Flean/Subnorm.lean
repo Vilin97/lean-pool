@@ -112,7 +112,6 @@ lemma subnormal_round_coe (r : IntRounder) [rh : ValidRounder r]
   · exact this
   nth_rw 4 [show m = r false m by symm; apply ValidRounder.leftInverse]
   congr
-  · simp_all
   have hprec : (C.prec : ℚ) ≠ 0 := by
     norm_cast; linarith [C.prec_pos]
   rw [abs_of_nonneg (by positivity), mul_assoc, mul_assoc, <-mul_assoc (2 ^ _),

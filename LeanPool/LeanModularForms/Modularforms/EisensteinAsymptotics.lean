@@ -193,16 +193,16 @@ lemma serre_DE₄_tendsto_atImInfty :
     Filter.Tendsto (serreD 4 E₄.toFun) atImInfty (nhds (-(1/3 : ℂ))) := by
   convert serre_D_tendsto_neg_k_div_12 4 E₄.toFun E₄.holo'
     (ModularFormClass.bdd_at_infty E₄) E₄_tendsto_one_atImInfty using 2
-  · rw [show ((4 : ℤ) : ℂ) = 4 from by norm_num]
-  · norm_num
+  rw [show ((4 : ℤ) : ℂ) = 4 from by norm_num]
+  norm_num
 
 /-- serreD 6 E₆ → -1/2 at i∞. -/
 lemma serre_DE₆_tendsto_atImInfty :
     Filter.Tendsto (serreD 6 E₆.toFun) atImInfty (nhds (-(1/2 : ℂ))) := by
   convert serre_D_tendsto_neg_k_div_12 6 E₆.toFun E₆.holo'
     E₆_isBoundedAtImInfty E₆_tendsto_one_atImInfty using 2
-  · rw [show ((6 : ℤ) : ℂ) = 6 from by norm_num]
-  · norm_num
+  rw [show ((6 : ℤ) : ℂ) = 6 from by norm_num]
+  norm_num
 
 /-- serreD 1 E₂ is a weight-4 modular form.
 Note: E₂ itself is NOT a modular form, but serreD 1 E₂ IS. -/

@@ -244,7 +244,7 @@ theorem exists_orientedEdgeParameter
     | pos e => exact T.edgeSource_ne_edgeTarget e
     | neg e => exact (T.edgeSource_ne_edgeTarget e).symm
   let r : unitInterval :=
-    ⟨x.1 b, mem_Icc_of_mem_stdSimplex x.2.1 b⟩
+    ⟨x.1 b, mem_Icc_of_mem_standardSimplex x.2.1 b⟩
   have hsum : x.1 a + x.1 b = 1 := by
     calc
       x.1 a + x.1 b = ∑ v ∈ d.edge.1, x.1 v := by

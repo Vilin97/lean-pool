@@ -1061,9 +1061,9 @@ noncomputable def makeNewTwoSimplex (a b : Fin 2 → ℝ)
 --This lemma shows that the above defined simplex is indeed a two simplex
 lemma makeNewTwoSimplex_lem (a b : Fin 2 → ℝ) (ha_simplex : a ∈ openSimplex 2)
     (hb_simplex : b ∈ openSimplex 2) : makeNewTwoSimplex a b ∈ openSimplex 2 := by
-  have hhelp :=  sub_pos.mpr (mul_lt_one_of_nonneg_of_lt_one_left (le_of_lt (ha_simplex.1 1))
-    (simplex_co_leq_1_open  (by norm_num) ha_simplex 1)
-    (le_of_lt (simplex_co_leq_1_open (by norm_num) hb_simplex 0)))
+  have hhelp :=  sub_pos.mpr ((mul_le_of_le_one_right (le_of_lt (ha_simplex.1 1))
+    (le_of_lt (simplex_co_leq_1_open (by norm_num) hb_simplex 0))).trans_lt
+    (simplex_co_leq_1_open (by norm_num) ha_simplex 1))
   constructor
   · intro i; fin_cases i
     · exact div_pos (ha_simplex.1 0)  hhelp
@@ -1100,9 +1100,9 @@ lemma two_colin_in_openHull {u v w x : ℝ²} (h₁ : colin u v w) (h₂ : colin
       nth_rewrite 2[← h2]
       module
     have h: (1 - a 1 * b 0) > 0 :=
-      sub_pos.mpr (mul_lt_one_of_nonneg_of_lt_one_left (le_of_lt (ha_simplex.1 1))
-        (simplex_co_leq_1_open  (by norm_num) ha_simplex 1)
-        (le_of_lt (simplex_co_leq_1_open (by norm_num) hb_simplex 0)))
+      sub_pos.mpr ((mul_le_of_le_one_right (le_of_lt (ha_simplex.1 1))
+        (le_of_lt (simplex_co_leq_1_open (by norm_num) hb_simplex 0))).trans_lt
+        (simplex_co_leq_1_open (by norm_num) ha_simplex 1))
     rw[← inv_smul_eq_iff₀ (Ne.symm (ne_of_lt h))] at h1
     rw[← h1]
     simp
@@ -1351,8 +1351,8 @@ lemma colin_sub {u v w : ℝ²} (h : colin u v w) {L : Segment}
     have hxl : ∃ x, x ∈ openHull L := open_pol_nonempty (by linarith) L
     rcases hxl with ⟨x, hx⟩
     by_cases hxl' : x ∈ closedHull (toSegment u v)
-    constructor
-    · exact (colin_sub_aux h hLsub hLv hx hxl')
+    · left
+      exact (colin_sub_aux h hLsub hLv hx hxl')
     have hLsubrev : closedHull L ⊆ closedHull (toSegment w u) := by
       rw [← reverseSegment_toSegment, reverseSegment_closedHull]
       exact hLsub

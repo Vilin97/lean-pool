@@ -6,7 +6,7 @@ Authors: Alex J. Best
 
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Nat.Basic
-import Mathlib.Logic.Basic
+import Mathlib.Basic.Logic.Lemmas
 import Mathlib.Tactic.Common
 import Mathlib.Data.Nat.Order.Lemmas
 import Mathlib.Data.Nat.ModEq
