@@ -59,11 +59,6 @@ FormalizationOfBoundedArithmetic:
     template text "Copyright (c) [year] [fullname]"; the repository owner of
     record is "ruplet".
 
-ForwardEuler:
-  relicensed: |-
-    Originally distributed without a license file, then placed under the
-    Apache License, Version 2.0, by its sole author.
-
 GrothendieckVanishing:
   relicensed: |-
     Originally distributed under the Creative Commons
@@ -130,9 +125,6 @@ Shannon1948Formalization:
     The upstream MIT LICENSE file gives the copyright line as
     "Copyright (c) 2026" with no name; the repository owner of record is
     "SamuelSchlesinger".
-
-SpecialNumbers:
-  note: Copyright (c) 2024 Walter Moreira, Joe Stubbs
 
 SteinhausThreeGap:
   note: Copyright (c) 2026 Dirk Kunert
