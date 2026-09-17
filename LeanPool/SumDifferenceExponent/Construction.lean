@@ -424,31 +424,26 @@ theorem zeroDiffCover_card_le (l : ℕ) :
     _ = 2 * columnModulus l - 1 := columnInterval_card l
     _ ≤ 2 * columnModulus l := Nat.sub_le _ _
 
-theorem rightDiffCover_card_le (l : ℕ) :
-    (rightDiffCover l).card ≤ 4 * l * columnModulus l := by
+/-- Any image of the mixed-row indexing domain satisfies the same cardinal bound. -/
+private theorem mixedRow_image_card_le (l : ℕ) (f : ℕ × ℤ → ℤ) :
+    (((Finset.range (2 * l)).product (columnInterval l)).image f).card ≤
+      4 * l * columnModulus l := by
   calc
-    (rightDiffCover l).card ≤
-        ((Finset.range (2 * l)).product (columnInterval l)).card :=
+    _ ≤ ((Finset.range (2 * l)).product (columnInterval l)).card :=
       Finset.card_image_le
-    _ = 2 * l * (2 * columnModulus l - 1) := by
-      simp [columnInterval_card]
+    _ = 2 * l * (2 * columnModulus l - 1) := by simp [columnInterval_card]
     _ ≤ 2 * l * (2 * columnModulus l) := by
       gcongr
       exact Nat.sub_le _ _
     _ = 4 * l * columnModulus l := by ring
 
+theorem rightDiffCover_card_le (l : ℕ) :
+    (rightDiffCover l).card ≤ 4 * l * columnModulus l :=
+  mixedRow_image_card_le l _
+
 theorem leftDiffCover_card_le (l : ℕ) :
-    (leftDiffCover l).card ≤ 4 * l * columnModulus l := by
-  calc
-    (leftDiffCover l).card ≤
-        ((Finset.range (2 * l)).product (columnInterval l)).card :=
-      Finset.card_image_le
-    _ = 2 * l * (2 * columnModulus l - 1) := by
-      simp [columnInterval_card]
-    _ ≤ 2 * l * (2 * columnModulus l) := by
-      gcongr
-      exact Nat.sub_le _ _
-    _ = 4 * l * columnModulus l := by ring
+    (leftDiffCover l).card ≤ 4 * l * columnModulus l :=
+  mixedRow_image_card_le l _
 
 theorem sparseDiffCover_card_le (l : ℕ) :
     (sparseDiffCover l).card ≤ 4 * l ^ 2 * 37 ^ depth l := by
