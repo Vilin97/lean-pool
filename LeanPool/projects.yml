@@ -8811,6 +8811,86 @@ projects:
       - '05C35'
       - '05B25'
       - '11N05'
+  - slug: language-generation-characterization
+    title: Finite witnesses and the width hierarchy for language generation
+    summary: >-
+      Characterizes generation in the limit for arbitrary families of infinite
+      languages over any countably infinite universe by finite positive witnesses.
+      Ordered-history generators admit a single set-driven normalization, chosen
+      before the target language. The separation-width invariant takes every value
+      0, 1, 2, ..., omega, omega+1; generation is equivalent to width at most omega.
+      Reusable infrastructure includes locking witnesses, positive separation,
+      bounded diagonal capture over arbitrary universes, transport under equivalences,
+      and finite-query normalization on natural numbers. The formalized scope is
+      the semantic characterization and hierarchy, not the paper's additional
+      density-one or Turing-computability results in Appendices D and E.
+    branch: formal language theory and learning theory
+    entry_module: LeanPool.LanguageGeneration
+    authors:
+      - Xiaoyu Li
+      - Andi Han
+      - Jiaojiao Jiang
+      - Junbin Gao
+      - Shuangping Li
+      - Peng Zhang
+    source:
+      title: 'Characterizing Language Generation in the Limit: Finite Witnesses and a Separation-Width Hierarchy'
+      authors:
+        - Xiaoyu Li
+        - Andi Han
+        - Jiaojiao Jiang
+        - Junbin Gao
+      arxiv: '2609.10525'
+      url: https://github.com/xiaoyulics/language-generation-characterization
+      github_repo: xiaoyulics/language-generation-characterization
+      commit: 4f7d3f2148017ae15135ba39ddc4d655bb175ab6
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GenLimit.FiniteWitness.Simplified.ordinary_iff_finiteWitnesses
+    main_results:
+      - declaration: GenLimit.FiniteWitness.Simplified.ordinary_iff_finiteWitnesses
+        informal: >-
+          For any family H of infinite languages over a countably infinite universe,
+          there exists one ordered-history generator that eventually outputs an
+          unseen target element on every exact presentation of every target in H
+          if and only if H admits a finite positive witness assignment whose
+          nonempty active subfamilies always have infinite common intersection.
+      - declaration: GenLimit.FiniteWitness.Simplified.universal_normalization
+        informal: >-
+          Every ordered-history generator over a countably infinite universe has
+          one set-driven normalization that locks on every infinite target on
+          which the original generator succeeds on all exact presentations.
+          The normalization is chosen before the target.
+      - declaration: GenLimit.FiniteWitness.ordinary_iff_width
+        informal: >-
+          A family of infinite languages over a countably infinite universe is
+          generatable in the limit exactly when its separation width is at most omega.
+      - declaration: GenLimit.FiniteWitness.full_range
+        informal: >-
+          Over every countably infinite universe, every value in
+          WithTop (WithTop Nat), representing 0, 1, 2, ..., omega, omega+1,
+          is the separation width of some family of infinite languages.
+      - declaration: GenLimit.FiniteWitness.bounded_capture
+        informal: >-
+          Over an arbitrary universe, every sequence of uniformly bounded finite
+          sets has infinitely many terms contained in one set D such that D
+          contains none of a prescribed countable list of infinite cores.
+      - declaration: GenLimit.FiniteWitness.executable_universal_normalization
+        informal: >-
+          The finite-search normalization on natural numbers locks on every
+          infinite language on which the supplied generator eventually succeeds
+          on every exact presentation. This is a semantic correctness theorem
+          for the defined procedure, without a formal Turing-computability claim.
+    tags:
+      - language-generation
+      - learning-theory
+      - finite-witnesses
+      - combinatorics
+    msc:
+      - 68Q32
+      - 68Q45
   - slug: even-graph-cycle-decomposition
     title: Even graphs are edge-disjoint unions of cycles
     summary: >-
