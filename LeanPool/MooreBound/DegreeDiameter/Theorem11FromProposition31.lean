@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wouter Cames van Batenburg, Samuel Korsky
 -/
 
+import LeanPool.MooreBound.DegreeDiameter.AsymptoticsLimits
 import LeanPool.MooreBound.DegreeDiameter.Proposition31Full
 import LeanPool.MooreBound.PrimeNumberTheoremAnd.Consequences
 import Mathlib.Analysis.SpecialFunctions.Pow.NthRootLemmas
@@ -110,11 +111,8 @@ theorem proposition31_orderAdmissible
 theorem proposition31_tendsto_nthRoot_comp_atTop
     {D : ℕ → ℕ} (hD : Tendsto D atTop atTop)
     {m : ℕ} (hm : 0 < m) :
-    Tendsto (fun d ↦ Nat.nthRoot m (D d)) atTop atTop := by
-  rw [Filter.tendsto_atTop]
-  intro a
-  filter_upwards [hD.eventually_ge_atTop (a ^ m)] with d hd
-  exact (Nat.le_nthRoot_iff hm.ne').2 hd
+    Tendsto (fun d ↦ Nat.nthRoot m (D d)) atTop atTop :=
+  tendsto_nthRoot_comp_atTop hD hm
 
 /-- The small root-normalization factor which occurs in the interpolation
 argument tends to one. -/
@@ -124,46 +122,15 @@ theorem proposition31_tendsto_nthRoot_div_add_one
     Tendsto
       (fun d ↦ (Nat.nthRoot m (D d) : ℝ) /
         ((Nat.nthRoot m (D d) : ℝ) + 1))
-      atTop (nhds 1) := by
-  have hrootNat := proposition31_tendsto_nthRoot_comp_atTop hD hm
-  have hrootReal :
-      Tendsto (fun d ↦ (Nat.nthRoot m (D d) : ℝ)) atTop atTop :=
-    tendsto_natCast_atTop_atTop.comp hrootNat
-  have hadd :
-      Tendsto (fun d ↦ (Nat.nthRoot m (D d) : ℝ) + 1) atTop atTop :=
-    tendsto_atTop_add_const_right atTop 1 hrootReal
-  have hinv :
-      Tendsto (fun d ↦ ((Nat.nthRoot m (D d) : ℝ) + 1)⁻¹)
-        atTop (nhds 0) :=
-    tendsto_inv_atTop_zero.comp hadd
-  have hsub :
-      Tendsto
-        (fun d ↦ 1 - ((Nat.nthRoot m (D d) : ℝ) + 1)⁻¹)
-        atTop (nhds (1 - 0)) :=
-    tendsto_const_nhds.sub hinv
-  simpa only [sub_zero] using hsub.congr' <| Eventually.of_forall fun d ↦ by
-    have hne : (Nat.nthRoot m (D d) : ℝ) + 1 ≠ 0 := by positivity
-    field_simp
-    ring
+      atTop (nhds 1) :=
+  tendsto_nthRoot_div_add_one hD hm
 
 /-- A positive multiplicative prime gap can be made small enough for any
 fixed power. -/
 theorem proposition31_exists_pos_inv_one_add_pow_gt
     {M : ℕ} {y : ℝ} (hy : y < 1) :
-    ∃ η : ℝ, 0 < η ∧ y < ((1 + η)⁻¹) ^ M := by
-  have hlim :
-      Tendsto (fun η : ℝ ↦ ((1 + η)⁻¹) ^ M) (nhds 0) (nhds 1) := by
-    have hadd : Tendsto (fun η : ℝ ↦ 1 + η) (nhds 0) (nhds 1) := by
-      have hone : Tendsto (fun _ : ℝ ↦ (1 : ℝ)) (nhds 0) (nhds 1) :=
-        tendsto_const_nhds
-      simpa only [id_eq, add_zero] using hone.add tendsto_id
-    simpa using (hadd.inv₀ one_ne_zero).pow M
-  have hnear : {η : ℝ | y < ((1 + η)⁻¹) ^ M} ∈ nhds 0 :=
-    hlim (Ioi_mem_nhds hy)
-  obtain ⟨δ, hδ, hball⟩ := Metric.mem_nhds_iff.1 hnear
-  refine ⟨δ / 2, half_pos hδ, hball ?_⟩
-  rw [Metric.mem_ball, Real.dist_eq, sub_zero, abs_of_pos (half_pos hδ)]
-  linarith
+    ∃ η : ℝ, 0 < η ∧ y < ((1 + η)⁻¹) ^ M :=
+  exists_pos_inv_one_add_pow_gt hy
 
 /-- The PNT prime interval pulled back along a growing integral root. -/
 theorem proposition31_eventually_prime_near_nthRoot
@@ -171,26 +138,8 @@ theorem proposition31_eventually_prime_near_nthRoot
     {m : ℕ} (hm : 0 < m) {η : ℝ} (hη : 0 < η) :
     ∀ᶠ d : ℕ in atTop, ∃ p : ℕ, p.Prime ∧
       (Nat.nthRoot m (D d) : ℝ) / (1 + η) < p ∧
-      p + 1 ≤ Nat.nthRoot m (D d) := by
-  have hrootNat := proposition31_tendsto_nthRoot_comp_atTop hD hm
-  have hrootReal :
-      Tendsto (fun d ↦ (Nat.nthRoot m (D d) : ℝ)) atTop atTop :=
-    tendsto_natCast_atTop_atTop.comp hrootNat
-  have hx :
-      Tendsto (fun d ↦ (Nat.nthRoot m (D d) : ℝ) / (1 + η))
-        atTop atTop :=
-    hrootReal.atTop_div_const (by linarith)
-  filter_upwards [hx.eventually (prime_between hη)] with d hd
-  obtain ⟨p, hp, hpLower, hpUpper⟩ := hd
-  refine ⟨p, hp, hpLower, ?_⟩
-  have hpUpper' : (p : ℝ) < Nat.nthRoot m (D d) := by
-    calc
-      (p : ℝ) <
-          (1 + η) * ((Nat.nthRoot m (D d) : ℝ) / (1 + η)) :=
-        hpUpper
-      _ = Nat.nthRoot m (D d) := by field_simp
-  have hpNat : p < Nat.nthRoot m (D d) := by exact_mod_cast hpUpper'
-  omega
+      p + 1 ≤ Nat.nthRoot m (D d) :=
+  eventually_prime_near_nthRoot (fun hη => prime_between hη) hD hm hη
 
 /-- The root comparison factor used in the lower bound. -/
 def proposition31RootComparison
@@ -202,20 +151,8 @@ theorem proposition31_tendsto_rootComparison
     {D : ℕ → ℕ} (hD : Tendsto D atTop atTop)
     {m : ℕ} (hm : 0 < m) (t : ℕ) {η : ℝ} (_hη : 0 < η) :
     Tendsto (proposition31RootComparison D m t η) atTop
-      (nhds (((1 + η)⁻¹) ^ (m * t))) := by
-  change Tendsto
-    (fun d ↦ ((Nat.nthRoot m (D d) : ℝ) /
-      ((Nat.nthRoot m (D d) : ℝ) + 1) / (1 + η)) ^ (m * t))
-    atTop (nhds (((1 + η)⁻¹) ^ (m * t)))
-  have hr := proposition31_tendsto_nthRoot_div_add_one hD hm
-  have hc :
-      Tendsto
-        (fun d ↦
-          ((Nat.nthRoot m (D d) : ℝ) /
-            ((Nat.nthRoot m (D d) : ℝ) + 1)) * (1 + η)⁻¹)
-        atTop (nhds (1 * (1 + η)⁻¹)) :=
-    hr.mul tendsto_const_nhds
-  simpa only [div_eq_mul_inv, one_mul] using hc.pow (m * t)
+      (nhds (((1 + η)⁻¹) ^ (m * t))) :=
+  tendsto_rootComparison hD hm t _hη
 
 /-! ## The lower and upper extremal comparisons -/
 
@@ -305,10 +242,8 @@ theorem proposition31_mul_rootComparison_lt_order_ratio
       field_simp [hcapNe, hdNe]
 
 theorem proposition31_tendsto_orderRatio_upper (k : ℕ) :
-    Tendsto (fun d : ℕ ↦ (1 + (d : ℝ)⁻¹) ^ k) atTop (nhds 1) := by
-  have hone : Tendsto (fun _ : ℕ ↦ (1 : ℝ)) atTop (nhds 1) :=
-    tendsto_const_nhds
-  simpa using (hone.add (tendsto_inv_atTop_nhds_zero_nat (𝕜 := ℝ))).pow k
+    Tendsto (fun d : ℕ ↦ (1 + (d : ℝ)⁻¹) ^ k) atTop (nhds 1) :=
+  tendsto_orderRatio_upper k
 
 /-- **Theorem 1.1, directly from Proposition 3.1.** -/
 theorem theorem_1_1_from_proposition_3_1

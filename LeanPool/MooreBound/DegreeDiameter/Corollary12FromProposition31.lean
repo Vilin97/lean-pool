@@ -62,11 +62,8 @@ private theorem proposition31_edgeFactor_tendsto_one
     horder.mul (hdegree.pow (k + 1))
 
 private theorem proposition31_tendsto_nat_sub_one_atTop :
-    Tendsto (fun d : ℕ ↦ d - 1) atTop atTop := by
-  rw [Filter.tendsto_atTop]
-  intro a
-  filter_upwards [eventually_ge_atTop (a + 1)] with d hd
-  omega
+    Tendsto (fun d : ℕ ↦ d - 1) atTop atTop :=
+  tendsto_nat_sub_one_atTop
 
 /-- The cap-scale comparison used for Corollary 1.2.  This is the edge
 analogue of the pointwise interpolation step for Theorem 1.1, with exponent
@@ -127,35 +124,8 @@ private theorem proposition31_rootComparison_lt_capRatio
 characterization of `liminf`. -/
 private theorem proposition31_edgeRatio_isBoundedUnder_le (ell : ℕ) :
     atTop.IsBoundedUnder (· ≤ ·)
-      (fun d : ℕ ↦ (h ell d : ℝ) / (d : ℝ) ^ ell) := by
-  refine ⟨(3 : ℝ) ^ ell + 1, ?_⟩
-  change ∀ᶠ d : ℕ in atTop,
-    (h ell d : ℝ) / (d : ℝ) ^ ell ≤ (3 : ℝ) ^ ell + 1
-  filter_upwards [eventually_ge_atTop 1] with d hd
-  have hhpos : 1 ≤ h ell d := by simp [h]
-  have hbase : 2 * d + 1 ≤ 3 * d := by omega
-  have hcoarse : h ell d - 1 ≤ (3 * d) ^ ell :=
-    (h_sub_one_le_coarseBound ell d).trans
-      (Nat.pow_le_pow_left hbase ell)
-  have hrewrite : h ell d = (h ell d - 1) + 1 := by omega
-  have hh : h ell d ≤ (3 * d) ^ ell + 1 := by
-    rw [hrewrite]
-    exact Nat.add_le_add_right hcoarse 1
-  have hhReal : (h ell d : ℝ) ≤ ((3 * d) ^ ell + 1 : ℕ) := by
-    exact_mod_cast hh
-  have hden : (0 : ℝ) < (d : ℝ) ^ ell := by positivity
-  calc
-    (h ell d : ℝ) / (d : ℝ) ^ ell ≤
-        (((3 * d) ^ ell + 1 : ℕ) : ℝ) / (d : ℝ) ^ ell :=
-      div_le_div_of_nonneg_right hhReal hden.le
-    _ = (3 : ℝ) ^ ell + 1 / (d : ℝ) ^ ell := by
-      push_cast
-      rw [mul_pow, add_div]
-      field_simp
-    _ ≤ (3 : ℝ) ^ ell + 1 := by
-      gcongr
-      exact (div_le_one hden).2
-        (one_le_pow₀ (by exact_mod_cast hd))
+      (fun d : ℕ ↦ (h ell d : ℝ) / (d : ℝ) ^ ell) :=
+  edgeRatio_isBoundedUnder_le ell
 
 /-- Applying `bipartiteExpansion` to the actual Proposition 3.1 graph gives
 an admissible edge graph whenever the actual degree plus one fits below the
