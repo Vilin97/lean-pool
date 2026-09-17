@@ -8586,7 +8586,9 @@ projects:
       completeness, finite reachability and game-theoretic infrastructure.
       The results assert existence; no executable extraction algorithm or
       complexity bound is claimed. Human contributors and Aristotle jointly
-      developed the formalization.
+      developed the formalization. The completeness modules reuse the finite
+      game determinacy theorem already pooled in `LeanPool.Lean4GlCoalgebras`
+      instead of duplicating it.
     branch: modal logic
     entry_module: LeanPool.PDL
     authors:
