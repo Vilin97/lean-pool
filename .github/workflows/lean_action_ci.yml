@@ -6,8 +6,7 @@ name: Lean Action CI
 # - `skip`: an exact README-only change. It still reports the
 #   protected `Build project` check without spending hours rebuilding Lean.
 # - `single`: the classic one-job pipeline. This is the fast path for the
-#   common case — a PR that adds or edits a project or three — and is
-#   byte-for-byte the pre-sharding behavior.
+#   common case — a PR that adds or edits a project or three.
 # - `sharded`: for the runs that take hours serially (cold cache,
 #   toolchain/manifest bump, refactors touching many projects), the dirty
 #   projects are bin-packed into parallel `shard` build jobs. Pool projects
@@ -35,6 +34,7 @@ on:
       - 'Challenge/challenges.yml'
       - 'python/lean_pool/challenge.py'
       - 'python/lean_pool/quality.py'
+      - 'python/lean_pool/ci_artifacts.py'
       - 'python/pyproject.toml'
       - 'python/uv.lock'
       - 'scripts/nolints-style.txt'
@@ -61,6 +61,7 @@ on:
       - 'Challenge/challenges.yml'
       - 'python/lean_pool/challenge.py'
       - 'python/lean_pool/quality.py'
+      - 'python/lean_pool/ci_artifacts.py'
       - 'python/pyproject.toml'
       - 'python/uv.lock'
       - 'scripts/nolints-style.txt'
@@ -106,13 +107,10 @@ jobs:
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           lookup-only: true
-          path: |
-            ~/.elan
-            .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Plan the build
         id: plan
@@ -157,7 +155,7 @@ jobs:
             echo "matrix=$(echo "$plan" | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin)["matrix"]))')"
           } >> "$GITHUB_OUTPUT"
 
-  # The classic pipeline, unchanged — the fast path for ordinary PRs.
+  # The single-job pipeline is the fast path for ordinary PRs.
   build:
     needs: plan
     if: needs.plan.outputs.mode == 'single'
@@ -169,17 +167,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore caches
-        id: cache
+      # Keep the large toolchain/Mathlib cache independent of per-commit builds.
+      - name: Restore Lean dependencies
+        id: dependency-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Restore pool build
+        id: cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -220,6 +225,20 @@ jobs:
       - name: Build challenges and solutions
         run: ./scripts/ci/build-challenges.sh
 
+      # Publish once compilation succeeds, so docs can overlap the later
+      # linters/quality checks without compiling the same PR a second time.
+      - name: Package build for documentation
+        run: PYTHONPATH=python python3 -m lean_pool.ci_artifacts pack
+
+      - name: Share build with documentation
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lean-pool-build
+          path: lean-pool-build.tar.gz
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1
+
       - name: Lint
         run: |
           ~/.elan/bin/lake exe runLinter LeanPool
@@ -238,15 +257,21 @@ jobs:
           uv sync --locked
           uv run python -m lean_pool.quality --repo ..
 
-      - name: Save caches
-        if: always() && github.ref == 'refs/heads/main'
+      - name: Save Lean dependencies
+        if: always() && github.ref == 'refs/heads/main' && steps.dependency-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Save pool build
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
 
   shard:
     needs: plan
@@ -266,16 +291,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore caches
+      - name: Restore Lean dependencies
+        id: dependency-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Restore pool build
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -353,16 +384,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore caches
+      - name: Restore Lean dependencies
+        id: dependency-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Restore pool build
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -422,6 +459,20 @@ jobs:
       - name: Build challenges and solutions
         run: ./scripts/ci/build-challenges.sh
 
+      # Publish once compilation succeeds, so docs can overlap the later
+      # linters/quality checks without compiling the same PR a second time.
+      - name: Package build for documentation
+        run: PYTHONPATH=python python3 -m lean_pool.ci_artifacts pack
+
+      - name: Share build with documentation
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lean-pool-build
+          path: lean-pool-build.tar.gz
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1
+
       - name: Lint
         run: |
           ~/.elan/bin/lake exe runLinter LeanPool
@@ -440,15 +491,21 @@ jobs:
           uv sync --locked
           uv run python -m lean_pool.quality --repo ..
 
-      - name: Save caches
-        if: always() && github.ref == 'refs/heads/main'
+      - name: Save Lean dependencies
+        if: always() && github.ref == 'refs/heads/main' && steps.dependency-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Save pool build
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
 
   # Single overall verdict under the check name the one-job workflow used,
   # so nothing watching "Build project" needs to change.

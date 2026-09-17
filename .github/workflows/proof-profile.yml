@@ -162,13 +162,10 @@ jobs:
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           lookup-only: true
-          path: |
-            ~/.elan
-            .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ steps.pr.outputs.head_sha }}
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.pr.outputs.head_sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Determine new and modified Lean files
         id: files
@@ -288,16 +285,22 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Restore caches
+      - name: Restore Lean dependencies
+        id: dependency-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ needs.plan.outputs.head_sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Restore pool build
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ needs.plan.outputs.head_sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -405,16 +408,22 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Restore caches
+      - name: Restore Lean dependencies
+        id: dependency-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ needs.plan.outputs.head_sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Restore pool build
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ needs.plan.outputs.head_sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
