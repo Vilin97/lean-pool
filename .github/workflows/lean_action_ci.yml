@@ -199,6 +199,7 @@ jobs:
           enable-cache: true
 
       - name: Install Mathlib cache
+        id: mathlib-cache
         run: |
           if [ ! -d ".lake/packages/mathlib" ]; then
             ~/.elan/bin/lake exe cache get
@@ -258,7 +259,7 @@ jobs:
           uv run python -m lean_pool.quality --repo ..
 
       - name: Save Lean dependencies
-        if: always() && github.ref == 'refs/heads/main' && steps.dependency-cache.outputs.cache-hit != 'true'
+        if: always() && github.ref == 'refs/heads/main' && steps.mathlib-cache.outcome == 'success' && steps.dependency-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
@@ -316,6 +317,7 @@ jobs:
           use-mathlib-cache: false
 
       - name: Install Mathlib cache
+        id: mathlib-cache
         run: |
           if [ ! -d ".lake/packages/mathlib" ]; then
             ~/.elan/bin/lake exe cache get
@@ -414,6 +416,7 @@ jobs:
           enable-cache: true
 
       - name: Install Mathlib cache
+        id: mathlib-cache
         run: |
           if [ ! -d ".lake/packages/mathlib" ]; then
             ~/.elan/bin/lake exe cache get
@@ -492,7 +495,7 @@ jobs:
           uv run python -m lean_pool.quality --repo ..
 
       - name: Save Lean dependencies
-        if: always() && github.ref == 'refs/heads/main' && steps.dependency-cache.outputs.cache-hit != 'true'
+        if: always() && github.ref == 'refs/heads/main' && steps.mathlib-cache.outcome == 'success' && steps.dependency-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
