@@ -129,15 +129,9 @@ theorem norm_cayleyUp_lt_one {z : ℂ} (hz : 0 < z.im) :
 /-- `z ↦ (z + i)/(z - i)` maps the lower half-plane into the unit disc. -/
 theorem norm_cayleyDown_lt_one {z : ℂ} (hz : z.im < 0) :
     ‖(z + Complex.I) / (z - Complex.I)‖ < 1 := by
-  have hlt : ‖z + Complex.I‖ < ‖z - Complex.I‖ := by
-    have hsq : ‖z + Complex.I‖ ^ 2 < ‖z - Complex.I‖ ^ 2 := by
-      rw [← Complex.normSq_eq_norm_sq, ← Complex.normSq_eq_norm_sq]
-      simp only [Complex.normSq_apply, Complex.sub_re, Complex.sub_im, Complex.add_re,
-        Complex.add_im, Complex.I_re, Complex.I_im, sub_zero, add_zero]
-      nlinarith [hz]
-    nlinarith [norm_nonneg (z - Complex.I), norm_nonneg (z + Complex.I), hsq]
-  rw [norm_div, div_lt_one (lt_of_le_of_lt (norm_nonneg _) hlt)]
-  exact hlt
+  have hupper := norm_cayleyUp_lt_one (z := -z) (by simpa using hz)
+  simpa only [show -z - Complex.I = -(z + Complex.I) by ring,
+    show -z + Complex.I = -(z - Complex.I) by ring, neg_div_neg_eq] using hupper
 
 /-- The Cayley transform of the upper half-plane is inverted by `u ↦ i(1+u)/(1-u)`. -/
 theorem cayleyUp_inv {w : ℂ} (hw : w + Complex.I ≠ 0) :
@@ -158,16 +152,15 @@ theorem cayleyUp_inv {w : ℂ} (hw : w + Complex.I ≠ 0) :
 theorem cayleyDown_inv {w : ℂ} (hw : w - Complex.I ≠ 0) :
     Complex.I * (1 + (w + Complex.I) / (w - Complex.I))
       / ((w + Complex.I) / (w - Complex.I) - 1) = w := by
-  have h1 : 1 + (w + Complex.I) / (w - Complex.I) = 2 * w / (w - Complex.I) := by
-    field_simp
-    ring
-  have h2 : (w + Complex.I) / (w - Complex.I) - 1
-      = 2 * Complex.I / (w - Complex.I) := by
-    field_simp
-    ring
-  have hI : Complex.I ≠ 0 := Complex.I_ne_zero
-  rw [h1, h2]
-  field_simp
+  have hden : -w + Complex.I ≠ 0 := by
+    intro h
+    apply hw
+    linear_combination -h
+  have hupper := cayleyUp_inv hden
+  rw [show -w - Complex.I = -(w + Complex.I) by ring,
+    show -w + Complex.I = -(w - Complex.I) by ring, neg_div_neg_eq] at hupper
+  rw [show (w + Complex.I) / (w - Complex.I) - 1 =
+    -(1 - (w + Complex.I) / (w - Complex.I)) by ring, div_neg, hupper, neg_neg]
 
 /-- The denominator of the upper-half-plane Cayley transform does not vanish there. -/
 theorem add_I_ne_zero {z : ℂ} (h : 0 < z.im) : z + Complex.I ≠ 0 := by
@@ -178,10 +171,8 @@ theorem add_I_ne_zero {z : ℂ} (h : 0 < z.im) : z + Complex.I ≠ 0 := by
 
 /-- The denominator of the lower-half-plane Cayley transform does not vanish there. -/
 theorem sub_I_ne_zero {z : ℂ} (h : z.im < 0) : z - Complex.I ≠ 0 := by
-  intro hc
-  have him : (z - Complex.I).im = 0 := by rw [hc, Complex.zero_im]
-  simp only [Complex.sub_im, Complex.I_im] at him
-  linarith
+  have hupper := add_I_ne_zero (z := -z) (by simpa using h)
+  simpa only [show -z + Complex.I = -(z - Complex.I) by ring, neg_ne_zero] using hupper
 
 /-- **Each image lies wholly in one open half-plane.** If no forward image of the connected
 set `V` meets the real axis, then for each `n` the image is entirely in the upper half-plane
