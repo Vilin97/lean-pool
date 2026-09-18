@@ -1151,6 +1151,10 @@ import LeanPool.Erdos403
 import LeanPool.Erdos403.Basic
 import LeanPool.Erdos403.FactBase
 import LeanPool.Erdos403.Sharp
+import LeanPool.Erdos548
+import LeanPool.Erdos548.Main
+import LeanPool.Erdos548.RootedTrees
+import LeanPool.Erdos548.Words
 import LeanPool.Erdos81PaperIContrib
 import LeanPool.Erdos81PaperIContrib.FarkasLP
 import LeanPool.Erdos81PaperIContrib.FgConeClosed
