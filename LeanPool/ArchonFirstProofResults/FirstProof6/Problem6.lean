@@ -11,6 +11,8 @@ public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LaplacianBa
 import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.DynamicColoring
 import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LoewnerPullback
 import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.OneSidedBarrier
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Main Proof

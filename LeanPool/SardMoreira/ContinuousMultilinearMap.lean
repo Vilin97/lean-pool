@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Asymptotics.Defs
 import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
 import Mathlib.Algebra.Order.Field.Power
 import Mathlib.Analysis.Asymptotics.Lemmas
+import Mathlib.Analysis.Asymptotics.Prod
 import Mathlib.Analysis.Normed.Operator.NormedSpace
 import Mathlib.Tactic.Positivity.Finset
 

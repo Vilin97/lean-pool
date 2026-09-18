@@ -9,6 +9,7 @@ public import Mathlib.InformationTheory.KullbackLeibler.Basic
 
 public import Mathlib.Probability.Kernel.RadonNikodym
 import Mathlib.Probability.Kernel.CompProdEqIff
+import Mathlib.Probability.Kernel.Composition.WithDensity
 
 /-!
 # Kullback-Leibler divergence and kernel composition products

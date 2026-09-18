@@ -514,8 +514,10 @@ def construction : Language.UformulaRec1.Construction V L (blueprint pL) where
   or_defined := by intro v; simp [blueprint]
   all_defined := by intro v; simp [blueprint]
   ex_defined := by intro v; simp [blueprint]
-  allChanges_defined := defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
-  exChanges_defined := defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
+  allChanges_defined := by
+    exact defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
+  exChanges_defined := by
+    exact defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
 
 end Substs
 

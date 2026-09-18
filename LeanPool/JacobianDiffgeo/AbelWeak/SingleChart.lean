@@ -11,6 +11,7 @@ import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Geometry.Manifold.ContMDiff.Atlas
+import Mathlib.Geometry.Manifold.ContMDiff.Basic
 
 /-!
 # The single-chart weak solution (`abel-weak-solutions`, §6.2-6.3)

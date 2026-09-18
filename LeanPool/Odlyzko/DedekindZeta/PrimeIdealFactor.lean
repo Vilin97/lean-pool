@@ -6,6 +6,7 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.DedekindZeta.LocalFactor
+public import Mathlib.Algebra.CharZero.Infinite
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic

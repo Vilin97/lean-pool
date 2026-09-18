@@ -8,6 +8,7 @@ module
 public import LeanPool.GKPCarry.Statement
 public import Mathlib.Data.Nat.Digits.Defs
 public import Mathlib.Data.Nat.MaxPowDiv
+public import Mathlib.Data.Nat.PadicValNat
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!

@@ -8,6 +8,7 @@ module
 public import LeanPool.JacobianDiffgeo.Meromorphic.Divisor
 import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.Geometry.Manifold.Complex
+import Mathlib.Geometry.Manifold.MFDeriv.Basic
 
 /-!
 # The linear system `L(D)` and `l(D)` (CC3, D4)

@@ -682,7 +682,7 @@ theorem IsFirstIntegralFamily.mass_zero_liftedDelaunayPhasePoint_eq
         (fun candidate : InteriorPositiveAction eccentricity ↦
           liftedDelaunayPhasePoint
             candidate.1.1 eccentricity angles.1 angles.2) action :=
-      (continuousAt_liftedDelaunayPhasePoint_firstAction action.1.2.ne').comp haction
+      (continuousAt_liftedDelaunayPhasePoint_firstAction action.1.2.ne').comp_of_eq haction rfl
     exact hcandidate.comp hchart
   have hleft : Continuous left := hcontinuous firstAngles
   have hright : Continuous right := hcontinuous secondAngles

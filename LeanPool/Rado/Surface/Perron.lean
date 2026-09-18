@@ -9,6 +9,7 @@ public import LeanPool.Rado.Surface.Harmonic
 public import LeanPool.Rado.Complex.Dirichlet
 import LeanPool.Rado.Complex.Poisson
 import Mathlib.Analysis.Complex.Harmonic.Poisson
+import Mathlib.Analysis.Complex.Harmonic.MeanValue
 
 /-!
 # Harmonic replacement and Perron's principle

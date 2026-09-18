@@ -6,6 +6,7 @@ Authors: Monica Omar
 module
 
 public import LeanPool.Monlib4.LinearAlgebra.Ips.Pos
+public import Mathlib.Analysis.Matrix.Order
 import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
 import LeanPool.Monlib4.Preq.RCLikeLe
 

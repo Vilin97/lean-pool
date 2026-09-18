@@ -6,6 +6,7 @@ Authors: FrenzyMath
 module
 
 public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LaplacianBasics
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Loewner Pullback

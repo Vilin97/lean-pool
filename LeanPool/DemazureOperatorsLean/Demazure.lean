@@ -12,6 +12,7 @@ public import Mathlib.Basic.Complex.Basic
 public import Mathlib.Algebra.MvPolynomial.Equiv
 public import Mathlib.Algebra.Polynomial.Div
 import Mathlib.Algebra.MvPolynomial.Polynomial
+import Mathlib.Algebra.MvPolynomial.CommRing
 import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.RingTheory.MvPolynomial.Basic

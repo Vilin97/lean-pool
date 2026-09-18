@@ -8,6 +8,7 @@ module
 public import LeanPool.PoincareThreeBody.DisturbingFunction
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.TrapezoidalRule
 import LeanPool.PoincareThreeBody.ValidatedQuadrature
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Finite certificates for nonconstant resonant averages

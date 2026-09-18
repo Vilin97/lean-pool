@@ -18,6 +18,7 @@ import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.MeasureTheory.Function.ContinuousMapDense
 import Mathlib.MeasureTheory.Group.Integral
 import Mathlib.RingTheory.PicardGroup
+import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 import Mathlib.Topology.Metrizable.Urysohn
 
 /-!

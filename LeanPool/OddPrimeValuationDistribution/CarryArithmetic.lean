@@ -8,6 +8,7 @@ module
 public import Mathlib.Data.Nat.Choose.Central
 public import Mathlib.Data.Nat.Digits.Defs
 public import Mathlib.Data.Nat.MaxPowDiv
+public import Mathlib.Data.Nat.PadicValNat
 public import Mathlib.Data.Nat.Prime.Defs
 import LeanPool.OddPrimeValuationDistribution.Kummer
 import Mathlib.Data.Nat.Digits.Lemmas

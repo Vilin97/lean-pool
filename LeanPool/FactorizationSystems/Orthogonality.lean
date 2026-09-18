@@ -5,6 +5,7 @@ Authors: Ivan Kobe
 -/
 module
 
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
 public import Mathlib.CategoryTheory.Limits.Types.Limits
 public import Mathlib.Tactic.Attr.Core
 import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits

@@ -18,6 +18,7 @@ public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.FactorWitness
 public import Mathlib.Analysis.CStarAlgebra.ContinuousMap
 import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SemidirectClosure
 import LeanPool.ConnesRigidity.Paper.Section3.GroupQuotient
+import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 
 /-!
 The factor closure component of the Connes rigidity formalization.
