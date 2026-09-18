@@ -12,12 +12,18 @@ absent from every raw occurrence of the body being instantiated.  This makes
 the substitution-composition step below an equality, including the otherwise
 awkward self-substitution case.
 -/
-import LeanPool.MatchingLogic.EntryIII.WitnessPush
-import LeanPool.MatchingLogic.EntryIII.Witnessed
+module
+
+public import LeanPool.MatchingLogic.EntryIII.WitnessPush
+public import LeanPool.MatchingLogic.EntryIII.Witnessed
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.FreshWitnessElim
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

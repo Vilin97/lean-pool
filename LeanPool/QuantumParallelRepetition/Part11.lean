@@ -3,10 +3,13 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part10
+public import LeanPool.QuantumParallelRepetition.Part10
 
 /-! # Quantum parallel repetition, part 11 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -295,7 +298,8 @@ theorem unconditionalActualC485SourceSelectedDecodedWinningBorn
 
 open QuantumParallelRepetition.ClassicalSampling
 
-private def unconditionalActualFairSourceAliceTarget
+/-- Alice's target vector determined by the shared source flag and her question. -/
+def unconditionalActualFairSourceAliceTarget
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -312,7 +316,8 @@ private def unconditionalActualFairSourceAliceTarget
       (exactSourceAlicePermutationHistory
         D denominator numerator nonempty flag x) x
 
-private def unconditionalActualFairSourceBobTarget
+/-- Bob's target vector determined by the shared source flag and his question. -/
+def unconditionalActualFairSourceBobTarget
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -805,7 +810,8 @@ private def unconditionalActualC485SelectedVerifierBorn
       (directDSVActualLocalPOVMWinningEffect G PA PB x y ⊗ₖ
         (1 : Matrix T T ℂ))) z
 
-private def unconditionalActualC485RawPhysicalVerifierBorn
+/-- The quadratic expectation of the physical winning effect in the supplied vector. -/
+def unconditionalActualC485RawPhysicalVerifierBorn
     {X Y A B ι κ : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]

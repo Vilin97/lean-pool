@@ -3,8 +3,19 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
+
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Algebra.GroupWithZero.Nat
 import LeanPool.CircuitComplexity.Internal.Bridge
 import LeanPool.CircuitComplexity.Internal.ShannonUpper
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Shannon Bounds
 
@@ -36,6 +47,8 @@ When `Basis.andOr2` is known to be complete, this yields a
 
 Together these establish that worst-case circuit complexity is `Θ(2^N / N)`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

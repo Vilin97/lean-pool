@@ -3,6 +3,10 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
+module
+
+public import Mathlib.Data.Nat.Notation
+public import Mathlib.Data.Set.Operations
 import Mathlib.Data.Set.Basic
 
 /-!
@@ -11,6 +15,8 @@ import Mathlib.Data.Set.Basic
 We define positive Boolean formulas (`PositiveBool`), alternating Büchi automata
 (`ABW`), their run DAGs (`RunDAG`), and the language they accept.
 -/
+
+@[expose] public section
 
 namespace LeanModelChecking
 

@@ -43,13 +43,22 @@ DESIGN RULINGS:
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.Sorted
-import LeanPool.MatchingLogic.ProofSystem  -- for PForm and PForm.Taut
+module
+
+public import LeanPool.MatchingLogic.Sorted
+public import LeanPool.MatchingLogic.ProofSystem  -- for PForm and PForm.Taut
 import LeanPool.MatchingLogic.EntryPoints
+import Mathlib.Data.Set.Lattice.Bounded
+import Mathlib.Data.Set.Lattice.Disjoint
+import Mathlib.Data.Set.Lattice.Image
+import Mathlib.Data.Set.Lattice.Indexed
+import Mathlib.Data.Set.Lattice.Order
 
 /-!
 # MatchingLogic.SortedProof
 -/
+
+@[expose] public section
 
 -- `PForm` lives in ProofSystem.lean. Without this import, `autoImplicit` turns
 -- every mention of it into a fresh type VARIABLE and the file still elaborates

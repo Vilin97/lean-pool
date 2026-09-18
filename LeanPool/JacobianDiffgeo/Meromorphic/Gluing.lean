@@ -3,8 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Meromorphic.GermSpace
+import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
 import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Sheaf gluing for `MeroGermOn` (§6.6): the Čech `H⁰` engine
@@ -16,6 +21,8 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.4,
   `evalAt_restrict` — makes the gluing elementary, no coherence lemma needed).
 * `MeroGermOn.glue_unique`: the glued class is unique.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

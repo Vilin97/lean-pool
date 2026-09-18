@@ -7,10 +7,7 @@ module
 
 public import LeanPool.Odlyzko.CompletedZeta.GammaFactor
 public import LeanPool.Odlyzko.CompletedZeta.UnitFundamentalDomain
-public import Mathlib.Analysis.MellinTransform
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.MeasureTheory.Integral.Pi
-public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 
 /-! TODO: Add doc-string. -/
 

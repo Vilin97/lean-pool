@@ -9,6 +9,9 @@ Authors: Carles Marín
    The element of H⊗H is a formal sum = `List (Forest × Forest)`; equality of formal sums
    = `List.Perm` (multiset equality). Empirically (probe 2026-06-18) coassoc holds up to Perm,
    not literal list equality. WIP, LOCAL only. -/
+module
+
+@[expose] public section
 
 namespace CK.Coassoc
 

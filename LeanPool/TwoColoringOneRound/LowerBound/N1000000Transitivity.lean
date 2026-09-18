@@ -3,20 +3,20 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

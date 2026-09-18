@@ -3,9 +3,14 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.EuclideanRecords
-import LeanPool.ThreeGap.EuclideanNN
+module
+
+public import LeanPool.ThreeGap.EuclideanRecords
+public import LeanPool.ThreeGap.EuclideanNN
+import LeanPool.ThreeGap.EuclideanDefect
+import LeanPool.ThreeGap.EuclideanGrowthFive
 import LeanPool.ThreeGap.EuclideanGrowthFour
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The sharp Euclidean five-distance theorem `g₂ ≤ 5`
@@ -20,10 +25,12 @@ replacing `2 qₙ ≤ qₙ₊₅`; feeding it through Chevallier's count (`cheva
 yields `≤ 4 + 1 = 5` distances. Axiom-clean.
 -/
 
+@[expose] public section
+
 namespace ThreeGap.EuclideanRecords
 
 open scoped Real
-open ThreeGap.SimApprox ThreeGap.Chevallier ThreeGap.DeltaCost ThreeGap.SimDirichlet
+open ThreeGap.SimApprox ThreeGap.Chevallier
 
 /-- **The sharp Euclidean growth `2 qₖ ≤ qₖ₊₄` for the record denominators (Haynes–Marklof).** -/
 theorem bestDenom_euclidean_growth_four (α : Fin 2 → ℝ) {k₀ : Fin 2} (hirr : Irrational (α k₀))

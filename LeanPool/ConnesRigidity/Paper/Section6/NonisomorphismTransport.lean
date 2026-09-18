@@ -3,14 +3,19 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section6.QuotientModuleTransport
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
 import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismEmbedding
+import LeanPool.ConnesRigidity.Paper.Section6.QuotientModuleTransport
 
 /-!
 This file exposes the concrete Section 6 module-equivalence conclusion for
 the actual Zhou carriers. The proof uses the public characteristic-kernel
 and quotient transport files in this project.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperNonisomorphism

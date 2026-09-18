@@ -3,20 +3,26 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.Elab.CodeElaborator
-import LeanPool.MRiscX.Semantics.Specification
-import LeanPool.MRiscX.Delab.DelabCode
-import LeanPool.MRiscX.Elab.HoareElaborator
-import LeanPool.MRiscX.Hoare.HoareRules
-import LeanPool.MRiscX.Util.BasicTheorems
+module
+
+public import LeanPool.MRiscX.Hoare.HoareCore
 import LeanPool.MRiscX.Examples.SingleProofsOTP
-import Mathlib.Tactic.NthRewrite
+import LeanPool.MRiscX.Hoare.HoareRules
+import LeanPool.MRiscX.Semantics.MsTheory
+import LeanPool.MRiscX.Semantics.Specification
+import LeanPool.MRiscX.Tactics.CodeProofTactics
+import LeanPool.MRiscX.Tactics.GeneralCustomTactics
+import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
+import LeanPool.MRiscX.Util.BasicTheorems
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # OtpProof
 
 This module provides the end-to-end One-Time-Pad correctness proof.
 -/
+
+@[expose] public section
 
 
 

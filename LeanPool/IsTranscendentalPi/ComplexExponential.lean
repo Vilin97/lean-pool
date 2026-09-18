@@ -3,10 +3,15 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Algebra.Order.Group.Pointwise.Interval
+module
+
+public import LeanPool.IsTranscendentalPi.SymmetricPolynomials
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import LeanPool.IsTranscendentalPi.IncrementalDerivatives
-import LeanPool.IsTranscendentalPi.SymmetricPolynomials
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # The complex exponential and subset sums
@@ -15,6 +20,8 @@ Properties of `t ↦ exp(-(t · x))` and the expansion of `∏ (1 + exp x)` over
 multiset of roots into zero- and nonzero-sum subset contributions, the analytic
 heart of Niven's proof of the transcendence of `π`.
 -/
+
+@[expose] public section
 
 open Polynomial
 

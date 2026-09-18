@@ -3,7 +3,9 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Basic
+module
+
+public import LeanPool.AndersonConjecture.Basic
 import Mathlib.RingTheory.Filtration
 import Mathlib.RingTheory.HopkinsLevitzki
 import Mathlib.RingTheory.Ideal.Quotient.Noetherian
@@ -14,6 +16,8 @@ import Mathlib.RingTheory.Ideal.Quotient.Noetherian
 A complete Noetherian local ring is quasi-complete
 (Anderson, 2014, Theorem 3).
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 

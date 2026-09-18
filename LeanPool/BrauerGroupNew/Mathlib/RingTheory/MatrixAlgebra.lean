@@ -3,14 +3,17 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.RingTheory.MatrixAlgebra
+public import Mathlib.RingTheory.MatrixAlgebra
 
 /-!
 # Matrix algebra tensor compatibility
 
 This file restores an upstream matrix/tensor equivalence in the opposite direction.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

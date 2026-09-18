@@ -3,19 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
+public import Mathlib.GroupTheory.CommutingProbability
 import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Data.Set.Card
-import Mathlib.GroupTheory.CommutingProbability
-import Mathlib.GroupTheory.Index
-import Mathlib.GroupTheory.SpecificGroups.Cyclic
-import Mathlib.GroupTheory.Subgroup.Centralizer
-import Mathlib.Logic.Equiv.Set
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith.Frontend
 
 /-!
 # The 5/8 theorem
@@ -46,6 +38,8 @@ The proof is the classical counting argument:
 
 All declarations live in the `FiveEighths` namespace.
 -/
+
+@[expose] public section
 
 namespace FiveEighths
 

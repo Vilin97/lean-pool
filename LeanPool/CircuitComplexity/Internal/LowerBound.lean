@@ -3,9 +3,12 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
+
+public import LeanPool.CircuitComplexity.EssentialInput
+public import LeanPool.CircuitComplexity.AON.Defs
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import LeanPool.CircuitComplexity.EssentialInput
-import LeanPool.CircuitComplexity.AON.Defs
+import Mathlib.Data.Fintype.Sum
 
 /-! # Internal: Gate Elimination Lower Bound
 
@@ -17,6 +20,8 @@ The public definitions (`IsEssentialInput`, `EssentialInputs`) are in
 `Circ.EssentialInput`. The public theorems (`gate_elimination_lower_bound`,
 `lower_bound_all_inputs`) are accessible through `Circ.LowerBound`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

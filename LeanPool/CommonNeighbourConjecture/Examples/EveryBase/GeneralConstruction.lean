@@ -3,8 +3,10 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.AbstractSeed
+import Mathlib.Data.Rat.Floor
 
 /-!
 # The abstract every-base-size construction
@@ -13,6 +15,8 @@ This module proves the base-array orbit-profile mechanism, the displayed
 sumset obstruction, and the abstract exact-base-size counterexample theorem.
 All seed and finite-colour hypotheses are exposed by the imported structures.
 -/
+
+@[expose] public section
 
 namespace SaxlCounterexamples.EveryBase
 

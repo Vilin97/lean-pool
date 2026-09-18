@@ -3,17 +3,18 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.ChannelCapacity.Basic
-import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
-import LeanPool.ChannelCapacity.ChainRule
-import LeanPool.ChannelCapacity.NonDegeneracy
-import LeanPool.ChannelCapacity.StrictConcavity
-import LeanPool.ChannelCapacity.Capacity
-import LeanPool.ChannelCapacity.Finite
-import LeanPool.ChannelCapacity.Discharged
-import LeanPool.ChannelCapacity.DischargedExample
-import LeanPool.ChannelCapacity.Counterexample
+public import LeanPool.ChannelCapacity.Basic
+public import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+public import LeanPool.ChannelCapacity.ChainRule
+public import LeanPool.ChannelCapacity.NonDegeneracy
+public import LeanPool.ChannelCapacity.StrictConcavity
+public import LeanPool.ChannelCapacity.Capacity
+public import LeanPool.ChannelCapacity.Finite
+public import LeanPool.ChannelCapacity.Discharged
+public import LeanPool.ChannelCapacity.DischargedExample
+public import LeanPool.ChannelCapacity.Counterexample
 
 /-!
 # Uniqueness of Shannon Capacity-Achieving Priors
@@ -25,3 +26,5 @@ Main declarations: `ChannelCapacity.exists_unique_capacity_achieving_prior_of_fi
 Tags: information-theory, channel-capacity, mutual-information, kullback-leibler, markov-kernel
 MSC: 94A17, 94A15, 60A10
 -/
+
+@[expose] public section

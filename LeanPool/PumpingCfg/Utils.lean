@@ -3,7 +3,10 @@ Copyright (c) 2026 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
-import Mathlib.Data.List.Basic
+module
+
+public import Mathlib.Data.Nat.Notation
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # List repetition utilities
@@ -11,6 +14,8 @@ import Mathlib.Data.List.Basic
 Defines `nTimes` (notation `l ^+^ n`), the `n`-fold repetition of a list,
 together with basic rewriting lemmas about it.
 -/
+
+@[expose] public section
 
 variable {α : Type _}
 

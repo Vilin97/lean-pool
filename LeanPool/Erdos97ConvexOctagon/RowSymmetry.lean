@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.RowMasks
-import Mathlib.Tactic.FinCases
+public import LeanPool.Erdos97ConvexOctagon.RowMasks
+public import LeanPool.Erdos97ConvexOctagon.FiniteModel
+public import LeanPool.Erdos97ConvexOctagon.Relabelling
 
 /-!
 # First-row symmetry reduction
@@ -15,6 +17,8 @@ The normalized zeroth row splits the remaining labels into `{2,3,4}` and
 to seven canonical orbits.  The small table below records an explicit forward
 and inverse permutation for every row.
 -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence
 

@@ -3,8 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.AdicCompletion.Basic
+module
+
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
 import Mathlib.RingTheory.Filtration
 import Mathlib.RingTheory.Ideal.Quotient.Noetherian
 import Mathlib.RingTheory.PicardGroup
@@ -20,6 +23,8 @@ the uncountable case uses a cardinality argument.
 
 Heitmann, "Characterization of completions of UFDs", 1993, Lemmas 2--3.
 -/
+
+@[expose] public section
 
 noncomputable section
 

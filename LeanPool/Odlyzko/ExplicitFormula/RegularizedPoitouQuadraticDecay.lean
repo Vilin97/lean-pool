@@ -5,14 +5,13 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.ExplicitFormula.PoitouTransform
-public import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartarTransform
 public import LeanPool.Odlyzko.TestFunction.TartarDerivativeBounds
-public import Mathlib.Analysis.Calculus.FDeriv.Measurable
-public import Mathlib.Analysis.Complex.RealDeriv
-public import Mathlib.Analysis.Fourier.FourierTransformDeriv
-public import Mathlib.Analysis.Fourier.RiemannLebesgueLemma
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartarTransform
+import LeanPool.Odlyzko.TestFunction.Fourier
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.Analysis.Fourier.FourierTransformDeriv
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # Regularized Poitou Quadratic Decay

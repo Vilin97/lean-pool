@@ -3,12 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
 import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
 import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
-import LeanPool.InfinitaryLogic.Methods.ConstantSupport
-import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
 /-!
 # Craig interpolation for `L_ω₁ω`, countable relational core (issue #8, Layer 1)
 
@@ -38,6 +40,8 @@ semantic contraposition — contradiction.  Feeding the inseparable root pair to
 `exists_paired_model_neg`
 gives one model with `M ⊨ r₁` and `¬ M ⊨ r₂`; its base reduct contradicts `r₁ ⊨ r₂`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

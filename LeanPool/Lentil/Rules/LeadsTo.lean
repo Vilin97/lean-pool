@@ -3,11 +3,18 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
-import LeanPool.Lentil.Rules.Basic
+module
+
+public import LeanPool.Lentil.Tactics.Basic
+import Aesop.Frontend.Tactic
+import Aesop.Main
 import LeanPool.Lentil.Gadgets.TheoremDeriving
+import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
 
 /-! Theorems about the leads-to operator. -/
+
+@[expose] public section
 
 open Classical
 

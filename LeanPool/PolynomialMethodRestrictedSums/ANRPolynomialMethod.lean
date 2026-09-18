@@ -3,9 +3,10 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.MvPolynomial.Degrees
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.MvPolynomial.Degrees
 import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
 import Mathlib.Combinatorics.Nullstellensatz
 import Mathlib.Data.Finsupp.Notation
@@ -18,6 +19,8 @@ polynomials, the vanishing-coefficient lemma on product grids, and the main
 theorem `ANR_polynomial_method` giving a non-vanishing-coefficient criterion
 for lower-bounding restricted sumsets.
 -/
+
+@[expose] public section
 
 open scoped Finset
 

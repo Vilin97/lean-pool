@@ -3,12 +3,15 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
+module
 
-import Mathlib.Order.Hom.Basic
+public import Mathlib.Order.Hom.Basic
 
 /-!
 # LeanPool.BruhatTits.Utils.Order
 -/
+
+@[expose] public section
 
 variable {α β : Type*} [PartialOrder α] [PartialOrder β] (f : α ≃o β)
 

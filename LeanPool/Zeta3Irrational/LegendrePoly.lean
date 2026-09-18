@@ -3,24 +3,16 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Algebra.Polynomial.Eval.SMul
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # Legendre Polynomials
 
@@ -28,6 +20,8 @@ In this file, we define the shiftedLegendre polynomials `shiftedLegendre n` for 
 polynomial in `ℤ[X]`. We prove some basic properties of the shiftedLegendre polynomials.
 
 -/
+
+@[expose] public section
 
 open scoped Nat
 open BigOperators Finset

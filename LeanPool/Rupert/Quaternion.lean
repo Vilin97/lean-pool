@@ -3,17 +3,19 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Quaternion
-import Mathlib.LinearAlgebra.CrossProduct
-import LeanPool.Rupert.Basic
+public import Mathlib.Algebra.Quaternion
+public import Mathlib.LinearAlgebra.CrossProduct
+public import LeanPool.Rupert.Basic
 
 /-!
 # LeanPool.Rupert.Quaternion
 
 Imported Lean Pool material for `LeanPool.Rupert.Quaternion`.
 -/
+
+@[expose] public section
 
 /-- Converts a quaternion to a normalized rotation matrix. -/
 def matrixOfQuat {R : Type} [Field R] (q : Quaternion R)

@@ -3,7 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
 import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Disk geometry for the sphere carrier
@@ -16,6 +24,8 @@ turns the reversed boundary parameter back into the forward parameter.
 The indexed cells are also compact. The instance is transported through the existing
 homeomorphism with the closed unit disk, keeping this fact tied to the actual polygon carrier.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

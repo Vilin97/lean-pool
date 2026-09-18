@@ -3,12 +3,12 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Logic.Equiv.Nat
-import Mathlib.Order.Hom.Set
-import Mathlib.Data.Set.Image
-import Mathlib.Algebra.Ring.Parity
-import Mathlib.Tactic.Ring
+public import Mathlib.Logic.Equiv.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Algebra.Order.Monoid.NatCast
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Exercise 5.13 (Scott 1981, PRG-19, Lecture V) — a one-one pairing `num : N × N →
@@ -75,6 +75,8 @@ types
 Everything (including `numEquiv` and the order-isomorphisms) is **choice-free**
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise513
 

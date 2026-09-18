@@ -3,10 +3,13 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part08
+public import LeanPool.QuantumParallelRepetition.Part08
 
 /-! # Quantum parallel repetition, part 09 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -881,7 +884,8 @@ abbrev UnconditionalSelectedCopyLocalIndex
     (B d N m : ℕ) :=
   Σ _ : Fin B × Fin d, Fin (N * m)
 
-private def unconditionalSelectedCopyCleanedStage
+/-- The selected mixed stage after applying its coherent local bucket resets. -/
+def unconditionalSelectedCopyCleanedStage
     {d N B m : ℕ}
     (Q : ℕ) (w : ℝ)
     (ξ ζ : BipartiteUnitVector d)
@@ -904,7 +908,8 @@ private def unconditionalSelectedCopyIdealStage
   dSVDensityRationalPublicBucketPhysicalCoherentTargetState
     (N := N) (B := B) w m ξ ζ
 
-private def unconditionalSelectedCopyRetainedWork
+/-- Tensor the common failure prefix with the work retained after the selected stage. -/
+def unconditionalSelectedCopyRetainedWork
     {S N d L : ℕ} {τ : Type*}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -1211,7 +1216,8 @@ theorem unconditionalConjugatePureVector_norm
   nlinarith [norm_nonneg (unconditionalConjugatePureVector z),
     norm_nonneg z]
 
-private def unconditionalConjugatePOVM
+/-- Transpose every effect of a POVM to obtain the conjugate measurement. -/
+def unconditionalConjugatePOVM
     {A ι : Type*} [Fintype A] [Fintype ι] [DecidableEq ι]
     (P : POVM A ι) : POVM A ι where
   effect a := (P.effect a).transpose
@@ -3137,7 +3143,8 @@ abbrev UnconditionalSourcePhysicalStoppingPhaseFiber
     DSVUniformDensityIndependentHistoryLocalIndex
       (L + 1) N d, Fin m
 
-private def unconditionalSourcePhysicalStoppingPhaseHarmonicIndexEquiv
+/-- Regroup phase, stopped history, and harmonic indices by their stopping flag. -/
+def unconditionalSourcePhysicalStoppingPhaseHarmonicIndexEquiv
     (S B N d L m : ℕ) :
     ((DSVDensityRationalPublicMultiscalePhaseIndex S B ×
         DSVUniformDensityThresholdWholeHistoryLocalIndex N d L) ×
@@ -3156,7 +3163,8 @@ private def unconditionalSourcePhysicalStoppingPhaseHarmonicIndexEquiv
     rcases q with ⟨flag, ⟨⟨phase, history⟩, work⟩⟩
     rfl
 
-private def unconditionalSourcePhysicalStoppingTargetFirstIndexEquiv
+/-- Convert the target-first index into stopping flags and their physical fibers. -/
+def unconditionalSourcePhysicalStoppingTargetFirstIndexEquiv
     (S B N d L m : ℕ) :
     Fin (d *
       dSVDensityRationalPublicMultiscalePhaseResidual
@@ -3168,7 +3176,8 @@ private def unconditionalSourcePhysicalStoppingTargetFirstIndexEquiv
     (unconditionalSourcePhysicalStoppingPhaseHarmonicIndexEquiv
       S B N d L m)
 
-private def unconditionalSourcePhysicalStoppingTargetFirstStateEquiv
+/-- The bipartite isometry induced by the target-first stopping index equivalence. -/
+def unconditionalSourcePhysicalStoppingTargetFirstStateEquiv
     (S B N d L m : ℕ) :
     EuclideanSpace ℂ
       (Fin (d *
@@ -3244,7 +3253,8 @@ theorem unconditionalSourcePhysicalStoppingBranch_sigmaContinuation
     Fintype.sum_prod_type, Fintype.sum_sigma, sum_ite_irrel, sum_const_zero, sum_ite_eq, mem_univ,
     ↓reduceIte]
 
-private def unconditionalSourceFixedPureStoppedSigmaReindexedUnitary
+/-- Transport a unitary matrix along an equivalence of its row and column indices. -/
+def unconditionalSourceFixedPureStoppedSigmaReindexedUnitary
     {ι κ : Type*} [Fintype ι] [DecidableEq ι]
     [Fintype κ] [DecidableEq κ]
     (e : ι ≃ κ) (U : Matrix.unitaryGroup ι ℂ) :
@@ -3266,7 +3276,8 @@ private def unconditionalSourceFixedPureStoppedSigmaReindexedUnitary
     (Matrix.mem_unitaryGroup_iff').mp U.property]
   exact (Matrix.reindexRingEquiv ℂ e).map_one
 
-private def unconditionalSelectedMultiscalePhaseIndexEquiv
+/-- Insert the selected phase into the family of phases at all other scales. -/
+def unconditionalSelectedMultiscalePhaseIndexEquiv
     {S B : ℕ} (scale : Fin (S + 1)) :
     (Fin B × Fin (Fintype.card (Fin S → Fin B))) ≃
       DSVDensityRationalPublicMultiscalePhaseIndex (S + 1) B :=
@@ -3331,7 +3342,8 @@ private theorem unconditionalSelectedMultiscalePhase_EPR_apply
     simp only [ePRState, Fintype.card_pi, Fintype.card_fin, prod_const, card_univ, Nat.cast_pow,
       ofReal_inv, different, ↓reduceIte, selected, mul_ite, zero_mul, mul_zero, ite_self]
 
-private def unconditionalActualMultiscalePhaseIndexEquiv
+/-- Split the actual phase family into its selected phase and remaining phases. -/
+def unconditionalActualMultiscalePhaseIndexEquiv
     {S B : ℕ} (scale : Fin S) :
     (Fin B × Fin (Fintype.card (Fin (S - 1) → Fin B))) ≃
       DSVDensityRationalPublicMultiscalePhaseIndex S B := by
@@ -3361,7 +3373,8 @@ private theorem unconditionalActualMultiscalePhase_EPR_apply
       exact unconditionalSelectedMultiscalePhase_EPR_apply
         scale p q r t
 
-private def unconditionalSourcePhysicalCleanedReindexedUnitary
+/-- Reindex a cleaned unitary through an equivalence of its local index spaces. -/
+def unconditionalSourcePhysicalCleanedReindexedUnitary
     {ι κ : Type*}
     [Fintype ι] [DecidableEq ι]
     [Fintype κ] [DecidableEq κ]
@@ -3386,7 +3399,8 @@ private def unconditionalSourcePhysicalCleanedReindexedUnitary
     (Matrix.mem_unitaryGroup_iff').mp U.property]
   exact (Matrix.reindexRingEquiv ℂ e).map_one
 
-private def unconditionalSourcePhysicalCleanedTargetFirstUnitary
+/-- Transport a target-first unitary to the physical stopping fibers. -/
+def unconditionalSourcePhysicalCleanedTargetFirstUnitary
     (S B N d L m : ℕ)
     (U : Matrix.unitaryGroup
       (Fin (d *
@@ -3547,7 +3561,8 @@ private theorem
     unconditionalSourcePhysicalStoppingTargetFirst_branch_apply
       width schedule ξ ζ r s φ ψ a b i k
 
-private def unconditionalSourcePhysicalCleanedSelectedHistoryEquiv
+/-- Split a history into the selected coordinate, its prefix, and its suffix. -/
+def unconditionalSourcePhysicalCleanedSelectedHistoryEquiv
     {L : ℕ} (j : Fin L) (β : Type*) :
     (Fin (L + 1) → β) ≃
       β × ((Fin j.val → β) × (Fin (L - j.val) → β)) where
@@ -3648,7 +3663,8 @@ private theorem unconditionalSourcePhysicalCleanedSelectedHistoryEquiv_hit
       j β f).1 = f j.castSucc := by
   rfl
 
-private def unconditionalSourcePhysicalCleanedFullBilateralRegroup
+/-- Group the selected pair together and retain the bilateral prefix and tail indices. -/
+def unconditionalSourcePhysicalCleanedFullBilateralRegroup
     {R : Type*} {B N d L m : ℕ} (j : Fin L) :
     ((UnconditionalSelectedCopyLocalIndex B d N m ×
        ((Fin j.val → DSVUniformDensityThresholdLocalIndex N d) ×
@@ -3949,7 +3965,8 @@ abbrev UnconditionalSourceFlagControlledRetainedIndex
     ((Fin (L - j.val) →
       DSVUniformDensityThresholdLocalIndex N d) × R)
 
-private def unconditionalSourceFlagControlledTensorUnitary
+/-- The tensor product of two unitaries acting on paired local indices. -/
+def unconditionalSourceFlagControlledTensorUnitary
     {ι κ : Type} [Fintype ι] [DecidableEq ι]
     [Fintype κ] [DecidableEq κ]
     (U : Matrix.unitaryGroup ι ℂ)
@@ -3958,7 +3975,8 @@ private def unconditionalSourceFlagControlledTensorUnitary
   ⟨(U : Matrix ι ι ℂ) ⊗ₖ (V : Matrix κ κ ℂ),
     Matrix.kronecker_mem_unitary U.property V.property⟩
 
-private def unconditionalSourceFlagControlledStagePhysicalIndexEquiv
+/-- Regroup phase, threshold, spectral, and harmonic indices into the selected-copy index. -/
+def unconditionalSourceFlagControlledStagePhysicalIndexEquiv
     (B N d m : ℕ) :
     (Σ _ : Fin B,
       DSVUniformDensityThresholdLocalIndex N d × Fin m) ≃
@@ -3976,7 +3994,8 @@ private def unconditionalSourceFlagControlledStagePhysicalIndexEquiv
     simp only [finProdFinEquiv_symm_apply, Sigma.mk.injEq, heq_eq_eq, true_and]
     exact finProdFinEquiv.apply_symm_apply work
 
-private def unconditionalSourceFlagControlledStageSpectralUnitary
+/-- Apply the spectral unitary at each public phase, retaining the harmonic coordinate. -/
+def unconditionalSourceFlagControlledStageSpectralUnitary
     {B N d m : ℕ}
     (spectral : Matrix.unitaryGroup
       (DSVUniformDensityThresholdLocalIndex N d) ℂ) :
@@ -3990,7 +4009,8 @@ private def unconditionalSourceFlagControlledStageSpectralUnitary
         unconditionalSourceFlagControlledTensorUnitary
           spectral (1 : Matrix.unitaryGroup (Fin m) ℂ)))
 
-private def unconditionalSourceFlagControlledStageBucketUnitary
+/-- Apply the unitary selected by the public phase and the accepted-rank bucket. -/
+def unconditionalSourceFlagControlledStageBucketUnitary
     {B N d m : ℕ} (Q : ℕ) (w : ℝ)
     (ξ : BipartiteUnitVector d)
     (A : Fin B → Option ℕ → Matrix.unitaryGroup (Fin (N * m)) ℂ) :
@@ -4001,7 +4021,8 @@ private def unconditionalSourceFlagControlledStageBucketUnitary
       A q.1 (dSVDensityRationalPublicLogRankBucket Q q.1
         (dSVDensityRationalPhysicalAcceptedRank w N ξ q.2)))
 
-private def unconditionalSourceFlagControlledFullStageUnitary
+/-- The controlled physical unitary at a selected stage of the scheduled source. -/
+def unconditionalSourceFlagControlledFullStageUnitary
     {S B N d L m : ℕ} {R : Type} [Fintype R] [DecidableEq R]
     (phaseSplit :
       DSVDensityRationalPublicMultiscalePhaseIndex S B ≃
@@ -4037,7 +4058,8 @@ private def unconditionalSourceFlagControlledFullStageUnitary
           unconditionalSourceFlagControlledStageSpectralUnitary
             (B := B) (m := m) spectral))
 
-private def unconditionalSourceFlagControlledFiniteStageDecoder
+/-- The family of controlled decoding unitaries indexed by the stopping flag. -/
+def unconditionalSourceFlagControlledFiniteStageDecoder
     {S B N d L m : ℕ} {R : Type} [Fintype R] [DecidableEq R]
     (phaseSplit :
       DSVDensityRationalPublicMultiscalePhaseIndex S B ≃
@@ -5928,7 +5950,8 @@ abbrev IntegratorActualC485BranchSpace
       UnconditionalSelectedCopyLocalIndex B d N m) ×
      IntegratorActualC485RetainedIndex S B N d L j)
 
-private def integratorActualC485OriginalRetainedWork
+/-- The original retained prefix and canonical phase tail at the selected stage. -/
+def integratorActualC485OriginalRetainedWork
     {S B N d L : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) (j : Fin L) :

@@ -3,7 +3,9 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Module.LinearMap.Defs
+module
+
+public import Mathlib.Algebra.Module.LinearMap.Defs
 
 /-!
 # Cyclic triple sums
@@ -38,6 +40,8 @@ too often in Lean) are proven for the cyclic triple sums:
 Jacobi identity, Lie algebra 2-cocycle condition
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

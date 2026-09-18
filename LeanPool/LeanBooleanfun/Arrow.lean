@@ -3,7 +3,9 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
-import LeanPool.LeanBooleanfun.BooleanValued
+module
+
+public import LeanPool.LeanBooleanfun.BooleanValued
 import LeanPool.LeanBooleanfun.ToMathlib.Finset
 
 /-!
@@ -27,6 +29,8 @@ This is mainly facilitated by introducing an auxiliary linear operator, see `_Tn
   theorem*][kalai2002]
 * [R. O'Donnell, *Analysis of Boolean functions*][odonnell2014]
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -151,7 +155,7 @@ lemma probabilityCondorcetWinner_eq_one (hc : IsCondorcet f) :
   simp
 
 /-- Auxiliary linear operator -/
-private abbrev _Tnae3 : BooleanFunc n →ₗ[ℝ] BooleanFunc n where
+abbrev _Tnae3 : BooleanFunc n →ₗ[ℝ] BooleanFunc n where
   toFun := fun f ↦
     fun x ↦ (1/3)^n * ∑ y, f y * ∑ z : Fin n → Fin 2, oneOn (VoteConsistent x y z)
   map_add' := by

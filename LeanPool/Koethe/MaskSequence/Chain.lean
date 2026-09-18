@@ -3,8 +3,14 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Tactic.Choose
-import LeanPool.Koethe.MaskSequence.Basic
+module
+
+public import LeanPool.Koethe.MaskSequence.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # A coherent chain of mortal periodic masks
@@ -14,6 +20,8 @@ An arbitrary sequence of pencils can be handled under the abstract
 integral sparsity bound is retained.  A pointwise choice then produces a
 nonzero sequence respecting every assignment at every stage.
 -/
+
+@[expose] public section
 
 noncomputable section
 

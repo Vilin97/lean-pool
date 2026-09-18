@@ -3,9 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-!
 # `RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict`
@@ -29,6 +29,8 @@ given by extension-by-zero (via `Set.indicator`).
 - `MeasureTheory.Lp.extendByZeroₗᵢ`
 -/
 
+@[expose] public section
+
 namespace MeasureTheory
 
 open scoped ENNReal
@@ -42,7 +44,8 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {p : ℝ≥0∞} [Fact (1 ≤ p)]
 variable {s : Set α} (hs : MeasurableSet s)
 
-private noncomputable def extendByZeroFun (f : Lp E p (μ.restrict s)) : Lp E p μ :=
+/-- Extend an Lp function from a restricted measure by zero outside the set. -/
+noncomputable def extendByZeroFun (f : Lp E p (μ.restrict s)) : Lp E p μ :=
   let hf : MemLp (fun x : α => f x) p (μ.restrict s) := Lp.memLp f
   let hfi : MemLp (s.indicator fun x : α => f x) p μ :=
     (memLp_indicator_iff_restrict (μ := μ) (p := p) (s := s) (f := fun x : α => f x) hs).2 hf

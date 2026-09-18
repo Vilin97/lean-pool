@@ -6,14 +6,15 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import LeanPool.LeanQuantumAlg.Core.Gate
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.DynamicalLieAlgebra
 public import LeanPool.LeanQuantumAlg.Primitives.QNN.Trainability
-public import Mathlib.Algebra.Lie.Matrix
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.Algebra.DirectSum.Module
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Lie-algebraic barren plateaus from the *real* dynamical Lie algebra

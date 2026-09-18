@@ -3,19 +3,21 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import LeanPool.Rupert.Basic
+public import LeanPool.Rupert.Quaternion
+import LeanPool.Rupert.Attr
 import LeanPool.Rupert.Convex
-import LeanPool.Rupert.MatrixSimps
-import LeanPool.Rupert.Quaternion
 import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
-import LeanPool.Rupert.FinCases
+import LeanPool.Rupert.MatrixSimps
 
 /-!
 # LeanPool.Rupert.Tetrahedron
 
 Imported Lean Pool material for `LeanPool.Rupert.Tetrahedron`.
 -/
+
+@[expose] public section
 
 namespace Tetrahedron
 

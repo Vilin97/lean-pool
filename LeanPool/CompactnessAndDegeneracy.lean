@@ -3,9 +3,10 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.CompactnessAndDegeneracy.Compactness
-import LeanPool.CompactnessAndDegeneracy.Degeneracy
+public import LeanPool.CompactnessAndDegeneracy.Compactness
+public import LeanPool.CompactnessAndDegeneracy.Degeneracy
 
 /-!
 # Counterexamples to graph compactness and two-degenerate extremal bounds
@@ -17,6 +18,8 @@ Main declarations: `CompactnessConjecture.quantitativeCompactnessCounterexample`
 Tags: extremal-combinatorics, extremal-graph-theory, degenerate-graphs, counterexamples
 MSC: 05C35, 05C75
 -/
+
+@[expose] public section
 
 /-!
 # Counterexamples in extremal graph theory

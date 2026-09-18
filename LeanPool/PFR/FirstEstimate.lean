@@ -6,8 +6,8 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.Fibring
 public import LeanPool.PFR.TauFunctional
+import LeanPool.PFR.Fibring
 
 /-!
 # First estimate

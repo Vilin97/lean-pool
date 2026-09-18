@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMTruth
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMTruth
 /-!
 # The local Skolem-universality mixin
 
@@ -26,6 +28,8 @@ The follow-up refactor threads the mixin through `truthLemmaStage` (keeping the 
 as wrappers supplying the canonical proof) and discharges it for `schemaTermStructure` from the
 restricted schema truth lemma.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

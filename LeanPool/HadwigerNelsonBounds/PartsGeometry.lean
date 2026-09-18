@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.Basic
+public import LeanPool.HadwigerNelsonBounds.Basic
 
 /-!
 # Exact geometry for the Parts lower-bound certificate
@@ -16,6 +17,8 @@ The 481-vertex base graph in Parts' certificate uses points
 The equivalent coordinates below use only `sqrt 33` and `sqrt 3`; this makes
 the unit-distance check an integer calculation.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

@@ -3,10 +3,18 @@ Copyright (c) 2026 Dillon Ryan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dillon Ryan
 -/
+module
 
-import LeanPool.LehmerE10.Defs
+public import LeanPool.LehmerE10.Defs
+public import LeanPool.LehmerE10.TraceQuintic
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import LeanPool.LehmerE10.CyclotomicKill
+import LeanPool.LehmerE10.Kronecker
 import LeanPool.LehmerE10.UnitCircleFactors
-import LeanPool.LehmerE10.TraceQuintic
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # the assembly:
@@ -35,6 +43,8 @@ SCOPE: Lehmer's 1933 conjecture (a positive lower bound for Mahler measures > 1)
 is NOT claimed anywhere in this repository.
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
+
+@[expose] public section
 
 namespace LehmerE10
 

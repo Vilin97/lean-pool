@@ -7,8 +7,11 @@ Authors: Rado Kirov
 /-
 Blueprint unit: local-multiplicity (CC4). Composition law and multiplicity-one criteria.
 -/
+module
+
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
 import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
-import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.RingTheory.RootsOfUnity.Complex
 
 /-!
@@ -25,6 +28,8 @@ import Mathlib.RingTheory.RootsOfUnity.Complex
 * `RS.eventually_multiplicity_eq_one` — ramification is isolated: near `x` (off `x`),
   `mult F y = 1` (mapping-degree's "critical values are discrete" seed).
 -/
+
+@[expose] public section
 
 open Filter Set OpenPartialHomeomorph Metric
 open scoped ContDiff Manifold Topology

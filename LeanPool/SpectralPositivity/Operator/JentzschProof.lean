@@ -3,13 +3,13 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Function.LpOrder
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.MeasureTheory.Function.L2Space
+public import Mathlib.Analysis.InnerProductSpace.l2Space
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
 
 /-!
 # Proof of Jentzsch's Theorem via the Variational Absolute Value Trick
@@ -35,6 +35,8 @@ structure (absolute value, positive/negative parts).
 - Simon, *Functional Integration and Quantum Physics* (2005), §I.13
 - Courant-Hilbert, *Methods of Mathematical Physics*, Ch. VI
 -/
+
+@[expose] public section
 
 noncomputable section
 

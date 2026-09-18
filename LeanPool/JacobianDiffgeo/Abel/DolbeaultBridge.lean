@@ -3,12 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.Loops
-import LeanPool.JacobianDiffgeo.TailDuality
-import LeanPool.JacobianDiffgeo.LaurentTail
-import LeanPool.JacobianDiffgeo.DolbeaultComparison
-import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Comparison
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+public import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the Dolbeault-upgrade bridge, RESTATED at the tail level (design §4.3 D3)
@@ -66,6 +70,8 @@ explicitly does not build this global object) is independent, substantial new an
 not an external blocker — flagged precisely in `Sufficiency.lean`.
 -/
 
+@[expose] public section
+
 open scoped ContDiff Manifold
 
 noncomputable section
@@ -101,26 +107,17 @@ theorem exists_dbar_eq_zero_of_forall_basis_pairing_eq_zero
           ((RS.dolbeaultEquiv (X := X)).symm (RS.H01.mk η))) = 0) :
     ∃ u : RS.SmoothC X, RS.dbar u = η := by
   apply RS.H01.mk_eq_zero_iff.1
-  have hzero :
-      (RS.LaurentTail.H1Tail.equivOfSurjective (0 : RS.Divisor X) hsurj).symm
-        ((RS.dolbeaultEquiv (X := X)).symm (RS.H01.mk η)) = 0 := by
-    rw [← Module.forall_dual_apply_eq_zero_iff ℂ]
-    intro φ
-    obtain ⟨g, rfl⟩ := formDualEquiv.surjective φ
-    have hL : ((LinearMap.applyₗ
-          ((RS.LaurentTail.H1Tail.equivOfSurjective (0 : RS.Divisor X) hsurj).symm
-            ((RS.dolbeaultEquiv (X := X)).symm (RS.H01.mk η)))).comp formDualEquiv.toLinearMap
-        : RS.Form1 X →ₗ[ℂ] ℂ) = 0 := by
-      apply (RS.basis X).ext
-      intro i
-      simpa using h i
-    have := congrArg (fun L => L g) hL
-    simpa using this
-  have hde : (RS.dolbeaultEquiv (X := X)).symm (RS.H01.mk η) = 0 := by
-    have h2 := congrArg (RS.LaurentTail.H1Tail.equivOfSurjective (0 : RS.Divisor X) hsurj) hzero
-    rwa [LinearEquiv.apply_symm_apply, map_zero] at h2
-  have h3 := congrArg (RS.dolbeaultEquiv (X := X)) hde
-  rwa [LinearEquiv.apply_symm_apply, map_zero] at h3
+  apply (RS.dolbeaultEquiv (X := X)).symm.map_eq_zero_iff.mp
+  apply (RS.LaurentTail.H1Tail.equivOfSurjective (0 : RS.Divisor X) hsurj).symm.map_eq_zero_iff.mp
+  apply (Module.forall_dual_apply_eq_zero_iff ℂ _).mp
+  intro φ
+  obtain ⟨g, rfl⟩ := formDualEquiv.surjective φ
+  have hL : ((LinearMap.applyₗ
+        ((RS.LaurentTail.H1Tail.equivOfSurjective (0 : RS.Divisor X) hsurj).symm
+          ((RS.dolbeaultEquiv (X := X)).symm (RS.H01.mk η)))).comp formDualEquiv.toLinearMap
+      : RS.Form1 X →ₗ[ℂ] ℂ) = 0 :=
+    (RS.basis X).ext h
+  exact LinearMap.congr_fun hL g
 
 end RS.Abel
 

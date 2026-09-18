@@ -3,10 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
+public import LeanPool.Incompleteness.Foundation.Logic.LogicSymbol
+import Mathlib.Tactic.Bound.Init
 
 /-! # Quantifier -/
+
+@[expose] public section
 
 
 

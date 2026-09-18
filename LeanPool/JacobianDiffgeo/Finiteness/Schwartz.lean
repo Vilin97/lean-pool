@@ -3,13 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Mathlib.Analysis.Normed.Operator.Banach
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.RingTheory.Finiteness.Finsupp
-import Mathlib.LinearAlgebra.Isomorphisms
-import Mathlib.Analysis.Complex.Basic
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # The Schwartz cospan lemma (`finiteness-and-chi`, Banach half)
@@ -42,6 +42,8 @@ perturbation `v` to correct for. Forster's open-mapping step 14.6(b) survives as
 `isCompactOperator_iff_isCompact_closure_image_closedBall` hits a deterministic `isDefEq`
 timeout at `E →L[ℂ] F`, per the spike `scratch_finiteness.lean` §11).
 -/
+
+@[expose] public section
 
 open Metric Function
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.HadwigerNelsonBounds.Basic
 import LeanPool.HadwigerNelsonBounds.VoronoiQuadratic
 
 /-!
@@ -12,6 +14,8 @@ import LeanPool.HadwigerNelsonBounds.VoronoiQuadratic
 This module converts the unit-square quadratic estimate into a covering-radius
 theorem for the triangular lattice and defines the chosen nearest lattice cell.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

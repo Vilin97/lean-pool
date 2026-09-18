@@ -6,8 +6,7 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.FunctionField.Divisor
-public import Mathlib.FieldTheory.AlgebraicClosure
-public import Mathlib.FieldTheory.RatFunc.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Basic divisor API aliases

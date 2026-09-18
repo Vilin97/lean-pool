@@ -3,8 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Kernel.Data
+public import LeanPool.BollobasNikiforov.Kernel.Data
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Sherman–Morrison formula for `𝒦`
@@ -12,6 +16,8 @@ import LeanPool.BollobasNikiforov.Kernel.Data
 The rank-one update `𝒦 = (𝒜 + VVᵀ/γ)⁻¹` expands as
 `𝒜⁻¹ - e₀ e₀ᵀ / (γ + a₀)`, using `𝒜⁻¹ V = e₀` and `V 0 = a₀`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

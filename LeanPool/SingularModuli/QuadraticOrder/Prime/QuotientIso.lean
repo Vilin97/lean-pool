@@ -3,8 +3,10 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
+public import Mathlib.Data.ZMod.QuotientRing
 
 /-!
 # Prime classification, part 2: the quotient ring isomorphism
@@ -29,6 +31,8 @@ field/PID structure of `𝔽ₚ[X]` does the work. The downstream files
 (`Inert`, `Split`, `Ramified`) are thin wrappers over this transport. This is a
 Lean-idiomatic route; the mathematical content matches Prop 3.2.1.
 -/
+
+@[expose] public section
 
 open Polynomial
 

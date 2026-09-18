@@ -13,12 +13,16 @@ explicit for the raw named syntax used by the base development, then shows that
 a derivation over the finite sub-signature can be replayed over the ambient
 signature.
 -/
-import LeanPool.MatchingLogic.EntryIII.SymbolSupport
-import Mathlib.Logic.Equiv.List
+module
+
+public import LeanPool.MatchingLogic.EntryIII.SymbolSupport
+public import Mathlib.Logic.Equiv.List
 
 /-!
 # MatchingLogic.EntryIII.SignatureRestriction
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

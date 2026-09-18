@@ -3,7 +3,17 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import LeanPool.Koethe.Mortality.FormalWord
+module
+
+public import LeanPool.Koethe.Mortality.FormalWord
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Periodic masks and independent connector holes
@@ -12,6 +22,8 @@ Free positions are enumerated as a finite subtype of *occurrences*, not as
 residue classes.  In particular a connector of length `m * period` has
 `m * holes` distinct projective blocks.
 -/
+
+@[expose] public section
 
 noncomputable section
 

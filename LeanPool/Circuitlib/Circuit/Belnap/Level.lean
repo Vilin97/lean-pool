@@ -3,8 +3,9 @@ Copyright (c) 2026 Matt Hunzinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
+module
 
-import Mathlib.Order.WithBotTop
+public import Mathlib.Order.WithBotTop
 
 /-! # Belnap levels
 
@@ -14,6 +15,8 @@ import Mathlib.Order.WithBotTop
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
+
+@[expose] public section
 
 namespace Circuit
 

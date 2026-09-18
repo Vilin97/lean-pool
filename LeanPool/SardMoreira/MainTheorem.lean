@@ -3,23 +3,25 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.Calculus.FDeriv.Comp
-import Mathlib.Analysis.Calculus.Implicit
-import Mathlib.Topology.MetricSpace.HausdorffDimension
-import Mathlib.Topology.OpenPartialHomeomorph.Constructions
-import LeanPool.SardMoreira.ContDiffMoreiraHolder
-import LeanPool.SardMoreira.ImplicitFunction
-import LeanPool.SardMoreira.LinearAlgebra
+public import Mathlib.Topology.MetricSpace.HausdorffDimension
+public import LeanPool.SardMoreira.ContDiffMoreiraHolder
 import LeanPool.SardMoreira.ChartEstimates
-import LeanPool.SardMoreira.WithRPowDist
+import LeanPool.SardMoreira.ContDiff
+import LeanPool.SardMoreira.ImplicitFunction
+import LeanPool.SardMoreira.LebesgueDensity
+import LeanPool.SardMoreira.LinearAlgebra
 import LeanPool.SardMoreira.OuterMeasureDeriv
-import LeanPool.SardMoreira.ToMathlib.PR33029
-import LeanPool.SardMoreira.ToMathlib.PR32993
+import LeanPool.SardMoreira.WithRPowDist
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 # LeanPool.SardMoreira.MainTheorem
 -/
+
+@[expose] public section
 
 open scoped unitInterval NNReal Topology ENNReal Pointwise
 open MeasureTheory Measure Metric
@@ -626,8 +628,7 @@ theorem hausdorffMeasure_image_nhdsWithin_null_of_finrank_eq
         rw [hdf.coe_implicitToOpenPartialHomeomorphOfComplementedKerRange hker hrange]
         funext x
         rw [ImplicitFunctionData.prodFun_apply]
-        simp [φ, HasStrictFDerivAt.implicitFunctionDataOfComplementedKerRange,
-          HasStrictFDerivAt.implicitFunctionDataOfComplemented]
+        simp [φ, HasStrictFDerivAt.implicitFunctionDataOfComplementedKerRange]
       rw [hprod]
       simpa [φ, HasStrictFDerivAt.implicitFunctionDataOfComplementedKerRange_pt] using
         φ.isInvertible_fderiv_prodFun

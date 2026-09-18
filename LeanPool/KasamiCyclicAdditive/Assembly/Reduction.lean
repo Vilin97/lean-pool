@@ -3,15 +3,18 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Assembly.GeometricChain
-import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
+public import LeanPool.KasamiCyclicAdditive.Counting.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.AdditiveCharacter
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
+public import LeanPool.KasamiCyclicAdditive.Phase.DillonKashyapInterface
 import LeanPool.KasamiCyclicAdditive.Assembly.CoefficientReduction
-import LeanPool.KasamiCyclicAdditive.Counting.Average
+import LeanPool.KasamiCyclicAdditive.Assembly.ElementaryInputs
+import LeanPool.KasamiCyclicAdditive.Assembly.GeometricChain
 import LeanPool.KasamiCyclicAdditive.Assembly.Normalization
+import LeanPool.KasamiCyclicAdditive.Counting.Average
 import LeanPool.KasamiCyclicAdditive.MCM.PhaseFormula
-import LeanPool.KasamiCyclicAdditive.MCM.ComplementTransport
 
 /-!
 # Reduction around the assembled Kasami chain
@@ -24,6 +27,8 @@ arithmetic. The theorems below are kept in their general hypothesis-taking
 form, with convenience wrappers taking only the half-size equation (and, in
 one case, also `DillonKashyapPhaseFormula`) supplied afterwards.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive
 

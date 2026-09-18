@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.KStatistic
+module
+
+public import LeanPool.Feige.KStatistic
 
 /-!
 # Mean-one two-point systems
@@ -17,6 +19,8 @@ and proves the required Boolean-lattice monotonicity.  The latter is obtained
 directly from the coordinatewise antitonicity of the exponential Dirichlet
 statistic.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 

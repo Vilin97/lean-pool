@@ -3,10 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
-import Mathlib.Analysis.Real.Pi.Bounds
+public import LeanPool.Chudnovsky.Basic
 import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Estimates for `1728·J` and `s₂` (Milla, arXiv:1809.00533v6, Chapter 5)
@@ -36,6 +37,8 @@ This file states the explicit estimates and `q`-series approximations of Chapter
 
 All estimates hold on `Chudnovsky.Region = {τ | Im τ > 5/4}`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -692,7 +695,7 @@ def lemkG : List ℤ :=
    1977862, -73416, -649704, -212520, 82731, 78936, 16192, -6072, -4830, -1472,
    -252, -24, -1]
 
-/-- **Paper Lemma `lemk`** (the one analytic input still admitted): the difference between
+/-- **Paper Lemma `lemk`**: the difference between
 Klein's `k = Δ/q` and its truncation `ktilde = (1-q-q²)²⁴` is `O(|q|²)`:
 `|k - ktilde| ≤ 365.6·|q|²`.
 
@@ -729,13 +732,14 @@ lemma lemk {τ : ℍ} (hτ : τ ∈ Region) : ‖kfun τ - ktilde τ‖ ≤ 365.
     ring
   rw [hid, norm_div]
   have hden : ‖(1728 : ℂ) * q τ‖ = 1728 * ‖q τ‖ := by rw [norm_mul, Complex.norm_ofNat]
-  rw [hden, div_le_iff₀ (by positivity)]
+  rw [hden, div_le_iff₀ (mul_pos (by norm_num) hQpos)]
   -- (d) bound the numerator by the three pieces of the paper's proof
   have hp1 : ‖E₄ τ ^ 3 - E₄trunc τ ^ 3‖ ≤ 24202 * ‖q τ‖ ^ 3 := norm_sub_cube_E₄trunc_le hτ
   have hp2 : ‖E₆ τ ^ 2 - E₆trunc τ ^ 2‖ ≤ 296780 * ‖q τ‖ ^ 3 := norm_sub_sq_E₆trunc_le hτ
   have hp3 : ‖(1728 : ℂ) * q τ ^ 3 * Gval‖ ≤ 1728 * ‖q τ‖ ^ 3 * 179.8 := by
     rw [norm_mul, norm_mul, Complex.norm_ofNat, norm_pow]
-    exact mul_le_mul_of_nonneg_left hGbound (by positivity)
+    exact mul_le_mul_of_nonneg_left hGbound
+      (mul_nonneg (by norm_num) (pow_nonneg hQpos.le 3))
   have hnum : ‖(E₄ τ ^ 3 - E₄trunc τ ^ 3) - (E₆ τ ^ 2 - E₆trunc τ ^ 2)
         + 1728 * q τ ^ 3 * Gval‖
       ≤ 24202 * ‖q τ‖ ^ 3 + 296780 * ‖q τ‖ ^ 3 + 1728 * ‖q τ‖ ^ 3 * 179.8 :=
@@ -744,7 +748,7 @@ lemma lemk {τ : ℍ} (hτ : τ ∈ Region) : ‖kfun τ - ktilde τ‖ ≤ 365.
   have hR : (365.6 : ℝ) * ‖q τ‖ ^ 2 * (1728 * ‖q τ‖) = 631756.8 * ‖q τ‖ ^ 3 := by ring
   rw [hR]
   refine le_trans hnum ?_
-  linarith [pow_pos hQpos 3]
+  linarith only [pow_pos hQpos 3]
 
 /-- `0.9907 - 365.6|q|² ≤ |k|` (paper: `|k| ≥ |ktilde| - |δktilde|`). -/
 lemma norm_kfun_ge {τ : ℍ} (hτ : τ ∈ Region) :
@@ -956,31 +960,15 @@ theorem theonaehers2 {τ : ℍ} (hτ : τ ∈ Region) :
     field_simp
     ring
   rw [hid, norm_div]
-  rw [div_lt_iff₀ (by linarith [hE6norm] : (0 : ℝ) < ‖E₆ τ‖)]
+  rw [div_lt_iff₀ (lt_trans (by norm_num) hE6norm : (0 : ℝ) < ‖E₆ τ‖)]
   have hnum : ‖(E₄ τ - E₄trunc τ) * E₂starTrunc τ + E₄trunc τ * (E₂star τ - E₂starTrunc τ)
         + (E₄ τ - E₄trunc τ) * (E₂star τ - E₂starTrunc τ)
         - s₂tilde τ * (E₆ τ - E₆trunc τ)‖
       ≤ ‖E₄ τ - E₄trunc τ‖ * ‖E₂starTrunc τ‖ + ‖E₄trunc τ‖ * ‖E₂star τ - E₂starTrunc τ‖
         + ‖E₄ τ - E₄trunc τ‖ * ‖E₂star τ - E₂starTrunc τ‖
         + ‖s₂tilde τ‖ * ‖E₆ τ - E₆trunc τ‖ := by
-    have key : ‖(E₄ τ - E₄trunc τ) * E₂starTrunc τ + E₄trunc τ * (E₂star τ - E₂starTrunc τ)
-        + (E₄ τ - E₄trunc τ) * (E₂star τ - E₂starTrunc τ)
-        - s₂tilde τ * (E₆ τ - E₆trunc τ)‖
-        ≤ ‖(E₄ τ - E₄trunc τ) * E₂starTrunc τ‖ + ‖E₄trunc τ * (E₂star τ - E₂starTrunc τ)‖
-          + ‖(E₄ τ - E₄trunc τ) * (E₂star τ - E₂starTrunc τ)‖
-          + ‖s₂tilde τ * (E₆ τ - E₆trunc τ)‖ := by
-      calc ‖_ + _ + _ - s₂tilde τ * (E₆ τ - E₆trunc τ)‖
-          ≤ ‖(E₄ τ - E₄trunc τ) * E₂starTrunc τ + E₄trunc τ * (E₂star τ - E₂starTrunc τ)
-              + (E₄ τ - E₄trunc τ) * (E₂star τ - E₂starTrunc τ)‖
-            + ‖s₂tilde τ * (E₆ τ - E₆trunc τ)‖ := norm_sub_le _ _
-        _ ≤ (‖(E₄ τ - E₄trunc τ) * E₂starTrunc τ + E₄trunc τ * (E₂star τ - E₂starTrunc τ)‖
-              + ‖(E₄ τ - E₄trunc τ) * (E₂star τ - E₂starTrunc τ)‖)
-            + ‖s₂tilde τ * (E₆ τ - E₆trunc τ)‖ := by gcongr; exact norm_add_le _ _
-        _ ≤ ((‖(E₄ τ - E₄trunc τ) * E₂starTrunc τ‖ + ‖E₄trunc τ * (E₂star τ - E₂starTrunc τ)‖)
-              + ‖(E₄ τ - E₄trunc τ) * (E₂star τ - E₂starTrunc τ)‖)
-            + ‖s₂tilde τ * (E₆ τ - E₆trunc τ)‖ := by gcongr; exact norm_add_le _ _
-    rw [norm_mul, norm_mul, norm_mul, norm_mul] at key
-    linarith [key]
+    simp only [← norm_mul]
+    exact (norm_sub_le _ _).trans (add_le_add norm_add₃_le le_rfl)
   have hbound : ‖E₄ τ - E₄trunc τ‖ * ‖E₂starTrunc τ‖ + ‖E₄trunc τ‖ * ‖E₂star τ - E₂starTrunc τ‖
         + ‖E₄ τ - E₄trunc τ‖ * ‖E₂star τ - E₂starTrunc τ‖
         + ‖s₂tilde τ‖ * ‖E₆ τ - E₆trunc τ‖
@@ -997,14 +985,14 @@ theorem theonaehers2 {τ : ℍ} (hτ : τ ∈ Region) :
     have hQ6 : (6744 * Q ^ 3) * (96.2 * Q ^ 3) ≤ 1 * Q ^ 3 := by
       have h33 : Q ^ 3 * Q ^ 3 ≤ 0.000389 ^ 3 * Q ^ 3 :=
         mul_le_mul_of_nonneg_right hQ3.le (pow_pos hQpos 3).le
-      linarith [pow_pos hQpos 3]
-    linarith [h1, h2, h3, h4, hQ6, pow_pos hQpos 3]
+      linarith only [h33, pow_pos hQpos 3]
+    linarith only [h1, h2, h3, h4, hQ6, pow_pos hQpos 3]
   calc ‖(E₄ τ - E₄trunc τ) * E₂starTrunc τ + E₄trunc τ * (E₂star τ - E₂starTrunc τ)
         + (E₄ τ - E₄trunc τ) * (E₂star τ - E₂starTrunc τ)
         - s₂tilde τ * (E₆ τ - E₆trunc τ)‖
       ≤ 177600 * Q ^ 3 := le_trans hnum hbound
     _ < 222000 * Q ^ 3 * ‖E₆ τ‖ := by
-      linarith [mul_lt_mul_of_pos_left hE6norm (pow_pos hQpos 3)]
+      linarith only [mul_lt_mul_of_pos_left hE6norm (pow_pos hQpos 3)]
 
 end Chudnovsky
 

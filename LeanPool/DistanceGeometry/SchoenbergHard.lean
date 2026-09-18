@@ -6,10 +6,10 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.DistanceGeometry.Defs
-public import LeanPool.DistanceGeometry.Schoenberg
-public import Mathlib.Analysis.Matrix.Spectrum
-public import Mathlib.Analysis.Matrix.PosDef
-public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.LinearAlgebra.Matrix.Rank
+import LeanPool.DistanceGeometry.Schoenberg
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Schoenberg's characterization: the sufficiency direction

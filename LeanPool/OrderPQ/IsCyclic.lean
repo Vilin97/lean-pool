@@ -3,13 +3,20 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
-import Mathlib.GroupTheory.SpecificGroups.Cyclic
+module
+
+public import Mathlib.GroupTheory.SpecificGroups.Cyclic
+public import LeanPool.OrderPQ.TorsionBy
 import LeanPool.OrderPQ.MonoidHom
-import LeanPool.OrderPQ.TorsionBy
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.OrderPQ.IsCyclic
 -/
+
+@[expose] public section
 
 section MulEquiv
 namespace IsCyclic

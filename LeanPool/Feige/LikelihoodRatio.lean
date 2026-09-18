@@ -3,7 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import Mathlib.MeasureTheory.Integral.Prod
+module
+
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Likelihood-ratio comparison for exponential convolutions
@@ -13,6 +16,8 @@ exponential transfer step used in the proof of Theorem 2.1.  We use an
 `ℝ≥0∞`-valued density so that Tonelli and monotone integration require no
 auxiliary integrability assumptions.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

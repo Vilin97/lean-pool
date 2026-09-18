@@ -3,10 +3,18 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
-import LeanPool.ArtinWedderburn.IdealProd
+module
+
+public import LeanPool.ArtinWedderburn.IdealProd
+public import Mathlib.RingTheory.SimpleRing.Defs
 import LeanPool.ArtinWedderburn.SetProd
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.RingTheory.SimpleRing.Basic
-import Mathlib.RingTheory.Ideal.Span
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NoncommRing
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Prime rings
@@ -15,6 +23,8 @@ Defines `IsPrimeRing R` (the ideal product version) and proves equivalence to th
 elementwise version `aRb = 0 → a = 0 ∨ b = 0` and to the two-sided ideal version.
 Concludes that simple rings are prime.
 -/
+
+@[expose] public section
 
 namespace LeanPool.ArtinWedderburn
 

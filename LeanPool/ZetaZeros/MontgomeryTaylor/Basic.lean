@@ -5,8 +5,13 @@ Authors: Axiom Math
 -/
 module
 
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Evaluation
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Reduction
+public import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
+public import LeanPool.ZetaZeros.Zeta.Defs
+import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.MontgomeryTaylor.Evaluation
+import LeanPool.ZetaZeros.MontgomeryTaylor.Reduction
+import LeanPool.ZetaZeros.MontgomeryTaylor.TestFunction
+import LeanPool.ZetaZeros.Zeta.Mass
 
 /-!
 # The Montgomery--Taylor computation

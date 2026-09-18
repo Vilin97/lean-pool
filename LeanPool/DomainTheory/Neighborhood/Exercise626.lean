@@ -3,8 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise621
+public import LeanPool.DomainTheory.Neighborhood.Exercise621
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 6.26 (Scott 1981, PRG-19, §6) — the lifting `𝒟_⊥` over `{0,1}*`
@@ -50,6 +58,8 @@ middle (`Classical`)
 to decide whether an element lies above the fresh bottom — unavoidable and called
 out there.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

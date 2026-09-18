@@ -3,8 +3,21 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import LeanPool.AndersonConjecture.Jensen.CloseUp.GcdComplexity
+public import Mathlib.RingTheory.AdicCompletion.Basic
 import LeanPool.AndersonConjecture.Jensen.CloseUp.AvoidanceStep
 import LeanPool.AndersonConjecture.Jensen.CloseUp.IntersectionHelpers
+import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
+import LeanPool.AndersonConjecture.Jensen.KrullDomain.KrullDomain
+import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Close-up: intersection theorems
@@ -16,6 +29,8 @@ the close-up
 is obtained by passing to an A-extension where the intersection
 has been resolved.
 -/
+
+@[expose] public section
 
 noncomputable section
 

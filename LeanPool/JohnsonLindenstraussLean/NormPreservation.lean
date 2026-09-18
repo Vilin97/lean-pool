@@ -3,7 +3,9 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import LeanPool.JohnsonLindenstraussLean.ChiSquared
+module
+
+public import LeanPool.JohnsonLindenstraussLean.ChiSquared
 
 /-!
 # Distributional Johnson–Lindenstrauss norm preservation
@@ -19,6 +21,8 @@ rotation invariance), this is exactly the statement that `f` preserves the squar
 norm of any fixed vector to within a factor `1 ± ε`, except with the stated failure
 probability.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 

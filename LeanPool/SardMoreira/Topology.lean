@@ -3,12 +3,16 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
+public import Mathlib.Topology.Defs.Filter
 import Mathlib.Topology.NhdsWithin
 
 /-!
 # LeanPool.SardMoreira.Topology
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

@@ -21,9 +21,20 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
     `∫_ℂ |w (1 + p(z)) − 1|² exp(−‖z‖²) dm(z)
       ≤ 23003² ∫_ℂ ||1 + p(z)| − 1|² exp(−‖z‖²) dm(z)`.
 -/
+module
+
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.PhaseRetrieval.Constant.Internal.LocalHelpers
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # Local -/
+
+@[expose] public section
 
 
 open FockSPR MeasureTheory Complex Real Polynomial

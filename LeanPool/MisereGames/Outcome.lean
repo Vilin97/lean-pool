@@ -6,7 +6,6 @@ Authors: Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Player
-public import Mathlib.Order.Defs.PartialOrder
 
 /-!
 Misere combinatorial games.

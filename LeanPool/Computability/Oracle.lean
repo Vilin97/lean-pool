@@ -3,10 +3,9 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import Mathlib.Computability.Partrec
-import Mathlib.Order.Antisymmetrization
-import Mathlib.Logic.Encodable.Basic
-import Mathlib.Tactic.Cases
+module
+
+public import Mathlib.Computability.Partrec
 
 /-!
 # Oracle Computability
@@ -38,6 +37,8 @@ the inductive structure of `Nat.Partrec`.
 
 Computability, Oracle, Recursion, Primitive Recursion
 -/
+
+@[expose] public section
 
 open Primrec Nat.Partrec Part Encodable
 

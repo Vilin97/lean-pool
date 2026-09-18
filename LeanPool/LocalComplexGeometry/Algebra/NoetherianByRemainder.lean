@@ -3,11 +3,13 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import Mathlib.RingTheory.Noetherian.Basic
-import Mathlib.RingTheory.Finiteness.Defs
-import Mathlib.RingTheory.Ideal.Operations
-import Mathlib.LinearAlgebra.Span.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Finite generation from a finite remainder module
@@ -16,6 +18,8 @@ This is the commutative-algebra skeleton of Rückert's induction.  If an ideal
 contains an element `p` and reduction modulo `p` lands in a Noetherian module,
 then finitely many lifted remainders together with `p` generate the ideal.
 -/
+
+@[expose] public section
 
 open Set
 

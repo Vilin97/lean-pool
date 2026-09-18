@@ -3,8 +3,13 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
+module
+
+public import LeanPool.Clawristotle.Defs
+import LeanPool.Clawristotle.GaussianHelpers
 import LeanPool.Clawristotle.Section3
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Polynomial Matching (Section 5)
@@ -13,6 +18,8 @@ Temperature is spatially constant, Lorentz force expansion, and polynomial
 identity matching that constrains the Maxwellian parameters (a, b, c) from the
 Vlasov transport equation.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

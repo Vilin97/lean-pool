@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import Mathlib.Data.Finset.Basic
+public import Mathlib.Data.Finset.Insert
 
 /-!
 # A choice-free `Finset` prelude
@@ -43,6 +44,8 @@ by
 folding `insert`. Every declaration here is audited to depend only on
 `[propext, Quot.sound]`.
 -/
+
+@[expose] public section
 
 namespace Domain.Constructive
 

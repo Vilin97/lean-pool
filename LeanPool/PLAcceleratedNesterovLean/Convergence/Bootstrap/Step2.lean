@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 
 /-!
 # Bootstrap Step 2: Choosing α and Closing the Induction
@@ -21,6 +22,8 @@ Assuming all iterates up to n stay in Ω with Lyapunov ≤ R²:
   And ‖x_{n+1} - m⋆‖ ≤ 2r + C_mov R ≤ 3r < 4r
   So x_{n+1} ∈ Ω
 -/
+
+@[expose] public section
 
 noncomputable section
 

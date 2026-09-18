@@ -3,19 +3,16 @@ Copyright (c) 2026 Keston Aquino-Michaels. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keston Aquino-Michaels
 -/
+module
 
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Fintype.Powerset
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Group.PUnit
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.NormNum
-import LeanPool.CriticalPortraits.CycleLemma  -- the cycle lemma (Raney, sum=1), PROVED sorry-free
+public import Mathlib.Data.ZMod.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Core definitions + the count numerator (Mathlib)
@@ -26,6 +23,8 @@ is **level-canonical** iff `#{i ∈ S : level i ≤ j} ≤ j` for all `j < d`.
 Proved here (sorry-free): the count **numerator** `#{(d−1)-subsets of Z_N} = C(N, d−1)`, via
 Mathlib's `Fintype.card_finset_len` + `ZMod.card`.
 -/
+
+@[expose] public section
 
 namespace CriticalPortraits
 

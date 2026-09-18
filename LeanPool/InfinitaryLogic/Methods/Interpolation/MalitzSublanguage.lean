@@ -3,8 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRelational
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.MalitzRelational
+import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
 /-!
 # Malitz interpolation over an arbitrary relational language (issue #15)
 
@@ -17,6 +22,8 @@ The quantifier class survives both moves: `universalSigned_restrictSymbols` carr
 into the sublanguage, and `universalSigned_mapLanguage` carries it back out.  This is the payoff of
 proving those as *exact* equivalences rather than one-way implications.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

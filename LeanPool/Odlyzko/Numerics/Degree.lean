@@ -5,7 +5,10 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.Analysis.Real.Pi.Bounds
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Tactic.Positivity.Finset
 
 /-! TODO: Add doc-string. -/
 

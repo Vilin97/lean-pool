@@ -3,8 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.TailDuality
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # cech-h1-genus (#27): `dim H¹(X, 𝒪) = g` at the tail level
@@ -29,6 +34,8 @@ scope for this challenge (per the orchestrator's 2026-07-08 addendum). Only the 
 `RS.LaurentTail.H1Tail.equivOfSurjective` exists upstream. The challenge API itself never
 mentions Čech `H¹` — this gap does not block anything else in this project.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

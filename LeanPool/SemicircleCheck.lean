@@ -3,14 +3,15 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import LeanPool.SemicircleCheck.ShiftTwoEquiv
-import LeanPool.SemicircleCheck.FinRotateLemmas
-import LeanPool.SemicircleCheck.RotationArithmetic
-import LeanPool.SemicircleCheck.GenusNoncrossing
-import LeanPool.SemicircleCheck.EvenCard
-import LeanPool.SemicircleCheck.CatalanRecurrence
-import LeanPool.SemicircleCheck.Census
+public import LeanPool.SemicircleCheck.ShiftTwoEquiv
+public import LeanPool.SemicircleCheck.FinRotateLemmas
+public import LeanPool.SemicircleCheck.RotationArithmetic
+public import LeanPool.SemicircleCheck.GenusNoncrossing
+public import LeanPool.SemicircleCheck.EvenCard
+public import LeanPool.SemicircleCheck.CatalanRecurrence
+public import LeanPool.SemicircleCheck.Census
 
 /-!
 # Genus-Zero Pairings and Catalan Numbers
@@ -22,3 +23,5 @@ Main declarations: `card_noncrossingPairing_eq_catalan`, `Pairing.genus_zero_cou
 Tags: combinatorics, catalan-numbers, noncrossing-partitions
 MSC: 05A15, 05A18
 -/
+
+@[expose] public section

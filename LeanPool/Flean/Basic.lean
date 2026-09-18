@@ -3,10 +3,19 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import LeanPool.Flean.FloatCfg
-import LeanPool.Flean.Subnorm
-import LeanPool.Flean.FloatRep
-import LeanPool.Flean.Rounding
+module
+
+public import Mathlib.Order.Closure
+
+public import Mathlib.Data.FunLike.IsApply
+
+public import LeanPool.Flean.Subnorm
+public import LeanPool.Flean.Rounding
+public meta import Lean.Meta.Tactic.NormCast
+public import Mathlib.Algebra.Order.SuccPred
+import LeanPool.Flean.LogRules
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Floating-Point Numbers
@@ -16,6 +25,8 @@ subnormal representations with infinities and NaN), the conversions `toFloat`
 and `toRat` between rationals and floats, and the round-trip and rounding-error
 correctness results such as `to_float_to_rat`.
 -/
+
+@[expose] public section
 
 variable {C : FloatCfg}
 

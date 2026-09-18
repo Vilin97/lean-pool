@@ -3,10 +3,12 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
+module
+
+public import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.Main
-import Mathlib.Algebra.GCDMonoid.Nat
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # The formal-conjectures statement of Erdős Problem 1196
@@ -20,6 +22,8 @@ definition, but omit the repository-specific metadata attribute and `answer(...)
 * `Erdos1196.IsPrimitive`
 * `Erdos1196.erdos_1196`
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Asymptotics BigOperators

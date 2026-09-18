@@ -3,8 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Lattices
+public import LeanPool.Chudnovsky.Lattices
+import LeanPool.Chudnovsky.Liouville
 
 /-!
 # Fourier expansions: the lattice ↔ modular-forms bridge
@@ -24,6 +26,8 @@ final product formula `fouriersigma` stated here is unaffected.
 
 All statements in this file are fully proved.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -650,51 +654,19 @@ private lemma phi_order (τ : ℍ) (z : ℂ) :
 /-- `H := φ/g` is periodic under the lattice `L_τ`. -/
 private lemma hfun_add_lattice (τ : ℍ) (l : ℂ) (hl : l ∈ (Lτ τ).lattice) (z : ℂ) :
     φfun τ (z + l) / gfun τ (z + l) = φfun τ z / gfun τ z := by
-  have hstep1 : ∀ w, φfun τ (w + 1) / gfun τ (w + 1) = φfun τ w / gfun τ w :=
-    fun w => by rw [φfun_add_one, gfun_add_one]
-  have hstep1' : ∀ w, φfun τ (w - 1) / gfun τ (w - 1) = φfun τ w / gfun τ w := fun w => by
-    have := hstep1 (w - 1); rw [sub_add_cancel] at this; exact this.symm
-  have hstepτ : ∀ w,
-      φfun τ (w + (τ : ℂ)) / gfun τ (w + (τ : ℂ)) = φfun τ w / gfun τ w := fun w => by
+  have hstep1 : Function.Periodic (fun w => φfun τ w / gfun τ w) (1 : ℂ) := by
+    intro w
+    dsimp only
+    rw [φfun_add_one, gfun_add_one]
+  have hstepτ : Function.Periodic (fun w => φfun τ w / gfun τ w) (τ : ℂ) := by
+    intro w
+    dsimp only
     rw [φfun_add_tau, gfun_add_tau,
       mul_div_mul_left _ _ (neg_ne_zero.mpr (Complex.exp_ne_zero _))]
-  have hstepτ' : ∀ w, φfun τ (w - (τ : ℂ)) / gfun τ (w - (τ : ℂ)) = φfun τ w / gfun τ w :=
-    fun w => by have := hstepτ (w - (τ : ℂ)); rw [sub_add_cancel] at this; exact this.symm
-  have h1 : ∀ (a : ℤ) (w : ℂ),
-      φfun τ (w + (a : ℂ)) / gfun τ (w + (a : ℂ)) = φfun τ w / gfun τ w := by
-    intro a
-    induction a using Int.induction_on with
-    | zero => intro w; simp
-    | succ k ih =>
-        intro w
-        rw [show w + (((k : ℤ) + 1 : ℤ) : ℂ) = (w + ((k : ℤ) : ℂ)) + 1 by push_cast; ring,
-          hstep1]
-        simpa using ih w
-    | pred k ih =>
-        intro w
-        rw [show w + ((-(k : ℤ) - 1 : ℤ) : ℂ) = (w + (-(k : ℤ) : ℂ)) - 1 by push_cast; ring,
-          hstep1']
-        simpa using ih w
-  have hτ : ∀ (a : ℤ) (w : ℂ),
-      φfun τ (w + (a : ℂ) * (τ : ℂ)) / gfun τ (w + (a : ℂ) * (τ : ℂ)) = φfun τ w / gfun τ w := by
-    intro a
-    induction a using Int.induction_on with
-    | zero => intro w; simp
-    | succ k ih =>
-        intro w
-        rw [show w + (((k : ℤ) + 1 : ℤ) : ℂ) * (τ : ℂ) = (w + ((k : ℤ) : ℂ) * (τ : ℂ)) + (τ : ℂ) by
-          push_cast; ring, hstepτ]
-        simpa using ih w
-    | pred k ih =>
-        intro w
-        rw [show w + ((-(k : ℤ) - 1 : ℤ) : ℂ) * (τ : ℂ)
-            = (w + (-(k : ℤ) : ℂ) * (τ : ℂ)) - (τ : ℂ) by
-          push_cast; ring, hstepτ']
-        simpa using ih w
   obtain ⟨m, n, hmn⟩ := PeriodPair.mem_lattice.mp hl
   simp only [Lτ_ω₁, Lτ_ω₂, mul_one] at hmn
-  rw [← hmn, show z + ((m : ℂ) + (n : ℂ) * (τ : ℂ)) = (z + (n : ℂ) * (τ : ℂ)) + (m : ℂ) by ring,
-    h1 m, hτ n]
+  rw [← hmn]
+  simpa only [mul_one] using ((hstep1.int_mul m).add_period (hstepτ.int_mul n)) z
 
 /-- The σ product formula (paper `fouriersigma`): with `q = e^{2πiτ}` and
 `q_z = e^{2πiz}`,

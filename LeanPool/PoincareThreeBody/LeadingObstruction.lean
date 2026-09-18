@@ -3,9 +3,11 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
+public import LeanPool.PoincareThreeBody.PoincareSet
+import LeanPool.PoincareThreeBody.ActionFactorization
 import LeanPool.PoincareThreeBody.DenseResonantObstruction
-import LeanPool.PoincareThreeBody.PoincareSet
 
 /-!
 # The classical obstruction for the leading coefficient
@@ -15,6 +17,8 @@ the resulting dependence back to physical phase space.  The remaining celestial-
 is isolated as `ClassicalDisturbingNondegeneracy`: the resonant disturbing average must be
 nonconstant at every rational resonance under consideration.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

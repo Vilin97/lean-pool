@@ -3,7 +3,15 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonClosures
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
+import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
 import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonPairedFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInsepFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 /-!
 # The polarity-refined consistency property and paired model (issue #14, Unit 4b)
 
@@ -34,6 +42,8 @@ for `exists_lyndon_paired_model_neg`.
 
 Root inseparability itself is **not** proved here; that (and interpolation) is Unit 5.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

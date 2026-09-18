@@ -7,6 +7,10 @@ module
 
 public import LeanPool.ZetaZeros.Hilbert.Defs
 public import LeanPool.ZetaZeros.Zeta.Finite
+public import LeanPool.ZetaZeros.Zeta.Defs
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The twisted functions live in `L²((-lam, lam))`

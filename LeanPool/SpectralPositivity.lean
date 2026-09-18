@@ -3,14 +3,19 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.SpectralPositivity.Matrix.MetzlerExp
-import LeanPool.SpectralPositivity.Matrix.NonnegPower
-import LeanPool.SpectralPositivity.Operator.Jentzsch
-import LeanPool.SpectralPositivity.Operator.SpectralRadius
-import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
-import LeanPool.SpectralPositivity.Matrix.MMatrixInverse
-import LeanPool.SpectralPositivity.Operator.KernelPositivity
+public import LeanPool.SpectralPositivity.Operator.JentzschProof
+
+public import LeanPool.SpectralPositivity.Matrix.MetzlerExp
+public import LeanPool.SpectralPositivity.Matrix.NonnegPower
+public import LeanPool.SpectralPositivity.Operator.Jentzsch
+public import LeanPool.SpectralPositivity.Operator.SpectralRadius
+public import LeanPool.SpectralPositivity.Matrix.PerronFrobenius
+public import LeanPool.SpectralPositivity.Matrix.MMatrixInverse
+public import LeanPool.SpectralPositivity.Operator.KernelPositivity
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Spectral positivity
@@ -22,3 +27,5 @@ Main declarations: `allpos_has_pos_eigenvec`, `perron_frobenius`, `ground_state_
 Tags: linear-algebra, perron-frobenius, positivity
 MSC: 15B48, 15A18
 -/
+
+@[expose] public section

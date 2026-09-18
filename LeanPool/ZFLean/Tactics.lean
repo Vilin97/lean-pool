@@ -3,14 +3,20 @@ Copyright (c) 2026 Vincent Trélat. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Trélat
 -/
+module
 
-import Mathlib.CategoryTheory.Category.Basic
+public meta import Lean.LabelAttribute
+
+import Lean.LabelAttribute
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # LeanPool.ZFLean.Tactics
 
 Imported Lean Pool material for `LeanPool.ZFLean.Tactics`.
 -/
+
+public meta section
 /-- Imported ZFLean declaration. -/
 register_label_attr zrel
 /-- Imported ZFLean declaration. -/

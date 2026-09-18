@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
-import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
 
 /-!
 # Rayleigh quotient for compact self-adjoint operators
@@ -28,6 +30,8 @@ compact operator the quadratic form is continuous on that weakly compact set.
 - `CompactSelfAdjoint.continuousOn_weakClosedBall_reApplyInnerSelf_of_isCompactOperator`
 - `CompactSelfAdjoint.exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator`
 -/
+
+@[expose] public section
 namespace CompactSelfAdjoint
 
 open CompactSpectral

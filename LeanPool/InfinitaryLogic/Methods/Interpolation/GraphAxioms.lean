@@ -3,7 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphLanguage
+public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Graph axioms: totality and functionality (Craig Layer 3, Unit 5a)
@@ -29,6 +33,8 @@ the graph-relation convention `funMap f args = output`.
 
 Unit 5b consumes these to reconstruct an `L`-structure from any model of `graphAxioms F`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

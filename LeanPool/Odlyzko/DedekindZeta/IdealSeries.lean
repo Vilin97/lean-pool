@@ -5,12 +5,12 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.DedekindZeta.Convergence
-public import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
 public import LeanPool.Odlyzko.DedekindZeta.IdealPrimeFactorization
-public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
-public import Mathlib.NumberTheory.EulerProduct.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.Constructions
+public import LeanPool.Odlyzko.DedekindZeta.Coefficients
+import LeanPool.Odlyzko.DedekindZeta.Convergence
+import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
+import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

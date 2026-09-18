@@ -3,8 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+public import LeanPool.JacobianDiffgeo.MappingDegree.LocalStructure
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Calibrated fiber stacks (residue-theorem, general-`X` reduction support)
@@ -27,6 +32,8 @@ conclusion `∀ y, A.e' y = chartAt ℂ (F x) y - chartAt ℂ (F x) (F x)` threa
 * `RS.exists_fiberStack_translated` — a `FiberStack` all of whose target charts are the
   recentered `chartAt ℂ y₀`; this discharges `resAtP1_trace_eq_sum`'s `hcal` verbatim.
 -/
+
+@[expose] public section
 
 open Filter Set OpenPartialHomeomorph Metric Function
 open scoped ContDiff Manifold Topology

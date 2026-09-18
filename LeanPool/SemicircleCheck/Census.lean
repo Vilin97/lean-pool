@@ -3,9 +3,16 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import Mathlib.GroupTheory.Perm.Fin
-import Mathlib.GroupTheory.Perm.Cycle.Type
+public import Mathlib.GroupTheory.Perm.Cycle.Type
+
+public import Mathlib.GroupTheory.Perm.Fin
+
+public import Mathlib.Algebra.Group.End
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
   COMPUTATIONAL ORACLE: The Semicircle Census
@@ -43,6 +50,8 @@ import Mathlib.GroupTheory.Perm.Cycle.Type
      (n+1) · ε_g(n) = (4n-2) · ε_g(n-1) + (2n-1)(n-1) · ε_{g-1}(n-1)
   4. Total pairings = (2n-1)!! = 1·3·5···(2n-1).
 -/
+
+@[expose] public section
 
 open Equiv Equiv.Perm
 

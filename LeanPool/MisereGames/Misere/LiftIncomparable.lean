@@ -6,7 +6,8 @@ Authors: Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.AugmentedForm.Lift
-public import LeanPool.MisereGames.Misere.Comparison
+public import LeanPool.MisereGames.Misere.Universe
+import LeanPool.MisereGames.Misere.Comparison
 
 /-!
 Misere combinatorial games.

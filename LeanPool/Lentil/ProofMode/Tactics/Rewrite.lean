@@ -3,7 +3,19 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Location
+module
+
+public import LeanPool.Lentil.Utils.MetaUtil
+
+
+
+public import LeanPool.Lentil.ProofMode.Basic
+meta import Batteries.Lean.Expr
+meta import LeanPool.Lentil.ProofMode.Basic
+meta import LeanPool.Lentil.ProofMode.Location
+public import LeanPool.Lentil.ProofMode.Location
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -65,7 +77,7 @@ target itself. This is the meta-level counterpart of
 `change Entails [updated hypotheses] updatedGoal`: it reads the rewritten
 predicate list, patches the original hypothesis list, and builds a fresh literal
 `Entails` expression. -/
-private def unfoldPartialHiddenTarget (target : Expr) : MetaM (Option Expr) := target.withApp' fun f args => do
+private meta def unfoldPartialHiddenTarget (target : Expr) : MetaM (Option Expr) := target.withApp' fun f args => do
   -- Recognize
   unless f.isConstOf ``EntailsWithSomePredsExtractedOut do
     return none
@@ -84,7 +96,7 @@ private def unfoldPartialHiddenTarget (target : Expr) : MetaM (Option Expr) := t
   let hypsExpr ← toHypsList hypTy hyps
   return some <| ← mkAppOptM ``Entails #[some σ, some hypsExpr, some goal]
 
-private def restorePartiallyHiddenGoals (contFVar : FVarId) : TacticM Unit := do
+private meta def restorePartiallyHiddenGoals (contFVar : FVarId) : TacticM Unit := do
   let gs ← getGoals
   let gs' ← gs.mapM fun g => g.withContext do
     unless (← getLCtx).contains contFVar do
@@ -104,7 +116,7 @@ private def restorePartiallyHiddenGoals (contFVar : FVarId) : TacticM Unit := do
 
 -- NOTE: This is an overkill for the current `tla_rewrite`, but might be useful
 -- in the future for other things? So just keep it for now.
-private def exposeSelectedLocations (hypsExpr goal : Expr)
+private meta def exposeSelectedLocations (hypsExpr goal : Expr)
     (hyps : List (String × Expr)) (loc : RewriteLocation) (mainGoal : MVarId) :
     TacticM (FVarId × MVarId) := do
   let predTy ← inferType goal
@@ -131,11 +143,11 @@ private def exposeSelectedLocations (hypsExpr goal : Expr)
     g'.change newTarget
   return (contFVar, g'')
 
-private inductive RewriteOneLocation where
+private meta inductive RewriteOneLocation where
   | hyp (idx : Nat)
   | goal
 
-private def exposeOneLocation (hypsExpr goal : Expr)
+private meta def exposeOneLocation (hypsExpr goal : Expr)
     (hyps : List (String × Expr)) (loc : RewriteOneLocation) (mainGoal : MVarId) :
     TacticM (FVarId × MVarId) := do
   match loc with
@@ -144,7 +156,7 @@ private def exposeOneLocation (hypsExpr goal : Expr)
 
 /-- Expose one proof-mode location, run `k`, then restore all generated goals
 back from the local-`let` view to `Entails`. -/
-private def withExposedLocation (loc : RewriteOneLocation) (k : TacticM Unit) : TacticM Unit := do
+private meta def withExposedLocation (loc : RewriteOneLocation) (k : TacticM Unit) : TacticM Unit := do
   let g ← getMainGoal
   let target ← cleanupAnnotAndMore (← g.getType)
   let_expr Entails _ hypsExpr goal := target
@@ -157,7 +169,7 @@ private def withExposedLocation (loc : RewriteOneLocation) (k : TacticM Unit) : 
   g'.withContext k
   restorePartiallyHiddenGoals contFVar
 
-private def rewriteAtProofModeLocations
+private meta def rewriteAtProofModeLocations
     (loc? : Option (TSyntax ``Lean.Parser.Tactic.location)) (k : TacticM Unit) : TacticM Unit := do
   let some (_, hyps) ← recognizeEntailsHypsFromGoal
     | throwError "tla_rewrite: goal is not an Entails sequent"

@@ -8,9 +8,10 @@ module
 
 public import LeanPool.LeanModularForms.Modularforms.JacobiTheta
 public import LeanPool.LeanModularForms.Modularforms.Derivative
-public import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
-public import LeanPool.LeanModularForms.Modularforms.AtImInfty
-public import LeanPool.LeanModularForms.Modularforms.EisensteinAsymptotics
+import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
+import LeanPool.LeanModularForms.Modularforms.EisensteinAsymptotics
+import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import Mathlib.Data.Int.Star
 
 /-! # ThetaDerivIdentities -/
 

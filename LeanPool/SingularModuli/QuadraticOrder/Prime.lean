@@ -3,12 +3,13 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
-import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
-import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
-import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
-import LeanPool.SingularModuli.QuadraticOrder.Prime.Split
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.PolyMod
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.QuotientIso
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.Inert
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.Ramified
+public import LeanPool.SingularModuli.QuadraticOrder.Prime.Split
 
 /-!
 # Layer 2a: Prime classification in `QuadraticOrder d`
@@ -32,3 +33,5 @@ See `Prime/QuotientIso.lean` for the main *divergence from the thesis*: the
 whole trichotomy is routed through one ring isomorphism rather than the
 thesis's explicit index computations.
 -/
+
+@[expose] public section

@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
+public import LeanPool.HadwigerNelsonBounds.PartsCanonicalTriangle
 
 /-!
 # Plane geometry for the Parts spindle
@@ -13,6 +14,8 @@ This module gives an explicit triangular-lattice realization and elementary
 distance-preserving rotations.  The two exact cosines are the angles used in
 Parts' doubled wheel and spindle.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

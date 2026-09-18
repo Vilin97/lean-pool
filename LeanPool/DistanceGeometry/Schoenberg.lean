@@ -7,7 +7,8 @@ module
 
 public import LeanPool.DistanceGeometry.Defs
 public import Mathlib.LinearAlgebra.Matrix.Rank
-public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.InnerProductSpace.GramMatrix
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Schoenberg's characterization: the easy direction

@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition72
-import LeanPool.DomainTheory.Neighborhood.Exercise319
-import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+public import LeanPool.DomainTheory.Neighborhood.Definition72
+public import LeanPool.DomainTheory.Neighborhood.Exercise319
+public import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
 
 /-!
 # Theorem 7.4 (Scott 1981, PRG-19, §7) — `+` and `×` preserve effective givenness
@@ -51,6 +52,8 @@ development.
 
 Everything here is `⊆ {propext, Quot.sound}` (choice-free).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

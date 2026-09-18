@@ -3,8 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian`
@@ -15,4 +16,6 @@ Thin re-export of the Riemannian Rellich–Kondrachov proof, split into focused 
 * `RellichKondrachovRiemannian.Chartwise`: chartwise compactness via Euclidean Rellich on `volume`.
 * `RellichKondrachovRiemannian.Global`: finite-atlas assembly and the final compactness theorem.
 -/
+
+@[expose] public section
 

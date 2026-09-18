@@ -30,11 +30,22 @@ valuation update, which is confined to `mupdate` below.
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.Core
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Order.SetNotation
+public import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Set.Lattice.Bounded
+import Mathlib.Data.Set.Lattice.Disjoint
+import Mathlib.Data.Set.Lattice.Image
+import Mathlib.Data.Set.Lattice.Indexed
+import Mathlib.Data.Set.Lattice.Order
 
 /-!
 # MatchingLogic.Sorted
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 namespace Sorted

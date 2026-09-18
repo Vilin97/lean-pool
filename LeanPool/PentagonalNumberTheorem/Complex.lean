@@ -3,10 +3,11 @@ Copyright (c) 2026 Weiyi Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Weiyi Wang
 -/
+module
 
-import LeanPool.PentagonalNumberTheorem.Generic
+public import LeanPool.PentagonalNumberTheorem.Generic
+public import Mathlib.Analysis.RCLike.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Summable
-import Mathlib.Analysis.RCLike.Basic
 
 /-!
 
@@ -17,6 +18,8 @@ This file proves the
 for real/complex numbers.
 
 -/
+
+@[expose] public section
 
 open Filter
 variable {K : Type*} [RCLike K]

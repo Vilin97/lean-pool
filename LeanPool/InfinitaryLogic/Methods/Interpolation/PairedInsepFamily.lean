@@ -3,12 +3,16 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
-import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInseparability
-import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.Inseparability
 import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.FairEnumeration
 import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+import LeanPool.InfinitaryLogic.Methods.Interpolation.PairedInseparability
+import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
 /-!
 # The paired inseparable-pair consistency family and its model (issue #8, commit 4c part 2)
 
@@ -29,6 +33,8 @@ pair `(Γ, Δ)` with `Γ ⊆ SentBnd F₁ R₁`, `Δ ⊆ SentBnd F₂ R₂`, ins
 * `exists_paired_model_neg` — the public wrapper: instantiating `rR := r₂.not` yields a model with
   `M ⊨ r₁ ∧ ¬ M ⊨ r₂`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

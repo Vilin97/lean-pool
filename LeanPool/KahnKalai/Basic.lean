@@ -3,13 +3,17 @@ Copyright (c) 2026 Dan Clemens Posch. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dan Clemens Posch
 -/
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-!
 Foundational lemmas for the Tran–Vu covering argument: upset calculus,
 cover cost as an attained infimum, and Fact 2.1 (level fractions of an
 upset are nondecreasing).
 -/
+
+@[expose] public section
 
 open Finset
 

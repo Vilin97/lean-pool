@@ -3,8 +3,17 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BallIntegralAC
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryFromRadial
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityFinal
 import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityRoutes
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusFormulas
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedDerivative
 import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedRepresentation
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Euclidean weak monotonicity interfaces
@@ -16,6 +25,8 @@ This file is still part of the internal proof route: it closes the Euclidean
 coarea and thin-shell ingredients before `MainTheorem.lean` packages the final
 user-facing statement.
 -/
+
+@[expose] public section
 
 noncomputable section
 

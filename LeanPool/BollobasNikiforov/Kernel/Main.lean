@@ -3,11 +3,16 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
+public import LeanPool.BollobasNikiforov.CP.Basic
+public import LeanPool.BollobasNikiforov.Kernel.Data
 import LeanPool.BollobasNikiforov.Kernel.Bilinear
-import LeanPool.BollobasNikiforov.Kernel.Signs
 import LeanPool.BollobasNikiforov.Kernel.N
-import LeanPool.BollobasNikiforov.CP.Basic
+import LeanPool.BollobasNikiforov.Kernel.SM
+import LeanPool.BollobasNikiforov.Kernel.Signs
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The three-column kernel lemma
@@ -16,6 +21,8 @@ Package of the sign bounds `N ≥ 1`, `P ≥ 0`, `Z ≥ 0` with the bilinear
 factorization of `docs/sol.tex` §3 (`lem:kernel`, `eq:factor`), and the
 resulting three-column completely positive Gram of `U`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

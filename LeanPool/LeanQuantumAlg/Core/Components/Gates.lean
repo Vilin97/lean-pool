@@ -6,10 +6,8 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import LeanPool.LeanQuantumAlg.Core.Tensor
 public import LeanPool.LeanQuantumAlg.Core.Components.Kets
-public import LeanPool.LeanQuantumAlg.Util.Complex
+import LeanPool.LeanQuantumAlg.Util.Complex
 
 /-!
 # Named gates

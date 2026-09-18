@@ -3,9 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import LeanPool.Erdos132ConvexK3.Geometry
+public import LeanPool.Erdos132ConvexK3.UseSite
 import LeanPool.Erdos132ConvexK3.TailClosure
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # Terminal-color closure at the maximal-gap use site
@@ -15,37 +19,30 @@ It closes the three terminal-color obligations left after `TailClosure.lean`:
 `(1,2)-d₁`, `(2,1)-d₁`, and `(2,1)-d₂`.
 -/
 
+@[expose] public section
+
 namespace LeanPool.Erdos132ConvexK3
 
 /-- Strict order of squared Euclidean distances is strict order of distances. -/
 theorem euclideanDist_lt_of_sqDist_lt
     {a b c d : Point ℝ} (h : sqDist a b < sqDist c d) :
     euclideanDist a b < euclideanDist c d := by
-  have habSq := euclideanDist_sq a b
-  have hcdSq := euclideanDist_sq c d
-  have habNonneg : 0 ≤ euclideanDist a b := dist_nonneg
-  have hcdNonneg : 0 ≤ euclideanDist c d := dist_nonneg
-  nlinarith
+  rw [← euclideanDist_sq, ← euclideanDist_sq] at h
+  exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mp h
 
 /-- Weak order of squared Euclidean distances is weak order of distances. -/
 theorem euclideanDist_le_of_sqDist_le
     {a b c d : Point ℝ} (h : sqDist a b ≤ sqDist c d) :
     euclideanDist a b ≤ euclideanDist c d := by
-  have habSq := euclideanDist_sq a b
-  have hcdSq := euclideanDist_sq c d
-  have habNonneg : 0 ≤ euclideanDist a b := dist_nonneg
-  have hcdNonneg : 0 ≤ euclideanDist c d := dist_nonneg
-  nlinarith
+  rw [← euclideanDist_sq, ← euclideanDist_sq] at h
+  exact (sq_le_sq₀ dist_nonneg dist_nonneg).mp h
 
 /-- Strict order of Euclidean distances is strict order of their squares. -/
 theorem sqDist_lt_of_euclideanDist_lt
     {a b c d : Point ℝ} (h : euclideanDist a b < euclideanDist c d) :
     sqDist a b < sqDist c d := by
-  have habSq := euclideanDist_sq a b
-  have hcdSq := euclideanDist_sq c d
-  have habNonneg : 0 ≤ euclideanDist a b := dist_nonneg
-  have hcdNonneg : 0 ≤ euclideanDist c d := dist_nonneg
-  nlinarith
+  rw [← euclideanDist_sq, ← euclideanDist_sq]
+  exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr h
 
 /-- Four increasing offsets, not necessarily starting at zero, form a
 strict convex quadrilateral. -/
@@ -784,17 +781,10 @@ theorem erlv_case12_other_d1_bzero_impossible
       · exact Or.inr h₂
       · linarith
     rcases hxuCases with hxuD₁ | hxuD₂
-    · have htailCard : tail.card ≤ 2 := by
-        simpa [tail, N, x] using
-          case12_bzero_d3_d1_tail_card_le_two S uoff zoff huoff3 hzoffn
-            (by simpa [x, u] using huIndex) (by simpa [x, z] using hzIndex)
-            (by simpa [x, p, u] using hpu) (by simpa [x, q, u] using hqu)
-            (by simpa [x, p, z] using hpz) (by simpa [x, q, z] using hqz)
-            (by simpa [x, u] using hxuD₁) (by simpa [x, z] using hxzD₃)
-            (by simpa [tail, N, x] using htailUpper)
-            (by simpa [tail, N, x, p] using htailHalf)
-      exact case12_bzero_false_of_tail_card_le_two S (by
-        simpa [tail, N, uoff, x] using htailCard)
+    · have htailCard : tail.card ≤ 2 :=
+        case12_bzero_d3_d1_tail_card_le_two S uoff zoff huoff3 hzoffn
+          huIndex hzIndex hpu hqu hpz hqz hxuD₁ hxzD₃ htailUpper htailHalf
+      exact case12_bzero_false_of_tail_card_le_two S htailCard
     · have htailCard : tail.card ≤ 2 := by
         refine two_fixed_radius_pairs_card_le_two hInjective x x p hxp
           (a₁ := d₃) (b₁ := d₁) (a₂ := d₃) (b₂ := d₂) htailHalf ?_
@@ -1949,34 +1939,29 @@ theorem erlv_at_vertex_case21_other_d2_impossible_of_tail :
     apply Fin.ext
     omega
   let D : Case21D2Prepared S := {
-    tu := by simpa [x, t, u] using htu
-    xz := by simpa [x, z] using hxz
-    pz := by simpa [x, p, z] using hpz
-    qz := by simpa [x, q, z] using hqz
-    qu := by simpa [x, q, u] using hqu
-    pu_le := by simpa [x, p, u] using hpuLe
-    p_ne_u := by simpa [x, p, u] using hpuNe
-    uoff_lt := by simpa [uoff] using huoffn
-    u_index := by simpa [x, u, uoff] using huIndex
-    pu_index := by simpa [x, p, u, puoff] using huPIndex
+    tu := htu
+    xz := hxz
+    pz := hpz
+    qz := hqz
+    qu := hqu
+    pu_le := hpuLe
+    p_ne_u := hpuNe
+    uoff_lt := huoffn
+    u_index := huIndex
+    pu_index := huPIndex
     points_injective := hInjective
-    x_p_ne := by simpa [x, p] using hxp
-    left_half := by simpa [left, Np, x, p, puoff] using hleftHalf
-    right_card := by simpa [right, Np, p, puoff] using hrightCard
-    tip_card := by simpa [tip, Np, p, puoff] using htipOne
-    xtail_card := by
-      intro hanchor
-      simpa [xtail, Nx, uoff, x] using hxtailCardTwo (by
-        simpa [x, p, u] using hanchor) }
+    x_p_ne := hxp
+    left_half := hleftHalf
+    right_card := hrightCard
+    tip_card := htipOne
+    xtail_card := hxtailCardTwo }
   by_cases hpuAbove : d₃ < sqDist (P p) (P u)
-  · exact case21_d2_above_impossible S D (by simpa [x, p, u] using hpuAbove)
+  · exact case21_d2_above_impossible S D hpuAbove
   · have hpuLow : sqDist (P p) (P u) ≤ d₃ := le_of_not_gt hpuAbove
     by_cases hxuLe : sqDist (P x) (P u) ≤ sqDist (P p) (P u)
-    · have htailCard := D.xtail_card (by simpa [x, p, u] using hxuLe)
+    · have htailCard := D.xtail_card hxuLe
       exact case12_bzero_false_of_tail_card_le_two S htailCard
-    · exact case21_d2_low_pivot_impossible S D
-        (by simpa [x, p, u] using hpuLow)
-        (by simpa [x, p, u] using lt_of_not_ge hxuLe)
+    · exact case21_d2_low_pivot_impossible S D hpuLow (lt_of_not_ge hxuLe)
 /-- All eight terminal-color obligations are now kernel proofs. -/
 theorem erlv_at_vertex_exceptional_branches_impossible_of_tail :
     ErLVAtVertexExceptionalBranchesImpossible :=

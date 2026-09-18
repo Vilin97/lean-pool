@@ -3,10 +3,14 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.Complexity.Symmetrization
-import LeanPool.FormalLearningTheory.Complexity.Rademacher
-import LeanPool.FormalLearningTheory.Complexity.Measurability
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Rademacher
+public import LeanPool.FormalLearningTheory.Complexity.Measurability
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Generalization Results
@@ -22,6 +26,8 @@ The public statements use the primed uniform-convergence route from
 - `sample_complexity_lower_bound` : PAC lower bound via VCDim
 - `rademacher_vanishing_imp_pac` : uniform Rademacher vanishing → PAC
 -/
+
+@[expose] public section
 
 universe u
 

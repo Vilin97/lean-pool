@@ -3,16 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
-import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.NormNum
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Combinatorics.SimpleGraph.Coloring.Vertex
 import Mathlib.Tactic.NormNum.Irrational
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Geometric four-colorings of the Moser lattice
@@ -24,6 +20,8 @@ the paper, and proves that each is proper and geometric on the whole lattice.
 
 The uniqueness assertion in Theorem 3.2 is not formalized here.
 -/
+
+@[expose] public section
 
 namespace LeanPool.MoserLatticeColorings
 

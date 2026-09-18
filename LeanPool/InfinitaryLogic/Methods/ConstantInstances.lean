@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+module
+
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Constant instances
 
@@ -14,6 +16,8 @@ This neutral module defines the two closing operations by the auxiliary constant
 * `closeBy φ τ` — open all `n` bound variables of `φ : BoundedFormulaω Empty n` and substitute the
   constants `c_{τ i}`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

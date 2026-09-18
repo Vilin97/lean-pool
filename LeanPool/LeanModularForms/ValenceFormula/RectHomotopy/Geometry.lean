@@ -3,12 +3,10 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.CircleParam
-import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.Convex.Basic
-import Mathlib.MeasureTheory.Integral.CircleIntegral
+public import LeanPool.LeanModularForms.ValenceFormula.Boundary.Basic
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Rect Homotopy: Geometry and Definitions
@@ -24,6 +22,8 @@ the winding number of `fdBoundary` around interior points is -1.
 * `RectHomotopyProof.fdBoundary` — the actual FD boundary curve
 * `RectHomotopyProof.HHeight` — height parameter (= `heightCutoff`)
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

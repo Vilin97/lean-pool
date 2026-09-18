@@ -6,8 +6,10 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
-public import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Defs
+import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
 
 /-! # E2 -/
 

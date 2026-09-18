@@ -3,10 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
-import LeanPool.InfinitaryLogic.Scott.Height.Defs
+module
+
+public import LeanPool.InfinitaryLogic.Scott.Height.Defs
 import LeanPool.InfinitaryLogic.Scott.RefinementCount
+import LeanPool.InfinitaryLogic.Util
 /-!
 # Counting Models
 
@@ -26,6 +27,8 @@ to the structure of the isomorphism relation.
 - [Mar16]
 - [KK04]
 -/
+
+@[expose] public section
 
 universe u v w
 

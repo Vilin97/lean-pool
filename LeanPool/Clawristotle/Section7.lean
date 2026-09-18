@@ -3,9 +3,17 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.VMLStructures
+module
+
+public import LeanPool.Clawristotle.VMLStructures
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.GaussianHelpers
 import LeanPool.Clawristotle.Section3
+import LeanPool.Clawristotle.Section3Helpers
 import LeanPool.Clawristotle.Section6
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Poisson-Boltzmann and Electric Field (Section 7)
@@ -14,6 +22,8 @@ Derives the Poisson-Boltzmann equation from force balance and Gauss's law,
 then proves the electric field vanishes (E = 0) and the magnetic field is
 spatially constant using harmonic function theory on the torus.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

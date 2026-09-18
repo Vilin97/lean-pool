@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
 import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
 import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
 import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
@@ -31,6 +32,8 @@ coefficient sequence with respect to `w^d + p`:
 Since both remainders are supported in degrees below `d`, uniqueness of
 division identifies both the quotient and the remainder.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped ENNReal NNReal Topology

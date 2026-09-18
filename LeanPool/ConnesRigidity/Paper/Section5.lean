@@ -5,7 +5,9 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Paper.Section5.ICCOrbits
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section5.ICCOrbits
 
 /-!
 # Zhou §5: ICC
@@ -13,3 +15,5 @@ import LeanPool.ConnesRigidity.Paper.Section5.ICCOrbits
 The section endpoint supplies the concrete orbit and displacement
 certificates for the two semidirect products.
 -/
+
+@[expose] public section

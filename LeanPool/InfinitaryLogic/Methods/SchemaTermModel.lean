@@ -3,7 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+module
+
+public import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 /-!
 # Layer 7b checkpoint 5a: the schema term-model substrate
 
@@ -26,6 +29,8 @@ and the shared body-extraction engine `exists_body_of_subset`; the exported sema
 sequence `schemaSeq` (the classes of the `d`-constants). No `iSup`, `all`, or truth lemma here —
 that is checkpoint 5b.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -338,7 +343,7 @@ private theorem schemaTermRel_congr {l : ℕ} (R : (localColim s₀).Relations l
 /-- The setoid on closed schema terms induced by the completed theory. -/
 def schemaTermSetoid : Setoid ((localColim s₀)[[ℕ]].Term Empty) where
   r := SchemaTermEq hM
-  iseqv := ⟨schemaTermEq_refl hM, schemaTermEq_symm hM, schemaTermEq_trans hM⟩
+  iseqv := by exact ⟨schemaTermEq_refl hM, schemaTermEq_symm hM, schemaTermEq_trans hM⟩
 
 /-- **The schema term-model carrier**: closed `(localColim s₀)[[ℕ]]` terms quotiented by the
 completed theory's equality. An `abbrev`, so `Quotient` lemmas and dot-notation apply

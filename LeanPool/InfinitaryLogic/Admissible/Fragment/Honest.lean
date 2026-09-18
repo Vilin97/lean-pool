@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Admissible.Family
-import LeanPool.InfinitaryLogic.Lomega1omega.Fragment
+module
+
+public import LeanPool.InfinitaryLogic.Admissible.Family
+public import LeanPool.InfinitaryLogic.Lomega1omega.Fragment
 /-!
 # The honest admissible fragment (issue #18)
 
@@ -22,6 +24,8 @@ Deliberately absent:
 This does **not** wrap the legacy `AdmissibleFragmentCore`, which an honest HF fragment provably
 cannot instantiate: its `closed_iInf`/`closed_iSup` are *upward* over arbitrary external ℕ-families.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -3,11 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.TailDuality.TailOps
-import LeanPool.JacobianDiffgeo.CanonicalForms
-import LeanPool.JacobianDiffgeo.ResidueCalculus.GermFunctionals
+public import LeanPool.JacobianDiffgeo.TailDuality.TailOps
+public import LeanPool.JacobianDiffgeo.ResidueCalculus.GermFunctionals
+public import LeanPool.JacobianDiffgeo.CanonicalForms.LinearSystems
+public import LeanPool.JacobianDiffgeo.Meromorphic.CodiscreteBridge
 import LeanPool.JacobianDiffgeo.ResidueTheorem.Unconditional
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # `pairT`/`resMap`: the residue pairing on the germ model (serre-duality-tails)
@@ -30,6 +34,8 @@ functional needs). All PUBLIC lemmas are stated at the `MForm`/`laurentCoeffAt` 
 * `pairAt_tailGerm_order_ne_zero`/`pairT_ne_zero`: Miranda Thm 3.3's injectivity half.
 * `resMap`/`resMap_injective`: the induced map `Ω(-D) →ₗ Dual(H1Tail D)`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace Filter Topology

@@ -3,8 +3,14 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy.Gibbs
+public import LeanPool.Shannon1948Formalization.Entropy.Uniform
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Shannon.Entropy.Joint
@@ -29,6 +35,8 @@ the infrastructure for multi-variable entropy identities.
 - `entropyNat_prodDist`: `H(X × Y) = H(X) + H(Y)` for independent distributions
 - `marginalFst_prodDist`, `marginalSnd_prodDist`: marginals of product distributions
 -/
+
+@[expose] public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

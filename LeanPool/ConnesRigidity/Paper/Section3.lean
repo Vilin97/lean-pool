@@ -5,7 +5,9 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.FactorClosure
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.FactorClosure
 
 /-!
 # Zhou §3: isomorphic group factors
@@ -13,3 +15,5 @@ import LeanPool.ConnesRigidity.Paper.Section3.FactorClosure
 The section endpoint constructs the compact-dual shear, its crossed-product
 implementation, and the resulting trace-preserving factor equivalence.
 -/
+
+@[expose] public section

@@ -3,10 +3,20 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.LinkData
-import LeanPool.JacobianDiffgeo.Abel.Sufficiency
-import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.Abel.LinkData
+public import LeanPool.JacobianDiffgeo.Abel.Sufficiency
+public import LeanPool.JacobianDiffgeo.LaurentTail.Comparison
+import LeanPool.JacobianDiffgeo.Abel.ChartSupported
+import LeanPool.JacobianDiffgeo.Abel.SerreFunctional
+import LeanPool.JacobianDiffgeo.Abel.WeakToMero
+import LeanPool.JacobianDiffgeo.AbelWeak.ChainAssembly
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import Mathlib.Analysis.Complex.HasPrimitives
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: the weak-solution-upgrade discharge (design §4.1 steps 5-7, assembled)
@@ -37,6 +47,8 @@ design §4.1 steps 5-7 discharged, gated ONLY on `serre-duality-tails`'s single 
 external fact (the same gate as `DolbeaultBridge.lean`; the weak-solution hypotheses of the
 `WeakSolutionUpgrade` shapes are simply not needed: the construction builds its own pieces).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory Filter Topology
@@ -124,9 +136,7 @@ private theorem isDbarOn_exp_neg_mul_prod {Λ : Type*} [Fintype Λ]
     have hrule := wirtingerDbar_finset_prod (f := fun l => f l ∘ ⇑(chartAt ℂ x).symm)
       Finset.univ (fun l _ => hdiffs l)
     have hshape : (fT ∘ ⇑(chartAt ℂ x).symm)
-        = fun w => ∏ l : Λ, (f l ∘ ⇑(chartAt ℂ x).symm) w := by
-      funext w
-      simp [hfT_def, Function.comp]
+        = fun w => ∏ l : Λ, (f l ∘ ⇑(chartAt ℂ x).symm) w := rfl
     rw [hshape, hrule]
     have hcoeff : ηT.coeffAt x (chartAt ℂ x x) = ∑ l : Λ, (η l).coeffAt x (chartAt ℂ x x) := by
       rw [hηT_def]
@@ -143,7 +153,7 @@ private theorem isDbarOn_exp_neg_mul_prod {Λ : Type*} [Fintype Λ]
           rw [hdlog l x (hmemSc x hx l).1 (hmemSc x hx l).2,
             Finset.prod_congr rfl (fun j _ => hval j)]
       _ = (η l).coeffAt x (chartAt ℂ x x) *
-          (f l x * ∏ j ∈ Finset.univ.erase l, f j x) := by ring
+          (f l x * ∏ j ∈ Finset.univ.erase l, f j x) := mul_assoc _ _ _
       _ = (η l).coeffAt x (chartAt ℂ x x) * fT x := by
           rw [Finset.mul_prod_erase Finset.univ (fun j => f j x) (Finset.mem_univ l)]
   -- the dbar equation for `u`
@@ -155,17 +165,14 @@ private theorem isDbarOn_exp_neg_mul_prod {Λ : Type*} [Fintype Λ]
   change RS.wirtingerDbar (F₀ ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x)
     = (0 : RS.Form01 X).coeffAt x (chartAt ℂ x x)
   rw [RS.Form01.coeffAt_zero]
+  have hval : (fT ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) = fT x := by
+    simp [Function.comp, (chartAt ℂ x).left_inv (mem_chart_source ℂ x)]
   have hkey : RS.wirtingerDbar (⇑u ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x)
       = RS.wirtingerDbar (fT ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x)
         / (fT ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) := by
-    have hval : (fT ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) = fT x := by
-      simp [Function.comp, (chartAt ℂ x).left_inv (mem_chart_source ℂ x)]
     rw [hux, hprod_dlog, hval, mul_div_cancel_right₀ _ hfT_ne]
-  have hval : (fT ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) = fT x := by
-    simp [Function.comp, (chartAt ℂ x).left_inv (mem_chart_source ℂ x)]
-  have hfT_ne' : (fT ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) ≠ 0 := by
-    rw [hval]
-    exact hfT_ne
+  have hfT_ne' : (fT ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) ≠ 0 :=
+    hval ▸ hfT_ne
   exact RS.Abel.wirtingerDbar_exp_neg_mul_eq_zero hud hfTd hkey hfT_ne'
 
 /-- **The Abel sufficiency engine** (Forster 20.5 + 20.7(a), assembled; gated only on
@@ -182,11 +189,11 @@ theorem exists_mero_of_sum_pathIntegral_eq_zero {ι : Type*} [Fintype ι] [Conne
   obtain ⟨PU⟩ := SurfPoU.nonempty (X := X)
   -- the chart chains
   have hC : ∀ i, Nonempty (RS.ChartChain (δ i)) := fun i => RS.exists_chartChain (δ i)
-  set C : (i : ι) → RS.ChartChain (δ i) := fun i => (hC i).some with hC_def
+  let C : (i : ι) → RS.ChartChain (δ i) := fun i => (hC i).some
   -- the link index and endpoint data
-  set Λ : Type _ := (i : ι) × Fin (C i).n with hΛ_def
-  set lA : Λ → X := fun l => (δ l.1).extend ((C l.1).t l.2) with hlA_def
-  set lB : Λ → X := fun l => (δ l.1).extend ((C l.1).t (l.2 + 1)) with hlB_def
+  let Λ : Type _ := (i : ι) × Fin (C i).n
+  let lA : Λ → X := fun l => (δ l.1).extend ((C l.1).t l.2)
+  let lB : Λ → X := fun l => (δ l.1).extend ((C l.1).t (l.2 + 1))
   -- link data from the chain
   have hmemA : ∀ l : Λ, lA l ∈ ((C l.1).e l.2).source ∧
       (C l.1).e l.2 (lA l) ∈ ball ((C l.1).c l.2) ((C l.1).r l.2) := fun l =>
@@ -231,9 +238,9 @@ theorem exists_mero_of_sum_pathIntegral_eq_zero {ι : Type*} [Fintype ι] [Conne
   -- STEP 2: solve dbaru = ηT
   obtain ⟨u, hu⟩ := exists_dbar_of_forall_pairing_eq_zero PU hsurj hpair_total
   -- STEP 3: the corrected function
-  set F₀ : X → ℂ := fun x => Complex.exp (-(u x)) * fT x with hF₀_def
+  let F₀ : X → ℂ := fun x => Complex.exp (-(u x)) * fT x
   -- the divisor set
-  set S : Set X := Set.range lA ∪ Set.range lB with hS_def
+  let S : Set X := Set.range lA ∪ Set.range lB
   have hSfin : S.Finite := (Set.finite_range _).union (Set.finite_range _)
   have hSc_open : IsOpen Sᶜ := hSfin.isClosed.isOpen_compl
   have hmemSc : ∀ x ∈ Sᶜ, ∀ l : Λ, x ≠ lA l ∧ x ≠ lB l := by
@@ -269,30 +276,18 @@ theorem exists_mero_of_sum_pathIntegral_eq_zero {ι : Type*} [Fintype ι] [Conne
     intro x
     set z₀ : ℂ := chartAt ℂ x x with hz₀_def
     -- the punctured-holomorphy neighborhood
-    set V : Set ℂ := (chartAt ℂ x).target ∩ ⇑(chartAt ℂ x).symm ⁻¹' ((S \ {x})ᶜ) with hV_def
-    have hVopen : IsOpen V := by
-      have h1 : IsOpen ((S \ {x})ᶜ) := ((hSfin.subset Set.sdiff_subset).isClosed).isOpen_compl
-      have hthis := (chartAt ℂ x).symm.isOpen_inter_preimage h1
-      rw [hV_def]
-      exact hthis
-    have hz₀V : z₀ ∈ V := by
-      constructor
-      · exact mem_chart_target ℂ x
-      · rw [Set.mem_preimage, hz₀_def, (chartAt ℂ x).left_inv (mem_chart_source ℂ x)]
-        intro hmem
-        exact hmem.2 rfl
+    let V : Set ℂ := (chartAt ℂ x).target ∩ ⇑(chartAt ℂ x).symm ⁻¹' ((S \ {x})ᶜ)
+    have hVopen : IsOpen V :=
+      (chartAt ℂ x).symm.isOpen_inter_preimage
+        (hSfin.subset Set.sdiff_subset).isClosed.isOpen_compl
+    have hz₀V : z₀ ∈ V :=
+      ⟨mem_chart_target ℂ x, fun hmem =>
+        hmem.2 ((chartAt ℂ x).left_inv (mem_chart_source ℂ x))⟩
     have hVmem : V ∈ nhds z₀ := hVopen.mem_nhds hz₀V
     have hVsub : V \ {z₀} ⊆ (chartAt ℂ x).target ∩ ⇑(chartAt ℂ x).symm ⁻¹' Sᶜ := by
       rintro w ⟨⟨hw1, hw2⟩, hw3⟩
-      refine ⟨hw1, ?_⟩
-      rw [Set.mem_preimage] at hw2 ⊢
-      intro hmem
-      refine hw2 ⟨hmem, fun heq => ?_⟩
-      rw [Set.mem_singleton_iff] at heq
-      apply hw3
-      rw [Set.mem_singleton_iff, hz₀_def]
-      calc w = chartAt ℂ x ((chartAt ℂ x).symm w) := ((chartAt ℂ x).right_inv hw1).symm
-        _ = chartAt ℂ x x := by rw [heq]
+      exact ⟨hw1, fun hmem => hw2 ⟨hmem, fun heq =>
+        hw3 (((chartAt ℂ x).right_inv hw1).symm.trans (congrArg (chartAt ℂ x) heq))⟩⟩
     -- punctured differentiability of the chart representative
     have hdiffV : DifferentiableOn ℂ (F₀ ∘ ⇑(chartAt ℂ x).symm) (V \ {z₀}) := by
       have hsymm : ContMDiffOn 𝓘(ℂ) 𝓘(ℂ) ω (⇑(chartAt ℂ x).symm) (chartAt ℂ x).target :=
@@ -342,37 +337,26 @@ theorem exists_mero_of_sum_pathIntegral_eq_zero {ι : Type*} [Fintype ι] [Conne
         = (F₀ ∘ ⇑(chartAt ℂ x).symm) z *
           (z - z₀) ^ (-(∑ l : Λ, linkOrd (lA l) (lB l) x))
       rw [hzpow, Finset.prod_mul_distrib]
-      change Complex.exp (-(u ((chartAt ℂ x).symm z))) *
-          ((∏ l : Λ, f l ((chartAt ℂ x).symm z)) *
-            ∏ l : Λ, (z - z₀) ^ (-(linkOrd (lA l) (lB l) x)))
-        = Complex.exp (-(u ((chartAt ℂ x).symm z))) * fT ((chartAt ℂ x).symm z) *
-          ∏ l : Λ, (z - z₀) ^ (-(linkOrd (lA l) (lB l) x))
-      rw [hfT_def]
-      ring
+      exact (mul_assoc _ _ _).symm
     exact meromorphicAt_of_tendsto_factor hVmem hdiffV hCtot_ne hfactor_tot
   -- STEP 5: package as a `Mero` and read off orders
   have hmero : RS.MeromorphicOnX F₀ (Set.univ : Set X) := fun x _ => (hmero_ord x).1
-  set F : RS.Mero X := RS.MeroGermOn.mk F₀ hmero with hF_def
+  let F : RS.Mero X := RS.MeroGermOn.mk F₀ hmero
   have hord : ∀ z : X, F.ord z = ((∑ l : Λ, linkOrd (lA l) (lB l) z : ℤ) : WithTop ℤ) := by
     intro z
-    rw [hF_def, RS.MeroGermOn.ord_mk isOpen_univ (Set.mem_univ z)]
-    exact (hmero_ord z).2
+    exact (RS.MeroGermOn.ord_mk isOpen_univ (Set.mem_univ z)).trans (hmero_ord z).2
   -- telescope the link orders back to endpoint orders
   have htel : ∀ z : X, ∑ l : Λ, linkOrd (lA l) (lB l) z = ∑ i, linkOrd (A i) (B i) z := by
     intro z
     rw [← Finset.univ_sigma_univ, Finset.sum_sigma]
     refine Finset.sum_congr rfl (fun i _ => ?_)
-    have hstep : ∀ k : ℕ, linkOrd ((δ i).extend ((C i).t k)) ((δ i).extend ((C i).t (k + 1))) z
-        = (if z = (δ i).extend ((C i).t (k + 1)) then (1 : ℤ) else 0)
-          - (if z = (δ i).extend ((C i).t k) then (1 : ℤ) else 0) := fun k => rfl
     calc ∑ k : Fin (C i).n, linkOrd (lA ⟨i, k⟩) (lB ⟨i, k⟩) z
         = ∑ k ∈ Finset.range (C i).n,
           ((if z = (δ i).extend ((C i).t (k + 1)) then (1 : ℤ) else 0)
             - (if z = (δ i).extend ((C i).t k) then (1 : ℤ) else 0)) := by
-          rw [← Fin.sum_univ_eq_sum_range (fun k =>
+          exact Fin.sum_univ_eq_sum_range (fun k =>
             (if z = (δ i).extend ((C i).t (k + 1)) then (1 : ℤ) else 0)
-              - (if z = (δ i).extend ((C i).t k) then (1 : ℤ) else 0)) (C i).n]
-          exact Finset.sum_congr rfl (fun k _ => rfl)
+              - (if z = (δ i).extend ((C i).t k) then (1 : ℤ) else 0)) (C i).n
       _ = (if z = (δ i).extend ((C i).t (C i).n) then (1 : ℤ) else 0)
           - (if z = (δ i).extend ((C i).t 0) then (1 : ℤ) else 0) :=
           Finset.sum_range_sub (fun k => if z = (δ i).extend ((C i).t k) then (1 : ℤ) else 0)

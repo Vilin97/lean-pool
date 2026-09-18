@@ -3,8 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCSentence
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCSentence
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorel
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The standard functional model and the forward presentation (issue #10, Unit 3a)
 
@@ -20,6 +26,8 @@ expansion** on `ℕ` built from a base code `c` and a branch `g`:
 Forward acceptance gate (`subset_pcClass`): `c ∈ B → ∃ d, codeReduct d = c ∧
 d ∈ ModelsOf (pcSentence side T)` — **without** `IsomorphismInvariant`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -55,17 +63,17 @@ theorem decodeBit_cond (b : Bool) : decodeBit (cond b 1 0) = b := by
   cases b <;> rfl
 
 /-- The first-half `Fin (2n)` index of `i : Fin n`. -/
-private def firstIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨(i : ℕ), by omega⟩
+def firstIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨(i : ℕ), by omega⟩
 
 /-- The second-half `Fin (2n)` index of `i : Fin n`. -/
-private def secondIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨n + (i : ℕ), by omega⟩
+def secondIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨n + (i : ℕ), by omega⟩
 
 variable (c : StructureSpace L) (g : ℕ → ℕ)
   (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
 
 /-- The witness function interpretation on `ℕ`: `c ↦ 0`, `s ↦ succ`, `f ↦` the query bit,
 `g ↦` the branch. -/
-private noncomputable def wFun : {k : ℕ} → WitnessFun k → (Fin k → ℕ) → ℕ
+noncomputable def wFun : {k : ℕ} → WitnessFun k → (Fin k → ℕ) → ℕ
   | _, .c, _ => 0
   | _, .s, a => a 0 + 1
   | _, .f, a => cond (queryCode c (a 0)) 1 0
@@ -73,7 +81,7 @@ private noncomputable def wFun : {k : ℕ} → WitnessFun k → (Fin k → ℕ) 
 
 /-- The witness (tree) relation interpretation on `ℕ`: `tree n` decodes the first half as
 bits, the second half as `τ`, and asks membership in `T n`. -/
-private def wRel : {k : ℕ} → WitnessRel k → (Fin k → ℕ) → Prop
+def wRel : {k : ℕ} → WitnessRel k → (Fin k → ℕ) → Prop
   | _, .tree n, u =>
       ((fun i : Fin n => decodeBit (u (firstIdx n i))), (fun i : Fin n => u (secondIdx n i)))
         ∈ T n

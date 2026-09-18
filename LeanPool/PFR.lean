@@ -7,6 +7,7 @@ Authors: PFR contributors
 module
 
 public import LeanPool.PFR.Solution
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Measure
 
 /-!
 # The polynomial Freiman–Ruzsa conjecture

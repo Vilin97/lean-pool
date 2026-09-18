@@ -3,10 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
+public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
 
 /-!
 # Positive Time Test Functions and Star Operations
@@ -27,6 +30,8 @@ the star operation (complex conjugation composed with time reflection) for test 
 * `is_open_positiveTimeSet`: The positive time set is open
 * `Star TestFunctionℂ`: Star instance for complex test functions
 -/
+
+@[expose] public section
 
 noncomputable section
 

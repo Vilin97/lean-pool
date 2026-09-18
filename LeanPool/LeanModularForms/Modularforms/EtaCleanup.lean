@@ -3,14 +3,25 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.Modularforms.E2
-import LeanPool.LeanModularForms.Modularforms.Csqrt
-import LeanPool.LeanModularForms.Modularforms.LogDerivLems
+public import LeanPool.LeanModularForms.Modularforms.E2
+public import LeanPool.LeanModularForms.Modularforms.Csqrt
+public import Mathlib.Analysis.Complex.Periodic
+public import Mathlib.Topology.Algebra.InfiniteSum.UniformOn
 import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.LogDerivLems
 import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-! # EtaCleanup -/
+
+@[expose] public section
 
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral

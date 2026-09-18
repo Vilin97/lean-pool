@@ -3,15 +3,20 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Data.Nat.Prime.Infinite
-import LeanPool.Redhill.Common.SubsumCondition
+public import Mathlib.Data.Nat.Prime.Infinite
+public import LeanPool.Redhill.Common.SubsumCondition
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 # Prime chains
 
 These are sequences of primes where the next prime is at least twice the last.
 -/
+
+@[expose] public section
 
 
 open Nat

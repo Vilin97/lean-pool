@@ -3,8 +3,12 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
+module
 
-import LeanPool.RiemannMappingTheorem.Main
+public import LeanPool.RiemannMappingTheorem.Main
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Riemann Mapping Theorem
@@ -16,6 +20,8 @@ Main declarations: `RMT`, `main`, `montel`, `hurwitz`
 Tags: complex-analysis, conformal-maps, schwarz-lemma
 MSC: 30C35, 30C20
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

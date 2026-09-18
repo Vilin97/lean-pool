@@ -6,7 +6,11 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.ForMathlib.Entropy.Kernel.Group
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.Basic
+import LeanPool.PFR.ForMathlib.Entropy.Kernel.Group
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Real
+import Mathlib.MeasureTheory.Integral.Prod
 
 /-!
 # Ruzsa distance between kernels

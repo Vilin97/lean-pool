@@ -3,8 +3,14 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
-import LeanPool.ThreeGap.SimultaneousDirichlet
+module
+
+public import LeanPool.ThreeGap.TorusReduction
+public import Mathlib.Analysis.Normed.Ring.Lemmas
+public import Mathlib.NumberTheory.Real.Irrational
+import LeanPool.ThreeGap.EuclideanFiveDistanceSharpArith
 import LeanPool.ThreeGap.LinftyFiveDistanceSharpArith
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The `L∞` three-torus bound `g_∞ ≤ 2^d+1` is **sharp** for `d = 3`: nine distances attained
@@ -32,10 +38,12 @@ three
 coordinates; everything is exact modular arithmetic — no square roots.
 -/
 
+@[expose] public section
+
 namespace ThreeGap.LinftyRecords3
 
 open scoped Real
-open ThreeGap.SimApprox ThreeGap.DeltaCost ThreeGap.Chevallier ThreeGap.SimDirichlet
+open ThreeGap.SimApprox ThreeGap.DeltaCost ThreeGap.Chevallier
 open ThreeGap.LinftyRecords (abs_residue_le)
 open ThreeGap.EuclideanRecords (inf_lt_inf)
 

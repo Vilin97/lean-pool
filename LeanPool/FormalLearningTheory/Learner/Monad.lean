@@ -3,8 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Learner.Closure
-import LeanPool.FormalLearningTheory.PureMath.ReaderMonad
+module
+
+public import LeanPool.FormalLearningTheory.Learner.Closure
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Measurable Batch Learner Monad
@@ -18,6 +20,8 @@ lives in the pure math layer. This file adds the measurability certificate.
 - `MeasLearner.bind`: selection-based composition (delegates to concatLearner)
 - Monad laws: inherited from ReaderSel, verified at evaluation level
 -/
+
+@[expose] public section
 
 universe u
 

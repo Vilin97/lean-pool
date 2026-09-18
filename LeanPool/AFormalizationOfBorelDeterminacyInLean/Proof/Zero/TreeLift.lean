@@ -3,8 +3,17 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
+
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.TreeLift
@@ -12,9 +21,11 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
+@[expose] public section
+
 
 namespace GaleStewartGame.BorelDet.Zero
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
@@ -310,25 +321,7 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
         (h := hcancel)
         (a := H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
           (H.pInv_fixing h.le)) (H.pInv_isPosition h.le hp))).symm
-  · have harg :
-        pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x) =
-          pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
-            (H.pInv_fixing h) := by
-      ext1
-      rw [pInv_treeHom_val]
-      · rw [pInv_treeHom_val]
-        · change pInvTreeHomMap hyp (List.take (2 * k) H.x.val) =
-            pInvTreeHomMap hyp (List.take (2 * k) H.x.val)
-          rfl
-        · change (List.take (2 * k) H.x.val).length ≤ 2 * k
-          exact List.length_take_le (2 * k) H.x.val
-      · simp_all
-    have hval := Strategy.eval_val_congr H.R H.R rfl
-      (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
-      (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
-        (H.pInv_fixing h))
-      harg H.preLift.pInv_take_position
-    have hsystem := strategyEquivSystem_apply_str H.R (2 * k)
+  · have hsystem := strategyEquivSystem_apply_str H.R (2 * k)
       (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
       H.preLift.pInv_take_position H.preLift.pInv_take_length_le
     ext1
@@ -346,13 +339,9 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
             (H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
               H.preLift.pInv_take_position).val' =
             (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x)).val := htake
-        _ = (pInv (treeHom hyp)
-              ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
-              (H.pInv_fixing h)).val :=
-          congrArg Subtype.val harg
         _ = pInvTreeHomMap hyp (List.take (2 * k) H.x.val) := by
           rw [pInv_treeHom_val]
-          all_goals simp [subtreeIncl_coe, take_coe]
+          all_goals simp [take_coe]
     · let a := (strategyEquivSystem H.R).str (2 * k)
           (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
           H.preLift.pInv_take_position H.preLift.pInv_take_length_le
@@ -370,7 +359,7 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
       change a.val'[2 * k]'hindex =
         (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
           (H.pInv_fixing h)) (H.pInv_isPosition h hp)).val
-      exact hlast.trans ((congrArg Subtype.val hsystem).trans hval)
+      exact hlast.trans (congrArg Subtype.val hsystem)
 attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma x_mem_tree_short h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Player.zero) :
     (H.lift h').liftShort.val[n]'(by simpa [Nat.lt_iff_add_one_le]) =
@@ -378,7 +367,8 @@ lemma x_mem_tree_short h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Pl
       (H.pInv_fixing h))
       (H.pInv_isPosition h hp)).val := by
   have hget := congr_arg (fun x ↦ x.val[n]?) (H.x_mem_tree_short' h' h hp)
-  conv at hget => simp
+  simp only [lift_toPreLift, take_coe, List.getElem?_take_of_lt (Nat.lt_succ_self n),
+    ExtensionsAt.valT'_coe] at hget
   apply Option.some_injective
   erw [← List.getElem?_eq_getElem (by simpa [Nat.lt_iff_add_one_le]), hget,
     List.getElem?_eq_getElem (by
@@ -409,7 +399,7 @@ lemma x_mem_tree_short h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Pl
 def WinnableOrLost := ∃ h, (H.lift h).Winnable ∨ (H.lift h).Lost
 variable (hWL : H.WinnableOrLost)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-noncomputable def wLLift' := by
+noncomputable def wLLift' : WLLift' hyp := by
   classical
   exact
     if hW : (H.lift hWL.1).Winnable then

@@ -7,12 +7,15 @@ module
 
 public import LeanPool.Odlyzko.Numerics.Degree
 public import LeanPool.Odlyzko.Numerics.Integrability
-public import LeanPool.Odlyzko.Numerics.Tail
-public import LeanPool.Odlyzko.TestFunction.Bounds
 public import LeanPool.Odlyzko.TestFunction.TaylorBound
-public import Mathlib.Analysis.Calculus.Deriv.Polynomial
-public import Mathlib.Analysis.Complex.ExponentialBounds
-public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import LeanPool.Odlyzko.Numerics.Tail
+import LeanPool.Odlyzko.TestFunction.Amplitude
+import LeanPool.Odlyzko.TestFunction.Bounds
+import LeanPool.Odlyzko.TestFunction.Fourier
+import Mathlib.Analysis.Calculus.Deriv.Polynomial
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-! TODO: Add doc-string. -/
 

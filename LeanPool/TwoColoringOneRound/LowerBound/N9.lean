@@ -3,14 +3,23 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
+public import Mathlib.Data.Nat.Cast.Prod
+
+public import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Fintype.Prod
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Fintype.CardEmbedding
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Logic.Equiv.Fin.Rotate
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Warm-up: `n = 9` gives `> 20%`
@@ -23,6 +32,8 @@ This file proves a small “warm-up” theorem matching the report:
 
 All proofs are kernel-checked (no `native_decide`).
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -198,7 +209,8 @@ noncomputable def cyclePairToEdgeExtraK : CyclePairs → EdgeExtraK
         exact idx4_ne_remIndex k i hIdx
       ⟨(e, (r, k)), hr⟩
 
-private def choice (k : Fin 5) : Fin 5 → Option (Fin 4) :=
+/-- The five explicit partial choices used in the nine-symbol lower bound. -/
+def choice (k : Fin 5) : Fin 5 → Option (Fin 4) :=
   match k.1 with
   | 0 =>
       fun i =>

@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
 
 /-!
 # `RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv`
@@ -21,6 +22,8 @@ an equivalence between the corresponding extend-by-zero ranges.
 This is used in the manifold Rellich glue to transport compactness on `volume` to chart measures on
 fixed compact supports.
 -/
+
+@[expose] public section
 
 namespace MeasureTheory
 

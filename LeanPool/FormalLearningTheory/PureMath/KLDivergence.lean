@@ -3,8 +3,9 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # KL Divergence and Finite PMFs
@@ -24,6 +25,8 @@ KL divergence, cross-entropy, and expected values. No learning-theory types.
 
 - Cover & Thomas, "Elements of Information Theory", Chapter 2
 -/
+
+@[expose] public section
 
 open Finset
 

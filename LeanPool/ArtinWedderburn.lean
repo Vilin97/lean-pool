@@ -3,19 +3,25 @@ Copyright (c) 2026 Matevz Miščič, Maša Žaucer, Job Petrovčič. All rights 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
+module
 
-import LeanPool.ArtinWedderburn.IdealProd
-import LeanPool.ArtinWedderburn.SetProd
-import LeanPool.ArtinWedderburn.Auxiliary
-import LeanPool.ArtinWedderburn.NonUnitalToUnital
-import LeanPool.ArtinWedderburn.PrimeRing
-import LeanPool.ArtinWedderburn.CornerRing
-import LeanPool.ArtinWedderburn.MinIdeals
-import LeanPool.ArtinWedderburn.Idempotents
-import LeanPool.ArtinWedderburn.CornerCornerLemma
-import LeanPool.ArtinWedderburn.MatrixUnits
-import LeanPool.ArtinWedderburn.NiceIdeals
-import LeanPool.ArtinWedderburn.ArtinWedderburnTheorem
+public import LeanPool.ArtinWedderburn.IdealProd
+public import LeanPool.ArtinWedderburn.SetProd
+public import LeanPool.ArtinWedderburn.Auxiliary
+public import LeanPool.ArtinWedderburn.NonUnitalToUnital
+public import LeanPool.ArtinWedderburn.PrimeRing
+public import LeanPool.ArtinWedderburn.CornerRing
+public import LeanPool.ArtinWedderburn.MinIdeals
+public import LeanPool.ArtinWedderburn.Idempotents
+public import LeanPool.ArtinWedderburn.CornerCornerLemma
+public import LeanPool.ArtinWedderburn.MatrixUnits
+public import LeanPool.ArtinWedderburn.NiceIdeals
+public import LeanPool.ArtinWedderburn.ArtinWedderburnTheorem
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # Artin-Wedderburn Theorem
@@ -27,6 +33,8 @@ Main declarations: `LeanPool.ArtinWedderburn.ArtinWedderburnForPrime`
 Tags: ring-theory, noncommutative-algebra, artinian-rings
 MSC: 16K20, 16P20
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

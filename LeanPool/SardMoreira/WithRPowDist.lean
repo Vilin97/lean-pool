@@ -3,28 +3,17 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-import Mathlib.MeasureTheory.Measure.Haar.Basic
-import Mathlib.MeasureTheory.Measure.Hausdorff
-import Mathlib.MeasureTheory.Measure.Doubling
-import Mathlib.Topology.EMetricSpace.Paracompact
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import LeanPool.SardMoreira.ToMathlib.PR33114
+public import Mathlib.MeasureTheory.Measure.Hausdorff
+public import LeanPool.SardMoreira.ToMathlib.PR33114
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.SardMoreira.WithRPowDist
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal Filter Uniformity Topology
 open Function

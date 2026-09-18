@@ -3,12 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.DigitAtToolkit
 import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.DigitVector
-import LeanPool.Egrs75.DigitAtToolkit
-import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Data.Finset.Attr
 
 /-!
 The HIGH-case clearing: when the floor `N` lies below `q^j` (the scale of the
@@ -18,11 +17,12 @@ top oversized base-`q` digit), a fresh `LowDigits p` window number drawn from
 clearing dichotomy; the low case is the μ-measure machine in `MuFinish`.
 -/
 
+@[expose] public section
+
 namespace Egrs75.Probe
 
 open Nat
 open Egrs75
-open Egrs75.RepairDV
 open Egrs75.RepairPaperfaithful
 
 /-- Goodness of the high block: if `q^j ≤ m < 2*q^j` and `q ≥ 3`, then every base-`q`

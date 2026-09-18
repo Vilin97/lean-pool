@@ -3,13 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Basic
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Convex.StrictConvexSpace
+module
+
+public import LeanPool.Erdos132ConvexK3.Basic
+public import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.InnerProductSpace.Convex
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 /-!
 # Geometric inputs for the convex three-distance argument
@@ -19,9 +17,12 @@ red--blue consequences, chord half-plane separation, and same-half-plane
 uniqueness for two-circle intersections.
 -/
 
+@[expose] public section
+
 namespace LeanPool.Erdos132ConvexK3
 
-private def toComplex (p : Point ℝ) : ℂ := ⟨p.1, p.2⟩
+/-- Regard a Cartesian point as a complex number. -/
+def toComplex (p : Point ℝ) : ℂ := ⟨p.1, p.2⟩
 
 /-- Ordinary Euclidean distance between real Cartesian points. -/
 noncomputable def euclideanDist (a b : Point ℝ) : ℝ :=
@@ -447,7 +448,7 @@ theorem same_half_plane_two_circle_unique
   have hdot : dp = dq := by
     dsimp [sqDist, ac, bc, pc, qc, toComplex, vx, vy, px, py, qx, qy, dp, dq]
       at hap hbp ⊢
-    nlinarith
+    linear_combination (hap - hbp) / 2
   have hlagP : dp ^ 2 + cp ^ 2 = (vx ^ 2 + vy ^ 2) * (px ^ 2 + py ^ 2) := by
     dsimp [dp, cp]
     ring
@@ -455,8 +456,8 @@ theorem same_half_plane_two_circle_unique
     dsimp [dq, cq]
     ring
   have hcrossSq : cp ^ 2 = cq ^ 2 := by
-    rw [hdot] at hlagP
-    nlinarith [hlagP, hlagQ, hnorm]
+    rw [hdot, hnorm, ← hlagQ] at hlagP
+    exact add_left_cancel hlagP
   have hcp : 0 < cp := by
     simpa [InLeftOpenHalfPlane, turn, ac, bc, pc, toComplex, vx, vy, px, py, cp]
       using hp
@@ -490,11 +491,7 @@ theorem same_half_plane_two_circle_unique
       rw [hid, hdot, hcross]
       ring
     exact sub_eq_zero.mp ((mul_eq_zero.mp hmul).resolve_left hv.ne')
-  apply Prod.ext
-  · dsimp [px, qx, pc, qc, ac, toComplex] at hx
-    linarith
-  · dsimp [py, qy, pc, qc, ac, toComplex] at hy
-    linarith
+  exact Prod.ext (sub_left_inj.mp hx) (sub_left_inj.mp hy)
 
 /-- A point distinct from both endpoints and contained in both closed disks
 whose common diameter is the endpoint segment has abscissa strictly between

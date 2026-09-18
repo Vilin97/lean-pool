@@ -3,19 +3,20 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
-import Mathlib.Topology.Connected.PathConnected
-import Mathlib.Topology.Constructions
-import Mathlib.Topology.Order
-import LeanPool.FiniteGraphFundamentalGroup.Proof
+
+public import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
+public import LeanPool.FiniteGraphFundamentalGroup.Proof
+import Mathlib.Topology.WithTopology
 
 /-!
 # Geometric realization of a finite quiver
 
 This module realizes vertices discretely and every directed edge as a separate interval cell.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver
@@ -298,6 +299,9 @@ theorem graphRealization_pathConnected {V : Type u} [Quiver.{u} V]
 theorem graphRealization_compact {V : Type u} [Quiver.{u} V]
     [Finite V] [FiniteQuiver V] : CompactSpace (graphRealization V) := by
   let _ : Fintype V := Fintype.ofFinite V
+  let _ : Finite (Quiver.Total V) := Finite.of_injective
+    (fun e : Quiver.Total V ↦ (⟨e.left, e.right, e.hom⟩ : Σ a b : V, a ⟶ b))
+    (by intro a b h; cases a; cases b; cases h; rfl)
   let _ : CompactSpace (graphRealizationPre V) := by infer_instance
   infer_instance
 

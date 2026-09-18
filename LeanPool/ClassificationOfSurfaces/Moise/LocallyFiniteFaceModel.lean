@@ -3,8 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceBoundary
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
+import Mathlib.Combinatorics.SimpleGraph.Init
 
 /-!
 # Standard plane models for locally finite faces
@@ -14,6 +17,8 @@ simplex on its three literal global vertices. This file reindexes those coordina
 chosen cyclic `Fin 3` ordering and identifies the result with the standard closed plane
 triangle. The cyclic sides are carried exactly to the corresponding standard polygon sides.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

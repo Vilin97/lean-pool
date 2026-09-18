@@ -3,10 +3,15 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
+public import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialQ
+public import LeanPool.Chudnovsky.SingularModuli.QuadraticPoints
 import LeanPool.Chudnovsky.SingularModuli.CMRelations
+import LeanPool.Chudnovsky.SingularModuli.FormReduction
+import LeanPool.Chudnovsky.SingularModuli.ModularPolynomialZ
 import LeanPool.Chudnovsky.SingularModuli.Valence
+import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.Tactic.NormNum.Prime
 
 /-!
@@ -45,6 +50,8 @@ Let `j₀ := j τ₁₆₃` and `x` an arbitrary complex root of `minpoly ℚ j�
 * **(C7)** Hence `x = j τ′ = j τ₁₆₃ = j₀`; every root of `minpoly ℚ j₀` equals `j₀`, and the
   Vieta relation on the subleading coefficient (a rational) forces `j₀ ∈ ℚ`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -130,10 +137,8 @@ lemma cmGL_factor (n : ℤ) [NeZero m] (hm : (m : ℤ) = n ^ 2 + n + 41) :
   have hmR : (m : ℝ) = (n : ℝ) ^ 2 + (n : ℝ) + 41 := by exact_mod_cast hm
   have hcoe : ((cmGamma n : SL(2, ℤ)) : Matrix (Fin 2) (Fin 2) ℤ) = !![n + 1, -1; 1, 0] := rfl
   apply Matrix.GeneralLinearGroup.ext
-  intro a c
-  fin_cases a <;> fin_cases c <;>
-    simp [val_cmGL, val_Acol, hcoe, Matrix.mul_apply, Fin.sum_univ_two]
-  nlinarith [hmR]
+  simp [Fin.forall_fin_two, val_cmGL, val_Acol, hcoe, Matrix.mul_apply, Fin.sum_univ_two]
+  linear_combination hmR
 
 /-- **The `b`-coset value at `τ₁₆₃`.** `j (Acol m n • τ₁₆₃) = j τ₁₆₃`. -/
 lemma cm_coset_val (n : ℤ) [NeZero m] (hm : (m : ℤ) = n ^ 2 + n + 41) :
@@ -264,7 +269,7 @@ lemma exists_primitive_isRoot {F : BQF} {τ : ℍ} (hpd : IsPosDef F) (hroot : I
         simp only [disc, ha0, hb0, hc0]; ring
       have hdneg := hpd.2
       rw [hdF] at hdneg
-      nlinarith [hdneg, sq_nonneg d, hdpos]
+      exact neg_of_mul_neg_right hdneg (sq_nonneg d)
   · -- root
     simp only [IsRoot] at hroot ⊢
     rw [ha0, hb0, hc0] at hroot
@@ -361,10 +366,7 @@ lemma exists_form_of_coincidence [Fact m.Prime] {τ' : ℍ} {i : Option (ZMod m)
     have hnat : s.natAbs * s.natAbs = m := by
       have h1 : (↑(s.natAbs * s.natAbs) : ℤ) = (m : ℤ) := by rw [Int.natAbs_mul_self]; exact hsq
       exact_mod_cast h1
-    have hdvd : s.natAbs ∣ m := ⟨s.natAbs, hnat.symm⟩
-    rcases hprime.eq_one_or_self_of_dvd _ hdvd with hh | hh
-    · rw [hh] at hnat; have := hprime.two_le; omega
-    · rw [hh] at hnat; nlinarith [hprime.two_le]
+    exact hprime.not_isSquare ⟨s.natAbs, hnat.symm⟩
   -- the fixing form `(r, s−p, −q)`
   have hroot0 : QF.IsRoot ⟨r, s - p, -q⟩ τ' := by
     simp only [QF.IsRoot, QF.Fixes] at hfix ⊢; push_cast

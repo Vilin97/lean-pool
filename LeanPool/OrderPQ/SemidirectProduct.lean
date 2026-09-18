@@ -3,15 +3,16 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
-import Mathlib.SetTheory.Cardinal.Finite
-import Mathlib.GroupTheory.SemidirectProduct
-import Mathlib.GroupTheory.GroupAction.ConjAct
-import Mathlib.Algebra.Group.Subgroup.Pointwise
-import Mathlib.Tactic.Group
+module
+
+public import Mathlib.GroupTheory.SemidirectProduct
+public import Mathlib.Tactic.Group
 
 /-!
 # LeanPool.OrderPQ.SemidirectProduct
 -/
+
+@[expose] public section
 
 variable {N₁ N₂ H₁ H₂ : Type*} [Group N₁] [Group N₂] [Group H₁] [Group H₂]
 

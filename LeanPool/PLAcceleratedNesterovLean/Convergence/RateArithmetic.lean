@@ -3,11 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
-import LeanPool.PLAcceleratedNesterovLean.Core.Defs
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Multi-Phase Rate Arithmetic
@@ -20,6 +19,8 @@ These establish that:
 
 All lemmas are independent of the Lean formalization of the algorithm.
 -/
+
+@[expose] public section
 
 noncomputable section
 

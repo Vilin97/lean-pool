@@ -3,11 +3,17 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.Hanf
+public import LeanPool.InfinitaryLogic.ModelTheory.InfinitaryTypes
+import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+import LeanPool.InfinitaryLogic.Methods.UniformCollapse
 import LeanPool.InfinitaryLogic.ModelTheory.ArbitraryStabilization
 import LeanPool.InfinitaryLogic.ModelTheory.TypePreservingBF
-import LeanPool.InfinitaryLogic.Methods.UniformCollapse
 import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
-import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+import Mathlib.Data.Rat.Floor
 /-!
 # The Scott completion and categoricity (issue #17 chunks 5.2–6)
 
@@ -34,6 +40,8 @@ stabilization kernel). Consequences, in order:
 Everything is for countable relational vocabularies (`[L.IsRelational]`,
 `[Countable (Σ l, L.Relations l)]`), inherited from the Scott/Karp stack per the frozen audit.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

@@ -3,15 +3,20 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Multiset
-import Mathlib.SetTheory.Cardinal.Order
+public import LeanPool.QuasiBorelSpaces.Multiset
+public import LeanPool.QuasiBorelSpaces.Subtype
+import LeanPool.QuasiBorelSpaces.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.Finset
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Finset`.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace.Finset
 
@@ -20,7 +25,8 @@ variable
   {B : Type*} [QuasiBorelSpace B]
   {C : Type*} [QuasiBorelSpace C]
 
-private irreducible_def toSubtype : Finset A → { xs : Multiset A // Multiset.Nodup xs }
+/-- View a finite set as its underlying nodup multiset. -/
+irreducible_def toSubtype : Finset A → { xs : Multiset A // Multiset.Nodup xs }
   | ⟨x, h⟩ => ⟨x, h⟩
 
 private irreducible_def ofSubtype : { xs : Multiset A // Multiset.Nodup xs } → Finset A

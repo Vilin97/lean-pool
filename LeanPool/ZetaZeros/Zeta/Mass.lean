@@ -5,7 +5,9 @@ Authors: Kenny Lau
 -/
 module
 
-public import LeanPool.ZetaZeros.Zeta.Basic
+public import LeanPool.ZetaZeros.Zeta.Defs
+import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
 
 /-!
 # The extremal test function has total mass one

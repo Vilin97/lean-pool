@@ -3,8 +3,11 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Combinatorics.Front.Defs
-import Mathlib.SetTheory.Ordinal.Rank
+module
+
+public import LeanPool.NashWilliams.Combinatorics.Front.Defs
+public import Mathlib.SetTheory.Ordinal.Rank
+import Mathlib.Order.Lattice.Nat
 
 /-!
 # The tree of a front is well-founded
@@ -30,6 +33,8 @@ strictly longer.
 * `Front.powK_rank`: the uniform front `[M]^k` has rank `k`.
 * `Front.schreier_rank`: the Schreier front has rank `ω`.
 -/
+
+@[expose] public section
 
 open Set List Ordinal
 

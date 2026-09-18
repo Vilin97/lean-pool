@@ -7,11 +7,12 @@ Authors: Rado Kirov
 /-
 Blueprint unit: mapping-degree. Planar root counting: total multiplicity of `z ↦ z ^ k` is `k`.
 -/
+module
+
+public import Mathlib.Analysis.Analytic.Order
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.Analysis.Complex.Basic
 import Mathlib.RingTheory.RootsOfUnity.Complex
-import Mathlib.Analysis.Analytic.Order
-import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.Data.Set.Card
 
 /-!
 # Planar root counting (mapping-degree, planar layer)
@@ -31,6 +32,8 @@ Everything about the roots of `z ^ k = w` in `ℂ` that the surface-level fiber 
 This file has zero project imports; `LocalConstancy.lean` bridges `analyticOrderAt` to
 `RS.multiplicity` via local-multiplicity's chart invariance.
 -/
+
+@[expose] public section
 
 open Filter Set Polynomial
 open scoped Topology

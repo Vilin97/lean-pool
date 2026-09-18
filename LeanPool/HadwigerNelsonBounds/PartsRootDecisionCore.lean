@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsFirstStage
+public import LeanPool.HadwigerNelsonBounds.PartsFirstStage
 
 /-!
 # Root-case dispatcher for the Parts certificate
@@ -13,6 +14,8 @@ The dispatcher colors the nine unfixed vertices of the 13-vertex 2-Golomb
 root. Its leaves point to the appropriate one of the 432 checked symmetry and
 color variants from `PartsFirstStage`.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

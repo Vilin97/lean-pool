@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 /-!
 # Tail-restricted `L_{ω₁ω}` indiscernibility (neutral definition)
 
@@ -17,6 +19,8 @@ from the EM/Admissible stack — so this file sits low in the import graph. It i
 surface (imported by `TailAdapter.lean` → `Admissible.lean`); being neutral and tiny, that is
 harmless, unlike routing the def through the WIP-excluded `LocalEMSupport.lean`.
 -/
+
+@[expose] public section
 
 universe u v
 

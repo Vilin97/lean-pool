@@ -3,16 +3,18 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import Mathlib.Topology.Homeomorph.Lemmas
-import Mathlib.Topology.Category.TopCat.Limits.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
+public import Mathlib.Topology.Category.TopCat.Limits.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.Pushout
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Pushout`.
 -/
+
+@[expose] public section
 
 /-!
 TODO:

@@ -3,8 +3,11 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevWitness
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationarityBridge
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevWitness
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationarityBridge
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Stationary Sobolev map package
@@ -16,6 +19,8 @@ explicit weak gradient, plus vanishing domain first variation.
 The target-manifold constraint is intentionally absent.  The monotonicity proof
 uses only this stationary package.
 -/
+
+@[expose] public section
 
 noncomputable section
 

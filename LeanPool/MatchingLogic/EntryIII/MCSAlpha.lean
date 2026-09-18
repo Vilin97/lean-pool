@@ -12,12 +12,16 @@ module turns those derivations, and the Nat-specific monotonicity rules used to
 construct them, into reusable MCS membership facts.  It is independent of the
 later witnessed-MCS construction.
 -/
-import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
-import LeanPool.MatchingLogic.EntryIII.LocalTheory
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
+public import LeanPool.MatchingLogic.EntryIII.LocalTheory
 
 /-!
 # MatchingLogic.EntryIII.MCSAlpha
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

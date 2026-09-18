@@ -6,11 +6,8 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.Genus.Polar
-public import LeanPool.RiemannRochFunctionFields.FundamentalIdentity
-public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
-public import Mathlib.RingTheory.Valuation.Discrete.Basic
-public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
-public import Mathlib.Algebra.Group.TypeTags.Basic
+import LeanPool.RiemannRochFunctionFields.FundamentalIdentity
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Ramification half of Stichtenoth 1.4.11

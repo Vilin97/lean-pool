@@ -3,8 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import LeanPool.LeanModularForms.ForMathlib.CongruenceSubgrps
-import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
+module
+
+public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
 
 /-!
 # Extensions to `Mathlib.NumberTheory.ModularForms.CongruenceSubgroups`
@@ -18,6 +19,8 @@ companion and add only the genuinely-local extras (`mem_conjGL'`,
 `finiteIndex_conjGL'` — the generalisation of `Mathlib.CongruenceSubgroup.finiteIndex_conjGL`
 to an arbitrary finite-index `Γ`).
 -/
+
+@[expose] public section
 
 open ConjAct Matrix.SpecialLinearGroup Matrix ModularGroup CongruenceSubgroup
 

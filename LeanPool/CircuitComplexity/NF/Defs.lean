@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Basic
+module
+
+public import LeanPool.CircuitComplexity.Basic
 
 /-! # Normal Forms — Core Definitions
 
@@ -20,6 +22,8 @@ complexity measures, and De Morgan negation duality.
 * `DNF.complexity` — the number of terms in a DNF formula
 * `CNF.neg` / `DNF.neg` — De Morgan negation (CNF ↔ DNF)
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 
