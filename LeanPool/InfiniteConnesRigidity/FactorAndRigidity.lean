@@ -3449,8 +3449,7 @@ private def gammaGroupFactorUnitary (n : ℕ) :
 private def lambdaGroupFactorUnitary :
     GroupL2 lambdaGroup ≃ₗᵢ[ℂ]
       crossedHilbert paperSplitHaarAction := by
-  change GroupL2 (SemidirectProduct (Multiplicative D) K kDAction) ≃ₗᵢ[ℂ]
-    crossedHilbert paperSplitHaarAction
+  change GroupL2 Lambda ≃ₗᵢ[ℂ] crossedHilbert paperSplitHaarAction
   exact groupFactorUnitary kDAction paperSplitHaarAction splitFourierEquiv
 
 end
@@ -3730,12 +3729,8 @@ private theorem lambdaGroupFactorUnitary_conj_inr (k : K) :
         paperSplitHaarAction k).toContinuousLinearEquiv.toContinuousLinearMap := by
   change
     (groupFactorUnitary kDAction paperSplitHaarAction splitFourierEquiv).conjStarAlgEquiv
-      (leftRegularUnitary
-        (SemidirectProduct.inr k :
-          SemidirectProduct (Multiplicative D) K kDAction) :
-          GroupL2 (SemidirectProduct (Multiplicative D) K kDAction)
-            →L[ℂ]
-          GroupL2 (SemidirectProduct (Multiplicative D) K kDAction)) =
+      (leftRegularUnitary (SemidirectProduct.inr k : Lambda) :
+          GroupL2 Lambda →L[ℂ] GroupL2 Lambda) =
       (crossedGroupUnitary paperSplitHaarAction k).toContinuousLinearEquiv.toContinuousLinearMap
   apply groupFactorUnitary_conj_inr
   exact splitTaggedFourierCovariance
@@ -3847,17 +3842,17 @@ private def toStarAlgEquiv (U : PaperFactorUnitaryWitness G H) :
     exact U.unitary.conjStarAlgEquiv.apply_symm_apply y
   map_mul' x y := by
     apply Subtype.ext
-    exact map_mul U.unitary.conjStarAlgEquiv
+    exact U.unitary.conjStarAlgEquiv.map_mul'
       (x : GroupL2 G →L[ℂ] GroupL2 G)
       (y : GroupL2 G →L[ℂ] GroupL2 G)
   map_add' x y := by
     apply Subtype.ext
-    exact map_add U.unitary.conjStarAlgEquiv
+    exact U.unitary.conjStarAlgEquiv.map_add'
       (x : GroupL2 G →L[ℂ] GroupL2 G)
       (y : GroupL2 G →L[ℂ] GroupL2 G)
   map_star' x := by
     apply Subtype.ext
-    exact map_star U.unitary.conjStarAlgEquiv
+    exact U.unitary.conjStarAlgEquiv.map_star'
       (x : GroupL2 G →L[ℂ] GroupL2 G)
   map_smul' c x := by
     apply Subtype.ext
@@ -5115,7 +5110,6 @@ private structure PaperAnalyticInput where
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem paperLambda_hasNoOrderFour : HasNoOrderFour Lambda := by
-  change HasNoOrderFour (SemidirectProduct (Multiplicative D) K kDAction)
   apply semidirect_hasNoOrderFour_of_no_nontrivial_torsion_of_exponentTwo
     (N := Multiplicative D) (Q := K) kDAction K_no_nontrivial_torsion
   intro d
