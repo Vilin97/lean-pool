@@ -9132,3 +9132,45 @@ projects:
     msc:
       - "05C35"
       - "05C05"
+  - slug: finite-max-flow-min-cut
+    title: Finite max-flow / min-cut
+    summary: >-
+      Develops finite networks with real nonnegative capacities, proves cut-flow weak duality and
+      maximum-flow attainment, and derives max-flow/min-cut equality by an augmenting-path argument.
+    branch: combinatorial optimization and graph theory
+    entry_module: LeanPool.MaxFlowMinCut
+    authors:
+      - Juan Pablo Traverso Gianini
+      - Aristotle
+    source:
+      title: >-
+        Reusable max-flow/min-cut component accompanying Linear-Error Clique Partitions of Split
+        Graphs via Structured Triangle Packing
+      authors:
+        - Juan Pablo Traverso Gianini
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/b3423f3e8c8db7c2d1b279673293ef3079faf903/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Contrib/MaxFlowMinCut.lean
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Contrib.MaxFlowMinCut.maxflow_eq_mincut
+    main_results:
+      - declaration: Contrib.MaxFlowMinCut.maxflow_eq_mincut
+        informal: >-
+          Every finite network with real nonnegative capacities and distinct source and sink admits
+          a feasible flow and a source-sink cut whose flow value equals the cut capacity.
+      - declaration: Contrib.MaxFlowMinCut.value_le_capacity
+        informal: >-
+          The value of every feasible flow is at most the capacity of every source-sink cut.
+      - declaration: Contrib.MaxFlowMinCut.max_flow_exists
+        informal: >-
+          Every finite network with real nonnegative capacities admits a maximum-value feasible
+          flow.
+    tags:
+      - combinatorial-optimization
+      - graph-theory
+      - network-flows
+    msc:
+      - "05C21"
+      - "90C35"

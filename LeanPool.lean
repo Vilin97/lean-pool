@@ -3307,6 +3307,7 @@ import LeanPool.MatchingLogic.SetVariables
 import LeanPool.MatchingLogic.Sorted
 import LeanPool.MatchingLogic.SortedProof
 import LeanPool.MatchingLogic.Soundness
+import LeanPool.MaxFlowMinCut
 import LeanPool.MetricCodes
 import LeanPool.MetricCodes.Binary
 import LeanPool.MetricCodes.Branching
