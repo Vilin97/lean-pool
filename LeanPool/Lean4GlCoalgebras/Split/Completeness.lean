@@ -1981,7 +1981,6 @@ lemma builder_win_strong_left_succ {Δ : SplitSequent}
         nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
           (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
       convert raw_u₁_u₂ -- dont understand why simp or rw doesn't do this
-      exact u₁_def
     have u₁_u₂_mem := move_iff_in_moves.1 move_u₁_u₂.1
     unfold Game.Pos.moves Game.moves at u₁_u₂_mem
     simp only [List.mem_cons, Finset.mem_filterMap, Option.ite_none_left_eq_some, not_or,
@@ -2226,7 +2225,6 @@ lemma builder_win_strong_right_succ {Δ : SplitSequent}
         nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
           (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
       convert raw_u₁_u₂ -- dont understand why simp or rw doesn't do this
-      exact u₁_def
     have u₁_u₂_mem := move_iff_in_moves.1 move_u₁_u₂.1
     unfold Game.Pos.moves Game.moves at u₁_u₂_mem
     simp only [List.mem_cons, Finset.mem_filterMap, Option.ite_none_left_eq_some, not_or,

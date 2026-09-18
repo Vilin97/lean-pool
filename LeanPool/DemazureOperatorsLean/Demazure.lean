@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Óscar Álvarez Sánchez
 -/
 
-import Mathlib.Data.Set.Lattice
+import Mathlib.Data.Set.Lattice.Bounded
+import Mathlib.Data.Set.Lattice.Disjoint
+import Mathlib.Data.Set.Lattice.Image
+import Mathlib.Data.Set.Lattice.Indexed
+import Mathlib.Data.Set.Lattice.Order
 import Mathlib.Data.Set.Function
 import Mathlib.Analysis.Complex.Polynomial.Basic
 import Init.System.IO
 
-import Mathlib.Data.Complex.Basic
-
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Algebra.MvPolynomial.Basic
 import Mathlib.Algebra.MvPolynomial.CommRing

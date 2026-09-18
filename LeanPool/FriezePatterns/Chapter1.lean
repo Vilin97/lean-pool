@@ -5,7 +5,7 @@ Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
 
 import Mathlib.Algebra.Field.Basic
-import Mathlib.Data.Finite.Prod
+import Mathlib.Basic.Finite.Prod
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Set.Finite.Range
 import Mathlib.Tactic.Cases

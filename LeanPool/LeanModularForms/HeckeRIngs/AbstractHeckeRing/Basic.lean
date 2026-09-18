@@ -372,7 +372,7 @@ abbrev decompQuot (P : HeckePair G) (g : P.Δ) :=
 /-- The decomposition quotient is finite because `Δ ≤ commensurator(H)`. -/
 noncomputable instance instFintypeDecompQuot (P : HeckePair G) (g : P.Δ) :
     Fintype (decompQuot P g) :=
-  Subgroup.fintypeOfIndexNeZero (P.h₁ g.2).1
+  Subgroup.fintypeOfIndexNeZero (P.h₁ g.2).1.relIndex_ne_zero
 
 /-- Products of the form `a · h · b` with `h ∈ H`, `a, b ∈ Δ` remain in `Δ`. -/
 lemma delta_mul_mem (i : H) (a b : Δ) (h₀ : H.toSubmonoid ≤ Δ) :

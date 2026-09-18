@@ -108,7 +108,6 @@ lemma tendsto_uniformly_on_add_const :
   convert (tendsto_uniformly_on_const (f := g)).add this using 2
   · ext ε
     simp
-  · simp
 
 lemma deriv_ne_zero_of_inj_aux {g : ℂ → ℂ} (hU : IsOpen U) (hg : DifferentiableOn ℂ g U)
     (hi : InjOn g U) (hz₀ : z₀ ∈ U) (hgz₀ : g z₀ = 0) :

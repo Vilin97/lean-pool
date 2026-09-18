@@ -576,7 +576,8 @@ lemma dist_of_U_add_le {G : Type*} [MeasurableFinGroup G] {Ω : Type u} [hΩ : M
     rw [←entropy_add_left', ←entropy_neg_left] <;> try fun_prop
     congr!; rw [←add_eq_zero_iff_neg_eq, ←hsum]; abel
   let _hG : MeasureSpace G := ⟨Measure.map (T₁ + T₂) ℙ⟩
-  let _ : IsProbabilityMeasure (ℙ: Measure G) := Measure.isProbabilityMeasure_map (by fun_prop)
+  let _ : IsProbabilityMeasure (ℙ: Measure G) :=
+    inferInstanceAs (IsProbabilityMeasure (Measure.map (T₁ + T₂) ℙ))
   change
     ∫ x, (fun z ↦ d[T₁; ℙ[|(T₁ + T₂) ⁻¹' {z}] # T₂; ℙ[|(T₁ + T₂) ⁻¹' {z}]]) x ≤
       3 * I[T₁ : T₂] + 2 * H[T₁ + T₂] - H[T₁] - H[T₂] at h1
@@ -667,7 +668,8 @@ lemma k_eq_zero (hη_eq : p.η = 1 / (32 * p.m ^ 3)) : k = 0 := by
         exact mutual_information_le_t_23 hΩ h_min h_mes h_indep hident
       _ = _ := by ring
   let _ : MeasureSpace G := ⟨Measure.map W ℙ⟩
-  have _ : IsProbabilityMeasure (ℙ: Measure G) := Measure.isProbabilityMeasure_map (by fun_prop)
+  have _ : IsProbabilityMeasure (ℙ: Measure G) :=
+    inferInstanceAs (IsProbabilityMeasure (Measure.map W ℙ))
   let δ' : G → ℝ := fun w ↦ p.m * (2 + p.η / 2) * (δ w) + p.η * ∑ i, d[X i; ℙ # Z2; ℙ[|W ⁻¹' {w}]]
   have main_est {w:G} (hw: ℙ {w} ≠ 0) : k ≤ δ' w := by
     let μ : Measure Ω' := ℙ[|W ⁻¹' {w}]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
 
-import Mathlib.Data.ENNReal.Basic
+import Mathlib.Basic.ENNReal.Basic
 
 /-!
 # LeanPool.SardMoreira.ToMathlib.PR32993

@@ -32,7 +32,7 @@ lemma measurable_cons : Measurable (fun x : A × Encoding A ↦ cons x.1 x.2) :=
   intro n
   simp only [cons]
   apply Sigma.measurable_mk'
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   rintro ⟨i, _⟩
   cases i with
   | zero =>

@@ -149,7 +149,7 @@ theorem norm_iteratedFDeriv_snd_le {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
   rw [L.iteratedFDeriv_comp_right hf y (nat_le_infty n)]
   apply (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans
   have hprod : (∏ _i : Fin n, ‖L‖) ≤ 1 := by
-    exact Finset.prod_le_one (fun _ _ => norm_nonneg _) (fun _ _ => ContinuousLinearMap.norm_snd_le
+    exact Finset.prod_le_one₀ (fun _ _ => norm_nonneg _) (fun _ _ => ContinuousLinearMap.norm_snd_le
         _ _ _)
   exact (mul_le_mul_of_nonneg_left hprod (norm_nonneg (iteratedFDeriv ℝ n f (L y)))).trans_eq
       (mul_one _)
@@ -283,7 +283,7 @@ theorem norm_iteratedFDeriv_comp_linear_le {G : Type*} [NormedAddCommGroup G] [N
   rw [L.iteratedFDeriv_comp_right hf x (nat_le_infty n)]
   apply (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans
   have hp : (∏ _i : Fin n, ‖L‖) ≤ 1 :=
-    Finset.prod_le_one (fun _ _ => norm_nonneg _) (fun _ _ => hL)
+    Finset.prod_le_one₀ (fun _ _ => norm_nonneg _) (fun _ _ => hL)
   simpa only [mul_one] using mul_le_mul_of_nonneg_left hp (norm_nonneg (iteratedFDeriv ℝ n f (L x)))
 
 theorem norm_iteratedFDeriv_parameter_le {f : E × ℝ → ℝ} (hf : ContDiff ℝ ∞ f)

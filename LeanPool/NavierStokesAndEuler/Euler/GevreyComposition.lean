@@ -60,7 +60,7 @@ theorem norm_taylorComp_le
       _ ≤ (A * S^c.length * (c.length.factorial : ℝ)^2) *
           (∏ i, B * R^(c.partSize i) * ((c.partSize i).factorial : ℝ)^2) := by
         apply mul_le_mul (hq _ c.length_le)
-        · apply Finset.prod_le_prod
+        · apply Finset.prod_le_prod₀
           · intro i _
             exact norm_nonneg _
           · intro i _

@@ -89,7 +89,8 @@ theorem metric_product_hasDerivAt (K : SmoothCoefficient period) (a : LiftTangen
     simp [translatedCoefficient]
   rw [hop0] at hprod
   simp only [translationPath_zero, translation_zero] at hprod
-  convert hprod using 1 <;> first | rfl | exact add_comm _ _
+  convert hprod using 1
+  first | rfl | exact add_comm _ _
 
 /-- Exact metric integration by parts for one genuine second translation derivative. -/
 theorem metric_second_derivative_identity (K : SmoothCoefficient period) (a : LiftTangent)

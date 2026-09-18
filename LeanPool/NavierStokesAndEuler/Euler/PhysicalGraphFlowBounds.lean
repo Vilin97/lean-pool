@@ -361,7 +361,6 @@ theorem scaled_flow_eq (hell : ell ≠ 0) (s t : ℝ) (x : E) :
       (V.velocity r (ell • (flowData T hT A).flow s r (ell⁻¹ • x))) r := by
     have h := ((flowData T hT A).flow_hasDerivAt s r (ell⁻¹ • x)).const_smul ell
     convert h using 1
-    · rfl
     · change ell • A.field (projIcc 0 T hT r)
         (ell⁻¹ • (ell • (flowData T hT A).flow s r (ell⁻¹ • x))) = _
       simp only [smul_smul,inv_mul_cancel₀ hell,one_smul]
@@ -1003,7 +1002,8 @@ theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
   have hreal' : (eLpNorm (fun q => jetSeries P (accelerationField T A A₁ t) q n)
       2 (liftMeasure P)).toReal ≤ (eLpNorm v 2 (liftMeasure P)).toReal+(eLpNorm w 2 (liftMeasure
           P)).toReal := by
-    simpa only [Fin.sum_univ_two,H,ite_true,Fin.isValue,one_ne_zero,ite_false,eLpNorm_norm] using
+    simpa only [Fin.sum_univ_two,H,ite_true,Fin.isValue,one_ne_zero,ite_false,
+      eLpNorm_norm _ hv.aestronglyMeasurable, eLpNorm_norm _ hw.aestronglyMeasurable] using
         hreal
   have hn₁ : (eLpNorm v 2 (liftMeasure P)).toReal ≤ C₁*majorant U 0 n := by
     apply (hNorm₁ t n).trans

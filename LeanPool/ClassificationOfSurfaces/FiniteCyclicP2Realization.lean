@@ -1262,7 +1262,7 @@ theorem positivePreMap_occurrenceSide
       simp only [occurrenceSide, PolygonGluing.Side.point]
       convert
         positivePreMap_selected_side_of_lt
-          P cut horientation hl hr validP i t hleft using 1 <;> rfl
+          P cut horientation hl hr validP i t hleft using 1
     · have hright :
           cut.left.length ≤
             (positiveCutSideIndex
@@ -1273,13 +1273,13 @@ theorem positivePreMap_occurrenceSide
       simp only [occurrenceSide, PolygonGluing.Side.point]
       convert
         positivePreMap_selected_side_of_not_lt
-          P cut horientation hl hr validP i t hright using 1 <;> rfl
+          P cut horientation hl hr validP i t hright using 1
   · rw [positiveMapOccurrence_retained
       P cut horientation hl hr hface i]
     simp only [occurrenceSide, PolygonGluing.Side.point]
     convert
       positivePreMap_retained_side
-        P cut horientation hl hr validP hface i t using 1 <;> rfl
+        P cut horientation hl hr validP hface i t using 1
 
 /-- The transported occurrence carries exactly the retained old dart. -/
 theorem positiveMapOccurrence_dart

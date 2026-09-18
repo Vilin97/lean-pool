@@ -41,7 +41,7 @@ theorem familyNorm_lipschitz : LipschitzWith ‖(familyHilbertMap : (I → H) �
     => H))‖₊
     (familyNorm : (I → H) → ℝ) := by
   have h := lipschitzWith_one_norm.comp (familyHilbertMap : (I → H) →L[ℝ] PiLp 2 (fun _ : I =>
-      H)).lipschitz
+      H)).lipschitzWith
   simpa only [one_mul, Function.comp_def, ← familyNorm_eq_piLp] using h
 
 /-- The actual scalar finite-family norm represented in Bochner L² time. -/

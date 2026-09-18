@@ -67,7 +67,7 @@ theorem heptagon_x_degree : vertexDegree heptagon 7225 6649 5353 0 = 5 := by
         ({2, 3, 4, 5, 6} : Finset (Fin 7)).card := by
       apply vertexDegree_eq_of_neighbors
       intro j
-      fin_cases j <;> norm_num [heptagon, sqDist] <;> decide
+      fin_cases j <;> norm_num [heptagon, sqDist]
     _ = 5 := by decide
 
 /-- Attempt 3's exact nine-point low-altitude insertion witness. -/

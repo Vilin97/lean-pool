@@ -5566,7 +5566,7 @@ private theorem scalarOperatorKernel_posSemidef {I : Type u}
     (K : Matrix I I ℂ) (hK : K.PosSemidef) :
     (scalarOperatorKernel K).PosSemidef := by
   apply ((RKHS.posSemidef_tfae
-    (K := scalarOperatorKernel K)).out 2 0).mp
+    (K := scalarOperatorKernel K)).out 3 1).mp
   constructor
   · apply Matrix.IsHermitian.ext
     intro g h
@@ -6444,7 +6444,7 @@ private theorem kazhdan_generator_displacement_of_orthogonal_invariants
       (orthogonalRepresentation π)
       (orthogonalRepresentation_no_fixed π) z hz
   refine ⟨g, hg, ?_⟩
-  simpa only [Submodule.coe_norm, orthogonalRepresentation, MonoidHom.coe_mk, OneHom.coe_mk,
+  simpa only [← Submodule.norm_coe, orthogonalRepresentation, MonoidHom.coe_mk, OneHom.coe_mk,
     orthogonalLinearIsometryEquiv, map_inv, LinearIsometryEquiv.coe_inv, LinearIsometryEquiv.coe_mk,
       LinearEquiv.coe_mk,
     LinearMap.coe_mk, AddHom.coe_mk, AddSubgroupClass.coe_sub] using hgap

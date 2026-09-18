@@ -400,14 +400,11 @@ also `⋖_` is well-founded via `RelHomClass.wellFounded`. -/
 theorem edge.wellFounded {Hist : History} {X : Sequent} {tab : Tableau Hist X} : WellFounded
     (@edge Hist X tab) := by
   apply @RelHomClass.wellFounded _ Nat (@edge Hist X tab) Nat.lt _ _ _ edgeNatLTRelHom
-  have := instWellFoundedLTNat
-  rcases this with ⟨nat_wf⟩
-  exact nat_wf
+  exact instWellFoundedLTNat
 
 instance edge.isAsymm {Hist : History} {X : Sequent} {tab : Tableau Hist X} : @Std.Asymm
-    (PathIn tab) edge := by
-  constructor
-  apply WellFounded.asymmetric edge.wellFounded
+    (PathIn tab) edge :=
+  edge.wellFounded.asymm
 
 theorem edge_is_strict_ordering {Hist X} {tab : Tableau Hist X} {s t : PathIn tab} : s ⋖_ t → s ≠
   t := by
@@ -510,7 +507,7 @@ instance {Hist X} {tab : Tableau Hist X} : LE (PathIn tab) := ⟨Relation.ReflTr
 /-- The "<" in a tableau is antisymmetric. -/
 instance edge.TransGen_isAsymm {Hist : History} {X : Sequent} {tab : Tableau Hist X} : @Std.Asymm
     (PathIn tab) (Relation.TransGen edge) :=
-  ⟨WellFounded.asymmetric (WellFounded.transGen wellFounded)⟩
+  (WellFounded.transGen wellFounded).asymm
 
 theorem not_path_nil {Hist X} {tab : Tableau Hist X} {a : PathIn tab} : ¬(a < PathIn.nil) := by
   intro con

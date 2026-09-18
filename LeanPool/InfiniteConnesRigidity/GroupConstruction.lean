@@ -4810,7 +4810,7 @@ private theorem measurable_polynomialCharacterCoefficient
 private theorem measurable_polynomialCharacterCoefficients (i : Fin 2) :
     Measurable (fun χ : PolynomialRankTwoCharacter =>
       polynomialCharacterCoefficients χ i) := by
-  exact measurable_pi_lambda _ fun n =>
+  exact Measurable.of_eval fun n =>
     measurable_polynomialCharacterCoefficient i n
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -6263,7 +6263,7 @@ private theorem shalom_normalizedFixedVector_of_relativePair
         ((‖p‖ : ℂ)⁻¹) • (p : W)‖ < _
     rw [map_smul, ← smul_sub, norm_smul, norm_inv,
       Complex.norm_real, Real.norm_of_nonneg (norm_nonneg p)]
-    simpa only [Submodule.coe_norm, div_eq_mul_inv, mul_comm] using hfrac
+    simpa only [← Submodule.norm_coe, div_eq_mul_inv, mul_comm] using hfrac
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem shalom_normalizedConstantFixedVector_of_integerPair
@@ -8130,8 +8130,7 @@ private theorem blockCoefficients_map_mulLeft (f : R) (w : TensorProduct F R R)
     blockCoefficients
         ((TensorProduct.map (LinearMap.mulLeft F f) LinearMap.id) w) n =
       f * blockCoefficients w n := by
-  induction w using TensorProduct.induction_on with
-  | zero => simp only [map_zero, Finsupp.coe_zero, Pi.zero_apply, mul_zero]
+  induction w with
   | tmul u v =>
       simp only [TensorProduct.map_tmul, LinearMap.mulLeft_apply, LinearMap.id_coe, id_eq,
         blockCoefficients_tmul, Algebra.mul_smul_comm]
@@ -8292,8 +8291,7 @@ private theorem tensorCoords_transvection
       tensorCoords w i k +
         (TensorProduct.map (LinearMap.mulLeft F f) LinearMap.id)
           (tensorCoords w j k) := by
-  induction w using TensorProduct.induction_on with
-  | zero => simp only [map_zero, Pi.zero_apply, add_zero]
+  induction w using TensorProduct.inductionOn with
   | tmul u v =>
       simp only [transvectionTensor, TensorProduct.congr_tmul, LinearEquiv.restrictScalars_apply,
         tensorCoords_tmul, transvection_linear_apply_coordinate, ↓reduceIte, hik.symm, add_zero,

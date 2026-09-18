@@ -63,7 +63,7 @@ theorem multilinear_norm_le_coordinate_sum {F : Type*} [NormedAddCommGroup F] [N
       apply Finset.sum_le_sum
       intro w _
       apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-      exact Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun j _ => PiLp.norm_apply_le (m j) (w
+      exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun j _ => PiLp.norm_apply_le (m j) (w
           j))
     _ = _ := by rw [← Finset.mul_sum]; ring
 

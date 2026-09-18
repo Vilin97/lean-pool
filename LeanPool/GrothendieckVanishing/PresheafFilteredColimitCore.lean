@@ -560,7 +560,7 @@ theorem sheafH_filtered_colimit_comparison_succ_compatibility
   rw [show (sheafHFilteredColimitSuccShiftDomainIso Ysh n h_mid_n h_mid_succ).hom =
       (HasColimit.isoOfNatIso (sheafHFilteredColimitSuccShiftNatIso Ysh n
         h_mid_n h_mid_succ)).hom from rfl]
-  rw [HasColimit.isoOfNatIso_ι_hom_assoc]
+  rw [HasColimit.ι_isoOfNatIso_hom_assoc]
   rw [colimit_ι_sheafH_filtered_colimit_comparison]
   rw [show
       colimit.ι (sheafHFilteredColimitSuccQuotient Ysh ⋙ sheafCohomologyFunctor X n) j ≫

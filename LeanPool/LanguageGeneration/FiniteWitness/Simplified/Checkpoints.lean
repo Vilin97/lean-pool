@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
 import LeanPool.LanguageGeneration.FiniteWitness.Simplified.FirstPoints
-import Mathlib.Logic.Denumerable
+import Mathlib.Basic.Denumerable
 
 /-!
 # Checkpoint interface and its construction from an enumeration

@@ -137,7 +137,7 @@ theorem average_integrable_of_memLp {t : ℝ} (ht : 0 < t)
     Integrable (fun y : Space => kernel t y • f (x+y)) := by
   have hs : MemLp (fun y : Space => f (x+y)) 2 volume :=
     hf.comp_measurePreserving (measurePreserving_add_left (volume : Measure Space) x)
-  exact memLp_one_iff_integrable.mp (hs.smul (kernel_memLp ht))
+  exact memLp_one_iff_integrable.mp ((kernel_memLp ht).smul hs)
 
 theorem average_sub {t : ℝ} (ht : 0 < t) (f g : Space → V)
     (hf : MemLp f 2 volume) (hg : MemLp g 2 volume) (x : Space) :

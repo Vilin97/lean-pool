@@ -298,7 +298,7 @@ noncomputable instance instEuclideanDomain : EuclideanDomain R where
 
 /-- `R` is a principal ideal ring, since every Euclidean domain is one. -/
 instance instPrincipalIdealRing : IsPrincipalIdealRing R :=
-  EuclideanDomain.to_principal_ideal_domain
+  EuclideanDomain.instIsPrincipalIdealRing
 
 /-- `R` is a unique factorization domain, since every principal ideal ring is one. -/
 instance instUniqueFactorizationMonoid : UniqueFactorizationMonoid R := inferInstance

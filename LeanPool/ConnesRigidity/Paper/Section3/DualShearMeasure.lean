@@ -446,8 +446,7 @@ theorem characterProductHaar_map :
       characterProductHomeomorph.continuous
       characterProductHomeomorph.symm.continuous
   have _ : IsProbabilityMeasure (Measure.map characterProductEquiv μ) :=
-    μ.isProbabilityMeasure_map
-      characterProductHomeomorph.continuous.measurable.aemeasurable
+    inferInstance
   rw [NormalizedHaar.productHaar_eq_normalizedAddHaar]
   exact NormalizedHaar.normalizedAddHaar_unique _
     (Measure.map characterProductEquiv μ)
@@ -521,8 +520,7 @@ theorem coordinateHaar_map :
       coordinateProductHomeomorph.continuous
       coordinateProductHomeomorph.symm.continuous
   have _ : IsProbabilityMeasure (Measure.map coordinateProductEquiv μ) :=
-    μ.isProbabilityMeasure_map
-      coordinateProductHomeomorph.continuous.measurable.aemeasurable
+    inferInstance
   rw [NormalizedHaar.productHaar_eq_normalizedAddHaar]
   exact NormalizedHaar.normalizedAddHaar_unique _
     (Measure.map coordinateProductEquiv μ)

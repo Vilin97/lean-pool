@@ -223,7 +223,8 @@ private lemma gff_pushforward_charFun
     Complex.exp (-(1/2 : ℂ) * t^2 * (freeCovarianceFormR m φ φ : ℝ)) := by
   have : IsProbabilityMeasure
       ((gaussianFreeFieldFree m).toMeasure.map (distributionPairingCLM φ)) :=
-    Measure.isProbabilityMeasure_map ((distributionPairingCLM_measurable φ).aemeasurable)
+    (Measure.isProbabilityMeasure_map_iff
+      ((distributionPairingCLM_measurable φ).aemeasurable)).mpr inferInstance
   rw [charFun_eq_GJGeneratingFunctional]
   have h_char := gff_real_characteristic m (t • φ)
   rw [h_char]
@@ -241,7 +242,8 @@ theorem gff_pairing_is_gaussian
     = gaussianReal 0 (freeCovarianceFormR m φ φ).toNNReal := by
   have : IsProbabilityMeasure
       ((gaussianFreeFieldFree m).toMeasure.map (distributionPairingCLM φ)) :=
-    Measure.isProbabilityMeasure_map ((distributionPairingCLM_measurable φ).aemeasurable)
+    (Measure.isProbabilityMeasure_map_iff
+      ((distributionPairingCLM_measurable φ).aemeasurable)).mpr inferInstance
   apply charFun_implies_gaussian
   intro t
   rw [gff_pushforward_charFun]

@@ -498,7 +498,7 @@ private lemma l2ChartToVolumeOnRhoSupportImage_toL2_of_tsupport_subset (i : dR.d
         simpa using
           (memLp_of_mem_C1c
             (μ := (volume : Measure E).restrict K) (E := E) (f := g.1) g.2)
-      exact hgmem.1.aemeasurable
+      exact hgmem.aestronglyMeasurable.aemeasurable
   have hez :
       ((ez (e (r x)) : E →₂[(volume : Measure E)] ℝ) : E → ℝ) =ᵐ[(volume : Measure E)]
         K.indicator fun z : E => (e (r x) : E → ℝ) z := by
@@ -621,7 +621,7 @@ private lemma l2ChartToVolumeOnRhoSupportImage_toL2Grad_of_tsupport_subset (i : 
         simpa using
           (memLp_grad_of_mem_C1c
             (μ := (volume : Measure E).restrict K) (E := E) (f := g.1) g.2)
-      exact hgmem.1.aemeasurable
+      exact hgmem.aestronglyMeasurable.aemeasurable
   have hez :
       ((ez (e (r x)) : E →₂[(volume : Measure E)] E) : E → E) =ᵐ[(volume : Measure E)]
         K.indicator fun z : E => (e (r x) : E → E) z := by

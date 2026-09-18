@@ -114,7 +114,6 @@ theorem vectorCurl_convection (u : Space → Space) (hu : ContDiff ℝ ∞ u) (x
   simp only [vectorCurl, curl_apply]
   fin_cases i <;>
     norm_num [Fin.sum_univ_three, Fin.add_def] <;>
-    simp only [show (⟨2, by decide⟩ : Fin 3) = 2 from rfl] <;>
     simp only [hcomm01, hcomm02, hcomm12] <;> ring!
 
 /-- The form of curl transport used for incompressible Euler. -/

@@ -5,7 +5,7 @@ Authors: Dhruv Gupta
 -/
 import Mathlib.Order.BoundedOrder.Basic
 import Mathlib.Topology.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.Basic
 import Mathlib.Data.Finset.Basic
 
 /-!

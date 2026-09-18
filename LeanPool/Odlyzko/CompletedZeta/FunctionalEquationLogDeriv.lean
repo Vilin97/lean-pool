@@ -76,12 +76,12 @@ theorem logDeriv_completedDedekindXi_rightHalfPlane {s : ℂ}
       (differentiableAt_dedekindZeta K hs)
   change logDeriv
     (fun z : ℂ ↦ z * (z - 1) * CompletedZeta.completed K z) s = _
-  rw [logDeriv_mul (f := fun z : ℂ ↦ z * (z - 1))
+  rw [logDeriv_fun_mul (f := fun z : ℂ ↦ z * (z - 1))
       (g := CompletedZeta.completed K) s hprod0
       (completedDedekindZeta_ne_zero_of_one_lt_re K hs)
       (hdiffS.mul hdiffS1)
       hdiffCompleted,
-    logDeriv_mul (f := fun z : ℂ ↦ z) (g := fun z : ℂ ↦ z - 1)
+    logDeriv_fun_mul (f := fun z : ℂ ↦ z) (g := fun z : ℂ ↦ z - 1)
       s hs0 hs1 hdiffS hdiffS1,
     logDeriv_apply, logDeriv_apply]
   simp only [deriv_id'', deriv_sub_const, one_div]

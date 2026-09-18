@@ -47,9 +47,9 @@ theorem finite_domination {ι : Type*} (μ : Measure X) (I : Finset ι)
     funext x
     simp only [Finset.sum_apply]
   have hn : eLpNorm f 2 μ ≤ ∑ i ∈ I, eLpNorm (H i) 2 μ := by
-    apply (eLpNorm_mono_ae_real (Eventually.of_forall hdom)).trans
+    apply (eLpNorm_mono_ae_real hf (Eventually.of_forall hdom)).trans
     rw [he]
-    exact eLpNorm_sum_le (fun i hi => (hH i hi).aestronglyMeasurable) (by norm_num)
+    exact eLpNorm_sum_le (by norm_num)
   have hr := ENNReal.toReal_mono (ENNReal.sum_ne_top.mpr (fun i hi => (hH i hi).eLpNorm_ne_top)) hn
   rwa [ENNReal.toReal_sum (fun i hi => (hH i hi).eLpNorm_ne_top)] at hr
 
@@ -85,8 +85,9 @@ theorem clm_apply_memLp_and_bound
   have hHnorm (j : ℕ) : (eLpNorm (H j) 2 μ).toReal =
       a j*(eLpNorm (fun x => iteratedFDeriv ℝ (n-j) g (σ x)) 2 μ).toReal := by
     have he : H j = a j • (fun x => ‖iteratedFDeriv ℝ (n-j) g (σ x)‖) := rfl
-    rw [he,eLpNorm_const_smul,eLpNorm_norm,ENNReal.toReal_mul,toReal_enorm,Real.norm_of_nonneg (ha
-        j)]
+    rw [he,eLpNorm_const_smul,
+      eLpNorm_norm _ (hLp (n-j) (Nat.sub_le n j)).aestronglyMeasurable,
+      ENNReal.toReal_mul,toReal_enorm,Real.norm_of_nonneg (ha j)]
   simp_rw [hHnorm]
   calc
     _ ≤ ∑ j ∈ Finset.range (n+1), a j*(C*majorant R e (n-j)) :=

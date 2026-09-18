@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 

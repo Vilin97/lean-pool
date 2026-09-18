@@ -5,7 +5,7 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.Topology.Algebra.Module.Multilinear.Basic
 import Mathlib.Analysis.Complex.OperatorNorm

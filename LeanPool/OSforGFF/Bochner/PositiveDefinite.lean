@@ -5,7 +5,7 @@ Authors: Michael R. Douglas
 -/
 
 
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.Complex.Order
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Fintype.Basic

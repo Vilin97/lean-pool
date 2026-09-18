@@ -217,6 +217,8 @@ theorem product_word_L2_le {n : ℕ} (hn : n ≤ 6) (w : Fin n → Fin 4)
           := by
   have hq := productEnvelope_memLp period f g hfL2 hgL2
   have hA := eLpNorm_le_mul_eLpNorm_of_ae_le_mul (μ := liftMeasure period)
+    ((smoothField_continuous period _ (iteratedFieldDerivative_smooth period w (f*g)
+      (product_smooth period f g hf hg))).aestronglyMeasurable)
     (Filter.Eventually.of_forall (fun x => show ‖iteratedFieldDerivative period w (f*g) x‖ ≤
       (64 * lowDerivativeConstant period) * ‖productEnvelope period f g x‖ by
         rw [Real.norm_of_nonneg (productEnvelope_nonneg period f g x)]
