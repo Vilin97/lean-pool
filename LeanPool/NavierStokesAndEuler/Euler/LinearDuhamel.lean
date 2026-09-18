@@ -182,10 +182,9 @@ theorem solution_unique (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) (a : ℝ → E)
     have hd := (U.backward_derivative ⟨s,hs⟩).clm_apply
       ((ha ⟨s,hs⟩).sub (U.solution_derivative f a₀ ⟨s,hs⟩))
     convert hd using 1
-    · rfl
-    · simp only [neg_apply, comp_apply, extendPath, projIcc_of_mem hT hs,
-        Pi.sub_apply, map_sub, map_add, solution, ContinuousMap.coe_mk]
-      abel
+    simp only [neg_apply, comp_apply, extendPath, projIcc_of_mem hT hs,
+      Pi.sub_apply, map_sub, map_add, solution, ContinuousMap.coe_mk]
+    abel
   have hconst : q t = q 0 := by
     have hbound := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le (C := 0) hq
       (fun s hs => by simp) (convex_Icc (0 : ℝ) T)

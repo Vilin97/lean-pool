@@ -30,7 +30,7 @@ theorem gamma_bound (k n : ℕ) {x : K} (hx : ‖x‖ < 1) :
   refine mul_le_mul_of_nonneg_left ?_ (by simp)
   trans ∏ i ∈ Finset.Ico (k + 1) (n + 1 + (k + 1)), (1 + ‖x‖ ^ i)
   · rw [Finset.prod_Ico_eq_prod_range, Nat.add_sub_cancel]
-    apply Finset.prod_le_prod (by simp) fun _ _ ↦ (norm_sub_le _ _).trans_eq ?_
+    apply Finset.prod_le_prod₀ (by simp) fun _ _ ↦ (norm_sub_le _ _).trans_eq ?_
     rw [norm_one, norm_pow]
     ring
   have : Multipliable (1 + ‖x‖ ^ ·) := multipliable_one_add_of_summable (by simpa using hx)

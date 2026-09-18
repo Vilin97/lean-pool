@@ -5,7 +5,7 @@ Authors: Palalansoukî
 -/
 
 import LeanPool.Incompleteness.Arithmetization.Basic.Ind
-import Mathlib.Logic.Nonempty
+import Mathlib.Basic.Nonempty
 
 /-! # IOpen -/
 

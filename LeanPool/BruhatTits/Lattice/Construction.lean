@@ -712,7 +712,7 @@ lemma Lattice.standard_M :
 lemma map_subtype_smul_standard_eq_standard (g : GL (Fin 2) R) :
     Matrix.GeneralLinearGroup.map R.subtype g • Lattice.standard R = Lattice.standard R := by
   ext : 1
-  rw [Lattice.smul_M, Lattice.standard_M, Matrix.GeneralLinearGroup.smul_def]
+  rw [Lattice.smul_M, Lattice.standard_M, Matrix.GeneralLinearGroup.smul_submodule_def]
   simp only [Matrix.GeneralLinearGroup.val_map_apply, Subring.coe_subtype]
   have (x : Fin 2 → R) :
       (g.val.map Subtype.val).mulVec (((Algebra.linearMap (↥R) K).compLeft (Fin 2)) x) =

@@ -146,7 +146,6 @@ lemma image_extend_eq_image (γ : Dipath x y) (a b : I) :
     refine ⟨t, t_ab, ?_⟩
     rw [← ht]
     convert Path.extend_apply γ.toPath ⟨le_trans a.2.1 t_ab.1, le_trans t_ab.2 b.2.2⟩
-    rfl
 
 /-! ### Reflexive dipaths -/
 

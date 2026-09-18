@@ -103,7 +103,7 @@ def WgRefinedCap (g k : ℕ) : ℕ := ∏ p ∈ Nat.primesBelow (k + 1), p ^ min
 /-- `1 ≤ WgRefinedCap g k` (empty/prime-power factors are all `≥ 1`).
 Mirrors `smoothCapacity_pos`. -/
 lemma wgRefinedCap_pos (g k : ℕ) : 1 ≤ WgRefinedCap g k :=
-  Finset.one_le_prod' fun _p hp => Nat.one_le_pow _ _ (Nat.prime_of_mem_primesBelow hp).pos
+  Finset.one_le_prod fun _p hp => Nat.one_le_pow _ _ (Nat.prime_of_mem_primesBelow hp).pos
 
 lemma wgRefinedCap_ne_zero (g k : ℕ) : WgRefinedCap g k ≠ 0 :=
   Nat.one_le_iff_ne_zero.mp (wgRefinedCap_pos g k)

@@ -181,7 +181,7 @@ theorem iteratedFDeriv_comp_inv_smul_le {χ : D → F} {n : ℕ} (hχ : ContDiff
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
       calc
         ∏ _ : Fin n, ‖dilation D R‖ ≤ ∏ _ : Fin n, R⁻¹ :=
-          Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun _ _ => norm_dilation_le hR)
+          Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun _ _ => norm_dilation_le hR)
         _ = (R⁻¹) ^ n := by simp
     _ ≤ C * (R⁻¹) ^ n := mul_le_mul_of_nonneg_right (hC _) (by positivity)
     _ = C / R ^ n := by simp [div_eq_mul_inv]

@@ -297,10 +297,7 @@ lemma range_map_subtype_le_ideal_map {A : Type u_1} [CommRing A] [IsLocalRing A]
       (↥(IsLocalRing.maximalIdeal A : Submodule A A))).surjective z
   change (AdicCompletion.map _ (Submodule.subtype _))
     ((AdicCompletion.ofTensorProduct _ _) t) ∈ _
-  induction t using TensorProduct.induction_on with
-  | zero =>
-    rw [map_zero]
-    exact Submodule.zero_mem _
+  induction t using TensorProduct.inductionOn with
   | tmul a m =>
     rw [AdicCompletion.ofTensorProduct_tmul, map_smul, AdicCompletion.map_of]
     exact Ideal.mul_mem_left _ a (Ideal.mem_map_of_mem _ m.property)
@@ -425,10 +422,7 @@ lemma range_map_subtype_pow_le {A : Type u_1} [CommRing A] [IsLocalRing A]
       (↥(M ^ n : Submodule A A))).surjective z
   change (AdicCompletion.map _ (Submodule.subtype _))
     ((AdicCompletion.ofTensorProduct _ _) t) ∈ _
-  induction t using TensorProduct.induction_on with
-  | zero =>
-    rw [map_zero]
-    exact Submodule.zero_mem _
+  induction t using TensorProduct.inductionOn with
   | tmul a m =>
     rw [AdicCompletion.ofTensorProduct_tmul, map_smul, AdicCompletion.map_of]
     exact Ideal.mul_mem_left _ a (Ideal.mem_map_of_mem _ m.property)

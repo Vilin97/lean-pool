@@ -499,7 +499,7 @@ theorem logDeriv_completedZetaPoleFactor_eq
     logDeriv completedZetaPoleFactor s =
       completedZetaPoleLogDeriv s := by
   unfold completedZetaPoleFactor completedZetaPoleLogDeriv
-  rw [logDeriv_mul]
+  rw [logDeriv_fun_mul]
   · simp only [logDeriv_apply, deriv_sub_const,
       deriv_id'', one_div]
   · simp_all

@@ -166,7 +166,7 @@ def multilinearValue (L : ContinuousMultilinearMap ℝ V W)
     (L.cont.comp (continuous_pi (fun i => (f i).continuous)))
     (‖L‖ * ∏ i, ‖f i‖) (fun x => (L.le_opNorm _).trans
       (mul_le_mul_of_nonneg_left
-        (Finset.prod_le_prod (fun _ _ => norm_nonneg _)
+        (Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
           (fun i _ => (f i).norm_coe_le_norm x)) (norm_nonneg L)))
 
 @[simp] theorem multilinearValue_apply (L : ContinuousMultilinearMap ℝ V W)

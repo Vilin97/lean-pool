@@ -80,7 +80,7 @@ theorem kronecker_roots {p : Polynomial ℤ} (hm : p.Monic)
   have hgen : (algebraMap K ℂ) x = z := IntermediateField.AdjoinSimple.algebraMap_gen ℚ z
   have hinj : Function.Injective (algebraMap K ℂ) := (algebraMap K ℂ).injective
   have hxi : IsIntegral ℤ x := by
-    exact (isIntegral_algebraMap_iff hinj).mp (hgen ▸ hint)
+    exact isIntegral_algebraMap_iff.mp (hgen ▸ hint)
   -- the generator is itself a root of p inside K
   have hpx : (Polynomial.aeval x) p = 0 := by
     apply hinj

@@ -405,8 +405,7 @@ lemma integrableOn_aux (x : ℝ × ℝ)
     simp at hy
     apply div_nonneg (by norm_num)
     simp only [sub_nonneg]
-    apply mul_le_one₀ _ (by linarith) (by linarith)
-    linarith
+    exact (mul_le_of_le_one_left (by linarith) (by linarith)).trans (by linarith)
 
 lemma JENN_eq_triple_aux' (x : ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1) :
     ∫⁻ (w : ℝ) in Set.Ioo 0 1, ENNReal.ofReal (1 / (1 - (1 - x.1 * x.2) * w)) =
@@ -435,8 +434,7 @@ lemma JENN_eq_triple_aux' (x : ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 
       · simp only [h, true_and] at hs
         apply div_nonneg (by norm_num)
         simp only [sub_nonneg]
-        apply mul_le_one₀ _ (by linarith) (by linarith)
-        linarith
+        exact (mul_le_of_le_one_left (by linarith) (by linarith)).trans (by linarith)
       · tauto
 
 lemma JENN_eq_triple_aux (x : ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1) :
@@ -467,9 +465,9 @@ lemma JENN_eq_triple_aux (x : ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0
     · simp only [Left.nonneg_neg_iff]
       apply Real.log_nonpos
       · apply mul_nonneg (by linarith) (by linarith)
-      · apply mul_le_one₀ (by linarith) (by linarith) (by linarith)
+      · exact (mul_le_of_le_one_left (by linarith) (by linarith)).trans (by linarith)
     · simp only [sub_nonneg]
-      apply mul_le_one₀ (by linarith) (by linarith) (by linarith)
+      exact (mul_le_of_le_one_left (by linarith) (by linarith)).trans (by linarith)
 
 lemma JENN_eq_triple (r s : ℕ) : JENN r s =
     ∫⁻ (x : ℝ × ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,

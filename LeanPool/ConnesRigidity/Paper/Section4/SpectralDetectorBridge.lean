@@ -70,7 +70,7 @@ The `paperMeasureOfRaw` construction used in the Connes rigidity formalization.
 -/
 def paperMeasureOfRaw (μ : ProbabilityMeasure Raw) :
     ProbabilityMeasure Paper :=
-  μ.map rawToPaper_measurable.aemeasurable
+  μ.map rawToPaper
 
 /- The two definitions of the dual action agree under the type-tag equivalence. Paper: §4. -/
 theorem raw_action_to_paper

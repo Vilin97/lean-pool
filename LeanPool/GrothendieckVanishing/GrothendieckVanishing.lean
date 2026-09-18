@@ -127,7 +127,7 @@ theorem GrothendieckVanishing (X : TopCat.{u}) [NoetherianSpace X]
     (n : ℕ) (h : n > topologicalKrullDim X)
     (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
     Subsingleton (Sheaf.H F n) := by
-  have hwf : WellFounded (fun (a b : WithBot ℕ∞) ↦ a < b) := IsWellFounded.wf
+  have hwf : WellFounded (fun (a b : WithBot ℕ∞) ↦ a < b) := inferInstance
   exact hwf.induction (C := fun d ↦
     ∀ (X : TopCat.{u}) [NoetherianSpace X]
       (n : ℕ) (F : TopCat.Sheaf AddCommGrpCat.{u} X),

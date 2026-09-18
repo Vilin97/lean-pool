@@ -1524,7 +1524,7 @@ private theorem angularCoverProjection_measurePreserving {n : ℕ}
     unfold angularFundamentalBox
     exact MeasurableSet.univ_pi' (fun _ => measurableSet_Ioc)
   have hp : Measurable (angularCoverProjection n) := by
-    apply measurable_pi_lambda
+    apply Measurable.of_eval
     intro i
     exact AddCircle.measurable_mk'.comp (measurable_pi_apply i)
   refine ⟨hp, ?_⟩
@@ -7652,7 +7652,7 @@ theorem complexLp_norm_le_of_ae_norm_le
     ‖hf.toLp f‖ ≤ C * ‖hg.toLp g‖ := by
   have hsemi :=
     MeasureTheory.eLpNorm_le_mul_eLpNorm_of_ae_le_mul
-      hbound (2 : ℝ≥0∞)
+      hf.aestronglyMeasurable hbound (2 : ℝ≥0∞)
   have htop :
       ENNReal.ofReal C * eLpNorm g 2 μ ≠ ⊤ :=
     ENNReal.mul_ne_top ENNReal.ofReal_ne_top hg.eLpNorm_ne_top

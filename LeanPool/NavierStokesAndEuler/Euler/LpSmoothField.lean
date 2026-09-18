@@ -112,13 +112,16 @@ theorem translation_contDiff (A : SmoothL2Field V) :
 theorem norm_jetLp_zero (A : SmoothL2Field V) : ‖A.jetLp 0‖ = ‖A.toLp‖ := by
   simp only [jetLp, toLp, Lp.norm_toLp]
   congr 1
-  exact eLpNorm_congr_norm_ae (Eventually.of_forall (fun x => norm_iteratedFDeriv_zero))
+  exact eLpNorm_congr_norm_ae (A.integrable 0).aestronglyMeasurable
+    A.memLp.aestronglyMeasurable (Eventually.of_forall (fun x => norm_iteratedFDeriv_zero))
 
 theorem norm_derivative_jetLp (A : SmoothL2Field V) (n : ℕ) :
     ‖A.derivative.jetLp n‖ = ‖A.jetLp (n+1)‖ := by
   simp only [jetLp, Lp.norm_toLp]
   congr 1
-  exact eLpNorm_congr_norm_ae (Eventually.of_forall (fun x => norm_iteratedFDeriv_fderiv))
+  exact eLpNorm_congr_norm_ae (A.derivative.integrable n).aestronglyMeasurable
+    (A.integrable (n + 1)).aestronglyMeasurable
+    (Eventually.of_forall (fun x => norm_iteratedFDeriv_fderiv))
 
 private theorem norm_iteratedFDeriv_translation_aux (n : ℕ) :
     ∀ (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] (A : SmoothL2Field V) (a : Space),

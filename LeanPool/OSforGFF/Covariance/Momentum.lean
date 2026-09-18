@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
@@ -72,7 +72,7 @@ lemma schwartz_L2_integrable (f : TestFunctionℂ) :
   -- Using Mathlib's `SchwartzMap.memLp` we know any Schwartz function lies in every `L^p` space.
   have hf_memLp : MemLp f 2 volume :=
     f.memLp 2 volume
-  have hf_meas : AEStronglyMeasurable f volume := hf_memLp.1
+  have hf_meas : AEStronglyMeasurable f volume := hf_memLp.aestronglyMeasurable
   -- Translate the `L^2` membership into integrability of the squared norm.
   simpa using (memLp_two_iff_integrable_sq_norm hf_meas).1 hf_memLp
 

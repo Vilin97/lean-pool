@@ -87,7 +87,7 @@ lemma weakDualEmbed_injective : Function.Injective (weakDualEmbed E) := by
     w.r.t. the cylinder σ-algebra (by definition).
 -/
 lemma measurable_weakDualEmbed : Measurable (weakDualEmbed E) := by
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro f
   exact WeakDual.eval_measurable f
 
@@ -1029,7 +1029,8 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
 lemma isProbabilityMeasure_map_projection [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν] :
     IsProbabilityMeasure (ν.map (measurableProjection (E := E))) :=
-  Measure.isProbabilityMeasure_map measurable_measurableProjection.aemeasurable
+  (Measure.isProbabilityMeasure_map_iff
+    measurable_measurableProjection.aemeasurable).mpr inferInstance
 
 /-- The characteristic functional of ν.map P equals Φ. -/
 lemma charFunctional_map_projection [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]

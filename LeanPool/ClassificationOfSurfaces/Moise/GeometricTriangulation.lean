@@ -82,6 +82,183 @@ namespace LeanEval
 namespace Topology
 namespace ClassificationOfSurfaces
 
+/-!
+### Barycentric coordinates on the standard simplex
+
+Mathlib replaced the set-valued `stdSimplex 𝕜 ι : Set (ι → 𝕜)` by the bundled
+`Convexity.StdSimplex`, whose elements carry a `Finsupp` of weights instead of a plain
+coordinate function.  Every complex in this development parametrizes its faces by honest
+barycentric coordinate functions `ι → ℝ`, so the section below keeps the set-valued simplex —
+and exactly the slice of its API that this project uses — as a definition of its own.  The
+statements and proofs are those of the corresponding Mathlib declarations, which are now
+deprecated.
+-/
+
+section StandardSimplex
+
+variable (𝕜 : Type*) (ι : Type*) [Semiring 𝕜] [PartialOrder 𝕜] [Fintype ι]
+
+/-- The standard simplex in the space of functions `ι → 𝕜` is the set of vectors with
+non-negative coordinates with total sum `1`. -/
+def stdSimplex : Set (ι → 𝕜) :=
+  {f | (∀ x, 0 ≤ f x) ∧ ∑ x, f x = 1}
+
+theorem stdSimplex_eq_inter :
+    stdSimplex 𝕜 ι = (⋂ x, {f : ι → 𝕜 | 0 ≤ f x}) ∩ {f | ∑ x, f x = 1} := by
+  ext f
+  simp only [stdSimplex, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
+
+theorem convex_stdSimplex [IsOrderedRing 𝕜] : Convex 𝕜 (stdSimplex 𝕜 ι) := by
+  refine fun f hf g hg a b ha hb hab => ⟨fun x => ?_, ?_⟩
+  · apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]
+  · simp_rw [Pi.add_apply, Pi.smul_apply]
+    rwa [Finset.sum_add_distrib, ← Finset.smul_sum, ← Finset.smul_sum, hf.2, hg.2, smul_eq_mul,
+      smul_eq_mul, mul_one, mul_one]
+
+variable {ι}
+
+variable {𝕜} in
+/-- All values of a function `f ∈ stdSimplex 𝕜 ι` belong to `[0, 1]`. -/
+theorem mem_Icc_of_mem_stdSimplex [IsOrderedAddMonoid 𝕜] {f : ι → 𝕜}
+    (hf : f ∈ stdSimplex 𝕜 ι) (x) : f x ∈ Set.Icc (0 : 𝕜) 1 :=
+  ⟨hf.1 x, hf.2 ▸ Finset.single_le_sum (fun y _ => hf.1 y) (Finset.mem_univ x)⟩
+
+/-- `stdSimplex 𝕜 ι` is a subset of the unit cube. -/
+theorem stdSimplex_subset_Icc [IsOrderedAddMonoid 𝕜] : stdSimplex 𝕜 ι ⊆ Set.Icc 0 1 := by
+  intro f h
+  rw [← Set.pi_univ_Icc, Set.univ_pi_eq_iInter, Set.mem_iInter]
+  simpa using fun i ↦ mem_Icc_of_mem_stdSimplex h i
+
+variable [DecidableEq ι] [ZeroLEOneClass 𝕜]
+
+theorem single_mem_stdSimplex (i : ι) : Pi.single i 1 ∈ stdSimplex 𝕜 ι :=
+  ⟨le_update_iff.2 ⟨zero_le_one, fun _ _ ↦ le_rfl⟩, by simp⟩
+
+end StandardSimplex
+
+section StandardSimplexTopology
+
+variable (𝕜 ι : Type*) [Fintype ι] [TopologicalSpace 𝕜] [Semiring 𝕜] [PartialOrder 𝕜]
+  [OrderClosedTopology 𝕜] [ContinuousAdd 𝕜]
+
+/-- `stdSimplex 𝕜 ι` is closed. -/
+theorem isClosed_stdSimplex : IsClosed (stdSimplex 𝕜 ι) := by
+  rw [stdSimplex_eq_inter]
+  apply IsClosed.inter
+  · exact isClosed_iInter fun i ↦ isClosed_le continuous_const (continuous_apply i)
+  · exact isClosed_eq (by fun_prop) continuous_const
+
+/-- `stdSimplex 𝕜 ι` is compact. -/
+theorem isCompact_stdSimplex [CompactIccSpace 𝕜] [IsOrderedAddMonoid 𝕜] :
+    IsCompact (stdSimplex 𝕜 ι) :=
+  IsCompact.of_isClosed_subset isCompact_Icc (isClosed_stdSimplex 𝕜 ι) (stdSimplex_subset_Icc 𝕜)
+
+instance stdSimplex.instCompactSpace_coe [CompactIccSpace 𝕜] [IsOrderedAddMonoid 𝕜] :
+    CompactSpace (stdSimplex 𝕜 ι) :=
+  isCompact_iff_compactSpace.mp <| isCompact_stdSimplex 𝕜 _
+
+end StandardSimplexTopology
+
+namespace stdSimplex
+
+variable {S : Type*} [Semiring S] [PartialOrder S]
+  {X Y Z : Type*} [Fintype X] [Fintype Y] [Fintype Z]
+
+@[macro_inline]
+instance : FunLike (stdSimplex S X) X S where
+  coe s := s.val
+  coe_injective := by aesop
+
+@[ext high]
+lemma ext {s t : stdSimplex S X} (h : (s : X → S) = t) : s = t := by
+  ext : 1
+  assumption
+
+@[simp] lemma zero_le (s : stdSimplex S X) (x : X) : 0 ≤ s x := s.2.1 x
+
+@[simp] lemma sum_eq_one (s : stdSimplex S X) : ∑ x, s x = 1 := s.2.2
+
+@[simp] lemma add_eq_one (s : stdSimplex S (Fin 2)) : s 0 + s 1 = 1 := by
+  simpa only [Fin.sum_univ_two] using sum_eq_one s
+
+section
+
+variable [IsOrderedRing S]
+
+@[simp] lemma le_one (s : stdSimplex S X) (x : X) : s x ≤ 1 := by
+  rw [← sum_eq_one s]
+  exact Finset.single_le_sum (by simp) (by simp)
+
+lemma image_linearMap (f : X → Y) :
+    Set.image (FunOnFinite.linearMap S S f) (stdSimplex S X) ⊆ stdSimplex S Y := by
+  classical
+  rintro _ ⟨s, ⟨hs₀, hs₁⟩, rfl⟩
+  refine ⟨fun y ↦ ?_, ?_⟩
+  · rw [FunOnFinite.linearMap_apply_apply]
+    exact Finset.sum_nonneg (by aesop)
+  · simp only [FunOnFinite.linearMap_apply_apply, ← hs₁]
+    exact Finset.sum_fiberwise Finset.univ f s
+
+/-- The map `stdSimplex S X → stdSimplex S Y` that is induced by a map `f : X → Y`. -/
+noncomputable def map (f : X → Y) (s : stdSimplex S X) : stdSimplex S Y :=
+  ⟨FunOnFinite.linearMap S S f s, image_linearMap f (by aesop)⟩
+
+@[simp] lemma map_coe (f : X → Y) (s : stdSimplex S X) :
+    ⇑(map f s) = FunOnFinite.linearMap S S f s := rfl
+
+@[simp] lemma map_id_apply (x : stdSimplex S X) : map id x = x := by
+  aesop
+
+lemma map_comp_apply (f : X → Y) (g : Y → Z) (x : stdSimplex S X) :
+    map g (map f x) = map (g.comp f) x := by
+  ext
+  simp [FunOnFinite.linearMap_comp]
+
+/-- The vertex corresponding to `x : X` in `stdSimplex S X`. -/
+abbrev vertex [DecidableEq X] (x : X) : stdSimplex S X :=
+  ⟨Pi.single x 1, single_mem_stdSimplex S x⟩
+
+@[simp] lemma vertex_coe [DecidableEq X] (x : X) :
+    ⇑(vertex (S := S) x) = Pi.single x 1 := rfl
+
+@[simp] lemma map_vertex [DecidableEq X] [DecidableEq Y] (f : X → Y) (x : X) :
+    map (S := S) f (vertex x) = vertex (f x) := by
+  aesop
+
+lemma continuous_map [TopologicalSpace S] [IsTopologicalSemiring S] (f : X → Y) :
+    Continuous (map (S := S) f) :=
+  Continuous.subtype_mk ((FunOnFinite.continuous_linearMap S S f).comp continuous_induced_dom) _
+
+lemma vertex_injective [Nontrivial S] [DecidableEq X] :
+    Function.Injective (vertex (S := S) (X := X)) := by
+  intro x y h
+  replace h := DFunLike.congr_fun h x
+  by_contra!
+  simp [Pi.single_eq_of_ne this] at h
+
+instance [Nonempty X] : Nonempty (stdSimplex S X) := by
+  classical
+  exact ⟨vertex (Classical.arbitrary _)⟩
+
+instance [Nontrivial S] [Nontrivial X] : Nontrivial (stdSimplex S X) where
+  exists_pair_ne := by
+    classical
+    obtain ⟨x, y, hxy⟩ := exists_pair_ne X
+    exact ⟨vertex x, vertex y, fun h ↦ hxy (vertex_injective h)⟩
+
+instance [Subsingleton X] : Subsingleton (stdSimplex S X) where
+  allEq s t := by
+    ext i
+    have (u : stdSimplex S X) : u i = 1 := by
+      rw [← sum_eq_one u, Finset.sum_eq_single i _ (by simp)]
+      intro j _ hj
+      exact (hj (Subsingleton.elim j i)).elim
+    simp [this]
+
+end
+
+end stdSimplex
+
 /-- The geometric realization of a finite family `F` of faces on a finite vertex type `V`: the
 points of the standard simplex on `V` whose support lies inside some face of `F`.  For a face `t`
 this carves out the geometric simplex spanned by `t`, so the realization is the finite union of

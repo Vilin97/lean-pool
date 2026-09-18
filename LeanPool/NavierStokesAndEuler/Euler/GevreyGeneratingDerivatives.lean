@@ -241,7 +241,7 @@ theorem norm_taylorComp_le_coefficient
       _ ≤ ((c.length.factorial : ℝ)^2*q.coeff c.length) *
           ∏ i, ((c.partSize i).factorial : ℝ)^2*p.coeff (c.partSize i) := by
         apply mul_le_mul (hQ _ (c.length_pos hn) c.length_le)
-        · exact Finset.prod_le_prod (fun i _ => norm_nonneg _)
+        · exact Finset.prod_le_prod₀ (fun i _ => norm_nonneg _)
             (fun i _ => hP _ (c.partSize_pos i) (c.partSize_le i))
         · exact Finset.prod_nonneg (fun i _ => norm_nonneg _)
         · exact mul_nonneg (sq_nonneg _) (hq _)

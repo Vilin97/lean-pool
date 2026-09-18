@@ -110,7 +110,7 @@ theorem sobolev_add_le (q : ℕ) (f g : LiftDomain period → F)
   have hfj := hfL2 j (by have := Finset.mem_range.1 hj; omega) w
   have hgj := hgL2 j (by have := Finset.mem_range.1 hj; omega) w
   have he := ENNReal.toReal_mono (ENNReal.add_ne_top.2 ⟨hfj.eLpNorm_ne_top, hgj.eLpNorm_ne_top⟩)
-    (eLpNorm_add_le hfj.1 hgj.1 (by norm_num : (1 : ℝ≥0∞) ≤ 2))
+    (eLpNorm_add_le (by norm_num : (1 : ℝ≥0∞) ≤ 2))
   simpa only [ENNReal.toReal_add hfj.eLpNorm_ne_top hgj.eLpNorm_ne_top] using he
 
 /-- Sum of actual Hq norms of all external derivative words of exactly order n. -/

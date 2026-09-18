@@ -238,8 +238,7 @@ theorem cdQuaternionEquiv_isCompIso : IsCompIso cdQuaternionEquiv where
   map_mul x y := by
     change (_ : Octonion) = Octonion.mul _ _
     ext i; fin_cases i <;>
-      simp [Octonion.mul, Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
-        Quaternion.imK_mul] <;> ring
+      simp [Octonion.mul] <;> ring
   map_nf x := by
     rw [CD.nf_eq, Octonion.nf_eq, Quaternion.nf_eq, Quaternion.nf_eq]
     simp [cdQuaternionEquiv_coords]

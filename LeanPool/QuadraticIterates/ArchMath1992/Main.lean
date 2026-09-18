@@ -188,7 +188,7 @@ theorem section1_equiv (ha : ¬IsSquare (-a : ℚ)) (n : ℕ) :
 theorem section1_squarefree (ha : ¬IsSquare (-a : ℚ)) (n : ℕ)
     (h : ∀ k ≥ 2, k ≤ n → ¬IsSquare |bSeq a k|) :
     Nonempty (GaloisGroup a n ≃* WreathPower n) := by
-  refine ((section1_equiv a ha n).out 2 0).mp ?_
+  refine ((section1_equiv a ha n).out 3 1).mp ?_
   refine ⟨fun i ↦ by simpa using bSeq_ne_zero a ha (Nat.le_add_left 1 (i : ℕ)), fun S hS hsq ↦ ?_⟩
   have hsq_int : IsSquare (∏ i ∈ S, bSeq a ((i : ℕ) + 1)) := by
     rwa [show (∏ i ∈ S, (bSeq a ((i : ℕ) + 1) : ℚ))

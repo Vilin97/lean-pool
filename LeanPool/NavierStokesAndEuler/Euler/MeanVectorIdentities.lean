@@ -158,10 +158,8 @@ theorem vectorCurl_vectorCurl (f : Space → Space) (hf : ContDiff ℝ ∞ f) :
     have h₂ : d 2 1 2 = d 2 2 1 := hcomm 2 1 2 x
     linarith
   · norm_num [Fin.sum_univ_three, Fin.add_def]
-    change d 0 2 0 - d 2 0 0 - (d 2 1 1 - d 1 2 1) =
-      d 0 0 2 + d 1 1 2 + d 2 2 2 - (d 2 0 0 + d 2 1 1 + d 2 2 2)
-    have h₁ : d 0 2 0 = d 0 0 2 := hcomm 0 2 0 x
-    have h₂ : d 1 2 1 = d 1 1 2 := hcomm 1 2 1 x
+    have h₁ := hcomm 0 2 0 x
+    have h₂ := hcomm 1 2 1 x
     linarith
 
 theorem divergence_compact (f : Space → Space) (hf : ContDiff ℝ ∞ f)

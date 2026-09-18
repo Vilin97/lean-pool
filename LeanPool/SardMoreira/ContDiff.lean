@@ -82,7 +82,8 @@ theorem length_eq_iff : c.length = n ↔ c = atomic n := by
     suffices ∀ i, emb i 0 = i by
       ext i j : 2
       convert this i
-    rw [← funext_iff, ← StrictMono.range_inj, Surjective.range_eq, Surjective.range_eq]
+    rw [← funext_iff, ← StrictMono.range_inj_of_wellFoundedLT, Surjective.range_eq,
+      Surjective.range_eq]
     exacts [surjective_id, Finite.surjective_of_injective parts_strictMono.injective,
       parts_strictMono, strictMono_id]
   rfl

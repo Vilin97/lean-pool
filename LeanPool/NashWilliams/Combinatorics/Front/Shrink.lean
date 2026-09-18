@@ -130,15 +130,15 @@ theorem tree_shrink_subset {N : ℕ → ℕ} : tree (shrink F N) ⊆ tree F := b
 rank at most that of the front. -/
 theorem IsFront.shrink_rank_le (hF : IsFront F M) {E : ℕ → ℕ} (hE : StrictMono E) :
     (shrink_isFront hF hE).rank ≤ hF.rank := by
-  have iF : IsWellFounded (List ℕ) (treeExt F) := ⟨hF.wellFounded_treeExt⟩
-  have iS : IsWellFounded (List ℕ) (treeExt (shrink F (M ∘ E))) :=
-    ⟨(shrink_isFront hF hE).wellFounded_treeExt⟩
+  have iF : WellFounded (treeExt F) := hF.wellFounded_treeExt
+  have iS : WellFounded (treeExt (shrink F (M ∘ E))) :=
+    (shrink_isFront hF hE).wellFounded_treeExt
   -- The identity is a relation homomorphism `treeExt (shrink F N) →r treeExt F`.
   let φ : treeExt (shrink F (M ∘ E)) →r treeExt F :=
     ⟨id, by
       rintro x y ⟨hx, hy, hyx, hne⟩
       exact ⟨tree_shrink_subset hx, tree_shrink_subset hy, hyx, hne⟩⟩
-  change IsWellFounded.rank (treeExt (shrink F (M ∘ E))) [] ≤ IsWellFounded.rank (treeExt F) []
+  change WellFounded.rank (treeExt (shrink F (M ∘ E))) [] ≤ WellFounded.rank (treeExt F) []
   exact φ.rank_le []
 
 end Front

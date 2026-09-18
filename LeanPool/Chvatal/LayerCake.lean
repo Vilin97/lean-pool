@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Finset.Max
 public import Mathlib.Data.Fintype.BigOperators
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Order.UpperLower.Basic
 public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 public import Mathlib.Algebra.BigOperators.Ring.Finset

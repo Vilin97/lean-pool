@@ -343,8 +343,8 @@ lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
               try linarith [hx 0 ]
             )
             convert sub_nonneg.2 (le_of_lt (Nat.lt_floor_add_one (↑n * x 1))) using 1
-            · rfl
-            · ring
+            simp only [j]
+            ring
           · rw [translateTriangle_det, scaleTriangle_det, mul_ne_zero_iff_right]
             · simp only [one_div, ne_eq, inv_eq_zero, Nat.cast_eq_zero, hn, not_false_eq_true]
             · simp [det, Δ₀']

@@ -345,7 +345,7 @@ lemma cond_c_eq_integral [IsProbabilityMeasure (ℙ : Measure Ω')]
   simp_rw [← integral_fintype .of_finite]
   rw [← condRuzsaDist'_eq_integral _ hY hZ, ← condRuzsaDist'_eq_integral _ hY hZ, integral_const,
     integral_const]
-  have : IsProbabilityMeasure (Measure.map Z ℙ) := Measure.isProbabilityMeasure_map hZ.aemeasurable
+  have : IsProbabilityMeasure (Measure.map Z ℙ) := inferInstance
   simp
 
 variable {T₁ T₂ T₃ : Ω' → G} (hT : T₁ + T₂ + T₃ = 0)
@@ -378,7 +378,7 @@ lemma construct_good_prelim :
   let sum4 : ℝ := (Measure.map T₃ ℙ)[fun t ↦ ψ[T₁; ℙ[|T₃ ⁻¹' {t}] # T₂; ℙ[|T₃ ⁻¹' {t}]]]
   have hp.η : 0 ≤ p.η := by linarith [p.hη]
   have hP : IsProbabilityMeasure (Measure.map T₃ ℙ) :=
-    Measure.isProbabilityMeasure_map hT₃.aemeasurable
+    inferInstance
   have h2T₃ : T₃ = T₁ + T₂ :=
     calc T₃ = T₁ + T₂ + T₃ - T₃ := by rw [hT, zero_sub]; simp [ZModModule.neg_eq_self]
       _ = T₁ + T₂ := by rw [add_sub_cancel_right]
@@ -396,7 +396,7 @@ lemma construct_good_prelim :
     have : sum2 = d[p.X₀₁ # T₁ | T₃] - d[p.X₀₁ # X₁] := by
       simp only [integral_sub .of_finite .of_finite, integral_const, smul_eq_mul, sum2]
       simp [condRuzsaDist'_eq_sum hT₁ hT₃, integral_eq_setIntegral
-        (FiniteRange.ae_mem_toFinset _ T₃), setIntegral_finset _ .finset,
+        (FiniteRange.ae_mem_toFinset _ T₃ hT₃.aemeasurable), setIntegral_finset _ .finset,
         map_measureReal_apply hT₃ (.singleton _)]
     gcongr
     linarith [condRuzsaDist_le' ℙ ℙ p.hmeas1 hT₁ hT₃]
@@ -404,7 +404,7 @@ lemma construct_good_prelim :
     have : sum3 = d[p.X₀₂ # T₂ | T₃] - d[p.X₀₂ # X₂] := by
       simp only [integral_sub .of_finite .of_finite, integral_const, smul_eq_mul, sum3]
       simp [condRuzsaDist'_eq_sum hT₂ hT₃,
-        integral_eq_setIntegral (FiniteRange.ae_mem_toFinset _ T₃),
+        integral_eq_setIntegral (FiniteRange.ae_mem_toFinset _ T₃ hT₃.aemeasurable),
          setIntegral_finset _ .finset,
         map_measureReal_apply hT₃ (.singleton _)]
     gcongr
@@ -474,7 +474,7 @@ lemma cond_construct_good :
   simp_rw [integral_fintype .of_finite, ← Finset.sum_add_distrib, ← smul_add, Finset.mul_sum,
     mul_smul_comm, ← Finset.sum_add_distrib, ← smul_add]
   simp_rw [← integral_fintype .of_finite]
-  have : IsProbabilityMeasure (Measure.map R ℙ) := Measure.isProbabilityMeasure_map (by fun_prop)
+  have : IsProbabilityMeasure (Measure.map R ℙ) := inferInstance
   calc
     k = (Measure.map R ℙ)[fun _r => k] := by
       rw [integral_const]; simp

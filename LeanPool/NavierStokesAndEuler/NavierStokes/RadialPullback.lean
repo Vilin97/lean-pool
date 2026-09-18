@@ -837,7 +837,7 @@ theorem cutoff_finiteJet_bound (a b : ℝ) (χ : ℝ → ℝ) (hχ : ContDiff �
       ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _
     _ ≤ ‖iteratedFDeriv ℝ j χ z.1‖ * 1 := by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-      exact Finset.prod_le_one (fun _ _ => norm_nonneg _) (fun _ _ =>
+      exact Finset.prod_le_one₀ (fun _ _ => norm_nonneg _) (fun _ _ =>
           ContinuousLinearMap.norm_fst_le _ _ _)
     _ = ‖iteratedFDeriv ℝ j χ z.1‖ := mul_one _
     _ ≤ C j' := hb j' z.1 hz

@@ -44,7 +44,7 @@ theorem wordDerivative_norm (directions : ι → P) (hd : ∀ i, ‖directions i
     (f : P → E) {n : ℕ} (w : Fin n → ι) (x : P) :
     ‖wordDerivative directions f w x‖ ≤ ‖iteratedFDeriv ℝ n f x‖ := by
   have hp : (∏ j : Fin n, ‖directions (w j)‖) ≤ 1 :=
-    prod_le_one (fun _ _ => norm_nonneg _) (fun j _ => hd (w j))
+    prod_le_one₀ (fun _ _ => norm_nonneg _) (fun j _ => hd (w j))
   exact ((iteratedFDeriv ℝ n f x).le_opNorm (fun j => directions (w j))).trans
     (by simpa only [mul_one] using mul_le_mul_of_nonneg_left hp (norm_nonneg _))
 

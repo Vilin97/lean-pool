@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
@@ -125,7 +125,7 @@ lemma sqrtPropagatorMap_sq_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
   set F := SchwartzMap.fourierTransformCLM ℂ (toComplex f)
   have hF_sq : Integrable (fun k => ‖F k‖ ^ 2) volume :=
     schwartz_L2_integrable F
-  have hF_meas : AEStronglyMeasurable F volume := (F.memLp 2 volume).1
+  have hF_meas : AEStronglyMeasurable F volume := (F.memLp 2 volume).aestronglyMeasurable
   have h_weight_meas : AEStronglyMeasurable (momentumWeightSqrtMathlib m) volume :=
     (momentumWeightSqrt_mathlib_measurable (m := m)).aestronglyMeasurable
   have h_map_meas : AEStronglyMeasurable (sqrtPropagatorMap m f) volume := by
@@ -177,7 +177,7 @@ lemma sqrtPropagatorMap_memLp (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     MemLp (sqrtPropagatorMap m f) 2 volume := by
   classical
   set F := SchwartzMap.fourierTransformCLM ℂ (toComplex f)
-  have hF_meas : AEStronglyMeasurable F volume := (F.memLp 2 volume).1
+  have hF_meas : AEStronglyMeasurable F volume := (F.memLp 2 volume).aestronglyMeasurable
   have h_weight_meas : AEStronglyMeasurable (momentumWeightSqrtMathlib m) volume :=
     (momentumWeightSqrt_mathlib_measurable (m := m)).aestronglyMeasurable
   have h_weight_C : AEStronglyMeasurable (fun k => (momentumWeightSqrtMathlib m k : ℂ)) volume :=
@@ -344,6 +344,7 @@ lemma embeddingMap_norm_sq (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
             congr 1
             have h_eq := MeasureTheory.eLpNorm_nnreal_pow_eq_lintegral
               (f := sqrtPropagatorMap m f) (p := 2) (μ := volume) h_two_ne
+              h_memLp.aestronglyMeasurable
             simp only [ENNReal.coe_ofNat, NNReal.coe_ofNat] at h_eq
             have h_pow_cast : (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ)
                 = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := by

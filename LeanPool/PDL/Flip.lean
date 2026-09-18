@@ -312,8 +312,7 @@ def LoadedPathRepeat.flip {Hist X} : LoadedPathRepeat Hist X →
   · rcases hk with ⟨same, path_loaded⟩
     constructor
     · simp only [List.get_eq_getElem, List.getElem_map, Sequent.flip_eq_flip_iff]
-      convert same
-      simp [List.get_eq_getElem]
+      exact same
     · simp only [List.get_eq_getElem, List.getElem_map, Sequent.flip_isLoaded]
       intro m m_lt
       apply path_loaded ⟨m, by grind⟩

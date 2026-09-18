@@ -127,7 +127,7 @@ theorem lpNorm_fderiv_le_gradient (f : Test) :
     _ = ∑ i : Fin 3, ‖derivativeColumn f i‖ := by
       apply Finset.sum_congr rfl
       intro i _
-      rw [derivativeColumn, Lp.norm_toLp, toReal_eLpNorm (f.column_memLp i).aestronglyMeasurable]
+      rw [derivativeColumn, Lp.norm_toLp, toReal_eLpNorm]
       exact lpNorm_norm (f.column_memLp i).aestronglyMeasurable 2
     _ ≤ ∑ _i : Fin 3, ‖testGradient f‖ :=
       Finset.sum_le_sum (fun i _ => PiLp.norm_apply_le (testGradient f) i)

@@ -5,7 +5,7 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.LocallyConvex.Basic
 import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
@@ -99,7 +99,8 @@ lemma integral_neg_invariance
   -- Step 1: Define the pushforward measure
   let μneg := μ.toMeasure.map negMap
   have hμneg_prob : IsProbabilityMeasure μneg := by
-    exact Measure.isProbabilityMeasure_map (Measurable.aemeasurable negMap_measurable)
+    exact (Measure.isProbabilityMeasure_map_iff
+      (Measurable.aemeasurable negMap_measurable)).mpr inferInstance
   -- Step 2: Show characteristic functionals are equal
   have hCF_equal : ∀ g : TestFunction,
       ∫ ω, Complex.exp (Complex.I * (distributionPairing ω g)) ∂μneg
