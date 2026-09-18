@@ -6,6 +6,9 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredHolomorphy
+public import LeanPool.Odlyzko.CompletedZeta.TraceDualClass
+import LeanPool.Odlyzko.CompletedZeta.ClassThetaCenteredRepresentative
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

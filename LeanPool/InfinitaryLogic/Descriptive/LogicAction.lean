@@ -3,8 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
-import Mathlib.GroupTheory.Perm.Basic
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.LopezEscobarEasy
+public import Mathlib.Tactic.Continuity
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The logic action of `S∞ = Equiv.Perm ℕ` on the structure space (issue #27, algebraic layer)
@@ -21,6 +27,8 @@ The `Fin n` analogue (`Descriptive/FiniteCarrier.lean`, `permSmul`/`iso_iff_orbi
 this is the `ℕ`-tier that issue #27 packages (and that #28 will build its σ-algebra on). The
 topology, Polish-group structure, and `ContinuousSMul` are the *next* milestones of #27, not here.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

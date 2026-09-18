@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import Mathlib.SetTheory.Cardinal.Aleph
 import Mathlib.SetTheory.Cardinal.Arithmetic
-import Mathlib.SetTheory.Cardinal.Aleph
 
 /-!
 # Cardinal lemmas for the beth ladder
@@ -27,6 +29,8 @@ Marker's recursion `ℶ_α = sup_{β<α} 2^{ℶ_β}` agrees with Mathlib's `beth
 the right side is the empty supremum), so Mathlib's `beth_zero`/`beth_succ`/`beth_limit` are
 used directly as the formal interface; no second recursive beth is introduced.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

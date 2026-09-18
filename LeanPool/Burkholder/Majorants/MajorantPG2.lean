@@ -3,20 +3,11 @@ Copyright (c) 2026 Daniel Smania. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Smania
 -/
+module
 
-import Mathlib.Analysis.Convex.Function
+public import LeanPool.Burkholder.Majorants.Definitions
 import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
-import Mathlib.Analysis.Convex.SpecificFunctions.Pow
 import Mathlib.Analysis.InnerProductSpace.NormPow
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import LeanPool.Burkholder.Majorants.Definitions
 
 
 /-!
@@ -25,6 +16,8 @@ import LeanPool.Burkholder.Majorants.Definitions
 Constructs and verifies the Burkholder majorant in the regime `p > 2`,
 including the explicit derivatives, concavity, and tangent estimates.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -63,26 +56,11 @@ bookkeeping private lemmas that move a segment through the sector decomposition 
 
 
 private lemma pStar_eq_self_of_two_le (p : ℝ) (hp : 2 ≤ p) : pStar p = p := by
-  unfold pStar
+  unfold pStar q
   apply max_eq_left
-  unfold q
-  have hp_ne_one : p ≠ 1 := by linarith
-  simp only [hp_ne_one, ↓reduceIte, ge_iff_le]
-  have hden : 0 < p - 1 := by linarith
-  have hnonneg : 0 ≤ p := by linarith
-  have h1 : 1 ≤ p - 1 := by linarith
-  have hmul : p * 1 ≤ p * (p - 1) := mul_le_mul_of_nonneg_left h1 hnonneg
-  have hp_le : p ≤ p * (p - 1) := by simpa using hmul
-  have hden_ne : p - 1 ≠ 0 := by linarith
-  have h_inv_nonneg : 0 ≤ (p - 1)⁻¹ := by positivity
-  have hmul' : p * (p - 1)⁻¹ ≤ (p * (p - 1)) * (p - 1)⁻¹ :=
-    mul_le_mul_of_nonneg_right hp_le h_inv_nonneg
-  simpa [div_eq_mul_inv, hden_ne, mul_assoc, mul_comm, mul_left_comm] using hmul'
-
-
-
-
-
+  rw [ite_eq_right (by linarith : p ≠ 1)]
+  apply (div_le_iff₀ (by linarith : 0 < p - 1)).2
+  nlinarith only [hp]
 
 /-- The same expression specialized to the `p ≥ 2` regime. -/
 private def vGeTwo (p x y : ℝ) : ℝ :=
@@ -10117,11 +10095,9 @@ private lemma DyuA1_mono_x_of_pos
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
   have hpow : x ^ (p - 1) ≤ z ^ (p - 1) :=
     Real.rpow_le_rpow hx.le hxz (by linarith : 0 ≤ p - 1)
-  have hcoef : 0 ≤ alpha p * (p / 2) := by
-    exact mul_nonneg (alpha_nonneg_of_two_le p hp) (by linarith : 0 ≤ p / 2)
-  simp [DyuA1, hx, hz, hpStar]
-  simpa [mul_assoc, mul_comm, mul_left_comm] using
-    mul_le_mul_of_nonneg_left hpow hcoef
+  simp only [DyuA1, ite_eq_left hx, ite_eq_left hz, hpStar]
+  exact mul_le_mul_of_nonneg_right
+    (mul_le_mul_of_nonneg_left hpow (alpha_nonneg_of_two_le p hp)) (by linarith)
 
 private lemma DxuA1_mono_y_of_pos
     (p : ℝ) (hp : 2 ≤ p) {x y z : ℝ}
@@ -10156,10 +10132,10 @@ private lemma DyvGeTwo_mono_x_of_pos
   have hcoef : 0 ≤ (p - 1) ^ p := Real.rpow_nonneg (by linarith : 0 ≤ p - 1) _
   have hhalf : 0 ≤ p / 2 := by linarith
   have hzpos : 0 < z := lt_of_lt_of_le hxpos hxz
-  simp [DyvGeTwo, hxpos, hzpos, abs_of_nonneg hsum_x, abs_of_nonneg hsum_z,
-    abs_of_nonneg hdiff_x, abs_of_nonneg hdiff_z]
-  nlinarith [mul_le_mul_of_nonneg_right hA hhalf,
-    mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hB hcoef) hhalf]
+  simp only [DyvGeTwo, ite_eq_left hxpos, ite_eq_left hzpos, abs_of_nonneg hsum_x,
+    abs_of_nonneg hsum_z, abs_of_nonneg hdiff_x, abs_of_nonneg hdiff_z]
+  exact add_le_add (mul_le_mul_of_nonneg_right hA hhalf)
+    (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hB hcoef) hhalf)
 
 private lemma DxvGeTwo_mono_y_of_pos
     (p : ℝ) (hp : 2 ≤ p) {x y z : ℝ}
@@ -10176,10 +10152,10 @@ private lemma DxvGeTwo_mono_y_of_pos
   have hB := Real.rpow_le_rpow hdiff_z hdiff_le hp_exp
   have hcoef : 0 ≤ (p - 1) ^ p := Real.rpow_nonneg (by linarith : 0 ≤ p - 1) _
   have hhalf : 0 ≤ p / 2 := by linarith
-  simp [DxvGeTwo, hxpos, abs_of_nonneg hsum_y, abs_of_nonneg hsum_z,
+  simp only [DxvGeTwo, ite_eq_left hxpos, abs_of_nonneg hsum_y, abs_of_nonneg hsum_z,
     abs_of_nonneg hdiff_y, abs_of_nonneg hdiff_z]
-  nlinarith [mul_le_mul_of_nonneg_right hA hhalf,
-    mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hB hcoef) hhalf]
+  exact sub_le_sub (mul_le_mul_of_nonneg_right hA hhalf)
+    (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hB hcoef) hhalf)
 
 private lemma DyuCandidate_mono_x_on_Q2
     (p : ℝ) (hp : 2 < p) {x z y : ℝ}

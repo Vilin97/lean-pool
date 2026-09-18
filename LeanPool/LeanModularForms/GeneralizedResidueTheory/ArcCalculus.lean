@@ -3,24 +3,15 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Analysis.Complex.CauchyIntegral
-import Mathlib.Analysis.Complex.AbsMax
-import Mathlib.Analysis.Complex.Periodic
-import Mathlib.Analysis.Complex.LocallyUniformLimit
-import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathlib.Analysis.Calculus.FDeriv.Analytic
-import Mathlib.Analysis.Calculus.ParametricIntegral
-import Mathlib.Analysis.Asymptotics.Defs
-import Mathlib.Analysis.Meromorphic.NormalForm
-import Mathlib.MeasureTheory.Integral.CircleIntegral
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.RingTheory.LaurentSeries
-import Mathlib.Topology.Homotopy.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Arc Calculus
@@ -39,6 +30,8 @@ Used for computing winding numbers, distances, and derivatives along circular ar
 * `exp_sub_norm_sq` - distance formula between arc points via cosine
 * `sin_pos_of_mem_Ioo_zero_pi` - sin is positive on (0, π)
 -/
+
+@[expose] public section
 
 open Complex Real Set
 

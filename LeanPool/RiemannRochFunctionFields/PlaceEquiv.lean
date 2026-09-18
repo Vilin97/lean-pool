@@ -5,12 +5,14 @@ Authors: Guanghao Li
 -/
 module
 
+public import Mathlib.RingTheory.Valuation.Discrete.RankOne
+
 public import LeanPool.RiemannRochFunctionFields.Place
 import Mathlib.NumberTheory.RatFunc.Ostrowski
 import Mathlib.NumberTheory.RamificationInertia.Valuation
-import Mathlib.RingTheory.Valuation.Discrete.RankOne
 import Mathlib.RingTheory.Valuation.Discrete.IsDiscreteValuationRing
 import Mathlib.RingTheory.Valuation.LocalSubring
+import Mathlib.RingTheory.Valuation.IsTrivialOn
 
 /-!
 # Coordinate-free places and the two-chart presentation

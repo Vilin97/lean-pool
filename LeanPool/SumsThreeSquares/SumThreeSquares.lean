@@ -3,36 +3,17 @@ Copyright (c) 2026 Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 -/
+module
+
+public import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.SumsThreeSquares.MinkowskiConvex
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.NormNum.LegendreSymbol
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
-import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
-import Mathlib.NumberTheory.SumTwoSquares
-import Mathlib.NumberTheory.LSeries.PrimesInAP
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.LinearAlgebra.Matrix.ToLin
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-import Mathlib.LinearAlgebra.Determinant
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
-import Mathlib.MeasureTheory.Group.GeometryOfNumbers
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.RingTheory.Int.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Mathlib.NumberTheory.LSeries.PrimesInAP
+import Mathlib.NumberTheory.SumTwoSquares
+import Mathlib.Tactic.NormNum.LegendreSymbol
 
 /-!
 # Sums of three squares: the case `m ≡ 3 (mod 8)`
@@ -44,6 +25,8 @@ Minkowski's theorem (see `LeanPool.SumsThreeSquares.MinkowskiConvex`).
 
 The main result is `blueprint_case_mod8_eq3`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.SumsThreeSquares
 

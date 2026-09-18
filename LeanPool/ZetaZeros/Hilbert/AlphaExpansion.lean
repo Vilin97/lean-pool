@@ -6,17 +6,17 @@ Authors: Kenny Lau
 module
 
 public import LeanPool.ZetaZeros.Hilbert.Basis
-public import LeanPool.ZetaZeros.Hilbert.Dimensions
-public import LeanPool.ZetaZeros.Hilbert.FIdentity
-public import LeanPool.ZetaZeros.Hilbert.InnerRealL2
-public import LeanPool.ZetaZeros.Hilbert.Integrals
-public import LeanPool.ZetaZeros.Hilbert.L2
-public import LeanPool.ZetaZeros.Hilbert.Subspaces
-public import LeanPool.ZetaZeros.Meta.Attr
-public import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
-public import LeanPool.ZetaZeros.Zeta.Basic
-public import LeanPool.ZetaZeros.Zeta.OrderConj
-public import LeanPool.ZetaZeros.Zeta.Defs
+public import LeanPool.ZetaZeros.Hilbert.SymmetryL2
+import LeanPool.ZetaZeros.Hilbert.Dimensions
+import LeanPool.ZetaZeros.Hilbert.FIdentity
+import LeanPool.ZetaZeros.Hilbert.InnerRealL2
+import LeanPool.ZetaZeros.Hilbert.Integrals
+import LeanPool.ZetaZeros.Hilbert.Symmetry
+import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.Zeta.Basic
+import LeanPool.ZetaZeros.Zeta.OrderConj
+import Mathlib.NumberTheory.LSeries.Nonvanishing
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Integrability and factorisation for the Bessel coefficients

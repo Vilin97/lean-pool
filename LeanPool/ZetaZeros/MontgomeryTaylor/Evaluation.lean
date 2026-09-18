@@ -6,6 +6,8 @@ Authors: Axiom Math
 module
 
 public import LeanPool.ZetaZeros.MontgomeryTaylor.AffineKernel
+public import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # The value of the constant

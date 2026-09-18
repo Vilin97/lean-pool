@@ -3,16 +3,20 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import LeanPool.Rupert.Basic
+public import LeanPool.Rupert.Basic
+import LeanPool.Rupert.Affine
 import LeanPool.Rupert.Set
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
 
 /-!
 # LeanPool.Rupert.Equivalences.Util
 
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.Util`.
 -/
+
+@[expose] public section
 open Pointwise
 open Matrix
 
@@ -47,3 +51,7 @@ def projXyRotationIsAffine (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
 noncomputable
 def fullTransformAffine (off : E 2) (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ² :=
   AffineMap.comp (offsetAffine off) (projXyRotationIsAffine rot)
+
+proof_wanted affine_rupert_iff_rupert_set
+    (X : Set (EuclideanSpace ℝ (Fin 3))) :
+    IsAffineRupertSet X ↔ IsRupertSet X

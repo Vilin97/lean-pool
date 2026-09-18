@@ -3,10 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.FlatnessTransfer.PerTermVanishing.CPVHelpers
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeromorphicPrincipalPart
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Higher-Order Cancellation Assembly
@@ -23,6 +32,8 @@ instantiated differently for convex vs null-homologous domains.
 The convex-domain specializations (`higherOrderCancel_assembly`,
 `conditionsAB_imply_higherOrderCancel`) are in `FlatnessTransfer.lean`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

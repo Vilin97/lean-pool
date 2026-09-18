@@ -3,18 +3,21 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.TautoSet
-import Mathlib.Data.Set.Disjoint
-import Mathlib.Data.Set.Notation
+public import Mathlib.Data.Set.BooleanAlgebra
+public import Mathlib.Order.Filter.Defs
 import Mathlib.Order.Filter.Basic
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.TautoSet
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.General
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 lemma diff_subset_union {I} {A B C : Set I} : A \ C ⊆ (A \ B) ∪ (B \ C) := by tauto_set

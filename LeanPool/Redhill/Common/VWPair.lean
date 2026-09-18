@@ -3,11 +3,16 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
+module
 
-import Mathlib.Data.Nat.ChineseRemainder
+public import Mathlib.Data.Nat.ChineseRemainder
+public import LeanPool.Redhill.Common.PrimeChain
+public import Mathlib.Algebra.Ring.Parity
+public import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Nat.Factors
 import Mathlib.Data.ZMod.Defs
-import LeanPool.Redhill.Common.PrimeChain
 
 /-!
 # VW pairs
@@ -26,6 +31,8 @@ because 29 and 31 are big primes.
 
 The coprimality condition only requires `0 < u ≤ m` and is proved separately.
 -/
+
+@[expose] public section
 
 
 open Nat Finset

@@ -7,7 +7,12 @@ Authors: Rado Kirov
 /-
 Blueprint unit: mapping-degree. FiberStack: adapted charts stacked over a whole fiber.
 -/
+module
+
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
 import LeanPool.JacobianDiffgeo.MappingDegree.Basics
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The stack of adapted charts over a fiber (heart, part 1)
@@ -25,6 +30,8 @@ import LeanPool.JacobianDiffgeo.MappingDegree.Basics
 `LocalConstancy.lean` combines this with the planar count (`RootCounting.lean`) to prove that
 `fiberMultSum` is locally constant.
 -/
+
+@[expose] public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

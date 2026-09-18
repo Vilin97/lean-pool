@@ -3,10 +3,10 @@ Copyright (c) 2026 YnirPaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: YnirPaz
 -/
+module
 
-import Mathlib.SetTheory.Ordinal.Arithmetic
-import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
-import Mathlib.Order.SuccPred.Limit
+public import Mathlib.SetTheory.Ordinal.Arithmetic
+import Mathlib.SetTheory.Ordinal.Family
 
 /-!
 # Background lemmas on ordinals
@@ -14,6 +14,8 @@ import Mathlib.Order.SuccPred.Limit
 Auxiliary results about ordinals and recursion on bounded ordinals used in the
 PCF-theory formalization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

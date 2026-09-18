@@ -3,25 +3,29 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
+module
 
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Order.Interval.Finset.Nat
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.AlgebraicTopology.SimplexCategory.Basic
-import Mathlib.Analysis.Normed.Ring.Lemmas
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
 import Mathlib.Data.Int.Star
-import Mathlib.Data.Nat.ModEq
-import Mathlib.Data.Nat.Prime.Defs
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # H1 for Thakur's hypotheses on power sums
 -/
+
+@[expose] public section
 
 namespace ZetaH123.H1
 
@@ -394,20 +398,10 @@ lemma F_lt_of_Phi_lt (q d _k : ℕ) (hq : 2 ≤ q)
   have hqpos : (0 : ℤ) < (q : ℤ) - 1 := by
     have : (2 : ℤ) ≤ (q : ℤ) := by exact_mod_cast hq
     linarith
-  -- (q - 1)*(F kk' - F kk) = Φ kk - Φ kk' > 0
-  rw [← sub_pos]
-  -- goal: 0 < (bCoeff q 0 d + ∑ kk' ...) - (bCoeff q 0 d + ∑ kk ...)
-  have hdiff : ((q : ℤ) - 1) *
-      ((bCoeff q 0 d + ∑ i : Fin (d + 1), (kk' i : ℤ) * bCoeff q (i : ℕ) d)
-        - (bCoeff q 0 d + ∑ i : Fin (d + 1), (kk i : ℤ) * bCoeff q (i : ℕ) d)) > 0 := by
-    have expand : ((q : ℤ) - 1) *
-        ((bCoeff q 0 d + ∑ i : Fin (d + 1), (kk' i : ℤ) * bCoeff q (i : ℕ) d)
-          - (bCoeff q 0 d + ∑ i : Fin (d + 1), (kk i : ℤ) * bCoeff q (i : ℕ) d))
-        = (((q : ℤ) - 1) * (∑ i : Fin (d + 1), (kk' i : ℤ) * bCoeff q (i : ℕ) d))
-          - (((q : ℤ) - 1) * (∑ i : Fin (d + 1), (kk i : ℤ) * bCoeff q (i : ℕ) d)) := by ring
-    rw [expand, kkey, kkey', hkZ]
-    linarith [hPhiZ]
-  nlinarith [hdiff, hqpos]
+  apply add_lt_add_right
+  apply (mul_lt_mul_iff_of_pos_left hqpos).mp
+  rw [kkey, kkey', hkZ]
+  exact sub_lt_sub_left hPhiZ _
 
 /-- **Row selection (take-from-top).** Given nonnegative row-counts `a` on `Fin (d + 1)`
 and a target `c` with `1 ≤ c ≤ ∑ a`, there is a removal function `r ≤ a` removing
@@ -687,6 +681,52 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
           Finset.sum_le_sum (fun i _ => hle i)
       _ ≤ q - 1 := hcf n
 
+/-- **`g` is strictly decreasing in the row index** (for `q ≥ 2`): the stone weight
+`gWeight q d i = q ^ {d+1-i} + (q - 1)·i` strictly decreases as `i` increases within
+`0..d` (informal.tex `eq:g-decreasing-H1`). -/
+lemma gWeight_anti (q d i j : ℕ) (hq : 2 ≤ q) (hij : i < j) (hjd : j ≤ d) :
+    gWeight q d j < gWeight q d i := by
+  -- Single downward step: for e < d, g_{e+1} < g_e.
+  have step : ∀ e : ℕ, e < d → gWeight q d (e + 1) < gWeight q d e := by
+    intro e he
+    unfold gWeight
+    have he1 : d + 1 - e = (d - e) + 1 := by omega
+    have he2 : d + 1 - (e + 1) = d - e := by omega
+    rw [he1, he2, pow_succ]
+    -- Need: q ^ (d-e) + (q - 1)*(e + 1) < q ^ (d-e)*q + (q - 1)*e
+    have hb : 2 ≤ q ^ (d - e) := by
+      calc 2 ≤ q := hq
+        _ = q ^ 1 := (pow_one q).symm
+        _ ≤ q ^ (d - e) := Nat.pow_le_pow_right (by omega) (by omega)
+    obtain ⟨p, rfl⟩ : ∃ p, q = p + 2 := ⟨q - 2, by omega⟩
+    have hp1 : p + 2 - 1 = p + 1 := by omega
+    rw [hp1]
+    nlinarith [hb]
+  -- Chain from i to j using strong induction on the gap.
+  have chain : ∀ n : ℕ, ∀ e : ℕ, e + n ≤ d → 0 < n →
+      gWeight q d (e + n) < gWeight q d e := by
+    intro n
+    induction n with
+    | zero => omega
+    | succ m ih =>
+      intro e hle hpos
+      rcases Nat.eq_zero_or_pos m with hm | hm
+      · subst hm
+        have : e + (0 + 1) = e + 1 := by omega
+        rw [this]
+        exact step e (by omega)
+      · have h1 : gWeight q d (e + (m + 1)) < gWeight q d (e + m) := by
+          have hlt : e + m < d := by omega
+          have hs := step (e + m) hlt
+          have heq : e + m + 1 = e + (m + 1) := by omega
+          rw [heq] at hs
+          exact hs
+        have h2 : gWeight q d (e + m) < gWeight q d e := ih e (by omega) hm
+        exact lt_trans h1 h2
+  have hj : j = i + (j - i) := by omega
+  rw [hj]
+  exact chain (j - i) i (by omega) (by omega)
+
 /-- **Strict `F`-increase for the single-column exchange.** The exchanged tuple `kk'`
 has strictly larger `F`, since `Φ` drops by `q ^ m·(q - 1) ^ 2·(d-jv) > 0`. -/
 lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ)
@@ -788,33 +828,10 @@ lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → �
     · intro h; exact absurd (Finset.mem_univ _) h
   -- g_d is the minimum weight
   have hgmin : ∀ i : Fin (d + 1), gWeight q d d ≤ gWeight q d (i : ℕ) := by
-    -- helper power inequality
-    have hpow : ∀ e : ℕ, q + (q - 1) * e ≤ q ^ (e + 1) := by
-      obtain ⟨p, rfl⟩ : ∃ p, q = p + 2 := ⟨q - 2, by omega⟩
-      have he1 : p + 2 - 1 = p + 1 := by omega
-      rw [he1]
-      intro e
-      induction e with
-      | zero => simp
-      | succ n ih =>
-        have hexp : (p + 2) ^ (n + 1 + 1) = (p + 2) ^ (n + 1) * (p + 2) := by rw [pow_succ]
-        have hge : (p + 2) ≤ (p + 2) ^ (n + 1) := by nlinarith [ih]
-        have hmul : ((p + 2) + (p + 1) * n) * (p + 2)
-            ≤ (p + 2) ^ (n + 1) * (p + 2) := Nat.mul_le_mul_right _ ih
-        rw [hexp]
-        nlinarith [hmul, hge]
     intro i
-    have hile : (i : ℕ) ≤ d := by have := i.2; omega
-    simp only [gWeight]
-    have hexp3 : d + 1 - d = 1 := by omega
-    rw [hexp3, pow_one]
-    -- goal: q + (q - 1)*d ≤ q ^ (d+1-i) + (q - 1)*i
-    have he := hpow (d - (i : ℕ))
-    have hexp2 : d - (i : ℕ) + 1 = d + 1 - (i : ℕ) := by omega
-    rw [hexp2] at he
-    have hsum : (q - 1) * (i : ℕ) + (q - 1) * (d - (i : ℕ)) = (q - 1) * d := by
-      rw [← Nat.mul_add]; congr 1; omega
-    omega
+    rcases lt_or_eq_of_le (Nat.le_of_lt_succ i.isLt) with hi | hi
+    · exact (gWeight_anti q d i d hq2 hi le_rfl).le
+    · rw [hi]
   -- lower bound: g_jv + (q - 1)*g_d ≤ ∑ g_i r_i
   have hrjv_le : r jrow ≤ q := by
     rw [← hrsum]
@@ -882,17 +899,19 @@ lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → �
       have : 0 < d - jv := by omega
       positivity
     -- g_jv + (q - 1) g_d = q*g_{jv+1} + (q - 1) ^ 2(d-jv)
-    nlinarith [hbal, hmono, hgex, hqmpos, hdpos,
-      Nat.mul_le_mul_left (q ^ m) hlb]
+    have hweight_lt : q * gWeight q d (jv + 1) <
+        gWeight q d jv + (q - 1) * gWeight q d d := by omega
+    have hdecrease := (Nat.mul_lt_mul_of_pos_left hweight_lt hqmpos).trans_le hmono
+    omega
   -- representation preserved
-  have hk : (∑ i : Fin (d + 1), kk i * q ^ (i : ℕ))
-      = (∑ i : Fin (d + 1), kk' i * q ^ (i : ℕ)) := by
+  have hrep' : k = ∑ i : Fin (d + 1), kk' i * q ^ (i : ℕ) := by
+    rw [hrep]
     have := repr_preserved q d m hq1 kk r jj jv hjjval hjm hrdig hr0 hrsum
     rw [← this]
     apply Finset.sum_congr rfl
     intro i _
     rw [hkk' i]
-  exact F_lt_of_Phi_lt q d k hq2 kk kk' hk hPhilt
+  exact F_lt_of_Phi_lt q d k hq2 kk kk' (hrep.symm.trans hrep') hPhilt
 
 /-- **Carry-exchange improvement.** If an admissible `kk` has a *shifted carry* at
 some column `m` (shifted column sum `∑_i a_{i,m-i} ≥ q`), there is an admissible
@@ -1040,52 +1059,6 @@ to maximizing `F`. -/
 def Phi (q d : ℕ) (kk : Fin (d + 1) → ℕ) : ℕ :=
   q ^ (d + 1) * (∑ i : Fin (d + 1), kk i)
     + (q - 1) * ∑ i : Fin (d + 1), (i : ℕ) * q ^ (i : ℕ) * kk i
-
-/-- **`g` is strictly decreasing in the row index** (for `q ≥ 2`): the stone weight
-`gWeight q d i = q ^ {d+1-i} + (q - 1)·i` strictly decreases as `i` increases within
-`0..d` (informal.tex `eq:g-decreasing-H1`). -/
-lemma gWeight_anti (q d i j : ℕ) (hq : 2 ≤ q) (hij : i < j) (hjd : j ≤ d) :
-    gWeight q d j < gWeight q d i := by
-  -- Single downward step: for e < d, g_{e+1} < g_e.
-  have step : ∀ e : ℕ, e < d → gWeight q d (e + 1) < gWeight q d e := by
-    intro e he
-    unfold gWeight
-    have he1 : d + 1 - e = (d - e) + 1 := by omega
-    have he2 : d + 1 - (e + 1) = d - e := by omega
-    rw [he1, he2, pow_succ]
-    -- Need: q ^ (d-e) + (q - 1)*(e + 1) < q ^ (d-e)*q + (q - 1)*e
-    have hb : 2 ≤ q ^ (d - e) := by
-      calc 2 ≤ q := hq
-        _ = q ^ 1 := (pow_one q).symm
-        _ ≤ q ^ (d - e) := Nat.pow_le_pow_right (by omega) (by omega)
-    obtain ⟨p, rfl⟩ : ∃ p, q = p + 2 := ⟨q - 2, by omega⟩
-    have hp1 : p + 2 - 1 = p + 1 := by omega
-    rw [hp1]
-    nlinarith [hb]
-  -- Chain from i to j using strong induction on the gap.
-  have chain : ∀ n : ℕ, ∀ e : ℕ, e + n ≤ d → 0 < n →
-      gWeight q d (e + n) < gWeight q d e := by
-    intro n
-    induction n with
-    | zero => omega
-    | succ m ih =>
-      intro e hle hpos
-      rcases Nat.eq_zero_or_pos m with hm | hm
-      · subst hm
-        have : e + (0 + 1) = e + 1 := by omega
-        rw [this]
-        exact step e (by omega)
-      · have h1 : gWeight q d (e + (m + 1)) < gWeight q d (e + m) := by
-          have hlt : e + m < d := by omega
-          have hs := step (e + m) hlt
-          have heq : e + m + 1 = e + (m + 1) := by omega
-          rw [heq] at hs
-          exact hs
-        have h2 : gWeight q d (e + m) < gWeight q d e := ih e (by omega) hm
-        exact lt_trans h1 h2
-  have hj : j = i + (j - i) := by omega
-  rw [hj]
-  exact chain (j - i) i (by omega) (by omega)
 
 /-- **Single downward move within a column.** Move one stone from cell `(i, m-i)` down
 to cell `(j, m-j)` (same column, rows `i < j ≤ d`), when the source cell is occupied

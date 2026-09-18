@@ -5,7 +5,8 @@ Authors: Kenny Lau
 -/
 module
 
-public meta import Lean
+public meta import Lean.Attributes
+import Lean.Exception
 
 /-!
 # The `zz_tag` attribute

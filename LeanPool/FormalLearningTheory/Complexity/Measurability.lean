@@ -3,9 +3,12 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Symmetrization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Measurability Infrastructure for Learning Theory
@@ -43,6 +46,8 @@ This typeclass replaces explicit hypothesis threading in theorem signatures:
 Combined with `MeasurableBatchLearner` (Learner/Core.lean), these two typeclasses
 provide the complete regularity infrastructure for PAC learning proofs.
 -/
+
+@[expose] public section
 
 universe u
 

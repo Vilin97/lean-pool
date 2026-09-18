@@ -3,12 +3,15 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import LeanPool.BrauerGroupNew.MoritaEquivalence
-import LeanPool.BrauerGroupNew.Wedderburn
-import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
-import Mathlib.Algebra.Category.ModuleCat.Products
-import Mathlib.RingTheory.LittleWedderburn
+import Mathlib.CategoryTheory.Adjunction.Limits
+
+public import LeanPool.BrauerGroupNew.MoritaEquivalence
+public import LeanPool.BrauerGroupNew.Wedderburn
+public import Mathlib.Algebra.Category.ModuleCat.ChangeOfRings
+public import Mathlib.Algebra.Category.ModuleCat.Products
+public import Mathlib.RingTheory.LittleWedderburn
 
 /-!
 # The Stacks Project tag 074E
@@ -16,6 +19,8 @@ import Mathlib.RingTheory.LittleWedderburn
 This file ports the upstream Wedderburn-Artin uniqueness arguments used by the Brauer group
 development.
 -/
+
+@[expose] public section
 
 open CategoryTheory DirectSum
 
@@ -346,7 +351,8 @@ private lemma matrixModuleEnd_apply {n : ℕ} [NeZero n]
     _ = v i * f (Pi.single (M := fun _ : Fin n => D) (0 : Fin n) (1 : D)) 0 := rfl
 
 omit [IsSimpleRing A] [FiniteDimensional k A] in
-private noncomputable def matrixModuleEndAlgEquivMop {n : ℕ} [NeZero n]
+/-- The endomorphism algebra of the standard matrix module is the opposite scalar algebra. -/
+noncomputable def matrixModuleEndAlgEquivMop {n : ℕ} [NeZero n]
     (D : Type v) [DivisionRing D] [Algebra k D]
     [IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D)]
     [SMulCommClass (Matrix (Fin n) (Fin n) D) k (Fin n → D)] :

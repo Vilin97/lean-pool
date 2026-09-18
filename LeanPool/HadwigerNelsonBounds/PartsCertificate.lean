@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsCoordinates
+public import LeanPool.HadwigerNelsonBounds.PartsCoordinates
 
 /-!
 # A sound checker for Parts coloring trees
@@ -14,6 +15,8 @@ node therefore ends at either a genuine branch or an uncolorable leaf. This is
 the same certificate as the source coloring diagram, but avoids artificial
 recursion depth from long chains of forced assignments.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

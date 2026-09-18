@@ -3,22 +3,19 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.Defs
-import Mathlib.Analysis.Normed.Lp.MeasurableSpace
-import Mathlib.Order.Filter.Basic
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Real
-import Mathlib.Probability.Kernel.Condexp
-import Mathlib.Analysis.Convex.Integral
+module
 
-import LeanPool.RlTheoryInLean.Defs
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+
+public import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import LeanPool.RlTheoryInLean.Order.Filter.Basic
-import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
+import Mathlib.Probability.Kernel.Condexp
 
 /-!
 # LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation.Basic
 -/
+
+@[expose] public section
 
 open Filter ProbabilityTheory
 open scoped RealInnerProductSpace

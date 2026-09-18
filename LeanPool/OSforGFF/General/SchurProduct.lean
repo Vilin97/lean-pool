@@ -3,11 +3,10 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.Hadamard
-import Mathlib.LinearAlgebra.Matrix.Kronecker
+public import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Schur Product Theorem
@@ -19,6 +18,8 @@ Hadamard form `x ᵀ (A ∘ B) x` to positivity of the Kronecker product `A ⊗ 
 the diagonal embedding of `x` into `ι × ι`. Used in the OS3 reflection positivity argument
 to transfer PSD properties through the matrix exponential via `HadamardExp.lean`.
 -/
+
+@[expose] public section
 
 
 open scoped BigOperators

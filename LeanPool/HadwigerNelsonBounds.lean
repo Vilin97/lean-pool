@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsSpindle
+public import LeanPool.HadwigerNelsonBounds.PartsSpindle
 
 /-!
 # Known Bounds for the Hadwiger-Nelson Problem
@@ -16,6 +17,8 @@ Main declarations: `HadwigerNelsonBounds.hadwiger_nelson_known_bounds`
 Tags: graph-theory, geometric-graph-theory, graph-coloring, hadwiger-nelson
 MSC: 05C15, 52C10
 -/
+
+@[expose] public section
 
 /-!
 # Kernel-checked Hadwiger--Nelson bounds

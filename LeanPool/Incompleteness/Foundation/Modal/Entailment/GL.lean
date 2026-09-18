@@ -3,10 +3,13 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.K4
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K4
 
 /-! # GL -/
+
+@[expose] public section
 
 
 namespace LO
@@ -67,7 +70,8 @@ instance : HasAxiomH 𝓢 := ⟨fun _ ↦ GL.axiomH⟩
 
 end GL
 
-private noncomputable def lem_boxdot_Grz_of_L :
+/-- The intermediate boxed Grzegorczyk derivation obtained from the Löb principle. -/
+noncomputable def lemBoxdotGrzOfL :
     𝓢 ⊢ (⊡(⊡(φ ==> ⊡φ) ==> φ)) ==> (□(φ ==> ⊡φ) ==> φ) := by
   have : 𝓢 ⊢ (□(φ ==> ⊡φ) ⋏ ∼φ) ==> ⊡(φ ==> ⊡φ) := by
     apply deduct';
@@ -93,7 +97,7 @@ noncomputable def boxdotGrzOfL : 𝓢 ⊢ ⊡(⊡(φ ==> ⊡φ) ==> φ) ==> φ :
   have : 𝓢 ⊢ □(⊡(φ ==> ⊡φ) ==> φ) ==> □(□(φ ==> ⊡φ) ==> (φ ==> ⊡φ)) := impTrans'' axiomFour this;
   have : 𝓢 ⊢ □(⊡(φ ==> ⊡φ) ==> φ) ==> □(φ ==> ⊡φ) := impTrans'' this axiomL;
   have : 𝓢 ⊢ ⊡(⊡(φ ==> ⊡φ) ==> φ) ==> □(φ ==> ⊡φ) := impTrans'' boxdotBox this;
-  exact mdp₁ lem_boxdot_Grz_of_L this;
+  exact mdp₁ lemBoxdotGrzOfL this;
 omit [DecidableEq F] in
 @[simp] lemma «boxdotGrzOfL!» : 𝓢 ⊢! ⊡(⊡(φ ==> ⊡φ) ==> φ) ==> φ := by
   classical

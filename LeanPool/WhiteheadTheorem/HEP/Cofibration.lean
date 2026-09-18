@@ -3,12 +3,12 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
+public import LeanPool.WhiteheadTheorem.Shapes.Maps
+public import LeanPool.WhiteheadTheorem.CWComplex.Basic
+public import LeanPool.WhiteheadTheorem.Exponential
 import LeanPool.WhiteheadTheorem.Shapes.Jar
-import LeanPool.WhiteheadTheorem.Shapes.Maps
-import LeanPool.WhiteheadTheorem.CWComplex.Basic
-import LeanPool.WhiteheadTheorem.Exponential
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
 import Mathlib.CategoryTheory.LiftingProperties.Limits
 
 /-!
@@ -16,6 +16,8 @@ import Mathlib.CategoryTheory.LiftingProperties.Limits
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HEP.Cofibration`.
 -/
+
+@[expose] public section
 
 open CategoryTheory TopCat
 open scoped Topology unitInterval

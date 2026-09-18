@@ -12,11 +12,16 @@ boundary lemma.  Keeping the zero-arity case explicit is important: the
 paper's definition says that a constant is interpreted by the worlds which
 contain that constant, and no argument-world construction may be smuggled in.
 -/
-import LeanPool.MatchingLogic.EntryIII.CanonicalCore
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CanonicalCore
+import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 
 /-!
 # MatchingLogic.EntryIII.CanonicalExistence
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 
@@ -70,7 +75,8 @@ existential body and of all finite-stage component conjunctions. -/
 def tupleAllVars (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Finset Nat :=
   p.allVars ∪ Finset.univ.biUnion (fun i => (Phi i).allVars)
 
-private def tupleFreshBase (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Nat :=
+/-- An upper bound on all variable indices in a pattern and its tuple of parameters. -/
+def tupleFreshBase (p : Pattern S Nat) (Phi : Fin n → Pattern S Nat) : Nat :=
   (insert 0 (tupleAllVars p Phi)).max' (by simp)
 
 /-- The source's tuple of pairwise distinct fresh variables, constructed from

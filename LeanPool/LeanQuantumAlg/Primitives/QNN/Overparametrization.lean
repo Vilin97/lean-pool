@@ -6,8 +6,8 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import Mathlib.Order.Monotone.Basic
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Order.Monotone.Defs
 
 /-!
 # Overparametrization of quantum neural networks

@@ -3,16 +3,18 @@ Copyright (c) 2026 YnirPaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: YnirPaz
 -/
+module
 
-import Mathlib.SetTheory.Ordinal.Topology
-import Mathlib.Topology.DerivedSet
-import LeanPool.PCFTheory.Background.Ordinal
+public import Mathlib.SetTheory.Ordinal.Topology
+public import Mathlib.Topology.DerivedSet
 
 /-!
 # Topological results on ordinals
 
 A handful of order-topological facts used to set up the theory of clubs.
 -/
+
+@[expose] public section
 
 open Set Order Cardinal Filter Set.Notation
 

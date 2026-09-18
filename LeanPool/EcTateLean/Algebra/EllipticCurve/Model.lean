@@ -3,20 +3,31 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
+public import Mathlib.Algebra.Order.Sub.Basic
+
+public import LeanPool.EcTateLean.FieldTheory.PerfectClosure
+public import Mathlib.Algebra.Field.Defs
 import LeanPool.EcTateLean.Algebra.Ring.Basic
-import Mathlib.Algebra.CharP.Basic
-import LeanPool.EcTateLean.FieldTheory.PerfectClosure
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.NormNum
+import Mathlib.Algebra.Field.IsField
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Common
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.EcTateLean.Algebra.EllipticCurve.Model
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.Model`.
 -/
+
+@[expose] public section
 -- import Aesop
 
 
@@ -598,106 +609,40 @@ lemma isSingularPoint_singularPoint [PerfectRing K] (e : Model K) (h : e.discr =
         rw [show (12 : K) = 2 * 2 * 3 by norm_num]
         simp_all
       refine ⟨?_, ?_, ?_⟩
-      · apply nzero_mul_left_cancel (12 ^ 3) _ _ (pow_ne_zero _ h12)
-        simp only [weierstrass, div_eq_mul_inv, mul_zero]
-        rw [show
-          12 ^ 3 * ((-(-e.a1 * b2 e * 12⁻¹ + e.a3) * 2⁻¹) ^ 2 +
-          e.a1 * (-b2 e * 12⁻¹) * (-(-e.a1 * b2 e * 12⁻¹ + e.a3) * 2⁻¹) +
-          e.a3 * (-(-e.a1 * b2 e * 12⁻¹ + e.a3) * 2⁻¹) -
-          ((-b2 e * 12⁻¹) ^ 3 + e.a2 * (-b2 e * 12⁻¹) ^ 2 + e.a4 * (-b2 e * 12⁻¹)
-            + e.a6)) =
-          3*(-(-e.a1 * b2 e * (12 * 12⁻¹) + 12 * e.a3) * (2 * 2⁻¹)) ^ 2 +
-          e.a1 * (-b2 e * (12 * 12⁻¹)) * (-(-e.a1 * b2 e * (12 * 12⁻¹)
-              + 12 * e.a3) * (6 * (2 * 2⁻¹))) +
-          12 * e.a3 * (-(-e.a1 * b2 e * (12 * 12⁻¹) + 12 * e.a3) * (6 * (2 * 2⁻¹))) -
-          ((-b2 e * (12 * 12⁻¹)) ^ 3 + 12 * e.a2 * (-b2 e * (12 * 12⁻¹)) ^ 2
-              + 12 ^ 2 * e.a4 * (-b2 e * (12 * 12⁻¹)) + 12 ^ 3 * e.a6) by ring]
-        simp only [mul_inv_cancel₀ h2, mul_inv_cancel₀ h12, mul_one]
-        -- This is 2*c6
-        rw [← mul_zero (2 : K), ← hc6]
+      · simp only [weierstrass]
+        field_simp
+        simp only [mul_zero]
+        rw [← mul_zero (8 : K), ← hc6]
         simp only [c6, b2, b4, b6]
         ring
-      · apply nzero_mul_left_cancel (12 ^ 2) _ _ (pow_ne_zero _ h12)
-        simp only [dweierstrassDx, div_eq_mul_inv, mul_zero]
-        rw [show
-          12 ^ 2 * (e.a1 * (-(-e.a1 * b2 e * 12⁻¹ + e.a3) * 2⁻¹) - (3 * (-b2 e * 12⁻¹) ^ 2
-              + 2 * e.a2 * (-b2 e * 12⁻¹) + e.a4))
-          =
-          e.a1 * (-(-e.a1 * b2 e * (12 * 12⁻¹) + 12* e.a3) * 6 * (2 * 2⁻¹))
-              - (3 * (-b2 e * (12 * 12⁻¹)) ^ 2 + 24 * e.a2 * (-b2 e * (12 * 12⁻¹))
-                + 144 * e.a4)
-          by ring]
-        simp only [mul_inv_cancel₀ h2, mul_inv_cancel₀ h12, mul_one]
-        -- This is 2*c6
-        rw [← mul_zero (3 : K), ← hc4]
+      · simp only [dweierstrassDx]
+        field_simp
+        simp only [mul_zero]
+        rw [← mul_zero (6 : K), ← hc4]
         simp only [c4, b2, b4]
         ring
-      · apply nzero_mul_left_cancel 12 _ _ h12
-        simp only [dweierstrassDy, div_eq_mul_inv, mul_zero]
-        rw [show
-          12 * (2 * (-(-e.a1 * b2 e * 12⁻¹ + e.a3) * 2⁻¹) + e.a1 * (-b2 e * 12⁻¹) + e.a3)
-          =
-          (-(-e.a1 * b2 e * (12 * 12⁻¹) + 12 * e.a3) * (2 * 2⁻¹))
-            + e.a1 * (-b2 e * (12 * 12⁻¹))
-              + 12 * e.a3
-          by ring]
-        simp_all
+      · simp only [dweierstrassDy]
+        field_simp
+        ring
   · rw [isSingularPoint]
     refine ⟨?_, ?_, ?_⟩
-    · rw [weierstrass]
-      -- simp [b2, b5, b7]
-      apply nzero_mul_left_cancel (e.c4 ^ 3) _ _ (pow_ne_zero _ hc4)
-      rw [mul_zero]
-      simp only [div_eq_mul_inv]
-      rw [show c4 e ^ 3 * (((b2 e * b5 e + 3 * b7 e) * (c4 e)⁻¹) ^ 2 +
-            e.a1 * ((18 * b6 e - b2 e * b4 e) * (c4 e)⁻¹)
-              * ((b2 e * b5 e + 3 * b7 e) * (c4 e)⁻¹) +
-          e.a3 * ((b2 e * b5 e + 3 * b7 e) * (c4 e)⁻¹) -
-          (((18 * b6 e - b2 e * b4 e) * (c4 e)⁻¹) ^ 3 + e.a2 * ((18 * b6 e
-              - b2 e * b4 e) * (c4 e)⁻¹) ^ 2 +
-          e.a4 * ((18 * b6 e - b2 e * b4 e) * (c4 e)⁻¹) + e.a6)) =
-        (c4 e * (c4 e)⁻¹ * c4 e * (c4 e)⁻¹ * c4 e * ((b2 e * b5 e + 3 * b7 e)) ^ 2 +
-          c4 e * (c4 e)⁻¹ * c4 e * (c4 e)⁻¹ * c4 e * e.a1 * ((18 * b6 e
-              - b2 e * b4 e)) * ((b2 e * b5 e + 3 * b7 e)) +
-        c4 e * (c4 e)⁻¹ * c4 e * c4 e * e.a3 * ((b2 e * b5 e + 3 * b7 e)) -
-        (c4 e * (c4 e)⁻¹ * c4 e * (c4 e)⁻¹ * c4 e * (c4 e)⁻¹
-          * ((18 * b6 e - b2 e * b4 e)) ^ 3 +
-        c4 e * (c4 e)⁻¹ * c4 e * (c4 e)⁻¹ * c4 e * e.a2 * ((18 * b6 e - b2 e * b4 e)) ^ 2 +
-          c4 e * (c4 e)⁻¹ * c4 e * c4 e * e.a4 * ((18 * b6 e - b2 e * b4 e)) +
-        c4 e * c4 e * c4 e * e.a6)) by ring]
-      simp only [mul_inv_cancel₀ hc4, one_mul]
+    · simp only [weierstrass]
+      field_simp
+      simp only [mul_zero]
       rw [b5, b7, c4, b2, b4, b6]
-      -- what remains factors the discriminant (up to sign)
       rw [← mul_zero (e.a1^6 + 12*e.a1^4*e.a2 + 48*e.a1^2*e.a2^2 - 36*e.a1^3*e.a3 + 64*e.a2^3
         - 144*e.a1*e.a2*e.a3 - 72*e.a1^2*e.a4 + 216*e.a3^2 - 288*e.a2*e.a4 + 864*e.a6),
         ← h, discr_eq_neg_singular]
       ring
-    · rw [dweierstrassDx]
-      apply nzero_mul_left_cancel (e.c4 ^ 2) _ _ (pow_ne_zero _ hc4)
-      rw [mul_zero, pow_two]
-      simp only [div_eq_mul_inv]
-      rw [show c4 e * c4 e *
-        (e.a1 * ((b2 e * b5 e + 3 * b7 e) * (c4 e)⁻¹) -
-          (3 * ((18 * b6 e - b2 e * b4 e) * (c4 e)⁻¹) ^ 2
-          + 2 * e.a2 * ((18 * b6 e - b2 e * b4 e) * (c4 e)⁻¹) + e.a4)) =
-          c4 e * (c4 e)⁻¹ * c4 e * (e.a1 * (b2 e * b5 e + 3 * b7 e)
-          - 2 * e.a2 * ((18 * b6 e - b2 e * b4 e)))
-          - c4 e * (c4 e)⁻¹ * c4 e * (c4 e)⁻¹ *
-          3 * (18 * b6 e - b2 e * b4 e) ^ 2 - e.a4 * c4 e * c4 e
-        by ring]
-      simp only [mul_inv_cancel₀ hc4, one_mul]
+    · simp only [dweierstrassDx]
+      field_simp
+      simp only [mul_zero]
       rw [b5, b7, c4, b2, b4, b6]
-      -- what remains is just 36 times the discriminant (up to sign)
       rw [← mul_zero (36 : K), ← h, discr_eq_neg_singular]
       ring
-    · rw [dweierstrassDy]
-      apply nzero_mul_left_cancel e.c4 _ _ hc4
-      simp only [div_eq_mul_inv, mul_zero]
-      rw [show c4 e * (2 * ((b2 e * b5 e + 3 * b7 e) * (c4 e)⁻¹)
-          + e.a1 * ((18 * b6 e - b2 e * b4 e) * (c4 e)⁻¹) + e.a3) =
-        c4 e * (c4 e)⁻¹ * (2 * (b2 e * b5 e + 3 * b7 e)
-        + e.a1 * ((18 * b6 e - b2 e * b4 e))) + c4 e * e.a3 by ring]
-      simp only [mul_inv_cancel₀ hc4, one_mul]
+    · simp only [dweierstrassDy]
+      field_simp
+      simp only [mul_zero]
       rw [b5, b7, c4, b2, b4, b6]
       ring
 

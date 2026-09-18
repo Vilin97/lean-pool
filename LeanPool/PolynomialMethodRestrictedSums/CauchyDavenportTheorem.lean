@@ -3,9 +3,10 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Algebra.Field.ZMod
-import Lean.Meta.Tactic.NormCast
+public import Mathlib.Algebra.Field.ZMod
+meta import Lean.Meta.Tactic.NormCast
 import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Order.Ring.Star
@@ -25,6 +26,8 @@ import Mathlib.Topology.MetricSpace.Bounded
 Derives the Cauchy-Davenport theorem `cauchy_davenport` on sumsets in `ZMod p`
 from the Alon-Nathanson-Ruzsa polynomial method.
 -/
+
+@[expose] public section
 
 open Finsupp
 open scoped Finset

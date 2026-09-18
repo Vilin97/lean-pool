@@ -6,7 +6,6 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.UnitSlabTranslation
-public import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
 
 /-! TODO: Add doc-string. -/
 

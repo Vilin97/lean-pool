@@ -3,8 +3,14 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Infinity
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Infinity
+import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Frobenius
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Validity of the affine Fermat-incidence chart
@@ -23,6 +29,8 @@ characteristic two (algebraic closedness is nowhere needed), `E` is the Fermat c
 The Frobenius-twist hypothesis is stated as `pi^n Q = Q + C` with `C = ptInf c` a point at infinity;
 the three points at infinity are the three points of `K0 = ker (1+pi)`, cf. `neg_ptInf`.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
@@ -84,7 +92,7 @@ variable [DecidableEq K]
 
 /-- The `3`-torsion point `t3 = (1,0)`. -/
 def t3 (K : Type*) [Field K] [CharP K 2] : (fer K).toAffine.Point :=
-  pt 1 0 t3_fermat
+  pt 1 0 (by exact t3_fermat)
 
 /-- `t3 = (1,0)` is `3`-torsion. -/
 lemma three_torsion_t3 : (3 : ℕ) • t3 K = 0 :=

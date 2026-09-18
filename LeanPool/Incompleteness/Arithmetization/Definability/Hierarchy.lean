@@ -3,9 +3,12 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.Vorspiel.Lemmata
-import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.StrictHierarchy
+public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Lemmata
+public import LeanPool.Incompleteness.Arithmetization.Vorspiel.Vorspiel
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
 
 /-!
 
@@ -20,6 +23,8 @@ This file defines the $\Sigma_n / \Pi_n / \Delta_n$ formulas of arithmetic of fi
   `M`.
 
 -/
+
+@[expose] public section
 
 namespace LO
 namespace FirstOrder

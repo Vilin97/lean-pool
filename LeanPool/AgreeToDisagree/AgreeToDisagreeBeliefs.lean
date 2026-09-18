@@ -3,18 +3,18 @@ Copyright (c) 2026 Axiom Math contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: AgreeToDisagree contributors
 -/
-import LeanPool.AgreeToDisagree.AgreeToDisagree
+module
+
+public import LeanPool.AgreeToDisagree.AgreeToDisagree
 import Mathlib.Analysis.Normed.Group.InfiniteSum
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Push
-import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # Approximate agreement under common belief
 
 This file proves the `p`-belief version of Aumann's agreement theorem.
 -/
+
+@[expose] public section
 
 namespace AgreeToDisagree
 

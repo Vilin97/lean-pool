@@ -3,14 +3,20 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Fixpoint
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.HFS.Fixpoint
+import LeanPool.Incompleteness.Arithmetization.Definability.Absoluteness
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Algebra.Order.Sub.Basic
 
 /-!
 
 # Vec
 
 -/
+
+@[expose] public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -38,7 +44,7 @@ macro_rules
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Cons.cons]
-def consUnexpander : Lean.PrettyPrinter.Unexpander
+meta def consUnexpander : Lean.PrettyPrinter.Unexpander
   | `($_ $term ?[$terms,*]) => `(?[$term, $terms,*])
   | `($_ $term 0) => `(?[$term])
   | _ => throw ()

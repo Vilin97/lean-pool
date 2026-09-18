@@ -3,8 +3,10 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import LeanPool.PebblingLean.Hypercube
+public import LeanPool.PebblingLean.Hypercube
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Small examples
@@ -12,6 +14,8 @@ import LeanPool.PebblingLean.Hypercube
 These definitions give named vertices and distributions for testing the basic
 API on low-dimensional cubes.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

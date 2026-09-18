@@ -3,11 +3,11 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Mathlib.Algebra.Group.Prod
-import Mathlib.Data.Int.Cast.Lemmas
-import Mathlib.Algebra.Ring.Basic
-import LeanPool.Polylean.UnitConjecture.EnumDecide
+public import Mathlib.Algebra.Group.Prod
+public import Mathlib.Data.Int.Cast.Lemmas
+public import LeanPool.Polylean.UnitConjecture.EnumDecide
 
 /-!
 
@@ -25,6 +25,8 @@ homomorphisms on finitely generated free groups.
 - `ℤFree` - a proof that the additive group of integers is a free group on the one-element type.
 - `prodFree` - a proof that the product of free groups is free.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

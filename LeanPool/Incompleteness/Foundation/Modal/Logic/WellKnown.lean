@@ -3,35 +3,41 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Unprovability
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.MDP
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K4
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K45
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K5
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB4
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB5
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD4
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD45
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD5
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KDB
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KTB
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot2
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot3
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S5
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Triv
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.S5Grz
+public import LeanPool.Incompleteness.Foundation.Modal.Logic.Basic
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomGrz
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomL
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomVer
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Completeness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Soundness
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Unnecessitation
 import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Completeness
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K4
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K45
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.K5
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB4
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KB5
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD4
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD45
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KD5
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KDB
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KT
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.KTB
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot2
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4Dot3
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S5
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Triv
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Grz.Soundness
 import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Ver
-import LeanPool.Incompleteness.Foundation.Modal.Hilbert.S5Grz
-import LeanPool.Incompleteness.Foundation.Modal.Logic.Basic
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.KT
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.KHIncompleteness
 
 /-! # WellKnown -/
+
+@[expose] public section
 
 
 namespace LO

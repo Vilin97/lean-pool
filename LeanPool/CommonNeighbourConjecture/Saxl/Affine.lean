@@ -3,17 +3,14 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.GroupTheory.SemidirectProduct
-import Mathlib.GroupTheory.GroupAction.Primitive
-import Mathlib.Algebra.Group.Action.Faithful
-import Mathlib.Algebra.Group.Pointwise.Set.Card
-import Mathlib.RepresentationTheory.Irreducible
-import Mathlib.Algebra.Field.ZMod
+public import Mathlib.GroupTheory.SemidirectProduct
+public import Mathlib.GroupTheory.GroupAction.Primitive
+public import Mathlib.RepresentationTheory.Irreducible
+public import Mathlib.Algebra.Field.ZMod
+public import LeanPool.CommonNeighbourConjecture.Saxl.Basic
 import Mathlib.Algebra.Module.ZMod
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.FinCases
-import LeanPool.CommonNeighbourConjecture.Saxl.Basic
 
 /-!
 # Affine actions and the regular-difference criterion
@@ -22,6 +19,8 @@ This file gives a local affine group whose executable representation is the
 semidirect product of the additive translation group by a distributive action.
 It proves the part of paper Lemma 3.1 used by every affine construction.
 -/
+
+@[expose] public section
 
 namespace Saxl
 

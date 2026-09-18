@@ -3,15 +3,18 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import Lean.Elab.Tactic.Basic
-import Mathlib.Tactic.Push
-import Mathlib.Data.Set.Basic
+module
+
+public meta import Lean.Elab.Tactic.Basic
+import Mathlib.Tactic.Finiteness.Attr
 
 /-!
 # GeneralCustomTactics
 
 This module provides general-purpose custom tactics for MRiscX.
 -/
+
+@[expose] public section
 
 open Lean Elab Tactic Meta
 

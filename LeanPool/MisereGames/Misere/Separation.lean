@@ -6,7 +6,6 @@ Authors: Alfie Davies
 module
 
 public import LeanPool.MisereGames.Form.Misere.Adjoint
-public import LeanPool.MisereGames.Misere.Hereditary.MaintenanceProviso
 
 /-!
 Misere combinatorial games.

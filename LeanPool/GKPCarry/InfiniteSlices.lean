@@ -3,10 +3,16 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import Mathlib.Data.Finset.Card
+public import LeanPool.GKPCarry.BadCarryLanguage
+public import Mathlib.Data.Nat.Choose.Central
+import LeanPool.GKPCarry.CarryArithmetic
 import LeanPool.GKPCarry.GKPCharacterization
-import LeanPool.GKPCarry.ModularPrefix
-import Mathlib.Data.Finset.Card
-import Mathlib.Tactic.IntervalCases
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Infinite periodic slices of the GKP carry condition
@@ -19,6 +25,8 @@ those classes satisfies the divisibility-by-nine branch of the GKP conjecture.
 This is an infinite scoped result. The other nine residue classes are not
 settled here, and the universal GKP conjecture remains open.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

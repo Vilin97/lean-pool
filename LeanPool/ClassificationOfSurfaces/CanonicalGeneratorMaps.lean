@@ -3,7 +3,16 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.CanonicalWords
+public import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
 import LeanPool.ClassificationOfSurfaces.CanonicalCoordinates
+import LeanPool.ClassificationOfSurfaces.CanonicalPairings
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Generator maps for the canonical Eval representatives
@@ -13,6 +22,8 @@ generator relations.  Together with the reverse maps from the trusted Eval const
 maps identify the generated equivalence relations and descend the one-face carrier homeomorphisms
 to the canonical quotient spaces.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces.NormalForm
 

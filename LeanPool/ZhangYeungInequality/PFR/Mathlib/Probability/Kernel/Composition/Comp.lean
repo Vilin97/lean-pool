@@ -6,7 +6,6 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Probability.Kernel.Composition.Comp
 public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Kernel.Disintegration
 
 /-!

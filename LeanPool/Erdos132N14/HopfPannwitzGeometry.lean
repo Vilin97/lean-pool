@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132N14.Basic
+module
+
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Coordinate geometry for the planar diameter bound
@@ -12,6 +14,8 @@ This file isolates the two algebraic facts used in the Perles charging proof
 of the planar diameter bound.  Working with dot products and signed areas
 keeps all collinear cases explicit and avoids a general-position assumption.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132N14
 

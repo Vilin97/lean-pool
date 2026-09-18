@@ -3,10 +3,13 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.GeneralMain
-import LeanPool.Wallace.RealMain
-import LeanPool.Wallace.TychonoffWallace
+public import LeanPool.Wallace.GeneralMain
+public import LeanPool.Wallace.RealMain
+public import LeanPool.Wallace.TychonoffWallace
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # The Wallace problem in ZFC
@@ -18,6 +21,8 @@ Main declarations: `Wallace.commutativeTychonoffWallaceCounterexampleExists`
 Tags: wallace-problem, topological-groups, set-theoretic-topology
 MSC: 22A05, 54D30, 20K20
 -/
+
+@[expose] public section
 
 /-!
 # Countably compact groups and the Wallace counterexample

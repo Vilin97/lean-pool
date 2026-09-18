@@ -3,11 +3,11 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import Mathlib.Analysis.Matrix.Spectrum
+public import LeanPool.BollobasNikiforov.Basic.Inner
+public import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
 import Mathlib.Combinatorics.SimpleGraph.DegreeSum
-import Mathlib.Combinatorics.SimpleGraph.LapMatrix
-import LeanPool.BollobasNikiforov.Basic.Inner
 
 /-!
 # Ordered spectrum of a Hermitian matrix
@@ -18,6 +18,8 @@ conventions in `docs/sol.tex`. The ordered family is Mathlib's antitone
 `F` is the sum of squares of the two largest positive eigenvalues, with missing
 terms replaced by zero.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

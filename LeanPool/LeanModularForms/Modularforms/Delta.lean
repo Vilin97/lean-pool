@@ -6,14 +6,17 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
-public import LeanPool.LeanModularForms.Modularforms.ClogArgLems
-public import LeanPool.LeanModularForms.Modularforms.Eta
-public import LeanPool.LeanModularForms.Modularforms.MultipliableLems
 public import LeanPool.LeanModularForms.Modularforms.ResToImagAxis
-public import Mathlib.NumberTheory.ModularForms.QExpansion
 
+public import Mathlib.NumberTheory.ModularForms.DedekindEta
+import LeanPool.LeanModularForms.Modularforms.ClogArgLems
+import LeanPool.LeanModularForms.Modularforms.Eta
+import LeanPool.LeanModularForms.Modularforms.ExpLems
 public import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import LeanPool.LeanModularForms.Modularforms.MultipliableLems
+public import LeanPool.LeanModularForms.Modularforms.SlashActionAuxil
+import LeanPool.LeanModularForms.Modularforms.SummableLems
+import Mathlib.Analysis.Normed.Group.Tannery
 
 /-! # Delta -/
 
@@ -315,7 +318,7 @@ def Delta : CuspForm (CongruenceSubgroup.Gamma 1) 12 where
   toFun := DiscriminantSIF
   slash_action_eq' := DiscriminantSIF.slash_action_eq'
   holo' := by
-    rw [mdifferentiable_iff]
+    rw [UpperHalfPlane.mdifferentiable_iff]
     simp only [SlashInvariantForm.coe_mk]
     have he2 : DifferentiableOn ℂ (fun z => (η z) ^ 24) {z | 0 < z.im} := by
       apply DifferentiableOn.pow
@@ -410,7 +413,7 @@ def CuspFormDivDiscriminant (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1)
     toFun := f / Delta
     slash_action_eq' := fun γ hγ => div_Delta_is_SIF _ _ γ hγ
     holo' := by
-      rw [mdifferentiable_iff]
+      rw [UpperHalfPlane.mdifferentiable_iff]
       simp only [SlashInvariantForm.coe_mk]
       have : (⇑f / ⇑Delta) ∘ ↑ofComplex = (⇑f ∘ ↑ofComplex) / (Delta ∘ ↑ofComplex) := by rfl
       rw [this]

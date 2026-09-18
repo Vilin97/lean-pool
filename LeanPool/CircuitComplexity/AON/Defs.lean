@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Basic
+module
+
+public import LeanPool.CircuitComplexity.Basic
 
 /-! # AND/OR/NOT Basis — Definitions
 
@@ -18,6 +20,8 @@ used throughout the circuit complexity library.
 * `Basis.boundedAON` — fan-in bounded by `k` AND/OR basis
 * `Basis.andOr2` — fan-in exactly 2 AND/OR basis (used in Shannon/Schnorr bounds)
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

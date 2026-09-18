@@ -3,9 +3,16 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
+public import LeanPool.IsoGraph.Canon.Node
 import LeanPool.IsoGraph.Canon.Pinned
 import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Backjumping is sound
@@ -26,6 +33,8 @@ current leaf and the deepest node the two leaves share.  This file justifies tha
   have exactly the same set of leaf keys.  Everything still to be found under the first is
   therefore already recorded under the second — the branch depth-first search has *finished*.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

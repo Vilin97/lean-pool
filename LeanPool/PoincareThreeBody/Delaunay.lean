@@ -3,20 +3,17 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Resonance
+public import LeanPool.PoincareThreeBody.Resonance
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.Calculus.Deriv.Pow
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.FunProp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Mathlib.Topology.Algebra.Order.Archimedean
-import Mathlib.Topology.Instances.Irrational
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # Delaunay frequencies and resonant actions
@@ -25,6 +22,8 @@ At zero mass the planar rotating Kepler Hamiltonian in Delaunay actions is
 `-1 / (2 * I₁²) - I₂`, with frequency `(I₁⁻³, -1)`. Positive rational frequency ratios give an
 explicit family of resonant actions.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

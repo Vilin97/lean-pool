@@ -3,10 +3,19 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
+public import Mathlib.Tactic.DeriveFintype
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.Finsupp.Defs
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Order.Lattice.Nat
 import Mathlib.Analysis.Normed.Field.Lemmas
 import Mathlib.NumberTheory.NumberField.Basic
-import Mathlib.Tactic.DeriveFintype
 
 /-!
 # Finite combinatorics used in the Wallace construction
@@ -22,6 +31,8 @@ current paper:
 The paper writes integer bounds as `|c| ≤ M`.  We use `Int.natAbs c ≤ M`, which is
 definitionally the corresponding natural-number inequality.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Set
@@ -94,7 +105,8 @@ omit [AddCommGroup G] in
   rw [coefficientPatterns, Fintype.mem_piFinset]
   simp only [mem_boundedIntFinset_iff]
 
-private noncomputable def equationSolution (B : Finset G) (q : ℤ) (c : B → ℤ) : G :=
+/-- Choose a solution to the finite integer equation when one exists, and zero otherwise. -/
+noncomputable def equationSolution (B : Finset G) (q : ℤ) (c : B → ℤ) : G :=
   by
     classical
     exact if h : ∃ x : G, q • x + ∑ b, c b • (b : G) = 0 then Classical.choose h else 0
@@ -209,12 +221,15 @@ theorem exists_integer_dependence (s : ℕ) (b : Fin (s + 1) → Fin s → ℤ) 
 abbrev BoundedInt (Q : ℕ) := ↑(boundedIntFinset Q)
 
 /-- All bounded vector families of every dimension at most `r`. -/
-private structure BoundedVectorFamily (r Q : ℕ) where
+structure BoundedVectorFamily (r Q : ℕ) where
+  /-- The dimension of the bounded integer vectors. -/
   size : Fin (r + 1)
+  /-- A family of one more bounded integer vectors than its dimension. -/
   vec : Fin (size + 1) → Fin size → BoundedInt Q
 deriving Fintype
 
-private noncomputable def chosenIntegerDependence {r Q : ℕ} (B : BoundedVectorFamily r Q) :
+/-- Choose a nontrivial integer dependence among the bounded vectors. -/
+noncomputable def chosenIntegerDependence {r Q : ℕ} (B : BoundedVectorFamily r Q) :
     Fin (B.size + 1) → ℤ :=
   Classical.choose <| exists_integer_dependence B.size fun i j ↦ B.vec i j
 
@@ -223,7 +238,8 @@ private theorem chosenIntegerDependence_spec {r Q : ℕ} (B : BoundedVectorFamil
       ∀ j, ∑ i, chosenIntegerDependence B i * (B.vec i j : ℤ) = 0 :=
   Classical.choose_spec <| exists_integer_dependence B.size fun i j ↦ B.vec i j
 
-private noncomputable def familyDependenceBound {r Q : ℕ} (B : BoundedVectorFamily r Q) : ℕ :=
+/-- Bound the absolute values of the chosen integer dependence coefficients. -/
+noncomputable def familyDependenceBound {r Q : ℕ} (B : BoundedVectorFamily r Q) : ℕ :=
   Finset.univ.sup fun i ↦ Int.natAbs (chosenIntegerDependence B i)
 
 /-- A uniform bound for an integer dependence among any `s+1` vectors in `ℤ^s`, for `s ≤ r`,

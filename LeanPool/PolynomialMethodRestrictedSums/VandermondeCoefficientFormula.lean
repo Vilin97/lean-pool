@@ -3,9 +3,10 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Nat.Cast.Field
 import Mathlib.Data.Nat.Choose.Multinomial
@@ -20,6 +21,8 @@ Lemma 3.1 of Alon-Nathanson-Ruzsa: a closed form for the coefficient of
 `∏ i, X i ^ c i` in `(X 0 + ⋯ + X k) ^ m * ∏_{i > j} (X i - X j)`,
 culminating in `Vandermonde_coefficient_formula`.
 -/
+
+@[expose] public section
 
 open MvPolynomial
 open AddMonoidAlgebra (coeff)

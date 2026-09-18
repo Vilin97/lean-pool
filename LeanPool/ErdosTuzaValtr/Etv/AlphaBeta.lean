@@ -3,19 +3,26 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Data.Finset.Sort
-import Mathlib.Data.List.MinMax
-import Mathlib.Data.List.Sublists
+public import Mathlib.Data.Finset.Sort
+public import Mathlib.Data.List.MinMax
+public import Mathlib.Data.List.Sublists
+public import LeanPool.ErdosTuzaValtr.Etv.Label
 import Mathlib.Data.List.Chain
-import LeanPool.ErdosTuzaValtr.Etv.Defs
-import LeanPool.ErdosTuzaValtr.Etv.Label
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Etv.AlphaBeta
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Etv.AlphaBeta`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
-import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
-import LeanPool.JacobianDiffgeo.SphereTopology.Headline
+public import LeanPool.JacobianDiffgeo.SphereTopology.SimplyConnectedP1
+public import LeanPool.JacobianDiffgeo.SphereTopology.GlobalPrimitive
+public import LeanPool.JacobianDiffgeo.SphereTopology.Headline
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # sphere-topology: `SimplyConnectedSpace (OnePoint ℂ)` and `genus X = 0` for simply connected `X`
@@ -50,3 +52,5 @@ Downstream consumers: `genus-zero-headline` (consumes `genus_eq_zero_of_homeo_sp
 re-derive the same conclusion from its own chain-continuation `IsPrimitiveAlongMap id η F univ`
 fact — both routes agree, no dependency is required either way).
 -/
+
+@[expose] public section

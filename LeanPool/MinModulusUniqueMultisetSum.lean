@@ -3,9 +3,18 @@ Copyright (c) 2026 José A. R. Fonollosa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: José A. R. Fonollosa
 -/
+module
 
-import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
-import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
+public import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
+public import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Minimum modulus for the unique multiset-sum problem
@@ -17,3 +26,5 @@ Main declarations: `MinModulus.nmin_eq`, `MinModulus.elementaryAbelianTwoGroups_
 Tags: additive-combinatorics, multiset-sums, finite-groups, permanent
 MSC: 11B75, 05D99
 -/
+
+@[expose] public section

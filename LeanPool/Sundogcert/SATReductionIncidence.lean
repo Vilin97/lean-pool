@@ -3,8 +3,9 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.SATReduction
+public import LeanPool.Sundogcert.SATReduction
 
 /-!
   Sundogcert/SATReductionIncidence.lean — MILESTONE 6 of the `3SAT ≤ 3DM` marathon: the INCIDENCE
@@ -36,6 +37,8 @@ import LeanPool.Sundogcert.SATReduction
 
   Axiom-clean (no `decide`, no `native_decide`).  Expect `[propext, Quot.sound]` subsets on all six.
 -/
+
+@[expose] public section
 
 open Sundog.SATReduction Sundog.SATNPHard
 

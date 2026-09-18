@@ -3,14 +3,20 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.Tactic.Common
+public meta import Aesop.BuiltinRules
+public meta import Lean.Elab.Tactic.Simp
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Elab.Tactic.Simp
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+public meta section
 
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

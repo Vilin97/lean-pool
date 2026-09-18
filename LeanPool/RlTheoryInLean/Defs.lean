@@ -3,16 +3,18 @@ Copyright (c) 2026 Shangtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shangtong Zhang
 -/
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.MeasureTheory.MeasurableSpace.Defs
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Probability.Kernel.Defs
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Probability.Kernel.Defs
 
 /-!
 # LeanPool.RlTheoryInLean.Defs
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Filter
 

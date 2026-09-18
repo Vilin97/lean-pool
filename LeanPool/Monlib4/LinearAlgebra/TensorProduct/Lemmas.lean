@@ -3,11 +3,10 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.LinearAlgebra.TensorProduct.Map
-import Mathlib.RingTheory.TensorProduct.Maps
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
-import LeanPool.Monlib4.Preq.StarAlgEquiv
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Mathlib.LinearAlgebra.DFinsupp
 
 /-!
 # Tensor-product map lemmas
@@ -15,6 +14,8 @@ import LeanPool.Monlib4.Preq.StarAlgEquiv
 This file contains compatibility lemmas and equivalences for tensor-product
 maps used by the Monlib4 port.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

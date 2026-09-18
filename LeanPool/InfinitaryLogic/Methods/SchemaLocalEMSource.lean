@@ -3,8 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalSkolemUniversal
-import LeanPool.InfinitaryLogic.Methods.SchemaTermTruth
+module
+
+public import LeanPool.InfinitaryLogic.Methods.EM.FragmentAdapter
+public import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
+public import LeanPool.InfinitaryLogic.Methods.LocalEMTruthLemma
+public import LeanPool.InfinitaryLogic.Methods.SchemaTermModel
+import LeanPool.InfinitaryLogic.Methods.LocalEMTemplateRealization
+public import LeanPool.InfinitaryLogic.Methods.SchemaTermTruth
 /-!
 # The schema term model as a local-EM source
 
@@ -23,6 +29,8 @@ interpretation, `locSkWitness_universal_constInterp_nat` turns the first fact in
 a contradiction. The universal sentence is therefore positive, and the truth lemma reads it back
 into the quotient.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -6,7 +6,8 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
+public import Mathlib.LinearAlgebra.InvariantBasisNumber
+import Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
 
 /-!
 # Cardinality bounds for finite-dimensional modules

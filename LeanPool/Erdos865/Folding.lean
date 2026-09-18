@@ -3,7 +3,13 @@ Copyright (c) 2026 Ricky Cipollini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ricky Cipollini
 -/
+module
+
+public import LeanPool.Erdos865.Defs
 import LeanPool.Erdos865.FoldedMain
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # The folding lemma (Erdős 865, §3)
@@ -11,6 +17,8 @@ import LeanPool.Erdos865.FoldedMain
 Folds a triple-free set `A ⊆ [1,N]` onto a `FoldedOK` set `B_h` and controls the
 collisions via the exceptional set, giving the folding lemma `folding_lemma`.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -3,8 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.MappingDegree
+public import LeanPool.JacobianDiffgeo.MappingDegree.Degree
+public import Mathlib.Geometry.Manifold.ContMDiff.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The challenge-signature mapping degree (proper-map-degree, file 1 of 3)
@@ -26,6 +30,8 @@ declares `f` **explicit** — confirmed load-bearing by its own call site
 match "the exact challenge signature" this file declares `f` explicit throughout; `hf.degree`
 (dot notation) still works since `f` is fully determined by unification against `hf`'s type.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

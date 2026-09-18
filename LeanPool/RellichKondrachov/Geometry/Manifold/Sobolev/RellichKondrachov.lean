@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.Analysis.Normed.Operator.Compact.Basic
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov`
@@ -23,6 +24,8 @@ The analytic heart of Rellich (compactness on Euclidean chart domains) is tracke
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.isCompactOperator_h1ToL2_of_summands`
 - `RellichKondrachov.Geometry.Manifold.Sobolev.FiniteChartData.isCompactOperator_h2ToL2_of_summands`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

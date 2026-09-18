@@ -3,7 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetHardCasesData
 import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification0
 import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification1
 import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification2
@@ -12,8 +14,15 @@ import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification4
 import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification5
 import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification6
 import LeanPool.HadwigerNelsonBounds.PartsGadgetHardVerification7
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! Aggregated kernel and routing checks for the hard normalized cases. -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

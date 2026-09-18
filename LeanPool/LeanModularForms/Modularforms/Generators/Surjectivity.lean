@@ -7,6 +7,9 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.Modularforms.Generators.Defs
+import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
+import LeanPool.LeanModularForms.Modularforms.QExpansionLems
+import Mathlib.Data.Int.Star
 
 /-!
 # Generators of the graded ring of level 1 modular forms: Surjectivity

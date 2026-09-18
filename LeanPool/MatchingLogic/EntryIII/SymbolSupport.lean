@@ -5,13 +5,17 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
 
 /- Finite symbol support for reducing arbitrary signatures to finite ones. -/
-import LeanPool.MatchingLogic.ProofSystem
-import Mathlib.Data.Finset.Union
-import Mathlib.Data.Fintype.Basic
+module
+
+public import LeanPool.MatchingLogic.ProofSystem
+public import Mathlib.Data.Finset.Union
+public import Mathlib.Data.Fintype.Basic
 
 /-!
 # MatchingLogic.EntryIII.SymbolSupport
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

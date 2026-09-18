@@ -3,11 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
-import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
-import LeanPool.LocalComplexGeometry.Nullstellensatz.ResultantSpecialization
-import LeanPool.LocalComplexGeometry.Germs.Representatives
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.GenericFiber
+public import LeanPool.LocalComplexGeometry.Nullstellensatz.QuotientPolynomialSpecialization
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # A nonvanishing resultant for the cleared generic minimal polynomial
@@ -18,6 +19,8 @@ resultant nevertheless stay outside the contracted prime.  Consequently,
 away from one analytic exceptional factor, its complex specializations keep
 their generic degree and have only simple roots.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

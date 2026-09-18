@@ -3,8 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CellComplex
-import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
+module
+
+public import LeanPool.ClassificationOfSurfaces.CellComplex
+public import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Polygonal realization of surface cell-complex data
@@ -22,6 +28,8 @@ model. The public polygonal gluing relation requires a witness of this predicate
 realization, and the standard one-face examples have occurrence-validity witnesses. The adapter
 derives its orbit conditions from `IsSurfaceValid`.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

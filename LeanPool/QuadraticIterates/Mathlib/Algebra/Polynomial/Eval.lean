@@ -3,7 +3,9 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Algebra.Polynomial.AlgebraMap
+module
+
+public import Mathlib.Algebra.Polynomial.AlgebraMap
 
 /-!
 # Polynomial evaluation lemmas
@@ -11,6 +13,8 @@ import Mathlib.Algebra.Polynomial.AlgebraMap
 Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of some iterated
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
+
+@[expose] public section
 
 /-- A ring homomorphism intertwines iterated evaluation of `p` with iterated evaluation of the
 mapped polynomial. -/

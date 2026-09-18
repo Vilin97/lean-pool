@@ -3,9 +3,17 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.LopezEscobar
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.WellOrderClass
 import LeanPool.InfinitaryLogic.Descriptive.WellOrderBridge
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.Separation
+import LeanPool.InfinitaryLogic.Methods.WellOrdering.GraphTranslation
 import LeanPool.InfinitaryLogic.OrdinalUtil
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Non-Borelness of the countable well-order class (issue #33)
 
@@ -32,6 +40,8 @@ finite models cannot escape:
 Marker's Corollary 4.27 then bounds the order types of all models of `φ ⊓ infiniteAxiom` by a
 single countable ordinal, which `exists_code_type_eq` contradicts.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

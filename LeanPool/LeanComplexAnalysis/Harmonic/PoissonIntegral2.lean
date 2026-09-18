@@ -3,8 +3,14 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
+module
+
+public import Mathlib.MeasureTheory.Integral.CircleAverage
+public import Mathlib.Analysis.Calculus.DiffContOnCl
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
-import Mathlib.MeasureTheory.Integral.CircleAverage
+import Mathlib.Analysis.Complex.Harmonic.Analytic
 
 /-!
 # The Poisson Integral Formula on Disc
@@ -46,6 +52,8 @@ The proof follows from
 
 ℂ-differentiable function, harmonic function, Poisson integral.
 -/
+
+@[expose] public section
 
 open Complex Metric Real Set
 

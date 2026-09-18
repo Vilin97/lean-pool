@@ -9,7 +9,7 @@ module
 public import Mathlib.Data.Finset.Density
 public import Mathlib.Data.Fintype.Prod
 
-public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.Ring.NNRat
+import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.Ring.NNRat
 
 /-!
 # Density lemmas for finite sets

@@ -3,11 +3,10 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.MeasureTheory.MeasurableSpace.Constructions
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Distributed2Coloring: Definitions
@@ -18,6 +17,8 @@ Most internal development lives under `Distributed2Coloring.LowerBound` and
 `Distributed2Coloring.UpperBound`; users should not need to import those files directly unless
 they want to follow the detailed proofs.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

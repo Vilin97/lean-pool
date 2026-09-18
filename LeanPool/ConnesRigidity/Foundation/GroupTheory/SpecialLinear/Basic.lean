@@ -5,13 +5,17 @@ Authors: Utensil Song
 -/
 /-
 -/
-import Mathlib.Algebra.Field.ZMod
+module
+
+public import Mathlib.Algebra.Field.ZMod
+public import LeanPool.ConnesRigidity.Core
 import Mathlib.Data.Finsupp.Encodable
-import LeanPool.ConnesRigidity.Core
 
 /-!
 # The special-linear carrier in Zhou's construction
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace SpecialLinear

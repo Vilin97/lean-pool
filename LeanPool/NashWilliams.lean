@@ -3,9 +3,16 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Combinatorics
-import LeanPool.NashWilliams.Data
-import LeanPool.NashWilliams.Order
+module
+
+public import LeanPool.NashWilliams.Combinatorics
+public import LeanPool.NashWilliams.Data
+public import LeanPool.NashWilliams.Order
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Nash-Williams fronts and 2-better-quasi-orders
@@ -17,3 +24,5 @@ Main declarations: `Front.IsFront.nash_williams`, `TwoBQO.wellQuasiOrdered`
 Tags: infinitary-combinatorics, ramsey-theory, better-quasi-orders, well-quasi-orders, ordinal-ranks
 MSC: 03E05, 05D10, 06A07
 -/
+
+@[expose] public section

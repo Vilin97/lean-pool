@@ -3,12 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.ValenceFormula.PVChain.Helpers
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Bounds
+import LeanPool.LeanModularForms.ValenceFormula.Boundary.Smooth
+import LeanPool.LeanModularForms.ValenceFormula.PVChain.ArcContribution
 import LeanPool.LeanModularForms.ValenceFormula.PVChain.OnCurveCapture
 import LeanPool.LeanModularForms.ValenceFormula.PVChain.Seg5CuspIntegral
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.ArcContribution
-import LeanPool.LeanModularForms.ValenceFormula.PVChain.ResidueSideInfra
-import LeanPool.LeanModularForms.ValenceFormula.ModularInvariance
+import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.Common
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # PV Chain Assembly
@@ -23,6 +30,8 @@ using `Tendsto` statements for the ε-truncated integrals.
 * `cpv_modular_side_tendsto` — the ε-truncated integral of `f'/f` around
     `fdBoundaryH H` tends to `-(2πi · (k/12 - ord_∞(f)))`.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

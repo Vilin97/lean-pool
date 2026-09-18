@@ -6,8 +6,9 @@ Authors: Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Form.Misere.Outcome
-public import LeanPool.MisereGames.Form.Misere.Adjoint
 import Mathlib.Data.Set.Finite.Range
+public import LeanPool.MisereGames.Form.Short
+import LeanPool.MisereGames.Form.Misere.Adjoint
 
 /-!
 Misere combinatorial games.

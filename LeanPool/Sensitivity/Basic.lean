@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.Sensitivity.Defs
+module
+
+public import LeanPool.Sensitivity.Defs
 
 /-!
 # Elementary Properties of Sensitivity
@@ -20,6 +22,8 @@ Basic bounds and symmetries for the sensitivity of Boolean functions.
 * `LeanPoolSensitivity.BoolFun.sensitiveAt_flipBit` — the sensitivity
   predicate is invariant under flipping the same coordinate at the input.
 -/
+
+@[expose] public section
 
 namespace LeanPoolSensitivity
 

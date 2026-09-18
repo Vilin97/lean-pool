@@ -3,8 +3,19 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Koethe.Mortality.Minors
+public import LeanPool.Koethe.Pencil
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 import LeanPool.Koethe.Mortality.Mask
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Mask mortality for one-row pencils over an algebraically closed field
@@ -18,6 +29,8 @@ Every connector hole is independently enumerated, all chosen vectors lie
 in the constant field, and all products are in the forward word convention
 of `KoethePencilDefs`.  No nilness or countability hypothesis is used.
 -/
+
+@[expose] public section
 
 noncomputable section
 

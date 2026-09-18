@@ -3,11 +3,12 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import Mathlib.Algebra.Order.Archimedean.Real.Hom
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Analysis.Matrix.Hermitian
-import Mathlib.Combinatorics.Quiver.ConnectedComponent
+public import Mathlib.Algebra.Order.Archimedean.Real.Hom
+public import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import Mathlib.Analysis.Matrix.Hermitian
+public import Mathlib.Combinatorics.Quiver.ConnectedComponent
 
 /-!
 # Perron eigenvectors of finite nonnegative symmetric matrices
@@ -16,6 +17,8 @@ The finite matrix argument is shared by the binary, Johnson, spherical, and high
 bounds. It requires no coding-theory definitions. Positivity is propagated along the quiver of
 positive matrix entries, allowing arbitrary finite index sets rather than just tridiagonal grids.
 -/
+
+@[expose] public section
 
 noncomputable section
 

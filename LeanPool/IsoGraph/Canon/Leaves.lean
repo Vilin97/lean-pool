@@ -3,8 +3,16 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
+public import LeanPool.IsoGraph.Canon.Pinned
 import LeanPool.IsoGraph.Canon.Jump
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The leaves and generators a state holds
@@ -22,6 +30,8 @@ Bookkeeping for the optimality proof, one layer above `Jump.lean`.
 * `LeafNode` / `StGood` / `dfsNode_good` — every leaf a state records is a genuine leaf of the
   tree, and every generator it records is a genuine automorphism.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

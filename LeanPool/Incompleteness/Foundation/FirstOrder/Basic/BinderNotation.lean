@@ -3,10 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Operator
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Operator
+import Mathlib.Tactic.Bound.Init
 
 /-! # BinderNotation -/
+
+@[expose] public section
 
 
 open Lean PrettyPrinter Delaborator SubExpr
@@ -155,24 +159,24 @@ section «lp_section_1»
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Semiterm.Operator.numeral]
-def unexpsnderNatLit : Unexpander
+meta def unexpsnderNatLit : Unexpander
   | `($_ $_ $z:num) => `($z:num)
   | _ => throw ()
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Semiterm.Operator.const]
-def unexpsnderOperatorConst : Unexpander
+meta def unexpsnderOperatorConst : Unexpander
   | `($_ $z:num) => `(‘ $z:num ’)
   | _ => throw ()
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Semiterm.Operator.Add.add]
-def unexpsnderAdd : Unexpander
+meta def unexpsnderAdd : Unexpander
   | `($_) => `(op(+))
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Semiterm.Operator.Mul.mul]
-def unexpsnderMul : Unexpander
+meta def unexpsnderMul : Unexpander
   | `($_) => `(op(*))
 
 /-
@@ -182,7 +186,7 @@ def unexpsnderMul : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Semiterm.Operator.operator]
-def unexpandFuncArith : Unexpander
+meta def unexpandFuncArith : Unexpander
   | `($_ op(+) ![‘$t:firstOrderTerm’,   ‘$u:firstOrderTerm’   ]) => `(‘($t     + $u    )’)
   | `($_ op(+) ![‘$t:firstOrderTerm’,   #$x                     ]) => `(‘($t     + #$x   )’)
   | `($_ op(+) ![‘$t:firstOrderTerm’,   &$x                     ]) => `(‘($t     + &$x   )’)
@@ -219,7 +223,7 @@ def unexpandFuncArith : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Semiterm.numeral]
-def unexpandNumeral : Unexpander
+meta def unexpandNumeral : Unexpander
   | `($_ $n:num) => `(‘$n:num’)
   | _            => throw ()
 
@@ -489,17 +493,17 @@ section «lp_section_2»
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Language.Eq.eq]
-def unexpsnderEq : Unexpander
+meta def unexpsnderEq : Unexpander
   | `($_) => `(op(=))
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Language.LT.lt]
-def unexpsnderLe : Unexpander
+meta def unexpsnderLe : Unexpander
   | `($_) => `(op(<))
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Wedge.wedge]
-def unexpandAnd : Unexpander
+meta def unexpandAnd : Unexpander
   | `($_ “ $φ:firstOrderFormula ” “ $ψ:firstOrderFormula ”) => `(“ ($φ ∧ $ψ) ”)
   | `($_ “ $φ:firstOrderFormula ” $u:term                   ) => `(“ ($φ ∧ !$u) ”)
   | `($_ $t:term                    “ $ψ:firstOrderFormula ”) => `(“ (!$t ∧ $ψ) ”)
@@ -507,7 +511,7 @@ def unexpandAnd : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Vee.vee]
-def unexpandOr : Unexpander
+meta def unexpandOr : Unexpander
   | `($_ “ $φ:firstOrderFormula ” “ $ψ:firstOrderFormula ”) => `(“ ($φ ∨ $ψ) ”)
   | `($_ “ $φ:firstOrderFormula ” $u:term                   ) => `(“ ($φ ∨ !$u) ”)
   | `($_ $t:term                    “ $ψ:firstOrderFormula ”) => `(“ (!$t ∨ $ψ) ”)
@@ -515,25 +519,25 @@ def unexpandOr : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Tilde.tilde]
-def unexpandNeg : Unexpander
+meta def unexpandNeg : Unexpander
   | `($_ “ $φ:firstOrderFormula ”) => `(“ ¬$φ ”)
   | _                                => throw ()
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander UnivQuantifier.univ]
-def unexpandUniv : Unexpander
+meta def unexpandUniv : Unexpander
   | `($_ “ $φ:firstOrderFormula ”) => `(“ ∀' $φ:firstOrderFormula ”)
   | _                                => throw ()
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander ExQuantifier.ex]
-def unexpandEx : Unexpander
+meta def unexpandEx : Unexpander
   | `($_ “ $φ:firstOrderFormula”) => `(“ ∃' $φ:firstOrderFormula ”)
   | _                                   => throw ()
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander ball]
-def unexpandBall : Unexpander
+meta def unexpandBall : Unexpander
   | `($_ “ $φ:firstOrderFormula ” “ $ψ:firstOrderFormula ”) => `(“ (∀[$φ] $ψ) ”)
   | `($_ “ $φ:firstOrderFormula ” $u:term                   ) => `(“ (∀[$φ] !$u) ”)
   | `($_ $t:term                    “ $ψ:firstOrderFormula ”) => `(“ (∀[!$t] $ψ) ”)
@@ -541,7 +545,7 @@ def unexpandBall : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander bex]
-def unexpandBex : Unexpander
+meta def unexpandBex : Unexpander
   | `($_ “ $φ:firstOrderFormula ” “ $ψ:firstOrderFormula ”) => `(“ (∃[$φ] $ψ) ”)
   | `($_ “ $φ:firstOrderFormula ” $u:term                   ) => `(“ (∃[$φ] !$u) ”)
   | `($_ $t:term                    “ $ψ:firstOrderFormula ”) => `(“ (∃[!$t] $ψ) ”)
@@ -549,7 +553,7 @@ def unexpandBex : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Arrow.arrow]
-def unexpandArrow : Unexpander
+meta def unexpandArrow : Unexpander
   | `($_ “ $φ:firstOrderFormula ” “ $ψ:firstOrderFormula”) => `(“ ($φ → $ψ) ”)
   | `($_ “ $φ:firstOrderFormula ” $u:term                  ) => `(“ ($φ → !$u) ”)
   | `($_ $t:term                    “ $ψ:firstOrderFormula”) => `(“ (!$t → $ψ) ”)
@@ -557,7 +561,7 @@ def unexpandArrow : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander LogicalConnective.iff]
-def unexpandIff : Unexpander
+meta def unexpandIff : Unexpander
   | `($_ “ $φ:firstOrderFormula” “ $ψ:firstOrderFormula”) => `(“ ($φ ↔ $ψ) ”)
   | `($_ “ $φ:firstOrderFormula” $u:term                  ) => `(“ ($φ ↔ !$u) ”)
   | `($_ $t:term                   “ $ψ:firstOrderFormula”) => `(“ (!$t ↔ $ψ) ”)
@@ -565,7 +569,7 @@ def unexpandIff : Unexpander
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[app_unexpander Semiformula.Operator.operator]
-def unexpandOpArith : Unexpander
+meta def unexpandOpArith : Unexpander
   | `($_ op(=) ![‘ $t:firstOrderTerm ’,  ‘ $u:firstOrderTerm ’]) =>
     `(“ $t:firstOrderTerm = $u   ”)
   | `($_ op(=) ![‘ $t:firstOrderTerm ’,  #$y:term               ]) =>

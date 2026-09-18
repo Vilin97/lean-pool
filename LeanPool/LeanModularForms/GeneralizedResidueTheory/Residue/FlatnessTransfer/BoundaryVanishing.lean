@@ -3,8 +3,16 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.DivergenceTheorem
 
 /-!
 # Boundary Vanishing for Higher-Order Polar Terms
@@ -18,6 +26,8 @@ angle conditions with flatness rate (L3).
 * `zpow_boundary_diff_tendsto_zero`: boundary zpow difference → 0 under angle + flatness
 * `cutoff_zpow_infrastructure`: full infrastructure for cutoff zpow integrals
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

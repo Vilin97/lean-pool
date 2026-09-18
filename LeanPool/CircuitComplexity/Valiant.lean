@@ -3,7 +3,14 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
+
+public import LeanPool.CircuitComplexity.Digraph.Defs
 import LeanPool.CircuitComplexity.Internal.Valiant
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Pow
 
 /-! # Valiant's Depth Reduction Lemma
 
@@ -32,6 +39,8 @@ The proof machinery — canonical labelings, the edge partition by
 first-differing bit, averaging, and the relabeling-after-removal
 bound — lives in `Circ.Internal.Valiant`.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity.Valiant
 

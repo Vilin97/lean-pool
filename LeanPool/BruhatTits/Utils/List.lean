@@ -3,13 +3,16 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
+module
 
-import Batteries.Data.List.Basic
-import Mathlib.Logic.Function.Basic
+public import Batteries.Data.List.Basic
+import Mathlib.Tactic.TypeStar
 
 /-!
 # LeanPool.BruhatTits.Utils.List
 -/
+
+@[expose] public section
 
 theorem List.zipWith₃_map {α α' β β' γ γ' δ : Type*} (f : α' → β' → γ' → δ)
     (fa : α → α') (fb : β → β') (fc : γ → γ')

@@ -3,28 +3,12 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Choquet
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.PreLift
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Lift
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.BodyFunctor
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.PointedTrees
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeBody
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.TreeExtensions
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Applications.Choquet
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BorelDeterminacy
 
 /-!
 # Root aliases for dotted declarations
@@ -32,6 +16,8 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
 These aliases preserve names that Lean Pool's deterministic quality audit derives
 from dotted declarations inside namespaces.
 -/
+
+@[expose] public section
 
 namespace AllWinning
 alias residual := GaleStewartGame.Game.AllWinning.residual

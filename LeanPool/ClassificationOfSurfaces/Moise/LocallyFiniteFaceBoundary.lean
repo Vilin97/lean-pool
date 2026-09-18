@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphPL
-import LeanPool.ClassificationOfSurfaces.Moise.PlaneCycle
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteGraphPL
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneCycle
 
 /-!
 # Polygonal boundaries of locally finite two-simplexes
@@ -14,6 +16,8 @@ abstract edge. For each maximal face this file resolves its three edge complexes
 line arrangement and extracts the resulting simple polygonal cycle. Shared abstract edges use
 literally the same replacement arc, so adjacent face fillings will have identical boundaries.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

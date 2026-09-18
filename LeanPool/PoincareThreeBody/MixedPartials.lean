@@ -3,12 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import Mathlib.Analysis.Analytic.IteratedFDeriv
-import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.FDeriv.Prod
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.FDeriv.Symmetric
-import Mathlib.Tactic.FunProp
 
 /-!
 # Mixed mass and phase derivatives
@@ -16,6 +14,8 @@ import Mathlib.Tactic.FunProp
 The first homological equation differentiates phase derivatives with respect to the mass
 parameter.  This file packages the needed Schwarz theorem for a jointly `C²` scalar function.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

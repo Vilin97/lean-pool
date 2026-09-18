@@ -6,7 +6,10 @@ Authors: Chris Birkbeck
 
 module
 
+public import LeanPool.LeanModularForms.Modularforms.Generators.Defs
 public import LeanPool.LeanModularForms.Modularforms.Generators.Surjectivity
+import LeanPool.LeanModularForms.Modularforms.QExpansionLems
+import Mathlib.Data.Int.Star
 public import Mathlib.Algebra.MvPolynomial.CommRing
 
 /-!

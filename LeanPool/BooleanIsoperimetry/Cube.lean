@@ -3,6 +3,11 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Fintype.Powerset
 import Mathlib.Algebra.Order.Ring.GeomSum
 import Mathlib.Data.Nat.Digits.Defs
 import Mathlib.Tactic.IntervalCases
@@ -14,6 +19,8 @@ This file defines Boolean-cube vertices, Hamming distance, closed neighborhoods,
 simplicial order, initial segments, slicing maps, and the Harper boundary
 function `H`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

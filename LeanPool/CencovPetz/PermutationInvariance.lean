@@ -3,8 +3,16 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
+
+public import LeanPool.CencovPetz.SufficientStatistic
+public import LeanPool.CencovPetz.MonotoneMetric
+public import Mathlib.LinearAlgebra.BilinearForm.Hom
 import LeanPool.CencovPetz.LeftInverseIsometry
-import LeanPool.CencovPetz.SufficientStatistic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!
@@ -22,6 +30,8 @@ permutation/equivalence invariance consequences for monotone metric families in 
 - `CencovPetz.MonotoneMetricFamily.comp_eq_of_equiv`:
   any monotone metric family is invariant under equivalences (permutations) of finite types.
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

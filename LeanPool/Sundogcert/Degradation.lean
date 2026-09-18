@@ -3,10 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.Looseness
-import Mathlib.LinearAlgebra.Matrix.Block
-import Mathlib.Data.Fintype.Fin
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import LeanPool.Sundogcert.Scaling
 
 /-!
   Sundogcert/Degradation.lean — the DEGRADATION CURVE of the column-weight bound vs density.
@@ -33,13 +33,14 @@ import Mathlib.Data.Fintype.Fin
                     Safe-equivalence for all c), reusing the Looseness invertibility approach.
 -/
 
+@[expose] public section
+
 open Matrix
 
 namespace Sundog.Certificate.Degradation
 
 open Sundog.Certificate
 open Sundog.Certificate.Scaling
-open Sundog.Certificate.Looseness
 
 variable {F : Type*} [Field F] [Fintype F] [DecidableEq F]
 

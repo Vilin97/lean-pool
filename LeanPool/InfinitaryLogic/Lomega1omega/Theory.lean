@@ -3,9 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 import LeanPool.InfinitaryLogic.Util
-import Mathlib.Data.Set.Basic
 
 /-!
 # Lω₁ω Theories and Semantic Entailment
@@ -33,6 +34,8 @@ in Lω₁ω (countable infinitary logic with countable conjunctions/disjunctions
 - [Mar16]
 - [KK04]
 -/
+
+@[expose] public section
 
 universe u v w w'
 

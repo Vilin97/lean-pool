@@ -11,12 +11,18 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   instead of assuming `p(0) = 0`, we assume that `p` is small in the normalized
   Gaussian `L²` norm and that its constant coefficient is real.
 -/
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
 import LeanPool.PhaseRetrieval.Constant.Internal.MainTheorem
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Measure.WithDensity
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Gamma
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # LocalCore -/
+
+@[expose] public section
 
 
 open FockSPR MeasureTheory Complex Real Polynomial Finset

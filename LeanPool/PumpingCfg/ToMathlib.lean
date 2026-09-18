@@ -3,7 +3,9 @@ Copyright (c) 2026 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
-import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
+module
+
+public import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
 
 /-!
 # Auxiliary grammar lemmas
@@ -11,6 +13,8 @@ import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
 Small facts about `ChomskyNormalFormRule.Rewrites` and `ChomskyNormalFormGrammar.Produces`
 intended for upstreaming into Mathlib alongside the Chomsky-normal-form development.
 -/
+
+@[expose] public section
 
 universe uT uN
 variable {T : Type uT}

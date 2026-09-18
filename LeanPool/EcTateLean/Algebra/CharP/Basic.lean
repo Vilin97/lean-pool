@@ -3,8 +3,9 @@ Copyright (c) 2023 Alex J. Best and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best
 -/
+module
 
-import LeanPool.EcTateLean.Algebra.Ring.Basic
+public import Mathlib.Algebra.CharP.Defs
 import Mathlib.Algebra.CharP.Lemmas
 
 /-!
@@ -12,6 +13,8 @@ import Mathlib.Algebra.CharP.Lemmas
 
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.CharP.Basic`.
 -/
+
+@[expose] public section
 
 lemma ringChar_is_zero_or_prime (R : Type _) [NonAssocSemiring R] [NoZeroDivisors R]
     [Nontrivial R] : ringChar R = 0 ∨ Nat.Prime (ringChar R) :=

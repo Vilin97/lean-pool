@@ -3,9 +3,9 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntGoal
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntGoal
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock2
@@ -13,10 +13,13 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntB
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiInt
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

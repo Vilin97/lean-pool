@@ -3,15 +3,12 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.Algebra.Algebra.Bilinear
-import Mathlib.Algebra.Algebra.Spectrum.Basic
-import Mathlib.Algebra.Star.BigOperators
-import Mathlib.Algebra.Star.StarAlgHom
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.RCLike.Basic
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
 import LeanPool.Monlib4.LinearAlgebra.End
+import Mathlib.Analysis.Complex.Order
 
 /-!
 # Real Linear Maps
@@ -20,6 +17,8 @@ This file defines `LinearMap.real`, the star-conjugate of a linear map,
 `φ.real x = star (φ (star x))`. A map is real, equivalently star-preserving,
 when `φ = φ.real`.
 -/
+
+@[expose] public section
 
 /-- A function-like map is real if it commutes with star. -/
 def LinearMap.IsReal {M₁ M₂ : Type*} {F : Type*} [FunLike F M₁ M₂]

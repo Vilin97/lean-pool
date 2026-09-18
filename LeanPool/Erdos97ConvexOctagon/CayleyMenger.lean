@@ -3,10 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.Erdos97ConvexOctagon.Basic
 import LeanPool.Erdos97ConvexOctagon.Gram
 
 /-! # Erdős 97 convex-octagon formalization: Cayley Menger -/
+
+@[expose] public section
 
 namespace Erdos97Octagon
 

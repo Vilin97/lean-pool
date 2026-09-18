@@ -3,15 +3,19 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
+module
+
+public import LeanPool.RiemannMappingTheorem.Spaces
 import Mathlib.Analysis.Complex.Liouville
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 import Mathlib.Topology.UniformSpace.Ascoli
-import LeanPool.RiemannMappingTheorem.Spaces
-import LeanPool.RiemannMappingTheorem.Defs
-import LeanPool.RiemannMappingTheorem.Hurwitz
 
 /-!
 # LeanPool.RiemannMappingTheorem.Montel
 -/
+
+@[expose] public section
 
 open Set Function Metric UniformConvergence Complex
 

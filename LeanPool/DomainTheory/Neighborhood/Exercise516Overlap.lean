@@ -3,8 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise516ThueMorse
+public import LeanPool.DomainTheory.Neighborhood.Exercise516ThueMorse
+public import Mathlib.Algebra.Ring.Parity
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 5.16 follow-up (Scott 1981, PRG-19, Lecture V) — overlap-freeness of
@@ -36,6 +44,8 @@ contracts to a period-`q` overlap via the substitution structure, and an odd
 period `≥ 5` forces a
 run of three equal symbols.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise516
 

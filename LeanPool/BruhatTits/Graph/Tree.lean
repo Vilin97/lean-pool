@@ -3,7 +3,10 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Graph.GroupAction
+module
+
+public import LeanPool.BruhatTits.Graph.GroupAction
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
 
 /-!
 # Proof that the Bruhat-Tits graph is a tree
@@ -25,6 +28,8 @@ The strategy for proving acyclicity is as follows:
   `3 > 0 = inv x x`, so no circles exist.
 
 -/
+
+@[expose] public section
 
 open Module
 

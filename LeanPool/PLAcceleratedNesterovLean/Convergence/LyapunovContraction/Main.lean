@@ -3,13 +3,15 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
 import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
 import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step2
 import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step3
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.AuxVar
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseArithmetic
 
 
 /-!
@@ -19,6 +21,8 @@ After shrinking the neighborhood Ω and the energy radius R, one step of the
 modified Nesterov scheme contracts the Lyapunov function by a factor 1 - a/2,
 where a = √(μ'·η).
 -/
+
+@[expose] public section
 
 
 noncomputable section

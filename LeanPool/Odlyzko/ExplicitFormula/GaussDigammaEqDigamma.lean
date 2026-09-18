@@ -5,12 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.Analysis.Complex.LocallyUniformLimit
-public import Mathlib.Analysis.Normed.Field.Lemmas
-public import Mathlib.Analysis.PSeries
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Digamma
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import Mathlib.Analysis.Complex.LocallyUniformLimit
+import Mathlib.Analysis.PSeries
 
 /-!
 # Gauss Digamma Eq Digamma

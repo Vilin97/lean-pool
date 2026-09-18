@@ -3,15 +3,14 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.ChannelCapacity.Capacity
-import LeanPool.ChannelCapacity.NonDegeneracy
+module
+
+public import LeanPool.ChannelCapacity.Capacity
+
 import LeanPool.ChannelCapacity.ChainRule
 import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
-
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
 import Mathlib.MeasureTheory.Measure.Prokhorov
-import Mathlib.Probability.Kernel.WithDensity
+import Mathlib.Probability.Kernel.Composition.MeasureComp
 
 /-!
 # ChannelCapacity.Discharged
@@ -34,6 +33,8 @@ The worked example lives in `ChannelCapacity.DischargedExample`: a positive full
 channel with counting-measure reference, an explicit `ContinuousPositiveDensity` inhabitant, and a
 concrete application of `exists_unique_capacity_achieving_prior_discharged`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

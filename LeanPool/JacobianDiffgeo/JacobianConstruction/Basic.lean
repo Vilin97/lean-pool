@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
-import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.ULift
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # `Jac₀`, `Jacobian`, and the challenge instance assembly (CC9, §2–§9)
@@ -44,6 +47,8 @@ X).topologicalClosure`
 subgroup of a given `X`, Lean's instance search discharges all four automatically; nothing further
 needs to change here.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

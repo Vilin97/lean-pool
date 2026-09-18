@@ -3,11 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Analysis.Complex.Circle
+module
+
+public import Mathlib.Analysis.Complex.Circle
+public import Mathlib.Topology.Homeomorph.Quotient
+public import Mathlib.Topology.UnitInterval
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
-import Mathlib.Data.Setoid.Basic
-import Mathlib.Topology.Homeomorph.Quotient
-import Mathlib.Topology.UnitInterval
 
 /-!
 # Polygonal quotient spaces
@@ -28,6 +29,8 @@ empty-word sphere. The cell-complex adapter therefore presents the sphere as two
 oriented monogons instead of using `PolygonCell 0`. Keeping that choice out of this generic layer
 prevents a side-free disk from silently acquiring the wrong topology.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

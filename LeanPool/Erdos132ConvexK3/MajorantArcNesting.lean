@@ -3,13 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.GlobalReduction
+module
+
+public import LeanPool.Erdos132ConvexK3.GlobalReduction
 import LeanPool.Erdos132ConvexK3.Geometry
-import Lean.Elab.Tactic.Omega
-import Mathlib.Order.Interval.Finset.Fin
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # ErLV majorant arc nesting
@@ -20,6 +19,8 @@ boundary angles acute.  If two such majorants were avoiding, cyclic
 convexity propagates those local inequalities to all four angles of their
 quadrilateral, contradicting `strict_convex_quad_not_all_acute`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -42,17 +43,10 @@ theorem dot_pos_of_sqDist_le
 
 theorem dot_self_pos_of_cross_pos_left
     {u v : Point ℝ} (hcross : 0 < cross u v) : 0 < dot u u := by
-  have h1 : 0 ≤ u.1 ^ 2 := sq_nonneg _
-  have h2 : 0 ≤ u.2 ^ 2 := sq_nonneg _
-  by_contra hn
-  have hle : dot u u ≤ 0 := le_of_not_gt hn
-  have hu1 : u.1 = 0 := by
-    simp [dot] at hle
-    nlinarith
-  have hu2 : u.2 = 0 := by
-    simp [dot] at hle
-    nlinarith
-  simp [cross, hu1, hu2] at hcross
+  have hu : (0, 0) ≠ u := by
+    rintro rfl
+    simp [cross] at hcross
+  simpa [dot, sqDist, pow_two] using sqDist_pos_of_ne hu
 
 theorem dot_self_pos_of_cross_pos_right
     {u v : Point ℝ} (hcross : 0 < cross u v) : 0 < dot v v := by
@@ -76,9 +70,7 @@ theorem dot_pos_of_cross_between_left
     simp [cross, dot]
     ring
   rw [← hid] at hsum
-  rcases mul_pos_iff.mp hsum with hpos | hneg
-  · exact hpos.2
-  · linarith
+  exact (mul_pos_iff_of_pos_left huv).mp hsum
 
 theorem dot_pos_of_cross_between_right
     {u w v : Point ℝ}
@@ -94,9 +86,7 @@ theorem dot_pos_of_cross_between_right
     simp [cross, dot]
     ring
   rw [← hid] at hsum
-  rcases mul_pos_iff.mp hsum with hpos | hneg
-  · exact hpos.2
-  · linarith
+  exact (mul_pos_iff_of_pos_left huv).mp hsum
 
 theorem cross_trans_of_common_half_plane
     {e u v w : Point ℝ}
@@ -109,9 +99,7 @@ theorem cross_trans_of_common_half_plane
     simp [cross]
     ring
   rw [← hid] at hsum
-  rcases mul_pos_iff.mp hsum with hpos | hneg
-  · exact hpos.2
-  · linarith
+  exact (mul_pos_iff_of_pos_left hev).mp hsum
 
 /-- Positive consecutive turns are transitive while the whole chain stays in
 one open half-plane. -/
@@ -642,15 +630,15 @@ theorem erlv_terminal_majorants_not_avoiding_of_offsets
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := vp) (b := sp) (c := v + n) hvsp (by omega) (by omega)
         rw [hperiodV] at h
-        simpa [turn, cross] using h
+        exact h
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := vp) (b := v + n) (c := vp - 1 + n) (by omega) (by omega) (by omega)
         rw [hperiodV, cyclicAdvance_period base (vp - 1)] at h
-        simpa [turn, cross] using h
+        exact h
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := vp) (b := sp) (c := vp - 1 + n) hvsp (by omega) (by omega)
         rw [cyclicAdvance_period base (vp - 1)] at h
-        simpa [turn, cross] using h
+        exact h
       · exact hSecondLeft
   have hb : 0 < dot
       (P (cyclicAdvance base vp) - P (cyclicAdvance base sp))
@@ -664,15 +652,15 @@ theorem erlv_terminal_majorants_not_avoiding_of_offsets
         (v := P (cyclicAdvance base vp) - P (cyclicAdvance base sp))
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := sp) (b := sp + 1) (c := s) (by omega) hnextlt (by omega)
-        simpa [turn, cross] using h
+        exact h
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := sp) (b := s) (c := vp + n) hsps (by omega) (by omega)
         rw [hperiodVp] at h
-        simpa [turn, cross] using h
+        exact h
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := sp) (b := sp + 1) (c := vp + n) (by omega) (by omega) (by omega)
         rw [hperiodVp] at h
-        simpa [turn, cross] using h
+        exact h
       · rw [dot_comm]
         exact hSecondRight
   have hc : 0 < dot
@@ -690,17 +678,17 @@ theorem erlv_terminal_majorants_not_avoiding_of_offsets
           have ht := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := s) (b := v + n) (c := sp + n) (by omega) (by omega) (by omega)
           rw [hperiodV, hperiodSp] at ht
-          simpa [turn, cross] using ht)
+          exact ht)
         (by
           have ht := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := s) (b := sp + n) (c := s - 1 + n) (by omega) (by omega) (by omega)
           rw [hperiodSp, cyclicAdvance_period base (s - 1)] at ht
-          simpa [turn, cross] using ht)
+          exact ht)
         (by
           have ht := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := s) (b := v + n) (c := s - 1 + n) (by omega) (by omega) (by omega)
           rw [hperiodV, cyclicAdvance_period base (s - 1)] at ht
-          simpa [turn, cross] using ht)
+          exact ht)
         hFirstLeft
       rw [dot_comm]
       exact h
@@ -716,13 +704,13 @@ theorem erlv_terminal_majorants_not_avoiding_of_offsets
         (v := P (cyclicAdvance base s) - P (cyclicAdvance base v))
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := v) (b := v + 1) (c := vp) (by omega) hnextlt (by omega)
-        simpa [turn, cross] using h
+        exact h
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := v) (b := vp) (c := s) hvv (by omega) (by omega)
-        simpa [turn, cross] using h
+        exact h
       · have h := cyclic_strict_convex_turn_unwrapped hConvex base
             (a := v) (b := v + 1) (c := s) (by omega) (by omega) (by omega)
-        simpa [turn, cross] using h
+        exact h
       · rw [dot_comm]
         exact hFirstRight
   exact strict_convex_quad_not_all_acute hquad ha hb hc hd
@@ -912,28 +900,20 @@ theorem erlv_terminal_majorants_not_avoiding
     (hdLocal : 0 < dot (c - d) (nd - d)) : False := by
   have ha : 0 < dot (b - a) (d - a) :=
     dot_pos_of_cross_between_left (u := b - a) (w := d - a) (v := pa - a)
-      (by simpa [turn, cross] using haCone.1)
-      (by simpa [turn, cross] using haCone.2.1)
-      (by simpa [turn, cross] using haCone.2.2) haLocal
+      haCone.1 haCone.2.1 haCone.2.2 haLocal
   have hb : 0 < dot (a - b) (c - b) :=
     dot_pos_of_cross_between_right (u := nb - b) (w := c - b) (v := a - b)
-      (by simpa [turn, cross] using hbCone.1)
-      (by simpa [turn, cross] using hbCone.2.1)
-      (by simpa [turn, cross] using hbCone.2.2)
+      hbCone.1 hbCone.2.1 hbCone.2.2
       (by rw [dot_comm]; exact hbLocal)
   have hc : 0 < dot (b - c) (d - c) := by
     have h := dot_pos_of_cross_between_left
       (u := d - c) (w := b - c) (v := pc - c)
-      (by simpa [turn, cross] using hcCone.1)
-      (by simpa [turn, cross] using hcCone.2.1)
-      (by simpa [turn, cross] using hcCone.2.2) hcLocal
+      hcCone.1 hcCone.2.1 hcCone.2.2 hcLocal
     rw [dot_comm]
     exact h
   have hd : 0 < dot (c - d) (a - d) :=
     dot_pos_of_cross_between_right (u := nd - d) (w := a - d) (v := c - d)
-      (by simpa [turn, cross] using hdCone.1)
-      (by simpa [turn, cross] using hdCone.2.1)
-      (by simpa [turn, cross] using hdCone.2.2)
+      hdCone.1 hdCone.2.1 hdCone.2.2
       (by rw [dot_comm]; exact hdLocal)
   exact strict_convex_quad_not_all_acute hquad ha hb hc hd
 

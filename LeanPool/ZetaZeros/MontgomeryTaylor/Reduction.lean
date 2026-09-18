@@ -6,7 +6,9 @@ Authors: Axiom Math
 module
 
 public import LeanPool.ZetaZeros.MontgomeryTaylor.AffineKernel
-public import LeanPool.ZetaZeros.MontgomeryTaylor.Integrability
+import LeanPool.ZetaZeros.MontgomeryTaylor.Integrability
+import LeanPool.ZetaZeros.MontgomeryTaylor.TestFunction
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Reducing the functional to a single integral against `G`

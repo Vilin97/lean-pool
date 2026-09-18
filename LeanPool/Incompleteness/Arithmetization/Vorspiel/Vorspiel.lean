@@ -3,13 +3,17 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Representation
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Model
+import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
 import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.PeanoMinus
-import Mathlib.Data.Fin.Basic
-import Mathlib.Algebra.Order.Sub.Basic
+import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
+import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
+
+@[expose] public section
 
 
 instance [Zero α] : Nonempty α := ⟨0⟩

@@ -3,9 +3,15 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import Mathlib.Geometry.Manifold.SmoothEmbedding
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.Step1
 import LeanPool.PLAcceleratedNesterovLean.Convergence.NesterovConvergence
 import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
 
 
 /-!
@@ -14,6 +20,8 @@ import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
 This file contains helper statements used by `PLAcceleratedNesterovLean.MainTheorem`.  The public
 file intentionally exposes only the clean top-level theorem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

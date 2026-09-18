@@ -3,9 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetCertificate
+public import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbeddingCore
 import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification
 import LeanPool.HadwigerNelsonBounds.PartsGadgetForcedPair
+import LeanPool.HadwigerNelsonBounds.PartsGadgetSymmetry
 
 /-!
 # The finite Parts gadget inside the unit-distance plane
@@ -13,6 +17,8 @@ import LeanPool.HadwigerNelsonBounds.PartsGadgetForcedPair
 Every combinatorial edge is a unit segment and every hyperedge is a rigid copy
 of the canonical triangle ruled out by the checked 481-vertex certificate.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

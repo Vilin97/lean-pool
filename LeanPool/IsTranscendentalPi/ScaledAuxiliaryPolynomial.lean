@@ -3,7 +3,11 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import LeanPool.IsTranscendentalPi.SubsetSumPolynomial
+module
+
+public import LeanPool.IsTranscendentalPi.SubsetSumPolynomial
+public import LeanPool.IsTranscendentalPi.NivenPolynomials
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # Scaled auxiliary polynomial
@@ -11,6 +15,8 @@ import LeanPool.IsTranscendentalPi.SubsetSumPolynomial
 The symmetric polynomial `∑ᵢ T(Xᵢ)` and its evaluation, providing the algebraic
 input to the auxiliary integer in Niven's proof.
 -/
+
+@[expose] public section
 
 open Polynomial
 open Multiset

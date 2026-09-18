@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.EM.Indiscernible
+module
+
+public import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Syntax
 /-!
 # Ehrenfeucht–Mostowski templates for Lω₁ω
 
@@ -11,6 +13,8 @@ import LeanPool.InfinitaryLogic.Methods.EM.Indiscernible
 The downstream EM modules construct templates from indiscernible sequences and develop their
 realization properties.
 -/
+
+@[expose] public section
 
 universe u v
 

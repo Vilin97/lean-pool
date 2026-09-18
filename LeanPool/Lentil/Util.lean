@@ -3,10 +3,14 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
-import LeanPool.Lentil.Utils.MetaUtil
-import LeanPool.Lentil.Utils.SyntaxUtil
-import LeanPool.Lentil.Utils.MiscLemmas
+module
+
+public import Lean.Data.Options
+public meta import Lean.Meta.Tactic.Simp.Simproc
+meta import Lean.Meta.Tactic.Simp.Attr
+import Lean.Meta.Tactic.Simp.RegisterCommand
+
+@[expose] public section
 
 open Lean
 

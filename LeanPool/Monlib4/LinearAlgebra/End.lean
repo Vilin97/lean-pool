@@ -3,13 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.LinearAlgebra.Eigenspace.Basic
+module
+
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
 
 /-!
  # Some obvious lemmas on module.End
 
 This file contains some obvious lemmas on `module.End`.
 -/
+
+@[expose] public section
 
 
 open scoped BigOperators

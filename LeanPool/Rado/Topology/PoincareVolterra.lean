@@ -3,6 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
+
+public import Mathlib.Topology.Connected.LocallyConnected
 import LeanPool.Rado.Topology.SecondCountable
 
 /-!
@@ -39,6 +42,8 @@ second countable (as a subspace). Then:
    reachable, hence `z ∈ G`); connectedness gives `G = Z`, so countably many
    second-countable open sets cover `Z`.
 -/
+
+@[expose] public section
 
 open Set Topology TopologicalSpace
 

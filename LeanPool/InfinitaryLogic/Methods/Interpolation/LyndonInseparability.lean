@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
-import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
+module
+
+public import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
 import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
+import LeanPool.InfinitaryLogic.Methods.Interpolation.InseparablePairFamily
 /-!
 # Polarity-refined inseparability and the mixed closures (issue #14, Unit 2 — the stop/go gate)
 
@@ -36,6 +38,8 @@ equation.  `SentBndPol`, the one-sided closure suite, and the paired family are 
   `(Pos φ ∩ Pos ψ, Neg φ ∩ Neg ψ)`.  This is the machine-checked form of the side flip in
   López–Escobar 1965, Theorem 4.0(.4).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

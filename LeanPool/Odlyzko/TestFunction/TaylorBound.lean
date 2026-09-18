@@ -5,9 +5,11 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.TestFunction.Quadratic
 public import Mathlib.Analysis.Calculus.Taylor
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+public import LeanPool.Odlyzko.TestFunction.Basic
+import LeanPool.Odlyzko.TestFunction.Fourier
+import LeanPool.Odlyzko.TestFunction.Quadratic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-! TODO: Add doc-string. -/
 

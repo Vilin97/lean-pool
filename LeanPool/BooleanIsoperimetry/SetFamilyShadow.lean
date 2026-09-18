@@ -3,7 +3,15 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import LeanPool.BooleanIsoperimetry.Shadow
+module
+
+public import LeanPool.BooleanIsoperimetry.Shadow
+public import LeanPool.BooleanIsoperimetry.KruskalKatona
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Set-family shadow corollaries
@@ -11,6 +19,8 @@ import LeanPool.BooleanIsoperimetry.Shadow
 This file exposes thin numeric corollaries of the upstream Kruskal-Katona
 upper-shadow theorem in the notation used by the Harper proof.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

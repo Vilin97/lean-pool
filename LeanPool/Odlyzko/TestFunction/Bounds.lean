@@ -5,9 +5,12 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.TestFunction.Fourier
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+public import LeanPool.Odlyzko.TestFunction.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.Odlyzko.TestFunction.Amplitude
+import LeanPool.Odlyzko.TestFunction.Fourier
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 
 /-!
 # Bounds

@@ -3,7 +3,9 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Combinatorics.SimpleGraph.LapMatrix
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.LapMatrix
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Laplacian Basics
@@ -27,6 +29,8 @@ with mathlib's `lapMatrix`.
 - `Problem6.inducedLaplacian_eq_lapMatrix`: inducedLaplacian = (inducedSubgraph G S).lapMatrix ℝ
 - `Problem6.lapMatrix_loewner_mono`: Loewner monotonicity for lapMatrix
 -/
+
+@[expose] public section
 
 open Finset Matrix BigOperators
 

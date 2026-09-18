@@ -3,8 +3,11 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
+module
 
-import LeanPool.Flean.Basic
+public import LeanPool.Flean.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Flean: Floating-Point Numbers in Lean
@@ -16,6 +19,8 @@ Main declarations: `Flean.Float`, `toFloat`, `toRat`, `to_float_to_rat`, `roundf
 Tags: floating-point, numerical-analysis, ieee-754, rounding
 MSC: 65G50, 65G30, 68V20
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

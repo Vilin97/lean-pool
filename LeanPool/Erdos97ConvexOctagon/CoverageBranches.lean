@@ -3,7 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
+public import LeanPool.Erdos97ConvexOctagon.FiniteModel
+public import LeanPool.Erdos97ConvexOctagon.Relabelling
+public import LeanPool.Erdos97ConvexOctagon.RowMasks
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSoundness
 
 /-!
@@ -12,6 +16,8 @@ import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSoundness
 The compact kernel-checked coverage certificate excludes all seven canonical
 first rows.
 -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence
 

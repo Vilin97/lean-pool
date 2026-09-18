@@ -3,8 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Lemma43Relations
+module
+
+public import LeanPool.Feige.Lemma43
 import LeanPool.Feige.Lemma43Density
+import LeanPool.Feige.Lemma43Relations
 
 /-!
 # Fully automatic local exponential transfer interface
@@ -13,6 +16,8 @@ This file discharges the bounded-integrability hypotheses in the transfer
 Stein identities and assembles the probability relations and density
 identifications.
 -/
+
+@[expose] public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

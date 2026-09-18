@@ -3,12 +3,12 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.ChannelCapacity.Discharged
-import LeanPool.ChannelCapacity.Finite
+module
 
-import Mathlib.MeasureTheory.Measure.Count
-import Mathlib.Probability.ProbabilityMassFunction.Basic
-import Mathlib.Probability.ProbabilityMassFunction.Constructions
+public import LeanPool.ChannelCapacity.Discharged
+public import LeanPool.ChannelCapacity.Finite
+
+public import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
 /-!
 # ChannelCapacity.DischargedExample
@@ -19,6 +19,8 @@ This file builds a concrete positive full-rank `Fin 2 → Fin 2` channel with co
 reference, instantiates `Kernel.ContinuousPositiveDensity`, and applies
 `exists_unique_capacity_achieving_prior_discharged`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

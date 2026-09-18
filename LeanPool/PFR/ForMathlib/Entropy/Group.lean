@@ -7,7 +7,6 @@ Authors: PFR contributors
 module
 
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
-public import LeanPool.PFR.ForMathlib.Entropy.Kernel.Group
 
 /-!
 # Entropy identities in additive groups

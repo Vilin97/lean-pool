@@ -3,14 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.M.Basic
-import LeanPool.BollobasNikiforov.M.Config
-import LeanPool.BollobasNikiforov.M.Schur
-import LeanPool.BollobasNikiforov.M.GammaZero
-import LeanPool.BollobasNikiforov.CP.Basic
+public import LeanPool.BollobasNikiforov.M.Config
+public import LeanPool.BollobasNikiforov.CP.Basic
 import LeanPool.BollobasNikiforov.CP.Closed
-import Mathlib.Data.Fin.Tuple.Sort
+import LeanPool.BollobasNikiforov.M.GammaZero
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Completely positivity of `M` on a right-angle planar cone
@@ -25,6 +24,8 @@ with a unique supporting vector reduces, after rotation and scaling, to the
 MX06 configuration (`k ≥ 1`). Unique and tied open-half-plane configurations
 are completely positive (HP04–HP05), as is the closed half-plane (HP06).
 -/
+
+@[expose] public section
 
 open Matrix Filter
 open scoped Matrix Topology

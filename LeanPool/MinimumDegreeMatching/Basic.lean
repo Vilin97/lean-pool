@@ -3,6 +3,8 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini and Aristotle contributors. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
+module
+public import Mathlib.Combinatorics.SimpleGraph.Matching
 import LeanPool.MinimumDegreeMatching.Spread
 
 /-!
@@ -27,6 +29,8 @@ The even case reuses the finite-set augmentation theorem from `Spread`. The odd 
 reduced to it by adjoining a universal apex vertex and deleting that vertex from the resulting
 perfect matching. Both public formulations therefore share one proof of the degree criterion.
 -/
+
+@[expose] public section
 
 namespace SimpleGraph
 

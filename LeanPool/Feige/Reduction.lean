@@ -3,11 +3,14 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.Calibration
-import LeanPool.Feige.Constants
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.Real
-import Mathlib.Probability.Independence.Basic
+module
+
+public import LeanPool.Feige.Calibration
+public import LeanPool.Feige.Constants
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Reduction from exact calibration to Feige's inequality
@@ -17,6 +20,8 @@ theorem and the deterministic simplex bridge are exposed as separate
 hypotheses.  The result here is the shift, bad-event inclusion, and
 complement argument in the proof of Theorem 1.1.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open MeasureTheory ProbabilityTheory Set

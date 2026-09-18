@@ -3,7 +3,9 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
+module
+
+public import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 
 
 /-!
@@ -13,6 +15,8 @@ and a termination flag. The program counter points to the next instruction to be
 while the termination flag indicates whether the machine state has halted or if further
 evaluation should continue.
 -/
+
+@[expose] public section
 /-- The state of the abstract machine: its memory, registers, program counter,
 loaded code, and termination flag. -/
 structure MState where

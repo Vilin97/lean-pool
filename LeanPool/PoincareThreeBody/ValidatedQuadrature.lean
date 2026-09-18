@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.TrapezoidalRule
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.TrapezoidalRule
 
 /-!
 # Validated quadrature certificates
@@ -13,6 +14,8 @@ These lemmas turn a finite trapezoidal sum and a certified second-derivative bou
 about the exact interval integral. They form the narrow interface through which a verified finite
 computation can discharge a nonvanishing obligation in the Poincaré argument.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

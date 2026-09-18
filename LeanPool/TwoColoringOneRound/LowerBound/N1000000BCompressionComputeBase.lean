@@ -3,21 +3,21 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.FieldSimp
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
 import Mathlib.Algebra.BigOperators.Field
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Algebraic cancellation lemma used to keep integer cross-multiplication checks from ballooning:
 we replace a term `(s : ℚ) / (D : ℚ)` by the reduced fraction obtained by cancelling
 `g = gcd(|s|, D)`.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -49,7 +49,7 @@ private theorem tTr_lt (d : DirIdx) : tTr[d.1]! < masks.size := by fin_cases d <
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def invDir (d : DirIdx) : DirIdx :=
-  ⟨tTr[d.1]!, tTr_lt d⟩
+  ⟨tTr[d.1]!, (by exact tTr_lt d)⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev basisDen (r : Block) : Nat :=
@@ -125,11 +125,33 @@ theorem div_by_D_eq_div_by_div_gcd (s : Int) :
       simp only [Rat.divInt_eq_div]
       simp_all
 
-/-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+/-- Integer numerator of a compressed basis entry, skipping zero basis coordinates. -/
 def compBasisIntEntry (r : Block) (d : DirIdx) (p q : Fin 3) : Int :=
-  (Finset.univ : Finset DirIdx).sum fun k =>
-    (Finset.univ : Finset DirIdx).sum fun a =>
-      (iOfNat (baseTypeCount k)) * (iOfNat (N k a d)) * (bValNum r p k) * (bValNum r q a)
+  let rows := (Finset.univ : Finset DirIdx).filter fun k => bValNum r p k ≠ 0
+  let columns := (Finset.univ : Finset DirIdx).filter fun a => bValNum r q a ≠ 0
+  rows.sum fun k =>
+    iOfNat (baseTypeCount k) * bValNum r p k * columns.sum fun a =>
+      iOfNat (N k a d) * bValNum r q a
+
+/-- Skipping zero coordinates and factoring row coefficients preserves the defining double sum. -/
+theorem compBasisIntEntry_eq_sum (r : Block) (d : DirIdx) (p q : Fin 3) :
+    compBasisIntEntry r d p q =
+      (Finset.univ : Finset DirIdx).sum fun k =>
+        (Finset.univ : Finset DirIdx).sum fun a =>
+          iOfNat (baseTypeCount k) * iOfNat (N k a d) * bValNum r p k * bValNum r q a := by
+  unfold compBasisIntEntry
+  simp only [Finset.sum_filter]
+  apply Finset.sum_congr rfl
+  intro k _
+  by_cases hleft : bValNum r p k = 0
+  · simp [hleft]
+  · simp only [hleft, ne_eq, not_false_eq_true, ite_true, Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro a _
+    by_cases hright : bValNum r q a = 0
+    · simp [hright]
+    · simp only [hright, not_false_eq_true, ite_true]
+      ac_rfl
 
 private theorem basisDen_pos (r : Block) : 0 < basisDen r := by fin_cases r <;> decide
 
@@ -204,7 +226,7 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
       (Finset.univ.sum fun k : DirIdx =>
         Finset.univ.sum fun a : DirIdx => ((num k a : Int) : Q)) =
         ((compBasisIntEntry r d p q : Int) : Q) := by
-    simp [compBasisIntEntry, compBasisIntEntry, num]
+    simp [compBasisIntEntry_eq_sum, num]
   have hmain :
       compBasis r d p q = ((compBasisIntEntry r d p q : Int) : Q) / (den * den) := by
     dsimp [compBasis]
@@ -227,7 +249,7 @@ private theorem varToOrbitRep_lt (i : Var) : varToOrbitRep[i.1]! < masks.size :=
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def varOrbit (i : Var) : DirIdx :=
-  ⟨varToOrbitRep[i.1]!, varToOrbitRep_lt i⟩
+  ⟨varToOrbitRep[i.1]!, (by exact varToOrbitRep_lt i)⟩
 
 end N1000000BCompressionCompute
 

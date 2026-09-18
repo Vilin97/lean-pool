@@ -3,18 +3,17 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Union
-import Mathlib.Data.Nat.Basic
-import Mathlib.Order.Lattice.Nat
+public import Mathlib.Order.Lattice.Nat
 
 /-!
 # Basic definitions for the hypergraph lower bound
 
 Basic definitions and the substitution theorem for the hypergraph lower bound.
 -/
+
+@[expose] public section
 
 open Finset
 

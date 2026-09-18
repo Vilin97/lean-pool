@@ -3,10 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DisturbingFunction
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
+public import LeanPool.PoincareThreeBody.DisturbingFunction
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
 # Full phase-space Kepler orbits
@@ -16,6 +16,8 @@ momenta.  The homological equation must instead be evaluated on a genuine Hamilt
 file supplies the canonical rotating-frame momentum and embeds the resonant ellipse into the full
 four-dimensional phase space.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

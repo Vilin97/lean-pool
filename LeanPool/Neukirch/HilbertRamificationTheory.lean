@@ -3,36 +3,23 @@ Copyright (c) 2023 Hu Yongle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hu Yongle
 -/
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
+module
+
+
+public import LeanPool.Neukirch.ExtensionOfDedekindDomains
+public import Mathlib.NumberTheory.NumberField.Basic
 import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.NumberTheory.NumberField.Norm
-import Mathlib.LinearAlgebra.Dimension.DivisionRing
-import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 import Mathlib.RingTheory.RamificationInertia.Basic
-import Mathlib.FieldTheory.Galois.IsGaloisGroup
-import Mathlib.NumberTheory.RamificationInertia.Ramification
-import Mathlib.NumberTheory.RamificationInertia.Inertia
-
-import LeanPool.Neukirch.ExtensionOfDedekindDomains
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.Neukirch.HilbertRamificationTheory
 
 Imported Lean Pool material for `LeanPool.Neukirch.HilbertRamificationTheory`.
 -/
+
+@[expose] public section
 
 open Algebra
 
@@ -834,20 +821,19 @@ open Classical in
 theorem DecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg [IsGalois K L] :
     Fintype.card (DecompositionGroup p P) =
     ramificationIdxOfIsGalois p L * inertiaDegOfIsGalois p L := by
-  apply mul_left_cancel₀ (primesOver_card_ne_zero p L)
   have : Fintype (orbit (L ≃ₐ[K] L) (primesOverMk p P)) :=
     Set.fintypeRange fun m ↦ m • primesOverMk p P
+  have horbit : orbit (L ≃ₐ[K] L) (primesOverMk p P) = Set.univ := by
+    apply Set.eq_univ_of_forall
+    intro Q
+    obtain ⟨σ, hs⟩ := IsMaximal_conjugates p P Q.1
+    exact ⟨σ, by rw [← Subtype.val_inj, ← hs]; rfl⟩
+  apply mul_left_cancel₀ (primesOver_card_ne_zero p L)
   rw [ramificationIdx_mul_inertiaDegOfIsGalois, ← IsGalois.card_aut_eq_finrank,
     Nat.card_eq_fintype_card, DecompositionGroup,
     ← MulAction.card_orbit_mul_card_stabilizer_eq_card_group (L ≃ₐ[K] L) (primesOverMk p P)]
-  congr 1
-  · rw [Fintype.card_of_finset' (@Finset.univ (primesOver p L) _), Finset.card_univ]
-    · exact (Fintype.card_coe (primesOver p L)).symm
-    · intro Q
-      simp only [Finset.univ_eq_attach, Finset.mem_attach, true_iff, MulAction.mem_orbit_iff]
-      rcases IsMaximal_conjugates p P Q.1 with ⟨σ, hs⟩
-      exact ⟨σ, by rw [← Subtype.val_inj, ← hs]; rfl⟩
-  · simp_all
+  simp only [horbit, Fintype.card_setUniv, Fintype.card_coe]
+  congr!
 
 open Classical in
 theorem Extension_degree_over_DecompositionField_eq_ramificationIdx_mul_inertiaDeg
@@ -1057,8 +1043,8 @@ theorem ResidueGaloisHom_surjective [hn : Normal K L] :
   let τ := ((IntermediateField.adjoin.powerBasis (hn.isIntegral a.1)).lift b.1
     h).fieldRangeToAlgEquiv.liftNormal L
   use τ
-  refine AlgEquiv.coe_toAlgHom_injective ((@PowerBasis.liftEquiv E _ F _ _ E _ _ e).injective ?_)
-  apply Subtype.val_inj.mp
+  apply AlgEquiv.coe_toAlgHom_injective
+  apply e.algHom_ext
   change ((ResidueGaloisHom p P) τ) e.gen = σ e.gen
   simp only [← ha]
   calc _ = ϕP ((GalAlgEquiv τ) a) := rfl
@@ -1070,9 +1056,7 @@ theorem ResidueGaloisHom_surjective [hn : Normal K L] :
       rw [← PowerBasis.lift_gen (IntermediateField.adjoin.powerBasis (hn.isIntegral a.1)) b.1 h,
         GalAlgEquiv_apply, ha, AlgEquiv.liftNormal_intermediateField_commutes]
       rfl
-    _ = _ := by
-      change (e.liftEquiv σ.toAlgHom).1 = σ (ϕP a)
-      simp_all
+    _ = _ := congrArg σ ha.symm
 
 
 
@@ -1205,12 +1189,9 @@ theorem inertiaDeg_over_InertiaIdeal_eq_one_of_unique (p : Ideal (𝓞 K)) (P : 
     inertiaDeg_eq_of_isMaximal (InertiaIdeal' K P) P,
     ← card_aut_eq_finrank, ← Nat.card_congr <| MulEquiv.toEquiv <|
     autQuoutientInertiaGroupEquivResidueFieldAut (InertiaIdeal' K P) P,
-    Nat.card_eq_fintype_card]
-  have hm := Subgroup.card_eq_card_quotient_mul_card_subgroup (InertiaGroup (InertiaField' K P) P)
-  nth_rw 1 [(Subgroup.card_eq_iff_eq_top (InertiaGroup (InertiaField' K P) P)).mpr <|
-    InertiaGroup_InertiaIdeal_top K P, ← one_mul (Nat.card (L ≃ₐ[InertiaField' K P] L))] at hm
-  simp only [Nat.card_eq_fintype_card] at hm
-  exact mul_right_cancel₀ Fintype.card_ne_zero hm.symm
+    InertiaGroup_InertiaIdeal_top K P]
+  let := QuotientGroup.subsingleton_quotient_top (G := L ≃ₐ[InertiaField' K P] L)
+  exact Nat.card_unique
 
 theorem ramificationIdx_over_InertiaIdeal_eq_ramificationIdx_of_unique :
     ramificationIdxOfIsGalois (InertiaIdeal' K P) L = ramificationIdxOfIsGalois p L := by

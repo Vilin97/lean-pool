@@ -3,10 +3,12 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
 import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Calculus.ContDiff.Comp
 
 /-!
 # Segment Estimate Helpers
@@ -15,6 +17,8 @@ Helper lemmas for the segment estimate used by `motion_bounds_curvature_error`.
 Provides a generalized strong aiming lemma (no φ'(0) = 0 requirement)
 and the fiber-path Hessian-to-second-derivative connection.
 -/
+
+@[expose] public section
 
 noncomputable section
 

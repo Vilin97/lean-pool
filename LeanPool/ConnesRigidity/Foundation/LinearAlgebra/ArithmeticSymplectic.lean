@@ -11,13 +11,15 @@ Derived in part from Apache-2.0 `deancureton/ten-proofs`,
 Modifications: isolated the arithmetic carriers, narrowed imports, and changed
 the namespace for the Zhou §2 and §5 interfaces. See the upstream PORT_MAP.md.
 -/
-import Mathlib.Data.ZMod.Basic
-import Mathlib.LinearAlgebra.Matrix.Integer
-import Mathlib.LinearAlgebra.SymplecticGroup
+module
+
+public import Mathlib.LinearAlgebra.SymplecticGroup
 
 /-!
 The arithmetic symplectic component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace OpenAIPort

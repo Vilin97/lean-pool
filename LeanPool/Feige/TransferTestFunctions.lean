@@ -3,7 +3,12 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import LeanPool.Feige.SteinIdentity
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Test functions for the exponential transfer identity
@@ -13,6 +18,8 @@ identity.  They are written with `max` and `min`; for positive `c,d` this is
 equivalent to the corresponding indicator notation and makes global
 continuity transparent.
 -/
+
+@[expose] public section
 
 open Real Set Filter Topology MeasureTheory
 

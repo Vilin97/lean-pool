@@ -3,8 +3,19 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.AndersonConjecture.Jensen.Construction.Construction
+module
+
+public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+public import LeanPool.AndersonConjecture.Jensen.Defs
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Regular.RegularSequence
 import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
+import LeanPool.AndersonConjecture.Jensen.Construction.Construction
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Cardinality
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Application to T = C[[x,y,z]]/(x^2 - yz)
@@ -14,6 +25,8 @@ of depth 2 with uncountable residue field C. We verify Jensen's
 hypotheses (Corollary 2.4 with P = (0)) and apply the construction
 to produce a local UFD whose completion is T.
 -/
+
+@[expose] public section
 
 noncomputable section
 

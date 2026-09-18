@@ -3,9 +3,20 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import LeanPool.AndersonConjecture.CompleteDomain.LocalRing
+public import LeanPool.AndersonConjecture.Jensen.Defs
+public import Mathlib.RingTheory.Regular.RegularSequence
 import LeanPool.AndersonConjecture.CompleteDomain.CompleteDomain
 import LeanPool.AndersonConjecture.Jensen.Construction.Construction
+import LeanPool.AndersonConjecture.Jensen.Construction.HeitmannProp
 import Mathlib.Algebra.CharP.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Cardinality
+import Mathlib.Analysis.Complex.Order
+import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Jensen's Theorem on Completions of UFDs
@@ -14,6 +25,8 @@ Under suitable hypotheses on a complete local domain T, one
 constructs a local UFD A whose adic completion is T and whose
 generic formal fiber is trivial (Jensen, 2006, Corollary 2.4).
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -190,73 +203,45 @@ noncomputable def divR' (f : MvPowerSeries (Fin 3) ℂ) :
 open MvPowerSeries in
 lemma coeff_lhs' (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
     coeff d (f - X 1 * shiftX1' f) = if d 1 = 0 then coeff d f else 0 := by
-  simp only [map_sub]
-  rw [show (X (1 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
-    MvPowerSeries.monomial (R := ℂ) (Finsupp.single 1 1) 1 from rfl]
-  rw [MvPowerSeries.coeff_monomial_mul]
-  by_cases hle : Finsupp.single (1 : Fin 3) 1 ≤ d
-  · have hd1 : d 1 ≠ 0 := by
-      have := hle 1
-      simp [Finsupp.single_eq_same] at this
-      omega
-    simp only [hle, ite_true, one_mul, hd1, ite_false, sub_eq_zero]
-    change f d = shiftX1' f (d - Finsupp.single 1 1)
-    simp only [shiftX1']
-    show f d = f (d - Finsupp.single 1 1 + Finsupp.single 1 1)
-    rw [tsub_add_cancel_of_le hle]
-  · have hd1 : d 1 = 0 := by
-      by_contra h
-      apply hle
-      intro i
-      simp only [Finsupp.single_apply]
-      by_cases hi : i = 1
-      · subst hi
-        simp
-        omega
-      · simp [show (1 : Fin 3) ≠ i from fun h => hi h.symm]
-    simp [hle, hd1]
+  rw [map_sub, show (X (1 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
+    MvPowerSeries.monomial (Finsupp.single 1 1) 1 from rfl,
+    MvPowerSeries.coeff_monomial_mul]
+  simp only [Finsupp.single_le_iff]
+  by_cases hd1 : 1 ≤ d 1
+  · rw [ite_eq_left hd1, one_mul, ite_eq_right (Nat.ne_of_gt hd1)]
+    change f d - f (d - Finsupp.single 1 1 + Finsupp.single 1 1) = 0
+    rw [tsub_add_cancel_of_le (Finsupp.single_le_iff.mpr hd1), sub_self]
+  · have hzero : d 1 = 0 := Nat.eq_zero_of_not_pos hd1
+    rw [ite_eq_right hd1, sub_zero, ite_eq_left hzero]
 
 open MvPowerSeries in
 lemma coeff_rhs' (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
     coeff d (X (0 : Fin 3) ^ 2 * divR' f) =
       if 2 ≤ d 0 ∧ d 1 = 0 then coeff d f else 0 := by
-  rw [show (X (0 : Fin 3) : MvPowerSeries (Fin 3) ℂ) ^ 2 =
-    MvPowerSeries.monomial (R := ℂ) (Finsupp.single 0 2) 1 from
-    MvPowerSeries.X_pow_eq 0 2]
-  rw [MvPowerSeries.coeff_monomial_mul]
-  by_cases hle : Finsupp.single (0 : Fin 3) 2 ≤ d
-  · have hd0 : 2 ≤ d 0 := by
-      have := hle 0
-      simp only [Finsupp.single_eq_same] at this
-      exact this
-    simp only [hle, ite_true, one_mul]
+  rw [MvPowerSeries.X_pow_eq, MvPowerSeries.coeff_monomial_mul]
+  simp only [Finsupp.single_le_iff]
+  by_cases hd0 : 2 ≤ d 0
+  · rw [ite_eq_left hd0, one_mul]
+    change (if (d - Finsupp.single 0 2 : Fin 3 →₀ ℕ) 1 = 0 then
+      f (Finsupp.update (d - Finsupp.single 0 2 : Fin 3 →₀ ℕ) 0
+        ((d - Finsupp.single 0 2 : Fin 3 →₀ ℕ) 0 + 2))
+      else 0) = _
+    have hsub1 : (d - Finsupp.single (0 : Fin 3) 2 : Fin 3 →₀ ℕ) 1 = d 1 := by
+      simp only [Finsupp.tsub_apply, Finsupp.single_apply, Fin.isValue,
+        Fin.reduceEq, ↓reduceIte, tsub_zero]
+    rw [hsub1]
     by_cases hd1 : d 1 = 0
-    · simp only [hd0, hd1, true_and, ite_true]
-      change divR' f (d - Finsupp.single 0 2) = f d
-      unfold divR'
-      set d' := (d - Finsupp.single (0 : Fin 3) 2 : Fin 3 →₀ ℕ) with hd'_def
-      have hsub1 : d' 1 = 0 := by simp [hd'_def, Finsupp.tsub_apply, hd1]
-      simp only [hsub1, ite_true]
+    · rw [ite_eq_left hd1, ite_eq_left ⟨hd0, hd1⟩, coeff_apply]
       congr 1
       ext i
-      simp only [Finsupp.update_apply, hd'_def, Finsupp.tsub_apply, Finsupp.single_apply]
-      fin_cases i <;> simp_all
-    · simp only [hd1, and_false, ite_false]
-      change divR' f (d - Finsupp.single 0 2) = 0
-      unfold divR'
-      set d' := (d - Finsupp.single (0 : Fin 3) 2 : Fin 3 →₀ ℕ) with hd'_def
-      have hsub1 : d' 1 = d 1 := by simp [hd'_def, Finsupp.tsub_apply]
-      simp [hsub1, hd1]
-  · have hd0 : ¬ (2 ≤ d 0) := by
-      intro h
-      apply hle
-      intro i
-      simp only [Finsupp.single_apply]
       by_cases hi : i = 0
-      · subst hi
-        simpa only [Fin.isValue, ↓reduceIte] using h
-      · simp [show (0 : Fin 3) ≠ i from fun h => hi h.symm]
-    simp [hle, hd0]
+      · subst i
+        simp only [Finsupp.update_apply, ↓reduceIte, Finsupp.tsub_apply,
+          Finsupp.single_eq_same, Nat.sub_add_cancel hd0]
+      · simp only [Finsupp.update_apply, ite_eq_right hi, Finsupp.tsub_apply,
+          Finsupp.single_apply, ite_eq_right (Ne.symm hi), tsub_zero]
+    · rw [ite_eq_right hd1, ite_eq_right (not_and_of_not_right _ hd1)]
+  · rw [ite_eq_right hd0, ite_eq_right (not_and_of_not_left _ hd0)]
 
 open MvPowerSeries in
 lemma coeff_gen_zero' (a : Fin 3 →₀ ℕ) (ha0 : a 0 < 2) (ha1 : a 1 = 0) :
@@ -411,153 +396,50 @@ The construction uses:
 See references/heitmann_1993.md Theorem 8 and references/jensen_2006.md Corollary 2.4.
 -/
 
--- Local copies of Construction.lean theorems (circular import workaround)
-
 /-- In a local domain with depth ≥ 2, M is not an associated prime of T/rT
-for any nonzero r. (Local copy of Construction.maximal_not_assoc_of_depth_ge_two.) -/
+for any nonzero r. -/
 theorem maximal_not_assoc_local
     (hdepth : ∃ (a b : T), a ∈ IsLocalRing.maximalIdeal T ∧
       b ∈ IsLocalRing.maximalIdeal T ∧
       RingTheory.Sequence.IsRegular T [a, b])
     (r : T) (hr : r ≠ 0) :
     IsLocalRing.maximalIdeal T ∉ associatedPrimes T (T ⧸ Ideal.span {r}) := by
-  intro hM_assoc
-  obtain ⟨a, b, ha_mem, hb_mem, hreg⟩ := hdepth
-  rw [RingTheory.Sequence.isRegular_cons_iff] at hreg
-  obtain ⟨ha_reg, hreg_b⟩ := hreg
-  rw [RingTheory.Sequence.isRegular_cons_iff] at hreg_b
-  obtain ⟨hb_reg_mod_a, _⟩ := hreg_b
-  rw [AssociatedPrimes.mem_iff, isAssociatedPrime_iff] at hM_assoc
-  obtain ⟨_, x, hx_ann⟩ := hM_assoc
-  have hx_ne : x ≠ 0 := by
-    intro hx0
-    rw [hx0] at hx_ann
-    have : IsLocalRing.maximalIdeal T = ⊤ := by
-      rw [hx_ann]
-      ext t
-      simp
-    exact (IsLocalRing.maximalIdeal.isMaximal T).ne_top this
-  obtain ⟨x_lift, rfl⟩ := Ideal.Quotient.mk_surjective x
-  have hx_not_mem : x_lift ∉ Ideal.span ({r} : Set T) := by
-    intro h
-    apply hx_ne
-    exact (Ideal.Quotient.eq_zero_iff_mem).mpr h
-  have ha_in_ann : a ∈ (⊥ : Submodule T (T ⧸ Ideal.span {r})).colon
-      {Ideal.Quotient.mk (Ideal.span {r}) x_lift} := by
-    rw [← hx_ann]
-    exact ha_mem
-  have ha_mul : a * x_lift ∈ Ideal.span ({r} : Set T) := by
-    rw [Submodule.mem_colon] at ha_in_ann
-    have := ha_in_ann (Ideal.Quotient.mk _ x_lift) (Set.mem_singleton _)
-    rw [Submodule.mem_bot] at this
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
-    exact this
-  have hb_in_ann : b ∈ (⊥ : Submodule T (T ⧸ Ideal.span {r})).colon
-      {Ideal.Quotient.mk (Ideal.span {r}) x_lift} := by
-    rw [← hx_ann]
-    exact hb_mem
-  have hb_mul : b * x_lift ∈ Ideal.span ({r} : Set T) := by
-    rw [Submodule.mem_colon] at hb_in_ann
-    have := hb_in_ann (Ideal.Quotient.mk _ x_lift) (Set.mem_singleton _)
-    rw [Submodule.mem_bot] at this
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
-    exact this
-  rw [Ideal.mem_span_singleton] at ha_mul hb_mul
-  obtain ⟨y₁, hy₁⟩ := ha_mul
-  obtain ⟨y₂, hy₂⟩ := hb_mul
-  have h_eq : r * (b * y₁) = r * (a * y₂) := by
-    have h1 : b * (a * x_lift) = a * (b * x_lift) := by ring
-    rw [hy₁, hy₂] at h1
-    calc r * (b * y₁) = b * (r * y₁) := by ring
-    _ = a * (r * y₂) := h1
-    _ = r * (a * y₂) := by ring
-  have h_cancel : b * y₁ = a * y₂ := by
-    have h_sub : r * (b * y₁ - a * y₂) = 0 := by rw [mul_sub]
-                                                 exact sub_eq_zero.mpr h_eq
-    exact sub_eq_zero.mp ((mul_eq_zero.mp h_sub).resolve_left hr)
-  have hby₁_mem : b * y₁ ∈ Ideal.span ({a} : Set T) :=
-    Ideal.mem_span_singleton.mpr ⟨y₂, h_cancel⟩
-  open Pointwise in
-  have hy₁_in_aT : y₁ ∈ Ideal.span ({a} : Set T) := by
-    have h_eq : (Ideal.span ({a} : Set T) : Submodule T T) = (a • ⊤ : Submodule T T) := by
-      ext x
-      constructor
-      · intro hx
-        rw [Ideal.mem_span_singleton] at hx
-        obtain ⟨c, rfl⟩ := hx
-        exact Submodule.smul_mem_pointwise_smul c a ⊤ Submodule.mem_top
-      · intro hx
-        have : x ∈ (a • (⊤ : Set T) : Set T) := SetLike.mem_coe.mpr hx
-        rw [Set.mem_smul_set] at this
-        obtain ⟨c, _, rfl⟩ := this
-        exact Ideal.mem_span_singleton.mpr ⟨c, by rw [smul_eq_mul]⟩
-    have hby₁_smul : b * y₁ ∈ (a • ⊤ : Submodule T T) := h_eq ▸ hby₁_mem
-    have hy₁_smul : y₁ ∈ (a • ⊤ : Submodule T T) :=
-      mem_of_isSMulRegular_quotient_of_smul_mem hb_reg_mod_a (by rwa [smul_eq_mul])
-    rw [h_eq]
-    exact hy₁_smul
-  rw [Ideal.mem_span_singleton] at hy₁_in_aT
-  obtain ⟨z, hz⟩ := hy₁_in_aT
-  have h_ax : a * x_lift = a * (r * z) := by rw [hy₁, hz]
-                                             ring
-  have h_x_eq : x_lift = r * z := by
-    have := ha_reg (show a • x_lift = a • (r * z) by rwa [smul_eq_mul, smul_eq_mul])
-    exact this
-  exact hx_not_mem (Ideal.mem_span_singleton.mpr ⟨z, h_x_eq⟩)
+  exact maximal_not_assoc_of_depth_ge_two hdepth r hr
 
-/-- Heitmann's Proposition 1, Noetherian part: if R → T/M² is surjective and
-IT ∩ R = I for all f.g. ideals, then R is Noetherian.
-(Local copy of the first conjunct of Construction.heitmann_prop1.) -/
+/-- A subring of T is Noetherian if extension and contraction preserve each
+finitely generated ideal. -/
 theorem heitmann_prop1_noetherian
     (R : Subring T)
     (h_closed : ∀ (I : Ideal R), I.FG →
       ∀ (c : R), (c : T) ∈ Ideal.map R.subtype I → c ∈ I) :
     IsNoetherianRing R := by
+  classical
   rw [isNoetherianRing_iff_ideal_fg]
   intro I
-  have hIT_fg : (Ideal.map R.subtype I).FG := IsNoetherian.noetherian _
-  have hIT_eq : Ideal.map R.subtype I = Ideal.span (R.subtype '' (I : Set R)) := rfl
-  rw [hIT_eq] at hIT_fg
-  obtain ⟨s', hs'_sub, hs'_span⟩ :=
-    (Submodule.fg_span_iff_fg_span_finset_subset (R.subtype '' (I : Set R))).mp hIT_fg
-  classical
-  have h_preimage : ∀ t ∈ (s' : Set T), ∃ (r : R), r ∈ I ∧ R.subtype r = t := by
-    intro t ht
-    exact hs'_sub ht
-  let f : (t : T) → t ∈ (s' : Set T) → R := fun t ht => (h_preimage t ht).choose
-  have hf_mem : ∀ t (ht : t ∈ (s' : Set T)), f t ht ∈ I :=
-    fun t ht => (h_preimage t ht).choose_spec.1
-  have hf_eq : ∀ t (ht : t ∈ (s' : Set T)), R.subtype (f t ht) = t :=
-    fun t ht => (h_preimage t ht).choose_spec.2
-  set gen_set : Finset R :=
-    s'.attach.image (fun ⟨t, ht⟩ => f t (Finset.mem_coe.mpr ht))
-  have hgen_sub : (gen_set : Set R) ⊆ (I : Set R) := by
+  obtain ⟨generators, hsubset, hspan⟩ :=
+    (Submodule.fg_span_iff_fg_span_finset_subset (R.subtype '' (I : Set R))).mp
+      (show (Ideal.span (R.subtype '' (I : Set R))).FG from IsNoetherian.noetherian _)
+  let preimages : Finset R := generators.preimage R.subtype R.subtype_injective.injOn
+  have hpreimages : (preimages : Set R) = R.subtype ⁻¹' (generators : Set T) :=
+    Finset.coe_preimage _ _
+  have hpreimages_subset : (preimages : Set R) ⊆ (I : Set R) := by
     intro r hr
-    rw [Finset.mem_coe, Finset.mem_image] at hr
-    obtain ⟨⟨t, ht⟩, _, rfl⟩ := hr
-    exact hf_mem t (Finset.mem_coe.mpr ht)
-  have hJ_fg : (Ideal.span (gen_set : Set R)).FG := ⟨gen_set, rfl⟩
-  have hJT_eq : Ideal.map R.subtype (Ideal.span (gen_set : Set R)) =
+    obtain ⟨r', hr', heq⟩ := hsubset (show R.subtype r ∈ (generators : Set T) from
+      Finset.mem_preimage.mp hr)
+    exact R.subtype_injective heq ▸ hr'
+  have himage : R.subtype '' (preimages : Set R) = (generators : Set T) := by
+    rw [hpreimages]
+    apply Set.image_preimage_eq_of_subset
+    rintro t ht
+    obtain ⟨r, _, rfl⟩ := hsubset ht
+    exact ⟨r, rfl⟩
+  have hmap : Ideal.map R.subtype (Ideal.span (preimages : Set R)) =
       Ideal.map R.subtype I := by
-    apply le_antisymm
-    · rw [Ideal.map_span]
-      apply Ideal.span_le.mpr
-      intro t ht
-      obtain ⟨r, hr, rfl⟩ := ht
-      rw [hIT_eq]
-      exact Ideal.subset_span ⟨r, hgen_sub hr, rfl⟩
-    · rw [hIT_eq, Ideal.map_span]
-      rw [show (Ideal.span (R.subtype '' (I : Set R)) : Ideal T) =
-        Ideal.span (↑s' : Set T) from by exact_mod_cast hs'_span]
-      apply Ideal.span_le.mpr
-      intro t ht
-      have ht' : t ∈ s' := Finset.mem_coe.mp ht
-      apply Ideal.subset_span
-      exact ⟨f t (Finset.mem_coe.mpr ht'),
-        Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨⟨t, ht'⟩, Finset.mem_attach _ _, rfl⟩),
-        hf_eq t (Finset.mem_coe.mpr ht')⟩
-  exact ⟨gen_set, le_antisymm (Ideal.span_le.mpr hgen_sub) (fun c hc =>
-    h_closed _ hJ_fg c (hJT_eq ▸ Ideal.mem_map_of_mem R.subtype hc))⟩
+    rw [Ideal.map_span, himage]
+    exact hspan.symm
+  refine ⟨preimages, le_antisymm (Ideal.span_le.mpr hpreimages_subset) ?_⟩
+  intro c hc
+  exact h_closed _ ⟨preimages, rfl⟩ c (hmap ▸ Ideal.mem_map_of_mem R.subtype hc)
 
 lemma jensen_map_maxIdeal_le_of_closed
     (R : Subring T) [IsLocalRing ↥R]

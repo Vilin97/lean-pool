@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.OddPrimeValuationDistribution.ValuationBlocks
-import Mathlib.RingTheory.PowerSeries.Basic
+module
+
+public import LeanPool.OddPrimeValuationDistribution.ValuationBlocks
+public import Mathlib.RingTheory.PowerSeries.Basic
 
 /-!
 # Bivariate generating function for odd-prime valuation distributions
@@ -15,6 +17,8 @@ denominator-cleared, subtraction-free form of
 
 `(1 - X * T) / (1 - (half + 1) * (1 + X) * T + p * X * T ^ 2)`.
 -/
+
+@[expose] public section
 
 namespace OddPrimeValuationDistribution
 

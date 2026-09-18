@@ -6,23 +6,20 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Analysis.Normed.Field.Instances
-public import Mathlib.Data.Int.Star
-public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.UniformConvergence
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.Topology.Algebra.Module.ModuleTopology
-public import Mathlib.Topology.EMetricSpace.Paracompact
-public import Mathlib.Topology.Separation.CompletelyRegular
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Cotangent
-public import LeanPool.LeanModularForms.Modularforms.ExpLems
-public import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
-public import LeanPool.LeanModularForms.Modularforms.BigO
 public import LeanPool.LeanModularForms.Modularforms.Equivs
 public import LeanPool.LeanModularForms.Modularforms.TsumderivWithin
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
+import LeanPool.LeanModularForms.Modularforms.BigO
+import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.Iteratedderivs
+import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Cotangent
+import Mathlib.Data.Int.Star
+import Mathlib.NumberTheory.TsumDivisorsAntidiagonal
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-! # SummableLems -/
 
@@ -30,7 +27,7 @@ public import LeanPool.LeanModularForms.Modularforms.TsumderivWithin
 @[expose] public section
 
 
-open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set
+open EisensteinSeries UpperHalfPlane TopologicalSpace Set
   Metric Filter Function Complex
 
 open scoped Interval Real NNReal ENNReal Topology BigOperators Nat

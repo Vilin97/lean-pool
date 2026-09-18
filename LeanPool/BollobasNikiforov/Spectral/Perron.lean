@@ -3,10 +3,9 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Basic.Spectrum
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
-import Mathlib.Topology.Instances.Matrix
+public import LeanPool.BollobasNikiforov.Basic.Spectrum
 
 /-!
 # Nonnegative Perron vector for a symmetric nonnegative matrix
@@ -14,6 +13,8 @@ import Mathlib.Topology.Instances.Matrix
 A real symmetric entrywise-nonnegative matrix has a nonnegative unit maximizer of the
 Rayleigh quotient, and that maximizer is an eigenvector for `lambdaMax`.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

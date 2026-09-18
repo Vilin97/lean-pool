@@ -6,8 +6,8 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.EllipticCurve.PlaceDictionary
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.ByContra
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Degree-one places are rational Weierstrass points

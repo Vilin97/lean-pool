@@ -3,10 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
-import LeanPool.ClassificationOfSurfaces.Triangulation
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Data.Fintype.Fin
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Finite cyclic presentations of triangulations
@@ -17,6 +20,8 @@ Incidence validity and dual connectivity then pass to the resulting
 `FiniteCyclicPresentation`.
 -/
 
+@[expose] public section
+
 namespace LeanEval
 namespace Topology
 namespace ClassificationOfSurfaces
@@ -24,7 +29,7 @@ namespace ClassificationOfSurfaces
 namespace SurfaceCellComplex
 
 /-- Oriented triangulation edges and signed cell-complex darts carry the same data. -/
-private def orientedEdgeSignedDartEquiv {Edge : Type*} :
+def orientedEdgeSignedDartEquiv {Edge : Type*} :
     OrientedEdge Edge ≃ SignedDart Edge where
   toFun := signedDartOfOrientedEdge
   invFun

@@ -9,12 +9,16 @@ Finite-group Property-(T) lemmas for the Zhou §4 transfer chain. This is a
 local proof of the finite quotient step and does not supply Zhou's spectral
 or EJZK input.
 -/
-import LeanPool.ConnesRigidity.Core
-import Mathlib.RepresentationTheory.Invariants
+module
+
+public import LeanPool.ConnesRigidity.Core
+public import Mathlib.RepresentationTheory.Invariants
 
 /-!
 The finite property t component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

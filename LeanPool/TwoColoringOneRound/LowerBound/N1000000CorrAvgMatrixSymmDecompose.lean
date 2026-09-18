@@ -3,14 +3,14 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+import Mathlib.Data.Nat.Bitwise
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 This file rewrites `corrAvgMatrix` into the symmetric orbital basis:
@@ -20,6 +20,8 @@ This file rewrites `corrAvgMatrix` into the symmetric orbital basis:
 The key bookkeeping is a tiny (34-element) map from directed indices to the unique variable whose
 transpose-orbit contains it (with `idDirIdx` handled separately).
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

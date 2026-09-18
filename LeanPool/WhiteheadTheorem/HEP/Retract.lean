@@ -3,18 +3,21 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.HEP.Cube
-import LeanPool.WhiteheadTheorem.Shapes.Cube
-import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
-import Mathlib.Analysis.Convex.Basic
-import Mathlib.Topology.Homotopy.Contractible
+public import LeanPool.WhiteheadTheorem.Shapes.Cube
+public import Mathlib.Topology.Homotopy.Contractible
+public import Mathlib.Logic.Equiv.PartialEquiv
+import LeanPool.WhiteheadTheorem.Auxiliary
+public import LeanPool.WhiteheadTheorem.HEP.Cube
 
 /-!
 # LeanPool.WhiteheadTheorem.HEP.Retract
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HEP.Retract`.
 -/
+
+@[expose] public section
 
 
 open TopCat

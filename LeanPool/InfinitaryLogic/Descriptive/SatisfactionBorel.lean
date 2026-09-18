@@ -3,7 +3,15 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.Measurable
+public import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
 import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Satisfaction of Lω₁ω Formulas is Borel
 
@@ -18,6 +26,8 @@ This file specializes the carrier-parametric result to structures on `ℕ`.
 
 - `modelsOf_measurableSet`: Satisfaction of any Lω₁ω sentence is measurable.
 -/
+
+@[expose] public section
 
 universe u v u'
 

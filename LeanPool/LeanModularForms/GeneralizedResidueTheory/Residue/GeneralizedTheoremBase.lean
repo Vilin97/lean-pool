@@ -3,13 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeasureHelpers
 import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MultipointPV.DominatedConvergence
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.Flatness
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.SectorCurveLemma
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
-import Mathlib.Analysis.Meromorphic.Order
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Generalized Residue Theorem -- Base Infrastructure
@@ -35,6 +41,8 @@ The convex-domain theorems `generalizedResidueTheorem`,
 `generalizedResidueTheorem_higher_order_simple` are in `GeneralizedTheorem.lean`,
 where they are proved as corollaries of the null-homologous versions.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

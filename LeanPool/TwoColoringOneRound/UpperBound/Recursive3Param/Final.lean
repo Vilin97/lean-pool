@@ -3,10 +3,13 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
+public import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Basic
 import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Regions
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.NormNum
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 /-!
 ## Final upper bound for the 3-parameter recursive algorithm
 
@@ -16,6 +19,8 @@ This file combines the four `b`-regions computed in
 `ClassicalAlgorithm.p recursive3ParamAlg`, and derives the numerical bound
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

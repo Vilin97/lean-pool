@@ -3,8 +3,13 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
-import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
+import Mathlib.Analysis.Complex.Harmonic.Analytic
+import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 
 /-!
 # Harnack's inequality
@@ -17,6 +22,8 @@ A positive harmonic function `u` on the unit disc satisfies the inequalities
     `(1 - ‖z‖) / (1 + ‖z‖) * u 0 ≤ u z ∧ u z ≤ u 0 * (1 + ‖z‖) / (1 - ‖z‖)`
 for all `z` in the unit disc.
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanComplexAnalysis
 

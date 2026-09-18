@@ -3,14 +3,22 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Common
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+public import Mathlib.Data.Rat.Init
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 namespace N1000000WedderburnData

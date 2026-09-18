@@ -3,7 +3,11 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedDerivative
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Ball integral absolute continuity
@@ -11,6 +15,8 @@ import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedD
 This module contains thin-shell estimates and the resulting absolute continuity
 of scalar ball-integral radius functions.
 -/
+
+@[expose] public section
 
 noncomputable section
 

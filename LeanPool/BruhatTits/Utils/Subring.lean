@@ -3,13 +3,17 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import Mathlib.Algebra.Ring.Subring.Basic
-import Mathlib.LinearAlgebra.Basis.Basic
+module
+
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Mathlib.RingTheory.Localization.FractionRing
 import Mathlib.RingTheory.Localization.Module
-import Mathlib.Tactic.Common
 /-!
 # LeanPool.BruhatTits.Utils.Subring
 -/
+
+@[expose] public section
 
 open Module
 

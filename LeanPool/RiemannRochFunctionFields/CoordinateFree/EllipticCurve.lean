@@ -7,6 +7,9 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.CoordinateFree.RiemannRoch
 public import LeanPool.RiemannRochFunctionFields.EllipticCurve.PicTorsorCore
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.DegreeOneDictionary
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusOne
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Coordinate-free elliptic-curve dictionary

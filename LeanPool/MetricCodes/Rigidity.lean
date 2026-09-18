@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Weyl
+public import LeanPool.MetricCodes.Weyl
 
 /-!
 # All-rank harmonic rigidity
 
 Completion of the root complex and rigidity of harmonic highest-weight vectors.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -226,7 +229,8 @@ theorem fullRootExteriorBracket_weightedAtom_swap
   rw [rootStructureConstant_swap, fullRootExteriorBracketAtom_swap]
   simp only [smul_neg, neg_smul, neg_neg]
 
-private def fullRootExteriorBracketUnordered (r n : ℕ) :
+/-- Sum the exterior bracket atoms over all ordered root triples with their structure constants. -/
+def fullRootExteriorBracketUnordered (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, ∑ β : PositiveRoot r,
     ∑ γ : PositiveRoot r,
@@ -1099,7 +1103,9 @@ section
 open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def fullRootExteriorCubicIncidenceOne (r n : ℕ) :
+/-- The cubic bracket contribution in which the second structure constant outputs the first
+input root. -/
+def fullRootExteriorCubicIncidenceOne (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, ∑ β : PositiveRoot r,
     ∑ γ : PositiveRoot r, ∑ δ : PositiveRoot r,
@@ -1110,7 +1116,9 @@ private def fullRootExteriorCubicIncidenceOne (r n : ℕ) :
               (actualExteriorRootContraction (PolynomialSpace r n) ε *
                 actualExteriorRootContraction (PolynomialSpace r n) δ)))
 
-private def fullRootExteriorCubicIncidenceTwo (r n : ℕ) :
+/-- The cubic bracket contribution in which the second structure constant outputs the second
+input root. -/
+def fullRootExteriorCubicIncidenceTwo (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, ∑ β : PositiveRoot r,
     ∑ γ : PositiveRoot r, ∑ δ : PositiveRoot r,
@@ -1121,7 +1129,9 @@ private def fullRootExteriorCubicIncidenceTwo (r n : ℕ) :
               (actualExteriorRootContraction (PolynomialSpace r n) ε *
                 actualExteriorRootContraction (PolynomialSpace r n) δ)))
 
-private def fullRootExteriorCubicIncidenceThree (r n : ℕ) :
+/-- The cubic bracket contribution using the first bracket's output as the next bracket's first
+input. -/
+def fullRootExteriorCubicIncidenceThree (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, ∑ β : PositiveRoot r,
     ∑ γ : PositiveRoot r, ∑ ε : PositiveRoot r,
@@ -1132,7 +1142,9 @@ private def fullRootExteriorCubicIncidenceThree (r n : ℕ) :
               (actualExteriorRootContraction (PolynomialSpace r n) β *
                 actualExteriorRootContraction (PolynomialSpace r n) α)))
 
-private def fullRootExteriorCubicIncidenceFour (r n : ℕ) :
+/-- The cubic bracket contribution using the first bracket's output as the next bracket's second
+input. -/
+def fullRootExteriorCubicIncidenceFour (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, ∑ β : PositiveRoot r,
     ∑ γ : PositiveRoot r, ∑ δ : PositiveRoot r,
@@ -2181,7 +2193,8 @@ theorem fullRootExteriorUpperPolynomialAction_contraction_commute
     actualExteriorRootContraction_apply]
   split_ifs <;> simp
 
-private def fullRootExteriorUpperActionAtom (r n : ℕ) (α : PositiveRoot r) :
+/-- The upper polynomial action composed with exterior creation of the same root. -/
+def fullRootExteriorUpperActionAtom (r n : ℕ) (α : PositiveRoot r) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   fullRootExteriorUpperPolynomialAction r n α *
     actualExteriorRootCreation (PolynomialSpace r n) α
@@ -2423,7 +2436,9 @@ section
 open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def rootJointHarmonicActionBracketMixed {r : ℕ}
+/-- The two mixed compositions of the action coboundary and bracket boundary on joint harmonic
+chains. -/
+def rootJointHarmonicActionBracketMixed {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam (k + 1) →ₗ[ℝ]
       RootJointHarmonicChain n lam (k + 1) :=
@@ -2432,7 +2447,8 @@ private def rootJointHarmonicActionBracketMixed {r : ℕ}
     (weightedRootBracketBoundary n lam (k + 1)).comp
       (weightedExteriorActionCoboundary n lam (k + 1))
 
-private def rootJointHarmonicFullMixedHodge {r : ℕ}
+/-- The four mixed action-bracket terms in the weighted Hodge operator on joint harmonic chains. -/
+def rootJointHarmonicFullMixedHodge {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam (k + 1) →ₗ[ℝ]
       RootJointHarmonicChain n lam (k + 1) :=
@@ -2494,7 +2510,8 @@ section
 
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def rootPolynomialActionBracketMixed (r n k : ℕ) :
+/-- The mixed action-coboundary and bracket-boundary operator on polynomial chains. -/
+def rootPolynomialActionBracketMixed (r n k : ℕ) :
     RootPolynomialChain r n (k + 1) →ₗ[ℝ]
       RootPolynomialChain r n (k + 1) :=
   (rootActionCoboundary r n k).comp (rootBracketBoundary r n k) +
@@ -2541,7 +2558,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung
 
 attribute [local instance] Classical.propDecidable
 
-private def fullRootExteriorUpperRootStructureIncidence (r n : ℕ) :
+/-- The structure-constant sum coupling upper polynomial action, root creation, and root
+contraction. -/
+def fullRootExteriorUpperRootStructureIncidence (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, ∑ β : PositiveRoot r, ∑ γ : PositiveRoot r,
     rootStructureConstant β γ α •
@@ -2987,7 +3006,9 @@ section
 
 open MetricCodes.Spherical.HigherHarmonicYoung
 
-private def weightedChevalleyEilenbergCoboundary {r : ℕ}
+/-- The weighted Chevalley-Eilenberg coboundary, combining the action and root-bracket
+coboundaries. -/
+def weightedChevalleyEilenbergCoboundary {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam k →ₗ[ℝ]
       RootJointHarmonicChain n lam (k + 1) :=
@@ -3448,11 +3469,14 @@ namespace HigherYoungArbitraryRankColumnHighestCoefficientDescent
 open MetricCodes.Spherical.HigherHarmonicYoung.BideterminantHighestLine
 open MetricCodes.Spherical.HigherYoungAllRankSourceCoefficientStraightening
 
-private def sourceMatrixTranspose (m : ℕ) :
+/-- The polynomial-algebra automorphism that transposes the two indices of each source matrix
+variable. -/
+def sourceMatrixTranspose (m : ℕ) :
     SourceMatrix m ≃ₐ[ℂ] SourceMatrix m :=
   MvPolynomial.renameEquiv ℂ (Equiv.prodComm (Fin m) (Fin m))
 
-private def sourceExponentTranspose {m : ℕ}
+/-- Transpose the row and column indices of a source matrix monomial's exponent vector. -/
+def sourceExponentTranspose {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) : Fin m × Fin m →₀ ℕ :=
   Finsupp.mapDomain (Equiv.prodComm (Fin m) (Fin m)) d
 
@@ -3554,7 +3578,8 @@ namespace HigherYoungArbitraryRankTriangularMarginDominance
 
 open MetricCodes.Spherical.HigherHarmonicYoung.BideterminantHighestLine
 
-private def sourceMarginPrefix {m : ℕ} (f : Fin m → ℕ) (k : ℕ) : ℕ :=
+/-- The sum of the first `k` entries of a row or column margin. -/
+def sourceMarginPrefix {m : ℕ} (f : Fin m → ℕ) (k : ℕ) : ℕ :=
   ∑ i : Fin m, if i.val < k then f i else 0
 
 theorem sourceColumnPrefix_le_sourceRowPrefix_of_upper
@@ -3688,7 +3713,8 @@ namespace ArbitraryRankColumnWeightProjection
 
 open MetricCodes.Spherical.HigherHarmonicYoung.BideterminantHighestLine
 
-private def columnVariableWeight (m : ℕ) :
+/-- Assign each source matrix variable unit weight in its column coordinate. -/
+def columnVariableWeight (m : ℕ) :
     (Fin m × Fin m) → (Fin m → ℕ) :=
   fun z => Pi.single z.2 1
 
@@ -3706,7 +3732,8 @@ theorem columnVariableWeight_weight {m : ℕ}
     Nat.cast_id, Pi.single_apply, mul_ite, mul_one, mul_zero, Fintype.sum_prod_type,
     Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte, sourceColumnDegree]
 
-private def columnWeightComponent {m : ℕ} (ν : Fin m → ℕ)
+/-- Project a source matrix polynomial to the component with column-degree vector `ν`. -/
+def columnWeightComponent {m : ℕ} (ν : Fin m → ℕ)
     (p : SourceMatrix m) : SourceMatrix m :=
   MvPolynomial.weightedHomogeneousComponent
     (columnVariableWeight m) ν p
@@ -4452,19 +4479,23 @@ open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 open MetricCodes.Spherical.HigherYoungAmbientCartanIsotropicEigenvalues
 open MetricCodes.Spherical.HigherYoungAmbientRootNilpotence
 
-private def totalYoungRowEuler {r n : ℕ} :
+/-- The total Euler derivation obtained by summing the diagonal derivations of all Young rows. -/
+def totalYoungRowEuler {r n : ℕ} :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   ∑ a : Fin (r + 1), rowDerivation a a
 
-private def antiholomorphicEulerDefect {r n : ℕ}
+/-- The Euler contribution from conjugate isotropic variables and their antiholomorphic
+derivatives. -/
+def antiholomorphicEulerDefect {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   ∑ a : Fin (r + 1), ∑ p : Fin (r + 1),
     conjugateIsotropicVariable h a p • antiholomorphicDerivative h a p
 
-private def unusedCoordinateEulerDefect {r n : ℕ} :
+/-- The Euler contribution of ambient coordinates outside the chosen isotropic pairs. -/
+def unusedCoordinateEulerDefect {r n : ℕ} :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   ∑ a : Fin (r + 1),
@@ -5019,7 +5050,8 @@ open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 open MetricCodes.Spherical.HigherYoungAmbientRootRotationDecomposition
 
-private def unusedAmbientCoordinates {r n : ℕ} : Finset (Fin n) :=
+/-- The ambient coordinates beyond the `r + 1` selected even-odd pairs. -/
+def unusedAmbientCoordinates {r n : ℕ} : Finset (Fin n) :=
   Finset.univ.filter (fun t : Fin n => 2 * (r + 1) ≤ t.val)
 
 @[simp] theorem mem_unusedAmbientCoordinates {r n : ℕ}
@@ -5146,7 +5178,8 @@ section
 open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 
-private def holomorphicDerivative {r n : ℕ}
+/-- The even-coordinate partial derivative minus `i` times the paired odd-coordinate derivative. -/
+def holomorphicDerivative {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) (a p : Fin (r + 1)) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
@@ -6267,7 +6300,9 @@ theorem triangularResidual_eq_rowTail_add_columnTail {r : ℕ}
   have hp := p.isLt
   omega
 
-private def harmonicHighestTriangularCoefficient {r : ℕ}
+/-- The triangular coercivity coefficient combining unused coordinates, row weights, and root
+indices. -/
+def harmonicHighestTriangularCoefficient {r : ℕ}
     (n : ℕ)
     (lam mu : Fin (r + 1) → ℕ)
     (b p : Fin (r + 1)) : ℕ :=
@@ -6803,7 +6838,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 open MetricCodes.Spherical.HigherYoungTwoRowLieIrreducibility
 
-private def ambientShortNegativeRoot {r n : ℕ}
+/-- The negative short-root derivation formed from the two rotations of an isotropic coordinate
+pair. -/
+def ambientShortNegativeRoot {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) (p : Fin (r + 1)) (t : Fin n) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
@@ -6827,7 +6864,9 @@ open MetricCodes.Spherical.HigherYoungArbitraryRankDominantHighestLinePreservati
 open MetricCodes.Spherical.HigherYoungAllRankShortNegativeRootNilpotence
 open MetricCodes.Spherical.HigherYoungTwoRowLieIrreducibility
 
-private def complexDerivationCommutator {r n : ℕ}
+/-- The commutator of two complex polynomial derivations, given by the difference of their
+compositions. -/
+def complexDerivationCommutator {r n : ℕ}
     (D₁ D₂ : Derivation ℂ
       (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ)) :
@@ -6842,7 +6881,7 @@ private def complexDerivationCommutator {r n : ℕ}
         Derivation.coeFn_coe, map_add, Derivation.leibniz, smul_eq_mul]
       ring
 
-private instance complexDerivationBracket {r n : ℕ} :
+instance complexDerivationBracket {r n : ℕ} :
     Bracket
       (Derivation ℂ
         (MvPolynomial (Fin ((r + 1) * n)) ℂ)
@@ -7225,7 +7264,9 @@ namespace HigherHarmonicYoung.ArbitraryRankAmbientSignedWeightProjection
 open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 open MetricCodes.Spherical.HigherYoungAmbientRootNilpotence
 
-private def ambientSignedVariableWeight {r n : ℕ}
+/-- The signed coordinate weight: positive on even isotropic indices, negative on odd ones, and
+zero elsewhere. -/
+def ambientSignedVariableWeight {r n : ℕ}
     (v : Fin ((r + 1) * n)) : Fin (r + 1) → ℤ :=
   let t := ((finProdFinEquiv (m := r + 1) (n := n)).symm v).2
   if ht : t.val < 2 * (r + 1) then
@@ -7270,7 +7311,9 @@ private def ambientSignedVariableWeight {r n : ℕ}
   simp only [ambientSignedVariableWeight, variableIndex, Equiv.symm_apply_apply, not_lt_of_ge ht,
     ↓reduceDIte]
 
-private def ambientSignedWeightComponent {r n : ℕ}
+/-- Project to signed ambient weight `mu` after changing to isotropic coordinates, then change
+back. -/
+def ambientSignedWeightComponent {r n : ℕ}
     (h : 2 * (r + 1) ≤ n)
     (mu : Fin (r + 1) → ℤ)
     (f : MvPolynomial (Fin ((r + 1) * n)) ℂ) :
@@ -7372,7 +7415,8 @@ namespace HigherYoungArbitraryRankSignedDiagonalDerivation
 
 open MetricCodes.Spherical.HigherYoungMaximalCartanNullSubstitutionRange
 
-private def signedDiagonalDerivation {ι : Type*} {m : ℕ}
+/-- The diagonal derivation sending variable `i` to `2 * w i p` times that variable. -/
+def signedDiagonalDerivation {ι : Type*} {m : ℕ}
     (w : ι → Fin m → ℤ) (p : Fin m) :
     Derivation ℂ (MvPolynomial ι ℂ) (MvPolynomial ι ℂ) :=
   MvPolynomial.mkDerivation ℂ
@@ -7803,7 +7847,8 @@ theorem derivation_weightedHomogeneousComponent_shift
       exact heq (add_right_cancel h)
     simp only [heq, ↓reduceIte, map_zero, hshift]
 
-private def orthogonalPositiveRootSignedCharge
+/-- The signed coordinate charge of a difference, sum, or short positive orthogonal root. -/
+def orthogonalPositiveRootSignedCharge
     {r n : ℕ} (alpha : OrthogonalPositiveRoot r n) : Fin (r + 1) → ℤ :=
   match alpha with
   | .difference p q _ => Pi.single p 1 - Pi.single q 1

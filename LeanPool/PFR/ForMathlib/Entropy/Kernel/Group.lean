@@ -7,7 +7,6 @@ Authors: PFR contributors
 module
 
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.MutualInfo
-public import Mathlib.MeasureTheory.Group.Arithmetic
 
 /-!
 # Kernel entropy and mutual information in a commutative group

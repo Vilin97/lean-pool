@@ -8,12 +8,16 @@ Authors: Utensil Song
 The proved kernel slice of Zhou's crossed-product model. The discrete kernel
 Fourier transform is lifted fiberwise over the acting group. Paper: §3.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.FourierCoordinates
-import LeanPool.ConnesRigidity.Paper.Section3.CrossedHaar
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.FourierCoordinates
+public import LeanPool.ConnesRigidity.Paper.Section3.CrossedHaar
 
 /-!
 The crossed kernel component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperCrossedKernel

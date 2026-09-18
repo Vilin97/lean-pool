@@ -3,13 +3,14 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
+module
+
+public import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
 import LeanPool.FormalLearningTheory.Complexity.Symmetrization
-import LeanPool.FormalLearningTheory.Complexity.Generalization
-import LeanPool.FormalLearningTheory.PureMath.FiniteVCApprox
-import Mathlib.Probability.ProbabilityMassFunction.Basic
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Map
 
 /-!
 # Finite-Support VC Approximation via Symmetrization
@@ -18,6 +19,8 @@ For finite `H`, we embed into `H ⊕ ℕ` (which is Infinite) and push the Finit
 forward along `Sum.inl`. This forces the growth-function path in the symmetrization
 proof, giving a sample bound depending only on d and ε, not on |H| or |A|.
 -/
+
+@[expose] public section
 
 open Finset MeasureTheory
 noncomputable section

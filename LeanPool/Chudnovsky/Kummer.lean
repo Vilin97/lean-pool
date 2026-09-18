@@ -3,11 +3,15 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.PicardFuchs
+public import LeanPool.Chudnovsky.PicardFuchs
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.Clausen
 import LeanPool.Chudnovsky.Estimates
 import LeanPool.Chudnovsky.Ramanujan
 import Mathlib.Analysis.InnerProductSpace.Calculus
+import Mathlib.NumberTheory.ModularForms.LevelOne.DimensionFormula
 
 /-!
 # Kummer's solution of the Picard–Fuchs equation
@@ -49,6 +53,8 @@ what chapter 9 consumes after the PLAN A7 reformulation. TODO: if the final asse
 `MainTheorem.lean` turns out to need the literal `Δ^(1/12)` statement (it uses `ωtilde₁ = Δ^(1/12)`
 only through `F` and `dF/dJ`), add it here with an explicit principal-branch bookkeeping.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -170,7 +176,7 @@ theorem kummerB_satisfiesPicardFuchs :
   have hWz := (hasDerivAt_inv h1z).comp z ((hasDerivAt_id z).const_sub (1 : ℂ))
   have hGz := (hHD1 z⁻¹ huw).comp z (hasDerivAt_inv hz0)
   have hGdz := (hHD2 z⁻¹ huw).comp z (hasDerivAt_inv hz0)
-  have hSz := ((hasDerivAt_inv (pow_ne_zero 2 hz0)).comp z (hasDerivAt_pow 2 z)).neg
+  have hSz := ((hasDerivAt_pow 2 z).inv (pow_ne_zero 2 hz0)).neg
   -- Assemble `HasDerivAt D1 _ z` term by term.
   have hPI := hPz.mul hIz
   have ht1 := ((hPI.const_mul (-(1 / 4) : ℂ)).mul hQz).mul hGz
@@ -187,7 +193,7 @@ theorem kummerB_satisfiesPicardFuchs :
     rw [Complex.cpow_sub _ _ h1z, Complex.cpow_one, div_eq_mul_inv]
   -- Rewrite the Picard–Fuchs expression and finish by the ODE substitution.
   rw [heqEv.deriv_eq, hderivKummer z ⟨hznorm, hzim⟩, hHD_D1.deriv]
-  simp only [hD1def, kummerB, id_eq, Pi.mul_apply, Pi.neg_apply, Function.comp_apply]
+  simp only [hD1def, kummerB, id_eq, Pi.mul_apply, Pi.neg_apply, Pi.inv_apply, Function.comp_apply]
   rw [eZ1z, eW1z, hF2]
   field_simp
   ring
@@ -724,7 +730,7 @@ private lemma WrC_eq_zero {A : ℝ} (hA : 2 ≤ A)
     have h := (hψd t ht).norm_sq
     rwa [show -(2 * ↑π) * (m22 (ofComplex (z₀ + ↑t * Complex.I)) * WrC (z₀ + ↑t * Complex.I))
         = (-(2 * ↑π) * m22 (ofComplex (z₀ + ↑t * Complex.I))) * WrC (z₀ + ↑t * Complex.I)
-        from by ring, real_inner_mul_self] at h
+        from (mul_assoc _ _ _).symm, real_inner_mul_self] at h
   -- the weighted modulus `g(t) = r(t)·e^{-2πt}` and its monotonicity
   have hgd : ∀ t : ℝ, 0 ≤ t →
       HasDerivAt (fun s : ℝ => ‖WrC (z₀ + ↑s * Complex.I)‖ ^ 2 * Real.exp (-(2 * π) * s))
@@ -760,8 +766,8 @@ private lemma WrC_eq_zero {A : ℝ} (hA : 2 ≤ A)
           Complex.re_ofReal_mul]
       rw [h3]
       have key : (0 : ℝ) ≤ -(4 * π * (m22 (ofComplex (z₀ + ↑s * Complex.I))).re) - 2 * π := by
-        nlinarith [Real.pi_pos]
-      nlinarith [mul_nonneg (mul_nonneg h1 h2.le) key]
+        nlinarith only [hre, Real.pi_pos]
+      linear_combination mul_nonneg (mul_nonneg h1 h2.le) key
   -- `ψ → 0` along the ray, so `r → 0`
   have hψ0 : Tendsto (fun t : ℝ => WrC (z₀ + ↑t * Complex.I)) atTop (𝓝 0) := by
     have h := tendsto_WrC.comp (tendsto_vertical hz₀im)
@@ -780,14 +786,13 @@ private lemma WrC_eq_zero {A : ℝ} (hA : 2 ≤ A)
       filter_upwards [eventually_ge_atTop (0 : ℝ)] with t ht
       have hmt := hmono Set.self_mem_Ici (Set.mem_Ici.mpr ht) ht
       have hexp1 : Real.exp (-(2 * π) * t) ≤ 1 := by
-        rw [← Real.exp_zero]
-        apply Real.exp_le_exp.mpr
-        nlinarith [Real.pi_pos]
-      nlinarith [sq_nonneg ‖WrC (z₀ + ↑t * Complex.I)‖, Real.exp_pos (-(2 * π) * t), hmt]
+        apply Real.exp_le_one_iff.mpr
+        exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr (by positivity)) ht
+      exact hmt.trans (mul_le_of_le_one_right (sq_nonneg _) hexp1)
     exact ge_of_tendsto hr0 hle
   have hz : WrC (z₀ + ↑(0 : ℝ) * Complex.I) = WrC z₀ := by norm_num
   rw [hz, mul_zero, Real.exp_zero, mul_one] at hg0
-  have hnorm : ‖WrC z₀‖ = 0 := by nlinarith [sq_nonneg ‖WrC z₀‖, norm_nonneg (WrC z₀)]
+  have hnorm : ‖WrC z₀‖ = 0 := sq_eq_zero_iff.mp (le_antisymm hg0 (sq_nonneg _))
   exact norm_eq_zero.mp hnorm
 
 /-- On `{Im z > A}` the two solutions agree: the ratio `Xtilde/X` has vanishing derivative

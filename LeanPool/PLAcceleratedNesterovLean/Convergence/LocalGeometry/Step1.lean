@@ -3,9 +3,11 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # Local Geometry Step 1: Hessian Bounds via Continuity
@@ -21,6 +23,8 @@ D²f(x) ≥ -εI on a neighborhood, with ε arbitrarily small.
 Both arguments use: continuous function ≥ threshold on compact set ⟹
                      ≥ (threshold - δ) on a neighborhood.
 -/
+
+@[expose] public section
 
 noncomputable section
 

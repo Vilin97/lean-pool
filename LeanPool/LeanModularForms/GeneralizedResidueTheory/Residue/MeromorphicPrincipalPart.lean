@@ -3,13 +3,19 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.CauchyPrimitive
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.GeneralizedTheoremBase
 -- Note: Does NOT import FlatnessTransfer to avoid circular dependencies.
 -- The zpow FTC lemmas used here are reproved locally.
+public import Mathlib.Analysis.Meromorphic.Order
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.Meromorphic.NormalForm
-import Mathlib.MeasureTheory.Integral.CircleIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Meromorphic Laurent Principal Parts
@@ -49,6 +55,8 @@ of pp = 0.
 * Mathlib `MeromorphicAt`, `meromorphicOrderAt`
 -/
 
+@[expose] public section
+
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval
 
@@ -71,11 +79,11 @@ This equals `sum_{j=1}^{N} c_j / (z-s)^j` where `c_j = g^{(N-j)}(s) / (N-j)!`.
 If `f` is analytic at `s` (order >= 0) or not meromorphic, the principal part is 0. -/
 
 /-- Helper: extract the pole order as a natural number from meromorphic data. -/
-private noncomputable def poleOrderNat (f : ℂ → ℂ) (s : ℂ) : ℕ :=
+noncomputable def poleOrderNat (f : ℂ → ℂ) (s : ℂ) : ℕ :=
   (-(meromorphicOrderAt f s).untop₀).toNat
 
 /-- Helper: extract the analytic factor g from the meromorphic decomposition. -/
-private noncomputable def meromorphicFactor (f : ℂ → ℂ) (s : ℂ)
+noncomputable def meromorphicFactor (f : ℂ → ℂ) (s : ℂ)
     (hf : MeromorphicAt f s) (hne : meromorphicOrderAt f s ≠ ⊤) : ℂ → ℂ :=
   ((meromorphicOrderAt_ne_top_iff hf).mp hne).choose
 

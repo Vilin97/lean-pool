@@ -3,12 +3,22 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.CoulombSpatialTransport
+module
+
+public import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.CoulombFlux
 import LeanPool.Clawristotle.CoulombFluxBound
-import LeanPool.Clawristotle.CoulombPSD
+import LeanPool.Clawristotle.CoulombFluxConv
 import LeanPool.Clawristotle.CoulombFluxDiff
-import LeanPool.Clawristotle.IteratedDerivHelpers
+import LeanPool.Clawristotle.CoulombForceTransport
+import LeanPool.Clawristotle.CoulombPSD
+import LeanPool.Clawristotle.CoulombPSDHelpers
+import LeanPool.Clawristotle.CoulombSpatialTransport
 import LeanPool.Clawristotle.LogBoundHelpers
+import LeanPool.Clawristotle.Theorem42
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-!
 # Concrete Theorem 4.2 for Coulomb Collisions on T^3
@@ -19,6 +29,8 @@ the physically most important case in plasma physics. Verifies all 19 fields of
 steady state of the VML system with Coulomb collisions is a global Maxwellian
 with E = 0 and B = const.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

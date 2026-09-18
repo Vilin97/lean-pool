@@ -3,16 +3,19 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Defs
-import LeanPool.Clawristotle.TorusDefs
+module
+
+public import LeanPool.Clawristotle.TorusDefs
 import LeanPool.Clawristotle.TorusInstance
-import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Topology.Order.Compact
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.Clawristotle.LogBoundHelpers
 -/
+
+@[expose] public section
 
 open ContinuousLinearMap Real Set VML
 
