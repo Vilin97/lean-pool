@@ -7,6 +7,7 @@ module
 
 public import LeanPool.InfinitaryLogic.Scott.Sentence
 import LeanPool.InfinitaryLogic.ModelTheory.FragmentLowenheimSkolem
+import Mathlib.Data.Set.Finite.Range
 /-!
 # Arbitrary-target stabilization (issue #17 chunk 5.1)
 

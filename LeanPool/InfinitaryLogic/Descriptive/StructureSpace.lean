@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import Mathlib.ModelTheory.Basic
+import Mathlib.Basic.Countable.Basic
 /-!
 # Coding Space for Countable Structures
 

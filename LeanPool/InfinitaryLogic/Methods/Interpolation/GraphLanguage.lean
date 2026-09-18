@@ -6,6 +6,7 @@ Authors: Cameron Freer
 module
 
 public import Mathlib.ModelTheory.Basic
+import Mathlib.Data.Set.Lattice.Image
 /-!
 # Relationalization of a language: the graph language and its structures (Craig Layer 3, Unit 1)
 
