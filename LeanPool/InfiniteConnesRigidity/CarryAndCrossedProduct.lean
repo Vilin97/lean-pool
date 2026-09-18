@@ -7,28 +7,22 @@ Authors: OpenAI, Dean Cureton
 module
 
 public import Mathlib.Algebra.Group.MinimalAxioms
-public import Mathlib.Algebra.Module.ZMod
 public import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
-public import Mathlib.Data.Finsupp.Encodable
 public import Mathlib.Data.Finsupp.Pointwise
 public import Mathlib.GroupTheory.SemidirectProduct
-public import Mathlib.LinearAlgebra.Countable
-public import Mathlib.MeasureTheory.Function.ContinuousMapDense
 public import Mathlib.MeasureTheory.Function.Holder
 public import Mathlib.MeasureTheory.Function.L2Space
-public import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
-public import Mathlib.MeasureTheory.Group.Integral
-public import Mathlib.MeasureTheory.Measure.Regular
-public import Mathlib.RingTheory.DedekindDomain.Dvr
-public import Mathlib.RingTheory.KrullDimension.Polynomial
-public import Mathlib.RingTheory.Localization.Algebra
 public import Mathlib.Topology.Algebra.PontryaginDual
-public import Mathlib.Topology.Constructions
-public import Mathlib.Topology.ContinuousMap.SecondCountableSpace
-public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 public import Mathlib.Topology.Instances.ZMod
-public import Mathlib.Topology.Metrizable.Urysohn
 public import LeanPool.InfiniteConnesRigidity.UniversalLattice
+import Mathlib.LinearAlgebra.Countable
+import Mathlib.MeasureTheory.Function.ContinuousMapDense
+import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+import Mathlib.MeasureTheory.Group.Integral
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.Topology.ContinuousMap.SecondCountableSpace
+import Mathlib.Topology.ContinuousMap.StoneWeierstrass
+import Mathlib.Topology.Metrizable.Urysohn
 
 /-!
 # Carry groups, duality, and crossed products
@@ -1919,15 +1913,12 @@ private theorem cornulierColumnRootProduct_apply (v : Index → IntegralPolynomi
           (show (2 : Index) ≠ cornulierLast by decide) (v 2) :
       IntegralSpecialLinearGroup) p q = _
   fin_cases p <;> fin_cases q <;>
-    simp only [cornulierLast, Fin.isValue, Nat.reduceAdd, Fin.zero_eta,
-      Matrix.SpecialLinearGroup.coe_mul,
-      Matrix.SpecialLinearGroup.transvection_coe, Matrix.mul_apply,
-      Matrix.add_apply, Matrix.one_apply, Matrix.single_apply, true_and,
-      Fin.sum_univ_four, ↓reduceIte, Fin.reduceEq, add_zero, one_ne_zero,
-      false_and, mul_ite, mul_one, mul_zero, zero_ne_one, zero_mul, ite_self,
-      zero_add, and_false,
-      Finset.sum_ite_eq', Finset.mem_univ, Fin.mk_one, Fin.reduceFinMk,
-      and_true, ite_mul, one_mul, Finset.sum_ite_eq]
+    simp only [cornulierLast, Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk,
+      ConnesRigidity.MennickeIdentity.specialLinear_mul_transvection_apply, Fin.reduceEq,
+      ↓reduceIte,
+      Matrix.SpecialLinearGroup.transvection_coe, Matrix.add_apply, Matrix.one_apply,
+      Matrix.single_apply, one_ne_zero, zero_ne_one, and_self, and_false, and_true, mul_one,
+      mul_zero, add_zero, zero_add]
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def cornulierRowRootProduct (v : Index → IntegralPolynomial) :
@@ -1962,15 +1953,12 @@ private theorem cornulierRowRootProduct_apply (v : Index → IntegralPolynomial)
           (show cornulierLast ≠ (2 : Index) by decide) (v 2) :
       IntegralSpecialLinearGroup) p q = _
   fin_cases p <;> fin_cases q <;>
-    simp only [cornulierLast, Fin.isValue, Nat.reduceAdd, Fin.zero_eta,
-      Matrix.SpecialLinearGroup.coe_mul,
-      Matrix.SpecialLinearGroup.transvection_coe, Matrix.mul_apply,
-      Matrix.add_apply, Matrix.one_apply, Matrix.single_apply, true_and,
-      Fin.sum_univ_four, ↓reduceIte, Fin.reduceEq, add_zero, one_ne_zero,
-      false_and, mul_ite, mul_one, mul_zero, zero_ne_one, zero_mul, ite_self,
-      zero_add, and_false,
-      Finset.sum_ite_eq', Finset.mem_univ, Fin.mk_one, Fin.reduceFinMk,
-      and_true, ite_mul, one_mul, Finset.sum_ite_eq]
+    simp only [cornulierLast, Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk,
+      ConnesRigidity.MennickeIdentity.specialLinear_mul_transvection_apply, Fin.reduceEq,
+      ↓reduceIte,
+      Matrix.SpecialLinearGroup.transvection_coe, Matrix.add_apply, Matrix.one_apply,
+      Matrix.single_apply, one_ne_zero, zero_ne_one, and_self, and_false, and_true, mul_one,
+      mul_zero, add_zero, zero_add]
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem cornulier_conjugate_K₁_root_mem
@@ -4384,7 +4372,8 @@ def coordinateProduct : V →ₗ[F] V →ₗ[F] V where
         apply auxiliaryBasis.repr.injective
         ext i
         simp only [map_smul, Basis.repr_symm_apply, Basis.repr_linearCombination, Finsupp.mul_apply,
-          Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, mul_left_comm, RingHom.id_apply] }
+          Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, RingHom.id_apply]
+        ring }
   map_add' x y := by
     apply LinearMap.ext
     intro z
@@ -6276,9 +6265,12 @@ public
 def kDLinear : K →* (D ≃ₗ[F] D) where
   toFun k := (kLinear k).prodCongr (kDividedSquareLinear k)
   map_one' := by
-    ext d <;> simp
+    ext d <;>
+      simp only [map_one, LinearEquiv.prodCongr_apply, LinearEquiv.coe_one, id_eq, Prod.mk.eta]
   map_mul' k l := by
-    ext d <;> simp
+    ext d <;>
+      simp only [map_mul, LinearEquiv.prodCongr_apply, LinearEquiv.mul_apply, kLinear_apply,
+        kDividedSquareLinear_val]
 
 
 
@@ -7113,13 +7105,13 @@ def crossedIndexEquiv
         ⟨fun k ↦ ξ (e.symm k), by
           change Memℓp (fun k ↦ ξ (e.symm k)) 2
           rw [memℓp_gen_iff (by norm_num : 0 < (2 : ℝ≥0∞).toReal)]
-          exact (e.symm.summable_iff).2
+          exact (e.symm.summable_iff (f := fun i ↦ ‖ξ i‖ ^ (2 : ℝ≥0∞).toReal)).2
             ((lp.memℓp ξ).summable (by norm_num : 0 < (2 : ℝ≥0∞).toReal))⟩
       invFun := fun ξ ↦
         ⟨fun k ↦ ξ (e k), by
           change Memℓp (fun k ↦ ξ (e k)) 2
           rw [memℓp_gen_iff (by norm_num : 0 < (2 : ℝ≥0∞).toReal)]
-          exact (e.summable_iff).2
+          exact (e.summable_iff (f := fun i ↦ ‖ξ i‖ ^ (2 : ℝ≥0∞).toReal)).2
             ((lp.memℓp ξ).summable (by norm_num : 0 < (2 : ℝ≥0∞).toReal))⟩
       left_inv := by
         intro ξ
