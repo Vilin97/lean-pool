@@ -9073,6 +9073,65 @@ projects:
     - 37B10
     - 37B51
     - 68R15
+  - slug: erdos548
+    title: "The Erdős–Sós conjecture (Erdős Problem 548)"
+    summary: >-
+      Proves the Erdős–Sós conjecture (1962), Erdős Problem 548: every graph on n ≥ k+1 vertices
+      with at least (k−1)n/2 + 1 edges contains every tree on k+1 vertices as a (not necessarily
+      induced) subgraph. The headline statement is the FrontierMath Erdős benchmark statement,
+      reviewed by Thomas Bloom and carried verbatim by Google DeepMind's Formal Conjectures; the
+      proof was found autonomously by GPT-6 Astra. It is a finite double counting over permutation
+      words of the host vertices: rotating the first qualifying prefix of a cut word gives a gluing
+      inequality for two rooted branches, and reversing the two blocks of a cut moves the root to a
+      newly attached leaf. A strong induction on the order t of the tree bounds the
+      adjacency-marked cut words by the rooted-copy count plus (t−2)·n!, so a tree-free host on n
+      vertices has at most (t−2)n/2 edges, the sharp classical bound.
+    branch: extremal graph theory
+    entry_module: LeanPool.Erdos548
+    authors:
+      - Tom Adamczewski
+    source:
+      title: "Erdős problem #548 (Erdős–Sós conjecture): proof"
+      authors:
+        - Tom Adamczewski
+      url: https://github.com/tadamcz/erdos548
+      github_repo: tadamcz/erdos548
+      commit: c02708a6956d7b953c2e889c8bc24a0c97796313
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Erdos548.erdos_548
+    main_results:
+      - declaration: Erdos548.erdos_548
+        informal: >-
+          Let n ≥ k+1. Every simple graph on n vertices with at least (k−1)n/2 + 1 edges contains
+          every tree on k+1 vertices as a subgraph (an injective graph homomorphism). This is
+          Erdős Problem 548, the Erdős–Sós conjecture, in the benchmark phrasing.
+      - declaration: Erdos548.tree_free_edge_bound
+        informal: >-
+          If a tree T on t ≥ 2 vertices is not contained in a graph G on n ≥ 1 vertices, then
+          2·|E(G)| ≤ (t−2)·n. This is the classical sharp form of the Erdős–Sós bound.
+      - declaration: Erdos548.rooted_word_tree_bound
+        informal: >-
+          For a tree T on t ≥ 2 vertices rooted at r, a host graph G and a nonempty
+          repetition-free host word of length n, the number of cut permutation words of that
+          word whose cut ends at a neighbour of the first letter is at most the number supporting
+          a rooted copy of T on the prefix plus (t−2)·n!.
+      - declaration: Erdos548.marked_word_gluing_count
+        informal: >-
+          For a permutation-closed family W of repetition-free words, all of the same length m,
+          and families A, B, C of letter sets with C ⊆ A and A R ∧ B X → C (R ∪ X) for disjoint
+          R, X, the marked cuts (l, k) with l ∈ W and k ≤ m qualifying for A plus those qualifying
+          for B number at most the allowed cuts plus those qualifying for C.
+    tags:
+      - extremal-graph-theory
+      - erdos-problems
+      - trees
+      - combinatorics
+    msc:
+      - "05C35"
+      - "05C05"
   - slug: besicovitchs-1-2
     title: A machine-checked bound of 0.6934 for Besicovitch's 1/2-problem
     summary: >-
