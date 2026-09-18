@@ -6263,7 +6263,7 @@ private theorem shalom_normalizedFixedVector_of_relativePair
         ((‖p‖ : ℂ)⁻¹) • (p : W)‖ < _
     rw [map_smul, ← smul_sub, norm_smul, norm_inv,
       Complex.norm_real, Real.norm_of_nonneg (norm_nonneg p)]
-    simpa only [← Submodule.norm_coe, div_eq_mul_inv, mul_comm] using hfrac
+    simpa only [← Submodule.norm_coe, div_eq_inv_mul] using hfrac
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem shalom_normalizedConstantFixedVector_of_integerPair
@@ -7533,15 +7533,12 @@ private theorem upperUnitriangular_factorization (g : Q)
   apply Matrix.SpecialLinearGroup.ext
   intro i j
   fin_cases i <;> fin_cases j <;>
-    simp only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, Fin.mk_one,
-      Fin.reduceFinMk, Matrix.SpecialLinearGroup.coe_mul,
-      Matrix.SpecialLinearGroup.transvection_coe, Matrix.mul_apply,
-      Matrix.add_apply, Matrix.one_apply, Fin.reduceEq, false_and,
-      not_false_eq_true, Matrix.single_apply_of_ne, add_zero,
-      Matrix.single_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, ↓reduceIte, one_ne_zero, true_and,
-      Fin.sum_univ_four, zero_ne_one, mul_ite, mul_one, mul_zero,
-      ite_self, zero_add, and_false, Finset.sum_ite_eq', and_true,
+    simp only [Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk,
+      ConnesRigidity.MennickeIdentity.specialLinear_mul_transvection_apply, Fin.reduceEq,
+      ↓reduceIte,
+      Matrix.SpecialLinearGroup.transvection_coe, Matrix.add_apply, Matrix.one_apply,
+      Matrix.single_apply, one_ne_zero, zero_ne_one, and_self, and_false, and_true,
+      mul_one, mul_zero, add_zero, zero_add,
       h00, h11, h22, h33, h10, h20, h21, h30, h31, h32]
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
