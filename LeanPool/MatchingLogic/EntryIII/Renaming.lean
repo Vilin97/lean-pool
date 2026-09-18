@@ -14,7 +14,7 @@ bridge: transport of syntax, contexts, derivations, semantics, and strong local
 completeness along an equivalence of variable types.
 -/
 import LeanPool.MatchingLogic.ProofSystem
-import Mathlib.Logic.Denumerable
+import Mathlib.Basic.Denumerable
 
 /-!
 # MatchingLogic.EntryIII.Renaming

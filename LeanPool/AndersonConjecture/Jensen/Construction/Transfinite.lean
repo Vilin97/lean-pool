@@ -625,8 +625,12 @@ private def transfinite_construction_proof
                   (hprimes_lt (le_of_lt hlt') hγ_lt r
                     (((IH_wf hγ_ex.choose hγ_lt).1 β₁ hlt').trans
                       (data hγ_ex.choose).2.2.1.le r.2) hr)
+        have prime_of_eq : ∀ (S : NSubring T), S = prevF α (fun γ hγ => data γ) →
+            ∀ (hx : (r : T) ∈ S.carrier), Prime (⟨(r : T), hx⟩ : S.carrier) := by
+          rintro S rfl hx
+          exact hprime_prevF
         have hprime_prev : Prime (⟨(r : T), hmem_prev⟩ : (data α).2.1.carrier) :=
-          prime_transport _ _ h_nsub_eq.symm _ hmem_prevF_carrier hprime_prevF
+          prime_of_eq _ h_nsub_eq hmem_prev
         have hext := (data α).2.2.1
         have hprime_ring := hext.primes_preserved ⟨(r : T), hmem_prev⟩ hprime_prev
         cases heq_α

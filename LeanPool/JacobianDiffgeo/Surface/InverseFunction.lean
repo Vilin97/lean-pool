@@ -174,7 +174,7 @@ theorem mfderiv_ne_zero_iff_deriv_ne_zero {f : X → Y} {x : X}
     (hf : MDifferentiableAt 𝓘(ℂ) 𝓘(ℂ) f x) :
     mfderiv 𝓘(ℂ) 𝓘(ℂ) f x ≠ 0 ↔
       deriv (writtenInExtChartAt 𝓘(ℂ) 𝓘(ℂ) x f) (extChartAt 𝓘(ℂ) x x) ≠ 0 := by
-  rw [hf.mfderiv, modelWithCornersSelf_coe, Set.range_id, fderivWithin_univ]
+  rw [hf.mfderiv_abuse, modelWithCornersSelf_coe, Set.range_id, fderivWithin_univ]
   refine not_congr ?_
   constructor
   · intro h

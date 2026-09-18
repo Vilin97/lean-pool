@@ -196,7 +196,7 @@ theorem secondWord_product_gradient (A : SmoothL2Field Space) (K N : ℝ)
     rfl
   have hn (j : Fin 3) :
       (eLpNorm (fun x => ‖(C j).field x‖) 2 volume).toReal = ‖(C j).toLp‖ := by
-    rw [field_norm,eLpNorm_norm]
+    rw [field_norm,eLpNorm_norm _ (C j).memLp.aestronglyMeasurable]
   have h := (finite_domination (volume : Measure Space) univ B.field
     B.memLp.aestronglyMeasurable (fun j x => ‖(C j).field x‖)
     (fun j _ => (C j).memLp.norm) (fun x => by

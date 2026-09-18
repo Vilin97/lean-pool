@@ -35,7 +35,7 @@ lemma block_extract_disjoint (k m : ℕ) (j₁ j₂ : Fin k) (hne : j₁ ≠ j�
 lemma block_extract_measurable {X : Type*} [MeasurableSpace X]
     (k m : ℕ) (j : Fin k) :
     Measurable (fun (ω : Fin (k * m) → X) => blockExtract k m ω j) := by
-  exact measurable_pi_lambda _ (fun i => measurable_pi_apply _)
+  exact Measurable.of_eval (fun i => measurable_pi_apply _)
 
 /-- Block extractions are independent under the product measure.
     Key infrastructure for boosting (D4) and probability amplification. -/

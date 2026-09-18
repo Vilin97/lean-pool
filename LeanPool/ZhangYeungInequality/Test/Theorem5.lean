@@ -94,7 +94,7 @@ example
     let Xtuple : Ω → ∀ j : Fin 2, S j := fun ω j => X j ω
     let πe := MeasurableEquiv.piFinTwo S
     let π : (∀ j : Fin 2, S j) → S 0 × S 1 := πe
-    have hXtuple : Measurable Xtuple := measurable_pi_lambda _ hX
+    have hXtuple : Measurable Xtuple := Measurable.of_eval hX
     change H[Xtuple; μ] = H[π ∘ Xtuple; μ]
     exact (entropy_comp_of_injective μ hXtuple π πe.injective).symm
   have hRaw :

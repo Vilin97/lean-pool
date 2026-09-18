@@ -934,7 +934,7 @@ private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] (f :
   withMatrixQuantumCtx[φ]
   rw [StarAlgEquiv.IsIsometry, isometry_iff_norm]
   exact List.TFAE.out
-    (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 0
+    (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 5 1
 
 -- The conjugation normal form produces large matrix expressions before simplification.
 theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap]

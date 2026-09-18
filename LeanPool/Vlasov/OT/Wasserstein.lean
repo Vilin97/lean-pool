@@ -614,7 +614,7 @@ theorem integral_boundedContinuous_eq_of_integral_lipschitz_eq
             (integrable_thickenedIndicator (μ := ν) F (δs_pos n))]
       congr 1
       exact h_lip_eq _ _
-        ((NNReal.isometry_coe.lipschitz).comp (lipschitzWith_thickenedIndicator (δs_pos n) F))
+        ((NNReal.isometry_coe.lipschitzWith).comp (lipschitzWith_thickenedIndicator (δs_pos n) F))
         (integrable_thickenedIndicator (μ := μ) F (δs_pos n))
         (integrable_thickenedIndicator (μ := ν) F (δs_pos n))
     simp_rw [hlint_eq] at hμ_lim

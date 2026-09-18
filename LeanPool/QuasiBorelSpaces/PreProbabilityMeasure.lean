@@ -79,7 +79,7 @@ noncomputable def mk'
   eval :=
     have : Nonempty A := base.nonempty
     .mk fun x ↦ eval (unpack x)
-  base := base.map measurable_pack.aemeasurable
+  base := base.map pack
 
 @[simp]
 lemma lintegral_mk'
@@ -331,10 +331,10 @@ noncomputable def cases
       · fun_prop
       · fun_prop
   }
-  base r := ((φ (ix r)).base r).map (f := fun x ↦ pack (ix r, x)) (by fun_prop)
+  base r := ((φ (ix r)).base r).map (fun x ↦ pack (ix r, x))
   measurable_base := by
     apply measurable_cases (f := fun n r ↦
-        ((φ n).base r).map (f := fun x ↦ pack (n, x)) (by fun_prop))
+        ((φ n).base r).map (fun x ↦ pack (n, x)))
     · exact hix
     · intro i
       apply Measurable.subtype_mk
@@ -638,7 +638,7 @@ namespace Var
 /-- The functorial `str`ength operation, lifted to variables. -/
 noncomputable def str {φ : ℝ → A} (hφ : IsHom φ) (ψ : Var B) : Var (A × B) where
   eval := .mk fun r ↦ (φ (unpack r : ℝ × ℝ).1, ψ.eval (unpack r : ℝ × ℝ).2)
-  base r := (ψ r).base.map (f := fun x ↦ pack (r, x)) (by fun_prop)
+  base r := (ψ r).base.map (fun x ↦ pack (r, x))
   measurable_base := by
     apply Measurable.subtype_mk
     apply Measure.measurable_map'

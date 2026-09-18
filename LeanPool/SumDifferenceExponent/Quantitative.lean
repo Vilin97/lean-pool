@@ -19,8 +19,17 @@ def quantitativeScale : ℕ := 10 ^ 999
 /-- An exponent large enough to force the logarithmic error below the tolerance. -/
 def quantitativePower : ℕ := 100 * quantitativeScale
 
+-- Keep kernel conversion from evaluating the enormous closed power in the witness.
+private def powerOfTwo (n : ℕ) : ℕ := 2 ^ n
+
+private theorem two_le_powerOfTwo (n : ℕ) (hn : 0 < n) : 2 ≤ powerOfTwo n :=
+  Nat.le_pow hn
+
+private theorem cast_powerOfTwo (n : ℕ) : (powerOfTwo n : ℝ) = (2 : ℝ) ^ n :=
+  Nat.cast_pow 2 n
+
 /-- The row parameter used for the explicit quantitative witness. -/
-def quantitativeIndex : ℕ := 2 ^ quantitativePower
+def quantitativeIndex : ℕ := powerOfTwo quantitativePower
 
 /-- An explicit finite integer set whose growth exponent is within `10⁻⁹⁹⁹` of two. -/
 abbrev quantitativeSet : Finset ℤ :=
@@ -33,8 +42,7 @@ theorem quantitativePower_pos : 0 < quantitativePower := by
   exact Nat.mul_pos (by norm_num) quantitativeScale_pos
 
 theorem quantitativeIndex_two_le : 2 ≤ quantitativeIndex := by
-  rw [quantitativeIndex]
-  exact le_trans (by norm_num) (Nat.le_pow quantitativePower_pos)
+  exact two_le_powerOfTwo quantitativePower quantitativePower_pos
 
 theorem log_constant_lt_twenty_three :
     Real.log 2 + 2 * Real.log 12 < 23 := by
@@ -56,8 +64,7 @@ theorem quantitative_denominator_gt :
         (quantitativePower : ℝ) * Real.log 2 := by
     have hcast :
         (quantitativeIndex : ℝ) = (2 : ℝ) ^ quantitativePower := by
-      rw [quantitativeIndex]
-      exact Nat.cast_pow 2 quantitativePower
+      exact cast_powerOfTwo quantitativePower
     rw [hcast, Real.log_pow]
   rw [hpow]
   have h2 : (1 / 2 : ℝ) < Real.log 2 :=

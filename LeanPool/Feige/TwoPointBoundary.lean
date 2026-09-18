@@ -61,7 +61,7 @@ theorem tendsto_strictGammaApprox {m : ℕ} (γ : Fin m → ℝ) :
   unfold strictGammaApprox
   convert (((tendsto_const_nhds.sub tendsto_boundaryEpsilon).mul
     tendsto_const_nhds).add (tendsto_boundaryEpsilon.div_const 2)) using 1
-  ring
+  ring_nf
 
 theorem tendsto_twoPointKFinset_strictGammaApprox
     {m : ℕ} (γ β : Fin m → ℝ) (S : Finset (Fin m)) :

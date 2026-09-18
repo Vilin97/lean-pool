@@ -371,7 +371,7 @@ noncomputable def boundaryCircleHomeomorph :
             squareAmbientHomeomorph '' boundary := by
         rw [squareAmbientHomeomorph_image_boundary]
         rw [squareAmbientHomeomorph.apply_symm_apply]
-        simpa [Metric.mem_sphere, Submonoid.unitSphere] using z.property
+        simp [Submonoid.unitSphere]
       rcases hz with ⟨w, hw, heq⟩
       exact squareAmbientHomeomorph.injective heq.symm ▸ hw⟩
   left_inv := by

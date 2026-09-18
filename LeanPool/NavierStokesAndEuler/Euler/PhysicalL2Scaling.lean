@@ -36,7 +36,7 @@ variable {V : Type*} [NormedAddCommGroup V]
 theorem lpNorm_sq_integral (f : Space → V) (hf : MemLp f 2 volume) :
     (lpNorm f 2 volume)^2 = ∫ x, ‖f x‖^2 := by
   have hn : ‖hf.toLp f‖ = lpNorm f 2 volume := by
-    rw [Lp.norm_toLp, toReal_eLpNorm hf.aestronglyMeasurable]
+    rw [Lp.norm_toLp, toReal_eLpNorm]
   rw [← hn, EulerLpConvergence.norm_sq_eq_integral]
   apply integral_congr_ae
   filter_upwards [hf.coeFn_toLp] with x hx

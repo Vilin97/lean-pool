@@ -425,7 +425,7 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
     exact sheafH1_cokernel_iso_of_subsingleton_middle_natural
       (sheafH_filtered_colimit_succ_stage_shortExact (Y' := Ysh) j)
       (sheafH_filtered_colimit_succ_shortExact Ysh csh hcsh) stageHom (h_mid j) h_colim
-  rw [HasColimit.isoOfNatIso_ι_inv_assoc, HasColimit.isoOfNatIso_ι_hom_assoc,
+  rw [HasColimit.ι_isoOfNatIso_inv_assoc, HasColimit.ι_isoOfNatIso_hom_assoc,
     colimit_ι_sheafH_filtered_colimit_comparison]
   have hright :
       stageNat.inv.app j ≫ (stageCokMap ≫ globalIso.hom) =
@@ -625,7 +625,7 @@ private noncomputable def sheafH_filtered_colimit_comparison_zero_iso :
           (HasColimit.isoOfNatIso h0Iso).hom ≫ (e.hom ≫ h0Symm) =
         h0Iso.hom.app j ≫ colimit.ι (Ysh ⋙ sectionsFunctor) j ≫
           e.hom ≫ h0Symm
-      rw [HasColimit.isoOfNatIso_ι_hom_assoc]
+      rw [HasColimit.ι_isoOfNatIso_hom_assoc]
     _ = colimit.ι (Ysh ⋙ sheafCohomologyFunctor X 0) j ≫
         sheafHFilteredColimitComparison Ysh 0 csh := by
       rw [colimit_ι_sheafH_filtered_colimit_comparison]

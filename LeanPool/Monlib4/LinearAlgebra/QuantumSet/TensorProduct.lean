@@ -22,10 +22,8 @@ open scoped TensorProduct
 noncomputable instance tensorStarAlgebra
     :
     starAlgebra (A ⊗[ℂ] B) where
-  star_mul x y := x.induction_on (by simp only [zero_mul, star_zero, mul_zero])
-    (y.induction_on
-      (by simp only [mul_zero, star_zero, TensorProduct.star_tmul, zero_mul,
-        implies_true])
+  star_mul x y := x.inductionOn
+    (y.inductionOn
       (fun _ _ _ _ => by simp only [Algebra.TensorProduct.tmul_mul_tmul,
         TensorProduct.star_tmul, star_mul])
       (fun _ _ h1 h2 _ _ => by simp only [mul_add, star_add, h1, h2, add_mul]))
@@ -39,7 +37,7 @@ noncomputable instance tensorStarAlgebra
     simp only [AlgEquiv.trans_toLinearMap, LinearMap.coe_comp, Function.comp_apply,
       AlgEquiv.toLinearMap_apply, AlgEquiv.TensorProduct.map_tmul,
       QuantumSet.modAut_apply_modAut, add_comm]
-  modAut_star _ x := x.induction_on (by simp only [map_zero, star_zero])
+  modAut_star _ x := x.inductionOn
     (fun _ _ => by
       simp only [AlgEquiv.TensorProduct.map_tmul, TensorProduct.star_tmul,
         starAlgebra.modAut_star])
@@ -74,13 +72,9 @@ noncomputable instance QuantumSet.tensorProduct
     simp_rw [LinearMap.star_eq_adjoint, ← TensorProduct.map_adjoint]
     exact LinearMap.adjoint_inner_left _ _ _
   k := hA.k
-  inner_star_left a b c := a.induction_on
-    (by simp only [zero_mul, inner_zero_left, star_zero, map_zero, inner_zero_right])
-    (b.induction_on
-      (by simp only [mul_zero, inner_zero_left, TensorProduct.star_tmul, implies_true])
-      (c.induction_on
-        (by simp only [Algebra.TensorProduct.tmul_mul_tmul, inner_zero_right,
-          TensorProduct.star_tmul, mul_zero, implies_true])
+  inner_star_left a b c := a.inductionOn
+    (b.inductionOn
+      (c.inductionOn
         (fun _ _ _ _ _ _ => by
           simp only [TensorProduct.star_tmul, modAut_tensor,
             Algebra.TensorProduct.tmul_mul_tmul, QuantumSet.inner_star_left,
@@ -93,14 +87,9 @@ noncomputable instance QuantumSet.tensorProduct
     (fun _ _ h1 h2 => by
       simp only [add_mul, inner_add_left, inner_add_right, h1, h2, star_add,
         map_add])
-  inner_conj_left a b c := a.induction_on
-    (by simp only [zero_mul, inner_zero_left])
-    (b.induction_on
-      (by simp only [mul_zero, inner_zero_left, star_zero, map_zero, inner_zero_right,
-        implies_true])
-      (c.induction_on
-        (by simp only [Algebra.TensorProduct.tmul_mul_tmul, inner_zero_right,
-          TensorProduct.star_tmul, zero_mul, implies_true])
+  inner_conj_left a b c := a.inductionOn
+    (b.inductionOn
+      (c.inductionOn
         (fun _ _ _ _ _ _ => by
           simp_rw [TensorProduct.star_tmul, modAut_tensor_tmul,
             Algebra.TensorProduct.tmul_mul_tmul, TensorProduct.inner_tmul,

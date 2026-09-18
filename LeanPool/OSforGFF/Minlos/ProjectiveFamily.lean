@@ -37,8 +37,8 @@ def finsetReindexEquiv (J : Finset E) :
       invFun := fun t j => t (J.equivFin j)
       left_inv := fun x => by ext j; simp
       right_inv := fun t => by ext i; simp }
-  measurable_toFun := measurable_pi_lambda _ (fun i => measurable_pi_apply _)
-  measurable_invFun := measurable_pi_lambda _ (fun j => measurable_pi_apply _)
+  measurable_toFun := Measurable.of_eval (fun i => measurable_pi_apply _)
+  measurable_invFun := Measurable.of_eval (fun j => measurable_pi_apply _)
 
 /-- Measurable equivalence between `∀ j : J, ℝ` and `EuclideanSpace ℝ (Fin |J|)`.
     Composition of reindexing by `J.equivFin` and `MeasurableEquiv.toLp`.
@@ -83,7 +83,8 @@ instance marginalFamilyIsFiniteMeasure (Φ : E → ℂ) (hΦ_cont : Continuous �
 instance marginalFamilyIsProbabilityMeasure (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) (J : Finset E) :
     IsProbabilityMeasure (marginalFamily Φ hΦ_cont hΦ_pd hΦ_norm J) :=
-  Measure.isProbabilityMeasure_map (finsetPiMeasEquiv J).symm.measurable.aemeasurable
+  (Measure.isProbabilityMeasure_map_iff
+    (finsetPiMeasEquiv J).symm.measurable.aemeasurable).mpr inferInstance
 
 /-! ## Projectivity
 
@@ -117,7 +118,7 @@ omit [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTopologicalAddGroup
 private lemma euclideanProject_measurable (I J : Finset E) (hJI : J ⊆ I) :
     Measurable (euclideanProject I J hJI) := by
   apply (MeasurableEquiv.toLp 2 (Fin J.card → ℝ)).measurable.comp
-  exact measurable_pi_lambda _ fun k =>
+  exact Measurable.of_eval fun k =>
     (measurable_pi_apply (finsetIndexInj I J hJI k)).comp
       (MeasurableEquiv.toLp 2 (Fin I.card → ℝ)).symm.measurable
 

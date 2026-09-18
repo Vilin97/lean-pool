@@ -7,7 +7,7 @@ Authors: Madeleine Gignoux
 import Mathlib.Data.Finset.Basic
 import Mathlib.Order.CompleteLattice.Basic
 import Mathlib.Order.FixedPoints
-import Mathlib.Data.Set.Lattice
+import Mathlib.Data.Set.Lattice.Indexed
 import LeanPool.Lean4GlCoalgebras.Logic.Syntax
 
 /-! ## Semantics of GL

@@ -20,10 +20,10 @@ public section
 
 namespace NavierStokesAndEuler
 
-@[simp] theorem le_infinity_iff_ne_top (n : WithTop ℕ∞) :
+theorem le_infinity_iff_ne_top (n : WithTop ℕ∞) :
     n ≤ (⊤ : ℕ∞) ↔ n ≠ ⊤ := by
   cases n with
   | top => simp
-  | coe n => simp [WithTop.coe_le_coe]
+  | coe n => simp
 
 end NavierStokesAndEuler

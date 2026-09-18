@@ -40,8 +40,9 @@ theorem partialDerivative_twice (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
 theorem complex_eLpNorm_toReal (f : Space → ℝ) (hf : AEStronglyMeasurable f volume) :
     (eLpNorm (fun x => (f x : ℂ)) 2 volume).toReal = lpNorm f 2 volume := by
   have he : eLpNorm (fun x => (f x : ℂ)) 2 volume = eLpNorm f 2 volume :=
-    eLpNorm_congr_norm_ae (Filter.Eventually.of_forall fun x => by simp)
-  rw [he, toReal_eLpNorm hf]
+    eLpNorm_congr_norm_ae (Complex.continuous_ofReal.comp_aestronglyMeasurable hf) hf
+      (Filter.Eventually.of_forall fun x => by simp)
+  rw [he, toReal_eLpNorm]
 
 /-- This is the existing Fourier Sobolev estimate applied to the actual scalar
 function and its actual twofold coordinate derivatives, with no embedding
@@ -88,7 +89,7 @@ theorem lpNorm_sq_eq_integral_norm_sq {V : Type*} [NormedAddCommGroup V]
     [InnerProductSpace ℝ V] (f : Space → V)
     (hf : MemLp f 2 volume) : (lpNorm f 2 volume) ^ 2 = ∫ x, ‖f x‖ ^ 2 := by
   have hn : ‖hf.toLp f‖ = lpNorm f 2 volume := by
-    rw [Lp.norm_toLp, toReal_eLpNorm hf.aestronglyMeasurable]
+    rw [Lp.norm_toLp, toReal_eLpNorm]
   rw [← hn, ← real_inner_self_eq_norm_sq, MeasureTheory.L2.inner_def]
   apply integral_congr_ae
   filter_upwards [hf.coeFn_toLp] with x hx

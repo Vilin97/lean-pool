@@ -42,7 +42,7 @@ theorem exists_cellCarrier_eq_segment (L : PlaneComplex)
         L.position '' (↑({v, w} : Finset L.Vertex) : Set L.Vertex) =
           {L.position v, L.position w} := by
       ext x
-      simp [eq_comm]
+      simp
     rw [himage, convexHull_pair]
 
 end PlaneComplex

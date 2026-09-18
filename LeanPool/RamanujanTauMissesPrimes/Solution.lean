@@ -975,8 +975,6 @@ lemma E2_ysq_le_x11_add_X_int_step (X : ℝ) (p : ℕ+ × ℤ)
     (p.2 : ℝ) ^ 2 - ((p.1 : ℕ) : ℝ) ^ 11 ≤ X := by
   have h3' : |((↑↑p.1 : ℝ) ^ 11 - (↑p.2 : ℝ) ^ 2)| ≤ X := by
     convert h3 using 2
-    push_cast
-    ring
   linarith [neg_le_abs ((↑↑p.1 : ℝ) ^ 11 - (↑p.2 : ℝ) ^ 2)]
 
 lemma E2_ysq_le_x11_add_X_helper (X : ℝ) (p : ℕ+ × ℤ)
@@ -1174,7 +1172,7 @@ lemma primeFactors_mem_one_le (n : ℕ) (p : ℕ) (hp : p ∈ n.primeFactors) : 
   (Nat.mem_primeFactors.mp hp).1.one_le
 
 lemma one_le_prod_primeFactors (n : ℕ) :
-    1 ≤ ∏ p ∈ n.primeFactors, p := Finset.one_le_prod' (fun p hp => primeFactors_mem_one_le n p hp)
+    1 ≤ ∏ p ∈ n.primeFactors, p := Finset.one_le_prod (fun p hp => primeFactors_mem_one_le n p hp)
 
 lemma radical_mul_le_aux (m n : ℕ) (_hm : 0 < m) (_hn : 0 < n) :
     (∏ p ∈ (m * n).primeFactors, p) ≤
@@ -3103,7 +3101,7 @@ lemma radical_dvd_le (d n : ℕ) (hd : 0 < d) (hn : 0 < n) (hdvd : d ∣ n) :
     Nat.radical d ≤ Nat.radical n := by
   unfold Nat.radical
   simp only [Nat.pos_iff_ne_zero.mp hd, Nat.pos_iff_ne_zero.mp hn, ↓reduceIte]
-  apply Finset.prod_le_prod_of_subset_of_one_le'
+  apply Finset.prod_le_prod_of_subset_of_one_le
   · exact Nat.primeFactors_mono hdvd (Nat.pos_iff_ne_zero.mp hn)
   · intro p hp _
     exact Nat.Prime.one_le (Nat.prime_of_mem_primeFactors hp)

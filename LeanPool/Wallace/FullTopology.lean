@@ -126,7 +126,7 @@ theorem evaluation_injective (C : FullCharacterPackage G) :
 
 theorem initial_isTopologicalAddGroup (C : FullCharacterPackage G) :
     @IsTopologicalAddGroup G C.initialTopology _ :=
-  topologicalAddGroup_induced C.evaluation
+  isTopologicalAddGroup_induced C.evaluation
 
 theorem initial_t2Space (C : FullCharacterPackage G) :
     @T2Space G C.initialTopology := by

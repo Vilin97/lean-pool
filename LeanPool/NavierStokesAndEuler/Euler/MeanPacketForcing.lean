@@ -303,7 +303,7 @@ theorem forcing_translation_jet_bound (T : ℝ) (A : ℝ → SmoothL2Field V)
   have h := (forcingFamily T A hA).norm_iteratedFDeriv_value_le n a
   have hn : ‖(forcingFamily T A hA).bound n‖ = ‖(hA n).toLp (fun t => (A t).jetLp n)‖ := by
     change ‖(hA n).norm.toLp (fun t => ‖(A t).jetLp n‖)‖ = _
-    simp only [Lp.norm_toLp, eLpNorm_norm]
+    simp only [Lp.norm_toLp, eLpNorm_norm _ (hA n).aestronglyMeasurable]
   exact (congrArg (fun g : Space → TimeLp T (L2Space V) =>
     ‖iteratedFDeriv ℝ n g a‖) he).trans_le (h.trans_eq hn)
 

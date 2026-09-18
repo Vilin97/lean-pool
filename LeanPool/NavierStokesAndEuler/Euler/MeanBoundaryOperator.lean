@@ -135,7 +135,7 @@ theorem cutoffBound_nonneg (χ : Cutoff) : 0 ≤ cutoffBound χ := by
 theorem testCurl_bound (χ : Cutoff) (f : Test) :
     ‖testCurlLinear χ f‖ ≤ cutoffBound χ * ‖homogeneousGradient f‖ := by
   change ‖testCurl χ f‖ ≤ _
-  rw [testCurl, Lp.norm_toLp, toReal_eLpNorm (testCurl_memLp χ f).aestronglyMeasurable]
+  rw [testCurl, Lp.norm_toLp, toReal_eLpNorm]
   calc
     _ ≤ cutoffCurlConstant *
         (lpNorm χ.field ∞ volume + lpNorm (gradient χ.field) 3 volume) *

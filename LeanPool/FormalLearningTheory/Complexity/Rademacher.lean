@@ -392,7 +392,7 @@ theorem rademacher_mgf_bound {m : ℕ} (hm : 0 < m) (a : Fin m → ℝ) (c : ℝ
   -- Step 4: Product inequality → exponential sum → final bound
   calc ∏ i : Fin m, (1 / 2 : ℝ) * ∑ b : Bool, Real.exp (t * a i * boolToSign b / ↑m)
       ≤ ∏ i : Fin m, Real.exp ((t * a i / ↑m) ^ 2 / 2) :=
-        Finset.prod_le_prod h_factor_nonneg (fun i _ => h_factor_bound i)
+        Finset.prod_le_prod₀ h_factor_nonneg (fun i _ => h_factor_bound i)
     _ = Real.exp (∑ i : Fin m, (t * a i / ↑m) ^ 2 / 2) :=
         (Real.exp_sum Finset.univ _).symm
     _ ≤ Real.exp (t ^ 2 * c ^ 2 / (2 * ↑m)) := by
@@ -1178,7 +1178,7 @@ private theorem uniform_injective_tuple_measure_half
       calc ∏ k : Fin m, D_sub (if k = i then {t} else if k = j then {t} else Set.univ)
           ≤ ∏ k : Fin m,
               (if k = i ∨ k = j then 1 / (n : ENNReal) else 1) := by
-            apply Finset.prod_le_prod'
+            apply Finset.prod_le_prod
             intro k _; exact (hfact_eq k) ▸ (hfact_le k)
         _ = (1 / (n : ENNReal)) ^ 2 := by
             have hprod_ij : ∏ k : Fin m,
@@ -1366,7 +1366,7 @@ theorem rademacher_lower_bound_on_shattered (X : Type u) [MeasurableSpace X]
   -- φ is a MeasurableEmbedding (injective, measurable, images of meas sets are meas).
   have hφ_emb : MeasurableEmbedding φ := by
     refine ⟨fun a b hab => funext (fun i => Subtype.val_injective (congr_fun hab i)),
-      measurable_pi_lambda _ (fun i => hval_meas.comp (measurable_pi_apply i)),
+      Measurable.of_eval (fun i => hval_meas.comp (measurable_pi_apply i)),
       fun s _ => ?_⟩
     -- φ '' s ⊆ {xs | ∀ i, xs i ∈ T} which is finite, so φ '' s is finite, hence measurable.
     apply Set.Finite.measurableSet

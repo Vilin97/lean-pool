@@ -70,7 +70,6 @@ theorem field_zero_of_toLp_zero (A : SmoothL2Field V) (h : A.toLp = 0) : A.field
 
 theorem field_zero_of_derivative_zero (A : SmoothL2Field Space)
     (hD : ∀ x, fderiv ℝ A.field x = 0) : A.field=0 := by
-  have h6 := memLp_six A.field A.smooth A.memLp A.derivative.memLp
   have hb := eLpNorm_six_le A.field A.smooth A.memLp A.derivative.memLp
   have hz : eLpNorm (fderiv ℝ A.field) 2 (volume : Measure Space)=0 := by
     calc
@@ -80,8 +79,8 @@ theorem field_zero_of_derivative_zero (A : SmoothL2Field Space)
         (p := 2) (μ := (volume : Measure Space))
   have hb0 : eLpNorm A.field 6 (volume : Measure Space) ≤ 0 := by
     exact hb.trans_eq (by rw [hz,mul_zero])
-  have hae : A.field=ᵐ[volume] 0 := (eLpNorm_eq_zero_iff h6.aestronglyMeasurable
-    (by norm_num : (6 : ℝ≥0∞) ≠ 0)).mp (le_antisymm hb0 bot_le)
+  have hae : A.field=ᵐ[volume] 0 :=
+    (eLpNorm_eq_zero_iff (by norm_num : (6 : ℝ≥0∞) ≠ 0)).mp (le_antisymm hb0 bot_le)
   exact Measure.eq_of_ae_eq hae A.smooth.continuous continuous_const
 
 theorem field_zero_of_laplacian_zero (A : SmoothL2Field Space)

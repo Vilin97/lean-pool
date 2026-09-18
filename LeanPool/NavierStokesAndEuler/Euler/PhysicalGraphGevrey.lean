@@ -58,8 +58,8 @@ theorem norm_jetLp_scale_le (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (A : SmoothL2Field V) (n : ℕ) :
     ‖(scaleField ell hell A).jetLp n‖ ≤ (ell⁻¹)^n*‖A.jetLp n‖ := by
   rw [norm_jetLp,norm_jetLp,
-    toReal_eLpNorm ((scaleField ell hell A).integrable n).aestronglyMeasurable,
-    toReal_eLpNorm (A.integrable n).aestronglyMeasurable]
+    toReal_eLpNorm,
+    toReal_eLpNorm]
   exact lpNorm_scale_jet_le ell hell hell1 A.field A.smooth n (A.integrable n)
 
 theorem HasJetBound.scale {A : SmoothL2Field V} {C R : ℝ}

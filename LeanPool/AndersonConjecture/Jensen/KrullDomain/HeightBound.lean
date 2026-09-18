@@ -830,12 +830,11 @@ private def build_intersection_nsubring_proof
   -- WfDvdMonoid for S: divisibility in S embeds into divisibility in T (which is Noetherian)
   have : IsDomain S_sub := inferInstance
   have : WfDvdMonoid S_sub := by
-    constructor
     apply Subrelation.wf (r := InvImage DvdNotUnit (fun (a : S_sub) => (a : T)))
     · intro a b ⟨ha_ne, c, hc_nu, hab_eq⟩
       refine ⟨fun h => ha_ne (Subtype.ext h), c.val, ?_, congrArg Subtype.val hab_eq⟩
       exact fun hcu_T => hc_nu (hinv c (IsLocalRing.notMem_maximalIdeal.mpr hcu_T))
-    · exact InvImage.wf _ IsWellFounded.wf
+    · exact InvImage.wf _ wellFounded_dvdNotUnit
   have hS_mem_rep : ∀ s : S_sub,
       ∃ (a b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
         b ∉ IsLocalRing.maximalIdeal T ∧ (s : T) * b = a := by

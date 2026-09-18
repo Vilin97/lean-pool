@@ -81,6 +81,7 @@ theorem tensor_eLpNorm_le (f : LiftDomain P → V)
       (C : ℝ≥0∞) * eLpNorm
         (fun q => ∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative P w f q‖) 2 (liftMeasure P) := by
     apply eLpNorm_le_nnreal_smul_eLpNorm_of_ae_le_mul
+      (tensor_continuous P f hf n).aestronglyMeasurable_of_secondCountable
     filter_upwards [] with q
     apply NNReal.coe_le_coe.mp
     change ‖tensor P f n q‖ ≤ ‖coordinateEquiv.symm.toContinuousLinearMap‖^n *
@@ -92,10 +93,11 @@ theorem tensor_eLpNorm_le (f : LiftDomain P → V)
     funext q
     simp only [Finset.sum_apply]
   rw [he] at hA
-  have hB := eLpNorm_sum_le
-    (fun w (_ : w ∈ (Finset.univ : Finset (Fin n → Fin 4))) => (hLp w).1.norm)
-    (by norm_num : (1 : ℝ≥0∞) ≤ 2)
-  simp only [eLpNorm_norm] at hB
+  have hB : eLpNorm (∑ w : Fin n → Fin 4, fun q => ‖iteratedFieldDerivative P w f q‖) 2
+      (liftMeasure P) ≤
+      ∑ w : Fin n → Fin 4, eLpNorm (iteratedFieldDerivative P w f) 2 (liftMeasure P) :=
+    (eLpNorm_sum_le (by norm_num : (1 : ℝ≥0∞) ≤ 2)).trans_eq
+      (Finset.sum_congr rfl fun w _ => eLpNorm_norm _ (hLp w).aestronglyMeasurable)
   have hC : (C : ℝ≥0∞) * ∑ w : Fin n → Fin 4,
       eLpNorm (iteratedFieldDerivative P w f) 2 (liftMeasure P) ≠ ⊤ := by
     apply ENNReal.mul_ne_top ENNReal.coe_ne_top
