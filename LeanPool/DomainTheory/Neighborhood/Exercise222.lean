@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Order.Directed
 public import LeanPool.DomainTheory.Neighborhood.Basic
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Order.SetNotation
 public import Mathlib.Tactic.ToAdditive
 import Mathlib.Data.Set.BooleanAlgebra

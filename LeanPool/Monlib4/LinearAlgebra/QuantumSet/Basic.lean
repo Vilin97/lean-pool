@@ -721,7 +721,7 @@ theorem _root_.QuantumSet.starAlgEquiv_is_isometry_tfae [QuantumSet A] [QuantumS
 theorem _root_.QuantumSet.starAlgEquiv_isometry_iff_adjoint_eq_symm
     [QuantumSet A] [QuantumSet B] {f : A ≃⋆ₐ[ℂ] B} :
     Isometry f ↔ LinearMap.adjoint f.toLinearMap = f.symm.toLinearMap :=
-  List.TFAE.out (QuantumSet.starAlgEquiv_is_isometry_tfae f) 3 0
+  List.TFAE.out (QuantumSet.starAlgEquiv_is_isometry_tfae f) 4 1
 
 theorem QuantumSet.starAlgEquiv_isometry_iff_coalgHom [hA : QuantumSet A] [hB : QuantumSet B]
     (gns₁ : hA.k = 0) (gns₂ : hB.k = 0) {f : A ≃⋆ₐ[ℂ] B} :
@@ -890,8 +890,7 @@ theorem _root_.tenSwap_apply_lTensor {R A B C : Type*}
     (x : A ⊗[R] Bᵐᵒᵖ) :
     (tenSwap R) ((LinearMap.lTensor A f.op) x) =
       (LinearMap.rTensor _ f) (tenSwap R x) := by
-  refine x.induction_on ?_ ?_ ?_
-  · simp only [map_zero]
+  refine x.inductionOn ?_ ?_
   · simp_all
   · simp_all
 

@@ -6,7 +6,7 @@ Authors: Dhyan Aranha, contributors
 module
 
 public import Mathlib.RingTheory.Valuation.ValuationSubring
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Tactic.Measurability.Init
@@ -367,7 +367,7 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
   · rcases (lower_degree B α m n H p q m_eq_degree_p n_eq_degree_q
      zero_lt_m zero_lt_n p_eval q_eval leq) with ⟨m', pq, deg, eval, deg2⟩
     have main : m' ∈ degree := ⟨pq, deg2.symm, eval⟩
-    have ge : m' ≥ m := WellFounded.min_le wellFounded_lt main
+    have ge : m' ≥ m := WellFoundedLT.min_le main
     omega
   · have leq2 : m ≤ n := Nat.le_of_not_ge leq
     have H3 : α⁻¹ ∉ B ∧ α⁻¹⁻¹ ∉ B := by
@@ -377,7 +377,7 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
     rcases (lower_degree B α⁻¹ n m H3 q p n_eq_degree_q m_eq_degree_p
      zero_lt_n zero_lt_m q_eval p_eval2 leq2) with ⟨m', pq, deg, eval, deg2⟩
     have main : m' ∈ degree' := ⟨pq, deg2.symm, eval⟩
-    have ge : m' ≥ n := WellFounded.min_le wellFounded_lt main
+    have ge : m' ≥ n := WellFoundedLT.min_le main
     omega
 
 /-- The set of subrings of `ℝ` not containing `1/2`. -/

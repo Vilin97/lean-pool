@@ -118,7 +118,7 @@ theorem cdfRoot_centroid_lower_bound {d : ℕ}
       isProbabilityMeasure_uniformVolume (C : Set (Euc d))
         C.volume_ne_zero C.volume_ne_top
   let : IsProbabilityMeasure ν := by
-    exact Measure.isProbabilityMeasure_map ℓ.measurable.aemeasurable
+    exact inferInstanceAs (IsProbabilityMeasure (μ.map ℓ))
   let : NullSingletonClass ν := by
     change NullSingletonClass ((uniformVolume (C : Set (Euc d))).map ℓ)
     exact nullSingletonClass_map_uniform (C : Set (Euc d)) ℓ hℓ

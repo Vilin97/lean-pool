@@ -145,7 +145,7 @@ theorem markedEdgeChain_segment (point : P → Plane)
       (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
       {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
     ext x
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
 
 /-- The `markedEdgeArrangement` declaration. -/
@@ -583,7 +583,7 @@ theorem exists_face_containing_axis_segment_of_no_vertex
     have himage : L.position '' (({v, w} : Finset L.Vertex) : Set L.Vertex) =
         {L.position v, L.position w} := by
       ext z
-      simp [eq_comm]
+      simp
     rwa [himage] at hqs
   rw [segment_eq_image_lineMap] at hqSeg
   obtain ⟨t, ht, hqt⟩ := hqSeg
@@ -610,7 +610,7 @@ theorem exists_face_containing_axis_segment_of_no_vertex
         exact ⟨hvLow.trans hab, hwHigh⟩
     refine ⟨{v, w}, hs, ?_⟩
     rw [PlaneComplex.cellCarrier, show L.position '' (({v, w} : Finset L.Vertex) : Set L.Vertex) =
-        {L.position v, L.position w} by ext z; simp [eq_comm], convexHull_pair, hvAxis, hwAxis]
+        {L.position v, L.position w} by ext z; simp, convexHull_pair, hvAxis, hwAxis]
     exact hsub
   · have hsub : segment ℝ (planePoint a 0) (planePoint b 0) ⊆
         segment ℝ (planePoint (L.position w 0) 0) (planePoint (L.position v 0) 0) := by
@@ -623,7 +623,7 @@ theorem exists_face_containing_axis_segment_of_no_vertex
         exact ⟨hwLow.trans hab, hvHigh⟩
     refine ⟨{v, w}, hs, ?_⟩
     rw [PlaneComplex.cellCarrier, show L.position '' (({v, w} : Finset L.Vertex) : Set L.Vertex) =
-        {L.position v, L.position w} by ext z; simp [eq_comm], convexHull_pair,
+        {L.position v, L.position w} by ext z; simp, convexHull_pair,
       hvAxis, hwAxis]
     simpa only [segment_symm] using hsub
   · have hbq : b ≤ q := by

@@ -550,7 +550,7 @@ theorem logDeriv_GammaSeq
     unfold denominator
     fun_prop
   change logDeriv (fun z : ℂ ↦ numerator z / denominator z) s = _
-  rw [logDeriv_div s hnum hden hdnum hdden]
+  rw [logDeriv_fun_div s hnum hden hdnum hdden]
   have hnumFormula :
       logDeriv numerator s = Complex.log (n : ℂ) := by
     unfold numerator
@@ -560,7 +560,7 @@ theorem logDeriv_GammaSeq
       logDeriv denominator s =
         ∑ j ∈ Finset.range (n + 1), (s + j)⁻¹ := by
     unfold denominator
-    rw [logDeriv_prod hs]
+    rw [logDeriv_fun_prod hs]
     · apply Finset.sum_congr rfl
       intro j hj
       exact logDeriv_add_nat s j

@@ -8,8 +8,8 @@ module
 public import Mathlib.Algebra.Algebra.Defs
 public import Mathlib.Algebra.Polynomial.Basic
 public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Data.Countable.Defs
-import Mathlib.Data.Countable.Basic
+public import Mathlib.Basic.Countable.Defs
+import Mathlib.Basic.Countable.Basic
 /-!
 # Pencils, periodic masks and mortality
 

@@ -88,7 +88,7 @@ lemma factor_le_mul {k n i : ℕ} (_hk : 1 ≤ k) (hn : 1 ≤ n) (hi : i < k) :
 F(k, n) ≤ (k * n) ^ k for n ≥ 1, k ≥ 1.
 -/
 lemma F_le_pow {k n : ℕ} (hk : 1 ≤ k) (hn : 1 ≤ n) : F k n ≤ (k * n) ^ k := by
-  exact le_trans ( Finset.prod_le_prod' fun _ _ => factor_le_mul hk hn ( Finset.mem_range.mp ‹_› ) )
+  exact le_trans ( Finset.prod_le_prod fun _ _ => factor_le_mul hk hn ( Finset.mem_range.mp ‹_› ) )
     ( by norm_num )
 
 /-! ### LEMMA STAR -/
@@ -115,7 +115,7 @@ theorem lemma_star (m : ℕ) (hm : m ≠ 0) : rad m ^ 2 * B2 m ≤ m ^ 2 := by
     rw [ ← Finset.prod_pow ]; rw [ Finset.prod_filter ]; rw [ ← Finset.prod_mul_distrib ];
     congr; ext; split_ifs <;> ring;
   rw [ h_factorization, h_rad_B2 ];
-  exact Finset.prod_le_prod' fun p hp => Nat.pow_le_pow_right ( Nat.pos_of_mem_primeFactors hp )
+  exact Finset.prod_le_prod fun p hp => Nat.pow_le_pow_right ( Nat.pos_of_mem_primeFactors hp )
     ( by split_ifs <;> linarith [ Nat.pos_of_ne_zero ( Finsupp.mem_support_iff.mp hp ) ] )
 
 /-! ### Bridge to ℝ -/

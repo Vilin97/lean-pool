@@ -379,10 +379,10 @@ theorem QFun.adjoint_comp_self_eq_id_of_map_counit
         simp [TensorProduct.sum_tmul, map_sum, TensorProduct.smul_tmul]
     _ = rT H 1 := by
         convert congrArg (rT H) (@FrobeniusAlgebra.snake_equation_2 ℂ _ B₁ _
-          (QuantumSet.isFrobeniusAlgebra (A := B₁))) using 2 <;>
-          first
-            | rfl
-            | (congr 4; ext r; simp [Algebra.algebraMap_eq_smul_one])
+          (QuantumSet.isFrobeniusAlgebra (A := B₁))) using 2
+        first
+          | rfl
+          | (congr 4; ext r; simp [Algebra.algebraMap_eq_smul_one])
     _ = 1 := by ext; simp
 
 theorem QFun.map_counit_of_adjoint_comp_self_eq_id

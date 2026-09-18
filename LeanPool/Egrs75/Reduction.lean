@@ -6,7 +6,7 @@ Authors: Egor Lyfar
 module
 
 public import LeanPool.Egrs75.Defs
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 import Mathlib.Data.Finset.Attr
 
 /-!

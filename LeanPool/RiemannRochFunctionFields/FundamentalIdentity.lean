@@ -15,7 +15,7 @@ import Mathlib.RingTheory.RamificationInertia.Basic
 Mathlib's `Ideal.sum_ramification_inertia_eq_finrank` states the fundamental identity
 `∑ e · f = [L : K]` for the localization-based `Ideal.ramificationIdx` and `Ideal.inertiaDeg`,
 summed over the subtype `p.primesOver S`.  The rest of this development works with the
-quotient-based `Ideal.ramificationIdx'` and `Ideal.inertiaDeg'` over the finite set
+quotient-based `Ideal.ramificationIdx'` over the finite set
 `IsDedekindDomain.primesOverFinset`, so this file transports the identity to that form and
 records the resulting bound `e ≤ [L : K]` for a single prime.
 -/
@@ -35,7 +35,7 @@ variable {R S : Type*} [CommRing R] [IsDedekindDomain R] [CommRing S] [IsDedekin
 /-- The fundamental identity `∑ e · f = [L : K]` for the quotient-based ramification index and
 inertia degree, summed over the finite set of primes above a nonzero maximal ideal `p`. -/
 theorem sum_ramificationIdx'_mul_inertiaDeg' {p : Ideal R} [p.IsMaximal] (hp0 : p ≠ ⊥) :
-    ∑ P ∈ IsDedekindDomain.primesOverFinset p S, ramificationIdx' p P * inertiaDeg' p P =
+    ∑ P ∈ IsDedekindDomain.primesOverFinset p S, ramificationIdx' p P * P.inertiaDeg R =
       finrank K L := by
   classical
   rw [IsFractionRing.finrank_eq R K S L, ← sum_ramification_inertia_eq_finrank p S,
@@ -43,7 +43,7 @@ theorem sum_ramificationIdx'_mul_inertiaDeg' {p : Ideal R} [p.IsMaximal] (hp0 : 
       (fun P => IsDedekindDomain.mem_primesOverFinset_iff hp0 S (P := P))]
   refine Finset.sum_congr rfl fun q _ => ?_
   have : q.1.IsMaximal := IsMaximal.of_liesOver_isMaximal q.1 p
-  rw [ramificationIdx'_eq_ramificationIdx p q.1 hp0, inertiaDeg'_eq_inertiaDeg p q.1]
+  rw [ramificationIdx'_eq_ramificationIdx p q.1 hp0]
 
 /-- The quotient-based ramification index of a prime above a nonzero maximal ideal is bounded by
 the degree of the extension of fraction fields. -/
@@ -53,6 +53,6 @@ theorem ramificationIdx'_le_finrank {p : Ideal R} [p.IsMaximal] (hp0 : p ≠ ⊥
   have hP : P ∈ IsDedekindDomain.primesOverFinset p S :=
     (IsDedekindDomain.mem_primesOverFinset_iff hp0 S).mpr ⟨hP₁, hP₂⟩
   rw [← sum_ramificationIdx'_mul_inertiaDeg' (S := S) K L hp0, ← Finset.add_sum_erase _ _ hP]
-  exact le_trans (Nat.le_mul_of_pos_right _ (inertiaDeg'_pos p P)) (Nat.le_add_right _ _)
+  exact le_trans (Nat.le_mul_of_pos_right _ (P.inertiaDeg_pos R)) (Nat.le_add_right _ _)
 
 end Ideal

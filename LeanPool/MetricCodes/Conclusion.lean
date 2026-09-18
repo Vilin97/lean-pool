@@ -1352,10 +1352,7 @@ theorem gtTransverseTensorEmbedding_axis_inner_eq_zero
     (q : HarmonicYoungSpace (n := n) mu) :
     ⟪gtTransverseTensorEmbedding lam nu hnu hnuGram x,
       canonicalGelfandTsetlinAxisTensor lam mu hmu hmuGram q⟫_ℝ = 0 := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [map_zero, canonicalGelfandTsetlinAxisTensor_apply,
-              EuclideanSpace.basisFun_apply, canonicalGelfandTsetlinFibre_apply,
-              TensorProduct.tmul_smul, inner_zero_left]
+  induction x with
   | tmul v p =>
       rw [gtTransverseTensorEmbedding_tmul,
         canonicalGelfandTsetlinAxisTensor_apply,
@@ -2188,8 +2185,7 @@ theorem gtTransverseTensorEmbedding_rotation_intertwine
         (gtTransverseTensorEmbedding lam nu h hgram).toLinearMap := by
   apply LinearMap.ext
   intro x
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [map_zero]
+  induction x with
   | add x y hx hy =>
       simpa only [map_add] using congrArg₂ (· + ·) hx hy
   | tmul v p =>
@@ -3393,10 +3389,7 @@ theorem gtTransverseWallTensorEmbedding_axis_inner_eq_zero
     (q : HarmonicYoungSpace (n := n) mu) :
     ⟪gtTransverseWallTensorEmbedding lam mu h hn hlast x,
       canonicalGelfandTsetlinAxisTensor lam mu h hgram q⟫_ℝ = 0 := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [map_zero, canonicalGelfandTsetlinAxisTensor_apply,
-              EuclideanSpace.basisFun_apply, canonicalGelfandTsetlinFibre_apply,
-              TensorProduct.tmul_smul, inner_zero_left]
+  induction x with
   | tmul v p =>
       rw [gtTransverseWallTensorEmbedding_tmul,
         canonicalGelfandTsetlinAxisTensor_apply,
@@ -3644,8 +3637,7 @@ private theorem wallTensorEmbedding_rotation_intertwine_metriccodes2_3a89272e
         (gtTransverseWallTensorEmbedding lam mu h hn hlast).toLinearMap := by
   apply LinearMap.ext
   intro x
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [map_zero]
+  induction x with
   | add x y hx hy =>
       simpa only [map_add] using congrArg₂ (· + ·) hx hy
   | tmul v p =>
@@ -3861,12 +3853,9 @@ theorem gtFullTransverseInternalEmbedding_orthogonal {r n : ℕ}
       HarmonicYoungSpace (n := n) (fullBranchSignature nu)) :
     ⟪gtFullTransverseInternalEmbedding lam hn mu x,
       gtFullTransverseInternalEmbedding lam hn nu y⟫_ℝ = 0 := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [map_zero, inner_zero_left]
+  induction x with
   | tmul v p =>
-      induction y using TensorProduct.induction_on with
-      | zero => simp only [gtFullTransverseInternalEmbedding_tmul, Nat.add_one_sub_one, map_zero,
-                  inner_zero_right]
+      induction y with
       | tmul w q =>
           rw [gtFullTransverseInternalEmbedding_tmul,
             gtFullTransverseInternalEmbedding_tmul,
@@ -4081,8 +4070,7 @@ theorem gtFullAxisAmbientInclusion_sup_transverse_range_eq_top
           HarmonicYoungSpace (n := n + 1) lam)) := by
   apply top_unique
   intro x _
-  induction x using TensorProduct.induction_on with
-  | zero => exact Submodule.zero_mem _
+  induction x with
   | tmul v p =>
       let w : SpherePacking.Euclidean n :=
         WithLp.toLp 2 (fun i : Fin n => v i.castSucc)
@@ -4144,9 +4132,7 @@ theorem gtFullAxisEmbedding_inner_transverse_eq_zero {r n : ℕ}
       HarmonicYoungSpace (n := n) (fullBranchSignature nu)) :
     ⟪gtFullAxisEmbedding lam hn mu p,
       gtFullTransverseEmbedding lam hn nu x⟫_ℝ = 0 := by
-  induction x using TensorProduct.induction_on with
-  | zero => simp only [gtFullAxisEmbedding_apply, EuclideanSpace.basisFun_apply,
-              Nat.add_one_sub_one, map_zero, inner_zero_right]
+  induction x with
   | tmul v q =>
       rw [gtFullAxisEmbedding_apply]
       change
@@ -4877,8 +4863,7 @@ theorem tensor_mapIsometry_range_eq_of_second_range_eq
       LinearMap.range (TensorProduct.mapIsometry e h).toLinearMap := by
   apply le_antisymm
   · rintro _ ⟨x, rfl⟩
-    induction x using TensorProduct.induction_on with
-    | zero => exact Submodule.zero_mem _
+    induction x with
     | add x y hx hy => simpa only [map_add] using Submodule.add_mem _ hx hy
     | tmul v p =>
         have hmem : g p ∈ LinearMap.range h.toLinearMap := by
@@ -4890,8 +4875,7 @@ theorem tensor_mapIsometry_range_eq_of_second_range_eq
         change e v ⊗ₜ[ℝ] h q = e v ⊗ₜ[ℝ] g p
         rw [hq]
   · rintro _ ⟨x, rfl⟩
-    induction x using TensorProduct.induction_on with
-    | zero => exact Submodule.zero_mem _
+    induction x with
     | add x y hx hy => simpa only [map_add] using Submodule.add_mem _ hx hy
     | tmul v p =>
         have hmem : h p ∈ LinearMap.range g.toLinearMap := by

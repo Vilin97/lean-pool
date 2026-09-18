@@ -206,9 +206,8 @@ theorem eLpNorm_wordMagnitude_le (n : ℕ) (f : LiftDomain period → F)
     funext x
     simp [wordMagnitude]
   rw [he]
-  simpa only [eLpNorm_norm] using eLpNorm_sum_le
-    (fun w (_ : w ∈ (Finset.univ : Finset (Fin n → Fin 4))) => (hf w).1.norm)
-    (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+  exact (eLpNorm_sum_le (by norm_num : (1 : ℝ≥0∞) ≤ 2)).trans_eq
+    (Finset.sum_congr rfl fun w _ => eLpNorm_norm _ (hf w).aestronglyMeasurable)
 
 theorem totalMagnitude_memLp (s : ℕ) (f : LiftDomain period → F)
     (hf : ∀ n ≤ s, ∀ w : Fin n → Fin 4,
@@ -228,9 +227,7 @@ theorem totalMagnitude_L2_le (s : ℕ) (f : LiftDomain period → F)
   have hA : eLpNorm (totalMagnitude period s f) 2 (liftMeasure period) ≤
       ∑ n ∈ Finset.range (s+1), eLpNorm (wordMagnitude period n f) 2 (liftMeasure period) := by
     rw [he]
-    exact eLpNorm_sum_le (fun n hn =>
-      (wordMagnitude_memLp period n f (hf n (by
-          simpa using Finset.mem_range.1 hn))).1) (by norm_num)
+    exact eLpNorm_sum_le (by norm_num)
   have hB : (∑ n ∈ Finset.range (s+1), eLpNorm (wordMagnitude period n f) 2 (liftMeasure period)) ≤
       ∑ n ∈ Finset.range (s+1), ∑ w : Fin n → Fin 4,
         eLpNorm (iteratedFieldDerivative period w f) 2 (liftMeasure period) := by
@@ -380,7 +377,7 @@ theorem localized_directional_L2_le (n : ℕ) (i : Fin 4) (f : LiftDomain period
     (directional 4 n (EuclideanSpace.single i 1) (localized period f hf x))
     (directional_localized_support period n i f hf x) (bumpCoefficient period n) hb
   have hnorm : ‖hqt.toLp (translated period q x)‖ = ‖hq.toLp q‖ := by
-    simp only [Lp.norm_toLp, eLpNorm_translated period q hq.1]
+    simp only [Lp.norm_toLp, eLpNorm_translated period q hq.aestronglyMeasurable]
   rw [hnorm] at hA
   exact hA.trans (mul_le_mul_of_nonneg_left (totalMagnitude_L2_le period n f hfL2)
     (mul_nonneg (bumpCoefficient period n).coe_nonneg (Real.rpow_nonneg (by norm_num) _)))

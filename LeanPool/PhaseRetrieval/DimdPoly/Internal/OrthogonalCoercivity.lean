@@ -355,7 +355,7 @@ private theorem evalPkappa_lpNorm_eq_norm_wip
     MeasureTheory.lpNorm (evalPkappa kappa F) 2 (gammaD d)
       = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) :=
           (gaussianL2Norm_eq_lpNorm_wip (evalPkappa kappa F)
-            (memLp_two_evalPkappa_wip hd kappa F).1).symm
+            (memLp_two_evalPkappa_wip hd kappa F).aestronglyMeasurable).symm
     _ = ‖F‖ := by
           have hpow :
               (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) =
@@ -423,7 +423,7 @@ private theorem defect_lpNorm_eq_wip
   let _ := hd
   simpa [defect, defectFunctionPkappa_wip, Real.norm_eq_abs, sq_abs] using
     gaussianL2Norm_eq_lpNorm_wip (defectFunctionPkappa_wip kappa F G)
-      (memLp_two_defectFunctionPkappa_wip hd kappa F G).1
+      (memLp_two_defectFunctionPkappa_wip hd kappa F G).aestronglyMeasurable
 
 private theorem evalPkappa_add_apply_wip
     {d : Nat} (kappa : MultiIndex d) (F G : Pkappa d kappa) (z : Cd d) :

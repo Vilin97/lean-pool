@@ -6,7 +6,7 @@ Authors: Palalansoukî
 module
 
 public import Aesop.BuiltinRules
-public import Mathlib.Logic.ExistsUnique
+public import Mathlib.Basic.ExistsUnique
 import Mathlib.Data.Finset.Attr
 import Mathlib.Tactic.Bound.Init
 import Mathlib.Tactic.Finiteness.Attr

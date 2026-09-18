@@ -171,7 +171,7 @@ private def close_up_all_one_pass_aux_proof
   set Pairs := Finset R'.carrier × R'.carrier with Pairs_def
   have cdec : ∀ (p : Prop), Decidable p := Classical.propDecidable
   let pairLO : LinearOrder Pairs := IsWellOrder.linearOrder WellOrderingRel
-  let pairWF : WellFoundedLT Pairs := ⟨WellOrderingRel.isWellOrder.wf⟩
+  let pairWF : WellFoundedLT Pairs := WellOrderingRel.isWellOrder.wf
   -- #Pairs ≤ max(ℵ₀, #R'): for infinite R', #(Finset R' × R') = #R'
   have hPairs_card : Cardinal.mk Pairs ≤ max Cardinal.aleph0 (Cardinal.mk R'.carrier) := by
     by_cases hfin : Finite R'.carrier
@@ -185,7 +185,7 @@ private def close_up_all_one_pass_aux_proof
     le_trans hPairs_card (max_le (le_max_left ..) R'.card_le)
   let build_union := @build_union_isNSubring T _ _ _ _
   -- Define f by well-founded recursion: f(p) closes the pair p over the union of all f(q), q < p
-  let f : Pairs → NSubring T := WellFounded.fix pairWF.wf (fun p IH =>
+  let f : Pairs → NSubring T := WellFounded.fix pairWF (fun p IH =>
     if hmono : ∀ q₁ q₂ (h₁ : q₁ < p) (h₂ : q₂ < p), q₁ ≤ q₂ →
         (IH q₁ h₁).carrier ≤ (IH q₂ h₂).carrier then
       if hprimes : ∀ q₁ q₂ (h₁ : q₁ < p) (h₂ : q₂ < p) (h12 : q₁ ≤ q₂)
@@ -242,8 +242,8 @@ private def close_up_all_one_pass_aux_proof
           (⟨(p.2 : T), hle p.2.2⟩ : (f p).carrier) ∈
             Ideal.map (Subring.inclusion hle) (Ideal.span ↑p.1)) := by
     intro p
-    induction p using pairWF.wf.induction with
-    | h p IHGood =>
+    induction p using pairWF.induction with
+    | ind p IHGood =>
     have hfq_R'_le : ∀ q (hq : q < p), R'.carrier ≤ (f q).carrier :=
       fun q hq => (IHGood q hq).1.choose
     have hfq_R'_primes : ∀ q (hq : q < p) (r : R'.carrier), Prime r →

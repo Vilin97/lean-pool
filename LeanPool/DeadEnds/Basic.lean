@@ -312,7 +312,7 @@ lemma tprod_compl_le_one (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆
   apply tprod_le_of_prod_le'
   · exact le_refl 1
   · intro s
-    apply Finset.prod_le_one
+    apply Finset.prod_le_one₀
     · intro i _
       exact localDensityFactor_nonneg (i : ℕ) b T
     · intro i _

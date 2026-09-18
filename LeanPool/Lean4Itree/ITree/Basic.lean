@@ -154,8 +154,8 @@ def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)
     ret v (by
       rw [elim0_eq_all snd] at hm
       simp only [ITree.ret, ret']
-      rw [←hm]
-      exact (PFunctor.M.mk_dest x).symm
+      rw [← PFunctor.M.mk_dest x, hm]
+      rfl
     )
   | ⟨.tau, c⟩ =>
     tau (c 0) (by
@@ -166,8 +166,8 @@ def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)
   | ⟨.vis α e, k⟩ =>
     vis α e k (by
       simp only [ITree.vis, vis']
-      rw [←hm]
-      exact (PFunctor.M.mk_dest x).symm
+      rw [← PFunctor.M.mk_dest x, hm]
+      rfl
     )
 
 /- Destructor utilities -/

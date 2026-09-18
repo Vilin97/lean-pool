@@ -5,7 +5,7 @@ Authors: Michael R. Douglas
 -/
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Data.Matrix.Mul
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Sym.Sym2.Init

@@ -128,16 +128,16 @@ theorem realHermiteGenerating_hasDerivAt (t : ℝ) (u : ℂ) :
     have hquad : HasDerivAt (fun v : ℂ => v ^ 2 / 2) u u := by
       simpa [id, two_mul] using
         HasDerivAt.div_const ((hasDerivAt_id u).fun_pow 2) 2
-    convert ((hlin.add_const (-(((t : ℂ) ^ 2) / 2))).sub hquad) using 1 <;>
-      first
-      | rfl
-      | (funext v; simp only [Pi.sub_apply]; ring_nf)
+    convert ((hlin.add_const (-(((t : ℂ) ^ 2) / 2))).sub hquad) using 1
+    first
+    | rfl
+    | (funext v; simp only [Pi.sub_apply]; ring_nf)
   unfold realHermiteGenerating
   convert HasDerivAt.const_mul
-    (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ)) hpoly.cexp using 1 <;>
-      first
-      | rfl
-      | ring
+    (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ)) hpoly.cexp using 1
+  first
+  | rfl
+  | ring
 
 theorem realHermiteGenerating_integral_mul (u w : ℂ) :
     (∫ t : ℝ, realHermiteGenerating t u * realHermiteGenerating t w) =
@@ -5468,9 +5468,9 @@ private lemma rankOneKernel_memLp_two
         ((volume : Measure (RealVec d)).prod
           (volume : Measure (RealVec d))) := by
     exact
-      (hf.1.comp_quasiMeasurePreserving
+      (hf.aestronglyMeasurable.comp_quasiMeasurePreserving
         Measure.quasiMeasurePreserving_fst).mul
-        ((hg.1.comp_quasiMeasurePreserving
+        ((hg.aestronglyMeasurable.comp_quasiMeasurePreserving
           Measure.quasiMeasurePreserving_snd).star)
   exact
     (integrable_norm_rpow_iff
@@ -5589,7 +5589,8 @@ private lemma memLp_two_prod_right_ae
   have hF_prod : MemLp F 2 (μ.prod μ) := by simpa [μ, MeasureTheory.Measure.volume_eq_prod] using hF
   have hmeas_sec :
       ∀ᵐ x ∂μ,
-        AEStronglyMeasurable (fun t : RealVec d => F (x, t)) μ := hF_prod.1.prodMk_left
+        AEStronglyMeasurable (fun t : RealVec d => F (x, t)) μ :=
+    hF_prod.aestronglyMeasurable.prodMk_left
   have hint_global :
       Integrable (fun p : PhaseSpace d => ‖F p‖ ^ 2) (μ.prod μ) := by
     simpa using hF_prod.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)
@@ -5758,7 +5759,7 @@ theorem equalAmbiguity_to_rankOneKernel_ae
         (by
           have hcenter_prod : MemLp centerDiff 2 (μ.prod μ) := by
             simpa [μ, MeasureTheory.Measure.volume_eq_prod] using hcenter_mem
-          exact hcenter_prod.1)
+          exact hcenter_prod.aestronglyMeasurable)
         hcenter_zero_sections
   have hendpoint_zero :
       endpointDiff =ᵐ[μ.prod μ] fun _ => (0 : ℂ) := by

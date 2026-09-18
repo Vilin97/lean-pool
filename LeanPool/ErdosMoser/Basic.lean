@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Finset.Max
 public import Mathlib.Data.Finset.Powerset
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Rat.Cast.Order

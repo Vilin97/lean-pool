@@ -8,7 +8,7 @@ Authors: ruplet
 -- extended with case for empty type
 module
 
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 public import Aesop.BuiltinRules
 public import Mathlib.Tactic.Attr.Core
 public import Mathlib.Tactic.ToAdditive

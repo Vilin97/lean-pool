@@ -331,7 +331,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
     simpa [one_div] using this
   -- Show integrability of ‖F‖² via MemLp → Integrable (square norm)
   have hF_memLp : MemLp F 2 volume := F.memLp 2 volume
-  have hF_meas : AEStronglyMeasurable F volume := hF_memLp.1
+  have hF_meas : AEStronglyMeasurable F volume := hF_memLp.aestronglyMeasurable
   have hF_sq_int : Integrable (fun k => ‖F k‖^2) volume :=
     (memLp_two_iff_integrable_sq_norm hF_meas).1 hF_memLp
   -- The weighted integrand measurability (not strictly needed for the monotonicity helper)
@@ -389,11 +389,11 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
     simpa [hL, fIm, complexTestFunctionDecompose] using hsq
   -- Show integrability of both sides to apply integral monotonicity
   have hIm_memLp : MemLp (toComplex fIm) 2 volume := (toComplex fIm).memLp 2 volume
-  have hIm_meas : AEStronglyMeasurable (toComplex fIm) volume := hIm_memLp.1
+  have hIm_meas : AEStronglyMeasurable (toComplex fIm) volume := hIm_memLp.aestronglyMeasurable
   have hIm_sq_int : Integrable (fun x => ‖(toComplex fIm) x‖^2) volume :=
     (memLp_two_iff_integrable_sq_norm hIm_meas).1 hIm_memLp
   have hf_memLp : MemLp f 2 volume := f.memLp 2 volume
-  have hf_meas : AEStronglyMeasurable f volume := hf_memLp.1
+  have hf_meas : AEStronglyMeasurable f volume := hf_memLp.aestronglyMeasurable
   have hf_sq_int : Integrable (fun x => ‖f x‖^2) volume :=
     (memLp_two_iff_integrable_sq_norm hf_meas).1 hf_memLp
   have h_imag_bound : ∫ x, ‖(toComplex fIm) x‖^2 ∂volume ≤ ∫ x, ‖f x‖^2 ∂volume := by

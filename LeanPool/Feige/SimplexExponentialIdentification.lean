@@ -308,7 +308,7 @@ theorem measurable_nnrealNormalizedCoordinates :
     Measurable (nnrealNormalizedCoordinates :
       (Option (Fin n) → NNReal) → (Fin n → ℝ)) := by
   unfold nnrealNormalizedCoordinates
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro i
   exact ((measurable_pi_apply (some i)).coe_nnreal_real).div
     measurable_nnrealExponentialTotal

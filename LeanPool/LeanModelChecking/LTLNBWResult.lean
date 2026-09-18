@@ -9,7 +9,7 @@ module
 public import LeanPool.LeanModelChecking.LTLNBWStatement
 import LeanPool.LeanModelChecking.ABWNBW
 import LeanPool.LeanModelChecking.NNFABW
-import Mathlib.Data.Finite.Prod
+import Mathlib.Basic.Finite.Prod
 import Mathlib.Data.Fintype.Powerset
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.NormNum.Abs

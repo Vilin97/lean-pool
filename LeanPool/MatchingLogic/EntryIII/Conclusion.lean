@@ -15,7 +15,7 @@ countably infinite element-variable type.
 module
 
 public import LeanPool.MatchingLogic.EntryIII.Countertheory
-public import Mathlib.Logic.Denumerable
+public import Mathlib.Basic.Denumerable
 import LeanPool.MatchingLogic.EntryIII.CanonicalConstruction
 import LeanPool.MatchingLogic.EntryIII.ModelExistence
 import LeanPool.MatchingLogic.EntryIII.Renaming

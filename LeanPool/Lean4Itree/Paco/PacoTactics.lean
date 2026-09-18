@@ -98,7 +98,10 @@ private def rewriteLocalWith (mvarId : MVarId) (fvarId : FVarId)
   return replacement.mvarId :: result.mvarIds
 
 /-- Initialise a parameterized-coinduction proof: mark the context and unfold the
-goal's `lfp_monotone` fixed point so the Paco combinators can act on it. -/
+goal's `lfp_monotone` fixed point so the Paco combinators can act on it.
+
+The variant `pinit at h` initialises the proof from a fixed-point hypothesis `h`
+instead of from the goal. -/
 elab "pinit" : tactic =>
   Tactic.liftMetaTactic λ mvarId => do
     let mark := Expr.const ``paco_mark.mk_paco_mark []
@@ -275,7 +278,7 @@ elab_rules : tactic
         | throwError "Cannot find hypothesis of name {h.getId}"
       rewriteLocalWith mvarId decl.fvarId (← mkPlfpUnfoldProof decl.type)
 
-/-- Initialise a parameterized-coinduction proof from a fixed-point hypothesis `h`. -/
+@[tactic_alt tacticPinit]
 elab "pinit" " at " h:ident : tactic =>
   Tactic.withMainContext do
     let some hyp := (← getLCtx).findDecl? (λ ldecl =>

@@ -136,7 +136,7 @@ every breakpoint, including the case where the path revisits its own basepoint).
 
 * **`OfCurveInj.lean`** (§4.4 D4): `Jacobian.ofCurve_inj'` (gated on
   `[DiscreteTopology (RS.periodSubgroup X)]`, Forster 21.4(i) exactly — proved via the frozen
-  ordering-resolution bridge `AddSubgroup.isClosed_of_discrete` + `AddSubgroup.
+  ordering-resolution bridge `AddSubgroup.isClosed_of_discreteTopology` + `AddSubgroup.
   topologicalClosure_minimal`/`le_topologicalClosure`, spike-verified in the design §9 — AND on
   the explicit hypothesis `RS.Abel.WeakSolutionUpgrade X`) and `Jacobian.ofCurve_inj` (same two
   gates — see the file's own docstring for why the design's literal UNGATED final shape cannot be
@@ -155,7 +155,7 @@ every breakpoint, including the case where the path revisits its own basepoint).
    register **both** `instance : DiscreteTopology (RS.periodSubgroup X)` (feeds `ofCurve_inj'`
    directly) and `instance : DiscreteTopology (RS.periodSubgroup X).topologicalClosure` (feeds
    `jacobian-construction`'s existing gates) — both are cheap corollaries of the same
-   discreteness proof via `AddSubgroup.isClosed_of_discrete` (§4.4/§9 of the design).
+   discreteness proof via `AddSubgroup.isClosed_of_discreteTopology` (§4.4/§9 of the design).
 3. **Final assembly discharge shape**: once (1) `RS.Abel.WeakSolutionUpgrade`/
    `WeakSolutionUpgradeFinset` are proved (design steps 5+7 — `serre-duality-tails`'s own external
    blocker has already cleared, see `DolbeaultBridge.lean`) and (2) the

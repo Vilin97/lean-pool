@@ -6,7 +6,7 @@ Authors: Palalansoukî
 module
 
 public import Aesop.BuiltinRules
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Order.Lattice
 import Mathlib.Data.Fintype.Pigeonhole
 import Mathlib.Order.WellFounded

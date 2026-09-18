@@ -37,7 +37,7 @@ lemma isAlgebraic_pi_of_not_transcendental_pi
 /-- If `π` is algebraic over `ℚ`, then so is `π i`. -/
 lemma isAlgebraic_I_mul_pi_of_isAlgebraic_pi
     (hpi : IsAlgebraic ℚ (Real.pi : ℂ)) : IsAlgebraic ℚ (Real.pi * I : ℂ) := by
-  simpa [mul_comm] using (isAlgebraic_iff_isIntegral.2 Complex.isIntegral_rat_I).mul hpi
+  simpa [mul_comm] using (isAlgebraic_iff_isIntegral.2 (Complex.isIntegral_I ℚ)).mul hpi
 
 /-- If `π i` is algebraic over `ℚ`, there is a monic rational polynomial vanishing at `π i`. -/
 lemma exists_monic_rat_poly_aeval_Ipi_eq_zero

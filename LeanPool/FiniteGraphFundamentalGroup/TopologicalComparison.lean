@@ -67,7 +67,7 @@ theorem graphCoverSymmetricFreeGroupoidMap_endpoint {root : V}
       (y : graphCoverVertex root).2 ≫
         (graphCoverSymmetricFreeGroupoidMap root).map e := by
   change graphCoverVertex root at y z
-  cases e with
+  cases e using Sum.casesOn with
   | inl e =>
       exact e.property.symm
   | inr e =>
@@ -106,7 +106,7 @@ theorem coverSymPathValue_eq_baseSymPathValue {root : V}
   | nil => rfl
   | cons p e ih =>
       rw [coverSymPathValue_cons, ih]
-      cases e <;> rfl
+      cases e using Sum.casesOn <;> rfl
 /-- Sends every graph edge to its generator in the free group on total edges. -/
 def graphFreeGroupPrefunctor {V : Type u} [Quiver.{u} V] :
     V ⥤q CategoryTheory.SingleObj (FreeGroup (Quiver.Total V)) where
@@ -128,7 +128,7 @@ def coverSymEdgeLetter {root : V}
     (e : @Quiver.Hom (Symmetrify (graphCoverVertex root))
       (Quiver.symmetrifyQuiver (graphCoverVertex root)) a b) :
     Quiver.Total V × Bool := by
-  cases e with
+  cases e using Sum.casesOn with
   | inl e => exact (⟨_, _, e.1⟩, true)
   | inr e => exact (⟨_, _, e.1⟩, false)
 
@@ -213,9 +213,9 @@ theorem coverSymEdgeLetter_cancel {root : V}
     (⟨b, c, e⟩ : Quiver.Total (Symmetrify (graphCoverVertex root))) =
       ⟨b, a, Quiver.reverse f⟩ := by
   change graphCoverVertex root at a b c
-  cases e with
+  cases e using Sum.casesOn with
   | inl e =>
-      cases f with
+      cases f using Sum.casesOn with
       | inl f => simp [coverSymEdgeLetter] at hbool
       | inr f =>
           have htot :
@@ -230,7 +230,7 @@ theorem coverSymEdgeLetter_cancel {root : V}
           cases htotal
           rfl
   | inr e =>
-      cases f with
+      cases f using Sum.casesOn with
       | inr f => simp [coverSymEdgeLetter] at hbool
       | inl f =>
           have htot :
@@ -326,7 +326,7 @@ theorem coverFreeGroupMap_letter {root : V}
     singleObjHomValue ((graphFreeGroupoidToFreeGroup (V := V)).map
       ((graphCoverSymmetricFreeGroupoidMap root).map e)) =
       FreeGroup.mk [coverSymEdgeLetter e] := by
-  cases e with
+  cases e using Sum.casesOn with
   | inl e =>
       rw [graphCoverSymmetricFreeGroupoidMap_map_pos]
       have h := graphFreeGroupoidToFreeGroup_map_pos
@@ -401,9 +401,9 @@ theorem coverSymEdge_star_eq_of_letter_eq {root : V}
     (h : coverSymEdgeLetter e = coverSymEdgeLetter f) :
     (⟨b, e⟩ : Quiver.Star a) = ⟨c, f⟩ := by
   change graphCoverVertex root at a b c
-  cases e with
+  cases e using Sum.casesOn with
   | inl e =>
-      cases f with
+      cases f using Sum.casesOn with
       | inl f =>
           have htot :
               (⟨a.1, b.1, e.1⟩ : Quiver.Total V) =
@@ -416,7 +416,7 @@ theorem coverSymEdge_star_eq_of_letter_eq {root : V}
           rfl
       | inr f => simp [coverSymEdgeLetter] at h
   | inr e =>
-      cases f with
+      cases f using Sum.casesOn with
       | inl f => simp [coverSymEdgeLetter] at h
       | inr f =>
           have htot :
@@ -763,7 +763,7 @@ def graphCoverTreeEdgeBase {V : Type u} [Quiver.{u} V]
     Quiver.Total (graphCoverVertex root) := by
   rcases d with ⟨a, b, ⟨f, hf⟩⟩
   change graphCoverVertex root at a b
-  cases f with
+  cases f using Sum.casesOn with
   | inl e => exact ⟨a, b, e⟩
   | inr e => exact ⟨b, a, e⟩
 
@@ -771,7 +771,7 @@ def graphCoverTreeEdgeBase {V : Type u} [Quiver.{u} V]
 def graphCoverTreeEdgeSign {V : Type u} [Quiver.{u} V]
     (root : V)
     (d : Quiver.Total (graphCoverSymmetricTree root)) : Bool := by
-  cases d.hom.1 with
+  cases d.hom.1 using Sum.casesOn with
   | inl _ => exact true
   | inr _ => exact false
 
@@ -842,7 +842,7 @@ def graphCoverTreeFoldCoordinate {V : Type u} [Quiver.{u} V]
     (d : Quiver.Total (graphCoverSymmetricTree root)) : C(I, I) := by
   rcases d with ⟨a, b, ⟨f, hf⟩⟩
   change graphCoverVertex root at a b
-  cases f with
+  cases f using Sum.casesOn with
   | inl _ => exact ContinuousMap.id I
   | inr _ => exact graphRealizationIntervalSymm
 
@@ -868,7 +868,7 @@ theorem graphCoverTreeFold_h0 {V : Type u} [Quiver.{u} V]
         graphVertex (graphCoverTreeVertexForget root d.left) := by
   rcases d with ⟨a, b, ⟨f, hf⟩⟩
   change graphCoverVertex root at a b
-  cases f with
+  cases f using Sum.casesOn with
   | inl e =>
       change graphEdgePath (⟨a, b, e⟩ : Quiver.Total (graphCoverVertex root)) 0 =
         graphVertex (graphCoverTreeVertexForget root a)
@@ -891,7 +891,7 @@ theorem graphCoverTreeFold_h1 {V : Type u} [Quiver.{u} V]
         graphVertex (graphCoverTreeVertexForget root d.right) := by
   rcases d with ⟨a, b, ⟨f, hf⟩⟩
   change graphCoverVertex root at a b
-  cases f with
+  cases f using Sum.casesOn with
   | inl e =>
       change graphEdgePath (⟨a, b, e⟩ : Quiver.Total (graphCoverVertex root)) 1 =
         graphVertex (graphCoverTreeVertexForget root b)
@@ -979,7 +979,7 @@ theorem graphCoverSection_h0 {V : Type u} [Quiver.{u} V]
   rw [hd]
   rcases d with ⟨a, b, ⟨f, hf⟩⟩
   change graphCoverVertex root at a b
-  cases f with
+  cases f using Sum.casesOn with
   | inl f =>
       change graphEdgePath
           (⟨a, b, ⟨Sum.inl f, hf⟩⟩ :
@@ -1024,7 +1024,7 @@ theorem graphCoverSection_h1 {V : Type u} [Quiver.{u} V]
   rw [hd]
   rcases d with ⟨a, b, ⟨f, hf⟩⟩
   change graphCoverVertex root at a b
-  cases f with
+  cases f using Sum.casesOn with
   | inl f =>
       change graphEdgePath
           (⟨a, b, ⟨Sum.inl f, hf⟩⟩ :
@@ -1094,7 +1094,7 @@ theorem graphRealization_map_ext {U W : Type u} [Quiver.{u} U] [Quiver.{u} W]
   funext x
   refine Quotient.inductionOn x ?_
   intro x
-  cases x with
+  cases x using Sum.casesOn with
   | inl v => exact hv (graphVertexUnderlying v)
   | inr z =>
       rcases z with ⟨e, t⟩
@@ -1128,7 +1128,7 @@ theorem graphCoverTreeToCover_comp_graphCoverToTree
     rw [hd]
     rcases d with ⟨a, b, ⟨f, hf⟩⟩
     change graphCoverVertex root at a b
-    cases f with
+    cases f using Sum.casesOn with
     | inl f =>
         change graphEdgePath
             (⟨a, b, f⟩ : Quiver.Total (graphCoverVertex root))
@@ -1163,9 +1163,9 @@ theorem graphCoverTreeEdgeBase_injective
   rcases d₁ with ⟨a, b, ⟨f, hf⟩⟩
   rcases d₂ with ⟨c, d, ⟨g, hg⟩⟩
   change graphCoverVertex root at a b c d
-  cases f with
+  cases f using Sum.casesOn with
   | inl f =>
-      cases g with
+      cases g using Sum.casesOn with
       | inl g =>
           have htotal : (⟨a, b, f⟩ : Quiver.Total (graphCoverVertex root)) =
               ⟨c, d, g⟩ := by
@@ -1186,7 +1186,7 @@ theorem graphCoverTreeEdgeBase_injective
           exact False.elim (no_reverse_edges (graphCoverSymmetricTree root)
             f hf hg)
   | inr f =>
-      cases g with
+      cases g using Sum.casesOn with
       | inl g =>
           have htotal : (⟨b, a, f⟩ : Quiver.Total (graphCoverVertex root)) =
               ⟨c, d, g⟩ := by
@@ -1232,7 +1232,7 @@ theorem graphCoverToTree_comp_graphCoverTreeToCover
     rw [hchoice]
     rcases d with ⟨a, b, ⟨f, hf⟩⟩
     change graphCoverVertex root at a b
-    cases f with
+    cases f using Sum.casesOn with
     | inl f =>
         dsimp [graphCoverSectionCoordinate, graphCoverTreeFoldCoordinate]
         change graphEdgePath
@@ -1324,7 +1324,7 @@ theorem graphFreeGroupoidToTopological_map_path {V : Type u} [Quiver.{u} V]
               (@graphRealizationQuiverPath V _ _ _ p)) := by
         exact ih
       rw [ih']
-      cases e with
+      cases e using Sum.casesOn with
       | inl e =>
           rfl
       | inr e =>
@@ -1339,7 +1339,7 @@ theorem graphCoverRealization_fiber_vertex
   revert hz
   refine Quotient.inductionOn z ?_
   intro z hz
-  cases z with
+  cases z using Sum.casesOn with
   | inl v =>
       let x : graphCoverVertex root := graphVertexUnderlying v
       have hzx : graphRealizationQuotient (Sum.inl v) = graphVertex x := by
@@ -1409,7 +1409,7 @@ theorem graphCoverRealizationQuiverPath_map
             (@Quiver.Path.cons (Symmetrify (graphCoverVertex root))
               (Quiver.symmetrifyQuiver (graphCoverVertex root)) _ _ _ p e))
       rw [Prefunctor.mapPath_cons, Path.map_trans, ih]
-      cases e with
+      cases e using Sum.casesOn with
       | inl e =>
           rfl
       | inr e =>

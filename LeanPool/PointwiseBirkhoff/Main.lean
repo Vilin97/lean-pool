@@ -31,7 +31,7 @@ def birkhoffMax (f : α → α) (φ : α → ℝ) : ℕ →o (α → ℝ) :=
 lemma birkhoffMax_succ : birkhoffMax f φ n.succ x = φ x + 0 ⊔ birkhoffMax f φ n (f x) := by
   have : birkhoffSum f φ ∘ .succ = fun k ↦ φ + birkhoffSum f φ k ∘ f := by
     funext k x; dsimp
-    rw [add_comm k 1, birkhoffSum_add f φ 1, birkhoffSum_one];
+    rw [add_comm k 1, birkhoffSum_add_right_apply f φ 1, birkhoffSum_one_apply];
     rfl
   nth_rw 1 [birkhoffMax, this, partialSups_const_add]
   simp only [Pi.add_apply, add_right_inj]
@@ -108,7 +108,7 @@ lemma divergentSet_invariant : f x ∈ divergentSet f φ ↔ x ∈ divergentSet 
     | coe a =>
         rcases hx ↑(- φ x + a) (EReal.coe_lt_top _) with ⟨N, hN⟩
         norm_cast at *
-        rw [neg_add_lt_iff_lt_add, ← birkhoffSum_succ'] at hN
+        rw [neg_add_lt_iff_lt_add, ← birkhoffSum_succ_apply'] at hN
         use N + 1
   · intro hx
     simp only [divergentSet, Set.mem_preimage, birkhoffSup, Set.mem_singleton_iff,
@@ -123,7 +123,7 @@ lemma divergentSet_invariant : f x ∈ divergentSet f φ ↔ x ∈ divergentSet 
       conv =>
         congr
         intro i
-        rw [← add_lt_add_iff_left (φ x), ← birkhoffSum_succ']
+        rw [← add_lt_add_iff_left (φ x), ← birkhoffSum_succ_apply']
       cases N with
       | zero =>
         rcases hx ↑(birkhoffSum f φ 1 x) (EReal.coe_lt_top _) with ⟨N, hNN⟩

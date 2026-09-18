@@ -38,8 +38,8 @@ lemma dist_le_integral_of_norm_deriv_le_of_le {f : ℝ → E} {B : ℝ → ℝ} 
     have hdg : ∀ t ∈ Ioo a b, deriv g t = deriv f t := by
       intro t ht
       have : HasFDerivAt (𝕜 := ℝ) (↑) UniformSpace.Completion.toComplL (f t) := by
-        rw [← UniformSpace.Completion.coe_toComplL (𝕜 := ℝ)]
-        exact (UniformSpace.Completion.toComplL (E := E) (𝕜 := ℝ)).hasFDerivAt
+        rw [← UniformSpace.Completion.coe_toComplL (S := ℝ)]
+        exact (UniformSpace.Completion.toComplL (α := E) (S := ℝ)).hasFDerivAt
       have hdft : HasDerivAt f (deriv f t) t := hfd.hasDerivAt <| Ioo_mem_nhds ht.1 ht.2
       rw [hg, (this.comp_hasDerivAt t hdft).deriv, UniformSpace.Completion.coe_toComplL]
     have hgn : ∀ᵐ t, t ∈ Ioo a b → ‖deriv g t‖ ≤ B t :=

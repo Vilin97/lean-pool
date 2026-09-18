@@ -6,7 +6,7 @@ Authors: Yann Pequignot
 module
 
 public import Aesop.BuiltinRules
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 import Mathlib.Data.Fintype.Pigeonhole
 
 /-!

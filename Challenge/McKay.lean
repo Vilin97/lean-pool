@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Clawristotle contributors
 -/
 
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.GroupTheory.Sylow
 import Mathlib.RepresentationTheory.Character
 

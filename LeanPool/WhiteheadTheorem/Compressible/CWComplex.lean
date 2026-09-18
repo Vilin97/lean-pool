@@ -111,7 +111,7 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
     let H := Limits.Sigma.desc fun c ↦ ofHom (h c)
     have hmap c : Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map (fun _ : cells ↦ i) =
         i ≫ Limits.Sigma.ι (fun _ ↦ X) c := Limits.Sigma.ι_map _ _
-    have hιH c : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
+    have hιH c : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_comp_desc _ _
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk L ?_ H ?_ ?_ fun t ↦ ?_⟩
     · apply Limits.Sigma.hom_ext
       intro c
@@ -119,7 +119,7 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
       change Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ ↦ i) ≫ L = _
       rw [← Category.assoc, hmap, Category.assoc]
       change i ≫ Limits.Sigma.ι (fun _ ↦ X) c ≫ Limits.Sigma.desc (fun c ↦ (l c).l) = _
-      rw [Limits.Sigma.ι_desc]
+      rw [Limits.Sigma.ι_comp_desc]
       exact hfac
     · apply Limits.Sigma.hom_ext
       intro c
@@ -129,7 +129,7 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
     · apply Limits.Sigma.hom_ext
       intro c
       have h1 := (l c).curriedH_apply_one
-      have hιL : Limits.Sigma.ι (fun _ ↦ X) c ≫ L = (l c).l := Limits.Sigma.ι_desc _ _
+      have hιL : Limits.Sigma.ι (fun _ ↦ X) c ≫ L = (l c).l := Limits.Sigma.ι_comp_desc _ _
       change Limits.Sigma.ι (fun _ ↦ X) c ≫ H ≫ PathSpace.eval₁ Y =
         Limits.Sigma.ι (fun _ ↦ X) c ≫ L ≫ j
       rw [← Category.assoc, hιH, h1, ← Category.assoc, hιL]

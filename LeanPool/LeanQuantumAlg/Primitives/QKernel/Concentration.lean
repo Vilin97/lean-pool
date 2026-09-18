@@ -47,7 +47,7 @@ theorem ryKernel_nonneg (n : ℕ) (θ : Fin n → ℝ) : 0 ≤ ryKernel n θ :=
   Finset.prod_nonneg (fun _ _ => sq_nonneg _)
 
 theorem ryKernel_le_one (n : ℕ) (θ : Fin n → ℝ) : ryKernel n θ ≤ 1 :=
-  Finset.prod_le_one (fun k _ => sq_nonneg _)
+  Finset.prod_le_one₀ (fun k _ => sq_nonneg _)
     (fun k _ => by nlinarith [Real.neg_one_le_cos (θ k), Real.cos_le_one (θ k)])
 
 theorem continuous_ryKernel (n : ℕ) : Continuous (ryKernel n) := by

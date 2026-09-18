@@ -16,7 +16,7 @@ completeness along an equivalence of variable types.
 module
 
 public import LeanPool.MatchingLogic.ProofSystem
-public import Mathlib.Logic.Denumerable
+public import Mathlib.Basic.Denumerable
 
 /-!
 # MatchingLogic.EntryIII.Renaming

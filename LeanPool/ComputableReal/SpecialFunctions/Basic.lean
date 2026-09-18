@@ -6,8 +6,8 @@ Authors: Alex Meiburg
 module
 
 public import LeanPool.ComputableReal.IsComputable
-public import Mathlib.Data.Real.Sign
-public import Mathlib.Data.Real.ConjExponents
+public import Mathlib.Basic.Real.Sign
+public import Mathlib.Basic.Real.ConjExponents
 import Mathlib.Algebra.Order.BigOperators.Expect
 import Mathlib.Analysis.Normed.Group.Basic
 import Mathlib.Analysis.Real.Sqrt

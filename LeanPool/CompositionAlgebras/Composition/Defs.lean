@@ -6,7 +6,7 @@ Authors: Bryan Ehrlich
 module
 
 public import Mathlib.Algebra.Algebra.Basic
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Algebra.Order.Field.Power
 import Mathlib.Analysis.Normed.Group.Basic

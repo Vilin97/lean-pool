@@ -90,7 +90,7 @@ theorem memLp_norm_of_domination {E F : Type*} [NormedAddCommGroup E] [NormedAdd
       (eLpNorm f 2 (liftMeasure period)).toReal ≤ c*(eLpNorm g 2 (liftMeasure period)).toReal := by
   have hm := hg.of_le_mul hf h
   refine ⟨hm, ?_⟩
-  have hh := eLpNorm_le_mul_eLpNorm_of_ae_le_mul h (2 : ℝ≥0∞)
+  have hh := eLpNorm_le_mul_eLpNorm_of_ae_le_mul hf h (2 : ℝ≥0∞)
   have hfin : ENNReal.ofReal c * eLpNorm g 2 (liftMeasure period) ≠ ⊤ := by finiteness
   have hh' := ENNReal.toReal_mono hfin hh
   simpa only [ENNReal.toReal_mul, ENNReal.toReal_ofReal hc] using hh'
@@ -153,7 +153,7 @@ theorem fieldL2_add_le {E : Type*} [NormedAddCommGroup E]
     (eLpNorm (f+g) 2 (liftMeasure period)).toReal ≤
       (eLpNorm f 2 (liftMeasure period)).toReal+(eLpNorm g 2 (liftMeasure period)).toReal := by
   have h := ENNReal.toReal_mono (ENNReal.add_ne_top.mpr ⟨hf.eLpNorm_ne_top, hg.eLpNorm_ne_top⟩)
-    (eLpNorm_add_le hf.1 hg.1 (by norm_num : (1 : ℝ≥0∞) ≤ 2))
+    (eLpNorm_add_le (by norm_num : (1 : ℝ≥0∞) ≤ 2))
   simpa only [ENNReal.toReal_add hf.eLpNorm_ne_top hg.eLpNorm_ne_top] using h
 
 end EulerMixedH5Product

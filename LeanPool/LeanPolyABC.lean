@@ -13,7 +13,7 @@ public import LeanPool.LeanPolyABC.All
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.CategoryTheory.Category.Init
 import Mathlib.Combinatorics.Matroid.Init
-import Mathlib.Data.NNReal.Defs
+import Mathlib.Basic.NNReal.Defs
 import Mathlib.Data.Nat.Totient
 import Mathlib.Data.Sym.Sym2.Init
 import Mathlib.Tactic.Continuity.Init

@@ -202,12 +202,23 @@ theorem quadratic_weight_lower_bound
   have hadd (x y : ι → F) :
       q.eval (x + y) = q.eval x + q.eval y + q.eval 0 + b x y := by
     rw [hq0]
-    simp only [QuadraticData.eval, b, Pi.add_apply, add_mul, mul_add,
-      Finset.sum_add_distrib]
-    have hthree : (3 : F) = 1 := by decide
-    have hc3 : q.constantTerm * 3 = q.constantTerm := by rw [hthree, mul_one]
-    ring_nf
-    try rw [hc3]
+    simp only [QuadraticData.eval, b, Pi.add_apply]
+    have hlinear : ∑ i, q.linear i * (x i + y i) =
+        (∑ i, q.linear i * x i) + ∑ i, q.linear i * y i := by
+      rw [← Finset.sum_add_distrib]
+      exact Finset.sum_congr rfl fun i _ => by ring
+    have hquadratic : ∑ i, ∑ j, q.quadratic i j * (x i + y i) * (x j + y j) =
+        (∑ i, ∑ j, q.quadratic i j * x i * x j) +
+          (∑ i, ∑ j, q.quadratic i j * y i * y j) +
+          ∑ i, ∑ j, q.quadratic i j * (x i * y j + y i * x j) := by
+      rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+      refine Finset.sum_congr rfl fun i _ => ?_
+      rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+      exact Finset.sum_congr rfl fun j _ => by ring
+    rw [hlinear, hquadratic]
+    have hconstantTerm : q.constantTerm + q.constantTerm = 0 :=
+      CharTwo.add_self_eq_zero q.constantTerm
+    linear_combination -hconstantTerm
   have hbadd (x y z : ι → F) : b (x + y) z = b x z + b y z := by
     dsimp [b]
     simp only [add_mul, mul_add]

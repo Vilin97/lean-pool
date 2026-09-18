@@ -362,8 +362,7 @@ noncomputable def oneMapTranspose : ℍ ⊗[ℂ] ℍᵐᵒᵖ ≃⋆ₐ[ℂ] Mat
           tensorToKronecker
       change ∀ x, F (star x) = star (F x)
       intro x
-      refine x.induction_on ?zero ?tmul ?add
-      · simp only [star_zero, map_zero]
+      refine x.inductionOn ?tmul ?add
       · intro x₁ x₂
         simp only [TensorProduct.star_tmul]
         exact (TensorProduct.toKronecker_star

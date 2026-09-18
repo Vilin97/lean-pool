@@ -805,7 +805,7 @@ lemma injRearrange_comp {k m : ℕ} (S : StrictMonoFin k m) (π : Equiv.Perm (Fi
     injRearrange (S.2.injective.comp π.injective) = S := by
   have hu : Function.Injective (S.1 ∘ π) := S.2.injective.comp π.injective
   apply Subtype.ext
-  refine (StrictMono.range_inj (injRearrange hu).2 S.2).1 ?_
+  refine (StrictMono.range_inj_of_wellFoundedLT (injRearrange hu).2 S.2).1 ?_
   have h1 : Set.range (injRearrange hu).1 = ((univ.image (S.1 ∘ π) : Finset _) : Set _) := by
     simp only [injRearrange]
     exact range_orderEmbOfFin _ _

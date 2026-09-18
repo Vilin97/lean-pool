@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Analysis.Complex.Norm
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Complex.BigOperators
+import Mathlib.Basic.Complex.BigOperators
 
 /-!
 

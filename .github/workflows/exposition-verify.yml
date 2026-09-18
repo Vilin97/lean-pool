@@ -15,6 +15,7 @@ on:
       - main
     paths:
       - 'python/lean_pool/exposition/**'
+      - 'python/lean_pool/ci_artifacts.py'
       - 'scripts/exposition/**'
       - '.github/workflows/exposition-verify.yml'
 
@@ -24,6 +25,7 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   verify:
@@ -36,16 +38,22 @@ jobs:
       # Match Lean Action CI's cache lookup exactly. This workflow only needs
       # compiled Lean artifacts; restoring doc-gen output here used to make a
       # broad fallback pull an incompatible cache after every toolchain bump.
-      - name: Restore Lean build cache
+      - name: Restore Lean dependencies
+        id: dependency-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
-            .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: LeanDependencies-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      - name: Restore pool build
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/build
+          key: LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ github.sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -65,8 +73,26 @@ jobs:
             exit 1
           fi
 
+      - name: Reuse matching Lean CI build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          BUILD_EVENT: ${{ github.event_name }}
+        run: >-
+          PYTHONPATH=python python3 -m lean_pool.ci_artifacts restore
+          --head "$BUILD_HEAD" --event "$BUILD_EVENT"
+
       - name: Build pool
         run: ~/.elan/bin/lake build LeanPool
+
+      - name: Restore project extraction cache
+        id: extraction-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/exposition-cache/v1
+          key: Exposition-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml', 'scripts/exposition/**', 'python/lean_pool/exposition/extract.py', 'python/lean_pool/exposition/source_text.py') }}-${{ github.sha }}
+          restore-keys: |
+            Exposition-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml', 'scripts/exposition/**', 'python/lean_pool/exposition/extract.py', 'python/lean_pool/exposition/source_text.py') }}-
 
       - name: Extract declarations
         env:
@@ -75,6 +101,25 @@ jobs:
         run: >-
           ~/.elan/bin/lake env bash scripts/exposition/extract-all.sh
           exposition-dump.jsonl exposition-commands.jsonl
+
+      - name: Save project extraction cache
+        if: steps.extraction-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: .lake/exposition-cache/v1
+          key: ${{ steps.extraction-cache.outputs.cache-primary-key }}
+
+      - name: Upload extraction timings and logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: exposition-extraction-diagnostics
+          path: |
+            .lake/exposition-timings.json
+            .lake/exposition-cache/v1/**/extract.log
+            .lake/exposition-cache/v1/**/failed.log
+          include-hidden-files: true
+          retention-days: 7
 
       - name: Install uv
         uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff

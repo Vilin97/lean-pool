@@ -888,8 +888,8 @@ lemma analytic_unique_of_real_part
             _ < 1 := hz
           convert HasDerivAt.deriv (HasDerivAt.comp (t : ℂ) (
             h_analytic.differentiableOn.differentiableAt (isOpen_ball.mem_nhds hmem) |>
-                DifferentiableAt.hasDerivAt) (hasDerivAt_mul_const z)) using 2 <;>
-            rfl
+                DifferentiableAt.hasDerivAt) (hasDerivAt_mul_const z)) using 2
+          rfl
         simp_all only [mem_ball, dist_zero_right, mem_Icc, mul_eq_zero]
         exact Or.inl <| h_const _ <| by simpa [abs_of_nonneg ht.1] using lt_of_le_of_lt (
           mul_le_of_le_one_left (norm_nonneg _) ht.2) hz

@@ -49,7 +49,7 @@ theorem logDeriv_tprod_eq_tsum2 {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ �
     conv =>
       enter [1]
       ext n
-      rw [← logDeriv_prod (by intro i hi; apply hf i)
+      rw [← logDeriv_fun_prod (by intro i hi; apply hf i)
         (by intro i hi; apply (hd i x x.2).differentiableAt; exact IsOpen.mem_nhds hs x.2)]
     exact HT
 
@@ -73,8 +73,6 @@ theorem logDeriv_tprod_eq_tsumold {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ
       apply HT.congr
       intro m
       congr
-      ext i
-      simp only [Finset.prod_apply]
     · exact htend
     · simp only [eventually_atTop]
       exact ⟨0, fun b _ z hz =>

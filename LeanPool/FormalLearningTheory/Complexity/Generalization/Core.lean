@@ -526,7 +526,7 @@ theorem consistent_tail_bound {X : Type u} [MeasurableSpace X]
     exact tsub_le_tsub_left herr 1
   calc ∏ i : Fin m, D { x | h x = c x }
       ≤ ∏ _i : Fin m, ENNReal.ofReal (1 - ε) :=
-        Finset.prod_le_prod' (fun i _ => hD_agree)
+        Finset.prod_le_prod (fun i _ => hD_agree)
     _ = ENNReal.ofReal (1 - ε) ^ m := by rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin]
     _ = ENNReal.ofReal ((1 - ε) ^ m) := by
         rw [ENNReal.ofReal_pow (by linarith : (0 : ℝ) ≤ 1 - ε)]

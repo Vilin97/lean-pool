@@ -382,9 +382,10 @@ lemma exists_log_of_analytic_nonzero_on_ball (f : ℂ → ℂ)
     intro z hz; rw [← hH_const z hz, mul_assoc, ← exp_add, neg_add_cancel, exp_zero, mul_one]
   obtain ⟨c, hc⟩ : ∃ c : ℂ, H 0 = exp c :=
     ⟨log (H 0), by rw [exp_log (mul_ne_zero (hf_ne_zero 0 (by norm_num)) (exp_ne_zero _))]⟩
-  refine ⟨fun z => c + g0 z, ?_, ?_⟩ <;> norm_num [hc] at *
+  refine ⟨fun z => c + g0 z, ?_, fun z hz => ?_⟩
   · exact AnalyticOn.add analyticOn_const hg0_anal
-  · exact fun z hz => by rw [hf_eq z hz, exp_add]
+  · rw [exp_add, ← hc]
+    exact (hf_eq z hz).symm
 
 /--
 For any function `f` in `classS`, there exists an analytic function `h` on the unit disc such that

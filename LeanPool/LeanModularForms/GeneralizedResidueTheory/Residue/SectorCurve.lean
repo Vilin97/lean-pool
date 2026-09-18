@@ -512,7 +512,7 @@ private theorem pv_cutoff_integral_seg1_eq_inv (r : ℝ) (hr : 0 < r) (α : ℝ)
       calc ε = δ * r := by rw [hδ_def]; field_simp
         _ < t * r := by nlinarith
   apply intervalIntegral.integral_congr_ae
-  filter_upwards [(Filter.eventuallyEq_set.mp Ioo_ae_eq_Ioc)] with t ht
+  filter_upwards [(Filter.eventuallyEqSet_iff.mp Ioo_ae_eq_Ioc)] with t ht
   rw [Set.uIoc_of_le (le_of_lt hδ1)]
   exact fun ht_mem => h_on_Ioo t (ht.mpr ht_mem)
 
@@ -535,7 +535,7 @@ private theorem pv_cutoff_integral_seg2_eq_Ialpha (r : ℝ) (hr : 0 < r) (α : �
       simp only [norm_mul, Complex.norm_exp_I_mul_ofReal, mul_one]
       rw [Complex.norm_of_nonneg (le_of_lt hr)]; linarith
   have h_ae : ∀ᵐ t, t ∈ Ι 1 2 → F t = I * ↑α := by
-    filter_upwards [(Filter.eventuallyEq_set.mp Ioo_ae_eq_Ioc)] with t ht
+    filter_upwards [(Filter.eventuallyEqSet_iff.mp Ioo_ae_eq_Ioc)] with t ht
     rw [Set.uIoc_of_le (by norm_num : (1 : ℝ) ≤ 2)]
     exact fun ht_mem => h_on_Ioo t (ht.mpr ht_mem)
   change ∫ (t : ℝ) in (1 : ℝ)..2, F t = I * ↑α
@@ -569,7 +569,7 @@ private theorem pv_cutoff_integral_seg3_eq_neg_inv (r : ℝ) (hr : 0 < r) (α : 
       calc ε = δ * r := by rw [hδ_def]; field_simp
         _ < (3 - t) * r := by nlinarith
   apply intervalIntegral.integral_congr_ae
-  filter_upwards [(Filter.eventuallyEq_set.mp Ioo_ae_eq_Ioc)] with t ht
+  filter_upwards [(Filter.eventuallyEqSet_iff.mp Ioo_ae_eq_Ioc)] with t ht
   rw [Set.uIoc_of_le (le_of_lt h3δ)]
   exact fun ht_mem => h_on_Ioo t (ht.mpr ht_mem)
 

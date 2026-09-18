@@ -189,7 +189,7 @@ theorem LinearMap.mulLeft_eq_one_or_zero_iff_mulRight_tfae {H₁ : Type _} [Semi
 theorem LinearMap.mulLeft_eq_one_or_zero_iff_mulRight {H₁ : Type _} [Semiring H₁] [Algebra R H₁]
     (x : H₁) (p : Prop) [Decidable p] :
     LinearMap.mulLeft R x = ite p 1 0 ↔ LinearMap.mulRight R x = ite p 1 0 :=
-  List.TFAE.out (@LinearMap.mulLeft_eq_one_or_zero_iff_mulRight_tfae R _ H₁ _ _ x p _) 0 1
+  List.TFAE.out (@LinearMap.mulLeft_eq_one_or_zero_iff_mulRight_tfae R _ H₁ _ _ x p _) 1 2
 
 theorem LinearMap.mulRight_smul (x : H₁) (α : R) :
     LinearMap.mulRight R (α • x) = α • LinearMap.mulRight R x :=

@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 public import Mathlib.Data.Fintype.Basic
 import Mathlib.Algebra.BigOperators.Fin

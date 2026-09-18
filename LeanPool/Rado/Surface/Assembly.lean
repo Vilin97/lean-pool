@@ -159,7 +159,7 @@ theorem secondCountable_configY {e : OpenPartialHomeomorph X ℂ}
         exact ⟨⟨q, hqC⟩, hqT, Subtype.ext hqy⟩
     rw [himg]
     exact (ConjEtale.isOpenMap_proj _ (hT'.inter hCopen)).preimage continuous_subtype_val
-  exact (hgopen.isQuotientMap hgcont hgsurj).secondCountableTopology hgopen
+  exact (show IsOpenQuotientMap g from ⟨hgsurj, hgcont, hgopen⟩).secondCountableTopology
 
 /-- **Radó's theorem**, instance form: a connected Hausdorff Riemann surface is
 second countable. `X = configY e ∪ (chart ball)`, both open and second

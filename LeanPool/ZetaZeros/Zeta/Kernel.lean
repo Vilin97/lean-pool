@@ -413,9 +413,8 @@ lemma unweightedKernelSum_cutoffTest_tendsto (hPC : PairCorrelation) {delta : �
       (fun T : ℝ => ((((4 * Real.log T ^ 2 : ℝ) : ℂ)))⁻¹)
       Filter.atTop (nhds 0) := by
     convert (Complex.continuous_ofReal.tendsto 0).comp hinv_real using 1
-    · funext T
-      exact (Complex.ofReal_inv _).symm
-    · rfl
+    funext T
+    exact (Complex.ofReal_inv _).symm
   have hQ2_small : Filter.Tendsto
       (fun T =>
         (pairCorrelationSum (iteratedDeriv 2 (cutoffSelfConv psi)) T /

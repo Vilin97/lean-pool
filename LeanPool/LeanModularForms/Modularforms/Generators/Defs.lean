@@ -169,19 +169,19 @@ lemma evalE₄E₆_whc_eq_single (n : ℕ) (p : MvPolynomial (Fin 2) ℂ)
   · subst hk; simp [DirectSum.of_eq_same]
   · rw [DirectSum.of_eq_of_ne _ _ _ hk]
     conv_lhs => rw [← MvPolynomial.support_sum_monomial_coeff p]; rw [map_sum]
-    rw [show (∑ x ∈ p.support, evalE₄E₆ ((MvPolynomial.monomial x) (MvPolynomial.coeff x p))) k =
-      ∑ x ∈ p.support, (evalE₄E₆ ((MvPolynomial.monomial x) (MvPolynomial.coeff x p))) k from
+    rw [show (∑ x ∈ p.support, evalE₄E₆ ((MvPolynomial.monomial x) (p.coeff x))) k =
+      ∑ x ∈ p.support, (evalE₄E₆ ((MvPolynomial.monomial x) (p.coeff x))) k from
       map_sum (DFinsupp.evalAddMonoidHom k) _ _]
     apply Finset.sum_eq_zero
     intro d hd
     have hweight := hp (MvPolynomial.mem_support_iff.mp hd)
-    have hd0 : MvPolynomial.monomial d (MvPolynomial.coeff d p) =
-        MvPolynomial.C (MvPolynomial.coeff d p) * MvPolynomial.X 0 ^ d 0 *
+    have hd0 : MvPolynomial.monomial d (p.coeff d) =
+        MvPolynomial.C (p.coeff d) * MvPolynomial.X 0 ^ d 0 *
           MvPolynomial.X 1 ^ d 1 := by
       rw [MvPolynomial.monomial_eq, mul_assoc]; simp_all
-    rw [hd0, show MvPolynomial.C (MvPolynomial.coeff d p) *
+    rw [hd0, show MvPolynomial.C (p.coeff d) *
         MvPolynomial.X (0 : Fin 2) ^ d 0 * MvPolynomial.X (1 : Fin 2) ^ d 1 =
-        MvPolynomial.C (MvPolynomial.coeff d p) *
+        MvPolynomial.C (p.coeff d) *
         (MvPolynomial.X (0 : Fin 2) ^ d 0 * MvPolynomial.X (1 : Fin 2) ^ d 1)
         from mul_assoc _ _ _]
     rw [map_mul, evalE₄E₆_C, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,

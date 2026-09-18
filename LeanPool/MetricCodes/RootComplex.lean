@@ -410,13 +410,16 @@ theorem isotropicOrthogonalPositiveRoot_strict_even
           (variableIndex a (evenCoordinate h p))
           (variableIndex a (evenCoordinate h q)) (2 : ℂ) _ d hd
         simpa only [isotropicCoordinateCoheight_even, Fin.val_fin_lt] using hpq
-      · simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      · simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
   | sum p q hpq =>
       rw [conjugatedSumRoot_X_even h p q hpq a j] at hd
-      simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
   | short p t ht =>
       rw [conjugatedShortRoot_X_even h p t ht a j] at hd
-      simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
 
 theorem isotropicOrthogonalPositiveRoot_strict_odd
     {r n : ℕ} (h : 2 * (r + 1) ≤ n)
@@ -439,7 +442,8 @@ theorem isotropicOrthogonalPositiveRoot_strict_odd
         have hp' := p.isLt
         have hq' := q.isLt
         omega
-      · simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      · simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
   | sum p q hpq =>
       rw [conjugatedSumRoot_X_odd h p q hpq a j] at hd
       by_cases hq : q = j
@@ -478,8 +482,8 @@ theorem isotropicOrthogonalPositiveRoot_strict_odd
           have hp' := p.isLt
           have hq' := q.isLt
           omega
-        · simp only [hq, ↓reduceIte, hp, sub_self, MvPolynomial.coeff_zero, ne_eq,
-            not_true_eq_false] at hd
+        · simp only [hq, ↓reduceIte, hp, sub_self, AddMonoidAlgebra.coeff_zero,
+            Finsupp.zero_apply, ne_eq, not_true_eq_false] at hd
   | short p t ht =>
       rw [conjugatedShortRoot_X_odd h p t ht a j] at hd
       split_ifs at hd with hp
@@ -492,7 +496,8 @@ theorem isotropicOrthogonalPositiveRoot_strict_odd
           isotropicCoordinateCoheight_odd]
         have hp' := p.isLt
         omega
-      · simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      · simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
 
 theorem isotropicOrthogonalPositiveRoot_strict_unused
     {r n : ℕ} (h : 2 * (r + 1) ≤ n)
@@ -507,10 +512,12 @@ theorem isotropicOrthogonalPositiveRoot_strict_unused
   cases α with
   | difference p q hpq =>
       rw [conjugatedDifferenceRoot_X_unused h p q hpq a t ht] at hd
-      simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
   | sum p q hpq =>
       rw [conjugatedSumRoot_X_unused h p q hpq a t ht] at hd
-      simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
   | short p u hu =>
       rw [conjugatedShortRoot_X_unused h p u t hu ht a] at hd
       split_ifs at hd with hut
@@ -525,7 +532,8 @@ theorem isotropicOrthogonalPositiveRoot_strict_unused
         rw [isotropicCoordinateCoheight_even,
           isotropicCoordinateCoheight_unused a t ht]
         exact p.isLt
-      · simp only [MvPolynomial.coeff_zero, ne_eq, not_true_eq_false] at hd
+      · simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ne_eq,
+          not_true_eq_false] at hd
 
 theorem isotropicOrthogonalPositiveRoot_strict
     {r n : ℕ} (h : 2 * (r + 1) ≤ n)
@@ -774,7 +782,7 @@ theorem coeff_X_mul_pderiv {ι : Type*} (p : MvPolynomial ι ℂ)
   classical
   induction p using MvPolynomial.induction_on' with
   | add p q hp hq =>
-      simp only [map_add, mul_add, MvPolynomial.coeff_add, hp, hq]
+      simp only [map_add, mul_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq]
   | monomial m c =>
       rw [MvPolynomial.X_mul_pderiv_monomial]
       rw [← Nat.cast_smul_eq_nsmul ℂ]
@@ -980,9 +988,9 @@ theorem isotropicCoordinateDefect_eq_zero_of_mem_vars_of_maximalCartan
     (MvPolynomial.mem_vars_iff_mem_support v).mp hv
   have hzero := isotropicCoordinateDefectDerivation_eq_zero_of_maximalCartan
     h f d hfhom hcartan
-  have hcoeff := congrArg (MvPolynomial.coeff m) hzero
+  have hcoeff := congrArg (·.coeff m) hzero
   rw [naturalDiagonalDerivation_coeff] at hcoeff
-  simp only [MvPolynomial.coeff_zero] at hcoeff
+  simp only [AddMonoidAlgebra.coeff_zero] at hcoeff
   have hmcoeff : g.coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
   have hcast :
@@ -2575,8 +2583,7 @@ theorem youngWeightedComponent_gram_mul
     apply Finset.sum_congr rfl
     intro ab hab
     by_cases hg :
-        MvPolynomial.coeff ab.1
-          (rowPairingPolynomial (n := n) i j) = 0
+        (rowPairingPolynomial (n := n) i j).coeff ab.1 = 0
     · simp only [hg, zero_mul]
     · have hga := rowPairingPolynomial_isWeightedHomogeneous i j hg
       have hab' := Finset.HasAntidiagonal.mem_antidiagonal.mp hab
@@ -2597,8 +2604,7 @@ theorem youngWeightedComponent_gram_mul
     apply Finset.sum_eq_zero
     intro ab hab
     by_cases hg :
-        MvPolynomial.coeff ab.1
-          (rowPairingPolynomial (n := n) i j) = 0
+        (rowPairingPolynomial (n := n) i j).coeff ab.1 = 0
     · simp only [hg, zero_mul]
     · have hga := rowPairingPolynomial_isWeightedHomogeneous i j hg
       have hab' := Finset.HasAntidiagonal.mem_antidiagonal.mp hab
@@ -2866,14 +2872,13 @@ theorem youngWeightedComponent_gram_mul_eq_zero_of_overweight
   classical
   ext d
   rw [MvPolynomial.coeff_weightedHomogeneousComponent,
-    MvPolynomial.coeff_zero]
+    AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
   by_cases hd : Finsupp.weight (youngVariableRowWeight r n) d = lam
   · rw [ite_eq_left hd, MvPolynomial.coeff_mul]
     apply Finset.sum_eq_zero
     intro bc hbc
     by_cases hg :
-        MvPolynomial.coeff bc.1
-          (rowPairingPolynomial (n := n) i j) = 0
+        (rowPairingPolynomial (n := n) i j).coeff bc.1 = 0
     · simp only [hg, zero_mul]
     · have hga := rowPairingPolynomial_isWeightedHomogeneous i j hg
       have hbc' := Finset.HasAntidiagonal.mem_antidiagonal.mp hbc
@@ -4962,10 +4967,9 @@ theorem rootAction_apply_X {r n : ℕ}
 
 theorem rootAction_X_coefficient {r n : ℕ}
     (x : RootVector r) (α : PositiveRoot r) (k : Fin n) :
-    MvPolynomial.coeff
-      (Finsupp.single (variableIndex α.val.2 k) 1)
-      (rootAction n x
-        (MvPolynomial.X (variableIndex α.val.1 k))) = x α := by
+    (rootAction n x
+        (MvPolynomial.X (variableIndex α.val.1 k))).coeff
+      (Finsupp.single (variableIndex α.val.2 k) 1) = x α := by
   classical
   rw [rootAction_apply_X]
   simp_rw [MvPolynomial.coeff_sum, MvPolynomial.coeff_smul]
@@ -4990,7 +4994,8 @@ theorem rootAction_X_coefficient {r n : ℕ}
           intro h
           exact hvar (Finsupp.single_left_injective (by norm_num : (1 : ℕ) ≠ 0) h)
         simp only [hsource, ↓reduceIte, MvPolynomial.coeff_X, hsingle, smul_eq_mul, mul_zero]
-      · simp only [hsource, ↓reduceIte, MvPolynomial.coeff_zero, smul_eq_mul, mul_zero]
+      · simp only [hsource, ↓reduceIte, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply,
+          smul_eq_mul, mul_zero]
     · exact fun h => (h hα).elim
   · have hx : x α = 0 := Finsupp.notMem_support_iff.mp hα
     rw [hx]
@@ -5015,7 +5020,8 @@ theorem rootAction_X_coefficient {r n : ℕ}
         intro h
         exact hvar (Finsupp.single_left_injective (by norm_num : (1 : ℕ) ≠ 0) h)
       simp only [hsource, ↓reduceIte, MvPolynomial.coeff_X, hsingle, smul_eq_mul, mul_zero]
-    · simp only [hsource, ↓reduceIte, MvPolynomial.coeff_zero, smul_eq_mul, mul_zero]
+    · simp only [hsource, ↓reduceIte, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply,
+          smul_eq_mul, mul_zero]
 
 theorem rootAction_injective {r n : ℕ}
     (hn : 0 < n) : Function.Injective (rootAction (r := r) n) := by
@@ -5024,8 +5030,7 @@ theorem rootAction_injective {r n : ℕ}
   let k : Fin n := ⟨0, hn⟩
   have hcoord := LinearMap.congr_fun hxy
     (MvPolynomial.X (variableIndex α.val.1 k))
-  have hcoeff := congrArg
-    (MvPolynomial.coeff
+  have hcoeff := congrArg (·.coeff
       (Finsupp.single (variableIndex α.val.2 k) 1)) hcoord
   simpa only [rootAction_X_coefficient] using hcoeff
 

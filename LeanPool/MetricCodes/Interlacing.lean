@@ -3019,7 +3019,7 @@ theorem young_pderiv_eq_zero_of_isHomogeneous_zero
   have hdegree : p.totalDegree = 0 :=
     (MvPolynomial.totalDegree_zero_iff_isHomogeneous
       (Fin ((r + 1) * n))).mpr hp
-  have hconstant : p = MvPolynomial.C (MvPolynomial.coeff 0 p) :=
+  have hconstant : p = MvPolynomial.C (p.coeff 0) :=
     MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp hdegree
   rw [hconstant, MvPolynomial.pderiv_C]
 
@@ -7317,8 +7317,8 @@ theorem downstreamCorrectedDerivative_fischer_cross_recurrence
       internalDerivative_downstreamPolarization_fischer_inner
         lam i j hij p _ k]
     ring
-  · simp only [SpherePacking.Fischer.polynomialInner, MvPolynomial.coeff_zero, mul_zero,
-      Finsupp.sum_fun_zero, neg_zero]
+  · simp only [SpherePacking.Fischer.polynomialInner, AddMonoidAlgebra.coeff_zero,
+      Finsupp.coe_zero, Pi.zero_apply, mul_zero, Finsupp.sum_fun_zero, neg_zero]
 
 theorem downstreamCorrectedDerivative_fischer_cross_sum_recurrence
     {r n : ℕ} (lam : Fin (r + 1) → ℕ)
@@ -7924,8 +7924,8 @@ theorem projectedCoordinateLower_basis_eq_downstreamCorrectedDerivative
       ((mem_harmonicYoungSubmodule mu
         (q : PolynomialSpace r n)).mp q.property).2.2.2 a j haj
     rw [hhighest]
-    simp only [SpherePacking.Fischer.polynomialInner, MvPolynomial.coeff_zero, mul_zero,
-      Finsupp.sum_fun_zero]
+    simp only [SpherePacking.Fischer.polynomialInner, AddMonoidAlgebra.coeff_zero,
+      Finsupp.coe_zero, Pi.zero_apply, mul_zero, Finsupp.sum_fun_zero]
   · simp only [SpherePacking.Fischer.polynomialInner, AddMonoidAlgebra.coeff_zero,
       Finsupp.sum_zero_index]
 

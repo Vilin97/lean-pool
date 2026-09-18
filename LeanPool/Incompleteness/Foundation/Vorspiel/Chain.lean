@@ -7,7 +7,7 @@ module
 
 public import Aesop.BuiltinRules
 public import Batteries.Data.List.Basic
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Tactic.ToAdditive
 public import Mathlib.Tactic.ToDual
 import Mathlib.Data.Fintype.EquivFin

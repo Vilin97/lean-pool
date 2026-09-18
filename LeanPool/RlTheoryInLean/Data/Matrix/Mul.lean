@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Matrix.Mul
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Ring.RingNF
 
 /-!

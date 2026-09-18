@@ -52,9 +52,9 @@ namespace SetTheory
     simpa using fun hz _ => hz
 
 @[toZFSet_simps] lemma IsWellFoundedRevMem.toZFSet (x : M) :
-    IsWellFoundedRevMem x ↔ IsWellFounded ⇓x fun a b => b ∈ a := by
+    IsWellFoundedRevMem x ↔ WellFounded fun a b : ⇓x => b ∈ a := by
   rw [← IsWellFoundedRevMem.toV]
-  simp only [IsWellFoundedRevMem, isWellFounded_iff, WellFounded.wellFounded_iff_has_min,
+  simp only [IsWellFoundedRevMem, WellFounded.wellFounded_iff_has_min,
     powerset.spec, toZFSet_simps, Subtype.forall, Subtype.exists,
     Set.mem_ofPred_eq, mem_inside_ZFSet, exists_and_left, exists_prop]
   conv =>
@@ -99,14 +99,13 @@ lemma eq_natCast_of_mem_ωₛ {α} (hα : α ∈ ωₛ) : ∃ n : ℕ, α = Ordi
   obtain ⟨α, ⟨_⟩⟩ := isOrdinal_iff_mem_range_toZFSet.mp ord_α
   simpa [ωₛ, toZFSet_mem_toZFSet_iff, lt_omega0, toZFSet_strictMono.injective.eq_iff] using hα
 
-lemma nwf_rev_of_ωₛ_le {α} (hα : ωₛ ≤ α) : ¬IsWellFounded α (fun x y => y ∈ x) := by
-  intro ⟨h⟩
+lemma nwf_rev_of_ωₛ_le {α} (hα : ωₛ ≤ α) : ¬WellFounded (fun x y : α => y ∈ x) := by
+  intro h
   rw [wellFounded_iff_isEmpty_descending_chain] at h
   refine h.false ⟨fun n => ⟨Ordinal.toZFSet n, hα toZFSet_nat_mem_ωₛ⟩, ?_⟩
   simpa only [mem_inside_ZFSet] using fun n => toZFSet_mem_toZFSet_iff.mpr (by simp)
 
-lemma wf_rev_of_lt_ωₛ {α} (hα : α ∈ ωₛ) : IsWellFounded α (fun x y => y ∈ x) := by
-  rw [isWellFounded_iff]
+lemma wf_rev_of_lt_ωₛ {α} (hα : α ∈ ωₛ) : WellFounded (fun x y : α => y ∈ x) := by
   refine @Finite.wellFounded_of_trans_of_irrefl _ ?_  _ ?_ ?_
   · obtain ⟨n, ⟨_⟩⟩ := eq_natCast_of_mem_ωₛ hα
     erw [← mk_lt_aleph0_iff, cardinalMk_coe_sort]

@@ -110,7 +110,7 @@ lemma pinv_pullback_eq
     have h_diff_nn : 0 ≤ star y ⬝ᵥ ((graphLaplacian G - L_S) *ᵥ y) :=
       (inducedLaplacian_le_graphLaplacian G S).dotProduct_mulVec_nonneg y
     rw [Matrix.sub_mulVec, hLy, zero_sub, dotProduct_neg] at h_diff_nn
-    exact (hLS_psd.dotProduct_mulVec_zero_iff y).mp
+    exact (hLS_psd.dotProduct_mulVec_zero_iff (x := y)).mp
       (le_antisymm (neg_nonneg.mp h_diff_nn) h_LS_nn)
   have hLP : L_S * P = L_S := by
     have key : ∀ v, (L_S * P) *ᵥ v = L_S *ᵥ v := by

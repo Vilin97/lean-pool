@@ -5,7 +5,7 @@ Authors: Juan Pablo Traverso Giannini, Aristotle
 -/
 module
 public import LeanPool.MinimumDegreeMatching.BKLOInfrastructure
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import LeanPool.MinimumDegreeMatching.Spread
 import Mathlib.Tactic.Positivity.Finset
 import Mathlib.Tactic.NormNum.OfScientific

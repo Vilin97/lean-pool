@@ -7,7 +7,7 @@ module
 
 public import LeanPool.KasamiCyclicAdditive.Statement.Definitions
 public import Mathlib.Algebra.Group.AddChar
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 import Mathlib.CategoryTheory.Category.Init
 import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

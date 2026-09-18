@@ -68,8 +68,7 @@ lemma TensorProduct.rid_adjoint {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGro
   intro y
   simp only [LinearMap.adjoint_inner_left, LinearEquiv.coe_toLinearMap,
     TensorProduct.rid_symm_apply]
-  exact y.induction_on
-    (by simp only [inner_zero_right, map_zero])
+  exact y.inductionOn
     (fun α z => by
       simp only [TensorProduct.rid_tmul, TensorProduct.inner_tmul, RCLike.inner_apply,
         starRingEnd_apply, star_one, inner_smul_right, mul_comm, mul_one])

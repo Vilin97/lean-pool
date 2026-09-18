@@ -393,7 +393,7 @@ theorem evalHom_injective_one (p : ℕ) (hp : p.Prime) :
   set D := TDiag (n := 1) (fun _ => p ^ (s 0))
   have h0 : (evalHom 1 p R).toFun D = 0 := by rw [hR]; rfl
   apply hcoeff
-  suffices h : ((evalHom 1 p) R).toFun D = MvPolynomial.coeff s R from h ▸ h0
+  suffices h : ((evalHom 1 p) R).toFun D = R.coeff s from h ▸ h0
   -- Adapted for v4.29: use erw for coercion-sensitive rewrites
   -- Reduce to eval₂ and expand as sum, push application D inside
   change (MvPolynomial.eval₂ (Int.castRingHom (HeckeAlgebra 1))

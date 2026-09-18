@@ -33,15 +33,6 @@ theorem Entails_clear_except {σ : Type u} {hyps : List (NamedPred σ)} {goal : 
   letI hyps' := hyps.filter fun h => toKeep.contains h.name
   Entails hyps' goal → Entails hyps goal := Entails_drop_hyps _ (by grind)
 
-/--
-`tla_clear * - h₁ h₂ ...` removes every temporal hypothesis except the named
-ones. The kept hypotheses stay in their original order. For example, from
-`hp : p`, `hq : q`, `hr : r`,
-```lean
-tla_clear * - hq
-```
-leaves only `hq : q`.
--/
 syntax (name := tlaClearExceptTac) "tla_clear" "*" " -" (ppSpace colGt ident)* : tactic
 /--
 `tla_clear h₁ h₂ ...` removes temporal hypotheses from the proof-mode context.
@@ -55,6 +46,19 @@ tla_clear hp
 leaves only `hq : q` in the proof-mode context.
 -/
 syntax (name := tlaClearTac) "tla_clear" (ppSpace colGt ident)+ : tactic
+
+/--
+`tla_clear * - h₁ h₂ ...` removes every temporal hypothesis except the named
+ones. The kept hypotheses stay in their original order. For example, from
+`hp : p`, `hq : q`, `hr : r`,
+```lean
+tla_clear * - hq
+```
+leaves only `hq : q`.
+-/
+tactic_extension tlaClearTac
+
+attribute [tactic_alt tlaClearTac] tlaClearExceptTac
 
 /-- Reduction rules used after clearing a proof-mode hypothesis. -/
 meta def clearTacDSimps := #[``List.filter, ``List.contains, ``List.elem, ``or, ``and, ``not,

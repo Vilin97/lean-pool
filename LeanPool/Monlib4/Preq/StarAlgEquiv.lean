@@ -189,22 +189,22 @@ lemma NonUnitalAlgEquiv.image_span_center {F R A B : Type*} [Semiring R]
   [NonUnitalSemiring A] [NonUnitalSemiring B] [Module R A] [Module R B]
   [EquivLike F A B] [NonUnitalAlgHomClass F R A B] (f : F) :
   f '' (Submodule.span R (Set.center A)) = Submodule.span R (Set.center B) := by
-  change (LinearMapClass.linearMap f : A → B) ''
+  change (LinearMap.ofClass f : A → B) ''
       (Submodule.span R (Set.center A) : Set A) =
     (Submodule.span R (Set.center B) : Set B)
-  rw [← Submodule.map_coe (LinearMapClass.linearMap f) (Submodule.span R (Set.center A)),
+  rw [← Submodule.map_coe (LinearMap.ofClass f) (Submodule.span R (Set.center A)),
     Submodule.map_span]
-  rw [show (LinearMapClass.linearMap f : A → B) '' Set.center A = Set.center B by
+  rw [show (LinearMap.ofClass f : A → B) '' Set.center A = Set.center B by
     change f '' Set.center A = Set.center B
     exact MulEquiv.image_center f]
 
 lemma NonUnitalAlgEquiv.map_span_center {F R A B : Type*} [Semiring R]
   [NonUnitalSemiring A] [NonUnitalSemiring B] [Module R A] [Module R B]
   [EquivLike F A B] [NonUnitalAlgHomClass F R A B] (f : F) :
-  Submodule.map (LinearMapClass.linearMap f) (Submodule.span R (Set.center A)) =
+  Submodule.map (LinearMap.ofClass f) (Submodule.span R (Set.center A)) =
     Submodule.span R (Set.center B) := by
   rw [Submodule.map_span]
-  rw [show (LinearMapClass.linearMap f : A → B) '' Set.center A = Set.center B by
+  rw [show (LinearMap.ofClass f : A → B) '' Set.center A = Set.center B by
     change f '' Set.center A = Set.center B
     exact MulEquiv.image_center f]
 

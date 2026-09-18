@@ -161,8 +161,7 @@ lemma nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
   have hQ_normal : Subgroup.Normal (Q : Subgroup G) := by
     rw [← Subgroup.normalizer_eq_top_iff, ← Subgroup.index_eq_one]
     trans Nat.card (Sylow q G)
-    · convert Q.card_eq_index_normalizer.symm using 3
-      exact Q.coe_coe
+    · exact Q.card_eq_index_normalizer.symm
     refine (Nat.Prime.eq_one_or_self_of_dvd (hp.elim) (Nat.card (Sylow q G)) ?_).resolve_right ?_
     · convert Sylow.card_dvd_index Q using 1; symm
       rw [← Nat.mul_left_cancel_iff (Nat.zero_lt_of_ne_zero hq.elim.ne_zero), mul_comm]

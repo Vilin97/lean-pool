@@ -150,7 +150,7 @@ lemma factorial_le_prod_primes (S : Finset ℕ) (hS : ∀ p ∈ S, Nat.Prime p) 
   rw [hprod_eq]
   calc ∏ i ∈ Finset.range l.length, (i + 2)
       = ∏ i : Fin l.length, (i.val + 2) := (Fin.prod_univ_eq_prod_range _ _).symm
-    _ ≤ ∏ i : Fin l.length, l.get i := Finset.prod_le_prod' fun i _ =>
+    _ ≤ ∏ i : Fin l.length, l.get i := Finset.prod_le_prod fun i _ =>
         sorted_primes_get_ge l hl_sorted hl_ge2 i
 
 lemma primeFactors_factorial_le_1 (n : ℕ) (hn : 0 < n) :

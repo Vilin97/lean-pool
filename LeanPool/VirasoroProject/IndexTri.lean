@@ -5,7 +5,7 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Data.Sign.Defs
+public import Mathlib.Basic.Sign.Defs
 public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.Data.Set.BooleanAlgebra
 import Mathlib.Algebra.Order.Ring.Star

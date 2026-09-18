@@ -147,9 +147,9 @@ noncomputable def finsetImageInclGen {X : TopCat.{u}}
           rw [Category.assoc, Limits.image.fac]
           ext ⟨σ, hσ⟩
           simp only [finsetCoproductInclGen, TopCat.Presheaf.finsetGeneratorMap,
-            TopCat.Sheaf.familyMap, Sigma.ι_desc_assoc]
-          exact (Sigma.ι_desc _ _).trans
-            (Sigma.ι_desc
+            TopCat.Sheaf.familyMap, Sigma.ι_comp_desc_assoc]
+          exact (Sigma.ι_comp_desc _ _).trans
+            (Sigma.ι_comp_desc
               (fun τ : {τ // τ ∈ S} ↦ sectionHom hF τ.1)
               ⟨σ, hσ⟩).symm }
 
@@ -170,9 +170,9 @@ theorem finsetImageInclGen_comp_ι {X : TopCat.{u}}
             rw [Category.assoc, Limits.image.fac]
             ext ⟨σ, hσ⟩
             simp only [finsetCoproductInclGen, TopCat.Presheaf.finsetGeneratorMap,
-              TopCat.Sheaf.familyMap, Sigma.ι_desc_assoc]
-            exact (Sigma.ι_desc _ _).trans
-              (Sigma.ι_desc
+              TopCat.Sheaf.familyMap, Sigma.ι_comp_desc_assoc]
+            exact (Sigma.ι_comp_desc _ _).trans
+              (Sigma.ι_comp_desc
                 (fun τ : {τ // τ ∈ S} ↦ sectionHom hF τ.1)
                 ⟨σ, hσ⟩).symm })
 
@@ -215,7 +215,7 @@ instance allSectionMap_epi {X : TopCat.{u}}
       Sigma.ι (fun σ : SectionIndex F ↦ TopCat.Sheaf.zeroOutsideInt σ.1) ⟨U, t⟩ ≫
           allSectionMap hF =
         sectionHom hF ⟨U, t⟩ := by
-    apply Sigma.ι_desc
+    apply Sigma.ι_comp_desc
   rw [hcomp]
   change (TopCat.Sheaf.zeroOutsideInt.sHomVal hF t).app (op U)
       (TopCat.Sheaf.zeroOutsideInt.generator U) =

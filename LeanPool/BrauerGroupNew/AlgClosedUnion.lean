@@ -52,8 +52,7 @@ def intermediateTensor' (L : IntermediateField K K_bar) : Submodule L (K_bar ⊗
   LinearMap.range ({LinearMap.rTensor _ (L.val.toLinearMap) with
     map_smul' l x := by
       simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, RingHom.id_apply]
-      induction x using TensorProduct.induction_on with
-      | zero => simp
+      induction x using TensorProduct.inductionOn with
       | tmul x a =>
         simp only [smul_tmul', smul_eq_mul, LinearMap.rTensor_tmul, AlgHom.toLinearMap_apply,
           _root_.map_mul, IntermediateField.coe_val]; rfl
@@ -87,11 +86,7 @@ def intermediateTensorEquiv' (L : IntermediateField K K_bar) :
   map_smul' := by
     rintro x ⟨-, ⟨y, rfl⟩⟩
     simp only [RingHom.id_apply]
-    induction y using TensorProduct.induction_on with
-    | zero =>
-      simp only [map_zero, SetLike.mk_smul_mk, smul_zero]
-      erw [map_zero]
-      rw [smul_zero]
+    induction y using TensorProduct.inductionOn with
     | tmul y a =>
       change (intermediateTensorEquiv K K_bar A L) ⟨↑(x * y) ⊗ₜ[K] a, _⟩ =
         x • (intermediateTensorEquiv K K_bar A L) ⟨↑y ⊗ₜ[K] a, _⟩
@@ -155,8 +150,7 @@ theorem inter_tensor_union :
     (intermediateTensor K K_bar A L) = ⊤ := by
   rw [eq_top_iff]
   rintro x -
-  induction x using TensorProduct.induction_on with
-  |zero => simp
+  induction x using TensorProduct.inductionOn with
   |tmul x a =>
     have finite_adjoin : FiniteDimensional K K⟮x⟯ :=
       IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral x)

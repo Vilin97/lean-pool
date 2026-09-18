@@ -5,7 +5,7 @@ Authors: Kalle Kytölä
 -/
 module
 
-public import Mathlib.Data.Sign.Defs
+public import Mathlib.Basic.Sign.Defs
 public import LeanPool.VirasoroProject.LieAlgebraModuleUEA
 public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
 public import LeanPool.VirasoroProject.VermaModule

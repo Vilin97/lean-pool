@@ -53,7 +53,7 @@ theorem prod_one_add_geometric_le {C r : ℝ} (hC : 0 ≤ C) (hr0 : 0 ≤ r)
     linarith [Real.add_one_le_exp (C * r ^ (k + 1))]
   calc ∏ k ∈ range K, (1 + C * r ^ (k + 1))
       ≤ ∏ k ∈ range K, Real.exp (C * r ^ (k + 1)) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro k _; linarith [mul_nonneg hC (pow_nonneg hr0 (k + 1))]
         · exact hfactors
     _ = Real.exp (∑ k ∈ range K, C * r ^ (k + 1)) := by

@@ -120,7 +120,7 @@ noncomputable def finsetGenCoconeIsColimit :
     have hfac : g ≫ d = TopCat.Presheaf.allSectionMap hK := by
       ext σ
       dsimp only [g, d]
-      rw [← Category.assoc, Sigma.ι_desc]
+      rw [← Category.assoc, Sigma.ι_comp_desc]
       calc
         Sigma.ι (fun τ : {τ // τ ∈ ({σ} : Finset _)} ↦
             TopCat.Sheaf.zeroOutsideInt τ.1.1) ⟨σ, Finset.mem_singleton_self σ⟩ ≫
@@ -139,7 +139,7 @@ noncomputable def finsetGenCoconeIsColimit :
           rw [← Category.assoc]
           dsimp only [finsetGenCocone]
           rw [Category.assoc, Limits.image.fac]
-          exact (Sigma.ι_desc _ _).trans (Sigma.ι_desc _ _).symm
+          exact (Sigma.ι_comp_desc _ _).trans (Sigma.ι_comp_desc _ _).symm
     exact @epi_of_epi_fac _ _ _ _ _ g d (TopCat.Presheaf.allSectionMap hK)
       (TopCat.Presheaf.allSectionMap_epi (F := K) hK) hfac
   -- mono + epi → iso in abelian category
@@ -224,9 +224,9 @@ theorem finsetGeneratedSheaf_vanishing
       ext ⟨σ, hσ⟩
       by_cases h : σ = σ₀
       · subst h
-        rw [← Category.assoc, Sigma.ι_desc]
+        rw [← Category.assoc, Sigma.ι_comp_desc]
         simp [g]
-      · rw [← Category.assoc, Sigma.ι_desc, dite_eq_right h, zero_comp]
+      · rw [← Category.assoc, Sigma.ι_comp_desc, dite_eq_right h, zero_comp]
         have hfacBase :
             TopCat.Presheaf.finsetCoproductInclGen h_sub ≫ qIns = qS ≫ f := by
           simp [qIns, qS, f, TopCat.Presheaf.finsetImageInclGen]
@@ -239,7 +239,7 @@ theorem finsetGeneratedSheaf_vanishing
                 (fun σ : {σ // σ ∈ insert σ₀ S'} ↦ TopCat.Sheaf.zeroOutsideInt σ.1.1)
                 ⟨σ, hσ⟩ ≫ qIns ≫ cokernel.π f = 0 := by
           simpa [TopCat.Presheaf.finsetCoproductInclGen, Category.assoc, h,
-            cokernel.condition, Sigma.ι_desc_assoc, Sigma.ι_desc] using hfac'
+            cokernel.condition, Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc] using hfac'
         exact hzero_rhs.symm
     exact subsingleton_sheafH_of_shortExact_middle f m ih <|
       hzero (cokernel f).property g.hom

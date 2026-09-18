@@ -252,8 +252,8 @@ theorem _root_.LinearMap.IsSymmetric.sqrtIsPositive'
   refine ⟨this, ?_⟩
   intro x
   simp_rw [sqrt_apply _ hT, inner_sum, inner_smul_right]
-  apply Finset.sum_nonneg'
-  intro i
+  apply Finset.sum_nonneg
+  intro i _
   simp_rw [← inner_conj_symm x _, ← OrthonormalBasis.repr_apply_apply, mul_conj,
     ← ofReal_pow, ← ofReal_mul, ofReal_nonneg]
   exact mul_nonneg (Real.sqrt_nonneg _) (sq_nonneg _)
@@ -526,7 +526,7 @@ theorem LinearMap.isPositive'_iff_eq_sum_rankOne [FiniteDimensional 𝕜 E]
       inner_smul_right, inner_conj_symm, mul_comm, forall₂_true_iff, true_and,
       ← inner_conj_symm _ (u _), RCLike.conj_mul, ← RCLike.ofReal_pow,
       ← ofReal_sum, zero_le_real]
-    exact fun _ => Finset.sum_nonneg' (fun _ => sq_nonneg _)
+    exact fun _ => Finset.sum_nonneg (fun _ _ => sq_nonneg _)
 
 theorem LinearMap.IsSymmetric.rePowIsPositive'OfIsPositive' {𝕜 E : Type _} [RCLike 𝕜]
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E]

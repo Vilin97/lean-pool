@@ -250,21 +250,21 @@ theorem mem_tree_ray {a : ℕ} {t : List ℕ} : t ∈ tree (ray F a) ↔ a :: t 
 theorem IsFront.ray_rank_lt (hF : IsFront F M) (h0 : [] ∉ F) {n : ℕ}
     (hn : n ∈ Set.range M) : (hF.ray_isFront_mem h0 hn).rank < hF.rank := by
   have ha : [n] ∈ tree F := hF.singleton_mem_tree h0 hn
-  have iF : IsWellFounded (List ℕ) (treeExt F) := ⟨hF.wellFounded_treeExt⟩
-  have iR : IsWellFounded (List ℕ) (treeExt (ray F n)) :=
-    ⟨(hF.ray_isFront_mem h0 hn).wellFounded_treeExt⟩
+  have iF : WellFounded (treeExt F) := hF.wellFounded_treeExt
+  have iR : WellFounded (treeExt (ray F n)) :=
+    (hF.ray_isFront_mem h0 hn).wellFounded_treeExt
   -- The head-attaching map `t ↦ n :: t` is a relation homomorphism into `treeExt F`.
   let φ : treeExt (ray F n) →r treeExt F :=
     ⟨fun t => n :: t, by
       rintro x y ⟨hx, hy, hyx, hne⟩
       refine ⟨mem_tree_ray.mp hx, mem_tree_ray.mp hy, (List.prefix_cons_inj n).mpr hyx, ?_⟩
       intro hc; injection hc with _ h; exact hne h⟩
-  have hle : IsWellFounded.rank (treeExt (ray F n)) [] ≤ IsWellFounded.rank (treeExt F) [n] :=
+  have hle : WellFounded.rank (treeExt (ray F n)) [] ≤ WellFounded.rank (treeExt F) [n] :=
     φ.rank_le []
-  have hlt : IsWellFounded.rank (treeExt F) [n] < IsWellFounded.rank (treeExt F) [] :=
-    IsWellFounded.rank_lt_of_rel
+  have hlt : WellFounded.rank (treeExt F) [n] < WellFounded.rank (treeExt F) [] :=
+    WellFounded.rank_lt_of_rel
       ⟨ha, hF.nil_mem_tree, List.nil_prefix, (List.cons_ne_nil n []).symm⟩
-  change IsWellFounded.rank (treeExt (ray F n)) [] < IsWellFounded.rank (treeExt F) []
+  change WellFounded.rank (treeExt (ray F n)) [] < WellFounded.rank (treeExt F) []
   exact lt_of_le_of_lt hle hlt
 
 end Front

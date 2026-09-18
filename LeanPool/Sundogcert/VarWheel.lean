@@ -7,7 +7,7 @@ module
 
 public import Mathlib.Data.Fintype.Pi
 
-public import Mathlib.Logic.Basic
+public import Mathlib.Basic.Logic.Basic
 public import Aesop.BuiltinRules
 public import Mathlib.Algebra.Group.Nat.Defs
 public import Mathlib.Tactic.ToDual

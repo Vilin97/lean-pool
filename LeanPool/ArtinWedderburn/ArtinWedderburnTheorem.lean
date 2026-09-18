@@ -38,7 +38,7 @@ theorem ArtinWedderburnForPrime {R : Type u} [Ring R] [h_nontriv : Nontrivial R]
     ∃ (n : ℕ) (D : Type u) (_ : DivisionRing D),
       Nonempty (R ≃+* Matrix (Fin n) (Fin n) D) := by
   have top_acc : Acc (fun x y => x < y) (⊤ : Ideal R) :=
-    IsWellFounded.apply (fun x y ↦ x < y) ⊤
+    WellFounded.apply h_artinian ⊤
   have top_nice := accIdealNice h_prime h_artinian ⊤ top_acc
   have top_idem : IdemIdeal (⊤ : Ideal R) := by
     refine ⟨1, IsIdempotentElem.one, ?_⟩

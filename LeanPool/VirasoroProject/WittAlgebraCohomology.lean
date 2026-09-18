@@ -146,7 +146,7 @@ lemma exists_add_bdry_eq_smul_virasoroCocycle :
         · -- k = 0 case is true for any cocycle by skew-symmetry
           simp
         · -- k = 1 case follows due to the choice of the normalizing coboundary
-          convert add_bdry_normalizingCochain_apply_lgen_one γ <;> norm_num
+          convert add_bdry_normalizingCochain_apply_lgen_one γ; norm_num
         · -- k = 2 case is what determines the multiplicative factor r
           rw [hr]
           norm_num

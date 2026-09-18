@@ -797,7 +797,7 @@ lemma erdos367_key (j₀ : ℕ) :
           _ ≤ (p + 1) / 2 * p := Nat.mul_le_mul h1 hp5le
       have h2card : 2 ^ S.card ≤ L := by
         calc 2 ^ S.card = ∏ _p ∈ S, 2 := by rw [Finset.prod_const]
-          _ ≤ L := Finset.prod_le_prod' hfac
+          _ ≤ L := Finset.prod_le_prod hfac
       have hcard_le : S.card ≤ 2 ^ S.card := Nat.lt_two_pow_self.le
       have hj0_le_L : 2 * j₀ ≤ L := le_trans hS_card_j (le_trans hcard_le h2card)
       omega
@@ -837,13 +837,13 @@ lemma erdos367_key (j₀ : ℕ) :
         have h_lower_le_sq :
             (∏ p ∈ S, (5 / 3 : ℝ) * (((p : ℝ) + 1) / 2 * p)) ≤
               ∏ p ∈ S, (p : ℝ) ^ 2 :=
-          Finset.prod_le_prod h_lower_nonneg h_prod_sq_ge
+          Finset.prod_le_prod₀ h_lower_nonneg h_prod_sq_ge
         have hL_le :
             (L : ℝ) ≤ ∏ p ∈ S, (((p : ℝ) + 1) / 2 * p) := by
           change ((S.prod (fun p => (p + 1) / 2 * p) : ℕ) : ℝ) ≤
             ∏ p ∈ S, (((p : ℝ) + 1) / 2 * p)
           rw [Nat.cast_prod]
-          exact Finset.prod_le_prod (fun p hp => by positivity) fun p hp => by
+          exact Finset.prod_le_prod₀ (fun p hp => by positivity) fun p hp => by
             rw [Nat.cast_mul]
             have hdiv : (((p + 1) / 2 : ℕ) : ℝ) ≤ ((p : ℝ) + 1) / 2 := by
               rw [le_div_iff₀ (by positivity : (0 : ℝ) < 2)]

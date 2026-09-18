@@ -120,7 +120,7 @@ theorem Qam.iso_preserves_ir_reflexive {φ : Module.Dual ℂ ℍ}
   obtain ⟨f, hf, h⟩ := hxhy
   rw [StarAlgEquiv.comp_eq_iff, LinearMap.comp_assoc] at hf
   have := List.TFAE.out (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _
-    f) 0 4
+    f) 1 5
   have hisometry : StarAlgEquiv.IsIsometry f := by
     change Isometry f
     rw [isometry_iff_norm]

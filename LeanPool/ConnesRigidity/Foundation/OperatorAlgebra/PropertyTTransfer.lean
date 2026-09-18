@@ -262,7 +262,7 @@ theorem normalFixedQuotient_hasAlmostInvariantUnitVectors
         ‖((‖(p : K)‖ : ℂ)⁻¹)‖ = (‖(p : K)‖ : ℝ)⁻¹ := by
       simp [norm_inv, Complex.norm_real]
     rw [hscalar]
-    simpa only [Submodule.coe_norm, div_eq_mul_inv, mul_comm] using hfrac
+    simpa only [← Submodule.norm_coe, div_eq_mul_inv, mul_comm] using hfrac
   have hrep :
       ((normalFixedQuotientRepresentation N π (QuotientGroup.mk' N g) :
         normalFixedSubmodule N π →L[ℂ] normalFixedSubmodule N π) η : K) =

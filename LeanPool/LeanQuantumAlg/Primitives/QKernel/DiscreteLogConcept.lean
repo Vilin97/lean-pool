@@ -7,7 +7,7 @@ Authors: QudeLeap Team
 module
 
 public import Mathlib.GroupTheory.SpecificGroups.Cyclic
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 /-!
 # The discrete-logarithm concept class and its secret-homogeneity
 

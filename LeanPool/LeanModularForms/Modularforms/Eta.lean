@@ -55,7 +55,7 @@ lemma eta_logDeriv_eql (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z =
     apply DifferentiableAt.inv
     · simp only [differentiableAt_fun_id]
     · exact ne_zero z
-  rw [h0, show ((csqrt) * η) = (fun x => (csqrt) x * η x) by rfl, logDeriv_mul]
+  rw [h0, show ((csqrt) * η) = (fun x => (csqrt) x * η x) by rfl, logDeriv_fun_mul]
   · nth_rw 2 [logDeriv_apply]
     unfold csqrt
     have := csqrt_deriv z

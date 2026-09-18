@@ -5,7 +5,7 @@ Authors: Shengtong Zhang
 -/
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!

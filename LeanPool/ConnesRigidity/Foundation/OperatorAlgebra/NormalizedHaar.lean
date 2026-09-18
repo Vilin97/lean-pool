@@ -81,8 +81,7 @@ theorem normalizedAddHaar_preserving_addEquiv
   let μ := normalizedAddHaar A
   have mappedHaar : Measure.IsAddHaarMeasure (μ.map e) :=
     e.isAddHaarMeasure_map μ he heinv
-  have mappedProbability : IsProbabilityMeasure (μ.map e) :=
-    μ.isProbabilityMeasure_map he.measurable.aemeasurable
+  have mappedProbability : IsProbabilityMeasure (μ.map e) := inferInstance
   refine ⟨he.measurable, ?_⟩
   exact normalizedAddHaar_unique A (μ.map e)
 

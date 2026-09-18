@@ -7,7 +7,7 @@ module
 
 public import LeanPool.Brouwer.ScarfPath
 public import Mathlib.Algebra.Group.End
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Combinatorics.SimpleGraph.DegreeSum

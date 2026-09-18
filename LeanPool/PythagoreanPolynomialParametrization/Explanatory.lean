@@ -79,41 +79,39 @@ private lemma rat_scaled_num_den_cast_eq (N : ℕ) (q : ℚ) (hdiv : q.den ∣ N
 
 private lemma coeff_mapRange_scaled_rat {n : ℕ} (F : RatPoly n) (N : ℕ)
     (hf_map : (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) 0 = 0)
-    (hdiv : ∀ s ∈ MvPolynomial.support F, (MvPolynomial.coeff s F).den ∣ N)
+    (hdiv : ∀ s ∈ MvPolynomial.support F, (F.coeff s).den ∣ N)
     (s : Fin n →₀ ℕ) :
     let P : MvPolynomial (Fin n) ℤ :=
       AddMonoidAlgebra.ofCoeff <|
         Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map
           (AddMonoidAlgebra.coeff F)
-    (Int.cast (MvPolynomial.coeff s P) : ℚ) = (N : ℚ) * MvPolynomial.coeff s F := by
+    (Int.cast (P.coeff s) : ℚ) = (N : ℚ) * F.coeff s := by
   intro P
   change
-    (Int.cast (MvPolynomial.coeff s
-      (AddMonoidAlgebra.ofCoeff <|
+    (Int.cast
+      ((AddMonoidAlgebra.ofCoeff <|
         Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map
-          (AddMonoidAlgebra.coeff F))) :
+          (AddMonoidAlgebra.coeff F)).coeff s) :
         ℚ) =
-      (N : ℚ) * MvPolynomial.coeff s F
+      (N : ℚ) * F.coeff s
   by_cases hs : s ∈ MvPolynomial.support F
   · have hdiv_s := hdiv s hs
     have h1 :
-        MvPolynomial.coeff s
-          (AddMonoidAlgebra.ofCoeff <|
+        (AddMonoidAlgebra.ofCoeff <|
             Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map
-              (AddMonoidAlgebra.coeff F)) =
-            (N / (MvPolynomial.coeff s F).den : ℤ) * (MvPolynomial.coeff s F).num := by
-      simp [MvPolynomial.coeff, Finsupp.mapRange_apply]
+              (AddMonoidAlgebra.coeff F)).coeff s =
+            (N / (F.coeff s).den : ℤ) * (F.coeff s).num := by
+      simp [Finsupp.mapRange_apply]
     rw [h1]
-    exact rat_scaled_num_den_cast_eq N (MvPolynomial.coeff s F) hdiv_s
-  · have hq : MvPolynomial.coeff s F = 0 := by
+    exact rat_scaled_num_den_cast_eq N (F.coeff s) hdiv_s
+  · have hq : F.coeff s = 0 := by
       rwa [MvPolynomial.notMem_support_iff] at hs
-    unfold MvPolynomial.coeff at hq ⊢
     simp [Finsupp.mapRange_apply, hq]
 
 private lemma map_intPoly_eq_nat_smul_of_coeff {n : ℕ}
     (F : RatPoly n) (P : MvPolynomial (Fin n) ℤ) (N : ℕ)
     (hcoeff : ∀ s : Fin n →₀ ℕ,
-      (Int.cast (MvPolynomial.coeff s P) : ℚ) = (N : ℚ) * MvPolynomial.coeff s F) :
+      (Int.cast (P.coeff s) : ℚ) = (N : ℚ) * F.coeff s) :
     MvPolynomial.map (Int.castRingHom ℚ) P = (N : ℚ) • F := by
   apply MvPolynomial.ext
   intro s
@@ -210,11 +208,11 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
   rcases hF with ⟨hF_int, hF_eq⟩
   have hD :
       ∀ i : Fin k, ∃ D : ℕ, 0 < D ∧
-        ∀ s, s ∈ (F i).support → (MvPolynomial.coeff s (F i)).den ∣ D := by
+        ∀ s, s ∈ (F i).support → ((F i).coeff s).den ∣ D := by
     intro i
-    refine ⟨Finset.prod (F i).support fun s => (MvPolynomial.coeff s (F i)).den, ?_, ?_⟩
+    refine ⟨Finset.prod (F i).support fun s => ((F i).coeff s).den, ?_, ?_⟩
     · exact Finset.prod_pos fun s _ =>
-        Nat.pos_of_ne_zero (Rat.den_ne_zero (MvPolynomial.coeff s (F i)))
+        Nat.pos_of_ne_zero (Rat.den_ne_zero ((F i).coeff s))
     · intro s hs
       exact Finset.dvd_prod_of_mem _ hs
   choose D hD_pos hD_div using hD
@@ -222,7 +220,7 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
   have hD_total_pos : 0 < D_total := Finset.prod_pos fun i _ => hD_pos i
   have hD_total_div :
       ∀ (i : Fin k) (s : Fin n →₀ ℕ),
-        s ∈ (F i).support → (MvPolynomial.coeff s (F i)).den ∣ D_total := by
+        s ∈ (F i).support → ((F i).coeff s).den ∣ D_total := by
     intro i s hs
     exact dvd_trans (hD_div i s hs) (Finset.dvd_prod_of_mem _ (Finset.mem_univ i))
   have hf_map : (fun q : ℚ => (D_total / q.den : ℤ) * q.num) 0 = 0 := by simp
@@ -232,8 +230,8 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
         (AddMonoidAlgebra.coeff (F i))
   have hP_coeff :
       ∀ (i : Fin k) (s : Fin n →₀ ℕ),
-        (Int.cast (MvPolynomial.coeff s (P i)) : ℚ) =
-          D_total * MvPolynomial.coeff s (F i) := by
+        (Int.cast ((P i).coeff s) : ℚ) =
+          D_total * (F i).coeff s := by
     intro i s
     exact coeff_mapRange_scaled_rat (F i) D_total hf_map (hD_total_div i) s
   have hP_eval :

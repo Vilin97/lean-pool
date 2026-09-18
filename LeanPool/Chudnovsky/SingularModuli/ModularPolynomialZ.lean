@@ -107,11 +107,10 @@ identical fact is `private` in `Coefficients.lean`). -/
 rational `r`, then `x = (m : ℂ)` for some `m : ℤ`. -/
 theorem isInt_of_integral_of_rat {x : ℂ} (hint : IsIntegral ℤ x) {r : ℚ}
     (hr : x = (r : ℂ)) : ∃ m : ℤ, x = (m : ℂ) := by
-  have hinj : Function.Injective (algebraMap ℚ ℂ) := FaithfulSMul.algebraMap_injective ℚ ℂ
   have h1 : IsIntegral ℤ (algebraMap ℚ ℂ r) := by
     have hx : algebraMap ℚ ℂ r = x := by rw [hr]; simp
     rw [hx]; exact hint
-  have h2 : IsIntegral ℤ r := (isIntegral_algebraMap_iff hinj).mp h1
+  have h2 : IsIntegral ℤ r := isIntegral_algebraMap_iff.mp h1
   obtain ⟨n, hn⟩ := IsIntegrallyClosed.isIntegral_iff.mp h2
   exact ⟨n, by rw [hr, ← hn]; simp⟩
 

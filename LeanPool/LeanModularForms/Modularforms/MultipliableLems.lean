@@ -121,7 +121,7 @@ theorem hasProd_le_nonneg (f g : ι → ℝ) (h : ∀ i, f i ≤ g i) (h0 : ∀ 
   (hf : HasProd f a₁) (hg : HasProd g a₂) : a₁ ≤ a₂ := by
   apply le_of_tendsto_of_tendsto' hf hg
   intro s
-  exact Finset.prod_le_prod (fun i _ => h0 i) (fun i _ => h i)
+  exact Finset.prod_le_prod₀ (fun i _ => h0 i) (fun i _ => h i)
 
 theorem HasProd.le_one_nonneg (g : ℕ → ℝ) (h : ∀ i, g i ≤ 1) (h0 : ∀ i, 0 ≤ g i)
     (ha : HasProd g a) : a ≤ 1 := by

@@ -266,7 +266,7 @@ omit [WeierstrassCurve.IsElliptic W] in
 lemma infinity_sum_ramification_inertia :
     let p := IsLocalRing.maximalIdeal A∞
     ∑ P ∈ IsDedekindDomain.primesOverFinset p S∞,
-      p.ramificationIdx' P * p.inertiaDeg' P = 2 := by
+      p.ramificationIdx' P * P.inertiaDeg A∞ = 2 := by
   dsimp
   have hp0 : IsLocalRing.maximalIdeal A∞ ≠ ⊥ :=
     Ring.ne_bot_of_isMaximal_of_not_isField (IsLocalRing.maximalIdeal.isMaximal A∞)
@@ -278,7 +278,7 @@ include W in
 omit [WeierstrassCurve.IsElliptic W] in
 lemma infinity_inertiaDeg_eq_one
     (v : IsDedekindDomain.HeightOneSpectrum S∞) :
-    (IsLocalRing.maximalIdeal A∞).inertiaDeg' v.asIdeal = 1 := by
+    v.asIdeal.inertiaDeg A∞ = 1 := by
   let p := IsLocalRing.maximalIdeal A∞
   let P := v.asIdeal
   have hp0 : p ≠ ⊥ :=
@@ -290,17 +290,17 @@ lemma infinity_inertiaDeg_eq_one
   have hP : P ∈ IsDedekindDomain.primesOverFinset p S∞ :=
     (IsDedekindDomain.mem_primesOverFinset_iff hp0 (P := P)).2
       ⟨v.isPrime, (show P.LiesOver p from inferInstance)⟩
-  let g : Ideal S∞ → ℕ := fun Q => p.ramificationIdx' Q * p.inertiaDeg' Q
+  let g : Ideal S∞ → ℕ := fun Q => p.ramificationIdx' Q * Q.inertiaDeg A∞
   have hsum : (∑ Q ∈ IsDedekindDomain.primesOverFinset p S∞, g Q) = 2 := by
     simpa [g] using infinity_sum_ramification_inertia W K
   have hterm : g P ≤ 2 := by
     rw [← hsum, ← Finset.add_sum_erase _ _ hP]
     omega
   have he : p.ramificationIdx' P = 2 := infinity_ramificationIdx_eq_two W K v
-  have hfpos : 0 < p.inertiaDeg' P := Ideal.inertiaDeg'_pos p P
+  have hfpos : 0 < P.inertiaDeg A∞ := Ideal.inertiaDeg_pos P A∞
   dsimp [g] at hterm
   rw [he] at hterm
-  change p.inertiaDeg' P = 1
+  change P.inertiaDeg A∞ = 1
   omega
 
 include W in
@@ -327,7 +327,7 @@ lemma infinity_heightOne_unique
     (IsDedekindDomain.mem_primesOverFinset_iff hp0 (P := Q)).2
       ⟨w.isPrime, (show Q.LiesOver p from inferInstance)⟩
   by_contra hne
-  let g : Ideal S∞ → ℕ := fun R => p.ramificationIdx' R * p.inertiaDeg' R
+  let g : Ideal S∞ → ℕ := fun R => p.ramificationIdx' R * R.inertiaDeg A∞
   let F := IsDedekindDomain.primesOverFinset p S∞
   have hsum : F.sum g = 2 := by
     simpa [F, g] using infinity_sum_ramification_inertia W K
@@ -340,8 +340,8 @@ lemma infinity_heightOne_unique
       _ = 2 := hsum
   have heP : p.ramificationIdx' P = 2 := infinity_ramificationIdx_eq_two W K v
   have heQ : p.ramificationIdx' Q = 2 := infinity_ramificationIdx_eq_two W K w
-  have hfP : 0 < p.inertiaDeg' P := Ideal.inertiaDeg'_pos p P
-  have hfQ : 0 < p.inertiaDeg' Q := Ideal.inertiaDeg'_pos p Q
+  have hfP : 0 < P.inertiaDeg A∞ := Ideal.inertiaDeg_pos P A∞
+  have hfQ : 0 < Q.inertiaDeg A∞ := Ideal.inertiaDeg_pos Q A∞
   dsimp [g] at hQle hdecomp
   rw [heP] at hdecomp
   rw [heQ] at hQle
@@ -366,11 +366,6 @@ include W in
 omit [WeierstrassCurve.IsElliptic W] in
 theorem infinityPlace_deg_one : placeDegree k K (infinityPlace K) = 1 := by
   rw [infinityPlace, placeDegree_infinite_eq_inertiaDeg]
-  have hunder : (infinityHeightOne (k := k) K).asIdeal.under A∞ =
-      IsLocalRing.maximalIdeal A∞ :=
-    IsLocalRing.eq_maximalIdeal
-      (Ideal.IsMaximal.under A∞ (infinityHeightOne (k := k) K).asIdeal)
-  rw [hunder]
   exact infinity_inertiaDeg_eq_one W K (infinityHeightOne (k := k) K)
 
 end

@@ -596,7 +596,7 @@ theorem edge_lineMap_mem_support (i : Fin (Fintype.card K.EdgeFace)) {t : ℝ}
       (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
       {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
     ext x
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
   exact lineMap_mem_segment ℝ _ _ ht
 
@@ -847,7 +847,7 @@ theorem openSegments_disjoint_of_ne
         (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
         {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
       ext y
-      simp [eq_comm]
+      simp
     rw [himage, convexHull_pair]
     exact openSegment_subset_segment ℝ _ _ hxi
   have hxjSeg : x ∈ K.cellCarrier (K.edgeAt j).1 := by
@@ -856,7 +856,7 @@ theorem openSegments_disjoint_of_ne
         (({K.edgeFirst j, K.edgeSecond j} : Finset K.Vertex) : Set K.Vertex) =
         {K.position (K.edgeFirst j), K.position (K.edgeSecond j)} := by
       ext y
-      simp [eq_comm]
+      simp
     rw [himage, convexHull_pair]
     exact openSegment_subset_segment ℝ _ _ hxj
   have hxInter : x ∈ K.cellCarrier ((K.edgeAt i).1 ∩ (K.edgeAt j).1) := by
@@ -970,7 +970,7 @@ theorem disjoint_centralCarrier {j : Fin (Fintype.card K.EdgeFace)}
         (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
         {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
       ext z
-      simp [eq_comm]
+      simp
     rw [himage, convexHull_pair]
     exact openSegment_subset_segment ℝ _ _ hxOpen
   have hx'Support : x' ∈ K.support := by
@@ -980,7 +980,7 @@ theorem disjoint_centralCarrier {j : Fin (Fintype.card K.EdgeFace)}
         (({K.edgeFirst j, K.edgeSecond j} : Finset K.Vertex) : Set K.Vertex) =
         {K.position (K.edgeFirst j), K.position (K.edgeSecond j)} := by
       ext z
-      simp [eq_comm]
+      simp
     rw [himage, convexHull_pair]
     exact openSegment_subset_segment ℝ _ _ hx'Open
   have hxx' : x = x' := hinj hxSupport hx'Support (hxy.trans hx'y.symm)
@@ -1110,7 +1110,7 @@ theorem exists_centralPolygonalArc {h : Plane → Plane}
         (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
         {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
       ext z
-      simp [eq_comm]
+      simp
     rw [himage, convexHull_pair]
     exact lineMap_mem_segment ℝ _ _
       ⟨(K.edgeTrim hcont D i).left_pos.le.trans ht.1,
@@ -1153,7 +1153,7 @@ theorem resolvedCarrier_subset_tube (A : K.CentralPolygonalArc hcont D C i) :
       (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
       {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
     ext z
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
   exact lineMap_mem_segment ℝ _ _
     ⟨(K.edgeTrim hcont D i).left_pos.le,
@@ -1178,7 +1178,7 @@ theorem resolvedCarrier_subset_edgeConvexHull
       (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
       {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
     ext z
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
   exact lineMap_mem_segment ℝ _ _
     ⟨(K.edgeTrim hcont D i).left_pos.le,
@@ -1392,7 +1392,7 @@ theorem trimmedCarrier_avoids_nonincident
       (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
       {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
     ext x
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
   exact openSegment_subset_segment ℝ _ _
 
@@ -2201,7 +2201,7 @@ theorem edgeReplacementMap_image_cellCarrier {h : Plane → Plane}
           (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
           {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
         ext z
-        simp [eq_comm]
+        simp
       rw [himage, convexHull_pair]
       exact lineMap_mem_segment ℝ _ _ t.2
     refine ⟨x, hx, ?_⟩
@@ -2269,7 +2269,7 @@ private theorem mem_openSegment_of_mem_edge_not_vertex
         (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
         {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
       ext z
-      simp [eq_comm]
+      simp
     rwa [himage] at hx
 
 theorem edgeIndexAt_eq_of_not_vertex {x : Plane}
@@ -2650,7 +2650,7 @@ theorem graphReplacementMap_affineOn_middle {h : Plane → Plane}
       have himage : R.position '' (({p, q} : Finset R.Vertex) : Set R.Vertex) =
           {R.position p, R.position q} := by
         ext x
-        simp [eq_comm]
+        simp
       rw [himage, convexHull_pair, image_segment]
       simp only [middleSourceMap_apply]
       change segment ℝ (planePoint (z (R.position p)) 0)
@@ -2915,7 +2915,7 @@ theorem graphReplacementMap_dist_lt_two_mul {h : Plane → Plane}
             (({K.edgeFirst i, K.edgeSecond i} : Finset K.Vertex) : Set K.Vertex) =
             {K.position (K.edgeFirst i), K.position (K.edgeSecond i)} := by
           ext y
-          simp [eq_comm]
+          simp
         rw [himage, convexHull_pair]
         exact lineMap_mem_segment ℝ _ _ htIcc
       calc

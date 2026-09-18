@@ -64,7 +64,7 @@ lemma schwartz_L2_integrable (f : TestFunctionℂ) :
   -- Using Mathlib's `SchwartzMap.memLp` we know any Schwartz function lies in every `L^p` space.
   have hf_memLp : MemLp f 2 volume :=
     f.memLp 2 volume
-  have hf_meas : AEStronglyMeasurable f volume := hf_memLp.1
+  have hf_meas : AEStronglyMeasurable f volume := hf_memLp.aestronglyMeasurable
   -- Translate the `L^2` membership into integrability of the squared norm.
   simpa using (memLp_two_iff_integrable_sq_norm hf_meas).1 hf_memLp
 

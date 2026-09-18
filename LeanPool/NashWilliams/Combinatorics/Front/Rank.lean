@@ -44,24 +44,24 @@ noncomputable section
 
 /-- **A relation homomorphism does not increase rank.** If `f : r →r s` maps `r` into a
 well-founded relation `s`, then the `r`-rank of `a` is at most the `s`-rank of `f a`. This is the
-cross-relation companion to `IsWellFounded.rank_lt_of_rel` (which only compares ranks within a
+cross-relation companion to `WellFounded.rank_lt_of_rel` (which only compares ranks within a
 single relation), and the tool underlying the rank comparisons for the ray and the restriction of
-a front. General; Mathlib-bound (belongs next to `IsWellFounded.rank_lt_of_rel`). -/
+a front. General; Mathlib-bound (belongs next to `WellFounded.rank_lt_of_rel`). -/
 theorem RelHom.rank_le {α β : Type u} {r : α → α → Prop} {s : β → β → Prop}
-    [IsWellFounded α r] [IsWellFounded β s] (f : r →r s) (a : α) :
-    IsWellFounded.rank r a ≤ IsWellFounded.rank s (f a) := by
-  refine IsWellFounded.induction r a
-    (motive := fun a => IsWellFounded.rank r a ≤ IsWellFounded.rank s (f a))
+    [WellFounded r] [WellFounded s] (f : r →r s) (a : α) :
+    WellFounded.rank r a ≤ WellFounded.rank s (f a) := by
+  refine WellFounded.induction' r a
+    (motive := fun a => WellFounded.rank r a ≤ WellFounded.rank s (f a))
     (fun a IH => ?_)
-  rw [IsWellFounded.rank_eq r a]
+  rw [WellFounded.rank_eq r a]
   apply Ordinal.iSup_le
   rintro ⟨b, hb⟩
-  calc Order.succ (IsWellFounded.rank r b)
-      ≤ Order.succ (IsWellFounded.rank s (f b)) := Order.succ_le_succ (IH b hb)
-    _ ≤ IsWellFounded.rank s (f a) := by
-        rw [IsWellFounded.rank_eq s (f a)]
+  calc Order.succ (WellFounded.rank r b)
+      ≤ Order.succ (WellFounded.rank s (f b)) := Order.succ_le_succ (IH b hb)
+    _ ≤ WellFounded.rank s (f a) := by
+        rw [WellFounded.rank_eq s (f a)]
         exact Ordinal.le_iSup
-          (fun c : {c // s c (f a)} => Order.succ (IsWellFounded.rank s c))
+          (fun c : {c // s c (f a)} => Order.succ (WellFounded.rank s c))
           ⟨f b, f.map_rel hb⟩
 
 namespace Front
@@ -72,7 +72,7 @@ def tree (F : Set (List ℕ)) : Set (List ℕ) :=
 
 /-- Proper end-extension inside the tree of `F`: `treeExt F a b` holds when `a` properly extends
 `b` and both lie in the tree. Its well-foundedness is what allows ranking a front. Note the
-recursion direction: `IsWellFounded.rank (treeExt F) s` is the supremum of `succ (rank s')` over
+recursion direction: `WellFounded.rank (treeExt F) s` is the supremum of `succ (rank s')` over
 the proper extensions `s'` of `s`, matching the usual rank of a front. -/
 def treeExt (F : Set (List ℕ)) (a b : List ℕ) : Prop :=
   a ∈ tree F ∧ b ∈ tree F ∧ b <+: a ∧ b ≠ a
@@ -176,8 +176,8 @@ theorem IsFront.wellFounded_treeExt {F : Set (List ℕ)} {M : ℕ → ℕ} (hF :
 /-- The ordinal **rank of a front**: the rank of the root `[]` in the well-founded tree of proper
 end-extensions. -/
 def IsFront.rank {F : Set (List ℕ)} {M : ℕ → ℕ} (hF : IsFront F M) : Ordinal :=
-  have : IsWellFounded (List ℕ) (treeExt F) := ⟨hF.wellFounded_treeExt⟩
-  IsWellFounded.rank (treeExt F) []
+  have : WellFounded (treeExt F) := hF.wellFounded_treeExt
+  WellFounded.rank (treeExt F) []
 
 variable {F : Set (List ℕ)} {M : ℕ → ℕ}
 
@@ -231,17 +231,17 @@ theorem rank_eq_sub (hF : IsFront F M) {s0 : List ℕ} (L : ℕ)
     (hbound : ∀ s, s0 <+: s → s ∈ tree F → s.length ≤ L)
     (hext : ∀ s, s0 <+: s → s ∈ tree F → s.length < L → ∃ x, treeExt F (s ++ [x]) s)
     (s : List ℕ) (hs0 : s0 <+: s) (hs : s ∈ tree F) :
-    haveI : IsWellFounded (List ℕ) (treeExt F) := ⟨hF.wellFounded_treeExt⟩
-    IsWellFounded.rank (treeExt F) s = ((L - s.length : ℕ) : Ordinal) := by
-  have : IsWellFounded (List ℕ) (treeExt F) := ⟨hF.wellFounded_treeExt⟩
+    haveI : WellFounded (treeExt F) := hF.wellFounded_treeExt
+    WellFounded.rank (treeExt F) s = ((L - s.length : ℕ) : Ordinal) := by
+  have : WellFounded (treeExt F) := hF.wellFounded_treeExt
   suffices H : ∀ d s, s0 <+: s → s ∈ tree F → L - s.length = d →
-      IsWellFounded.rank (treeExt F) s = (d : Ordinal) by
+      WellFounded.rank (treeExt F) s = (d : Ordinal) by
     exact H _ s hs0 hs rfl
   intro d
   induction d using Nat.strong_induction_on with
   | _ d IH =>
     intro s hs0 hs hd
-    rw [IsWellFounded.rank_eq]
+    rw [WellFounded.rank_eq]
     apply le_antisymm
     · apply Ordinal.iSup_le
       rintro ⟨y, hytree, -, hsy, hsney⟩
@@ -263,10 +263,10 @@ theorem rank_eq_sub (hF : IsFront F M) {s0 : List ℕ} (L : ℕ)
               rw [Order.succ_eq_add_one, ← Nat.cast_add_one]
               congr 1
               omega
-          _ = Order.succ (IsWellFounded.rank (treeExt F) (s ++ [x])) := by rw [hrank]
+          _ = Order.succ (WellFounded.rank (treeExt F) (s ++ [x])) := by rw [hrank]
           _ ≤ _ := Ordinal.le_iSup
               (fun b : {b // treeExt F b s} =>
-                Order.succ (IsWellFounded.rank (treeExt F) (b : List ℕ)))
+                Order.succ (WellFounded.rank (treeExt F) (b : List ℕ)))
               ⟨s ++ [x], hx⟩
 
 /-- Membership in the tree of `[M]^k`: increasing lists in `M` of length at most `k`. -/
@@ -337,11 +337,11 @@ theorem mem_tree_schreier (hM : StrictMono M) {s : List ℕ} :
 `a + 1 - s.length`. -/
 theorem schreier_rank_node (hM : StrictMono M) {s : List ℕ} {a : ℕ}
     (hsmem : s ∈ tree (schreier M)) (hhead : s.head? = some a) :
-    haveI : IsWellFounded (List ℕ) (treeExt (schreier M)) :=
-      ⟨(isFront_schreier hM).wellFounded_treeExt⟩
-    IsWellFounded.rank (treeExt (schreier M)) s = ((a + 1 - s.length : ℕ) : Ordinal) := by
-  have : IsWellFounded (List ℕ) (treeExt (schreier M)) :=
-    ⟨(isFront_schreier hM).wellFounded_treeExt⟩
+    haveI : WellFounded (treeExt (schreier M)) :=
+      (isFront_schreier hM).wellFounded_treeExt
+    WellFounded.rank (treeExt (schreier M)) s = ((a + 1 - s.length : ℕ) : Ordinal) := by
+  have : WellFounded (treeExt (schreier M)) :=
+    (isFront_schreier hM).wellFounded_treeExt
   have hpre_a : [a] <+: s := by
     obtain ⟨ys, rfl⟩ := List.head?_eq_some_iff.mp hhead
     exact ⟨ys, rfl⟩
@@ -378,9 +378,9 @@ theorem schreier_rank_node (hM : StrictMono M) {s : List ℕ} {a : ℕ}
 
 /-- **The Schreier front has rank `ω`.** -/
 theorem schreier_rank (hM : StrictMono M) : (isFront_schreier hM).rank = ω := by
-  have : IsWellFounded (List ℕ) (treeExt (schreier M)) :=
-    ⟨(isFront_schreier hM).wellFounded_treeExt⟩
-  rw [IsFront.rank, IsWellFounded.rank_eq]
+  have : WellFounded (treeExt (schreier M)) :=
+    (isFront_schreier hM).wellFounded_treeExt
+  rw [IsFront.rank, WellFounded.rank_eq]
   apply le_antisymm
   · apply Ordinal.iSup_le
     rintro ⟨y, hytree, -, -, hbne⟩
@@ -404,14 +404,14 @@ theorem schreier_rank (hM : StrictMono M) : (isFront_schreier hM).rank = ω := b
         simp only [List.length_cons, List.length_nil]; omega
     have hte : treeExt (schreier M) [x] [] :=
       ⟨hxtree, (isFront_schreier hM).nil_mem_tree, List.nil_prefix, by simp⟩
-    have hrank : IsWellFounded.rank (treeExt (schreier M)) [x] = (x : Ordinal) := by
+    have hrank : WellFounded.rank (treeExt (schreier M)) [x] = (x : Ordinal) := by
       rw [schreier_rank_node hM hxtree List.head?_cons]; simp
     calc (n : Ordinal) ≤ ((x + 1 : ℕ) : Ordinal) := by rw [Nat.cast_le]; omega
-      _ = Order.succ (IsWellFounded.rank (treeExt (schreier M)) [x]) := by
+      _ = Order.succ (WellFounded.rank (treeExt (schreier M)) [x]) := by
             rw [hrank, Order.succ_eq_add_one, Nat.cast_add_one]
       _ ≤ _ := Ordinal.le_iSup
             (fun b : {b // treeExt (schreier M) b []} =>
-              Order.succ (IsWellFounded.rank (treeExt (schreier M)) (b : List ℕ)))
+              Order.succ (WellFounded.rank (treeExt (schreier M)) (b : List ℕ)))
             ⟨[x], hte⟩
 
 end Front

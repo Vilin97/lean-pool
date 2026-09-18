@@ -8,7 +8,7 @@ module
 public import Mathlib.Analysis.Complex.Basic
 
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 import Mathlib.CategoryTheory.Category.Init
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 

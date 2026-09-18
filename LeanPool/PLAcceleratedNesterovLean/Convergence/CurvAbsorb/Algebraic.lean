@@ -76,9 +76,8 @@ theorem xi_bound_mvt (P : E d →L[ℝ] E d) (π : E d → E d) (x y c : E d) (r
     rw [hfg, ← norm_neg, neg_sub]; exact hbound z hz
   have hmvt := (convex_ball c r).norm_image_sub_le_of_norm_fderiv_le hg_diff hg_bound hxs hys
   convert hmvt using 2
-  · rfl
-  · simp only [Pi.sub_apply, map_sub]
-    abel
+  simp only [Pi.sub_apply, map_sub]
+  abel
 
 /-- If Dπ(π x) kills (x - π x) and ‖Dπ(π x) - P‖ ≤ ε₁, then ‖P(x - π x)‖ ≤ ε₁·‖x - π x‖. -/
 theorem proj_normal_bound (P : E d →L[ℝ] E d) (π : E d → E d) (x : E d)

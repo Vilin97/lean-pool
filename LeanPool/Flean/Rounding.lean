@@ -451,7 +451,6 @@ lemma roundf_up_minus_down {q : ℚ} (q_nezero : q ≠ 0) :
   · rw [Nat.cast_natAbs]
     nth_rw 5 [abs_of_nonneg]
     · convert this using 1
-      · rfl
       ring
     · apply Int.floor_nonneg.mpr
       apply mantissa_nonneg C q q_nezero

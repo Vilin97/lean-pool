@@ -6,7 +6,7 @@ Authors: Catskills Research Company
 module
 
 public import LeanPool.DomainTheory.Neighborhood.Exercise118
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Data.Set.Finite.Range
 import Mathlib.Tactic.NormNum.Abs

@@ -137,7 +137,7 @@ lemma timeShift_isometry (s : ℝ) : Isometry (timeShift s) := by
 
 /-- Time shift is antilipschitz (follows from being an isometry). -/
 lemma timeShift_antilipschitz (s : ℝ) : AntilipschitzWith 1 (timeShift s) :=
-  (timeShift_isometry s).antilipschitz
+  (timeShift_isometry s).antilipschitzWith
 
 /-- The constant vector used to express timeShift as id + const. -/
 def timeShiftConst (s : ℝ) : SpaceTime :=

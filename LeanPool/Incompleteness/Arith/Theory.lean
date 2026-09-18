@@ -738,9 +738,22 @@ variable (T)
 def _root_.LO.FirstOrder.Theory.provableₐ : Sg1.Semisentence 1 := .mkSigma
   “p. !(T + 𝐑₀').tDef.prv p” (by simp)
 
+-- Keep the substitution proof generic so kernel checking does not expand the provability formula.
+omit [V ⊧ₘ* 𝐈Sg1] in
+private lemma predicate_defined_identity_substitution (φ : Sg1.Semisentence 1) (P : V → Prop)
+    (h : Sg1-Predicate P via φ) :
+    Sg1-Predicate P via (.mkSigma “p. !φ p” (by simp)) := by
+  intro v
+  have hv : (fun _ : Fin 1 => v 0) = v := by
+    funext i
+    have hi : i = 0 := Fin.eq_zero i
+    subst i
+    rfl
+  simpa [hv] using h v
+
 lemma provableₐ_defined : Sg1-Predicate (T.Provableₐ : V → Prop) via T.provableₐ := by
-  intro v; simp [FirstOrder.Theory.provableₐ, FirstOrder.Theory.Provableₐ,
-    ((T + 𝐑₀').codeIn V).provable_defined.df.iff]
+  exact predicate_defined_identity_substitution (T + 𝐑₀').tDef.prv
+    ((T + 𝐑₀').codeIn V).Provable ((T + 𝐑₀').codeIn V).provable_defined
 
 @[simp] lemma eval_provableₐ (v) :
     Semiformula.Evalbm V v T.provableₐ.val ↔ T.Provableₐ (v 0) := (provableₐ_defined T).df.iff v

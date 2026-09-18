@@ -7,6 +7,8 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.Divisor
 public import Mathlib.NumberTheory.FunctionField
+
+public import Mathlib.RingTheory.RamificationInertia.Inertia
 public import Mathlib.RingTheory.Valuation.AlgebraInstances
 public import Mathlib.Data.Int.ConditionallyCompleteOrder
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -485,8 +487,8 @@ instance finiteDimensionalResidueFieldInfinite
     rw [hp]
     exact inftyValuationSubring.finiteDimensionalResidueField k
   let : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := by
-    have hfin := Ideal.inertiaDeg'_pos p v.asIdeal
-    rw [Ideal.inertiaDeg'_algebraMap] at hfin
+    have hfin := Ideal.inertiaDeg_pos v.asIdeal A
+    rw [Ideal.inertiaDeg_eq_of_isMaximal p v.asIdeal] at hfin
     exact FiniteDimensional.of_finrank_pos hfin
   let : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
@@ -518,7 +520,7 @@ theorem principalDivisorA_apply_finite (x : Additive Kˣ)
     Finsupp.mapDomain Sum.inr
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inl v) = _
-  rw [Finsupp.mapDomain_apply Sum.inl_injective]
+  rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective]
   rw [Finsupp.mapDomain_of_notMem_range]
   · simp
   · rintro ⟨w, h⟩
@@ -536,7 +538,7 @@ theorem principalDivisorA_apply_infinite (x : Additive Kˣ)
     Finsupp.mapDomain Sum.inr
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inr v) = _
-  rw [Finsupp.mapDomain_apply Sum.inr_injective]
+  rw [Finsupp.mapDomain_apply_of_injective Sum.inr_injective]
   rw [Finsupp.mapDomain_of_notMem_range]
   · simp
   · rintro ⟨w, h⟩

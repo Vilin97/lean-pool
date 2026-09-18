@@ -2341,8 +2341,10 @@ instance spectralOperatorAdjoin_isMulCommutative
     IsMulCommutative
       (StarAlgebra.adjoin ℂ (spectralOperatorGenerators E π)) := by
   apply StarAlgebra.isMulCommutative_adjoin
-  · exact fun _ hS _ hT ↦ spectralOperatorGenerators_commute E π hS hT
-  · intro S hS T hT
+  · exact fun _ hS ↦ ⟨spectralOperatorGenerators_commute E π
+      (star_mem_spectralOperatorGenerators E π hS) hS⟩
+  · exact fun _ hS _ hT _ ↦ spectralOperatorGenerators_commute E π hS hT
+  · intro S hS T hT _
     exact spectralOperatorGenerators_commute E π hS
       (star_mem_spectralOperatorGenerators E π hT)
 
@@ -2352,14 +2354,13 @@ instance spectralOperatorAlgebraCommCStarAlgebra
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) :
     CommCStarAlgebra (spectralOperatorAlgebra E π) := by
-  letI : CommRing (spectralOperatorAlgebra E π) :=
-    StarSubalgebra.commRingTopologicalClosure _
-      (isMulCommutative_iff.mp
-        (spectralOperatorAdjoin_isMulCommutative E π))
+  letI : IsMulCommutative (spectralOperatorAlgebra E π) :=
+    StarSubalgebra.isMulCommutative_topologicalClosure
+      (StarAlgebra.adjoin ℂ (spectralOperatorGenerators E π))
   letI : IsClosed (spectralOperatorAlgebra E π : Set (V →L[ℂ] V)) :=
     (StarAlgebra.adjoin ℂ
       (spectralOperatorGenerators E π)).isClosed_topologicalClosure
-  exact { mul_comm := mul_comm }
+  exact { mul_comm := mul_comm' }
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
@@ -4117,7 +4118,7 @@ private theorem scalarOperatorKernel_posSemidef {I : Type u}
     (K : Matrix I I ℂ) (hK : K.PosSemidef) :
     (scalarOperatorKernel K).PosSemidef := by
   apply ((RKHS.posSemidef_tfae
-    (K := scalarOperatorKernel K)).out 2 0).mp
+    (K := scalarOperatorKernel K)).out 3 1).mp
   constructor
   · apply Matrix.IsHermitian.ext
     intro g h
@@ -8547,15 +8548,15 @@ private theorem cornulierRowRoot_commute
 private theorem cornulierK₁_isMulCommutative : IsMulCommutative cornulierK₁ := by
   unfold cornulierK₁
   apply Subgroup.isMulCommutative_closure
-  rintro _ ⟨i, hi, a, rfl⟩ _ ⟨j, hj, b, rfl⟩
-  exact (cornulierColumnRoot_commute i j hi hj a b).eq
+  rintro _ ⟨i, hi, a, rfl⟩ _ ⟨j, hj, b, rfl⟩ _
+  exact cornulierColumnRoot_commute i j hi hj a b
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem cornulierK₂_isMulCommutative : IsMulCommutative cornulierK₂ := by
   unfold cornulierK₂
   apply Subgroup.isMulCommutative_closure
-  rintro _ ⟨i, hi, a, rfl⟩ _ ⟨j, hj, b, rfl⟩
-  exact (cornulierRowRoot_commute i j hi hj a b).eq
+  rintro _ ⟨i, hi, a, rfl⟩ _ ⟨j, hj, b, rfl⟩ _
+  exact cornulierRowRoot_commute i j hi hj a b
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]

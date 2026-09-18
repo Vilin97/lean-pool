@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Mathlib.Data.NNReal.Defs
+public import Mathlib.Basic.NNReal.Defs
 
 public import LeanPool.GKPCarry.BadCarryCounting
 public import Mathlib.Data.ZMod.Basic

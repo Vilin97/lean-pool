@@ -483,11 +483,12 @@ theorem discreteTopology_periodSubgroup (hupgrade : DiscretenessHyp X) :
     rwa [hseteq] at hUopen
 
 /-- The closure of `periodSubgroup X` is itself, once it is discrete: discreteness implies
-closedness (`AddSubgroup.isClosed_of_discrete`). -/
+closedness (`AddSubgroup.isClosed_of_discreteTopology`). -/
 theorem periodSubgroup_topologicalClosure_eq (hupgrade : DiscretenessHyp X) :
     (periodSubgroup X).topologicalClosure = periodSubgroup X := by
   have := discreteTopology_periodSubgroup hupgrade
-  exact SetLike.coe_injective (AddSubgroup.isClosed_of_discrete (H := periodSubgroup X)).closure_eq
+  exact SetLike.coe_injective
+    (AddSubgroup.isClosed_of_discreteTopology (U := periodSubgroup X)).closure_eq
 
 /-- The gated `DiscreteTopology` instance for the closure, the shape `jacobian-construction`'s
 ledger needs directly. -/

@@ -324,7 +324,7 @@ theorem PlaneComplex.isPreconnected_cellCarrier_sdiff_sharedCarrier (K : PlaneCo
         simp only [Finset.mem_insert, Finset.mem_singleton] at hz
         rcases hz with rfl | rfl <;> assumption
       have himage : K.position '' (({v, w} : Finset K.Vertex) : Set K.Vertex) =
-          {K.position v, K.position w} := by ext z; simp [eq_comm]
+          {K.position v, K.position w} := by ext z; simp
       have hset : K.oneSkeleton.cellCarrier ({v, w} : Finset K.Vertex) \
           K.cellCarrier (({v, w} : Finset K.Vertex) ∩ t) =
           AffineMap.lineMap (K.position v) (K.position w) '' Set.Ioc (0 : ℝ) 1 := by
@@ -363,7 +363,7 @@ theorem PlaneComplex.isPreconnected_cellCarrier_sdiff_sharedCarrier (K : PlaneCo
             K.cellCarrier (({v, w} : Finset K.Vertex) ∩ t) =
             AffineMap.lineMap (K.position v) (K.position w) '' Set.Ico (0 : ℝ) 1 := by
           have himage : K.position '' (({v, w} : Finset K.Vertex) : Set K.Vertex) =
-              {K.position v, K.position w} := by ext z; simp [eq_comm]
+              {K.position v, K.position w} := by ext z; simp
           rw [show ({v, w} : Finset K.Vertex) ∩ t = {w} by ext z; simp [hv, hw]]
           rw [show K.oneSkeleton.cellCarrier ({v, w} : Finset K.Vertex) =
               segment ℝ (K.position v) (K.position w) by
@@ -477,7 +477,7 @@ theorem PlaneComplex.exists_face_containing_polygon_edge
   have himage : K.position '' (({v, w} : Finset K.Vertex) : Set K.Vertex) =
       ({K.position v, K.position w} : Set Plane) := by
     ext x
-    simp [eq_comm]
+    simp
   have hmABSegment : m ∈ segment ℝ A B := by
     simpa only [PlaneComplex.cellCarrier, himage, convexHull_pair, A, B] using hms
   have hmAB : m ∈ openSegment ℝ A B := by
@@ -992,7 +992,7 @@ theorem IsPLOnSet.comp_polygonal_embedding (J J' : PolygonalCircle)
     rw [← convexHull_pair]
     congr 1
     ext x
-    simp [eq_comm]
+    simp
   rw [← hpair]
   exact convexHull_mono (Set.image_mono hsi)
 

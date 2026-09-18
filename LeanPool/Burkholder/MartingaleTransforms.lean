@@ -397,7 +397,7 @@ private lemma burkholder_plusOne_mul_martingaleDiff_memLp
   have hcoeff_meas : AEStronglyMeasurable (plusOne w n) μ := by
     exact hw_meas.add aestronglyMeasurable_const
   refine MemLp.of_le_mul (c := (2 : ℝ)) (burkholder_martingaleDiff_memLp h n)
-    (hcoeff_meas.mul (burkholder_martingaleDiff_memLp h n).1) ?_
+    (hcoeff_meas.mul (burkholder_martingaleDiff_memLp h n).aestronglyMeasurable) ?_
   filter_upwards [h.hbound n] with ω hwω
   have hcoeff : |plusOne w n ω| ≤ 2 := by
     rw [plusOne, abs_le]
@@ -418,7 +418,7 @@ private lemma burkholder_minusOne_mul_martingaleDiff_memLp
   have hcoeff_meas : AEStronglyMeasurable (minusOne w n) μ := by
     exact hw_meas.sub aestronglyMeasurable_const
   refine MemLp.of_le_mul (c := (2 : ℝ)) (burkholder_martingaleDiff_memLp h n)
-    (hcoeff_meas.mul (burkholder_martingaleDiff_memLp h n).1) ?_
+    (hcoeff_meas.mul (burkholder_martingaleDiff_memLp h n).aestronglyMeasurable) ?_
   filter_upwards [h.hbound n] with ω hwω
   have hcoeff : |minusOne w n ω| ≤ 2 := by
     rw [minusOne, abs_le]
@@ -522,7 +522,7 @@ private lemma burkholder_u_Xn_Yn_integrable
   have hpair_meas :
       AEStronglyMeasurable
         (fun ω => (X_{n}[w, f] ω, Y_{n}[w, f] ω)) μ :=
-    hX.1.prodMk hY.1
+    hX.aestronglyMeasurable.prodMk hY.aestronglyMeasurable
   have hu_meas :
       AEStronglyMeasurable
         (fun ω =>

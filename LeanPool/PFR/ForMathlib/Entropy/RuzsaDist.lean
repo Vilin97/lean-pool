@@ -185,15 +185,15 @@ lemma tendsto_rdist_probabilityMeasure {α : Type*} {l : Filter α}
     Tendsto (fun n ↦ d[X; (μ n : Measure Ω) # Y; (μ n : Measure Ω)]) l
       (𝓝 (d[X; ν # Y; ν])) := by
   have J (η : ProbabilityMeasure Ω) :
-      d[X; η # Y; η] = d[(id : G → G); η.map hX.aemeasurable # id; η.map hY.aemeasurable] := by
+      d[X; η # Y; η] = d[(id : G → G); η.map X # id; η.map Y] := by
     apply ProbabilityTheory.IdentDistrib.rdist_congr
     · exact ⟨hX.aemeasurable, aemeasurable_id, by simp⟩
     · exact ⟨hY.aemeasurable, aemeasurable_id, by simp⟩
   simp_rw [J]
   have Z := ((continuous_rdist_restrict_probabilityMeasure (G := G)).tendsto
-    ((ν.map hX.aemeasurable), (ν.map hY.aemeasurable)))
-  have T : Tendsto (fun n ↦ (((μ n).map hX.aemeasurable), ((μ n).map hY.aemeasurable)))
-      l (𝓝 (((ν.map hX.aemeasurable), (ν.map hY.aemeasurable)))) := by
+    ((ν.map X), (ν.map Y)))
+  have T : Tendsto (fun n ↦ (((μ n).map X), ((μ n).map Y)))
+      l (𝓝 (((ν.map X), (ν.map Y)))) := by
     apply Tendsto.prodMk_nhds
     · exact ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous μ ν hμ hX
     · exact ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous μ ν hμ hY
@@ -370,10 +370,10 @@ lemma ent_of_proj_le {UH : Ω' → G} [FiniteRange UH]
     have h_one : ∑ x ∈ FiniteRange.toFinset (π ∘ X'), νq.real {x} = 1 := by
       rewrite [sum_measureReal_singleton]
       apply (ENNReal.toReal_eq_one_iff _).mpr
-      have := isProbabilityMeasure_map (μ := ν) <| .of_discrete (f := π ∘ X')
+      have : IsProbabilityMeasure (ν.map (π ∘ X')) := inferInstance
       rewrite [← measure_univ (μ := νq), ← FiniteRange.range]
       let rng := Set.range (π ∘ X')
-      have h_compl : νq rngᶜ = 0 := ae_map_mem_range (π ∘ X') .of_discrete ν
+      have h_compl : νq rngᶜ = 0 := ae_map_mem_range .of_discrete (by fun_prop)
       rw [← measure_add_measure_compl (MeasurableSet.of_discrete (s := rng)),
         h_compl, add_zero]
     have := FiniteRange.sub X' UH'
@@ -600,8 +600,10 @@ lemma condRuzsaDist_symm [Countable T]
     (hW : Measurable W) [IsProbabilityMeasure μ] [IsProbabilityMeasure μ'] [FiniteRange Z]
     [FiniteRange W] :
     d[X | Z; μ # Y | W; μ'] = d[Y | W; μ' # X | Z; μ] := by
-  have : IsProbabilityMeasure (μ.map Z) := isProbabilityMeasure_map hZ.aemeasurable
-  have : IsProbabilityMeasure (μ'.map W) := isProbabilityMeasure_map hW.aemeasurable
+  have : IsProbabilityMeasure (μ.map Z) :=
+    (Measure.isProbabilityMeasure_map_iff hZ.aemeasurable).mpr inferInstance
+  have : IsProbabilityMeasure (μ'.map W) :=
+    (Measure.isProbabilityMeasure_map_iff hW.aemeasurable).mpr inferInstance
   rw [condRuzsaDist_def, condRuzsaDist_def, Kernel.rdist_symm]
 
 public
@@ -612,8 +614,8 @@ lemma condRuzsaDist_nonneg [Countable T] {X : Ω → G} (hX : Measurable X) [Fin
     [IsProbabilityMeasure μ] [IsProbabilityMeasure μ'] :
     0 ≤ d[X | Z; μ # Y | W; μ'] := by
   rw [condRuzsaDist_def]
-  have : IsProbabilityMeasure (μ.map Z) := isProbabilityMeasure_map hZ.aemeasurable
-  have : IsProbabilityMeasure (μ'.map W) := isProbabilityMeasure_map hW.aemeasurable
+  have : IsProbabilityMeasure (μ.map Z) := inferInstance
+  have : IsProbabilityMeasure (μ'.map W) := inferInstance
   refine Kernel.rdist_nonneg ?_ ?_
   · exact Kernel.aefiniteKernelSupport_condDistrib _ _ _ hX hZ
   · exact Kernel.aefiniteKernelSupport_condDistrib _ _ _ hY hW
@@ -782,8 +784,8 @@ lemma condRuzsaDist_of_indep
     (μ : Measure Ω) [IsProbabilityMeasure μ]
     (h : IndepFun (⟨X, Z⟩) (⟨Y, W⟩) μ) [FiniteRange Z] [FiniteRange W] :
     d[X | Z; μ # Y | W; μ] = H[X - Y | ⟨Z, W⟩; μ] - H[X | Z; μ]/2 - H[Y | W; μ]/2 := by
-  have : IsProbabilityMeasure (μ.map Z) := isProbabilityMeasure_map hZ.aemeasurable
-  have : IsProbabilityMeasure (μ.map W) := isProbabilityMeasure_map hW.aemeasurable
+  have : IsProbabilityMeasure (μ.map Z) := inferInstance
+  have : IsProbabilityMeasure (μ.map W) := inferInstance
   rw [condRuzsaDist_def, Kernel.rdist_eq', condEntropy_eq_kernel_entropy _ (hZ.prodMk hW),
     condEntropy_eq_kernel_entropy hX hZ, condEntropy_eq_kernel_entropy hY hW]
   swap; · exact hX.sub hY
@@ -795,7 +797,8 @@ lemma condRuzsaDist_of_indep
   refine Kernel.entropy_congr ?_
   have : Kernel.map (condDistrib (⟨X, Y⟩) (⟨Z, W⟩) μ) (fun x ↦ x.1 - x.2)
       =ᵐ[μ.map (⟨Z, W⟩)] condDistrib (X - Y) (⟨Z, W⟩) μ :=
-    (condDistrib_comp _ (by fun_prop) (by fun_prop)).symm
+    (condDistrib_comp (hZ.prodMk hW).aemeasurable
+      (hX.prodMk hY).aemeasurable (by fun_prop)).symm
   refine (this.symm.trans ?_).symm
   suffices Kernel.prodMkRight T (condDistrib X Z μ)
         ×ₖ Kernel.prodMkLeft S (condDistrib Y W μ)

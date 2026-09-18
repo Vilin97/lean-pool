@@ -547,9 +547,9 @@ lemma single_fibres {G H Ω Ω' : Type*}
     unfold M
     unfold entropy
     have : IsProbabilityMeasure (.map (φ ∘ UA) ℙ) :=
-      Measure.isProbabilityMeasure_map (.comp_measurable .of_discrete hUA')
+      inferInstance
     have : IsProbabilityMeasure (.map (φ ∘ UB) ℙ) :=
-      Measure.isProbabilityMeasure_map (.comp_measurable .of_discrete hUB')
+      inferInstance
     rewrite [← Finset.sum_product',
       ← tsum_eq_sum (L := SummationFilter.unconditional _) fun _ ↦ h_compl, ← measureEntropy_prod]
     apply tsum_congr; intro; congr
@@ -750,7 +750,7 @@ lemma weak_PFR_asymm_prelim (A B : Set G) [A_fin : Finite A] [B_fin : Finite B]
         simp only [one_div, gt_iff_lt, inv_pos, Nat.cast_pos, Finset.card_pos]
         exact (Finite.toFinset_nonempty (toFinite A)).mpr hnA
       have _ : IsProbabilityMeasure ((ℙ).map UA) :=
-        Measure.isProbabilityMeasure_map (Measurable.aemeasurable hUA_mes)
+        inferInstance
       replace this := single ((ℙ).map UA) hx this
       rwa [Set.mem_preimage, Set.mem_singleton_iff] at this
     have hxx : Ax = A := by
@@ -774,7 +774,7 @@ lemma weak_PFR_asymm_prelim (A B : Set G) [A_fin : Finite A] [B_fin : Finite B]
         simp only [one_div, gt_iff_lt, inv_pos, Nat.cast_pos, Finset.card_pos]
         exact (Finite.toFinset_nonempty (toFinite B)).mpr hnB
       have _ : IsProbabilityMeasure ((ℙ).map UB) :=
-        Measure.isProbabilityMeasure_map (Measurable.aemeasurable hUB_mes)
+        inferInstance
       replace this := single ((ℙ).map UB) hy this
       rwa [Set.mem_preimage, Set.mem_singleton_iff] at this
     have hyy : By = B := by

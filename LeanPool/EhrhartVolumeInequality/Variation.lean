@@ -8295,7 +8295,7 @@ private theorem jointRealCoordinate_sourcePositiveJointTimePoint
 private theorem measurable_sourceTorusCoverPoint {n : ℕ} :
     Measurable
       (sourceTorusCoverPoint (n := n)) := by
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro i
   have hangle :
       Measurable

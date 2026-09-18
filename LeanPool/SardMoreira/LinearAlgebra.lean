@@ -6,7 +6,7 @@ Authors: Yury G. Kudryashov
 module
 
 public import Mathlib.LinearAlgebra.Dimension.LinearMap
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Tactic.Positivity.Finset

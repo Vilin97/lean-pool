@@ -38,94 +38,68 @@ theorem hasDerivAt_binEntropy (x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
     HasDerivAt (fun x => -x * Real.log x - (1 - x) * Real.log (1 - x))
       (Real.log (1 - x) - Real.log x) x := by
   convert
-    HasDerivAt.sub
-      (HasDerivAt.mul (hasDerivAt_neg x) (Real.hasDerivAt_log hx.ne'))
-      (HasDerivAt.mul (hasDerivAt_id x |> HasDerivAt.const_sub 1)
-        (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub 1)
+    HasDerivAt.fun_sub
+      (HasDerivAt.fun_mul (hasDerivAt_neg' x) (Real.hasDerivAt_log hx.ne'))
+      (HasDerivAt.fun_mul (hasDerivAt_id' x |> HasDerivAt.const_sub 1)
+        (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub 1)
           (by linarith : (1 - x) ≠ 0))) using 1
-  · rfl
-  · rfl
-  · ext y
-    simp [Pi.mul_apply, Pi.sub_apply, id_eq]
-  · simp [id_eq]
-    field_simp [hx.ne', sub_ne_zero.mpr hx1.ne']
-    ring
+  field_simp [hx.ne', sub_ne_zero.mpr hx1.ne']
+  ring
 
 theorem hasDerivAt_h_entropy_second (θ x : ℝ) (hx : 0 < x) (hxθ : x < θ) :
     HasDerivAt (fun x => θ * Real.log θ - x * Real.log x - (θ - x) * Real.log (θ - x))
       (Real.log (θ - x) - Real.log x) x := by
   convert
-    HasDerivAt.sub
-      (HasDerivAt.sub (hasDerivAt_const x (θ * Real.log θ))
-        (HasDerivAt.mul (hasDerivAt_id x) (Real.hasDerivAt_log hx.ne')))
-      (HasDerivAt.mul (hasDerivAt_id x |> HasDerivAt.const_sub θ)
-        (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub θ)
+    HasDerivAt.fun_sub
+      (HasDerivAt.fun_sub (hasDerivAt_const x (θ * Real.log θ))
+        (HasDerivAt.fun_mul (hasDerivAt_id' x) (Real.hasDerivAt_log hx.ne')))
+      (HasDerivAt.fun_mul (hasDerivAt_id' x |> HasDerivAt.const_sub θ)
+        (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub θ)
           (by linarith : (θ - x) ≠ 0))) using 1
-  · rfl
-  · rfl
-  · ext y
-    simp [Pi.mul_apply, Pi.sub_apply, id_eq]
-  · simp [id_eq]
-    field_simp [hx.ne', sub_ne_zero.mpr hxθ.ne']
-    ring
+  field_simp [hx.ne', sub_ne_zero.mpr hxθ.ne']
+  ring
 
 theorem hasDerivAt_neg_entropy_scaled (r x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
     HasDerivAt (fun x => r * x * Real.log x + r * (1 - x) * Real.log (1 - x))
       (r * (Real.log x - Real.log (1 - x))) x := by
   convert
-    HasDerivAt.add
-      (HasDerivAt.mul (HasDerivAt.mul (hasDerivAt_const x r) (hasDerivAt_id x))
+    HasDerivAt.fun_add
+      (HasDerivAt.fun_mul (HasDerivAt.fun_mul (hasDerivAt_const x r) (hasDerivAt_id' x))
         (Real.hasDerivAt_log hx.ne'))
-      (HasDerivAt.mul
-        (HasDerivAt.mul (hasDerivAt_const x r) (hasDerivAt_id x |> HasDerivAt.const_sub 1))
-        (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub 1)
+      (HasDerivAt.fun_mul
+        (HasDerivAt.fun_mul (hasDerivAt_const x r) (hasDerivAt_id' x |> HasDerivAt.const_sub 1))
+        (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub 1)
           (by linarith : (1 - x) ≠ 0))) using 1
-  · rfl
-  · rfl
-  · ext y
-    simp [Pi.mul_apply, Pi.add_apply, id_eq]
-  · simp [id_eq]
-    field_simp [hx.ne', sub_ne_zero.mpr hx1.ne']
-    ring
+  field_simp [hx.ne', sub_ne_zero.mpr hx1.ne']
+  ring
 
 /-! ## Second derivatives -/
 
 theorem hasDerivAt_binEntropy_deriv (x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
     HasDerivAt (fun x => Real.log (1 - x) - Real.log x) (-1/(1-x) - 1/x) x := by
   convert
-    HasDerivAt.sub
-      (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub 1)
+    HasDerivAt.fun_sub
+      (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub 1)
         (by linarith : (1 - x) ≠ 0))
       (Real.hasDerivAt_log hx.ne') using 1
-  · rfl
-  · rfl
-  · ext y
-    rfl
-  · simp [id_eq, one_div, sub_eq_add_neg]
+  simp [one_div]
 
 theorem hasDerivAt_h_entropy_second_deriv (θ x : ℝ) (hx : 0 < x) (hxθ : x < θ) :
     HasDerivAt (fun x => Real.log (θ - x) - Real.log x) (-1/(θ-x) - 1/x) x := by
   convert
-    HasDerivAt.sub
-      (HasDerivAt.log (hasDerivAt_id x |> HasDerivAt.const_sub θ)
+    HasDerivAt.fun_sub
+      (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub θ)
         (by linarith : (θ - x) ≠ 0))
       (Real.hasDerivAt_log hx.ne') using 1
-  · rfl
-  · rfl
-  · ext y
-    rfl
-  · simp [id_eq, one_div, sub_eq_add_neg]
+  simp [one_div]
 
 theorem hasDerivAt_neg_entropy_scaled_deriv (r x : ℝ) (hx : 0 < x) (hx1 : x < 1) :
     HasDerivAt (fun x => r * (Real.log x - Real.log (1 - x))) (r * (1/x + 1/(1-x))) x := by
   convert
     HasDerivAt.const_mul r
-      (HasDerivAt.sub (Real.hasDerivAt_log hx.ne')
+      (HasDerivAt.fun_sub (Real.hasDerivAt_log hx.ne')
         (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub 1) (by linarith))) using 1
-  · rfl
-  · rfl
-  · simp_all
-  · ring_nf
+  ring_nf
 
 /-! ## Derivative of Phi -/
 
@@ -183,23 +157,20 @@ theorem hasDerivAt_Phi (r θ x : ℝ) (hx : 0 < x) (hxθ : x < θ) (hx1 : x < 1)
             r * (log x - log (1 - x)))
         x := by
     convert
-      HasDerivAt.add
-        (HasDerivAt.add
-          (HasDerivAt.add
-            (HasDerivAt.add
-              (HasDerivAt.add
-                (HasDerivAt.add
-                  (HasDerivAt.add (hasDerivAt_binEntropy x hx hx1) (hasDerivAt_const x 0))
+      HasDerivAt.fun_add
+        (HasDerivAt.fun_add
+          (HasDerivAt.fun_add
+            (HasDerivAt.fun_add
+              (HasDerivAt.fun_add
+                (HasDerivAt.fun_add
+                  (HasDerivAt.fun_add (hasDerivAt_binEntropy x hx hx1) (hasDerivAt_const x 0))
                   (hasDerivAt_h_entropy_second θ x hx hxθ))
                 (hasDerivAt_id' x |> HasDerivAt.mul_const <| hEntropy (r / θ) r))
               (hasDerivAt_neg_entropy_scaled r x hx hx1))
             (hasDerivAt_const x 0))
           (hasDerivAt_const x 0))
         (hasDerivAt_const x 0) using 1
-    · rfl
-    · rfl
     · ext y
-      simp [Pi.add_apply]
       ring
     · unfold hEntropy
       ring
@@ -217,18 +188,14 @@ theorem hasDerivAt_Phi_second (r θ x : ℝ) (hx : 0 < x) (hxθ : x < θ) (hx1 :
       + r * (Real.log x - Real.log (1 - x)))
       (Phi'' r θ x) x := by
   convert
-    HasDerivAt.add
-      (HasDerivAt.add
-        (HasDerivAt.add (hasDerivAt_binEntropy_deriv x hx hx1)
+    HasDerivAt.fun_add
+      (HasDerivAt.fun_add
+        (HasDerivAt.fun_add (hasDerivAt_binEntropy_deriv x hx hx1)
           (hasDerivAt_h_entropy_second_deriv θ x hx hxθ))
         (hasDerivAt_const x
           (r / θ * Real.log (r / θ) - r * Real.log r -
             (r / θ - r) * Real.log (r / θ - r))))
       (hasDerivAt_neg_entropy_scaled_deriv r x hx hx1) using 1
-  · rfl
-  · rfl
-  · ext y
-    simp [Pi.add_apply]
   · unfold Phi''
     field_simp [hx.ne', sub_ne_zero.mpr hx1.ne', sub_ne_zero.mpr hxθ.ne']
     ring

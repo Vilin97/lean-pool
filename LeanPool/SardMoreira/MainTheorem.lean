@@ -675,7 +675,7 @@ theorem hausdorffMeasure_image_nhdsWithin_null_of_finrank_eq
     · exact Filter.image_mem_map self_mem_nhdsWithin
   · have := hausdorffMeasure_image_piProd_fst_null_of_finrank_eq hgt hk hgdim
     rw [hdimKer, hdimRange, Nat.add_sub_cancel' hp_dom.le] at this
-    convert (eCod.symm.lipschitz.hausdorffMeasure_image_null (by positivity) this) using 2
+    convert (eCod.symm.lipschitzWith.hausdorffMeasure_image_null (by positivity) this) using 2
     rw [Set.image_image, Set.image_image]
     apply Set.EqOn.image_eq
     intro x hx

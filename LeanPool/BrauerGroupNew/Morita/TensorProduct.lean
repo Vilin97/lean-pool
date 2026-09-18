@@ -269,8 +269,7 @@ abbrev toModuleOverTensor : TensorModule R A C ⥤ ModuleCat (A ⊗[R] C) where
   map {M N} f := ModuleCat.ofHom {
     __ := f.hom.hom
     map_smul' ac m := by
-      induction ac using TensorProduct.induction_on with
-      | zero => simp
+      induction ac using TensorProduct.inductionOn with
       | tmul a c => simp [TensorModule.commutes_apply]
       | add _ _ _ _ => simp_all [add_smul]
   }
@@ -333,10 +332,7 @@ abbrev e02 (M : ModuleCat (A ⊗[R] C)) :
     · have key : ∀ (ac : A ⊗[R] C) (m : M),
           (moduleAux R A C ((fromModuleOverTensor R A C).obj M) ac) m = ac • m := by
         intro ac m
-        induction ac using TensorProduct.induction_on with
-        | zero =>
-          rw [map_zero]
-          exact (zero_smul _ m).symm
+        induction ac using TensorProduct.inductionOn with
         | tmul a c =>
           refine (moduleAux_apply R A C ((fromModuleOverTensor R A C).obj M) a c m).trans ?_
           change (a ⊗ₜ[R] (1 : C)) • (((1 : A) ⊗ₜ[R] c) • m) = (a ⊗ₜ[R] c) • m

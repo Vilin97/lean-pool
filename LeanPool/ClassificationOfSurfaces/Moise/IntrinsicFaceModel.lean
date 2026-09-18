@@ -518,7 +518,7 @@ theorem faceEdgeSourcePoint_mem_standardEdge (t : K.Face) (i : ZMod 3)
       {standardTriangleVertex (K.faceEdgeFirstIndex t i),
         standardTriangleVertex (K.faceEdgeSecondIndex t i)} by
     ext p
-    simp [eq_comm]]
+    simp]
   rw [convexHull_pair, segment_eq_image_lineMap]
   exact ⟨r, hr, rfl⟩
 
@@ -533,7 +533,7 @@ theorem faceEdgeSourcePoint_image_Icc (t : K.Face) (i : ZMod 3) :
       {standardTriangleVertex (K.faceEdgeFirstIndex t i),
         standardTriangleVertex (K.faceEdgeSecondIndex t i)} := by
     ext p
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair, segment_eq_image_lineMap]
   rfl
 

@@ -6,7 +6,7 @@ Authors: Dhyan Aranha, contributors
 module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Data.Real.Sign
+public import Mathlib.Basic.Real.Sign
 import Mathlib.Tactic.Measurability.Init
 
 /-!

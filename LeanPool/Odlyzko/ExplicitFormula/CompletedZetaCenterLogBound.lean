@@ -552,7 +552,7 @@ theorem logDeriv_centeredCanonicalZeroProduct
           (centeredCanonicalZeroFactor c R u w) ^ D u := by
     funext w
     simp
-  rw [hpoint, logDeriv_prod]
+  rw [hpoint, logDeriv_fun_prod]
   · rw [finsum_eq_sum_of_support_subset]
     · apply Finset.sum_congr rfl
       intro u hu

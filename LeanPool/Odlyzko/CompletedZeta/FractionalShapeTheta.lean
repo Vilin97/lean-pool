@@ -1030,7 +1030,7 @@ theorem mk0_fractionalIdealNumerator
         FractionalIdeal (𝓞 K)⁰ (FractionRing (𝓞 K)))
   grind
 
-omit [IsTotallyComplex K] in
+omit [NumberField K] [IsTotallyComplex K] in
 open Classical in
 theorem fractionalIdeal_den_ne_zero
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
@@ -1047,7 +1047,7 @@ noncomputable def numeratorRadii
     w (algebraMap (𝓞 K) K
       ((I : FractionalIdeal (𝓞 K)⁰ K).den : 𝓞 K))
 
-omit [IsTotallyComplex K] in
+omit [NumberField K] [IsTotallyComplex K] in
 open Classical in
 theorem numeratorRadii_ne_zero
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ)

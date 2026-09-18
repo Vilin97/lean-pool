@@ -56,8 +56,7 @@ def avStarActionHom : H →* (AVStar ≃ₗ[k] AVStar) where
   map_one' := by
     apply LinearEquiv.ext
     intro u
-    refine TensorProduct.induction_on u ?_ ?_ ?_
-    · simp [avStarAction]
+    refine TensorProduct.inductionOn u ?_ ?_
     · intro a f
       simp [avStarAction]
     · intro x y hx hy
@@ -65,8 +64,7 @@ def avStarActionHom : H →* (AVStar ≃ₗ[k] AVStar) where
   map_mul' h h' := by
     apply LinearEquiv.ext
     intro u
-    refine TensorProduct.induction_on u ?_ ?_ ?_
-    · simp [avStarAction]
+    refine TensorProduct.inductionOn u ?_ ?_
     · intro a f
       simp [avStarAction]
     · intro x y hx hy
@@ -78,8 +76,7 @@ theorem sl3TensorAction_mul (l m : SpecialLinear.SL3) :
       (sl3TensorAction l).comp (sl3TensorAction m) := by
   apply LinearMap.ext
   intro x
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro a b
     simp [sl3TensorAction]
   · intro x y hx hy
@@ -90,8 +87,7 @@ theorem sl3TensorAction_one :
     sl3TensorAction (1 : SpecialLinear.SL3) = LinearMap.id := by
   apply LinearMap.ext
   intro x
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro a b
     simp [sl3TensorAction]
   · intro x y hx hy

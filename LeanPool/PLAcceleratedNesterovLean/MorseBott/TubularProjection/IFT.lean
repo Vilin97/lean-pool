@@ -158,12 +158,7 @@ lemma optimalityEqn_partial_v_eq_neg_id
       have hιV_hfd : HasFDerivAt (fun v : V => (v : E)) (ιV : V →L[ℝ] E) 0 := by
         simpa [ιV] using ιV.hasFDerivAt
       convert hιV_hfd.add h_φE using 1
-      · rfl
-      · rfl
-      · rfl
-      · funext v
-        rfl
-      · simp_all
+      rw [add_zero]
     exact h_vE.neg.congr_of_eventuallyEq (Filter.Eventually.of_forall fun v => by
       change (0 : E) - (v : E) - (φ v : E) = -((v : E) + (φ v : E)); abel)
   have hterm1 : HasFDerivAt

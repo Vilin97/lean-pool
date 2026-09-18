@@ -54,14 +54,14 @@ private theorem prod_one_add_le_prod_one_add_of_le
     intro i hi
     simp only [mem_Ico] at hi
     linarith [hc i (by linarith)]
-  · apply Finset.one_le_prod
+  · apply Finset.one_le_prod₀
     simp_all
 
 private theorem prod_one_add_le_exp_sum
     {n₀ n : ℕ} (hc : ∀ m ≥ n₀, c m ≥ 0) :
     ∏ i ∈ Ico n₀ n, (1 + c i) ≤ exp (∑ i ∈ Ico n₀ n, c i) := by
   rw [exp_sum]
-  apply prod_le_prod
+  apply prod_le_prod₀
   · intro i hi
     simp only [mem_Ico] at hi
     linarith [hc i (by linarith)]

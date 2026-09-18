@@ -80,14 +80,15 @@ If `d ^ 3 ∣ M` (and `M > 0`), then `d ^ 3 ∣ rFullPart 3 M`.
 -/
 theorem pow_dvd_rFullPart (M d : ℕ) (hM : 0 < M) (hd : d ^ 3 ∣ M) :
     d ^ 3 ∣ rFullPart 3 M := by
-  rw [ ← Nat.factorization_le_iff_dvd ] at *;
-  · intro q; by_cases hq : Nat.Prime q <;> simp_all +decide ;
-    have := hd q; simp_all +decide [ rFullPart_factorization ] ;
-    grind;
-  · aesop;
-  · positivity;
-  · aesop;
-  · exact rFullPart_ne_zero 3 M
+  have hd0 : d ^ 3 ≠ 0 := fun h => hM.ne' (Nat.eq_zero_of_zero_dvd (h ▸ hd))
+  rw [← Nat.factorization_le_iff_dvd hd0 hM.ne'] at hd
+  rw [← Nat.factorization_le_iff_dvd hd0 (rFullPart_ne_zero 3 M), Finsupp.le_def]
+  intro q
+  have hq := Finsupp.le_def.mp hd q
+  rw [rFullPart_factorization]
+  rw [Nat.factorization_pow] at hq ⊢
+  simp only [Finsupp.smul_apply, smul_eq_mul] at hq ⊢
+  split_ifs with h <;> omega
 
 /-! ## The key algebraic identity -/
 

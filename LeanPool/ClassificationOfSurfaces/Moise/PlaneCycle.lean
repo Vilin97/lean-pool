@@ -34,7 +34,7 @@ theorem cellCarrier_pair_of_adj {u w : K.Vertex} (_ : K.vertexGraph.Adj u w) :
       (({u, w} : Finset K.Vertex) : Set K.Vertex) =
       {K.position u, K.position w} := by
     ext x
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
 
 /-- A graph walk traces a canonical geometric path through the corresponding straight edges. -/
@@ -349,7 +349,7 @@ private theorem cycle_edge_carrier (p : K.vertexGraph.Walk v v) (_ : p.IsCycle)
       (({p.getVert i.val, p.getVert (i + 1).val} : Finset K.Vertex) : Set K.Vertex) =
       {K.position (p.getVert i.val), K.position (p.getVert (i + 1).val)} := by
     ext x
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
 
 private theorem cycle_edge_inter_next (p : K.vertexGraph.Walk v v) (hp : p.IsCycle)

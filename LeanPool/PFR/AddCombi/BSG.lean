@@ -8,7 +8,7 @@ module
 
 public import LeanPool.PFR.AddCombi.Convolution.Finite.Defs
 public import Mathlib.Analysis.Real.Sqrt
-public import Mathlib.Data.Real.Star
+public import Mathlib.Basic.Real.Star
 import LeanPool.PFR.AddCombi.Convolution.Finite.Order
 import LeanPool.PFR.AddCombi.Mathlib.Algebra.Order.GroupWithZero.Indicator
 import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi

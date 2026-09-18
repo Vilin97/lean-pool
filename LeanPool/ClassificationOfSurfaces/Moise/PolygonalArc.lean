@@ -540,7 +540,7 @@ theorem exists_vertex_pair_segment_of_mem_cellCarrier {s : Finset K.Vertex}
         (({v, w} : Finset K.Vertex) : Set K.Vertex) =
         {K.position v, K.position w} := by
       ext y
-      simp [eq_comm]
+      simp
     rwa [himage, convexHull_pair] at hx
 
 /-- The graph formed by the one-dimensional faces of a plane complex. -/
@@ -1288,7 +1288,7 @@ theorem resolvedSegment_subset (i : Fin B.resolvedWalk.length) :
       {B.arrangementMesh.toPlaneComplex.position (p.getVert i.val),
         B.arrangementMesh.toPlaneComplex.position (p.getVert (i.val + 1))} := by
     ext x
-    simp [eq_comm]
+    simp
   rw [PlaneComplex.cellCarrier, himage, convexHull_pair] at hcarrier
   exact hcarrier
 
@@ -1306,7 +1306,7 @@ theorem resolvedSegment_eq_cellCarrier (i : Fin B.resolvedWalk.length) :
       {B.arrangementMesh.toPlaneComplex.position (B.resolvedWalk.getVert i.val),
         B.arrangementMesh.toPlaneComplex.position (B.resolvedWalk.getVert (i.val + 1))} := by
     ext x
-    simp [eq_comm]
+    simp
   rw [himage, convexHull_pair]
 
 theorem resolvedEdge_mem_simplexes (i : Fin B.resolvedWalk.length) :

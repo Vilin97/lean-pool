@@ -192,8 +192,7 @@ theorem LinearMap.IsBimoduleMap.add_smul (a b : R) (x : (IsBimoduleMaps R H₁ H
 theorem LinearMap.isBimoduleMap_iff {T : l(R,H₁ ⊗[R] H₂)} :
     T.IsBimoduleMap ↔ ∀ a b x y, T ((a * x) ⊗ₜ[R] (y * b)) = a •ₗ T (x ⊗ₜ[R] y) •ᵣ b :=
 ⟨fun h a b x y => by rw [← h]; rfl, fun h a b x =>
-  x.induction_on
-    (by simp only [map_zero, Bimodule.lsmul_zero, Bimodule.zero_rsmul])
+  x.inductionOn
     (fun _ _ => h _ _ _ _)
     (fun _ _ hc hd => by simp only [map_add, Bimodule.lsmul_add, Bimodule.add_rsmul, hc, hd])⟩
 
@@ -236,7 +235,7 @@ Submodule.coe_sum _ _ _
 
 theorem rmulMapLmul_apply_apply (x : H₁ ⊗[R] H₂) (a : H₁) (b : H₂) :
     rmulMapLmul x (a ⊗ₜ b) = a •ₗ x •ᵣ b :=
-x.induction_on (by simp only [map_zero]; rfl)
+x.inductionOn
   (fun α β => by
     simp_rw [rmulMapLmul_apply, TensorProduct.map_tmul, rmul_apply, lmul_apply]
     rfl)

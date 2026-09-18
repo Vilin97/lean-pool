@@ -60,8 +60,7 @@ noncomputable def stateLaw (γ β : ι → ℝ) (S : Finset ι) : Measure ℝ :=
 instance stateLaw_isProbability (γ β : ι → ℝ) (S : Finset ι) :
     IsProbabilityMeasure (stateLaw γ β S) := by
   unfold stateLaw
-  exact Measure.isProbabilityMeasure_map
-    (measurable_stateSignedSum γ β S).aemeasurable
+  infer_instance
 
 /-- The original event in the definition of `K` is exactly nonnegativity
 of the signed sum. -/

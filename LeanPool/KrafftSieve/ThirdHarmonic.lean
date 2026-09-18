@@ -589,7 +589,7 @@ private lemma dirac_comb_zero_split_sum (n : ℕ) (i : Fin (w n)) (h : ZMod (q n
     · intro a₁ a₂ h
       have := Fact.mk (show 1 < q n from ?_)
       · exact ZMod.val_injective _ h
-      refine lt_of_lt_of_le ?_ (Finset.prod_le_prod' fun x hx =>
+      refine lt_of_lt_of_le ?_ (Finset.prod_le_prod fun x hx =>
         Nat.Prime.two_le <| Finset.mem_filter.mp hx |>.2.2)
       norm_num [q]
       exact Finset.Nonempty.ne_empty ⟨5, Finset.mem_filter.mpr ⟨

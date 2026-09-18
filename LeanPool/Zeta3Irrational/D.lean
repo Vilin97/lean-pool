@@ -296,7 +296,7 @@ theorem d_le_pow_counting (n : ℕ) : d (Finset.Icc 1 n) ≤ n ^ (n.primeCountin
     rw [d_eq_prod_pow n]
     calc
     _ ≤ ∏ _ ∈ ((n + 1).primesBelow), n := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · simp_all
       · intro p hp
         rw [Nat.mem_primesBelow] at hp

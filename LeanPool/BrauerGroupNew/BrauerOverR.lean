@@ -53,17 +53,9 @@ abbrev toEndMap : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ] →ₗ[ℝ] Module.End ℝ (ℍ[ℝ
 
 lemma toEndMap.map_mul (x1 x2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) : toEndMap (x1 * x2) =
     toEndMap x1 * toEndMap x2 := by
-  induction x1 using TensorProduct.induction_on with
-  | zero =>
-    have e : (0 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * x2 = 0 := by
-      exact (inferInstance : MulZeroClass (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).zero_mul _
-    rw [e, map_zero, zero_mul]
+  induction x1 using TensorProduct.inductionOn with
   | tmul q1 q2 =>
-    induction x2 using TensorProduct.induction_on with
-    | zero =>
-      have e : (q1 ⊗ₜ[ℝ] q2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * 0 = 0 := by
-        exact (inferInstance : MulZeroClass (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).mul_zero _
-      rw [e, map_zero, mul_zero]
+    induction x2 using TensorProduct.inductionOn with
     | tmul q3 q4 => ext : 1; simp [← _root_.mul_assoc]
     | add x y h1 h2 =>
       have e : (q1 ⊗ₜ[ℝ] q2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * (x + y) =
@@ -97,24 +89,10 @@ instance : Algebra.IsCentral ℝ ℍ[ℝ] := ⟨fun q hq ↦ by
   obtain ⟨_, _, eq13, eq14⟩ := eq1
   obtain ⟨_, eq22, _, eq24⟩ := eq2
   obtain ⟨_, eq32, eq33, _⟩ := eq3
-  have hI : q.imI = 0 := by
-    have hleft := Quaternion.imJ_mul (⟨0, 0, 0, 1⟩ : ℍ[ℝ]) q
-    have hright := Quaternion.imJ_mul q (⟨0, 0, 0, 1⟩ : ℍ[ℝ])
-    norm_num at hleft hright
-    have hx : q.imI = -q.imI := hleft.symm.trans (eq33.trans hright)
-    linarith
-  have hJ : q.imJ = 0 := by
-    have hleft := Quaternion.imK_mul (⟨0, 1, 0, 0⟩ : ℍ[ℝ]) q
-    have hright := Quaternion.imK_mul q (⟨0, 1, 0, 0⟩ : ℍ[ℝ])
-    norm_num at hleft hright
-    have hx : q.imJ = -q.imJ := hleft.symm.trans (eq14.trans hright)
-    linarith
-  have hK : q.imK = 0 := by
-    have hleft := Quaternion.imJ_mul (⟨0, 1, 0, 0⟩ : ℍ[ℝ]) q
-    have hright := Quaternion.imJ_mul q (⟨0, 1, 0, 0⟩ : ℍ[ℝ])
-    norm_num at hleft hright
-    have hx : -q.imK = q.imK := hleft.symm.trans (eq13.trans hright)
-    linarith
+  norm_num at eq13 eq14 eq33
+  have hI : q.imI = 0 := by linarith
+  have hJ : q.imJ = 0 := by linarith
+  have hK : q.imK = 0 := by linarith
   change (⟨q.re, 0, 0, 0⟩ : ℍ[ℝ]) = q
   ext <;> simp [hI, hJ, hK]⟩
 

@@ -39,15 +39,34 @@ theorem ramificationIdx_algebra_tower_of_eq [IsDedekindDomain S] [IsDedekindDoma
     ramificationIdx' p P * ramificationIdx' P Q :=
   ramificationIdx'_algebra_tower hg0 hfg (map_le_iff_le_comap.mpr (le_of_eq hg))
 
+/-- The quotient-dimension tower law retains the former inertia-degree formula even when the
+ideal upstairs is not prime, where the residue-field inertia degree is zero. -/
+theorem quotient_finrank_algebra_tower_of_eq {p : Ideal R} {P : Ideal S} {I : Ideal T}
+    [IsMaximal p] [IsMaximal P] (hp : p = comap (algebraMap R S) P)
+    (hP : P = comap (algebraMap S T) I) :
+    let : P.LiesOver p := ⟨hp⟩
+    let : I.LiesOver P := ⟨hP⟩
+    let : I.LiesOver p := LiesOver.trans I P p
+    Module.finrank (R ⧸ p) (T ⧸ I) =
+      Module.finrank (R ⧸ p) (S ⧸ P) * Module.finrank (S ⧸ P) (T ⧸ I) := by
+  let : P.LiesOver p := ⟨hp⟩
+  let : I.LiesOver P := ⟨hP⟩
+  let : I.LiesOver p := LiesOver.trans I P p
+  let : IsScalarTower (R ⧸ p) (S ⧸ P) (T ⧸ I) :=
+    IsScalarTower.of_algebraMap_eq fun x => Quot.inductionOn x fun r => by
+      change Ideal.Quotient.mk I (algebraMap R T r) =
+        Ideal.Quotient.mk I (algebraMap S T (algebraMap R S r))
+      rw [IsScalarTower.algebraMap_apply R S T]
+  exact (Module.finrank_mul_finrank (R ⧸ p) (S ⧸ P) (T ⧸ I)).symm
+
+variable (R) in
 /-- Multiplicativity of the inertia degree in a tower of Dedekind domains, stated with the
 hypotheses used by the Hilbert ramification development. -/
-theorem inertiaDeg_algebra_tower_of_eq {p : Ideal R} {P : Ideal S} {I : Ideal T} [IsMaximal p]
-    [IsMaximal P] (hp : p = comap (algebraMap R S) P)
-    (hP : P = comap (algebraMap S T) I) : inertiaDeg' p I =
-    inertiaDeg' p P * inertiaDeg' P I :=
-  letI : P.LiesOver p := ⟨hp⟩
+theorem inertiaDeg_algebra_tower_of_eq {P : Ideal S} {I : Ideal T}
+    (hP : P = comap (algebraMap S T) I) : I.inertiaDeg R =
+    P.inertiaDeg R * I.inertiaDeg S :=
   letI : I.LiesOver P := ⟨hP⟩
-  inertiaDeg'_algebra_tower p P I
+  inertiaDeg_tower P I
 
 /-- The decomposition of a prime in a tower is `Nonsplit` when there is a unique prime above. -/
 class Nonsplit {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S) (p : Ideal R) : Prop where

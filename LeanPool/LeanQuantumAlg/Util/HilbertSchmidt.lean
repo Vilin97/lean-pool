@@ -7,7 +7,7 @@ Authors: QudeLeap Team
 module
 
 public import Mathlib.LinearAlgebra.Matrix.Kronecker
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 
 /-!
 # The Hilbert–Schmidt inner product on matrices

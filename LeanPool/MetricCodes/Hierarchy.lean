@@ -3005,9 +3005,7 @@ theorem tendsto_sphericalEntropy_sub_of_ratio
         (a⁻¹ + f a / a) / (a⁻¹ + 1)) atTop (𝓝 c) := by
     convert (hinv.add hratio).div (hinv.add_const 1)
       (by norm_num : (0 : ℝ) + 1 ≠ 0) using 1
-    · ext a
-      rfl
-    · norm_num
+    norm_num
   have hshifted :
       Tendsto (fun a : ℝ => (1 + f a) / (1 + a))
         atTop (𝓝 c) := by
@@ -3693,8 +3691,8 @@ theorem tendsto_spectralAtom_atTop_half :
       Tendsto (fun u : ℝ =>
         Real.sqrt (1 + u⁻¹) / (u⁻¹ + 2)) atTop (nhds ((1 : ℝ) / 2)) := by
     convert ((tendsto_const_nhds (x := (1 : ℝ))).add hinv).sqrt.div
-      (hinv.add_const 2) (by norm_num : (0 : ℝ) + 2 ≠ 0) using 1 <;>
-      norm_num; rfl
+      (hinv.add_const 2) (by norm_num : (0 : ℝ) + 2 ≠ 0) using 1
+    norm_num
   apply hnormal.congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with u hu
   unfold spectralAtom
@@ -3730,8 +3728,8 @@ theorem tendsto_retainedQuadraticResidueFactor_atTop
         atTop (nhds (c ^ 2)) := by
     convert ((hq.const_mul (z * (1 + z))).sub_const (c ^ 2)).div
       ((hq.const_mul (z * (1 + z))).sub_const 1)
-      (by norm_num : ((z * (1 + z)) * 0 - 1 : ℝ) ≠ 0) using 1 <;>
-      norm_num; rfl
+      (by norm_num : ((z * (1 + z)) * 0 - 1 : ℝ) ≠ 0) using 1
+    norm_num
   apply hnormal.congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with u hu
   have hquad : (u * (1 + u)) ≠ 0 := by
@@ -4440,9 +4438,7 @@ theorem tendsto_shifted_degree_ratio_of_tendsto_ratio
         ((u n)⁻¹ + 1)) atTop (nhds d) := by
     convert (hinv.add hratio).div (hinv.add_const 1)
       (by norm_num : (0 : ℝ) + 1 ≠ 0) using 1
-    · ext n
-      rfl
-    · norm_num
+    norm_num
   apply hnormalized.congr'
   filter_upwards [hu.eventually (eventually_gt_atTop (0 : ℝ))]
     with n hn
@@ -4516,8 +4512,6 @@ theorem paired_stabilizer_tendsto_atTop_of_ambient
       (fun n => a (φ n) i.castSucc / D - 1) atTop atTop := by
     convert tendsto_atTop_add_const_right atTop (-1)
       (ha.atTop_div_const hD) using 1
-    ext n
-    ring
   exact tendsto_atTop_mono' atTop
     (Filter.Eventually.of_forall hbound) hleft
 
@@ -4920,7 +4914,7 @@ theorem exists_compactified_residual_of_closure_sequence
     exact (hescape i (hprefix i (Finset.mem_filter.mp hi).2).1).1
   have hcle : c ≤ 1 := by
     dsimp [c]
-    apply Finset.prod_le_one
+    apply Finset.prod_le_one₀
     · intro i _
       exact (hd i).1
     · intro i _
@@ -6986,9 +6980,7 @@ theorem tendsto_sphericalEntropy_sub_of_sequential_ratio
       atTop (𝓝 c) := by
     convert (hinv.add hratio).div (hinv.add_const 1)
       (by norm_num : (0 : ℝ) + 1 ≠ 0) using 1
-    · ext n
-      rfl
-    · norm_num
+    norm_num
   have hshifted : Tendsto
       (fun n => (1 + b n) / (1 + a n)) atTop (𝓝 c) := by
     apply hnormalized.congr'

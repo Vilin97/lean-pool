@@ -48,7 +48,11 @@ module
 public import LeanPool.MatchingLogic.Sorted
 public import LeanPool.MatchingLogic.ProofSystem  -- for PForm and PForm.Taut
 import LeanPool.MatchingLogic.EntryPoints
-import Mathlib.Data.Set.Lattice
+import Mathlib.Data.Set.Lattice.Bounded
+import Mathlib.Data.Set.Lattice.Disjoint
+import Mathlib.Data.Set.Lattice.Image
+import Mathlib.Data.Set.Lattice.Indexed
+import Mathlib.Data.Set.Lattice.Order
 
 /-!
 # MatchingLogic.SortedProof

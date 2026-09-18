@@ -323,7 +323,7 @@ theorem summable_latticeGaussian [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   have hclosed : IsClosed (L : Set E) :=
     by
       change IsClosed (L.toAddSubgroup : Set E)
-      exact AddSubgroup.isClosed_of_discrete
+      exact AddSubgroup.isClosed_of_discreteTopology
   have htend :
       Tendsto (norm ∘ ((↑) : L → E)) cofinite atTop :=
     tendsto_norm_comp_cofinite_atTop_of_isClosedEmbedding

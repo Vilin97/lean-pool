@@ -418,8 +418,7 @@ theorem Finset.abcExceptionsBelow_subset_union_dyadicPoints (ε : ℝ) (X : ℕ)
     rw [← Real.rpow_le_rpow_left_iff (show 1 < (2 : ℝ) by norm_num)]
     norm_cast at this ⊢
     convert this using 2
-    · rfl
-    · ring_nf
+    ring
   have {a : ℕ} : (2 ^ n : ℝ) ^ (Nat.log 2 (radical a) / n : ℝ) =
       2 ^ Nat.log 2 (radical a) := by
     rw [← Real.rpow_natCast_mul (by norm_num)]
@@ -853,7 +852,7 @@ private theorem prod_y_large_le_X_pow : ∏ m ∈ Finset.Ioc d n, y m ≤ (X : �
     _ ≤ (∏ m ∈ Finset.Ioc d n, y m ^ m : ℝ) ^ (d⁻¹ : ℝ) := by
       rw [← Real.finsetProd_rpow]
       · push_cast
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intros; positivity
         simp only [Finset.mem_Ioc, and_imp]
         intro i hMi hin
@@ -870,7 +869,7 @@ private theorem prod_y_large_le_X_pow : ∏ m ∈ Finset.Ioc d n, y m ≤ (X : �
       gcongr
       norm_cast
       conv => rhs; rw [← prod_y_pow_eq_n]
-      apply Finset.prod_le_prod_of_subset_of_one_le'
+      apply Finset.prod_le_prod_of_subset_of_one_le
       · simp
       simp only [Finset.mem_union, Finset.mem_Icc, y]
       intro i hi _
@@ -886,7 +885,7 @@ private theorem c_le_X_pow : c ≤ (X : ℝ) ^ ε := calc
   c ≤ ∏ m ∈ Finset.Ioc d n, (y m : ℝ) ^ K := by
     simp_rw [c]
     push_cast
-    apply Finset.prod_le_prod
+    apply Finset.prod_le_prod₀
     · intros; positivity
     simp only [Finset.mem_Ioc, and_imp]
     intro x hMx hxn
@@ -1062,7 +1061,7 @@ private theorem X_pow_mul_prod_le_radical : (X : ℝ)^(-ε) * ∏ j, x j ≤ (ra
         Fin.prod_univ_eq_prod_range (fun j ↦ if j + 1 ≠ K then y (j + 1) else 1) d]
     _ ≤ ∏ m ∈ Finset.range d, y (m+1) := by
       norm_cast
-      apply Finset.prod_le_prod_of_subset_of_one_le'
+      apply Finset.prod_le_prod_of_subset_of_one_le
       · exact Finset.filter_subset (fun m ↦ m + 1 ≠ K) (Finset.range d)
       · intros
         apply hy_pos
@@ -1076,7 +1075,7 @@ private theorem X_pow_mul_prod_le_radical : (X : ℝ)^(-ε) * ∏ j, x j ≤ (ra
       simp [← this, Finset.prod_map]
     _ ≤ ∏ m ∈ Finset.Icc 1 d ∪ Finset.Ioc d n, y m := by
       norm_cast
-      apply Finset.prod_le_prod_of_subset_of_one_le'
+      apply Finset.prod_le_prod_of_subset_of_one_le
       · simp_all
       · simp only [Finset.mem_union, Finset.mem_Icc, not_and]
         intro i _ _
@@ -1322,7 +1321,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
       ring
   have prod_log_pow_le_prod_pow {u : Fin d → ℕ} (hu : ∀ i, 0 < u i):
       ∏ i, (2 ^ Nat.log 2 (u i)) ^ (i.val + 1) ≤ ∏ i, u i ^ (i.val + 1) := by
-    apply Finset.prod_le_prod
+    apply Finset.prod_le_prod₀
     · simp
     simp only [Finset.mem_univ, forall_const]
     intro i
@@ -1376,7 +1375,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
         _ ≤ 2 * (∏ i, (2 ^ (Nat.log 2 (w i)+1))^(i.val+1) : ℝ):= by
           norm_cast
           gcongr _ * ?_
-          apply Finset.prod_le_prod
+          apply Finset.prod_le_prod₀
           · simp
           intro i _
           gcongr

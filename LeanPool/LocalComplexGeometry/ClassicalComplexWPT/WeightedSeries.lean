@@ -283,7 +283,7 @@ lemma norm_monomial_le_one (y : S → ℂ) (hy : ∀ i, ‖y i‖ ≤ 1) (a : S 
   change ‖∏ i ∈ a.support, y i ^ a i‖ ≤ 1
   rw [norm_prod]
   simp only [norm_pow]
-  apply Finset.prod_le_one
+  apply Finset.prod_le_one₀
   · intro i hi
     exact pow_nonneg (norm_nonneg _) _
   · intro i hi

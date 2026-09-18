@@ -5,7 +5,7 @@ Authors: Palalansoukî
 -/
 module
 
-public import Mathlib.Data.Finite.Sum
+public import Mathlib.Basic.Finite.Sum
 
 public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Tree

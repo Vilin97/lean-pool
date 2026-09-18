@@ -368,12 +368,11 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
     exact ⟨f, 1, by simp_all,
       by rw [map_one, mul_one]⟩
   have : WfDvdMonoid S_sub := by
-    constructor
     apply Subrelation.wf (r := InvImage DvdNotUnit (fun (a : S_sub) => (a : T)))
     · intro a b ⟨ha_ne, c, hc_nu, hab_eq⟩
       refine ⟨fun h => ha_ne (Subtype.ext h), c.val, ?_, congrArg Subtype.val hab_eq⟩
       exact fun hcu_T => hc_nu (hinv c (IsLocalRing.notMem_maximalIdeal.mpr hcu_T))
-    · exact InvImage.wf _ IsWellFounded.wf
+    · exact InvImage.wf _ wellFounded_dvdNotUnit
   apply UniqueFactorizationMonoid.mk (fun {a} => ⟨fun ha_irr => ?_, Prime.irreducible⟩)
   have ha_M : (a : T) ∈ IsLocalRing.maximalIdeal T := by
     by_contra h

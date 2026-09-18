@@ -7,7 +7,7 @@ module
 
 public import Aesop.BuiltinRules
 public import Mathlib.Data.Set.Operations
-public import Mathlib.Logic.Unique
+public import Mathlib.Basic.Unique
 import Mathlib.Data.Finset.Attr
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.Measurability.Init

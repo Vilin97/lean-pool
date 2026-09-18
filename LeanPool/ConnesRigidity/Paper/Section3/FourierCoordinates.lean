@@ -91,8 +91,7 @@ theorem characterCoordinates_measurePreserving :
       characterCoordinatesHomeomorph.symm.continuous
   have _ : IsProbabilityMeasure
       (Measure.map characterCoordinatesMeasurableEquiv μ) :=
-    μ.isProbabilityMeasure_map
-      characterCoordinatesHomeomorph.continuous.measurable.aemeasurable
+    inferInstance
   refine ⟨characterCoordinatesMeasurableEquiv.measurable, ?_⟩
   change Measure.map characterCoordinatesMeasurableEquiv μ = coordinatesHaar
   unfold coordinatesHaar

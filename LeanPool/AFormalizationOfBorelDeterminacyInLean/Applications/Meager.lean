@@ -284,7 +284,7 @@ lemma forces_trans (hU : U ⊩ V) (h : V ⊩ A) : U ⊩ A := by
   exact (hU.union h).mono diff_subset_union
 lemma forces_congr {U : tX.Opens} (h : A =ᵇ B) : U ⊩ A ↔ U ⊩ B := by
   simp_rw [forces_iff_isMeagre]
-  exact isMeagre_congr (Filter.EventuallyEq.rfl.diff h)
+  exact isMeagre_congr (Filter.EventuallyEqSet.rfl.diff h)
 private lemma forces_disjoint_iUnion_left {I} (U : I → tX.Opens)
   (hd : Pairwise (Function.onFun Disjoint (fun i ↦ (U i : Set X)))) (h : ∀ i, U i ⊩ A) :
   ⨆ i, U i ⊩ A := by

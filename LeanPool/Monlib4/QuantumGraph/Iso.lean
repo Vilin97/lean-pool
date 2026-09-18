@@ -86,7 +86,7 @@ private theorem commutes_with_mul''_adjoint [hφ : φ.IsFaithfulPosMap]
     have :=
       (List.TFAE.out
             (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f)
-            0 1).mp
+            1 2).mp
         hf
     simp_rw [this, StarAlgEquiv.toLinearMap_apply, _root_.map_mul, implies_true])
 
@@ -108,7 +108,7 @@ theorem innerAut_adjoint_eq_iff [hφ : φ.IsFaithfulPosMap]
     have := List.TFAE.out
         (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ hφ
           (innerAutStarAlg U))
-        1 0
+        2 1
     rw [hf, hf', this,
       innerAutStarAlg_apply, unitaryGroup.injective_hMul U, Matrix.mul_assoc, ←
       unitaryGroup.star_coe_eq_coe_star, UnitaryGroup.star_mul_self, Matrix.mul_one]
@@ -193,7 +193,7 @@ theorem unitary_commutes_with_hφ_matrix_iff_isIsometry (hφ : φ.IsFaithfulPosM
     have := List.TFAE.out
         (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _
           (innerAutStarAlg U))
-        1 4
+        2 5
     change LinearMap.adjoint (innerAutStarAlg U).toLinearMap =
         (innerAutStarAlg U).symm.toLinearMap ↔
       StarAlgEquiv.IsIsometry (innerAutStarAlg U)
@@ -209,7 +209,7 @@ theorem Qam.symm_apply_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap]
       f.toLinearMap ∘ₗ (symmMap ℂ (Matrix n n ℂ) _ A) ∘ₗ f.symm.toLinearMap) :=
   withMatrixQuantum[φ] (by
     have := List.TFAE.out
-      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 1
+      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 5 2
     rw [StarAlgEquiv.IsIsometry, isometry_iff_norm, this] at hf
     change LinearMap.adjoint f.toAlgEquiv.toLinearMap = f.symm.toAlgEquiv.toLinearMap at hf
     change LinearMap.adjoint
@@ -251,7 +251,7 @@ theorem StarAlgEquiv.IsIsometry.commutes_with_mul'_adjoint
       LinearMap.adjoint (LinearMap.mul' ℂ (Matrix n n ℂ)) ∘ₗ f.toLinearMap) :=
   withMatrixQuantum[φ] (by
     have := List.TFAE.out
-      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 1
+      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 5 2
     rw [StarAlgEquiv.IsIsometry, isometry_iff_norm, this] at hf
     rw [← LinearMap.adjoint_adjoint (f.toLinearMap ⊗ₘ f.toLinearMap), ←
       LinearMap.adjoint_comp, TensorProduct.map_adjoint, hf,
@@ -272,11 +272,11 @@ theorem Qam.reflIdempotent_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap]
       simp_rw [StarAlgEquiv.IsIsometry, isometry_iff_norm] at hf ⊢
       have := List.TFAE.out
           (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f.symm)
-          4 1
+          5 2
       rw [this]
       have this' := List.TFAE.out
           (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f)
-          4 1
+          5 2
       rw [this'] at hf
       rw [StarAlgEquiv.symm_symm, ← hf, LinearMap.adjoint_adjoint]
     change
@@ -319,7 +319,7 @@ theorem Qam.iso_iff [hφ : φ.IsFaithfulPosMap] {A B : l((Matrix n n ℂ))} :
       List.TFAE.out
         (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _
           (innerAutStarAlg U))
-        1 0
+        2 1
     simp_rw [hf, ← innerAutStarAlg_symm_eq_star, this]
     constructor
     · rintro ⟨f, hf⟩

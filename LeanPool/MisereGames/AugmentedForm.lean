@@ -6,8 +6,8 @@ Authors: Alfie Davies, Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.GameForm
-public import Mathlib.Data.Countable.Small
-import Mathlib.Logic.UnivLE
+public import Mathlib.Basic.Countable.Small
+import Mathlib.Basic.UnivLE
 import Mathlib.Tactic.Bound.Init
 
 /-!

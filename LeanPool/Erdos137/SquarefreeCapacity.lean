@@ -104,7 +104,7 @@ lemma sqfreeBlockProduct_ne_zero {k n : ℕ} (hn : 1 ≤ n) : SqfreeBlockProduct
   intro i _; omega
 
 lemma smoothCapacity_pos (k : ℕ) : 1 ≤ SmoothCapacity k :=
-  Finset.one_le_prod' fun _p hp => Nat.one_le_pow _ _ (Nat.prime_of_mem_primesBelow hp).pos
+  Finset.one_le_prod fun _p hp => Nat.one_le_pow _ _ (Nat.prime_of_mem_primesBelow hp).pos
 
 lemma smoothCapacity_ne_zero (k : ℕ) : SmoothCapacity k ≠ 0 :=
   Nat.one_le_iff_ne_zero.mp (smoothCapacity_pos k)
@@ -273,7 +273,7 @@ lemma sqfreeBlockProduct_ge_pow {k n : ℕ} :
   calc n ^ (SqfreeBlockIndices k n).card
         = ∏ _i ∈ SqfreeBlockIndices k n, n := by rw [Finset.prod_const]
     _ ≤ ∏ i ∈ SqfreeBlockIndices k n, (n + i) :=
-        Finset.prod_le_prod' (fun i _ => Nat.le_add_right n i)
+        Finset.prod_le_prod (fun i _ => Nat.le_add_right n i)
 
 /-- Counting form of the squarefree-capacity obstruction. -/
 theorem powerful_sqfree_count_capacity_bound {k n : ℕ}

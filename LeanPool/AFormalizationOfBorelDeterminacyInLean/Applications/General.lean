@@ -31,11 +31,11 @@ namespace Filter
 variable {α β γ : Type*} {s t : Set α} {l : Filter α}
 lemma mem_congr (h : s =ᶠ[l] t) : s ∈ l ↔ t ∈ l := by
   apply congr_sets
-  rwa [eventuallyEq_set, eventually_iff] at h
+  rwa [eventuallyEqSet_iff, eventually_iff] at h
 lemma eventuallyEq_set' {α} {s t : Set α} {l : Filter α} :
-  l.EventuallyEq s t ↔ (s \ t)ᶜ ∈ l ∧ (t \ s)ᶜ ∈ l := by
+  l.EventuallyEqSet s t ↔ (s \ t)ᶜ ∈ l ∧ (t \ s)ᶜ ∈ l := by
   constructor <;> intro h
-  · simp [Filter.mem_congr (h.diff (Filter.EventuallyEq.refl _ t)).compl,
-      Filter.mem_congr ((Filter.EventuallyEq.refl _ t).diff h).compl]
-  · rw [Filter.eventuallyEq_set]; filter_upwards [h.1, h.2]; tauto_set
+  · simp [Filter.mem_congr (h.diff (Filter.EventuallyEqSet.refl _ t)).compl,
+      Filter.mem_congr ((Filter.EventuallyEqSet.refl _ t).diff h).compl]
+  · rw [Filter.eventuallyEqSet_iff]; filter_upwards [h.1, h.2]; tauto_set
 end Filter

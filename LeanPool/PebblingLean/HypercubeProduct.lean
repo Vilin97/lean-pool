@@ -9,7 +9,7 @@ public import LeanPool.PebblingLean.GraphIso
 public import LeanPool.PebblingLean.Product
 public import LeanPool.PebblingLean.UpperBound
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Finite.Prod
+import Mathlib.Basic.Finite.Prod
 import Mathlib.Tactic.Bound.Init
 
 /-!

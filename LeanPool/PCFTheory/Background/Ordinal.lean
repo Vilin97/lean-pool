@@ -92,14 +92,14 @@ all predecessors `o' : Iio o`, we get a function `(o : Iio l) → C o`. -/
 @[elab_as_elim]
 def boundedRec {l : Ordinal} {C : Iio l → Sort*}
     (H : (o : Iio l) → ((o' : Iio o) → C o') → C o) (o : Iio l) : C o :=
-  lt_wf.fix (C := fun p ↦ (h : p < l) → C ⟨p, h⟩)
+  WellFoundedLT.fix (motive := fun p ↦ (h : p < l) → C ⟨p, h⟩)
     (fun o h h' ↦ H ⟨o, h'⟩ fun o' ↦ h o'.1 o'.2 (o'.2.trans h')) o o.2
 
 theorem boundedRec_eq {l} {C} (H o) :
     @boundedRec l C H o = H o (fun o' ↦ @boundedRec l C H o') := by
   rcases o with ⟨o, ho⟩
   unfold boundedRec
-  rw [WellFounded.fix_eq]
+  rw [WellFoundedLT.fix_eq]
   rfl
 
 /-- Bounded version of `limitRecOn`: an `Iio l` version that mirrors the deprecated

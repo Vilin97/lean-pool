@@ -160,8 +160,7 @@ instance instPreorderUInt64LeanPool : Preorder UInt64 where
     · simp
 
 
-instance : WellFoundedLT UInt64 where
-  wf := by
-    apply Subrelation.wf (r := InvImage (· < ·) UInt64.toNat)
-      (fun h => (UInt64.lt_iff_toNat_lt_toNat).mp h)
-    exact InvImage.wf _ wellFounded_lt
+instance : WellFoundedLT UInt64 := by
+  apply Subrelation.wf (r := InvImage (· < ·) UInt64.toNat)
+    (fun h => UInt64.lt_iff_toNat_lt_toNat.mp h)
+  exact InvImage.wf _ wellFounded_lt

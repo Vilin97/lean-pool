@@ -391,7 +391,7 @@ def Prod.toLieSemidirectProduct : (L × J) ≃ₗ⁅K⁆ L ⋉[(0 : L →ₗ⁅K
     rintro x y
     change (⁅x.1, y.1⁆, ⁅x.2, y.2⁆) = (⁅x.1, y.1⁆, _)
     simp only [LinearEquiv.refl_toLinearMap, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom,
-      LinearMap.id_coe, id_eq, LieHom.coe_zero, Pi.zero_apply, LieDerivation.coe_zero, sub_self,
+      LinearMap.id_coe, id_eq, FunLike.coe_zero, Pi.zero_apply, LieDerivation.coe_zero, sub_self,
       zero_add]
 }
 

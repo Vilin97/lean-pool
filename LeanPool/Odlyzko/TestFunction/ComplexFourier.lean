@@ -306,10 +306,9 @@ theorem cosineTransform_tartarTestFunction (t : ℝ) :
         (2 * Real.pi)⁻¹ * Poitou.cosineTransform Tartar.testFunction t := by
     rw [Poitou.cosineTransform]
     convert hchange using 1
-    · apply integral_congr_ae
-      filter_upwards [] with v
-      grind
-    · simp
+    apply integral_congr_ae
+    filter_upwards [] with v
+    grind
   have hre' :
       (16 / 9 : ℝ) *
           (∫ v : ℝ, Tartar.testFunction (2 * Real.pi * v) *

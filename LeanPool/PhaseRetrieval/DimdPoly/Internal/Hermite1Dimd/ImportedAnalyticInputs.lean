@@ -153,7 +153,6 @@ private lemma integrable_oneDimPhi_cross_gaussian
       funext z
       simp [Algebra.smul_def, mul_left_comm, mul_comm]
     convert hsmul.const_mul (1 / Real.pi) using 1
-    case e'_5 => rfl
     funext z
     have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by positivity
     simp only [gaussianDensity, pow_one, one_div, univ_unique, Fin.default_eq_zero, Fin.isValue,
@@ -1149,7 +1148,6 @@ theorem tensorGaussianFactorization
         (gaussianMeasure d) := by
     rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
     · convert hprod_volume using 1
-      case e'_5 => rfl
       funext z
       exact density_smul_prod_identity d F G z
     · exact measurable_ofReal_gaussianDensity d

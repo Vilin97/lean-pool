@@ -6,7 +6,7 @@ Authors: Rodrigo Gutierrez, Yves Jäckle
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Clique
-public import Mathlib.Data.NNReal.Defs
+public import Mathlib.Basic.NNReal.Defs
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
@@ -193,6 +193,7 @@ def Improve (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) : FunToM
         rw [Finset.mem_filter] at h; exact ⟨h.2.2, h.2.1⟩
     rw[filter_eq_S, ←h_sum, remember]
 
+omit [DecidableEq α] in
 /--
 Helper lemma: Given that an edge e is part of gain's incidence set, this lemma proves that gain is
 in e.
@@ -202,6 +203,7 @@ lemma helper_gain_mem {gain : α} (e : Sym2 α) (he : e ∈ G.incidenceFinset ga
   rw [mem_incidenceFinset] at he
   exact (edge_mem_incidenceSet_iff (e := ⟨e, G.incidenceSet_subset _ he⟩)).mp he
 
+omit [DecidableEq α] in
 /--
 Helper lemma : Calculates the value (`vp`) of an edge e, where gain is one of the vertices in e, as
 the product of gain and the other vertex v, in e.
@@ -223,6 +225,7 @@ lemma gain_edge_decomp (W : FunToMax G) (gain : α)
     ) _ s(x,y) help
   rw [Quot.liftOn_mk]
 
+omit [DecidableEq α] in
 /-- Helper lemma : Shows that the sum of values of the edges incident to gain is equal to
 the product of the weight of gain and the sum of the other vertices incident to gain. -/
 lemma gain_edge_sum (W : FunToMax G) (gain : α) :
@@ -232,6 +235,7 @@ lemma gain_edge_sum (W : FunToMax G) (gain : α) :
   rw [mul_sum, ← sum_attach]
   exact sum_congr rfl fun x _ => gain_edge_decomp _ _ gain _ x.prop
 
+omit [DecidableEq α] in
 /-- Helper lemma : Shows that the sum of values of the edges incident to loose is equal to
 the product of the weight of loose and the sum of the other vertices incident to loose. -/
 lemma loose_edge_sum (W : FunToMax G) (loose : α) :
@@ -248,6 +252,7 @@ set corresponding to them.
 lemma edge_mem_iff {v w : α} : G.Adj v w ↔ ∃ e ∈ G.edgeSet, e = s(v, w) := by
   simp_all
 
+omit [DecidableEq α] in
 /--
 Helper lemma : States that the incidence set of any vertex is a subset of the entire edge set.
 -/
@@ -280,6 +285,7 @@ lemma Improve_loose_weight_zero (W : FunToMax G) (loose gain : α) (h_neq : gain
   (Improve G W loose gain h_neq).w loose = 0 := by
   dsimp [Improve]; simp only [↓reduceIte]
 
+omit [DecidableEq α] in
 /--
 Helper lemma: Shows that the incidence sets of gain and loose are disjoint (Assuming they are not
 adjacent).
@@ -287,6 +293,7 @@ adjacent).
 lemma Improve_gain_loose_disjoint {loose gain : α} (h_neq : gain ≠ loose)
     (h_adj : ¬ G.Adj gain loose) :
   Disjoint (G.incidenceFinset gain) (G.incidenceFinset loose) := by
+    classical
     simp_rw [disjoint_iff_inter_eq_empty, eq_empty_iff_forall_notMem, mem_inter]
     rintro x ⟨xg,xl⟩
     rw [incidenceFinset_eq_filter, mem_filter, mem_edgeFinset] at *
@@ -808,6 +815,7 @@ noncomputable
 def supEdgeFinset (W : FunToMax G) :=
   G.edgeFinset.filter (inSupport G W)
 
+omit [DecidableEq α] in
 /-- Helper lemma:  Explicitly characterizes the definition of supIncidenceFinset:
 - edges are incident to the vertex
 - edges are supported -/
@@ -824,6 +832,7 @@ lemma mem_supEdgeFinset {W : FunToMax G} {e : Sym2 α} :
   e ∈ supEdgeFinset G W ↔ e ∈ (G.edgeFinset) ∧ inSupport G W e := by
   dsimp [supEdgeFinset]; rw [mem_filter]
 
+omit [DecidableEq α] in
 /--
 Helper lemma: Shows that any edge part of an supported incident set of a vertex, is also part of
 whole incident set of v.

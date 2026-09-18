@@ -429,7 +429,7 @@ lemma norm_sq_smoothL2_sub_extendByZeroL2_le_integral_norm_sq_translateL2_sub_ex
         MeasureTheory.AEStronglyMeasurable f
           (Measure.map Prod.fst
             ((volume : Measure E).prod μ)) := by
-      simpa [Measure.map_fst_prod] using hf_mem.1
+      simpa [Measure.map_fst_prod] using hf_mem.aestronglyMeasurable
     exact MeasureTheory.AEStronglyMeasurable.comp_measurable
       (μ := (volume : Measure E).prod μ) (f := Prod.fst)
       (g := f) hf_map measurable_fst

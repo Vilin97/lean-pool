@@ -12,7 +12,7 @@ public import Mathlib.Data.Rat.Cast.Order
 public import Mathlib.Algebra.Order.Archimedean.Basic
 
 public import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Data.Sign.Defs
+public import Mathlib.Basic.Sign.Defs
 
 public import LeanPool.ComputableReal.AuxLemmas
 public import Mathlib.Tactic.Ring.RingNF

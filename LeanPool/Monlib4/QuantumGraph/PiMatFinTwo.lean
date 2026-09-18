@@ -381,7 +381,7 @@ lemma
   simp only [QuantumGraph.Real.dimOfPiMatSubmodule_eq,
     Finset.sum_product_univ, Fin.sum_univ_two,
     Fin.isValue, Prod.mk_zero_zero, Prod.mk_one_one] at hd
-  simp only [Fin.isValue, Nat.add_eq_one_iff, AddLeftCancelMonoid.add_eq_zero,
+  simp only [Fin.isValue, Nat.add_eq_one_iff, add_eq_zero,
     Submodule.finrank_eq_zero] at hd
   simp only [Fin.isValue, hA.PiMatSubmodule_eq_bot_iff_swap_eq_bot_of_adjoint hA₂ (0, 1),
     Prod.swap_prod_mk] at hd
@@ -582,7 +582,7 @@ theorem NonUnitalAlgHom.single_toLinearMap
   {R ι : Type*} [CommSemiring R] [DecidableEq ι]
   {φ : ι → Type*} [(i : ι) → Ring (φ i)]
   [(i : ι) → Module R (φ i)] (i : ι) :
-  (LinearMapClass.linearMap (NonUnitalAlgHom.single R φ i) : φ i →ₗ[R] (Π i, φ i)) =
+  (LinearMap.ofClass (NonUnitalAlgHom.single R φ i) : φ i →ₗ[R] (Π i, φ i)) =
     LinearMap.single R φ i :=
 rfl
 
@@ -632,7 +632,7 @@ theorem LinearMap.proj_comp_inj
 
 theorem NonUnitalAlgHom.id_toLinearMap
   {R A : Type*} [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
-  (LinearMapClass.linearMap (NonUnitalAlgHom.id R A) : A →ₗ[R] A) = 1 :=
+  (LinearMap.ofClass (NonUnitalAlgHom.id R A) : A →ₗ[R] A) = 1 :=
 rfl
 
 theorem QuantumGraph.Real.conj_proj_isReal
@@ -751,17 +751,17 @@ by
   simp only [← LinearMap.comp_assoc]
   have hcomul :
       TensorProduct.map
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i))
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i)) ∘ₗ
+          (LinearMap.ofClass (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i))
+          (LinearMap.ofClass (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i)) ∘ₗ
         Coalgebra.comul =
       Coalgebra.comul ∘ₗ
-        LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i) := by
+        LinearMap.ofClass (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i) := by
     apply_fun LinearMap.adjoint using LinearEquiv.injective _
     simp only [Coalgebra.comul_eq_mul_adjoint, LinearMap.adjoint_comp,
       LinearMap.adjoint_adjoint, TensorProduct.map_adjoint]
     have hsingle :
         LinearMap.adjoint
-            (LinearMapClass.linearMap
+            (LinearMap.ofClass
               (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i) :
                 Mat ℂ (p i) →ₗ[ℂ] PiMat ℂ ι p) =
           LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i := by
@@ -892,8 +892,8 @@ theorem schurMul_comp_proj_of_ne_eq_zero
     rw [hadj]
     change LinearMap.mul' ℂ ((i : ι) → Mat ℂ (p i)) ∘ₗ
         TensorProduct.map
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i))
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) j)) =
+          (LinearMap.ofClass (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i))
+          (LinearMap.ofClass (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) j)) =
       0
     apply TensorProduct.ext'
     intro x y

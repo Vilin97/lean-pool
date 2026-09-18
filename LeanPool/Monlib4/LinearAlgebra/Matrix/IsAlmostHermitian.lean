@@ -5,7 +5,7 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.Matrix.Block
 public import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
 import Mathlib.Algebra.Order.Algebra

@@ -1118,9 +1118,9 @@ theorem unconditionalActualFairSourceVerifier_norm_le_one
       0 ≤ integratorActualC485WinningEffect
         (P := P) (N := N) (m := m)
         G n S D a₀ b₀ j x y :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mpr positive
+    ContinuousLinearMap.nonneg_iff_isPositive.mpr positive
   apply (CStarAlgebra.norm_le_one_iff_of_nonneg _ nonnegative).mpr
-  exact (ContinuousLinearMap.le_def _ _).mpr
+  exact ContinuousLinearMap.le_def.mpr
     (unconditionalActualFairSourceVerifier_complement_isPositive
       (P := P) (N := N) (m := m) G n S D a₀ b₀ j x y)
 

@@ -24,6 +24,8 @@ is obtained from the single-simplex theorem.
 
 @[expose] public section
 
+open Brouwer (standardSimplex)
+
 open Filter
 
 section Brouwer.ProductRetraction
@@ -45,10 +47,10 @@ private lemma card_pos_real (i : I) : 0 < (card i : ℝ) := by
   norm_cast; exact PNat.pos (card i)
 
 /-- The big simplex on `totalCard card` coordinates. -/
-abbrev BigSimplex := stdSimplex ℝ (Fin (totalCard card))
+abbrev BigSimplex := standardSimplex ℝ (Fin (totalCard card))
 
 /-- The product of simplices indexed by `I`. -/
-abbrev ProductSimplices := (i : I) → stdSimplex ℝ (Fin (card i))
+abbrev ProductSimplices := (i : I) → standardSimplex ℝ (Fin (card i))
 
 
 
@@ -78,7 +80,7 @@ lemma index_split_existence (k : Fin (totalCard card)) : ∃ (p : Σ i, Fin (car
   have i₀_in_S : i₀ ∈ S := WellFounded.min_mem wellFounded_lt S s_nonempty
   have i₀_is_min : ∀ j < i₀, j ∉ S := fun j hlt => by
     intro hj
-    have := WellFounded.min_le wellFounded_lt hj
+    have := WellFoundedLT.min_le hj
     exact not_le_of_gt hlt this
   have h_lt : k.val < prefixSum card i₀ + (card i₀ : ℕ) := by
     change k.val < (∑ j ∈ Finset.univ.filter (· ≤ i₀), (card j : ℕ)) at i₀_in_S
@@ -251,16 +253,16 @@ noncomputable def blockSum (i : I) (x : BigSimplex card) : ℝ :=
 noncomputable def uniformProduct : ProductSimplices card :=
   fun i =>
     (⟨fun _ => (1 : ℝ) / (card i : ℝ), by
-      simp only [stdSimplex, Set.mem_ofPred_eq]
+      simp only [standardSimplex, Set.mem_ofPred_eq]
       constructor
       · intro _; apply div_nonneg <;> positivity
       · simp [Finset.sum_const]
-    ⟩ : stdSimplex ℝ (Fin (card i)))
+    ⟩ : standardSimplex ℝ (Fin (card i)))
 
 /-- The uniform point in the big simplex. -/
 noncomputable def zUniform : BigSimplex card :=
   ⟨fun _ => (1 : ℝ) / (totalCard card : ℝ), by
-    simp only [stdSimplex, Set.mem_ofPred_eq]
+    simp only [standardSimplex, Set.mem_ofPred_eq]
     constructor
     · intro _
       apply div_nonneg
@@ -286,7 +288,7 @@ noncomputable def tPush (x : BigSimplex card) : ℝ :=
 /-- Convex push of `x` toward `zUniform` by amount `tPush`. -/
 noncomputable def pushTowardsZ (x : BigSimplex card) : BigSimplex card :=
   ⟨fun k => (1 - tPush card x) * x.1 k + (tPush card x) * (zUniform card).1 k, by
-    simp only [stdSimplex, Set.mem_ofPred_eq]
+    simp only [standardSimplex, Set.mem_ofPred_eq]
     constructor
     · intro k;
       have hx_nonneg : 0 ≤ x.1 k := x.2.1 k
@@ -399,7 +401,7 @@ noncomputable def projectToProduct (x : BigSimplex card) : ProductSimplices card
     let s := blockSum card i y
     have hspos : 0 < s := blockSum_pushTowardsZ_pos card i x
     (⟨fun j => y.1 (indexCombine card ⟨i, j⟩) / s, by
-      simp only [stdSimplex, Set.mem_ofPred_eq]
+      simp only [standardSimplex, Set.mem_ofPred_eq]
       constructor
       · intro j
         have hy := y.2.1 (indexCombine card ⟨i, j⟩)
@@ -412,14 +414,14 @@ noncomputable def projectToProduct (x : BigSimplex card) : ProductSimplices card
         have hsum : (∑ j : Fin (card i), y.1 (indexCombine card ⟨i, j⟩)) = s := rfl
         rw [h, hsum]
         field_simp
-    ⟩ : stdSimplex ℝ (Fin (card i)))
+    ⟩ : standardSimplex ℝ (Fin (card i)))
 
 /-- Embedding of the product of simplices into the big simplex. -/
 noncomputable def embedFromProduct (y : ProductSimplices card) : BigSimplex card :=
   ⟨fun k =>
     let p := indexSplit card k
     (y p.1).1 p.2 * (card p.1 : ℝ) / (totalCard card : ℝ), by
-    simp only [stdSimplex, Set.mem_ofPred_eq]
+    simp only [standardSimplex, Set.mem_ofPred_eq]
     constructor
     · intro k
       let p := indexSplit card k

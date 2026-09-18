@@ -5,7 +5,7 @@ Authors: Palalansoukî
 -/
 module
 
-public import Mathlib.Data.Rel
+public import Mathlib.Basic.Rel
 public import Mathlib.Tactic.ToAdditive
 import Mathlib.Algebra.Group.Nat.Defs
 import Mathlib.Data.Finset.Attr

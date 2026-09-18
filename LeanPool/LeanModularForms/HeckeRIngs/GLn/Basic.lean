@@ -340,9 +340,11 @@ lemma posDetInt_le_commensurator :
     change ConjAct.toConjAct g • (γ : GL (Fin n) ℚ) ∈ H
     rw [ConjAct.smul_def, ConjAct.ofConjAct_toConjAct]
     exact conj_ker_mem_SLnZ_inv n g A hA hAdet_ne γ hγ_ker
-  refine ⟨ne_zero_of_dvd_ne_zero hK_relIndex
-      (Subgroup.relIndex_dvd_of_le_left H hK_le_gH), ?_⟩
-  rw [show H.relIndex (ConjAct.toConjAct g • H) =
+  rw [show MulAut.conj g • H = ConjAct.toConjAct g • H from rfl]
+  refine ⟨⟨ne_zero_of_dvd_ne_zero hK_relIndex
+      (Subgroup.relIndex_dvd_of_le_left H hK_le_gH)⟩, ?_⟩
+  rw [Subgroup.isFiniteRelIndex_iff_relIndex_ne_zero,
+    show H.relIndex (ConjAct.toConjAct g • H) =
       (ConjAct.toConjAct g⁻¹ • H).relIndex H from by
     have h1 : ConjAct.toConjAct g⁻¹ • (ConjAct.toConjAct g • H) = H := by
       rw [smul_smul, ← map_mul, inv_mul_cancel, map_one, one_smul]

@@ -858,8 +858,7 @@ private lemma ptilde_sum_eq_one
     (μ : Measure Ω) [IsProbabilityMeasure μ] :
     ∑ t : S₁ × S₂ × S₃ × S₄, ptilde X Y Z U μ t = 1 := by
   have hZU_meas : Measurable (fun ω => (Z ω, U ω)) := hZ.prodMk hU
-  have : IsProbabilityMeasure (μ.map (fun ω => (Z ω, U ω))) :=
-    Measure.isProbabilityMeasure_map hZU_meas.aemeasurable
+  have : IsProbabilityMeasure (μ.map (fun ω => (Z ω, U ω))) := inferInstance
   let e : S₃ × S₄ × S₁ × S₂ ≃ S₁ × S₂ × S₃ × S₄ :=
     { toFun := fun ⟨z, u, x, y⟩ => (x, y, z, u)
       invFun := fun ⟨x, y, z, u⟩ => (z, u, x, y)
@@ -1155,7 +1154,7 @@ private lemma phat_sum_eq_one
     rw [sum_map_pair_first hY hU μ u]
     field_simp
   simp_rw [h_sum_y, sum_map_pair_first hX hU μ]
-  have : IsProbabilityMeasure (μ.map U) := Measure.isProbabilityMeasure_map hU.aemeasurable
+  have : IsProbabilityMeasure (μ.map U) := inferInstance
   simp_all
 
 /-! ### Δ-to-log-ratio identities -/

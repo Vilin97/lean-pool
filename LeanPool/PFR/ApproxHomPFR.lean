@@ -12,7 +12,7 @@ public import Mathlib.Algebra.Algebra.Defs
 public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.Algebra.Module.ZMod
 public import Mathlib.Data.Finset.Density
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.LinearAlgebra.Dual.Defs
 import LeanPool.PFR.AddCombi.BSG
 import LeanPool.PFR.HomPFR

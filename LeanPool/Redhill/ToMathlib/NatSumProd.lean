@@ -33,7 +33,7 @@ lemma sum_le_prod {ι : Type*} {s : Finset ι} {f : ι → ℕ} (hf : ∀ i ∈ 
     simp_rw [Finset.mem_insert, forall_eq_or_imp] at hf
     refine (Nat.add_le_add_left (ih hf.2) _).trans (Nat.add_le_mul hf.1 ?_)
     obtain ⟨b, hb⟩ := hs
-    refine (hf.2 _ hb).trans (Finset.single_le_prod' (fun j mj ↦ ?_) hb)
+    refine (hf.2 _ hb).trans (Finset.single_le_prod (fun j mj ↦ ?_) hb)
     exact one_le_two.trans (hf.2 _ mj)
 
 /-- The sum of three natural numbers is strictly less than their product

@@ -159,7 +159,7 @@ noncomputable def liftMeasureRealToComplex
     (dμ_real : ProbabilityMeasure (Lp ℝ 2 μ)) :
     ProbabilityMeasure (Lp ℂ 2 μ) :=
   ⟨Measure.map embeddingRealToComplex dμ_real, by
-    apply isProbabilityMeasure_map
+    refine (Measure.isProbabilityMeasure_map_iff ?_).mpr inferInstance
     apply Continuous.aemeasurable
     unfold embeddingRealToComplex composedFunction
     exact Complex.ofRealCLM_continuous_compLp⟩
@@ -264,9 +264,10 @@ theorem linfty_mul_L2_CLM_norm_bound {μ : Measure α}
     _ ≤ ‖(ContinuousLinearMap.mul ℂ ℂ)‖ * ‖hg_mem.toLp‖ * ‖f‖ := by
       apply ContinuousLinearMap.norm_holder_apply_apply_le
     _ ≤ C * ‖f‖ := by
-      simp only [ContinuousLinearMap.opNorm_mul, Lp.norm_toLp, eLpNorm_exponent_top, one_mul]
+      simp only [ContinuousLinearMap.opNorm_mul, Lp.norm_toLp, one_mul]
       gcongr
       refine toReal_le_of_le_ofReal hC ?_
+      rw [eLpNorm_exponent_top hg_meas.aestronglyMeasurable]
       exact eLpNormEssSup_le_of_ae_bound hg_bound
 
 /-! ## Local Integrability of Power-Law Decay Functions
@@ -533,10 +534,7 @@ theorem schwartz_bilinear_integrable_of_translationInvariant_L1
     -- The map preserves measure (translation invariance of Lebesgue measure)
     have he_preserves : MeasurePreserving e (volume.prod volume) (volume.prod volume) := by
       -- Use measurePreserving_sub_prod: (x, y) ↦ (x - y, y) preserves measure
-      have := measurePreserving_sub_prod (G := EuclideanSpace ℝ (Fin d)) volume volume
-      convert this using 1
-      ext p : 1
-      rfl
+      exact measurePreserving_sub_prod (G := EuclideanSpace ℝ (Fin d)) volume volume
     have hchange : Integrable (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) =>
         ‖K₀ (p.1 - p.2)‖ * ‖g p.2‖) (volume.prod volume) := by
       -- We have hprod : Integrable (fun p => ‖K₀ p.1‖ * ‖g p.2‖)

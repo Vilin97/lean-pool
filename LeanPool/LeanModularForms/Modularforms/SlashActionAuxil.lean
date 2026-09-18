@@ -255,8 +255,7 @@ lemma Γ2_descent (A : Γ 2) (h : A.1 1 0 ≠ 0) :
     α_zpow_val, β_zpow_val, Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply,
     Matrix.cons_val_zero, Matrix.cons_val_one] at hn hm ⊢
   convert hm.trans hn using 2
-  · rfl
-  · ring
+  ring
 
 theorem Γ2_generate : (⊤ : Subgroup (Γ 2)) = Subgroup.closure {α, β, negI} := by
   refine le_antisymm ?_ le_top

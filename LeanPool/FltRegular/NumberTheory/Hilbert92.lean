@@ -117,7 +117,7 @@ lemma lemma2 [Module A G] (S : systemOfUnits p G s) (hs : S.IsFundamental)
       · rw [Finsupp.mapDomain_of_notMem_range, zero_add, hij]
         rwa [← this]
       · obtain ⟨j, rfl⟩ := not_imp_comm.mp this.mpr hij
-        rw [Finsupp.mapDomain_apply Fin.succAbove_right_injective, add_zero,
+        rw [Finsupp.mapDomain_apply_of_injective Fin.succAbove_right_injective, add_zero,
           Finsupp.comapDomain_apply]
     have := S'.isMaximal p hp G hf
     suffices Submodule.span A (Set.range S.units) < Submodule.span A (Set.range S'.units) by
@@ -235,7 +235,7 @@ lemma relativeUnitsMap_mk (σ : K →ₐ[k] K) (x : (𝓞 K)ˣ) :
 
 private lemma relativeUnitsMap_addMonoidEndRingEquivInt_apply
     (σ : K →ₐ[k] K) (x : (𝓞 K)ˣ) :
-    (addMonoidEndRingEquivInt _ (MulEquiv.Monoid.End (relativeUnitsMap σ)))
+    (addMonoidEndRingEquivInt _ (MulEquiv.monoidEnd _ (relativeUnitsMap σ)))
       (Additive.ofMul (QuotientGroup.mk x)) =
       Additive.ofMul (QuotientGroup.mk
         (Units.map (galRestrictHom (𝓞 k) k K (𝓞 K) σ) x)) := by
@@ -280,7 +280,7 @@ include σ hp hKL hσ in
 open Polynomial in
 lemma isTors' [IsGalois k K] : Module.IsTorsionBySet ℤ[X]
     (Module.AEval' (addMonoidEndRingEquivInt _
-      (MulEquiv.Monoid.End <| relativeUnitsMapHom <|
+      (MulEquiv.monoidEnd _ <| relativeUnitsMapHom <|
         ((AlgEquiv.algHomUnitsEquiv _ _).symm σ).val)))
     (Ideal.span {cyclotomic p ℤ}) := by
   classical
@@ -552,7 +552,7 @@ instance relativeUnitsModule : Module A G := by
 lemma relativeUnitsModule_zeta_smul (x) :
     (zeta p) • mkG x = mkG (Units.map (galRestrictHom (𝓞 k) k K (𝓞 K) σ) x) := by
   let φ := (addMonoidEndRingEquivInt _
-      (MulEquiv.Monoid.End <| relativeUnitsMap <| ((AlgEquiv.algHomUnitsEquiv _ _).symm σ).val))
+      (MulEquiv.monoidEnd _ <| relativeUnitsMap <| ((AlgEquiv.algHomUnitsEquiv _ _).symm σ).val))
   change QuotientAddGroup.mk ((Module.AEval'.of φ).symm <|
     Polynomial.X (R := ℤ) • Module.AEval'.of φ (Additive.ofMul (QuotientGroup.mk x))) = _
   simp only [Module.AEval.of_symm_smul, Polynomial.aeval_X,

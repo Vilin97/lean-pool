@@ -5,7 +5,7 @@ Authors: Palalansoukî
 -/
 module
 
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Data.Finset.Insert
 public import Mathlib.Tactic.ToAdditive
 import Mathlib.Data.Set.Finite.Basic

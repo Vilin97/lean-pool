@@ -460,7 +460,7 @@ theorem weight_lt_of_mem_move {p : Player} {s s' : R}
 
 instance : (graph R).IsWellFounded where
   wf := by
-    refine { wf := WellFounded.intro ?_ }
+    refine WellFounded.intro ?_
     intro s
     induction n : weight s using Nat.strong_induction_on generalizing s with
     | h n ih =>

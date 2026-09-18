@@ -7,7 +7,7 @@ Authors: QudeLeap Team
 module
 
 public import Mathlib.Algebra.Lie.OfAssociative
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.Order.Algebra
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Data.Sym.Sym2.Init

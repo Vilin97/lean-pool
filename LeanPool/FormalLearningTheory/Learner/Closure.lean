@@ -60,7 +60,7 @@ theorem measurableBatchLearner_combine
     have hg : Measurable (fun p : (Fin m → X × Bool) × X =>
         (p.2, fun i => (L i).learn p.1 p.2) : (Fin m → X × Bool) × X → X × (Fin k → Bool)) :=
       Measurable.prodMk measurable_snd
-        (measurable_pi_lambda _ (fun i => (hL i).eval_measurable m))
+        (Measurable.of_eval (fun i => (hL i).eval_measurable m))
     exact hF.comp hg
 
 /-! ## Part 3: Boost learner via majority vote -/

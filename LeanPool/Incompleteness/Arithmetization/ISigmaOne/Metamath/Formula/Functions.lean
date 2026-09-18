@@ -478,6 +478,22 @@ def blueprint (pL : LDef) : Language.UformulaRec1.Blueprint pL where
 
 variable (L)
 
+-- Prove identity substitution before instantiating the large formula, avoiding its repeated
+-- expansion when the kernel checks the construction's two parameter-change proof fields.
+omit [V ⊧ₘ* 𝐈Sg1] in
+private lemma defined_identity_substitution (φ : Sg1.Semisentence 2) (f : V → V)
+    (h : Sg1-Function₁ f via φ) :
+    Sg1-Function₁ f via (.mkSigma “y param. !φ y param” (by simp)) := by
+  intro v
+  have hv : (fun i : Fin 2 =>
+      Semiterm.val (standardModel V) v Empty.elim (![#0, #1] i)) = v := by
+    funext i
+    refine Fin.cases rfl (fun i => ?_) i
+    have hi : i = 0 := Fin.eq_zero i
+    subst i
+    rfl
+  simpa [hv] using h v
+
 /-- Imported declaration from the Incompleteness formalization. -/
 def construction : Language.UformulaRec1.Construction V L (blueprint pL) where
   rel (param)  := fun k R v ↦ ^rel k R (L.termSubstVec k param v)
@@ -498,8 +514,8 @@ def construction : Language.UformulaRec1.Construction V L (blueprint pL) where
   or_defined := by intro v; simp [blueprint]
   all_defined := by intro v; simp [blueprint]
   ex_defined := by intro v; simp [blueprint]
-  allChanges_defined := by intro v; simp [blueprint, L.qVec_defined.df.iff]
-  exChanges_defined := by intro v; simp [blueprint, L.qVec_defined.df.iff]
+  allChanges_defined := defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
+  exChanges_defined := defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
 
 end Substs
 

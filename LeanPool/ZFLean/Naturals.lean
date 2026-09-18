@@ -15,6 +15,8 @@ import LeanPool.ZFLean.Basic
 import Mathlib.Tactic.NormNum.Inv
 import Mathlib.Tactic.NormNum.Pow
 import Std.Data.DHashMap.Internal.AssocList.Lemmas
+public import Mathlib.Order.WellFounded
+public import Mathlib.Util.Delaborators
 
 /-! # ZFC Natural numbers
 

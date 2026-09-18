@@ -5,7 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 module
 
-public import Mathlib.Data.ENNReal.Basic
+public import Mathlib.Basic.ENNReal.Basic
 
 /-!
 # LeanPool.SardMoreira.ToMathlib.PR32993

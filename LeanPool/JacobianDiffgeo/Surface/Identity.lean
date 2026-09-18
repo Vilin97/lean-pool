@@ -51,7 +51,7 @@ theorem map_extChartAt_nhdsNE (x : X) :
     (chartAt ℂ x).map_nhdsWithin_eq (mem_chart_source ℂ x) _
   have h2 : 𝓝[(chartAt ℂ x) '' ((chartAt ℂ x).source ∩ {x}ᶜ)] (chartAt ℂ x x) =
       𝓝[≠] (chartAt ℂ x x) := by
-    rw [nhdsWithin_eq_iff_eventuallyEq, Filter.eventuallyEq_set]
+    rw [nhdsWithin_eq_iff_eventuallyEqSet, Filter.eventuallyEqSet_iff]
     filter_upwards [(chartAt ℂ x).open_target.mem_nhds
       ((chartAt ℂ x).map_source (mem_chart_source ℂ x))] with w hw
     constructor

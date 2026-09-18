@@ -111,7 +111,7 @@ theorem directSumTensorInvFun_apply_to_fun {R : Type _} [CommRing R] {ι₁ : Ty
     {M₂ : ι₂ → Type _} [∀ i₁ : ι₁, AddCommGroup (M₁ i₁)] [∀ i₂ : ι₂, AddCommGroup (M₂ i₂)]
     [∀ i₁ : ι₁, Module R (M₁ i₁)] [∀ i₂ : ι₂, Module R (M₂ i₂)] (x : (∀ i, M₁ i) ⊗[R] ∀ i, M₂ i) :
     directSumTensorInvFun (directSumTensorToFun x) = x :=
-  x.induction_on (by simp only [map_zero])
+  x.inductionOn
     (fun x y => by
     simp only [directSumTensorInvFun, LinearMap.coe_mk]
     calc
@@ -196,13 +196,9 @@ letI : ZeroHomClass
     (((i : ι₁) → M₁ i) ⊗[R] ((i : ι₂) → M₂ i) →ₗ[R]
       (i : ι₁ × ι₂) → M₁ i.1 ⊗[R] M₂ i.2) _ _ :=
 ⟨fun x => by simp only [LinearMap.map_zero]⟩
-x.induction_on
-  (by
-    simp only [zero_mul, map_zero]
-    )
+x.inductionOn
   (fun x₁ x₂ =>
-    y.induction_on
-    (by simp only [MulZeroClass.mul_zero, map_zero])
+    y.inductionOn
     (fun y₁ y₂ => by
       ext
       simp only [Pi.mul_apply, directSumTensorToFun_apply, Algebra.TensorProduct.tmul_mul_tmul])

@@ -5077,7 +5077,7 @@ private theorem complexGamma_vertical_polynomial_bound {z : ℂ}
       |z.im| ^ k ≤
         ∏ j ∈ Finset.range k, ‖z + (j : ℂ)‖ := by
     simpa only [Finset.prod_const, Finset.card_range] using!
-      (Finset.prod_le_prod
+      (Finset.prod_le_prod₀
         (s := Finset.range k)
         (f := fun _ : ℕ => |z.im|)
         (g := fun j : ℕ => ‖z + (j : ℂ)‖)
@@ -5117,7 +5117,7 @@ private theorem complexGamma_shifted_vertical_polynomial_bound
       |z.im| ^ k ≤
         ∏ j ∈ Finset.range k, ‖z + (j : ℂ)‖ := by
     simpa only [Finset.prod_const, Finset.card_range] using!
-      (Finset.prod_le_prod
+      (Finset.prod_le_prod₀
         (s := Finset.range k)
         (f := fun _ : ℕ => |z.im|)
         (g := fun j : ℕ => ‖z + (j : ℂ)‖)
@@ -6964,8 +6964,8 @@ private theorem saddleGaussianPoleRepresentative_weighted_horizontalStrip_bound
     _ ≤ (r ^ (-a) *
         Real.exp ((a + ((2 * n : ℕ) : ℝ)) ^ 2)) * 1 := by
       apply mul_le_mul_of_nonneg_left
-        (mul_le_one₀ hexp
-          (div_nonneg (abs_nonneg t) (norm_nonneg _)) hfrac)
+        ((mul_le_of_le_one_left
+          (div_nonneg (abs_nonneg t) (norm_nonneg _)) hexp).trans hfrac)
       positivity
     _ = r ^ (-a) *
         Real.exp ((a + ((2 * n : ℕ) : ℝ)) ^ 2) :=

@@ -1761,10 +1761,8 @@ theorem tendsto_plusLeadingFactor_of_ratio {r : ℕ}
             (2 * (ambientShift n (lam n) i / (n : ℝ))))
         atTop (𝓝 ((a i + 1) / (2 * a i + 1))) := by
     convert hlimit using 1
-    · funext n
-      rfl
-    · congr 1
-      ring
+    congr 1
+    ring
   apply hconverted.congr'
   filter_upwards [eventually_gt_atTop (0 : ℕ)] with n hn
   have hn' : (n : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hn)
@@ -1796,10 +1794,8 @@ theorem tendsto_raisedMinusLeadingFactor_of_ratio {r : ℕ}
               (1 : ℝ) / (n : ℝ))))
         atTop (𝓝 (a i / (2 * a i + 1))) := by
     convert hlimit using 1
-    · funext n
-      rfl
-    · congr 1
-      ring
+    congr 1
+    ring
   apply hconverted.congr'
   filter_upwards [eventually_gt_atTop (0 : ℕ)] with n hn
   have hn' : (n : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hn)
@@ -3120,9 +3116,7 @@ theorem coordinateInclusion_orthogonal
   rw [LinearMap.zero_apply, inner_zero_left]
   simp only [LinearMap.comp_apply]
   rw [LinearMap.adjoint_inner_left]
-  induction t using TensorProduct.induction_on with
-  | zero => simp only [LinearIsometry.coe_toLinearMap, map_zero, coordinateInclusion_tmul,
-              inner_zero_left]
+  induction t with
   | tmul y w =>
       change
         ⟪coordinateInclusion (n := n) lam j (y ⊗ₜ[ℝ] w),
@@ -4464,16 +4458,15 @@ theorem gramSummandExponent_eq_pivot_iff {r n : ℕ}
 
 theorem coeff_gramPairPolynomial_pivot {r n : ℕ}
     (hn : 2 * r < n) (z : UpperGramPair r) :
-    MvPolynomial.coeff (gramPivotExponent hn z)
-      (gramPairPolynomial n z) = 1 := by
+    (gramPairPolynomial n z).coeff (gramPivotExponent hn z) = 1 := by
   classical
   unfold gramPairPolynomial rowPairingPolynomial
   simp only [MvPolynomial.coeff_sum]
   rw [Finset.sum_eq_single (gramPivot hn z)]
-  · simp only [gramPivotExponent, MvPolynomial.X, MvPolynomial.monomial_mul, mul_one,
+  · simp only [gramPivotExponent, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, mul_one,
       MvPolynomial.coeff_monomial, ↓reduceIte]
   · intro k _ hk
-    simp only [MvPolynomial.X, MvPolynomial.monomial_mul,
+    simp only [MvPolynomial.X, MvPolynomial.monomial_mul_monomial,
       MvPolynomial.coeff_monomial, ite_eq_right_iff, ]
     simpa only [gramPivotExponent, mul_one, one_ne_zero, imp_false, gramSummandExponent, ne_eq]
       using
@@ -4610,14 +4603,13 @@ instance instIsOrderedCancelAddMonoidYoungWeightedLex :
 
 variable [WellFoundedGT σ]
 
-instance instWellFoundedLTYoungWeightedLex : WellFoundedLT (YoungWeightedLex w) where
-  wf := by
-    have hlex : WellFounded (Finsupp.Lex (α := σ) (· < ·) (· < ·)) :=
-      Finsupp.Lex.wellFounded' (fun _ => Nat.not_lt_zero _)
-        (inferInstance : WellFoundedLT ℕ).wf wellFounded_gt
-    have hprod := WellFounded.prod_lex
-      (inferInstance : WellFoundedLT ℕ).wf hlex
-    exact hprod.onFun
+instance instWellFoundedLTYoungWeightedLex : WellFoundedLT (YoungWeightedLex w) := by
+  have hlex : WellFounded (Finsupp.Lex (α := σ) (· < ·) (· < ·)) :=
+    Finsupp.Lex.wellFounded' (fun _ => Nat.not_lt_zero _)
+      (inferInstance : WellFoundedLT ℕ) wellFounded_gt
+  have hprod := WellFounded.prod_lex
+    (inferInstance : WellFoundedLT ℕ) hlex
+  exact hprod.onFun
 
 end LinearOrder
 
@@ -4735,7 +4727,7 @@ theorem gramPairPolynomial_support_exponent {r n : ℕ}
   obtain ⟨k, _, hk⟩ := Finset.mem_biUnion.mp hsum
   refine ⟨k, ?_⟩
   symm
-  simpa only [gramSummandExponent, MvPolynomial.X, MvPolynomial.monomial_mul, mul_one,
+  simpa only [gramSummandExponent, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, mul_one,
     MvPolynomial.mem_support_iff, MvPolynomial.coeff_monomial, ne_eq, ite_eq_right_iff, one_ne_zero,
     imp_false, Decidable.not_not] using hk
 

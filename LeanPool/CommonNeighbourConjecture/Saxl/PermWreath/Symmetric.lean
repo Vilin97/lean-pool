@@ -6,7 +6,7 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 module
 
 public import Mathlib.Algebra.Group.Action.End
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 import Mathlib.Data.Fintype.Card
 
 /-!

@@ -6,7 +6,7 @@ Authors: Palalansoukî
 module
 
 public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Tree
-public import Mathlib.Data.Finite.Sum
+public import Mathlib.Basic.Finite.Sum
 
 /-! # SimpleExtension -/
 

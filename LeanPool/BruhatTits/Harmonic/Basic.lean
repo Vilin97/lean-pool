@@ -56,6 +56,7 @@ instance (v : V) [Finite (X.incidenceSet v)] : Finite { e : X.edgeSet | v ∈ e.
 def incidenceFinset' (v : V) [Fintype (X.neighborSet v)] : Finset X.edgeSet :=
   (Set.toFinite { e : X.edgeSet | v ∈ e.val }).toFinset
 
+omit [DecidableEq V] in
 lemma mem_incidenceFinset' (v : V) [Fintype (X.neighborSet v)] (e : X.edgeSet) :
     e ∈ incidenceFinset' v ↔ v ∈ e.val := by
   simp [incidenceFinset']
@@ -249,16 +250,19 @@ def outwardEdgeCone (w : V) : Finset X.edgeSet :=
     simpa only [Finset.mem_coe, mem_incidenceFinset'] using he.left
   hs.toFinset
 
+omit [DecidableEq V] in
 lemma mem_outwardEdgeCone_iff (w : V) (e : X.edgeSet) :
     e ∈ X.outwardEdgeCone v₀ w ↔ w ∈ e.val ∧ X.source v₀ e = w := by
   simp [outwardEdgeCone]
 
+omit [DecidableEq V] in
 lemma outwardEdgeCone_nonempty_of_source (e : X.edgeSet) :
     (X.outwardEdgeCone v₀ (X.source v₀ e)).Nonempty := by
   use e
   rw [mem_outwardEdgeCone_iff]
   simp
 
+omit [DecidableEq V] in
 /-- The outward edge cone of the origin `v₀` is the finset of all neighboring edges. -/
 lemma outwardEdgeCone_origin_eq : X.outwardEdgeCone v₀ v₀ = X.incidenceFinset' v₀ := by
   ext e
@@ -270,10 +274,12 @@ lemma outwardEdgeCone_origin_eq : X.outwardEdgeCone v₀ v₀ = X.incidenceFinse
 def distinguishedEdge (w : V) (hw : (X.outwardEdgeCone v₀ w).Nonempty) : X.edgeSet :=
   hw.choose
 
+omit [DecidableEq V] in
 lemma distinguishedEdge_mem (w : V) (hw : (X.outwardEdgeCone v₀ w).Nonempty) :
     X.distinguishedEdge v₀ w hw ∈ X.outwardEdgeCone v₀ w :=
   hw.choose_spec
 
+omit [DecidableEq V] in
 @[simp]
 lemma source_distinguishedEdge (v : V) (hnonempty : (X.outwardEdgeCone v₀ v).Nonempty) :
     X.source v₀ (distinguishedEdge v₀ v hnonempty) = v := by
@@ -281,9 +287,11 @@ lemma source_distinguishedEdge (v : V) (hnonempty : (X.outwardEdgeCone v₀ v).N
   rw [mem_outwardEdgeCone_iff] at this
   exact this.right
 
+omit [DecidableEq V] in
 lemma outwardEdgeCone_eq_union (w : V) (hw : (X.outwardEdgeCone v₀ w).Nonempty) :
     X.outwardEdgeCone v₀ w = { X.distinguishedEdge v₀ w hw } ∪
         { e | e ∈ X.outwardEdgeCone v₀ w ∧ X.distinguishedEdge v₀ w hw ≠ e } := by
+  classical
   ext e
   simp_rw [Finset.mem_coe, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_ofPred_eq]
   constructor
@@ -415,6 +423,7 @@ lemma vertex_mem_edgeTowardsOrigin (w : V) (hw : 0 < X.dist v₀ w) :
   nth_rw 2 [← edgeTowardsOrigin_target_eq v₀ w hw]
   exact target_mem v₀ (edgeTowardsOrigin v₀ w hw)
 
+omit [DecidableEq V] in
 lemma edgeTowardsOrigin_not_mem_outwardEdgeCone (v : V) (hdist : 0 < X.dist v₀ v) :
     edgeTowardsOrigin v₀ v hdist ∉ outwardEdgeCone v₀ v := by
   intro hc
@@ -425,6 +434,7 @@ lemma edgeTowardsOrigin_not_mem_outwardEdgeCone (v : V) (hdist : 0 < X.dist v₀
   apply this.ne
   exact hc.right
 
+omit [DecidableEq V] in
 lemma outwardEdgeCone_nonempty_of_two_le_degree {v : V} (hv : 2 ≤ X.degree v) :
     (X.outwardEdgeCone v₀ v).Nonempty := by
   have : 1 < (X.neighborFinset v).card := by simpa
@@ -717,9 +727,11 @@ end Tree
 
 end «Surjectivity»
 
+omit [DecidableEq V] in
 /-- If `X` is a tree, the Laplacian on `X` is surjective. -/
 lemma laplace_surjective {X : SimpleGraph V} (htree : IsTree X) [∀ v, Fintype (X.neighborSet v)]
     (w : V → Aˣ) (hmindeg : ∀ v, 2 ≤ X.degree v) : Function.Surjective (X.laplace (M := M) w) := by
+  classical
   intro f
   let X : Tree V := ⟨X, htree⟩
   obtain ⟨v₀⟩ := X.isTree.connected.nonempty
@@ -733,15 +745,18 @@ section «Hom»
 variable {X : SimpleGraph V}
 variable [∀ v, Fintype (X.neighborSet v)] (w : V → Aˣ)
 
+omit [DecidableEq V] in
 lemma laplace_apply (f : X.edgeSet → M) (v : V) :
     laplace w f v = w v • ∑ e ∈ X.incidenceFinset' v, f e :=
   rfl
 
+omit [DecidableEq V] in
 @[simp]
 lemma laplace_zero : X.laplace w (M := M) 0 = 0 := by
   ext x
   simp [laplace_apply]
 
+omit [DecidableEq V] in
 @[simp]
 lemma laplace_add (f g : X.edgeSet → M) : X.laplace w (f + g) = X.laplace w f + X.laplace w g := by
   ext x
@@ -754,15 +769,18 @@ def laplaceHom : (X.edgeSet → M) →+ (V → M) where
   map_zero' := laplace_zero w
   map_add' := laplace_add w
 
+omit [DecidableEq V] in
 lemma laplaceHom_surjective (htree : X.IsTree) (hdeg : ∀ (v : V), 2 ≤ X.degree v) :
     Function.Surjective (X.laplaceHom (M := M) w) :=
   laplace_surjective htree w hdeg
 
+omit [DecidableEq V] in
 @[simp]
 lemma laplace_ASmul (a : A) (f : X.edgeSet → M) : X.laplace w (a • f) = a • X.laplace w f := by
   ext v
   simp [laplace_apply ,smul_comm a (w v), Finset.smul_sum]
 
+omit [DecidableEq V] in
 lemma isLinearMap_laplace : IsLinearMap A (X.laplace (M := M) w) where
   map_add := laplace_add w
   map_smul := laplace_ASmul w
@@ -770,6 +788,7 @@ lemma isLinearMap_laplace : IsLinearMap A (X.laplace (M := M) w) where
 /-- The Laplacian of `X` as an `A`-linear map. -/
 def laplaceLinearMap : (X.edgeSet → M) →ₗ[A] (V → M) := (isLinearMap_laplace w).mk'
 
+omit [DecidableEq V] in
 @[simp]
 lemma coe_laplaceLinearMap : ⇑(laplaceLinearMap w) = laplace (X := X) (M := M) w :=
   rfl
@@ -808,6 +827,7 @@ lemma smul_units (g : G) (x : Rˣ) : g • x = x := rfl
 variable {G} {X}
 variable [∀ v, Fintype (X.neighborSet v)] (w : V →[G] Rˣ)
 
+omit [DecidableEq V] in
 @[simp]
 lemma laplace_smul (g : G) (f : X.edgeSet → M) :
     laplace w (g • f) = g • laplace w f := by
@@ -831,6 +851,7 @@ def laplaceSMulHom : (X.edgeSet → M) →+[G] (V → M) where
   map_zero' := laplace_zero w
   map_add' := laplace_add w
 
+omit [DecidableEq V] in
 lemma laplaceSMulHom_surjective (htree : X.IsTree) (hdeg : ∀ (v : V), 2 ≤ X.degree v) :
     Function.Surjective (laplaceSMulHom (M := M) (X := X) w) :=
   laplace_surjective htree w hdeg

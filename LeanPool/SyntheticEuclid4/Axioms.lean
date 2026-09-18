@@ -5,8 +5,8 @@ Authors: André Hernandez-Espiet, Vladimir Sedlacek
 -/
 module
 
-public import Mathlib.Data.Real.Basic
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Basic.Finite.Defs
 import Mathlib.Data.Finset.Attr
 import Mathlib.Tactic.SetLike
 

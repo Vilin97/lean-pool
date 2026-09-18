@@ -463,7 +463,8 @@ lemma _root_.ProbabilityTheory.condEntropy_le_log_card [MeasurableSingletonClass
   refine (integral_mono_of_nonneg ?_ (integrable_const (log (Fintype.card S))) ?_).trans ?_
   · exact ae_of_all _ (fun _ ↦ entropy_nonneg _ _)
   · exact ae_of_all _ (fun _ ↦ entropy_le_log_card _ _)
-  · have : IsProbabilityMeasure (μ.map Y) := isProbabilityMeasure_map hY.aemeasurable
+  · have : IsProbabilityMeasure (μ.map Y) :=
+      (Measure.isProbabilityMeasure_map_iff hY.aemeasurable).mpr ‹_›
     simp
 
 /-- `H[X|Y] = ∑_y P[Y=y] H[X|Y=y]`. -/

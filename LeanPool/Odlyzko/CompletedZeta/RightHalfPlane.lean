@@ -121,10 +121,10 @@ theorem logDeriv_completedDedekindZeta_of_isTotallyComplex {s : ℂ} (hs : 0 < s
     differentiable_dedekindDiscriminantFactor K s
   have hdA : DifferentiableAt ℂ (CompletedZeta.archimedeanFactor K) s :=
     differentiableAt_dedekindArchimedeanFactor_of_isTotallyComplex K hs
-  rw [logDeriv_mul
+  rw [logDeriv_fun_mul
       (f := fun z ↦ CompletedZeta.discriminantFactor K z * CompletedZeta.archimedeanFactor K z)
       (g := dedekindZeta K) s (mul_ne_zero hD hA) hζne (hdD.mul hdA) hζdiff,
-    logDeriv_mul
+    logDeriv_fun_mul
       (f := CompletedZeta.discriminantFactor K) (g := CompletedZeta.archimedeanFactor K)
       s hD hA hdD hdA,
     logDeriv_dedekindDiscriminantFactor,

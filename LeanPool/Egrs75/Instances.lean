@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 module
 
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Data.Nat.Choose.Central
 public import Mathlib.Data.Nat.Prime.Defs
 import LeanPool.Egrs75.MuFinish

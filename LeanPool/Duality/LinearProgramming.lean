@@ -651,7 +651,6 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
               convert hAx₀
               · change 0 = 0 • -(toE bᵢ)
                 rw [←EF.coe_neg, EF.zero_smul_coe]
-              · rfl
             rw [add_zero] at zeros
             rw [Matrix.mulWeig_add, Matrix.mulWeig_smul k_pos, Pi.add_apply]
             apply add_le_of_le_of_nonpos

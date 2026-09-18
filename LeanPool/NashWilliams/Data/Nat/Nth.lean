@@ -6,7 +6,7 @@ Authors: Yann Pequignot
 module
 
 public import Aesop.BuiltinRules
-public import Mathlib.Data.Finite.Defs
+public import Mathlib.Basic.Finite.Defs
 public import Mathlib.Data.Nat.Basic
 public import Mathlib.Order.Monotone.Defs
 import Mathlib.Data.Nat.Nth

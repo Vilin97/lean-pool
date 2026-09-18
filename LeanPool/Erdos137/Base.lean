@@ -135,7 +135,7 @@ theorem pow_le_F {k n : ℕ} : n ^ k ≤ F k n := by
   unfold F
   calc n ^ k = ∏ _i ∈ Finset.range k, n := by rw [Finset.prod_const, Finset.card_range]
     _ ≤ ∏ i ∈ Finset.range k, (n + i) :=
-        Finset.prod_le_prod' (fun i _ => Nat.le_add_right n i)
+        Finset.prod_le_prod (fun i _ => Nat.le_add_right n i)
 
 /-! ## Counting multiples of a prime in an interval (for the overlap bound) -/
 
@@ -196,10 +196,10 @@ def P (k : ℕ) : ℕ := ∏ p ∈ Nat.primesBelow k, p
 def L (k : ℕ) : ℕ := ∏ p ∈ Nat.primesBelow k, p ^ (k / p)
 
 lemma P_pos (k : ℕ) : 1 ≤ P k :=
-  Finset.one_le_prod' fun _p hp => (Nat.prime_of_mem_primesBelow hp).one_le
+  Finset.one_le_prod fun _p hp => (Nat.prime_of_mem_primesBelow hp).one_le
 
 lemma L_pos (k : ℕ) : 1 ≤ L k :=
-  Finset.one_le_prod' fun _p hp => Nat.one_le_pow _ _ (Nat.prime_of_mem_primesBelow hp).pos
+  Finset.one_le_prod fun _p hp => Nat.one_le_pow _ _ (Nat.prime_of_mem_primesBelow hp).pos
 
 lemma L_ne_zero (k : ℕ) : L k ≠ 0 := Nat.one_le_iff_ne_zero.mp (L_pos k)
 
@@ -235,11 +235,11 @@ lemma Ssmooth_mul_Rrough {k n : ℕ} (hn : 1 ≤ n) : Ssmooth k n * Rrough k n =
   rw [Nat.prod_factorization_eq_prod_primeFactors]
 
 lemma Ssmooth_pos {k n : ℕ} (_hn : 1 ≤ n) : 1 ≤ Ssmooth k n :=
-  Finset.one_le_prod' fun _p hp =>
+  Finset.one_le_prod fun _p hp =>
     Nat.one_le_pow _ _ (Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hp)).pos
 
 lemma Rrough_pos {k n : ℕ} (_hn : 1 ≤ n) : 1 ≤ Rrough k n :=
-  Finset.one_le_prod' fun _p hp =>
+  Finset.one_le_prod fun _p hp =>
     Nat.one_le_pow _ _ (Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hp)).pos
 
 /-! ## Bound on the smooth radical: `rad(S)^2 ≤ P^2` -/
@@ -266,7 +266,7 @@ lemma rough_sq_le {k n : ℕ} (hF : F k n ≠ 0) (hP : Powerful (F k n)) :
     (∏ p ∈ (F k n).primeFactors.filter (fun p => ¬ p < k), p) ^ 2 ≤ Rrough k n := by
   unfold Rrough
   rw [← Finset.prod_pow]
-  apply Finset.prod_le_prod'
+  apply Finset.prod_le_prod
   intro p hp
   rw [Finset.mem_filter] at hp
   have hpp : p.Prime := Nat.prime_of_mem_primeFactors hp.1

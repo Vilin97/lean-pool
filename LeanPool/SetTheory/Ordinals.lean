@@ -198,15 +198,15 @@ instance : LinearOrder (Ordinals M) where
     have := hx.mem_trichotomous hy
     tauto
 
-instance : WellFoundedLT (Ordinals M) where
-  wf := by
-    have : (· < · : Ordinals M → _ → _) = ((· ∈ ·) on (⇓·.1)) := by
-      ext x y
-      rw [onFun, ← ToZFSet.mem, x.2.mem_iff_lt y.2, Subtype.coe_lt_coe]
-    rw [this]
-    refine RelEmbedding.wellFounded ⟨⟨(⇓·.1), ?_⟩, ?_⟩ ZFSet.mem_wf
-    · simp [Injective, toZFSet_simps]
-    · rfl
+instance : WellFoundedLT (Ordinals M) := by
+  change WellFounded (· < · : Ordinals M → _ → _)
+  have : (· < · : Ordinals M → _ → _) = ((· ∈ ·) on (⇓·.1)) := by
+    ext x y
+    rw [onFun, ← ToZFSet.mem, x.2.mem_iff_lt y.2, Subtype.coe_lt_coe]
+  rw [this]
+  refine RelEmbedding.wellFounded ⟨⟨(⇓·.1), ?_⟩, ?_⟩ ZFSet.mem_wf
+  · simp [Injective, toZFSet_simps]
+  · rfl
 
 instance : OrderBot (Ordinals M) where
   bot := ⟨∅, isOrdinal_empty⟩

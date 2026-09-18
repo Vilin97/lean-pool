@@ -133,8 +133,7 @@ theorem tensor_op_star_apply (x : E) (y : Eᵐᵒᵖ) :
 
 omit [Module.Finite 𝕜 E] in
 theorem tenSwap_star (x : E ⊗[𝕜] Eᵐᵒᵖ) : star (tenSwap 𝕜 x) = tenSwap 𝕜 (star x) :=
-x.induction_on
-  (by simp only [star_zero, map_zero])
+x.inductionOn
   (fun _ _ => by
     simp only [tenSwap_apply, tensor_op_star_apply, unop_apply, op_apply, MulOpposite.unop_op])
   (fun z w hz hw => by simp only [map_add, StarAddMonoid.star_add, hz, hw])
@@ -156,7 +155,7 @@ noncomputable def starAlgEquivOfLinearEquivTensorProduct
   TensorProduct R A B ≃⋆ₐ[R] C :=
 StarAlgEquiv.ofAlgEquiv
   (Algebra.TensorProduct.algEquivOfLinearEquivTensorProduct f h_mul h_one)
-  (fun x => x.induction_on (by simp only [star_zero, map_zero])
+  (fun x => x.inductionOn
     h_star
     (fun _ _ h1 h2 => by simp only [star_add, map_add, h1, h2]))
 
@@ -170,8 +169,7 @@ noncomputable def StarAlgEquiv.TensorProduct.map {R A B C D : Type*} [RCLike R]
   TensorProduct R A C ≃⋆ₐ[R] TensorProduct R B D :=
 StarAlgEquiv.ofAlgEquiv
   (AlgEquiv.TensorProduct.map f.toAlgEquiv g.toAlgEquiv)
-  (fun x => x.induction_on
-    (by simp only [star_zero, map_zero])
+  (fun x => x.inductionOn
     (fun _ _ => by simp only [TensorProduct.star_tmul, AlgEquiv.TensorProduct.map_tmul,
       coe_toAlgEquiv, map_star])
     (fun _ _ h1 h2 => by simp only [star_add, map_add, h1, h2]))
@@ -204,8 +202,7 @@ noncomputable def StarAlgEquiv.lTensor {R A B : Type*} (C : Type*) [RCLike R]
   (C ⊗[R] A) ≃⋆ₐ[R] (C ⊗[R] B) :=
 StarAlgEquiv.ofAlgEquiv
   (AlgEquiv.lTensor C f.toAlgEquiv)
-  (fun x => x.induction_on
-    (by simp only [star_zero, map_zero])
+  (fun x => x.inductionOn
     (fun _ _ => by
       simp only [AlgEquiv.lTensor_tmul, TensorProduct.star_tmul, coe_toAlgEquiv, map_star])
     (fun _ _ h1 h2 => by simp only [star_add, map_add, h1, h2]))

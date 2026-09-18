@@ -759,7 +759,6 @@ theorem starPos_groundCount_right (l r : ℕ) :
     · tauto
   unfold groundCount
   rw [h_groundEdges_right, Finset.card_image_of_injOn] <;> norm_num [Function.Injective]
-  omega
 
 instance : GameForm.Strided (Ruleset.Forms (Hackenbush ℕ)) where
   mk_with_strides l r := by

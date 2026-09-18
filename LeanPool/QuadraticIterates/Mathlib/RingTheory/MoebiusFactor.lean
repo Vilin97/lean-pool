@@ -88,6 +88,7 @@ lemma prod_moebiusFactorK {c : ℕ → R} (hc : ∀ d ≥ 1, c d ≠ 0) (n : ℕ
       (fun k hk ↦ by rw [ne_eq, FaithfulSMul.algebraMap_eq_zero_iff]; exact hc k hk)).mpr
     (fun n _ ↦ by simp [moebiusFactorK]) n hn).symm
 
+omit [IsDomain R] in
 /-- `algebraMap a / algebraMap b` is integral iff `b ∣ a` (for `b ≠ 0`). -/
 theorem isInteger_div_iff_dvd (a b : R) (hb : b ≠ 0) :
     IsLocalization.IsInteger R (algebraMap R K a / algebraMap R K b) ↔ b ∣ a := by

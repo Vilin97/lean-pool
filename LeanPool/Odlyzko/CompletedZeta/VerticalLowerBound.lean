@@ -118,7 +118,7 @@ theorem norm_inv_dedekindZeta_two_add_mul_I_le (t : ℝ) :
     ∏ P ∈ S,
         ‖1 + -inverseNormPower (primeIdealNorm K P) (2 + t * Complex.I)‖ ≤
         ∏ P ∈ S, (1 + (primeIdealNorm K P : ℝ) ^ (-(2 : ℝ))) := by
-      exact Finset.prod_le_prod
+      exact Finset.prod_le_prod₀
         (fun _ _ ↦ norm_nonneg _)
         (fun P _ ↦ norm_one_sub_inverseNormPower_two_add_mul_I_le K P t)
     _ ≤ Real.exp (∑ P ∈ S, (primeIdealNorm K P : ℝ) ^ (-(2 : ℝ))) :=

@@ -907,7 +907,7 @@ theorem faceBoundarySubdivision_middleSource
     have himage : R.position '' (({p, q} : Finset R.Vertex) : Set R.Vertex) =
         {R.position p, R.position q} := by
       ext x
-      simp [eq_comm]
+      simp
     rw [himage, convexHull_pair, image_segment]
     rw [hsourceApply, hsourceApply]
     rcases le_total (z (R.position p)) (z (R.position q)) with hpzq | hqzp

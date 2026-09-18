@@ -11,7 +11,7 @@ public import LeanPool.BrauerGroupNew.CentralSimple
 public import LeanPool.BrauerGroupNew.FieldCat
 public import Mathlib.Algebra.BrauerGroup.Defs
 public import Mathlib.Algebra.Algebra.Rat
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
 import LeanPool.BrauerGroupNew.Wedderburn
@@ -561,13 +561,11 @@ def e6Aux0 : (E ⊗[K] A) ⊗[E] (E ⊗[K] B) →ₐ[E] E ⊗[K] (A ⊗[K] B) :=
     fun e b => (commute_iff_eq _ _).2 <|
       show (_ ⊗ₜ _) * (_ ⊗ₜ _) = (_ ⊗ₜ _) * (_ ⊗ₜ _) by simp)
       fun x y => (commute_iff_eq _ _).2 <| show _ = _ by
-        induction x using TensorProduct.induction_on with
-        | zero => simp only [map_zero, zero_mul, mul_zero]
+        induction x using TensorProduct.inductionOn with
         | add x x' hx hx' => simp only [map_add, mul_add, hx, hx', add_mul]
         | tmul e a =>
           simp only [Algebra.TensorProduct.lift_tmul, AlgHom.coe_mk, RingHom.coe_mk]
-          induction y using TensorProduct.induction_on with
-          | zero => simp only [map_zero, mul_zero, zero_mul]
+          induction y using TensorProduct.inductionOn with
           | add y y' hy hy' => simp only [map_add, mul_add, hy, hy', add_mul]
           | tmul e' b =>
             simp only [Algebra.TensorProduct.lift_tmul, AlgHom.coe_mk, RingHom.coe_mk]

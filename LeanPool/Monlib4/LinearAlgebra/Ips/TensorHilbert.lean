@@ -182,10 +182,8 @@ theorem inner_ext_fourfold_iff' (x y : (E ⊗[𝕜] F) ⊗[𝕜] (G ⊗[𝕜] H)
     rw [TensorProduct.ext_iff_inner_right]
     intro p q
     induction p with
-    | zero => simp
     | tmul a b =>
         induction q with
-        | zero => simp
         | tmul c d => exact h a b c d
         | add q₁ q₂ hq₁ hq₂ => simp [TensorProduct.tmul_add, inner_add_right, hq₁, hq₂]
     | add p₁ p₂ hp₁ hp₂ => simp [TensorProduct.add_tmul, inner_add_right, hp₁, hp₂]

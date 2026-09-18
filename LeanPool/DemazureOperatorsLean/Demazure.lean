@@ -6,7 +6,7 @@ Authors: Óscar Álvarez Sánchez
 module
 
 
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 
 
 public import Mathlib.Algebra.MvPolynomial.Equiv

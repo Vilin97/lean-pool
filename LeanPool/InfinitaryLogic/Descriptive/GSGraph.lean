@@ -234,7 +234,7 @@ theorem exists_gSGraph_edge_of_not_isMeagre
   have hsym : IsMeagre {p : ℕ → Bool | ¬(p ∈ B ↔ p ∈ W)} := by
     rw [IsMeagre, compl_ofPred]
     simp only [not_not]
-    exact Filter.eventuallyEq_set.mp hBW
+    exact Filter.eventuallyEqSet_iff.mp hBW
   have hW_ne : W.Nonempty := by
     rcases W.eq_empty_or_nonempty with rfl | h
     · exact (hBnm (hsym.mono fun p hp => by simp [hp])).elim

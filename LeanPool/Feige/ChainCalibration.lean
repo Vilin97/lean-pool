@@ -6,7 +6,7 @@ Authors: Zhengqing Zhou, GPT-5.6 Pro
 module
 
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Order.Interval.Finset.Nat
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 

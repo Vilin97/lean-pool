@@ -3509,7 +3509,7 @@ theorem sourceMatrixTranspose_columnRoot {m : ℕ}
 @[simp] theorem sourceExponentTranspose_apply {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) (i j : Fin m) :
     sourceExponentTranspose d (i, j) = d (j, i) := by
-  have h := Finsupp.mapDomain_apply
+  have h := Finsupp.mapDomain_apply_of_injective
     (Equiv.prodComm (Fin m) (Fin m)).injective d (j, i)
   simpa only [sourceExponentTranspose, Equiv.coe_prodComm, Equiv.prodComm_apply,
     Prod.swap_prod_mk] using h
@@ -3755,9 +3755,9 @@ theorem columnWeightComponent_ne_zero_of_coeff_ne_zero {m : ℕ}
     columnWeightComponent
       (fun j : Fin m => sourceColumnDegree d j) p ≠ 0 := by
   intro hzero
-  have hcoeff := congrArg (MvPolynomial.coeff d) hzero
+  have hcoeff := congrArg (·.coeff d) hzero
   exact hd (by simpa only [coeff_columnWeightComponent, ↓reduceIte,
-                 MvPolynomial.coeff_zero] using hcoeff)
+                 AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] using hcoeff)
 
 end ArbitraryRankColumnWeightProjection
 
@@ -4047,7 +4047,7 @@ theorem columnWeightComponent_columnHighest
   intro d
   rw [coeff_sourceColumnRoot_columnWeightComponent ν p i j
     (ne_of_lt hij) d, hhighest]
-  simp only [MvPolynomial.coeff_zero, ite_self]
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, ite_self]
 
 theorem columnWeightComponent_columnHighest_all
     {m : ℕ} (ν : Fin m → ℕ) (p : SourceMatrix m)

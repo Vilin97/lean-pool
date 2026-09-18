@@ -6,7 +6,7 @@ Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 module
 
 public import Mathlib.Algebra.Group.AddChar
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 public import Mathlib.NumberTheory.MulChar.Basic
 import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
 import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality

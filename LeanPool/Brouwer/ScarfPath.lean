@@ -632,7 +632,7 @@ theorem maximal_component_path_no_escape_of_degree_le_two
   by_cases hxv : x = v
   · subst hxv
     let p' : G.Walk u y := p.concat hxy
-    have hp' : p'.IsPath := (SimpleGraph.Walk.concat_isPath_iff hxy).2 ⟨hp, hyNot⟩
+    have hp' : p'.IsPath := (SimpleGraph.Walk.isPath_concat hxy).2 ⟨hp, hyNot⟩
     have hp'_sub : {z : α | z ∈ p'.support} ⊆ component.supp := by
       intro z hz
       simp only [SimpleGraph.Walk.support_concat, List.mem_append, List.mem_cons,

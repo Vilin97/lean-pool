@@ -118,7 +118,7 @@ lemma multiTau_continuous {G Ω₀ : Type u} [MeasurableFinGroup G] [Topological
   · let f : (Fin p.m → G) → G := fun x ↦ ∑ i, x i
     have fcont : Continuous f := by fun_prop
     change Continuous fun (x : Fin p.m → ProbabilityMeasure G) ↦
-      Hm[(ProbabilityMeasure.map (ProbabilityMeasure.pi x) fcont.aemeasurable : Measure G)]
+      Hm[(ProbabilityMeasure.map (ProbabilityMeasure.pi x) f : Measure G)]
     apply continuous_measureEntropy_probabilityMeasure.comp
     exact (ProbabilityMeasure.continuous_map fcont).comp ProbabilityMeasure.continuous_pi
   · apply Continuous.mul continuous_const
@@ -172,8 +172,7 @@ lemma multiTau_min_exists {G Ω₀ : Type u} [MeasurableFinGroup G] [MeasureSpac
   rw [← this]
   apply (multiTau_min_exists_measure p).choose_spec.2
   intro i
-  apply Measure.isProbabilityMeasure_map
-  exact (hX i).aemeasurable
+  infer_instance
 
 /-- If $(X_i)_{1 \leq i \leq m}$ is a $\tau$-minimizer,
 then $\sum_{i=1}^m d[X_i; X^0] \leq \frac{2m}{\eta} d[X^0; X^0]$. -/

@@ -5,7 +5,11 @@ Authors: Catskills Research Company
 -/
 module
 
-public import Mathlib.Data.Set.Lattice
+public import Mathlib.Data.Set.Lattice.Bounded
+public import Mathlib.Data.Set.Lattice.Disjoint
+public import Mathlib.Data.Set.Lattice.Image
+public import Mathlib.Data.Set.Lattice.Indexed
+public import Mathlib.Data.Set.Lattice.Order
 
 public import Mathlib.Order.Hom.Basic
 public import Mathlib.Data.Set.Basic

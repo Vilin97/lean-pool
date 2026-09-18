@@ -198,7 +198,7 @@ lemma eta_DifferentiableAt_UpperHalfPlane' (z : ℍ) : DifferentiableAt ℂ dede
 
 lemma eta_logDeriv' (z : ℍ) : logDeriv dedekindEtaFun' z = (π * Complex.I / 12) * E₂ z := by
   unfold dedekindEtaFun' etaProdTerm
-  rw [logDeriv_mul (UpperHalfPlane.coe z) _ (etaProdTerm_ne_zero z) _
+  rw [logDeriv_fun_mul (UpperHalfPlane.coe z) _ (etaProdTerm_ne_zero z) _
     (etaProdTerm_differentiableAt z)]
   · have HG := logDeriv_tprod_eq_tsum2 (isOpen_lt continuous_const Complex.continuous_im)
       ⟨(z : ℂ), z.2⟩ (fun n x => 1 - etaQ n x)
@@ -258,7 +258,7 @@ lemma eta_logDeriv_eql' (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z 
       apply DifferentiableAt.inv
       · simp only [differentiableAt_fun_id]
       · exact ne_zero z
-  rw [h0, show ((csqrt) * η) = (fun x => (csqrt) x * η x) by rfl, logDeriv_mul]
+  rw [h0, show ((csqrt) * η) = (fun x => (csqrt) x * η x) by rfl, logDeriv_fun_mul]
   · nth_rw 2 [logDeriv_apply]
     unfold csqrt
     have := csqrt_deriv z

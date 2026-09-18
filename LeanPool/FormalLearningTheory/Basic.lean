@@ -5,7 +5,7 @@ Authors: Dhruv Gupta
 -/
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.MeasureTheory.MeasurableSpace.Instances
 import Mathlib.Algebra.Order.Module.Field
 import Mathlib.Data.EReal.Inv

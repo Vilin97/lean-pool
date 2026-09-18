@@ -361,8 +361,8 @@ theorem coeff_zero_polynomialMap {n : ℕ}
     (U : SpherePacking.Euclidean n ≃ₗᵢ[ℝ]
       SpherePacking.Euclidean n)
     (p : MvPolynomial (Fin n) ℝ) :
-    MvPolynomial.coeff 0 (polynomialMap U p) =
-      MvPolynomial.coeff 0 p := by
+    (polynomialMap U p).coeff 0 =
+      p.coeff 0 := by
   have h := eval_polynomialMap U p (0 : SpherePacking.Euclidean n)
   simp only [map_zero, PiLp.zero_apply] at h
   simpa only [MvPolynomial.eval_zero', MvPolynomial.constantCoeff_eq]
@@ -2235,7 +2235,8 @@ theorem coeff_X_mul_pderiv {R σ : Type*} [CommSemiring R]
   classical
   induction p using MvPolynomial.induction_on' with
   | add p q hp hq =>
-      simp only [map_add, mul_add, MvPolynomial.coeff_add, hp, nsmul_eq_mul, hq, smul_add]
+      simp only [map_add, mul_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp,
+        nsmul_eq_mul, hq, smul_add]
   | monomial m c =>
       rw [MvPolynomial.X_mul_pderiv_monomial,
         MvPolynomial.coeff_smul, MvPolynomial.coeff_monomial]
@@ -2300,7 +2301,7 @@ theorem harmonicYoung_rowExponent_degree {r n : ℕ}
   have hrow :=
     ((mem_harmonicYoungSubmodule lam
       (p : PolynomialSpace r n)).mp p.property).2.1 i
-  have hcoeff := congrArg (MvPolynomial.coeff d) hrow
+  have hcoeff := congrArg (·.coeff d) hrow
   rw [coeff_rowEuler, MvPolynomial.coeff_smul] at hcoeff
   have hmul :
       ((rowExponent d i).degree : ℝ) *
@@ -4286,7 +4287,7 @@ theorem polarization_isHomogeneous_harmonicLift {r n m : ℕ}
   cases m with
   | zero =>
       have hconstant :
-          p = MvPolynomial.C (MvPolynomial.coeff 0 p) :=
+          p = MvPolynomial.C (p.coeff 0) :=
         MvPolynomial.totalDegree_eq_zero_iff_eq_C.mp
           ((MvPolynomial.totalDegree_zero_iff_isHomogeneous _).mpr hp)
       rw [hconstant]
@@ -4589,7 +4590,7 @@ theorem mem_youngMultihomogeneousSubmodule_iff_rowEuler
     have hdegree : ∀ i : Fin (r + 1),
         (rowExponent d i).degree = lam i := by
       intro i
-      have heuler := congrArg (MvPolynomial.coeff d) (hp i)
+      have heuler := congrArg (·.coeff d) (hp i)
       rw [coeff_rowEuler, MvPolynomial.coeff_smul] at heuler
       have hmul :
           ((rowExponent d i).degree : ℝ) * p.coeff d =
@@ -4754,7 +4755,7 @@ theorem youngMultihomogeneous_pderiv_eq_zero_of_rowDegree_zero
     have hcoordinate := congrArg (fun e : Fin n →₀ ℕ => e k) hrow
     simp only [rowExponent_apply, Finsupp.coe_add, Pi.add_apply, Finsupp.single_eq_same,
       Finsupp.coe_zero, Pi.zero_apply, Nat.add_eq_zero_iff, one_ne_zero, and_false] at hcoordinate
-  simp only [hcoeff, zero_mul, MvPolynomial.coeff_zero]
+  simp only [hcoeff, zero_mul, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
 
 theorem youngMultihomogeneous_polarization_eq_zero_of_rowDegree_zero
     {r n : ℕ} (lam : Fin (r + 1) → ℕ)
@@ -4915,14 +4916,16 @@ theorem polynomialRealPart_ne_zero_or_polynomialImaginaryPart_ne_zero
   · right
     intro him
     have hi : (p.coeff d).im = 0 := by
-      simpa only [coeff_polynomialImaginaryPart, MvPolynomial.coeff_zero] using
+      simpa only [coeff_polynomialImaginaryPart, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero,
+        Pi.zero_apply] using
         congrArg (fun q : MvPolynomial σ ℝ => q.coeff d) him
     apply hd
     apply Complex.ext <;> simp [hre, hi]
   · left
     intro hreal
     exact hre (by
-      simpa only [coeff_polynomialRealPart, MvPolynomial.coeff_zero] using
+      simpa only [coeff_polynomialRealPart, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero,
+        Pi.zero_apply] using
         congrArg (fun q : MvPolynomial σ ℝ => q.coeff d) hreal)
 
 theorem polynomialRealPart_pderiv {σ : Type*} (i : σ)
@@ -8458,8 +8461,8 @@ theorem polynomialInner_youngGramRadialIdeal_eq_zero_of_traceFree
         obtain ⟨⟨i, j⟩, rfl⟩ := hg
         intro a
         rw [mul_comm a, polynomialInner_rowPairing_trace i j a p, hp i j]
-        simp only [SpherePacking.Fischer.polynomialInner, MvPolynomial.coeff_zero, mul_zero,
-          Finsupp.sum_fun_zero]
+        simp only [SpherePacking.Fischer.polynomialInner, AddMonoidAlgebra.coeff_zero,
+          Finsupp.coe_zero, Pi.zero_apply, mul_zero, Finsupp.sum_fun_zero]
     | zero =>
         intro a
         simp only [SpherePacking.Fischer.polynomialInner, mul_zero, AddMonoidAlgebra.coeff_zero,

@@ -99,7 +99,7 @@ theorem evaluation_injective (C : SeparationPackage I) :
 
 theorem initial_isTopologicalAddGroup (C : SeparationPackage I) :
     @IsTopologicalAddGroup (I →₀ ℤ) C.initialTopology _ := by
-  exact topologicalAddGroup_induced C.evaluation
+  exact isTopologicalAddGroup_induced C.evaluation
 
 theorem initial_t2Space (C : SeparationPackage I) :
     @T2Space (I →₀ ℤ) C.initialTopology := by

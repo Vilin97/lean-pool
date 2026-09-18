@@ -279,7 +279,7 @@ lemma validResidues_card_eq_mul (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT 
 lemma localDensityProduct_le_one (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) :
     localDensityProduct b T S ≤ 1 := by
   unfold localDensityProduct
-  apply Finset.prod_le_one
+  apply Finset.prod_le_one₀
   · intro p _
     exact localDensityFactor_nonneg p b T
   · intro p _

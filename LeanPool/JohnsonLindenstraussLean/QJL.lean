@@ -7,7 +7,7 @@ module
 
 import Mathlib.Probability.Distributions.Gaussian.Fernique
 import Mathlib.Probability.Independence.Integration
-public import Mathlib.Data.Real.Sign
+public import Mathlib.Basic.Real.Sign
 public import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
 import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic

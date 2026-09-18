@@ -468,7 +468,7 @@ theorem summable_sq_Phi_eval
         Finset.prod Finset.univ
           (fun q : Fin d =>
             ∑' n : Nat, ‖phi1D (kappa q) n (z q)‖ ^ 2) :=
-    Finset.prod_le_prod
+    Finset.prod_le_prod₀
       (fun q _ => Finset.sum_nonneg fun n _ => sq_nonneg _)
       (fun q _ => (summable_sq_phi1D_eval (kappa q) (z q)).sum_le_tsum
           (Finset.range (J q + 1)) (fun n _ => sq_nonneg _))
@@ -1125,7 +1125,7 @@ private lemma phiMajorant_multi_sq_summable
               (fun n : Nat => phiMajorant (kappa q) n R ^ 2)) ≤
         Finset.prod Finset.univ
           (fun q : Fin d => ∑' n : Nat, phiMajorant (kappa q) n R ^ 2) :=
-    Finset.prod_le_prod
+    Finset.prod_le_prod₀
       (fun q _ => Finset.sum_nonneg fun n _ => sq_nonneg _)
       (fun q _ => (summable_phiMajorant_sq (kappa q) hR).sum_le_tsum
           (Finset.range (J q + 1)) (fun n _ => sq_nonneg _))
@@ -1228,7 +1228,7 @@ private lemma partialSum_uniformCauchy_on_compact
         Finset.prod Finset.univ
           (fun q : Fin d => ‖phi1D (kappa q) (alpha q) (z q)‖) by
       simp [Phi, norm_prod]]
-    exact Finset.prod_le_prod
+    exact Finset.prod_le_prod₀
       (by intro q _; exact norm_nonneg _)
       (by intro q _; exact phi1D_norm_le_majorant hR (hcoord z hzK q))
   rw [norm_mul]

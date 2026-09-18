@@ -79,7 +79,7 @@ theorem Balanced.add_iff_right {d e : Vars N →₀ ℕ} (hd : Balanced d) :
 /-- Coefficientwise multihomogeneity with a specified degree in each block. -/
 def IsMultiHomogeneous [CommSemiring k] (f : MvPolynomial (Vars N) k)
     (r : Fin N → ℕ) : Prop :=
-  ∀ d, coeff d f ≠ 0 → ∀ b, blockDegree d b = r b
+  ∀ d, f.coeff d ≠ 0 → ∀ b, blockDegree d b = r b
 
 /-- Every nonzero monomial has the same degree `r` in every block. -/
 def IsMultiHomogeneousOfDegree [CommSemiring k] (f : MvPolynomial (Vars N) k)
@@ -89,7 +89,7 @@ def IsMultiHomogeneousOfDegree [CommSemiring k] (f : MvPolynomial (Vars N) k)
 /-- Polynomials all of whose monomials have balanced block degrees.
 Different monomials may have different common degrees. -/
 def HasBalancedSupport [CommSemiring k] (f : MvPolynomial (Vars N) k) : Prop :=
-  ∀ d, coeff d f ≠ 0 → Balanced d
+  ∀ d, f.coeff d ≠ 0 → Balanced d
 
 theorem IsMultiHomogeneousOfDegree.hasBalancedSupport [CommSemiring k]
     {f : MvPolynomial (Vars N) k} {r : ℕ} (hf : IsMultiHomogeneousOfDegree f r) :
@@ -124,9 +124,9 @@ theorem IsMultiHomogeneous.add {p q : MvPolynomial (Vars N) k} {r : Fin N → �
     (hp : IsMultiHomogeneous p r) (hq : IsMultiHomogeneous q r) :
     IsMultiHomogeneous (p + q) r := by
   intro d hd
-  by_cases h : coeff d p = 0
+  by_cases h : p.coeff d = 0
   · apply hq d
-    simpa [coeff_add, h] using hd
+    simpa [h] using hd
   · exact hp d h
 
 theorem IsMultiHomogeneous.smul {p : MvPolynomial (Vars N) k} {r : Fin N → ℕ}
@@ -190,9 +190,9 @@ theorem hasBalancedSupport_add {p q : MvPolynomial (Vars N) k}
     (hp : HasBalancedSupport p) (hq : HasBalancedSupport q) :
     HasBalancedSupport (p + q) := by
   intro d hd
-  by_cases h : coeff d p = 0
+  by_cases h : p.coeff d = 0
   · apply hq d
-    simpa [coeff_add, h] using hd
+    simpa [h] using hd
   · exact hp d h
 
 theorem hasBalancedSupport_mul {p q : MvPolynomial (Vars N) k}
@@ -202,8 +202,8 @@ theorem hasBalancedSupport_mul {p q : MvPolynomial (Vars N) k}
   intro d hd
   rw [coeff_mul] at hd
   obtain ⟨⟨e, f⟩, hef, h⟩ := Finset.exists_ne_zero_of_sum_ne_zero hd
-  have he : coeff e p ≠ 0 := left_ne_zero_of_mul h
-  have hf : coeff f q ≠ 0 := right_ne_zero_of_mul h
+  have he : p.coeff e ≠ 0 := left_ne_zero_of_mul h
+  have hf : q.coeff f ≠ 0 := right_ne_zero_of_mul h
   rw [← Finset.HasAntidiagonal.mem_antidiagonal.mp hef]
   exact (hp e he).add (hq f hf)
 
@@ -311,7 +311,7 @@ theorem monomial_mem_adjoin_segre {d : Vars N →₀ ℕ} {r : ℕ}
       simp only [blockDegree_add, blockDegree_segreExponent, hd b] at h
       omega
     have hm : monomial d a = segreMonomial j * monomial (d - segreExponent j) a := by
-      rw [segreMonomial_eq_monomial, monomial_mul, one_mul, hde]
+      rw [segreMonomial_eq_monomial, monomial_mul_monomial, one_mul, hde]
     rw [hm]
     exact Subalgebra.mul_mem _ (Algebra.subset_adjoin ⟨j, rfl⟩) (ih hrem)
 
@@ -351,8 +351,8 @@ def balancedPart : MvPolynomial (Vars N) k →ₗ[k] MvPolynomial (Vars N) k whe
   map_smul' _ _ := by simp [Finsupp.filter_smul]
 
 @[simp] theorem coeff_balancedPart (p : MvPolynomial (Vars N) k) (d : Vars N →₀ ℕ) :
-    coeff d (balancedPart p) = if Balanced d then coeff d p else 0 := by
-  simp [balancedPart, MvPolynomial.coeff, Finsupp.filter_apply]
+    (balancedPart p).coeff d = if Balanced d then p.coeff d else 0 := by
+  simp [balancedPart, Finsupp.filter_apply]
 
 theorem balancedPart_mem (p : MvPolynomial (Vars N) k) :
     balancedPart p ∈ balancedAlgebra k N := by
@@ -368,7 +368,7 @@ theorem balancedPart_mem (p : MvPolynomial (Vars N) k) :
   rw [coeff_balancedPart]
   by_cases h : Balanced d
   · simp [h]
-  · have hc : coeff d p = 0 := by
+  · have hc : p.coeff d = 0 := by
       by_contra hc
       exact h (hp d hc)
     simp [h, hc]
@@ -380,7 +380,8 @@ theorem balancedPart_mem (p : MvPolynomial (Vars N) k) :
   rw [coeff_balancedPart]
   rcases eq_or_ne d e with rfl | hde
   · split_ifs <;> simp [coeff_monomial]
-  · simp [coeff_monomial, hde, apply_ite (coeff e)]
+  · simp [coeff_monomial, hde,
+      apply_ite (fun p : MvPolynomial (Vars N) k => p.coeff e)]
 
 theorem balancedPart_monomial_mul {d : Vars N →₀ ℕ} (hd : Balanced d)
     (a : k) (q : MvPolynomial (Vars N) k) :
@@ -388,9 +389,9 @@ theorem balancedPart_monomial_mul {d : Vars N →₀ ℕ} (hd : Balanced d)
   classical
   induction q using MvPolynomial.induction_on' with
   | monomial e b =>
-    rw [monomial_mul, balancedPart_monomial, balancedPart_monomial]
+    rw [monomial_mul_monomial, balancedPart_monomial, balancedPart_monomial]
     simp only [hd.add_iff_right]
-    split_ifs <;> simp [monomial_mul]
+    split_ifs <;> simp [monomial_mul_monomial]
   | add p q hp hq =>
     simp only [mul_add, map_add, hp, hq]
 
@@ -402,12 +403,12 @@ theorem balancedPart_mul {p : MvPolynomial (Vars N) k}
   classical
   calc
     balancedPart (p * q) =
-        balancedPart ((∑ d ∈ p.support, monomial d (coeff d p)) * q) := by
+        balancedPart ((∑ d ∈ p.support, monomial d (p.coeff d)) * q) := by
       congr 2
       exact p.as_sum
-    _ = ∑ d ∈ p.support, balancedPart (monomial d (coeff d p) * q) := by
+    _ = ∑ d ∈ p.support, balancedPart (monomial d (p.coeff d) * q) := by
       simp only [Finset.sum_mul, map_sum]
-    _ = ∑ d ∈ p.support, monomial d (coeff d p) * balancedPart q := by
+    _ = ∑ d ∈ p.support, monomial d (p.coeff d) * balancedPart q := by
       apply Finset.sum_congr rfl
       intro d hd
       exact balancedPart_monomial_mul (hp d (mem_support_iff.mp hd)) _ _
@@ -658,7 +659,7 @@ variable [Field k]
 theorem IsMultiHomogeneousOfDegree.constantCoeff_eq_zero [NeZero N]
     {f : MvPolynomial (Vars N) k} {r : ℕ}
     (hf : IsMultiHomogeneousOfDegree f r) (hr : 0 < r) : constantCoeff f = 0 := by
-  change coeff 0 f = 0
+  change f.coeff 0 = 0
   by_contra h
   have hdeg := hf 0 h (0 : Fin N)
   simp only [blockDegree_zero] at hdeg
@@ -728,7 +729,7 @@ theorem exists_common_zero_balanced {q : ℕ} (hq : q ≤ 2 * N)
   have hmin : vertexIdeal k N ∈ (Ideal.span (Set.range f)).minimalPrimes := by
     rw [← Ideal.radical_minimalPrimes, hrad, Ideal.minimalPrimes_eq_subsingleton_self]
     exact Set.mem_singleton _
-  have hupper := Ideal.height_le_card_of_mem_minimalPrimes_span (Set.finite_range f) hmin
+  have hupper := Ideal.height_le_ncard_of_mem_minimalPrimes_span (Set.finite_range f) hmin
   have hcard : (Set.range f).ncard ≤ q := by
     simpa only [Set.image_univ, Set.ncard_univ, Nat.card_fin] using
       (Set.ncard_image_le (s := Set.univ) (f := f) Set.finite_univ)
@@ -772,7 +773,7 @@ of coefficients and blockwise sums of exponents. -/
 theorem exists_common_zero_of_coeff [Field k] [IsAlgClosed k] {q r : ℕ}
     (f : Fin q → MvPolynomial (Fin N × Fin 3) k)
     (hN : 0 < N) (hr : 0 < r) (hq : q ≤ 2 * N)
-    (hf : ∀ i d, coeff d (f i) ≠ 0 → ∀ b : Fin N, ∑ j : Fin 3, d (b, j) = r) :
+    (hf : ∀ i d, (f i).coeff d ≠ 0 → ∀ b : Fin N, ∑ j : Fin 3, d (b, j) = r) :
     ∃ x : (Fin N × Fin 3) → k,
       (∀ b : Fin N, (fun j : Fin 3 => x (b, j)) ≠ 0) ∧
       ∀ i : Fin q, eval x (f i) = 0 :=

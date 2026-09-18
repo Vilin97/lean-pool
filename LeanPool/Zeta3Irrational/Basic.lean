@@ -218,9 +218,9 @@ lemma integrableOn_JJ' (n : ℕ) : MeasureTheory.Integrable (fun (x : ℝ × ℝ
           · rw [abs_eq_self.2, abs_eq_self.2, abs_eq_self.2, abs_eq_self.2, abs_eq_self.2,
               abs_eq_self.2] <;> nlinarith
           · simp only [abs_eq_self, sub_nonneg]
-            apply mul_le_one₀ (by nlinarith) (by linarith) (by linarith)
+            exact (mul_le_of_le_one_left (by linarith) (by nlinarith)).trans (by linarith)
           · simp only [abs_eq_self, sub_nonneg]
-            apply mul_le_one₀ (by nlinarith) (by linarith) (by linarith)
+            exact (mul_le_of_le_one_left (by linarith) (by nlinarith)).trans (by linarith)
         · positivity
         · exact JJ'_nonneg x hx n
       · simp only [hx, ↓reduceIte]
@@ -621,7 +621,7 @@ lemma ineq_aux (x : ℝ × ℝ) (z : ℝ)
   constructor
   · apply div_nonneg (by linarith)
     simp only [sub_nonneg]
-    apply mul_le_one₀ _ (by linarith) (by linarith)
+    refine (mul_le_of_le_one_left (by linarith) ?_).trans (by linarith)
     simp only [tsub_le_iff_right, le_add_iff_nonneg_right]
     nlinarith
   · rw [div_le_iff₀]

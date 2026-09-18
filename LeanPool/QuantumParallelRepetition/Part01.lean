@@ -2400,7 +2400,7 @@ theorem posSemidef_kernel_of_sub_posSemidef
     (hA : A.PosSemidef) (hsub : (F - A).PosSemidef)
     {x : d → ℂ} (hx : F *ᵥ x = 0) :
     A *ᵥ x = 0 := by
-  apply (hA.dotProduct_mulVec_zero_iff x).mp
+  apply hA.dotProduct_mulVec_zero_iff.mp
   have hA_nonneg : 0 ≤ star x ⬝ᵥ (A *ᵥ x) :=
     hA.dotProduct_mulVec_nonneg x
   have hsub_nonneg : 0 ≤ star x ⬝ᵥ ((F - A) *ᵥ x) :=
@@ -4882,7 +4882,7 @@ theorem fullHistoryHiddenAliceWeight_sum_le_one
       fullHistoryHiddenAliceWeight G h hidden) ≤ 1 := by
   unfold fullHistoryHiddenAliceWeight
   rw [← Fintype.prod_sum]
-  apply Finset.prod_le_one
+  apply Finset.prod_le_one₀
   · intro i _
     exact Finset.sum_nonneg fun x _ =>
       G.conditionalXGivenY_nonneg (h.bobRemaining i) x
@@ -4897,7 +4897,7 @@ theorem fullHistoryHiddenBobWeight_sum_le_one
       fullHistoryHiddenBobWeight G h hidden) ≤ 1 := by
   unfold fullHistoryHiddenBobWeight
   rw [← Fintype.prod_sum]
-  apply Finset.prod_le_one
+  apply Finset.prod_le_one₀
   · intro i _
     exact Finset.sum_nonneg fun y _ =>
       G.conditionalYGivenX_nonneg (h.aliceRevealed i) y

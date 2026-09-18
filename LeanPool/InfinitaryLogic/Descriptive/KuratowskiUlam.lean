@@ -123,7 +123,7 @@ theorem isMeagre_of_isMeagre_sections [SecondCountableTopology Y]
   have hM : IsMeagre {p : X × Y | ¬(p ∈ A ↔ p ∈ W)} := by
     rw [IsMeagre, compl_ofPred]
     simp only [not_not]
-    exact Filter.eventuallyEq_set.mp hAW
+    exact Filter.eventuallyEqSet_iff.mp hAW
   by_contra hA_nm
   -- W is nonempty (otherwise A is contained in the symmetric difference)
   have hW_ne : W.Nonempty := by

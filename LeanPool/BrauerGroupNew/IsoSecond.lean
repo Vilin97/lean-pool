@@ -149,14 +149,12 @@ instance : MulAction (A ⊗[F] B)ᵐᵒᵖ (M α β) where
     ext a b
     simp only [AlgebraTensorModule.curry_apply, curry_apply, LinearMap.coe_restrictScalars,
       LinearMap.coe_comp, Function.comp_apply, Submodule.mkQ_apply]
-    induction x using TensorProduct.induction_on with
+    induction x using TensorProduct.inductionOn with
     | tmul xl rl =>
-      induction y using TensorProduct.induction_on with
+      induction y using TensorProduct.inductionOn with
       | tmul yl yr => simp [AoxFBSmulM_op_tmul_smul_mk_tmul, _root_.mul_assoc]
       | add y y' hy hy' => simp_all [add_mul]
-      | zero => simp
     | add x x' hx hx' => simp_all [mul_add]
-    | zero => simp
 
 instance : DistribMulAction (A ⊗[F] B)ᵐᵒᵖ (M α β) where
   smul_zero x := show AoxFBSmulM _ _ = _ by simp
@@ -314,10 +312,7 @@ theorem C_mul_smul' (x y : C) (ab : M α β) : (x * y) • ab = x • y • ab :
       rw [mul_add, map_add, LinearMap.add_apply, map_add, LinearMap.add_apply, h1, h2, map_add]
     | single τ k2 =>
       induction ab using Submodule.Quotient.induction_on with | H ab =>
-      induction ab using TensorProduct.induction_on with
-      | zero =>
-        change CSmul _ _ = CSmul _ (CSmul _ _)
-        simp
+      induction ab using TensorProduct.inductionOn with
       | tmul a b =>
         change CSmul (⟨mulLinearMap _ (.single σ k1) (.single τ k2)⟩ : C) _ = CSmul _ (CSmul _ _)
         simp only [mulLinearMap_single_single, Pi.mul_apply, Units.val_mul]
@@ -344,7 +339,7 @@ instance : MulAction C (M α β) where
   one_smul x := by
     induction x using Quotient.inductionOn' with | h x =>
     change (1 : C) • Submodule.Quotient.mk x = Submodule.Quotient.mk x
-    induction x using TensorProduct.induction_on with
+    induction x using TensorProduct.inductionOn with
     | tmul a b =>
       rw [show (1 : C) = ((β (1, 1)).1⁻¹ * (α (1, 1)).1⁻¹) • CrossProductAlgebra.basis 1 by
         apply val_injective; simp [CrossProductAlgebra.basis], CSmul_calc, mul_smul,
@@ -366,8 +361,6 @@ instance : MulAction C (M α β) where
       simp only [Submodule.Quotient.mk_add]
       conv_rhs => rw [← hx, ← hy]
       simp [CSmul_def, map_add]
-    | zero =>
-      simp [Submodule.Quotient.mk_zero, CSmul_def, map_zero]
   mul_smul := C_mul_smul'
 
 instance : DistribMulAction C (M α β) where
@@ -392,9 +385,9 @@ instance : SMulCommClass (A ⊗[F] B)ᵐᵒᵖ C (M α β) where
     rintro ⟨x⟩ c m
     induction m using Quotient.inductionOn' with | h m =>
     change op x • c • Submodule.Quotient.mk _ = c • op x • Submodule.Quotient.mk _
-    induction x using TensorProduct.induction_on with
+    induction x using TensorProduct.inductionOn with
     | tmul a' b' =>
-      induction m using TensorProduct.induction_on with
+      induction m using TensorProduct.inductionOn with
       | tmul a b =>
         change _ • (⟨c.val⟩ : C) • _ = (⟨c.val⟩ : C) • _ • Submodule.Quotient.mk _
         induction c.val using Finsupp.induction_linear with
@@ -405,14 +398,11 @@ instance : SMulCommClass (A ⊗[F] B)ᵐᵒᵖ C (M α β) where
           rw [← mul_one c, ← smul_eq_mul _ 1, ← Finsupp.smul_single, ← smul_mk, mk_single_one,
             CSmul_calc, Aox_FB_op_tmul_smul_mk_tmul, Aox_FB_op_tmul_smul_mk_tmul, CSmul_calc,
             _root_.mul_assoc, _root_.mul_assoc]
-      | zero => simp
       | add x y hx hy =>
         simp [Submodule.Quotient.mk_add, @smul_add (A ⊗[F] B)ᵐᵒᵖ (M α β) _ _,
           @smul_add C (M α β) _ _, hx, hy]
     | add x y hx hy =>
       simp only [op_add, @add_smul (A ⊗[F] B)ᵐᵒᵖ (M α β) _ _, hx, hy, smul_add]
-    | zero =>
-      simp [op_zero, zero_smul]
 
 /-- The tensor-product action commutes with the cross-product action on `M`. -/
 lemma Aox_FB_smul_comm_CSmul (x : (A ⊗[F] B)ᵐᵒᵖ) (c : C) (m : M α β) :
@@ -422,8 +412,7 @@ lemma Aox_FB_smul_comm_CSmul (x : (A ⊗[F] B)ᵐᵒᵖ) (c : C) (m : M α β) :
 open CrossProductAlgebra TensorProduct in
 instance : IsScalarTower F C (M α β) := .of_algebraMap_smul fun x m ↦ by
   induction m using Submodule.Quotient.induction_on with | H m =>
-  induction m using TensorProduct.induction_on with
-  | zero => simp
+  induction m using TensorProduct.inductionOn with
   | add x y h1 h2 =>
     rw [Submodule.Quotient.mk_add, smul_add, h1, h2, smul_add]
   | tmul a b =>
@@ -492,15 +481,13 @@ noncomputable def φ0 :
     simp only [MulOpposite.algebraMap_apply, Algebra.TensorProduct.algebraMap_apply,
       LinearMap.coe_mk, AddHom.coe_mk, Module.algebraMap_end_apply]
     induction m using Submodule.Quotient.induction_on with | H m =>
-    induction m using TensorProduct.induction_on with
+    induction m using TensorProduct.inductionOn with
     | tmul a b =>
       erw [Aox_FB_op_tmul_smul_mk_tmul]
       rw [_root_.mul_one, ← Algebra.commutes, ← Algebra.smul_def, ← smul_tmul',
         Submodule.Quotient.mk_smul]
     | add x y hx hy =>
       simpa using congr($hx + $hy)
-    | zero =>
-      erw [smul_zero]
 
 open TensorProduct
 
@@ -539,7 +526,7 @@ def AoxKBToM : A ⊗[K] B →ₗ[F] M α β where
   __ := AoxKBToMAux
   map_smul' := by
     intro f x
-    induction x using TensorProduct.induction_on with
+    induction x using TensorProduct.inductionOn with
     | tmul a b =>
       simp only [AoxKBToMAux, smul_tmul', ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe,
         liftAddHom_tmul, AddMonoidHom.coe_mk, ZeroHom.coe_mk, RingHom.id_apply]
@@ -548,15 +535,12 @@ def AoxKBToM : A ⊗[K] B →ₗ[F] M α β where
       simp only [ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe, RingHom.id_apply, smul_add,
         map_add] at hx hy ⊢
       simp only [hx, hy]
-    | zero =>
-      simp only [smul_zero, ZeroHom.toFun_eq_coe, map_zero,
-        RingHom.id_apply]
 
 /-- The balanced quotient is linearly equivalent to the tensor product over `K`. -/
 def AoxKBEquivM : M α β ≃ₗ[F] A ⊗[K] B := .ofLinearMap MtoAoxKB AoxKBToM
   (by
     ext x
-    induction x using TensorProduct.induction_on with
+    induction x using TensorProduct.inductionOn with
     | tmul a b =>
       simp only [MtoAoxKB, AoxKBToM, AoxKBToMAux, ZeroHom.toFun_eq_coe,
         AddMonoidHom.toZeroHom_coe, LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk,
@@ -564,8 +548,7 @@ def AoxKBEquivM : M α β ≃ₗ[F] A ⊗[K] B := .ofLinearMap MtoAoxKB AoxKBToM
         Submodule.liftQ_apply, lift.tmul, LinearMap.id_coe, id_eq]
     | add x y hx hy =>
       simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.id_coe, id_eq] at hx hy
-      simp only [LinearMap.coe_comp, Function.comp_apply, map_add, hx, hy, LinearMap.id_coe, id_eq]
-    | zero => simp)
+      simp only [LinearMap.coe_comp, Function.comp_apply, map_add, hx, hy, LinearMap.id_coe, id_eq])
   (by
     ext a b
     simp only [AoxKBToM, AoxKBToMAux, ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe,

@@ -97,10 +97,7 @@ def smul1 (K A B M : Type u)
     __ := smul1AddHom K A B M f m
     map_smul' := fun k b ↦ by
       simp only [smul1AddHom, ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe, RingHom.id_apply]
-      induction b using TensorProduct.induction_on
-      · rw [smul_zero, map_zero]
-        have h : algebraMap K A k • (0 : M) = 0 := smul_zero _
-        exact h.symm
+      induction b using TensorProduct.inductionOn
       · rename_i b l
         rw [TensorProduct.smul_tmul', TensorProduct.liftAddHom_tmul,
           TensorProduct.liftAddHom_tmul]
@@ -136,8 +133,7 @@ lemma smul1_zero_left (K A B M : Type u)
     [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B]
     [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A)
     (r : B ⊗[K] Module.End A M) : smul1 K A B M f (0 : M) r = 0 := by
-  induction r using TensorProduct.induction_on with
-  | zero => rw [map_zero]
+  induction r using TensorProduct.inductionOn with
   | tmul b l =>
     rw [smul1_tmul, map_zero, smul_zero]
     rfl
@@ -150,8 +146,7 @@ lemma smul1_add (K A B M : Type u)
     smul1 K A B M f (m1 + m2) r = smul1 K A B M f m1 r + smul1 K A B M f m2 r :=
     fun r (m1 m2 : M) ↦ by
   change smul1 K A B M f ((m1 : M) + m2) r = smul1 K A B M f m1 r + smul1 K A B M f m2 r
-  induction r using TensorProduct.induction_on with
-  | zero => rw [map_zero, map_zero, map_zero, add_zero]
+  induction r using TensorProduct.inductionOn with
   | tmul b l =>
     rw [smul1_tmul, smul1_tmul, smul1_tmul, map_add, smul_add]
     rfl
@@ -164,13 +159,9 @@ lemma mul_smul1 (K A B M : Type u)
     [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A) :
     ∀ (x y : (B ⊗[K] (Module.End A M))) (m : moduleInst K A B M f),
     smul1 K A B M f m (x * y) = smul1 K A B M f (smul1 K A B M f m y) x := fun x y (m : M) ↦ by
-  induction x using TensorProduct.induction_on with
-  | zero => rw [zero_mul, map_zero, map_zero]
+  induction x using TensorProduct.inductionOn with
   | tmul b1 l1 =>
-    induction y using TensorProduct.induction_on with
-    | zero =>
-      rw [mul_zero, map_zero]
-      exact (smul1_zero_left K A B M f _).symm
+    induction y using TensorProduct.inductionOn with
     | tmul b2 l2 =>
       rw [Algebra.TensorProduct.tmul_mul_tmul, smul1_tmul, smul1_tmul, smul1_tmul,
         map_mul, Module.End.mul_apply, map_smul, mul_smul]
@@ -206,10 +197,6 @@ instance (K A B M : Type u)
     IsScalarTower K (B ⊗[K] Module.End A M) (moduleInst K A B M f) where
   smul_assoc a x y := by
     induction x with
-    | zero =>
-      -- simp
-      change smul1 K A B M f _ _ = _ • smul1 K A B M f _ _
-      rw [map_zero, smul_zero, smul_zero, map_zero]
     | tmul b z =>
       change (smul1 K A B M f _ _) = _ • smul1 K A B M f _ _
       simp

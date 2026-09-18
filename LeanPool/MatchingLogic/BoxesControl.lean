@@ -18,7 +18,7 @@ by anything.
 module
 
 public import LeanPool.MatchingLogic.Boxes
-public import Mathlib.Logic.IsEmpty.Defs
+public import Mathlib.Basic.IsEmpty.Defs
 import Mathlib.Order.BooleanAlgebra.Set
 
 /-!

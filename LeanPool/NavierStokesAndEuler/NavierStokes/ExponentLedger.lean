@@ -6,7 +6,7 @@ Authors: OpenAI
 
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Linarith.Frontend
 import Mathlib.Tactic.Ring.RingNF
 import Mathlib.Tactic.NormNum.Abs

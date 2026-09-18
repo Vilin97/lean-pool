@@ -5,7 +5,7 @@ Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 -/
 module
 
-public import Mathlib.Algebra.Ring.MinimalAxioms
+public import Mathlib.Algebra.Ring.Basic
 
 /-!
 # Promoting a non-unital ring with a unit element to a unital ring
@@ -21,8 +21,7 @@ namespace LeanPool.ArtinWedderburn
 variable {R : Type*} [NonUnitalRing R]
 variable (e : R)
 
-/-- Designate `e` as the `1` element when building a unital `Ring` structure
-on `R` via `Ring.ofMinimalAxioms`. -/
+/-- Designate `e` as the `1` element when building a unital `Ring` structure on `R`. -/
 @[reducible]
 def eOne : One R := ⟨e⟩
 
@@ -31,17 +30,17 @@ variable (is_right_unit : ∀ x : R, x * e = x)
 
 -- if we have a nonunital ring where one element is the left and right unit simultaneously
 -- then it is a regular ring
-/-- Promote a non-unital ring `R` with a two-sided identity `e` to a unital `Ring R`. -/
+/-- Promote a non-unital ring `R` with a two-sided identity `e` to a unital `Ring R`.
+
+The additive structure is inherited verbatim from the `NonUnitalRing R` instance, so the
+`AddCommMonoid R` carried by the result is the one already in scope; rebuilding it (as
+`Ring.ofMinimalAxioms` would) yields `nsmulRec`/`zsmulRec` instead and makes the two
+incomparable during instance synthesis. -/
 @[reducible]
-def nonUnitalWEIsRing : Ring R :=
-  @Ring.ofMinimalAxioms R (by exact inferInstance) (by exact inferInstance) (by exact inferInstance)
-    (by exact inferInstance) (by exact eOne e)
-    (by intro a b c; rw [add_assoc])
-    (by intro a; exact AddZeroClass.zero_add a)
-    (by intro a; exact neg_add_cancel a)
-    (by intro a b c; exact mul_assoc a b c)
-    is_left_unit is_right_unit
-    (by intro a b c; exact LeftDistribClass.left_distrib a b c)
-    (by intro a b c; exact RightDistribClass.right_distrib a b c)
+def nonUnitalWEIsRing : Ring R where
+  __ := (inferInstance : NonUnitalRing R)
+  __ := eOne e
+  one_mul := is_left_unit
+  mul_one := is_right_unit
 
 end LeanPool.ArtinWedderburn

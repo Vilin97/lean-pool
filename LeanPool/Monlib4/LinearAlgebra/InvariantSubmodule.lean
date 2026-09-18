@@ -5,7 +5,7 @@ Authors: Monica Omar
 -/
 module
 
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.Projection
 public import Mathlib.Algebra.Star.Subalgebra
 import Mathlib.Data.Rat.Floor

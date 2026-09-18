@@ -1678,7 +1678,6 @@ lemma builder_win_strong {Δ : Sequent} (strat : Strategy coalgebraGame Builder)
           nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
             (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
         convert u₁_u₂
-        exact u₁_def
       have u₁_u₂_mem := move_iff_in_moves.1 u₁_u₂.1
       change π[π.length - (i + 1 + 1) - 1 + 1 + 1] ∈
         Finset.filterMap

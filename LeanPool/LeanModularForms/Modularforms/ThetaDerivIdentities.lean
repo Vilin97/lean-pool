@@ -478,8 +478,7 @@ lemma f₄_tendsto_atImInfty : Tendsto f₄ atImInfty (𝓝 0) := by
   have h_serre_H₄ : Tendsto (serreD 2 H₄) atImInfty (𝓝 (-(1/6 : ℂ))) := by
     convert serre_D_tendsto_neg_k_div_12 2 H₄ H₄_SIF_MDifferentiable isBoundedAtImInfty_H₄
       H₄_tendsto_atImInfty using 2
-    · rw [show ((2 : ℤ) : ℂ) = 2 from by norm_num]
-    · norm_num
+    norm_num
   have h_sum : Tendsto (2 * H₂ + H₄) atImInfty (𝓝 1) := by
     have h := (H₂_tendsto_atImInfty.const_mul 2).add H₄_tendsto_atImInfty
     norm_num at h; exact h

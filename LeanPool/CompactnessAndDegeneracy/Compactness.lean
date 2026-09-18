@@ -6,9 +6,9 @@ Authors: OpenAI, Dean Cureton
 
 module
 
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Combinatorics.SimpleGraph.Acyclic
 public import Mathlib.Combinatorics.SimpleGraph.Extremal.Basic
-public import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Combinatorics.SimpleGraph.Coloring.Constructions
 import Mathlib.Data.SetLike.Fintype
@@ -5641,10 +5641,10 @@ private lemma edgeFinset_card_le_sum_degree_of_vertex_cover
         simpa only [mem_edgeFinset, mem_edgeSet] using hedge
       rcases hcover hadj with hu | hv
       · exact Finset.mem_biUnion.mpr
-          ⟨u, hu, (G.mem_incidenceFinset u _).mpr
+          ⟨u, hu, mem_incidenceFinset.mpr
             (G.mk'_mem_incidenceSet_left_iff.mpr hadj)⟩
       · exact Finset.mem_biUnion.mpr
-          ⟨v, hv, (G.mem_incidenceFinset v _).mpr
+          ⟨v, hv, mem_incidenceFinset.mpr
             (G.mk'_mem_incidenceSet_right_iff.mpr hadj)⟩
   calc
     G.edgeFinset.card ≤

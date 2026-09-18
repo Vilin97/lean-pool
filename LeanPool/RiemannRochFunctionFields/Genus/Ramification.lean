@@ -287,7 +287,7 @@ theorem deg_polarDivisor_XK_eq_primesOverFinset_sum :
       ∑ P ∈ IsDedekindDomain.primesOverFinset
           (IsLocalRing.maximalIdeal (inftyValuationSubring k)) (infiniteIntegers k K),
         (ramIdxInfty k K P : ℤ) *
-          ((IsLocalRing.maximalIdeal (inftyValuationSubring k)).inertiaDeg' P : ℤ) := by
+          (P.inertiaDeg (inftyValuationSubring k) : ℤ) := by
   classical
   rw [deg, Finsupp.sum]
   let A := inftyValuationSubring k
@@ -345,9 +345,7 @@ theorem deg_polarDivisor_XK_eq_primesOverFinset_sum :
     simp only [Finset.mem_filter, pred, inftyIdealOfPlace] at hv ⊢
     rcases v with v | v
     · simp at hv
-    · have hpw : v.asIdeal.under A = p :=
-        IsLocalRing.eq_maximalIdeal (Ideal.IsMaximal.under A v.asIdeal)
-      rw [polarDivisor_XK_at_infinite k K v, ramIdxInfty, placeDegree_infinite_eq_inertiaDeg, hpw]
+    · rw [polarDivisor_XK_at_infinite k K v, ramIdxInfty, placeDegree_infinite_eq_inertiaDeg]
 
 omit [IsFullConstantField k K] in
 /-- Stichtenoth 1.4.11 ramification half for the chart variable: `deg (X_K)_∞ ≤ [K : k(X)]`. -/
@@ -364,7 +362,7 @@ theorem deg_polarX_le_finrank :
   have hsum := Ideal.sum_ramificationIdx'_mul_inertiaDeg' (R := A) (S := S) k⟮X⟯ K hp
   have heq :
       (∑ P ∈ IsDedekindDomain.primesOverFinset p S,
-          (ramIdxInfty k K P : ℤ) * (p.inertiaDeg' P : ℤ)) =
+          (ramIdxInfty k K P : ℤ) * (P.inertiaDeg A : ℤ)) =
         Module.finrank k⟮X⟯ K := by
     dsimp [ramIdxInfty]
     norm_cast

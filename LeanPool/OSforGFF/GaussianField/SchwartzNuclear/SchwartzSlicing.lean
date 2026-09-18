@@ -389,7 +389,7 @@ private lemma schwartz_slice_y_le_seminorm (d : ℕ)
       _ ≤ ‖iteratedFDeriv ℝ m f' (L y)‖ * 1 := by
           gcongr
           calc ∏ _ : Fin m, ‖L‖ ≤ ∏ _ : Fin m, (1 : ℝ) :=
-                Finset.prod_le_prod (fun _ _ => norm_nonneg _)
+                Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
                   (fun _ _ => euclideanSnoc_linearCLM_norm_le d)
             _ = 1 := by simp
       _ = ‖iteratedFDeriv ℝ m f (c + L y)‖ := by rw [mul_one, h_trans]
@@ -752,7 +752,7 @@ noncomputable def schwartzSlicePartial (d : ℕ)
             ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _
         _ ≤ ‖iteratedFDeriv ℝ b G' (L_t t)‖ * 1 := by
             gcongr; calc ∏ _ : Fin b, ‖L_t‖ ≤ ∏ _ : Fin b, (1 : ℝ) :=
-                  Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun _ _ => h_Lt_norm)
+                  Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun _ _ => h_Lt_norm)
               _ = 1 := by simp
         _ = ‖iteratedFDeriv ℝ b G (c₀ + L_t t)‖ := by
             rw [mul_one]; congr 1; exact iteratedFDeriv_comp_add_left b c₀ (L_t t)
@@ -992,7 +992,7 @@ private lemma schwartz_slice_partial_pointwise_bound (d : ℕ)
           ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _
       _ ≤ ‖iteratedFDeriv ℝ b G' (L_t t)‖ * 1 := by
           gcongr; calc ∏ _ : Fin b, ‖L_t‖ ≤ ∏ _ : Fin b, (1 : ℝ) :=
-                Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun _ _ => h_Lt_norm)
+                Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun _ _ => h_Lt_norm)
             _ = 1 := by simp
       _ = ‖iteratedFDeriv ℝ b G (c₀ + L_t t)‖ := by
           rw [mul_one]; congr 1; exact iteratedFDeriv_comp_add_left b c₀ (L_t t)
@@ -1070,7 +1070,7 @@ lemma schwartz_slice_partial_seminorm_bound (d : ℕ) (k' l' a b : ℕ) :
             calc ‖A w‖ ≤ ‖A‖ * ∏ i, ‖w i‖ := A.le_opNorm w
               _ = (∏ i, ‖w i‖) * ‖A‖ := mul_comm _ _
       _ ≤ ∏ i, ‖v i‖ := by
-          apply Finset.prod_le_prod (fun _ _ => norm_nonneg _)
+          apply Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
           intro i _
           calc ‖w i‖ = ‖L (v i)‖ := rfl
             _ ≤ ‖L‖ * ‖v i‖ := ContinuousLinearMap.le_opNorm L (v i)
