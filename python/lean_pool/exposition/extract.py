@@ -105,7 +105,8 @@ def cache_valid(directory: Path, expected: str) -> bool:
 
 
 def validate_output(path: Path, required: set[str]) -> None:
-    """Require complete JSONL records before publishing an extraction to the cache."""
+    """Require complete, nonempty JSONL before publishing an extraction to the cache."""
+    records = 0
     with path.open() as stream:
         for line in stream:
             record = json.loads(line)
@@ -113,6 +114,11 @@ def validate_output(path: Path, required: set[str]) -> None:
                 raise ValueError(f"Invalid extraction record in {path}")
             if not line.endswith("\n"):
                 raise ValueError(f"Unterminated extraction record in {path}")
+            records += 1
+    if records == 0:
+        # Every project declares at least one result and one module, so an
+        # empty file means the extractor silently produced nothing.
+        raise ValueError(f"Empty extraction output in {path}")
 
 
 @dataclass

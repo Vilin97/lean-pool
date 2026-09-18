@@ -169,6 +169,23 @@ def test_invalid_jsonl_is_not_cached(repository: Path) -> None:
     )
 
 
+def test_empty_extraction_is_not_cached(repository: Path) -> None:
+    """A successful exit with no records is a failed extraction, never a cache entry."""
+    executable = repository / "lean"
+    executable.write_text(
+        executable.read_text().replace(
+            "pathlib.Path(declarations).write_text(json.dumps(data) + '\\n')",
+            "pathlib.Path(declarations).write_text('')",
+        )
+    )
+    with pytest.raises(ValueError, match="Empty extraction output"):
+        _run(repository)
+    assert not (repository / OUTPUTS[0]).exists()
+    assert not list(
+        (repository / ".lake/exposition-cache/v1").glob("*/*/manifest.json")
+    )
+
+
 def test_additional_source_invalidates_project(repository: Path) -> None:
     """Adding a module changes the project key even before the inventory mentions it."""
     _run(repository)
