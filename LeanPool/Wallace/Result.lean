@@ -6,7 +6,7 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 
 import Mathlib.Algebra.Group.Finsupp
 import Mathlib.Algebra.Group.Units.Defs
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Order.Filter.Ultrafilter.Basic
 import Mathlib.Topology.Algebra.Group.Basic
 import Mathlib.Topology.Compactness.CountablyCompact

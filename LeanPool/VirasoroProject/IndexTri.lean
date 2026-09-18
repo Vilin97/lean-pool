@@ -6,7 +6,7 @@ Authors: Kalle Kytölä
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Analysis.Normed.Ring.Lemmas
 import Mathlib.Data.Int.Star
-import Mathlib.Data.Sign.Defs
+import Mathlib.Basic.Sign.Defs
 import Mathlib.Order.CompletePartialOrder
 
 /-!

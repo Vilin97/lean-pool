@@ -823,7 +823,7 @@ theorem ContinuousLinearMap.isOrthogonalProjection_iff'
   simp only [and_congr_right_iff]
   intro h
   have := List.TFAE.out (IsIdempotentElem.self_adjoint_is_positive_isOrthogonalProjection_tFAE
-    h) 0 1
+    h) 1 2
   rw [this, isOrthogonalProjection_iff]
   simp only [h, true_and]
 

@@ -94,7 +94,8 @@ theorem spatialCutoff_fderiv (n : ℕ) (x : LiftDomain period) (v : LiftTangent)
   have hi : HasFDerivAt (fun h : LiftTangent => cutoffScale n • (x.1 + h.1))
       (cutoffScale n • ContinuousLinearMap.fst ℝ Vector3 ℝ) 0 := by
     convert ((ContinuousLinearMap.fst ℝ Vector3 ℝ).hasFDerivAt.const_add x.1).const_smul
-      (cutoffScale n) using 1 <;> rfl
+      (cutoffScale n) using 1
+    rfl
   have ho := ((spatialBump.contDiff : ContDiff ℝ ∞ spatialBump).differentiable
     (by simp)).differentiableAt.hasFDerivAt (x := cutoffScale n • (x.1 + (0 : LiftTangent).1))
   have h := ho.comp 0 hi

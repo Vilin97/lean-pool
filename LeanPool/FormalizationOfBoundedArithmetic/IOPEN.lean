@@ -6,7 +6,7 @@ Authors: ruplet
 
 -- for a quick demo, jump straight to `theorem add_assoc`
 import Mathlib.Tactic.Core
-import Mathlib.Logic.Basic
+import Mathlib.Basic.Logic.Basic
 import Mathlib.Tactic.Common
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring

@@ -25,6 +25,7 @@ variable {R : Type*} [CommRing R]
 variable {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
 
 open MvPolynomial
+open AddMonoidAlgebra (coeff)
 
 open Finsupp
 
@@ -130,13 +131,7 @@ lemma totalDegree_sumX_sub_C_first {p k : ℕ} [Fact (Nat.Prime p)] (a : ZMod p)
         simp [totalDegree_C, h_sumX]
       · refine le_trans ?_ (Finset.le_sup <| show Finsupp.single 0 1 ∈ (∑ i : Fin (k + 1),
           MvPolynomial.X i - MvPolynomial.C a |> MvPolynomial.support) from ?_) <;> norm_num
-        rw [MvPolynomial.coeff_sum];
-        simp_all only [coeff_single_X, true_and, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
-        apply Aesop.BuiltinRules.not_intro
-        intro a_1
-        split at a_1
-        next h => simpa using congr_arg (fun f => f 0) h.symm
-        next h => simp_all only [sub_zero, one_ne_zero]
+        simp [eq_comm, Finsupp.single_eq_zero]
 
 /-- Lemma 2.1.3.2 : Another version of the previous lemma -/
 lemma totalDegree_sumX_sub_C_second (e : ZMod p) :
@@ -170,7 +165,8 @@ lemma totalDegree_prod_sumX_sub_C_eq_card (E : Multiset (ZMod p)) :
       obtain ⟨a, a_mem, rid⟩ := rid
       have := congr($(rid).coeff (fun₀ | 0 => 1))
       simp only [coeff_sub, coeff_sum, coeff_single_X, true_and, Finset.sum_ite_eq',
-        Finset.mem_univ, ↓reduceIte, coeff_C, coeff_zero] at this
+        Finset.mem_univ, ↓reduceIte, coeff_C, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero,
+        Pi.zero_apply] at this
       rw [ite_eq_right] at this
       · norm_num at this
       · rw [eq_comm, Finsupp.single_eq_zero]
@@ -207,9 +203,9 @@ same as in $S^{|E|}$
 lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
     {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
     (E : Multiset (ZMod p)) (x : (Fin (k + 1)) →₀ ℕ) (hx : ∑ i, x i = Multiset.card E) :
-    MvPolynomial.coeff x ((E.map (fun e => (∑ i : Fin (k + 1),
-        MvPolynomial.X i) - MvPolynomial.C e)).prod) =
-    MvPolynomial.coeff x ((∑ i : Fin (k + 1), MvPolynomial.X i) ^ Multiset.card E) := by
+    coeff ((E.map (fun e => (∑ i : Fin (k + 1),
+        MvPolynomial.X i) - MvPolynomial.C e)).prod) x =
+    coeff ((∑ i : Fin (k + 1), MvPolynomial.X i) ^ Multiset.card E) x := by
   revert x
   induction E using Multiset.induction with
   | empty => intro x _; simp
@@ -226,7 +222,7 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
   have hx_sum : ∑ x, (fst x + snd x) = E.card + 1 := by
     simpa [Finsupp.add_apply, Finset.sum_add_distrib] using hx
   by_cases h : 0 = fst
-  · -- in the pos branch, coeff 0 (C a) = a
+  · -- in the pos branch, coeff (C a) 0 = a
     subst h
     simp only [MvPolynomial.coeff_C, ↓reduceIte]
     -- carry hx in the simplified form (snd = E.card + 1) for the legacy bullet
@@ -248,7 +244,7 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
       obtain ⟨left, right⟩ := h
       subst right
       norm_num [MvPolynomial.totalDegree]
-      intro b hb; contrapose! hb; simp_all +decide only [zero_add, coeff_sum, coeff_X,
+      intro b hb; contrapose! hb; simp_all +decide only [zero_add, coeff_X,
         Finset.sum_boole]
       rw [Finset.card_eq_zero.mpr] <;> aesop
     · rw [Finset.sum_subset (Finset.subset_univ snd.support)] <;> aesop
@@ -256,9 +252,9 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
     rw [MvPolynomial.coeff_C, ite_eq_right h, zero_mul, sub_zero]
     -- rewrite the goal as a disjunction expected by the legacy bullet 2
     suffices h_disj :
-        coeff snd (Multiset.map (fun e => (∑ i, X i) - C e) E).prod =
-          coeff snd ((∑ i, X i) ^ E.card) ∨
-          coeff fst ((∑ i, X i) : MvPolynomial (Fin (k + 1)) (ZMod p)) = 0 by
+        coeff (Multiset.map (fun e => (∑ i, X i) - C e) E).prod snd =
+          coeff ((∑ i, X i) ^ E.card) snd ∨
+          coeff ((∑ i, X i) : MvPolynomial (Fin (k + 1)) (ZMod p)) fst = 0 by
       rcases h_disj with h_eq | h_zero
       · rw [h_eq]
       · rw [h_zero, zero_mul, zero_mul]
@@ -293,36 +289,34 @@ certain conditions
 lemma constructionPolynomial_coeff_target_generalized
     (h : MvPolynomial (Fin (k + 1)) (ZMod p))
     (c : Fin (k + 1) → ℕ) (m : ℕ) (hm : m + h.totalDegree = ∑ i, c i)
-    (h_coeff : coeff (Finsupp.equivFunOnFinite.symm c) ((∑ i, X i) ^ m * h) ≠ 0)
+    (h_coeff : coeff ((∑ i, X i) ^ m * h) (Finsupp.equivFunOnFinite.symm c) ≠ 0)
     (E : Multiset (ZMod p)) (hE_card : E.card = m)
     (coeff_prod_sumX_minus_C_target :
-      coeff (Finsupp.equivFunOnFinite.symm c) ((E.map (fun e => (∑ i, X i) - C e)).prod) =
-      coeff (Finsupp.equivFunOnFinite.symm c) ((∑ i, X i) ^ m))
+      coeff ((E.map (fun e => (∑ i, X i) - C e)).prod) (Finsupp.equivFunOnFinite.symm c) =
+      coeff ((∑ i, X i) ^ m) (Finsupp.equivFunOnFinite.symm c))
     (other_terms_vanish : ∀ (d : (Fin (k + 1)) →₀ ℕ), d ≠ 0 →
-      coeff d h * coeff (Finsupp.equivFunOnFinite.symm c - d)
-        ((E.map (fun e => (∑ i, X i) - C e)).prod) = 0)
-    (h_constant_term_nonzero : coeff 0 h ≠ 0) :
-    coeff (Finsupp.equivFunOnFinite.symm c) (constructionPolynomial h E) ≠ 0 := by
+      coeff h d * coeff ((E.map (fun e => (∑ i, X i) - C e)).prod)
+        (Finsupp.equivFunOnFinite.symm c - d) = 0)
+    (h_constant_term_nonzero : coeff h 0 ≠ 0) :
+    coeff (constructionPolynomial h E) (Finsupp.equivFunOnFinite.symm c) ≠ 0 := by
       -- By combining the results from `coeff_prod_sumX_minus_C_target` and `other_terms_vanish`, we
       -- can conclude that the coefficient of $c$ in the product is equal to the coefficient of $c$
       -- in $S^m$ times the constant term of $h$.
       have h_final :
-          MvPolynomial.coeff
-              ((Finsupp.equivFunOnFinite.symm : (Fin (k + 1) → ℕ) → Fin (k + 1) →₀ ℕ) c)
-              (constructionPolynomial h E) =
-            MvPolynomial.coeff
-                ((Finsupp.equivFunOnFinite.symm : (Fin (k + 1) → ℕ) → Fin (k + 1) →₀ ℕ) c)
-                (Multiset.prod
-                    (Multiset.map (fun e => (∑ i, MvPolynomial.X i) - MvPolynomial.C e) E)) *
-              MvPolynomial.coeff 0 h := by
+          coeff (constructionPolynomial h E)
+              ((Finsupp.equivFunOnFinite.symm : (Fin (k + 1) → ℕ) → Fin (k + 1) →₀ ℕ) c) =
+            coeff (Multiset.prod
+                    (Multiset.map (fun e => (∑ i, MvPolynomial.X i) - MvPolynomial.C e) E))
+                ((Finsupp.equivFunOnFinite.symm : (Fin (k + 1) → ℕ) → Fin (k + 1) →₀ ℕ) c) *
+              coeff h 0 := by
         rw [constructionPolynomial, MvPolynomial.coeff_mul]
         rw [Finset.sum_eq_single (0, (Finsupp.equivFunOnFinite.symm c))]
         · -- the diagonal term
-          change coeff 0 h *
-              coeff (Finsupp.equivFunOnFinite.symm c)
-                (Multiset.map (fun e => sumXPolynomial - C e) E).prod =
-            coeff (Finsupp.equivFunOnFinite.symm c)
-                (Multiset.map (fun e => (∑ i, X i) - C e) E).prod * coeff 0 h
+          change coeff h 0 *
+              coeff (Multiset.map (fun e => sumXPolynomial - C e) E).prod
+                (Finsupp.equivFunOnFinite.symm c) =
+            coeff (Multiset.map (fun e => (∑ i, X i) - C e) E).prod
+                (Finsupp.equivFunOnFinite.symm c) * coeff h 0
           simp only [sumXPolynomial]
           rw [mul_comm]
         · -- the off-diagonal terms vanish
@@ -347,10 +341,10 @@ lemma constructionPolynomial_coeff_target_generalized
       simp_all +decide only [ne_eq, mul_eq_zero, mul_comm, zero_eq_mul, false_or]
       rw [MvPolynomial.coeff_mul]
       rw [Finset.sum_eq_single (0, (Finsupp.equivFunOnFinite.symm c))]
-      · -- the diagonal term: coeff 0 h * coeff (sym c) ((∑ X)^m) = 0 via h_final
-        change coeff 0 h *
-            coeff (Finsupp.equivFunOnFinite.symm c)
-              ((∑ i, X i : MvPolynomial (Fin (k + 1)) (ZMod p)) ^ m) = 0
+      · -- the diagonal term: coeff h 0 * coeff ((∑ X)^m) (sym c) = 0 via h_final
+        change coeff h 0 *
+            coeff ((∑ i, X i : MvPolynomial (Fin (k + 1)) (ZMod p)) ^ m)
+              (Finsupp.equivFunOnFinite.symm c) = 0
         rw [h_final, mul_zero]
       · -- the off-diagonal terms vanish
         rintro ⟨fst, snd⟩ hmem hne
@@ -365,19 +359,19 @@ lemma constructionPolynomial_coeff_target_generalized
             rw [← hmem, add_tsub_cancel_left]
           rcases other_terms_vanish fst h_fst with h_zero | h_prod_zero
           · rw [h_zero, zero_mul]
-          · -- h_prod_zero : coeff (sym c - fst) (∏ (∑ X - C e)) = 0
-            -- Branch on whether coeff fst h is zero
-            by_cases h_coeff_fst : coeff fst h = 0
+          · -- h_prod_zero : coeff (∏ (∑ X - C e)) (sym c - fst) = 0
+            -- Branch on whether coeff h fst is zero
+            by_cases h_coeff_fst : coeff h fst = 0
             · rw [h_coeff_fst, zero_mul]
-            · -- coeff fst h ≠ 0, so fst ∈ h.support
+            · -- coeff h fst ≠ 0, so fst ∈ h.support
               by_cases h_deg : ∑ i, snd i = E.card
               · -- snd has degree E.card; rewrite via the helper lemma
                 have h_eq :
-                    coeff snd ((∑ i, X i : MvPolynomial (Fin (k + 1)) (ZMod p)) ^ E.card) =
-                    coeff snd (Multiset.map (fun e => (∑ i, X i) - C e) E).prod := by
+                    coeff ((∑ i, X i : MvPolynomial (Fin (k + 1)) (ZMod p)) ^ E.card) snd =
+                    coeff (Multiset.map (fun e => (∑ i, X i) - C e) E).prod snd := by
                   rw [← coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq E snd h_deg]
                 rw [← hE_card, h_eq, h_snd_eq, h_prod_zero, mul_zero]
-              · -- snd has wrong degree; show coeff snd ((∑ X)^m) = 0
+              · -- snd has wrong degree; show coeff ((∑ X)^m) snd = 0
                 have h_left : fst ∈ h.support :=
                   MvPolynomial.mem_support_iff.mpr h_coeff_fst
                 have h_sum_eq : (∑ i, fst i) + (∑ i, snd i) = ∑ i, c i := by
@@ -397,8 +391,8 @@ lemma constructionPolynomial_coeff_target_generalized
                 have h_total_pow :
                     ((∑ i, X i : MvPolynomial (Fin (k+1)) (ZMod p)) ^ E.card).totalDegree
                       ≤ E.card := totalDegree_sumX_pow_le E.card
-                have h_snd_zero : coeff snd ((∑ i, X i) ^ E.card :
-                    MvPolynomial (Fin (k + 1)) (ZMod p)) = 0 := by
+                have h_snd_zero : coeff ((∑ i, X i) ^ E.card :
+                    MvPolynomial (Fin (k + 1)) (ZMod p)) snd = 0 := by
                   rw [MvPolynomial.coeff_eq_zero_of_totalDegree_lt]
                   refine lt_of_le_of_lt h_total_pow ?_
                   by_contra h_not_lt
@@ -438,7 +432,7 @@ private lemma equivFun_symm_support_sum_eq (c : Fin (k + 1) → ℕ) :
 private lemma coeff_equivFun_eq_zero_of_totalDegree_lt
     (P : MvPolynomial (Fin (k + 1)) (ZMod p)) (c : Fin (k + 1) → ℕ)
     (hP : P.totalDegree < ∑ i, c i) :
-    coeff (Finsupp.equivFunOnFinite.symm c) P = 0 := by
+    coeff P (Finsupp.equivFunOnFinite.symm c) = 0 := by
   apply MvPolynomial.coeff_eq_zero_of_totalDegree_lt
   rw [equivFun_symm_support_sum_eq]
   exact hP
@@ -462,12 +456,12 @@ private lemma elimination_polynomial_degreeOf_eq
   rw [MvPolynomial.degreeOf_eq_sup]
   -- The leading coefficient of the product of linear factors is 1.
   have h_leading_coeff :
-      (MvPolynomial.coeff (Finsupp.single i #(A i)) (∏ a ∈ A i,
-          (MvPolynomial.X i - MvPolynomial.C a))) = 1 := by
+      (coeff (∏ a ∈ A i,
+          (MvPolynomial.X i - MvPolynomial.C a)) (Finsupp.single i #(A i))) = 1 := by
     induction (A i) using Finset.induction with
     | empty =>
       simp_all only [gt_iff_lt, Finset.card_pos, Finset.card_empty, single_zero,
-          Finset.prod_empty, coeff_zero_one]
+          Finset.prod_empty, AddMonoidAlgebra.coeff_one_zero]
     | @insert a s a_1 a_2 =>
     simp_all only [gt_iff_lt, Finset.card_pos, not_false_eq_true,
         Finset.card_insert_of_notMem, single_add, Finset.prod_insert]
@@ -530,13 +524,13 @@ private lemma elimination_polynomial_degreeOf_eq
 /-- Helper for `elimination_polynomial_properties`: leading coefficient of $g_i$ equals 1. -/
 private lemma elimination_polynomial_coeff_top_eq_one
     (A : Fin (k + 1) → Finset (ZMod p)) (i : Fin (k + 1)) (h_card : (A i).card > 0) :
-    coeff (Finsupp.single i ((A i).card)) (eliminationPolynomials A i) = 1 := by
+    coeff (eliminationPolynomials A i) (Finsupp.single i ((A i).card)) = 1 := by
   have h_leading_coeff : ∀ (s : Finset (ZMod p)),
       (∏ a ∈ s, (MvPolynomial.X i - MvPolynomial.C a)).coeff (Finsupp.single i (s.card)) =
           1 := by
     intro s
     induction s using Finset.induction with
-    | empty => simp +decide [MvPolynomial.coeff_one]
+    | empty => simp +decide
     | @insert a s ha ih =>
       simp_all? +decide [Finset.prod_insert ha, MvPolynomial.coeff_mul]
       -- The only non-zero term in the sum is when $x = (fun | i => 1)$ and $y = (fun | i =>
@@ -544,8 +538,8 @@ private lemma elimination_polynomial_coeff_top_eq_one
       have h_nonzero_term : ∀ x y : (Fin (k + 1)) →₀ ℕ,
           x + y = (fun₀ | i => #s) +
               (fun₀ | i => 1) →
-                  (MvPolynomial.coeff x (MvPolynomial.X i) - if 0 = x then a else 0) *
-                  MvPolynomial.coeff y (∏ a ∈ s, (MvPolynomial.X i - MvPolynomial.C a)) =
+                  (coeff (MvPolynomial.X i) x - if 0 = x then a else 0) *
+                  coeff (∏ a ∈ s, (MvPolynomial.X i - MvPolynomial.C a)) y =
                       if x = (fun₀ | i => 1) ∧ y = (fun₀ | i => #s) then 1 else 0 := by
         intro x y hxy
         by_cases hx : x = (fun₀ | i => 1)
@@ -672,7 +666,7 @@ private lemma elimination_polynomial_sub_top_totalDegree_lt
             -- that's a constant, which can't contribute to the coefficient of snd unless
             -- snd is zero.
             have h_snd_zero : ∀ (c : ZMod p),
-                MvPolynomial.coeff snd (MvPolynomial.C c) = if snd = 0 then c else 0 := by
+                coeff (MvPolynomial.C c) snd = if snd = 0 then c else 0 := by
               intro c; rw [MvPolynomial.coeff_C]
               split
               next h =>
@@ -751,7 +745,7 @@ lemma elimination_polynomial_properties (A : Fin (k + 1) → Finset (ZMod p)) (i
     (h_card : (A i).card > 0) :
     let g := eliminationPolynomials A i
     g.degreeOf i = (A i).card ∧
-    coeff (Finsupp.single i ((A i).card)) g = 1 ∧
+    coeff g (Finsupp.single i ((A i).card)) = 1 ∧
     (∀ x, x i ∈ A i → eval x g = 0) ∧
     (g - X i ^ (A i).card).totalDegree < (A i).card := by
   refine ⟨elimination_polynomial_degreeOf_eq A i h_card,
@@ -771,8 +765,8 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
       Q.totalDegree < m.sum (fun _ n => n) ∧
       (∀ x, (∀ j, x j ∈ A j) → eval x Q = eval x (monomial m 1)) ∧
       (m.sum (fun _ n => n) ≤ ∑ j, c j →
-        coeff (Finsupp.equivFunOnFinite.symm c) Q = coeff (Finsupp.equivFunOnFinite.symm c) (
-            monomial m 1)) := by
+        coeff Q (Finsupp.equivFunOnFinite.symm c) = coeff (
+            monomial m 1) (Finsupp.equivFunOnFinite.symm c)) := by
           -- Define Q as X^{m'} * (X_i^{c_i+1} - g_i).
           set Q : MvPolynomial (Fin (k + 1)) (ZMod p) :=
               MvPolynomial.monomial (m - Finsupp.single i (c i + 1)) 1 *
@@ -846,7 +840,7 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
               have := congr_arg (fun f : Fin (k+1) →₀ ℕ => f i) hm_eq
               simp [Finsupp.equivFunOnFinite_symm_apply_apply] at this
               omega
-            rw [show coeff (equivFunOnFinite.symm c) ((monomial m) (1:ZMod p)) = 0 from by
+            rw [show coeff ((monomial m) (1:ZMod p)) (equivFunOnFinite.symm c) = 0 from by
               rw [MvPolynomial.coeff_monomial, ite_eq_right hm_ne]]
           · rw [elimination_polynomial_eval_eq_zero A i x (a i), sub_zero]
             simp +decide [MvPolynomial.eval_monomial]
@@ -876,7 +870,7 @@ lemma exists_remainder (Q : MvPolynomial (Fin (k + 1)) (ZMod p))
     ∃ R : MvPolynomial (Fin (k + 1)) (ZMod p),
       (∀ i, R.degreeOf i ≤ c i) ∧
       (∀ x, (∀ i, x i ∈ A i) → eval x R = eval x Q) ∧
-      (coeff (Finsupp.equivFunOnFinite.symm c) R = coeff (Finsupp.equivFunOnFinite.symm c) Q) := by
+      (coeff R (Finsupp.equivFunOnFinite.symm c) = coeff Q (Finsupp.equivFunOnFinite.symm c)) := by
         by_contra h_contra
         -- Apply induction on the total degree of Q.
         induction hQ_deg : Q.totalDegree using Nat.strong_induction_on generalizing Q with
@@ -950,13 +944,14 @@ lemma coeff_target_eq_zero_of_vanishes_on_grid
     (hA : ∀ i, (A i).card = c i + 1)
     (hQ_deg : Q.totalDegree ≤ ∑ i, c i)
     (hQ_vanishes : ∀ x, (∀ i, x i ∈ A i) → eval x Q = 0) :
-    coeff (Finsupp.equivFunOnFinite.symm c) Q = 0 := by
+    coeff Q (Finsupp.equivFunOnFinite.symm c) = 0 := by
   obtain ⟨R, hdegree, heval, hcoeff⟩ := exists_remainder Q A c hA hQ_deg
   have hzero : R = 0 :=
     _root_.eq_zero_of_eval_zero_at_prod_finset R A
       (fun i => hA i ▸ Nat.lt_succ_of_le (hdegree i))
       (fun x hx => (heval x hx).trans (hQ_vanishes x hx))
-  rw [← hcoeff, hzero, coeff_zero]
+  rw [← hcoeff, hzero]
+  rfl
 
 /--
 Lemma 2.1.11 : If two polynomials P and Q are equal or their difference has a total degree less
@@ -969,8 +964,8 @@ lemma coeff_mul_eq_of_degree_bound
     (m : ℕ)
     (h_deg : h.totalDegree + m = ∑ i, c i)
     (h_diff : P = Q ∨ (P - Q).totalDegree < m) :
-    coeff (Finsupp.equivFunOnFinite.symm c) (h * P) =
-    coeff (Finsupp.equivFunOnFinite.symm c) (h * Q) := by
+    coeff (h * P) (Finsupp.equivFunOnFinite.symm c) =
+    coeff (h * Q) (Finsupp.equivFunOnFinite.symm c) := by
   rcases h_diff with rfl | h_diff
   · rfl
   · have hdegree : (h * (P - Q)).totalDegree < ∑ i, c i := by
@@ -992,17 +987,17 @@ lemma degree_product_minus_pow_lt {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
       -- Since every monomial of degree $|E|$ in $P$ has the same coefficient as in $Q$, the
       -- difference $P - Q$ has no terms of degree $|E|$.
       have h_coeff_eq : ∀ x : (Fin (k + 1)) →₀ ℕ, x.sum (fun _ n => n) = E.card →
-          MvPolynomial.coeff x ((E.map (fun e => (∑ i : Fin (k + 1),
+          coeff ((E.map (fun e => (∑ i : Fin (k + 1),
               MvPolynomial.X i) - MvPolynomial.C e)).prod - (∑ i : Fin (k + 1),
-                  MvPolynomial.X i) ^ E.card) = 0 := by
+                  MvPolynomial.X i) ^ E.card) x = 0 := by
             -- Apply the lemma that states the coefficients of monomials of degree $|E|$ in $P$ and
             -- $Q$ are equal.
             intros x hx
             have h_coeff_eq :
-                MvPolynomial.coeff x ((E.map (fun e => (∑ i : Fin (k + 1),
-                    MvPolynomial.X i) - MvPolynomial.C e)).prod)
-                        = MvPolynomial.coeff x ((∑ i : Fin (k + 1),
-                            MvPolynomial.X i) ^ E.card) := by
+                coeff ((E.map (fun e => (∑ i : Fin (k + 1),
+                    MvPolynomial.X i) - MvPolynomial.C e)).prod) x
+                        = coeff ((∑ i : Fin (k + 1),
+                            MvPolynomial.X i) ^ E.card) x := by
               convert coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq E x _
               simpa [Finsupp.sum_fintype] using hx
             aesop
@@ -1010,9 +1005,9 @@ lemma degree_product_minus_pow_lt {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
       -- strictly less than $|E|$.
       have h_total_degree_lt : ∀ x : (Fin (k + 1)) →₀ ℕ,
           x.sum (fun _ n => n) ≥ E.card →
-              MvPolynomial.coeff x ((E.map (fun e => (∑ i : Fin (k + 1),
+              coeff ((E.map (fun e => (∑ i : Fin (k + 1),
                   MvPolynomial.X i) - MvPolynomial.C e)).prod - (∑ i : Fin (k + 1),
-                      MvPolynomial.X i) ^ E.card) = 0 := by
+                      MvPolynomial.X i) ^ E.card) x = 0 := by
         -- If x has degree greater than E.card, then since P and Q both have total degree E.card,
         -- their difference P - Q can't have any terms of degree higher than E.card. Therefore, the
         -- coefficient of x in P - Q must be zero because there are no such terms.
@@ -1023,7 +1018,7 @@ lemma degree_product_minus_pow_lt {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
           -- hence its coefficient in $P - Q$ is zero.
           have h_support : ∀ (P : MvPolynomial (Fin (k + 1)) (ZMod p)),
               P.totalDegree ≤ E.card → ∀ x : (Fin (k + 1)) →₀ ℕ,
-              x.sum (fun _ n => n) > E.card → MvPolynomial.coeff x P = 0 := by
+              x.sum (fun _ n => n) > E.card → coeff P x = 0 := by
             intro P hP x hx
             rw [MvPolynomial.coeff_eq_zero_of_totalDegree_lt]
             exact lt_of_le_of_lt hP hx
@@ -1077,8 +1072,8 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
     (c : Fin (k + 1) → ℕ)
     (hA : ∀ i, (A i).card = c i + 1)
     (m : ℕ) (hm : m + h.totalDegree = ∑ i, c i)
-    (h_coeff : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c)
-    ((∑ i : Fin (k + 1), MvPolynomial.X i) ^ m * h) ≠ 0) :
+    (h_coeff : AddMonoidAlgebra.coeff ((∑ i : Fin (k + 1), MvPolynomial.X i) ^ m * h)
+      (Finsupp.equivFunOnFinite.symm c) ≠ 0) :
     let S : Finset (ZMod p) :=
       (Fintype.piFinset A).filter (fun f => h.eval f ≠ 0) |>.image (fun f => ∑ i, f i)
     S.card ≥ m + 1 ∧ m < p := by
@@ -1086,8 +1081,8 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
   intro S
   have h_ne_zero : h ≠ 0 := by
     intro h_zero
-    rw [h_zero, mul_zero, coeff_zero] at h_coeff
-    exact h_coeff rfl
+    rw [h_zero, mul_zero] at h_coeff
+    exact h_coeff (by simp)
   -- Step 1: Prove |S| >= m + 1 by contradiction
   have hS_card : S.card ≥ m + 1 := by
     by_contra! H
@@ -1107,7 +1102,7 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
     have h_prod_ne_zero : productPolynomial k E ≠ 0 := productPolynomial_ne_zero k E
     have hQ_total_deg : Q.totalDegree = ∑ i, c i :=
       constructionPolynomial_totalDegree h h_ne_zero c m E hm hE_card h_prod_ne_zero
-    have hQ_coeff : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) Q ≠ 0 := by
+    have hQ_coeff : coeff Q (Finsupp.equivFunOnFinite.symm c) ≠ 0 := by
       rw [hQ_def]
       apply constructionPolynomial_coeff_target_generalized h c m hm h_coeff E hE_card
       · -- The product of (sumX - e) over E is equal to (sumX)^m plus a polynomial of degree less
@@ -1142,17 +1137,17 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
         · rw [sub_eq_zero.mp h_diff_zero]
         · -- Since the difference has a lower degree, the coefficient of the term with degree m in
           -- the product must be equal to the coefficient of the term with degree m in (sumX)^m.
-          have h_coeff_eq : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (
+          have h_coeff_eq : coeff (
               (E.map (fun e => (∑ i : Fin (k + 1),
                   MvPolynomial.X i) - MvPolynomial.C e)).prod - (∑ i : Fin (k + 1),
-                      MvPolynomial.X i) ^ m) = 0 := by
+                      MvPolynomial.X i) ^ m) (Finsupp.equivFunOnFinite.symm c) = 0 := by
             -- Since the total degree of the difference is less than m, any term with degree m must
             -- have a coefficient of zero.
             have h_coeff_zero : ∀ (P : MvPolynomial (Fin (k + 1)) (ZMod p)),
-                P.totalDegree < m → MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) P = 0 := by
+                P.totalDegree < m → coeff P (Finsupp.equivFunOnFinite.symm c) = 0 := by
               intros P hP_deg
               have h_coeff_zero : ∀ (m : (Fin (k + 1)) →₀ ℕ),
-                  m.sum (fun _ n => n) > P.totalDegree → MvPolynomial.coeff m P = 0 :=
+                  m.sum (fun _ n => n) > P.totalDegree → coeff P m = 0 :=
                 fun m a => coeff_eq_zero_of_totalDegree_lt a
               exact h_coeff_zero _ (by
                 simpa [Finsupp.sum_fintype] using by
@@ -1163,17 +1158,17 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
       · intro d hd_ne_zero
         by_contra h_contra
         -- Apply the lemma `coeff_target_eq_zero_of_vanishes_on_grid` to $Q$.
-        have h_coeff_zero : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) Q = 0 := by
+        have h_coeff_zero : coeff Q (Finsupp.equivFunOnFinite.symm c) = 0 := by
           apply coeff_target_eq_zero_of_vanishes_on_grid
           any_goals tauto
           linarith
         -- Apply the lemma `coeff_mul_eq_of_degree_bound` with $h, P, P_{lead}, c, m$.
-        have h_coeff_mul_eq : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (
+        have h_coeff_mul_eq : coeff (
             h *
             (E.map (fun e => ∑ i : Fin (k + 1),
-                MvPolynomial.X i - MvPolynomial.C e)).prod)
-                    = MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (h * (∑ i : Fin (k + 1),
-                        MvPolynomial.X i) ^ m) := by
+                MvPolynomial.X i - MvPolynomial.C e)).prod) (Finsupp.equivFunOnFinite.symm c)
+                    = coeff (h * (∑ i : Fin (k + 1),
+                        MvPolynomial.X i) ^ m) (Finsupp.equivFunOnFinite.symm c) := by
           apply coeff_mul_eq_of_degree_bound
           any_goals exact m
           · linarith
@@ -1194,17 +1189,16 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
         by_contra h_const_zero
         -- If the constant term of h is zero, then the constant term of h * (∑ i, X i)^m is also
         -- zero.
-        have h_const_zero_prod : MvPolynomial.coeff 0 (h * (∑ i, MvPolynomial.X i) ^ m) = 0 := by
+        have h_const_zero_prod : coeff (h * (∑ i, MvPolynomial.X i) ^ m) 0 = 0 := by
           rw [MvPolynomial.coeff_mul, Finset.sum_eq_zero]; aesop
         -- By the properties of the product of polynomials, we can show that the coefficient of the
         -- target term in h * (∑ i, X i)^m is equal to the coefficient of the target term in h *
         -- P_{lead}.
-        have h_coeff_eq : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (
+        have h_coeff_eq : coeff (
             h *
             (∑ i,
-                MvPolynomial.X i) ^ m)
-                    = MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c)
-                        (h * (productPolynomial k E)) := by
+                MvPolynomial.X i) ^ m) (Finsupp.equivFunOnFinite.symm c)
+                    = coeff (h * (productPolynomial k E)) (Finsupp.equivFunOnFinite.symm c) := by
           -- By the properties of polynomial multiplication, if the difference between two
           -- polynomials has a lower total degree, then their coefficients for the highest-degree
           -- term are equal.
@@ -1239,8 +1233,9 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
             rw [show E.card = m from hE_card] at key
             exact key
           have h_coeff_eq : ∀ (P Q : MvPolynomial (Fin (k + 1)) (ZMod p)),
-              (P - Q).totalDegree < m → MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (
-                  h * P) = MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (h * Q) := by
+              (P - Q).totalDegree < m →
+                coeff (h * P) (Finsupp.equivFunOnFinite.symm c) =
+                  coeff (h * Q) (Finsupp.equivFunOnFinite.symm c) := by
             intros P Q h_diff_deg
             apply coeff_mul_eq_of_degree_bound
             all_goals norm_cast
@@ -1253,7 +1248,7 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
     -- Since Q vanishes on the grid, the coefficient of the target monomial in Q is zero,
     -- contradicting hQ_coeff.
     have hQ_coeff_zero :
-        MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) Q = 0 :=
+        coeff Q (Finsupp.equivFunOnFinite.symm c) = 0 :=
       coeff_target_eq_zero_of_vanishes_on_grid Q A c hA hQ_total_deg.le hQ_zero
     contradiction
   -- Step 2: Prove m < p first (this is needed for the main argument)

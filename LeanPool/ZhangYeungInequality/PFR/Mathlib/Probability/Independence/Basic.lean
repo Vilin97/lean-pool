@@ -353,21 +353,13 @@ lemma _root_.ProbabilityTheory.iIndepFun.prod
 
 variable {β β' Ω : Type*} {mΩ : MeasurableSpace Ω} {μ : Measure Ω}
 
-/-- The new Mathlib tool `Finset.eventuallyEq_iInter` will supersede this result. -/
+/-- The Mathlib tool `Finset.eventuallyEqSet_iInter` supersedes this result. -/
 theorem _root_.ProbabilityTheory.EventuallyEq.finite_iInter
     {ι : Type*} {α : Type u_2} {l : Filter α} (s : Finset ι)
     {E : ι → Set α} {F : ι → Set α}
     (h : ∀ i ∈ s, E i =ᶠ[l] F i) :
-    ⋂ i ∈ s, E i =ᶠ[l] ⋂ i ∈ s, F i := by
-  unfold Filter.EventuallyEq Filter.Eventually at h ⊢
-  simp only [eq_iff_iff] at h ⊢
-  rw [← Filter.biInter_finset_mem] at h
-  apply Filter.mem_of_superset h
-  intro a ha
-  change a ∈ ⋂ i ∈ s, E i ↔ a ∈ ⋂ i ∈ s, F i
-  simp only [mem_iInter, mem_ofPred_eq] at ha ⊢
-  change ∀ i ∈ s, a ∈ E i ↔ a ∈ F i at ha
-  exact forall₂_congr ha
+    ⋂ i ∈ s, E i =ᶠ[l] ⋂ i ∈ s, F i :=
+  Finset.eventuallyEqSet_iInter s h
 
 /-- TODO: a kernel version of this theorem -/
 theorem _root_.ProbabilityTheory.iIndepFun.ae_eq {ι : Type*} {β : ι → Type*}

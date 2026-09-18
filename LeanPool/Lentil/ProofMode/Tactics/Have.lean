@@ -207,6 +207,9 @@ tla_have := lemma hp
 ```
 adds a new hypothesis named `this` containing the result of `lemma hp`.
 -/
+tactic_extension tlaHaveTac
+
+@[tactic_alt tlaHaveTac]
 syntax (name := tlaHaveAnonTac) "tla_have" " := " term : tactic
 /--
 `tla_replace h := t` replaces the named proof-mode hypothesis `h` by the

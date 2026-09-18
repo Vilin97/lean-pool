@@ -297,8 +297,20 @@ lemma enorm_translateL2_sub_toL2_le (a : E) (f : ↥(C1c (E := E))) :
     -- Expand the definition of `eLpNorm` at exponent `2`.
     have h2_ne0 : (2 : ℝ≥0∞) ≠ 0 := by simp
     have h2_netop : (2 : ℝ≥0∞) ≠ ∞ := by simp
-    simp_rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
-      h2_ne0 h2_netop, ENNReal.toReal_ofNat] at *
+    have hf_meas : MeasureTheory.AEStronglyMeasurable (fun x : E => f.1 x) μ :=
+      (memLp_of_mem_C1c (μ := μ) (E := E) f.2).aestronglyMeasurable
+    have hshift_meas :
+        MeasureTheory.AEStronglyMeasurable (fun x : E => f.1 (x + a) - f.1 x) μ := by
+      have hshift : MeasureTheory.AEStronglyMeasurable (fun x : E => f.1 (x + a)) μ :=
+        hf_meas.comp_quasiMeasurePreserving
+          (MeasureTheory.measurePreserving_add_right μ a).quasiMeasurePreserving
+      exact hshift.sub hf_meas
+    have hgrad_meas :
+        MeasureTheory.AEStronglyMeasurable (fun x : E => grad (E := E) f.1 x) μ :=
+      (memLp_grad_of_mem_C1c (μ := μ) (E := E) f.2).aestronglyMeasurable
+    rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal h2_ne0 h2_netop hshift_meas,
+      MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal h2_ne0 h2_netop hgrad_meas,
+      ENNReal.toReal_ofNat]
     -- It suffices to compare the squared integrals.
     have hsq := lintegral_enorm_sub_sq_le (μ := μ) a f
     -- Take the `1/2` power on both sides and simplify.

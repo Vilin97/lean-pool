@@ -157,7 +157,7 @@ theorem nu_lt_self_of_dvd_prodPrimes : ∀ d : ℕ, d ∣ P → d ≠ 1 → ν d
       eq_comm.mp (prod_factors_of_mult ν s.nu_mult hd_sq)
     _ < ∏ p ∈ d.primeFactors, 1 := by
       have hd_ne_zero : d ≠ 0 := by aesopDiv
-      apply prod_lt_prod_of_nonempty
+      apply prod_lt_prod_of_nonempty₀
       · intro p hp
         simp only [mem_primeFactors] at hp
         apply s.nu_pos_of_prime p (by aesop) (by aesopDiv)

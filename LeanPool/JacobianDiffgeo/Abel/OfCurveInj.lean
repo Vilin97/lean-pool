@@ -13,7 +13,7 @@ import LeanPool.JacobianDiffgeo.Abel.UpgradeDischarge
 Unit: abel-theorem. Namespace `Jacobian`. The challenge's `ofCurve_inj`
 (`docs/Jacobian_challenge.lean:99`), assembled from `RS.Abel.genus_eq_zero_of_pathIntegral_mem`
 (`Sufficiency.lean`) via the frozen ordering-resolution bridge
-(`AddSubgroup.isClosed_of_discrete`, §1.3/§9 of the design, spike-verified).
+(`AddSubgroup.isClosed_of_discreteTopology`, §1.3/§9 of the design, spike-verified).
 
 Both theorems below are stated exactly at their design shape and type-check; `ofCurve_inj'`'s
 PROOF calls `RS.Abel.genus_eq_zero_of_pathIntegral_mem`, so it inherits that theorem's one
@@ -44,7 +44,7 @@ theorem ofCurve_inj' (hupgrade : RS.Abel.WeakSolutionUpgrade X) (P : X) (h : 0 <
   by_contra hne
   -- The bridge: discreteness ⟹ closedness ⟹ `closure = self` (design §1.3/§9, spike-verified).
   have hclosed : IsClosed (RS.periodSubgroup X : Set (Fin (genus X) → ℂ)) :=
-    AddSubgroup.isClosed_of_discrete
+    AddSubgroup.isClosed_of_discreteTopology
   have hclosure_eq : (RS.periodSubgroup X).topologicalClosure = RS.periodSubgroup X :=
     le_antisymm (AddSubgroup.topologicalClosure_minimal _ le_rfl hclosed)
       (AddSubgroup.le_topologicalClosure _)

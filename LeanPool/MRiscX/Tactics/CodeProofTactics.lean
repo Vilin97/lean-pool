@@ -82,7 +82,7 @@ sets (e.g., `L_W ≠ ∅`), which are trivial in most cases.
 
 The same tactic can be used without providing `P`
 -/
-elab "sapplySSeq" &"P" &" := " P:term &", "
+elab (name := sapplySSeqWithP) "sapplySSeq" &"P" &" := " P:term &", "
                     &"R" &" := "  R:term &", "
                     &"L_W" &" := "  L_w:term &", "
                     &"L_W'" &" := "  L_w':term &", "
@@ -98,9 +98,12 @@ elab "sapplySSeq" &"P" &" := " P:term &", "
   evalTactic (← `(tactic | applyToLastGoal simpSetEq ))
 
 /--
-The same as the other `sapplySSeq` tactic, but without having to provide
-`P`.
+`sapplySSeq R := …, L_W := …, L_W' := …, L_B := …, L_B' := …` is the same tactic
+without having to provide `P`.
 -/
+tactic_extension sapplySSeqWithP
+
+@[tactic_alt sapplySSeqWithP]
 elab "sapplySSeq" &"R" &" := "  R:term &", "
                     &"L_W" &" := "  L_w:term &", "
                     &"L_W'" &" := "  L_w':term &", "
@@ -125,7 +128,7 @@ macro "sapplySSeq'" P:term ", " R:term ", " L_w:term ", " L_w':term : tactic => 
 /--
 Like `sapplySSeq`, but without solving the sidegoal `L_b = L_b' ∩ L_b''`.
 -/
-elab "sapplySSeq''" R:term &", "
+elab (name := sapplySSeqDoublePrime) "sapplySSeq''" R:term &", "
                       L_w:term &", "
                       L_w':term &", "
                       L_b:term &", "
@@ -139,18 +142,16 @@ elab "sapplySSeq''" R:term &", "
 
 -- TODO make this more robust
 /--
-Apply `S_SEQ` without explicitly providing the names of the parameters.
-The order is:
-1. `R`
-2. `L_W`
-3. `L_W'`
-4. `L_B`
-5. `L_B'`
+`sapplySSeq'' R := …, L_W := …, L_W' := …, L_B := …, L_B' := …` applies `S_SEQ`
+without explicitly providing `P`.
 
 Also, try to automatically solve the most "side goals", which are generated
 during the process. Those side goals generally are goals about the set provided
 (e.g. `L_W ≠ ∅`), which are trivial is most cases.
 -/
+tactic_extension sapplySSeqDoublePrime
+
+@[tactic_alt sapplySSeqDoublePrime]
 elab "sapplySSeq''"
                       &"R" &" := "  R:term &", "
                       &"L_W" &" := "  L_w:term &", "
@@ -167,20 +168,17 @@ elab "sapplySSeq''"
 
 
 /--
-Apply `S_SEQ` with explicitly providing the names and values of the parameters.
-The order is:
-1. `P`
-2. `R`
-3. `L_W`
-4. `L_W'`
-5. `L_B`
-6. `L_B'`
+`sapplySSeq'' P := …, R := …, L_W := …, L_W' := …, L_B := …, L_B' := …` applies
+`S_SEQ` with explicitly providing the names and values of the parameters.
 
 Also, try to automatically solve the most "side goals", which are generated
 during the process. Those side goals generally are goals about the set provided
 (e.g. `L_W ≠ ∅`), which are trivial is most cases.
 -/
-  elab "sapplySSeq''"
+tactic_extension sapplySSeqDoublePrime
+
+@[tactic_alt sapplySSeqDoublePrime]
+elab "sapplySSeq''"
                       &"P" &" := " P:term &", "
                       &"R" &" := "  R:term &", "
                       &"L_W" &" := "  L_w:term &", "
@@ -206,7 +204,7 @@ The order is:
 5. `L_B`
 6. `L_B'`
 -/
-elab "sapplySSeqPlain"  &"P" &" := " P:term &", "
+elab (name := sapplySSeqPlainWithP) "sapplySSeqPlain"  &"P" &" := " P:term &", "
                         &"R" &" := "  R:term &", "
                         &"L_W" &" := "  L_w:term &", "
                         &"L_W'" &" := "  L_w':term &", "
@@ -217,7 +215,13 @@ elab "sapplySSeqPlain"  &"P" &" := " P:term &", "
       (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simpSetEq))
 
 
-/-- Apply the plain sequencing rule with the given assertions and address sets. -/
+/--
+`sapplySSeqPlain R := …, L_W := …, L_W' := …, L_B := …, L_B' := …` applies the
+plain sequencing rule without explicitly providing `P`.
+-/
+tactic_extension sapplySSeqPlainWithP
+
+@[tactic_alt sapplySSeqPlainWithP]
 elab "sapplySSeqPlain"  &"R" &" := "  R:term &", "
                         &"L_W" &" := "  L_w:term &", "
                         &"L_W'" &" := "  L_w':term &", "
@@ -237,7 +241,7 @@ elab "sapplySSeqPlain"  &"R" &" := "  R:term &", "
 Like `sapplySSeq''`, but also apply a tactic to automatically solve the
 set equality which should be able to show `L_{B''} = L_B ∩ L_{B'}`.
 -/
-elab "sapplySSeq'''"  &"P" &" := " P:term &", "
+elab (name := sapplySSeqTriplePrimeWithP) "sapplySSeq'''"  &"P" &" := " P:term &", "
                         &"R" &" := "  R:term &", "
                         &"L_W" &" := "  L_w:term &", "
                         &"L_W'" &" := "  L_w':term &", "
@@ -253,17 +257,15 @@ elab "sapplySSeq'''"  &"P" &" := " P:term &", "
   evalTactic (← `(tactic | applyToLastGoal simpSetEq ))
 
 /--
-Apply S_SEQ with explicitly providing the names of the parameters.
-The order is:
-1. `R`
-2. `L_W`
-3. `L_W'`
-4. `L_B`
-5. `L_B'`
+`sapplySSeq''' R := …, L_W := …, L_W' := …, L_B := …, L_B' := …` applies `S_SEQ`
+without explicitly providing `P`.
 
 Also, apply a tactic to automatically solve set equality which should be
 able to show `L_{B''} = L_B ∩ L_{B'}`.
 -/
+tactic_extension sapplySSeqTriplePrimeWithP
+
+@[tactic_alt sapplySSeqTriplePrimeWithP]
 elab "sapplySSeq'''"  &"R" &" := "  R:term &", "
                         &"L_W" &" := "  L_w:term &", "
                         &"L_W'" &" := "  L_w':term &", "

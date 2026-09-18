@@ -78,7 +78,7 @@ theorem logDeriv_complexPlaceGammaFactor_of_re_pos {s : ℂ} (hs : 0 < s.re) :
       have hn : 0 < (-n : ℂ).re := h ▸ hs
       simp only [neg_re, natCast_re, neg_pos] at hn
       grind
-  have hmul := logDeriv_mul
+  have hmul := logDeriv_fun_mul
     (f := fun z : ℂ ↦ (2 * (Real.pi : ℂ)) ^ (-z))
     (g := Complex.Gamma) s
     (cpow_ne_zero_iff.mpr <| Or.inl hbase)

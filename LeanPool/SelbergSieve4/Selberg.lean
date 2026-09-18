@@ -421,7 +421,7 @@ theorem selberg_bound_muPlus (n : ℕ) (hn : n ∈ divisors P) :
     simp only [f]
     by_cases h : n = d1.lcm d2
     · rw [ite_eq_left h, ite_eq_left h]
-      apply mul_le_one₀ (s.selberg_bound_weights d1) (abs_nonneg <| γ d2)
+      exact (mul_le_of_le_one_left (abs_nonneg <| γ d2) (s.selberg_bound_weights d1)).trans
         (s.selberg_bound_weights d2)
     · rw [ite_eq_right h, ite_eq_right h]
   · rw [← Finset.sum_product']

@@ -33,7 +33,7 @@ theorem tensorNorm_eq_derivativeSum (A : SmoothL2Field Space) (s : ℕ) :
   unfold tensorNorm derivativeSum
   apply sum_congr rfl
   intro n _
-  rw [norm_jetLp,toReal_eLpNorm (A.integrable n).aestronglyMeasurable]
+  rw [norm_jetLp,toReal_eLpNorm]
 
 theorem tensorNorm_add_le (A B : SmoothL2Field Space) (s : ℕ) :
     tensorNorm s (addField A B) ≤ tensorNorm s A+tensorNorm s B := by

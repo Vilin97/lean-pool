@@ -698,7 +698,7 @@ theorem spatialOrbit_derivative_norm (n : ℕ) (a : LiftTangent) :
     _ ≤ ‖iteratedFDeriv ℝ n (fun b : Space => EulerLpTranslation.translation b u.toLp) a.1‖*
         ∏ _i : Fin n, (1 : ℝ) := by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-      exact Finset.prod_le_prod (fun _ _ => norm_nonneg L)
+      exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg L)
         (fun _ _ => ContinuousLinearMap.norm_fst_le ℝ Space ℝ)
     _ = ‖iteratedFDeriv ℝ n (fun b : Space => EulerLpTranslation.translation b u.toLp) a.1‖ := by
       simp only [Finset.prod_const_one,mul_one]
@@ -3216,7 +3216,7 @@ theorem hasJetBound_of_support_sup (A : SmoothL2Field V) (K : Set Space)
   have h := EulerMeanBoundary.lpNorm_le_bound_volume (iteratedFDeriv ℝ n A.field)
     (A.integrable n).aestronglyMeasurable K hK (C*R^n*(n.factorial : ℝ)^2)
     (by positivity) (hb n) hzero 2
-  rw [norm_jetLp,toReal_eLpNorm (A.integrable n).aestronglyMeasurable]
+  rw [norm_jetLp,toReal_eLpNorm]
   convert h using 1
   norm_num
   ring

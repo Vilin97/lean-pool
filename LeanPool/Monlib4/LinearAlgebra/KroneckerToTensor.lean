@@ -107,10 +107,8 @@ theorem TensorProduct.matrix_eq_sum_std_basis (x : Matrix m m R ⊗[R] Matrix n 
 
 theorem TensorProduct.toKronecker_hMul (x y : Matrix m m R ⊗[R] Matrix n n R) :
     toKronecker (x * y) = toKronecker x * toKronecker y :=
-x.induction_on
- (by simp only [zero_mul, map_zero])
- (y.induction_on
-  (by simp only [mul_zero, map_zero, implies_true])
+x.inductionOn
+ (y.inductionOn
   (fun _ _ _ _ => by
     simp only [Algebra.TensorProduct.tmul_mul_tmul, toKronecker_apply, Matrix.mul_kronecker_mul])
   (fun _ _ h1 h2 _ _ => by simp only [_root_.map_add, h1, h2, mul_add]))

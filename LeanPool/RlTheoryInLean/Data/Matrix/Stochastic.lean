@@ -14,7 +14,7 @@ import Mathlib.Topology.MetricSpace.Contracting
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Logic.Function.Defs
 import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Topology.MetricSpace.ProperSpace
 import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.UniformSpace.Cauchy
@@ -67,13 +67,17 @@ abbrev Simplex (S : Type u) [Fintype S] := {x : l1Space S | StochasticVec x.ofLp
 instance (x : ↑(Simplex S)) : @StochasticVec S _ x.val.ofLp := x.property
 
 instance : IsClosed (Simplex S) := by
+  have hofLp : Continuous fun x : l1Space S => x.ofLp := PiLp.continuous_ofLp 1 _
   have hsimplex : {x : l1Space S | StochasticVec x.ofLp} =
-      {x : l1Space S | x.ofLp ∈ stdSimplex ℝ S} := by
+      (⋂ s : S, {x : l1Space S | 0 ≤ x.ofLp s}) ∩ {x : l1Space S | ∑ s, x.ofLp s = 1} := by
     ext x
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     exact ⟨fun h => ⟨h.nonneg, h.rowsum⟩, fun h => ⟨h.1, h.2⟩⟩
   change IsClosed {x : l1Space S | StochasticVec x.ofLp}
   rw [hsimplex]
-  exact (isClosed_stdSimplex ℝ S).preimage (PiLp.continuous_ofLp 1 _)
+  refine .inter (isClosed_iInter fun s => ?_) (isClosed_eq ?_ continuous_const)
+  · exact isClosed_le continuous_const ((continuous_apply s).comp hofLp)
+  · exact continuous_finsetSum _ fun s _ => (continuous_apply s).comp hofLp
 
 instance : CompleteSpace (Simplex S) := IsClosed.completeSpace_coe
 

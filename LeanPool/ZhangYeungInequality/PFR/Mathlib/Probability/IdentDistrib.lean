@@ -186,7 +186,7 @@ lemma _root_.ProbabilityTheory.AEMeasurable.piMk
   AEMeasurable (F i) μ) :
     AEMeasurable (fun x i => F i x) μ := by
   refine ⟨fun x i => (hF i).mk (F i) x,
-    measurable_pi_lambda _ (fun i => (hF i).measurable_mk), ?_ ⟩
+    .of_eval (fun i => (hF i).measurable_mk), ?_ ⟩
   filter_upwards [eventually_countable_forall.mpr (fun i ↦ (hF i).ae_eq_mk)] with ω hω
   ext i; exact hω i
 
@@ -291,8 +291,6 @@ lemma independent_copies {X : Ω → α} {Y : Ω' → β} (hX : Measurable X) (h
       IsProbabilityMeasure ν
       ∧ Measurable X' ∧ Measurable Y' ∧ IndepFun X' Y' ν
       ∧ IdentDistrib X' X ν μ ∧ IdentDistrib Y' Y ν μ' := by
-  have := Measure.isProbabilityMeasure_map hX.aemeasurable (μ := μ)
-  have := Measure.isProbabilityMeasure_map hY.aemeasurable (μ := μ')
   exact ⟨(μ.map X).prod (μ'.map Y), _, _, inferInstance, measurable_fst, measurable_snd,
     indepFun_fst_snd, ⟨measurable_fst.aemeasurable, hX.aemeasurable, by simp⟩,
     measurable_snd.aemeasurable, hY.aemeasurable, by simp⟩

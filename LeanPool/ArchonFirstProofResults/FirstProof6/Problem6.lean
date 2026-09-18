@@ -355,7 +355,7 @@ lemma cross_edge_sum_le_graphLaplacian
   have laplacian_row_sum : ∀ (H : SimpleGraph V) [DecidableRel H.Adj] (a : V),
       ∑ b, graphLaplacian H a b = 0 := by
     intro H _ a
-    have h := congrFun (SimpleGraph.lapMatrix_mulVec_const_eq_zero (R := ℝ) H) a
+    have h := congrFun (H.lapMatrix_mulVec_one_eq_zero ℝ) a
     rw [graphLaplacian_eq_lapMatrix]
     simpa [Matrix.mulVec, dotProduct] using h
   -- Helper: inducedLaplacian row sum = 0 (induced subgraph is itself a graph Laplacian)

@@ -31,7 +31,11 @@ Representation rulings (fixed before any proof was written):
 * Denotations are `Set M`, i.e. `M → Prop`, classically.
 -/
 import Mathlib.Data.Set.Basic
-import Mathlib.Data.Set.Lattice
+import Mathlib.Data.Set.Lattice.Bounded
+import Mathlib.Data.Set.Lattice.Disjoint
+import Mathlib.Data.Set.Lattice.Image
+import Mathlib.Data.Set.Lattice.Indexed
+import Mathlib.Data.Set.Lattice.Order
 import Mathlib.Logic.Function.Basic
 
 /-!

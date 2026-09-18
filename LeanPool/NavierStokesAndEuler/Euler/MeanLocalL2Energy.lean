@@ -27,7 +27,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal
 def localL2Energy (s : Set Space) (u : L2) : ℝ := ∫ x in s, ‖u x‖ ^ 2
 
 theorem lpNorm_coe_L2 (u : L2) : lpNorm (u : Space → Space) 2 volume = ‖u‖ := by
-  rw [Lp.norm_def, toReal_eLpNorm (Lp.memLp u).aestronglyMeasurable]
+  rw [Lp.norm_def, toReal_eLpNorm]
 
 theorem integrable_norm_sq_L2 (u : L2) : Integrable (fun x => ‖u x‖ ^ 2) volume :=
   (memLp_two_iff_integrable_sq (Lp.memLp u).norm.aestronglyMeasurable).1 (Lp.memLp u).norm

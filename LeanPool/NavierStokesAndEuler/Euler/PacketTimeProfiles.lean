@@ -6,7 +6,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Topology.ContinuousMap.Compact
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Order.Star.Real
 meta import Lean.Meta.Tactic.NormCast
 import Mathlib.Tactic.Bound

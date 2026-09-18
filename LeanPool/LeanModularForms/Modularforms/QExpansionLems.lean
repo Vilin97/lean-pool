@@ -117,8 +117,7 @@ lemma iteratedDeriv_eq_iteratedDerivWithin (n : ℕ) (f : ℂ → ℂ) (s : Set 
   simp_rw [iteratedDerivWithin]
   rw [iteratedFDerivWithin_congr_set]
   apply EventuallyEq.symm
-  rw [eventuallyEq_univ]
-  exact IsOpen.mem_nhds hs hz
+  exact eventuallyEqSet_univ.2 (IsOpen.mem_nhds hs hz)
 
 lemma qExpansion_mul_coeff (a b : ℤ) (f : ModularForm Γ(n) a) (g : ModularForm Γ(n) b)
     [hn : NeZero n] : qExpansion n (f.mul g) = qExpansion n f * qExpansion n g := by

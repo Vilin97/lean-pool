@@ -70,7 +70,7 @@ theorem angularJet_memLp_and_bound (hf : ContDiff ℝ ∞ f) (n : ℕ)
       ‖fieldDerivative P (0,1) (fun x => jetSeries P f x n) q‖ ≤ ‖jetSeries P f q (n+1)‖ :=
     Eventually.of_forall (angularJet_bound P f hperiod n)
   exact ⟨hLp.of_le hc.aestronglyMeasurable hb,
-    ENNReal.toReal_mono hLp.eLpNorm_ne_top (eLpNorm_mono_ae hb)⟩
+    ENNReal.toReal_mono hLp.eLpNorm_ne_top (eLpNorm_mono_ae hc.aestronglyMeasurable hb)⟩
 
 variable [CompleteSpace W]
 

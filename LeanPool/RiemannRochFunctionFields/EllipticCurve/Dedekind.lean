@@ -243,7 +243,7 @@ theorem isDiscreteValuationRing_atPrime_of_derivative_not_mem
     infer_instance
   exact ((IsDiscreteValuationRing.TFAE (Localization.AtPrime P)
     (IsLocalization.AtPrime.not_isField (AdjoinRoot f) hP0
-      (Localization.AtPrime P))).out 4 0).mp hprincipal
+      (Localization.AtPrime P))).out 5 1).mp hprincipal
 
 theorem isDiscreteValuationRing_atPrime_of_derivative_eq_not_mem
     [IsNoetherianRing R] [IsPrincipalIdealRing R]

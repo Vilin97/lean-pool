@@ -176,7 +176,7 @@ lemma no_reverse_edges (T : WideSubquiver (Symmetrify V)) [Arborescence T]
 def symEdgeForget (T : WideSubquiver (Symmetrify V))
     (e : Quiver.Total T) : Quiver.Total (wideSubquiverSymmetrify T) := by
   rcases e with ⟨a, b, ⟨f, hf⟩⟩
-  cases f with
+  cases f using Sum.casesOn with
   | inl f => exact ⟨a, b, ⟨f, Or.inl hf⟩⟩
   | inr f => exact ⟨b, a, ⟨f, Or.inr hf⟩⟩
 
@@ -193,7 +193,7 @@ lemma symEdgeForgetInv_forget (T : WideSubquiver (Symmetrify V)) [Arborescence T
     (e : Quiver.Total T) : symEdgeForgetInv T (symEdgeForget T e) = e := by
   rcases e with ⟨a, b, ⟨f, hf⟩⟩
   change V at a b
-  cases f with
+  cases f using Sum.casesOn with
   | inl f =>
       simp only [symEdgeForget, symEdgeForgetInv]
       exact dite_eq_left hf
@@ -214,14 +214,14 @@ lemma symEdgeForget_forgetInv (T : WideSubquiver (Symmetrify V))
       simp only [symEdgeForgetInv]
       exact dite_eq_left h
     rw [hinv]
-    simp [symEdgeForget]
+    rfl
   · have h' := hf.resolve_left h
     have hinv : symEdgeForgetInv T ⟨a, b, ⟨f, hf⟩⟩ =
         ⟨b, a, ⟨Sum.inr f, h'⟩⟩ := by
       simp only [symEdgeForgetInv]
       exact dite_eq_right h
     rw [hinv]
-    simp [symEdgeForget]
+    rfl
 
 /-- Equates oriented tree edges with the underlying edges of the symmetrified subquiver. -/
 def symEdgeEquiv (T : WideSubquiver (Symmetrify V)) [Arborescence T] :

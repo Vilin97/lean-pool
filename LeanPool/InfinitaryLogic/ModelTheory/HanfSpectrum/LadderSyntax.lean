@@ -48,9 +48,9 @@ abbrev Index (α : Ordinal.{0}) : Type := (α + 2).ToType
 
 instance (α : Ordinal.{0}) : Nonempty (Index α) :=
   Ordinal.nonempty_toType_iff.mpr fun h => by
-    have h2 := (Ordinal.add_eq_zero_iff.mp h).2
+    have h2 := (add_eq_zero.mp h).2
     rw [show (2 : Ordinal) = 1 + 1 from one_add_one_eq_two.symm,
-      Ordinal.add_eq_zero_iff] at h2
+      add_eq_zero] at h2
     exact one_ne_zero h2.1
 
 noncomputable instance (α : Ordinal.{0}) : OrderBot (Index α) :=
