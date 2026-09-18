@@ -124,6 +124,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/MRiscX                    https://github.com/JulsDE/MRiscX
   LeanPool/MassFormula               https://github.com/0stellensatz/MassFormula
   LeanPool/MatchingLogic             https://github.com/eveil-labs/matching-logic-lean
+  LeanPool/MaxFlowMinCut             https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/MetricCodes               https://github.com/openai/ten-proofs
   LeanPool/MinModulusUniqueMultisetSum
                                      https://github.com/jarfo/min-modulus
