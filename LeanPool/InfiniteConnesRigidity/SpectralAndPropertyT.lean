@@ -20,6 +20,7 @@ import Mathlib.Topology.Metrizable.Urysohn
 import Std.Tactic.BVDecide.Normalize.Prop
 public import LeanPool.InfiniteConnesRigidity.CarryAndCrossedProduct
 import Mathlib.Analysis.InnerProductSpace.Reproducing
+import Mathlib.Analysis.Matrix.Order
 import Mathlib.Topology.Algebra.LinearMapCompletion
 
 /-!
