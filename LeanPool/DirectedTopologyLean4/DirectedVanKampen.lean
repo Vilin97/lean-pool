@@ -164,7 +164,7 @@ def FunctorOnHomOfCoveredAux₂ {γ : Dipath x y} (hγ : range γ ⊆ X₂) :
 /-
   Show that these maps respect composition of paths
 -/
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor in
 lemma functorOnHomOfCoveredAux₁_trans {x y z : X} {γ₁ : Dipath x y}
     {γ₂ : Dipath y z} (hγ : range (γ₁.trans γ₂) ⊆ X₁) :
@@ -174,7 +174,7 @@ lemma functorOnHomOfCoveredAux₁_trans {x y z : X} {γ₁ : Dipath x y}
   unfold FunctorOnHomOfCoveredAux₁
   rw [(subset_functor_trans hγ).symm]
   simp
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor in
 lemma functorOnHomOfCoveredAux₂_trans {x y z : X} {γ₁ : Dipath x y}
     {γ₂ : Dipath y z} (hγ : range (γ₁.trans γ₂) ⊆ X₂) :
@@ -202,7 +202,7 @@ lemma functorOnHomOfCoveredAux₂_reparam {x y : X} {γ : Dipath x y} (hγ : ran
 /-
  Show that the maps respect reparametrization of paths
 -/
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor in
 lemma functorOnHomOfCoveredAux₁_refl {x : X} (hx : x ∈ X₁) :
   FunctorOnHomOfCoveredAux₁ hX h_comm (range_refl_subset_of_mem hx) = 𝟙 (F_obj ⟨x⟩) := by
@@ -211,7 +211,7 @@ lemma functorOnHomOfCoveredAux₁_refl {x : X} (hx : x ∈ X₁) :
   change eqToHom _ ≫ F₁.map (𝟙 ⟨x, hx⟩) ≫ eqToHom _ = 𝟙 (F_obj ⟨x⟩)
   rw [F₁.map_id]
   simp
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor in
 lemma functorOnHomOfCoveredAux₂_refl {x : X} (hx : x ∈ X₂) :
   FunctorOnHomOfCoveredAux₂ hX h_comm (range_refl_subset_of_mem hx) = 𝟙 (F_obj ⟨x⟩) := by
@@ -223,7 +223,7 @@ lemma functorOnHomOfCoveredAux₂_refl {x : X} (hx : x ∈ X₂) :
 /-
   Show that for any path living in `X₁ ∩ X₂`, either map gives the same result.
 -/
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor in
 lemma functorOnHomOfCoveredAux_equal {γ : Dipath x y} (hγ₁ : range γ ⊆ X₁)
     (hγ₂ : range γ ⊆ X₂) :
@@ -562,7 +562,7 @@ lemma functorOnHomOfCoveredPartwise_apply_right_side {x y : X} {γ : Dipath x y}
   rw [functorOnHomOfCoveredPartwise_split hX h_comm (Nat.lt_succ_self n)]
   rw [functorOnHomOfCoveredPartwise_equal' hX h_comm rfl (Nat.sub_self n.succ)]
   rw [functorOnHomOfCoveredPartwise_apply_0]
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor Dipath.coveredPartwise in
 lemma functorOnHomOfCoveredPartwise_trans_case_0 {x y z : X}
     {γ₁ : Dipath x y} {γ₂ : Dipath y z}
@@ -872,7 +872,7 @@ lemma functorOnHomAux_of_homotopic_dimaps {m : ℕ} :
             := by rw [Category.assoc]
       _ = Fh_aux (H.evalAtRight 0) ≫ Fh_aux (Dipath.ofDirectedMap g)
             := by rw [functorOnHomAux_split_of_covered_partwise _ _ _ _ g_cov]
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor Quiver.Hom Quotient
   Dipath.Dihomotopic.Quotient Dipath.coveredPartwise Dipath.cast
   SplitDipath.FirstPart SplitDipath.SecondPart SplitPath.FirstPart SplitPath.SecondPart
@@ -958,7 +958,7 @@ lemma functorOnHom_comp_path {x y z : X} (γ₁ : Dipath x y) (γ₂ : Dipath y 
     F_hom (⟦γ₁⟧ ≫ ⟦γ₂⟧) = F_hom ⟦γ₁⟧ ≫ F_hom ⟦γ₂⟧ := by
   change Fh_aux (γ₁.trans γ₂) = Fh_aux γ₁ ≫ Fh_aux γ₂
   exact functorOnHom_trans hX X₁_open X₂_open h_comm γ₁ γ₂
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor Quiver.Hom Quotient
   Dipath.Dihomotopic.Quotient in
 lemma functorOnHom_comp {x y z : dπₓ X} (γ₁ : x ⟶ y) (γ₂ : y ⟶ z) :
@@ -1033,7 +1033,7 @@ lemma functor_comp_right : (dπₘ j₂) ⋙ F = F₂ := by
   · intros x y f
     rw [←Quotient.out_eq f]
     exact functor_comp_right_dipath hX X₁_open X₂_open h_comm f.out
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor Functor in
 lemma functor_uniq_aux_obj (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' = F₁)
     (h₂ : (dπₘ j₂) ⋙ F' = F₂) (x : X) :
@@ -1050,7 +1050,7 @@ lemma functor_uniq_aux_obj (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' 
     change F'.obj _ = F'.obj _
     apply congrArg
     rfl
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor Quiver.Hom Quotient
   Dipath.Dihomotopic.Quotient Functor in
 lemma functor_uniq_of_covered (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' = F₁)
@@ -1078,7 +1078,7 @@ lemma functor_uniq_of_covered (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ 
     change ((dπₘ j₂) ⋙ F').map ⟦SubtypeDipath γ hγ⟧ = _
     rw [map_eq_map_of_eq h₂]
     simp [functorObj_def]; rfl
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
+attribute [local implicit_reducible] dTopCat.of
   FundamentalCategory.fundamentalCategoryFunctor Quiver.Hom Quotient
   Dipath.Dihomotopic.Quotient Functor in
 lemma functor_uniq_aux_map (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' = F₁)

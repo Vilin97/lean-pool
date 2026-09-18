@@ -878,7 +878,7 @@ private lemma memLp_two_lintegral_nnnorm_sq {α ε : Type*} [MeasurableSpace α]
     ∫⁻ x, ↑‖f x‖₊ ^ (2 : ℕ) ∂μ < ⊤ := by
   have h := hf.eLpNorm_lt_top
   rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num : (2 : ℝ≥0∞) ≠ 0)
-    (by norm_num : (2 : ℝ≥0∞) ≠ ⊤)] at h
+    (by norm_num : (2 : ℝ≥0∞) ≠ ⊤) hf.aestronglyMeasurable] at h
   simp only [toReal_ofNat] at h
   rw [rpow_lt_top_iff_of_pos (by positivity : (0:ℝ) < 1/2)] at h
   refine lt_of_eq_of_lt ?_ h

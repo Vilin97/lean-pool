@@ -9,7 +9,7 @@ import Mathlib.Analysis.Analytic.Basic
 import Mathlib.Analysis.Analytic.Constructions
 import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 import Mathlib.LinearAlgebra.BilinearMap
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith

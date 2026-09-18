@@ -124,7 +124,7 @@ lemma case1a (dim3 : Module.finrank K L = 3) (h₁ : Module.finrank K (commutato
         repeat rw [Finsupp.linearCombination_apply, Finsupp.sum_fintype]
         · repeat rw [Fin.sum_univ_three]
           simp only [Basis.repr_reindex, Basis.mk_repr, Fin.isValue,
-            Finsupp.mapDomain_equiv_apply, Equiv.symm_symm, Equiv.ofRightInverseOfCardLE_apply,
+            Equiv.symm_symm, Equiv.ofRightInverseOfCardLE_apply,
             Matrix.cons_val_zero, Basis.reindex_apply, Basis.coe_mk, Matrix.cons_val_one,
             Matrix.cons_val, lie_add, lie_smul, add_lie, smul_lie, lie_self, smul_zero, zero_add,
             smul_add, add_zero, B₂', B₂, reind', reind]
@@ -1082,8 +1082,8 @@ lemma finrank_com_eq2_from_basis_bracket
       use (  -(B.repr z) 0 • (B.repr y) 1  + -((B.repr z) 0 • (B.repr y) 2 • β ) + (B.repr z) 1 •
           (B.repr y) 0 + (B.repr z) 2 • (B.repr y) 0 • β  )
       match_scalars
-      · simp only [smul_eq_mul,Fin.isValue, neg_mul, mul_one,smul_eq_mul]
-      · simp only [Fin.isValue, smul_eq_mul, neg_mul, mul_one]
+      · simp only [smul_eq_mul, Fin.isValue, neg_mul, smul_eq_mul]
+      · simp only [Fin.isValue, smul_eq_mul, neg_mul]
     · have h1 :  B 1 ∈  {x | ∃ (y z:L), ⁅y, z⁆ = x} :=by
         rw [Set.mem_ofPred_eq]
         use α⁻¹ • B 0
@@ -1165,7 +1165,6 @@ lemma case2 : Module.finrank K L = 3 ∧ Module.finrank K (commutator K L) = 2 �
               not_false_eq_true, inv_smul_smul₀, smul_inv_smul₀, add_left_inj,
                 βinvunit, βunit, β2unit]
               match_scalars
-              simp only [mul_one]
               ring_nf
               simp_all
   · rintro (⟨B,hB01,hB02,hB12⟩|⟨B,hB01,hB02,⟨α, anz, hB12⟩⟩| ⟨B,hB01,hB02,⟨α, anz, hB12⟩⟩)

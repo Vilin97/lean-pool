@@ -113,7 +113,7 @@ lemma le_Y_of_mem_F : f ≤ Y F :=
     _ ≤ (F.erase 0).prod id := by
       obtain rfl | f0 := eq_or_ne f 0
       · simp
-      · exact single_le_prod' (f := id) (by grind) (by simp_all)
+      · exact single_le_prod (f := id) (by grind) (by simp_all)
     _ ≤ _ := by grind [Y]
 
 lemma lt_primeChain_of_mem_F : f < primeChain (100 * Y F ^ 6) n :=

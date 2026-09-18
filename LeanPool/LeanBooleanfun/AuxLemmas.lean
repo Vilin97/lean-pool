@@ -5,8 +5,7 @@ Authors: Joris Roos
 -/
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Finprod
-import Mathlib.Data.Real.Basic
-
+import Mathlib.Basic.Real.Basic
 /-!
 General lemmas not specific to analysis of Boolean functions.
 -/

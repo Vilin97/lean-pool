@@ -96,8 +96,7 @@ theorem pair_mem_squareSpan (i j : OrderedBasisIndex) :
     ext n m
     exact CharTwo.add_self_eq_zero ((x n).coeff m)
   have tensor_add_self (x : TensorAA) : x + x = 0 := by
-    refine TensorProduct.induction_on x ?_ ?_ ?_
-    · simp
+    refine TensorProduct.inductionOn x ?_ ?_
     · intro x y
       rw [← TensorProduct.add_tmul, A_add_self]
       simp

@@ -822,7 +822,6 @@ theorem graph_cylinderPoint (n : ℕ) (z : SpaceTime) :
       simp only [AxisymmetricResidual.pack, ProblemStatement.coordinateVector,
         PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, PiLp.single_apply]
       norm_num
-      simp only [show (0 : Fin 3) ≠ 2 by decide, ite_false, add_zero]
       change Real.sqrt (ChartScales.Q n) * (ChartScales.Q n ^ (-(1 / 2 : ℝ)) * z.2 0) = z.2 0
       rw [← mul_assoc, hs, one_mul]
     · simp [ActualBaseResidual.cylinderPoint, AxisymmetricResidual.pack,

@@ -26,7 +26,7 @@ lemma Finset.exists_minimal_of_nonempty {α : Type*} [PartialOrder α] [WellFoun
     obtain ⟨m, hmT, hmmin, _⟩ := this x₀ hx₀
     exact ⟨m, hmT, hmmin⟩
   intro x
-  apply (IsWellFounded.wf (r := (· < ·))).induction x
+  apply (wellFounded_lt (α := α)).induction x
   intro z ih hz
   by_cases hmin : ∀ y ∈ T, y < z → False
   · exact ⟨z, hz, hmin, le_rfl⟩

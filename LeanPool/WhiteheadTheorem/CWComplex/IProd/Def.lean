@@ -228,7 +228,7 @@ lemma commSqSkSk (n : ℕ) :
     -- The underlying morphism equality follows from the universal property of the coproduct.
     apply Limits.Sigma.hom_ext
     intro α
-    simp only [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_map_assoc,
+    simp only [Limits.Sigma.ι_comp_desc_assoc, Limits.Sigma.ι_map_assoc,
       ]
     -- Now we need to show `attachMaps α ≫ skInclSucc X n = diskBoundaryIncl (n+1) ≫
     -- Sigma.ι _ α ≫ sigmaDisksInclToSk X n`.
@@ -239,7 +239,7 @@ lemma commSqSkSk (n : ℕ) :
           (diskPair.homeoCubePairULift (n + 1)).hom.right ≫ cubeSplitAtLast.hom ≫
             ofHom ((ContinuousMap.id I).prodMap (X.cubeInclToSk α).hom)) ≫
         Limits.pushout.inr (l X (n + 1)) (r X (n + 1)))
-    rw [Limits.Sigma.ι_desc]
+    rw [Limits.Sigma.ι_comp_desc]
     -- Use `Arrow.Hom.w` to move `diskBoundaryIncl` past `right`.
     have hw : diskBoundaryIncl (n + 1) ≫ (diskPair.homeoCubePairULift (n + 1)).hom.right =
         (diskPair.homeoCubePairULift (n + 1)).hom.left ≫ cubeBoundaryIncl (n + 1) :=
@@ -341,7 +341,7 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
   apply Limits.Sigma.hom_ext
   intro α
   unfold IProd.xskl IProd.xskr
-  rw [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_map_assoc]
+  rw [Limits.Sigma.ι_comp_desc_assoc, Limits.Sigma.ι_map_assoc]
   change _ = diskBoundaryIncl n ≫ Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ r' ..
   ext x t
   unfold l' r'
@@ -356,7 +356,7 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
       (Limits.Sigma.ι (fun _ ↦ ∂𝔻 (n + 1)) α ≫
         Limits.Sigma.desc (IProd.attachMaps X)) xt := by
     unfold IProd.attachMaps xt
-    rw [Limits.Sigma.ι_desc]
+    rw [Limits.Sigma.ι_comp_desc]
     change _ = ((diskPair.homeoCubePairULift _).inv.left ≫
       (diskPair.homeoCubePairULift _).hom.left ≫
       cubeBoundary.mapOfBotTopSides (cubeAttBotOrTop X α) (cubeAttSides X α)
@@ -392,7 +392,7 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
   change (Limits.Sigma.ι (fun _ ↦ ∂𝔻 (n + 1)) α ≫
       (Limits.Sigma.map fun _ ↦ diskBoundaryIncl (n + 1)) ≫ Z.inr) xt =
     (Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ r' X n Z) (diskBoundaryIncl n x) t
-  rw [Limits.Sigma.ι_map_assoc, Limits.Sigma.ι_desc]
+  rw [Limits.Sigma.ι_map_assoc, Limits.Sigma.ι_comp_desc]
   rfl
 
 /-- `d'` -/
@@ -481,7 +481,7 @@ lemma w'' : l X (n + 1) ≫ l'' X n Z = r X (n + 1) ≫ r'' X n Z := by
       refine Limits.Sigma.hom_ext _ _ fun α ↦ ?_
       change _ = (Limits.Sigma.ι (fun x ↦ 𝔻 n) α ≫ r' ..) ≫ eₜ
       unfold r' eₜ
-      rw [Limits.Sigma.ι_desc]
+      rw [Limits.Sigma.ι_comp_desc]
       have : Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ Limits.pushout.inr (xskl X n) (xskr X n) ≫
           (X.attachCells n).isoPushout.inv ≫ X.skIncl (n + 1) ≫
           ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩ ≫ Limits.pushout.inl (l X n) (r X n) =
@@ -510,7 +510,7 @@ lemma w'' : l X (n + 1) ≫ l'' X n Z = r X (n + 1) ≫ r'' X n Z := by
               = (diskPair.homeoCubePairULift (n + 1)).inv.left ≫
                 IProd.attachMaps X α := by
                 congr 1
-                exact Limits.Sigma.ι_desc _ α
+                exact Limits.Sigma.ι_comp_desc _ α
             _ = cubeBoundary.mapOfBotTopSides (IProd.cubeAttBotOrTop X α) (IProd.cubeAttSides X α)
                   (IProd.cubeAtt_compatible X α) := by
                 unfold IProd.attachMaps
@@ -663,7 +663,7 @@ lemma coconeInr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
       Limits.pushout.desc (l'' X n Z) (r'' X n Z) (w'' X n Z)) = Z.inr
   rw [Limits.pushout.inr_desc]
   refine Limits.Sigma.hom_ext _ _ fun α ↦ ?_
-  rw [← Category.assoc, Limits.Sigma.ι_desc]
+  rw [← Category.assoc, Limits.Sigma.ι_comp_desc]
   apply CategoryTheory.eq_of_comp_right_iso_eq (diskPair.homeoCubePairULift (n + 1)).inv.right
   simp only [Category.assoc, Arrow.inv_hom_id_right_assoc]
   apply CategoryTheory.eq_of_comp_right_iso_eq cubeSplitAtLast.inv
@@ -682,7 +682,7 @@ lemma coconeInr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     simp only [Category.assoc, Iso.inv_hom_id, Category.comp_id]
   -- Compute `Sigma.ι α ≫ r' = (diskPair.homeoCubePairULift n).hom.right ≫ ofHom (curry ...)`.
   have hι : Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫ r' X n Z = _ :=
-    Limits.Sigma.ι_desc _ α
+    Limits.Sigma.ι_comp_desc _ α
   ext ⟨t, y⟩
   unfold r''
   simp only [ContinuousMap.argSwap, TopCat.hom_comp, ContinuousMap.coe_mk, ofHom_comp, hom_ofHom,
@@ -811,7 +811,7 @@ lemma pushoutSkSk (n : ℕ) :
       rw [← hdr, (by rfl : (cocone X n).inr = IProd.sigmaDisksInclToSk X n)]
       -- Combine nested `Hom.hom` applications into a single composition.
       simp only [← TopCat.comp_app]
-      -- Reduce the RHS `(Sigma.desc f).hom (Sigma.ι α x) t` via `Sigma.ι_desc` at morphism level.
+      -- Reduce the RHS via `Sigma.ι_comp_desc` at the morphism level.
       have hsi : Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
           (Limits.Sigma.desc fun α ↦
               Arrow.Hom.right (diskPair.homeoCubePairULift n).hom ≫
@@ -824,7 +824,7 @@ lemma pushoutSkSk (n : ℕ) :
                 ((Hom.hom (Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α)).comp
                   ((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).inv)).comp
                     ((Hom.hom cubeSplitAtLast.inv).comp ContinuousMap.prodSwap)))).curry :=
-        Limits.Sigma.ι_desc _ α
+        Limits.Sigma.ι_comp_desc _ α
       -- Provide the morphism-level identity for the LHS.
       have hci : (Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
             Limits.pushout.inr (Limits.Sigma.desc (X.attachCells n).attachMaps)
@@ -877,7 +877,7 @@ lemma pushoutSkSk (n : ℕ) :
           Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
             cubeSplitAtLast.hom ≫
               ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))) :=
-        Limits.Sigma.ι_desc _ α
+        Limits.Sigma.ι_comp_desc _ α
       -- Evaluate the curried form on the RHS manually so the result matches the LHS.
       change (Hom.hom d) ((Hom.hom (Limits.pushout.inr (l X (n + 1)) (r X (n + 1))))
           (t, (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift n).hom ≫

@@ -351,7 +351,7 @@ private lemma nat_pair_sample_marginal
     simp only [Set.mem_preimage, Set.mem_ofPred_eq, SuccessSub, p, N, n]
     constructor <;> intro h <;> (convert h using 1; rfl)
   have hSuccessSub_meas : MeasurableSet SuccessSub :=
-    measurableSet_preimage (measurable_pi_lambda _ (fun j => measurable_pi_apply (e₁ j))) hSuccess
+    measurableSet_preimage (Measurable.of_eval (fun j => measurable_pi_apply (e₁ j))) hSuccess
   rw [h_eq, pi_cylinder_set_eq D p SuccessSub hSuccessSub_meas]
   -- Now D^{p}(SuccessSub) and need D^{Fin n}(Success) — reindex via e₁
   have h_mp : MeasureTheory.MeasurePreserving
@@ -405,7 +405,7 @@ private lemma adviceGoodTrain_measurable {X : Type u} [MeasurableSpace X]
         ≤ ENNReal.ofReal (ε / 2)} := by
   have h_label : Measurable
       (fun xs₁ : Fin m₁ → X => fun i : Fin m₁ => (xs₁ i, c (xs₁ i))) :=
-    measurable_pi_lambda _ (fun i =>
+    Measurable.of_eval (fun i =>
       (measurable_pi_apply i).prodMk (hcm.comp (measurable_pi_apply i)))
   have h_joint : Measurable (fun p : (Fin m₁ → X) × X =>
       LA.learnWithAdvice aStar (fun i => (p.1 i, c (p.1 i))) p.2) :=
@@ -446,7 +446,7 @@ private lemma adviceBadVal_measurable {X : Type u} [MeasurableSpace X]
   intro a
   have h_label_a : Measurable
       (fun xs₁ : Fin m₁ → X => fun i : Fin m₁ => (xs₁ i, c (xs₁ i))) :=
-    measurable_pi_lambda _ (fun i =>
+    Measurable.of_eval (fun i =>
       (measurable_pi_apply i).prodMk (hcm.comp (measurable_pi_apply i)))
   have h_joint_a : Measurable (fun q : (Fin m₁ → X) × X =>
       LA.learnWithAdvice a (fun i => (q.1 i, c (q.1 i))) q.2) :=
@@ -487,7 +487,8 @@ private lemma adviceBadVal_measurable {X : Type u} [MeasurableSpace X]
         exact measurableSet_eq_fun h_eval_j h_c_j
       · exact measurable_const
       · exact measurable_const
-  exact (h_trueR.sub h_empR).abs measurableSet_Ici
+  simpa only [Real.norm_eq_abs, Pi.sub_apply, Set.preimage, Set.mem_Ici] using
+    (h_trueR.sub h_empR).norm measurableSet_Ici
 
 private theorem adviceGoodPair_subset_success {X : Type u} [MeasurableSpace X]
     {A : Type*} [Fintype A] [Nonempty A]

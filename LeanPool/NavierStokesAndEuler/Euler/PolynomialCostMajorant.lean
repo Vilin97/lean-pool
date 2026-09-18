@@ -8,7 +8,7 @@ module
 
 public import Mathlib.Algebra.Polynomial.Degree.Defs
 public import Mathlib.Algebra.Polynomial.Eval.Defs
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Polynomial.Degree.Operations
 import Mathlib.Tactic.Bound
 import Mathlib.Tactic.Measurability.Init

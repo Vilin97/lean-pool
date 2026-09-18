@@ -346,8 +346,7 @@ lemma time_average_memLp_two (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (T :
     have h_int_meas : AEStronglyMeasurable (fun ω => ∫ s in Set.Icc 0 T, A s ω) μ :=
       AEStronglyMeasurable.integral_prod_right' h_swap
     -- c * f = c • f for ℂ
-    convert AEStronglyMeasurable.const_smul h_int_meas (1/T : ℂ) using 2 with ω
-    simp [Pi.smul_apply, smul_eq_mul]
+    convert AEStronglyMeasurable.const_smul h_int_meas (1/T : ℂ) using 2
   -- Apply the proved theorem from L2TimeIntegral
   exact OSforGFF.time_average_memLp_two μ A T hT h_As_L2 h_uniform h_joint_meas h_avg_meas
 
@@ -372,12 +371,11 @@ lemma gff_err_sq_integrable (m : ℝ) [Fact (0 < m)] (T : ℝ) (hT : T > 0) (f :
   -- Step 3: Difference is in L² (L² is a vector space)
   have h_diff_L2 : MemLp (fun ω => (1/T : ℂ) * (∫ s in Set.Icc (0 : ℝ) T, A s ω) - EA) 2 μ := by
     have h := h_avg_L2.sub h_const_L2
-    convert h using 2 with ω
-    simp [Pi.sub_apply]
+    convert h using 2
   -- Step 4: L² function has integrable square
   have h_sq_int : Integrable (fun ω => ‖(1/T : ℂ) * (∫ s in Set.Icc (0 : ℝ) T,
     A s ω) - EA‖^2) μ := by
-    have h_meas := h_diff_L2.1
+    have h_meas := h_diff_L2.aestronglyMeasurable
     rwa [memLp_two_iff_integrable_sq_norm h_meas] at h_diff_L2
   -- Goal matches h_sq_int up to notation: smul ↔ mul, and ∫ ω' ... ↔ EA
   have h_EA : ∫ ω' : FieldConfiguration, Complex.exp (distributionPairingℂReal ω' f) ∂μ = EA := by

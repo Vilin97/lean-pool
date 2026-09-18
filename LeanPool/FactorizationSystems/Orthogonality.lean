@@ -12,8 +12,7 @@ import Mathlib.CategoryTheory.Limits.Types.Pullbacks
 import Mathlib.CategoryTheory.Limits.IsLimit
 import Mathlib.CategoryTheory.Iso
 import Mathlib.CategoryTheory.Types.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
-
+import Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts.ProdComparison
 /-!
 # LeanPool.FactorizationSystems.Orthogonality
 -/

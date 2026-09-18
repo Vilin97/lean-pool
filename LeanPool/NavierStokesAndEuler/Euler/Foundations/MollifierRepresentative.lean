@@ -189,7 +189,7 @@ theorem finite_set_integral_norm_le (f : LiftDomain period → Vector3)
     (∫ x in K, ‖f x‖ ∂liftMeasure period) ≤
       (eLpNorm f 2 (liftMeasure period)).toReal * (liftMeasure period K).toReal ^ (1/2 : ℝ) := by
   have hA := eLpNorm_le_eLpNorm_mul_rpow_measure_univ (p := (1 : ℝ≥0∞)) (q := 2)
-    (by norm_num) (hf.restrict K).1
+    (by norm_num) (hf.restrict K).aestronglyMeasurable
   norm_num only [ENNReal.toReal_one, ENNReal.toReal_ofNat, one_div, inv_one,
       Measure.restrict_apply_univ] at hA
   have hB : eLpNorm f 2 ((liftMeasure period).restrict K) * (liftMeasure period K)^(1/2 : ℝ) ≤
@@ -198,7 +198,8 @@ theorem finite_set_integral_norm_le (f : LiftDomain period → Vector3)
   have hfin : eLpNorm f 2 (liftMeasure period) * (liftMeasure period K) ^ (1/2 : ℝ) ≠ ⊤ := by
       finiteness
   have hC := ENNReal.toReal_mono hfin (hA.trans hB)
-  rw [integral_norm_eq_lintegral_enorm (hf.restrict K).1, ← eLpNorm_one_eq_lintegral_enorm]
+  rw [integral_norm_eq_lintegral_enorm (hf.restrict K).aestronglyMeasurable,
+    ← eLpNorm_one_eq_lintegral_enorm (hf.restrict K).aestronglyMeasurable]
   convert hC using 1
   simp only [ENNReal.toReal_mul, ← ENNReal.toReal_rpow]
 

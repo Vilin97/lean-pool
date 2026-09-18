@@ -315,7 +315,7 @@ theorem image_freeTriangleBaseEdge (T : M.Triangle) (k : Fin 3) :
   rw [freeTriangleBaseEdge, hindices]
   rw [Finset.image_insert, Finset.image_singleton]
   ext p
-  simp [freeTriangleOrder, eq_comm]
+  simp [freeTriangleOrder]
 
 theorem freeTriangleBaseEdge_eq_orderedPair (T : M.Triangle) (k : Fin 3) :
     M.freeTriangleBaseEdge T k =
@@ -338,7 +338,7 @@ theorem freeTriangleApexEdge0_carrier (T : M.Triangle) (k : Fin 3) :
   rw [show M.position '' (M.freeTriangleApexEdge0 T k : Set M.Vertex) =
     {M.freeTriangleOrder T k 0, M.freeTriangleOrder T k 2} by
       ext p
-      simp [freeTriangleApexEdge0, freeTriangleOrder, eq_comm]]
+      simp [freeTriangleApexEdge0, freeTriangleOrder]]
   exact convexHull_pair _ _
 
 theorem freeTriangleApexEdge1_carrier (T : M.Triangle) (k : Fin 3) :
@@ -347,7 +347,7 @@ theorem freeTriangleApexEdge1_carrier (T : M.Triangle) (k : Fin 3) :
   rw [show M.position '' (M.freeTriangleApexEdge1 T k : Set M.Vertex) =
     {M.freeTriangleOrder T k 1, M.freeTriangleOrder T k 2} by
       ext p
-      simp [freeTriangleApexEdge1, freeTriangleOrder, eq_comm]]
+      simp [freeTriangleApexEdge1, freeTriangleOrder]]
   exact convexHull_pair _ _
 
 theorem triangleEdges_eq_freeTriangleEdges (T : M.Triangle) (k : Fin 3) :
@@ -412,7 +412,7 @@ theorem frontier_triangleCarrier_subset_freeTriangleEdges (T : M.Triangle) (k : 
       convexHull ℝ (M.position '' (({a, b} : Finset M.Vertex) : Set M.Vertex)) =
         segment ℝ (M.position a) (M.position b) := by
     rw [show M.position '' (({a, b} : Finset M.Vertex) : Set M.Vertex) =
-      {M.position a, M.position b} by ext q; simp [eq_comm]]
+      {M.position a, M.position b} by ext q; simp]
     exact convexHull_pair _ _
   rw [M.triangleEdges_eq_orderedEdges T] at he
   simp only [Finset.mem_insert, Finset.mem_singleton] at he
@@ -571,7 +571,7 @@ theorem isGeometricallyFreeTriangle_of_boundaryEdges_card_two (T : M.Triangle)
       convexHull ℝ (M.position '' (({a, b} : Finset M.Vertex) : Set M.Vertex)) =
         segment ℝ (M.position a) (M.position b) := by
     rw [show M.position '' (({a, b} : Finset M.Vertex) : Set M.Vertex) =
-      {M.position a, M.position b} by ext p; simp [eq_comm]]
+      {M.position a, M.position b} by ext p; simp]
     exact convexHull_pair _ _
   have hUnion (a b : Finset M.Vertex) :
       (⋃ d ∈ ({a, b} : Finset (Finset M.Vertex)),
@@ -821,7 +821,7 @@ theorem exists_transportedThinKitePatch_inter_boundaryEdge_subset_baseEndpoints
       convexHull ℝ (M.position '' (({v, w} : Finset M.Vertex) : Set M.Vertex)) =
         segment ℝ (M.position v) (M.position w) := by
     rw [show M.position '' (({v, w} : Finset M.Vertex) : Set M.Vertex) =
-      {M.position v, M.position w} by ext p; simp [eq_comm]]
+      {M.position v, M.position w} by ext p; simp]
     exact convexHull_pair _ _
   have hsegmentImage : E '' segment ℝ a b =
       segment ℝ (M.position v) (M.position w) := by

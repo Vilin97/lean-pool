@@ -7,7 +7,7 @@ Authors: Bhavik Mehta
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Algebra.Order.Field.Rat
 import Mathlib.Algebra.Order.Star.Basic
-import Mathlib.Data.Countable.Basic
+import Mathlib.Basic.Countable.Basic
 import Mathlib.Data.Setoid.Partition
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Order.Interval.Set.Infinite

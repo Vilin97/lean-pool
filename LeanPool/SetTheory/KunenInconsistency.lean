@@ -155,7 +155,8 @@ def s (α : ν.ToType) : ℕ → κω := by
   have s' (β : Set.Iio α) : ℕ → κω := s β.1
   suffices {x : ℕ → κω | (∀ n, ↑(x n) ∈ X α) ∧ ∀ β, s' β ≠ x}.Nonempty from this.some
   convert_to ({x : ℕ → κω | ∀ n, ↑(x n) ∈ X α} \ Set.range s').Nonempty using 1
-  · ext x; simp
+  · ext x
+    simp only [Set.mem_ofPred_eq, Set.mem_sdiff, Set.mem_range, not_exists, ne_eq]
   · apply sdiff_nonempty_of_mk_lt_mk
     refine lt_of_le_of_lt mk_range_le ?_
     refine lt_of_lt_of_le (mk_Iio_ToType_lt _) ?_
@@ -178,14 +179,14 @@ lemma injective_s : Injective s := by
     · exact eq
     · exact this s_eq.symm (lt_of_le_of_ne (not_lt.mp lt) eq.symm) |>.symm
   · nth_rw 2 [s] at s_eq
-    generalize_proofs hβ at s_eq
+    generalize_proofs _ hβ at s_eq
     dsimp only at hβ
     exact (hβ.some_mem.2 ⟨_, lt⟩ s_eq).elim
 
 lemma s_mem_X : ∀ α n, (s α n).1 ∈ X α := by
   intro α n
   simp only [s]
-  generalize_proofs hα
+  generalize_proofs _ hα
   exact hα.some_mem.1 n
 
 /-- The `f` declaration. -/
@@ -220,7 +221,7 @@ lemma exists_γ_and_X_eq {β H : M} (hβ : β ∈ κω) (hH : H ⊆ κω) (card_
 
 lemma f_s_eq_γ {α : ν.ToType} : ↑(f (s α)) = γ α := by
   rw [f, s]
-  generalize_proofs hne_ν hne_s γ_mem
+  generalize_proofs hne_ν _ hne_s γ_mem
   dsimp only
   congr 1
   suffices s α = hne_s.some by

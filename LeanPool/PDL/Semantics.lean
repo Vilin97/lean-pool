@@ -6,7 +6,11 @@ Authors: PDL formalization contributors (see project card)
 
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Vector.Basic
-import Mathlib.Data.Set.Lattice
+import Mathlib.Data.Set.Lattice.Bounded
+import Mathlib.Data.Set.Lattice.Disjoint
+import Mathlib.Data.Set.Lattice.Image
+import Mathlib.Data.Set.Lattice.Indexed
+import Mathlib.Data.Set.Lattice.Order
 import Mathlib.Logic.Relation
 import Mathlib.Order.CompleteLattice.Basic
 
@@ -512,8 +516,7 @@ theorem SemImplyAnyNegFormula_loadBoxes_iff {M : KripkeModel W} {ξ : AnyFormula
       simp only [relateSeq_cons]
       constructor
       · use u
-      · convert z_
-        rfl
+      · exact z_
     · rintro ⟨v, w_v, v_⟩
       simp only [relateSeq_cons] at w_v
       rcases w_v with ⟨u, w_u, u_v⟩

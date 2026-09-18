@@ -8,7 +8,7 @@ import LeanPool.Sabidussi.Statement
 import Mathlib.Data.Fin.Rev
 import Mathlib.Logic.Equiv.Fin.Rotate
 import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finite.Set
+import Mathlib.Basic.Finite.Set
 import Mathlib.Data.Fintype.Sets
 
 /-!

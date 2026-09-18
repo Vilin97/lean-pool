@@ -6,7 +6,9 @@ Authors: Vincent Trélat
 
 import LeanPool.ZFLean.Basic
 import Mathlib.Algebra.Ring.Defs
+import Mathlib.Order.WellFounded
 import Mathlib.Tactic.Ring
+import Mathlib.Util.Delaborators
 
 /-! # ZFC Natural numbers
 

@@ -201,7 +201,7 @@ private theorem isClosed_of_subset_euclidean_integer_grid
     Submodule.span ℤ (Set.range b)
   have hclosed : IsClosed (G : Set (EuclideanSpace ℝ (Fin n))) := by
     change IsClosed (G.toAddSubgroup : Set (EuclideanSpace ℝ (Fin n)))
-    exact AddSubgroup.isClosed_of_discrete
+    exact AddSubgroup.isClosed_of_discreteTopology
   have hsub' : s ⊆ (G : Set (EuclideanSpace ℝ (Fin n))) := hsub
   let inside : Set G := ((↑) : G → EuclideanSpace ℝ (Fin n)) ⁻¹' s
   have hinside : IsClosed inside := isClosed_discrete inside

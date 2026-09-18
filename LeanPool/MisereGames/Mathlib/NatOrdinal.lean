@@ -113,7 +113,7 @@ theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
   wellFounded_iff_wellFounded_subrel.mpr (·.induction_on fun ⟨_, _, wo⟩ ↦
     RelHomClass.wellFounded (enum _) wo.wf)
 
-instance : WellFoundedLT NatOrdinal := ⟨lt_wf⟩
+instance : WellFoundedLT NatOrdinal := lt_wf
 
 instance wellFoundedRelation : WellFoundedRelation NatOrdinal :=
   ⟨(· < ·), lt_wf⟩

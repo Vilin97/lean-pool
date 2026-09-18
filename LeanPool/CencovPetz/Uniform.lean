@@ -5,9 +5,7 @@ Authors: Adam Benenson
 -/
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Real.Basic
-
-
+import Mathlib.Basic.Real.Basic
 /-!
 # `CencovPetz.Uniform`
 

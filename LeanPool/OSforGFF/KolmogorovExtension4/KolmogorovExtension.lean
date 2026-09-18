@@ -8,6 +8,7 @@ import LeanPool.OSforGFF.KolmogorovExtension4.RegularContent
 import Mathlib.MeasureTheory.Constructions.ProjectiveFamilyContent
 import Mathlib.MeasureTheory.Measure.RegularityCompacts
 import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
+import Mathlib.Topology.MetricSpace.Polish
 
 /-!
 # Kolmogorov Extension

@@ -5,7 +5,7 @@ Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
 import LeanPool.LanguageGeneration.FiniteWitness.Width.Divergence
 import LeanPool.LanguageGeneration.FiniteWitness.Width.Singleton
-import Mathlib.Logic.Denumerable
+import Mathlib.Basic.Denumerable
 
 /-!
 # Endpoint examples and realization of the entire width range

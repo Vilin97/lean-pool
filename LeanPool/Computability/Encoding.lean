@@ -6,7 +6,7 @@ Authors: Tanner Duve, Elan Roth
 import LeanPool.Computability.TuringDegree
 import Mathlib.Data.Option.Basic
 import Mathlib.Tactic.Linarith
-import Mathlib.Logic.Denumerable
+import Mathlib.Basic.Denumerable
 import Mathlib.Logic.Encodable.Basic
 import Mathlib.Data.Nat.PSub
 import Mathlib.Data.PFun

@@ -24,6 +24,7 @@ sets `A i` have distinct sizes.
 -/
 
 open MvPolynomial
+open AddMonoidAlgebra (coeff)
 
 open Finset
 
@@ -184,9 +185,8 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
     (h_distinct : ∀ i j, i < j → c i ≠ c j)
     (hm : m < p)
     (h_sum : ∑ i, c i = m + (k + 1).choose 2) :
-    MvPolynomial.coeff (toFinsupp c)
-      ((∑ i : Fin (k + 1), (X i : MvPolynomial (Fin (k + 1)) (ZMod p))) ^ m *
-       vandermondePolynomial k) ≠ 0 := by
+    coeff ((∑ i : Fin (k + 1), (X i : MvPolynomial (Fin (k + 1)) (ZMod p))) ^ m *
+       vandermondePolynomial k) (toFinsupp c) ≠ 0 := by
          -- Therefore, the coefficient in ZMod p is non-zero because none of the factors in
          -- `expectedValue c m` are divisible by `p`.
          intro h_coeff_zero_in_charP
@@ -197,9 +197,10 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
                fun i j => by split_ifs <;> norm_num; exact sub_ne_zero_of_ne <|
                    mod_cast Ne.symm <| by aesop⟩, fun i => Nat.factorial_ne_zero _⟩;
          have h_coeff_not_zero_in_K :
-             (MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) ((∑ i : Fin (k + 1),
+             (coeff ((∑ i : Fin (k + 1),
                  MvPolynomial.X i) ^ m * ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
-                     if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ)))
+                     if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ))
+                 (Finsupp.equivFunOnFinite.symm c))
                          = expectedValue c m := by
            have h_index : (Finsupp.equivFunOnFinite.symm c : (Fin (k + 1)) →₀ ℕ) = toFinsupp c := by
              ext i
@@ -212,12 +213,12 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
            have h_coeff_eq : ∀ (f : MvPolynomial (Fin (k + 1)) ℤ) (
                g :
                MvPolynomial (Fin (k + 1)) ℤ),
-                   MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (f * g)
-                       = MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c)
-                           (MvPolynomial.map (algebraMap ℤ ℚ) (f * g)) := by
+                   coeff (f * g) (Finsupp.equivFunOnFinite.symm c)
+                       = coeff (MvPolynomial.map (algebraMap ℤ ℚ) (f * g))
+                           (Finsupp.equivFunOnFinite.symm c) := by
              intros f g; rw [MvPolynomial.coeff_map]; aesop;
            rw [h_coeff_eq, h_index, ← Vandermonde_coefficient_formula c m h_sum]
-           congr 1
+           congr 2
            -- Push `map` through the polynomial product.
            rw [map_mul, map_pow, map_sum, map_prod]
            refine congrArg₂ (· * ·) ?_ ?_
@@ -230,19 +231,20 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
              rw [apply_ite (MvPolynomial.map (algebraMap ℤ ℚ))]
              simp only [Fin.val_fin_lt, map_sub, MvPolynomial.map_X, map_one]
          have h_coeff_not_zero_in_K' : (algebraMap ℤ (ZMod p)) (
-             MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (
+             coeff (
              (∑ i : Fin (k + 1), MvPolynomial.X i) ^ m * ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
-             if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ))) = 0 := by
+             if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ))
+             (Finsupp.equivFunOnFinite.symm c)) = 0 := by
            convert h_coeff_zero_in_charP using 1;
            unfold vandermondePolynomial;
            -- By definition of polynomial multiplication and the fact that the coefficients are
            -- integers, the coefficient of the polynomial in ZMod p is the same as the coefficient
            -- of the polynomial in ℤ.
            have h_coeff_eq : ∀ (P : MvPolynomial (Fin (k + 1)) ℤ),
-               MvPolynomial.coeff (toFinsupp c) (
-                   MvPolynomial.map (algebraMap ℤ (ZMod p)) P)
+               coeff (
+                   MvPolynomial.map (algebraMap ℤ (ZMod p)) P) (toFinsupp c)
                        = (algebraMap ℤ (ZMod p))
-                           (MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) P) := by
+                           (coeff P (Finsupp.equivFunOnFinite.symm c)) := by
              intro P; erw [MvPolynomial.coeff_map]
              simp_all only [ne_eq, Fin.val_fin_lt, algebraMap_int_eq, eq_intCast];
              congr! 2;
@@ -298,9 +300,9 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
       -- \text{vandermonde}$ is non-zero modulo $p$.
       have hm_lt_p : m < p := restricted_sum_m_bound A h_nonempty h_sum_bound
       have h_coeff_nonzero :
-          (MvPolynomial.coeff (toFinsupp c) ((∑ i,
+          (coeff ((∑ i,
               (X i : MvPolynomial (Fin (k + 1)) (ZMod p))) ^ m *
-            vandermondePolynomial k)) ≠ 0 := by
+            vandermondePolynomial k) (toFinsupp c)) ≠ 0 := by
         -- Since $|A_i|$ are distinct, $c_i$ are distinct.
         have hc_distinct : ∀ i j, i < j → c i ≠ c j :=
           fun i j hij => fun h => h_sizes_distinct i j hij <|
