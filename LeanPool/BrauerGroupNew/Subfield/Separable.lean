@@ -37,7 +37,7 @@ lemma SubField.adjoin_centralizer_mul_comm (L : SubField K D) (a : D)
     y ∈ Algebra.adjoin K (L ∪ {a}) → x * y = y * x :=
   fun x y hx hy ↦ by
     have := Algebra.isMulCommutative_adjoin K (s := (L : Set D) ∪ {a}) <| by
-      intro x₁ hx₁ y₁ hy₁
+      intro x₁ hx₁ y₁ hy₁ _
       simp only [Set.mem_union, SetLike.mem_coe, Set.mem_singleton_iff] at hx₁ hy₁
       rcases hx₁ with hx₁ | rfl
       · rcases hy₁ with hy₁ | rfl

@@ -5,7 +5,7 @@ Authors: Math_XMUM
 -/
 module
 
-public import Mathlib.Analysis.Convex.StdSimplex
+public import LeanPool.Brouwer.Simplex
 import LeanPool.Brouwer.Brouwer
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal

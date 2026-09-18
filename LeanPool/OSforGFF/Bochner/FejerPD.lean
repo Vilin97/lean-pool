@@ -11,6 +11,7 @@ public import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
 
 /-!
 # Fourier transform of L¹ positive-definite functions is nonneg
