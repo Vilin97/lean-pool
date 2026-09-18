@@ -3,10 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Karp.PotentialIso
+module
+
+public import LeanPool.InfinitaryLogic.Karp.PotentialIso
 import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
-import LeanPool.InfinitaryLogic.Scott.AtomicDiagram
-import LeanPool.InfinitaryLogic.Scott.BackAndForth
 /-!
 # Karp's theorem at a common branching carrier
 
@@ -51,6 +51,8 @@ whole content of "any common carrier suffices": the sum is canonical, not necess
 The common-carrier formulation with `IndexCoding` is this formalization's presentation, not
 a statement made in those sources; the mathematics is Karp's.
 -/
+
+@[expose] public section
 
 universe u v w w' uι uκ
 

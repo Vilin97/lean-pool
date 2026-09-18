@@ -3,9 +3,19 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise621
-import LeanPool.DomainTheory.Neighborhood.Theorem69
+public import LeanPool.DomainTheory.Neighborhood.Exercise621
+public import LeanPool.DomainTheory.Neighborhood.Definition63
+public import LeanPool.DomainTheory.Neighborhood.Proposition612
+public import LeanPool.DomainTheory.Neighborhood.Theorem69
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Continuity.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 6.23 (Scott 1981, PRG-19, §6) — the syntactic domain of expressions
@@ -76,6 +86,8 @@ built without `Classical.choice` (the generator `Γ` is the *explicit* Kleene
 union, not an
 existential witness).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

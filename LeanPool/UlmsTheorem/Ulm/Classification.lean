@@ -3,8 +3,12 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import LeanPool.UlmsTheorem.Ulm.Extension
+public import LeanPool.UlmsTheorem.Ulm.Extension
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Classification machinery for countable reduced abelian p-groups
@@ -13,6 +17,8 @@ This module contains the hard-direction interface for Ulm's theorem:
 the back-and-forth construction on finite partial isomorphisms and the final
 isomorphism-from-invariants statement.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 
@@ -39,13 +45,13 @@ hypothesis, and applying it to the inverse stage supplies the back hypothesis.
 abbrev BFIsoStep := UlmStage p (G := G) (H := H)
 
 /-- Policy for extending a finite stage so that it covers a chosen source element. -/
-private abbrev BFForthPolicy :=
+abbrev BFForthPolicy :=
   ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
     ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
       g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a
 
 /-- Policy for extending a finite stage so that it covers a chosen target element. -/
-private abbrev BFBackPolicy :=
+abbrev BFBackPolicy :=
   ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
     ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
       h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a

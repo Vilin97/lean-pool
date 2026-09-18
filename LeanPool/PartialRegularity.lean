@@ -3,8 +3,14 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang. All 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
+module
 
-import LeanPool.PartialRegularity.Extension
+public import LeanPool.PartialRegularity.Extension
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Almost all primes are partially regular
@@ -16,6 +22,8 @@ Main declarations: `LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO`
 Tags: number-theory, asymptotics
 MSC: 11B68, 11N05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,14 +3,17 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Mathlib.Algebra.CharP.Defs
-import Mathlib.Algebra.EuclideanDomain.Defs
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.RingTheory.Coprime.Basic
 import LeanPool.LeanPolyABC.MasonStothers
 
 /-!
 # LeanPool.LeanPolyABC.Corollaries.Davenport
 -/
+
+@[expose] public section
 
 noncomputable section
 

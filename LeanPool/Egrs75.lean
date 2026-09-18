@@ -3,25 +3,28 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.KummerValuation
-import LeanPool.Egrs75.CentralBinomialDigits
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import LeanPool.Egrs75.DigitVector
-import LeanPool.Egrs75.DigitAtToolkit
-import LeanPool.Egrs75.AddBranch
-import LeanPool.Egrs75.SubtractBranch
-import LeanPool.Egrs75.ConditionThreeWindow
-import LeanPool.Egrs75.LogIrrationality
-import LeanPool.Egrs75.ClearingHigh
-import LeanPool.Egrs75.Reduction
-import LeanPool.Egrs75.BadPrefixRoute
-import LeanPool.Egrs75.SeedWindow
-import LeanPool.Egrs75.MoveDigits
-import LeanPool.Egrs75.MuFinish
-import LeanPool.Egrs75.Instances
+public import LeanPool.Egrs75.KummerValuation
+public import LeanPool.Egrs75.CentralBinomialDigits
+public import LeanPool.Egrs75.Defs
+public import LeanPool.Egrs75.RoundUp
+public import LeanPool.Egrs75.LeafInduction
+public import LeanPool.Egrs75.DigitVector
+public import LeanPool.Egrs75.DigitAtToolkit
+public import LeanPool.Egrs75.AddBranch
+public import LeanPool.Egrs75.SubtractBranch
+public import LeanPool.Egrs75.ConditionThreeWindow
+public import LeanPool.Egrs75.LogIrrationality
+public import LeanPool.Egrs75.ClearingHigh
+public import LeanPool.Egrs75.Reduction
+public import LeanPool.Egrs75.BadPrefixRoute
+public import LeanPool.Egrs75.SeedWindow
+public import LeanPool.Egrs75.MoveDigits
+public import LeanPool.Egrs75.MuFinish
+public import LeanPool.Egrs75.Instances
+import Mathlib.Data.Nat.Totient
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # The Erdős–Graham–Ruzsa–Straus two-prime theorem
@@ -33,3 +36,5 @@ Main declarations: `Egrs75.MuFinish.egrs_two_prime_mu`, `Egrs75.Finish.egrs_two_
 Tags: number-theory, central-binomial-coefficients, digit-representations, erdos-problems
 MSC: 11A63, 11B65
 -/
+
+@[expose] public section

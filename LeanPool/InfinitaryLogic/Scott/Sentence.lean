@@ -3,9 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.Formula
+module
+
+public import LeanPool.InfinitaryLogic.Scott.Formula
 import LeanPool.InfinitaryLogic.Karp.PotentialIso
-import Mathlib.ModelTheory.PartialEquiv
+import LeanPool.InfinitaryLogic.Util
 import Mathlib.SetTheory.Cardinal.Regular
 /-!
 # Scott Sentences
@@ -31,6 +33,8 @@ The proof proceeds by showing:
 3. The Scott formula at the stabilization ordinal captures exactly this.
 -/
 
+@[expose] public section
+
 universe u v w u'
 
 namespace FirstOrder
@@ -40,7 +44,7 @@ namespace Language
 variable {L : Language.{u, v}} [L.IsRelational]
 variable [Countable (Σ l, L.Relations l)]
 
-open FirstOrder Structure Ordinal BoundedFormulaω Substructure
+open FirstOrder Structure Ordinal BoundedFormulaω
 
 -- We fix the ordinal universe to avoid metavariable issues
 -- In practice, we typically work with Ordinal.{0}

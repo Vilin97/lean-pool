@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
-import Mathlib.SetTheory.Cardinal.Continuum
+module
+
+public import Mathlib.SetTheory.Cardinal.Continuum
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 /-!
 # Conditional Counting Dichotomy for Models
 
@@ -29,6 +31,8 @@ The isomorphism relation `isoSetoid` this file counts is defined in
   among coded ℕ-models is either ≤ ℵ₀ or exactly 2^ℵ₀.
 -/
 
+@[expose] public section
+
 universe u v w
 
 namespace FirstOrder
@@ -46,7 +50,6 @@ def SilverBurgessDichotomy : Prop :=
     MeasurableSet {p : X × X | r.r p.1 p.2} →
     (#(Quotient r) ≤ ℵ₀) ∨ (#(Quotient r) = Cardinal.continuum)
 
-variable {L : Language.{u, v}} [L.IsRelational] [Countable (Σ l, L.Relations l)]
 
 end Language
 

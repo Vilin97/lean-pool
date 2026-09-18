@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.AON.Defs
+module
+
+public import LeanPool.CircuitComplexity.AON.Defs
 
 /-! # AC0 — Core Definitions
 
@@ -14,6 +16,8 @@ This module defines the AC0 circuit complexity class.
 * `InAC0` — predicate: the family is in AC0 (constant depth, polynomial size,
   unbounded fan-in AND/OR)
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

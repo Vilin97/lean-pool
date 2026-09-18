@@ -3,8 +3,11 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
 
 /-!
 # Polygonal Jordan regions as finite plane complexes
@@ -13,6 +16,8 @@ This file formalizes Moise Chapter 2, Theorem 2.  The finitely many affine lines
 edges of a polygon cut an enclosing triangle into a finite triangle mesh.  The triangles on the
 bounded side of polygonal Jordan form the required finite complex.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

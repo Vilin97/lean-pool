@@ -3,7 +3,13 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.CoulombFlux
+module
+
+public import LeanPool.Clawristotle.CoulombKernel
+import LeanPool.Clawristotle.NewtonianPotential
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # PSD Helpers: Continuity and Pointwise Bounds for Coulomb
@@ -12,6 +18,8 @@ Proves the Landau quadratic form bound, continuity of the PSD integrand
 (the Coulomb singularity cancels in the quadratic form), and pointwise bounds.
 These are building blocks for the integrability and Fubini results in CoulombPSD.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

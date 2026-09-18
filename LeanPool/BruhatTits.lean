@@ -3,12 +3,13 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
+module
 
-import LeanPool.BruhatTits.Cartan
-import LeanPool.BruhatTits.Graph
-import LeanPool.BruhatTits.Harmonic
-import LeanPool.BruhatTits.Lattice
-import LeanPool.BruhatTits.Utils
+public import LeanPool.BruhatTits.Cartan
+public import LeanPool.BruhatTits.Graph
+public import LeanPool.BruhatTits.Harmonic
+public import LeanPool.BruhatTits.Lattice
+public import LeanPool.BruhatTits.Utils
 
 /-!
 # Formalisation of the Bruhat-Tits Tree
@@ -20,6 +21,8 @@ Main declarations: `BruhatTits.BTtree`, `BruhatTits.BTlaplace_surjective`
 Tags: algebraic-geometry, graph-theory, discrete-valuation-rings
 MSC: 20E42, 05C25, 13H05
 -/
+
+@[expose] public section
 
 open Module
 

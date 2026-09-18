@@ -3,10 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Basic definitions for classical complex Weierstrass preparation
@@ -15,6 +15,8 @@ This module will contain the ordinary finite-dimensional spaces and local analyt
 definitions used by the proof development. The independently audited public
 statement remains in `Challenge.lean`.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Topology
 

@@ -3,17 +3,29 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.Order.Category.PartOrd
-import Mathlib.Topology.Category.TopCat.Basic
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
+public import Mathlib.Order.Category.PartOrd
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.Trees
+public import Mathlib.Tactic.Continuity
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
 import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.LenTreeHom
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory

@@ -6,7 +6,9 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquation
-public import LeanPool.Odlyzko.CompletedZeta.RightHalfPlane
+public import LeanPool.Odlyzko.DedekindZeta.PrimePowerExpansion
+import LeanPool.Odlyzko.CompletedZeta.RightHalfPlane
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

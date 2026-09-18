@@ -3,9 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
-import LeanPool.DomainTheory.Neighborhood.ExampleB
+public import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.ExampleB
+import Mathlib.Tactic.Attr.Core
 
 /-!
 # Example 2.4 (Scott 1981, PRG-19, §2) — eliminating the first run of `1`'s, `g :
@@ -35,6 +37,8 @@ neighbourhood relation is
 Definition
 2.1(iii); (i) and (ii) are the principal-filter facts for the cone `(out σ)Σ*`.
 Constructive. -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Example24
 

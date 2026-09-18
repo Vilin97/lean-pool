@@ -3,7 +3,9 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+module
+
+public import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
 
 /-!
 # Chi-squared moment generating function and concentration
@@ -24,6 +26,8 @@ optimised at the Dasgupta–Gupta choice of `t`:
 The analytic crux is reduced to two scalar logarithmic inequalities, proven by
 the monotonicity of an explicit auxiliary function.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal

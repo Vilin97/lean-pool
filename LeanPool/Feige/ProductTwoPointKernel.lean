@@ -3,8 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.AugmentedTwoPointKernel
-import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+module
+
+public import LeanPool.Feige.AugmentedTwoPointKernel
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Probability.Kernel.Composition.ParallelComp
 import Mathlib.Probability.Kernel.Composition.Lemmas
 
 /-!
@@ -14,6 +17,8 @@ This file lifts the one-dimensional measurable two-point decomposition to a
 finite independent product.  It is the product-measure interface used in the
 proof of Theorem 2.1 before conditioning on all latent pairs.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 

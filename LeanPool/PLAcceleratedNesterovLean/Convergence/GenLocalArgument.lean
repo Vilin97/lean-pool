@@ -3,15 +3,21 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.EmbeddedManifold
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
-import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
 import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Main
-import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Main
 import LeanPool.PLAcceleratedNesterovLean.Convergence.CurvAbsorb.Assembly
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Main
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.SegmentEstimate
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.FlatCaseHelper
+import LeanPool.PLAcceleratedNesterovLean.Convergence.LyapunovContraction.GenMain
+import LeanPool.PLAcceleratedNesterovLean.Convergence.MotionError.Main
+import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Derivative
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 
 /-!
@@ -29,6 +35,8 @@ State-based version of `LocalArgument.lean`. The conclusion provides gen bootstr
 ∃ δ > 0, ∀ s₀ near m⋆ with small Lyapunov →
   iterates stay in Ω ∧ Lyapunov decays geometrically with `nesterovSeqGen`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -139,7 +147,7 @@ private abbrev localConvergenceAtBasePointGenProof
   set P := fderiv ℝ π mstar with hP_def
   -- ── Bridge: connect our hand-rolled π to the canonical PLMB projection ──
   have hS_ne' : S.Nonempty := ⟨mstar, hmstar⟩
-  obtain ⟨π', hπ'_on_U, _, _, _, _, _, _, hπ'_diff, hπ'_self_adj, hπ'_C1⟩ :=
+  obtain ⟨π', hπ'_on_U, _, _, _, _, _, hπ'_kills, hπ'_diff, hπ'_self_adj, hπ'_C1⟩ :=
     tubular_neighborhood_projection hTub_sub hS_ne'
   have hπ_eq_on_U' : ∀ y ∈ U, π y = π' y := by
     intro y hyU
@@ -197,42 +205,26 @@ private abbrev localConvergenceAtBasePointGenProof
   -- ── Curvature absorption (gen) ──────────────────────────────────
   -- Prerequisites
   have hε_bound : ε * η ≤ Real.sqrt (μ_minus * η) := by
-    have h_nn : (0:ℝ) ≤ ε * η := mul_nonneg (le_of_lt hε_pos) (le_of_lt hη_pos)
-    rw [Real.le_sqrt h_nn (mul_nonneg (by linarith : (0:ℝ) ≤ μ_minus) (le_of_lt hη_pos))]
-    have hε_sq : ε ^ 2 ≤ μ_minus / η := by
-      have h1 := hε_le
-      have h2 := Real.sq_sqrt (div_nonneg
-          (by linarith : (0:ℝ) ≤ μ_minus) (le_of_lt hη_pos))
-      have h3 := sq_abs ε
-      have h4 := sq_abs (Real.sqrt (μ_minus / η))
-      have h5 := abs_of_nonneg (le_of_lt hε_pos)
-      have h6 := abs_of_nonneg (Real.sqrt_nonneg (μ_minus / η))
-      nlinarith
-    have h_sq_η := sq_nonneg η
-    have h_prod_sq : (ε * η) ^ 2 = ε ^ 2 * η ^ 2 := by ring
-    have h_cancel : (μ_minus / η) * η ^ 2 = μ_minus * η := by field_simp
-    nlinarith
+    have hε_sq : ε ^ 2 ≤ μ_minus / η :=
+      (Real.le_sqrt hε_pos.le (div_pos hμ_minus hη_pos).le).mp hε_le
+    rw [← Real.sqrt_sq (mul_pos hε_pos hη_pos).le]
+    apply Real.sqrt_le_sqrt
+    calc
+      (ε * η) ^ 2 = ε ^ 2 * η ^ 2 := mul_pow _ _ _
+      _ ≤ (μ_minus / η) * η ^ 2 :=
+        mul_le_mul_of_nonneg_right hε_sq (sq_nonneg η)
+      _ = μ_minus * η := by field_simp
   have hπ_kills_normal : ∀ x ∈ U_plus,
       fderiv ℝ π (π x) (x - π x) = 0 := by
     intro x hx
     have hxU : x ∈ U := hU_sub (subset_closure hx)
     have hπxS : π x ∈ S := (hπ_on_U x hxU).1
     have hπxU : π x ∈ U := hTub_sub.subset hπxS
-    have hS_ne : S.Nonempty := ⟨mstar, hmstar⟩
-    obtain ⟨π', hπ'_on_U, _, _, _, _, _, hπ'_kills, _, _, _⟩ :=
-      tubular_neighborhood_projection hTub_sub hS_ne
-    have hπ_eq_on_U : ∀ y ∈ U, π y = π' y := by
-      intro y hyU
-      have h1 := hπ_on_U y hyU
-      have h2 := hπ'_on_U y hyU
-      obtain ⟨_, _, huniq⟩ := hTub_sub.uniqueProj y hyU
-      exact (huniq (π y) ⟨h1.1, h1.2⟩).trans
-        (huniq (π' y) ⟨h2.1, by rw [dist_eq_norm]; exact h2.2⟩).symm
     have h_evt_eq : π =ᶠ[𝓝 (π x)] π' :=
       (hTub_sub.isOpen.eventually_mem hπxU).mono
-        (fun y hy => hπ_eq_on_U y hy)
+        (fun y hy => hπ_eq_on_U' y hy)
     have h := hπ'_kills x hxU
-    rw [← hπ_eq_on_U x hxU] at h
+    rw [← hπ_eq_on_U' x hxU] at h
     rwa [← h_evt_eq.fderiv_eq] at h
   have hπ_diff_near : ∃ δ_diff > 0,
       ∀ z ∈ Metric.ball mstar δ_diff, DifferentiableAt ℝ π z := by
@@ -405,16 +397,9 @@ private abbrev localConvergenceAtBasePointGenProof
       set en := normalDispOfState π η s
       -- Coercivity (via Ω ⊆ U_plus)
       have hcoer_here := (hcoer_bound s (hΩ_sub_Up hsx) (hΩ_sub_Up hslx)).1
-      -- Ln ≥ 0
-      have hLn_nn : 0 ≤ Ln := by
-        have h1 : 0 ≤ ‖s.v‖ ^ 2 + μ_minus * ‖en‖ ^ 2 :=
-          add_nonneg (sq_nonneg _) (mul_nonneg (le_of_lt hmu4_pos) (sq_nonneg _))
-        nlinarith [hcoer_here]
       -- (1) ‖s.v‖ ≤ Cv * √Ln
-      have hv_sq : ‖s.v‖ ^ 2 ≤ C_coer * Ln := by
-        have : 0 ≤ μ_minus * ‖en‖ ^ 2 :=
-          mul_nonneg (le_of_lt hmu4_pos) (sq_nonneg _)
-        linarith [hcoer_here]
+      have hv_sq : ‖s.v‖ ^ 2 ≤ C_coer * Ln :=
+        (le_add_of_nonneg_right (mul_nonneg hmu4_pos.le (sq_nonneg ‖en‖))).trans hcoer_here
       have hv_bound : ‖s.v‖ ≤ Cv * Real.sqrt Ln := by
         rw [show Cv = Real.sqrt C_coer from rfl,
             ← Real.sqrt_mul hC_coer_nn,
@@ -422,15 +407,11 @@ private abbrev localConvergenceAtBasePointGenProof
         exact Real.sqrt_le_sqrt hv_sq
       -- (2) ‖en‖ ≤ Ce * √Ln
       have he_sq : ‖en‖ ^ 2 ≤ K * Ln := by
-        have h1 : μ_minus * ‖en‖ ^ 2 ≤ C_coer * Ln := by
-          have := sq_nonneg ‖s.v‖
-          linarith [hcoer_here]
-        have hKmu : μ_minus * K = C_coer := by
-          change μ_minus * (C_coer / μ_minus) = C_coer
-          field_simp
-        have h2 : μ_minus * (K * Ln) = C_coer * Ln := by nlinarith
-        by_contra h; push Not at h
-        linarith [mul_lt_mul_of_pos_left h hmu4_pos]
+        calc
+          ‖en‖ ^ 2 ≤ (C_coer * Ln) / μ_minus :=
+            (le_div_iff₀' hmu4_pos).mpr
+              ((le_add_of_nonneg_left (sq_nonneg ‖s.v‖)).trans hcoer_here)
+          _ = K * Ln := (div_mul_eq_mul_div C_coer μ_minus Ln).symm
       have he_bound : ‖en‖ ≤ Ce * Real.sqrt Ln := by
         have hK_nn : (0 : ℝ) ≤ K := by positivity
         rw [show Ce = Real.sqrt K from rfl,
@@ -529,7 +510,8 @@ private abbrev localConvergenceAtBasePointGenProof
   -- Derive ‖Pv‖ ≤ ‖v‖ from the Pythagorean identity
   have hP_norm : ∀ w : E d, ‖P w‖ ≤ ‖w‖ := by
     intro w
-    have hPw_sq : ‖P w‖ ^ 2 ≤ ‖w‖ ^ 2 := by nlinarith [hP_ortho w, sq_nonneg ‖w - P w‖]
+    have hPw_sq : ‖P w‖ ^ 2 ≤ ‖w‖ ^ 2 :=
+      (le_add_of_nonneg_right (sq_nonneg ‖w - P w‖)).trans_eq (hP_ortho w).symm
     calc ‖P w‖ = Real.sqrt (‖P w‖ ^ 2) := (Real.sqrt_sq (norm_nonneg _)).symm
       _ ≤ Real.sqrt (‖w‖ ^ 2) := Real.sqrt_le_sqrt hPw_sq
       _ = ‖w‖ := Real.sqrt_sq (norm_nonneg _)

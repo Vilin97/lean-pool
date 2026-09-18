@@ -3,16 +3,28 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import Mathlib.Data.Finset.Basic
-import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
-import LeanPool.ErdosTuzaValtr.Config.Default
+public import Mathlib.Data.NNRat.Defs
+
+public import LeanPool.ErdosTuzaValtr.Config.Lemmas
+public import LeanPool.ErdosTuzaValtr.Config.Mirror
+public import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+public import Mathlib.Algebra.Group.Defs
+import Mathlib.Data.List.Chain
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.ErdosTuzaValtr.Etv.Label
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Etv.Label`.
 -/
+
+@[expose] public section
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 

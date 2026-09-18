@@ -3,18 +3,14 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import Mathlib.Algebra.Lie.OfAssociative
+public import Mathlib.NumberTheory.Chebyshev
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.Data.Rat.Cast.OfScientific
-import Mathlib.NumberTheory.Chebyshev
-import Mathlib.Tactic.NormNum.BigOperators
 
 /-!
 # Chebyshev estimates needed for the ζ(3) irrationality argument
@@ -23,6 +19,8 @@ This file ports the elementary, `sorry`-free Chebyshev estimate used by the
 upstream PrimeNumberTheoremAnd development. It gives an eventual bound
 `ψ x ≤ 1.13 x`, enough to control the lcm denominator in Beukers' proof.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Zeta3Irrational
 namespace ChebyshevAux

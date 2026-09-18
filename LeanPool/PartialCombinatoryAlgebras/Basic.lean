@@ -3,7 +3,9 @@ Copyright (c) 2026 Andrej Bauer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrej Bauer
 -/
-import Mathlib.Data.Part
+module
+
+public import Mathlib.Data.Part
 
 /-!
 # Notation and core classes for partial combinatory algebras
@@ -12,6 +14,8 @@ A notation for totality of a partial element, a generic class for a
 left-associative binary application operator, and the class for a partial
 binary operation on a type.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

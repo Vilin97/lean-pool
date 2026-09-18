@@ -3,9 +3,13 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
-import LeanPool.Monlib4.LinearAlgebra.MyBimodule
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Basic
+public import LeanPool.Monlib4.LinearAlgebra.MyBimodule
+public import Mathlib.Analysis.InnerProductSpace.MulOpposite
+import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The Phi Map
@@ -14,6 +18,8 @@ This file packages the upstream `Upsilon` equivalence as a bimodule-map
 equivalence and records the one-vector inner-product identities used by
 downstream quantum graph files.
 -/
+
+@[expose] public section
 
 /-- The `Upsilon` equivalence viewed through the tensor-product bimodule map API. -/
 noncomputable abbrev PhiMap {A B : Type*} [starAlgebra B] [starAlgebra A] [QuantumSet A]

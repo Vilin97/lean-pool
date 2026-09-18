@@ -3,7 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigRelational
+import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
 import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
 /-!
 # Craig interpolation for `L_ω₁ω`, relational core without global countability (Layer 2)
@@ -24,6 +29,8 @@ craig_interpolation_relational [L.IsRelational] :
          Sentenceω.Entails r₁ θ ∧ Sentenceω.Entails θ r₂
 ```
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

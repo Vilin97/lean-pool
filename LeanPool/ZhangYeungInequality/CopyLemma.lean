@@ -3,10 +3,10 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.Delta
+public import LeanPool.ZhangYeungInequality.Delta
 import LeanPool.ZhangYeungInequality.Prelude
-import LeanPool.ZhangYeungInequality.PFR.ForMathlib.ConditionalIndependence
 
 /-!
 # The Zhang-Yeung copy lemma
@@ -114,6 +114,8 @@ transports.
 Shannon entropy, conditional mutual information, copy lemma, conditional independence,
 Zhang-Yeung
 -/
+
+@[expose] public section
 
 namespace ZhangYeung
 

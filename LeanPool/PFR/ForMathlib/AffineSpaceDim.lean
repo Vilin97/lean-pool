@@ -6,10 +6,11 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.LinearAlgebra.AffineSpace.AffineSubspace.Basic
-public import Mathlib.LinearAlgebra.Dimension.Constructions
-public import Mathlib.LinearAlgebra.Dimension.Finite
 public import LeanPool.PFR.Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.AffineSpace.AffineSubspace.Defs
+public import Mathlib.LinearAlgebra.InvariantBasisNumber
+import Mathlib.LinearAlgebra.AffineSpace.AffineSubspace.Basic
+import Mathlib.LinearAlgebra.Dimension.Constructions
 
 /-!
 # Dimensions of affine spaces

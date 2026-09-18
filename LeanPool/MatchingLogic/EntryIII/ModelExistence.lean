@@ -12,12 +12,18 @@ The only remaining mathematical premise is the separately isolated canonical
 Existence Lemma.  All model construction, completion, valuation, and Truth
 Lemma steps are discharged below without strengthening that premise.
 -/
+module
+
+public import LeanPool.MatchingLogic.EntryIII.Countertheory
+public import LeanPool.MatchingLogic.EntryIII.CanonicalExistence
 import LeanPool.MatchingLogic.EntryIII.Truth
-import LeanPool.MatchingLogic.EntryIII.Countertheory
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # MatchingLogic.EntryIII.ModelExistence
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

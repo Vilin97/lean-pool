@@ -3,8 +3,16 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Paths
+public import LeanPool.IsoGraph.Canon.Node
+import LeanPool.IsoGraph.Canon.Progress
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Individualised vertices stay where they were put
@@ -23,6 +31,8 @@ two equal-certificate leaves visibly map one branch onto the other.
 
 Along the way `nodePath` makes a node an honest function of its path (`Node.det`).
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

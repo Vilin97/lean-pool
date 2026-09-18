@@ -3,8 +3,16 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.BarrierPotential
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.ColoringFramework
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LaplacianBasics
 import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.DynamicColoring
+import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.LoewnerPullback
 import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary.OneSidedBarrier
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Main Proof
@@ -18,6 +26,8 @@ All auxiliary infrastructure is in `Problem6Aux.lean`.
   and `epsilon in (0,1]`, there exists an epsilon-light subset S
   with `|S| >= epsilon/256 * |V|`
 -/
+
+@[expose] public section
 
 open Finset Matrix BigOperators
 

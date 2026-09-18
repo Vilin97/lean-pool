@@ -6,6 +6,8 @@ Authors: Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Misere.DeadEnding
+import Mathlib.Algebra.Ring.Int.Defs
+import Mathlib.Order.Lattice.Nat
 
 /-!
 Misere combinatorial games.

@@ -6,7 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.Basic.Finite.Defs
+public import Mathlib.LinearAlgebra.Quotient.Defs
+import Mathlib.LinearAlgebra.Quotient.Basic
 
 /-!
 # Finiteness of quotient modules

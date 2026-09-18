@@ -3,10 +3,13 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part06
+public import LeanPool.QuantumParallelRepetition.Part06
 
 /-! # Quantum parallel repetition, part 07 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -2226,7 +2229,8 @@ private theorem
       linarith [mul_nonneg Kmass_nonnegative
         (sub_nonneg.mpr diagonal_budget)]
 
-private def dSVDensityRationalHeterogeneousStoppedCommonPrefixFailureCopy
+/-- The joint failure vector at a stage preceding the stopping position. -/
+def dSVDensityRationalHeterogeneousStoppedCommonPrefixFailureCopy
     {S N d L : ℕ} (width : Fin S → ℝ)
     (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)

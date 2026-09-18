@@ -3,15 +3,21 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
+module
+
+public meta import Lean.Elab.Term.TermElabM
+public meta import Std.Do.Triple.SpecLemmas
+import Lean.Exception
 import LeanPool.MRiscX.Parser.AssemblySyntax
-import Lean
 
 /-!
 # HandleNumOrIdent
 
 This module provides elaboration helpers for numeric/identifier operands.
 -/
-open Nat Lean PrettyPrinter Expr Meta Elab
+
+public meta section
+open Nat Lean PrettyPrinter Expr Meta Elab Term
 
 /-
 Next, we introduce utility functions to streamline the conversion of syntax into an Expr.

@@ -8,8 +8,7 @@ module
 public import LeanPool.MisereGames.AugmentedForm
 public import LeanPool.MisereGames.Misere.Comparison
 public import LeanPool.MisereGames.Misere.Quotients
-public import Mathlib.Algebra.Group.Subgroup.Basic
-public import Mathlib.Algebra.Group.Units.Basic
+public import Mathlib.Algebra.Group.Subgroup.Defs
 
 /-!
 Misere combinatorial games.

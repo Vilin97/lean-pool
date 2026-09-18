@@ -3,27 +3,23 @@ Copyright (c) 2026 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+module
 
-import LeanPool.SardMoreira.UpperLowerSemicontinuous
-import LeanPool.SardMoreira.NormedSpace
-import LeanPool.SardMoreira.MeasureComap
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import LeanPool.SardMoreira.MeasureBallSemicontinuous
+import LeanPool.SardMoreira.MeasureComap
+import LeanPool.SardMoreira.NormedSpace
 import LeanPool.SardMoreira.Topology
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.MeasureTheory.Constructions.HaarToSphere
-import Mathlib.MeasureTheory.Covering.Besicovitch
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Topology.EMetricSpace.Paracompact
-import Mathlib.Topology.Separation.CompletelyRegular
 import Mathlib.Dynamics.Ergodic.Action.Regular
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
 import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.MeasureTheory.Measure.Haar.Unique
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!
 # LeanPool.SardMoreira.LebesgueDensity
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal Set.Notation Pointwise
 open MeasureTheory Filter Set Function Metric Topology

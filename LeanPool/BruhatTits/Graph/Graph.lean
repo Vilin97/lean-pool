@@ -3,8 +3,10 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import LeanPool.BruhatTits.Graph.Edges
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+module
+
+public import LeanPool.BruhatTits.Graph.Edges
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 
 /-!
 # Definition of the Bruhat-Tits graph
@@ -12,6 +14,8 @@ import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 In this file we define the Bruhat-Tits graph as a simple graph and show it is connected.
 
 -/
+
+@[expose] public section
 
 open Module
 

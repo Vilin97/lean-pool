@@ -3,14 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini
 -/
+module
 
-import Mathlib.Analysis.Convex.Cone.InnerDual
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 import LeanPool.Erdos81PaperIContrib.FgConeClosed
+import Mathlib.Analysis.Convex.Cone.InnerDual
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 
@@ -32,6 +30,8 @@ specialization built directly from the finitely generated cone closedness theore
 `FgConeClosed.lean`.
 
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

@@ -6,9 +6,26 @@ Authors: PFR contributors
 
 module
 
-public import LeanPool.PFR.ForMathlib.ThreeVariables
 public import LeanPool.PFR.Kullback
-public import LeanPool.PFR.Main
+public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
+import LeanPool.PFR.Endgame
+import LeanPool.PFR.Fibring
+import LeanPool.PFR.FirstEstimate
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FourVariables
+import LeanPool.PFR.ForMathlib.ThreeVariables
+import LeanPool.PFR.HundredPercent
+import LeanPool.PFR.Main
+import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
+import Mathlib.Algebra.Module.ZMod
+import Mathlib.Combinatorics.Additive.RuzsaCovering
+import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+import Mathlib.MeasureTheory.Measure.Prokhorov
 
 /-!
 # The rho functional
@@ -237,6 +254,26 @@ private lemma rhoMinus_continuous_aux2 (hA : A.Nonempty) {μ : ProbabilityMeasur
   contrapose hy
   exact map_prod_uniformOn_ne_zero hA (fun x ↦ (ν_pos x).ne')
 
+omit [AddCommGroup G] [Finite G] [DiscreteMeasurableSpace G] in
+private lemma KLDiv_eq_neg_entropy_sub_sum [Fintype G]
+    {Ω' : Type*} [MeasurableSpace Ω'] {μ' : Measure Ω'} {Y : Ω' → G}
+    [IsZeroOrProbabilityMeasure μ] [IsFiniteMeasure μ']
+    (habs : ∀ g, μ'.map Y {g} = 0 → μ.map X {g} = 0) :
+    KL[X; μ # Y; μ'] =
+      -H[X; μ] - ∑ g, (μ.map X).real {g} * log ((μ'.map Y).real {g}) := by
+  rw [KLDiv_eq_sum, entropy_eq_sum, tsum_fintype, ← Finset.sum_neg_distrib,
+    ← Finset.sum_sub_distrib]
+  congr with g
+  simp only [negMulLog, neg_mul]
+  rcases eq_or_ne ((μ.map X).real {g}) 0 with h | h
+  · simp [h]
+  rw [log_div]
+  · ring
+  · exact h
+  · contrapose! h
+    simp only [measureReal_def, ENNReal.toReal_eq_zero_iff, measure_ne_top, or_false] at h ⊢
+    exact habs g h
+
 private lemma rhoMinus_continuous_aux3 (hA : A.Nonempty) {μ : ProbabilityMeasure G}
     {ε : ℝ} (hε : 0 < ε) [TopologicalSpace G] [DiscreteTopology G] :
     ∀ᶠ (μ' : ProbabilityMeasure G) in 𝓝 μ, ρ⁻[id; μ # A] < ρ⁻[id; μ' # A] + ε := by
@@ -298,11 +335,11 @@ private lemma rhoMinus_continuous_aux3 (hA : A.Nonempty) {μ : ProbabilityMeasur
   have h₃ g (hg : μ.toMeasure.real {g} ≠ 0) : c/2 ≤ μ'.toMeasure.real {g} := by
     have : c ≤ μ.toMeasure.real {g} := hc _ hg
     linarith [neg_le_of_abs_le (h₂ g).le]
-  have : ρ⁻[id; μ' # A] < ρ⁻[id; μ' # A] + δ := by linarith
-  have : ∃ b ∈ rhoMinusSet id A μ', b < ρ⁻[id; μ' # A] + δ :=
-    (csInf_lt_iff (bddBelow_rhoMinusSet (μ := μ') measurable_id (A := A))
-    (nonempty_rhoMinusSet hA (X := id) (μ := μ'))).1 this
-  rcases this with ⟨-, ⟨ν, νP, h'_abs, rfl⟩, h⟩
+  obtain ⟨_, ⟨ν, νP, h'_abs, rfl⟩, h⟩ :
+      ∃ b ∈ rhoMinusSet id A (μ' : Measure G), b < ρ⁻[id; μ' # A] + δ :=
+    (csInf_lt_iff (s := rhoMinusSet id A (μ' : Measure G))
+      (bddBelow_rhoMinusSet (μ := (μ' : Measure G)) (A := A) measurable_id)
+      (nonempty_rhoMinusSet (μ := (μ' : Measure G)) (X := id) hA)).mp (lt_add_of_pos_right _ δpos)
   simp only [Measure.map_id] at h'_abs
   set m := Measure.map (Prod.fst + Prod.snd) (ν.prod (uniformOn A)) with hm
   have m_nonpos g : log (m {g}).toReal ≤ 0 := by
@@ -320,18 +357,9 @@ private lemma rhoMinus_continuous_aux3 (hA : A.Nonempty) {μ : ProbabilityMeasur
     linarith
   have I₀ : KL[id; μ' # Prod.fst + Prod.snd; ν.prod (uniformOn A)]
       = - H[id; (μ' : Measure G)] - ∑ g, μ'.toMeasure.real {g} * log (m.real {g}) := by
-    rw [KLDiv_eq_sum, entropy_eq_sum, tsum_fintype, ← Finset.sum_neg_distrib,
-      ← Finset.sum_sub_distrib]
-    congr with g
-    simp only [Measure.map_id, negMulLog, neg_mul]
-    rcases eq_or_ne (μ'.toMeasure.real {g}) 0 with h | h
-    · simp [h]
-    rw [log_div, hm]
-    · ring
-    · exact h
-    · contrapose! h
-      simp only [ne_eq, measure_ne_top, not_false_eq_true, measureReal_eq_zero_iff] at h ⊢
-      apply h'_abs _ (by simpa [ENNReal.toReal_eq_zero_iff] using h)
+    rw [KLDiv_eq_neg_entropy_sub_sum]
+    · simp only [Measure.map_id, hm]
+    · simpa only [Measure.map_id] using h'_abs
   have M g (hg : μ.toMeasure.real {g} ≠ 0) : |log (m.real {g})| ≤ C := by
     rw [le_div_iff₀' (by positivity)]
     calc
@@ -357,18 +385,9 @@ private lemma rhoMinus_continuous_aux3 (hA : A.Nonempty) {μ : ProbabilityMeasur
   _ ≤ KL[id; μ # Prod.fst + Prod.snd; ν.prod (uniformOn A)] :=
     rhoMinus_le_def measurable_id (by simpa using h_abs)
   _ = - H[id; (μ : Measure G)] - ∑ g, μ.toMeasure.real {g} * log (m.real {g}) := by
-    rw [KLDiv_eq_sum, entropy_eq_sum, tsum_fintype, ← Finset.sum_neg_distrib,
-      ← Finset.sum_sub_distrib]
-    congr with g
-    simp only [Measure.map_id, negMulLog, neg_mul]
-    rcases eq_or_ne (μ.toMeasure.real {g}) 0 with h | h
-    · simp [h]
-    rw [log_div, hm]
-    · ring
-    · exact h
-    · contrapose! h
-      simp only [measureReal_def, ENNReal.toReal_eq_zero_iff, measure_ne_top, or_false] at h ⊢
-      exact h_abs _ h
+    rw [KLDiv_eq_neg_entropy_sub_sum]
+    · simp only [Measure.map_id, hm]
+    · simpa only [Measure.map_id] using h_abs
   _ ≤ - H[id; (μ : Measure G)] - ∑ g ∈ {g | μ.toMeasure.real {g} ≠ 0},
         μ.toMeasure.real {g} * log (m.real {g}) := by
     gcongr
@@ -1913,7 +1932,10 @@ lemma dist_of_min_eq_zero' (hA : A.Nonempty) (hη' : η < 1 / 8) : d[X₁ # X₂
     have : 0 ≤ D := sub_nonneg_of_le (I_one_le hη h_min h₁ h₂ h_indep hX₁ hX₂ hX₁' hX₂' hA)
     apply mul_nonneg _ this
     exact div_nonneg (by linarith) (by linarith)
-  have : k ≤ 0 := by nlinarith
+  have : k ≤ 0 := by
+    have hfactor : 0 < 1 - 8 * η := by linarith only [hη']
+    apply (mul_le_mul_iff_of_pos_left hfactor).mp
+    linarith only [J₅]
   exact le_antisymm this (rdist_nonneg hX₁ hX₂)
 
 include hX₁ hX₂ h_min hη in

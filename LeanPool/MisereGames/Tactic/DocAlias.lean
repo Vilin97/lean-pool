@@ -6,7 +6,7 @@ Authors: Alfie Davies
 module
 
 public meta import Lean.Elab.Command
-public meta import Batteries.Tactic.Alias
+import Batteries.Tactic.Alias
 
 /-!
 # The `doc_alias` command

@@ -3,8 +3,9 @@ Copyright (c) 2026 Jun Kwon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jun Kwon
 -/
+module
 
-import LeanPool.Polytopes.MainTheorem
+public import LeanPool.Polytopes.MainTheorem
 
 /-!
 # The main theorem of polytopes
@@ -16,6 +17,8 @@ Main declarations: `MainTheoremOfPolytopes`
 Tags: convex-geometry, discrete-geometry, polytopes
 MSC: 52B11, 52A20
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

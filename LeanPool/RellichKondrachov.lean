@@ -3,49 +3,50 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H2
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.ArzelaAscoli
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Compactness
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.FrechetKolmogorov
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Kernels
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.TranslationIntegral
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2CompactnessCriterion
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Rellich
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Translation
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimate
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateH1
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
-import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H2
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global
-import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv
-import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
-import LeanPool.RellichKondrachov.MeasureTheory.Measure.HausdorffVolume
+public import LeanPool.RellichKondrachov.Analysis.Calculus.ContDiff.Support
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H1
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.H2
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Approximation
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.ArzelaAscoli
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Compactness
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.FrechetKolmogorov
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Kernels
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Transfer
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.TranslationIntegral
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2CompactnessCriterion
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Rellich
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.SupportedH1
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.Translation
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimate
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateH1
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitz
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartData
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartDataRiemannian
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasure
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureLp
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannian
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.ChartMeasureRiemannianVolume
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.EmbeddingL2
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H1
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.H2
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.Localization
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.LocalizationH2
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachov
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Chartwise
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Global
+public import LeanPool.RellichKondrachov.Geometry.Manifold.Sobolev.RellichKondrachovRiemannian.Transport
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.ExtendByZeroRangeEquiv
+public import LeanPool.RellichKondrachov.MeasureTheory.Function.LpSpace.Restrict
+public import LeanPool.RellichKondrachov.MeasureTheory.Measure.HausdorffVolume
 
 /-!
 # Rellich–Kondrachov compact embedding theorem
@@ -57,6 +58,8 @@ Main declarations: `RellichKondrachov.Geometry.Manifold.Sobolev.exists_riemannia
 Tags: analysis, pde, sobolev-embedding
 MSC: 46E35
 -/
+
+@[expose] public section
 
 /-!
 # Rellich–Kondrachov Compact Embedding Theorem

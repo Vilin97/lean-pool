@@ -3,8 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMCompression
 import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
+import Mathlib.ModelTheory.Encoding
+import Mathlib.Order.Filter.AtTopBot.Basic
 /-!
 # Exact cardinality of the local EM carrier (issue #11 unit 5)
 
@@ -25,6 +29,8 @@ embedding travels WITH the code, expansion is a total function (`LocatedTermCode
   countable base language, injective deep sequence.
 -/
 
+@[expose] public section
+
 namespace FirstOrder
 
 namespace Language
@@ -33,7 +39,7 @@ variable (Λ : Language.{0, 0}) (J : Type) [LinearOrder J]
 
 /-- The located term code: compression arity, the support's increasing enumeration, and the
 compressed term. Unlike the orbit code, it remembers WHERE the support sits in `J`. -/
-private def LocatedTermCode : Type :=
+def LocatedTermCode : Type :=
   Σ k : ℕ, (Fin k ↪o J) × Λ[[Fin k]].Term Empty
 
 /-- Expansion of a located code — total, since the embedding travels with the code. -/

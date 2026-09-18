@@ -3,7 +3,11 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
-import LeanPool.SetTheory.Ordinals
+module
+
+public import LeanPool.SetTheory.Ordinals
+import Mathlib.Tactic.FinCases
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # The first infinite ordinal in models of ZF
@@ -11,6 +15,8 @@ import LeanPool.SetTheory.Ordinals
 This module develops the theory of `ω` and the natural numbers inside a von Neumann model
 of ZF, providing the infinitary tools needed for the Kunen inconsistency argument.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -59,9 +65,8 @@ namespace SetTheory
   congr! 4 with y hy sub
   simp only [ne_eq, ZFSet.ext_iff, notMem_empty, iff_false, not_forall, not_not, Set.Nonempty,
     Set.mem_ofPred_eq, Subtype.exists, exists_prop]
-  conv =>
-    enter [2, 1, z]
-    erw [and_iff_right_of_imp (@hy z)]
+  simp_all
+  aesop
 
 /-- The `ωₛ` declaration. -/
 def ωₛ := Ordinal.toZFSet ω

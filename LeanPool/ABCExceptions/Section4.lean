@@ -3,11 +3,20 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Tactic.NormNum.BigOperators
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+public import Mathlib.Order.Interval.Finset.Nat
+meta import Lean.Meta.Tactic.NormCast
 import LeanPool.ABCExceptions.ForMathlib.Misc
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.CharP.Defs
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.BigOperators
 
 /-!
 # Section 4
@@ -17,6 +26,8 @@ Currently, we formalise section 4.3 onwards, taking as assumptions the bounds in
 parts of the paper.
 
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -1010,7 +1021,7 @@ lemma bound_4_point_24 (hd : 6 ≤ d) (hba : b 3 ≤ a 3) :
       have h4 : 0 ≤ min (a 4) (b 4) := le_min (ha.nonneg _) (hb.nonneg _)
       have h5 : 0 ≤ min (a 5) (b 5) := le_min (ha.nonneg _) (hb.nonneg _)
       have h6 : 0 ≤ min (a 6) (b 6) := le_min (ha.nonneg _) (hb.nonneg _)
-      norm_num [- min_add_max, ha.zero, hb.zero, hba]
+      simp [-min_add_max, ha.zero, hb.zero, hba]
       linear_combination 2 * h4 + 3 * h5 + 4 * h6
 
 include ha hb h44 htab hg in
@@ -1118,7 +1129,8 @@ lemma GeometryBound.s21_application_basic
   have h₁₂₃ : {1, 2, 3} ⊆ Finset.Icc 1 d := by simp [Finset.insert_subset_iff]; omega
   have h₁₂₄ : {1, 2, 4} ⊆ Finset.Icc 1 d := by simp [Finset.insert_subset_iff]; omega
   have h₁₂₃₄ : {1, 2, 3, 4} ⊆ Finset.Icc 1 d := by simp [Finset.insert_subset_iff]; omega
-  have : ν < ε + a 3 + b 3 + c 4 + ∑ i ∈ Icc 5 d, (b i + c i) + 0 ⊔ (∑ x ∈ Icc 1 d, x * a x +
+  have hbounds :
+      ν < ε + a 3 + b 3 + c 4 + ∑ i ∈ Icc 5 d, (b i + c i) + 0 ⊔ (∑ x ∈ Icc 1 d, x * a x +
           (b 1 + c 1) + 2 * (b 2 + c 2) - 3 * (a 3 - c 3) + (4 * b 4) - 1) ∧
          ν < ε + a 3 + b 3 + b 4 + ∑ i ∈ Icc 5 d, (b i + c i) + 0 ⊔ (∑ x ∈ Icc 1 d, x * a x +
           (b 1 + c 1) + 2 * (b 2 + c 2) - 3 * (a 3 - c 3) + (4 * c 4) - 1) := by
@@ -1136,10 +1148,10 @@ lemma GeometryBound.s21_application_basic
     simp only [Finset.sum_add_distrib]
     simp [sum_range, Fin.sum_univ_five, hb.zero, hc.zero] at h₁ h₂
     ring_nf at h₁ h₂ ⊢
-    simp_all
+    exact ⟨h₁, h₂⟩
   obtain h4 | h4 := le_total (b 4) (c 4)
-  · simp_all
-  · simp_all
+  · simpa only [min_eq_left h4, max_eq_right h4] using hbounds.2
+  · simpa only [min_eq_right h4, max_eq_left h4] using hbounds.1
 
 lemma min_le_half_add {x y : ℝ} : min x y ≤ (x + y) / 2 := by
   linarith [min_le_left x y, min_le_right x y]

@@ -7,6 +7,7 @@ module
 
 public import LeanPool.MisereGames.Form.Misere.Outcome
 public import LeanPool.MisereGames.Form.Short
+import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 Misere combinatorial games.

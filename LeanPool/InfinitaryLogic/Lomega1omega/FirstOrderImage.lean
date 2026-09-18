@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # The first-order image inside `Lω₁ω`
 
@@ -19,6 +21,8 @@ Without these, every consumer that needs "this fragment contains no infinitary f
 same `cases … <;> simp [toLω]` inversion. With them the HF fragment's closure fields become
 one-liners.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

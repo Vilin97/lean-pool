@@ -3,9 +3,13 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
+public import Mathlib.Analysis.Real.Pi.Chudnovsky
+public import LeanPool.Chudnovsky.Basic
 import LeanPool.Chudnovsky.Coefficients
-import Mathlib.Analysis.Real.Pi.Chudnovsky
+import LeanPool.Chudnovsky.MainTheorem
+import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # Glue: from Milla's `theohud` to Mathlib's `chudnovskySum = π⁻¹`
@@ -22,6 +26,8 @@ the Phase C inputs (`SingularModuli.lean`) as explicit hypotheses: the paper's p
 minus the literature citations (Silverman II.6.1, II.4.3(b), Buell, Masser Thm. A1).
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace Chudnovsky
@@ -30,40 +36,10 @@ open UpperHalfPlane Complex Nat
 
 open scoped Real
 
-/-- Key factorial bound: `(6n)! ≤ 1728ⁿ·(3n)!·(n!)³`, the exponential growth rate of
-`(6n)!/((3n)!(n!)³)` (Stirling gives exactly `1728 = 6⁶/3³`). Proved by induction: the
-single-step ratio is `(6n+1)⋯(6n+6) ≤ 1728·(3n+1)(3n+2)(3n+3)(n+1)³`, whose difference
-factors as `72·(n+1)(3n+1)(3n+2)(108n²+170n+67) ≥ 0`. -/
+/-- The factorial bound from the Main Theorem controls the series normalization. -/
 private theorem factorial_six_bound (n : ℕ) :
-    (6 * n)! ≤ 1728 ^ n * ((3 * n)! * (n ! ) ^ 3) := by
-  induction n with
-  | zero => simp
-  | succ n ih =>
-    have e6 : 6 * (n + 1) = 6 * n + 6 := by ring
-    have e3 : 3 * (n + 1) = 3 * n + 3 := by ring
-    have exp6 : (6 * n + 6)! =
-        (6*n+6)*(6*n+5)*(6*n+4)*(6*n+3)*(6*n+2)*(6*n+1) * (6*n)! := by
-      simp only [Nat.factorial_succ]; ring
-    have exp3 : (3 * n + 3)! = (3*n+3)*(3*n+2)*(3*n+1) * (3*n)! := by
-      simp only [Nat.factorial_succ]; ring
-    have expn : ((n+1) ! ) ^ 3 = (n+1)^3 * (n ! )^3 := by
-      rw [Nat.factorial_succ]; ring
-    rw [e6, e3, exp6, exp3, expn]
-    have hstep : (6*n+6)*(6*n+5)*(6*n+4)*(6*n+3)*(6*n+2)*(6*n+1)
-        ≤ 1728 * ((3*n+3)*(3*n+2)*(3*n+1)*(n+1)^3) := by
-      calc (6*n+6)*(6*n+5)*(6*n+4)*(6*n+3)*(6*n+2)*(6*n+1)
-          ≤ (6*n+6)*(6*n+5)*(6*n+4)*(6*n+3)*(6*n+2)*(6*n+1)
-            + (69984*n^5+250128*n^4+349272*n^3+237024*n^2+77544*n+9648) :=
-            Nat.le_add_right _ _
-        _ = 1728 * ((3*n+3)*(3*n+2)*(3*n+1)*(n+1)^3) := by ring
-    calc (6*n+6)*(6*n+5)*(6*n+4)*(6*n+3)*(6*n+2)*(6*n+1) * (6*n)!
-        ≤ (6*n+6)*(6*n+5)*(6*n+4)*(6*n+3)*(6*n+2)*(6*n+1)
-            * (1728^n * ((3*n)! * (n ! )^3)) := Nat.mul_le_mul_left _ ih
-      _ = ((6*n+6)*(6*n+5)*(6*n+4)*(6*n+3)*(6*n+2)*(6*n+1)) * 1728^n
-            * ((3*n)! * (n ! )^3) := by ring
-      _ ≤ (1728 * ((3*n+3)*(3*n+2)*(3*n+1)*(n+1)^3)) * 1728^n * ((3*n)! * (n ! )^3) :=
-          Nat.mul_le_mul_right _ (Nat.mul_le_mul_right _ hstep)
-      _ = 1728 ^ (n+1) * ((3*n+3)*(3*n+2)*(3*n+1) * (3*n)! * ((n+1)^3 * (n ! )^3)) := by ring
+    (6 * n)! ≤ 1728 ^ n * ((3 * n)! * (n ! ) ^ 3) :=
+  factorial_ratio_le n
 
 /-- The Chudnovsky series is (absolutely) summable — needed for `hauptformel`
 substitution, the series rearrangement, and the final inversion. -/
@@ -105,7 +81,7 @@ theorem summable_chudnovskyTerm : Summable fun n : ℕ ↦ (chudnovskyTerm n : �
         * (((3*n)! : ℝ) * (n ! )^3 * 640320^(3*n))
       = (545140134 * (n:ℝ) + 13591409) * (r ^ n * 640320^(3*n))
           * (((3*n)! : ℝ) * (n ! )^3) from by ring, hrpow]
-  nlinarith [mul_le_mul_of_nonneg_left key hApos]
+  linear_combination mul_le_mul_of_nonneg_left key hApos
 
 /-- The glue lemma: Milla's normalization `√(640320³)/(12π) = ∑ …` implies Mathlib's
 `chudnovskySum = π⁻¹`. Shared by both `chudnovsky_of_singular_moduli` and the

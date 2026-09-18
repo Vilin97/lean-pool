@@ -3,12 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Coordinates
+public import LeanPool.LocalComplexGeometry.Germs.Coordinates
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Main
 import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Topology.MetricSpace.ProperSpace
-import Mathlib.Topology.Maps.Proper.CompactlyGenerated
 
 /-!
 # Geometric finite projection of a prepared hypersurface
@@ -17,6 +17,8 @@ This module packages the genuine local finite-map conclusion of Weierstrass
 preparation.  The source is the actual zero locus in an open vertical tube,
 and properness is asserted over the open base neighborhood itself.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators Topology

@@ -3,11 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
+public import Mathlib.Geometry.Manifold.Instances.Real
 import LeanPool.ClassificationOfSurfaces.Moise.ChartInduction
 import LeanPool.ClassificationOfSurfaces.Moise.DualConnectivity
-import LeanPool.ClassificationOfSurfaces.Moise.GeometricTriangulation
-import Mathlib.Data.List.OfFn
-import Mathlib.Data.List.Rotate
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Finite surface triangulations
@@ -21,6 +25,8 @@ An arbitrary `FiniteSurfaceTriangulation` record does not certify that its incid
 its stored realization. The classification proof therefore starts from `GeometricTriangulation`
 and uses the incidence certificate constructed by its bridge.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

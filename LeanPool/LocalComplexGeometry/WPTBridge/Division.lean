@@ -3,8 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.WPTBridge.DivisionCore
+public import LeanPool.LocalComplexGeometry.WPTBridge.DivisionCore
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PolynomialEvaluation
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.PreparationSequences
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedGermEvaluation
 
 /-!
 # Analytic Weierstrass division
@@ -12,6 +16,8 @@ import LeanPool.LocalComplexGeometry.WPTBridge.DivisionCore
 This file reconstructs function-level analytic quotients and polynomial
 remainders from the sequence-level division operators.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology

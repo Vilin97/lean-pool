@@ -3,12 +3,9 @@ Copyright (c) 2026 Antoine de Saint Germain, Ambrose Tang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint Germain, Ambrose Tang
 -/
+module
 
-import Mathlib.LinearAlgebra.RootSystem.OfBilinear
-import Mathlib.Tactic.Ext
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Tauto
+public import Mathlib.LinearAlgebra.RootSystem.OfBilinear
 
 /-!
 # Type-BCₙ root systems
@@ -18,6 +15,8 @@ on `ℤⁿ`, exhibited as a Mathlib `RootPairing`, together with a characterizat
 its roots as the classical type-`BCₙ` root set `{±eᵢ, ±2eᵢ, ±eᵢ ± eⱼ (i ≠ j)}`
 (`BCn.isReflective_iff_isClassicalRoot`, `BCn.range_rootPairing_root`).
 -/
+
+@[expose] public section
 
 namespace BCn
 

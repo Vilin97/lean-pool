@@ -3,16 +3,21 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
+public import Mathlib.Topology.CompactOpen
+public import Mathlib.Algebra.Group.End
+public import Mathlib.CategoryTheory.Adjunction.Basic
+public import Mathlib.Topology.Category.TopCat.Basic
 import Mathlib.Topology.UnitInterval
-import Mathlib.Topology.CompactOpen
-import Mathlib.Topology.Category.TopCat.Limits.Products
 
 /-!
 # LeanPool.WhiteheadTheorem.Exponential
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Exponential`.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 open scoped Topology

@@ -3,8 +3,9 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacobianConstruction.Torus
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Torus
 
 /-!
 # The `ULift` shell: transporting `ChartedSpace`/`IsManifold`/`LieAddGroup` along `Homeomorph.ulift`
@@ -29,6 +30,8 @@ continuous maps, so every chart composite involving them cancels by `rfl`. Conse
   through `V ⧸ L`'s own `contMDiff_add_torus`/`contMDiff_neg_torus` by composition — no new
   analyticity computation.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Pointwise
 open Set Filter Topology Metric

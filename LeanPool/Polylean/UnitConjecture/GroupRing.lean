@@ -3,9 +3,13 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import LeanPool.Polylean.UnitConjecture.FreeModule
-import Mathlib.Algebra.Field.Basic
+public import LeanPool.Polylean.UnitConjecture.FreeModule
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Ring.Hom.Defs
+public import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Push
 
 /-!
 # Group Rings
@@ -18,6 +22,8 @@ We first define multiplication on formal sums. We prove many properties that are
 to show invariance under elementary moves and to prove that `R[G]` is a ring.
 
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

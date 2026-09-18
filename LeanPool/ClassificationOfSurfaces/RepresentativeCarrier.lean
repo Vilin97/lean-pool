@@ -3,8 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
-import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
+module
+
+public import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
+public import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Carrier bridge to the Eval quotient representatives
@@ -23,6 +30,8 @@ The remaining comparison is deliberately isolated: prove that the equivalence cl
 canonical polygonal generators transports to the equivalence closure of `OrientableRel` or
 `NonOrientableRel`.
 -/
+
+@[expose] public section
 
 namespace Complex
 

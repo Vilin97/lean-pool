@@ -7,10 +7,9 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.AdeleSpace.Basic
 public import LeanPool.RiemannRochFunctionFields.Genus.Polar
-public import LeanPool.RiemannRochFunctionFields.Genus.Ramification
-public import Mathlib.Data.Int.LeastGreatest
-public import Mathlib.FieldTheory.RatFunc.Basic
-public import Mathlib.LinearAlgebra.Basis.Basic
+public import Mathlib.Algebra.Algebra.IsSimpleRing
+import LeanPool.RiemannRochFunctionFields.Genus.Ramification
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Genus, Riemann inequality, and the index of specialty

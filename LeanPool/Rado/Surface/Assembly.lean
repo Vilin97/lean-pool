@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
-import LeanPool.Rado.Surface.Barriers
+module
+
+public import LeanPool.Rado.Surface.Barriers
 import LeanPool.Rado.Surface.Germs
 import LeanPool.Rado.Topology.PoincareVolterra
+import LeanPool.Rado.Topology.SecondCountable
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Topology.LocalAtTarget
 
 /-!
 # Assembly: Radó's theorem
@@ -18,6 +23,8 @@ Poincaré–Volterra lemma to the evaluation map on a connected component of the
 (`secondCountable_configY`), and cover `X` by that set together with a chart
 ball (`secondCountableTopology_of_riemannSurface`).
 -/
+
+@[expose] public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 

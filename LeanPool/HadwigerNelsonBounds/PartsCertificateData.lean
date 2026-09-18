@@ -3,14 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData0
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData1
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData2
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData3
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData4
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData5
-import LeanPool.HadwigerNelsonBounds.PartsCertificateData6
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData0
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData1
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData2
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData3
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData4
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData5
+public import LeanPool.HadwigerNelsonBounds.PartsCertificateData6
 
 /-!
 # Parts certificate roots and exact graph symmetries
@@ -19,6 +20,8 @@ The six permutations are the stabilizer of the normalized 2-Golomb root.
 Together with swapping the two unused color names, they expand 36 orbit
 representatives to all 432 proper normalized root colorings.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

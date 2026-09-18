@@ -3,12 +3,17 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import Mathlib.Geometry.Manifold.SmoothEmbedding
 import LeanPool.PLAcceleratedNesterovLean.Convergence.MainTheoremInternal
 
 /-!
 # Public main theorem wrappers
 -/
+
+@[expose] public section
 
 noncomputable section
 

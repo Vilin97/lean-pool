@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicSubdivision
-import LeanPool.ClassificationOfSurfaces.Moise.Anchors
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicSubdivision
+public import LeanPool.ClassificationOfSurfaces.Moise.Anchors
 
 /-!
 # Standard plane models for intrinsic faces
@@ -13,6 +15,8 @@ Every maximal face of an intrinsic complex is a closed barycentric triangle.  Th
 the explicit coordinate reindexing homeomorphism to the standard plane triangle.  It is the
 source-side bridge used to apply the already proved polygonal Schoenflies extension cellwise.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

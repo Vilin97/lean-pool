@@ -11,12 +11,16 @@ Derived in part from Apache-2.0 `deancureton/ten-proofs`,
 Modifications: isolated the finite and integral cocycle calculations, narrowed
 imports, and changed the namespace. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.ArithmeticSymplectic
-import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
+module
+
+public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.ArithmeticSymplectic
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 
 /-!
 The quadratic cocycle component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace OpenAIPort

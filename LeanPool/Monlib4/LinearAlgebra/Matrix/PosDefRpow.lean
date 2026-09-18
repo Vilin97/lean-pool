@@ -3,10 +3,13 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
-import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosEqLinearMapIsPositive
+public import LeanPool.Monlib4.LinearAlgebra.InnerAut
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+import LeanPool.Monlib4.Preq.RCLikeLe
+import LeanPool.Monlib4.RepTheory.AutMat
 
 /-!
 # Real powers of positive definite matrices
@@ -15,6 +18,8 @@ This file restores the upstream monlib4 API for real powers of positive
 semidefinite and positive definite matrices.  The definitions are stated in
 terms of the current Mathlib Hermitian spectral theorem.
 -/
+
+@[expose] public section
 
 namespace Matrix
 
@@ -119,6 +124,8 @@ noncomputable def _root_.Matrix.PosDef.eigenvaluesInvertible' {Q : Matrix n n �
     (hQ : Q.PosDef) :
     Invertible (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1) : n → 𝕜) := by
   letI := hQ.eigenvaluesInvertible
+  letI (i : n) : Invertible (hQ.1.eigenvalues i) :=
+    invertibleOfNonzero (ne_of_gt (hQ.pos_eigenvalues i))
   use (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1)⁻¹ : n → 𝕜) <;>
     · ext i
       simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,

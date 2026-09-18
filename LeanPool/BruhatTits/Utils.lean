@@ -3,20 +3,23 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
+module
 
-import LeanPool.BruhatTits.Utils.GLSubmoduleAction
-import LeanPool.BruhatTits.Utils.GraphAction
-import LeanPool.BruhatTits.Utils.LinearAlgebra
-import LeanPool.BruhatTits.Utils.List
-import LeanPool.BruhatTits.Utils.Matrix
-import LeanPool.BruhatTits.Utils.Misc
-import LeanPool.BruhatTits.Utils.Order
-import LeanPool.BruhatTits.Utils.RingHom
-import LeanPool.BruhatTits.Utils.Subring
-import LeanPool.BruhatTits.Utils.ValuationRings
+public import LeanPool.BruhatTits.Utils.GLSubmoduleAction
+public import LeanPool.BruhatTits.Utils.GraphAction
+public import LeanPool.BruhatTits.Utils.LinearAlgebra
+public import LeanPool.BruhatTits.Utils.List
+public import LeanPool.BruhatTits.Utils.Matrix
+public import LeanPool.BruhatTits.Utils.Misc
+public import LeanPool.BruhatTits.Utils.Order
+public import LeanPool.BruhatTits.Utils.RingHom
+public import LeanPool.BruhatTits.Utils.Subring
+public import LeanPool.BruhatTits.Utils.ValuationRings
 
 /-!
 # Auxiliary lemmas
 -/
+
+@[expose] public section
 
 open Module

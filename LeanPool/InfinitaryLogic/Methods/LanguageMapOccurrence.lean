@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+module
+
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 /-!
 # Occurrence calculus for language maps
 
@@ -16,6 +18,8 @@ across `SchemaCompletion.lean`, `Interpolation/CraigRelational.lean` and
 `BoundedFormulaω.relationsIn_mapLanguage`, so which one a downstream file saw depended on import
 order.  Consolidating here removes that hazard.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

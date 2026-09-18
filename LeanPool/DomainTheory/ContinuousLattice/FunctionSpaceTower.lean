@@ -3,9 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.ContinuousLattice.InverseLimits
-import Mathlib.Order.Hom.Basic
+public import LeanPool.DomainTheory.ContinuousLattice.InverseLimits
 
 /-!
 # The function-space tower and Scott's `D_∞ ≅ [D_∞ → D_∞]` (Scott 1972, §4,
@@ -22,6 +22,8 @@ and form its inverse limit `D_∞`. Theorem 4.4 is that `D_∞` is *homeomorphic
 its own function
 space* `[D_∞ → D_∞]`.
 -/
+
+@[expose] public section
 
 namespace Domain.ContinuousLattice
 

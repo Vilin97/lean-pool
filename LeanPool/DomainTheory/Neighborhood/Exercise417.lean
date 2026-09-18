@@ -3,11 +3,12 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise414
-import Mathlib.Algebra.Group.Submonoid.Basic
-import Mathlib.Algebra.Group.Pointwise.Set.Basic
-import Mathlib.Algebra.Group.Nat.Defs
+public import LeanPool.DomainTheory.Neighborhood.Exercise414
+public import Mathlib.Algebra.Group.Submonoid.Basic
+public import Mathlib.Algebra.Group.Pointwise.Set.Basic
+public import Mathlib.Algebra.Group.Nat.Defs
 
 /-!
 # Exercise 4.17 (Scott 1981, PRG-19, Lecture IV) — least solution in a monoid
@@ -47,6 +48,8 @@ The constructions are **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`
 inheriting
 `lfpSet` from Exercise 4.14.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise417
 

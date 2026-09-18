@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.ProductTwoPointKernel
+module
+
+public import LeanPool.Feige.ProductTwoPointKernel
 
 /-!
 # Conditional product law of the recursive augmented kernel
@@ -12,6 +14,8 @@ The recursively measurable kernel used for the finite mixture construction
 has, at every fixed latent parameter vector, exactly the ordinary finite
 product of the selected one-coordinate laws.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 

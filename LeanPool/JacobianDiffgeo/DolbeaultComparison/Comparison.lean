@@ -3,9 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
 import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
-import LeanPool.JacobianDiffgeo.DolbeaultComparison.Splitting
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Dolbeault comparison `H¹(X, 𝒪) ≅ H^{0,1}(X)` (`Jacobian/DolbeaultComparison/Comparison.lean`)
@@ -20,6 +25,8 @@ PDE-free at `D = 0`: `H01 X := Form01 X ⧸ range dbar`, the Čech → Dolbeault
 the time of this build `Jacobian/Finiteness/H1Finite.lean` (the file that would discharge this
 hypothesis unconditionally) has not landed; see the unit's build-log entry.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -108,8 +115,6 @@ noncomputable def toDolb {𝒰 : FinCover (⊤ : Opens X)} [T2Space X] [CompactS
 @[simp] theorem toDolb_mk {𝒰 : FinCover (⊤ : Opens X)} [T2Space X] [CompactSpace X]
     (h𝒰 : 𝒰.IsGood) (f : Z1 (0 : RS.Divisor X) 𝒰) :
     toDolb h𝒰 (H1Cover.mk (0 : RS.Divisor X) 𝒰 f) = H01.mk (RS.Dolb.dolbForm h𝒰 f) := by
-  change Submodule.liftQ _ (toDolbRaw h𝒰) _ (Submodule.Quotient.mk f) = _
-  rw [Submodule.liftQ_apply]
   rfl
 
 theorem toDolb_res {𝒰 𝒱 : FinCover (⊤ : Opens X)} [T2Space X] [CompactSpace X]
@@ -118,12 +123,8 @@ theorem toDolb_res {𝒰 𝒱 : FinCover (⊤ : Opens X)} [T2Space X] [CompactSp
   apply LinearMap.ext
   intro ξ
   obtain ⟨f, rfl⟩ := H1Cover.mk_surjective (0 : RS.Divisor X) 𝒰 ξ
-  change toDolb h𝒱 (resH1 (0 : RS.Divisor X) τ hτ (H1Cover.mk (0 : RS.Divisor X) 𝒰 f)) =
-    toDolb h𝒰 (H1Cover.mk (0 : RS.Divisor X) 𝒰 f)
-  rw [resH1_mk, toDolb_mk, toDolb_mk]
-  have hmem := RS.Dolb.dolbForm_res_sub_mem h𝒰 h𝒱 τ hτ f
-  rw [← sub_eq_zero, ← map_sub]
-  exact H01.mk_eq_zero_iff.2 (LinearMap.mem_range.mp hmem)
+  exact H01.mk_eq_mk_iff.2
+    (LinearMap.mem_range.mp (RS.Dolb.dolbForm_res_sub_mem h𝒰 h𝒱 τ hτ f))
 
 /-! ### `cechToH01`: extend `toDolb` to the whole colimit via `H1.lift` -/
 
@@ -154,8 +155,9 @@ private theorem resH1_resH1' {𝒰 𝒱 𝒲 : FinCover (⊤ : Opens X)} (h : �
     (ξ : H1Cover (0 : RS.Divisor X) 𝒰) :
     resH1 (0 : RS.Divisor X) c hc (resH1' (0 : RS.Divisor X) h ξ) =
       resH1 (0 : RS.Divisor X) (ρ ∘ c) hidx ξ := by
-  rw [resH1'_eq_resH1 (0 : RS.Divisor X) h ρ hρ]
-  exact LinearMap.congr_fun (resH1_comp (0 : RS.Divisor X) ρ hρ c hc) ξ
+  exact (congrArg (resH1 (0 : RS.Divisor X) c hc)
+    (LinearMap.congr_fun (resH1'_eq_resH1 (0 : RS.Divisor X) h ρ hρ) ξ)).trans
+    (LinearMap.congr_fun (resH1_comp (0 : RS.Divisor X) ρ hρ c hc) ξ)
 
 /-- `toDolb` does not see which refinement index was used (`resH1_indep`). -/
 private theorem toDolb_resH1_congr [T2Space X] [CompactSpace X]
@@ -181,18 +183,10 @@ private theorem toDolbAll_eq_toDolb [T2Space X] [CompactSpace X]
     ⟨chosenRefIdx (goodRef_le 𝒴), chosenRefIdx_spec (goodRef_le 𝒴)⟩
   obtain ⟨σ, hσ⟩ : ∃ σ, IsRefIdx (goodRef 𝒴) 𝒲 σ := ⟨chosenRefIdx hg, chosenRefIdx_spec hg⟩
   have hidx : IsRefIdx 𝒴 𝒲 (τ ∘ σ) := fun k => (hσ k).trans (hτ (σ k))
-  have h1 : toDolbAll 𝒴 η = toDolb h𝒲good (resH1 (0 : RS.Divisor X) (τ ∘ σ) hidx η) := by
-    change toDolb (goodRef_isGood 𝒴) (resH1' (0 : RS.Divisor X) (goodRef_le 𝒴) η) = _
-    rw [resH1'_eq_resH1 (0 : RS.Divisor X) (goodRef_le 𝒴) τ hτ]
-    have hc1 : resH1 (0 : RS.Divisor X) σ hσ (resH1 (0 : RS.Divisor X) τ hτ η) =
-        resH1 (0 : RS.Divisor X) (τ ∘ σ) hidx η :=
-      LinearMap.congr_fun (resH1_comp (0 : RS.Divisor X) τ hτ σ hσ) η
-    have hc2 : toDolb h𝒲good (resH1 (0 : RS.Divisor X) σ hσ (resH1 (0 : RS.Divisor X) τ hτ η)) =
-        toDolb (goodRef_isGood 𝒴) (resH1 (0 : RS.Divisor X) τ hτ η) :=
-      LinearMap.congr_fun (toDolb_res (goodRef_isGood 𝒴) h𝒲good σ hσ)
-        (resH1 (0 : RS.Divisor X) τ hτ η)
-    rw [← hc2, hc1]
-  exact h1.trans (toDolb_resH1_congr h𝒲good hidx ha η)
+  exact ((LinearMap.congr_fun (toDolb_res (goodRef_isGood 𝒴) h𝒲good σ hσ)
+      (resH1' (0 : RS.Divisor X) (goodRef_le 𝒴) η)).symm.trans
+    (congrArg (toDolb h𝒲good) (resH1_resH1' (goodRef_le 𝒴) hτ hσ hidx η))).trans
+    (toDolb_resH1_congr h𝒲good hidx ha η)
 
 theorem toDolbAll_compat [T2Space X] [CompactSpace X] (𝒰 𝒱 : FinCover (⊤ : Opens X)) (h : 𝒰 ≤ 𝒱)
     (ξ : H1Cover (0 : RS.Divisor X) 𝒰) :
@@ -200,18 +194,13 @@ theorem toDolbAll_compat [T2Space X] [CompactSpace X] (𝒰 𝒱 : FinCover (⊤
   obtain ⟨𝒲, h𝒲le, h𝒲good⟩ := exists_good_refinement ((goodRef 𝒰).meet (goodRef 𝒱))
   have hU𝒲 : goodRef 𝒰 ≤ 𝒲 := (le_meet_left _ _).trans h𝒲le
   have hV𝒲 : goodRef 𝒱 ≤ 𝒲 := (le_meet_right _ _).trans h𝒲le
-  obtain ⟨a, ha⟩ : ∃ a, IsRefIdx 𝒰 𝒲 a :=
-    ⟨chosenRefIdx ((goodRef_le 𝒰).trans hU𝒲), chosenRefIdx_spec ((goodRef_le 𝒰).trans hU𝒲)⟩
   obtain ⟨b, hb⟩ : ∃ b, IsRefIdx 𝒱 𝒲 b :=
     ⟨chosenRefIdx ((goodRef_le 𝒱).trans hV𝒲), chosenRefIdx_spec ((goodRef_le 𝒱).trans hV𝒲)⟩
   obtain ⟨ρ, hρ⟩ : ∃ ρ, IsRefIdx 𝒰 𝒱 ρ := ⟨chosenRefIdx h, chosenRefIdx_spec h⟩
   have hidx : IsRefIdx 𝒰 𝒲 (ρ ∘ b) := fun k => (hb k).trans (hρ (b k))
-  -- composed as terms rather than by `rw`: building rewrite motives over the `H1Cover`
-  -- direct-limit types is expensive here.
   exact (toDolbAll_eq_toDolb hV𝒲 h𝒲good hb (resH1' (0 : RS.Divisor X) h ξ)).trans
-    (((congrArg (toDolb h𝒲good) (resH1_resH1' h hρ hb hidx ξ)).trans
-      (toDolb_resH1_congr h𝒲good hidx ha ξ)).trans
-      (toDolbAll_eq_toDolb hU𝒲 h𝒲good ha ξ).symm)
+    ((congrArg (toDolb h𝒲good) (resH1_resH1' h hρ hb hidx ξ)).trans
+      (toDolbAll_eq_toDolb hU𝒲 h𝒲good hidx ξ).symm)
 
 /-- **THE comparison map on the colimit** (Forster 15.14(a), forward map). -/
 noncomputable def cechToH01 [T2Space X] [CompactSpace X] :
@@ -225,12 +214,12 @@ noncomputable def cechToH01 [T2Space X] [CompactSpace X] :
 theorem cechToH01_toH1 [T2Space X] [CompactSpace X] {𝒰 : FinCover (⊤ : Opens X)}
     (h𝒰 : 𝒰.IsGood) (c : H1Cover (0 : RS.Divisor X) 𝒰) :
     cechToH01 (toH1 (0 : RS.Divisor X) 𝒰 c) = toDolb h𝒰 c := by
-  rw [cechToH01_toH1_all]
-  change toDolb (goodRef_isGood 𝒰) (resH1' (0 : RS.Divisor X) (goodRef_le 𝒰) c) = toDolb h𝒰 c
-  rw [resH1'_eq_resH1 (0 : RS.Divisor X) (goodRef_le 𝒰) (chosenRefIdx (goodRef_le 𝒰))
-    (chosenRefIdx_spec (goodRef_le 𝒰))]
-  exact LinearMap.congr_fun (toDolb_res h𝒰 (goodRef_isGood 𝒰) (chosenRefIdx (goodRef_le 𝒰))
-    (chosenRefIdx_spec (goodRef_le 𝒰))) c
+  exact (cechToH01_toH1_all 𝒰 c).trans
+    ((congrArg (toDolb (goodRef_isGood 𝒰))
+      (LinearMap.congr_fun (resH1'_eq_resH1 (0 : RS.Divisor X) (goodRef_le 𝒰)
+        (chosenRefIdx (goodRef_le 𝒰)) (chosenRefIdx_spec (goodRef_le 𝒰))) c)).trans
+      (LinearMap.congr_fun (toDolb_res h𝒰 (goodRef_isGood 𝒰) (chosenRefIdx (goodRef_le 𝒰))
+        (chosenRefIdx_spec (goodRef_le 𝒰))) c))
 
 /-! ### Injectivity -/
 
@@ -241,23 +230,23 @@ theorem cechToH01_injective [T2Space X] [CompactSpace X] :
   intro ξ hξ
   obtain ⟨𝒰, h𝒰, f, hf⟩ := exists_rep_good (0 : RS.Divisor X) ξ
   obtain ⟨F, rfl⟩ := H1Cover.mk_surjective (0 : RS.Divisor X) 𝒰 f
-  rw [← hf, cechToH01_toH1 h𝒰, toDolb_mk, H01.mk_eq_zero_iff] at hξ
-  obtain ⟨u, hu⟩ := hξ
-  set s := (RS.Dolb.exists_smoothSplitting 𝒰 F).some with hs_def
-  have hform : RS.Dolb.dolbForm h𝒰 F = (s.glueData h𝒰).form := rfl
-  rw [hform] at hu
-  have hIsDbarOn_u : ∀ i, IsDbarOn (⇑u) (s.glueData h𝒰).form (𝒰.U i : Set X) := fun i x _ => by
-    have h1 := RS.isDbarOn_dbar u x trivial
-    rwa [hu] at h1
+  have hzero : H01.mk (RS.Dolb.dolbForm h𝒰 F) = 0 :=
+    (cechToH01_toH1 h𝒰 (H1Cover.mk (0 : RS.Divisor X) 𝒰 F)).symm.trans
+      ((congrArg (cechToH01 (X := X)) hf).trans hξ)
+  obtain ⟨u, hu⟩ := H01.mk_eq_zero_iff.1 hzero
+  let s := (RS.Dolb.exists_smoothSplitting 𝒰 F).some
+  have hIsDbarOn_u : ∀ i, IsDbarOn (⇑u) (s.glueData h𝒰).form (𝒰.U i : Set X) :=
+    fun i x _ => (congrArg (fun η => IsDbarAt (⇑u) η x) hu).mp
+      (RS.isDbarOn_dbar u x trivial)
   have hCMu : ContMDiffOn 𝓘(ℝ, ℂ) 𝓘(ℝ, ℂ) ∞ (⇑u) (Set.univ : Set X) := u.contMDiff.contMDiffOn
   have hholo : ∀ i, ContMDiffOn 𝓘(ℂ) 𝓘(ℂ) ω (s.g i - ⇑u) (𝒰.U i : Set X) := fun i =>
     RS.contMDiffOn_omega_sub_of_isDbarOn (𝒰.U i).isOpen (s.smoothOn i)
       (hCMu.mono (Set.subset_univ _)) ((s.glueData h𝒰).isDbarOn_form i) (hIsDbarOn_u i)
   have hmero : ∀ i, MeromorphicOnX (s.g i - ⇑u) (𝒰.U i : Set X) := fun i =>
     RS.meromorphicOnX_of_contMDiffOn_omega (𝒰.U i).isOpen (hholo i)
-  set b : C0 (0 : RS.Divisor X) 𝒰 := fun i =>
+  let b : C0 (0 : RS.Divisor X) 𝒰 := fun i =>
     (⟨RS.MeroGermOn.mk (s.g i - ⇑u) (hmero i), RS.mk_mem_linSysOn_zero (𝒰.U i).isOpen (hholo i)⟩ :
-      RS.LinSysOn (0 : RS.Divisor X) (𝒰.U i : Set X)) with hb_def
+      RS.LinSysOn (0 : RS.Divisor X) (𝒰.U i : Set X))
   have hd0b : d0 (0 : RS.Divisor X) 𝒰 b = (F : C1 (0 : RS.Divisor X) 𝒰) := by
     funext p
     obtain ⟨i, j⟩ := p
@@ -267,12 +256,6 @@ theorem cechToH01_injective [T2Space X] [CompactSpace X] :
     -- the application ill-typed at `implicit` transparency, which blocks every later rewrite
     have hj : (↑(𝒰.U i ⊓ 𝒰.U j) : Set X) ⊆ ↑(𝒰.U j) := fun _ hx => hx.2
     have hi : (↑(𝒰.U i ⊓ 𝒰.U j) : Set X) ⊆ ↑(𝒰.U i) := fun _ hx => hx.1
-    change (RS.MeroGermOn.restrict hj
-          (b j : RS.MeroGermOn X (𝒰.U j : Set X)) -
-        RS.MeroGermOn.restrict hi
-          (b i : RS.MeroGermOn X (𝒰.U i : Set X)) :
-        RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X)) =
-      ((F : C1 (0 : RS.Divisor X) 𝒰) (i, j) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X))
     change (RS.MeroGermOn.restrict hj
           (RS.MeroGermOn.mk (s.g j - ⇑u) (hmero j)) -
         RS.MeroGermOn.restrict hi
@@ -289,11 +272,12 @@ theorem cechToH01_injective [T2Space X] [CompactSpace X] :
     change (s.g j y - u y) - (s.g i y - u y) =
       RS.Dolb.Z1.repr F (i, j) y
     rw [s.split i j y hy]
-    ring
+    abel
   have hFB1 : (F : C1 (0 : RS.Divisor X) 𝒰) ∈ B1 (0 : RS.Divisor X) 𝒰 := ⟨b, hd0b⟩
   have hFmk0 : H1Cover.mk (0 : RS.Divisor X) 𝒰 F = 0 :=
     (H1Cover.mk_eq_zero_iff (0 : RS.Divisor X) 𝒰 F).2 hFB1
-  rw [← hf, hFmk0, map_zero]
+  exact hf.symm.trans ((congrArg (toH1 (0 : RS.Divisor X) 𝒰) hFmk0).trans
+    (toH1 (0 : RS.Divisor X) 𝒰).map_zero)
 
 /-! ### Surjectivity -/
 
@@ -315,10 +299,10 @@ theorem cechToH01_surjective [T2Space X] [CompactSpace X] :
       (fun x hx => hDbar j x hx.2) (fun x hx => hDbar i x hx.1)
   have hmero : ∀ i j, MeromorphicOnX (h j - h i) (𝒰.U i ⊓ 𝒰.U j : Set X) := fun i j =>
     RS.meromorphicOnX_of_contMDiffOn_omega (𝒰.U i ⊓ 𝒰.U j).isOpen (hholoDiff i j)
-  set F : C1 (0 : RS.Divisor X) 𝒰 := fun p =>
+  let F : C1 (0 : RS.Divisor X) 𝒰 := fun p =>
     (⟨RS.MeroGermOn.mk (h p.2 - h p.1) (hmero p.1 p.2),
       RS.mk_mem_linSysOn_zero (𝒰.U p.1 ⊓ 𝒰.U p.2).isOpen (hholoDiff p.1 p.2)⟩ :
-      RS.LinSysOn (0 : RS.Divisor X) (𝒰.U p.1 ⊓ 𝒰.U p.2 : Set X)) with hF_def
+      RS.LinSysOn (0 : RS.Divisor X) (𝒰.U p.1 ⊓ 𝒰.U p.2 : Set X))
   have hFZ1 : F ∈ Z1 (0 : RS.Divisor X) 𝒰 := by
     rw [mem_Z1_iff]
     rintro ⟨i, j, k⟩
@@ -329,13 +313,6 @@ theorem cechToH01_surjective [T2Space X] [CompactSpace X] :
     have hik : (↑(𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k) : Set X) ⊆ ↑(𝒰.U i ⊓ 𝒰.U k) :=
       fun _ hx => ⟨hx.1.1, hx.2⟩
     have hij : (↑(𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k) : Set X) ⊆ ↑(𝒰.U i ⊓ 𝒰.U j) := fun _ hx => hx.1
-    change (RS.MeroGermOn.restrict hjk
-          (F (j, k) : RS.MeroGermOn X (𝒰.U j ⊓ 𝒰.U k : Set X)) -
-        RS.MeroGermOn.restrict hik
-          (F (i, k) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U k : Set X)) +
-        RS.MeroGermOn.restrict hij
-          (F (i, j) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X)) :
-        RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k : Set X)) = 0
     change (RS.MeroGermOn.restrict hjk
           (RS.MeroGermOn.mk (h k - h j) (hmero j k)) -
         RS.MeroGermOn.restrict hik
@@ -351,8 +328,8 @@ theorem cechToH01_surjective [T2Space X] [CompactSpace X] :
     refine Filter.mem_of_superset (Filter.self_mem_codiscreteWithin _) ?_
     intro y _
     change (h k y - h j y) - (h k y - h i y) + (h j y - h i y) = 0
-    ring
-  set FZ1 : Z1 (0 : RS.Divisor X) 𝒰 := ⟨F, hFZ1⟩ with hFZ1_def
+    abel
+  let FZ1 : Z1 (0 : RS.Divisor X) 𝒰 := ⟨F, hFZ1⟩
   have hsplit : ∀ i j, ∀ x ∈ (𝒰.U i ⊓ 𝒰.U j : Opens X),
       RS.Dolb.Z1.repr FZ1 (i, j) x = h j x - h i x := by
     intro i j x hx
@@ -363,14 +340,16 @@ theorem cechToH01_surjective [T2Space X] [CompactSpace X] :
     have hCMAt : ContMDiffAt 𝓘(ℂ) 𝓘(ℂ) ω (h j - h i) x :=
       (hholoDiff i j).contMDiffAt ((𝒰.U i ⊓ 𝒰.U j).isOpen.mem_nhds hx)
     exact RS.MeroGermOn.evalAt_mk_of_contMDiffAt (𝒰.U i ⊓ 𝒰.U j).isOpen hx hCMAt
-  set s : RS.Dolb.SmoothSplitting 𝒰 FZ1 := ⟨h, hCM, hsplit⟩ with hs_def
+  let s : RS.Dolb.SmoothSplitting 𝒰 FZ1 := ⟨h, hCM, hsplit⟩
   have hIsDbarZero : ∀ i, IsDbarOn (h i) η (𝒰.U i : Set X) := hDbar
   have hformEq : (s.glueData h𝒰).form = η :=
     (RS.DbarGlueData.form_unique (s.glueData h𝒰) hIsDbarZero).symm
   refine ⟨toH1 (0 : RS.Divisor X) 𝒰 (H1Cover.mk (0 : RS.Divisor X) 𝒰 FZ1), ?_⟩
-  rw [cechToH01_toH1 h𝒰, toDolb_mk, ← hformEq, ← sub_eq_zero, ← map_sub]
-  exact H01.mk_eq_zero_iff.2 (LinearMap.mem_range.mp
-    (RS.Dolb.sub_mem_range_dbar_of_splittings h𝒰 (RS.Dolb.exists_smoothSplitting 𝒰 FZ1).some s))
+  have heq : H01.mk (RS.Dolb.dolbForm h𝒰 FZ1) = H01.mk (s.glueData h𝒰).form :=
+    H01.mk_eq_mk_iff.2 (LinearMap.mem_range.mp
+      (RS.Dolb.sub_mem_range_dbar_of_splittings h𝒰 (RS.Dolb.exists_smoothSplitting 𝒰 FZ1).some s))
+  exact (cechToH01_toH1 h𝒰 (H1Cover.mk (0 : RS.Divisor X) 𝒰 FZ1)).trans
+    (heq.trans (congrArg H01.mk hformEq))
 
 /-! ### Assembly -/
 

@@ -3,10 +3,10 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.LinearAlgebra.Dual.Lemmas
-import Mathlib.LinearAlgebra.StdBasis
-import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.FrobeniusGroup
+public import LeanPool.CommonNeighbourConjecture.Examples.EveryBase.FrobeniusGroup
+import Mathlib.Data.Rat.Floor
 
 /-!
 # The binary deleted permutation module
@@ -16,6 +16,8 @@ permutation set.  The explicit equivariant retraction is used in the
 irreducibility proof: every endomorphism of the deleted module extends to the
 full permutation module, while the all-ones operator restricts to zero.
 -/
+
+@[expose] public section
 
 noncomputable section
 

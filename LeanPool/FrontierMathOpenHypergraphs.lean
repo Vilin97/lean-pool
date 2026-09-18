@@ -3,11 +3,15 @@ Copyright (c) 2026 Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dean Cureton
 -/
+module
 
-import LeanPool.FrontierMathOpenHypergraphs.Basic
-import LeanPool.FrontierMathOpenHypergraphs.Substitution
-import LeanPool.FrontierMathOpenHypergraphs.Uniform
-import LeanPool.FrontierMathOpenHypergraphs.Lubell
+public import LeanPool.FrontierMathOpenHypergraphs.Basic
+public import LeanPool.FrontierMathOpenHypergraphs.Substitution
+public import LeanPool.FrontierMathOpenHypergraphs.Uniform
+public import LeanPool.FrontierMathOpenHypergraphs.Lubell
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # FrontierMath Ramsey Hypergraphs
@@ -19,3 +23,5 @@ Main declarations: `HypergraphLowerBound.thm_main_H_lower_bound`
 Tags: combinatorics, hypergraphs, ramsey-theory, extremal-combinatorics, frontiermath
 MSC: 05C65, 05D10, 03E02
 -/
+
+@[expose] public section

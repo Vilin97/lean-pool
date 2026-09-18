@@ -3,12 +3,25 @@ Copyright (c) 2026 Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak
 -/
-import LeanPool.Duality.ExtendedFields
+module
+
+public import LeanPool.Duality.ExtendedFields
+public import LeanPool.Duality.Common
+public import Mathlib.Algebra.Order.Nonneg.Basic
+public import Mathlib.LinearAlgebra.Matrix.Defs
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
 import LeanPool.Duality.FarkasBasic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Ineq
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.Duality.FarkasSpecial
 -/
+
+@[expose] public section
 
 section notation_EF
 
@@ -20,7 +33,7 @@ macro_rules
 
 /-- Pretty-print `Extend F` back as `F∞`. -/
 @[app_unexpander Extend]
-def unexpandExtend : Lean.PrettyPrinter.Unexpander
+meta def unexpandExtend : Lean.PrettyPrinter.Unexpander
 | `($(_) $F:ident) => `($F:ident∞)
 | _ => throw ()
 
@@ -41,7 +54,7 @@ macro_rules
 
 /-- Pretty-print `NNeg F` back as `F≥0`. -/
 @[app_unexpander NNeg]
-def unexpandNNeg : Lean.PrettyPrinter.Unexpander
+meta def unexpandNNeg : Lean.PrettyPrinter.Unexpander
 | `($(_) $F:ident) => `($F:ident≥0)
 | _ => throw ()
 

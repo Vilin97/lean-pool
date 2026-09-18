@@ -3,8 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise318
+public import LeanPool.DomainTheory.Neighborhood.Exercise318
+import Mathlib.Order.BooleanAlgebra.Set
 
 /-!
 # Exercise 3.19 (Scott 1981, PRG-19, §3) — the sum functor `f + g`
@@ -34,6 +36,8 @@ on the basepoint `Λ` (i.e. `(f + g)(⊥)`) is unconstrained; our choice sends `
 
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

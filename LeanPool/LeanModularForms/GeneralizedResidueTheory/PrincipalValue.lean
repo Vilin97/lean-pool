@@ -3,8 +3,13 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Cauchy Principal Value Theory
@@ -12,6 +17,8 @@ import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
 Theory of Cauchy principal value integrals for piecewise C¹ contour integration.
 The principal value approach allows contours to pass through singularities.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

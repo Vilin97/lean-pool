@@ -3,8 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Basic
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Canonical chosen analytic representatives
@@ -14,6 +16,8 @@ specialization arguments it is convenient to choose one analytic
 representative for each germ and retain the theorem identifying its raw
 function germ.
 -/
+
+@[expose] public section
 
 
 namespace LocalComplexGeometry

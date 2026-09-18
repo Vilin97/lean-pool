@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 
 /-!
 # Bootstrap Step 1: Geometric Decay by Induction
@@ -18,6 +19,8 @@ S_a = Σ_{k=0}^∞ (1-a/2)^{k/2} = 1/(1-√(1-a/2)) is finite for a > 0.
 ## Total Displacement Control
 Σ_{k=1}^n ‖h_k‖ ≤ C_h √η Σ_{k=1}^n √L_k ≤ C_h √η · R · S_a
 -/
+
+@[expose] public section
 
 noncomputable section
 

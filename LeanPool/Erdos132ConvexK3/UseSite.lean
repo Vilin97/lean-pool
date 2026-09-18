@@ -3,9 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.CoordinatedMajorants
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.CoordinatedMajorants
+import LeanPool.Erdos132ConvexK3.Geometry
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # The ErLV reduction at its actual use site
@@ -20,6 +23,8 @@ impossible.
 
 The use-site package keeps only the data consumed by the branch proofs.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -372,40 +377,36 @@ theorem equal_d3_avoiding_edges_force_cross_top_two
     (sqDist (P a) (P c) = d₁ ∨ sqDist (P a) (P c) = d₂) ∨
       (sqDist (P b) (P d) = d₁ ∨ sqDist (P b) (P d) = d₂) := by
   have hEdge := edge_diagonal_inequality hquad
-  have habSq := euclideanDist_sq (P a) (P b)
-  have hcdSq := euclideanDist_sq (P c) (P d)
-  have hacSq := euclideanDist_sq (P a) (P c)
-  have hbdSq := euclideanDist_sq (P b) (P d)
-  have habNonneg : 0 ≤ euclideanDist (P a) (P b) := dist_nonneg
-  have hcdNonneg : 0 ≤ euclideanDist (P c) (P d) := dist_nonneg
-  have hacNonneg : 0 ≤ euclideanDist (P a) (P c) := dist_nonneg
-  have hbdNonneg : 0 ≤ euclideanDist (P b) (P d) := dist_nonneg
   have hSideEq : euclideanDist (P a) (P b) =
       euclideanDist (P c) (P d) := by
-    nlinarith
+    have hEqual := habRank.trans hcdRank.symm
+    rw [← euclideanDist_sq, ← euclideanDist_sq] at hEqual
+    exact (sq_eq_sq₀ dist_nonneg dist_nonneg).mp hEqual
   by_cases hacLong : euclideanDist (P a) (P b) <
       euclideanDist (P a) (P c)
   · left
     have hGrow : sqDist (P a) (P b) < sqDist (P a) (P c) := by
-      nlinarith
+      rw [← euclideanDist_sq, ← euclideanDist_sq]
+      exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr hacLong
     have hAdj := top_three_adjacent_of_strictly_longer hClasses hab hGrow
     rcases hAdj.2 with h₁ | h₂ | h₃
     · exact Or.inl h₁
     · exact Or.inr h₂
-    · linarith
+    · exact (ne_of_lt hGrow (habRank.trans h₃.symm)).elim
   · right
     have hacLe : euclideanDist (P a) (P c) ≤
         euclideanDist (P a) (P b) := le_of_not_gt hacLong
     have hbdLong : euclideanDist (P c) (P d) <
         euclideanDist (P b) (P d) := by
-      linarith
+      linarith only [hEdge, hSideEq, hacLe]
     have hGrow : sqDist (P c) (P d) < sqDist (P b) (P d) := by
-      nlinarith
+      rw [← euclideanDist_sq, ← euclideanDist_sq]
+      exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr hbdLong
     have hAdj := top_three_adjacent_of_strictly_longer hClasses hcd hGrow
     rcases hAdj.2 with h₁ | h₂ | h₃
     · exact Or.inl h₁
     · exact Or.inr h₂
-    · linarith
+    · exact (ne_of_lt hGrow (hcdRank.trans h₃.symm)).elim
 
 /-- Exact ED output in case `(2,2)`: the inserted cross edge is `d₁ ∨ d₂`.
 The kernel does not force the `d₂` color required to enter the terminal

@@ -3,13 +3,16 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import Mathlib.Analysis.Analytic.IsolatedZeros
+module
+
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 import Mathlib.Analysis.Complex.RemovableSingularity
-import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 /-!
 # LeanPool.RiemannMappingTheorem.Cindex
 -/
+
+@[expose] public section
 
 open Real Complex Function TopologicalSpace Filter Topology Metric MeasureTheory Nat
 

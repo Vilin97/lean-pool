@@ -11,11 +11,15 @@ Modifications: extracted the generic extension interface and invariant-vector
 calculation and split later spectral declarations into separate files. See
 the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Core
+module
+
+public import LeanPool.ConnesRigidity.Core
 
 /-!
 The split abelian extension component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

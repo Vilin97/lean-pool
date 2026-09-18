@@ -3,12 +3,17 @@ Copyright (c) 2026 Trevor Morris. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Trevor Morris
 -/
+module
 
+public import LeanPool.Erdos403.FactBase
+public import Mathlib.Algebra.Group.Even
 import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Data.Finset.Powerset
 import Mathlib.Data.Nat.ModEq
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Order.Interval.Finset.Nat
 import Mathlib.Tactic.IntervalCases
-import LeanPool.Erdos403.Basic
-import LeanPool.Erdos403.FactBase
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Erdős #403 — the sharp bound `m ≤ 7` (Phases B–D)
@@ -25,6 +30,8 @@ Using the factorial number system (`FactBase`), `factSum S = 2^m` is impossible 
 * **Phase D (done):** `erdos_403_sharp` and `erdos_403_finite` are assembled below (`decide` the
   small `m`). Both are `sorry`-free and depend only on `[propext, Classical.choice, Quot.sound]`.
 -/
+
+@[expose] public section
 
 namespace Erdos403
 

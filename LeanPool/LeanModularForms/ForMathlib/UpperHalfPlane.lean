@@ -3,9 +3,9 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathlib.Data.Fintype.Parity
+public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 
 
 /- This is from the Sphere Pack project, so might not actually be for mathlib.-/
@@ -13,6 +13,8 @@ import Mathlib.Data.Fintype.Parity
 -- Probably put it at LinearAlgebra/Matrix/SpecialLinearGroup.lean
 
 /-! # UpperHalfPlane -/
+
+@[expose] public section
 
 
 theorem ModularGroup.modular_S_sq : S * S = -1 := by

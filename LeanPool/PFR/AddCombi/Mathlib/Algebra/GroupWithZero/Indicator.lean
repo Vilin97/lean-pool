@@ -10,6 +10,8 @@ public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Notation.Indicator
 public import Mathlib.Algebra.GroupWithZero.Indicator
 public import Mathlib.Algebra.GroupWithZero.Hom
 
+import Mathlib.Tactic.Finiteness.Attr
+
 /-!
 # Indicator functions valued in groups with zero
 -/

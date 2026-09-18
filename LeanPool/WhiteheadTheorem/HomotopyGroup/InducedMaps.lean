@@ -3,18 +3,20 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs
-import Mathlib.Algebra.Category.Grp.Basic
-import Mathlib.CategoryTheory.Category.Pointed
-import Mathlib.CategoryTheory.Comma.Over.Basic
-import Mathlib.AlgebraicTopology.FundamentalGroupoid.InducedMaps
+public import Mathlib.CategoryTheory.Category.Pointed
+public import Mathlib.CategoryTheory.Comma.Over.Basic
+public import Mathlib.Topology.Homotopy.HomotopyGroup
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps`.
 -/
+
+@[expose] public section
 
 
 open CategoryTheory
@@ -207,8 +209,8 @@ private theorem inducedMap'_respects (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ 
 induced by a morphism `f : X ⟶ Y` of pointed topological spaces -/
 def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     π_ n X.as X.point → π_ n Y.as Y.point :=
-  Quotient.map (GenLoop.inducedMap' n f) fun {α β} hαβ ↦
-    inducedMap'_respects n f (α := α) (β := β) hαβ
+  Quotient.map (GenLoop.inducedMap' n f) fun {α β} hαβ ↦ by
+    exact inducedMap'_respects n f (α := α) (β := β) hαβ
 
 lemma inducedMap'_default (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     inducedMap' n f (default : π_ n X.as X.point) = (default : π_ n Y.as Y.point) := by

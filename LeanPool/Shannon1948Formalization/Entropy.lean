@@ -3,9 +3,11 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Shannon1948Formalization.Entropy.Properties
-import LeanPool.Shannon1948Formalization.Entropy.Converse
+public import LeanPool.Shannon1948Formalization.Entropy.Properties
+public import LeanPool.Shannon1948Formalization.Entropy.Converse
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Shannon.Entropy
@@ -23,3 +25,5 @@ Import this file to access the full development:
 `Core → Uniform → Rational → Approx → Final → Gibbs → Joint → Properties`
                                                     ↘ Converse
 -/
+
+@[expose] public section

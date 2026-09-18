@@ -3,24 +3,18 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.MeasureTheory.Integral.Gamma
-import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
-import Mathlib.Analysis.Real.Pi.Bounds
-import LeanPool.OSforGFF.Spacetime.Basic
-import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Schwinger.Defs
-import LeanPool.OSforGFF.General.FunctionalAnalysis
-import LeanPool.OSforGFF.Covariance.Momentum
-import LeanPool.OSforGFF.Covariance.Position
-import LeanPool.OSforGFF.General.FourierTransforms
-import LeanPool.OSforGFF.OS.Axioms
-import LeanPool.OSforGFF.Spacetime.ProdIntegrable
-import LeanPool.OSforGFF.Spacetime.Decomposition
+public import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
+public import LeanPool.OSforGFF.Covariance.Momentum
 import LeanPool.OSforGFF.Spacetime.Tonelli
-import LeanPool.OSforGFF.General.LaplaceIntegral
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
+import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+import Mathlib.MeasureTheory.Integral.Gamma
 
 /-!
 # OS3 Infrastructure — Schwinger Parametrization and Fubini Theorems
@@ -40,6 +34,8 @@ proper-time s, spatial momenta k_sp, and spacetime points x,y. The integrability
 bounds use |f(x)||f(y)| ≤ C · x₀y₀ / (1+|xbar|²)^N(1+|ybar|²)^N for positive-time
 test functions, combined with Gaussian moment formulas for the time integrals.
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex Real Filter QFT
 open TopologicalSpace

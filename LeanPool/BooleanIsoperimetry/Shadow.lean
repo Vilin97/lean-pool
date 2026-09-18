@@ -3,7 +3,16 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
+module
+
+public import LeanPool.BooleanIsoperimetry.Cascade
 import LeanPool.BooleanIsoperimetry.Compression
+import LeanPool.BooleanIsoperimetry.Macaulay
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Upper-shadow and Macaulay layer
@@ -11,6 +20,8 @@ import LeanPool.BooleanIsoperimetry.Compression
 This file connects Kruskal-Katona upper-shadow estimates to the Macaulay
 exchange inequalities used in Harper's theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

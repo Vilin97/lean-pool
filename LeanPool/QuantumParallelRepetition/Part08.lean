@@ -3,10 +3,13 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part07
+public import LeanPool.QuantumParallelRepetition.Part07
 
 /-! # Quantum parallel repetition, part 08 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -263,7 +266,8 @@ attribute [local instance] Classical.propDecidable
 
 variable {Ω T : Type*} [Fintype Ω] [Fintype T] [DecidableEq T]
 
-private def exactFiniteFiberLift
+/-- Reweight each projection fiber to its target mass while retaining its relative weights. -/
+def exactFiniteFiberLift
     (projection : Ω → T) (original : Ω → ℝ) (target : T → ℝ)
     (outcome : Ω) : ℝ :=
   target (projection outcome) * original outcome /
@@ -773,7 +777,8 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-private def exactSourceAliceRefinedPOVM
+/-- Alice's local source measurement obtained by purifying the coordinate refinement. -/
+def exactSourceAliceRefinedPOVM
     [DecidableEq A]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (r : ExactHistoryFlag X Y A B D)
@@ -783,7 +788,8 @@ private def exactSourceAliceRefinedPOVM
   exact purificationAlicePOVM
     (exactAliceRefinedPOVM G n S D r a₀ x)
 
-private def exactSourceBobRefinedPOVM
+/-- Bob's local source measurement obtained by purifying the coordinate refinement. -/
+def exactSourceBobRefinedPOVM
     [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (r : ExactHistoryFlag X Y A B D)
@@ -791,7 +797,8 @@ private def exactSourceBobRefinedPOVM
     POVM B (ExactBobLocalIndex G n S D r) :=
   exactBobRefinedPOVM G n S D r b₀ y
 
-private def exactSourceJointEffect
+/-- The tensor product of the two refined local source effects. -/
+def exactSourceJointEffect
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (r : ExactHistoryFlag X Y A B D)
@@ -804,7 +811,8 @@ private def exactSourceJointEffect
   (exactSourceAliceRefinedPOVM G n S D r a₀ x).effect a ⊗ₖ
     (exactSourceBobRefinedPOVM G n S D r b₀ y).effect b
 
-private def exactSourceWinningEffect
+/-- The sum of refined joint effects over answers accepted by the game predicate. -/
+def exactSourceWinningEffect
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (r : ExactHistoryFlag X Y A B D)
@@ -955,7 +963,8 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-private def exactSourceAcceptedCoordinateMass
+/-- The postselected mass of outcomes with the specified code that win the selected coordinate. -/
+def exactSourceAcceptedCoordinateMass
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (t : ExactLocallySampleableTuple X Y A B D) : ℝ :=
@@ -2148,7 +2157,8 @@ def reindexedPOVM
     simpa only [Matrix.sum_apply, submatrix_apply, Matrix.one_apply,
       EmbeddingLike.apply_eq_iff_eq] using completed
 
-private def twoBlockPOVM
+/-- Combine two measurements as a direct-sum measurement on their local spaces. -/
+def twoBlockPOVM
     {C d e : Type} [Fintype C]
     [Fintype d] [Fintype e] [DecidableEq d] [DecidableEq e]
     (P : POVM C d) (Q : POVM C e) :
@@ -2180,7 +2190,8 @@ def deterministicOutcomePOVM
     classical
     simp only [sum_ite_eq', mem_univ, ↓reduceIte]
 
-private def pOVMChangeDecidableEq
+/-- Transport a POVM between equality decisions while retaining every effect matrix. -/
+def pOVMChangeDecidableEq
     {C d : Type*} [Fintype C] [Fintype d]
     (source target : DecidableEq d)
     (P : @POVM C d inferInstance inferInstance source) :
@@ -2200,7 +2211,8 @@ private def pOVMChangeDecidableEq
       simpa only [↓reduceIte] using completed
     · simpa only [same, ↓reduceIte] using completed
 
-private def exactSourceAlicePaddedPOVM
+/-- Pad Alice's refined measurement with deterministic outcomes on the unused blocks. -/
+def exactSourceAlicePaddedPOVM
     [DecidableEq A]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (r : ExactHistoryFlag X Y A B D)
@@ -2214,7 +2226,8 @@ private def exactSourceAlicePaddedPOVM
       (deterministicOutcomePOVM
         (d := ExactBobLocalIndex G n S D r) a₀))
 
-private def exactSourceBobPaddedPOVM
+/-- Pad Bob's refined measurement with deterministic outcomes on the unused blocks. -/
+def exactSourceBobPaddedPOVM
     [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (r : ExactHistoryFlag X Y A B D)

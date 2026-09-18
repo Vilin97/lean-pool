@@ -3,17 +3,24 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-import LeanPool.Monlib4.LinearAlgebra.Ips.Nontracial
-import LeanPool.Monlib4.LinearAlgebra.DirectSumFromTo
-import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-import LeanPool.Monlib4.LinearAlgebra.Coalgebra.FiniteDimensional
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import LeanPool.Monlib4.LinearAlgebra.Nacgor
+import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.Preq.Dite
+import LeanPool.Monlib4.Preq.Ites
 
 /-!
  # Frobenius equations
 
  This file contains the proof of the Frobenius equations.
 -/
+
+@[expose] public section
 
 
 variable {n p : Type _} [Fintype n] [Fintype p] [DecidableEq n] [DecidableEq p]

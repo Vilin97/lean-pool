@@ -3,18 +3,24 @@ Copyright (c) 2026 Arend Mellendijk. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arend Mellendijk
 -/
-import Mathlib.NumberTheory.Primorial
-import Mathlib.NumberTheory.PrimeCounting
-import Mathlib.Analysis.Asymptotics.Lemmas
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Mathlib.Algebra.Order.Field.Basic
+module
+
+public import Mathlib.NumberTheory.Primorial
+public import LeanPool.SelbergSieve4.Selberg
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import LeanPool.SelbergSieve4.AuxResults
+import LeanPool.SelbergSieve4.Tactic.AesopInit
 import Mathlib.Algebra.Order.Field.GeomSum
-import LeanPool.SelbergSieve4.Selberg
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
 -/
+
+@[expose] public section
 
 open scoped Nat Nat.Prime ArithmeticFunction.zeta ArithmeticFunction.Moebius
 open scoped ArithmeticFunction.omega BigOperators

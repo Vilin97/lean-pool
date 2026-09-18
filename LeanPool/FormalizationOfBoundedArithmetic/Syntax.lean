@@ -3,14 +3,17 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Mathlib.ModelTheory.Syntax
+public import Mathlib.ModelTheory.Syntax
 
-import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
+public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Syntax
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 namespace Language

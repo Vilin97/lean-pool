@@ -3,9 +3,10 @@ Copyright (c) 2026 Juan Pablo Traverso Giannini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Giannini, Aristotle
 -/
-import LeanPool.MinimumDegreeMatching.Spread
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Push
+module
+public import Mathlib.Data.Finset.Sym
+import Mathlib.Tactic.Bound.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
 
 /-!
 # Finite edge-set infrastructure for BKLO Lemma 10.7 at `r = 2`
@@ -14,6 +15,8 @@ This module contains only the finite graph vocabulary needed by the pseudorandom
 matching theorem. It is extracted from the independently frozen Paper III development and is kept
 separate from the theorem-facing API.
 -/
+
+@[expose] public section
 
 open Finset
 

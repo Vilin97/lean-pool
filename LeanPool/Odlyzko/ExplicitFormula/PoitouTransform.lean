@@ -6,6 +6,9 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.TestFunction.ComplexFourier
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Poitou Transform

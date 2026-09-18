@@ -3,12 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.TN.Basic
+public import LeanPool.BollobasNikiforov.TN.Basic
+public import Mathlib.Analysis.Convex.Function
 import Mathlib.Analysis.Convex.Slope
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Convex vanishing at zero and total nonnegativity
@@ -17,6 +17,8 @@ Lemma `lem:convex` of `docs/sol.tex`: if `f : [0, ∞) → [0, ∞)` is convex a
 `f 0 = 0`, then for `0 < t₁ ≤ ⋯ ≤ tₖ` the matrix with rows `(1, tᵢ, f tᵢ)` is
 totally nonnegative.
 -/
+
+@[expose] public section
 
 open Function Matrix Set
 

@@ -3,21 +3,17 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
-import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Algebra.Group.Submonoid.Operations
-import LeanPool.Polylean.UnitConjecture.Cocycle
+public import LeanPool.Polylean.UnitConjecture.Cocycle
 import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 
@@ -33,6 +29,8 @@ Such an extension is determined by data:
 We define the cocycle condition and construct a group structure on a structure extending `K × Q`.
 The main step is to show that the cocyle condition implies associativity.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

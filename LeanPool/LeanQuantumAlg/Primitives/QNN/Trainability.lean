@@ -6,9 +6,9 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import Mathlib.Analysis.SpecificLimits.Basic
-public import Mathlib.Analysis.Normed.Group.Basic
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # Trainability: exponential concentration and barren plateaus

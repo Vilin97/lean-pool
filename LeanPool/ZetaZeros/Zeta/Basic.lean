@@ -5,10 +5,12 @@ Authors: Kenny Lau
 -/
 module
 
-public import Mathlib.Analysis.Calculus.ContDiff.Convolution
-public import Mathlib.Analysis.Real.Pi.Bounds
-public import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
 public import LeanPool.ZetaZeros.Zeta.Defs
+import LeanPool.ZetaZeros.Meta.Attr
+import LeanPool.ZetaZeros.Numeric.MontgomeryTaylor
+import Mathlib.Analysis.Calculus.ContDiff.Convolution
+import Mathlib.Analysis.Real.Pi.Bounds
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # First properties of the extremal test function and the rescaling

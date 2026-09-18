@@ -3,9 +3,10 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Topology.Algebra.Support
 
 /-!
 # `RellichKondrachov.Analysis.Calculus.ContDiff.Support`
@@ -16,6 +17,8 @@ The key pattern is: if `f` is `C^n` on an open set `s` and the topological suppo
 is contained in `s`, then `f` is globally `C^n` (it is `0` in a neighborhood of every point
 outside `s`).
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis

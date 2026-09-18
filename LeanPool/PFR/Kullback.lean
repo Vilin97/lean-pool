@@ -6,11 +6,10 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Probability.IdentDistrib
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
-public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
-public import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.PFR.Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Analysis.SpecialFunctions.NegMulLog
 
 /-!
 # Kullback-Leibler divergence

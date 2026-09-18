@@ -3,8 +3,13 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.RadialHomotopy
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.RadialHomotopy
+import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Invariance
+import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.PolygonSlope
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Angle analysis and winding number invariance
@@ -19,6 +24,8 @@ branch cut crossing on segment 4, constructs a lifted angle that tracks the full
 * `refP₀` — reference point on imaginary axis
 * `winding_fdPolygon_center_invariant` — winding number preserved under center translation
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

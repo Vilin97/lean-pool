@@ -5,9 +5,8 @@ Authors: Tomasz Maciosowski
 -/
 module
 
-public import LeanPool.MisereGames.Misere.Comparison
 public import LeanPool.MisereGames.Misere.PFreeBlocking
-public import LeanPool.MisereGames.Tactic.DocAlias
+import LeanPool.MisereGames.Tactic.DocAlias
 
 /-!
 Misere combinatorial games.

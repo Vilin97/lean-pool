@@ -3,8 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.Geometry
 import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # Derivative norm bounds for the homotopy segments
@@ -12,6 +16,8 @@ import LeanPool.LeanModularForms.ValenceFormula.RectHomotopy.HomotopyDef
 Proves that the derivative norm of each segment of
 `fdBoundaryToPolygonHomotopy` is bounded by 5.
 -/
+
+@[expose] public section
 
 open Complex Set Metric Filter Topology
 

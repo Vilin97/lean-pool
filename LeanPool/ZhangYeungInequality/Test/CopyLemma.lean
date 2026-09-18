@@ -3,14 +3,21 @@ Copyright (c) 2026 Christopher Boone. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Boone
 -/
+module
 
-import LeanPool.ZhangYeungInequality.CopyLemma
+public import LeanPool.ZhangYeungInequality.CopyLemma
+
+public import Mathlib.MeasureTheory.MeasurableSpace.Defs
+
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.Test.CopyLemma
 
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Test.CopyLemma`.
 -/
+
+@[expose] public section
 
 namespace ZhangYeungTest
 

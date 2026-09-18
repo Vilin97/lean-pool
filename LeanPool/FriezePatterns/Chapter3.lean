@@ -3,19 +3,24 @@ Copyright (c) 2026 Antoine de Saint-Germain. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
+module
 
-import LeanPool.FriezePatterns.Chapter1
-import LeanPool.FriezePatterns.Chapter2
-import Mathlib.Data.Nat.ModEq
-import Mathlib.Data.Rat.Defs
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
+public import LeanPool.FriezePatterns.Chapter1
+public import LeanPool.FriezePatterns.Chapter2
+public import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.Data.Nat.ModEq
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FriezePatterns.Chapter3
 
 Imported Lean Pool material for `LeanPool.FriezePatterns.Chapter3`.
 -/
+
+@[expose] public section
 
 
 /-- An *arithmetic frieze pattern* of height `n`: a rational-valued frieze pattern with all
@@ -96,9 +101,10 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
           simp [key, this]
         have this.num.toNat : (f (2, m)).num.toNat * (f (2, m + 1)).num.toNat = 2 := by
           have h₃ : 0 ≤ (f (2,m)).num := by
-            linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 m (by omega) (by omega))]
+            exact le_of_lt (Rat.num_pos.mpr (@arith_fp.positive f n _ 2 m (by omega) (by omega)))
           have h₄ : 0 ≤ (f (2,m+1)).num := by
-            linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 (m+1) (by omega) (by omega))]
+            exact le_of_lt (Rat.num_pos.mpr
+              (@arith_fp.positive f n _ 2 (m+1) (by omega) (by omega)))
           zify; rw [Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, this.num]
         nth_rewrite 2 [← this.num.toNat]
         simp                                              --finish if n=3, i_even
@@ -163,16 +169,17 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
           (f ((n - 2), m)).num.toNat + (f ((n - 2) + 1 + 1, m)).num.toNat =
           (f (2, m + ((n - 2)))).num.toNat * (f ((n - 2) + 1,m)).num.toNat := by
         have h₂ : 0 ≤ (f ((n - 2), m)).num := by
-          linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ ((n - 2)) m (by omega) (by omega))]
+          exact le_of_lt (Rat.num_pos.mpr
+            (@arith_fp.positive f n _ ((n - 2)) m (by omega) (by omega)))
         have h₃ : 0 ≤ (f ((n - 2) + 1 + 1, m)).num := by
-          linarith [Rat.num_pos.mpr
-            (@arith_fp.positive f n _ ((n - 2) + 1 + 1) m (by omega) (by omega))]
+          exact le_of_lt (Rat.num_pos.mpr
+            (@arith_fp.positive f n _ ((n - 2) + 1 + 1) m (by omega) (by omega)))
         have h₄ : 0 ≤ (f (2, m + ((n - 2)))).num := by
-          linarith [Rat.num_pos.mpr
-            (@arith_fp.positive f n _ 2 (m + ((n - 2))) (by omega) (by omega))]
+          exact le_of_lt (Rat.num_pos.mpr
+            (@arith_fp.positive f n _ 2 (m + ((n - 2))) (by omega) (by omega)))
         have h₅ : 0 ≤ (f ((n - 2) + 1,m)).num := by
-          linarith [Rat.num_pos.mpr
-            (@arith_fp.positive f n _ ((n - 2) + 1) m (by omega) (by omega))]
+          exact le_of_lt (Rat.num_pos.mpr
+            (@arith_fp.positive f n _ ((n - 2) + 1) m (by omega) (by omega)))
         zify
         rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄,
           Int.toNat_of_nonneg h₅, continuant3.num]
@@ -192,13 +199,13 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
         by_contra boundary_neg
         rw [Nat.not_lt] at boundary_neg
         apply boundary
-        have this : i % (n - 1) + 1 = n - 1 := by linarith
+        have this : i % (n - 1) + 1 = n - 1 := by omega
         rw[Nat.add_mod, Nat.mod_eq_of_lt (one_lt_n_sub_one), this]
         simp
     have a₁ : (i + 1) % (n - 1) = (i) % (n - 1) + 1 := by
         rw[Nat.add_mod_of_add_mod_lt a₀₁]
         simp only [Nat.add_left_cancel_iff]
-        rw[Nat.mod_eq_of_lt (by linarith)]
+        rw[Nat.mod_eq_of_lt (by omega)]
     have a₀₂ : (i) % (n - 1) + (2) % (n - 1) < n - 1 := by
         rw[Nat.mod_eq_of_lt (two_lt_n_sub_one)]
         by_contra boundary_neg
@@ -240,17 +247,17 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
         (f (i % (n - 1) + 1, m)).num.toNat + (f (i % (n - 1) + 1 + 1 + 1, m)).num.toNat =
         (f (2, m + (i % (n - 1) + 1))).num.toNat * (f (i % (n - 1) + 1 + 1,m)).num.toNat := by
       have h₂ : 0 ≤ (f (i % (n - 1) + 1, m)).num := by
-        linarith [Rat.num_pos.mpr
-          (@arith_fp.positive f n _ (i % (n - 1) + 1) m (by omega) (by omega))]
+        exact le_of_lt (Rat.num_pos.mpr
+          (@arith_fp.positive f n _ (i % (n - 1) + 1) m (by omega) (by omega)))
       have h₃ : 0 ≤ (f (i % (n - 1) + 1 + 1 + 1, m)).num := by
-        linarith [Rat.num_pos.mpr
-          (@arith_fp.positive f n _ (i % (n - 1) + 1 + 1 + 1) m (by omega) (by omega))]
+        exact le_of_lt (Rat.num_pos.mpr
+          (@arith_fp.positive f n _ (i % (n - 1) + 1 + 1 + 1) m (by omega) (by omega)))
       have h₄ : 0 ≤ (f (2, m + (i % (n - 1) + 1))).num := by
-        linarith [Rat.num_pos.mpr
-          (@arith_fp.positive f n _ 2 (m + (i % (n - 1) + 1)) (by omega) (by omega))]
+        exact le_of_lt (Rat.num_pos.mpr
+          (@arith_fp.positive f n _ 2 (m + (i % (n - 1) + 1)) (by omega) (by omega)))
       have h₅ : 0 ≤ (f (i % (n - 1) + 1 + 1,m)).num := by
-        linarith [Rat.num_pos.mpr
-          (@arith_fp.positive f n _ (i % (n - 1) + 1 + 1) m (by omega) (by omega))]
+        exact le_of_lt (Rat.num_pos.mpr
+          (@arith_fp.positive f n _ (i % (n - 1) + 1 + 1) m (by omega) (by omega)))
       zify
       rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄,
         Int.toNat_of_nonneg h₅, continuant.num]

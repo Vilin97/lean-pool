@@ -3,14 +3,19 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import Mathlib.GroupTheory.Perm.Fin
-import Mathlib.GroupTheory.Perm.Cycle.Type
-import Mathlib.Data.Fin.Basic
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Logic.Equiv.Fin.Rotate
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
   `finRotate` arithmetic lemmas isolated for eventual Mathlib extraction.
 -/
+
+@[expose] public section
 
 open Equiv Equiv.Perm
 

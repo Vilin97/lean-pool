@@ -3,9 +3,10 @@ Copyright (c) 2026 Matt Hunzinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
+module
 
-import LeanPool.Circuitlib.Circuit.Belnap.Basic
-import LeanPool.Circuitlib.Circuit.Gate
+public import LeanPool.Circuitlib.Circuit.Belnap.Basic
+public import LeanPool.Circuitlib.Circuit.Gate
 
 /-! # Belnap gates
 
@@ -15,6 +16,8 @@ import LeanPool.Circuitlib.Circuit.Gate
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
+
+@[expose] public section
 
 namespace Circuit
 

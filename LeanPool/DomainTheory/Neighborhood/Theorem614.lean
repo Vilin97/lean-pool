@@ -3,10 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Definition613
+public import LeanPool.DomainTheory.Neighborhood.Definition613
 import LeanPool.DomainTheory.Neighborhood.Theorem69
-import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Lecture VI — Theorem 6.14 (Scott 1981, PRG-19): existence of initial
@@ -76,6 +82,8 @@ concrete `DomainObj`s
   g.hom := comp_idMap
   g.hom` — the `have` unifies by defeq), then `rw [← e]`.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

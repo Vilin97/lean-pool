@@ -3,8 +3,12 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialCutoffs
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialCutoffs
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Weak radial integrability
@@ -12,6 +16,8 @@ import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialCutoffs
 This module contains the weak radial integrands and the integrability lemmas
 that discharge the side conditions in the radial stationarity identity.
 -/
+
+@[expose] public section
 
 noncomputable section
 

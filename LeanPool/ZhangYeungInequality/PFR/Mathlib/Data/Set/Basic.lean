@@ -6,7 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.Set.Basic
+public import Mathlib.Data.Set.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Data.Set.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic

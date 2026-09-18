@@ -7,8 +7,6 @@ Authors: Chris Birkbeck
 module
 
 public import LeanPool.LeanModularForms.Modularforms.Eisenstein
-public import LeanPool.LeanModularForms.Modularforms.E2
-public import LeanPool.LeanModularForms.Modularforms.Delta
 
 /-! # PhiTransform -/
 

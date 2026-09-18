@@ -5,15 +5,21 @@ Authors: ruplet
 -/
 
 -- import Mathlib.Algebra.Ring.Defs
+module
 
-import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
-import LeanPool.FormalizationOfBoundedArithmetic.Complexity
-import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
-import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
+public import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
+import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+import LeanPool.FormalizationOfBoundedArithmetic.Register
+import LeanPool.FormalizationOfBoundedArithmetic.Semantics
+import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+import Mathlib.Tactic.Positivity.Finset
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.IDelta0
 -/
+
+@[expose] public section
 
 open FirstOrder Language BoundedFormula
 

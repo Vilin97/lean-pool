@@ -3,13 +3,20 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import LeanPool.ErdosTuzaValtr.Lib.List.Defs
-import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
-import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
+public import LeanPool.ErdosTuzaValtr.Lib.List.Chain3
+public import LeanPool.ErdosTuzaValtr.Lib.List.Lemmas
+
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.Finiteness.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # LeanPool.ErdosTuzaValtr.Lib.List.Default
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.List.Default`.
 -/
+
+@[expose] public section

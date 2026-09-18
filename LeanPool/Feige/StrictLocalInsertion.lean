@@ -3,6 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
+module
+
+public import LeanPool.Feige.OrderedTwoPointInduction
+import LeanPool.Feige.InsertionAnalyticAssembly
+import LeanPool.Feige.InsertionEdgeRealization
 import LeanPool.Feige.InsertionTerminalLaw
 import LeanPool.Feige.TwoPointReindex
 
@@ -13,6 +18,8 @@ This module assembles all interior insertion edges with the terminal edge,
 then feeds the resulting local insertion principle into the permutation
 reduction for an arbitrary (not initially ordered) strict system.
 -/
+
+@[expose] public section
 
 namespace Feige
 

@@ -7,8 +7,7 @@ Authors: PFR contributors
 module
 
 public import Mathlib.Data.Set.Card
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Insert
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Card

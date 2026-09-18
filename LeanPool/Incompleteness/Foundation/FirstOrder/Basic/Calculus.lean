@@ -3,11 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Calculus
-import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
+public import LeanPool.Incompleteness.Foundation.Logic.Calculus
+public import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # Calculus -/
+
+@[expose] public section
 
 namespace LO
 
@@ -349,7 +353,8 @@ instance : Tait.Axiomatized (SyntacticFormula L) (Theory L) where
 
 variable [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)]
 
-private def not_close' (φ) : T ⟹ [∼(∀∀φ), φ] :=
+/-- Derive a formula from the negation of its universal closure in the sequent calculus. -/
+def notClose' (φ) : T ⟹ [∼(∀∀φ), φ] :=
   have :
       T ⟹ [∃* ∼(@Rew.fixitr L 0 (fvSup φ) ▹ φ), φ] := instances (v := fun x ↦ &x) (em (φ := φ) (by
         simp) (by simp))
@@ -357,13 +362,14 @@ private def not_close' (φ) : T ⟹ [∼(∀∀φ), φ] :=
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.invClose (b : T ⊢ ∀∀φ) : T ⊢ φ :=
-  cut (wk b (by simp)) (not_close' φ)
+  cut (wk b (by simp)) (notClose' φ)
 
 omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)] in
 /-- Imported declaration from the Incompleteness formalization. -/
 lemma «invClose!» (b : T ⊢! ∀∀φ) : T ⊢! φ := ⟨invClose b.get⟩
 
-private def deductionAux {Γ : Sequent L} : T ⟹ Γ → T \ {φ} ⟹ ∼(∀∀φ) :: Γ
+/-- Transform a derivation by removing one theory axiom and adding its negated closure. -/
+def deductionAux {Γ : Sequent L} : T ⟹ Γ → T \ {φ} ⟹ ∼(∀∀φ) :: Γ
   | axL Γ R v       => Tait.wkTail <| axL Γ R v
   | verum Γ         => Tait.wkTail <| verum Γ
   | and d₁ d₂       =>
@@ -374,7 +380,7 @@ private def deductionAux {Γ : Sequent L} : T ⟹ Γ → T \ {φ} ⟹ ∼(∀∀
   | ex t d          => Tait.rotate₁ <| ex t <| Tait.rotate₁ (deductionAux d)
   | wk d ss         => wk (deductionAux d) (by simp [List.subset_cons_of_subset _ ss])
   | cut d₁ d₂       => (Tait.rotate₁ <| deductionAux d₁).cut (Tait.rotate₁ <| deductionAux d₂)
-  | root (φ := ψ) h => if hq : φ = ψ then Derivation.cast (not_close' φ) (by simp [hq]) else
+  | root (φ := ψ) h => if hq : φ = ψ then Derivation.cast (notClose' φ) (by simp [hq]) else
     have : T \ {φ} ⟹. ψ := root (by simp [h, Ne.symm hq])
     wk this (by simp)
 

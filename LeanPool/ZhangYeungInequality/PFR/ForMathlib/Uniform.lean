@@ -6,10 +6,10 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.MeasureTheory.Measure.Real
 public import Mathlib.Probability.IdentDistrib
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.ForMathlib.Uniform

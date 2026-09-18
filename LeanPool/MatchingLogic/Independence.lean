@@ -28,11 +28,20 @@ come apart.
 
 Statements pinned before any proof was attempted.
 -/
-import LeanPool.MatchingLogic.Composite
+module
+
+public import LeanPool.MatchingLogic.Localization
+import Mathlib.Data.Set.Lattice.Bounded
+import Mathlib.Data.Set.Lattice.Disjoint
+import Mathlib.Data.Set.Lattice.Image
+import Mathlib.Data.Set.Lattice.Indexed
+import Mathlib.Data.Set.Lattice.Order
 
 /-!
 # MatchingLogic.Independence
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

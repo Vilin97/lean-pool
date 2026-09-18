@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part01
-import Mathlib.Analysis.Normed.Module.Normalize
-import Mathlib.InformationTheory.KullbackLeibler.KLFun
-import Mathlib.LinearAlgebra.Matrix.Permutation
-import Mathlib.NumberTheory.Harmonic.Bounds
+public import LeanPool.QuantumParallelRepetition.Part01
+public import Mathlib.Analysis.Normed.Module.Normalize
+public import Mathlib.InformationTheory.KullbackLeibler.KLFun
+public import Mathlib.LinearAlgebra.Matrix.Permutation
+public import Mathlib.NumberTheory.Harmonic.Bounds
 
 /-! # Quantum parallel repetition, part 02 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -1173,7 +1176,8 @@ theorem spectralPartitionPOVM_projective
   exact spectralAtomSum_mul_self F hF
     (Finset.univ.filter (fun i : d => bin i = k))
 
-private def bilateralWorkPairEquiv
+/-- Regroup two families of local indices into a family of paired indices. -/
+def bilateralWorkPairEquiv
     {ι d e : Type*} :
     ((ι → d) × (ι → e)) ≃ (ι → d × e) where
   toFun x i := (x.1 i, x.2 i)
@@ -1362,7 +1366,8 @@ open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 
-private def finiteUniformThresholdGrid
+/-- The `k`th point of a uniform grid with spacing `(upper - lower) / N`. -/
+def finiteUniformThresholdGrid
     (lower upper : ℝ) (N : ℕ) (k : Fin N) : ℝ :=
   lower + (k.val : ℝ) * ((upper - lower) / (N : ℝ))
 
@@ -1490,7 +1495,8 @@ theorem localUnitaryPureResidual_targetLocalInverse_reset
   simp only [localUnitaryAction, OneMemClass.coe_one, zero_mul, implies_true, mul_zero, mul_one,
     kroneckerMap_one_one, one_mulVec, toLp_ofLp]
 
-private def targetCoefficientMatrix
+/-- The coefficient matrix of a bipartite vector, with Bob indexing its rows. -/
+def targetCoefficientMatrix
     {d : ℕ} (ξ : BipartiteUnitVector d) :
     Matrix (Fin d) (Fin d) ℂ :=
   fun b a => ξ.val (a, b)
@@ -2577,7 +2583,8 @@ abbrev DSVUniformDensityIndependentHistoryLocalIndex
     (L N d : ℕ) :=
   Fin L → DSVUniformDensityThresholdLocalIndex N d
 
-private def dSVUniformDensityIndependentHistoryPairReindex
+/-- The isometry regrouping paired history coordinates into Alice's and Bob's histories. -/
+def dSVUniformDensityIndependentHistoryPairReindex
     (L N d : ℕ) :
     EuclideanSpace ℂ
       (Fin L →
@@ -2820,7 +2827,8 @@ namespace ClassicalSampling
 
 variable {α : Type*} [Fintype α] [DecidableEq α]
 
-private def markedFirst (rank : α ≃ Fin (Fintype.card α))
+/-- The marked element with smallest rank after applying the given permutation. -/
+def markedFirst (rank : α ≃ Fin (Fintype.card α))
     (marked : Finset α) (nonempty : marked.Nonempty)
     (permutation : Equiv.Perm α) : α :=
   permutation.symm
@@ -5113,13 +5121,14 @@ section
 open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
-private def finiteTensorLocalUnitaryMatrix
+/-- The matrix of the tensor product of a finite family of local unitaries. -/
+def finiteTensorLocalUnitaryMatrix
     {ι β : Type*} [Fintype ι] [Fintype β] [DecidableEq β]
     (U : ι → Matrix.unitaryGroup β ℂ) :
     Matrix (ι → β) (ι → β) ℂ :=
   fun q r => ∏ i : ι, (U i : Matrix β β ℂ) (q i) (r i)
 
-private theorem finiteTensorLocalUnitaryMatrix_gram
+theorem finiteTensorLocalUnitaryMatrix_gram
     {ι β : Type*}
     [Fintype ι] [DecidableEq ι]
     [Fintype β] [DecidableEq β]
@@ -5179,7 +5188,8 @@ private theorem finiteTensorLocalUnitaryMatrix_gram
     rw [zero]
     simp only [ne_eq, equal, not_false_eq_true, one_apply_ne]
 
-private def finiteTensorLocalUnitary
+/-- The unitary on function indices obtained by tensoring the local unitaries. -/
+def finiteTensorLocalUnitary
     {ι β : Type*}
     [Fintype ι] [DecidableEq ι]
     [Fintype β] [DecidableEq β]
@@ -5484,7 +5494,8 @@ open scoped BigOperators Topology ComplexOrder MatrixOrder Matrix.Norms.Elementw
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-private def scalarPurificationLp (z : ℝ) (hz : 0 ≤ z) :
+/-- The scalar resolvent function `z / (z + s)` as a complex square-integrable function. -/
+def scalarPurificationLp (z : ℝ) (hz : 0 ≤ z) :
     Lp ℂ 2 (volume.restrict (Ioi (0 : ℝ))) :=
   ((scalarResolventFilter_memLp_two hz).ofReal (K := ℂ)).toLp
     (fun s : ℝ => ((z / (z + s) : ℝ) : ℂ))
@@ -5496,7 +5507,8 @@ private theorem scalarPurificationLp_coeFn
   ((scalarResolventFilter_memLp_two hz).ofReal
     (K := ℂ)).coeFn_toLp
 
-private def commonPurificationGenerator
+/-- Resolvent functions for the eigenvalues of the family and its mean matrix. -/
+def commonPurificationGenerator
     {ι d : Type*} [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)
@@ -5688,7 +5700,8 @@ def ensemblePurificationSubspaceEntry
     ensemble_spectralPurificationFilterEntryLp_mem_common
       F M positive hM a i j⟩
 
-private def meanPurificationSubspaceEntry
+/-- An entry of the mean spectral purification, bundled in the common subspace. -/
+def meanPurificationSubspaceEntry
     {ι d : Type*} [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)
@@ -6147,7 +6160,8 @@ private theorem matrixPurificationVector_norm_sq
       (Matrix.trace (Matrix.conjTranspose K * K)).re := by
   exact matrixVectorization_norm_sq K
 
-private def strategyPurificationShuffle
+/-- Regroup purification indices into a pair of joint player indices. -/
+def strategyPurificationShuffle
     (dA dB : Type) :
     ((dA × (dA × dB)) × dB) ≃ ((dA × dB) × (dA × dB)) where
   toFun q := (q.1.2, (q.1.1, q.2))

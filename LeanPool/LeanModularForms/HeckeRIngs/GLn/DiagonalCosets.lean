@@ -3,14 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GLn.Basic
-import Mathlib.LinearAlgebra.Matrix.Transvection
-import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.RingTheory.PrincipalIdealDomain
-import Mathlib.Algebra.EuclideanDomain.Int
-import Mathlib.LinearAlgebra.Matrix.Basis
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.Basic
+import Mathlib.Analysis.Normed.Ring.Lemmas
 import Mathlib.LinearAlgebra.Determinant
+import Mathlib.LinearAlgebra.FreeModule.PID
 
 /-!
 # Diagonal Coset Representatives for GL_n Hecke Ring
@@ -38,6 +36,8 @@ representative (elementary divisor theorem / Smith normal form).
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2
 -/
 
+@[expose] public section
+
 open Matrix Subgroup.Commensurable Pointwise HeckeRing Matrix.SpecialLinearGroup
 
 namespace HeckeRing.GLn
@@ -58,7 +58,7 @@ this is a junk value that simplifies the API by avoiding an explicit positivity 
 noncomputable def diagMat (a : Fin n → ℕ) : GL (Fin n) ℚ :=
   if h : ∀ i, 0 < a i then
     GeneralLinearGroup.mkOfDetNeZero (Matrix.diagonal (fun i => (a i : ℚ)))
-      (natDiagDetNeZero n a h)
+      (by exact natDiagDetNeZero n a h)
   else 1
 
 @[simp] lemma diagMat_val (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
@@ -192,7 +192,7 @@ private lemma transvection_det_ne_zero {i j : Fin n} (hij : i ≠ j) (c : ℤ) :
 noncomputable def transvectionGL {i j : Fin n} (hij : i ≠ j) (c : ℤ) : GL (Fin n) ℚ :=
   GeneralLinearGroup.mkOfDetNeZero
     ((Matrix.TransvectionStruct.mk i j hij c).toMatrix.map (Int.cast : ℤ → ℚ))
-    (transvection_det_ne_zero n hij c)
+    (by exact transvection_det_ne_zero n hij c)
 
 lemma transvectionGL_hasIntEntries {i j : Fin n} (hij : i ≠ j) (c : ℤ) :
     HasIntEntries n (transvectionGL n hij c) :=

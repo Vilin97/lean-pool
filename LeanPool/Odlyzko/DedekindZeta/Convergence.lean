@@ -6,8 +6,6 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.DedekindZeta.Coefficients
-public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-public import Mathlib.NumberTheory.LSeries.SumCoeff
 
 /-! TODO: Add doc-string. -/
 

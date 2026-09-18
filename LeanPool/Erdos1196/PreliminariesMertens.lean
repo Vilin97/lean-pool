@@ -3,10 +3,12 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.Basic
+module
+
+public import LeanPool.Erdos1196.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.NumberTheory.AbelSummation
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Arithmetic preliminaries for primitive sets above `x`
@@ -18,6 +20,8 @@ Mertens estimate used later in the normalization and tail-sum arguments.
 
 * `mertensEstimate`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators
 

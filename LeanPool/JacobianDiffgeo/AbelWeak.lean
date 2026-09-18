@@ -3,13 +3,17 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
-import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
-import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
-import LeanPool.JacobianDiffgeo.AbelWeak.ChainAssembly
-import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
-import LeanPool.JacobianDiffgeo.AbelWeak.GeneralChain
+public import LeanPool.JacobianDiffgeo.AbelWeak.PlanarLogBranch
+public import LeanPool.JacobianDiffgeo.AbelWeak.WeakSolution
+public import LeanPool.JacobianDiffgeo.AbelWeak.SingleChart
+public import LeanPool.JacobianDiffgeo.AbelWeak.ChainAssembly
+public import LeanPool.JacobianDiffgeo.AbelWeak.Rechart
+public import LeanPool.JacobianDiffgeo.AbelWeak.GeneralChain
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-weak-solutions: weak solutions, the planar log-branch, and chain assembly (Forster
@@ -129,3 +133,5 @@ now-built `exists_weakSolutionOfPair` above) have everything they need from this
 tightened `Builds on:` line (§2.5) plus the `ChartChain` dependency the general-chain gap closure
 needed. No file here imports `Jacobian.Monodromy`, `Jacobian.FormTrace`, or `Jacobian.Meromorphic`.
 -/
+
+@[expose] public section

@@ -3,8 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.TailDuality
+public import LeanPool.JacobianDiffgeo.TailDuality.Duality
+import LeanPool.JacobianDiffgeo.TailDuality.ChiLedger
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # riemann-roch: Riemann–Roch, `l(K) = g`, `deg K = 2g − 2`, the Riemann inequality
@@ -24,6 +28,8 @@ Serre-duality export bank (`l_sub_eq_h1T`, `h1T_zero_eq_genus`, `h1T_zero_eq_l_K
 * **`riemann_inequality (D) : deg D + 1 - g ≤ l D`** — the forward-headline seed
   `genus-zero-headline` (#30) consumes.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

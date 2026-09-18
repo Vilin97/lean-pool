@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.Defs
 
 /-!
 # Algebraic helper lemmas for the flat-case Lyapunov bound
@@ -12,6 +13,8 @@ import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
 Provides norm expansions, Pythagorean decompositions, inner product
 decompositions, and cross-term vanishing for orthogonal projectors.
 -/
+
+@[expose] public section
 
 
 noncomputable section

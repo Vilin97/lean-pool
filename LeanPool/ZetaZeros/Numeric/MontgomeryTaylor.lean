@@ -5,8 +5,9 @@ Authors: Kenny Lau
 -/
 module
 
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
-public import LeanPool.ZetaZeros.Meta.Attr
+public import Mathlib.Analysis.Complex.Trigonometric
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 
 /-!
 # The Montgomery–Taylor constant is less than `1.3275`

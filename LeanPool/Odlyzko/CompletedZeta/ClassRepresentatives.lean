@@ -6,8 +6,11 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.FundamentalConeSeries
-public import LeanPool.Odlyzko.DedekindZeta.IdealSeries
-public import Mathlib.Data.Fintype.BigOperators
+import LeanPool.Odlyzko.DedekindZeta.Convergence
+import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
+import LeanPool.Odlyzko.DedekindZeta.IdealSeries
+import Mathlib.NumberTheory.LSeries.Linearity
+import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 

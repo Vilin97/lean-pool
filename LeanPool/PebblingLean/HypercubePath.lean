@@ -3,9 +3,15 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import LeanPool.PebblingLean.Hypercube
-import LeanPool.PebblingLean.Delivery
+public import LeanPool.PebblingLean.Hypercube
+public import LeanPool.PebblingLean.Delivery
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Paths in hypercubes
@@ -14,6 +20,8 @@ This file connects Hamming distance to the graph-walk API: vertices at Hamming
 distance `d` are joined by a walk of length `d`.  This is the geometric input
 needed for direct delivery in the upper-bound proof.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

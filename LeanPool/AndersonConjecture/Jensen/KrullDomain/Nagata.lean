@@ -3,6 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import Mathlib.GroupTheory.MonoidLocalization.Away
+public import Mathlib.GroupTheory.MonoidLocalization.MonoidWithZero
+public import Mathlib.RingTheory.OreLocalization.Ring
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
 import Mathlib.RingTheory.Localization.Away.Basic
 import Mathlib.RingTheory.Localization.Ideal
 import Mathlib.RingTheory.UniqueFactorizationDomain.Kaplansky
@@ -16,6 +22,8 @@ is a UFD. The proof uses Kaplansky's theorem: every nonzero
 prime ideal of R contains a prime element, obtained by lifting
 a prime from the localisation and cancelling powers of p.
 -/
+
+@[expose] public section
 
 noncomputable section
 

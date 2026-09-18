@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 
 /-!
 # Binary quadratic forms and CM points (Phase C, Track 3)
@@ -31,6 +32,8 @@ The `GL₂` action is the classical *right* action on forms,
 `(f · M)(X, Y) = f(pX + qY, rX + sY)` for `M = ![![p, q], ![r, s]]`; it is packaged as
 `BQF.act f p q r s` taking the four entries directly (avoiding matrix-coercion churn).
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -92,10 +95,10 @@ theorem act_act (f : BQF) (p q r s p' q' r' s' : ℤ) :
 theorem act_act_inv (f : BQF) {p q r s : ℤ} (hdet : p * s - q * r = 1) :
     act (act f p q r s) s (-q) (-r) p = f := by
   rw [act_act]
-  have h1 : p * s + q * (-r) = 1 := by ring_nf; linarith [hdet]
+  have h1 : p * s + q * (-r) = 1 := by simpa only [mul_neg, sub_eq_add_neg] using hdet
   have h2 : r * s + s * (-r) = 0 := by ring
   have h3 : p * (-q) + q * p = 0 := by ring
-  have h4 : r * (-q) + s * p = 1 := by ring_nf; linarith [hdet]
+  have h4 : r * (-q) + s * p = 1 := by linear_combination hdet
   rw [h1, h2, h3, h4, act_one]
 
 /-- A common divisor of the coefficients divides the coefficients of any `act`. -/
@@ -168,26 +171,17 @@ theorem root_unique {f : BQF} (hf : IsPosDef f) {τ τ' : ℍ}
   have hsq : (2 * (f.a : ℂ) * (τ : ℂ) + (f.b : ℂ)) ^ 2
       = (2 * (f.a : ℂ) * (τ' : ℂ) + (f.b : ℂ)) ^ 2 := by
     rw [sq_two_a_root h, sq_two_a_root h']
-  have hfac : (2 * (f.a : ℂ) * (τ : ℂ) - 2 * (f.a : ℂ) * (τ' : ℂ)) *
-      (2 * (f.a : ℂ) * (τ : ℂ) + (f.b : ℂ) + (2 * (f.a : ℂ) * (τ' : ℂ) + (f.b : ℂ))) = 0 := by
-    linear_combination hsq
-  rcases mul_eq_zero.mp hfac with h1 | h2
-  · -- `2a(τ − τ') = 0` ⇒ `τ = τ'`
-    have : (τ : ℂ) = (τ' : ℂ) := by
-      have := mul_left_cancel₀ (mul_ne_zero (two_ne_zero) haC) (by linear_combination h1 :
-        2 * (f.a : ℂ) * (τ : ℂ) = 2 * (f.a : ℂ) * (τ' : ℂ))
-      exact this
-    exact UpperHalfPlane.ext this
+  rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq with h1 | h2
+  · exact UpperHalfPlane.ext
+      (mul_left_cancel₀ (mul_ne_zero two_ne_zero haC) (add_right_cancel h1))
   · -- `a(τ + τ') = −b` contradicts positive imaginary parts
     exfalso
     have h3 : (f.a : ℂ) * ((τ : ℂ) + (τ' : ℂ)) = -(f.b : ℂ) := by linear_combination h2 / 2
     have him := congrArg Complex.im h3
     simp only [Complex.mul_im, Complex.add_im, Complex.intCast_re, Complex.intCast_im,
-      UpperHalfPlane.coe_im, Complex.neg_im, zero_mul, add_zero, mul_add, neg_zero] at him
-    have hτ := τ.im_pos
-    have hτ' := τ'.im_pos
+      UpperHalfPlane.coe_im, Complex.neg_im, zero_mul, add_zero, neg_zero] at him
     have haR : (0 : ℝ) < (f.a : ℝ) := by exact_mod_cast ha
-    nlinarith [him, hτ, hτ', haR]
+    exact (mul_pos haR (add_pos τ.im_pos τ'.im_pos)).ne' him
 
 /-! ## The fixed-point (`ℚ[Λ]`) algebra
 
@@ -243,8 +237,8 @@ theorem fixes_classification {f : BQF} (hf : IsPrimitive f) (hpd : IsPosDef f)
     linear_combination (r : ℂ) * hroot - (f.a : ℂ) * hAf
   obtain ⟨r1, r2⟩ := int_lin_eq_zero τ hlin
   -- `r1 : r*b = a*(s-p)`, `r2 : r*c = a*(-q)`
-  have hr1 : r * f.b = f.a * (s - p) := by linarith [r1]
-  have hr2 : r * f.c = f.a * (-q) := by linarith [r2]
+  have hr1 : r * f.b = f.a * (s - p) := sub_eq_zero.mp r1
+  have hr2 : r * f.c = f.a * (-q) := sub_eq_zero.mp r2
   -- primitivity ⇒ `a ∣ r`
   obtain ⟨u, v, w, huvw⟩ := bezout_of_primitive hf
   have hdvd : f.a ∣ r := by
@@ -252,14 +246,11 @@ theorem fixes_classification {f : BQF} (hf : IsPrimitive f) (hpd : IsPosDef f)
     have hr : r * (u * f.a + v * f.b + w * f.c) = r := by rw [huvw]; ring
     linear_combination -hr + v * hr1 + w * hr2
   obtain ⟨k, hk⟩ := hdvd
-  refine ⟨k, by rw [hk]; ring, ?_, ?_⟩
-  · -- `s − p = k*b` from `r*b = a*(s−p)` and `r = a*k`
-    have : f.a * (k * f.b) = f.a * (s - p) := by rw [← hr1, hk]; ring
-    exact (mul_left_cancel₀ ha this).symm
-  · -- `q = −(k*c)` from `r*c = a*(−q)` and `r = a*k`
-    have : f.a * (k * f.c) = f.a * (-q) := by rw [← hr2, hk]; ring
-    have := mul_left_cancel₀ ha this
-    linarith [this]
+  refine ⟨k, hk.trans (mul_comm _ _), ?_, ?_⟩
+  · rw [hk, mul_assoc] at hr1
+    exact (mul_left_cancel₀ ha hr1).symm
+  · rw [hk, mul_assoc] at hr2
+    exact neg_eq_iff_eq_neg.mp (mul_left_cancel₀ ha hr2).symm
 
 /-- **Determinant is the norm form.** For a fixing matrix as classified above,
 `det = p s − q r = p² + b p k + a c k²` — the value of the norm form of the order at

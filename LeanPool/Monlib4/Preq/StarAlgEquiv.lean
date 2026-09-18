@@ -3,16 +3,19 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Star.StarAlgHom
-import Mathlib.Algebra.Algebra.Equiv
+module
+
+public import Mathlib.Algebra.Star.StarAlgHom
+public import Mathlib.LinearAlgebra.Span.Defs
 import Mathlib.LinearAlgebra.Span.Basic
-import Mathlib.Algebra.Star.Pi
 
 /-!
  # Some stuff on star algebra equivalences
 
  This file contains some obvious definitions and lemmas on star algebra equivalences.
 -/
+
+@[expose] public section
 
 
 theorem AlgEquiv.comp_inj {R A B C : Type _} [CommSemiring R] [Semiring A] [Semiring B] [Semiring C]

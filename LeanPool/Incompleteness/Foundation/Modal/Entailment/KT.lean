@@ -3,12 +3,13 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.KP
-import LeanPool.Incompleteness.Foundation.Modal.Entailment.KD
+public import LeanPool.Incompleteness.Foundation.Modal.Entailment.KP
 
 /-! # KT -/
+
+@[expose] public section
 
 
 namespace LO

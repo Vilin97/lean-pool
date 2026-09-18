@@ -3,8 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairCompletion
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPair
 import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.QuotientTruthLemma
+import LeanPool.InfinitaryLogic.Methods.Interpolation.BudgetedPairCompletion
 /-!
 # The budgeted labelled pair's countermodel (issue #15)
 
@@ -23,6 +26,8 @@ This is the countermodel that contradicts `r₁ ⊨ r₂` in the final interpola
   was
   seeded; the negative direction of the truth lemma is discarded, so no polarity argument is needed.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

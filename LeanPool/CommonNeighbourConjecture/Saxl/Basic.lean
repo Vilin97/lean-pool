@@ -3,9 +3,13 @@ Copyright (c) 2026 Aluna Rizzoli and Adam R. Thomas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aluna Rizzoli, Adam R. Thomas
 -/
+module
 
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.GroupTheory.GroupAction.Basic
+public import Mathlib.Data.Fin.Tuple.Basic
+public import Mathlib.Algebra.Group.Subgroup.Lattice
+public import Mathlib.GroupTheory.GroupAction.Defs
+import Mathlib.Algebra.Ring.Nat
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Bases and Saxl adjacency
@@ -13,6 +17,8 @@ import Mathlib.GroupTheory.GroupAction.Basic
 Foundational definitions for ordered tuple bases, ordinary and generalized
 Saxl adjacency, exact base size, and common neighbours.
 -/
+
+@[expose] public section
 
 namespace Saxl
 

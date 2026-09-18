@@ -3,11 +3,14 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.NormalizationClosure
+public import LeanPool.PoincareThreeBody.NormalizationClosure
+import LeanPool.PoincareThreeBody.Analytic
 import Mathlib.Analysis.Normed.Operator.Prod
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Parameterized analytic division
@@ -16,6 +19,8 @@ This file develops the several-variable Hadamard-division input needed by Poinca
 normalization.  The homotopy `(mass, phase) ↦ (t * mass, phase)` reduces division by the mass
 coordinate to integration of the mass partial derivative along `0 ≤ t ≤ 1`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

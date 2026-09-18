@@ -3,7 +3,18 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
-import LeanPool.NashWilliams.Data.Nat.Nth
+module
+
+public import Aesop.BuiltinRules
+public import Mathlib.Data.Nat.Basic
+public import Mathlib.Order.Monotone.Defs
+public import Mathlib.Order.SetNotation
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Set.Insert
+import Mathlib.Tactic.SetLike
+import Mathlib.Tactic.Widget.Calc
 
 /-!
 # Nash-Williams Fronts
@@ -45,6 +56,8 @@ sorting and its API rebuilt from scratch. We therefore encode a finite subset by
 increasing enumeration (a sorted `List ℕ`) and bridge to `Finset ℕ` only at the boundary with
 `Finset`-based (e.g. Ramsey) statements, via `Finset.sort` / `List.toFinset`.
 -/
+
+@[expose] public section
 
 open Set List
 

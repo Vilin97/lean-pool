@@ -3,8 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.CanonicalForms.Quotient
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Compat: small `MForm` helpers needed by residue-theorem (candidates for canonical-forms)
@@ -22,6 +25,8 @@ quotient API live in a clearly-marked NEW file rather than editing `Jacobian/Can
 
 Request filed in `docs/requests/canonical-forms.md`-spirit: these belong upstream eventually.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

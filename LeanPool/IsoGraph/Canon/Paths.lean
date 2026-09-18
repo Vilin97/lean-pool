@@ -3,8 +3,15 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Monotone
+public import LeanPool.IsoGraph.Canon.Equivariance
+import LeanPool.IsoGraph.ForMathlib.Array
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Where the search records its leaves
@@ -20,6 +27,8 @@ which leaf is *best*.
   call returns.  Instantiating `P` differently at each use turns this one lemma into the running
   invariant "the incumbent's path does not go down a branch we have not explored yet".
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

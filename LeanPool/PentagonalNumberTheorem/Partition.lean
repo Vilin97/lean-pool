@@ -3,17 +3,25 @@ Copyright (c) 2026 Weiyi Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Weiyi Wang
 -/
+module
 
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Algebra.Ring.NegOnePow
+public import Mathlib.Combinatorics.Enumerative.Partition.Basic
+public import Mathlib.RingTheory.PowerSeries.PiTopology
 import LeanPool.PentagonalNumberTheorem.PowerSeries
 import Mathlib.Combinatorics.Enumerative.Partition.Glaisher
-import Mathlib.Data.Int.Interval
 import Mathlib.Data.Int.Order.Lemmas
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # LeanPool.PentagonalNumberTheorem.Partition
 
 Imported Lean Pool material for `LeanPool.PentagonalNumberTheorem.Partition`.
 -/
+
+@[expose] public section
 
 theorem two_pentagonal (k : ℤ) : 2 * (k * (3 * k - 1) / 2) = k * (3 * k - 1) := by
   refine Int.two_mul_ediv_two_of_even ?_

@@ -3,17 +3,27 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
+
+public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
+public import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Nat.Bitwise
-
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -23,7 +33,6 @@ open scoped BigOperators
 
 open Distributed2Coloring.LowerBound.Correlation
 open Distributed2Coloring.LowerBound.N1000000Data
-open Distributed2Coloring.LowerBound.N1000000StructureConstants
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev n : Nat := N1000000Data.n

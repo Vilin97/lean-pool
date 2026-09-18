@@ -3,10 +3,14 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Injectivity
+public import LeanPool.JacobianDiffgeo.Cech.Colimit
+public import LeanPool.JacobianDiffgeo.Cech.Injectivity
 import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
 import LeanPool.JacobianDiffgeo.Meromorphic.Gluing
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Leray's theorem and the cocycle-trade lemma (`Jacobian/DolbeaultComparison/Leray.lean`)
@@ -25,6 +29,8 @@ under this unit's authorization) as black boxes — no `Form01`, no PoU, no dbar
 * `resH1_surjective_of_isGood` / `toH1_surjective_of_isGood` (Leray 12.8 surjectivity;
   injectivity is cech's `toH1_injective`, ALREADY on disk) / `h1CoverEquiv`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -96,54 +102,12 @@ theorem indCocycle_mem_Z1 (i : Fin 𝒰.n) {f : C1 D 𝒱} (hf : f ∈ Z1 D 𝒱
   have hW : (𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β ⊓ (𝒱.induced (𝒰.U i)).U γ ≤
       𝒱.U α ⊓ 𝒱.U β ⊓ 𝒱.U γ := le_inf hαβ (inf_le_right.trans inf_le_right)
   have key := Z1.rel_res D hf α β γ hW hβγ hαγ hαβ
-  have hkey : (RS.MeroGermOn.restrict hβγ (f (β, γ) : RS.MeroGermOn X (𝒱.U β ⊓ 𝒱.U γ : Set X)) -
-      RS.MeroGermOn.restrict hαγ (f (α, γ) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U γ : Set X)) +
-      RS.MeroGermOn.restrict hαβ (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X)) :
-      RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β ⊓
-        (𝒱.induced (𝒰.U i)).U γ : Set X)) = 0 := by
-    have hcast := congrArg Subtype.val key
-    exact hcast
-  apply Subtype.ext
-  rw [d1_apply]
-  change (RS.MeroGermOn.restrict hβγ𝒱ᵢ
-        (indCocycle D i f (β, γ) : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U β ⊓
-          (𝒱.induced (𝒰.U i)).U γ : Set X)) -
-      RS.MeroGermOn.restrict hαγ𝒱ᵢ
-        (indCocycle D i f (α, γ) : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α ⊓
-          (𝒱.induced (𝒰.U i)).U γ : Set X)) +
-      RS.MeroGermOn.restrict hαβ𝒱ᵢ
-        (indCocycle D i f (α, β) : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α ⊓
-          (𝒱.induced (𝒰.U i)).U β : Set X)) :
-      RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β ⊓
-        (𝒱.induced (𝒰.U i)).U γ : Set X)) = 0
-  change (RS.MeroGermOn.restrict hβγ𝒱ᵢ
-        (RS.MeroGermOn.restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U β) (𝒱.U γ))
-          (f (β, γ) : RS.MeroGermOn X (𝒱.U β ⊓ 𝒱.U γ : Set X))) -
-      RS.MeroGermOn.restrict hαγ𝒱ᵢ
-        (RS.MeroGermOn.restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U γ))
-          (f (α, γ) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U γ : Set X))) +
-      RS.MeroGermOn.restrict hαβ𝒱ᵢ
-        (RS.MeroGermOn.restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U β))
-          (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X))) :
-      RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β ⊓
-        (𝒱.induced (𝒰.U i)).U γ : Set X)) = 0
-  have e1 : (RS.MeroGermOn.restrict hβγ𝒱ᵢ
-      (RS.MeroGermOn.restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U β) (𝒱.U γ))
-        (f (β, γ) : RS.MeroGermOn X (𝒱.U β ⊓ 𝒱.U γ : Set X)))) =
-      RS.MeroGermOn.restrict hβγ (f (β, γ) : RS.MeroGermOn X (𝒱.U β ⊓ 𝒱.U γ : Set X)) :=
-    RS.MeroGermOn.restrict_restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U β) (𝒱.U γ)) hβγ𝒱ᵢ _
-  have e2 : (RS.MeroGermOn.restrict hαγ𝒱ᵢ
-      (RS.MeroGermOn.restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U γ))
-        (f (α, γ) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U γ : Set X)))) =
-      RS.MeroGermOn.restrict hαγ (f (α, γ) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U γ : Set X)) :=
-    RS.MeroGermOn.restrict_restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U γ)) hαγ𝒱ᵢ _
-  have e3 : (RS.MeroGermOn.restrict hαβ𝒱ᵢ
-      (RS.MeroGermOn.restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U β))
-        (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X)))) =
-      RS.MeroGermOn.restrict hαβ (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X)) :=
-    RS.MeroGermOn.restrict_restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U β)) hαβ𝒱ᵢ _
-  rw [e1, e2, e3]
-  exact hkey
+  refine Eq.trans ?_ key
+  exact congrArg₂ (· + ·)
+    (congrArg₂ (· - ·)
+      (restrictL_restrictL D _ hβγ𝒱ᵢ hβγ _)
+      (restrictL_restrictL D _ hαγ𝒱ᵢ hαγ _))
+    (restrictL_restrictL D _ hαβ𝒱ᵢ hαβ _)
 
 /-! ### §5 step 2: member splitting via disk acyclicity -/
 
@@ -171,10 +135,7 @@ theorem splitting_eq {f : C1 D 𝒱} {gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.indu
       LinSysOn.restrictL D
         (inf_le_left : (𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β ≤
           (𝒱.induced (𝒰.U i)).U α) (gFam i α) =
-    indCocycle D i f (α, β) := by
-  have hd := congrFun (hgFam i) (α, β)
-  rw [d0_apply] at hd
-  exact hd
+    indCocycle D i f (α, β) := congrFun (hgFam i) (α, β)
 
 omit [T2Space X] [CompactSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- Raw `MeroGermOn`-level form of `splitting_eq`. -/
@@ -208,27 +169,11 @@ theorem splitting_eq_restrict {f : C1 D 𝒱} {gFam : ∀ i : Fin 𝒰.n, C0 D (
   have hWαβ' : W ≤ (𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β := le_inf hWα hWβ
   have hcast := congrArg (RS.MeroGermOn.restrict hWαβ') (splitting_eq' D hgFam i α β)
   rw [map_sub] at hcast
-  have e1 : (RS.MeroGermOn.restrict hWαβ'
-      (RS.MeroGermOn.restrict
-        (inf_le_right : (𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β ≤
-          (𝒱.induced (𝒰.U i)).U β)
-        (gFam i β : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U β : Set X)))) =
-      RS.MeroGermOn.restrict hWβ (gFam i β : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U β : Set X)) :=
-    RS.MeroGermOn.restrict_restrict inf_le_right hWαβ' _
-  have e2 : (RS.MeroGermOn.restrict hWαβ'
-      (RS.MeroGermOn.restrict
-        (inf_le_left : (𝒱.induced (𝒰.U i)).U α ⊓ (𝒱.induced (𝒰.U i)).U β ≤
-          (𝒱.induced (𝒰.U i)).U α)
-        (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)))) =
-      RS.MeroGermOn.restrict hWα (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)) :=
-    RS.MeroGermOn.restrict_restrict inf_le_left hWαβ' _
-  have e3 : (RS.MeroGermOn.restrict hWαβ'
-      (RS.MeroGermOn.restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U β))
-        (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X)))) =
-      RS.MeroGermOn.restrict hWαβ (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X)) :=
-    RS.MeroGermOn.restrict_restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U β)) hWαβ' _
-  rw [e1, e2, e3] at hcast
-  exact hcast
+  exact (congrArg₂ (· - ·)
+    (RS.MeroGermOn.restrict_restrict inf_le_right hWαβ' _).symm
+    (RS.MeroGermOn.restrict_restrict inf_le_left hWαβ' _).symm).trans
+      (hcast.trans (RS.MeroGermOn.restrict_restrict (inf_inf_inf_le (𝒰.U i) (𝒱.U α) (𝒱.U β))
+        hWαβ' _))
 
 /-! ### §5 step 3: cross-glue -/
 
@@ -255,6 +200,22 @@ theorem patch_coe (gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.induced (𝒰.U i))) (i
             𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ (𝒱.induced (𝒰.U i)).U α)
           (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X))) := rfl
 
+omit [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space X] [CompactSpace X] in
+/-- `patch`, restricted further down to an arbitrary open `W` (`LinSysOn`-level unfolding of
+`patch_coe`, reused for both step 4's triple relation and step 5's final comparison). -/
+theorem patch_restrict (gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.induced (𝒰.U i))) (i j : Fin 𝒰.n)
+    (α : Fin 𝒱.n) {W : Opens X} (hWj : W ≤ (𝒱.induced (𝒰.U j)).U α)
+    (hWi : W ≤ (𝒱.induced (𝒰.U i)).U α) (hWij : W ≤ 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α) :
+    RS.MeroGermOn.restrict hWij
+        (patch D gFam i j α : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α : Set X)) =
+      RS.MeroGermOn.restrict hWj
+          (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X)) -
+        RS.MeroGermOn.restrict hWi
+          (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)) := by
+  exact (map_sub (RS.MeroGermOn.restrict hWij) _ _).trans
+    (congrArg₂ (· - ·) (RS.MeroGermOn.restrict_restrict _ hWij _)
+      (RS.MeroGermOn.restrict_restrict _ hWij _))
+
 omit [T2Space X] [CompactSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- Compatibility of the patches on overlaps (§5 step 3). -/
 theorem patch_compat {f : C1 D 𝒱} {gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.induced (𝒰.U i))}
@@ -280,60 +241,10 @@ theorem patch_compat {f : C1 D 𝒱} {gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.indu
     le_inf (hWα.trans inf_le_right) (hWβ.trans inf_le_right)
   have hj := splitting_eq_restrict D hgFam j α β hWαj hWβj hWαβ𝒱
   have hi := splitting_eq_restrict D hgFam i α β hWαi hWβi hWαβ𝒱
-  have hcompute : RS.MeroGermOn.restrict hWα
-      (patch D gFam i j α : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α : Set X)) -
-      RS.MeroGermOn.restrict hWβ
-        (patch D gFam i j β : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U β : Set X)) =
-      (RS.MeroGermOn.restrict hWαj
-          (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X)) -
-        RS.MeroGermOn.restrict hWβj
-          (gFam j β : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U β : Set X))) -
-      (RS.MeroGermOn.restrict hWαi
-          (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)) -
-        RS.MeroGermOn.restrict hWβi
-          (gFam i β : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U β : Set X))) := by
-    rw [patch_coe, patch_coe, map_sub, map_sub]
-    have e1 : (RS.MeroGermOn.restrict hWα
-        (RS.MeroGermOn.restrict
-          (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
-            𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ (𝒱.induced (𝒰.U j)).U α)
-          (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X)))) =
-        RS.MeroGermOn.restrict hWαj (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X))
-            :=
-      RS.MeroGermOn.restrict_restrict _ hWα _
-    have e2 : (RS.MeroGermOn.restrict hWα
-        (RS.MeroGermOn.restrict
-          (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
-            𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ (𝒱.induced (𝒰.U i)).U α)
-          (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)))) =
-        RS.MeroGermOn.restrict hWαi (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X))
-            :=
-      RS.MeroGermOn.restrict_restrict _ hWα _
-    have e3 : (RS.MeroGermOn.restrict hWβ
-        (RS.MeroGermOn.restrict
-          (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
-            𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U β ≤ (𝒱.induced (𝒰.U j)).U β)
-          (gFam j β : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U β : Set X)))) =
-        RS.MeroGermOn.restrict hWβj (gFam j β : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U β : Set X))
-            :=
-      RS.MeroGermOn.restrict_restrict _ hWβ _
-    have e4 : (RS.MeroGermOn.restrict hWβ
-        (RS.MeroGermOn.restrict
-          (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
-            𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U β ≤ (𝒱.induced (𝒰.U i)).U β)
-          (gFam i β : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U β : Set X)))) =
-        RS.MeroGermOn.restrict hWβi (gFam i β : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U β : Set X))
-            :=
-      RS.MeroGermOn.restrict_restrict _ hWβ _
-    rw [e1, e2, e3, e4]
-    abel
-  have hfinal : RS.MeroGermOn.restrict hWα
-      (patch D gFam i j α : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α : Set X)) -
-      RS.MeroGermOn.restrict hWβ
-        (patch D gFam i j β : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U β : Set X)) = 0 := by
-    rw [hcompute]
-    linear_combination hi - hj
-  exact sub_eq_zero.mp hfinal
+  rw [patch_restrict D gFam i j α hWαj hWαi hWα,
+    patch_restrict D gFam i j β hWβj hWβi hWβ]
+  apply sub_eq_sub_iff_sub_eq_sub.2
+  simpa only [neg_sub] using congrArg Neg.neg (hj.trans hi.symm)
 
 omit [T2Space X] [CompactSpace X] in
 /-- The glued section `F_{ij}` on `𝒰.U i ⊓ 𝒰.U j`, restricting back to `patch` on each
@@ -390,30 +301,6 @@ theorem exists_crossGlueLinSysOn {f : C1 D 𝒱} (hf : f ∈ Z1 D 𝒱)
   rw [restrictL_apply_coe]
   exact hΨ α
 
-omit [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space X] [CompactSpace X] in
-/-- `patch`, restricted further down to an arbitrary open `W` (`LinSysOn`-level unfolding of
-`patch_coe`, reused for both step 4's triple relation and step 5's final comparison). -/
-theorem patch_restrict (gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.induced (𝒰.U i))) (i j : Fin 𝒰.n)
-    (α : Fin 𝒱.n) {W : Opens X} (hWj : W ≤ (𝒱.induced (𝒰.U j)).U α)
-    (hWi : W ≤ (𝒱.induced (𝒰.U i)).U α) (hWij : W ≤ 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α) :
-    RS.MeroGermOn.restrict hWij
-        (patch D gFam i j α : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α : Set X)) =
-      RS.MeroGermOn.restrict hWj
-          (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X)) -
-        RS.MeroGermOn.restrict hWi
-          (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)) := by
-  rw [patch_coe, map_sub]
-  have e1 := RS.MeroGermOn.restrict_restrict
-    (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
-      𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ (𝒱.induced (𝒰.U j)).U α) hWij
-    (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X))
-  have e2 := RS.MeroGermOn.restrict_restrict
-    (le_inf (inf_le_left.trans inf_le_left) inf_le_right :
-      𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ (𝒱.induced (𝒰.U i)).U α) hWij
-    (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X))
-  rw [e1, e2]
-  rfl
-
 omit [T2Space X] [CompactSpace X] in
 /-- The glued sections `F_{ij}`, packaged as a full `1`-cochain on `𝒰` (§5 step 3, `LinSysOn`
 level): a choice of `crossGlue`-witness for every pair. -/
@@ -427,6 +314,25 @@ theorem exists_crossGlueFam {f : C1 D 𝒱} (hf : f ∈ Z1 D 𝒱)
     exists_crossGlueLinSysOn D hf hgFam p.1 p.2
   exact ⟨Φ, fun i j α => hΦ (i, j) α⟩
 
+omit [T2Space X] [CompactSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
+private theorem crossGlueFam_restrict {F : C1 D 𝒰}
+    {gFam : ∀ i : Fin 𝒰.n, C0 D (𝒱.induced (𝒰.U i))}
+    (hF : ∀ (i j : Fin 𝒰.n) (α : Fin 𝒱.n),
+      LinSysOn.restrictL D (inf_le_left : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ 𝒰.U i ⊓ 𝒰.U j) (F (i, j)) =
+        patch D gFam i j α)
+    (i j : Fin 𝒰.n) (α : Fin 𝒱.n) {W : Opens X}
+    (hWj : W ≤ (𝒱.induced (𝒰.U j)).U α) (hWi : W ≤ (𝒱.induced (𝒰.U i)).U α)
+    (hWij : W ≤ 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α) :
+    RS.MeroGermOn.restrict (hWij.trans inf_le_left)
+        (F (i, j) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X)) =
+      RS.MeroGermOn.restrict hWj
+          (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X)) -
+        RS.MeroGermOn.restrict hWi
+          (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)) := by
+  exact (RS.MeroGermOn.restrict_restrict inf_le_left hWij _).symm.trans
+    ((congrArg (RS.MeroGermOn.restrict hWij) (congrArg Subtype.val (hF i j α))).trans
+      (patch_restrict D gFam i j α hWj hWi hWij))
+
 /-! ### §5 step 4: `F ∈ Z1 D 𝒰` -/
 
 omit [T2Space X] [CompactSpace X] in
@@ -439,17 +345,16 @@ theorem crossGlueFam_mem_Z1 {F : C1 D 𝒰} {gFam : ∀ i : Fin 𝒰.n, C0 D (�
     F ∈ Z1 D 𝒰 := by
   rw [mem_Z1_iff]
   rintro ⟨i, j, k⟩
-  set A : Opens X := 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k with hA_def
-  set W : Fin 𝒱.n → Set X := fun α => ((A ⊓ 𝒱.U α : Opens X) : Set X) with hW_def
+  let A : Opens X := 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒰.U k
+  let W : Fin 𝒱.n → Set X := fun α => ((A ⊓ 𝒱.U α : Opens X) : Set X)
   have hWopen : ∀ α, IsOpen (W α) := fun α => (A ⊓ 𝒱.U α).isOpen
   have hunion : (⋃ α, W α) = (A : Set X) := iUnion_inf_eq A le_top
-  set e := MeroGermOn.congrSet hunion.symm with he_def
+  let e := MeroGermOn.congrSet hunion.symm
   have hrewrite : ∀ (Z : RS.MeroGermOn X (A : Set X)) (α : Fin 𝒱.n),
       RS.MeroGermOn.restrict (Set.subset_iUnion W α) (e Z) =
         RS.MeroGermOn.restrict (inf_le_left : A ⊓ 𝒱.U α ≤ A) Z := by
     intro Z α
-    change RS.MeroGermOn.restrict (Set.subset_iUnion W α) (RS.MeroGermOn.restrict _ Z) = _
-    rw [RS.MeroGermOn.restrict_restrict]
+    exact RS.MeroGermOn.restrict_restrict _ _ Z
   have hi : A ≤ 𝒰.U i := inf_le_left.trans inf_le_left
   have hj : A ≤ 𝒰.U j := inf_le_left.trans inf_le_right
   have hk : A ≤ 𝒰.U k := inf_le_right
@@ -462,7 +367,7 @@ theorem crossGlueFam_mem_Z1 {F : C1 D 𝒰} {gFam : ∀ i : Fin 𝒰.n, C0 D (�
         RS.MeroGermOn.restrict (inf_le_left : A ⊓ 𝒱.U α ≤ A)
           ((0 : RS.LinSysOn D (A : Set X)) : RS.MeroGermOn X (A : Set X)) := by
     intro α
-    set Wα : Opens X := A ⊓ 𝒱.U α with hWα_def
+    let Wα : Opens X := A ⊓ 𝒱.U α
     have hWA : Wα ≤ A := inf_le_left
     have hWα' : Wα ≤ 𝒱.U α := inf_le_right
     have hWjk : Wα ≤ 𝒰.U j ⊓ 𝒰.U k := hWA.trans hjk
@@ -474,56 +379,14 @@ theorem crossGlueFam_mem_Z1 {F : C1 D 𝒰} {gFam : ∀ i : Fin 𝒰.n, C0 D (�
     have hWjα : Wα ≤ (𝒱.induced (𝒰.U j)).U α := le_inf (hWA.trans hj) hWα'
     have hWiα : Wα ≤ (𝒱.induced (𝒰.U i)).U α := le_inf (hWA.trans hi) hWα'
     have hWkα : Wα ≤ (𝒱.induced (𝒰.U k)).U α := le_inf (hWA.trans hk) hWα'
-    have step_jk :
-        RS.MeroGermOn.restrict hWjk (F (j, k) : RS.MeroGermOn X (𝒰.U j ⊓ 𝒰.U k : Set X)) =
-          RS.MeroGermOn.restrict hWkα
-              (gFam k α : RS.MeroGermOn X ((𝒱.induced (𝒰.U k)).U α : Set X)) -
-            RS.MeroGermOn.restrict hWjα
-              (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X)) := by
-      have hF' := congrArg Subtype.val (hF j k α)
-      rw [restrictL_apply_coe] at hF'
-      have e1 := RS.MeroGermOn.restrict_restrict
-        (inf_le_left : 𝒰.U j ⊓ 𝒰.U k ⊓ 𝒱.U α ≤ 𝒰.U j ⊓ 𝒰.U k) hWjkα
-        (F (j, k) : RS.MeroGermOn X (𝒰.U j ⊓ 𝒰.U k : Set X))
-      rw [hF'] at e1
-      rw [← e1, patch_restrict D gFam j k α hWkα hWjα hWjkα]
-    have step_ik :
-        RS.MeroGermOn.restrict hWik (F (i, k) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U k : Set X)) =
-          RS.MeroGermOn.restrict hWkα
-              (gFam k α : RS.MeroGermOn X ((𝒱.induced (𝒰.U k)).U α : Set X)) -
-            RS.MeroGermOn.restrict hWiα
-              (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)) := by
-      have hF' := congrArg Subtype.val (hF i k α)
-      rw [restrictL_apply_coe] at hF'
-      have e1 := RS.MeroGermOn.restrict_restrict
-        (inf_le_left : 𝒰.U i ⊓ 𝒰.U k ⊓ 𝒱.U α ≤ 𝒰.U i ⊓ 𝒰.U k) hWikα
-        (F (i, k) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U k : Set X))
-      rw [hF'] at e1
-      rw [← e1, patch_restrict D gFam i k α hWkα hWiα hWikα]
-    have step_ij :
-        RS.MeroGermOn.restrict hWij (F (i, j) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X)) =
-          RS.MeroGermOn.restrict hWjα
-              (gFam j α : RS.MeroGermOn X ((𝒱.induced (𝒰.U j)).U α : Set X)) -
-            RS.MeroGermOn.restrict hWiα
-              (gFam i α : RS.MeroGermOn X ((𝒱.induced (𝒰.U i)).U α : Set X)) := by
-      have hF' := congrArg Subtype.val (hF i j α)
-      rw [restrictL_apply_coe] at hF'
-      have e1 := RS.MeroGermOn.restrict_restrict
-        (inf_le_left : 𝒰.U i ⊓ 𝒰.U j ⊓ 𝒱.U α ≤ 𝒰.U i ⊓ 𝒰.U j) hWijα
-        (F (i, j) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X))
-      rw [hF'] at e1
-      rw [← e1, patch_restrict D gFam i j α hWjα hWiα hWijα]
-    rw [d1_apply]
+    have step_jk := crossGlueFam_restrict D hF j k α hWkα hWjα hWjkα
+    have step_ik := crossGlueFam_restrict D hF i k α hWkα hWiα hWikα
+    have step_ij := crossGlueFam_restrict D hF i j α hWjα hWiα hWijα
     change RS.MeroGermOn.restrict hWA
-        ((RS.MeroGermOn.restrict
-            (le_inf (inf_le_left.trans inf_le_right) inf_le_right : A ≤ 𝒰.U j ⊓ 𝒰.U k)
-            (F (j, k) : RS.MeroGermOn X (𝒰.U j ⊓ 𝒰.U k : Set X)) -
-          RS.MeroGermOn.restrict
-            (le_inf (inf_le_left.trans inf_le_left) inf_le_right : A ≤ 𝒰.U i ⊓ 𝒰.U k)
-            (F (i, k) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U k : Set X)) +
-          RS.MeroGermOn.restrict (inf_le_left : A ≤ 𝒰.U i ⊓ 𝒰.U j)
-            (F (i, j) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X)))) =
-        RS.MeroGermOn.restrict hWA (0 : RS.MeroGermOn X (A : Set X))
+        (RS.MeroGermOn.restrict hjk (F (j, k) : RS.MeroGermOn X (𝒰.U j ⊓ 𝒰.U k : Set X)) -
+          RS.MeroGermOn.restrict hik (F (i, k) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U k : Set X)) +
+          RS.MeroGermOn.restrict hij (F (i, j) : RS.MeroGermOn X (𝒰.U i ⊓ 𝒰.U j : Set X))) =
+        RS.MeroGermOn.restrict hWA 0
     rw [map_add, map_sub]
     have g1 := RS.MeroGermOn.restrict_restrict
       (le_inf (inf_le_left.trans inf_le_right) inf_le_right : A ≤ 𝒰.U j ⊓ 𝒰.U k) hWA
@@ -542,9 +405,7 @@ theorem crossGlueFam_mem_Z1 {F : C1 D 𝒰} {gFam : ∀ i : Fin 𝒰.n, C0 D (�
     intro α
     rw [hrewrite _ α, hrewrite _ α]
     exact hcore α
-  have hval := e.injective hglu
-  apply Subtype.ext
-  simpa using hval
+  exact Subtype.ext (e.injective hglu)
 
 /-! ### §5 step 5: the comparison on `𝒱` -/
 
@@ -567,7 +428,7 @@ theorem resC1_crossGlueFam_add_eq {f : C1 D 𝒱} (_hf : f ∈ Z1 D 𝒱)
   funext p
   obtain ⟨α, β⟩ := p
   apply Subtype.ext
-  set W : Opens X := 𝒱.U α ⊓ 𝒱.U β with hW_def
+  let W : Opens X := 𝒱.U α ⊓ 𝒱.U β
   have hWτα : W ≤ 𝒰.U (τ α) := inf_le_left.trans (hτ α)
   have hWτβ : W ≤ 𝒰.U (τ β) := inf_le_right.trans (hτ β)
   have hWα : W ≤ 𝒱.U α := inf_le_left
@@ -583,14 +444,8 @@ theorem resC1_crossGlueFam_add_eq {f : C1 D 𝒱} (_hf : f ∈ Z1 D 𝒱)
       RS.MeroGermOn.restrict hWτβα
           (gFam (τ β) α : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ β))).U α : Set X)) -
         RS.MeroGermOn.restrict hWτα'
-          (gFam (τ α) α : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ α))).U α : Set X)) := by
-    have hF' := congrArg Subtype.val (hF (τ α) (τ β) α)
-    rw [restrictL_apply_coe] at hF'
-    have e1 := RS.MeroGermOn.restrict_restrict
-      (inf_le_left : 𝒰.U (τ α) ⊓ 𝒰.U (τ β) ⊓ 𝒱.U α ≤ 𝒰.U (τ α) ⊓ 𝒰.U (τ β)) hWijα
-      (F (τ α, τ β) : RS.MeroGermOn X (𝒰.U (τ α) ⊓ 𝒰.U (τ β) : Set X))
-    rw [hF'] at e1
-    rw [← e1, patch_restrict D gFam (τ α) (τ β) α hWτβα hWτα' hWijα]
+          (gFam (τ α) α : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ α))).U α : Set X)) :=
+    crossGlueFam_restrict D hF (τ α) (τ β) α hWτβα hWτα' hWijα
   -- LHS term 2: `f (α, β)`, unfolded via `splitting_eq_restrict` at `i := τ β`
   have step2 :
       RS.MeroGermOn.restrict hWτβ'
@@ -616,29 +471,9 @@ theorem resC1_crossGlueFam_add_eq {f : C1 D 𝒱} (_hf : f ∈ Z1 D 𝒱)
     have hα := RS.MeroGermOn.restrict_restrict
       (le_inf (hτ α) le_rfl : 𝒱.U α ≤ 𝒰.U (τ α) ⊓ 𝒱.U α) hWα
       (gFam (τ α) α : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ α))).U α : Set X))
-    change RS.MeroGermOn.restrict hWβ
-        (RS.MeroGermOn.restrict (le_inf (hτ β) le_rfl : 𝒱.U β ≤ 𝒰.U (τ β) ⊓ 𝒱.U β)
-          (gFam (τ β) β : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ β))).U β : Set X))) -
-      RS.MeroGermOn.restrict hWα
-        (RS.MeroGermOn.restrict (le_inf (hτ α) le_rfl : 𝒱.U α ≤ 𝒰.U (τ α) ⊓ 𝒱.U α)
-          (gFam (τ α) α : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ α))).U α : Set X))) =
-      RS.MeroGermOn.restrict hWτβ'
-          (gFam (τ β) β : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ β))).U β : Set X)) -
-        RS.MeroGermOn.restrict hWτα'
-          (gFam (τ α) α : RS.MeroGermOn X ((𝒱.induced (𝒰.U (τ α))).U α : Set X))
-    rw [hβ, hα]
-    rfl
-  change RS.MeroGermOn.restrict (inf_le_inf (hτ α) (hτ β))
-      (F (τ α, τ β) : RS.MeroGermOn X (𝒰.U (τ α) ⊓ 𝒰.U (τ β) : Set X)) +
-        (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X)) =
-      RS.MeroGermOn.restrict hWβ
-          ((tradeH0 D τ hτ gFam β : RS.LinSysOn D (𝒱.U β : Set X)) :
-            RS.MeroGermOn X (𝒱.U β : Set X)) -
-        RS.MeroGermOn.restrict hWα
-          ((tradeH0 D τ hτ gFam α : RS.LinSysOn D (𝒱.U α : Set X)) :
-            RS.MeroGermOn X (𝒱.U α : Set X))
-  rw [step3]
-  linear_combination step1 - step2
+    exact congrArg₂ (· - ·) hβ hα
+  exact ((congrArg₂ (· + ·) step1 step2.symm).trans
+    ((add_comm _ _).trans (sub_add_sub_cancel _ _ _))).trans step3.symm
 
 /-! ### §5 steps 6-7: `exists_trade`, Leray's theorem, `h1CoverEquiv` -/
 
@@ -654,16 +489,11 @@ theorem exists_trade (h𝒰 : 𝒰.IsGood) (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ
   have hF₀mem : F₀ ∈ Z1 D 𝒰 := crossGlueFam_mem_Z1 D hF₀
   have hadd := resC1_crossGlueFam_add_eq D τ hτ f.2 hgFam hF₀
   refine ⟨-(⟨F₀, hF₀mem⟩ : Z1 D 𝒰), -(tradeH0 D τ hτ gFam), ?_⟩
-  have hcoe : (resZ1 D τ hτ (-(⟨F₀, hF₀mem⟩ : Z1 D 𝒰)) : C1 D 𝒱) = -(resC1 D τ hτ F₀) := by
-    rw [resZ1_apply_coe]
-    change resC1 D τ hτ (-F₀) = -(resC1 D τ hτ F₀)
-    rw [map_neg]
-  rw [hcoe, map_neg]
-  have heq : resC1 D τ hτ F₀ = d0 D 𝒱 (tradeH0 D τ hτ gFam) - (f : C1 D 𝒱) := by
-    rw [eq_sub_iff_add_eq]
-    exact hadd
-  rw [heq]
-  abel
+  have hneg : -(resC1 D τ hτ F₀) = (f : C1 D 𝒱) - d0 D 𝒱 (tradeH0 D τ hτ gFam) :=
+    neg_eq_iff_add_eq_zero.2 ((add_sub_assoc _ _ _).symm.trans (sub_eq_zero.mpr hadd))
+  exact (map_neg (resC1 D τ hτ) F₀).trans
+    (hneg.trans ((sub_eq_add_neg _ _).trans
+      (congrArg ((f : C1 D 𝒱) + ·) (map_neg (d0 D 𝒱) _).symm)))
 
 /-- Forster 14.6(a) at `H1Cover`-level: the qualitative trade. -/
 theorem resH1_surjective_of_isGood (h𝒰 : 𝒰.IsGood) (τ : Fin 𝒱.n → Fin 𝒰.n)
@@ -671,12 +501,9 @@ theorem resH1_surjective_of_isGood (h𝒰 : 𝒰.IsGood) (τ : Fin 𝒱.n → Fi
   intro ξ
   obtain ⟨f, rfl⟩ := H1Cover.mk_surjective D 𝒱 ξ
   obtain ⟨F, g, hFg⟩ := exists_trade D h𝒰 τ hτ f
-  refine ⟨H1Cover.mk D 𝒰 F, ?_⟩
-  rw [resH1_mk, ← sub_eq_zero, ← map_sub, H1Cover.mk_eq_zero_iff]
-  change (↑(resZ1 D τ hτ F) - ↑f : C1 D 𝒱) ∈ B1 D 𝒱
-  rw [hFg]
-  simp only [add_sub_cancel_left]
-  exact ⟨g, rfl⟩
+  refine ⟨H1Cover.mk D 𝒰 F, (resH1_mk D τ hτ F).trans ?_⟩
+  apply (Submodule.Quotient.eq _).2
+  exact ⟨g, (eq_sub_iff_add_eq).2 ((add_comm _ _).trans hFg.symm)⟩
 
 /-- **LERAY** (Forster 12.8 surjectivity half; injectivity is cech's `toH1_injective`,
 already on disk). Discharges the interface recorded in cech's `Colimit.lean`. -/
@@ -685,13 +512,10 @@ theorem toH1_surjective_of_isGood (h𝒰 : 𝒰.IsGood) : Function.Surjective (t
   obtain ⟨𝒲, c, hc⟩ := exists_rep D ξ
   obtain ⟨c', hc'⟩ := resH1_surjective_of_isGood D h𝒰 (chosenRefIdx (le_meet_left 𝒰 𝒲))
     (chosenRefIdx_spec (le_meet_left 𝒰 𝒲)) (resH1' D (le_meet_right 𝒰 𝒲) c)
-  refine ⟨c', ?_⟩
-  have h1 := toH1_resH1 D (chosenRefIdx (le_meet_left 𝒰 𝒲))
-    (chosenRefIdx_spec (le_meet_left 𝒰 𝒲)) c'
-  rw [hc'] at h1
-  rw [toH1_resH1'] at h1
-  rw [← h1]
-  exact hc
+  refine ⟨c', (toH1_resH1 D (chosenRefIdx (le_meet_left 𝒰 𝒲))
+    (chosenRefIdx_spec (le_meet_left 𝒰 𝒲)) c').symm.trans ?_⟩
+  exact (congrArg (toH1 D (FinCover.meet 𝒰 𝒲)) hc').trans
+    ((toH1_resH1' D (le_meet_right 𝒰 𝒲) c).trans hc)
 
 /-- Cover-level `H¹` computes the colimit on good covers — finiteness transfers dimensions
 through this. -/

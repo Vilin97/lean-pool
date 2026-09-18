@@ -3,11 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Sector Curve PV Computation (Lemma 3.1)
@@ -44,6 +45,8 @@ The PV of `dz/z` along this curve decomposes as:
 
 Reference: Hungerbuhler-Wasem, arXiv:1808.00997v2, Lemma 3.1.
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

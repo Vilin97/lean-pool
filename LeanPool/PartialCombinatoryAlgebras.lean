@@ -3,13 +3,16 @@ Copyright (c) 2026 Andrej Bauer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrej Bauer
 -/
+module
 
-import LeanPool.PartialCombinatoryAlgebras.Basic
-import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
-import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
-import LeanPool.PartialCombinatoryAlgebras.Programming
-import LeanPool.PartialCombinatoryAlgebras.FreeCombinatoryAlgebra
-import LeanPool.PartialCombinatoryAlgebras.GraphModel
+public import LeanPool.PartialCombinatoryAlgebras.Basic
+public import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
+public import LeanPool.PartialCombinatoryAlgebras.CombinatoryAlgebra
+public import LeanPool.PartialCombinatoryAlgebras.Programming
+public import LeanPool.PartialCombinatoryAlgebras.FreeCombinatoryAlgebra
+public import LeanPool.PartialCombinatoryAlgebras.GraphModel
+import Mathlib.Data.Finset.Attr
+import Mathlib.Tactic.SetLike
 
 /-!
 # Partial Combinatory Algebras
@@ -21,6 +24,8 @@ Main declarations: `LeanPool.PartialCombinatoryAlgebras.PCA`
 Tags: combinatory-algebra, lambda-calculus, computability
 MSC: 03B40, 03D75
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

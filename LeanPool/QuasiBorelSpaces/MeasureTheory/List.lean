@@ -3,17 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Tactic.FunProp
+public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
+public import LeanPool.QuasiBorelSpaces.List.Encoding
 import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
-import Mathlib.MeasureTheory.MeasurableSpace.Constructions
-import LeanPool.QuasiBorelSpaces.List.Encoding
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.List
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.List`.
 -/
+
+@[expose] public section
 
 
 variable

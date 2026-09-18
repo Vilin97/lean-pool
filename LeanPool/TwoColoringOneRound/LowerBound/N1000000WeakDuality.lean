@@ -3,14 +3,18 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
-import LeanPool.TwoColoringOneRound.LowerBound.Certificate
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
+public import LeanPool.TwoColoringOneRound.LowerBound.Certificate
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -36,7 +40,8 @@ abbrev Mu := Fin muSupport.size
 def xEdge (x : Var → Q) : Q :=
   x ⟨edgeVar, by decide⟩
 
-private def defaultMu : Nat × Array Int × Int := (0, #[], 0)
+/-- The empty dual-certificate entry used as a default value. -/
+def defaultMu : Nat × Array Int × Int := (0, #[], 0)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def muNumD (k : Mu) : Int :=

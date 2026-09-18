@@ -3,13 +3,14 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
-import LeanPool.HansonWright.Probability.Concentration.Chernoff
-import LeanPool.HansonWright.Probability.Moments.Cumulant
+module
+
+public import Mathlib.Probability.Moments.SubGaussian
 import LeanPool.HansonWright.MeasureTheory.Integral.LayerCake
+import LeanPool.HansonWright.Probability.Concentration.Chernoff
+import LeanPool.HansonWright.Probability.Moments.Exponential
 import LeanPool.HansonWright.Probability.Process.FiniteMaximum
-import Mathlib.Probability.Moments.SubGaussian
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Topology.Order.OrderClosed
 
 /-!
 # Sub-Gaussian Processes
@@ -43,11 +44,12 @@ entropy integral bound.
 
 -/
 
+@[expose] public section
+
 namespace LeanPool
 
 open MeasureTheory Real Set Metric Filter
 open _root_.ProbabilityTheory
-open _root_.LeanPool.ProbabilityTheory
 open scoped ENNReal BigOperators NNReal Topology
 
 noncomputable section

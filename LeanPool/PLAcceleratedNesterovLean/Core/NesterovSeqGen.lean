@@ -3,8 +3,9 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovScheme
 
 /-!
 # Generalized Nesterov Sequence and State-Based Definitions
@@ -17,6 +18,8 @@ Extends the Nesterov scheme with:
 These are needed for the Nesterov algorithm with arbitrary initial state
 (nonzero velocity).
 -/
+
+@[expose] public section
 
 noncomputable section
 

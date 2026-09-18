@@ -3,11 +3,13 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
-import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
-import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
+module
+
 import LeanPool.InfinitaryLogic.Descriptive.CodeTransport
-import Mathlib.GroupTheory.Perm.Basic
+
+public import LeanPool.InfinitaryLogic.Descriptive.SatisfactionBorelOn
+public import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
+public import LeanPool.InfinitaryLogic.Descriptive.CountingDichotomy
 /-!
 # Finite-Carrier Counting via Permutation Orbits
 
@@ -28,6 +30,8 @@ gives a counting dichotomy for all countable models.
 - `counting_fin_models_dichotomy`: Per-tier counting dichotomy.
 - `allCodedIsoClasses_dichotomy`: Combined counting dichotomy for all countable models.
 -/
+
+@[expose] public section
 
 universe u v
 
@@ -97,7 +101,7 @@ structures they decode on `Fin n` are `L`-isomorphic.  Stated on all of
 This mirrors `structureIsoSetoid` at the `ℕ` tier, and for the same reason: perfectness of a set
 of codes must be a property of the ambient space, not of whichever refinement was chosen to make
 one model class Polish. -/
-private def structureIsoSetoidOn (L : Language.{u, v}) [L.IsRelational] (n : ℕ) :
+def structureIsoSetoidOn (L : Language.{u, v}) [L.IsRelational] (n : ℕ) :
     Setoid (StructureSpaceOn L (Fin n)) where
   r c₁ c₂ := Nonempty (@Language.Equiv L (Fin n) (Fin n)
     (StructureSpaceOn.toStructure c₁) (StructureSpaceOn.toStructure c₂))

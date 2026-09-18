@@ -3,14 +3,18 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Foundations
+public import LeanPool.MetricCodes.Foundations
+import all Mathlib.Analysis.SpecialFunctions.BinaryEntropy
 
 /-!
 # Binary-code asymptotics
 
 Asymptotic Johnson-scheme estimates and the binary-code variational bound.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -934,13 +938,16 @@ section
 
 open scoped BigOperators InnerProductSpace Matrix
 
-private def complementNegEquiv {n w : ℕ} (x : JohnsonSphere n w) :
+/-- The identification of complement coordinates with coordinates outside the binary word's
+support. -/
+def complementNegEquiv {n w : ℕ} (x : JohnsonSphere n w) :
     ComplementCoordinates x ≃
       {i : Fin n // i ∉ MetricCodes.wordSupport (x : BinaryWord n)} :=
   Equiv.subtypeEquivRight (fun i => by simp only [Finset.mem_sdiff, Finset.mem_univ,
                                          mem_wordSupport, Bool.not_eq_true, true_and])
 
-private def coordinateSumEquiv {n w : ℕ} (x : JohnsonSphere n w) :
+/-- The partition of all word coordinates into support and complement coordinates. -/
+def coordinateSumEquiv {n w : ℕ} (x : JohnsonSphere n w) :
     SupportCoordinates x ⊕ ComplementCoordinates x ≃ Fin n :=
   (Equiv.sumCongr (Equiv.refl (SupportCoordinates x))
     (complementNegEquiv x)).trans
@@ -961,7 +968,8 @@ private def coordinateSumEquiv {n w : ℕ} (x : JohnsonSphere n w) :
   simpa only [hi] using
     (coordinateSumEquiv x).symm_apply_apply (Sum.inr i)
 
-private def coordinateSplitEquiv {n w : ℕ} (x : JohnsonSphere n w) :
+/-- The equivalence splitting a finite coordinate set into its support and complement parts. -/
+def coordinateSplitEquiv {n w : ℕ} (x : JohnsonSphere n w) :
     Finset (Fin n) ≃
       Finset (SupportCoordinates x) ×
         Finset (ComplementCoordinates x) :=
@@ -1021,7 +1029,8 @@ theorem coordinateSplitEquiv_insert_complement {n w : ℕ}
     simp only [Equiv.finsetCongr_apply, Finset.map_insert, Function.Embedding.coeFn_mk,
       coordinateSumEquiv_symm_complement, Finset.toRight_insert_inr]
 
-private def supportRaisedFunction {n w p : ℕ}
+/-- A raised Boolean harmonic basis function transported to the support coordinates of `x`. -/
+def supportRaisedFunction {n w p : ℕ}
     (x : JohnsonSphere n w) (hp : 2 * p ≤ w)
     (a : Fin (MetricCodes.hammingFibreDimension w p)) (r : ℕ) :
     Finset (SupportCoordinates x) → ℝ :=
@@ -1030,7 +1039,8 @@ private def supportRaisedFunction {n w p : ℕ}
       (MetricCodes.Boolean.harmonicBasisFunction w p hp a)
       ((supportCoordinateEquiv x).finsetCongr S)
 
-private def complementRaisedFunction {n w q : ℕ}
+/-- A raised Boolean harmonic basis function transported to the complement coordinates of `x`. -/
+def complementRaisedFunction {n w q : ℕ}
     (x : JohnsonSphere n w) (hq : 2 * q ≤ n - w)
     (a : Fin (MetricCodes.hammingFibreDimension (n - w) q)) (r : ℕ) :
     Finset (ComplementCoordinates x) → ℝ :=
@@ -1154,7 +1164,8 @@ theorem supportRaisedFunction_cross_orthogonal {n w p : ℕ}
   · rw [supportRaisedFunction_eq_zero_of_card_ne x hp a r S hS,
       zero_mul]
 
-private def splitTensor {n w p q : ℕ}
+/-- The product of raised support and complement harmonics after splitting a coordinate set. -/
+def splitTensor {n w p q : ℕ}
     (x : JohnsonSphere n w)
     (hp : 2 * p ≤ w) (hq : 2 * q ≤ n - w)
     (a : HarmonicFibreIndex n w p q) (r s : ℕ) :
@@ -1257,7 +1268,8 @@ theorem splitTensor_cross_orthogonal {n w p q : ℕ}
     supportRaisedFunction_cross_orthogonal
       x hp a.1 b.1 r r' hrr', zero_mul]
 
-private def clebschCoefficient (w N p q t : ℕ) : ℕ → ℝ
+/-- The recursively defined Clebsch coupling coefficients, normalized to start at one. -/
+def clebschCoefficient (w N p q t : ℕ) : ℕ → ℝ
   | 0 => 1
   | r + 1 =>
       -clebschCoefficient w N p q t r *
@@ -1282,7 +1294,8 @@ theorem clebschCoefficient_succ_mul {w N p q t r : ℕ}
   simp only [clebschCoefficient]
   field_simp [hnonzero]
 
-private def clebschNormSq (w N p q t : ℕ) : ℝ :=
+/-- The sum of squared Clebsch coefficients used to normalize a coupled tensor. -/
+def clebschNormSq (w N p q t : ℕ) : ℝ :=
   ∑ r : Fin (t + 1),
     clebschCoefficient w N p q t r.val ^ 2
 
@@ -1298,7 +1311,8 @@ theorem clebschNormSq_pos (w N p q t : ℕ) :
     change 0 < clebschCoefficient w N p q t 0 ^ 2
     norm_num [clebschCoefficient]
 
-private def coupledTensor {n w p q : ℕ}
+/-- The sum of split harmonic tensors weighted by Clebsch coupling coefficients. -/
+def coupledTensor {n w p q : ℕ}
     (x : JohnsonSphere n w)
     (hp : 2 * p ≤ w) (hq : 2 * q ≤ n - w)
     (a : HarmonicFibreIndex n w p q) (t : ℕ) :
@@ -1532,7 +1546,8 @@ theorem coupledHarmonic_dot {n w p q t : ℕ}
   change (i : Fin n) ∈ S ↔ (i : Fin n) ∈ S
   rfl
 
-private def coordinateLower {α : Type*} [Fintype α] [DecidableEq α]
+/-- The Boolean lowering operator, summing over all one-element extensions of a coordinate set. -/
+def coordinateLower {α : Type*} [Fintype α] [DecidableEq α]
     (f : Finset α → ℝ) (S : Finset α) : ℝ :=
   ∑ i : α, if i ∈ S then 0 else f (insert i S)
 
@@ -2263,7 +2278,8 @@ def johnsonProjectionFamily {n w p q L : ℕ}
       johnsonFibreMatrix_transpose_mul h v hv x]
     simp only [Matrix.trace_one, Fintype.card_fin]
 
-private def johnsonHarmonicGap (n j : ℕ) : ℝ :=
+/-- The harmonic gap `n - 2 * j` controlling the Johnson channel normalizations. -/
+def johnsonHarmonicGap (n j : ℕ) : ℝ :=
   (n : ℝ) - 2 * (j : ℝ)
 
 theorem johnsonHarmonicGap_pos {n j : ℕ}
@@ -2274,12 +2290,14 @@ theorem johnsonHarmonicGap_pos {n j : ℕ}
   unfold johnsonHarmonicGap
   linarith
 
-private def johnsonMiddleScale (n j : ℕ) : ℝ :=
+/-- The squared norm factor used to normalize the middle Johnson channel. -/
+def johnsonMiddleScale (n j : ℕ) : ℝ :=
   (j : ℝ) * johnsonHarmonicGap n j *
       ((n : ℝ) - (j : ℝ) + 1) /
     ((n : ℝ) * (johnsonHarmonicGap n j + 2))
 
-private def johnsonUpperScale (n j : ℕ) : ℝ :=
+/-- The squared norm factor used to normalize the upper Johnson channel. -/
+def johnsonUpperScale (n j : ℕ) : ℝ :=
   (johnsonHarmonicGap n j - 1) *
       ((n : ℝ) - (j : ℝ) + 1) /
     (johnsonHarmonicGap n j + 1)
@@ -2415,7 +2433,9 @@ theorem johnsonBooleanLower_sub {n : ℕ}
         MetricCodes.Boolean.lowerLinear n g
   exact map_sub (MetricCodes.Boolean.lowerLinear n) f g
 
-private def johnsonMiddleRaw {n : ℕ} (j : ℕ)
+/-- The unnormalized middle Johnson channel at coordinate `a`, with lower-degree components
+removed. -/
+def johnsonMiddleRaw {n : ℕ} (j : ℕ)
     (a : Fin n) (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.Function n :=
   MetricCodes.Boolean.raiseAt a (MetricCodes.Boolean.lowerAt a f) -
@@ -2492,7 +2512,8 @@ theorem johnsonMiddleRaw_isHarmonic {n j : ℕ}
         smul_eq_mul, Pi.zero_apply, mul_zero, sub_zero]
       field_simp [hden]; simp only [sub_self, mul_zero]
 
-private def johnsonUpperRaw {n : ℕ} (j : ℕ)
+/-- The unnormalized upper Johnson channel obtained by correcting coordinate raising terms. -/
+def johnsonUpperRaw {n : ℕ} (j : ℕ)
     (a : Fin n) (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.Function n :=
   MetricCodes.Boolean.raiseAt a f -
@@ -3065,7 +3086,9 @@ theorem johnsonMiddleRaw_coordinateDot {n j : ℕ}
           unfold johnsonHarmonicGap
           ring
 
-private def johnsonMiddleChannel {n : ℕ} (j : ℕ)
+/-- The coordinate family of middle Johnson channels normalized by the square root of its norm
+factor. -/
+def johnsonMiddleChannel {n : ℕ} (j : ℕ)
     (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.CoordinateFunction n :=
   fun a =>
@@ -3432,7 +3455,9 @@ theorem johnsonUpperRaw_coordinateDot {n j : ℕ}
           unfold johnsonHarmonicGap
           ring
 
-private def johnsonUpperChannel {n : ℕ} (j : ℕ)
+/-- The coordinate family of upper Johnson channels normalized by the square root of its norm
+factor. -/
+def johnsonUpperChannel {n : ℕ} (j : ℕ)
     (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.CoordinateFunction n :=
   fun a =>
@@ -3501,7 +3526,8 @@ theorem johnsonUpperChannel_isometry {n j : ℕ}
     _ = MetricCodes.Boolean.dot f g := by
           rw [hscalar, one_mul]
 
-private def johnsonLowerChannel {n : ℕ} (j : ℕ)
+/-- The lower Johnson channel, given by the normalized Boolean deletion channel. -/
+def johnsonLowerChannel {n : ℕ} (j : ℕ)
     (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.CoordinateFunction n :=
   MetricCodes.Boolean.deleteChannel j f
@@ -3859,7 +3885,8 @@ theorem johnsonUpperChannel_isHarmonic {n j : ℕ}
     (johnsonUpperRaw_isHarmonic f hf hhalf a)
     (Real.sqrt (johnsonUpperScale n j))⁻¹
 
-private def johnsonDiagonalChannelSign
+/-- The sign of the Johnson diagonal coefficient, taking value one when the coefficient is zero. -/
+def johnsonDiagonalChannelSign
     (n w p q j : ℕ) : ℝ :=
   if 0 ≤ MetricCodes.johnsonDiagonal n w p q j then 1 else -1
 
@@ -4256,19 +4283,23 @@ def johnsonAxisTensor {n w : ℕ}
     MetricCodes.Boolean.CoordinateFunction n :=
   fun a => (geometricAxis x a) • f
 
-private def johnsonAxisRaise {n w : ℕ}
+/-- The sum of coordinate-raising operators weighted by the geometric axis of `x`. -/
+def johnsonAxisRaise {n w : ℕ}
     (x : JohnsonSphere n w) (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.Function n :=
   fun S => ∑ a : Fin n,
     geometricAxis x a * MetricCodes.Boolean.raiseAt a f S
 
-private def johnsonAxisLower {n w : ℕ}
+/-- The sum of coordinate-lowering operators weighted by the geometric axis of `x`. -/
+def johnsonAxisLower {n w : ℕ}
     (x : JohnsonSphere n w) (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.Function n :=
   fun S => ∑ a : Fin n,
     geometricAxis x a * MetricCodes.Boolean.lowerAt a f S
 
-private def johnsonAxisMembership {n w : ℕ}
+/-- The geometric-axis-weighted coordinate membership operator, expressed by raising after
+lowering. -/
+def johnsonAxisMembership {n w : ℕ}
     (x : JohnsonSphere n w) (f : MetricCodes.Boolean.Function n) :
     MetricCodes.Boolean.Function n :=
   fun S => ∑ a : Fin n,
@@ -4774,7 +4805,9 @@ theorem coordinateSplitEquiv_erase_complement {n w : ℕ}
       coordinateSumEquiv_symm_complement, Finset.mem_toRight, Finset.mem_erase, ne_eq,
       Sum.inr.injEq, Finset.mem_map_equiv, Equiv.symm_symm]
 
-private def coordinateRaise {α : Type*} [Fintype α] [DecidableEq α]
+/-- The Boolean raising operator, summing the function over one-element deletions of a
+coordinate set. -/
+def coordinateRaise {α : Type*} [Fintype α] [DecidableEq α]
     (f : Finset α → ℝ) (S : Finset α) : ℝ :=
   ∑ i : α, if i ∈ S then f (S.erase i) else 0
 
@@ -5127,13 +5160,15 @@ theorem sum_coordinateIndicator_mul_function {n w : ℕ}
         (MetricCodes.wordSupport (x : BinaryWord n))
         (fun i => Iff.rfl) F
 
-private def johnsonSupportRaise {n w : ℕ}
+/-- The sum of Boolean raising operators over coordinates in the support of `x`. -/
+def johnsonSupportRaise {n w : ℕ}
     (x : JohnsonSphere n w)
     (f : MetricCodes.Boolean.Function n) : MetricCodes.Boolean.Function n :=
   fun S => ∑ i : SupportCoordinates x,
     MetricCodes.Boolean.raiseAt (i : Fin n) f S
 
-private def johnsonSupportLower {n w : ℕ}
+/-- The sum of Boolean lowering operators over coordinates in the support of `x`. -/
+def johnsonSupportLower {n w : ℕ}
     (x : JohnsonSphere n w)
     (f : MetricCodes.Boolean.Function n) : MetricCodes.Boolean.Function n :=
   fun S => ∑ i : SupportCoordinates x,
@@ -5814,11 +5849,13 @@ theorem clebschCoefficient_sq_succ_mul
         rw [mul_pow, Real.sq_sqrt hsecond]
         ring
 
-private def clebschFirstMoment (w N p q t : ℕ) : ℝ :=
+/-- The unnormalized first moment of the degree index weighted by squared Clebsch coefficients. -/
+def clebschFirstMoment (w N p q t : ℕ) : ℝ :=
   ∑ r : Fin (t + 1),
     (r.val : ℝ) * clebschCoefficient w N p q t r.val ^ 2
 
-private def clebschSecondMoment (w N p q t : ℕ) : ℝ :=
+/-- The unnormalized second moment of the degree index weighted by squared Clebsch coefficients. -/
+def clebschSecondMoment (w N p q t : ℕ) : ℝ :=
   ∑ r : Fin (t + 1),
     (r.val : ℝ) ^ 2 * clebschCoefficient w N p q t r.val ^ 2
 
@@ -7862,7 +7899,8 @@ theorem johnsonSourceChannelCoefficient_sq
   rw [Real.sq_sqrt hsource, Real.sq_sqrt htarget]
   ring
 
-private def johnsonAdjacentRawScalar
+/-- The scalar coupling adjacent Clebsch degrees before Johnson channel normalization. -/
+def johnsonAdjacentRawScalar
     (n w p q t : ℕ) : ℝ :=
   Real.sqrt ((n : ℝ) /
       ((w : ℝ) * ((n - w : ℕ) : ℝ))) *
@@ -7871,12 +7909,14 @@ private def johnsonAdjacentRawScalar
     (Real.sqrt (clebschNormSq w (n - w) p q t) /
       Real.sqrt (clebschNormSq w (n - w) p q (t + 1)))
 
-private def johnsonLowerOffDiagonalScalar
+/-- The adjacent-degree coupling scalar normalized for the lower Johnson channel. -/
+def johnsonLowerOffDiagonalScalar
     (n w p q t : ℕ) : ℝ :=
   (Real.sqrt (((p + q + (t + 1) : ℕ) : ℝ)))⁻¹ *
     johnsonAdjacentRawScalar n w p q t
 
-private def johnsonUpperOffDiagonalScalar
+/-- The adjacent-degree coupling scalar normalized for the upper Johnson channel. -/
+def johnsonUpperOffDiagonalScalar
     (n w p q t : ℕ) : ℝ :=
   (Real.sqrt (johnsonUpperScale n (p + q + t)))⁻¹ *
     johnsonAdjacentRawScalar n w p q t

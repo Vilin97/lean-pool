@@ -3,9 +3,17 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
+public import Aesop.BuiltinRules
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Group.Nat.Defs
 import LeanPool.KasamiCyclicAdditive.Preliminaries.Arithmetic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Frobenius periodicity
@@ -16,6 +24,8 @@ in the prime field `F_2`.
 
 No algebraic closedness is needed: `x^2 = x` already forces `x = 0` or `x = 1` in any field.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 

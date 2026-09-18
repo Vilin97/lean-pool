@@ -7,7 +7,8 @@ Authors: FltRegular contributors
 module
 
 public import Mathlib.NumberTheory.Cyclotomic.Basic
-import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
 
 /-!
 # Ideals in rational cyclotomic fields

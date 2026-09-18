@@ -3,17 +3,16 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.ChartDetector
-import LeanPool.ConnesRigidity.Paper.Section4.ChartOrbits
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalizedHaar
-import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
-import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralCriterion
-import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section3.DualAutomorphism
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 /-!
 Invariant dual-measure transport for Zhou's finite chart detector. Paper: §4.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperChartMeasure

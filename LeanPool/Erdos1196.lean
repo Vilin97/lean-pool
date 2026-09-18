@@ -3,14 +3,17 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
+module
 
-import LeanPool.Erdos1196.Basic
-import LeanPool.Erdos1196.Preliminaries
-import LeanPool.Erdos1196.Markov
-import LeanPool.Erdos1196.PrimitiveWeight
-import LeanPool.Erdos1196.HitMass
-import LeanPool.Erdos1196.Main
-import LeanPool.Erdos1196.FormalConjecturesErdos1196
+public import LeanPool.Erdos1196.Basic
+public import LeanPool.Erdos1196.Preliminaries
+public import LeanPool.Erdos1196.Markov
+public import LeanPool.Erdos1196.PrimitiveWeight
+public import LeanPool.Erdos1196.HitMass
+public import LeanPool.Erdos1196.Main
+public import LeanPool.Erdos1196.FormalConjecturesErdos1196
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Primitive Sets Above x (Erdos Problem 1196)
@@ -22,6 +25,8 @@ Main declarations: `PrimitiveSetsAboveX.mainTheorem`, `Erdos1196.erdos_1196`
 Tags: number-theory, combinatorics, analysis
 MSC: 11N25, 05D05
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

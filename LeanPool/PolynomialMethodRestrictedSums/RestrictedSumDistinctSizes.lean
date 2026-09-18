@@ -3,10 +3,11 @@ Copyright (c) 2026 Nick Adfor. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nick Adfor
 -/
+module
 
-import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.MvPolynomial.Degrees
+public import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.MvPolynomial.Degrees
 import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
 import Mathlib.Algebra.MvPolynomial.NoZeroDivisors
 import Mathlib.Algebra.Order.Field.Basic
@@ -22,6 +23,8 @@ The Alon-Nathanson-Ruzsa lower bound `restricted_sum_distinct_sizes` on the
 set of sums `a 0 + ... + a k` with `a i ∈ A i` pairwise distinct, when the
 sets `A i` have distinct sizes.
 -/
+
+@[expose] public section
 
 open MvPolynomial
 open AddMonoidAlgebra (coeff)

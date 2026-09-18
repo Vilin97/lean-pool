@@ -17,18 +17,16 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   - `circleNormSq`
   - `polar_coord_fock`
 -/
-import Mathlib.Analysis.Fourier.AddCircle
-import Mathlib.Analysis.SpecialFunctions.PolarCoord
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.MeasureTheory.Integral.Gamma
+module
+
+public import Mathlib.Analysis.Fourier.AddCircle
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Gamma
 
 /-! # Definitions -/
+
+@[expose] public section
 
 
 open MeasureTheory Complex Real Finset

@@ -3,17 +3,17 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Opposites
-import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Data.Opposite
-import Mathlib.Algebra.Algebra.Equiv
-import Mathlib.Algebra.Algebra.Opposite
+module
+
+public import Mathlib.Algebra.Algebra.Opposite
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.LinearMapOp
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.LinearMapOp`.
 -/
+
+@[expose] public section
 
 /-- Push a semilinear map between modules through the multiplicative opposite. -/
 @[simps]

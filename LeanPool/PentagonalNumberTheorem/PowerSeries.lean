@@ -3,11 +3,12 @@ Copyright (c) 2026 Weiyi Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Weiyi Wang
 -/
+module
 
-import LeanPool.PentagonalNumberTheorem.Generic
-import Mathlib.RingTheory.PowerSeries.Basic
-import Mathlib.RingTheory.PowerSeries.Order
-import Mathlib.RingTheory.PowerSeries.PiTopology
+public import LeanPool.PentagonalNumberTheorem.Generic
+public import Mathlib.RingTheory.PowerSeries.PiTopology
+public import Mathlib.Algebra.Ring.NegOnePow
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 
@@ -19,6 +20,8 @@ for power series.
 
 
 -/
+
+@[expose] public section
 
 open PowerSeries Filter
 open scoped PowerSeries.WithPiTopology

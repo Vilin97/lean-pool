@@ -3,10 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
+module
+
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Regular.RegularSequence
+public import Mathlib.RingTheory.AdicCompletion.Algebra
 import Mathlib.RingTheory.AdicCompletion.RingHom
-import Mathlib.RingTheory.Ideal.Height
-import Mathlib.RingTheory.Regular.RegularSequence
 
 /-!
 # Heitmann's Proposition 1
@@ -18,6 +20,8 @@ depth T >= 2, associated primes of T have height at most 1.
 
 Heitmann, "Characterization of completions of UFDs", 1993, Prop. 1.
 -/
+
+@[expose] public section
 
 universe u
 
@@ -50,7 +54,9 @@ private lemma map_maxIdeal_le_of_closed
   have htop : Ideal.map R.subtype (Ideal.span ({r} : Set ↥R)) = ⊤ :=
     Ideal.eq_top_of_isUnit_mem _ hr_map hnotM
   have h1 : (1 : ↥R) ∈ Ideal.span ({r} : Set ↥R) := by
-    simp_all
+    apply h_closed _ hI_fg
+    rw [htop]
+    exact Submodule.mem_top
   have h_le : Ideal.span ({r} : Set ↥R) ≤ IsLocalRing.maximalIdeal ↥R :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hr)
   rw [(Ideal.eq_top_iff_one _).mpr h1] at h_le
@@ -117,51 +123,33 @@ private lemma heitmann_prop1_isNoetherian
     (h_closed : ∀ (I : Ideal R), I.FG →
       ∀ (c : R), (c : T) ∈ Ideal.map R.subtype I → c ∈ I) :
     IsNoetherianRing R := by
+  classical
   rw [isNoetherianRing_iff_ideal_fg]
   intro I
-  have hIT_fg : (Ideal.map R.subtype I).FG := IsNoetherian.noetherian _
-  have hIT_eq : Ideal.map R.subtype I = Ideal.span (R.subtype '' (I : Set R)) := rfl
-  rw [hIT_eq] at hIT_fg
-  obtain ⟨s', hs'_sub, hs'_span⟩ :=
-    (Submodule.fg_span_iff_fg_span_finset_subset (R.subtype '' (I : Set R))).mp hIT_fg
-  classical
-  have h_preimage : ∀ t ∈ (s' : Set T), ∃ (r : R), r ∈ I ∧ R.subtype r = t := by
-    intro t ht
-    exact hs'_sub ht
-  let f : (t : T) → t ∈ (s' : Set T) → R := fun t ht => (h_preimage t ht).choose
-  have hf_mem : ∀ t (ht : t ∈ (s' : Set T)), f t ht ∈ I :=
-    fun t ht => (h_preimage t ht).choose_spec.1
-  have hf_eq : ∀ t (ht : t ∈ (s' : Set T)), R.subtype (f t ht) = t :=
-    fun t ht => (h_preimage t ht).choose_spec.2
-  set gen_set : Finset R :=
-    s'.attach.image (fun ⟨t, ht⟩ => f t (Finset.mem_coe.mpr ht))
-  have hgen_sub : (gen_set : Set R) ⊆ (I : Set R) := by
+  obtain ⟨generators, hsubset, hspan⟩ :=
+    (Submodule.fg_span_iff_fg_span_finset_subset (R.subtype '' (I : Set R))).mp
+      (show (Ideal.span (R.subtype '' (I : Set R))).FG from IsNoetherian.noetherian _)
+  let preimages : Finset R := generators.preimage R.subtype R.subtype_injective.injOn
+  have hpreimages : (preimages : Set R) = R.subtype ⁻¹' (generators : Set T) :=
+    Finset.coe_preimage _ _
+  have hpreimages_subset : (preimages : Set R) ⊆ (I : Set R) := by
     intro r hr
-    rw [Finset.mem_coe, Finset.mem_image] at hr
-    obtain ⟨⟨t, ht⟩, _, rfl⟩ := hr
-    exact hf_mem t (Finset.mem_coe.mpr ht)
-  have hJ_fg : (Ideal.span (gen_set : Set R)).FG := ⟨gen_set, rfl⟩
-  have hJT_eq : Ideal.map R.subtype (Ideal.span (gen_set : Set R)) =
+    obtain ⟨r', hr', heq⟩ := hsubset (show R.subtype r ∈ (generators : Set T) from
+      Finset.mem_preimage.mp hr)
+    exact R.subtype_injective heq ▸ hr'
+  have himage : R.subtype '' (preimages : Set R) = (generators : Set T) := by
+    rw [hpreimages]
+    apply Set.image_preimage_eq_of_subset
+    rintro t ht
+    obtain ⟨r, _, rfl⟩ := hsubset ht
+    exact ⟨r, rfl⟩
+  have hmap : Ideal.map R.subtype (Ideal.span (preimages : Set R)) =
       Ideal.map R.subtype I := by
-    apply le_antisymm
-    · rw [Ideal.map_span]
-      apply Ideal.span_le.mpr
-      intro t ht
-      obtain ⟨r, hr, rfl⟩ := ht
-      rw [hIT_eq]
-      exact Ideal.subset_span ⟨r, hgen_sub hr, rfl⟩
-    · rw [hIT_eq, Ideal.map_span]
-      rw [show (Ideal.span (R.subtype '' (I : Set R)) : Ideal T) =
-        Ideal.span (↑s' : Set T) from by exact_mod_cast hs'_span]
-      apply Ideal.span_le.mpr
-      intro t ht
-      have ht' : t ∈ s' := Finset.mem_coe.mp ht
-      apply Ideal.subset_span
-      exact ⟨f t (Finset.mem_coe.mpr ht'),
-        Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨⟨t, ht'⟩, Finset.mem_attach _ _, rfl⟩),
-        hf_eq t (Finset.mem_coe.mpr ht')⟩
-  exact ⟨gen_set, le_antisymm (Ideal.span_le.mpr hgen_sub) (fun c hc =>
-    h_closed _ hJ_fg c (hJT_eq ▸ Ideal.mem_map_of_mem R.subtype hc))⟩
+    rw [Ideal.map_span, himage]
+    exact hspan.symm
+  refine ⟨preimages, le_antisymm (Ideal.span_le.mpr hpreimages_subset) ?_⟩
+  intro c hc
+  exact h_closed _ ⟨preimages, rfl⟩ c (hmap ▸ Ideal.mem_map_of_mem R.subtype hc)
 
 omit [IsDomain T] in
 /-- Under the hypotheses of Proposition 1, `R → T/Mⁿ` is surjective for every `n`,
@@ -188,8 +176,7 @@ private lemma heitmann_prop1_surj_pow
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective q
     exact ⟨0, by
       change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ y
-      rw [Ideal.Quotient.eq, show IsLocalRing.maximalIdeal T ^ 0 = ⊤ from by
-        simp_all]
+      rw [Ideal.Quotient.eq, pow_zero, Ideal.one_eq_top]
       exact Submodule.mem_top⟩
   | succ n _ih =>
     set M := IsLocalRing.maximalIdeal T
@@ -456,42 +443,22 @@ theorem maximal_not_assoc_of_depth_ge_two
   obtain ⟨_, x, hx_ann⟩ := hM_assoc
   have hx_ne : x ≠ 0 := by
     intro hx0
-    rw [hx0] at hx_ann
-    have : IsLocalRing.maximalIdeal T = ⊤ := by
-      simp_all
-    exact (IsLocalRing.maximalIdeal.isMaximal T).ne_top this
+    rw [hx0, Submodule.colon_singleton_zero] at hx_ann
+    exact (IsLocalRing.maximalIdeal.isMaximal T).ne_top hx_ann
   obtain ⟨x_lift, rfl⟩ := Ideal.Quotient.mk_surjective x
   have hx_not_mem : x_lift ∉ Ideal.span ({r} : Set T) := by
     intro h
     apply hx_ne
     exact (Ideal.Quotient.eq_zero_iff_mem).mpr h
-  have ha_in_ann : a ∈ (⊥ : Submodule T (T ⧸ Ideal.span {r})).colon
-      {Ideal.Quotient.mk (Ideal.span {r}) x_lift} := by
-    simp_all
-  have ha_mul : a * x_lift ∈ Ideal.span ({r} : Set T) := by
-    rw [Submodule.mem_colon] at ha_in_ann
-    have := ha_in_ann (Ideal.Quotient.mk _ x_lift) (Set.mem_singleton _)
-    rw [Submodule.mem_bot] at this
+  have hmul (s : T) (hs : s ∈ IsLocalRing.maximalIdeal T) :
+      s * x_lift ∈ Ideal.span ({r} : Set T) := by
+    rw [hx_ann, Submodule.mem_colon_singleton, Submodule.mem_bot] at hs
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
-    exact this
-  have hb_in_ann : b ∈ (⊥ : Submodule T (T ⧸ Ideal.span {r})).colon
-      {Ideal.Quotient.mk (Ideal.span {r}) x_lift} := by
-    simp_all
-  have hb_mul : b * x_lift ∈ Ideal.span ({r} : Set T) := by
-    rw [Submodule.mem_colon] at hb_in_ann
-    have := hb_in_ann (Ideal.Quotient.mk _ x_lift) (Set.mem_singleton _)
-    rw [Submodule.mem_bot] at this
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_mul]
-    exact this
-  rw [Ideal.mem_span_singleton] at ha_mul hb_mul
-  obtain ⟨y₁, hy₁⟩ := ha_mul
-  obtain ⟨y₂, hy₂⟩ := hb_mul
+    exact hs
+  obtain ⟨y₁, hy₁⟩ := Ideal.mem_span_singleton.mp (hmul a ha_mem)
+  obtain ⟨y₂, hy₂⟩ := Ideal.mem_span_singleton.mp (hmul b hb_mem)
   have h_eq : r * (b * y₁) = r * (a * y₂) := by
-    have h1 : b * (a * x_lift) = a * (b * x_lift) := by ring
-    rw [hy₁, hy₂] at h1
-    calc r * (b * y₁) = b * (r * y₁) := by ring
-    _ = a * (r * y₂) := h1
-    _ = r * (a * y₂) := by ring
+    rw [mul_left_comm r b, ← hy₁, mul_left_comm b a, hy₂, mul_left_comm a r]
   -- Cancel r (domain), then use b regular on T/aT to get y₁ ∈ aT
   have h_cancel : b * y₁ = a * y₂ := mul_left_cancel₀ hr h_eq
   have hby₁_mem : b * y₁ ∈ Ideal.span ({a} : Set T) :=
@@ -499,29 +466,16 @@ theorem maximal_not_assoc_of_depth_ge_two
   open Pointwise in
   have hy₁_in_aT : y₁ ∈ Ideal.span ({a} : Set T) := by
     have h_eq : (Ideal.span ({a} : Set T) : Submodule T T) = (a • ⊤ : Submodule T T) := by
-      ext x
-      constructor
-      · intro hx
-        rw [Ideal.mem_span_singleton] at hx
-        obtain ⟨c, rfl⟩ := hx
-        exact Submodule.smul_mem_pointwise_smul c a ⊤ Submodule.mem_top
-      · intro hx
-        have : x ∈ (a • (⊤ : Set T) : Set T) := SetLike.mem_coe.mpr hx
-        rw [Set.mem_smul_set] at this
-        obtain ⟨c, _, rfl⟩ := this
-        exact Ideal.mem_span_singleton.mpr ⟨c, by rw [smul_eq_mul]⟩
+      rw [← Submodule.set_smul_top_eq_span, Submodule.singleton_set_smul]
     have hby₁_smul : b * y₁ ∈ (a • ⊤ : Submodule T T) := h_eq ▸ hby₁_mem
     have hy₁_smul : y₁ ∈ (a • ⊤ : Submodule T T) :=
       mem_of_isSMulRegular_quotient_of_smul_mem hb_reg_mod_a (by rwa [smul_eq_mul])
-    simp_all
+    rwa [h_eq]
   rw [Ideal.mem_span_singleton] at hy₁_in_aT
   obtain ⟨z, hz⟩ := hy₁_in_aT
   -- Cancel a (regular on T): x_lift = r * z, contradicting x ≠ 0
-  have h_ax : a * x_lift = a * (r * z) := by rw [hy₁, hz]
-                                             ring
-  have h_x_eq : x_lift = r * z := by
-    have := ha_reg (show a • x_lift = a • (r * z) by rwa [smul_eq_mul, smul_eq_mul])
-    exact this
+  have h_ax : a * x_lift = a * (r * z) := by rw [hy₁, hz, mul_left_comm]
+  have h_x_eq : x_lift = r * z := ha_reg h_ax
   exact hx_not_mem (Ideal.mem_span_singleton.mpr ⟨z, h_x_eq⟩)
 
 /-- In a Noetherian local domain with depth ≥ 2, if all primes P ≠ M have height ≤ 1,

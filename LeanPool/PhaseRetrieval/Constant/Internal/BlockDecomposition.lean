@@ -22,9 +22,15 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   - `freq_support_localPoly`   (Theorem 5.5)
   - `monomial_peak_localization` (Theorem 5.6)
 -/
-import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.Definitions
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # BlockDecomposition -/
+
+@[expose] public section
 
 
 open Finset Nat Real MeasureTheory

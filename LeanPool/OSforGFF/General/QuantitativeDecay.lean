@@ -3,16 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import LeanPool.OSforGFF.General.SchwartzTranslationDecay
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
-import Mathlib.Topology.MetricSpace.Bounded
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Measure.Haar.Unique
 import Mathlib.Probability.Moments.IntegrableExpMul
-import LeanPool.OSforGFF.General.SchwartzTranslationDecay
 
 /-!
 # Quantitative Decay for Schwartz Bilinear Forms
@@ -43,6 +40,8 @@ for any α > 0.
 - Reed-Simon Vol. II, Ch. X (decay of correlations)
 - Glimm-Jaffe "Quantum Physics" Sec. 6.2 (clustering bounds)
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex SchwartzMap Filter Set Function Metric
 open scoped Real Topology
@@ -427,7 +426,8 @@ def convolutionPolynomialDecay
     (hv_decay : PolynomialDecayBound v N)
     (hu_int : Integrable u) (hv_int : Integrable v) :
     PolynomialDecayBound (fun x => ∫ y, u y * v (x - y)) N :=
-  (convolution_polynomial_decay_exists hN_dim hu_decay hv_decay hu_int hv_int).choose
+  (private_decl%
+    (convolution_polynomial_decay_exists hN_dim hu_decay hv_decay hu_int hv_int)).choose
 
 /-! ## Phase 4: Kernel Decomposition Bounds -/
 
@@ -600,7 +600,7 @@ def convolutionCompactSupportDecay (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀
     (hR₀ : R₀ > 0) (hK_loc : LocallyIntegrable K volume)
     (N : ℕ) (_hN : N > 0) :
     PolynomialDecayBound (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)) (N : ℝ) :=
-  (convolution_compactSupport_decay_exists f K R₀ hR₀ hK_loc N _hN).choose
+  (private_decl% (convolution_compactSupport_decay_exists f K R₀ hR₀ hK_loc N _hN)).choose
 
 /-- The convolution of a Schwartz function with the tail part of the kernel
     (exponentially decaying) has polynomial decay at any rate.
@@ -722,8 +722,8 @@ def convolutionExpDecayPolynomialDecay (f : SchwartzMap E ℂ) (K : E → ℝ)
     (hK_bdd : ∃ M : ℝ, ∀ z : E, |kernelTail K R₀ z| ≤ M)
     (N : ℝ) (hN_dim : N > Module.finrank ℝ E) (hN : N > 0) :
     PolynomialDecayBound (fun y => ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ)) N :=
-  (convolution_expDecay_polynomial_decay_exists f K R₀ m C_K hR₀ hm hC_K hK_loc
-    hK_decay hK_bdd N hN_dim hN).choose
+  (private_decl% (convolution_expDecay_polynomial_decay_exists f K R₀ m C_K hR₀ hm hC_K hK_loc
+    hK_decay hK_bdd N hN_dim hN)).choose
 
 /-! ## Phase 5: Main Theorem Assembly -/
 

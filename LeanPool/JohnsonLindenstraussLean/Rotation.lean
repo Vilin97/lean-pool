@@ -3,8 +3,13 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
+module
+
+public import LeanPool.JohnsonLindenstraussLean.Projection
+public import LeanPool.JohnsonLindenstraussLean.ChiSquared
 import LeanPool.JohnsonLindenstraussLean.NormPreservation
-import LeanPool.JohnsonLindenstraussLean.Projection
+import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
+import Mathlib.Probability.Distributions.Gaussian.Multivariate
 
 /-!
 # Gaussian rotation invariance: the projection ↔ chi-squared link
@@ -29,6 +34,8 @@ Combining this with the deterministic identity `‖jlMap A x‖² = (1/k)·∑�
 (`jlMap_sq_norm`) transports `jl_norm_preservation` to a genuine concentration bound on
 the projected squared norm `∑ᵢ (jlMap A w i)²` of any fixed `w ≠ 0` (`jlMap_concentration`).
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Real
 

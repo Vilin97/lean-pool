@@ -3,11 +3,15 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import LeanPool.Computability.Oracle
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.NormNum
-import Aesop
-import Mathlib.Computability.Halting
+module
+
+public import LeanPool.Computability.Oracle
+public meta import Mathlib.Tactic.ToAdditive
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Turing Reducibility and Turing Degrees
@@ -43,6 +47,8 @@ Turing reducibility. This gives a concrete representation of degrees as equivale
 
 Computability, Turing Degrees, Reducibility, Equivalence Relation
 -/
+
+@[expose] public section
 
 
 namespace Computability
@@ -126,10 +132,13 @@ Turing degrees are the equivalence classes of partial functions under Turing equ
 abbrev TuringDegree :=
   Antisymmetrization _ TuringReducible
 
-private instance : Preorder (ℕ →. ℕ) where
+/-- The preorder on partial functions induced by Turing reducibility. -/
+@[instance_reducible] def turingPreorder : Preorder (ℕ →. ℕ) where
   le := TuringReducible
   le_refl := .refl
   le_trans _ _ _ := TuringReducible.trans
+
+attribute [local instance] turingPreorder
 
 instance TuringDegree.instPartialOrder : PartialOrder TuringDegree :=
   instPartialOrderAntisymmetrization

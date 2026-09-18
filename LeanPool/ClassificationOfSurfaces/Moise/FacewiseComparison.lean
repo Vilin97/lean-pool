@@ -3,7 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFinitePLApproximation
+import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteSidePreservation
+import Mathlib.Analysis.Normed.Affine.AddTorsor
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The per-face comparison map for locally finite side preservation
@@ -34,6 +41,8 @@ Everything is arranged for a realization with shrunken approximation controls
 (`withApproximationControls`), which changes neither the embedded map nor the face separation
 radii; the resulting entry point is `exists_controlled_polygonalReplacement_of_comparison`.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

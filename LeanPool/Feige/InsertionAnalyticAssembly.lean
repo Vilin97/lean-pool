@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.InsertionExpectation
-import LeanPool.Feige.Lemma43Insertion
+module
+
+public import LeanPool.Feige.InsertionExpectation
+public import LeanPool.Feige.Lemma43Insertion
 
 /-!
 # Assembly of the analytic insertion edges
@@ -17,6 +19,8 @@ represented by its one-sided common law, all positivity, monotonicity, and
 transfer hypotheses required by `exists_insertChainPerm_dominates_reveal`
 follow automatically.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

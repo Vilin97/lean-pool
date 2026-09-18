@@ -3,7 +3,16 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
+module
+
+
+public import LeanPool.Lentil.ProofMode.Basic
+public meta import LeanPool.Lentil.ProofMode.Basic
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
 import LeanPool.Lentil.ProofMode.Tactics.Intro
+import LeanPool.Lentil.Rules.Basic
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -11,9 +20,10 @@ open Lean Meta Elab Tactic
 
 -- NOTE: The following approach to restoring binder names is inspired by
 -- `binderNameHint` and `resolveBinderNameHint`
-private def binderNameHintAsString (_n : String) (p : α → β) : α → β := p
+/-- Attach a binder-name hint without changing the underlying function. -/
+def binderNameHintAsString (_n : String) (p : α → β) : α → β := p
 
-private def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do
+private meta def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do
   Core.transform e (post := fun e' => do
     if e'.isAppOfArity' ``binderNameHintAsString 4 then
       let args := e'.getAppArgs'
@@ -63,13 +73,13 @@ theorem Entails_revert_all :
 
 end
 
-private def revertTacDSimps := #[``List.findIdx, ``List.findIdx.go,
+private meta def revertTacDSimps := #[``List.findIdx, ``List.findIdx.go,
   ``List.get?Internal, ``List.eraseIdx, ``String.reduceBEq,
   ``String.reduceBNe, ``Bool.cond_false, ``Bool.cond_true, ``Option.elim]
 
-private def revertAllTacDSimps := #[``repeatedImplies, ``List.map, ``List.foldr]
+private meta def revertAllTacDSimps := #[``repeatedImplies, ``List.map, ``List.foldr]
 
-private def restoreBinderNameInForallCase : TacticM Unit := do
+private meta def restoreBinderNameInForallCase : TacticM Unit := do
   let g ← getMainGoal
   g.withContext do
     let ty ← getMainTarget

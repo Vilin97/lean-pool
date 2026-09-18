@@ -3,41 +3,44 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Init
-import LeanPool.JacobianDiffgeo.Surface
-import LeanPool.JacobianDiffgeo.LocalMultiplicity
-import LeanPool.JacobianDiffgeo.Forms
-import LeanPool.JacobianDiffgeo.MappingDegree
-import LeanPool.JacobianDiffgeo.ProjectiveLine
-import LeanPool.JacobianDiffgeo.ResidueCalculus
-import LeanPool.JacobianDiffgeo.Meromorphic
-import LeanPool.JacobianDiffgeo.Path
-import LeanPool.JacobianDiffgeo.SphereTopology
-import LeanPool.JacobianDiffgeo.MeromorphicTrace
-import LeanPool.JacobianDiffgeo.ProperDegree
-import LeanPool.JacobianDiffgeo.JacobianConstruction
-import LeanPool.JacobianDiffgeo.Cech
-import LeanPool.JacobianDiffgeo.Finiteness
-import LeanPool.JacobianDiffgeo.Dbar
-import LeanPool.JacobianDiffgeo.Monodromy
-import LeanPool.JacobianDiffgeo.FormTrace
-import LeanPool.JacobianDiffgeo.PlanarStokes
-import LeanPool.JacobianDiffgeo.SerrePairing
-import LeanPool.JacobianDiffgeo.AbelWeak
-import LeanPool.JacobianDiffgeo.DolbeaultComparison
-import LeanPool.JacobianDiffgeo.ResidueTheorem
-import LeanPool.JacobianDiffgeo.CanonicalForms
-import LeanPool.JacobianDiffgeo.LaurentTail
-import LeanPool.JacobianDiffgeo.JacFunctorial
-import LeanPool.JacobianDiffgeo.Abel
-import LeanPool.JacobianDiffgeo.TailDuality
-import LeanPool.JacobianDiffgeo.H1Genus
-import LeanPool.JacobianDiffgeo.RiemannRoch
-import LeanPool.JacobianDiffgeo.GenusSphereHeadline
-import LeanPool.JacobianDiffgeo.PeriodLattice
-import LeanPool.JacobianDiffgeo.CechCount
-import LeanPool.JacobianDiffgeo.Challenge
+public import LeanPool.JacobianDiffgeo.Init
+public import LeanPool.JacobianDiffgeo.Surface
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity
+public import LeanPool.JacobianDiffgeo.Forms
+public import LeanPool.JacobianDiffgeo.MappingDegree
+public import LeanPool.JacobianDiffgeo.ProjectiveLine
+public import LeanPool.JacobianDiffgeo.ResidueCalculus
+public import LeanPool.JacobianDiffgeo.Meromorphic
+public import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.SphereTopology
+public import LeanPool.JacobianDiffgeo.MeromorphicTrace
+public import LeanPool.JacobianDiffgeo.ProperDegree
+public import LeanPool.JacobianDiffgeo.JacobianConstruction
+public import LeanPool.JacobianDiffgeo.Cech
+public import LeanPool.JacobianDiffgeo.Finiteness
+public import LeanPool.JacobianDiffgeo.Dbar
+public import LeanPool.JacobianDiffgeo.Monodromy
+public import LeanPool.JacobianDiffgeo.FormTrace
+public import LeanPool.JacobianDiffgeo.PlanarStokes
+public import LeanPool.JacobianDiffgeo.SerrePairing
+public import LeanPool.JacobianDiffgeo.AbelWeak
+public import LeanPool.JacobianDiffgeo.DolbeaultComparison
+public import LeanPool.JacobianDiffgeo.ResidueTheorem
+public import LeanPool.JacobianDiffgeo.CanonicalForms
+public import LeanPool.JacobianDiffgeo.LaurentTail
+public import LeanPool.JacobianDiffgeo.JacFunctorial
+public import LeanPool.JacobianDiffgeo.Abel
+public import LeanPool.JacobianDiffgeo.TailDuality
+public import LeanPool.JacobianDiffgeo.H1Genus
+public import LeanPool.JacobianDiffgeo.RiemannRoch
+public import LeanPool.JacobianDiffgeo.GenusSphereHeadline
+public import LeanPool.JacobianDiffgeo.PeriodLattice
+public import LeanPool.JacobianDiffgeo.CechCount
+public import LeanPool.JacobianDiffgeo.Challenge
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The Jacobian of a Compact Riemann Surface
@@ -49,3 +52,5 @@ Main declarations: `genus_eq_zero_iff_homeo`, `Jacobian.ofCurve_inj`
 Tags: riemann-surfaces, complex-geometry, abel-jacobi, riemann-roch, serre-duality
 MSC: 14H40, 30F30, 32G20
 -/
+
+@[expose] public section

@@ -3,9 +3,13 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
+public import LeanPool.OSforGFF.Covariance.Momentum
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 import LeanPool.OSforGFF.General.FourierTransforms
-import LeanPool.OSforGFF.Covariance.Momentum
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
 
 /-!
 # Parseval Identity for Covariance
@@ -48,6 +52,8 @@ where:
 - Multiple integrability conditions need verification
 - Fubini requires showing the triple integral is absolutely convergent
 -/
+
+@[expose] public section
 
 section ParsevalCovariance
 

@@ -10,11 +10,19 @@ algebraic action layer behind the Fourier model in §§3--4; analytic
 measurability is kept in the companion files.
 Paper: §§3--4.
 -/
-import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
+module
+
+public import LeanPool.ConnesRigidity.Construction.PaperActionInstances
+public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 The dual actions component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperDualActions

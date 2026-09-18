@@ -3,15 +3,17 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeBase
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0Int
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeS0
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

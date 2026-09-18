@@ -3,8 +3,19 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Basic
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+import Mathlib.Analysis.Calculus.LogDerivUniformlyOn
+import Mathlib.Analysis.Complex.SummableUniformlyOn
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # The Weierstrass σ- and ζ-functions
@@ -19,9 +30,9 @@ of a basic first year approach* (arXiv:1809.00533v6, file `060_ElliptFunct.tex`)
 * convergence statements (paper Rem. `bemsigma`), oddness of σ and ζ (paper `sigmaodd`),
   the location and simplicity of the zeros of σ (paper Rem. `bemsigma`),
   `ζ = σ'/σ` (paper Def. `defizeta`) and `ζ' = -℘` (paper Def. `defiwp`).
-
-All nontrivial proofs are `sorry`-ed for now; this file pins the statements.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -104,18 +115,16 @@ private lemma norm_weierstrassZetaTerm_le (z w : ℂ) (hw : w ≠ 0) (h : 2 * �
   have hwpos : 0 < ‖w‖ := norm_pos_iff.mpr hw
   have hznw : z ≠ w := by
     rintro rfl
-    have : ‖z‖ ≤ 0 := by linarith
-    exact hw (by rw [← norm_eq_zero]; linarith [norm_nonneg z])
+    linarith only [h, hwpos]
   have hzw : z - w ≠ 0 := sub_ne_zero.mpr hznw
   have h1 : ‖w‖ / 2 ≤ ‖z - w‖ := by
     rw [norm_sub_rev]
-    have := norm_sub_norm_le w z
-    linarith
+    linarith only [h, norm_sub_norm_le w z]
   have hbound : ‖weierstrassZetaTerm z w‖ ≤ 2 * ‖z‖ ^ 2 / ‖w‖ ^ 3 := by
     rw [weierstrassZetaTerm_eq z w hw hznw, norm_div, norm_mul, norm_pow, norm_pow,
       div_le_div_iff₀ (by positivity) (by positivity)]
-    nlinarith [mul_le_mul_of_nonneg_left h1 (show (0:ℝ) ≤ 2 * ‖z‖ ^ 2 * ‖w‖ ^ 2 by positivity),
-      norm_nonneg z, hwpos, h1, sq_nonneg ‖z‖]
+    linear_combination mul_le_mul_of_nonneg_left h1
+      (by positivity : (0 : ℝ) ≤ 2 * ‖z‖ ^ 2 * ‖w‖ ^ 2)
   refine hbound.trans_eq ?_
   rw [show (-3 : ℝ) = -(3 : ℕ) by norm_num, Real.rpow_neg hwpos.le, Real.rpow_natCast]
   ring
@@ -125,8 +134,10 @@ private lemma norm_weierstrassSigmaTerm_sub_one_le (z w : ℂ) (hw : w ≠ 0) (h
     ‖weierstrassSigmaTerm z w - 1‖ ≤ 4 / 3 * ‖z‖ ^ 3 * ‖w‖ ^ (-3 : ℝ) := by
   have hwpos : 0 < ‖w‖ := norm_pos_iff.mpr hw
   have hnorm : ‖z / w‖ ≤ 1 / 2 := by
-    rw [norm_div, div_le_iff₀ hwpos]; linarith
-  have hlt1 : ‖-(z / w)‖ < 1 := by rw [norm_neg]; linarith
+    rw [norm_div, div_le_iff₀ hwpos]; linarith only [h]
+  have hlt1 : ‖-(z / w)‖ < 1 := by
+    rw [norm_neg]
+    exact hnorm.trans_lt (by norm_num)
   have h1a : (1 : ℂ) - z / w ≠ 0 := by
     intro H
     rw [sub_eq_zero] at H
@@ -143,8 +154,8 @@ private lemma norm_weierstrassSigmaTerm_sub_one_le (z w : ℂ) (hw : w ≠ 0) (h
   rw [hexp]
   have hubound : ‖Complex.log (1 + -(z / w)) - logTaylor 3 (-(z / w))‖ ≤ 2 / 3 * ‖z / w‖ ^ 3 := by
     have hinv : (1 - ‖z / w‖)⁻¹ ≤ 2 := by
-      rw [inv_le_comm₀ (by linarith) (by norm_num)]
-      rw [inv_eq_one_div]; linarith
+      rw [inv_le_comm₀ (by linarith only [hnorm]) (by norm_num)]
+      rw [inv_eq_one_div]; linarith only [hnorm]
     calc ‖Complex.log (1 + -(z / w)) - logTaylor 3 (-(z / w))‖
         ≤ ‖-(z / w)‖ ^ (2 + 1) * (1 - ‖-(z / w)‖)⁻¹ / (2 + 1) :=
           norm_log_sub_logTaylor_le 2 hlt1
@@ -153,7 +164,8 @@ private lemma norm_weierstrassSigmaTerm_sub_one_le (z w : ℂ) (hw : w ≠ 0) (h
       _ = 2 / 3 * ‖z / w‖ ^ 3 := by ring
   have hule1 : ‖Complex.log (1 + -(z / w)) - logTaylor 3 (-(z / w))‖ ≤ 1 := by
     refine hubound.trans ?_
-    nlinarith [pow_le_pow_left₀ (norm_nonneg (z / w)) hnorm 3, norm_nonneg (z / w)]
+    calc 2 / 3 * ‖z / w‖ ^ 3 ≤ 2 / 3 * (1 / 2 : ℝ) ^ 3 := by gcongr
+      _ ≤ 1 := by norm_num
   calc ‖Complex.exp (Complex.log (1 + -(z / w)) - logTaylor 3 (-(z / w))) - 1‖
       ≤ 2 * ‖Complex.log (1 + -(z / w)) - logTaylor 3 (-(z / w))‖ := norm_exp_sub_one_le hule1
     _ ≤ 2 * (2 / 3 * ‖z / w‖ ^ 3) := by gcongr
@@ -171,28 +183,27 @@ private lemma weierstrassSigmaTerm_ne_zero {z w : ℂ} (hw : w ≠ 0) (hzw : z �
   rw [sub_ne_zero]
   exact fun H ↦ hzw ((div_eq_one_iff_eq hw).mp H.symm)
 
+/-- The derivative of a σ-factor, before any nonvanishing assumptions. -/
+private lemma hasDerivAt_weierstrassSigmaTerm (z w : ℂ) :
+    HasDerivAt (fun z ↦ weierstrassSigmaTerm z w)
+      (-(1 / w) * Complex.exp (z / w + z ^ 2 / (2 * w ^ 2))
+        + (1 - z / w) * (Complex.exp (z / w + z ^ 2 / (2 * w ^ 2))
+          * (1 / w + z / w ^ 2))) z := by
+  have hquad : HasDerivAt (fun z : ℂ ↦ z ^ 2 / (2 * w ^ 2)) (z / w ^ 2) z := by
+    have h : HasDerivAt (fun z : ℂ ↦ z ^ 2 / (2 * w ^ 2)) ((2 * z) / (2 * w ^ 2)) z := by
+      simpa using (hasDerivAt_pow 2 z).div_const (2 * w ^ 2)
+    rwa [mul_div_mul_left _ _ two_ne_zero] at h
+  exact (((hasDerivAt_id z).div_const w).const_sub 1).mul
+    (((hasDerivAt_id z).div_const w).add hquad).cexp
+
 /-- The logarithmic derivative of a σ-factor is the corresponding ζ-summand. -/
 private lemma logDeriv_weierstrassSigmaTerm {z w : ℂ} (hw : w ≠ 0) (hzw : z ≠ w) :
     logDeriv (fun z ↦ weierstrassSigmaTerm z w) z = weierstrassZetaTerm z w := by
   have h1a : (1 : ℂ) - z / w ≠ 0 := by
     rw [sub_ne_zero]; exact fun H ↦ hzw ((div_eq_one_iff_eq hw).mp H.symm)
   have hzw' : z - w ≠ 0 := sub_ne_zero.mpr hzw
-  have hg : HasDerivAt (fun z : ℂ ↦ z / w + z ^ 2 / (2 * w ^ 2)) (1 / w + z / w ^ 2) z := by
-    have hA : HasDerivAt (fun z : ℂ ↦ z / w) (1 / w) z := (hasDerivAt_id z).div_const w
-    have hB : HasDerivAt (fun z : ℂ ↦ z ^ 2 / (2 * w ^ 2)) (z / w ^ 2) z := by
-      have h2 : HasDerivAt (fun z : ℂ ↦ z ^ 2 / (2 * w ^ 2)) ((2 * z) / (2 * w ^ 2)) z := by
-        simpa using (hasDerivAt_pow 2 z).div_const (2 * w ^ 2)
-      rwa [mul_div_mul_left _ _ (two_ne_zero)] at h2
-    exact hA.add hB
-  have d1 : deriv (fun z : ℂ ↦ 1 - z / w) z = -(1 / w) :=
-    (((hasDerivAt_id z).div_const w).const_sub 1).deriv
-  have hmul := logDeriv_fun_mul (f := fun z : ℂ ↦ 1 - z / w)
-    (g := fun z : ℂ ↦ Complex.exp (z / w + z ^ 2 / (2 * w ^ 2))) z h1a (Complex.exp_ne_zero _)
-    (by fun_prop) (by fun_prop)
-  rw [show (fun z ↦ weierstrassSigmaTerm z w)
-      = fun z : ℂ ↦ (1 - z / w) * Complex.exp (z / w + z ^ 2 / (2 * w ^ 2)) from rfl, hmul,
-    logDeriv_apply, logDeriv_apply, d1, hg.cexp.deriv, weierstrassZetaTerm]
-  have hwz : w - z ≠ 0 := sub_ne_zero.mpr (Ne.symm hzw)
+  rw [logDeriv_apply, (hasDerivAt_weierstrassSigmaTerm z w).deriv,
+    weierstrassSigmaTerm, weierstrassZetaTerm]
   field_simp
   ring
 
@@ -404,7 +415,7 @@ theorem weierstrassSigma_eq_zero_iff (z : ℂ) :
   · intro hz
     rw [weierstrassSigma]
     by_cases hz0 : z = 0
-    · simp [hz0]
+    · simp only [hz0, zero_mul]
     · apply mul_eq_zero_of_right
       have hlmem : (⟨z, hz⟩ : L.lattice) ≠ 0 := fun H ↦ hz0 (by simpa using congrArg Subtype.val H)
       refine (hasProd_zero_of_exists_eq_zero ⟨⟨⟨z, hz⟩, hlmem⟩, ?_⟩).tprod_eq
@@ -511,23 +522,8 @@ private lemma deriv_weierstrassSigma_ne_zero_at (i₀ : {l : L.lattice // l ≠ 
   -- derivative of the single factor at its own zero
   have hBderiv : HasDerivAt (fun z ↦ weierstrassSigmaTerm z w)
       (-(1 / w) * Complex.exp (w / w + w ^ 2 / (2 * w ^ 2))) w := by
-    unfold weierstrassSigmaTerm
-    have hg : HasDerivAt (fun z : ℂ ↦ z / w + z ^ 2 / (2 * w ^ 2)) (1 / w + w / w ^ 2) w := by
-      have hA : HasDerivAt (fun z : ℂ ↦ z / w) (1 / w) w := (hasDerivAt_id w).div_const w
-      have hB : HasDerivAt (fun z : ℂ ↦ z ^ 2 / (2 * w ^ 2)) (w / w ^ 2) w := by
-        have h2 : HasDerivAt (fun z : ℂ ↦ z ^ 2 / (2 * w ^ 2)) ((2 * w) / (2 * w ^ 2)) w := by
-          simpa using (hasDerivAt_pow 2 w).div_const (2 * w ^ 2)
-        rwa [mul_div_mul_left _ _ (two_ne_zero)] at h2
-      exact hA.add hB
-    have hlin : HasDerivAt (fun z : ℂ ↦ 1 - z / w) (-(1 / w)) w :=
-      ((hasDerivAt_id w).div_const w).const_sub 1
-    have hmul := hlin.mul hg.cexp
-    have hV : (-(1 / w) * Complex.exp (w / w + w ^ 2 / (2 * w ^ 2)))
-        = -(1 / w) * Complex.exp (w / w + w ^ 2 / (2 * w ^ 2))
-          + (1 - w / w) * (Complex.exp (w / w + w ^ 2 / (2 * w ^ 2)) * (1 / w + w / w ^ 2)) := by
-      rw [div_self hwne]; ring
-    rw [hV]
-    exact hmul
+    simpa only [div_self hwne, sub_self, zero_mul, add_zero] using
+      hasDerivAt_weierstrassSigmaTerm w w
   have hBw : weierstrassSigmaTerm w w = 0 := by
     rw [weierstrassSigmaTerm, div_self hwne]; simp
   have hdB_ne : (-(1 / w) * Complex.exp (w / w + w ^ 2 / (2 * w ^ 2))) ≠ 0 :=
@@ -573,7 +569,7 @@ theorem meromorphicOrderAt_weierstrassSigma (l : ℂ) (hl : l ∈ L.lattice) :
       have hd : HasDerivAt L.weierstrassSigma _ (0 : ℂ) :=
         (hasDerivAt_id (0 : ℂ)).mul (hP 0).hasDerivAt
       rw [hd.deriv]
-      simp [hP0]
+      simpa only [hP0, id_eq, one_mul, zero_mul, add_zero] using (one_ne_zero : (1 : ℂ) ≠ 0)
     · -- `l ≠ 0`: reduce to the split-factor lemma at the lattice point `l`.
       have hmem : (⟨l, hl⟩ : L.lattice) ≠ 0 :=
         fun H ↦ hl0 (by simpa using congrArg Subtype.val H)

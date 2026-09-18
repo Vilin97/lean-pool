@@ -3,14 +3,19 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arith.D1
+public import LeanPool.Incompleteness.Arith.Theory
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-!
 
 # Formalized $\Sigma_1$-Completeness
 
 -/
+
+@[expose] public section
 
 noncomputable section «lp_nc_section_1»
 

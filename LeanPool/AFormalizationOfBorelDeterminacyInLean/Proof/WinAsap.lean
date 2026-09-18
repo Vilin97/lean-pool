@@ -3,14 +3,23 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 lemma choose_eq {α : Type*} {p q : α → Prop} (hpq : ∀ a, p a ↔ q a) (h : ∃ a, p a) :
@@ -55,12 +64,15 @@ lemma winningPrefix_of_residual {x y : List A}
   obtain ⟨n, hW⟩ := hW; use x.length + n
   convert hW using 1
   · simp_rw [List.take_length_add_append, residual_append]
-  · synthIsPosition
+  · rw [List.take_length_add_append, Player.residual_residual, ← List.append_assoc,
+      ← Player.residual_residual]
+    have hcancel : p.residual (x ++ x) = p := Player.residual_append_both x p (y := [])
+    rw [hcancel]
 section «Section2»
 variable {x : List A} (h : WinningPrefix G p x)
 
 /-- the length of the shortest prefix of `x` that is winning for `p` -/
-noncomputable def num := by
+noncomputable def num : ℕ := by
   classical
   exact Nat.find h
 lemma num_spec : (G.residual (x.take h.num)).ExistsWinning (p.residual (x.take h.num)) := by
@@ -190,7 +202,7 @@ lemma val_cast' {T T' : tree A} {b : T} {b' : T'} (hT : T = T')
   cast (by subst hT h; rfl) x = y ↔ x.val = y.val := by
     subst h hT; symm; apply Subtype.val_inj
 lemma cast_val {T y} (h : x = y) (a : subAt T x) :
-  Subtype.val (cast (by rw [h]) a) = a.val := by
+  Subtype.val (cast (show ↥(subAt T x) = ↥(subAt T y) by rw [h]) a) = a.val := by
   symm; apply (val_cast h a (cast (by rw [h]) a)).mp; rfl
 lemma hEq_drop_take {y} (hy : y ∈ subAt G.tree (x.take h.num)) (hxy) :
   HEq (Tree.drop _ (h.shrink.extend y).num

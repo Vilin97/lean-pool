@@ -3,14 +3,31 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.BodyFunctor
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.PointedTrees
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Tree.RestrictTree
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Data.Set.Subset
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Topology.Bases
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame.BorelDet
@@ -406,7 +423,10 @@ lemma gameTree_isPruned : IsPruned <| gameTree hyp := by
       change x ++ ([⟨a, b⟩] : List (upA hyp)) ∈ gameTree hyp
       refine (gameTree_concat x ⟨a, b⟩).mpr ⟨hx, (validExt_one hlen).mpr ⟨ha, Or.inr ?_⟩⟩
       refine WinningCondition.concat.mpr ⟨?_, ?_⟩
-      · simpa [Set.subset_def, S, b] using h
+      · rw [show b = subAt (getTree' hyp x) [a] from PreStrategy.top_subtree,
+          pullSub_body]
+        rintro _ ⟨z, hz, rfl⟩
+        exact not_not.mp (not_exists.mp h ⟨z, hz⟩)
       · exact ⟨S, rfl⟩
   · use (a, subAt (getTree' hyp x) [a])
     by_cases hlen' : x.length = 2 * k
@@ -745,7 +765,8 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
     rw [Game.wonPosition_iff_disjoint]
     simp_rw [Set.image_preimage_eq_range_inter, Set.inter_assoc, take_coe] at hW
     have hp : ((Player.one.residual u).swap).residual u = Player.zero := by
-      simp_all
+      rw [Player.residual_swap, Player.residual_residual]
+      exact Player.residual_append_both u Player.one.swap (y := [])
     rw [hp]
     rw [Player.payoff_zero]
     rw [Set.eq_empty_iff_forall_notMem]
@@ -755,7 +776,9 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
     constructor
     · rcases hs.1 with ⟨t, rfl⟩
       exact ⟨t, rfl⟩
-    · simp_all
+    · refine ⟨?_, hs.2⟩
+      rcases hs.2 with ⟨z, _, rfl⟩
+      exact z.prop
   have hUz := Game.WonPosition.extend z (G := G) (p := Player.one.residual u) (x := u) hU
   rw [Player.residual_residual] at hUz
   rw [← hze] at hUz

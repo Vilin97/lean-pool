@@ -5,16 +5,21 @@ Authors: Christopher Boone
 -/
 
 /- Test import surface for the Zhang-Yeung formalization. -/
-import LeanPool.ZhangYeungInequality.Test.CopyLemma
-import LeanPool.ZhangYeungInequality.Test.Delta
-import LeanPool.ZhangYeungInequality.Test.EntropyRegion
-import LeanPool.ZhangYeungInequality.Test.Theorem2
-import LeanPool.ZhangYeungInequality.Test.Theorem3
-import LeanPool.ZhangYeungInequality.Test.Theorem4
-import LeanPool.ZhangYeungInequality.Test.Theorem5
+module
+
+public import LeanPool.ZhangYeungInequality.Test.CopyLemma
+public import LeanPool.ZhangYeungInequality.Test.Delta
+public import LeanPool.ZhangYeungInequality.Test.EntropyRegion
+public import LeanPool.ZhangYeungInequality.Test.Theorem2
+public import LeanPool.ZhangYeungInequality.Test.Theorem3
+public import LeanPool.ZhangYeungInequality.Test.Theorem4
+public import LeanPool.ZhangYeungInequality.Test.Theorem5
+import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Measure
 
 /-!
 # LeanPool.ZhangYeungInequality.Test
 
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Test`.
 -/
+
+@[expose] public section

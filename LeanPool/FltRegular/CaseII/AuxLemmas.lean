@@ -6,8 +6,9 @@ Authors: FltRegular contributors
 
 module
 
-public import Mathlib.RingTheory.ClassGroup.Basic
 import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import Mathlib.RingTheory.FractionalIdeal.Operations
 
 /-!
 # Auxiliary lemmas for the second case

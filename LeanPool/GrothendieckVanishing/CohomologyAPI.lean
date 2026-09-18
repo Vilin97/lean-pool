@@ -3,14 +3,14 @@ Copyright (c) 2026 Vasily Ilin, Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin, Brian Nugent
 -/
+module
 
-import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
-import Mathlib.Algebra.Homology.DerivedCategory.Ext.EnoughInjectives
-import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Sheaf
-import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
-import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
+public import Mathlib.CategoryTheory.Abelian.GrothendieckAxioms.Sheaf
+public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
+public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
+public import LeanPool.GrothendieckVanishing.ClosedImmersion
+import Mathlib.Algebra.Category.Grp.AB
 import Mathlib.Topology.Sheaves.Skyscraper
-import LeanPool.GrothendieckVanishing.ClosedImmersion
 
 /-!
 # Sheaf Cohomology API
@@ -60,6 +60,8 @@ calculations internal so downstream files never need to unfold `Sheaf.H` directl
 * `sheafH_dimension_shift_X₃_of_locallySurjective`: reverse dimension shift for locally
   surjective morphisms
 -/
+
+@[expose] public section
 
 universe w' w v u
 
@@ -139,6 +141,17 @@ private theorem ext_dimension_shift_X₃ (Z : C') {S : ShortComplex C'} (hS : S.
   obtain ⟨d, hd⟩ := Ext.covariant_sequence_exact₃ _ hS b rfl (@Subsingleton.elim _ h₁ _ _)
   rw [← hc, ← hd, @Subsingleton.elim _ h₂ c d]
 
+/-- If both outer terms in an Ext exact sequence vanish, its middle term vanishes. -/
+private theorem ext_subsingleton_of_shortExact_middle (Z : C')
+    {S : ShortComplex C'} (hS : S.ShortExact) (n : ℕ)
+    (h₁ : Subsingleton (Ext Z S.X₁ n)) (h₃ : Subsingleton (Ext Z S.X₃ n)) :
+    Subsingleton (Ext Z S.X₂ n) := by
+  constructor
+  intro a b
+  obtain ⟨c, hc⟩ := Ext.covariant_sequence_exact₂ Z hS a (Subsingleton.elim _ _)
+  obtain ⟨d, hd⟩ := Ext.covariant_sequence_exact₂ Z hS b (Subsingleton.elim _ _)
+  rw [← hc, ← hd, @Subsingleton.elim _ h₁ c d]
+
 /-- If the middle cohomology groups in degrees `n` and `n + 1` are subsingleton, then the
     connecting morphism `Ext^n(Z, X₃) → Ext^(n+1)(Z, X₁)` is bijective. -/
 private theorem extClass_postcomp_bijective_of_subsingleton_middle
@@ -162,51 +175,20 @@ private theorem extClass_postcomp_bijective_of_subsingleton_middle
 
 /-- The connecting morphism in the covariant long exact sequence as an additive equivalence,
     assuming the middle cohomology groups in degrees `n` and `n + 1` vanish. -/
-private noncomputable def extClass_postcompAddEquiv_of_subsingleton_middle
+noncomputable def extClassPostcompAddEquivOfSubsingletonMiddle
     (Z : C') {S : ShortComplex C'} (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Ext Z S.X₂ n))
     (h₂succ : Subsingleton (Ext Z S.X₂ (n + 1))) :
     Ext Z S.X₃ n ≃+ Ext Z S.X₁ (n + 1) :=
   AddEquiv.ofBijective (hS.extClass.postcomp Z (rfl : n + 1 = n + 1))
-    (extClass_postcomp_bijective_of_subsingleton_middle Z hS n h₂n h₂succ)
+    (private_decl% (extClass_postcomp_bijective_of_subsingleton_middle Z hS n h₂n h₂succ))
 
-/-- Naturality of the extension class: given a morphism `φ : S₁ ⟶ S₂` of short exact sequences,
-    the connecting homomorphism commutes with the induced maps on Ext groups.
-    Proved via the triangulated category axiom TR3 (`complete_distinguished_triangle_morphism₁`),
-    fullness/faithfulness of `singleFunctor`, and mono cancellation. -/
+/-- Naturality of the extension class for a morphism of short exact sequences. -/
 private lemma extClass_naturality {S₁ S₂ : ShortComplex C'} (hS₁ : S₁.ShortExact)
     (hS₂ : S₂.ShortExact) (φ : S₁ ⟶ S₂) :
     (Ext.mk₀ φ.τ₃).comp hS₂.extClass (zero_add 1) =
-    hS₁.extClass.comp (Ext.mk₀ φ.τ₁) (add_zero 1) := by
-  let := HasDerivedCategory.standard C'
-  ext
-  simp only [Ext.comp_hom, Ext.mk₀_hom, ShortComplex.ShortExact.extClass_hom]
-  rw [ShiftedHom.mk₀_comp, ShiftedHom.comp_mk₀]
-  have comm₂ : hS₁.singleTriangle.mor₂ ≫ (DerivedCategory.singleFunctor C' 0).map φ.τ₃ =
-      (DerivedCategory.singleFunctor C' 0).map φ.τ₂ ≫ hS₂.singleTriangle.mor₂ := by
-    change (DerivedCategory.singleFunctor C' 0).map S₁.g ≫
-      (DerivedCategory.singleFunctor C' 0).map φ.τ₃ =
-      (DerivedCategory.singleFunctor C' 0).map φ.τ₂ ≫
-      (DerivedCategory.singleFunctor C' 0).map S₂.g
-    simp [← Functor.map_comp, φ.comm₂₃]
-  obtain ⟨a', ha₁, ha₃⟩ := Pretriangulated.complete_distinguished_triangle_morphism₁
-    hS₁.singleTriangle hS₂.singleTriangle
-    hS₁.singleTriangle_distinguished hS₂.singleTriangle_distinguished
-    ((DerivedCategory.singleFunctor C' 0).map φ.τ₂)
-    ((DerivedCategory.singleFunctor C' 0).map φ.τ₃) comm₂
-  simp only [ShortComplex.ShortExact.singleTriangle_mor₃] at ha₃
-  have ha' : a' = (DerivedCategory.singleFunctor C' 0).map φ.τ₁ := by
-    obtain ⟨a'', rfl⟩ := (DerivedCategory.singleFunctor C' 0).map_surjective a'
-    congr 1
-    have h : S₁.f ≫ φ.τ₂ = a'' ≫ S₂.f := by
-      have := ha₁
-      simp only [ShortComplex.ShortExact.singleTriangle_mor₁] at this
-      exact (DerivedCategory.singleFunctor C' 0).map_injective <| by
-        rwa [Functor.map_comp, Functor.map_comp]
-    have : Mono S₂.f := hS₂.mono_f
-    exact (cancel_mono S₂.f).mp (by rw [← φ.comm₁₂.symm, h])
-  rw [ha'] at ha₃
-  exact ha₃.symm
+    hS₁.extClass.comp (Ext.mk₀ φ.τ₁) (add_zero 1) :=
+  (ShortComplex.ShortExact.extClass_naturality hS₁ hS₂ φ).symm
 
 /-- Internal helper: if `Y` is zero in an abelian category, `Ext X Y n` is subsingleton
     for all `X`, `n`.
@@ -247,7 +229,7 @@ noncomputable def sheafHSuccMap {X : TopCat.{u}}
       (fun y ↦ y.comp hS.extClass rfl)
       (fun a b ↦ Ext.add_comp a b hS.extClass rfl)
 
-private theorem sheafH_succ_map_apply {X : TopCat.{u}}
+theorem sheafH_succ_map_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact)
     (n : ℕ)
@@ -282,11 +264,8 @@ theorem sheaf_isZero_of_zero_stalks (X : TopCat.{u})
         have hWU : W ≤ U := leOfHom iV
         rw [Subsingleton.elim iV (homOfLE hWU)] at hEq
         exact ⟨W, hWU, hxW, hEq⟩⟩)
-  exact IsZero.mk
-    (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
-      fun U ↦ (hZ.obj U).eq_zero_of_src (f.hom.app U))) }⟩)
-    (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
-      fun U ↦ (hZ.obj U).eq_zero_of_tgt (f.hom.app U))) }⟩)
+  exact IsZero.of_full_of_faithful_of_isZero (TopCat.Sheaf.forget AddCommGrpCat.{u} X)
+    ⟨F, hF⟩ hZ
 
 /-- If a bundled sheaf is zero, then its cohomology is subsingleton in every degree. -/
 theorem sheafH_subsingleton_of_isZero {X : TopCat.{u}}
@@ -298,10 +277,7 @@ theorem sheafH_subsingleton_of_isZero {X : TopCat.{u}}
 private theorem stalkFunctor_map_f_mono {X : TopCat.{u}}
     (S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)) (hS : S.ShortExact) (x : X) :
     Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f.hom) := by
-  have : Mono S.f := (Sheaf.Hom.mono_iff_presheaf_mono
-    (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).2
-    ((Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f)
+  have : Mono S.f := hS.mono_f
   have := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
   exact show Mono ((TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
     TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f) from
@@ -642,15 +618,7 @@ theorem subsingleton_sheafH_of_shortExact_middle {X : TopCat.{u}}
   have hS : S.ShortExact := ShortComplex.ShortExact.mk'
     (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel f))
     inferInstance inferInstance
-  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := h₁
-  have h₃' : Subsingleton (Sheaf.H S.X₃ n) := h₃
-  constructor
-  intro a b
-  obtain ⟨c, hc⟩ := Ext.covariant_sequence_exact₂ _ hS a
-    (@Subsingleton.elim _ ((add_zero n) ▸ h₃') _ _)
-  obtain ⟨d, hd⟩ := Ext.covariant_sequence_exact₂ _ hS b
-    (@Subsingleton.elim _ ((add_zero n) ▸ h₃') _ _)
-  rw [← hc, ← hd, @Subsingleton.elim _ h₁' c d]
+  exact ext_subsingleton_of_shortExact_middle _ hS n h₁ h₃
 
 /-- Naturality of `sheafH1CokernelIsoOfSubsingletonMiddle` for a morphism between
     two short exact sequences of sheaves. -/
@@ -714,13 +682,13 @@ noncomputable def sheafH0NatIsoSections {X : TopCat.{u}} :
 /-- Higher-degree connecting additive equivalence for a short exact sequence of sheaves:
 if the middle cohomology groups in degrees `n` and `n + 1` are subsingleton, then the
 connecting morphism induces an additive equivalence `H^n(S.X₃) ≃+ H^(n+1)(S.X₁)`. -/
-private noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : TopCat.{u}}
+noncomputable def sheafHExtClassAddEquivOfSubsingletonMiddle {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact) (n : ℕ)
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1))) :
     Sheaf.H S.X₃ n ≃+ Sheaf.H S.X₁ (n + 1) :=
-  extClass_postcompAddEquiv_of_subsingleton_middle _ hS n h₂n h₂succ
+  extClassPostcompAddEquivOfSubsingletonMiddle _ hS n h₂n h₂succ
 
 @[simp] private theorem sheafH_extClassAddEquiv_of_subsingleton_middle_apply
     {X : TopCat.{u}} {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
@@ -728,7 +696,7 @@ private noncomputable def sheafH_extClassAddEquiv_of_subsingleton_middle {X : To
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1)))
     (y : Sheaf.H S.X₃ n) :
-    sheafH_extClassAddEquiv_of_subsingleton_middle hS n h₂n h₂succ y =
+    sheafHExtClassAddEquivOfSubsingletonMiddle hS n h₂n h₂succ y =
       y.comp hS.extClass rfl := rfl
 
 /-- Higher-degree connecting isomorphism for a short exact sequence of sheaves: if the
@@ -740,7 +708,7 @@ noncomputable def sheafHSuccIsoOfSubsingletonMiddle {X : TopCat.{u}}
     (h₂n : Subsingleton (Sheaf.H S.X₂ n))
     (h₂succ : Subsingleton (Sheaf.H S.X₂ (n + 1))) :
     AddCommGrpCat.of (Sheaf.H S.X₃ n) ≅ AddCommGrpCat.of (Sheaf.H S.X₁ (n + 1)) :=
-  (sheafH_extClassAddEquiv_of_subsingleton_middle hS n h₂n h₂succ).toAddCommGrpIso
+  (sheafHExtClassAddEquivOfSubsingletonMiddle hS n h₂n h₂succ).toAddCommGrpIso
 
 private theorem sheafH_succ_iso_of_subsingleton_middle_hom_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}

@@ -3,7 +3,9 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import Mathlib.Order.Lattice.Nat
+module
+
+public import Mathlib.Order.Lattice.Nat
 
 /-! # Boolean Circuit Complexity
 
@@ -26,6 +28,8 @@ establishes the circuit size complexity measure for Boolean functions.
 
 * `Circuit.size_complexity_pos` — for complete bases, size complexity is positive
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

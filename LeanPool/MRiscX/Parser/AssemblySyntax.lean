@@ -3,13 +3,17 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import Lean
+module
+
+public meta import Lean.Parser.Term
 
 /-!
 # AssemblySyntax
 
 This module provides the parser/grammar for MRiscX assembly syntax.
 -/
+
+@[expose] public section
 open Lean Parser
 /-
 In this file, we extend Lean by introducing a new term. This term allows

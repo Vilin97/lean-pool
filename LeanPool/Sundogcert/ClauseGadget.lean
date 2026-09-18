@@ -3,10 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.SATNPHard
-import LeanPool.Sundogcert.VarWheel
-import Mathlib.Data.Fin.VecNotation
+public import LeanPool.Sundogcert.SATNPHard
+public import LeanPool.Sundogcert.VarWheel
 
 /-!
   Sundogcert/ClauseGadget.lean — MILESTONE 3 of the `3SAT ≤ 3DM` marathon.
@@ -54,6 +54,8 @@ import Mathlib.Data.Fin.VecNotation
   decidable `Prop`).  This locks the polarity convention end-to-end by kernel `decide` —
   AXIOM-CLEAN (no `Lean.ofReduceBool`; we use `decide`, never `native_decide`).
 -/
+
+@[expose] public section
 
 open Sundog.SATNPHard Sundog.VarWheel
 

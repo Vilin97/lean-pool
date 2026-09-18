@@ -5,8 +5,10 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.LogDerivativeResidue
-public import Mathlib.Analysis.Analytic.IsolatedZeros
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Meromorphic.Order
+import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.LogDerivativeResidue
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Weighted Disk Argument Principle

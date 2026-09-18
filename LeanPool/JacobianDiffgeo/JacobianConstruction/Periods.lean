@@ -3,9 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms
-import LeanPool.JacobianDiffgeo.Path
+public import LeanPool.JacobianDiffgeo.Forms.Finiteness
+public import LeanPool.JacobianDiffgeo.Forms.Genus
+public import LeanPool.JacobianDiffgeo.Path.Periods
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `basis`, `periodVector`, `periodSubgroup` (CC9)
@@ -25,6 +29,8 @@ Main declarations:
 * `RS.periodSubgroup X : AddSubgroup (Fin (genus X) → ℂ)` — `AddSubgroup.closure` of the range of
   `periodVector (basis X)` over based loops at a fixed basepoint.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Module

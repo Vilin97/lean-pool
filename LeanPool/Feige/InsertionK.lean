@@ -3,9 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.InsertionAlgebra
-import LeanPool.Feige.ChainInsertion
-import LeanPool.Feige.ChainFromBoolean
+module
+
+public import LeanPool.Feige.InsertionAlgebra
+public import LeanPool.Feige.ChainInsertion
+public import LeanPool.Feige.ChainFromBoolean
 
 /-!
 # Statistic values on an inserted Boolean chain
@@ -13,6 +15,8 @@ import LeanPool.Feige.ChainFromBoolean
 This file connects the concrete inserted Boolean chain to the abstract
 `A`/`B` statistic sequences used in the mass-transport proof of Theorem 2.1.
 -/
+
+@[expose] public section
 
 namespace Feige
 

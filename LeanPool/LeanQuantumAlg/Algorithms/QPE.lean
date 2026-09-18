@@ -6,11 +6,9 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
-public import LeanPool.LeanQuantumAlg.Core.Cost
 public import LeanPool.LeanQuantumAlg.Primitives.QFT
-public import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
-public import LeanPool.LeanQuantumAlg.Core.Components.Kets
+public import LeanPool.LeanQuantumAlg.Core.Components.Control
+import LeanPool.LeanQuantumAlg.Primitives.PhaseKickback
 
 /-!
 # Quantum phase estimation (exact, dyadic eigenphase)

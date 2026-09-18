@@ -3,10 +3,11 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise414
-import Mathlib.Algebra.Group.Pointwise.Set.Basic
-import Mathlib.Algebra.FreeMonoid.Basic
+public import LeanPool.DomainTheory.Neighborhood.Exercise414
+public import Mathlib.Algebra.Group.Pointwise.Set.Basic
+public import Mathlib.Algebra.FreeMonoid.Basic
 
 /-!
 # Exercise 5.15 (Scott 1981, PRG-19, Lecture V) — free-semigroup powerset and
@@ -50,6 +51,8 @@ recursion (`kpow`) rather than `⋃ₙ zⁿ`, and phrase Arden's lemma without
 `Monotone` — keeping
 everything **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise515
 

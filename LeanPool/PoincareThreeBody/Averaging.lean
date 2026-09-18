@@ -3,10 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.Resonance
+public import LeanPool.PoincareThreeBody.Resonance
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Tactic.Linarith
 
 /-!
 # Averaging the first homological equation
@@ -15,6 +17,8 @@ On a resonant periodic orbit, the first-order correction to a putative first int
 Integrating its derivative over one period removes that term. A nonzero averaged perturbation then
 forces the leading differential of the integral to annihilate the resonance vector.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

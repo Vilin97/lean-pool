@@ -3,9 +3,20 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.MathlibFoundations
-import LeanPool.Wallace.TriangularPreprocess
+public import LeanPool.Wallace.MathlibFoundations
+public import LeanPool.Wallace.TriangularPreprocess
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.Algebra.Ring.Real
 
 /-!
 # Block-density filters for the Wallace construction
@@ -14,6 +25,8 @@ This file packages the density-one filter used in the paper.  The formulation is
 abstract in the finite blocks: the later scheduling module only has to provide nonempty blocks
 which eventually avoid every finite set and a deletion bound whose relative size tends to zero.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 open scoped Topology

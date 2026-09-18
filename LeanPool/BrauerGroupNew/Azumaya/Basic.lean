@@ -3,16 +3,33 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
+public import LeanPool.BrauerGroupNew.Wedderburn
+public import Mathlib.Algebra.Azumaya.Defs
+public import Mathlib.Algebra.BrauerGroup.Defs
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Morita.Basic
 import LeanPool.BrauerGroupNew.BrauerGroup
 import LeanPool.BrauerGroupNew.LemmasAboutSimpleRing
+import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
 import LeanPool.BrauerGroupNew.Morita.ChangeOfRings
+import Mathlib.Algebra.Azumaya.Basic
+import Mathlib.Algebra.Central.Matrix
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.RingTheory.FiniteLength
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.Azumaya.Basic
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Azumaya.Basic`.
 -/
+
+@[expose] public section
 
 universe u v
 

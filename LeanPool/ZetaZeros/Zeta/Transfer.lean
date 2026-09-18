@@ -6,6 +6,11 @@ Authors: Axiom Math
 module
 
 public import LeanPool.ZetaZeros.Zeta.Kernel
+import LeanPool.ZetaZeros.Hilbert.AlphaExpansion
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Transfer of the Hilbert-space inequalities to zeta zeros

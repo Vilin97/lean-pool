@@ -13,15 +13,19 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Public API:
   - `fock_space_coercivity` (Theorem 7.1)
 -/
+module
+
+public import LeanPool.PhaseRetrieval.Constant.Internal.BlockDecomposition
 import LeanPool.PhaseRetrieval.Constant.Internal.AnnulusLocalEstimate
 import LeanPool.PhaseRetrieval.Constant.Internal.LeakageEstimate
 import LeanPool.PhaseRetrieval.Constant.Internal.LipschitzRho
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.MeasureTheory.Integral.Gamma
-import Mathlib.Algebra.Order.Field.GeomSum
-import Mathlib.MeasureTheory.Integral.IntegralEqImproper
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # MainTheorem -/
+
+@[expose] public section
 
 
 open MeasureTheory Complex Real Finset Polynomial

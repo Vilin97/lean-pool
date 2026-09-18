@@ -3,15 +3,11 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
-import Mathlib.LinearAlgebra.Matrix.Trace
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Cast
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
-import LeanPool.Monlib4.LinearAlgebra.LmulRmul
-import LeanPool.Monlib4.Preq.Set
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
 import LeanPool.Monlib4.Preq.StarAlgEquiv
 
 /-!
@@ -22,6 +18,8 @@ finite, nontrivial matrix algebra over a field is inner.  The downstream
 corollaries package the implementing matrix as a linear equivalence or as an
 element of the general linear group.
 -/
+
+@[expose] public section
 
 open scoped BigOperators Matrix
 

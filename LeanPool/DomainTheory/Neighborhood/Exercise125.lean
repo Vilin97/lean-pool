@@ -3,10 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Basic
-import Mathlib.Order.UpperLower.Basic
-import Mathlib.Order.Bounds.Basic
+public import LeanPool.DomainTheory.Neighborhood.Basic
+public import Mathlib.Order.UpperLower.Basic
 
 /-!
 # Exercise 1.25 (Scott 1981, PRG-19, §1) — final segments of an ordinal
@@ -49,6 +49,8 @@ elements are finite.
 The system and `Ici` lemmas are `[propext, Quot.sound]`; the classification's
 surjectivity uses
 the well-ordering (`WellFounded.has_min`), so it is classical. -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

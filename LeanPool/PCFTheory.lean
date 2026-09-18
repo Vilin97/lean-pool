@@ -3,9 +3,10 @@ Copyright (c) 2026 YnirPaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: YnirPaz
 -/
+module
 
-import LeanPool.PCFTheory.Background
-import LeanPool.PCFTheory.ClubGuessing
+public import LeanPool.PCFTheory.Background
+public import LeanPool.PCFTheory.ClubGuessing
 
 /-!
 # PCF Theory
@@ -17,6 +18,8 @@ Main declarations: `Ordinal.exists_isClubGuessing_of_cof_uncountable`
 Tags: set-theory, cardinal-arithmetic, club-guessing
 MSC: 03E04, 03E10, 03E55
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

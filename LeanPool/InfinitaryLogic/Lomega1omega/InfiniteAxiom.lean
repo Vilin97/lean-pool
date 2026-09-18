@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # The infiniteness axiom of `L_ω₁ω`
 
@@ -17,6 +19,8 @@ transferring a statement about **coded** countable structures (whose carrier is 
 infinite) to a statement about arbitrary models of a sentence, where a finite model would
 otherwise escape.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

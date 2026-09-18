@@ -3,12 +3,19 @@ Copyright (c) 2026 Tanner Duve, Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tanner Duve, Elan Roth
 -/
-import LeanPool.Computability.Oracle
-import LeanPool.Computability.TuringDegree
-import LeanPool.Computability.Encoding
-import LeanPool.Computability.Jump
-import LeanPool.Computability.ArithHierarchy
-import LeanPool.Computability.AutGrp
+module
+
+public import LeanPool.Computability.Oracle
+public import LeanPool.Computability.TuringDegree
+public import LeanPool.Computability.Encoding
+public import LeanPool.Computability.Jump
+public import LeanPool.Computability.ArithHierarchy
+public import LeanPool.Computability.AutGrp
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Oracle Computability and Turing Degrees
@@ -20,6 +27,8 @@ Main declarations: `Computability.RecursiveIn`, `Computability.TuringDegree`
 Tags: computability, oracle-computability, turing-degrees, recursion-theory, arithmetical-hierarchy
 MSC: 03D30, 03D28
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

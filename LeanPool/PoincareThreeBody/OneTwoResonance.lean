@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DisturbingCertificate
+public import LeanPool.PoincareThreeBody.DisturbingCertificate
 
 /-!
 # A concrete interior 1:2 resonance
@@ -14,6 +15,8 @@ eccentricity `1 / 10`.  All geometric side conditions are proved exactly.  A gen
 validated-numerics proof therefore only has to bound a second derivative and check one finite
 trapezoidal inequality.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

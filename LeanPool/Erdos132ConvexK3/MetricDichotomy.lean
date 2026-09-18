@@ -3,11 +3,18 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Penultimate
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+module
+
+public import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.Data.EReal.Inv
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Metric/sign dichotomy
@@ -17,6 +24,8 @@ The proof uses only the four cross-color metric parameters, so its conclusion
 applies uniformly to all four cross-color pairs.  The two boundary radicals
 are retained as exact kernel inequalities.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -125,20 +134,20 @@ theorem metric_dichotomy_range_one
   have hT : 1 < 2 * r + p :=
     amgm_two_r_add_p_gt_one hr hβlo hβhi hβsq
   have hh_lt_one : h < 1 := by
-    nlinarith [sq_pos_of_pos hr]
+    nlinarith only [hhsq, sq_pos_of_pos hr]
   have hrp : 0 < r + p := by linarith
   have hk_lt_one : k < 1 := by
-    nlinarith [sq_pos_of_pos hrp]
+    nlinarith only [hksq, sq_pos_of_pos hrp]
   have hsum_lt : h + k < 2 := by linarith
   have hδproduct : δ * (h + k) = p * (2 * r + p) := by
     rw [hδdef]
-    nlinarith
+    linear_combination hhsq - hksq
   have hp_lt_twoδ : p < 2 * δ := by
     have hleft : 0 < δ * (2 - (h + k)) :=
       mul_pos hδ (by linarith)
     have hright : 0 < p * ((2 * r + p) - 1) :=
       mul_pos hp (by linarith)
-    nlinarith
+    linear_combination hleft + hright - hδproduct
   have hMpos : 0 < (1 - β) * (3 - 5 * β) := by
     exact mul_pos (by linarith) (by linarith)
   have hdenδ : 0 < 4 * δ := by positivity
@@ -153,10 +162,10 @@ theorem metric_dichotomy_range_one
     apply div_lt_div_of_pos_left hMpos hdenp
     linarith
   have hfactor : (1 - β) * (1 + β) = 4 * r * p := by
-    nlinarith
+    linear_combination -hβsq
   have hfactor_div : (1 - β) / (2 * p) = (2 * r) / (1 + β) := by
     apply (div_eq_div_iff (by positivity) (by linarith)).2
-    nlinarith [hfactor]
+    linear_combination hfactor
   have hidentity :
       ((1 - β) * (3 - 5 * β)) / (2 * p) =
         (2 * r) * ((3 - 5 * β) / (1 + β)) := by
@@ -170,7 +179,7 @@ theorem metric_dichotomy_range_one
   have hscale :
       (2 * r) * ((3 - 5 * β) / (1 + β)) ≤
         (3 - 5 * β) / (1 + β) := by
-    nlinarith [mul_nonneg (by linarith : 0 ≤ 1 - 2 * r) (le_of_lt hratio_pos)]
+    exact mul_le_of_le_one_left hratio_pos.le (by linarith only [hrhi])
   have hradical := range_one_exact_radical_bound hβlo hβhi
   have hheight := normalized_height_lower hr hrhi hh hhsq
   calc
@@ -250,7 +259,7 @@ private lemma normalized_height_plus_k_gt
   have hβhprod : 0 < (β - h) * (β + h) :=
     mul_pos (sub_pos.mpr hβh) (by linarith)
   have hpquarter : p < r / 4 := by
-    nlinarith
+    nlinarith only [hβsq, hhsq, hβhprod, hr]
   have hkbound := normalized_k_lower hrhi hp hpquarter hk hksq
   have hTlt : 2 * r + p < (9 : ℝ) / 8 := by
     linarith
@@ -272,15 +281,10 @@ private lemma normalized_delta_lt_p
     normalized_height_plus_k_gt hr hrhi hp hβsq hh hhsq hk hksq hβh
   have hδproduct : δ * (h + k) = p * (2 * r + p) := by
     rw [hδdef]
-    nlinarith
-  have hsumpos : 0 < h + k := by linarith
-  by_contra hnot
-  have hpδ : p ≤ δ := le_of_not_gt hnot
-  have hgap1 : 0 < p * ((h + k) - (2 * r + p)) :=
-    mul_pos hp (by linarith)
-  have hgap2 : 0 ≤ (δ - p) * (h + k) :=
-    mul_nonneg (sub_nonneg.mpr hpδ) (le_of_lt hsumpos)
-  nlinarith
+    linear_combination hhsq - hksq
+  apply (mul_lt_mul_iff_of_pos_right (add_pos hh hk)).mp
+  rw [hδproduct]
+  exact mul_lt_mul_of_pos_left hTsum hp
 
 private lemma normalized_ratio_lt_five_beta_sub_three
     {r β h : ℝ}
@@ -326,8 +330,9 @@ private lemma normalized_range_three_core
     4 * δ * (β - h) < -((1 - β) * (3 - 5 * β)) := by
   have hdiffDiv := normalized_beta_height_difference hβsq hh hhsq hβh
   have hden : 0 < β + h := by linarith
-  have hfirstCore : 4 * δ * (β - h) < 4 * p * (β - h) := by
-    nlinarith [mul_pos (sub_pos.mpr hδltp) (sub_pos.mpr hβh)]
+  have hfirstCore : 4 * δ * (β - h) < 4 * p * (β - h) :=
+    mul_lt_mul_of_pos_right (mul_lt_mul_of_pos_left hδltp (by norm_num))
+      (sub_pos.mpr hβh)
   have hinner :
       r * (r - 4 * p) / (β + h) < r * r / (β + h) := by
     apply (div_lt_div_iff_of_pos_right hden).2
@@ -392,7 +397,7 @@ theorem metric_dichotomy_range_three
   have hcore :=
     normalized_range_three_core hr hp hβsq hh hhsq hβh hβlt1 hδltp hratio
   apply (div_lt_iff₀ (by positivity : 0 < 4 * δ)).2
-  nlinarith
+  nlinarith only [hNltM, hcore]
 
 /-- Metric/sign dichotomy for one arbitrary full two-rung normalization.
 Equality belongs to the length branch; only strict failure enters the three

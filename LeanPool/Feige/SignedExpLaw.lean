@@ -3,7 +3,9 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.FiniteSignedExp
+module
+
+public import LeanPool.Feige.FiniteSignedExp
 
 /-!
 # Probability laws of signed scaled exponentials
@@ -13,6 +15,8 @@ a rate-one exponential.  It is the first bridge from the original product
 of exponential coordinates in `dirichletK` to the finite convolution law
 used by the TP2 proof.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal

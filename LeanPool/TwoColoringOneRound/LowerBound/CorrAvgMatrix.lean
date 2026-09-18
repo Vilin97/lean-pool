@@ -3,15 +3,19 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+
+public import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 import Mathlib.Data.Rat.Star
-
-import LeanPool.TwoColoringOneRound.LowerBound.Correlation
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 
