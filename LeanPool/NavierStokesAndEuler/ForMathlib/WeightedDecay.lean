@@ -7,7 +7,7 @@ Authors: OpenAI, Code4me2
 module
 
 public import Mathlib.Analysis.Normed.Group.Basic
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Order.Interval.Set.Defs
 
 /-!

@@ -267,7 +267,7 @@ and keeps all cross-instance defeq checks trivial. -/
 
 noncomputable instance : AddCommGroup (NZ1 T P) := (NZ1 T P).addCommGroup
 
-instance : IsTopologicalAddGroup (NZ1 T P) := (NZ1 T P).topologicalAddGroup
+instance : IsTopologicalAddGroup (NZ1 T P) := (NZ1 T P).isTopologicalAddGroup
 
 noncomputable instance : NormedAddCommGroup (NZ1 T P) := (NZ1 T P).normedAddCommGroup
 

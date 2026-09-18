@@ -6,7 +6,7 @@ Authors: Egor Lyfar
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.FinRange
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 

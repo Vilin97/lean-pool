@@ -5,7 +5,7 @@ Authors: Alex Meiburg
 -/
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Data.Sign.Defs
+import Mathlib.Basic.Sign.Defs
 import Mathlib.Tactic.Rify
 
 import LeanPool.ComputableReal.AuxLemmas

@@ -129,7 +129,7 @@ theorem constantFieldOperator_ae (x : E) :
 theorem initialPrimitive_constantFieldOperator (x : E) (t : Icc (0 : ℝ) T) :
     initialPrimitive T hT (constantFieldOperator T hT x) t = (t : ℝ) • x := by
   have hlin : AbsolutelyContinuousOnInterval (fun s : ℝ => s • x) 0 T :=
-    (toSpanSingleton ℝ x).lipschitz.lipschitzOnWith.absolutelyContinuousOnInterval
+    (toSpanSingleton ℝ x).lipschitzWith.lipschitzOnWith.absolutelyContinuousOnInterval
   apply Eq.symm
   apply eq_initialRealPrimitive_of_ac_hasDerivAt_ae T hT (constantFieldOperator T hT x)
     (fun s : ℝ => s • x) hlin _ (zero_smul ℝ x) t t.property

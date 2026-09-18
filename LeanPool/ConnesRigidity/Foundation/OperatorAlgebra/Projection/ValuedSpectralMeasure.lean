@@ -394,7 +394,7 @@ theorem exists_quotientFixedUnitVector_with_displacement
       ‖((‖(p : K)‖ : ℂ)⁻¹)‖ = (‖(p : K)‖ : ℝ)⁻¹ := by
     simp [norm_inv, Complex.norm_real]
   rw [hscalar]
-  simpa only [Submodule.coe_norm, div_eq_mul_inv, mul_comm] using hfrac
+  simpa only [← Submodule.norm_coe, div_eq_mul_inv, mul_comm] using hfrac
 
 omit [TopologicalSpace A] [DiscreteTopology A]
   [MeasurableSpace (DiscreteCharacterSpace A)]

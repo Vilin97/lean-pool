@@ -6,7 +6,8 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.MeasureTheory.Measure.Dirac
+public import Mathlib.MeasureTheory.Measure.Dirac.Def
+public import Mathlib.MeasureTheory.Measure.Dirac.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Dirac

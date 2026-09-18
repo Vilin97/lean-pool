@@ -563,13 +563,13 @@ theorem rightDegeneratePreMap_occurrenceSide
     simp only [occurrenceSide,
       PolygonGluing.Side.point]
     convert rightDegeneratePreMap_selected_side
-      P cut horientation hleft hr validP i t using 1 <;> rfl
+      P cut horientation hleft hr validP i t using 1
   · rw [rightDegenerateMapOccurrence_retained
       P cut horientation hleft hr hface i]
     simp only [occurrenceSide,
       PolygonGluing.Side.point]
     convert rightDegeneratePreMap_retained_side
-      P cut horientation hleft hr validP hface i t using 1 <;> rfl
+      P cut horientation hleft hr validP hface i t using 1
 
 theorem rightDegenerateMapOccurrence_dart
     (P : FiniteCyclicPresentation) (cut : P2Cut P)

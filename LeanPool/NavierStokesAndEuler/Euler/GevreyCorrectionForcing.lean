@@ -63,8 +63,9 @@ theorem fieldL2_sum_le {ι F : Type*} [NormedAddCommGroup F] (S : Finset ι)
     (f : ι → LiftDomain period → F) (hf : ∀ i ∈ S, MemLp (f i) 2 (liftMeasure period)) :
     (eLpNorm (∑ i ∈ S, f i) 2 (liftMeasure period)).toReal ≤
       ∑ i ∈ S, (eLpNorm (f i) 2 (liftMeasure period)).toReal := by
-  have he := eLpNorm_sum_le (fun i hi => (hf i hi).aestronglyMeasurable) (by
-      norm_num : (1 : ℝ≥0∞) ≤ 2)
+  have he : eLpNorm (∑ i ∈ S, f i) 2 (liftMeasure period) ≤
+      ∑ i ∈ S, eLpNorm (f i) 2 (liftMeasure period) :=
+    eLpNorm_sum_le (by norm_num : (1 : ℝ≥0∞) ≤ 2)
   have hfin : (∑ i ∈ S, eLpNorm (f i) 2 (liftMeasure period)) ≠ ⊤ :=
     ENNReal.sum_ne_top.mpr (fun i hi => (hf i hi).eLpNorm_ne_top)
   have h := ENNReal.toReal_mono hfin he

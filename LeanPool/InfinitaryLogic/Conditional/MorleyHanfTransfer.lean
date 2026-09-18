@@ -9,7 +9,6 @@ import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Nat.Nth
 import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Lattice
 import Mathlib.Order.Hom.Basic
 import Mathlib.Order.WellFounded
 import Mathlib.SetTheory.Cardinal.Aleph
@@ -126,7 +125,6 @@ private theorem hasArbLargeModels_of_seed_realizability
       (morleySeed_indiscernibleOn φ hPairwise)
   intro κ
   let J : Type := (Cardinal.ord κ).ToType
-  have : LinearOrder J := linearOrder_toType _
   have hJ_card : Cardinal.mk J = κ := Cardinal.mk_ord_toType κ
   obtain ⟨N, instN, b, hSeq⟩ :=
     IsLomega1omegaIndiscernibleOnTail.stretch_restricted_sequence_of_model (J := J)

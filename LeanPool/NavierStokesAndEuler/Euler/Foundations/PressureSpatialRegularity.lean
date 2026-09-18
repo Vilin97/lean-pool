@@ -366,8 +366,6 @@ theorem liftedPressure_hasDerivAt (κ : ℝ) (m : Vector3)
   have hval := S.subtypeL.hasFDerivAt.comp_hasDerivAt 0 hsol
   convert hval using 1
   · rfl
-  · rfl
-  · rfl
   · simp [liftedPressure, pressureSolver, projectedInverse, projectedOperator,
       S, G, G', ContinuousLinearMap.comp_apply, map_sub]
 

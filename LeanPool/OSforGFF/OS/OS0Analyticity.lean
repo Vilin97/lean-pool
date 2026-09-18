@@ -200,8 +200,7 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
     apply h_dom.mono' ((Real.continuous_exp.measurable.comp (measurable_const.mul
       (continuous_abs.measurable.comp (WeakDual.eval_measurable f)))).aestronglyMeasurable)
     simp_all
-  refine ⟨h_aesm, ?_⟩
-  rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top hp_pos hp]
+  rw [memLp_iff, eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top hp_pos hp h_aesm]
   -- ‖exp(|x|)‖ₑ^p = exp(p|x|), reducing finiteness to h_exp_p_integrable.
   have h_eq : ∀ ω : FieldConfiguration,
       (‖Real.exp |ω f|‖ₑ : ENNReal) ^ p.toReal = ENNReal.ofReal (Real.exp (p.toReal * |ω f|)) := by
@@ -225,7 +224,7 @@ lemma gff_exp_abs_pairing_integrable (f : TestFunction) :
 /-- Product of exponentials of absolute pairings is in L².
     If we have k test functions g₁, ..., gₖ, then exp(∑ᵢ |ω gᵢ|) = ∏ᵢ exp(|ω gᵢ|).
     Each exp(|ω gᵢ|) ∈ L^(2k) by gff_exp_abs_pairing_memLp.
-    By generalized Hölder (MemLp.prod'), a product of k functions in L^(2k) is in L².
+    By generalized Hölder (MemLp.fun_prod), a product of k functions in L^(2k) is in L².
 -/
 lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunction) :
     MemLp (fun ω : FieldConfiguration => Real.exp (∑ i ∈ s, |ω (g i)|)) 2 (muGFF m).toMeasure := by
@@ -239,7 +238,7 @@ lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunctio
   -- For nonempty s, each factor is in L^(2·card s); generalized Hölder gives L².
   have hk_ne_zero : (s.card : ENNReal) ≠ 0 := by simpa using (Finset.card_pos.mpr hs).ne'
   have hk_ne_top : (s.card : ENNReal) ≠ ⊤ := ENNReal.natCast_ne_top s.card
-  have h_prod := MemLp.prod' (s := s) (p := fun _ => (2 * s.card : ℕ))
+  have h_prod := MemLp.fun_prod (s := s) (p := fun _ => (2 * s.card : ℕ))
     (f := fun i (ω : FieldConfiguration) => Real.exp |ω (g i)|)
     (fun i _ => gff_exp_abs_pairing_memLp m (g i) (2 * s.card : ℕ) (ENNReal.natCast_ne_top _))
   -- The resulting exponent is (∑ i ∈ s, (2·card s)⁻¹)⁻¹ = (card s · (2·card s)⁻¹)⁻¹ = 2.

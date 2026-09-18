@@ -73,6 +73,7 @@ lemma le_of_nneg_add {α : Type*} [AddCommGroup α] [PartialOrder α] [IsOrdered
     {a b c : α} (habc : a + b = c) (ha : 0 ≤ a) : b ≤ c := by aesop
 
 /-- `change h to t` rewrites the hypothesis `h` to the definitionally equal type `t`. -/
+@[tactic_alt Lean.Parser.Tactic.change]
 macro "change " h:ident " to " t:term : tactic => `(tactic| change $t at $h:ident)
 
 /-- `aeply t` is shorthand for `intro <;> apply t <;> aesop`, useful for proving universally

@@ -96,11 +96,11 @@ instance toSubmodule_isLattice (g : GL ι K) :
 
 instance (g : GL ι K) (M : Submodule R (ι → K)) [IsLattice M] : IsLattice (g • M) where
   isFG := by
-    rw [GeneralLinearGroup.smul_def]
+    rw [GeneralLinearGroup.smul_submodule_def]
     apply Submodule.FG.map
     exact IsLattice.isFG
   spans := by
-    rw [GeneralLinearGroup.smul_def]
+    rw [GeneralLinearGroup.smul_submodule_def]
     simp_rw [Submodule.map_coe, LinearMap.coe_restrictScalars]
     erw [Submodule.span_image g.val.mulVecLin]
     rw [IsLattice.spans]

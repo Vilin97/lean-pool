@@ -61,11 +61,11 @@ theorem PFunctor.M.unfold_corec'_left {P : PFunctor.{uA, uB}} {α : Type u}
   (h_eq : ∀ l, F (.inl l) = ⟨l.dest.1, Sum.inl ∘ l.dest.2⟩) :
   ∀ l, PFunctor.M.corec F (.inl l) = l := by
   intros
-  apply PFunctor.M.bisim (fun t1 t2 => t1 = PFunctor.M.corec _ (Sum.inl t2)) _ _ _ rfl
+  apply PFunctor.M.bisim (fun t1 t2 => t1 = PFunctor.M.corec F (Sum.inl t2)) ?_ _ _ rfl
   intros t1 t2 h; subst h
-  simp only [PFunctor.M.dest_corec, PFunctor.map, h_eq]
-  have ⟨a, g⟩ := t2.dest
-  exact ⟨_, _, _, rfl, rfl, fun _ => rfl⟩
+  refine ⟨t2.dest.fst, _, t2.dest.snd, ?_, rfl, fun _ => rfl⟩
+  rw [PFunctor.M.dest_corec, h_eq]
+  rfl
 
 theorem PFunctor.M.unfold_corec' {P : PFunctor.{uA, uB}} {α : Type u}
   (F : ∀ {X : Type (max u uA uB)}, (α → X) → α → P.M ⊕ P X) (x : α) :
@@ -76,27 +76,39 @@ theorem PFunctor.M.unfold_corec' {P : PFunctor.{uA, uB}} {α : Type u}
     match g i with
     | .inl l => l
     | .inr r => .corec' F r⟩ := by
-  conv =>
-    lhs
-    simp only [PFunctor.M.corec', PFunctor.M.corec₁, PFunctor.M.corec_def, PFunctor.map,
-      Sum.bind, Function.id_comp]
-  match F (@Sum.inr P.M α) x with
-  | .inl v =>
-    simp only
-    conv => rhs; rw [← (PFunctor.M.mk_dest v)]
-    congr
-    have ⟨a, g⟩ := v.dest
-    simp only; congr; funext i
-    apply unfold_corec'_left _ (fun _ => rfl)
-  | .inr ⟨a, g⟩ =>
-    simp only; congr; funext i
-    simp only [Function.comp]
-    match g i with
-    | .inl l =>
-      simp only
-      apply unfold_corec'_left _ (fun _ => rfl)
-    | .inr r =>
-      simp only [PFunctor.M.corec', PFunctor.M.corec₁, PFunctor.map, Sum.bind, Function.id_comp]
+  have main : ∀ G : P.M ⊕ α → P (P.M ⊕ α),
+      (∀ l : P.M, G (.inl l) = P.map Sum.inl l.dest) →
+      (∀ (a : α) (l : P.M), F (@Sum.inr P.M α) a = .inl l → G (.inr a) = P.map Sum.inl l.dest) →
+      (∀ (a : α) (w : P (P.M ⊕ α)), F (@Sum.inr P.M α) a = .inr w → G (.inr a) = w) →
+      ∀ a : α, PFunctor.M.corec G (.inr a) =
+        match F (@Sum.inr P.M α) a with
+        | .inl l => l
+        | .inr ⟨b, g⟩ => .mk ⟨b, fun i ↦
+          match g i with
+          | .inl l => l
+          | .inr r => PFunctor.M.corec G (.inr r)⟩ := by
+    intro G hl hinl hinr a
+    have key : ∀ l : P.M, PFunctor.M.corec G (Sum.inl l) = l :=
+      unfold_corec'_left G hl
+    rw [PFunctor.M.corec_def]
+    rcases hF : F (@Sum.inr P.M α) a with v | ⟨b, g⟩
+    · simp only
+      rw [hinl a v hF, PFunctor.map_map,
+        show (PFunctor.M.corec G ∘ Sum.inl) = id from funext key,
+        PFunctor.id_map, PFunctor.M.mk_dest]
+    · simp only
+      rw [hinr a _ hF]
+      refine congrArg PFunctor.M.mk (congrArg (PFunctor.Obj.mk b) (funext fun i ↦ ?_))
+      change PFunctor.M.corec G (g i) = _
+      match g i with
+      | .inl l => exact key l
+      | .inr r => rfl
+  simp only [PFunctor.M.corec', PFunctor.M.corec₁]
+  refine main _ (fun _ ↦ rfl) ?_ ?_ x
+  · intro a l h
+    simp only [Sum.bind, Function.id_comp, h]
+  · intro a w h
+    simp only [Sum.bind, Function.id_comp, h]
 
 end Lean4Itree
 

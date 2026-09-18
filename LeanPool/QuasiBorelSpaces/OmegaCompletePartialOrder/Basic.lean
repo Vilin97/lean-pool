@@ -8,7 +8,7 @@ import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 import Mathlib.Order.OmegaCompletePartialOrder
 import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Const
 import Mathlib.MeasureTheory.MeasurableSpace.Defs
-import Mathlib.Data.ENNReal.Basic
+import Mathlib.Basic.ENNReal.Basic
 import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic

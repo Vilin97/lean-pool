@@ -7,9 +7,9 @@ Authors: Scott D. Hughes
 import Mathlib.Algebra.Order.Ring.Nat
 import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Nat.Factorization.Defs
 import Mathlib.Data.Nat.PrimeFin
-import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Convert
 import Mathlib.Tactic.GCongr
 import Mathlib.Tactic.IntervalCases
@@ -85,14 +85,13 @@ theorem lemma_star (m : ℕ) (hm : 0 < m) :
       (Nat.primeFactors m).prod
           (fun p => p ^ 2 * if 2 ≤ m.factorization p then p ^ m.factorization p else 1) ≤
         (Nat.primeFactors m).prod (fun p => p ^ (2 * m.factorization p)) := by
-    refine Finset.prod_le_prod' ?_
+    refine Finset.prod_le_prod ?_
     intro p hp
     split_ifs with h_factorization
     · rw [← pow_add]
       exact Nat.pow_le_pow_right (Nat.prime_of_mem_primeFactors hp).one_lt.le (by
         nlinarith)
     · interval_cases _ : m.factorization p <;> simp_all +decide [Nat.pow_succ']
-      simp_all +decide [ Nat.factorization_eq_zero_iff ];
   -- By definition of $rad$ and $powerfulPart$, we can rewrite the left-hand side of the inequality.
   simp only [Nat.rad, Nat.powerfulPart, ge_iff_le] at *
   convert h_term_by_term using 1

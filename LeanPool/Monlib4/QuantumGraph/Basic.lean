@@ -1028,10 +1028,7 @@ theorem TensorProduct.toIsBimoduleMap_comp
     (AlgEquiv.TensorProduct.map f g).toLinearMap
       ∘ₗ (TensorProduct.toIsBimoduleMap x).1
       ∘ₗ (AlgEquiv.TensorProduct.map f.symm g.symm).toLinearMap := by
-  induction x using TensorProduct.induction_on with
-  | zero =>
-    simp only [map_zero, ZeroMemClass.coe_zero, AlgEquiv.TensorProduct.map_toLinearMap,
-    LinearMap.zero_comp, LinearMap.comp_zero]
+  induction x with
   | tmul _ _ =>
     rw [TensorProduct.toIsBimoduleMap_apply_coe, AlgEquiv.TensorProduct.map_tmul, rmulMapLmul_apply,
       TensorProduct.ext_iff']

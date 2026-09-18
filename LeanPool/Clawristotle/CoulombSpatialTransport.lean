@@ -54,7 +54,8 @@ lemma gradX_stronglyMeasurable_v
   have hF_at : HasFDerivAt F (fderiv ℝ F x₀) (x₀ + (0 : ℝ) • ei) := by
     rw [h_eq]; exact hF_diff.hasFDerivAt
   have hline : HasDerivAt (fun t : ℝ => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0 := by
-    convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1 <;> rfl
+    convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1
+    rfl
   have htendsto_inv : Filter.Tendsto (fun n : ℕ => ((↑n + 1 : ℝ))⁻¹) Filter.atTop
       (nhdsWithin 0 (Set.Ioi 0)) :=
     tendsto_nhdsWithin_iff.mpr ⟨

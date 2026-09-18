@@ -190,7 +190,7 @@ private lemma measurableSet_goodBlock_A
   have hL_meas : LearnEvalMeasurable L := MeasurableBatchLearner.eval_measurable
   have h_label : Measurable (fun p : (Fin n → X) × X =>
       fun i : Fin n => (p.1 i, c (p.1 i))) :=
-    measurable_pi_lambda _ (fun i =>
+    Measurable.of_eval (fun i =>
       ((measurable_pi_apply i).comp measurable_fst).prodMk
         (hc_meas.comp ((measurable_pi_apply i).comp measurable_fst)))
   have h_joint : Measurable (fun p : (Fin n → X) × X =>

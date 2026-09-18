@@ -89,17 +89,18 @@ theorem eLpNorm_fderiv_cutoff_smul_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f)
     eLpNorm (fderiv ℝ (fun y => cutoff ℝ³ R y • f y)) 2 volume
         ≤ eLpNorm (fun x => ‖fderiv ℝ f x‖ +
           (derivativeConstant ℝ³ 1 / R) * ‖f x‖) 2 volume :=
-      eLpNorm_mono_real (norm_fderiv_cutoff_smul_le hf hR)
+      eLpNorm_mono_real
+        ((((cutoff_smooth (E := ℝ³) R).of_le (by simp)).smul hf).continuous_fderiv
+          (by simp)).aestronglyMeasurable (norm_fderiv_cutoff_smul_le hf hR)
     _ ≤ eLpNorm (fun x => ‖fderiv ℝ f x‖) 2 volume +
         eLpNorm (fun x => (derivativeConstant ℝ³ 1 / R) * ‖f x‖) 2 volume :=
-      eLpNorm_add_le (hf.continuous_fderiv (by simp)).norm.aestronglyMeasurable
-        (continuous_const.mul hf.continuous.norm).aestronglyMeasurable (by norm_num)
+      eLpNorm_add_le (by norm_num)
     _ = eLpNorm (fderiv ℝ f) 2 volume +
         ENNReal.ofReal (derivativeConstant ℝ³ 1 / R) * eLpNorm f 2 volume := by
-      rw [eLpNorm_norm]
+      rw [eLpNorm_norm _ (hf.continuous_fderiv (by simp)).aestronglyMeasurable]
       change _ + eLpNorm ((derivativeConstant ℝ³ 1 / R) • (fun x => ‖f x‖)) 2 volume = _
-      rw [eLpNorm_const_smul, eLpNorm_norm, Real.enorm_eq_ofReal
-        (div_nonneg (derivativeConstant_pos 1).le hR.le)]
+      rw [eLpNorm_const_smul, eLpNorm_norm _ hf.continuous.aestronglyMeasurable,
+        Real.enorm_eq_ofReal (div_nonneg (derivativeConstant_pos 1).le hR.le)]
 
 /-- The homogeneous `H¹ → L⁶` inequality without a support assumption.
 Only the function itself must have finite `L²` norm for this extended-norm
@@ -123,6 +124,7 @@ theorem eLpNorm_six_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f) (h2 : MemLp f 2
       atTop.liminf (fun n => eLpNorm (u n) 6 volume) :=
     Lp.eLpNorm_lim_le_liminf_eLpNorm
       (fun n => (hu n).continuous.aestronglyMeasurable) f
+      hf.continuous.aestronglyMeasurable
       (Filter.Eventually.of_forall hpointwise)
   have hbound : ∀ᶠ n : ℕ in atTop,
       eLpNorm (u n) 6 volume ≤
@@ -157,8 +159,7 @@ theorem eLpNorm_six_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f) (h2 : MemLp f 2
 theorem memLp_six {f : ℝ³ → E} (hf : ContDiff ℝ 1 f)
     (h2 : MemLp f 2 volume) (hD2 : MemLp (fderiv ℝ f) 2 volume) :
     MemLp f 6 volume := by
-  refine ⟨hf.continuous.aestronglyMeasurable, (eLpNorm_six_le hf h2).trans_lt ?_⟩
-  exact ENNReal.mul_lt_top ENNReal.coe_lt_top hD2.2
+  exact (eLpNorm_six_le hf h2).trans_lt (ENNReal.mul_lt_top ENNReal.coe_lt_top hD2)
 
 /-- The real-valued homogeneous Sobolev bound when both `L²` norms are finite. -/
 theorem toReal_eLpNorm_six_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f)
@@ -166,7 +167,7 @@ theorem toReal_eLpNorm_six_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f)
     (eLpNorm f 6 volume).toReal ≤
       (sobolevConstant : ℝ) * (eLpNorm (fderiv ℝ f) 2 volume).toReal := by
   have hfinite : (sobolevConstant : ℝ≥0∞) * eLpNorm (fderiv ℝ f) 2 volume ≠ (⊤ : ℝ≥0∞) :=
-    (ENNReal.mul_lt_top ENNReal.coe_lt_top hD2.2).ne
+    (ENNReal.mul_lt_top ENNReal.coe_lt_top hD2).ne
   simpa only [ENNReal.toReal_mul, ENNReal.coe_toReal] using
     ENNReal.toReal_mono hfinite (eLpNorm_six_le hf h2)
 
@@ -174,8 +175,8 @@ theorem toReal_eLpNorm_six_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f)
 theorem lpNorm_six_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f)
     (h2 : MemLp f 2 volume) (hD2 : MemLp (fderiv ℝ f) 2 volume) :
     lpNorm f 6 volume ≤ (sobolevConstant : ℝ) * lpNorm (fderiv ℝ f) 2 volume := by
-  rw [← toReal_eLpNorm hf.continuous.aestronglyMeasurable,
-    ← toReal_eLpNorm (hf.continuous_fderiv (by simp)).aestronglyMeasurable]
+  rw [← toReal_eLpNorm,
+    ← toReal_eLpNorm]
   exact toReal_eLpNorm_six_le hf h2 hD2
 
 /-- The real-valued compact-support inequality. -/

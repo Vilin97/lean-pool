@@ -7,7 +7,7 @@ Authors: OpenAI
 module
 
 import Mathlib.Data.Nat.Choose.Cast
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Analysis.Normed.Field.Basic
 import Mathlib.Tactic.Bound

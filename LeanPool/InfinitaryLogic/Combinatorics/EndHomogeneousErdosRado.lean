@@ -269,7 +269,7 @@ noncomputable def nodeChosen (G : (Fin (n + 2) ↪o Source lam) → C)
           (h.restrict (le_of_lt (by
             have hh := Ordinal.typein_lt_type (· < · : β.ToType → β.ToType → Prop) x
             rwa [Ordinal.type_toType] at hh)))) h).Nonempty then
-      (IsWellFounded.wf : WellFounded (· < · : Source lam → Source lam → Prop)).min _ hne
+      (wellFounded_lt : WellFounded (· < · : Source lam → Source lam → Prop)).min _ hne
     else
       Classical.arbitrary (Source lam)
 termination_by β
@@ -329,7 +329,7 @@ private theorem nodeChosen_mem (G : (Fin (n + 2) ↪o Source lam) → C) {β : O
 private theorem nodeChosen_eq_min (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) (hlive : nodeLive G h) :
     nodeChosen G β h =
-      (IsWellFounded.wf : WellFounded (· < · : Source lam → Source lam → Prop)).min
+      (wellFounded_lt : WellFounded (· < · : Source lam → Source lam → Prop)).min
         (nodeS G h) hlive := by
   classical
   have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt

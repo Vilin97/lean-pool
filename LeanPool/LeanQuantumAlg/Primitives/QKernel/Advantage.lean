@@ -8,7 +8,7 @@ module
 
 public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Primitives.QKernel.DiscreteLogConcept
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Tactic.Common
 /-!
 # Quantum-kernel learning advantage (Liu, Arunachalam, Temme 2021)

@@ -94,7 +94,6 @@ lemma GL.mem_range_map_iff {f : R →+* S} (hf : Function.Injective f)
     congr 1
     ext i j
     simp [hr]
-  · exact (Units.inv_eq_val_inv _).symm
 
 variable {K : Type*} [CommRing K] (R : Subring K)
 

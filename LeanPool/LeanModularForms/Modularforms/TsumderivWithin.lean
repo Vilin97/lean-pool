@@ -100,7 +100,7 @@ private lemma summable_two_pi_pow_geometric (r : ℝ) (hr : ‖r‖ < 1) (K : �
       mul_one, norm_natCast]
     norm_cast
     simp only [Nat.cast_pow]
-    have hh : |π| = π := by simp [Real.pi_pos.le]
+    have hh : |π| = π := by simp
     rw [hh]
     ring
   apply Summable.congr _ heq

@@ -1212,6 +1212,15 @@ private lemma irreducible_of_addVal_eq_one {a : A} (h : addVal A a = 1) : Irredu
   exact ((associated_of_addVal_eq (a := a) (b := ϖ)
     (by rw [h, addVal_uniformizer hϖ])).symm).irreducible hϖ
 
+/-- A perturbation of valuation greater than one preserves a uniformizer's valuation. -/
+private lemma addVal_eq_one_of_close {w v : A} (hw : Irreducible w)
+    (hdist : (1 : ℕ∞) < addVal A (v - w)) : addVal A v = 1 := by
+  have hlt : addVal A w < addVal A (v - w) := by
+    rwa [addVal_uniformizer hw]
+  rw [show v = w + (v - w) by rw [add_comm, sub_add_cancel],
+    (addVal A).map_add_eq_of_lt_left hlt]
+  exact addVal_uniformizer hw
+
 /-- Any two uniformizers are associated. -/
 private lemma associated_of_irreducible {a b : A} (ha : Irreducible a) (hb : Irreducible b) :
     Associated a b :=
@@ -1363,6 +1372,27 @@ private lemma intModel_map {n : ℕ} (a : Fin n → K) (ha : ∀ i, a i ∈ 𝒪
   rw [Polynomial.map_mul, Polynomial.map_C, Polynomial.map_pow, Polynomial.map_X]
   rfl
 
+omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
+private lemma integral_of_root_toPoly (L : IntermediateField K (SeparableClosure K)) {n : ℕ}
+    (a : Fin n → K) (ha : ∀ i, a i ∈ 𝒪[K]) (y : ↥L)
+    (hy : Polynomial.aeval y (toPoly a) = 0) : y ∈ integers L := by
+  have h5 : Polynomial.aeval y (intModel a ha) = 0 := by
+    rw [← Polynomial.aeval_map_algebraMap K, intModel_map a ha]
+    exact hy
+  exact ⟨intModel a ha, intModel_monic a ha, by rwa [Polynomial.aeval_def] at h5⟩
+
+omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
+private lemma intModel_root_iff (L : IntermediateField K (SeparableClosure K)) {n : ℕ}
+    (a : Fin n → K) (ha : ∀ i, a i ∈ 𝒪[K]) (w : ↥(integers L)) :
+    Polynomial.eval w ((intModel a ha).map (algebraMap 𝒪[K] ↥(integers L))) = 0 ↔
+      Polynomial.aeval (w : ↥L) (toPoly a) = 0 := by
+  have hval_aeval : ((Polynomial.aeval w (intModel a ha) : ↥(integers L)) : ↥L) =
+      Polynomial.aeval (w : ↥L) (toPoly a) := by
+    rw [← intModel_map a ha, Polynomial.aeval_map_algebraMap]
+    exact (Polynomial.aeval_algHom_apply (Subalgebra.val _) w (intModel a ha)).symm
+  rw [Polynomial.eval_map, ← Polynomial.aeval_def, ← hval_aeval]
+  exact ⟨fun h => by rw [h]; rfl, fun h => Subtype.val_injective (by rw [h]; rfl)⟩
+
 /-! ### The annihilator package at an arbitrary uniformizer of `integers L`
 
 The cubes decomposing the set of uniformizers are centered at arbitrary uniformizers `η` of
@@ -1406,7 +1436,8 @@ private noncomputable def annihAt (hπ : Irreducible π) (hint : IsIntegral 𝒪
     (hei : (minpoly 𝒪[K] x).IsEisensteinAt (Submodule.span 𝒪[K] {π}))
     [IsDiscreteValuationRing ↥(integers (IntermediateField.adjoin K {x}))]
     (η : ↥(integers (IntermediateField.adjoin K {x}))) : Polynomial 𝒪[K] :=
-  annih (basisAt hπ hint hei η) η
+  annih (R := 𝒪[K]) (A := ↥(integers (IntermediateField.adjoin K {x})))
+    (n := (minpoly 𝒪[K] x).natDegree) (basisAt hπ hint hei η) η
 
 omit [IsUniformAddGroup K] in
 private lemma annihAt_monic (hπ : Irreducible π) (hint : IsIntegral 𝒪[K] x)
@@ -2188,28 +2219,8 @@ private theorem rootCount_eq_sum_indicator {π : 𝒪[K]} (hπ : Irreducible π)
     exact ((intModel_monic a ha).map _).ne_zero
   have hnodup : ((toPoly a).aroots ↥(IntermediateField.adjoin K {x})).Nodup :=
     Polynomial.nodup_roots hsep.map
-  have hint_y : ∀ y : ↥(IntermediateField.adjoin K {x}), Polynomial.aeval y (toPoly a) = 0 →
-      y ∈ integers (IntermediateField.adjoin K {x}) := by
-    intro y hy
-    have h5 : Polynomial.aeval y (intModel a ha) = 0 := by
-      rw [← Polynomial.aeval_map_algebraMap K, intModel_map a ha]
-      exact hy
-    exact ⟨intModel a ha, intModel_monic a ha, by rwa [Polynomial.aeval_def] at h5⟩
-  have hval_aeval : ∀ w : ↥(integers (IntermediateField.adjoin K {x})),
-      ((Polynomial.aeval w (intModel a ha) :
-        ↥(integers (IntermediateField.adjoin K {x}))) :
-          ↥(IntermediateField.adjoin K {x})) =
-        Polynomial.aeval (w : ↥(IntermediateField.adjoin K {x})) (toPoly a) := by
-    intro w
-    rw [← intModel_map a ha, Polynomial.aeval_map_algebraMap]
-    exact (Polynomial.aeval_algHom_apply (Subalgebra.val _) w (intModel a ha)).symm
-  have hroot_iff : ∀ w : ↥(integers (IntermediateField.adjoin K {x})),
-      Polynomial.eval w ((intModel a ha).map
-        (algebraMap 𝒪[K] ↥(integers (IntermediateField.adjoin K {x})))) = 0 ↔
-      Polynomial.aeval (w : ↥(IntermediateField.adjoin K {x})) (toPoly a) = 0 := by
-    intro w
-    rw [Polynomial.eval_map, ← Polynomial.aeval_def, ← hval_aeval w]
-    exact ⟨fun h => by rw [h]; rfl, fun h => Subtype.val_injective (by rw [h]; rfl)⟩
+  have hint_y := integral_of_root_toPoly (IntermediateField.adjoin K {x}) a ha
+  have hroot_iff := intModel_root_iff (IntermediateField.adjoin K {x}) a ha
   have hind : ∑ t ∈ T, (boxAt hπ hint hei ρ (rep t)).indicator
       (1 : (Fin (minpoly 𝒪[K] x).natDegree → K) → ℝ≥0∞) a =
       ((T.filter fun t => a ∈ boxAt hπ hint hei ρ (rep t)).card : ℝ≥0∞) := by
@@ -2421,30 +2432,16 @@ theorem lintegral_rootCount (n : ℕ) (hn : 0 < n)
       Irreducible (rep (Ideal.Quotient.mk I w)) := by
     intro w hw
     have hdist := (hclass (Ideal.Quotient.mk I w) w).mp rfl
-    have hlt : addVal ↥(integers (IntermediateField.adjoin K {x})) w <
-        addVal ↥(integers (IntermediateField.adjoin K {x}))
-          (rep (Ideal.Quotient.mk I w) - w) := by
-      rw [addVal_uniformizer hw,
-        (addVal ↥(integers (IntermediateField.adjoin K {x}))).map_sub_swap]
-      exact lt_of_lt_of_le (by exact_mod_cast hNρ1) hdist
-    refine irreducible_of_addVal_eq_one ?_
-    have h8 : rep (Ideal.Quotient.mk I w) = w + (rep (Ideal.Quotient.mk I w) - w) := by ring
-    rw [h8, (addVal ↥(integers (IntermediateField.adjoin K {x}))).map_add_eq_of_lt_left hlt]
-    exact addVal_uniformizer hw
+    apply irreducible_of_addVal_eq_one
+    apply addVal_eq_one_of_close hw
+    rw [(addVal ↥(integers (IntermediateField.adjoin K {x}))).map_sub_swap]
+    exact lt_of_lt_of_le (by exact_mod_cast hNρ1) hdist
   have hval_of_class : ∀ w : ↥(integers (IntermediateField.adjoin K {x})),
       Irreducible (rep (Ideal.Quotient.mk I w)) →
       addVal ↥(integers (IntermediateField.adjoin K {x})) w = 1 := by
     intro w hrw
     have hdist := (hclass (Ideal.Quotient.mk I w) w).mp rfl
-    have hlt : addVal ↥(integers (IntermediateField.adjoin K {x}))
-        (rep (Ideal.Quotient.mk I w)) <
-        addVal ↥(integers (IntermediateField.adjoin K {x}))
-          (w - rep (Ideal.Quotient.mk I w)) := by
-      rw [addVal_uniformizer hrw]
-      exact lt_of_lt_of_le (by exact_mod_cast hNρ1) hdist
-    have h8 : w = rep (Ideal.Quotient.mk I w) + (w - rep (Ideal.Quotient.mk I w)) := by ring
-    rw [h8, (addVal ↥(integers (IntermediateField.adjoin K {x}))).map_add_eq_of_lt_left hlt]
-    exact addVal_uniformizer hrw
+    exact addVal_eq_one_of_close hrw (lt_of_lt_of_le (by exact_mod_cast hNρ1) hdist)
   -- the normalization, and the cubes of the chart at the Eisenstein generator
   have hone : muCoeff K (minpoly 𝒪[K] x).natDegree
       (integerBox K (minpoly 𝒪[K] x).natDegree) = 1 :=

@@ -151,7 +151,7 @@ theorem PolygonalCircle.edgeSegment_inter_eq_shared_vertices
     rw [PolygonalCircle.edgeSegment, ← convexHull_pair]
     congr 1
     ext x
-    simp [eq_comm]
+    simp
   have hsucc (k : ZMod J.n) : k ≠ k + 1 := by
     intro hk
     exact J.adjacent_ne k (congrArg J.vertex hk)
@@ -308,7 +308,7 @@ noncomputable def PolygonalCircle.edgeComplex (J : PolygonalCircle) : PlaneCompl
           rw [PolygonalCircle.edgeSegment, ← convexHull_pair]
           congr 1
           ext x
-          simp [eq_comm]
+          simp
         simpa only [Finset.mem_insert, Finset.mem_singleton] using
           (J.vertex_mem_edgeSegment_iff v i).mp (by
             rw [← hpair]
@@ -370,13 +370,13 @@ noncomputable def PolygonalCircle.edgeComplex (J : PolygonalCircle) : PlaneCompl
             rw [PolygonalCircle.edgeSegment, ← convexHull_pair]
             congr 1
             ext x
-            simp [eq_comm]]
+            simp]
         rw [show convexHull ℝ (J.vertex '' (({j, j + 1} :
           Finset (ZMod J.n)) : Set (ZMod J.n))) = J.edgeSegment j by
             rw [PolygonalCircle.edgeSegment, ← convexHull_pair]
             congr 1
             ext x
-            simp [eq_comm]]
+            simp]
         exact J.edgeSegment_inter_eq_shared_vertices i j
 
 /-- The support of the polygon edge complex is exactly the polygon carrier. -/
@@ -390,7 +390,7 @@ theorem PolygonalCircle.edgeComplex_support (J : PolygonalCircle) :
     rw [← convexHull_pair]
     congr 1
     ext x
-    simp [eq_comm]
+    simp
   apply Set.Subset.antisymm
   · intro x hx
     rw [PlaneComplex.support] at hx
@@ -1330,11 +1330,11 @@ theorem TriangleMesh.exists_realizedProperChords_of_badFreeTriangle
   have havImage : M.position '' (({a, v} : Finset M.Vertex) : Set M.Vertex) =
       {M.position a, M.position v} := by
     ext p
-    simp [eq_comm]
+    simp
   have hbvImage : M.position '' (({b, v} : Finset M.Vertex) : Set M.Vertex) =
       {M.position b, M.position v} := by
     ext p
-    simp [eq_comm]
+    simp
   let Cav : J.ProperChord :=
     { P := M.position a
       Q := M.position v
@@ -1399,7 +1399,7 @@ theorem TriangleMesh.exists_meshCrosscut_of_badFreeTriangle
   have hchord : convexHull ℝ
       (M.position '' (({a, v} : Finset M.Vertex) : Set M.Vertex)) = G.B3 := by
     rw [show M.position '' (({a, v} : Finset M.Vertex) : Set M.Vertex) =
-      {M.position a, M.position v} by ext p; simp [eq_comm]]
+      {M.position a, M.position v} by ext p; simp]
     rw [convexHull_pair, hGB3, hCavP, hCavQ]
   refine ⟨G, ⟨{
     support_eq := hsupport.trans hclosed.symm
@@ -1407,7 +1407,7 @@ theorem TriangleMesh.exists_meshCrosscut_of_badFreeTriangle
     chordEdge_mem := hedgeMem
     chordVertices := by
       rw [show M.position '' (({a, v} : Finset M.Vertex) : Set M.Vertex) =
-        {M.position a, M.position v} by ext p; simp [eq_comm]]
+        {M.position a, M.position v} by ext p; simp]
       rw [hGP, hGQ, hCavP, hCavQ]
     chordCarrier := hchord }⟩⟩
 

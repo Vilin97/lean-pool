@@ -101,12 +101,7 @@ theorem fiber_path_second_deriv {d : ℕ} (f : E d → ℝ) (m v : E d)
     have h := ((hasDerivAt_id s).smul_const v).const_add m
     convert h using 1
     · rfl
-    · rfl
-    · rfl
-    · funext r
-      change (fun s => m + s • v) r = m + r • v
-      rfl
-    · simp
+    · rw [one_smul]
   have hf_diffAt : DifferentiableAt ℝ f (ψ t) :=
     hf_C2.differentiableAt (by norm_num : (2 : WithTop ℕ∞) ≠ 0)
   -- f is differentiable in a neighborhood of ψ(t)

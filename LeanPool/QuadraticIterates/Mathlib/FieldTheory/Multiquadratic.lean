@@ -871,9 +871,9 @@ theorem multiquadratic_degree_family {ι : Type*} [Fintype ι] {L : Type*} [Fiel
   have hs_ne : ∀ y ∈ s, cf y ≠ 0 := by
     intro y hy; obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp (hs ▸ hy); rw [hcf_x]; exact hr i
   set e : ↥(s : Set E) ≃ ι :=
-    (Equiv.setCongr hrange).trans (Equiv.ofInjective x hxinj).symm with he
+    (Set.equivOfEq hrange).trans (Equiv.ofInjective x hxinj).symm with he
   have hxe (y : ↥(s : Set E)) : x (e y) = (y : E) :=
-    congrArg Subtype.val ((Equiv.ofInjective x hxinj).apply_symm_apply (Equiv.setCongr hrange y))
+    congrArg Subtype.val ((Equiv.ofInjective x hxinj).apply_symm_apply (Set.equivOfEq hrange y))
   have hdim : Module.finrank (ZMod 2) (multiquadraticRelations s cf)
       = Module.finrank (ZMod 2) (rootRelations r) :=
     (multiquadraticRelations_finrank_eq_rootRelations s cf).trans
