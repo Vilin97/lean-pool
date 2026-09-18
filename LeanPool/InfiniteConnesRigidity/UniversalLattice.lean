@@ -5763,8 +5763,9 @@ private def mennickeBlock (a b c d : R) (hdet : a * d - b * c = 1) :
 
 
 
-/-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem specialLinear_mul_transvection_apply
+/-- Right multiplication by a transvection, entrywise. Shared by the block computations in
+`CarryAndCrossedProduct` and `GroupConstruction`, so keep it exported. -/
+public theorem specialLinear_mul_transvection_apply
     {ι A : Type*} [Fintype ι] [DecidableEq ι] [CommRing A]
     (x : Matrix.SpecialLinearGroup ι A) {i j : ι} (hij : i ≠ j)
     (r : A) (a b : ι) :

@@ -1896,20 +1896,6 @@ private theorem cornulierColumnRootProduct_mem (v : Index → IntegralPolynomial
       (cornulierRoot_mem_K₁ 1 (by decide) (v 1)))
     (cornulierRoot_mem_K₁ 2 (by decide) (v 2))
 
-/-- Right multiplication by a transvection, entrywise. -/
-private theorem specialLinear_mul_transvection_apply
-    {ι A : Type*} [Fintype ι] [DecidableEq ι] [CommRing A]
-    (x : Matrix.SpecialLinearGroup ι A) {i j : ι} (hij : i ≠ j)
-    (r : A) (a b : ι) :
-    (x * Matrix.SpecialLinearGroup.transvection hij r) a b =
-      if b = j then x a j + r * x a i else x a b := by
-  rw [Matrix.SpecialLinearGroup.coe_mul,
-    Matrix.SpecialLinearGroup.transvection_coe]
-  split_ifs with h
-  · subst b
-    exact Matrix.mul_transvection_apply_same (i := i) (j := j) a r x.val
-  · exact Matrix.mul_transvection_apply_of_ne (i := i) (j := j) a b h r x.val
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem cornulierColumnRootProduct_apply (v : Index → IntegralPolynomial)
     (p q : Index) :
@@ -1928,7 +1914,8 @@ private theorem cornulierColumnRootProduct_apply (v : Index → IntegralPolynomi
       IntegralSpecialLinearGroup) p q = _
   fin_cases p <;> fin_cases q <;>
     simp only [cornulierLast, Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk,
-      specialLinear_mul_transvection_apply, Fin.reduceEq, ↓reduceIte,
+      ConnesRigidity.MennickeIdentity.specialLinear_mul_transvection_apply, Fin.reduceEq,
+      ↓reduceIte,
       Matrix.SpecialLinearGroup.transvection_coe, Matrix.add_apply, Matrix.one_apply,
       Matrix.single_apply, one_ne_zero, zero_ne_one, and_self, and_false, and_true, mul_one,
       mul_zero, add_zero, zero_add]
@@ -1967,7 +1954,8 @@ private theorem cornulierRowRootProduct_apply (v : Index → IntegralPolynomial)
       IntegralSpecialLinearGroup) p q = _
   fin_cases p <;> fin_cases q <;>
     simp only [cornulierLast, Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk,
-      specialLinear_mul_transvection_apply, Fin.reduceEq, ↓reduceIte,
+      ConnesRigidity.MennickeIdentity.specialLinear_mul_transvection_apply, Fin.reduceEq,
+      ↓reduceIte,
       Matrix.SpecialLinearGroup.transvection_coe, Matrix.add_apply, Matrix.one_apply,
       Matrix.single_apply, one_ne_zero, zero_ne_one, and_self, and_false, and_true, mul_one,
       mul_zero, add_zero, zero_add]
