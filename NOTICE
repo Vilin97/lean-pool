@@ -69,6 +69,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Erdos346                  https://github.com/KitaKen1/erdos346-ratio-limit-lean
   LeanPool/Erdos367                  https://github.com/scottdhughes/erdos367
   LeanPool/Erdos403                  https://github.com/gotrevor/erdos-403
+  LeanPool/Erdos548                  https://github.com/tadamcz/erdos548
   LeanPool/Erdos81PaperIContrib      https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/Erdos81PaperIIContrib     https://github.com/jtraverso/lean-pool
   LeanPool/Erdos81PaperIIIContrib    https://github.com/jtraverso/erdos-81-chordal-clique-partitions
@@ -337,6 +338,20 @@ The following notices are reproduced from the upstream repositories' own NOTICE
 files or LICENSE addenda. Only each project's Apache-2.0 Lean sources were
 imported here; these notes preserve attribution and citation requests made by
 the original authors.
+
+  LeanPool/Erdos548                  https://github.com/tadamcz/erdos548
+      The upstream repository ships a NOTICE file (Apache License, Version 2.0,
+      Section 4(d)). Its attribution notice reads:
+
+          Erdős problem #548 (Erdős–Sós conjecture): proof
+          Copyright 2026 Tom Adamczewski / Epoch AI
+
+          The formal statement was given to the AI system by the FrontierMath
+          Erdős benchmark of Tom Adamczewski and Thomas F. Bloom
+          (LeanOpenProblems, https://github.com/epoch-research/LeanOpenProblems,
+          commit 77882c437ca1dfefab3b27fa00f1d29788100311), Epoch AI, MIT License.
+          The Lean proofs were produced by a pre-release version of GPT-6 Astra
+          (OpenAI) running in that benchmark.
 
   LeanPool/FormalLearningTheory      https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
       The upstream LICENSE appends a citation request. The original author asks
