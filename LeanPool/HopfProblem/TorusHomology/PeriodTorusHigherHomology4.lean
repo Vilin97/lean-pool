@@ -142,7 +142,7 @@ private theorem PeriodTorusHigherHomology.chainBilinearMap_ext (X Y : Type) [Top
 
 private def PeriodTorusHigherHomology.zeroSimplexValue {X : Type} [TopologicalSpace X]
     (σ : FirstHurewicz.SingularSimplex X 0) : X :=
-  σ (stdSimplex.vertex (S := ℝ) (0 : Fin 1))
+  σ (SimplexSet.vertex (S := ℝ) (0 : Fin 1))
 
 @[simp]
 private theorem PeriodTorusHigherHomology.zeroSimplexValue_comp {X X' : Type} [TopologicalSpace X]
@@ -626,7 +626,7 @@ private theorem
   intro t
   apply Subtype.ext
   change (∑ i, t i • (a : Fin (p + 1) → ℝ)) = (a : Fin (p + 1) → ℝ)
-  rw [← Finset.sum_smul, stdSimplex.sum_eq_one t, one_smul]
+  rw [← Finset.sum_smul, SimplexSet.sum_eq_one t, one_smul]
 
 private def PeriodTorusHigherHomology.productAffineSimplex {n p q : ℕ}
     (v : Fin (n + 1) → FirstHurewicz.Simplex p × FirstHurewicz.Simplex q) :

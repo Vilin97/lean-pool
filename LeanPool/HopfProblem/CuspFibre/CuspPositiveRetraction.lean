@@ -1061,7 +1061,7 @@ private theorem
 
 private theorem CuspPositiveRetraction.shrink_height_le (s : unitInterval) (r : Orthant) :
     height (shrink s r) ≤ height r :=
-  Finset.prod_le_prod (fun i _ => (shrink s r).2 i) (fun i _ => shrink_coordinate_le s r i)
+  Finset.prod_le_prod₀ (fun i _ => (shrink s r).2 i) (fun i _ => shrink_coordinate_le s r i)
 
 private theorem CuspPositiveRetraction.shrink_dist_eq (s : unitInterval) (r : Orthant) :
     Dist.dist (shrink s r) r = (s : ℝ) * minimum r := by

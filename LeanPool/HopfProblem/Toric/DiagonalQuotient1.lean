@@ -398,8 +398,7 @@ private theorem DiagonalQuotient.spaceSecondCountable {G : Type*} {B : Type*} {F
     (hq : IsQuotientCoveringMap (baseQuotient G B) G) [ContinuousConstSMul G F]
     [SecondCountableTopology B] [SecondCountableTopology F] :
     SecondCountableTopology (Space G B F) :=
-  (quotient_isQuotientMap G B F).secondCountableTopology
-    (quotient_isOpenQuotientMap (F := F) hq).isOpenMap
+  (quotient_isOpenQuotientMap (F := F) hq).secondCountableTopology
 
 end Mathoverflow1973
 

@@ -2564,7 +2564,8 @@ private theorem CuspQuotient.quotient_secondCountable (C : ℂ → Matrix (Fin 2
     (hR : ToricSpace.SmallDrift C ε) : SecondCountableTopology (QuotientSpace C ε) := by
   let := ToricSpace.tubeAction C (disc ε)
   have hq := quotientMap_covering C ε hε hε1 hC hR
-  exact hq.toIsQuotientMap.secondCountableTopology hq.isCoveringMap.isOpenMap
+  exact (IsOpenQuotientMap.of_isOpenMap_isQuotientMap hq.isCoveringMap.isOpenMap
+    hq.toIsQuotientMap).secondCountableTopology
 
 private def CuspQuotient.centralAffine : Set (ToricCharts.CoordinateSpace 3) :=
   {z | ToricFan.Triangle.time z = 0}

@@ -120,13 +120,13 @@ private instance SphereHomology.unitSphere_simplyConnectedSpace (n : ℕ) :
 
 @[simp]
 private theorem FirstHurewicz.simplexFace_vertex (n : ℕ) (i : Fin (n + 2)) (k : Fin (n + 1)) :
-    simplexFace n i (stdSimplex.vertex (S := ℝ) k) = stdSimplex.vertex (S := ℝ) (i.succAbove k) :=
-  by rw [simplexFace_apply, stdSimplex.map_vertex]
+    simplexFace n i (SimplexSet.vertex (S := ℝ) k) = SimplexSet.vertex (S := ℝ) (i.succAbove k) :=
+  by rw [simplexFace_apply, SimplexSet.map_vertex]
 
 private theorem FirstHurewicz.simplex_contractible (n : ℕ) : ContractibleSpace (Simplex n) :=
-  (convex_stdSimplex ℝ (Fin (n + 1))).contractibleSpace
-    ⟨(stdSimplex.vertex (S := ℝ) (0 : Fin (n + 1))).val,
-      (stdSimplex.vertex (S := ℝ) (0 : Fin (n + 1))).property⟩
+  (SimplexSet.convex ℝ (Fin (n + 1))).contractibleSpace
+    ⟨(SimplexSet.vertex (S := ℝ) (0 : Fin (n + 1))).val,
+      (SimplexSet.vertex (S := ℝ) (0 : Fin (n + 1))).property⟩
 
 private theorem
     FirstHurewicz.simplex_simplyConnected (n : ℕ) : SimplyConnectedSpace (Simplex n) := by
@@ -135,24 +135,24 @@ private theorem
 
 private def FirstHurewicz.triangleFacePath {X : Type*} [TopologicalSpace X] (σ : C(Simplex 2, X))
     (i : Fin 3) :
-    Path (σ (stdSimplex.vertex (S := ℝ) (i.succAbove (0 : Fin 2))))
-      (σ (stdSimplex.vertex (S := ℝ) (i.succAbove (1 : Fin 2)))) :=
+    Path (σ (SimplexSet.vertex (S := ℝ) (i.succAbove (0 : Fin 2))))
+      (σ (SimplexSet.vertex (S := ℝ) (i.succAbove (1 : Fin 2)))) :=
   (simplexPath (σ.comp (simplexFace 1 i))).cast (congrArg σ (simplexFace_vertex 1 i 0)).symm
     (congrArg σ (simplexFace_vertex 1 i 1)).symm
 
 private abbrev FirstHurewicz.triangleEdge01 {X : Type*} [TopologicalSpace X] (σ : C(Simplex 2, X)) :
-    Path (σ (stdSimplex.vertex (S := ℝ) (0 : Fin 3)))
-      (σ (stdSimplex.vertex (S := ℝ) (1 : Fin 3))) :=
+    Path (σ (SimplexSet.vertex (S := ℝ) (0 : Fin 3)))
+      (σ (SimplexSet.vertex (S := ℝ) (1 : Fin 3))) :=
   triangleFacePath σ 2
 
 private abbrev FirstHurewicz.triangleEdge12 {X : Type*} [TopologicalSpace X] (σ : C(Simplex 2, X)) :
-    Path (σ (stdSimplex.vertex (S := ℝ) (1 : Fin 3)))
-      (σ (stdSimplex.vertex (S := ℝ) (2 : Fin 3))) :=
+    Path (σ (SimplexSet.vertex (S := ℝ) (1 : Fin 3)))
+      (σ (SimplexSet.vertex (S := ℝ) (2 : Fin 3))) :=
   triangleFacePath σ 0
 
 private abbrev FirstHurewicz.triangleEdge02 {X : Type*} [TopologicalSpace X] (σ : C(Simplex 2, X)) :
-    Path (σ (stdSimplex.vertex (S := ℝ) (0 : Fin 3)))
-      (σ (stdSimplex.vertex (S := ℝ) (2 : Fin 3))) :=
+    Path (σ (SimplexSet.vertex (S := ℝ) (0 : Fin 3)))
+      (σ (SimplexSet.vertex (S := ℝ) (2 : Fin 3))) :=
   triangleFacePath σ 1
 
 private theorem FirstHurewicz.triangleEdges_homotopic {X : Type*} [TopologicalSpace X]

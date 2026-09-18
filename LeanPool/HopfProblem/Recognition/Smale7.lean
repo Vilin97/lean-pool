@@ -827,7 +827,7 @@ private theorem Smale.injective_nativeDerivative_of_strip_germ {E M : Type*} [No
     (hi : Function.Injective (fderiv ℝ r p)) :
     Function.Injective (mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, E) f p) := by
   have hgerm : f =ᶠ[𝓝 p] k.map ∘ r := Filter.mem_of_superset (hU.mem_nhds hp) (fun _ hx => heq hx)
-  rw [hgerm.mfderiv_eq]
+  rw [hgerm.mfderiv_eq']
   have hk := k.smooth.contMDiffAt (k.open_domain.mem_nhds (hmap hp))
   rw [mfderiv_comp p (hk.mdifferentiableAt (by simp)) (hr.contMDiff.mdifferentiableAt (by simp))]
   have hri : Function.Injective (mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, ℝ × ℝ) r p) := by
@@ -1959,10 +1959,10 @@ private theorem Smale.WhitneyPairModel.hasDerivAt_upperBoundaryArc (h t : ℝ) :
   have hs : HasDerivAt (fun s : ℝ => 2 * s - 1) 2 t := by
     simpa using ((hasDerivAt_id t).const_mul 2).sub_const 1
   have hy : HasDerivAt (fun s : ℝ => h * (1 - (2 * s - 1) ^ 2)) (-4 * h * (2 * t - 1)) t := by
-    convert HasDerivAt.const_mul h ((hasDerivAt_const t (1 : ℝ)).sub (hs.pow 2)) using 1 <;>
-      first
-      | rfl
-      | ring
+    convert HasDerivAt.const_mul h ((hasDerivAt_const t (1 : ℝ)).sub (hs.pow 2)) using 1
+    first
+    | rfl
+    | ring
   exact hs.prodMk hy
 
 private theorem Smale.TubularBigon.lowerBoundaryArc_mem_bigon {E M : Type*} [NormedAddCommGroup E]
@@ -2858,7 +2858,7 @@ private theorem
 private theorem
     Smale.FrameField.exists_nonzero_field_rel_closed {P F : Type*} [NormedAddCommGroup P]
     [NormedSpace ℝ P] [FiniteDimensional ℝ P] [NormedAddCommGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] {v : P → F} (hv : ContDiff ℝ ∞ v)
+    {v : P → F} (hv : ContDiff ℝ ∞ v)
     (hdim : Module.finrank ℝ P < Module.finrank ℝ F) {K C : Set P} (hK : IsCompact K)
     (hC : IsClosed C) (hne : ∀ x ∈ K ∩ C, v x ≠ 0) :
     ∃ v' : P → F, ContDiff ℝ ∞ v' ∧ v' =ᶠ[𝓝ˢ C] v ∧ ∀ x ∈ K, v' x ≠ 0 := by
@@ -2888,7 +2888,7 @@ private theorem
     · exact ha x hβx (0 : Z)
 
 private theorem Smale.FrameField.exists_nonzero_extension_of_local_field {F : Type*}
-    [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
     {v : Smale.PlaneImmersion.Plane → F} {U C K : Set Smale.PlaneImmersion.Plane} (hU : IsOpen U)
     (hv : ContDiffOn ℝ ∞ v U) (hC : IsClosed C) (hCU : C ⊆ U) (hK : IsCompact K)
     (hne : ∀ x ∈ K ∩ C, v x ≠ 0) (hdim : 3 ≤ Module.finrank ℝ F) :
@@ -2940,7 +2940,7 @@ private theorem
 
 private theorem Smale.FrameField.exists_one_column_extension_of_local_field {A F : Type*}
     [NormedAddCommGroup A] [NormedSpace ℝ A] [FiniteDimensional ℝ A] [NormedAddCommGroup F]
-    [NormedSpace ℝ F] [FiniteDimensional ℝ F] (hA : Module.finrank ℝ A = 1)
+    [NormedSpace ℝ F] (hA : Module.finrank ℝ A = 1)
     {L : Smale.PlaneImmersion.Plane → (A →L[ℝ] F)} {U C K : Set Smale.PlaneImmersion.Plane}
     (hU : IsOpen U) (hL : ContDiffOn ℝ ∞ L U) (hC : IsClosed C) (hCU : C ⊆ U) (hK : IsCompact K)
     (hi : ∀ x ∈ K ∩ C, Function.Injective (L x)) (hdim : 3 ≤ Module.finrank ℝ F) :
@@ -4385,7 +4385,7 @@ private theorem Smale.NativeSheetCoordinates.injective_mfderiv_projection {D B E
       rw [mfderiv_eq_fderiv]
       exact (ContinuousLinearMap.snd ℝ D B).fderiv
     have hz : (mfderiv I 𝓘(ℝ, B) (Prod.snd ∘ C) x : G →L[ℝ] B) = 0 := by
-      rw [hzero.mfderiv_eq, mfderiv_const]
+      rw [hzero.mfderiv_eq', mfderiv_const]
       rfl
     rw [mfderiv_comp x (hp.mdifferentiableAt (by simp)) (hC.mdifferentiableAt (by simp)),
       hd] at hz
@@ -5079,7 +5079,7 @@ private theorem Smale.CleanBigonBoundary.exists_smooth_inner_extension_in_open {
     have heq : (Subtype.val ∘ F) =ᶠ[𝓝 p] (d.map ∘ Smale.WhitneyPairModel.innerBigonMap h r) :=
       Filter.mem_of_superset (hW.mem_nhds hp) (fun _ hq => hEqval hq)
     have hi : Function.Injective (mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, E) (Subtype.val ∘ F) p) := by
-      rw [heq.mfderiv_eq]
+      rw [heq.mfderiv_eq']
       exact hderiv p (hWV hp)
     have hc : ContMDiff 𝓘(ℝ, E) 𝓘(ℝ, E) ∞ (Subtype.val : U → M) := contMDiff_subtype_val
     rw [mfderiv_comp p (hc.mdifferentiableAt (by simp)) (hF.mdifferentiableAt (by simp))] at hi
@@ -5365,7 +5365,7 @@ private theorem Smale.exists_filled_clean_bigon_of_collar_disjoint_inner {E M : 
     by_cases hpCore : p ∈ core
     · have heq : j =ᶠ[𝓝 p] G :=
         Filter.mem_of_superset (hP.mem_nhds (hcoreP hpCore)) (fun _ hx => hjG hx)
-      rw [heq.mfderiv_eq]
+      rw [heq.mfderiv_eq']
       change Function.Injective (mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, E) (F ∘ c.symm) p)
       rw [mfderiv_comp p (hF.mdifferentiableAt (by simp))
           (c.symm.contMDiff.mdifferentiableAt (by simp))]
@@ -5378,7 +5378,7 @@ private theorem Smale.exists_filled_clean_bigon_of_collar_disjoint_inner {E M : 
     · have hpC := hnotCore p hp hpCore
       have heq : j =ᶠ[𝓝 p] d.map :=
         Filter.mem_of_superset (hQ.mem_nhds (hcollarQ hpC)) (fun _ hx => hjd hx)
-      rw [heq.mfderiv_eq]
+      rw [heq.mfderiv_eq']
       exact d.derivative_injective p (hcollar hpC)
   have havoid : ∀ p ∈ interior (WhitneyPairModel.bigon h), j p ∉ S ∪ T := by
     intro p hp
@@ -5407,7 +5407,7 @@ private theorem Smale.exists_filled_clean_bigon_of_collar_disjoint_inner {E M : 
   · intro p hp
     have heq : f =ᶠ[𝓝 p] j := Filter.mem_of_superset (hV.mem_nhds (hKV hp)) (fun _ hx => hfj hx)
     change Function.Injective (mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, E) f p)
-    rw [heq.mfderiv_eq]
+    rw [heq.mfderiv_eq']
     exact hi p hp
   · intro p hp
     change f p ∉ S ∪ T
@@ -5523,7 +5523,7 @@ private theorem Smale.CleanBigonBoundary.nonempty_tubularBigon_of_complement_con
 private theorem Smale.ManifoldImmersion.exists_weighted_immersive_patch_with_property
     {B E G F H H' X N : Type*} [NormedAddCommGroup B] [NormedSpace ℝ B] [FiniteDimensional ℝ B]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F]
+    [NormedSpace ℝ G] [NormedAddCommGroup F] [NormedSpace ℝ F]
     [TopologicalSpace H] [TopologicalSpace H'] {I : ModelWithCorners ℝ B H}
     {J : ModelWithCorners ℝ G H'} [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X]
     [LindelofSpace (X × E)] [TopologicalSpace N] [ChartedSpace H' N]
@@ -5632,7 +5632,7 @@ private theorem Smale.ChartMapPerturbation.derivative_eq_zero_iff_of_weight_deri
     have heq : perturb c f β a =ᶠ[𝓝 x] f := by
       filter_upwards [hzero] with y hy
       exact perturb_eq_of_zero c f β a hy
-    rw [heq.mfderiv_eq]
+    rw [heq.mfderiv_eq']
     rfl
 
 end Mathoverflow1973

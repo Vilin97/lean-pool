@@ -362,8 +362,7 @@ private theorem CuspHoneycombHexagon.previous_transition (i : Fin 6) (a b : ℂ)
   fin_cases i <;> ext j <;> fin_cases j <;>
       norm_num [ToricCharts.monomial, previousTransitionMatrix, Fin.prod_univ_succ, Fin.add_def,
         Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.vecHead,
-        Matrix.vecTail, mul_comm] <;>
-    rfl
+        Matrix.vecTail, mul_comm]
 
 private theorem CuspHoneycombHexagon.chartPoint_previous (i : Fin 6) (a b : ℂ) (hb : b ≠ 0) :
     chartPoint (i + 5) ![b⁻¹, a * b] = chartPoint i ![a, b] := by

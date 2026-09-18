@@ -827,7 +827,7 @@ private theorem Degree.FlowSuspension.nativeSuspensionField_eq_vertical_of_flow_
     nativeSuspensionField Ψ p = nativeVerticalField p := by
   have hw := nativeSuspensionFlow_integralCurve Ψ p 0
   have hv := nativeVerticalField_integralCurve (Z := Z) p 0
-  have hh := hw.mfderiv.symm.trans (heq.mfderiv_eq.trans hv.mfderiv)
+  have hh := hw.mfderiv.symm.trans (heq.mfderiv_eq'.trans hv.mfderiv)
   have hval := congrArg (fun L : ℝ →L[ℝ] (Z × ℝ) => L 1) hh
   change
     (1 : ℝ) • nativeSuspensionField Ψ (nativeSuspensionFlow Ψ 0 p) =
@@ -993,7 +993,7 @@ private theorem
   have hd :
     mfderiv (𝓘(ℝ, Z).prod 𝓘(ℝ, ℝ)) 𝓘(ℝ, ℝ) (f ∘ A) q =
       mfderiv (𝓘(ℝ, Z).prod 𝓘(ℝ, ℝ)) 𝓘(ℝ, ℝ) (fun p : N × ℝ => b - s * p.2) q :=
-    heq.mfderiv_eq
+    heq.mfderiv_eq'
   rw [mvfderiv_native_model_pullback A hf W hx]
   change mfderiv (𝓘(ℝ, Z).prod 𝓘(ℝ, ℝ)) 𝓘(ℝ, ℝ) (f ∘ A) q (W q) = _
   rw [hd]
@@ -3959,7 +3959,7 @@ private theorem Degree.TransverseGerms.relative_transverse_of_label_sheets {A B 
     rwa [hH0] at hh
   have ht := label_sheets_transverse_in_incoming_chart Q P (hHs h0) hPsrc hQ0 hP0 htrans
   obtain ⟨heqH, heqP⟩ := relative_label_sheet_germs Q P H h0 hPsrc hHt hdiagram
-  rw [heqH.mfderiv_eq, heqP.mfderiv_eq] at ht
+  rw [heqH.mfderiv_eq', heqP.mfderiv_eq'] at ht
   exact fun _ => ht
 
 private theorem Degree.FlowSuspension.relative_intersection_of_native_unique_connection
@@ -5363,7 +5363,7 @@ private theorem Degree.FieldChartGluing.partialChartField_eq_of_forward_germ {D 
         ((NormedSpace.fromTangentSpace (Φ.symm (Φ p))).symm (W (Φ.symm (Φ p)))) =
       mfderiv 𝓘(ℝ, D) 𝓘(ℝ, E) Ψ (Ψ.symm (Φ p))
         ((NormedSpace.fromTangentSpace (Ψ.symm (Φ p))).symm (W (Ψ.symm (Φ p))))
-  rw [hiΦ, hiΨ, heq.mfderiv_eq]
+  rw [hiΦ, hiΨ, heq.mfderiv_eq']
   rfl
 
 private theorem Degree.FieldChartGluing.isLocalDiffeomorphAt_of_chart_germ {D E M : Type*}

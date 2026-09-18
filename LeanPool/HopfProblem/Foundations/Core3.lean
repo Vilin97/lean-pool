@@ -48,7 +48,7 @@ private instance standardLattice_isZLattice : IsZLattice ℝ standardLattice :=
 private instance standardLattice_closed : IsClosed (standardLattice : Set RealPlane₄) := by
   have : DiscreteTopology standardLattice.toAddSubgroup :=
     inferInstanceAs (DiscreteTopology standardLattice)
-  exact AddSubgroup.isClosed_of_discrete (H := standardLattice.toAddSubgroup)
+  exact AddSubgroup.isClosed_of_discreteTopology (U := standardLattice.toAddSubgroup)
 
 /-- The four-dimensional real torus obtained from the standard lattice quotient. -/
 public
@@ -56,7 +56,8 @@ abbrev RealTorus₄ :=
   RealPlane₄ ⧸ standardLattice
 
 private instance realTorus_secondCountable : SecondCountableTopology RealTorus₄ :=
-  standardLattice.isQuotientMap_mkQ.secondCountableTopology standardLattice.isOpenMap_mkQ
+  (IsOpenQuotientMap.of_isOpenMap_isQuotientMap standardLattice.isOpenMap_mkQ
+    standardLattice.isQuotientMap_mkQ).secondCountableTopology
 
 private instance realTorus_pathConnected : PathConnectedSpace RealTorus₄ :=
   standardLattice.mkQ_surjective.pathConnectedSpace standardLattice.continuous_mkQ

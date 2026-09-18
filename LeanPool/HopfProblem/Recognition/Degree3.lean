@@ -5195,7 +5195,7 @@ private theorem MorseCancel.LongitudinalTubeMotion.normal_trace_mfderiv {U H X N
     rw [hp]
     change n (Φ₁ (η p.1, (C (α p.2), 0))) = n (Φ₁ (1 + (η p.1 - 1), (C (α p.2), 0)))
     rw [show 1 + (η p.1 - 1) = η p.1 by ring]
-  rw [heq.mfderiv_eq]
+  rw [heq.mfderiv_eq']
   exact MorseCancel.mfderiv_normal_trace_model hα hα0 hη A.time_value C hB
 
 private theorem MorseCancel.mfderiv_retime_unit_rate {U H X N : Type*} [NormedAddCommGroup U]

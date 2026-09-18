@@ -965,7 +965,8 @@ private theorem Smale.NativeEuclideanEmbedding.contMDiff_embeddedField {E M : Ty
   have hp :=
     (contMDiff_tangentBundleModelSpaceHomeomorph (I := 𝓡 e.ambientDimension) (n := ∞)).comp ht
   rw [← modelWithCornersSelf_prod] at hp
-  convert contDiff_snd.contMDiff.comp hp using 1 <;> rfl
+  convert contDiff_snd.contMDiff.comp hp using 1
+  rfl
 
 private def
     Smale.RegularLevel.levelDisplacement {E M : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -2147,7 +2148,7 @@ private theorem
     (norm_fderiv_le_of_lipschitz ℝ hu).trans_lt (show (k : ℝ) < 1 from hk)
   have hnn : ‖fderiv ℝ u x‖₊ < 1 := hn
   have hi : Function.Injective (ContinuousLinearMap.id ℝ E + fderiv ℝ u x) :=
-    injective_id_add (fderiv ℝ u x).lipschitz hnn
+    injective_id_add (fderiv ℝ u x).lipschitzWith hnn
   have hd : fderiv ℝ (fun y => y + u y) x = ContinuousLinearMap.id ℝ E + fderiv ℝ u x :=
     ((hasFDerivAt_id x).add (hs.contDiffAt.differentiableAt (by simp)).hasFDerivAt).fderiv
   rw [hd]
@@ -4206,7 +4207,7 @@ private theorem Degree.LocalFunctionReplacement.replace_critical_iff {E B H M : 
     (hy : y ∈ Φ.target) : mfderiv I 𝓘(ℝ, ℝ) (replace Φ f b) y = 0 ↔ fderiv ℝ b (Φ.symm y) = 0 := by
   have hΦ : IsLocalDiffeomorphAt I 𝓘(ℝ, E) ∞ Φ.symm y := ⟨Φ.symm, hy, fun _ _ => rfl⟩
   have hsurj := (hΦ.mfderivToContinuousLinearEquiv (by simp)).surjective
-  rw [(replace_germ_chart Φ f b hy).mfderiv_eq,
+  rw [(replace_germ_chart Φ f b hy).mfderiv_eq',
     mfderiv_comp y (hb.contMDiff.mdifferentiableAt (by simp))
       (Φ.symm.mdifferentiableAt (by simp) hy),
     mfderiv_eq_fderiv]

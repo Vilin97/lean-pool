@@ -73,7 +73,7 @@ private theorem
     Smale.ManifoldImmersion.exists_boundary_derivative_repair_step {B E G H H' X N : Type*}
     [NormedAddCommGroup B] [NormedSpace ℝ B] [FiniteDimensional ℝ B] [NormedAddCommGroup E]
     [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [TopologicalSpace H] [TopologicalSpace H']
     {I : ModelWithCorners ℝ B H} {J : ModelWithCorners ℝ G H'} [J.Boundaryless]
     [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [LindelofSpace (X × E)]
     [TopologicalSpace N] [ChartedSpace H' N] [IsManifold J ∞ N] {ι : Type*} [Finite ι]
@@ -159,7 +159,7 @@ private theorem
     Smale.ManifoldImmersion.exists_finite_boundary_derivative_repair {B E G H H' X N : Type*}
     [NormedAddCommGroup B] [NormedSpace ℝ B] [FiniteDimensional ℝ B] [NormedAddCommGroup E]
     [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [TopologicalSpace H] [TopologicalSpace H']
     {I : ModelWithCorners ℝ B H} {J : ModelWithCorners ℝ G H'} [J.Boundaryless]
     [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [LindelofSpace (X × E)]
     [TopologicalSpace N] [ChartedSpace H' N] [IsManifold J ∞ N] {ι : Type*} [Finite ι]
@@ -204,7 +204,7 @@ public
 theorem Smale.ManifoldImmersion.exists_compact_boundary_derivative_repair {B E G H H' X N : Type*}
     [NormedAddCommGroup B] [NormedSpace ℝ B] [FiniteDimensional ℝ B] [NormedAddCommGroup E]
     [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [TopologicalSpace H] [TopologicalSpace H']
     {I : ModelWithCorners ℝ B H} {J : ModelWithCorners ℝ G H'} [J.Boundaryless]
     [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [CompactSpace X]
     [LindelofSpace (X × E)] [TopologicalSpace N] [ChartedSpace H' N] [IsManifold J ∞ N]
@@ -276,7 +276,7 @@ private theorem Smale.CurveImmersion.injective_endpointFunction_derivative {t : 
     exact hv
 
 private theorem Smale.ManifoldImmersion.exists_curve_endpoint_derivative_repair {G H N : Type*}
-    [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H]
+    [NormedAddCommGroup G] [NormedSpace ℝ G] [TopologicalSpace H]
     {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace N] [ChartedSpace H N]
     [IsManifold J ∞ N] (f : C(ℝ, N)) (hf : ContMDiff 𝓘(ℝ, ℝ) J ∞ f)
     (hdim : 2 ≤ Module.finrank ℝ G) :
@@ -3175,10 +3175,10 @@ private theorem Smale.SheetCorrection.hasFDerivAt_centeredCorrection_zero {A F :
     (hG : HasFDerivAt G L (s, 0)) :
     HasFDerivAt (centeredCorrection R G) (0 : (ℝ × A) →L[ℝ] F) (s, 0) := by
   have hdiff : HasFDerivAt (fun p => R p - G p) (0 : (ℝ × A) →L[ℝ] F) (s, (0 : A)) := by
-    convert hR.sub hG using 1 <;>
-      first
-      | rfl
-      | simp only [sub_self]
+    convert hR.sub hG using 1
+    first
+    | rfl
+    | simp only [sub_self]
   have hcenter := hdiff.comp (s, (0 : A)) (centerProjection (A := A)).hasFDerivAt
   convert hdiff.sub hcenter using 1 <;>
     first
@@ -5087,7 +5087,7 @@ private theorem
       (mfderiv (𝓡 2) 𝓘(ℝ, Smale.RegularLevel.Model E) g' x :
           EuclideanSpace ℝ (Fin 2) →L[ℝ] Smale.RegularLevel.Model E) =
         mfderiv (𝓡 2) 𝓘(ℝ, Smale.RegularLevel.Model E) g x :=
-      hnear.mfderiv_eq
+      hnear.mfderiv_eq'
     change
       Function.Surjective
         ((mfderiv (𝓡 2) 𝓘(ℝ, Smale.RegularLevel.Model E) g' x :
@@ -5105,7 +5105,7 @@ private theorem
     (mfderiv (𝓡 2) 𝓘(ℝ, D.chart.NegativeCoordinates) (D.beltNormal ∘ g') x :
         EuclideanSpace ℝ (Fin 2) →L[ℝ] D.chart.NegativeCoordinates) =
       mfderiv (𝓡 2) 𝓘(ℝ, D.chart.NegativeCoordinates) (D.beltNormal ∘ g) x :=
-    hnormal.mfderiv_eq
+    hnormal.mfderiv_eq'
   have hjac : D.beltIntersectionJacobian 2 r g' x = D.beltIntersectionJacobian 2 r g x :=
     congrArg
       (fun L : EuclideanSpace ℝ (Fin 2) →L[ℝ] D.chart.NegativeCoordinates =>

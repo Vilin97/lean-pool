@@ -1831,7 +1831,7 @@ private theorem Smale.SupportedDiffeomorph.exists_pointMoving_of_path {E H M : T
   · exact ⟨1, γ.target⟩
 
 private theorem Smale.exists_smooth_path_avoiding_finite {G H N : Type*} [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
+    [NormedSpace ℝ G] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
     [J.Boundaryless] [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N]
     {x y : N} (γ : Path x y) (hdim : 2 ≤ Module.finrank ℝ G) {S : Set N} (hS : S.Finite)
     (hx : x ∉ S) (hy : y ∉ S) : ∃ η : Path x y, ContMDiff (𝓡∂ 1) J ∞ η ∧ ∀ t, η t ∉ S := by
@@ -1973,7 +1973,7 @@ private theorem Smale.ChartMapPerturbation.exists_small_collision_removing_param
     [TopologicalSpace K] {I : ModelWithCorners ℝ E H} {J : ModelWithCorners ℝ G K}
     [TopologicalSpace X] [ChartedSpace H X] [TopologicalSpace N] [ChartedSpace K N]
     (c : PartialDiffeomorph J 𝓘(ℝ, F) N F ∞) {f : X → N} {β : X → ℝ} [FiniteDimensional ℝ E]
-    [FiniteDimensional ℝ F] [IsManifold I ∞ X] [LindelofSpace (X × X)] (hf : ContMDiff I J ∞ f)
+    [IsManifold I ∞ X] [LindelofSpace (X × X)] (hf : ContMDiff I J ∞ f)
     (hβ : ContMDiff I 𝓘(ℝ, ℝ) ∞ β) (hcompact : HasCompactSupport β)
     (hsupport : tsupport β ⊆ f ⁻¹' c.source) (hdim : 2 * Module.finrank ℝ E < Module.finrank ℝ F)
     {ε : ℝ} (hε : 0 < ε) :
@@ -2062,7 +2062,7 @@ private theorem Smale.ChartMapPerturbation.exists_small_embedding_avoiding_param
     {E E' G F H H' K X Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E']
     [NormedAddCommGroup G] [NormedSpace ℝ G] [NormedAddCommGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
+    [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
     {I : ModelWithCorners ℝ E H} {I' : ModelWithCorners ℝ E' H'} {J : ModelWithCorners ℝ G K}
     [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [TopologicalSpace Y]
     [ChartedSpace H' Y] [IsManifold I' ∞ Y] [TopologicalSpace N] [ChartedSpace K N]
@@ -2257,7 +2257,7 @@ private theorem
 private theorem Smale.ManifoldImmersion.exists_embedded_image_avoidance_step_controlled
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] {ι : Type*} [Finite ι]
@@ -2322,7 +2322,7 @@ private theorem Smale.ManifoldImmersion.exists_embedded_image_avoidance_step_con
 private theorem Smale.ManifoldImmersion.exists_finite_embedded_image_avoidance_controlled
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] {ι : Type*} [Finite ι]
@@ -2371,7 +2371,7 @@ private theorem
     Smale.ManifoldImmersion.exists_embedded_avoidance_on_compact_of_isClosed_image_controlled
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N] (f : C(E, N))
@@ -2425,7 +2425,7 @@ private theorem
 private theorem Smale.ManifoldImmersion.exists_embedded_avoidance_on_compact_of_isClosed_image
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N] (f : C(E, N))
@@ -2450,7 +2450,7 @@ private theorem Smale.ManifoldImmersion.exists_embedded_avoidance_on_compact_of_
 private theorem Smale.ManifoldImmersion.exists_embedded_avoidance_on_compact_of_isClosed_range
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N] (f : C(E, N))
@@ -3177,7 +3177,7 @@ private theorem Smale.ManifoldImmersion.exists_immersion_on_compact_rel {G H N :
 
 private theorem Smale.ManifoldImmersion.exists_selfIntersection_removal_step_within_target
     {E G H N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-    [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H]
+    [NormedAddCommGroup G] [NormedSpace ℝ G] [TopologicalSpace H]
     {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace N] [ChartedSpace H N]
     [IsManifold J ∞ N] {ι : Type*} [Finite ι] {C K : Set E}
     (p : ι → Smale.GeneralPosition.MapAvoidancePatch 𝓘(ℝ, E) J (N := N) C) (i : ι) (f : C(E, N))
@@ -3222,7 +3222,7 @@ private theorem Smale.ManifoldImmersion.exists_selfIntersection_removal_step_wit
 
 private theorem Smale.ManifoldImmersion.exists_finite_selfIntersection_removal_within_target
     {E G H N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-    [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H]
+    [NormedAddCommGroup G] [NormedSpace ℝ G] [TopologicalSpace H]
     {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace N] [ChartedSpace H N]
     [IsManifold J ∞ N] {ι : Type*} [Finite ι] {C K : Set E}
     (p : ι → Smale.GeneralPosition.MapAvoidancePatch 𝓘(ℝ, E) J (N := N) C) (f : C(E, N))
@@ -3259,7 +3259,7 @@ private theorem Smale.ManifoldImmersion.exists_finite_selfIntersection_removal_w
 
 private theorem Smale.ManifoldImmersion.exists_embedding_of_finite_separating_patches_within_target
     {E G H N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-    [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H]
+    [NormedAddCommGroup G] [NormedSpace ℝ G] [TopologicalSpace H]
     {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace N] [ChartedSpace H N]
     [IsManifold J ∞ N] [T2Space N] {ι : Type*} [Finite ι] {C K : Set E}
     (p : ι → Smale.GeneralPosition.MapAvoidancePatch 𝓘(ℝ, E) J (N := N) C) (f : C(E, N))
@@ -3684,7 +3684,7 @@ private theorem
 private theorem Smale.ManifoldImmersion.exists_embedded_image_avoidance_relative_neighborhood
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N] (f : C(E, N))
@@ -3719,7 +3719,7 @@ private theorem
     Smale.ManifoldImmersion.exists_embedded_avoidance_relative_neighborhood_of_isClosed_range
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N] (f : C(E, N))
@@ -3781,7 +3781,7 @@ private theorem
 private theorem Smale.ManifoldImmersion.exists_embedded_avoidance_relative_neighborhood
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [LindelofSpace (E × Y)]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N] [CompactSpace Y]
@@ -3870,7 +3870,7 @@ private theorem
 
 private theorem MorseCancel.exists_smooth_path_avoiding_closed_image {E G H H' N Y : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {I : ModelWithCorners ℝ E H} {J : ModelWithCorners ℝ G H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H Y] [IsManifold I ∞ Y] [SecondCountableTopology Y]
     [TopologicalSpace N] [ChartedSpace H' N] [IsManifold J ∞ N] {x y : N}
@@ -3902,7 +3902,7 @@ private theorem MorseCancel.exists_smooth_path_avoiding_closed_image {E G H H' N
 
 private theorem MorseCancel.exists_smooth_path_avoiding_closed_image_in_open {E G H H' N Y : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {I : ModelWithCorners ℝ E H} {J : ModelWithCorners ℝ G H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H Y] [IsManifold I ∞ Y] [SecondCountableTopology Y]
     [TopologicalSpace N] [ChartedSpace H' N] [IsManifold J ∞ N]
@@ -4197,7 +4197,7 @@ private theorem Smale.WeightedPerturbation.exists_small_parameter_with_common_ke
     [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
     {B H X : Type*} [NormedAddCommGroup B] [NormedSpace ℝ B] [TopologicalSpace H]
     {I : ModelWithCorners ℝ B H} [TopologicalSpace X] [ChartedSpace H X] [FiniteDimensional ℝ B]
-    [FiniteDimensional ℝ E] [FiniteDimensional ℝ F] [IsManifold I ∞ X] [LindelofSpace (X × E)]
+    [FiniteDimensional ℝ E] [IsManifold I ∞ X] [LindelofSpace (X × E)]
     {b : X → E} {f : E → F} {β : E → ℝ} (hb : ContMDiff I 𝓘(ℝ, E) ∞ b) (hf : ContDiff ℝ ∞ f)
     (hβ : ContDiff ℝ ∞ β) (hdim : Module.finrank ℝ B + Module.finrank ℝ E < Module.finrank ℝ F)
     {ε : ℝ} (hε : 0 < ε) :
@@ -4224,7 +4224,7 @@ private def
 
 private theorem
     Smale.CurveImmersion.exists_small_affine_immersion {F : Type*} [NormedAddCommGroup F]
-    [NormedSpace ℝ F] [FiniteDimensional ℝ F] {f : ℝ → F} (hf : ContDiff ℝ ∞ f)
+    [NormedSpace ℝ F] {f : ℝ → F} (hf : ContDiff ℝ ∞ f)
     (hdim : 3 ≤ Module.finrank ℝ F) {ε : ℝ} (hε : 0 < ε) :
     ∃ a : F,
       ‖a‖ < ε ∧ ContDiff ℝ ∞ (perturb f a) ∧ ∀ t, Function.Injective (fderiv ℝ (perturb f a) t) :=
@@ -4264,7 +4264,7 @@ private theorem
 
 private theorem Smale.ManifoldImmersion.exists_curve_immersion_patch_with_property_within_target
     {G F H N : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G] [NormedAddCommGroup F]
-    [NormedSpace ℝ F] [FiniteDimensional ℝ F] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
+    [NormedSpace ℝ F] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
     [TopologicalSpace N] [ChartedSpace H N] (c : PartialDiffeomorph J 𝓘(ℝ, F) N F ∞) (f : C(ℝ, N))
     (hf : ContMDiff 𝓘(ℝ, ℝ) J ∞ f) {β χ : ℝ → ℝ} (hβ : ContDiff ℝ ∞ β) (hχ : ContDiff ℝ ∞ χ)
     (hcompact : HasCompactSupport β) (hχsupport : tsupport χ ⊆ f ⁻¹' c.source)
@@ -4336,7 +4336,7 @@ private theorem Smale.ManifoldImmersion.exists_curve_immersion_patch_with_proper
 
 private theorem
     Smale.ManifoldImmersion.exists_curve_immersion_patch_step_within_target {G H N : Type*}
-    [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H]
+    [NormedAddCommGroup G] [NormedSpace ℝ G] [TopologicalSpace H]
     {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace N] [ChartedSpace H N]
     [IsManifold J ∞ N] {ι : Type*} [Finite ι]
     (p : ι → Smale.ManifoldSmoothing.MapSmoothingPatch 𝓘(ℝ, ℝ) J (X := ℝ) (N := N)) (i : ι)
@@ -4384,7 +4384,7 @@ private theorem
 
 private theorem
     Smale.ManifoldImmersion.exists_finite_curve_patch_immersion_within_target {G H N : Type*}
-    [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H]
+    [NormedAddCommGroup G] [NormedSpace ℝ G] [TopologicalSpace H]
     {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace N] [ChartedSpace H N]
     [IsManifold J ∞ N] {ι : Type*} [Finite ι]
     (p : ι → Smale.ManifoldSmoothing.MapSmoothingPatch 𝓘(ℝ, ℝ) J (X := ℝ) (N := N))
@@ -4422,7 +4422,7 @@ private theorem
       · exact Or.inl (Or.inr (Set.mem_iUnion₂.mpr ⟨j, hjs, htj⟩))
 
 private theorem Smale.ManifoldImmersion.exists_curve_immersion_on_compact_rel_within_target
-    {G H N : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G]
+    {G H N : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G]
     [TopologicalSpace H] {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace N]
     [ChartedSpace H N] [IsManifold J ∞ N] (f : C(ℝ, N)) (hf : ContMDiff 𝓘(ℝ, ℝ) J ∞ f)
     (hdim : 3 ≤ Module.finrank ℝ G) {K L C : Set ℝ} (hK : IsCompact K) (hL : IsCompact L)
@@ -4610,10 +4610,10 @@ private theorem Smale.exists_embedded_arc_with_endpoint_germs {G H N : Type*} [N
     rw [hga0.eq_of_nhds, hgb1.eq_of_nhds]
     exact hxy
   have hig0 : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J g 0) := by
-    rw [hga0.mfderiv_eq]
+    rw [hga0.mfderiv_eq']
     exact hia
   have hig1 : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J g 1) := by
-    rw [hgb1.mfderiv_eq]
+    rw [hgb1.mfderiv_eq']
     exact hib
   obtain ⟨C, hC, hBC, hinjC, hiC, hclean⟩ :=
     ManifoldImmersion.exists_clean_curve_endpoint_neighborhood hg hgxy hig0 hig1 hS
@@ -4658,10 +4658,10 @@ private theorem
   obtain ⟨a', ha', heqa⟩ := exists_smooth_curve_with_germ_at ha hU h0U
   obtain ⟨b', hb', heqb⟩ := exists_smooth_curve_with_germ_at hb hV h1V
   have hia' : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J a' 0) := by
-    rw [heqa.mfderiv_eq]
+    rw [heqa.mfderiv_eq']
     exact hia
   have hib' : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J b' 1) := by
-    rw [heqb.mfderiv_eq]
+    rw [heqb.mfderiv_eq']
     exact hib
   have hxy' : a' 0 ≠ b' 1 := by
     rw [heqa.eq_of_nhds, heqb.eq_of_nhds]
@@ -4922,7 +4922,7 @@ private theorem Smale.exists_local_tubularNeighborhood_of_embedded_starConvex {E
   have hig : ∀ x ∈ K, Function.Injective (mfderiv 𝓘(ℝ, D) 𝓘(ℝ, E) g x) := by
     intro x hx
     have hnear : g =ᶠ[𝓝 x] f := Filter.Eventually.mono (hV.mem_nhds (hKV hx)) heq
-    rw [hnear.mfderiv_eq]
+    rw [hnear.mfderiv_eq']
     exact hi x hx
   have hgO : Set.MapsTo g K O := by
     intro x hx

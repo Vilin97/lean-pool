@@ -441,7 +441,7 @@ private theorem ThirdHurewicz.CubeTriangulation.cubeTetrahedronInverse_tetrahedr
   fin_cases i
   · change 1 - (ThirdHurewicz.Geometry.cubeTetrahedron e s (e 0) : ℝ) = s 0
     rw [ThirdHurewicz.Geometry.cubeTetrahedron_coordinate_zero]
-    have hs := stdSimplex.sum_eq_one s
+    have hs := SimplexSet.sum_eq_one s
     simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
     change s 0 + (s 1 + (s 2 + s 3)) = 1 at hs
     linarith
@@ -571,11 +571,11 @@ private theorem
   constructor
   · rintro ⟨i, hi⟩
     obtain ⟨j, rfl⟩ := e.surjective i
-    have h0 := stdSimplex.zero_le s 0
-    have h1 := stdSimplex.zero_le s 1
-    have h2 := stdSimplex.zero_le s 2
-    have h3 := stdSimplex.zero_le s 3
-    have hs := stdSimplex.sum_eq_one s
+    have h0 := SimplexSet.zero_le s 0
+    have h1 := SimplexSet.zero_le s 1
+    have h2 := SimplexSet.zero_le s 2
+    have h3 := SimplexSet.zero_le s 3
+    have hs := SimplexSet.sum_eq_one s
     simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
     change s 0 + (s 1 + (s 2 + s 3)) = 1 at hs
     fin_cases j
@@ -1036,8 +1036,8 @@ private theorem ThirdHurewicz.cubeTetrahedron_coordinate_equality_boundary (e : 
   all_goals
     dsimp at hv
     first
-    | exact ⟨1, by linarith [stdSimplex.zero_le s 1, stdSimplex.zero_le s 2]⟩
-    | exact ⟨2, by linarith [stdSimplex.zero_le s 1, stdSimplex.zero_le s 2]⟩
+    | exact ⟨1, by linarith [SimplexSet.zero_le s 1, SimplexSet.zero_le s 2]⟩
+    | exact ⟨2, by linarith [SimplexSet.zero_le s 1, SimplexSet.zero_le s 2]⟩
 
 private def
     ThirdHurewicz.normalizedCube {X : Type} [TopologicalSpace X] [SimplyConnectedSpace X] (x : X)
@@ -2281,12 +2281,12 @@ private def
     i :=
     ⟨∑ j, s j * (v j i : ℝ), by
       constructor
-      · exact Finset.sum_nonneg fun j _ => mul_nonneg (stdSimplex.zero_le s j) (v j i).property.1
+      · exact Finset.sum_nonneg fun j _ => mul_nonneg (SimplexSet.zero_le s j) (v j i).property.1
       · calc
           ∑ j, s j * (v j i : ℝ) ≤ ∑ j, s j * 1 :=
             Finset.sum_le_sum fun j _ =>
-              mul_le_mul_of_nonneg_left (v j i).property.2 (stdSimplex.zero_le s j)
-          _ = 1 := by simp only [mul_one, stdSimplex.sum_eq_one]⟩
+              mul_le_mul_of_nonneg_left (v j i).property.2 (SimplexSet.zero_le s j)
+          _ = 1 := by simp only [mul_one, SimplexSet.sum_eq_one]⟩
   continuous_toFun := by
     apply continuous_pi
     intro i
@@ -2307,7 +2307,7 @@ private theorem HigherHurewicz.CubeTriangulation.cubeAffineSimplex_vertex {m n :
     cubeAffineSimplex v (SingularMayerVietoris.stdVertices m j) = v j := by
   funext i
   apply Subtype.ext
-  simp [cubeAffineSimplex_coordinate, SingularMayerVietoris.stdVertices, stdSimplex.vertex,
+  simp [cubeAffineSimplex_coordinate, SingularMayerVietoris.stdVertices, SimplexSet.vertex,
     Pi.single_apply]
 
 private theorem HigherHurewicz.CubeTriangulation.cubeAffineSimplex_face {m n : ℕ}
@@ -2326,7 +2326,7 @@ private theorem HigherHurewicz.CubeTriangulation.cubeAffineSimplex_constant_coor
     (v : Fin (m + 1) → CubeN n) (i : Fin n) (c : (unitInterval)) (h : ∀ j, v j i = c)
     (s : FirstHurewicz.Simplex m) : cubeAffineSimplex v s i = c := by
   apply Subtype.ext
-  simp only [cubeAffineSimplex_coordinate, h, ← Finset.sum_mul, stdSimplex.sum_eq_one, one_mul]
+  simp only [cubeAffineSimplex_coordinate, h, ← Finset.sum_mul, SimplexSet.sum_eq_one, one_mul]
 
 private def HigherHurewicz.CubeTriangulation.cubeVertex {n : ℕ} (e : Equiv.Perm (Fin n))
     (k : Fin (n + 1)) : CubeN n := fun i => if (e.symm i).val < k.val then 1 else 0
@@ -2357,7 +2357,7 @@ private theorem
     simp only [ite_eq_left hj, ite_eq_left hi, le_refl]
   · simp only [ite_eq_right hj]
     split_ifs
-    · exact stdSimplex.zero_le s k
+    · exact SimplexSet.zero_le s k
     · exact le_refl 0
 
 private def HigherHurewicz.CubeTriangulation.cubeOrientation {n : ℕ} (e : Equiv.Perm (Fin n)) : ℤ :=
@@ -2562,7 +2562,7 @@ private theorem HigherHurewicz.CubeTriangulation.cubeSimplex_coordinate_zero {n 
   rw [cubeSimplex_coordinate, Fin.sum_univ_succ]
   simp only [Fin.val_zero, Nat.lt_irrefl, ite_false, Fin.val_succ, Nat.zero_lt_succ, ite_true,
     zero_add]
-  have hs := stdSimplex.sum_eq_one s
+  have hs := SimplexSet.sum_eq_one s
   rw [Fin.sum_univ_succ] at hs
   linarith
 

@@ -410,7 +410,7 @@ private theorem Elliptic.FiniteQuotient.spaceCompactSpace (G M : Type*) [Group G
 private theorem Elliptic.FiniteQuotient.spaceSecondCountableTopology (G M : Type*) [Group G]
     [MulAction G M] [TopologicalSpace M] [SecondCountableTopology M] [ContinuousConstSMul G M] :
     SecondCountableTopology (Space G M) :=
-  (project_isQuotientMap G M).secondCountableTopology (project_isOpenQuotientMap G M).isOpenMap
+  (project_isOpenQuotientMap G M).secondCountableTopology
 
 private theorem Elliptic.FiniteQuotient.spaceT2Space (G M : Type*) [Group G] [MulAction G M]
     [TopologicalSpace M] [Finite G] [LocallyCompactSpace M] [T2Space M]

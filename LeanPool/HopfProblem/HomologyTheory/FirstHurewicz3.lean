@@ -308,7 +308,7 @@ private theorem FirstHurewicz.simplexPath_pathSimplex_cast {X : Type} [Topologic
   by
   apply Path.ext
   funext t
-  change p (stdSimplexHomeomorphUnitInterval (stdSimplexHomeomorphUnitInterval.symm t)) = p t
+  change p (SimplexSet.homeomorphUnitInterval (SimplexSet.homeomorphUnitInterval.symm t)) = p t
   rw [Homeomorph.apply_symm_apply]
 
 @[simp]
@@ -389,7 +389,7 @@ private theorem FirstHurewicz.inverseHurewiczMap_cycleClass {X : Type} [Topologi
 private def
     FirstHurewicz.basePathChain {X : Type} [TopologicalSpace X] {b : X} (r : ∀ x : X, Path b x) :
     Chains X 0 →ₗ[ℤ] Chains X 1 :=
-  chainLift X 0 (fun σ => pathChain (r (σ (stdSimplex.vertex (S := ℝ) (0 : Fin 1)))))
+  chainLift X 0 (fun σ => pathChain (r (σ (SimplexSet.vertex (S := ℝ) (0 : Fin 1)))))
 
 @[simp]
 private theorem FirstHurewicz.basePathChain_pointChain {X : Type} [TopologicalSpace X] {b : X}

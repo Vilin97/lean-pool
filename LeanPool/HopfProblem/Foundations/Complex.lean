@@ -274,7 +274,15 @@ private theorem
     intro z hz
     conv_lhs => rw [hfg]
     simp only [smul_eq_mul]
-    rw [logDeriv_mul, logDeriv_prod]
+    have hprod : (∏ x ∈ t, fun z ↦ (z - x) ^ analyticOrderNatAt f x) =
+        fun z ↦ ∏ x ∈ t, (z - x) ^ analyticOrderNatAt f x := by
+      funext z
+      simp [Finset.prod_apply]
+    have hfun : (fun z ↦ (∏ x ∈ t, (z - x) ^ analyticOrderNatAt f x) * g z) =
+        (∏ x ∈ t, fun z ↦ (z - x) ^ analyticOrderNatAt f x) * g := by
+      funext z
+      simp [Finset.prod_apply]
+    rw [hfun, logDeriv_mul, logDeriv_prod]
     · congr 1
       refine Finset.sum_congr rfl fun w hw ↦ ?_
       rw [logDeriv_fun_pow (by fun_prop), logDeriv, Pi.div_apply, deriv_sub_const, deriv_id'']
@@ -284,10 +292,11 @@ private theorem
       exact hne z hz w hw
     · intros
       fun_prop
-    · rw [Finset.prod_ne_zero_iff]
+    · rw [hprod, Finset.prod_ne_zero_iff]
       exact fun w hw ↦ pow_ne_zero _ (hne z hz w hw)
     · exact hg₀ z (Metric.sphere_subset_closedBall hz)
-    · fun_prop
+    · rw [hprod]
+      fun_prop
     · exact hgR _ (Metric.sphere_subset_closedBall hz) |>.differentiableAt
   rw [finsum_mem_eq_sum_of_subset (t := t), circleIntegral.integral_congr hR hleft]
   · have hdg : AnalyticOnNhd ℂ (logDeriv g) (Metric.closedBall c R) := hgR.deriv.div hgR hg₀

@@ -159,10 +159,10 @@ private theorem HigherHurewicz.realCubeHomeomorph_mem_boundary_iff (n : ℕ) (v 
 private def
     HigherHurewicz.simplexFlat (n : ℕ) (s : FirstHurewicz.Simplex n) : ↥(flatSimplexSet n) :=
   ⟨fun i => s i.succ, by
-    refine ⟨fun i => stdSimplex.zero_le s i.succ, ?_⟩
-    have hs := stdSimplex.sum_eq_one s
+    refine ⟨fun i => SimplexSet.zero_le s i.succ, ?_⟩
+    have hs := SimplexSet.sum_eq_one s
     rw [Fin.sum_univ_succ] at hs
-    have h0 := stdSimplex.zero_le s 0
+    have h0 := SimplexSet.zero_le s 0
     linarith⟩
 
 private def
@@ -197,7 +197,7 @@ private theorem HigherHurewicz.flatSimplex_simplexFlat (n : ℕ) (s : FirstHurew
   funext i
   refine Fin.cases ?_ (fun j => ?_) i
   · change 1 - ∑ j : Fin n, s j.succ = s 0
-    have hs := stdSimplex.sum_eq_one s
+    have hs := SimplexSet.sum_eq_one s
     rw [Fin.sum_univ_succ] at hs
     linarith
   · rfl
@@ -315,7 +315,7 @@ private theorem HigherHurewicz.simplexFlatHomeomorph_mem_interior_iff (n : ℕ)
     (simplexFlatHomeomorph n s).val ∈ interior (flatSimplexSet n) ↔ ∀ i, 0 < s i := by
   rw [interior_flatSimplexSet]
   change ((∀ i : Fin n, 0 < s i.succ) ∧ ∑ i : Fin n, s i.succ < 1) ↔ _
-  have hs := stdSimplex.sum_eq_one s
+  have hs := SimplexSet.sum_eq_one s
   rw [Fin.sum_univ_succ] at hs
   constructor
   · rintro ⟨hpos, hsum⟩ i
@@ -336,7 +336,7 @@ private theorem HigherHurewicz.simplexFlatHomeomorph_mem_frontier_iff (n : ℕ)
     classical
     push Not at hnot
     obtain ⟨i, hi⟩ := hnot
-    exact ⟨i, le_antisymm hi (stdSimplex.zero_le s i)⟩
+    exact ⟨i, le_antisymm hi (SimplexSet.zero_le s i)⟩
   · rintro ⟨i, hi⟩
     refine ⟨(simplexFlatHomeomorph n s).property, ?_⟩
     intro hpos
@@ -420,7 +420,7 @@ private theorem HigherHurewicz.simplexCubeHomeomorph_symm_boundary_iff (n : ℕ)
 private def
     SecondHurewicz.SimplyConnected.VerticesBased {X : Type} [TopologicalSpace X] (x : X) (n : ℕ)
     (smp : C(FirstHurewicz.Simplex n, X)) : Prop :=
-  ∀ i : Fin (n + 1), smp (stdSimplex.vertex (S := ℝ) i) = x
+  ∀ i : Fin (n + 1), smp (SimplexSet.vertex (S := ℝ) i) = x
 
 private theorem
     SecondHurewicz.SimplyConnected.VerticesBased.face {X : Type} [TopologicalSpace X] {x : X}
@@ -429,7 +429,7 @@ private theorem
     SecondHurewicz.SimplyConnected.VerticesBased x n (smp.comp (FirstHurewicz.simplexFace n i)) :=
   by
   intro j
-  change smp (FirstHurewicz.simplexFace n i (stdSimplex.vertex (S := ℝ) j)) = x
+  change smp (FirstHurewicz.simplexFace n i (SimplexSet.vertex (S := ℝ) j)) = x
   rw [FirstHurewicz.simplexFace_vertex]
   exact h (i.succAbove j)
 
@@ -455,8 +455,8 @@ private theorem
 private theorem SecondHurewicz.SimplyConnected.simplexVertex_exists_face (n : ℕ) (k : Fin (n + 2)) :
     ∃ i : Fin (n + 2),
       ∃ j : Fin (n + 1),
-        FirstHurewicz.simplexFace n i (stdSimplex.vertex (S := ℝ) j) =
-          stdSimplex.vertex (S := ℝ) k := by
+        FirstHurewicz.simplexFace n i (SimplexSet.vertex (S := ℝ) j) =
+          SimplexSet.vertex (S := ℝ) k := by
   obtain ⟨i, hi⟩ := exists_ne k
   obtain ⟨j, hj⟩ := Fin.exists_succAbove_eq hi.symm
   refine ⟨i, j, ?_⟩
@@ -468,9 +468,9 @@ private def SecondHurewicz.SimplyConnected.simplexFaceInverse (n : ℕ) (i : Fin
   toFun
     s :=
     ⟨fun k => s.val (i.succAbove k),
-      ⟨fun k => stdSimplex.zero_le s.val (i.succAbove k),
+      ⟨fun k => SimplexSet.zero_le s.val (i.succAbove k),
         by
-        have hs := stdSimplex.sum_eq_one s.val
+        have hs := SimplexSet.sum_eq_one s.val
         rw [Fin.sum_univ_succAbove _ i, s.property, zero_add] at hs
         exact hs⟩⟩
   continuous_toFun := by
@@ -695,12 +695,12 @@ private theorem SecondHurewicz.SimplyConnected.faceCompatible_zero {X : Type} [T
   fin_cases i <;> fin_cases j
   · rfl
   · have h : (1 : Fin 2) = 0 :=
-      stdSimplex.vertex_injective
+      SimplexSet.vertex_injective
         ((FirstHurewicz.simplexFace_zero_zero s).symm.trans
           (hst.trans (FirstHurewicz.simplexFace_zero_one s)))
     exact False.elim ((by decide : (1 : Fin 2) ≠ 0) h)
   · have h : (0 : Fin 2) = 1 :=
-      stdSimplex.vertex_injective
+      SimplexSet.vertex_injective
         ((FirstHurewicz.simplexFace_zero_one s).symm.trans
           (hst.trans (FirstHurewicz.simplexFace_zero_zero s)))
     exact False.elim ((by decide : (0 : Fin 2) ≠ 1) h)
@@ -712,7 +712,7 @@ private def
 
 private theorem SecondHurewicz.SimplyConnected.minimumCoordinate_nonneg {n : ℕ}
     (s : FirstHurewicz.Simplex n) : 0 ≤ minimumCoordinate s :=
-  Finset.le_inf' _ _ fun i _ => stdSimplex.zero_le s i
+  Finset.le_inf' _ _ fun i _ => SimplexSet.zero_le s i
 
 private theorem
     SecondHurewicz.SimplyConnected.minimumCoordinate_le {n : ℕ} (s : FirstHurewicz.Simplex n)
@@ -870,7 +870,7 @@ private theorem SecondHurewicz.SimplyConnected.retractedCoordinates_sum {n : ℕ
       _ = (cylinderDenominator u - 1) * (((n : ℝ) + 1) * barycenterCoordinate n) := by ring
       _ = _ := by rw [card_mul_barycenterCoordinate, mul_one]
   simp_rw [div_eq_mul_inv]
-  rw [← Finset.sum_mul, Finset.sum_add_distrib, stdSimplex.sum_eq_one, hsum]
+  rw [← Finset.sum_mul, Finset.sum_add_distrib, SimplexSet.sum_eq_one, hsum]
   rw [show 1 + (cylinderDenominator u - 1) = cylinderDenominator u by ring,
     mul_inv_cancel₀ (cylinderDenominator_ne_zero u)]
 
@@ -2006,7 +2006,7 @@ private theorem SecondHurewicz.SimplyConnected.vertexStepHomotopy_one_verticesBa
     VerticesBased x (n + 1) (timeSlice (vertexStepHomotopy D smp) 1) := by
   intro k
   obtain ⟨i, j, hij⟩ := simplexVertex_exists_face n k
-  change vertexStepHomotopy D smp (1, stdSimplex.vertex k) = x
+  change vertexStepHomotopy D smp (1, SimplexSet.vertex k) = x
   rw [← hij, vertexStepHomotopy_face_apply]
   exact D.one_verticesBased (smp.comp (FirstHurewicz.simplexFace n i)) j
 
@@ -2032,8 +2032,8 @@ private def
   face_compatible := SecondHurewicz.SimplyConnected.vertexStepHomotopy_faceCompatible D
 
 private def SecondHurewicz.SimplyConnected.basedEdgePath {X : Type} [TopologicalSpace X] (x : X)
-    (smp : C(FirstHurewicz.Simplex 1, X)) (h₀ : smp (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) = x)
-    (h₁ : smp (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) = x) : Path x x :=
+    (smp : C(FirstHurewicz.Simplex 1, X)) (h₀ : smp (SimplexSet.vertex (S := ℝ) (0 : Fin 2)) = x)
+    (h₁ : smp (SimplexSet.vertex (S := ℝ) (1 : Fin 2)) = x) : Path x x :=
   (FirstHurewicz.simplexPath smp).cast h₀.symm h₁.symm
 
 @[simp]
@@ -2071,21 +2071,21 @@ private theorem
 private def SecondHurewicz.SimplyConnected.vertexHomotopy {X : Type} [TopologicalSpace X]
     [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 0, X)) :
     C((unitInterval) × FirstHurewicz.Simplex 0, X) :=
-  (chosenBasePath x (smp (stdSimplex.vertex (S := ℝ) (0 : Fin 1)))).toContinuousMap.comp
+  (chosenBasePath x (smp (SimplexSet.vertex (S := ℝ) (0 : Fin 1)))).toContinuousMap.comp
     (ContinuousMap.fst : C((unitInterval) × FirstHurewicz.Simplex 0, (unitInterval)))
 
 @[simp]
 private theorem SecondHurewicz.SimplyConnected.vertexHomotopy_zero {X : Type} [TopologicalSpace X]
     [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 0, X))
     (s : FirstHurewicz.Simplex 0) : vertexHomotopy x smp (0, s) = smp s := by
-  change chosenBasePath x (smp (stdSimplex.vertex (S := ℝ) (0 : Fin 1))) 0 = smp s
+  change chosenBasePath x (smp (SimplexSet.vertex (S := ℝ) (0 : Fin 1))) 0 = smp s
   rw [Path.source, FirstHurewicz.simplexZero_eq_vertex s]
 
 @[simp]
 private theorem SecondHurewicz.SimplyConnected.vertexHomotopy_one {X : Type} [TopologicalSpace X]
     [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 0, X))
     (s : FirstHurewicz.Simplex 0) : vertexHomotopy x smp (1, s) = x :=
-  (chosenBasePath x (smp (stdSimplex.vertex (S := ℝ) (0 : Fin 1)))).target
+  (chosenBasePath x (smp (SimplexSet.vertex (S := ℝ) (0 : Fin 1)))).target
 
 @[simp]
 private theorem SecondHurewicz.SimplyConnected.vertexHomotopy_const {X : Type} [TopologicalSpace X]
@@ -2099,30 +2099,30 @@ private theorem SecondHurewicz.SimplyConnected.vertexHomotopy_const {X : Type} [
 
 private def SecondHurewicz.SimplyConnected.edgeNullHomotopy {X : Type} [TopologicalSpace X]
     [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 1, X))
-    (h₀ : smp (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) = x)
-    (h₁ : smp (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) = x) :
+    (h₀ : smp (SimplexSet.vertex (S := ℝ) (0 : Fin 2)) = x)
+    (h₁ : smp (SimplexSet.vertex (S := ℝ) (1 : Fin 2)) = x) :
     C((unitInterval) × FirstHurewicz.Simplex 1, X) :=
   (chosenNullHomotopy x (basedEdgePath x smp h₀ h₁)).toContinuousMap.comp
     ((ContinuousMap.id (unitInterval)).prodMap
-      ⟨stdSimplexHomeomorphUnitInterval, stdSimplexHomeomorphUnitInterval.continuous⟩)
+      ⟨SimplexSet.homeomorphUnitInterval, SimplexSet.homeomorphUnitInterval.continuous⟩)
 
 @[simp]
 private theorem SecondHurewicz.SimplyConnected.edgeNullHomotopy_zero {X : Type} [TopologicalSpace X]
     [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 1, X)) (h₀ h₁)
     (s : FirstHurewicz.Simplex 1) : edgeNullHomotopy x smp h₀ h₁ (0, s) = smp s := by
   change
-    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (0, stdSimplexHomeomorphUnitInterval s) =
+    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (0, SimplexSet.homeomorphUnitInterval s) =
       smp s
   rw [ContinuousMap.HomotopyWith.apply_zero]
-  change smp (stdSimplexHomeomorphUnitInterval.symm (stdSimplexHomeomorphUnitInterval s)) = smp s
-  rw [stdSimplexHomeomorphUnitInterval.symm_apply_apply]
+  change smp (SimplexSet.homeomorphUnitInterval.symm (SimplexSet.homeomorphUnitInterval s)) = smp s
+  rw [SimplexSet.homeomorphUnitInterval.symm_apply_apply]
 
 @[simp]
 private theorem SecondHurewicz.SimplyConnected.edgeNullHomotopy_one {X : Type} [TopologicalSpace X]
     [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 1, X)) (h₀ h₁)
     (s : FirstHurewicz.Simplex 1) : edgeNullHomotopy x smp h₀ h₁ (1, s) = x := by
   change
-    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (1, stdSimplexHomeomorphUnitInterval s) = x
+    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (1, SimplexSet.homeomorphUnitInterval s) = x
   rw [ContinuousMap.HomotopyWith.apply_one]
   rfl
 
@@ -2130,10 +2130,10 @@ private theorem SecondHurewicz.SimplyConnected.edgeNullHomotopy_one {X : Type} [
 private theorem SecondHurewicz.SimplyConnected.edgeNullHomotopy_vertex_zero {X : Type}
     [TopologicalSpace X] [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 1, X))
     (h₀ h₁) (t : (unitInterval)) :
-    edgeNullHomotopy x smp h₀ h₁ (t, stdSimplex.vertex (S := ℝ) (0 : Fin 2)) = x := by
+    edgeNullHomotopy x smp h₀ h₁ (t, SimplexSet.vertex (S := ℝ) (0 : Fin 2)) = x := by
   change
-    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (t, stdSimplexHomeomorphUnitInterval _) = x
-  rw [stdSimplexHomeomorphUnitInterval_zero]
+    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (t, SimplexSet.homeomorphUnitInterval _) = x
+  rw [SimplexSet.homeomorphUnitInterval_zero]
   exact Path.Homotopy.source _ t
 
 @[simp]
@@ -2141,10 +2141,10 @@ private theorem
     SecondHurewicz.SimplyConnected.edgeNullHomotopy_vertex_one {X : Type} [TopologicalSpace X]
     [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 1, X)) (h₀ h₁)
     (t : (unitInterval)) :
-    edgeNullHomotopy x smp h₀ h₁ (t, stdSimplex.vertex (S := ℝ) (1 : Fin 2)) = x := by
+    edgeNullHomotopy x smp h₀ h₁ (t, SimplexSet.vertex (S := ℝ) (1 : Fin 2)) = x := by
   change
-    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (t, stdSimplexHomeomorphUnitInterval _) = x
-  rw [stdSimplexHomeomorphUnitInterval_one]
+    chosenNullHomotopy x (basedEdgePath x smp h₀ h₁) (t, SimplexSet.homeomorphUnitInterval _) = x
+  rw [SimplexSet.homeomorphUnitInterval_one]
   exact Path.Homotopy.target _ t
 
 @[simp]
@@ -2157,7 +2157,7 @@ private theorem
   change
     chosenNullHomotopy x
         (basedEdgePath x (ContinuousMap.const (FirstHurewicz.Simplex 1) x) rfl rfl)
-        (t.1, stdSimplexHomeomorphUnitInterval t.2) =
+        (t.1, SimplexSet.homeomorphUnitInterval t.2) =
       x
   rw [basedEdgePath_const, chosenNullHomotopy_refl]
   rfl
@@ -2167,7 +2167,7 @@ private def SecondHurewicz.SimplyConnected.vertexInitialData {X : Type} [Topolog
     where
   homotopy := vertexHomotopy x
   zero := vertexHomotopy_zero x
-  one_verticesBased smp i := vertexHomotopy_one x smp (stdSimplex.vertex i)
+  one_verticesBased smp i := vertexHomotopy_one x smp (SimplexSet.vertex i)
   of_verticesBased smp
     h := by
     have hs : smp = ContinuousMap.const (FirstHurewicz.Simplex 0) x := verticesBased_zero_iff.mp h
@@ -2262,8 +2262,8 @@ private def SecondHurewicz.SimplyConnected.edgeStraighteningHomotopy {X : Type} 
   classical
     exact
     if h :
-        smp (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) = x ∧
-          smp (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) = x then
+        smp (SimplexSet.vertex (S := ℝ) (0 : Fin 2)) = x ∧
+          smp (SimplexSet.vertex (S := ℝ) (1 : Fin 2)) = x then
       edgeNullHomotopy x smp h.1 h.2
     else stationarySimplexHomotopy 1 smp
 
@@ -2279,13 +2279,13 @@ private theorem SecondHurewicz.SimplyConnected.edgeStraighteningHomotopy_zero {X
 
 private theorem SecondHurewicz.SimplyConnected.edgeStraighteningHomotopy_one {X : Type}
     [TopologicalSpace X] [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 1, X))
-    (h₀ : smp (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) = x)
-    (h₁ : smp (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) = x) (s : FirstHurewicz.Simplex 1) :
+    (h₀ : smp (SimplexSet.vertex (S := ℝ) (0 : Fin 2)) = x)
+    (h₁ : smp (SimplexSet.vertex (S := ℝ) (1 : Fin 2)) = x) (s : FirstHurewicz.Simplex 1) :
     edgeStraighteningHomotopy x smp (1, s) = x := by
   classical
   have h :
-    smp (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) = x ∧
-      smp (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) = x :=
+    smp (SimplexSet.vertex (S := ℝ) (0 : Fin 2)) = x ∧
+      smp (SimplexSet.vertex (S := ℝ) (1 : Fin 2)) = x :=
     ⟨h₀, h₁⟩
   rw [edgeStraighteningHomotopy, dite_eq_left h]
   exact edgeNullHomotopy_one x smp _ _ s
@@ -2293,8 +2293,8 @@ private theorem SecondHurewicz.SimplyConnected.edgeStraighteningHomotopy_one {X 
 private theorem SecondHurewicz.SimplyConnected.edgeStraighteningHomotopy_vertex {X : Type}
     [TopologicalSpace X] [SimplyConnectedSpace X] (x : X) (smp : C(FirstHurewicz.Simplex 1, X))
     (i : Fin 2) (t : (unitInterval)) :
-    edgeStraighteningHomotopy x smp (t, stdSimplex.vertex (S := ℝ) i) =
-      smp (stdSimplex.vertex (S := ℝ) i) := by
+    edgeStraighteningHomotopy x smp (t, SimplexSet.vertex (S := ℝ) i) =
+      smp (SimplexSet.vertex (S := ℝ) i) := by
   classical
   unfold edgeStraighteningHomotopy
   split
@@ -2778,7 +2778,7 @@ private def
 private def SecondHurewicz.SimplyConnected.tetrahedronSimplexBlend {n : ℕ} (t : (unitInterval))
     (a b : FirstHurewicz.Simplex n) : FirstHurewicz.Simplex n :=
   ⟨(1 - (t : ℝ)) • (a : Fin (n + 1) → ℝ) + (t : ℝ) • (b : Fin (n + 1) → ℝ),
-    convex_stdSimplex ℝ _ a.property b.property (sub_nonneg.mpr t.property.2) t.property.1
+    SimplexSet.convex ℝ _ a.property b.property (sub_nonneg.mpr t.property.2) t.property.1
       (by ring)⟩
 
 @[simp]
@@ -2952,8 +2952,8 @@ private def SecondHurewicz.SimplyConnected.tetrahedronQuarterShift :
     ⟨![s 3, s 0, s 1, s 2], by
       constructor
       · intro i
-        fin_cases i <;> exact stdSimplex.zero_le s _
-      · have hs := stdSimplex.sum_eq_one s
+        fin_cases i <;> exact SimplexSet.zero_le s _
+      · have hs := SimplexSet.sum_eq_one s
         simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero, Matrix.cons_val_zero,
           Matrix.cons_val_succ, Matrix.cons_val_fin_one] at hs ⊢
         change s 0 + (s 1 + (s 2 + s 3)) = 1 at hs
@@ -3437,8 +3437,8 @@ private def SecondHurewicz.SimplyConnected.triangleCyclicPermutation :
     ⟨![s 1, s 2, s 0], by
       constructor
       · intro i
-        fin_cases i <;> exact stdSimplex.zero_le s _
-      · have hs := stdSimplex.sum_eq_one s
+        fin_cases i <;> exact SimplexSet.zero_le s _
+      · have hs := SimplexSet.sum_eq_one s
         simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero, Matrix.cons_val_zero,
           Matrix.cons_val_succ, Matrix.cons_val_fin_one] at hs ⊢
         change s 0 + (s 1 + s 2) = 1 at hs
@@ -4351,7 +4351,7 @@ private theorem
     SecondHurewicz.SimplyConnected.lowerProductTriangle_fst (s : FirstHurewicz.Simplex 2) :
     ((lowerProductTriangle s).1 : ℝ) = s 1 + s 2 := by
   simp [lowerProductTriangle, squareAffineTriangle_fst_coe, SingularMayerVietoris.stdVertices,
-    stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 attribute [local instance] PeriodTorusHigherHomology.integerLinearMapModule
     PeriodTorusHigherHomology.integerTensorModule in
@@ -4360,7 +4360,7 @@ private theorem
     SecondHurewicz.SimplyConnected.lowerProductTriangle_snd (s : FirstHurewicz.Simplex 2) :
     ((lowerProductTriangle s).2 : ℝ) = s 2 := by
   simp [lowerProductTriangle, squareAffineTriangle_snd_coe, SingularMayerVietoris.stdVertices,
-    stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 attribute [local instance] PeriodTorusHigherHomology.integerLinearMapModule
     PeriodTorusHigherHomology.integerTensorModule in
@@ -4369,7 +4369,7 @@ private theorem
     SecondHurewicz.SimplyConnected.upperProductTriangle_fst (s : FirstHurewicz.Simplex 2) :
     ((upperProductTriangle s).1 : ℝ) = s 2 := by
   simp [upperProductTriangle, squareAffineTriangle_fst_coe, SingularMayerVietoris.stdVertices,
-    stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 attribute [local instance] PeriodTorusHigherHomology.integerLinearMapModule
     PeriodTorusHigherHomology.integerTensorModule in
@@ -4378,7 +4378,7 @@ private theorem
     SecondHurewicz.SimplyConnected.upperProductTriangle_snd (s : FirstHurewicz.Simplex 2) :
     ((upperProductTriangle s).2 : ℝ) = s 1 + s 2 := by
   simp [upperProductTriangle, squareAffineTriangle_snd_coe, SingularMayerVietoris.stdVertices,
-    stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 attribute [local instance] PeriodTorusHigherHomology.integerLinearMapModule
     PeriodTorusHigherHomology.integerTensorModule in
@@ -4388,7 +4388,7 @@ private theorem
     (leftProductDegenerate s).1 = 0 := by
   apply Subtype.ext
   simp [leftProductDegenerate, squareAffineTriangle_fst_coe, SingularMayerVietoris.stdVertices,
-    stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 attribute [local instance] PeriodTorusHigherHomology.integerLinearMapModule
     PeriodTorusHigherHomology.integerTensorModule in
@@ -4398,7 +4398,7 @@ private theorem
     (bottomProductDegenerate s).2 = 0 := by
   apply Subtype.ext
   simp [bottomProductDegenerate, squareAffineTriangle_snd_coe, SingularMayerVietoris.stdVertices,
-    stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 attribute [local instance] PeriodTorusHigherHomology.integerLinearMapModule
     PeriodTorusHigherHomology.integerTensorModule in
@@ -4513,10 +4513,10 @@ private theorem SecondHurewicz.SimplyConnected.triangleQuotient_lowerProductTria
   intro s
   apply Subtype.ext
   funext i
-  have hs := stdSimplex.sum_eq_one s
+  have hs := SimplexSet.sum_eq_one s
   simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
   change s 0 + (s 1 + s 2) = 1 at hs
-  have hle : s 2 ≤ s 1 + s 2 := le_add_of_nonneg_left (stdSimplex.zero_le s 1)
+  have hle : s 2 ≤ s 1 + s 2 := le_add_of_nonneg_left (SimplexSet.zero_le s 1)
   fin_cases i
   · change 1 - ((lowerProductTriangle s).1 : ℝ) = s 0
     rw [lowerProductTriangle_fst]
@@ -4535,7 +4535,7 @@ private theorem SecondHurewicz.SimplyConnected.triangleQuotient_upperProductTria
     triangleQuotient (upperProductTriangle s) ∈ triangleBoundary := by
   refine ⟨1, ?_⟩
   rw [triangleQuotient_one, upperProductTriangle_fst, upperProductTriangle_snd,
-    min_eq_left (le_add_of_nonneg_left (stdSimplex.zero_le s 1)), sub_self]
+    min_eq_left (le_add_of_nonneg_left (SimplexSet.zero_le s 1)), sub_self]
 
 private theorem
     SecondHurewicz.SimplyConnected.basedTriangleLoop_lower {X : Type} [TopologicalSpace X]
@@ -4814,35 +4814,35 @@ private theorem SecondHurewicz.SimplyConnected.lowerSquareTriangle_verticesBased
     [TopologicalSpace X] {x : X} (p : GenLoop (Fin 2) X x) :
     VerticesBased x 2 (p.val.comp lowerSquareTriangle) := by
   intro i
-  change p (lowerSquareTriangle (stdSimplex.vertex (S := ℝ) i)) = x
+  change p (lowerSquareTriangle (SimplexSet.vertex (S := ℝ) i)) = x
   apply GenLoop.boundary p
   refine ⟨1, ?_⟩
   by_cases hi : i = 2
   · right
     apply Subtype.ext
-    change (lowerSquareTriangle (stdSimplex.vertex (S := ℝ) i) 1 : ℝ) = 1
-    simp [hi, stdSimplex.vertex]
+    change (lowerSquareTriangle (SimplexSet.vertex (S := ℝ) i) 1 : ℝ) = 1
+    simp [hi, SimplexSet.vertex]
   · left
     apply Subtype.ext
-    change (lowerSquareTriangle (stdSimplex.vertex (S := ℝ) i) 1 : ℝ) = 0
-    simp [hi, stdSimplex.vertex]
+    change (lowerSquareTriangle (SimplexSet.vertex (S := ℝ) i) 1 : ℝ) = 0
+    simp [hi, SimplexSet.vertex]
 
 private theorem SecondHurewicz.SimplyConnected.upperSquareTriangle_verticesBased {X : Type}
     [TopologicalSpace X] {x : X} (p : GenLoop (Fin 2) X x) :
     VerticesBased x 2 (p.val.comp upperSquareTriangle) := by
   intro i
-  change p (upperSquareTriangle (stdSimplex.vertex (S := ℝ) i)) = x
+  change p (upperSquareTriangle (SimplexSet.vertex (S := ℝ) i)) = x
   apply GenLoop.boundary p
   refine ⟨0, ?_⟩
   by_cases hi : i = 2
   · right
     apply Subtype.ext
-    change (upperSquareTriangle (stdSimplex.vertex (S := ℝ) i) 0 : ℝ) = 1
-    simp [hi, stdSimplex.vertex]
+    change (upperSquareTriangle (SimplexSet.vertex (S := ℝ) i) 0 : ℝ) = 1
+    simp [hi, SimplexSet.vertex]
   · left
     apply Subtype.ext
-    change (upperSquareTriangle (stdSimplex.vertex (S := ℝ) i) 0 : ℝ) = 0
-    simp [hi, stdSimplex.vertex]
+    change (upperSquareTriangle (SimplexSet.vertex (S := ℝ) i) 0 : ℝ) = 0
+    simp [hi, SimplexSet.vertex]
 
 private theorem
     SecondHurewicz.SimplyConnected.squareTriangles_diagonal {X : Type} [TopologicalSpace X]
@@ -4887,7 +4887,7 @@ private theorem SecondHurewicz.SimplyConnected.lowerSquareTriangle_outerFace {X 
     have h2 : FirstHurewicz.simplexFace 1 0 s 2 = s 1 :=
       FirstHurewicz.simplexFace_apply_succAbove 1 0 s 1
     rw [h1, h2]
-    exact stdSimplex.add_eq_one s
+    exact SimplexSet.add_eq_one s
   · exact (hi rfl).elim
   · apply ContinuousMap.ext
     intro s
@@ -4916,7 +4916,7 @@ private theorem SecondHurewicz.SimplyConnected.upperSquareTriangle_outerFace {X 
     have h2 : FirstHurewicz.simplexFace 1 0 s 2 = s 1 :=
       FirstHurewicz.simplexFace_apply_succAbove 1 0 s 1
     rw [h1, h2]
-    exact stdSimplex.add_eq_one s
+    exact SimplexSet.add_eq_one s
   · exact (hi rfl).elim
   · apply ContinuousMap.ext
     intro s
@@ -5100,7 +5100,7 @@ private theorem
   rw [basedTrianglesLoop_apply]
   have hle : (lowerSquareTriangle s 1 : ℝ) ≤ lowerSquareTriangle s 0 := by
     rw [lowerSquareTriangle_zero, lowerSquareTriangle_one]
-    exact le_add_of_nonneg_left (stdSimplex.zero_le s 1)
+    exact le_add_of_nonneg_left (SimplexSet.zero_le s 1)
   rw [ite_eq_left hle]
   change
     τ.val (triangleQuotient ((lowerProductTriangle s).1, (lowerProductTriangle s).2)) = τ.val s
@@ -5127,7 +5127,7 @@ private theorem
   split_ifs with h
   · have hs : s 1 = 0 := by
       rw [upperSquareTriangle_zero, upperSquareTriangle_one] at h
-      exact le_antisymm (by linarith) (stdSimplex.zero_le s 1)
+      exact le_antisymm (by linarith) (SimplexSet.zero_le s 1)
     have he : upperSquareTriangle s 0 = upperSquareTriangle s 1 := by
       apply Subtype.ext
       rw [upperSquareTriangle_zero, upperSquareTriangle_one, hs, zero_add]
@@ -5270,18 +5270,18 @@ private def SecondHurewicz.SimplyConnected.subdivisionUpperPositiveSquareTriangl
 private theorem SecondHurewicz.SimplyConnected.subdivisionUpperPositiveSquareTriangle_zero
     (s : FirstHurewicz.Simplex 2) : (subdivisionUpperPositiveSquareTriangle s 0 : ℝ) = s 1 := by
   simp [subdivisionUpperPositiveSquareTriangle, squareAffineTriangle_fst_coe,
-    SingularMayerVietoris.stdVertices, stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SingularMayerVietoris.stdVertices, SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 @[simp]
 private theorem SecondHurewicz.SimplyConnected.subdivisionUpperPositiveSquareTriangle_one
     (s : FirstHurewicz.Simplex 2) :
     (subdivisionUpperPositiveSquareTriangle s 1 : ℝ) = s 1 + s 2 := by
   simp [subdivisionUpperPositiveSquareTriangle, squareAffineTriangle_snd_coe,
-    SingularMayerVietoris.stdVertices, stdSimplex.vertex, Fin.sum_univ_succ, Pi.single_apply]
+    SingularMayerVietoris.stdVertices, SimplexSet.vertex, Fin.sum_univ_succ, Pi.single_apply]
 
 private theorem SecondHurewicz.SimplyConnected.subdivisionTriangle_coordinate_sum
     (s : FirstHurewicz.Simplex 2) : s 0 + s 1 + s 2 = 1 := by
-  have hsum := stdSimplex.sum_eq_one s
+  have hsum := SimplexSet.sum_eq_one s
   simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hsum
   change s 0 + (s 1 + s 2) = 1 at hsum
   linarith

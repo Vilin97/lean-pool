@@ -324,7 +324,7 @@ private theorem MorseCancel.insert_morse_chart_pair {E D M : Type*} [NormedAddCo
         y ∈ Smale.ManifoldMorse.criticalPoints E g ↔ y ∈ Smale.ManifoldMorse.criticalPoints E f :=
         by
         change mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) g y = 0 ↔ _
-        rw [(houtside y hyK).mfderiv_eq]
+        rw [(houtside y hyK).mfderiv_eq']
         rfl
       simpa only [hyp, hyq, or_false] using he
   have hmg : Smale.ManifoldMorse.IsMorse E g := by

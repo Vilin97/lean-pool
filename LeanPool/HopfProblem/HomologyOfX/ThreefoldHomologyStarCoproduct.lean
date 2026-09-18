@@ -60,7 +60,7 @@ attribute [local instance] ThreefoldHomologyStarCoproduct.singularChainsFiniteBi
 private theorem ThreefoldHomologyStarCoproduct.sigmaSimplexMap_injective {ι : Type} (X : ι → Type)
     [∀ i, TopologicalSpace (X i)] (n : ℕ) : Function.Injective (sigmaSimplexMap X n) := by
   classical
-  let z : stdSimplex ℝ (Fin (n + 1)) := Classical.choice inferInstance
+  let z : SimplexSet ℝ (Fin (n + 1)) := Classical.choice inferInstance
   rintro ⟨i, σ⟩ ⟨j, τ⟩ h
   have hij : i = j := congrArg (fun f => (f z).1) h
   subst j

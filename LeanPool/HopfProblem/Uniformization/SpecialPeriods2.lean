@@ -1773,7 +1773,7 @@ private instance SpecialPeriods.Triangle.matrixGroup_discrete : DiscreteTopology
 
 private theorem
     SpecialPeriods.Triangle.matrixGroup_isClosed : IsClosed (matrixGroup : Set (SL(2, ℝ))) :=
-  Subgroup.isClosed_of_discrete
+  Subgroup.isClosed_of_discreteTopology
 
 private instance SpecialPeriods.Triangle.matrixGroup_properlyDiscontinuous :
     ProperlyDiscontinuousSMul matrixGroup ℍ :=

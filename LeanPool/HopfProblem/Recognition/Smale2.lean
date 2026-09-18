@@ -1678,7 +1678,7 @@ private theorem Smale.ManifoldMorse.mfderiv_constantPerturb_of_locally_constant 
   have heq : constantPerturb f ψ a =ᶠ[𝓝 x] (fun y => f y + a * b) := by
     filter_upwards [hψ] with y hy
     simp only [constantPerturb, hy]
-  rw [heq.mfderiv_eq]
+  rw [heq.mfderiv_eq']
   change mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) (f + fun _ => a * b) x = _
   rw [mfderiv_add (hf.mdifferentiableAt (by simp)) mdifferentiableAt_const, mfderiv_const]
   exact add_zero _
@@ -3504,7 +3504,7 @@ private theorem
     Smale.GeneralPosition.dense_compl_manifold_image {E F H X : Type*} [NormedAddCommGroup E]
     [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
     [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [TopologicalSpace X] [ChartedSpace H X]
-    [IsManifold I ∞ X] [LindelofSpace X] [FiniteDimensional ℝ F] {f : X → F} {s : Set X}
+    [IsManifold I ∞ X] [LindelofSpace X] {f : X → F} {s : Set X}
     (hs : IsOpen s) (hf : ContMDiffOn I 𝓘(ℝ, F) ∞ f s)
     (hd : Module.finrank ℝ E < Module.finrank ℝ F) : Dense (f '' s)ᶜ :=
   dense_compl_of_dimH_lt_finrank ((dimH_image_manifold_le hs hf).trans_lt (Nat.cast_lt.mpr hd))
@@ -3512,7 +3512,7 @@ private theorem
 private theorem Smale.exists_small_localized_image_avoidance {E E' F H H' X Y : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] [TopologicalSpace H] [TopologicalSpace H']
+    [TopologicalSpace H] [TopologicalSpace H']
     {I : ModelWithCorners ℝ E H} {J : ModelWithCorners ℝ E' H'} [TopologicalSpace X]
     [ChartedSpace H X] [IsManifold I ∞ X] [TopologicalSpace Y] [ChartedSpace H' Y]
     [IsManifold J ∞ Y] [LindelofSpace (X × Y)] {f : X → F} {g : Y → F} {β : X → ℝ}
@@ -3541,7 +3541,7 @@ private theorem
     Smale.ChartMapPerturbation.exists_small_avoiding_parameter {E E' G F H H' K X Y N : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] [TopologicalSpace H]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [TopologicalSpace H]
     [TopologicalSpace H'] [TopologicalSpace K] {I : ModelWithCorners ℝ E H}
     {I' : ModelWithCorners ℝ E' H'} {J : ModelWithCorners ℝ G K} [TopologicalSpace X]
     [ChartedSpace H X] [IsManifold I ∞ X] [TopologicalSpace Y] [ChartedSpace H' Y]
@@ -3616,7 +3616,7 @@ private theorem Smale.GeneralPosition.exists_patch_step {E G H K X N : Type*} [N
     [TopologicalSpace K] {I : ModelWithCorners ℝ E H} {J : ModelWithCorners ℝ G K}
     [TopologicalSpace X] [ChartedSpace H X] [TopologicalSpace N] [ChartedSpace K N]
     {E' H' Y : Type*} [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E']
-    [FiniteDimensional ℝ E] [FiniteDimensional ℝ G] [TopologicalSpace H']
+    [FiniteDimensional ℝ E] [TopologicalSpace H']
     {I' : ModelWithCorners ℝ E' H'} [IsManifold I ∞ X] [TopologicalSpace Y] [ChartedSpace H' Y]
     [IsManifold I' ∞ Y] [LindelofSpace (X × Y)] {ι : Type*} [Finite ι] {C : Set X}
     (p : ι → MapAvoidancePatch I J (N := N) C) (i : ι) (f : C(X, N)) (g : C(Y, N))
@@ -3663,7 +3663,7 @@ private theorem Smale.GeneralPosition.exists_patch_step {E G H K X N : Type*} [N
 private theorem Smale.GeneralPosition.exists_finite_patch_avoidance {E E' G H H' K X Y N : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
+    [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
     {I : ModelWithCorners ℝ E H} {I' : ModelWithCorners ℝ E' H'} {J : ModelWithCorners ℝ G K}
     [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [TopologicalSpace Y]
     [ChartedSpace H' Y] [IsManifold I' ∞ Y] [TopologicalSpace N] [ChartedSpace K N]
@@ -3698,7 +3698,7 @@ private theorem
     Smale.GeneralPosition.exists_avoidance_of_finite_patches {E E' G H H' K X Y N : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
+    [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
     {I : ModelWithCorners ℝ E H} {I' : ModelWithCorners ℝ E' H'} {J : ModelWithCorners ℝ G K}
     [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [TopologicalSpace Y]
     [ChartedSpace H' Y] [IsManifold I' ∞ Y] [TopologicalSpace N] [ChartedSpace K N]
@@ -3750,7 +3750,7 @@ private theorem Smale.GeneralPosition.exists_avoidance_patch_at {E G H K X N : T
 
 private theorem Smale.GeneralPosition.exists_disjoint_smooth_map_homotopicRel_of_isClosed_range
     {E G H K X N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-    [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H]
+    [NormedAddCommGroup G] [NormedSpace ℝ G] [TopologicalSpace H]
     [TopologicalSpace K] {I : ModelWithCorners ℝ E H} {J : ModelWithCorners ℝ G K}
     [J.Boundaryless] [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [T2Space X]
     [TopologicalSpace N] [ChartedSpace K N] [IsManifold J ∞ N] {E' H' Y : Type*}
@@ -3784,7 +3784,7 @@ private theorem Smale.GeneralPosition.exists_disjoint_smooth_map_homotopicRel_of
 
 private theorem Smale.GeneralPosition.exists_disjoint_smooth_map_homotopicRel {E G H K X N : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace K]
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace K]
     {I : ModelWithCorners ℝ E H} {J : ModelWithCorners ℝ G K} [J.Boundaryless]
     [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [T2Space X] [TopologicalSpace N]
     [ChartedSpace K N] [IsManifold J ∞ N] {E' H' Y : Type*} [NormedAddCommGroup E']
@@ -3811,7 +3811,7 @@ private theorem Smale.ImageComplement.exists_smooth_homotopy_of_ambient_homotopi
     [TopologicalSpace Y] [CompactSpace Y] [TopologicalSpace N] [T2Space N]
     {E E' G H H' K X : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     [TopologicalSpace K] {I : ModelWithCorners ℝ E H} {I' : ModelWithCorners ℝ E' H'}
     {J : ModelWithCorners ℝ G K} [J.Boundaryless] [TopologicalSpace X] [ChartedSpace H X]
     [IsManifold I ∞ X] [T2Space X] [CompactSpace X] [ChartedSpace H' Y] [IsManifold I' ∞ Y]
@@ -3872,7 +3872,7 @@ private theorem
     [CompactSpace Y] [TopologicalSpace N] [T2Space N] {E E' G H H' K X : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
+    [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
     {I : ModelWithCorners ℝ E H} {I' : ModelWithCorners ℝ E' H'} {J : ModelWithCorners ℝ G K}
     [J.Boundaryless] [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [T2Space X]
     [CompactSpace X] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [ChartedSpace K N] [IsManifold J ∞ N]
@@ -4068,7 +4068,7 @@ private theorem
     Smale.ImageComplement.nullhomotopic_of_ambient_nullhomotopic {E E' G H H' K X Y N : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedAddCommGroup E']
     [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
+    [TopologicalSpace H] [TopologicalSpace H'] [TopologicalSpace K]
     {I : ModelWithCorners ℝ E H} {I' : ModelWithCorners ℝ E' H'} {J : ModelWithCorners ℝ G K}
     [J.Boundaryless] [TopologicalSpace X] [ChartedSpace H X] [IsManifold I ∞ X] [T2Space X]
     [CompactSpace X] [Nonempty X] [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y]
@@ -4091,7 +4091,7 @@ private theorem
 
 private theorem Smale.ImageComplement.circle_nullhomotopies {E' G H' K Y N : Type*}
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H'] [TopologicalSpace K]
+    [NormedSpace ℝ G] [TopologicalSpace H'] [TopologicalSpace K]
     {I' : ModelWithCorners ℝ E' H'} {J : ModelWithCorners ℝ G K} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [CompactSpace Y]
     [TopologicalSpace N] [ChartedSpace K N] [IsManifold J ∞ N] [T2Space N] (g : C(Y, N))
@@ -4105,7 +4105,7 @@ private theorem Smale.ImageComplement.circle_nullhomotopies {E' G H' K Y N : Typ
 
 private theorem Smale.SurgeryBoundaryPair.beltComplement_circle_nullhomotopies_of_sphere_dimension
     {F R X Y G H : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
+    [NormedSpace ℝ G] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
     [J.Boundaryless] [TopologicalSpace R] [TopologicalSpace X] [TopologicalSpace Y]
     [ChartedSpace H X] [IsManifold J ∞ X] [T2Space X] {N : Type*} [NormedAddCommGroup N]
     [InnerProductSpace ℝ N] [FiniteDimensional ℝ N] (n : ℕ) [Fact (Module.finrank ℝ N = n + 1)]
@@ -4135,7 +4135,7 @@ private theorem Smale.SurgeryBoundaryPair.beltComplement_circle_nullhomotopies_o
 
 private theorem Smale.SurgeryBoundaryPair.beltComplement_circle_nullhomotopies_of_finrank_two
     {F R X Y G H : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
+    [NormedSpace ℝ G] [TopologicalSpace H] {J : ModelWithCorners ℝ G H}
     [J.Boundaryless] [TopologicalSpace R] [TopologicalSpace X] [TopologicalSpace Y]
     [ChartedSpace H X] [IsManifold J ∞ X] [T2Space X] {N : Type*} [NormedAddCommGroup N]
     [InnerProductSpace ℝ N] [FiniteDimensional ℝ N] [Fact (Module.finrank ℝ N = 1 + 1)]
@@ -4455,7 +4455,7 @@ private theorem
     NoExotic.dense_compl_manifold_image {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] {H M : Type*}
     [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless] [TopologicalSpace M]
-    [ChartedSpace H M] [IsManifold I ∞ M] [LindelofSpace M] [FiniteDimensional ℝ F] {f : M → F}
+    [ChartedSpace H M] [IsManifold I ∞ M] [LindelofSpace M] {f : M → F}
     {s : Set M} (hs : IsOpen s) (hf : ContMDiffOn I 𝓘(ℝ, F) ∞ f s)
     (hd : Module.finrank ℝ E < Module.finrank ℝ F) : Dense (f '' s)ᶜ :=
   dense_compl_of_dimH_lt_finrank ((dimH_image_manifold_le hs hf).trans_lt (Nat.cast_lt.mpr hd))
@@ -4501,7 +4501,7 @@ private theorem NoExotic.exists_smooth_nonzero_approx {B H M F : Type*} [NormedA
     [NormedSpace ℝ B] [FiniteDimensional ℝ B] [TopologicalSpace H] {I : ModelWithCorners ℝ B H}
     [I.Boundaryless] [TopologicalSpace M] [ChartedSpace H M] [IsManifold I ∞ M]
     [SigmaCompactSpace M] [T2Space M] [NormedAddCommGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] (f : C(M, F)) (ε : ℝ) (hε : 0 < ε)
+    (f : C(M, F)) (ε : ℝ) (hε : 0 < ε)
     (hd : Module.finrank ℝ B < Module.finrank ℝ F) :
     ∃ g : C(M, F), ContMDiff I 𝓘(ℝ, F) ∞ g ∧ (∀ x, g x ≠ 0) ∧ ∀ x, Dist.dist (g x) (f x) < ε := by
   have hhalf : 0 < ε / 2 := by linarith
@@ -4653,7 +4653,7 @@ private theorem NoExotic.exists_nonzero_homotopy_small {B H M F : Type*} [Normed
     [NormedSpace ℝ B] [FiniteDimensional ℝ B] [TopologicalSpace H] {I : ModelWithCorners ℝ B H}
     [I.Boundaryless] [TopologicalSpace M] [ChartedSpace H M] [IsManifold I ∞ M]
     [SigmaCompactSpace M] [T2Space M] [NormedAddCommGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] (f : C(M, F)) (ε : ℝ) (hε : 0 < ε)
+    (f : C(M, F)) (ε : ℝ) (hε : 0 < ε)
     (hd : Module.finrank ℝ B < Module.finrank ℝ F) :
     ∃ g : C(M, F),
       (∀ x, g x ≠ 0) ∧
@@ -4666,7 +4666,7 @@ private theorem NoExotic.exists_nonzero_homotopy_small {B H M F : Type*} [Normed
   exact ZeroAvoidanceCutoff.homotopy_dist_lt f h ε hε hclose
 
 private theorem Smale.SurgeryBoundaryPair.exists_belt_avoiding_circle {N P R X Y : Type*}
-    [NormedAddCommGroup N] [NormedSpace ℝ N] [FiniteDimensional ℝ N] [NormedAddCommGroup P]
+    [NormedAddCommGroup N] [NormedSpace ℝ N] [NormedAddCommGroup P]
     [TopologicalSpace R] [TopologicalSpace X] [TopologicalSpace Y]
     (d : Smale.SurgeryBoundaryPair N P R X Y) (hdim : 1 < Module.finrank ℝ N)
     (g : C(Smale.Hemisphere.Sphere 1, Y)) :
@@ -4752,7 +4752,7 @@ private theorem Smale.SurgeryBoundaryPair.exists_belt_avoiding_circle {N P R X Y
 
 private theorem
     Smale.SurgeryBoundaryPair.circle_nullhomotopies_of_beltComplement {N P R X Y : Type*}
-    [NormedAddCommGroup N] [NormedSpace ℝ N] [FiniteDimensional ℝ N] [NormedAddCommGroup P]
+    [NormedAddCommGroup N] [NormedSpace ℝ N] [NormedAddCommGroup P]
     [TopologicalSpace R] [TopologicalSpace X] [TopologicalSpace Y]
     (d : Smale.SurgeryBoundaryPair N P R X Y) (hdim : 1 < Module.finrank ℝ N)
     (hnull :
@@ -4771,7 +4771,7 @@ private theorem
 
 private theorem Smale.SurgeryBoundaryPair.newBoundary_circle_nullhomotopies {N F R X Y G H : Type*}
     [NormedAddCommGroup N] [InnerProductSpace ℝ N] [FiniteDimensional ℝ N] [NormedAddCommGroup F]
-    [NormedSpace ℝ F] [NormedAddCommGroup G] [NormedSpace ℝ G] [FiniteDimensional ℝ G]
+    [NormedSpace ℝ F] [NormedAddCommGroup G] [NormedSpace ℝ G]
     [TopologicalSpace H] {J : ModelWithCorners ℝ G H} [J.Boundaryless] [TopologicalSpace R]
     [TopologicalSpace X] [TopologicalSpace Y] [ChartedSpace H X] [IsManifold J ∞ X] [T2Space X]
     (n : ℕ) [Fact (Module.finrank ℝ N = n + 1)] (hn : 0 < n)

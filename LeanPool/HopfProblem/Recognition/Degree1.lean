@@ -1315,7 +1315,7 @@ private theorem MorseCancel.longitudinalBlend_derivative_positive {V : Type*} [N
   rw [hrate]
   have hweight : η t * β p.2 ∈ Set.Icc (0 : ℝ) 1 :=
     ⟨mul_nonneg (hηrange t).1 (hβrange p.2).1,
-      mul_le_one₀ (hηrange t).2 (hβrange p.2).1 (hβrange p.2).2⟩
+      (mul_le_of_le_one_left (hβrange p.2).1 (hηrange t).2).trans (hβrange p.2).2⟩
   have hpos := Degree.MorseRearrangement.positive_blended_slope hweight (hDpos p.1) zero_lt_one
   nlinarith
 
@@ -1633,7 +1633,7 @@ private theorem
   have hQ : HasMFDerivAt 𝓘(ℝ, U) 𝓘(ℝ, W) (fun u => Q u + b) (P (a x)) Q :=
     (Q.hasFDerivAt.add_const b).hasMFDerivAt
   have heq : (mfderiv I 𝓘(ℝ, W) a x : U →L[ℝ] W) = Q.comp (mfderiv I 𝓘(ℝ, U) (P ∘ a) x) :=
-    hgerm.mfderiv_eq.trans (hQ.comp x hα.hasMFDerivAt).mfderiv
+    hgerm.mfderiv_eq'.trans (hQ.comp x hα.hasMFDerivAt).mfderiv
   let D : U →L[ℝ] U := mfderiv I 𝓘(ℝ, U) (P ∘ a) x
   change Function.Surjective D
   apply (LinearMap.injective_iff_surjective (f := D.toLinearMap)).mp
@@ -1807,7 +1807,7 @@ private theorem
       g q = Φ (b q) := (Φ.right_inv hq).symm
       _ = (Φ ∘ B) q := congrArg Φ (Prod.ext hplane.1 (Prod.ext hplane.2 rfl))
   intro _
-  rw [hFgerm.mfderiv_eq, hGgerm.mfderiv_eq]
+  rw [hFgerm.mfderiv_eq', hGgerm.mfderiv_eq']
   exact hnative (congrArg Φ (hB0.trans hT0.symm))
 
 private theorem
@@ -3802,7 +3802,7 @@ private theorem MorseCancel.exists_embedded_native_open_arc_with_local_germs {G 
   have hend : b' 1 = (⟨b 1, hb1⟩ : S) := Subtype.ext heqb.eq_of_nhds
   have hia' : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J a' 0) := by
     have hi : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J (Subtype.val ∘ a') 0) := by
-      rw [heqa.mfderiv_eq]
+      rw [heqa.mfderiv_eq']
       exact hia
     rw [mfderiv_comp 0
         ((contMDiff_subtype_val (I := J) (U := S) (n := ∞)).mdifferentiableAt (by simp))
@@ -3811,7 +3811,7 @@ private theorem MorseCancel.exists_embedded_native_open_arc_with_local_germs {G 
     exact hi (congrArg (mfderiv J J (Subtype.val : S → N) (a' 0)) hxy)
   have hib' : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J b' 1) := by
     have hi : Function.Injective (mfderiv 𝓘(ℝ, ℝ) J (Subtype.val ∘ b') 1) := by
-      rw [heqb.mfderiv_eq]
+      rw [heqb.mfderiv_eq']
       exact hib
     rw [mfderiv_comp 1
         ((contMDiff_subtype_val (I := J) (U := S) (n := ∞)).mdifferentiableAt (by simp))
@@ -4003,7 +4003,7 @@ private theorem
     Smale.ManifoldImmersion.exists_embedded_image_avoidance_relative_neighborhood_in_open
     {E E' G H H' Y N : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E'] [NormedAddCommGroup G]
-    [NormedSpace ℝ G] [FiniteDimensional ℝ G] [TopologicalSpace H] [TopologicalSpace H']
+    [NormedSpace ℝ G] [TopologicalSpace H] [TopologicalSpace H']
     {J : ModelWithCorners ℝ G H} {I' : ModelWithCorners ℝ E' H'} [J.Boundaryless]
     [TopologicalSpace Y] [ChartedSpace H' Y] [IsManifold I' ∞ Y] [SecondCountableTopology Y]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] [T2Space N]
@@ -4209,7 +4209,7 @@ private theorem Degree.CircleGluing.periodicExtension_derivative_injective {N : 
     (hi : ∀ t ∈ Set.Ico (0 : ℝ) T, Function.Injective (mfderiv 𝓘(ℝ, ℝ) J f t)) (x : ℝ) :
     Function.Injective (mfderiv 𝓘(ℝ, ℝ) J (periodicExtension hT f) x) := by
   obtain ⟨c, hc, heq⟩ := periodicExtension_germ hT hmatch x
-  rw [heq.mfderiv_eq]
+  rw [heq.mfderiv_eq']
   exact MorseCancel.injective_mfderiv_curve_translate (hf (x + c) hc) (hi (x + c) hc)
 
 attribute [local instance 100] Classical.propDecidable in
@@ -4323,12 +4323,12 @@ private theorem Degree.CircleGluing.joinedArc_derivative_injective {N : Type*} {
       rcases htle.eq_or_lt with rfl | hlt
       · exact joinedArc_seam_germ h0
       · exact joinedArc_left_germ hlt
-    rw [heq.mfderiv_eq]
+    rw [heq.mfderiv_eq']
     exact
       MorseCancel.injective_mfderiv_curve_translate
         ((hα.contMDiffAt (Ioo_mem_nhds htα.1 htα.2)).mdifferentiableAt (by simp)) (hiα _ htα)
   · have htβ : t + (-2 * r) ∈ Set.Icc (0 : ℝ) 1 := ⟨by linarith, by linarith [ht.2]⟩
-    rw [(joinedArc_right_germ (α := α) (β := β) (lt_of_not_ge htle)).mfderiv_eq]
+    rw [(joinedArc_right_germ (α := α) (β := β) (lt_of_not_ge htle)).mfderiv_eq']
     exact
       MorseCancel.injective_mfderiv_curve_translate (hβ.mdifferentiableAt (by simp)) (hiβ _ htβ)
 

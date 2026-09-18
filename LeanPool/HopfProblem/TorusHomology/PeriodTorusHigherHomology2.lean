@@ -237,7 +237,7 @@ private def
 private theorem PeriodTorusHigherHomology.sumSimplexMap_injective (X Y : Type) [TopologicalSpace X]
     [TopologicalSpace Y] (n : ℕ) : Function.Injective (sumSimplexMap X Y n) := by
   classical
-  let z : stdSimplex ℝ (Fin (n + 1)) := Classical.choice inferInstance
+  let z : SimplexSet ℝ (Fin (n + 1)) := Classical.choice inferInstance
   intro σ τ h
   cases σ with
   | inl σ =>

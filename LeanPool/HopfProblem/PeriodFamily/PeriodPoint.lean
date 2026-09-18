@@ -232,7 +232,7 @@ private instance PeriodDomain.lattice_addSubgroup_discrete (p : PeriodDomain) :
 private instance PeriodDomain.lattice_isClosed (p : PeriodDomain) :
     IsClosed (p.lattice : Set ComplexPlane₂) := by
   change IsClosed (p.lattice.toAddSubgroup : Set ComplexPlane₂)
-  exact AddSubgroup.isClosed_of_discrete (H := p.lattice.toAddSubgroup)
+  exact AddSubgroup.isClosed_of_discreteTopology (U := p.lattice.toAddSubgroup)
 
 private abbrev PeriodDomain.Torus (p : PeriodDomain) :=
   ComplexPlane₂ ⧸ p.lattice

@@ -1354,7 +1354,7 @@ private theorem
       ((nativeBeltArc_contMDiffOn S q u v).contMDiffAt
             (Ioo_mem_nhds hs.1 hs.2)).congr_of_eventuallyEq
         hg
-  · rw [hg.mfderiv_eq]
+  · rw [hg.mfderiv_eq']
     exact nativeBeltArc_derivative_injective S q u v (abs_le.mpr ⟨hs.1.le, hs.2.le⟩)
 
 attribute [local instance 100] Classical.propDecidable in
@@ -1402,7 +1402,7 @@ private theorem MorseCancel.nativeBeltLevelArc_transverse {E M : Type*} [NormedA
       mul_comm s d.radius]
   have hnormalDerivative :
     mfderiv 𝓘(ℝ, ℝ) 𝓘(ℝ, d.chart.NegativeCoordinates) (d.beltNormal ∘ γ) 0 = L := by
-    rw [hgerm.mfderiv_eq, mfderiv_eq_fderiv, L.fderiv]
+    rw [hgerm.mfderiv_eq', mfderiv_eq_fderiv, L.fderiv]
   have hγ :=
     (nativeBeltLevelArc_contMDiffOn S hf q u v).contMDiffAt
       (Ioo_mem_nhds (show (-1 : ℝ) < 0 by norm_num) (show (0 : ℝ) < 1 by norm_num))
@@ -1465,7 +1465,7 @@ private theorem MorseCancel.transverse_circle_of_arc_germ {D G H N : Type*} [Nor
   let P : ℝ →L[ℝ] EuclideanSpace ℝ (Fin 1) := mfderiv 𝓘(ℝ, ℝ) (𝓡 1) ψ 0
   let A₀ : ℝ →L[ℝ] G := mfderiv 𝓘(ℝ, ℝ) J α 0
   have hc := mfderiv_comp 0 (hγ.mdifferentiableAt (by simp)) (hψ.mdifferentiableAt (by simp))
-  have heq : A.comp P = A₀ := hc.symm.trans hgerm.mfderiv_eq
+  have heq : A.comp P = A₀ := hc.symm.trans hgerm.mfderiv_eq'
   intro y
   obtain ⟨⟨a, b⟩, hab⟩ := htrans y
   refine ⟨(P a, b), ?_⟩
@@ -2568,12 +2568,7 @@ private theorem Smale.LocalDegree.exists_pos_remainder_bound {E F : Type*} [Norm
     (hf : HasFDerivAt f L.toContinuousLinearMap 0) (hzero : f 0 = 0) :
     ∃ ε : ℝ, 0 < ε ∧ ∀ x ∈ Metric.ball (0 : E) ε, ‖f x - L x‖ ≤ (1 / 2 : ℝ) * ‖L x‖ := by
   have herr : (fun x : E => f x - L x) =o[𝓝 (0 : E)] (fun x : E => x) := by
-    convert hf.isLittleO using 1
-    · rfl
-    · rfl
-    · simp only [hzero, sub_zero]
-      rfl
-    · simp only [sub_zero]
+    simpa only [hzero, sub_zero, ContinuousLinearEquiv.coe_coe] using hf.isLittleO
   have hbig : (fun x : E => x) =O[𝓝 (0 : E)] (fun x : E => L x) := by
     apply Asymptotics.isBigO_iff.mpr
     refine ⟨‖L.symm.toContinuousLinearMap‖, Filter.Eventually.of_forall ?_⟩
@@ -5405,7 +5400,7 @@ private theorem MorseCancel.mfderiv_of_add_const_germ {E M : Type*} [NormedAddCo
     (hf : MDifferentiableAt 𝓘(ℝ, E) 𝓘(ℝ, ℝ) f p) {k : ℝ} (hgerm : g =ᶠ[𝓝 p] fun x => f x + k) :
     mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) g p = mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) f p := by
   calc
-    _ = (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) (fun x => f x + k) p : E →L[ℝ] ℝ) := hgerm.mfderiv_eq
+    _ = (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) (fun x => f x + k) p : E →L[ℝ] ℝ) := hgerm.mfderiv_eq'
     _ = _ := by
       have hs : mvfderiv 𝓘(ℝ, E) (fun x => f x + k) p = mvfderiv 𝓘(ℝ, E) f p := by
         rw [mvfderiv_fun_add hf mdifferentiableAt_const, mvfderiv_const, add_zero]

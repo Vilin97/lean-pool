@@ -651,14 +651,14 @@ private theorem HigherHurewicz.CubeTriangulation.cubeSimplex_mem_boundary_iff {n
       have hr := congrArg (fun t : (unitInterval) => (t : ℝ)) hi
       change (cubeSimplex e s (e j) : ℝ) = 0 at hr
       rw [cubeSimplex_coordinate_last, hr] at hlast
-      exact le_antisymm hlast (stdSimplex.zero_le s (Fin.last (n + 1)))
+      exact le_antisymm hlast (SimplexSet.zero_le s (Fin.last (n + 1)))
     · left
       have hfirst : (cubeSimplex e s (e j) : ℝ) ≤ (cubeSimplex e s (e 0) : ℝ) :=
         cubeSimplex_antitone e s (Fin.zero_le j)
       have hr := congrArg (fun t : (unitInterval) => (t : ℝ)) hi
       change (cubeSimplex e s (e j) : ℝ) = 1 at hr
       rw [cubeSimplex_coordinate_zero, hr] at hfirst
-      linarith [stdSimplex.zero_le s 0]
+      linarith [SimplexSet.zero_le s 0]
   · rintro (hs | hs)
     · refine ⟨e 0, Or.inr ?_⟩
       apply Subtype.ext
@@ -1127,8 +1127,8 @@ private theorem
     calc
       s i.succ + ∑ k ∈ B, s k = ∑ k ∈ Insert.insert i.succ B, s k := (Finset.sum_insert hiB).symm
       _ ≤ ∑ k ∈ A, s k :=
-        Finset.sum_le_sum_of_subset_of_nonneg hsub (fun k _ _ => stdSimplex.zero_le s k)
-  exact le_antisymm (by linarith) (stdSimplex.zero_le s i.succ)
+        Finset.sum_le_sum_of_subset_of_nonneg hsub (fun k _ _ => SimplexSet.zero_le s k)
+  exact le_antisymm (by linarith) (SimplexSet.zero_le s i.succ)
 
 private theorem HigherHurewicz.cubeSimplex_ordered_coordinate_equality_boundary {n : ℕ}
     (e : Equiv.Perm (Fin n)) (s : FirstHurewicz.Simplex n) {i j : Fin n} (hij : i ≠ j)
@@ -1272,7 +1272,7 @@ private theorem
     have hi0 : i = 0 := Fin.ext (by omega)
     subst i
     have hsum : s 0 = 1 := by
-      simpa only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] using stdSimplex.sum_eq_one s
+      simpa only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] using SimplexSet.sum_eq_one s
     exact False.elim (by linarith)
   | succ
     n =>

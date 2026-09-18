@@ -107,11 +107,11 @@ private theorem ThirdHurewicz.edgeNormalizedFourSimplexMap_face {X : Type} [Topo
 private theorem ThirdHurewicz.triangleReturn_first_mem (s : FirstHurewicz.Simplex 2) :
     s 1 + Max.max (s 2 - s 0) 0 ∈ unitInterval := by
   constructor
-  · exact add_nonneg (stdSimplex.zero_le s 1) (le_max_right _ _)
+  · exact add_nonneg (SimplexSet.zero_le s 1) (le_max_right _ _)
   · have hm : Max.max (s 2 - s 0) 0 ≤ s 2 :=
-      max_le (sub_le_self _ (stdSimplex.zero_le s 0)) (stdSimplex.zero_le s 2)
-    have h0 := stdSimplex.zero_le s 0
-    have hs := stdSimplex.sum_eq_one s
+      max_le (sub_le_self _ (SimplexSet.zero_le s 0)) (SimplexSet.zero_le s 2)
+    have h0 := SimplexSet.zero_le s 0
+    have hs := SimplexSet.sum_eq_one s
     simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
     change s 0 + (s 1 + s 2) = 1 at hs
     linarith
@@ -120,11 +120,11 @@ private theorem ThirdHurewicz.triangleReturn_second_mem (s : FirstHurewicz.Simpl
     s 2 + Min.min (s 0) (s 2) ∈ unitInterval := by
   constructor
   · exact
-      add_nonneg (stdSimplex.zero_le s 2)
-        (le_min (stdSimplex.zero_le s 0) (stdSimplex.zero_le s 2))
+      add_nonneg (SimplexSet.zero_le s 2)
+        (le_min (SimplexSet.zero_le s 0) (SimplexSet.zero_le s 2))
   · have hm : Min.min (s 0) (s 2) ≤ s 0 := min_le_left _ _
-    have h1 := stdSimplex.zero_le s 1
-    have hs := stdSimplex.sum_eq_one s
+    have h1 := SimplexSet.zero_le s 1
+    have hs := SimplexSet.sum_eq_one s
     simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
     change s 0 + (s 1 + s 2) = 1 at hs
     linarith
@@ -150,8 +150,8 @@ private theorem ThirdHurewicz.triangleCubicalReturn_face_zero (s : FirstHurewicz
     (hs : s 0 = 0) : triangleCubicalReturn s 0 = 1 := by
   apply Subtype.ext
   change s 1 + Max.max (s 2 - s 0) 0 = 1
-  rw [hs, sub_zero, max_eq_left (stdSimplex.zero_le s 2)]
-  have hsum := stdSimplex.sum_eq_one s
+  rw [hs, sub_zero, max_eq_left (SimplexSet.zero_le s 2)]
+  have hsum := SimplexSet.sum_eq_one s
   simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hsum
   change s 0 + (s 1 + s 2) = 1 at hsum
   simpa only [hs, zero_add] using hsum
@@ -160,7 +160,7 @@ private theorem ThirdHurewicz.triangleCubicalReturn_face_two (s : FirstHurewicz.
     (hs : s 2 = 0) : triangleCubicalReturn s 1 = 0 := by
   apply Subtype.ext
   change s 2 + Min.min (s 0) (s 2) = 0
-  rw [hs, min_eq_right (stdSimplex.zero_le s 0), zero_add]
+  rw [hs, min_eq_right (SimplexSet.zero_le s 0), zero_add]
 
 private theorem ThirdHurewicz.triangleCubicalReturn_face_one (s : FirstHurewicz.Simplex 2)
     (hs : s 1 = 0) : triangleCubicalReturn s 0 = 0 ∨ triangleCubicalReturn s 1 = 1 := by
@@ -173,7 +173,7 @@ private theorem ThirdHurewicz.triangleCubicalReturn_face_one (s : FirstHurewicz.
     apply Subtype.ext
     change s 2 + Min.min (s 0) (s 2) = 1
     rw [min_eq_left h]
-    have hsum := stdSimplex.sum_eq_one s
+    have hsum := SimplexSet.sum_eq_one s
     simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hsum
     change s 0 + (s 1 + s 2) = 1 at hsum
     linarith
@@ -1009,12 +1009,12 @@ private def ThirdHurewicz.Geometry.cubeAffineSimplex {n : ℕ} (v : Fin (n + 1) 
     i :=
     ⟨∑ j, s j * (v j i : ℝ), by
       constructor
-      · exact Finset.sum_nonneg fun j _ => mul_nonneg (stdSimplex.zero_le s j) (v j i).property.1
+      · exact Finset.sum_nonneg fun j _ => mul_nonneg (SimplexSet.zero_le s j) (v j i).property.1
       · calc
           ∑ j, s j * (v j i : ℝ) ≤ ∑ j, s j * 1 :=
             Finset.sum_le_sum fun j _ =>
-              mul_le_mul_of_nonneg_left (v j i).property.2 (stdSimplex.zero_le s j)
-          _ = 1 := by simp only [mul_one, stdSimplex.sum_eq_one]⟩
+              mul_le_mul_of_nonneg_left (v j i).property.2 (SimplexSet.zero_le s j)
+          _ = 1 := by simp only [mul_one, SimplexSet.sum_eq_one]⟩
   continuous_toFun := by
     apply continuous_pi
     intro i
@@ -1046,7 +1046,7 @@ private theorem ThirdHurewicz.Geometry.cubeAffineSimplex_constant_coordinate {n 
     (v : Fin (n + 1) → Cube3) (i : Fin 3) (c : (unitInterval)) (h : ∀ j, v j i = c)
     (s : FirstHurewicz.Simplex n) : cubeAffineSimplex v s i = c := by
   apply Subtype.ext
-  simp only [cubeAffineSimplex_coordinate, h, ← Finset.sum_mul, stdSimplex.sum_eq_one, one_mul]
+  simp only [cubeAffineSimplex_coordinate, h, ← Finset.sum_mul, SimplexSet.sum_eq_one, one_mul]
 
 private def
     ThirdHurewicz.Geometry.cubeVertex (e : Equiv.Perm (Fin 3)) (k : Fin 4) : Cube3 := fun i =>
@@ -1075,13 +1075,13 @@ private theorem ThirdHurewicz.Geometry.cubeTetrahedron_order_first (e : Equiv.Pe
     (s : FirstHurewicz.Simplex 3) : cubeTetrahedron e s (e 1) ≤ cubeTetrahedron e s (e 0) := by
   change (cubeTetrahedron e s (e 1) : ℝ) ≤ (cubeTetrahedron e s (e 0) : ℝ)
   rw [cubeTetrahedron_coordinate_one, cubeTetrahedron_coordinate_zero]
-  linarith [stdSimplex.zero_le s 1]
+  linarith [SimplexSet.zero_le s 1]
 
 private theorem ThirdHurewicz.Geometry.cubeTetrahedron_order_second (e : Equiv.Perm (Fin 3))
     (s : FirstHurewicz.Simplex 3) : cubeTetrahedron e s (e 2) ≤ cubeTetrahedron e s (e 1) := by
   change (cubeTetrahedron e s (e 2) : ℝ) ≤ (cubeTetrahedron e s (e 1) : ℝ)
   rw [cubeTetrahedron_coordinate_two, cubeTetrahedron_coordinate_one]
-  exact le_add_of_nonneg_left (stdSimplex.zero_le s 2)
+  exact le_add_of_nonneg_left (SimplexSet.zero_le s 2)
 
 private theorem ThirdHurewicz.Geometry.cubeTetrahedron_face_zero_coordinate (e : Equiv.Perm (Fin 3))
     (s : FirstHurewicz.Simplex 2) :
@@ -1144,7 +1144,7 @@ private theorem ThirdHurewicz.Geometry.cubeOrientation_swap (e : Equiv.Perm (Fin
 
 private theorem ThirdHurewicz.threeSimplex_coordinate_sum (s : FirstHurewicz.Simplex 3) :
     s 0 + (s 1 + s 2 + s 3) = 1 := by
-  have hs := stdSimplex.sum_eq_one s
+  have hs := SimplexSet.sum_eq_one s
   simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
   change s 0 + (s 1 + (s 2 + s 3)) = 1 at hs
   linarith
@@ -1156,8 +1156,8 @@ private theorem ThirdHurewicz.threeSimplexQuotient_cubeTetrahedron_refl :
   intro s
   apply Subtype.ext
   funext i
-  have h₁ : s 2 + s 3 ≤ s 1 + s 2 + s 3 := by linarith [stdSimplex.zero_le s 1]
-  have h₂ : s 3 ≤ s 2 + s 3 := le_add_of_nonneg_left (stdSimplex.zero_le s 2)
+  have h₁ : s 2 + s 3 ≤ s 1 + s 2 + s 3 := by linarith [SimplexSet.zero_le s 1]
+  have h₂ : s 3 ≤ s 2 + s 3 := le_add_of_nonneg_left (SimplexSet.zero_le s 2)
   have h₃ : s 3 ≤ s 1 + s 2 + s 3 := h₂.trans h₁
   have hu₀ := Geometry.cubeTetrahedron_coordinate_zero (Equiv.refl (Fin 3)) s
   have hu₁ := Geometry.cubeTetrahedron_coordinate_one (Equiv.refl (Fin 3)) s
@@ -3027,7 +3027,7 @@ private theorem ThirdHurewicz.nativeCubeTetrahedronQuotient_coordinate_two (e : 
 
 private theorem ThirdHurewicz.nativeCubeTetrahedron_coordinate_sum (s : FirstHurewicz.Simplex 3) :
     s 0 + s 1 + s 2 + s 3 = 1 := by
-  have hs := stdSimplex.sum_eq_one s
+  have hs := SimplexSet.sum_eq_one s
   simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
   change s 0 + (s 1 + (s 2 + s 3)) = 1 at hs
   linarith
@@ -3129,10 +3129,10 @@ private theorem ThirdHurewicz.fourSimplexTetrahedron_five_coordinate (s : FirstH
 
 private theorem ThirdHurewicz.fourSimplexTetrahedron_tail_le_middle (s : FirstHurewicz.Simplex 3) :
     s 3 ≤ s 2 + s 3 :=
-  le_add_of_nonneg_left (stdSimplex.zero_le s 2)
+  le_add_of_nonneg_left (SimplexSet.zero_le s 2)
 
 private theorem ThirdHurewicz.fourSimplexTetrahedron_middle_le_first (s : FirstHurewicz.Simplex 3) :
-    s 2 + s 3 ≤ s 1 + s 2 + s 3 := by linarith [stdSimplex.zero_le s 1]
+    s 2 + s 3 ≤ s 1 + s 2 + s 3 := by linarith [SimplexSet.zero_le s 1]
 
 private theorem ThirdHurewicz.fourSimplexTetrahedron_tail_le_first (s : FirstHurewicz.Simplex 3) :
     s 3 ≤ s 1 + s 2 + s 3 :=
@@ -3140,7 +3140,7 @@ private theorem ThirdHurewicz.fourSimplexTetrahedron_tail_le_first (s : FirstHur
 
 private theorem ThirdHurewicz.fourSimplexTetrahedron_sum (s : FirstHurewicz.Simplex 3) :
     s 0 + s 1 + s 2 + s 3 = 1 := by
-  have h := stdSimplex.sum_eq_one s
+  have h := SimplexSet.sum_eq_one s
   simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at h
   change s 0 + (s 1 + (s 2 + s 3)) = 1 at h
   linarith
@@ -3750,8 +3750,8 @@ private def ThirdHurewicz.threeSimplexCycle : C(FirstHurewicz.Simplex 3, FirstHu
     ⟨![s 1, s 2, s 3, s 0], by
       constructor
       · intro i
-        fin_cases i <;> exact stdSimplex.zero_le s _
-      · have hs := stdSimplex.sum_eq_one s
+        fin_cases i <;> exact SimplexSet.zero_le s _
+      · have hs := SimplexSet.sum_eq_one s
         simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero, Matrix.cons_val_zero,
           Matrix.cons_val_succ, Matrix.cons_val_fin_one] at hs ⊢
         change s 0 + (s 1 + (s 2 + s 3)) = 1 at hs

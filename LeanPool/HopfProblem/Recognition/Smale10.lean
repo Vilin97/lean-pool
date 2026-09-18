@@ -1714,7 +1714,7 @@ private theorem MorseCancel.cell_oldHomologyMap_zero_bijective {N X : Type} [Nor
 attribute [local instance 100] Classical.propDecidable in
 private def MorseCancel.componentChainWeight {X : Type} [TopologicalSpace X] (x : X) :
     FirstHurewicz.Chains X 0 →ₗ[ℤ] ℤ :=
-  FirstHurewicz.chainLift X 0 (fun σ => if Joined x (σ (stdSimplex.vertex 0)) then 1 else 0)
+  FirstHurewicz.chainLift X 0 (fun σ => if Joined x (σ (SimplexSet.vertex 0)) then 1 else 0)
 
 attribute [local instance 100] Classical.propDecidable in
 private theorem MorseCancel.componentChainWeight_point {X : Type} [TopologicalSpace X] (x y : X) :
@@ -1731,9 +1731,9 @@ private theorem MorseCancel.componentChainWeight_boundary {X : Type} [Topologica
     simp only [LinearMap.comp_apply, LinearMap.zero_apply, FirstHurewicz.boundaryOne_simplex,
       map_sub, componentChainWeight, FirstHurewicz.chainLift_simplex, ContinuousMap.comp_apply,
       FirstHurewicz.simplexFace_zero_zero, FirstHurewicz.simplexFace_zero_one]
-    have hp : Joined (σ (stdSimplex.vertex 0)) (σ (stdSimplex.vertex 1)) :=
+    have hp : Joined (σ (SimplexSet.vertex 0)) (σ (SimplexSet.vertex 1)) :=
       ⟨FirstHurewicz.simplexPath σ⟩
-    have hi : Joined x (σ (stdSimplex.vertex 1)) ↔ Joined x (σ (stdSimplex.vertex 0)) :=
+    have hi : Joined x (σ (SimplexSet.vertex 1)) ↔ Joined x (σ (SimplexSet.vertex 0)) :=
       ⟨fun h => h.trans hp.symm, fun h => h.trans hp⟩
     rw [hi, sub_self]
   exact LinearMap.congr_fun heq b
@@ -2083,7 +2083,7 @@ private def Smale.ManifoldMorse.SurgeryWindows.point {E M : Type*} [NormedAddCom
     (S : Smale.ManifoldMorse.SurgeryWindows E f) :
     Fin S.count ≃ Smale.ManifoldMorse.criticalPoints E f :=
   ((S.values.orderIsoOfFin rfl).toEquiv.trans
-        (Equiv.setCongr (S.finite.image f).coe_toFinset)).trans
+        (Set.equivOfEq (S.finite.image f).coe_toFinset)).trans
     (Equiv.Set.imageOfInjOn f (Smale.ManifoldMorse.criticalPoints E f) S.distinct).symm
 
 private theorem Smale.ManifoldMorse.SurgeryWindows.point_value {E M : Type*} [NormedAddCommGroup E]
@@ -2092,7 +2092,7 @@ private theorem Smale.ManifoldMorse.SurgeryWindows.point_value {E M : Type*} [No
     f (S.point i) = S.values.orderEmbOfFin rfl i := by
   let e := Equiv.Set.imageOfInjOn f (Smale.ManifoldMorse.criticalPoints E f) S.distinct
   let v : f '' Smale.ManifoldMorse.criticalPoints E f :=
-    Equiv.setCongr (S.finite.image f).coe_toFinset (S.values.orderIsoOfFin rfl i)
+    Set.equivOfEq (S.finite.image f).coe_toFinset (S.values.orderIsoOfFin rfl i)
   have h :=
     congrArg (fun x : f '' Smale.ManifoldMorse.criticalPoints E f => (x : ℝ))
       (e.apply_symm_apply v)
@@ -3568,7 +3568,7 @@ private theorem MorseCancel.homologyZero_linearMap_ext {X : Type} [TopologicalSp
   have heq : L.comp zeroChainClass = K.comp zeroChainClass := by
     apply FirstHurewicz.chainMap_ext X 0
     intro σ
-    have hσ : σ = ContinuousMap.const (FirstHurewicz.Simplex 0) (σ (stdSimplex.vertex 0)) := by
+    have hσ : σ = ContinuousMap.const (FirstHurewicz.Simplex 0) (σ (SimplexSet.vertex 0)) := by
       ext t
       exact congrArg σ (FirstHurewicz.simplexZero_eq_vertex t)
     rw [hσ]
@@ -4565,7 +4565,7 @@ private theorem MorseCancel.nativeIndexDisorder_transport {E M : Type*} [NormedA
   have hgfinite : (Smale.ManifoldMorse.criticalPoints E g).Finite := hcrit.symm ▸ hfinite
   let _ := hgfinite.fintype
   let e : Smale.ManifoldMorse.criticalPoints E f ≃ Smale.ManifoldMorse.criticalPoints E g :=
-    Equiv.setCongr hcrit.symm
+    Set.equivOfEq hcrit.symm
   rw [nativeIndexDisorder_eq_of_finite hgfinite]
   rw [←
     Degree.MorseRearrangement.finiteIndexDisorder_comp_equiv
@@ -5011,7 +5011,7 @@ private theorem MorseCancel.exists_embedded_avoidance_into_level_basin {E M A : 
 private theorem Smale.SphereBoundary.exists_extension_immersive_on_sphere {E G H N : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] {n : ℕ}
     [Fact (Module.finrank ℝ E = n + 1)] [NormedAddCommGroup G] [NormedSpace ℝ G]
-    [FiniteDimensional ℝ G] [TopologicalSpace H] {J : ModelWithCorners ℝ G H} [J.Boundaryless]
+    [TopologicalSpace H] {J : ModelWithCorners ℝ G H} [J.Boundaryless]
     [TopologicalSpace N] [ChartedSpace H N] [IsManifold J ∞ N] {f : E → N}
     (hf : ContMDiff 𝓘(ℝ, E) J ∞ f) {γ : Metric.sphere (0 : E) 1 → N}
     (hext : ∀ x : Metric.sphere (0 : E) 1, f x.1 = γ x)

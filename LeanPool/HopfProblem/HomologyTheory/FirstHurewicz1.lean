@@ -106,7 +106,7 @@ private theorem FirstHurewicz.lowerTriangle_face_one (s : Simplex 1) :
   · change 1 - simplexFace 1 1 s 0 = s 1
     have h0 : simplexFace 1 1 s 0 = s 0 := congrFun (simplexFace_one_one s) 0
     rw [h0]
-    linarith [stdSimplex.add_eq_one s]
+    linarith [SimplexSet.add_eq_one s]
 
 private theorem FirstHurewicz.lowerTriangle_face_two (s : Simplex 1) :
     lowerTriangleMap (simplexFace 1 2 s) = (0, simplexCoordinate 1 1 s) := by
@@ -116,7 +116,7 @@ private theorem FirstHurewicz.lowerTriangle_face_two (s : Simplex 1) :
   · change 1 - simplexFace 1 2 s 0 = s 1
     have h0 : simplexFace 1 2 s 0 = s 0 := congrFun (simplexFace_one_two s) 0
     rw [h0]
-    linarith [stdSimplex.add_eq_one s]
+    linarith [SimplexSet.add_eq_one s]
 
 private theorem FirstHurewicz.upperTriangle_face_zero (s : Simplex 1) :
     upperTriangleMap (simplexFace 1 0 s) = (1, simplexCoordinate 1 1 s) := by
@@ -133,7 +133,7 @@ private theorem FirstHurewicz.upperTriangle_face_one (s : Simplex 1) :
   · change 1 - simplexFace 1 1 s 0 = s 1
     have h0 : simplexFace 1 1 s 0 = s 0 := congrFun (simplexFace_one_one s) 0
     rw [h0]
-    linarith [stdSimplex.add_eq_one s]
+    linarith [SimplexSet.add_eq_one s]
   · change simplexFace 1 1 s 2 = s 1
     exact congrFun (simplexFace_one_one s) 2
 
@@ -143,7 +143,7 @@ private theorem FirstHurewicz.upperTriangle_face_two (s : Simplex 1) :
   · change 1 - simplexFace 1 2 s 0 = s 1
     have h0 : simplexFace 1 2 s 0 = s 0 := congrFun (simplexFace_one_two s) 0
     rw [h0]
-    linarith [stdSimplex.add_eq_one s]
+    linarith [SimplexSet.add_eq_one s]
   · change simplexFace 1 2 s 2 = 0
     exact simplexFace_apply_self 1 2 s
 

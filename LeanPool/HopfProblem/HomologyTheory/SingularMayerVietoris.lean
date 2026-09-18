@@ -33,20 +33,245 @@ local infixr:80 " ≫ₚ " => Path.trans
 
 local notation:100 f " ∣[" k "] " a:100 => SlashAction.map k a f
 
+/-! ### The set-based standard simplex
+
+Mathlib's `Convexity.StdSimplex` replaced the set `stdSimplex ℝ ι ⊆ ι → ℝ` on 2026-08-29. The
+singular chains below manipulate simplex coordinates as functions, so this section keeps the
+set-based simplex together with the small API the development uses; `FirstHurewicz.toSimplex`
+bridges to the bundled simplices underlying Mathlib's singular simplicial set. -/
+
+section SimplexSet
+
+variable (S : Type*) (ι : Type*) [Semiring S] [PartialOrder S] [Fintype ι]
+
+/-- The vectors of `ι → S` with nonnegative coordinates summing to `1`. -/
+private def SimplexSet : Set (ι → S) :=
+  { f | (∀ x, 0 ≤ f x) ∧ ∑ x, f x = 1 }
+
+private theorem SimplexSet.convex [IsOrderedRing S] : Convex S (SimplexSet S ι) := by
+  refine fun f hf g hg a b ha hb hab => ⟨fun x => ?_, ?_⟩
+  · apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]
+  · simp_rw [Pi.add_apply, Pi.smul_apply]
+    rwa [Finset.sum_add_distrib, ← Finset.smul_sum, ← Finset.smul_sum, hf.2, hg.2, smul_eq_mul,
+      smul_eq_mul, mul_one, mul_one]
+
+variable {S ι}
+
+private theorem SimplexSet.mem_Icc [IsOrderedAddMonoid S] {f : ι → S} (hf : f ∈ SimplexSet S ι)
+    (x : ι) : f x ∈ Set.Icc (0 : S) 1 :=
+  ⟨hf.1 x, hf.2 ▸ Finset.single_le_sum (fun y _ => hf.1 y) (Finset.mem_univ x)⟩
+
+private theorem SimplexSet.single_mem [DecidableEq ι] [ZeroLEOneClass S] (i : ι) :
+    Pi.single i 1 ∈ SimplexSet S ι :=
+  ⟨le_update_iff.2 ⟨zero_le_one, fun _ _ => le_rfl⟩, by simp⟩
+
+namespace SimplexSet
+
+private instance : FunLike (SimplexSet S ι) ι S where
+  coe s := s.val
+  coe_injective := Subtype.val_injective
+
+@[ext high]
+private theorem ext {s t : SimplexSet S ι} (h : (s : ι → S) = t) : s = t :=
+  Subtype.ext h
+
+@[simp]
+private theorem zero_le (s : SimplexSet S ι) (x : ι) : 0 ≤ s x :=
+  s.2.1 x
+
+@[simp]
+private theorem sum_eq_one (s : SimplexSet S ι) : ∑ x, s x = 1 :=
+  s.2.2
+
+@[simp]
+private theorem add_eq_one (s : SimplexSet S (Fin 2)) : s 0 + s 1 = 1 := by
+  simpa only [Fin.sum_univ_two] using sum_eq_one s
+
+section OrderedRing
+
+variable [IsOrderedRing S] {κ : Type*} [Fintype κ]
+
+@[simp]
+private theorem le_one (s : SimplexSet S ι) (x : ι) : s x ≤ 1 := by
+  rw [← sum_eq_one s]
+  exact Finset.single_le_sum (by simp) (by simp)
+
+private theorem image_linearMap (f : ι → κ) :
+    Set.image (FunOnFinite.linearMap S S f) (SimplexSet S ι) ⊆ SimplexSet S κ := by
+  classical
+  rintro _ ⟨s, ⟨hs₀, hs₁⟩, rfl⟩
+  refine ⟨fun y => ?_, ?_⟩
+  · rw [FunOnFinite.linearMap_apply_apply]
+    exact Finset.sum_nonneg (by aesop)
+  · simp only [FunOnFinite.linearMap_apply_apply, ← hs₁]
+    exact Finset.sum_fiberwise Finset.univ f s
+
+/-- The map of simplices induced by a map of index types. -/
+private noncomputable def map (f : ι → κ) (s : SimplexSet S ι) : SimplexSet S κ :=
+  ⟨FunOnFinite.linearMap S S f s, image_linearMap f (by aesop)⟩
+
+@[simp]
+private theorem map_coe (f : ι → κ) (s : SimplexSet S ι) :
+    ⇑(map f s) = FunOnFinite.linearMap S S f s :=
+  rfl
+
+private theorem map_comp_apply {μ : Type*} [Fintype μ] (f : ι → κ) (g : κ → μ)
+    (x : SimplexSet S ι) : map g (map f x) = map (g.comp f) x := by
+  ext
+  simp [FunOnFinite.linearMap_comp]
+
+/-- The vertex of the simplex at index `x`. -/
+private abbrev vertex [DecidableEq ι] (x : ι) : SimplexSet S ι :=
+  ⟨Pi.single x 1, single_mem x⟩
+
+@[simp]
+private theorem vertex_coe [DecidableEq ι] (x : ι) : ⇑(vertex (S := S) x) = Pi.single x 1 :=
+  rfl
+
+@[simp]
+private theorem map_vertex [DecidableEq ι] [DecidableEq κ] (f : ι → κ) (x : ι) :
+    map (S := S) f (vertex x) = vertex (f x) := by
+  aesop
+
+private theorem continuous_map [TopologicalSpace S] [IsTopologicalSemiring S] (f : ι → κ) :
+    Continuous (map (S := S) f) :=
+  Continuous.subtype_mk ((FunOnFinite.continuous_linearMap S S f).comp continuous_induced_dom) _
+
+private theorem vertex_injective [Nontrivial S] [DecidableEq ι] :
+    Function.Injective (vertex (S := S) (ι := ι)) := by
+  intro x y h
+  replace h := DFunLike.congr_fun h x
+  by_contra!
+  simp [Pi.single_eq_of_ne this] at h
+
+private instance [Nonempty ι] : Nonempty (SimplexSet S ι) := by
+  classical
+  exact ⟨vertex (Classical.arbitrary _)⟩
+
+private instance [Subsingleton ι] : Subsingleton (SimplexSet S ι) where
+  allEq s t := by
+    ext i
+    have (u : SimplexSet S ι) : u i = 1 := by
+      rw [← sum_eq_one u, Finset.sum_eq_single i _ (by simp)]
+      intro j _ hj
+      exact (hj (Subsingleton.elim j i)).elim
+    simp [this]
+
+private instance [Unique ι] : Unique (SimplexSet S ι) where
+  default := ⟨1, by simp, by simp⟩
+  uniq := by subsingleton
+
+@[simp]
+private theorem eq_one_of_unique [Unique ι] (s : SimplexSet S ι) (x : ι) : s x = 1 := by
+  obtain rfl : s = default := by subsingleton
+  rfl
+
+end OrderedRing
+
+section Real
+
+variable (ι)
+
+private theorem isClosed : IsClosed (SimplexSet ℝ ι) := by
+  have : SimplexSet ℝ ι = (⋂ x, { f | 0 ≤ f x }) ∩ { f | ∑ x, f x = 1 } := by
+    ext f
+    simp only [SimplexSet, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
+  rw [this]
+  apply IsClosed.inter
+  · apply isClosed_iInter
+    exact fun i => isClosed_le continuous_const (continuous_apply i)
+  · exact isClosed_eq (by fun_prop) continuous_const
+
+private theorem subset_Icc : SimplexSet ℝ ι ⊆ Set.Icc 0 1 := by
+  intro f h
+  rw [← Set.pi_univ_Icc, Set.univ_pi_eq_iInter, Set.mem_iInter]
+  simpa using fun i => mem_Icc h i
+
+private instance : CompactSpace (SimplexSet ℝ ι) :=
+  isCompact_iff_compactSpace.mp <|
+    IsCompact.of_isClosed_subset isCompact_Icc (isClosed ι) (subset_Icc ι)
+
+private theorem subset_closedBall : SimplexSet ℝ ι ⊆ Metric.closedBall 0 1 := fun f hf => by
+  rw [Metric.mem_closedBall, dist_pi_le_iff zero_le_one]
+  intro x
+  rw [Pi.zero_apply, Real.dist_0_eq_abs, abs_of_nonneg <| hf.1 x]
+  exact (mem_Icc hf x).2
+
+private theorem isBounded : Bornology.IsBounded (SimplexSet ℝ ι) :=
+  (Metric.isBounded_iff_subset_closedBall 0).2 ⟨1, subset_closedBall ι⟩
+
+private instance [Nonempty ι] : PathConnectedSpace (SimplexSet ℝ ι) :=
+  isPathConnected_iff_pathConnectedSpace.1 <|
+    (convex ℝ ι).isPathConnected (by
+      classical
+      exact ⟨_, single_mem (Classical.arbitrary ι)⟩)
+
+variable {ι}
+
+private theorem diam_le : Metric.diam (SimplexSet ℝ ι) ≤ 1 :=
+  Metric.diam_le_of_forall_dist_le zero_le_one fun x hx y hy =>
+    (dist_pi_le_iff zero_le_one).2 fun i => by
+      have hx := mem_Icc hx i
+      have hy := mem_Icc hy i
+      grind [Real.dist_eq]
+
+/-- The barycenter of the simplex. -/
+private noncomputable def barycenter [Nonempty ι] : SimplexSet ℝ ι :=
+  ⟨fun _ => (Fintype.card ι : ℝ)⁻¹, by simp [SimplexSet]⟩
+
+@[simp]
+private theorem barycenter_apply [Nonempty ι] (x : ι) :
+    (barycenter : SimplexSet ℝ ι).val x = (Fintype.card ι : ℝ)⁻¹ :=
+  rfl
+
+/-- The one-dimensional simplex is homeomorphic to the unit interval, sending the vertex at `0`
+to `0` and the vertex at `1` to `1`. -/
+@[simps! -fullyApplied]
+private noncomputable def homeomorphUnitInterval : SimplexSet ℝ (Fin 2) ≃ₜ unitInterval where
+  toFun f :=
+    ⟨f.1 1, f.2.1 _, f.2.2 ▸ Finset.single_le_sum (fun i _ => f.2.1 i) (Finset.mem_univ _)⟩
+  invFun x := ⟨![1 - x, x], Fin.forall_fin_two.2 ⟨sub_nonneg.2 x.2.2, x.2.1⟩, by simp⟩
+  left_inv f :=
+    Subtype.ext <| funext <| Fin.forall_fin_two.2 <| by
+      simp [← (show f.1 0 + f.1 1 = 1 by simpa using f.2.2)]
+  right_inv x := Subtype.ext rfl
+  continuous_toFun := .subtype_mk ((continuous_apply 1).comp continuous_subtype_val) _
+  continuous_invFun := by
+    apply Continuous.subtype_mk
+    exact
+      continuous_pi <|
+        Fin.forall_fin_two.2 ⟨continuous_const.sub continuous_subtype_val, continuous_subtype_val⟩
+
+@[simp]
+private theorem homeomorphUnitInterval_zero :
+    homeomorphUnitInterval (vertex (S := ℝ) (0 : Fin 2)) = 0 :=
+  rfl
+
+@[simp]
+private theorem homeomorphUnitInterval_one :
+    homeomorphUnitInterval (vertex (S := ℝ) (1 : Fin 2)) = 1 :=
+  rfl
+
+end Real
+
+end SimplexSet
+
+end SimplexSet
+
 private abbrev FirstHurewicz.Simplex (n : ℕ) :=
-  stdSimplex ℝ (Fin (n + 1))
+  SimplexSet ℝ (Fin (n + 1))
 
 private def FirstHurewicz.simplexFace (n : ℕ) (i : Fin (n + 2)) : C(Simplex n, Simplex (n + 1)) :=
-  ⟨stdSimplex.map (SimplexCategory.δ i).toOrderHom,
-    stdSimplex.continuous_map (SimplexCategory.δ i).toOrderHom⟩
+  ⟨SimplexSet.map (SimplexCategory.δ i).toOrderHom,
+    SimplexSet.continuous_map (SimplexCategory.δ i).toOrderHom⟩
 
 private theorem FirstHurewicz.simplexFace_apply (n : ℕ) (i : Fin (n + 2)) (s : Simplex n) :
-    simplexFace n i s = stdSimplex.map i.succAbove s :=
+    simplexFace n i s = SimplexSet.map i.succAbove s :=
   rfl
 
 private def FirstHurewicz.simplexCoordinate (n : ℕ) (i : Fin (n + 1)) : C(Simplex n, unitInterval)
     where
-  toFun s := ⟨s i, stdSimplex.zero_le s i, stdSimplex.le_one s i⟩
+  toFun s := ⟨s i, SimplexSet.zero_le s i, SimplexSet.le_one s i⟩
   continuous_toFun := ((continuous_apply i).comp continuous_subtype_val).subtype_mk _
 
 @[simp]
@@ -90,42 +315,42 @@ private theorem FirstHurewicz.simplexFace_one_two (s : Simplex 1) :
   · exact simplexFace_apply_self 1 2 s
 
 private theorem FirstHurewicz.simplexZero_eq_vertex (s : Simplex 0) :
-    s = stdSimplex.vertex (S := ℝ) (0 : Fin 1) := by
+    s = SimplexSet.vertex (S := ℝ) (0 : Fin 1) := by
   let : Unique (Fin (0 + 1)) := inferInstanceAs (Unique (Fin 1))
   apply Subtype.ext
   funext k
   fin_cases k
   change s 0 = 1
-  exact stdSimplex.eq_one_of_unique (s : stdSimplex ℝ (Fin 1)) (0 : Fin 1)
+  exact SimplexSet.eq_one_of_unique (s : SimplexSet ℝ (Fin 1)) (0 : Fin 1)
 
 @[simp]
 private theorem FirstHurewicz.simplexFace_zero_zero (s : Simplex 0) :
-    simplexFace 0 0 s = stdSimplex.vertex (S := ℝ) (1 : Fin 2) := by
-  rw [simplexZero_eq_vertex s, simplexFace_apply, stdSimplex.map_vertex]
+    simplexFace 0 0 s = SimplexSet.vertex (S := ℝ) (1 : Fin 2) := by
+  rw [simplexZero_eq_vertex s, simplexFace_apply, SimplexSet.map_vertex]
   rfl
 
 @[simp]
 private theorem FirstHurewicz.simplexFace_zero_one (s : Simplex 0) :
-    simplexFace 0 1 s = stdSimplex.vertex (S := ℝ) (0 : Fin 2) := by
-  rw [simplexZero_eq_vertex s, simplexFace_apply, stdSimplex.map_vertex]
+    simplexFace 0 1 s = SimplexSet.vertex (S := ℝ) (0 : Fin 2) := by
+  rw [simplexZero_eq_vertex s, simplexFace_apply, SimplexSet.map_vertex]
   rfl
 
 private def FirstHurewicz.pathSimplex {X : Type*} [TopologicalSpace X] {x y : X} (p : Path x y) :
     C(Simplex 1, X) :=
   p.toContinuousMap.comp
-    ⟨stdSimplexHomeomorphUnitInterval, stdSimplexHomeomorphUnitInterval.continuous⟩
+    ⟨SimplexSet.homeomorphUnitInterval, SimplexSet.homeomorphUnitInterval.continuous⟩
 
 @[simp]
 private theorem FirstHurewicz.pathSimplex_vertex_zero {X : Type*} [TopologicalSpace X] {x y : X}
-    (p : Path x y) : pathSimplex p (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) = x := by
-  change p (stdSimplexHomeomorphUnitInterval _) = x
-  rw [stdSimplexHomeomorphUnitInterval_zero, p.source]
+    (p : Path x y) : pathSimplex p (SimplexSet.vertex (S := ℝ) (0 : Fin 2)) = x := by
+  change p (SimplexSet.homeomorphUnitInterval _) = x
+  rw [SimplexSet.homeomorphUnitInterval_zero, p.source]
 
 @[simp]
 private theorem FirstHurewicz.pathSimplex_vertex_one {X : Type*} [TopologicalSpace X] {x y : X}
-    (p : Path x y) : pathSimplex p (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) = y := by
-  change p (stdSimplexHomeomorphUnitInterval _) = y
-  rw [stdSimplexHomeomorphUnitInterval_one, p.target]
+    (p : Path x y) : pathSimplex p (SimplexSet.vertex (S := ℝ) (1 : Fin 2)) = y := by
+  change p (SimplexSet.homeomorphUnitInterval _) = y
+  rw [SimplexSet.homeomorphUnitInterval_one, p.target]
 
 @[simp]
 private theorem FirstHurewicz.pathSimplex_face_zero {X : Type*} [TopologicalSpace X] {x y : X}
@@ -146,25 +371,25 @@ private theorem FirstHurewicz.pathSimplex_face_one {X : Type*} [TopologicalSpace
   rw [simplexFace_zero_one, pathSimplex_vertex_zero]
 
 private def FirstHurewicz.simplexPath {X : Type*} [TopologicalSpace X] (σ : C(Simplex 1, X)) :
-    Path (σ (stdSimplex.vertex (S := ℝ) (0 : Fin 2))) (σ (stdSimplex.vertex (S := ℝ) (1 : Fin 2)))
+    Path (σ (SimplexSet.vertex (S := ℝ) (0 : Fin 2))) (σ (SimplexSet.vertex (S := ℝ) (1 : Fin 2)))
     where
-  toFun t := σ (stdSimplexHomeomorphUnitInterval.symm t)
-  continuous_toFun := σ.continuous.comp stdSimplexHomeomorphUnitInterval.symm.continuous
+  toFun t := σ (SimplexSet.homeomorphUnitInterval.symm t)
+  continuous_toFun := σ.continuous.comp SimplexSet.homeomorphUnitInterval.symm.continuous
   source' :=
     congrArg σ
-      (stdSimplexHomeomorphUnitInterval.symm_apply_eq.mpr
-        stdSimplexHomeomorphUnitInterval_zero.symm)
+      (SimplexSet.homeomorphUnitInterval.symm_apply_eq.mpr
+        SimplexSet.homeomorphUnitInterval_zero.symm)
   target' :=
     congrArg σ
-      (stdSimplexHomeomorphUnitInterval.symm_apply_eq.mpr
-        stdSimplexHomeomorphUnitInterval_one.symm)
+      (SimplexSet.homeomorphUnitInterval.symm_apply_eq.mpr
+        SimplexSet.homeomorphUnitInterval_one.symm)
 
 @[simp]
 private theorem FirstHurewicz.pathSimplex_simplexPath {X : Type*} [TopologicalSpace X]
     (σ : C(Simplex 1, X)) : pathSimplex (simplexPath σ) = σ := by
   apply ContinuousMap.ext
   intro s
-  change σ (stdSimplexHomeomorphUnitInterval.symm (stdSimplexHomeomorphUnitInterval s)) = σ s
+  change σ (SimplexSet.homeomorphUnitInterval.symm (SimplexSet.homeomorphUnitInterval s)) = σ s
   rw [Homeomorph.symm_apply_apply]
 
 private def FirstHurewicz.concatTime : C(Simplex 2, unitInterval)
@@ -172,10 +397,10 @@ private def FirstHurewicz.concatTime : C(Simplex 2, unitInterval)
   toFun
     s :=
     ⟨s 1 / 2 + s 2, by
-      have h0 := stdSimplex.zero_le s 0
-      have h1 := stdSimplex.zero_le s 1
-      have h2 := stdSimplex.zero_le s 2
-      have hs := stdSimplex.sum_eq_one s
+      have h0 := SimplexSet.zero_le s 0
+      have h1 := SimplexSet.zero_le s 1
+      have h2 := SimplexSet.zero_le s 2
+      have hs := SimplexSet.sum_eq_one s
       simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] at hs
       change s 0 + (s 1 + s 2) = 1 at hs
       constructor <;> linarith⟩
@@ -204,8 +429,8 @@ private theorem FirstHurewicz.concatSimplex_face_zero {X : Type*} [TopologicalSp
   have h1 : simplexFace 1 0 s 1 = s 0 := simplexFace_apply_succAbove 1 0 s 0
   have h2 : simplexFace 1 0 s 2 = s 1 := simplexFace_apply_succAbove 1 0 s 1
   rw [h1, h2]
-  have hs := stdSimplex.add_eq_one s
-  have hnonneg := stdSimplex.zero_le s 1
+  have hs := SimplexSet.add_eq_one s
+  have hnonneg := SimplexSet.zero_le s 1
   rw [Path.extend_trans_of_half_le p q (show 1 / 2 ≤ s 0 / 2 + s 1 by linarith)]
   have he : 2 * (s 0 / 2 + s 1) - 1 = s 1 := by linarith
   rw [he]
@@ -232,7 +457,7 @@ private theorem FirstHurewicz.concatSimplex_face_two {X : Type*} [TopologicalSpa
   rw [concatSimplex_apply, simplexFace_apply_self]
   have h1 : simplexFace 1 2 s 1 = s 1 := simplexFace_apply_succAbove 1 2 s 1
   rw [h1, add_zero]
-  have hle := stdSimplex.le_one s 1
+  have hle := SimplexSet.le_one s 1
   rw [Path.extend_trans_of_le_half p q (show s 1 / 2 ≤ 1 / 2 by linarith)]
   rw [show 2 * (s 1 / 2) = s 1 by ring]
   exact Path.extend_apply p (simplexCoordinate 1 1 s).property
@@ -254,12 +479,67 @@ abbrev FirstHurewicz.SingularH1 (X : Type) [TopologicalSpace X] :=
   (singularComplex X).homology 1
 
 private abbrev FirstHurewicz.SingularSimplex (X : Type) [TopologicalSpace X] (n : ℕ) :=
-  C(stdSimplex ℝ (Fin (n + 1)), X)
+  C(SimplexSet ℝ (Fin (n + 1)), X)
+
+/-- The coordinates of one of Mathlib's bundled simplices, as a point of `Simplex n`. -/
+private def FirstHurewicz.toSimplex (n : ℕ) :
+    C(Convexity.StdSimplex ℝ (Fin (n + 1)), Simplex n) where
+  toFun w := ⟨fun i => w.weights i, fun i => w.weights_nonneg i, w.total_of_fintype⟩
+  continuous_toFun :=
+    Continuous.subtype_mk
+      (continuous_pi fun i => Convexity.StdSimplex.continuous_weights_apply ℝ i) _
+
+/-- The bundled simplex with the coordinates of a point of `Simplex n`. -/
+private def FirstHurewicz.ofSimplex (n : ℕ) :
+    C(Simplex n, Convexity.StdSimplex ℝ (Fin (n + 1))) where
+  toFun s :=
+    { weights := Finsupp.equivFunOnFinite.symm s.val
+      nonneg := fun i => by simpa using s.2.1 i
+      total := by simpa [Finsupp.sum_fintype] using s.2.2 }
+  continuous_toFun :=
+    (Convexity.StdSimplex.isEmbedding_toFun_comp_weights ℝ (Fin (n + 1))).continuous_iff.mpr
+      (by simpa only [Function.comp_def, Finsupp.coe_equivFunOnFinite_symm] using
+        continuous_subtype_val)
+
+private theorem FirstHurewicz.toSimplex_ofSimplex (n : ℕ) (s : Simplex n) :
+    toSimplex n (ofSimplex n s) = s :=
+  Subtype.ext <| funext fun i => by simp [toSimplex, ofSimplex]
+
+private theorem FirstHurewicz.ofSimplex_toSimplex (n : ℕ)
+    (w : Convexity.StdSimplex ℝ (Fin (n + 1))) : ofSimplex n (toSimplex n w) = w :=
+  Convexity.StdSimplex.ext <| Finsupp.ext fun i => by simp [toSimplex, ofSimplex]
+
+private theorem FirstHurewicz.toSimplex_map {n m : ℕ} (f : Fin (n + 1) → Fin (m + 1))
+    (w : Convexity.StdSimplex ℝ (Fin (n + 1))) :
+    toSimplex m (Convexity.StdSimplex.map f w) = SimplexSet.map f (toSimplex n w) := by
+  classical
+  apply Subtype.ext
+  funext j
+  change (Convexity.StdSimplex.map f w).weights j =
+    FunOnFinite.linearMap ℝ ℝ f (fun i => w.weights i) j
+  rw [FunOnFinite.linearMap_apply_apply, Convexity.StdSimplex.weights_map,
+    Finsupp.mapDomain_fintype, Finsupp.coe_finsetSum, Finset.sum_apply, Finset.sum_filter]
+  exact Finset.sum_congr rfl fun a _ => by simp [Finsupp.single_apply]
+
+/-- Singular simplices, indexed as Mathlib's singular simplicial set indexes them. -/
+private def FirstHurewicz.simplexIndexEquiv (X : Type) [TopologicalSpace X] (n : ℕ) :
+    SingularSimplex X n ≃
+      (TopCat.toSSet.obj (TopCat.of X)).obj (Opposite.op (SimplexCategory.mk n)) where
+  toFun σ :=
+    ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk n))).symm (σ.comp (toSimplex n))
+  invFun s := ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk n)) s).comp (ofSimplex n)
+  left_inv σ := by
+    ext s
+    simp [toSimplex_ofSimplex]
+  right_inv s := by
+    rw [Equiv.symm_apply_eq]
+    ext w
+    simp [ofSimplex_toSimplex]
 
 private def
     FirstHurewicz.simplexIndex (X : Type) [TopologicalSpace X] (n : ℕ) (σ : SingularSimplex X n) :
     (TopCat.toSSet.obj (TopCat.of X)).obj (Opposite.op (SimplexCategory.mk (n))) :=
-  ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk (n)))).symm σ
+  simplexIndexEquiv X n σ
 
 private def
     FirstHurewicz.simplexChain (X : Type) [TopologicalSpace X] (n : ℕ) (σ : SingularSimplex X n) :
@@ -277,7 +557,21 @@ private abbrev
 private theorem FirstHurewicz.simplexIndex_face (X : Type) [TopologicalSpace X] (n : ℕ)
     (σ : SingularSimplex X (n + 1)) (i : Fin (n + 2)) :
     (TopCat.toSSet.obj (TopCat.of X)).δ i (simplexIndex X (n + 1) σ) =
-      simplexIndex X n (σ.comp (simplexFace n i)) := by rfl
+      simplexIndex X n (σ.comp (simplexFace n i)) := by
+  apply ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk n))).injective
+  change ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk (n + 1)))
+      (((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk (n + 1)))).symm
+        (σ.comp (toSimplex (n + 1))))).comp
+      ⟨_, Convexity.StdSimplex.continuous_map ℝ (SimplexCategory.δ i)⟩ =
+    (TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk n))
+      (((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk n))).symm
+        ((σ.comp (simplexFace n i)).comp (toSimplex n)))
+  rw [Equiv.apply_symm_apply, Equiv.apply_symm_apply]
+  ext w
+  change σ (toSimplex (n + 1) (Convexity.StdSimplex.map _ w)) =
+    σ (simplexFace n i (toSimplex n w))
+  rw [toSimplex_map]
+  rfl
 
 private theorem FirstHurewicz.boundary_simplex (X : Type) [TopologicalSpace X] (n : ℕ)
     (σ : SingularSimplex X (n + 1)) :
@@ -315,7 +609,7 @@ private def
         (fun s : (TopCat.toSSet.obj (TopCat.of X)).obj (Opposite.op (SimplexCategory.mk (n))) =>
           ModuleCat.ofHom
             (LinearMap.toSpanSingleton ℤ M
-              (f ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk (n))) s)))) :
+              (f ((simplexIndexEquiv X n).symm s)))) :
       Chains X n ⟶ ModuleCat.of ℤ M).hom
 
 @[simp]
@@ -323,19 +617,19 @@ private theorem FirstHurewicz.chainLift_simplex (X : Type) [TopologicalSpace X] 
     [AddCommGroup M] [Module ℤ M] (f : SingularSimplex X n → M) (σ : SingularSimplex X n) :
     chainLift X n f (simplexChain X n σ) = f σ := by
   have h :=
-    CategoryTheory.Limits.Sigma.ι_desc
+    CategoryTheory.Limits.Sigma.ι_comp_desc
       (fun s : (TopCat.toSSet.obj (TopCat.of X)).obj (Opposite.op (SimplexCategory.mk (n))) =>
         ModuleCat.ofHom
           (LinearMap.toSpanSingleton ℤ M
-            (f ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk (n))) s))))
+            (f ((simplexIndexEquiv X n).symm s))))
       (simplexIndex X n σ)
   have he := congrArg (fun g : ModuleCat.of ℤ ℤ ⟶ ModuleCat.of ℤ M => g.hom 1) h
   change
     chainLift X n f (simplexChain X n σ) =
       (LinearMap.toSpanSingleton ℤ M
-          (f ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk (n))) (simplexIndex X n σ))))
+          (f ((simplexIndexEquiv X n).symm (simplexIndex X n σ))))
         1 at he
-  simpa only [LinearMap.toSpanSingleton_apply_one, simplexIndex, Equiv.apply_symm_apply] using he
+  simpa only [LinearMap.toSpanSingleton_apply_one, simplexIndex, Equiv.symm_apply_apply] using he
 
 private theorem FirstHurewicz.chainMap_ext (X : Type) [TopologicalSpace X] (n : ℕ) {M : Type}
     [AddCommGroup M] [Module ℤ M] {f g : Chains X n →ₗ[ℤ] M}
@@ -348,8 +642,8 @@ private theorem FirstHurewicz.chainMap_ext (X : Type) [TopologicalSpace X] (n : 
     change
       f (((TopCat.toSSet.obj (TopCat.of X)).ιChainComplex (R := ModuleCat.of ℤ ℤ) s).hom 1) =
         g (((TopCat.toSSet.obj (TopCat.of X)).ιChainComplex (R := ModuleCat.of ℤ ℤ) s).hom 1)
-    have hs := h ((TopCat.of X).toSSetObjEquiv (.op (SimplexCategory.mk (n))) s)
-    simpa only [simplexChain, simplexIndex, Equiv.symm_apply_apply] using hs
+    have hs := h ((simplexIndexEquiv X n).symm s)
+    simpa only [simplexChain, simplexIndex, Equiv.apply_symm_apply] using hs
   exact congrArg ModuleCat.Hom.hom hcat
 
 /-- The kernel defining cycles in a short complex. -/
@@ -2122,8 +2416,8 @@ private def
   toFun
     t :=
     ⟨∑ i, t i • (v i : Fin (p + 1) → ℝ),
-      (convex_stdSimplex ℝ (Fin (p + 1))).sum_mem (fun i _ => stdSimplex.zero_le t i)
-        (stdSimplex.sum_eq_one t) (fun i _ => (v i).property)⟩
+      (SimplexSet.convex ℝ (Fin (p + 1))).sum_mem (fun i _ => SimplexSet.zero_le t i)
+        (SimplexSet.sum_eq_one t) (fun i _ => (v i).property)⟩
   continuous_toFun := by
     apply Continuous.subtype_mk
     exact
@@ -2140,7 +2434,7 @@ private theorem SingularMayerVietoris.affineSimplex_coordinate {n p : ℕ}
 @[simp]
 private theorem SingularMayerVietoris.affineSimplex_vertex {n p : ℕ}
     (v : Fin (n + 1) → FirstHurewicz.Simplex p) (i : Fin (n + 1)) :
-    affineSimplex v (stdSimplex.vertex (S := ℝ) i) = v i := by
+    affineSimplex v (SimplexSet.vertex (S := ℝ) i) = v i := by
   apply Subtype.ext
   change
     (∑ j : Fin (n + 1), ((Pi.single i (1 : ℝ) : Fin (n + 1) → ℝ) j) • (v j : Fin (p + 1) → ℝ)) =
@@ -2148,7 +2442,7 @@ private theorem SingularMayerVietoris.affineSimplex_vertex {n p : ℕ}
   simp [Pi.single_apply]
 
 private def SingularMayerVietoris.stdVertices (n : ℕ) : Fin (n + 1) → FirstHurewicz.Simplex n :=
-  stdSimplex.vertex
+  SimplexSet.vertex
 
 @[simp]
 private theorem SingularMayerVietoris.affineSimplex_stdVertices (n : ℕ) :
@@ -2193,14 +2487,14 @@ private theorem SingularMayerVietoris.affineSimplex_mem_convexHull {n p : ℕ}
   change (∑ i, t i • (v i : Fin (p + 1) → ℝ)) ∈ _
   apply (convex_convexHull ℝ _).sum_mem
   · intro i _
-    exact stdSimplex.zero_le t i
-  · exact stdSimplex.sum_eq_one t
+    exact SimplexSet.zero_le t i
+  · exact SimplexSet.sum_eq_one t
   · intro i _
     exact subset_convexHull ℝ _ (Set.mem_range_self i)
 
 private def SingularMayerVietoris.simplexBarycenter {n p : ℕ}
     (v : Fin (n + 1) → FirstHurewicz.Simplex p) : FirstHurewicz.Simplex p :=
-  affineSimplex v (stdSimplex.barycenter : FirstHurewicz.Simplex n)
+  affineSimplex v (SimplexSet.barycenter : FirstHurewicz.Simplex n)
 
 private theorem SingularMayerVietoris.simplexBarycenter_coe {n p : ℕ}
     (v : Fin (n + 1) → FirstHurewicz.Simplex p) :
@@ -2213,7 +2507,7 @@ private theorem SingularMayerVietoris.affineSimplex_simplexBarycenter {m n p : �
     (v : Fin (n + 1) → FirstHurewicz.Simplex p) (w : Fin (m + 1) → FirstHurewicz.Simplex n) :
     affineSimplex v (simplexBarycenter w) = simplexBarycenter (fun j => affineSimplex v (w j)) :=
   ContinuousMap.congr_fun (affineSimplex_comp v w)
-    (stdSimplex.barycenter : FirstHurewicz.Simplex m)
+    (SimplexSet.barycenter : FirstHurewicz.Simplex m)
 
 /-- Formal integer combinations of ordered `n`-tuples of vertices. -/
 public
@@ -3450,8 +3744,8 @@ private theorem SingularMayerVietoris.formalSubdivision_iterate_mesh {V E : Type
 
 private theorem SingularMayerVietoris.simplex_dist_le_one {p : ℕ} (x y : FirstHurewicz.Simplex p) :
     Dist.dist x y ≤ 1 :=
-  (Metric.dist_le_diam_of_mem (bounded_stdSimplex (Fin (p + 1))) x.property y.property).trans
-    diam_stdSimplex_le
+  (Metric.dist_le_diam_of_mem (SimplexSet.isBounded (Fin (p + 1))) x.property y.property).trans
+    SimplexSet.diam_le
 
 private theorem SingularMayerVietoris.simplex_formalSubdivision_iterate_mesh {p n : ℕ} (k : ℕ)
     (c : FormalChains (FirstHurewicz.Simplex p) (n + 1)) :

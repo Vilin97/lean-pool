@@ -4697,7 +4697,7 @@ private theorem Smale.ChartMapPerturbation.mfderiv_eq_of_translation_germ {D F H
       (show MDifferentiableAt I 𝓘(ℝ, F) (fun _ : X => a) x from mdifferentiableAt_const)
   change (mfderiv I 𝓘(ℝ, F) (fun z => u z + a) x : D →L[ℝ] F) = A + C at hh
   rw [hC] at hh
-  exact hevent.mfderiv_eq.trans (hh.trans (add_zero A))
+  exact hevent.mfderiv_eq'.trans (hh.trans (add_zero A))
 
 private theorem Smale.ChartMapPerturbation.transverse_of_chart {D Z G F H H' K X Y N : Type*}
     [NormedAddCommGroup D] [NormedSpace ℝ D] [NormedAddCommGroup Z] [NormedSpace ℝ Z]

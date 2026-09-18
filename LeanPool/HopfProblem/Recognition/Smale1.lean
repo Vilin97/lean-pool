@@ -5664,6 +5664,17 @@ private theorem Smale.ManifoldMorse.SignedMorseChart.flow_eq_descentModel_of_mem
   c.flow_eqOn_descentModel hV F hcurve hx isPreconnected_uIcc Set.left_mem_uIcc htarget heq
     Set.right_mem_uIcc
 
+/-- `Filter.EventuallyEq.mfderiv_eq` without the `tangentSpaceCast` that Mathlib inserts between
+the (definitionally equal) tangent spaces at `f₁ x` and `f x`. -/
+private theorem _root_.Filter.EventuallyEq.mfderiv_eq' {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type*} [TopologicalSpace H]
+    {I : ModelWithCorners 𝕜 E H} {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
+    {E' : Type*} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type*} [TopologicalSpace H']
+    {I' : ModelWithCorners 𝕜 E' H'} {M' : Type*} [TopologicalSpace M'] [ChartedSpace H' M']
+    {f₁ f : M → M'} {x : M} (h : f₁ =ᶠ[𝓝 x] f) : mfderiv I I' f₁ x = mfderiv I I' f x := by
+  rw [h.mfderiv_eq]
+  exact ContinuousLinearMap.ext fun _ => rfl
+
 end Mathoverflow1973
 
 end

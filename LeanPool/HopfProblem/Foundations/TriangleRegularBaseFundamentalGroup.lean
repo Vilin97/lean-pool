@@ -447,26 +447,20 @@ private theorem PeriodTorusLineBundle.ChernCocycle.simplexFace_comp {n : ℕ} {i
     (h : i ≤ j) :
     (FirstHurewicz.simplexFace (n + 1) j.succ).comp (FirstHurewicz.simplexFace n i) =
       (FirstHurewicz.simplexFace (n + 1) i.castSucc).comp (FirstHurewicz.simplexFace n j) := by
-  have hf :=
+  have hf :
+      ((SimplexCategory.δ j.succ).toOrderHom : Fin (n + 2) → Fin (n + 3)).comp
+          (SimplexCategory.δ i).toOrderHom =
+        ((SimplexCategory.δ i.castSucc).toOrderHom : Fin (n + 2) → Fin (n + 3)).comp
+          (SimplexCategory.δ j).toOrderHom :=
     congrArg
-      (fun f : (SimplexCategory.mk (n)) ⟶ (SimplexCategory.mk (n + 2)) =>
-        (SimplexCategory.toTop₀.map f).hom)
+      (fun f : (SimplexCategory.mk (n)) ⟶ (SimplexCategory.mk (n + 2)) => ⇑f.toOrderHom)
       (SimplexCategory.δ_comp_δ h)
-  have hl :=
-    congrArg
-      (fun f :
-          SimplexCategory.toTop₀.obj (SimplexCategory.mk (n)) ⟶
-            SimplexCategory.toTop₀.obj (SimplexCategory.mk (n + 2)) =>
-        f.hom)
-      (SimplexCategory.toTop₀.map_comp (SimplexCategory.δ i) (SimplexCategory.δ j.succ))
-  have hr :=
-    congrArg
-      (fun f :
-          SimplexCategory.toTop₀.obj (SimplexCategory.mk (n)) ⟶
-            SimplexCategory.toTop₀.obj (SimplexCategory.mk (n + 2)) =>
-        f.hom)
-      (SimplexCategory.toTop₀.map_comp (SimplexCategory.δ j) (SimplexCategory.δ i.castSucc))
-  exact hl.symm.trans (hf.trans hr)
+  ext s : 1
+  change SimplexSet.map (SimplexCategory.δ j.succ).toOrderHom
+      (SimplexSet.map (SimplexCategory.δ i).toOrderHom s) =
+    SimplexSet.map (SimplexCategory.δ i.castSucc).toOrderHom
+      (SimplexSet.map (SimplexCategory.δ j).toOrderHom s)
+  rw [SimplexSet.map_comp_apply, SimplexSet.map_comp_apply, hf]
 
 private theorem PeriodTorusLineBundle.ChernCocycle.singularSimplex_face_face {X : Type*}
     [TopologicalSpace X] {n : ℕ} (σ : C(FirstHurewicz.Simplex (n + 2), X)) {i j : Fin (n + 2)}

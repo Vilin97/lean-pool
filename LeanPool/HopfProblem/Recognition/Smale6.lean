@@ -2236,7 +2236,7 @@ private theorem Degree.FlowCancellation.mvfderiv_eq_of_germ {E M : Type*} [Norme
     {V : (x : M) → TangentSpace 𝓘(ℝ, E) x} {f g : M → ℝ} {x : M} (heq : f =ᶠ[𝓝 x] g) :
     mvfderiv 𝓘(ℝ, E) f x (V x) = mvfderiv 𝓘(ℝ, E) g x (V x) := by
   unfold mvfderiv
-  rw [heq.mfderiv_eq, heq.eq_of_nhds]
+  rw [heq.mfderiv_eq', heq.eq_of_nhds]
 
 private theorem
     Degree.FlowCancellation.exists_global_band_lyapunov {E M : Type*} [NormedAddCommGroup E]
@@ -2431,13 +2431,13 @@ private theorem Degree.FlowCancellation.remove_morse_band_pair {E M : Type*} [No
       have he := hgerm x (fun h => hout ⟨h.1.le, h.2.le⟩)
       have hcrit : x ∈ Smale.ManifoldMorse.criticalPoints E f := by
         change mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) f x = 0
-        rw [← he.mfderiv_eq]
+        rw [← he.mfderiv_eq']
         exact hx
       exact ⟨hcrit, fun h => hout (h ▸ hpc), fun h => hout (h ▸ hqc)⟩
     · rintro ⟨hx, hxp, hxq⟩
       have hout : f x ∉ Set.Icc c d := fun h => (hpair x hx h).elim hxp hxq
       change mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) g x = 0
-      rw [(hgerm x (fun h => hout ⟨h.1.le, h.2.le⟩)).mfderiv_eq]
+      rw [(hgerm x (fun h => hout ⟨h.1.le, h.2.le⟩)).mfderiv_eq']
       exact hx
   have hmg : Smale.ManifoldMorse.IsMorse E g := by
     apply Degree.MorseCancellationPreservation.isMorse_of_critical_germs hm hg
@@ -3234,12 +3234,12 @@ private theorem Degree.TransverseGerms.native_transversality_of_sheet_factorizat
   have hFd :
     (mfderiv I J F x : U →L[ℝ] E) =
       (mfderiv 𝓘(ℝ, A) J f 0 : A →L[ℝ] E).comp (mfderiv I 𝓘(ℝ, A) u x) := by
-    have heq : (mfderiv I J F x : U →L[ℝ] E) = mfderiv I J (f ∘ u) x := hF.mfderiv_eq
+    have heq : (mfderiv I J F x : U →L[ℝ] E) = mfderiv I J (f ∘ u) x := hF.mfderiv_eq'
     rw [heq, mfderiv_comp x hfx hu, hu0]
   have hGd :
     (mfderiv I' J G y : V →L[ℝ] E) =
       (mfderiv 𝓘(ℝ, B) J g 0 : B →L[ℝ] E).comp (mfderiv I' 𝓘(ℝ, B) v y) := by
-    have heq : (mfderiv I' J G y : V →L[ℝ] E) = mfderiv I' J (g ∘ v) y := hG.mfderiv_eq
+    have heq : (mfderiv I' J G y : V →L[ℝ] E) = mfderiv I' J (g ∘ v) y := hG.mfderiv_eq'
     rw [heq, mfderiv_comp y hgy hv, hv0]
   intro _ z
   obtain ⟨⟨a, b⟩, hab⟩ := htrans hcross z
@@ -3642,7 +3642,7 @@ private theorem Smale.ManifoldMorse.MorseSurgeryData.surjective_beltNormal_deriv
     filter_upwards [hnear] with u hu
     exact d.chart.splitChart_inverse_equation hu
   have hheight₀ : mfderiv 𝓘(ℝ, d.chart.NegativeCoordinates) 𝓘(ℝ, ℝ) (f ∘ γ) 0 = 0 := by
-    rw [hheight.mfderiv_eq, mfderiv_eq_fderiv, fderiv_add_const, fderiv_const_sub,
+    rw [hheight.mfderiv_eq', mfderiv_eq_fderiv, fderiv_add_const, fderiv_const_sub,
       fderiv_norm_sq_apply]
     simp
     rfl
@@ -3652,7 +3652,7 @@ private theorem Smale.ManifoldMorse.MorseSurgeryData.surjective_beltNormal_deriv
   have hnormal₀ :
     mfderiv 𝓘(ℝ, d.chart.NegativeCoordinates) 𝓘(ℝ, d.chart.NegativeCoordinates) (n ∘ γ) 0 =
       ContinuousLinearMap.id ℝ d.chart.NegativeCoordinates := by
-    rw [hnormal.mfderiv_eq, mfderiv_id]
+    rw [hnormal.mfderiv_eq', mfderiv_id]
     rfl
   let R : d.chart.NegativeCoordinates →L[ℝ] E :=
     mfderiv 𝓘(ℝ, d.chart.NegativeCoordinates) 𝓘(ℝ, E) γ 0
@@ -4702,7 +4702,7 @@ private theorem Smale.TransverseCoordinates.normalDerivative_comp_sheet_eq_zero 
   by
   have heq := normalCoordinate_sheet_eventually_zero Φ hF.continuous hclean hx
   have hzero : mfderiv 𝓘(ℝ, G) 𝓘(ℝ, B) (normalCoordinate Φ ∘ F) x = 0 := by
-    rw [heq.mfderiv_eq]
+    rw [heq.mfderiv_eq']
     simp only [mfderiv_const]
     rfl
   have hnormal := (contMDiffOn_normalCoordinate Φ).contMDiffAt (Φ.open_target.mem_nhds hx)
@@ -5067,7 +5067,7 @@ private theorem
   have hcsource : d.coordinateMap (t, 0) ∈ d.chart.source := by
     rw [d.coordinate_center ht]
     exact d.line ht
-  rw [← heq.mfderiv_eq,
+  rw [← heq.mfderiv_eq',
     mfderiv_comp (t, 0) (d.chart.mdifferentiableAt (by simp) hcsource)
       (hcoords.contMDiffAt.mdifferentiableAt (by simp)),
     d.coordinate_center ht, mfderiv_eq_fderiv]
@@ -5213,7 +5213,7 @@ private theorem Smale.StripNormalData.injective_normalFrame_of_strip_germ {A B Z
   have hdf :
     mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, E) f p =
       (mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, E) k (t, 0)).comp (fderiv ℝ c p) := by
-    rw [hgerm.mfderiv_eq,
+    rw [hgerm.mfderiv_eq',
       mfderiv_comp p (hk'.mdifferentiableAt (by simp))
         (hc.contMDiffAt.mdifferentiableAt (by simp)),
       hcp, mfderiv_eq_fderiv]

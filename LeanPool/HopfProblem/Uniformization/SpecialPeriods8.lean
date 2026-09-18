@@ -782,7 +782,7 @@ private theorem SpecialPeriods.Triangle.slitOverlap_joinedIn_iff {z w : TwicePun
       JoinedIn
         (((↑) : TwicePuncturedPlane → ℂ) '' ((upperSlit : Set TwicePuncturedPlane) ∩ lowerSlit))
         (z : ℂ) (w : ℂ) :=
-      h.map continuous_subtype_val
+      h.map continuous_subtype_val.continuousOn
     have hs :
       ((↑) : TwicePuncturedPlane → ℂ) '' ((upperSlit : Set TwicePuncturedPlane) ∩ lowerSlit) ⊆
         upperSlitPlane ∩ lowerSlitPlane := by
