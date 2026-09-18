@@ -9114,16 +9114,16 @@ projects:
           2·|E(G)| ≤ (t−2)·n. This is the classical sharp form of the Erdős–Sós bound.
       - declaration: Erdos548.rooted_word_tree_bound
         informal: >-
-          For a tree T on t ≥ 2 vertices rooted at r, a host graph G and a repetition-free host
-          word of length n, the number of cut permutation words whose cut ends at a neighbour of
-          the first letter is at most the number supporting a rooted copy of T on the prefix plus
-          (t−2)·n!.
+          For a tree T on t ≥ 2 vertices rooted at r, a host graph G and a nonempty
+          repetition-free host word of length n, the number of cut permutation words of that
+          word whose cut ends at a neighbour of the first letter is at most the number supporting
+          a rooted copy of T on the prefix plus (t−2)·n!.
       - declaration: Erdos548.marked_word_gluing_count
         informal: >-
-          For a permutation-closed family of repetition-free words and families A, B, C of letter
-          sets with C ⊆ A and A R ∧ B X → C (R ∪ X) for disjoint R, X, the marked cuts qualifying
-          for A plus those qualifying for B number at most the allowed cuts plus those qualifying
-          for C.
+          For a permutation-closed family W of repetition-free words, all of the same length m,
+          and families A, B, C of letter sets with C ⊆ A and A R ∧ B X → C (R ∪ X) for disjoint
+          R, X, the marked cuts (l, k) with l ∈ W and k ≤ m qualifying for A plus those qualifying
+          for B number at most the allowed cuts plus those qualifying for C.
     tags:
       - extremal-graph-theory
       - erdos-problems
