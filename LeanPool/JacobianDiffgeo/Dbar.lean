@@ -3,15 +3,18 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
-import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
-import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
-import LeanPool.JacobianDiffgeo.Dbar.Form01
-import LeanPool.JacobianDiffgeo.Dbar.Operator
-import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
-import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
-import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import LeanPool.JacobianDiffgeo.Dbar.CauchyKernel
+public import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
+public import LeanPool.JacobianDiffgeo.Dbar.Form01
+public import LeanPool.JacobianDiffgeo.Dbar.Operator
+public import LeanPool.JacobianDiffgeo.Dbar.PlanarPoU
+public import LeanPool.JacobianDiffgeo.Dbar.PlanarCousin
+public import LeanPool.JacobianDiffgeo.Dbar.DiskAcyclic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # dbar-solvability: the `dbar`-equation on Riemann surfaces (namespace `RS`)
@@ -32,3 +35,5 @@ API summary (see `docs/design/dbar-solvability.md`). Zero sorries throughout.
   `D = 0` case of Čech `H¹` vanishing on chart-disk covers — the general-divisor twist is NOT
   included (see the file's docstring and the build log for the honest scope note).
 -/
+
+@[expose] public section

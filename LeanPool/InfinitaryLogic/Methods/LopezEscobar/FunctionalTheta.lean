@@ -3,9 +3,16 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
-import LeanPool.InfinitaryLogic.Descriptive.QueryCode
-import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
+public import LeanPool.InfinitaryLogic.Descriptive.QueryCode
+public import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # The functional Θ: syntax and semantics (issue #10, Unit 2a)
 
@@ -32,6 +39,8 @@ numeral map); `fBit_eq_queryCode` (clauses 1–4 identify the `f`-bit sequence *
 with `queryCode` of the base-reduct code `pulledCode`); the tree pinning as an **iff**
 (`realize_treeDiagram`); and the bundled `functionalTheta T`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -323,7 +332,7 @@ theorem realize_defaultAxiom [Countable (Σ l, L.Relations l)]
 variable (L) in
 /-- The tree atom at level `n`: `tree n` applied to the bit-numerals of `σ` followed by the
 numerals of `τ`. -/
-private def treeAtom (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) : (MidLang L).Sentenceω :=
+def treeAtom (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) : (MidLang L).Sentenceω :=
   BoundedFormulaω.rel (Sum.inr (WitnessRel.tree n) : (MidLang L).Relations (2 * n))
     (fun i : Fin (2 * n) =>
       if h : (i : ℕ) < n then mNum L _ (cond (σ ⟨i, h⟩) 1 0)

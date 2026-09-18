@@ -3,15 +3,17 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
+module
+
+public import Mathlib.LinearAlgebra.DFinsupp
+public import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.LinearAlgebra.DFinsupp
-import Mathlib.Algebra.Module.Torsion.Free
-import Mathlib.Algebra.Module.Torsion.Field
-import Mathlib.Algebra.Field.Basic
 
 /-!
 # LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
 -/
+
+@[expose] public section
 
 lemma smul_support_subset_left {R M ι : Type*} [Semiring R]
     [AddCommGroup M] [Module R M] (v : ι → M) (cf : ι → R) :

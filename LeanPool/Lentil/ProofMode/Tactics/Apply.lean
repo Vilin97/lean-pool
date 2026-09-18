@@ -3,8 +3,14 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Tactics.Have
-import LeanPool.Lentil.Expr
+module
+
+public meta import LeanPool.Lentil.Expr
+
+public import LeanPool.Lentil.ProofMode.Tactics.Have
+import LeanPool.Lentil.Rules.Basic
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -45,10 +51,10 @@ theorem Entails_apply_hyp_closing_goal (h : hyps.getLast?.map NamedPred.pred = s
 
 end
 
-private def applyTacDSimps := #[``repeatedAnd, ``LentilLib.List.foldrD, ``List.dropLast,
+private meta def applyTacDSimps := #[``repeatedAnd, ``LentilLib.List.foldrD, ``List.dropLast,
   ``List.foldr]
 
-private def goalDirectedPremisesCut (remainingPremises : List Expr) (goal conclusion : Expr) : MetaM (List Expr) := do
+private meta def goalDirectedPremisesCut (remainingPremises : List Expr) (goal conclusion : Expr) : MetaM (List Expr) := do
   if ← isDefEq goal conclusion then
     return remainingPremises
   else

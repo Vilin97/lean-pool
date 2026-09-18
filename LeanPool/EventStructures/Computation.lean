@@ -3,10 +3,10 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import LeanPool.EventStructures.Configuration
-import LeanPool.EventStructures.Path
-import LeanPool.EventStructures.Trace
-import Mathlib.Logic.Function.Basic
+module
+
+public import LeanPool.EventStructures.Path
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Computations
@@ -16,6 +16,8 @@ configuration to it. This module defines computations, the type of reachable
 configurations, and linearisations, and relates computations to the
 configurations they reach.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

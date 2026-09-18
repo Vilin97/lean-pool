@@ -3,8 +3,12 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Data.Set.Basic
-import Mathlib.Basic.Finite.Defs
+module
+
+public import Mathlib.Basic.Finite.Defs
+public import Mathlib.Tactic.ToDual
+import Mathlib.Tactic.Finiteness.Attr
+
 /-!
 # Linear Temporal Logic and Büchi automata
 
@@ -12,6 +16,8 @@ We define the syntax and language of Linear Temporal Logic (`LTL`) formulas and
 of nondeterministic Büchi automata (`NBW`), and state the theorem that every
 `LTL` formula has an equivalent finite-state `NBW`.
 -/
+
+@[expose] public section
 
 namespace LeanModelChecking
 

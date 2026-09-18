@@ -3,8 +3,10 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import LeanPool.VirasoroProject.CentralExtension
-import LeanPool.VirasoroProject.SectionSES
+module
+
+public import LeanPool.VirasoroProject.CentralExtension
+public import LeanPool.VirasoroProject.SectionSES
 
 /-!
 # Abstract central extensions of Lie algebras (characteristic predicate)
@@ -34,6 +36,8 @@ characteristic predicate.
 Lie algebra, central extension, short exact sequence
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

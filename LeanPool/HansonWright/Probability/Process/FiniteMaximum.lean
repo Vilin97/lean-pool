@@ -3,6 +3,9 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
+module
+
+public import Mathlib.Probability.Moments.Basic
 import LeanPool.HansonWright.Probability.Moments.Exponential
 
 /-!
@@ -20,6 +23,8 @@ This module introduces no new definitions.
 * `abs_sup'_le_sum`: absolute supremum bounded by a finite sum.
 * `expected_max_subGaussian`: expected maximum of a finite sub-Gaussian family.
 -/
+
+@[expose] public section
 
 namespace LeanPool
 

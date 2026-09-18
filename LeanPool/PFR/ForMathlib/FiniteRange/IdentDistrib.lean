@@ -8,6 +8,7 @@ module
 
 public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.IdentDistrib
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # Identically distributed finite-range random variables

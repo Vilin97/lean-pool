@@ -3,12 +3,15 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import LeanPool.Polylean.ConjInvLength.ProvedBound
+public import LeanPool.Polylean.ConjInvLength.ProvedBound
 
 /-!
 # LeanPool.Polylean.ConjInvLength.WordTree
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

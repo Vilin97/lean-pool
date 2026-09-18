@@ -5,11 +5,17 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.Numerics.Tail
-public import LeanPool.Odlyzko.TestFunction.Amplitude
-public import LeanPool.Odlyzko.TestFunction.Quadratic
-public import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.Odlyzko.TestFunction.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+import LeanPool.Odlyzko.Numerics.Tail
+import LeanPool.Odlyzko.TestFunction.Amplitude
+import LeanPool.Odlyzko.TestFunction.Fourier
+import LeanPool.Odlyzko.TestFunction.Quadratic
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-! TODO: Add doc-string. -/
 

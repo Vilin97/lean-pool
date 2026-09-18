@@ -3,20 +3,12 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
-import Mathlib.NumberTheory.Bernoulli
-import Mathlib.Data.Nat.Choose.Sum
-import Mathlib.RingTheory.PowerSeries.WellKnown
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+module
+
+public import Mathlib.NumberTheory.Bernoulli
 /-! # Fel's Conjecture for Numerical Semigroups -/
+
+@[expose] public section
 /-- A *numerical semigroup*: an additive submonoid of `ℕ` with finite complement. -/
 structure NumericalSemigroup where
   /-- The underlying set of natural numbers comprising the semigroup. -/

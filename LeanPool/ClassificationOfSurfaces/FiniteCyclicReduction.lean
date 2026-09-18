@@ -3,7 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalizationResult
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicFaceMerge
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Combinatorial selections for finite-cyclic reduction
@@ -13,6 +19,8 @@ Gallier--Xu normalization.  In particular, connected presentations with more tha
 a genuinely adjacent pair, and either occurrence of their common edge can be placed at the head
 of a suitably oriented cyclic boundary.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

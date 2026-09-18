@@ -7,7 +7,7 @@ Authors: AddCombi contributors
 module
 
 public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Notation.Indicator
-public import Mathlib.Algebra.Star.Pi
+public import Mathlib.Algebra.Star.Basic
 
 /-!
 # Star operations on indicator functions

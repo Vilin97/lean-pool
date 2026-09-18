@@ -3,8 +3,14 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
+module
+
+public import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.Normalization
+import LeanPool.Erdos1196.NormalizationSmallPrime
 import LeanPool.Erdos1196.Preliminaries
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Markov-chain lemmas for primitive sets above `x`
@@ -20,6 +26,8 @@ probabilities.
 * `normalizationEstimate`
 * `visitProbabilityFormula`
 -/
+
+@[expose] public section
 
 /- ! Markov-chain identities and row-sum bounds used in the proof. -/
 open scoped ArithmeticFunction BigOperators

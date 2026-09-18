@@ -3,15 +3,18 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
-import Mathlib.Algebra.Module.ZMod
-import LeanPool.UlmsTheorem.PGroups.Heights
+public import Mathlib.Algebra.Module.ZMod
+public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 
 /-!
 # Socle-level constructions
 
 This file contains the p-socle and its interaction with the Ulm filtration.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

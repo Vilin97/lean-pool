@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
 /-!
 # The quotient term model and its atomic semantics (issue #8, commit 5a)
 
@@ -35,6 +36,8 @@ constant-specialized equality and congruence laws.
 congruence, and `C0` alone. There is no `M ⊨ φ ↔ φ ∈ S` for arbitrary `φ`.
 -/
 
+@[expose] public section
+
 namespace FirstOrder.Language
 
 open FirstOrder Structure
@@ -64,7 +67,7 @@ private theorem qtConst_constTerm (c : ℕ) : qtConst (constTerm (L' := L) (J :=
 /-! ## The quotient carrier -/
 
 /-- The equality relation on closed terms: their collapsed constants are `S`-equal. -/
-private def qRel (t u : L[[ℕ]].Term Empty) : Prop := constEq (L := L) (qtConst t) (qtConst u) ∈ S
+def qRel (t u : L[[ℕ]].Term Empty) : Prop := constEq (L := L) (qtConst t) (qtConst u) ∈ S
 
 /-- The equality relation is an equivalence (from the atomic equality fields of `S`). -/
 private theorem qRel_equiv (hsc : HenkinComplete U S) : Equivalence (qRel (L := L) (S := S)) where
@@ -74,7 +77,7 @@ private theorem qRel_equiv (hsc : HenkinComplete U S) : Equivalence (qRel (L := 
 
 /-- The setoid on closed terms. -/
 def qSetoid (hsc : HenkinComplete U S) : Setoid (L[[ℕ]].Term Empty) :=
-  ⟨qRel (S := S), qRel_equiv hsc⟩
+  ⟨qRel (S := S), by exact qRel_equiv hsc⟩
 
 /-- The quotient term model. -/
 def QModel (hsc : HenkinComplete U S) := Quotient (qSetoid hsc)

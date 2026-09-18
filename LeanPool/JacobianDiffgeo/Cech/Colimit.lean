@@ -3,9 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Refinement
-import Mathlib.Algebra.Colimit.Module
+public import LeanPool.JacobianDiffgeo.Cech.Refinement
+public import Mathlib.Algebra.Colimit.Module
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `H¹(D)` as a directed colimit (CC8, D1)
@@ -25,6 +28,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.5, §5).
 `subsingleton_H1_of_good` below (the direction actually needed downstream, via good-cover
 cofinality) does not need 12.4 and is proved here.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module
@@ -53,11 +58,10 @@ instance directedSystemH1Cover :
     rw [resH1'_eq_resH1 D (le_refl 𝒰) id (fun _ => le_rfl)]
     exact LinearMap.congr_fun (resH1_id D (fun _ => le_rfl)) x
   map_map {𝒰c 𝒰b 𝒰a} hab hbc x := by
-    show resH1' D hbc (resH1' D hab x) = resH1' D (hab.trans hbc) x
-    rw [resH1'_eq_resH1 D hab (chosenRefIdx hab) (chosenRefIdx_spec hab),
-      resH1'_eq_resH1 D hbc (chosenRefIdx hbc) (chosenRefIdx_spec hbc),
-      resH1'_eq_resH1 D (hab.trans hbc) (chosenRefIdx hab ∘ chosenRefIdx hbc)
-        (fun k => (chosenRefIdx_spec hbc k).trans (chosenRefIdx_spec hab (chosenRefIdx hbc k)))]
+    change resH1 D (chosenRefIdx hbc) (chosenRefIdx_spec hbc)
+      (resH1 D (chosenRefIdx hab) (chosenRefIdx_spec hab) x) = resH1' D (hab.trans hbc) x
+    rw [resH1'_eq_resH1 D (hab.trans hbc) (chosenRefIdx hab ∘ chosenRefIdx hbc)
+      (fun k => (chosenRefIdx_spec hbc k).trans (chosenRefIdx_spec hab (chosenRefIdx hbc k)))]
     exact LinearMap.congr_fun
       (resH1_comp D (chosenRefIdx hab) (chosenRefIdx_spec hab) (chosenRefIdx hbc)
         (chosenRefIdx_spec hbc)) x
@@ -109,6 +113,15 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 @[elab_as_elim] theorem H1.induction_on {C : H1 D → Prop} (ξ : H1 D)
     (ih : ∀ (𝒰 : FinCover (⊤ : Opens X)) (c : H1Cover D 𝒰), C (toH1 D 𝒰 c)) : C ξ :=
   Module.DirectLimit.induction_on ξ ih
+
+omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
+/-- Prove a property of a cohomology class using a cocycle on a finite cover. -/
+@[elab_as_elim] theorem H1.induction_on_cocycles {D : RS.Divisor X}
+    {motive : H1 D → Prop} (ξ : H1 D)
+    (h : ∀ (𝒰 : FinCover (⊤ : Opens X)) (z : Z1 D 𝒰),
+      motive (toH1 D 𝒰 (H1Cover.mk D 𝒰 z))) : motive ξ := by
+  induction ξ using H1.induction_on with
+  | ih 𝒰 c => exact Submodule.Quotient.induction_on _ c (h 𝒰)
 
 /-! ### Subsingleton criteria not requiring 12.4 -/
 
@@ -270,28 +283,18 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem H1Incl_id : H1Incl D (le_refl D) = LinearMap.id := by
   apply LinearMap.ext
   intro ξ
-  induction ξ using H1.induction_on with
-  | _ 𝒰 c =>
-    rw [H1Incl_toH1, LinearMap.id_apply]
-    congr 1
-    obtain ⟨f, rfl⟩ := H1Cover.mk_surjective D 𝒰 c
-    rw [h1CoverIncl_mk]
-    congr 1
+  refine H1.induction_on_cocycles ξ (fun 𝒰 z => ?_)
+  rw [H1Incl_toH1, LinearMap.id_apply]
+  rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem H1Incl_comp {D'' : RS.Divisor X} (h : D ≤ D') (h' : D' ≤ D'') :
     H1Incl D' h' ∘ₗ H1Incl D h = H1Incl D (h.trans h') := by
   apply LinearMap.ext
   intro ξ
-  induction ξ using H1.induction_on with
-  | _ 𝒰 c =>
-    -- `simp only` traverses once; three successive `rw`s of the same `@[simp]` lemma each
-    -- re-solve the direct-limit unification and together blow the heartbeat budget.
-    simp only [LinearMap.comp_apply, H1Incl_toH1]
-    congr 1
-    obtain ⟨f, rfl⟩ := H1Cover.mk_surjective D 𝒰 c
-    simp only [h1CoverIncl_mk]
-    congr 1
+  refine H1.induction_on_cocycles ξ (fun 𝒰 z => ?_)
+  simp only [LinearMap.comp_apply, H1Incl_toH1]
+  rfl
 
 /-!
 ### Leray interface (recorded; proof owned by dolbeault-comparison / dbar-solvability)

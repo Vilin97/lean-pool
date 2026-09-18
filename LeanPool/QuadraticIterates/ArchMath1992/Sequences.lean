@@ -3,12 +3,26 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
+module
+
+public import LeanPool.QuadraticIterates.Mathlib.RingTheory.MoebiusFactor
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.Algebra.Polynomial.Expand
 import LeanPool.QuadraticIterates.Mathlib.Algebra.Polynomial.EvenComp
 import LeanPool.QuadraticIterates.Mathlib.Algebra.Squares
 import LeanPool.QuadraticIterates.Mathlib.Data.Int.DvdSequence
 import LeanPool.QuadraticIterates.Mathlib.Data.ZMod
-import LeanPool.QuadraticIterates.Mathlib.RingTheory.MoebiusFactor
+import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
 import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Floor
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # The iteration sequence of a polynomial and its Möbius factors
@@ -23,6 +37,8 @@ and 2.2 of the paper (`not_isSquare_betaSeq` and `not_isSquare_betaSeq_of_pos`).
 Part of the formalization of M. Stoll, *Galois groups over ℚ of some iterated polynomials*,
 Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 -/
+
+@[expose] public section
 
 open Polynomial
 open scoped ArithmeticFunction.Moebius

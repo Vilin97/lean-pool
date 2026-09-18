@@ -8,9 +8,12 @@ Authors: Utensil Song
 Conceptual finite proofs for the natural Sp₄(F₂) action in Zhou §§2 and 6.
 Mathlib supplies the symplectic-matrix carrier and its standard module action.
 -/
-import Mathlib.Algebra.CharP.Pi
-import Mathlib.Algebra.Field.ZMod
+module
+
+public import Mathlib.Algebra.Field.ZMod
+public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.ArithmeticSymplectic
 import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
+import Mathlib.Algebra.CharP.Pi
 
 /-!
 # The natural `Sp₄(𝔽₂)` action
@@ -20,6 +23,8 @@ transitively on nonzero vectors. It realizes the action with symplectic
 transvections and keeps the exhaustive normal-subgroup certificate separate.
 -/
 
+@[expose] public section
+
 namespace Connes
 namespace Sp4
 
@@ -28,11 +33,14 @@ abbrev F := ZMod 2
 /-- Symplectic group carrier. Paper: §§2, 6. -/
 abbrev Group := Matrix.symplecticGroup (Fin 2) F
 
-private abbrev Matrix4 := Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) F
+/-- Four-by-four matrices with the symplectic block indexing. -/
+abbrev Matrix4 := Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) F
 
-private def allMatrices : Finset Matrix4 := Finset.univ
+/-- The finite set of all four-by-four matrices over the coefficient field. -/
+def allMatrices : Finset Matrix4 := Finset.univ
 
-private def symplecticMatrices : Finset Matrix4 :=
+/-- Matrices preserving the standard symplectic form. -/
+def symplecticMatrices : Finset Matrix4 :=
   allMatrices.filter (fun A =>
     A * Matrix.J (Fin 2) F * A.transpose = Matrix.J (Fin 2) F)
 

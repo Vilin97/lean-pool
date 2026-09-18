@@ -3,8 +3,14 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
+module
+
+public import LeanPool.ClassificationOfSurfaces.Surface
+public import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
-import LeanPool.ClassificationOfSurfaces.Surface
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Boundary invariance for C0 surface charts
@@ -16,6 +22,8 @@ manifold-boundary point is sent to the frontier of the model range by every char
 The frontier of the chart's extended target follows because its interior is contained in the
 interior of the model range.
 -/
+
+@[expose] public section
 
 open scoped Manifold
 

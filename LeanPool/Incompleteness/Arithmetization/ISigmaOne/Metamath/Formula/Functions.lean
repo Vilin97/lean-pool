@@ -3,11 +3,15 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Basic
-import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Functions
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Formula.Basic
+public import LeanPool.Incompleteness.Arithmetization.ISigmaOne.Metamath.Term.Functions
+import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Functions -/
+
+@[expose] public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -510,8 +514,10 @@ def construction : Language.UformulaRec1.Construction V L (blueprint pL) where
   or_defined := by intro v; simp [blueprint]
   all_defined := by intro v; simp [blueprint]
   ex_defined := by intro v; simp [blueprint]
-  allChanges_defined := defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
-  exChanges_defined := defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
+  allChanges_defined := by
+    exact defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
+  exChanges_defined := by
+    exact defined_identity_substitution pL.qVecDef L.qVec L.qVec_defined
 
 end Substs
 

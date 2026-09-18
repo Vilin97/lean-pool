@@ -3,17 +3,20 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.TypeStar
-import Mathlib.Data.Nat.Notation
-import Mathlib.Data.Fin.Basic
+public import Mathlib.Data.Nat.Notation
+public import Aesop.BuiltinRules
+import Mathlib.Tactic.Attr.Core
+import Mathlib.Tactic.Push
 
 /-!
 # LeanPool.QuasiBorelSpaces.List.Encoding
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.List.Encoding`.
 -/
+
+@[expose] public section
 
 
 namespace List

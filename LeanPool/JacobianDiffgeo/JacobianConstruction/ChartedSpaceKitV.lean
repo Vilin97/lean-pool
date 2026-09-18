@@ -3,9 +3,10 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Geometry.Manifold.IsManifold.Basic
-import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Geometry.Manifold.IsManifold.Basic
+public import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Charted-space kit, generalized to an arbitrary `NormedSpace ℂ` codomain
@@ -25,6 +26,8 @@ Namespace `RS` (Compat section, primed names to avoid clashing with Surface's or
   `ω`-manifold (model `𝓘(ℂ, E)`);
 * `isManifold_of_family'`: family version.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set

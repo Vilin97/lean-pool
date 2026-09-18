@@ -3,8 +3,10 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.OddPrimeValuationDistribution.CarryPolynomial
-import Mathlib.Data.Fintype.EquivFin
+module
+
+public import LeanPool.OddPrimeValuationDistribution.CarryPolynomial
+import Mathlib.Algebra.Polynomial.Coeff
 
 /-!
 # Exact central-binomial valuation distributions for odd primes
@@ -14,6 +16,8 @@ base-`p` words with the integers below `p ^ length`.  Kummer's theorem turns
 the word carry count into the exact value of `ν_p (centralBinom n)`, so the
 transfer recurrence becomes an arithmetic distribution theorem.
 -/
+
+@[expose] public section
 
 namespace OddPrimeValuationDistribution
 

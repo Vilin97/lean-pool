@@ -6,6 +6,7 @@ Authors: Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Misere.IntegerInvertible
+import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 Misere combinatorial games.

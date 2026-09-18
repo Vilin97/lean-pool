@@ -3,16 +3,17 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactOperatorOrthonormal
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.CutoffProjector
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralTheorem
-import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
-import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactOperatorOrthonormal
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Approximation
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.CutoffProjector
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.OpNormEigenvalue
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralFiniteness
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralTheorem
+public import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
+public import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
 
 /-!
 # Spectral theorem for compact self-adjoint operators
@@ -24,6 +25,8 @@ Main declarations: `CompactSelfAdjoint.exists_hasEigenvector_iSup_or_iInf_of_isC
 Tags: spectral-theory, functional-analysis, compact-operators
 MSC: 47A75, 47B07
 -/
+
+@[expose] public section
 
 /-!
 # Compact self-adjoint spectral theory

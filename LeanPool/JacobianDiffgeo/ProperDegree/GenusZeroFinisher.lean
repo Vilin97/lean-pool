@@ -3,10 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Meromorphic.OrderEval
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import LeanPool.JacobianDiffgeo.MappingDegree.Degree
 import LeanPool.JacobianDiffgeo.MeromorphicTrace.OrderMultiplicity
-import LeanPool.JacobianDiffgeo.MappingDegree
 import LeanPool.JacobianDiffgeo.ProjectiveLine.Sphere
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `homeoSphere_of_exists_simple_pole` (proper-map-degree, file 3 of 3)
@@ -23,6 +29,8 @@ itself, cheaper than the general codiscrete-nonconstancy argument.
 
 Main declaration: `RS.homeoSphere_of_exists_simple_pole`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter

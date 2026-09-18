@@ -3,25 +3,13 @@ Copyright (c) 2025 Michał Dobranowski. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Dobranowski
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Nat.Dist
-import Mathlib.Data.Rat.Floor
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
+module
+
+public import Mathlib.Data.Nat.Dist
+public import Mathlib.Data.Rat.Floor
+public import Mathlib.Data.Finset.Insert
 import LeanPool.Apportionment.Utils
+import Mathlib.Tactic.Measurability.Init
 
 /-!
 # Basic
@@ -63,7 +51,7 @@ between weak and strong exactness is added, following [PalomaresPukelsheimRamire
 
 -/
 
-open BigOperators
+@[expose] public section
 
 /-- An apportionment is a vector of natural numbers representing the number of seats allocated to
 each party (at the corresponding index). -/

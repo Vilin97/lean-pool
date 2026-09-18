@@ -3,8 +3,9 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.M.HalfPlane
+public import LeanPool.BollobasNikiforov.M.HalfPlane
 
 /-!
 # The planar Gram theorem for `M`
@@ -12,6 +13,8 @@ import LeanPool.BollobasNikiforov.M.HalfPlane
 If planar vectors lie in a closed half-plane, `M` of their Gram matrix is
 completely positive (`thm:matrix`).
 -/
+
+@[expose] public section
 
 open Matrix
 

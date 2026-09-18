@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.SpectralDecomposition
+public import LeanPool.MetricCodes.SpectralDecomposition
 
 /-!
 # Binary and spherical code bounds
 
 The unconditional characteristic-minor argument and the final headline theorems.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -87,7 +90,9 @@ theorem fixedLevelHierarchyCodeBound_of_extraStrongCanonicalFischerRecurrence
         (canonicalBoxReverseAxisRange_of_strongStable a b hstable hgram
           hnstrong low high row hrow)
 
-private def ActualBoxAxisCharacteristicMinor
+/-- The characteristic-minor identity for a box fibre: the compressed minor equals the inner-
+product constant times the channel numerator polynomial. -/
+def ActualBoxAxisCharacteristicMinor
     {r m n : ℕ}
     (a : Fin (r + 2) → ℝ) (b : Fin (r + 1) → ℝ)
     (hstable : ∀ v : RectangularVertices.Vertex (r + 1) m,
@@ -112,7 +117,9 @@ private def ActualBoxAxisCharacteristicMinor
           (HigherChannel.stabilizerShift (n + 1)
             (Weyl.flooredWeight b (n + 1)))
 
-private def ActualBoxSelectedAxisProjectorAgreement
+/-- Agreement of the Cartan characteristic projector and the selected Clebsch range projector on
+the canonical box-axis tensor image. -/
+def ActualBoxSelectedAxisProjectorAgreement
     {r m n : ℕ}
     (a : Fin (r + 2) → ℝ) (b : Fin (r + 1) → ℝ)
     (hstable : ∀ v : RectangularVertices.Vertex (r + 1) m,
@@ -1176,7 +1183,8 @@ theorem gtStabilizerRelativeCasimir_lowerTarget_eigenvalue {r n : ℕ}
     (n := n) mu nu row hnu
   linarith
 
-private def gtStabilizerShiftedRelativeCasimir {r n : ℕ}
+/-- The stabilizer relative Casimir shifted by one half of the identity. -/
+def gtStabilizerShiftedRelativeCasimir {r n : ℕ}
     (nu : Fin (r + 1) → ℕ) :
     Module.End ℝ (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) nu) :=
@@ -1250,7 +1258,8 @@ open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 open MetricCodes.Spherical.HigherRepresentationGraph
 open MetricCodes.Spherical.HigherYoungAllRankGTArrowheadSchurComplement
 
-private def gtTransverseEuclidean (n : ℕ) :
+/-- The linear embedding of Euclidean space obtained by appending a zero coordinate. -/
+def gtTransverseEuclidean (n : ℕ) :
     SpherePacking.Euclidean n →ₗ[ℝ] SpherePacking.Euclidean (n + 1) where
   toFun x := WithLp.toLp 2 (Fin.snoc (WithLp.ofLp x) 0)
   map_add' x y := by
@@ -1283,7 +1292,8 @@ theorem gtTransverseEuclidean_inner
   rw [PiLp.inner_apply, Fin.sum_univ_castSucc]
   simp [PiLp.inner_apply]
 
-private def gtTransverseEuclideanIsometry (n : ℕ) :
+/-- The isometric embedding of Euclidean space obtained by appending a zero coordinate. -/
+def gtTransverseEuclideanIsometry (n : ℕ) :
     SpherePacking.Euclidean n →ₗᵢ[ℝ] SpherePacking.Euclidean (n + 1) :=
   (gtTransverseEuclidean n).isometryOfInner (gtTransverseEuclidean_inner n)
 
@@ -1306,7 +1316,9 @@ theorem gtTransverseEuclideanIsometry_orthogonal_last
   rw [EuclideanSpace.inner_basisFun_real,
     gtTransverseEuclideanIsometry_last]
 
-private def gtTransverseTensorEmbedding
+/-- The tensor isometry combining the transverse Euclidean inclusion with a canonical
+Gelfand–Tsetlin fibre. -/
+def gtTransverseTensorEmbedding
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (nu : Fin (r + 1) → ℕ)
     (h : Interlaces lam nu)
@@ -1350,7 +1362,9 @@ theorem gtTransverseTensorEmbedding_axis_inner_eq_zero
   | add x y hx hy =>
       rw [map_add, inner_add_left, hx, hy, zero_add]
 
-private def gtTransverseNegativeSector
+/-- The transverse negative-sector map obtained by composing Clebsch raising with the transverse
+tensor embedding. -/
+def gtTransverseNegativeSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (row : Fin (r + 1))
     (hnu : Interlaces lam (raiseWeight mu row))
@@ -1364,7 +1378,9 @@ private def gtTransverseNegativeSector
       (youngClebschRaise (raiseWeight mu row) mu
         (sum_raiseWeight mu row) row)
 
-private def gtTransversePositiveSector
+/-- The transverse positive-sector map obtained by composing Clebsch lowering with the
+transverse tensor embedding. -/
+def gtTransversePositiveSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu nu : Fin (r + 1) → ℕ) (row : Fin (r + 1))
     (hmu : mu = raiseWeight nu row)
@@ -1882,7 +1898,9 @@ theorem gtTransverseNegativeSector_gram_pos
     canonicalEdgeRaisingGram mu kappa row hfinite hraise
   simpa only [heq] using hc
 
-private def normalizedGTTransverseNegativeSector
+/-- The transverse negative-sector map normalized by its positive Gram scalar to a linear
+isometry. -/
+def normalizedGTTransverseNegativeSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (kappa : Fin r → ℕ)
     (row : Fin (r + 1))
@@ -1973,7 +1991,9 @@ theorem gtTransversePositiveSector_gram_pos
     exact canonicalEdge_raiseWeight_strictly_removable
       nu hdominant row j hj
 
-private def normalizedGTTransversePositiveSector
+/-- The transverse positive-sector map normalized by its positive Gram scalar to a linear
+isometry. -/
+def normalizedGTTransversePositiveSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu nu : Fin (r + 1) → ℕ) (row : Fin (r + 1))
     (hmunu : mu = raiseWeight nu row)
@@ -2330,7 +2350,9 @@ private theorem appendZeroWeight_antitone_metriccodes2_021c7d5c {r : ℕ}
           have hle : i ≤ j := by simpa only [Fin.castSucc_le_castSucc_iff] using hij
           simpa only [appendZeroWeight_castSucc, ge_iff_le] using hmu hle
 
-private def paddedPhysicalStabilizerTensor
+/-- A physical stabilizer tensor map transported through two appended zero rows in its source
+and one in its target. -/
+def paddedPhysicalStabilizerTensor
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ)
     (B : HarmonicYoungSpace (n := n) mu →ₗ[ℝ]
@@ -2882,7 +2904,9 @@ theorem exists_fullBranchSignature_wall_of_last_pos {r : ℕ}
     simpa [signature, raiseWeight, Fin.castSucc_ne_last] using (h i).2
   exact ⟨gtWallFullBranchOfSignature lam signature hupper hlower, rfl⟩
 
-private def gtWallFullBranch
+/-- A chosen full branch whose signature is the appended stabilizer weight raised in its last
+coordinate. -/
+def gtWallFullBranch
     {r : ℕ} (lam : Fin (r + 2) → ℕ) (mu : Fin (r + 1) → ℕ)
     (h : Interlaces lam mu)
     (hlast : 0 < lam (Fin.last (r + 1))) : FullBranchWeight lam :=
@@ -2898,7 +2922,8 @@ private def gtWallFullBranch
   Classical.choose_spec
     (exists_fullBranchSignature_wall_of_last_pos lam mu h hlast)
 
-private def gtWallCanonicalFullBranchFibre
+/-- The canonical full-branch fibre corresponding to the wall signature. -/
+def gtWallCanonicalFullBranchFibre
     {r n : ℕ} (lam : Fin (r + 2) → ℕ) (mu : Fin (r + 1) → ℕ)
     (h : Interlaces lam mu)
     (hn : 2 * (r + 1) + 5 ≤ n + 1)
@@ -2909,7 +2934,9 @@ private def gtWallCanonicalFullBranchFibre
   (gtWallFullBranch_signature lam mu h hlast) ▸
     canonicalFullBranchFibre lam hn (gtWallFullBranch lam mu h hlast)
 
-private def gtTransverseWallTensorEmbedding
+/-- The tensor isometry combining the transverse Euclidean inclusion with the canonical wall
+fibre. -/
+def gtTransverseWallTensorEmbedding
     {r n : ℕ} (lam : Fin (r + 2) → ℕ) (mu : Fin (r + 1) → ℕ)
     (h : Interlaces lam mu)
     (hn : 2 * (r + 1) + 5 ≤ n + 1)
@@ -2922,7 +2949,9 @@ private def gtTransverseWallTensorEmbedding
   TensorProduct.mapIsometry (gtTransverseEuclideanIsometry n)
     (gtWallCanonicalFullBranchFibre lam mu h hn hlast)
 
-private def gtTransverseWallSector
+/-- The transverse wall-sector map obtained by composing Clebsch raising with the wall tensor
+embedding. -/
+def gtTransverseWallSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ) (mu : Fin (r + 1) → ℕ)
     (h : Interlaces lam mu)
     (hn : 2 * (r + 1) + 5 ≤ n + 1)
@@ -3119,7 +3148,9 @@ theorem stabilizerIsometry_rotation_adjoint_compression
   rw [← hF a b, ← LinearMap.comp_assoc,
     F.adjoint_comp_self', LinearMap.id_comp]
 
-private def transverseTensorEmbeddingOfStabilizerIsometry
+/-- The tensor isometry combining the transverse Euclidean inclusion with a supplied stabilizer
+isometry. -/
+def transverseTensorEmbeddingOfStabilizerIsometry
     {s r n : ℕ} (lam : Fin (r + 1) → ℕ)
     (nu : Fin (s + 1) → ℕ)
     (F : HarmonicYoungSpace (n := n) nu →ₗᵢ[ℝ]
@@ -3482,7 +3513,8 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTWallTransverseCompressio
 open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 open MetricCodes.Spherical.HigherYoungMixedGapAxisProbability
 
-private def normalizedGTTransverseWallSector
+/-- The transverse wall-sector map normalized by its positive Gram scalar to a linear isometry. -/
+def normalizedGTTransverseWallSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hn : 2 * (r + 1) + 5 ≤ n + 1)
@@ -3790,7 +3822,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankOrthogonalBranchCompletene
 open MetricCodes.Spherical.HigherHarmonicYoung.BranchingDimension
 open MetricCodes.Spherical.HigherYoungAllRankCanonicalGelfandTsetlinCompleteness
 
-private def gtFullTransverseInternalEmbedding {r n : ℕ}
+/-- The tensor isometry induced by a canonical full-branch fibre while retaining the Euclidean
+tensor factor. -/
+def gtFullTransverseInternalEmbedding {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (hn : 2 * r + 5 ≤ n + 1)
     (mu : FullBranchWeight lam) :
     (SpherePacking.Euclidean n ⊗[ℝ]
@@ -3889,7 +3923,9 @@ theorem gtFullTransverseInternalEmbedding_iSup_range_eq_top
     (gtFullTransverseInternalEmbedding_orthogonal lam hn)
     (gtFullTransverseInternalEmbedding_finrank_sum lam hn hdom)
 
-private def gtFullTransverseAmbientInclusion {r n : ℕ}
+/-- The tensor isometry induced by the transverse Euclidean inclusion while retaining the
+harmonic Young factor. -/
+def gtFullTransverseAmbientInclusion {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n + 1) lam) →ₗᵢ[ℝ]
@@ -3900,7 +3936,9 @@ private def gtFullTransverseAmbientInclusion {r n : ℕ}
       HarmonicYoungSpace (n := n + 1) lam →ₗᵢ[ℝ]
         HarmonicYoungSpace (n := n + 1) lam)
 
-private def gtFullTransverseEmbedding {r n : ℕ}
+/-- The tensor isometry combining the transverse Euclidean inclusion with a canonical full-
+branch fibre. -/
+def gtFullTransverseEmbedding {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (hn : 2 * r + 5 ≤ n + 1)
     (mu : FullBranchWeight lam) :
     (SpherePacking.Euclidean n ⊗[ℝ]
@@ -4002,7 +4040,8 @@ theorem euclidean_eq_gtTransverse_add_last_axis {n : ℕ}
                 Fin.castSucc_ne_last, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul,
                 mul_zero, add_zero]
 
-private def gtFullAxisAmbientInclusion {r n : ℕ}
+/-- The isometry sending a harmonic Young vector to its tensor with the last coordinate axis. -/
+def gtFullAxisAmbientInclusion {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n + 1) lam →ₗᵢ[ℝ]
       (SpherePacking.Euclidean (n + 1) ⊗[ℝ]
@@ -4051,7 +4090,9 @@ theorem gtFullAxisAmbientInclusion_sup_transverse_range_eq_top
         simp only [TensorProduct.tmul_smul, TensorProduct.smul_tmul]
   | add x y hx hy => exact Submodule.add_mem _ (hx trivial) (hy trivial)
 
-private def gtFullAxisEmbedding {r n : ℕ}
+/-- The isometry obtained by embedding a full-branch fibre and tensoring with the last
+coordinate axis. -/
+def gtFullAxisEmbedding {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (hn : 2 * r + 5 ≤ n + 1)
     (mu : FullBranchWeight lam) :
     HarmonicYoungSpace (n := n) (fullBranchSignature mu) →ₗᵢ[ℝ]
@@ -4275,7 +4316,8 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTRelativeCasimirCompresse
 open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTRelativeCasimirProjector
 open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 
-private def canonicalGelfandTsetlinAxisIsometry
+/-- The canonical Gelfand–Tsetlin axis tensor map bundled as a linear isometry. -/
+def canonicalGelfandTsetlinAxisIsometry
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h) :
@@ -4437,7 +4479,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTRelativeCasimirProjector
 open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTRelativeCasimirCompressedResolvent
 open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 
-private def gtTransverseAxisCrossBlock
+/-- The cross block of the relative Casimir from a supplied tensor map to the canonical
+Gelfand–Tsetlin axis image. -/
+def gtTransverseAxisCrossBlock
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h)
@@ -6618,7 +6662,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTRelativeCasimirProjector
 open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 open MetricCodes.Spherical.HigherYoungAllRankGTCharacteristicResidue
 
-private def signedCharacteristicAdjugate {r : ℕ} {V : Type*}
+/-- The signed characteristic adjugate expressed as a sum of characteristic projectors weighted
+by the nodal polynomials with one node removed. -/
+def signedCharacteristicAdjugate {r : ℕ} {V : Type*}
     [AddCommGroup V] [Module ℝ V]
     (L : Fin (r + 1) → ℝ) (T : Module.End ℝ V)
     (z : ℝ) : Module.End ℝ V :=
@@ -7072,7 +7118,8 @@ namespace AllRankGTAdjacentCommonInterlacing
 
 open MetricCodes.Spherical.HigherChannel
 
-private def gtSelectedPrefixWeight {r : ℕ}
+/-- The prefix of a stabilizer weight obtained by dropping its final coordinate. -/
+def gtSelectedPrefixWeight {r : ℕ}
     (mu : Fin (r + 1) → ℕ) : Fin r → ℕ :=
   fun j => mu j.castSucc
 

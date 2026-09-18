@@ -3,8 +3,9 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini
 -/
+module
 
-import LeanPool.Erdos81PaperIIContrib.Chordal
+public import LeanPool.Erdos81PaperIIContrib.Chordal
 
 /-!
 # Chordal graphs: minimal separators and simplicial vertices
@@ -16,6 +17,8 @@ Main declarations: `SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial`
 Tags: graph-theory, chordal-graphs, induced-subgraphs, minimal-separators, simplicial-vertices
 MSC: 05C75
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

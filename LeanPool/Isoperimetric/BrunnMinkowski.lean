@@ -3,8 +3,13 @@ Copyright (c) 2026 Jonathan Ho. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jonathan Ho
 -/
-import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+module
+
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.Isoperimetric.PrekopaLeindler
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 /-!
 # The Brunn–Minkowski inequality
@@ -13,6 +18,8 @@ This file deduces the Brunn–Minkowski inequality from the Prékopa–Leindler
 inequality, both for the standard product measure on `ℝⁿ` and for the
 Euclidean structure `EuclideanSpace ℝ (Fin n)`.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 open scoped Pointwise

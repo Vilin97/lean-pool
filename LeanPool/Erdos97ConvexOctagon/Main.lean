@@ -3,8 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.Classification
+public import LeanPool.Erdos97ConvexOctagon.Classification
+
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 # The convex-octagon case of Erdős problem 97
@@ -21,3 +27,5 @@ remaining legal rows and checked geometric obstruction witnesses.
 This is the eight-point convex case only. It does not prove the general open
 problem.
 -/
+
+@[expose] public section

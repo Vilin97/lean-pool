@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.ChannelCapacity.ChainRule
-import LeanPool.ChannelCapacity.NonDegeneracy
-import Mathlib.Order.Filter.Extr
+module
+
+public import LeanPool.ChannelCapacity.NonDegeneracy
+import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+import Mathlib.Probability.Kernel.Composition.MeasureComp
 
 /-!
 # ChannelCapacity.StrictConcavity
@@ -16,6 +18,8 @@ Mathlib does not currently equip `ProbabilityMeasure α` with an affine or vecto
 strict concavity is phrased directly in terms of the explicit operation
 `ProbabilityMeasure.convexCombination`.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 open ProbabilityTheory

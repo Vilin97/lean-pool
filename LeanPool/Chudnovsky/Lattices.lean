@@ -3,8 +3,9 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.Quasiperiods
+public import LeanPool.Chudnovsky.Quasiperiods
 
 /-!
 # Equivalent lattices and scaling laws
@@ -22,6 +23,8 @@ Statements from chapter 3 of Milla (arXiv:1809.00533v6, file `080_Lattices.tex`)
 
 All nontrivial proofs are `sorry`-ed for now; this file pins the statements.
 -/
+
+@[expose] public section
 
 noncomputable section
 

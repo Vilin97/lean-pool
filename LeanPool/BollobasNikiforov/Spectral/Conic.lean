@@ -3,16 +3,14 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Basic.Graph
-import LeanPool.BollobasNikiforov.Basic.Inner
+public import LeanPool.BollobasNikiforov.Basic.Graph
+public import LeanPool.BollobasNikiforov.Basic.Inner
+public import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
 import LeanPool.BollobasNikiforov.Spectral.Gram
-import Mathlib.Analysis.Matrix.Spectrum
-import Mathlib.Analysis.Real.Sqrt
-import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Topology.Instances.Matrix
-import Mathlib.Topology.Order.Compact
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Matrix.PosDef
 
 /-!
 # The rank-two conic parameter `χ''_{vec,3}`
@@ -22,6 +20,8 @@ of rank at most two, nonnegative on the edges of `G`, and normalized so that
 the mass of `X ⊙ X` off those edges equals `1`. The feasible set is nonempty
 and compact, so the supremum is attained.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

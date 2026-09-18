@@ -3,8 +3,10 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
+module
 
-import LeanPool.LatticeTriangle.Solution
+public import LeanPool.LatticeTriangle.Solution
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-!
 # On the paucity of lattice triangles
@@ -16,6 +18,8 @@ Main declarations: `analyticEngine_lower_bound`
 Tags: number-theory, combinatorics
 MSC: 11H06, 11B30
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,18 +3,21 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.MatrixPerron
-import LeanPool.MetricCodes.Representation
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
-import Mathlib.RingTheory.MvPolynomial.Groebner
-import Mathlib.RingTheory.Regular.RegularSequence
+public import LeanPool.MetricCodes.MatrixPerron
+public import LeanPool.MetricCodes.Representation
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+public import Mathlib.RingTheory.MvPolynomial.Groebner
+public import Mathlib.RingTheory.Regular.RegularSequence
 
 /-!
 # Harmonic Young branching
 
 Trace ideals, Clebsch decompositions, and arbitrary-rank branching constructions.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -684,7 +687,8 @@ theorem FiniteInterlacing.antitone_ambient {r n : ℕ}
   intro i
   exact (h.2 i).2.trans (h.2 i).1
 
-private def pairEdgeRatio {r : ℕ}
+/-- The ratio of pair factors when the selected shifted ambient coordinate is increased by one. -/
+def pairEdgeRatio {r : ℕ}
     (L : Fin (r + 1) → ℝ) (ℓ j : Fin (r + 1)) : ℝ :=
   ((L ℓ + 1) ^ 2 - L j ^ 2) / (L ℓ ^ 2 - L j ^ 2)
 
@@ -809,7 +813,8 @@ theorem incidentPairProduct {r : ℕ}
     · simp only [hlt, ↓reduceIte, ne_of_lt hlt]
     · simp only [hlt, ↓reduceIte]
 
-private def rowEdgeRatio {r : ℕ} (n : ℕ)
+/-- The row factor in the Weyl-dimension ratio for increasing row `ℓ` by one. -/
+def rowEdgeRatio {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (ℓ : Fin (r + 1)) : ℝ :=
   let L := ambientShift n lam ℓ
   let rho := wallShift n r
@@ -1051,7 +1056,8 @@ def nextVertex {r m : ℕ} (v : BoxVertex r m)
     (i : Fin (r + 1)) (h : (v i).val < m) : BoxVertex r m :=
   Function.update v i ⟨(v i).val + 1, by omega⟩
 
-private def forwardMatrix {r m : ℕ}
+/-- The weighted forward adjacency matrix of the rectangular box of signatures. -/
+def forwardMatrix {r m : ℕ}
     (edge : BoxVertex r m → Fin (r + 1) → ℝ) :
     Matrix (BoxVertex r m) (BoxVertex r m) ℝ :=
   Matrix.of fun v w =>
@@ -1060,7 +1066,8 @@ private def forwardMatrix {r m : ℕ}
         if w = nextVertex v i h then edge v i else 0
       else 0
 
-private def adjacencyMatrix {r m : ℕ}
+/-- The symmetric box adjacency matrix obtained by adding the forward matrix to its transpose. -/
+def adjacencyMatrix {r m : ℕ}
     (edge : BoxVertex r m → Fin (r + 1) → ℝ) :
     Matrix (BoxVertex r m) (BoxVertex r m) ℝ :=
   forwardMatrix edge + (forwardMatrix edge)ᵀ
@@ -1161,7 +1168,8 @@ theorem adjacencyMatrix_sum {r m : ℕ}
   rw [htranspose, forwardMatrix_sum]
   ring
 
-private def constantRayleigh {r m : ℕ}
+/-- The Rayleigh quotient of the constant vector for the weighted box adjacency matrix. -/
+def constantRayleigh {r m : ℕ}
     (edge : BoxVertex r m → Fin (r + 1) → ℝ) : ℝ :=
   (∑ v : BoxVertex r m, ∑ w : BoxVertex r m,
     adjacencyMatrix edge v w) /
@@ -1380,7 +1388,8 @@ theorem eventually_finiteInterlacing_all {r m : ℕ}
   intro v
   exact ⟨hstable, (hn v).interlaces⟩
 
-private def correctedSignature {r m : ℕ}
+/-- The signature when it is dominant, with the floored ambient weight as a dominant fallback. -/
+def correctedSignature {r m : ℕ}
     (a : Fin (r + 1) → ℝ) (v : ℕ → Vertex r m)
     (n : ℕ) : Fin (r + 1) → ℕ :=
   if Antitone (signature a n (v n)) then
@@ -2238,7 +2247,8 @@ def probability {r m : ℕ}
   forwardMatrix (plusEdge (m := m) a b n) v w +
     forwardMatrix (minusEdge (m := m) a b n) w v
 
-private def vertexWeylDimension {r m : ℕ}
+/-- The Weyl dimension evaluated at the signature attached to a rectangular-box vertex. -/
+def vertexWeylDimension {r m : ℕ}
     (a : Fin (r + 1) → ℝ) (n : ℕ) (v : Vertex r m) : ℝ :=
   Weyl.dimension n (signature a n v)
 
@@ -2471,7 +2481,8 @@ namespace HigherHierarchyBoxPerron
 open MetricCodes.Spherical.HigherHierarchy
 open MetricCodes.Spherical.HigherHierarchyBoxSpectral
 
-private def constantVector (r m : ℕ) :
+/-- The vector with every box-vertex coordinate equal to one. -/
+def constantVector (r m : ℕ) :
     HigherHierarchyFinitePerron.Space (BoxVertex r m) :=
   WithLp.toLp 2 fun _ : BoxVertex r m => (1 : ℝ)
 
@@ -3075,7 +3086,8 @@ abbrev YoungCoordinateAmbient {I : Type*}
     {r : ℕ} (n : ℕ) (lam : I → Fin (r + 1) → ℕ) :=
   SpherePacking.Euclidean n ⊗[ℝ] YoungAmbient n lam
 
-private def coordinateInclusion {I : Type*} [Fintype I] [DecidableEq I]
+/-- The tensor-product inclusion of one Young vertex into the full coordinate ambient space. -/
+def coordinateInclusion {I : Type*} [Fintype I] [DecidableEq I]
     {r n : ℕ} (lam : I → Fin (r + 1) → ℕ) (i : I) :
     (SpherePacking.Euclidean n ⊗[ℝ] YoungVertex (n := n) lam i) →ₗᵢ[ℝ]
       YoungCoordinateAmbient n lam :=
@@ -3161,7 +3173,9 @@ theorem coordinateInclusion_orthogonal
   rw [coordinateInclusion_orthogonal lam hij]
   rfl
 
-private def liftChannel {I : Type*} [Fintype I] [DecidableEq I]
+/-- The ambient channel obtained by projecting to a source vertex and including the target
+tensor space. -/
+def liftChannel {I : Type*} [Fintype I] [DecidableEq I]
     {r n : ℕ} (lam : I → Fin (r + 1) → ℕ) (target source : I)
     (T : YoungVertex (n := n) lam source →ₗᵢ[ℝ]
       (SpherePacking.Euclidean n ⊗[ℝ] YoungVertex (n := n) lam target)) :
@@ -3340,7 +3354,9 @@ theorem liftChannel_adjoint_axis_ne
   rw [coordinateInclusion_adjoint_axis_ne lam target j h,
     map_zero, map_zero]
 
-private def actualYoungChannel
+/-- The lifted Young edge channel when its transition probability is positive, and zero
+otherwise. -/
+def actualYoungChannel
     {I : Type*} [Fintype I] [DecidableEq I]
     {r n : ℕ} (lam : I → Fin (r + 1) → ℕ)
     (probability : I → I → ℝ)
@@ -3354,7 +3370,9 @@ private def actualYoungChannel
     liftChannel lam target source (edge target source h)
   else 0
 
-private def actualYoungHilbertGraph
+/-- The realized Hilbert graph assembled from Young vertex fibres and their isometric edge
+channels. -/
+def actualYoungHilbertGraph
     {I : Type*} [Fintype I] [DecidableEq I]
     {r n : ℕ} {E : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -3684,7 +3702,8 @@ theorem BoxRepresentationData.detailed_balance {r m n : ℕ}
     ((Fintype.equivFin
       (RectangularVertices.Vertex (r + 1) m)).symm source)
 
-private def indexedEigenvector {r m : ℕ}
+/-- The box eigenvector reindexed by the canonical finite enumeration of rectangular vertices. -/
+def indexedEigenvector {r m : ℕ}
     (x : RectangularVertices.Vertex r m → ℝ)
     (i : BoxIndex r m) : ℝ :=
   x ((Fintype.equivFin (RectangularVertices.Vertex r m)).symm i)
@@ -4385,7 +4404,8 @@ def gramPivotExponent {r n : ℕ} (hn : 2 * r < n)
   Finsupp.single (variableIndex z.val.1 (gramPivot hn z)) 1 +
     Finsupp.single (variableIndex z.val.2 (gramPivot hn z)) 1
 
-private def gramSummandExponent {r n : ℕ}
+/-- The monomial exponent of one coordinate summand in a Gram pairing. -/
+def gramSummandExponent {r n : ℕ}
     (z : UpperGramPair r) (k : Fin n) :
     Fin ((r + 1) * n) →₀ ℕ :=
   Finsupp.single (variableIndex z.val.1 k) 1 +
@@ -4454,12 +4474,14 @@ theorem coeff_gramPairPolynomial_pivot {r n : ℕ}
         hk ((gramSummandExponent_eq_pivot_iff hn z k).mp h))
   · simp only [Finset.mem_univ, not_true_eq_false, IsEmpty.forall_iff]
 
-private def gramVariableWeight (r n : ℕ)
+/-- The quadratic integer variable weight used to distinguish the leading Gram monomial. -/
+def gramVariableWeight (r n : ℕ)
     (i : Fin (r + 1)) (k : Fin n) : ℤ :=
   ((n + 2 * r : ℕ) : ℤ) ^ 2 -
     ((k.val : ℤ) - 2 * (i.val : ℤ)) ^ 2
 
-private def gramSummandWeight {r n : ℕ}
+/-- The sum of the two variable weights in a coordinate summand of a Gram pairing. -/
+def gramSummandWeight {r n : ℕ}
     (z : UpperGramPair r) (k : Fin n) : ℤ :=
   gramVariableWeight r n z.val.1 k +
     gramVariableWeight r n z.val.2 k
@@ -4499,19 +4521,22 @@ section
 open Finsupp
 open scoped MonomialOrder
 
-private def YoungWeightedLex {σ : Type*} (_w : σ → ℕ) := σ →₀ ℕ
+/-- A copy of exponent vectors carrying the weighted lexicographic ordering. -/
+def YoungWeightedLex {σ : Type*} (_w : σ → ℕ) := σ →₀ ℕ
 
-private def toYoungWeightedLex {σ : Type*} (w : σ → ℕ) :
+/-- The identity equivalence from exponent vectors to their weighted-lexicographic copy. -/
+def toYoungWeightedLex {σ : Type*} (w : σ → ℕ) :
     (σ →₀ ℕ) ≃ YoungWeightedLex w := Equiv.refl _
 
-private def ofYoungWeightedLex {σ : Type*} (w : σ → ℕ) :
+/-- The identity equivalence from the weighted-lexicographic copy back to exponent vectors. -/
+def ofYoungWeightedLex {σ : Type*} (w : σ → ℕ) :
     YoungWeightedLex w ≃ (σ →₀ ℕ) := Equiv.refl _
 
 namespace YoungWeightedLex
 
 variable {σ : Type*} (w : σ → ℕ)
 
-noncomputable instance : AddCommMonoid (YoungWeightedLex w) :=
+noncomputable instance instAddCommMonoidYoungWeightedLex : AddCommMonoid (YoungWeightedLex w) :=
   (ofYoungWeightedLex w).addCommMonoid
 
 @[simp] theorem toYoungWeightedLex_add (a b : σ →₀ ℕ) :
@@ -4526,21 +4551,22 @@ section LinearOrder
 
 variable [LinearOrder σ]
 
-private def key_metriccodes2_a7f44027 (a : YoungWeightedLex w) : Lex (ℕ × Lex (σ →₀ ℕ)) :=
+/-- The lexicographic key comparing total weight first and then the exponent vector. -/
+def key (a : YoungWeightedLex w) : Lex (ℕ × Lex (σ →₀ ℕ)) :=
   toLex ((Finsupp.weight w) (ofYoungWeightedLex w a),
     toLex (ofYoungWeightedLex w a))
 
 omit [LinearOrder σ] in
-private theorem key_injective_metriccodes2_a7f44027 : Function.Injective
-  (key_metriccodes2_a7f44027 w) := by
+theorem key_injective_metriccodes2_a7f44027 : Function.Injective
+  (key w) := by
   intro a b hab
   have h := congrArg (fun z : Lex (ℕ × Lex (σ →₀ ℕ)) =>
     (ofLex z).2) hab
   exact (ofYoungWeightedLex w).injective
     ((toLex (α := σ →₀ ℕ)).injective h)
 
-noncomputable instance : LinearOrder (YoungWeightedLex w) :=
-  LinearOrder.lift' (key_metriccodes2_a7f44027 w) (key_injective_metriccodes2_a7f44027 w)
+noncomputable instance instLinearOrderYoungWeightedLex : LinearOrder (YoungWeightedLex w) :=
+  LinearOrder.lift' (key w) (key_injective_metriccodes2_a7f44027 w)
 
 theorem lt_iff {a b : YoungWeightedLex w} :
     a < b ↔
@@ -4550,7 +4576,7 @@ theorem lt_iff {a b : YoungWeightedLex w} :
             (Finsupp.weight w) (ofYoungWeightedLex w b) ∧
           toLex (ofYoungWeightedLex w a) <
             toLex (ofYoungWeightedLex w b) := by
-  change key_metriccodes2_a7f44027 w a < key_metriccodes2_a7f44027 w b ↔ _
+  change key w a < key w b ↔ _
   exact Prod.Lex.toLex_lt_toLex
 
 theorem le_iff {a b : YoungWeightedLex w} :
@@ -4561,10 +4587,11 @@ theorem le_iff {a b : YoungWeightedLex w} :
             (Finsupp.weight w) (ofYoungWeightedLex w b) ∧
           toLex (ofYoungWeightedLex w a) ≤
             toLex (ofYoungWeightedLex w b) := by
-  change key_metriccodes2_a7f44027 w a ≤ key_metriccodes2_a7f44027 w b ↔ _
+  change key w a ≤ key w b ↔ _
   exact Prod.Lex.toLex_le_toLex
 
-instance : IsOrderedCancelAddMonoid (YoungWeightedLex w) where
+instance instIsOrderedCancelAddMonoidYoungWeightedLex :
+    IsOrderedCancelAddMonoid (YoungWeightedLex w) where
   le_of_add_le_add_left a b c h := by
     rw [le_iff] at h ⊢
     simpa only [ofYoungWeightedLex_add, map_add, add_lt_add_iff_left,
@@ -4576,7 +4603,7 @@ instance : IsOrderedCancelAddMonoid (YoungWeightedLex w) where
 
 variable [WellFoundedGT σ]
 
-instance : WellFoundedLT (YoungWeightedLex w) := by
+instance instWellFoundedLTYoungWeightedLex : WellFoundedLT (YoungWeightedLex w) := by
   have hlex : WellFounded (Finsupp.Lex (α := σ) (· < ·) (· < ·)) :=
     Finsupp.Lex.wellFounded' (fun _ => Nat.not_lt_zero _)
       (inferInstance : WellFoundedLT ℕ) wellFounded_gt
@@ -4941,7 +4968,9 @@ theorem mem_ofList_iff_exists_linearCombination
     refine ⟨g, ?_⟩
     simpa only [Finsupp.sum, Finsupp.linearCombination_apply, smul_eq_mul] using hg
 
-private def representationDegree {σ K ι : Type*} [Field K]
+/-- The maximum monomial-order degree of the summands in a finitely supported polynomial
+representation. -/
+def representationDegree {σ K ι : Type*} [Field K]
     (m : MonomialOrder σ)
     (b : ι → MvPolynomial σ K)
     (g : ι →₀ MvPolynomial σ K) : m.syn :=
@@ -5789,7 +5818,9 @@ theorem finsupp_le_add_of_disjoint_support
         (Finsupp.mem_support_iff.mpr hb)
     simpa only [ge_iff_le, Finsupp.coe_add, Pi.add_apply, hb, zero_add] using hle k
 
-private def IsLeadingGroebnerFamily
+/-- The leading-degree condition that every nonzero ideal element has degree above some
+generator. -/
+def IsLeadingGroebnerFamily
     {σ K : Type*} [Field K]
     (m : MonomialOrder σ) (fs : List (MvPolynomial σ K)) : Prop :=
   ∀ p : MvPolynomial σ K, p ∈ Ideal.ofList fs → p ≠ 0 →

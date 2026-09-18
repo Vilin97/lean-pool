@@ -10,11 +10,15 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the normal-fixed and orthogonal representations and
 changed carrier names and namespace for Zhou §4. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Core
+module
+
+public import LeanPool.ConnesRigidity.Core
 
 /-!
 The normal fixed component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

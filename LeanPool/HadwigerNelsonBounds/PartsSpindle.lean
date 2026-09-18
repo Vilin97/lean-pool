@@ -3,9 +3,11 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbedding
+public import LeanPool.HadwigerNelsonBounds.PartsPlaneGeometry
 import LeanPool.HadwigerNelsonBounds.IsbellColoring
+import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbedding
 
 /-!
 # The Parts spindle and the known bounds
@@ -14,6 +16,8 @@ Two copies of the forced distance-four pair share one endpoint.  Rotating the
 second copy through cosine `31/32` makes the remaining endpoints unit-adjacent,
 contradicting a proper four-coloring.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

@@ -3,14 +3,20 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
+public import Mathlib.Order.Interval.Finset.Fin
+
+public import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Fintype.CardEmbedding
-import Mathlib.Data.Fintype.Sum
-import Mathlib.Order.Interval.Finset.Fin
-
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
-import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 Small “sanity checks” intended to validate that the Lean definitions in `Defs.lean` match the
@@ -19,6 +25,8 @@ intended combinatorial model.
 This file proves, in a fully kernel-checked way, that for `n = 5` there is an explicit coloring
 with monochromatic edge fraction exactly `1/5`.
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

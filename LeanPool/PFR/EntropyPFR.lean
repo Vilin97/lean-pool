@@ -6,10 +6,10 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.Module.ZMod
 public import LeanPool.PFR.TauFunctional
-public import LeanPool.PFR.HundredPercent
-public import LeanPool.PFR.Endgame
+import LeanPool.PFR.Endgame
+import LeanPool.PFR.HundredPercent
+import Mathlib.Algebra.Module.ZMod
 
 /-!
 # Entropic version of polynomial Freiman-Ruzsa conjecture

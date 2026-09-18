@@ -3,7 +3,11 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import LeanPool.IsTranscendentalPi.NivenPolynomials
+module
+
+public import LeanPool.IsTranscendentalPi.NivenPolynomials
+import LeanPool.IsTranscendentalPi.ComplexExponential
+import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.RingTheory.Int.Basic
 
 /-!
@@ -12,6 +16,8 @@ import Mathlib.RingTheory.Int.Basic
 Uniform bounds on the Niven auxiliary polynomials, controlling the size of the
 integral appearing in Niven's proof of the transcendence of `π`.
 -/
+
+@[expose] public section
 
 open Polynomial
 open Complex

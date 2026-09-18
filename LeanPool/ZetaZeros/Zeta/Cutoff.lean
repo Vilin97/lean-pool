@@ -5,8 +5,9 @@ Authors: Kenny Lau
 -/
 module
 
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 public import LeanPool.ZetaZeros.Zeta.Defs
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 
 /-!
 # Cutoffs exist

@@ -3,12 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.PrincipalValue
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Proposition22
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Homotopy.Integrality
+public import Mathlib.Analysis.Calculus.FDeriv.Add
+
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Winding Number: Definitions and Simple Results
@@ -29,6 +31,8 @@ including the Hungerbühler-Wasem angle-based approach.
 * `windingNumber_corner_crossing` — corner with angle α contributes α/(2π)
 * `angleAtCrossing_translate` — translation invariance of crossing angle
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

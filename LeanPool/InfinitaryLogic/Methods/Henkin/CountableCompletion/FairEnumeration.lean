@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
+module
+
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.ConsistencyPropertyEqOn
 /-!
 # Fair enumeration for a fragment-relative consistency property (issue #8 tranche 2, commit 3)
 
@@ -20,6 +22,8 @@ to be in `C.sets` (Finding 1) — only that each closure target cohabits a later
 The remaining piece (the `HenkinComplete Sstar` acceptance theorem) is the per-field limit proof;
 it consumes `request_fires_after` plus per-request "what `process` adds" facts.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -80,7 +84,7 @@ variable {P : ConsistencyPropertyEqOn U}
 /-- Process a decomposition request: if the trigger `t` is present, add the target dictated by
 its outermost shape (the per-index rules use `idx`; the branching/witness rules choose
 classically). -/
-private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : SetIn P := by
+noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : SetIn P := by
   classical
   exact if hs : (t : L[[ℕ]].Sentenceω) ∈ S.1 then
     match heq : (t : L[[ℕ]].Sentenceω) with
@@ -124,7 +128,7 @@ private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : S
 /-- Process a `C1` request: inspects only the **outer** `imp` constructor (so it reduces on
 `φ.imp ψ` regardless of whether `φ`/`ψ` later specialize to the negation encoding — the field
 that a shape-dispatching `decompose` leaves stuck). -/
-private noncomputable def processImpC1 (S : SetIn P) (t : U) : SetIn P := by
+noncomputable def processImpC1 (S : SetIn P) (t : U) : SetIn P := by
   classical
   exact if hs : (t : L[[ℕ]].Sentenceω) ∈ S.1 then
     match heq : (t : L[[ℕ]].Sentenceω) with
@@ -136,7 +140,7 @@ private noncomputable def processImpC1 (S : SetIn P) (t : U) : SetIn P := by
   else S
 
 /-- Process one request. -/
-private noncomputable def process (S : SetIn P) : Request U → SetIn P := by
+noncomputable def process (S : SetIn P) : Request U → SetIn P := by
   classical
   intro request
   exact match request with
@@ -190,7 +194,7 @@ private theorem subset_process (S : SetIn P) (r : Request U) : S.1 ⊆ (process 
 variable (e : ℕ → Request U)
 
 /-- One sweep: process requests `e 0, …, e n` in order. -/
-private noncomputable def sweep (S : SetIn P) : ℕ → SetIn P
+noncomputable def sweep (S : SetIn P) : ℕ → SetIn P
   | 0 => process S (e 0)
   | (n + 1) => process (sweep S n) (e (n + 1))
 

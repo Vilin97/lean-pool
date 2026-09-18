@@ -3,7 +3,16 @@ Copyright (c) 2026 Nikolay Ulyanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nikolay Ulyanov
 -/
-import LeanPool.Sabidussi.Color
+module
+
+public import LeanPool.Sabidussi.Color
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Local difference patterns
@@ -12,6 +21,8 @@ For every number `n + 2` of transition occurrences we construct three admissible
 The construction is the degree-splitting step of the manuscript written without changing the
 graph: remove pairs of occurrences recursively, ending with a pair or a triple.
 -/
+
+@[expose] public section
 
 namespace Sabidussi
 

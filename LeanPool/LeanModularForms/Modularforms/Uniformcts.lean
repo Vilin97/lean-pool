@@ -6,13 +6,9 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Analysis.Complex.ReImTopology
-public import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
-public import Mathlib.Analysis.SpecialFunctions.Log.Summable
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Analysis.Normed.Group.FunctionSeries
-public import Mathlib.Analysis.Normed.Module.MultipliableUniformlyOn
-public import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Uniformcts -/
 

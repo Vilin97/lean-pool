@@ -6,9 +6,7 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Core.Tensor
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
 # Linear combination of unitaries (LCU)

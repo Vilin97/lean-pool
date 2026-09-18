@@ -3,14 +3,26 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InvLimitNat
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringLim
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame
@@ -221,6 +233,29 @@ lemma limCone_body_is_lift' (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
   ext1
   apply congr_arg Subtype.val (limCone_body_is_lift hF S y yc k m)
 
+lemma limConeBodySystem_project (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
+  (y : bodySystem.obj (F.obj (Opposite.op (n ⊔ 0))).1)
+  (yc : consistent y ((LvlStratHom.system p).map (limConeStr hF (n ⊔ 0)) S)) k :
+  (limConeπMap hF (n ⊔ k)) (resEq.val' ((limConeBodySystem hF S y yc).res k)) =
+    resEq.val' ((limConeBodyLifts hF S y yc k).1.res k) := by
+  change
+    resEq.val'
+      (((resEq k).map (limConeπMap hF (n ⊔ k)))
+        ((limConeBodySystem hF S y yc).res k)) =
+    resEq.val' ((limConeBodyLifts hF S y yc k).1.res k)
+  let : Tree.Fixing k (limConeπMap hF (n ⊔ k)) := by
+    synthFixing
+  change
+    resEq.val'
+      (((resEq k).map (limConeπMap hF (n ⊔ k)))
+        (inv ((resEq k).map (limConeπMap hF (n ⊔ k)))
+          ((limConeBodyLifts hF S y yc k).1.res k))) =
+    resEq.val' ((limConeBodyLifts hF S y yc k).1.res k)
+  exact congrArg
+    (resEq.val' (S := (F.obj (Opposite.op (n ⊔ k))).1))
+    (cancel_inv_right_types ((resEq k).map (limConeπMap hF (n ⊔ k)))
+      ((limConeBodyLifts hF S y yc k).1.res k))
+
 lemma limConeBodySystem_map_contains (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
   (y : bodySystem.obj (F.obj (Opposite.op (n ⊔ 0))).1)
   (yc : consistent y ((LvlStratHom.system p).map (limConeStr hF (n ⊔ 0)) S))
@@ -248,46 +283,7 @@ lemma limConeBodySystem_map_contains (S : (LvlStratHom.system p).obj ⟨limConeP
   conv_lhs =>
     arg 2
     rw [hc]
-  change
-    resEq.val'
-      (((resEq x.val.length).map (limConeπMap hF (n ⊔ x.val.length)))
-        ((limConeBodySystem hF S y yc).res x.val.length)) =
-    resEq.val' ((limConeBodyLifts hF S y yc x.val.length).1.res x.val.length)
-  let : Tree.Fixing x.val.length (limConeπMap hF (n ⊔ x.val.length)) := by
-    synthFixing
-  change
-    resEq.val'
-      (((resEq x.val.length).map (limConeπMap hF (n ⊔ x.val.length)))
-        (inv ((resEq x.val.length).map (limConeπMap hF (n ⊔ x.val.length)))
-          ((limConeBodyLifts hF S y yc x.val.length).1.res x.val.length))) =
-    resEq.val' ((limConeBodyLifts hF S y yc x.val.length).1.res x.val.length)
-  exact congrArg
-    (resEq.val' (S := (F.obj (Opposite.op (n ⊔ x.val.length))).1))
-    (cancel_inv_right_types ((resEq x.val.length).map (limConeπMap hF (n ⊔ x.val.length)))
-      ((limConeBodyLifts hF S y yc x.val.length).1.res x.val.length))
-
-lemma limConeBodySystem_project (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
-  (y : bodySystem.obj (F.obj (Opposite.op (n ⊔ 0))).1)
-  (yc : consistent y ((LvlStratHom.system p).map (limConeStr hF (n ⊔ 0)) S)) k :
-  (limConeπMap hF (n ⊔ k)) (resEq.val' ((limConeBodySystem hF S y yc).res k)) =
-    resEq.val' ((limConeBodyLifts hF S y yc k).1.res k) := by
-  change
-    resEq.val'
-      (((resEq k).map (limConeπMap hF (n ⊔ k)))
-        ((limConeBodySystem hF S y yc).res k)) =
-    resEq.val' ((limConeBodyLifts hF S y yc k).1.res k)
-  let : Tree.Fixing k (limConeπMap hF (n ⊔ k)) := by
-    synthFixing
-  change
-    resEq.val'
-      (((resEq k).map (limConeπMap hF (n ⊔ k)))
-        (inv ((resEq k).map (limConeπMap hF (n ⊔ k)))
-          ((limConeBodyLifts hF S y yc k).1.res k))) =
-    resEq.val' ((limConeBodyLifts hF S y yc k).1.res k)
-  exact congrArg
-    (resEq.val' (S := (F.obj (Opposite.op (n ⊔ k))).1))
-    (cancel_inv_right_types ((resEq k).map (limConeπMap hF (n ⊔ k)))
-      ((limConeBodyLifts hF S y yc k).1.res k))
+  exact limConeBodySystem_project hF S y yc x.val.length
 
 lemma limCone_body_consistent (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
     (y : bodySystem.obj (F.obj (Opposite.op (n ⊔ 0))).1)

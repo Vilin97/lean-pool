@@ -3,7 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedCoefficientMap
 import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedEvaluation
 
 /-!
@@ -13,6 +16,8 @@ The explicit weighted reconstruction theorem uses three radius inequalities.
 This file packages their simultaneous neighborhood shrinking into the germ
 identity needed by preparation and uniqueness.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped ENNReal NNReal Topology

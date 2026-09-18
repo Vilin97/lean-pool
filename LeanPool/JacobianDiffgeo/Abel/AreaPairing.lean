@@ -3,15 +3,19 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Dbar.Operator
+public import LeanPool.JacobianDiffgeo.Dbar.Form01
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import LeanPool.JacobianDiffgeo.Forms.Coeffs
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.JacobianDiffgeo.Forms.Analyticity
 import LeanPool.JacobianDiffgeo.Surface.RealSmooth
-import LeanPool.JacobianDiffgeo.PlanarStokes.Compat
 import Mathlib.MeasureTheory.Function.Jacobian
 import Mathlib.RingTheory.Complex
 import Mathlib.RingTheory.Norm.Transitivity
-import Mathlib.Topology.Algebra.Module.Determinant
 
 /-!
 # abel-theorem: the Serre area-pairing infrastructure (design §4.3, routing decision #2)
@@ -43,6 +47,8 @@ positivity against the conjugate form); `ChartSupported.lean` localizes the pair
 single-chart-supported `(0,1)`-data. No independence-of-`PU` statement is ever needed: every
 downstream conclusion is a `Prop` quantified over a single fixed `PU`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory

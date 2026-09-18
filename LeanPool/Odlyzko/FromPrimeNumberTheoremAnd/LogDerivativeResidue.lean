@@ -5,10 +5,9 @@ Authors: The FLT Project
 -/
 module
 
-public import Mathlib.Analysis.Calculus.LogDeriv
-public import Mathlib.Analysis.Complex.CauchyIntegral
-public import Mathlib.Analysis.Meromorphic.Divisor
-public import Mathlib.Analysis.Meromorphic.NormalForm
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Meromorphic.Order
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-! Adapted from [PNT+](https://github.com/AlexKontorovich/PrimeNumberTheoremAnd)
 by Alex Kontorovich and Terence Tao:

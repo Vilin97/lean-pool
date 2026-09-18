@@ -3,25 +3,28 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
-import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
-import LeanPool.Monlib4.LinearAlgebra.InvariantSubmodule
+
+
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
+public import LeanPool.Monlib4.LinearAlgebra.IsReal
+public import LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
+import LeanPool.Monlib4.LinearAlgebra.Ips.Ips
 import LeanPool.Monlib4.LinearAlgebra.Ips.MinimalProj
-import LeanPool.Monlib4.LinearAlgebra.Nacgor
-import Mathlib.Analysis.InnerProductSpace.StarOrder
-import LeanPool.Monlib4.LinearAlgebra.OfNorm
 import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
 import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.Analysis.CStarAlgebra.Matrix
+import LeanPool.Monlib4.RepTheory.AutMat
+import Mathlib.Analysis.InnerProductSpace.StarOrder
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.PosMapIsReal
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.PosMapIsReal`.
 -/
+
+@[expose] public section
 
 variable {A : Type _} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A] [PartialOrder A]
   [_root_.StarOrderedRing A]
@@ -128,6 +131,8 @@ by rw [← ContinuousLinearMap.toLinearMapAlgEquiv_apply, AlgEquiv.spectrum_eq]
 
 variable {B : Type*} [NormedAddCommGroup B] [InnerProductSpace ℂ B]
   [FiniteDimensional ℂ B]
+
+local instance : CompleteSpace B := FiniteDimensional.complete ℂ B
 
 open scoped MatrixOrder ComplexOrder FiniteDimensional
 theorem ContinuousLinearMap.nonneg_iff_isSelfAdjoint_and_nonneg_spectrum

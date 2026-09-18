@@ -3,12 +3,14 @@ Copyright (c) 2026 Trevor Morris. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Trevor Morris
 -/
+module
 
+public import Mathlib.Data.Finset.Max
+public import Mathlib.Data.Nat.Factorial.Basic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.Order.Ring.Nat
-import Mathlib.Data.Finset.Max
-import Mathlib.Data.Nat.Factorial.Basic
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Erdős Problem #403 — sums of distinct factorials that are powers of 2
@@ -34,6 +36,8 @@ distinct factorials is exactly a factorial-base numeral with all digits `≤ 1`,
 A "sum of distinct factorials" is modelled by a `Finset ℕ` of indices (distinctness of the `aᵢ` is
 automatic). Note `0! = 1! = 1`, so e.g. `{0,1}` sums to `2`.
 -/
+
+@[expose] public section
 
 namespace Erdos403
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.LinearAlgebra.Matrix.DotProduct
-import Mathlib.Probability.Distributions.Gaussian.Multivariate
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Basic
-import Mathlib.Probability.Distributions.Gaussian.HasGaussianLaw.Independence
+module
+
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.Data.Matrix.Mul
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # The Gaussian random projection
@@ -27,6 +29,8 @@ row–vector products. Under the Gaussian law on `A`, each `Aᵢ · x` is `N(0, 
 `JL.ChiSquared`; that probabilistic reduction is the one ingredient consumed as a
 labeled hypothesis by the existence theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

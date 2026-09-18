@@ -3,22 +3,15 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Learner.Core
-import LeanPool.FormalLearningTheory.Learner.Active
-import LeanPool.FormalLearningTheory.Criterion.Online
-import LeanPool.FormalLearningTheory.Criterion.PAC
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
-import LeanPool.FormalLearningTheory.Complexity.Structures
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.Combinatorics.SetFamily.Shatter
-import Mathlib.Data.Nat.Choose.Bounds
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.ProductMeasure
+module
+
+public import LeanPool.FormalLearningTheory.Criterion.Online
+public import LeanPool.FormalLearningTheory.Criterion.PAC
+public import LeanPool.FormalLearningTheory.Complexity.Structures
+public import Mathlib.Combinatorics.SetFamily.Shatter
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # Generalization Error, Sample/Query/Label Complexity, ERM
@@ -26,6 +19,8 @@ import Mathlib.Probability.ProductMeasure
 The numerical quantities that PAC learning bounds.
 Includes the canonical PAC learner (ERM).
 -/
+
+@[expose] public section
 
 universe u v
 

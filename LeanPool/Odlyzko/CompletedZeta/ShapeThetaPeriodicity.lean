@@ -6,7 +6,6 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.CompletedZeta.FractionalShapeTheta
-public import LeanPool.Odlyzko.CompletedZeta.UnitSlabTranslation
 
 /-! TODO: Add doc-string. -/
 

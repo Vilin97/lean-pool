@@ -10,12 +10,15 @@ extension is proved over the actual finite group algebra; the remaining
 embedding into the full second kernel is handled in the companion action
 file. The construction follows the paper's E_ell argument.
 -/
-import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
-import Mathlib.Algebra.Exact.Basic
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
 
 /-!
 The nonisomorphism proofs component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperNonisomorphism

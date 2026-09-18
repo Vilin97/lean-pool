@@ -3,18 +3,15 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.Definitions
-import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-import Mathlib.Data.Fin.Tuple.Basic
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Constructions.UnitInterval
-import Mathlib.Order.Interval.Set.Disjoint
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.NormNum
+public import LeanPool.TwoColoringOneRound.Definitions
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # LeanPool.TwoColoringOneRound.SimpleBounds
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring
 

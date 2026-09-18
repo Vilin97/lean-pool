@@ -3,8 +3,18 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
+public import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Ring
+public import LeanPool.LeanModularForms.HeckeRIngs.GLn.DiagonalCosets
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
 import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # GL₂ Hecke Algebra: Definitions for Theorem 3.24
@@ -22,6 +32,8 @@ structural lemmas for Shimura's Theorem 3.24.
 
 * Shimura, Theorem 3.24
 -/
+
+@[expose] public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset HeckeRing.GLn
 

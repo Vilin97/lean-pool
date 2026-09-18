@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise414
-import LeanPool.DomainTheory.Neighborhood.Theorem46
+public import LeanPool.DomainTheory.Neighborhood.Exercise414
+public import LeanPool.DomainTheory.Neighborhood.Theorem46
 
 /-!
 # Exercise 4.22 (Scott 1981, PRG-19, Lecture IV) — carving a Peano model out of a
@@ -49,6 +50,8 @@ The subset `nats` is built choice-free (`lfpSet`); the `PeanoModel` packaging of
 existence statement live over `Classical.choice` exactly as Theorem 4.6's
 bijection does.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise422
 

@@ -3,8 +3,15 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
+module
+
+public meta import LeanPool.Lentil.ProofMode.Basic
+
+
+public meta import LeanPool.Lentil.Expr
 import LeanPool.Lentil.ProofMode.Basic
-import LeanPool.Lentil.Expr
+
+public meta section
 
 namespace TLA.ProofMode
 

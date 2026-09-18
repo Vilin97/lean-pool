@@ -3,9 +3,12 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Analytic.ConstantRankLinear
+public import LeanPool.LocalComplexGeometry.Analytic.ConstantRankLinear
+public import LeanPool.LocalComplexGeometry.Analytic.LocalBiholomorph
 import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Topology.Algebra.Module.FiniteDimension
 
 /-!
 # Holomorphic constant-rank theorem
@@ -15,6 +18,8 @@ constant complex rank.  The proof uses the analytic inverse-function theorem,
 finite-dimensional complements, and the mean-value theorem on the kernel
 factor.
 -/
+
+@[expose] public section
 
 
 open Filter Metric

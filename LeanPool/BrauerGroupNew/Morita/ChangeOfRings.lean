@@ -3,10 +3,13 @@ Copyright (c) 2022 Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
-import LeanPool.BrauerGroupNew.MoritaEquivalence
+module
+
+public import LeanPool.BrauerGroupNew.MoritaEquivalence
+public import Mathlib.RingTheory.Morita.Basic
 import Mathlib.Algebra.Category.ModuleCat.Abelian
+import Mathlib.CategoryTheory.Limits.Shapes.Countable
 import Mathlib.RingTheory.HopkinsLevitzki
-import Mathlib.RingTheory.Morita.Basic
 import Mathlib.RingTheory.SimpleModule.Rank
 
 /-!
@@ -14,6 +17,8 @@ import Mathlib.RingTheory.SimpleModule.Rank
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Morita.ChangeOfRings`.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

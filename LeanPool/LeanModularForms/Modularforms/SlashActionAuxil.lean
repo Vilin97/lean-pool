@@ -6,11 +6,10 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Algebra.Field.ZMod
-public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 public import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
 public import Mathlib.NumberTheory.ModularForms.SlashActions
+import Mathlib.Algebra.Field.ZMod
+import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 
 /-! # SlashActionAuxil -/
 

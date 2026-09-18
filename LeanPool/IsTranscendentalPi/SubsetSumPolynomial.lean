@@ -3,9 +3,12 @@ Copyright (c) 2026 James Huang, Samuël Borza. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Huang, Samuël Borza
 -/
-import LeanPool.IsTranscendentalPi.NivenPolynomials
-import LeanPool.IsTranscendentalPi.SymmetricPolynomials
-import Mathlib.Algebra.Polynomial.OfFn
+module
+
+public import Mathlib.Algebra.Polynomial.OfFn
+public import LeanPool.IsTranscendentalPi.ComplexExponential
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.RingTheory.Polynomial.Vieta
 
 /-!
 # Subset-sum polynomial
@@ -14,6 +17,8 @@ The polynomial `∏ x ∈ s, (X - C x)` attached to a multiset `s` and its facto
 according to the vanishing subset sums, used to track integer divisibility in
 Niven's argument.
 -/
+
+@[expose] public section
 
 open Polynomial
 open Multiset

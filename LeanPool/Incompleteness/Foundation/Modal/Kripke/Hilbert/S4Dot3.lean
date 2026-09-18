@@ -3,11 +3,18 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
+public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
+public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Completeness
 import LeanPool.Incompleteness.Foundation.Modal.Kripke.AxiomDot3
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Geach
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.S4
+import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # S4Dot3 -/
+
+@[expose] public section
 
 
 namespace LO

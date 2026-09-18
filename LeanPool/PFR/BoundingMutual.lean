@@ -6,9 +6,12 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.BigOperators.Group.Multiset.Defs
-public import LeanPool.PFR.Mathlib.Data.Fin.Basic
 public import LeanPool.PFR.MultiTauFunctional
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.Mathlib.Data.Fin.Basic
+import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # Bounding the mutual information
@@ -88,21 +91,8 @@ lemma condMultiDist_of_cast {m m' : ℕ} (h : m' = m) {Ω : Fin m → Type*}
     {G S : Type*} [MeasurableFinGroup G] [Fintype S] (X : ∀ i, Ω i → G) (Y : ∀ i, Ω i → S) :
     D[fun i ↦ X (i.cast h) | fun i ↦ Y (i.cast h); fun i ↦ hΩ (i.cast h)] =
     D[X | Y; hΩ] := by
-  unfold condMultiDist
-  let ι : (Fin m' → S) → (Fin m → S) := fun x i ↦ x (i.cast h.symm)
-  have hι : Function.Bijective ι := by
-    constructor
-    · intro f g h'; ext i; replace h' := congrFun h' (i.cast h); simpa [ι] using h'
-    intro f; use f ∘ (Fin.cast h); ext i; simp [ι]
-  convert Function.Bijective.sum_comp hι _ with y _
-  congr 1
-  · convert Function.Bijective.prod_comp (Fin.cast_bijective h) _ with i _
-    rfl
-  convert multiDist_of_cast h _ _ X with i hmes i
-  · simp; congr
-  intros
-  simp only
-  infer_instance
+  subst m'
+  rfl
 
 private lemma row_entropy_le {G Ωₒ : Type u} [MeasurableFinGroup G] [MeasureSpace Ωₒ]
     {p : multiRefPackage G Ωₒ} {Ω : Type u} [hΩ : MeasureSpace Ω]
@@ -290,6 +280,26 @@ private lemma final_to_row_rdist_le {G Ω : Type u} [MeasurableFinGroup G]
   simp [T, T'] at h h'
   order
 
+/-- The mutual-information chain rule with any index size at least two. -/
+private lemma mutualInfo_le_multiDist_chain {G Ω : Type u} [MeasurableFinGroup G]
+    [hΩ : MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω)] {m : ℕ} (hm : m ≥ 2)
+    (X : Fin m × Fin m → Ω → G) (hX : ∀ i j, Measurable (X (i, j)))
+    (hIndependent : iIndepFun X) :
+    I[fun ω ↦ fun j ↦ ∑ i, X (i, j) ω : fun ω ↦ fun i ↦ ∑ j, X (i, j) ω |
+      fun ω ↦ ∑ i, ∑ j, X (i, j) ω] ≤
+      ∑ j ∈ Finset.Iio (finalIndex hm),
+        (D[fun i ↦ X (i, j); fun _ ↦ hΩ] -
+          D[fun i ↦ X (i, j) | fun i ↦ rowTail X i j; fun _ ↦ hΩ]) +
+      (D[fun i ↦ X (i, finalIndex hm); fun _ ↦ hΩ] -
+        D[fun i ↦ ∑ j, X (i, j); fun _ ↦ hΩ]) := by
+  cases m with
+  | zero => omega
+  | succ m =>
+    have hlast : finalIndex hm = Fin.last m := rfl
+    simpa only [hlast, rowTail, Fin.Iio_last_eq_map, Finset.sum_map, Fin.castSuccEmb_apply,
+      Fintype.sum_prod_type, Finset.sum_fn, add_sub_assoc, Fin.top_eq_last] using
+      cor_multiDist_chainRule hΩ X (fun i ↦ hX i.1 i.2) hIndependent
+
 -- Spelling here is *very* janky. Feel free to respell
 /-- Suppose that $X_{i, j}$, $1 \leq i, j \leq m$, are jointly independent $G$-valued random
 variables, such that for each $j = 1,\dots,m$, the random variables $(X_{i, j})_{i = 1}^m$
@@ -328,64 +338,8 @@ lemma mutual_information_le {G Ωₒ : Type u} [MeasurableFinGroup G] [MeasureSp
     - D[ column j | fun i ↦ S i j; fun _ ↦ hΩ']
   set B : ℝ := D[ column last; fun _ ↦ hΩ'] - D[ fun i ω ↦ ∑ j, X' (i, j) ω; fun _ ↦ hΩ']
   have h1 : I₀ ≤ ∑ j ∈ .Iio last, A j + B := by
-    -- significant dependent type hell here because `p.m` is not defeq of the form `m+1`.
-    -- One might refactor the rest of the argument to do this, but I think this claim is
-    -- the only place where it is a serious issue.
-    set m := p.m - 1
-    have hm' : m+1 = p.m := by omega
-    let X'' : Fin (m+1) × Fin (m+1) → Ω' → G := fun (i, j) ↦ X' (i.cast hm', j.cast hm')
-    convert cor_multiDist_chainRule _ X'' (by fun_prop) _ using 1 <;> try infer_instance
-    · let ι : (Fin (m+1) → G) → (Fin p.m → G) := fun f ↦ f ∘ (Fin.cast hm'.symm)
-      have hι : Function.Injective ι := by
-        intro f g h; ext i; replace h := congrFun h (i.cast hm'); simpa [ι] using h
-      observe hid : Function.Injective (id: G → G)
-      have hA : ι ∘ (fun ω ↦ (fun j ↦ ∑ i, X'' (i, j) ω)) = fun ω ↦ (fun j ↦ ∑ i, X' (i, j) ω) := by
-        ext ω j
-        simp only [Function.comp_apply]
-        apply Function.Bijective.sum_comp (Fin.cast_bijective hm') (fun i ↦ X' (i, j) ω)
-      have hB : ι ∘ (fun ω ↦ (fun i ↦ ∑ j, X'' (i, j) ω)) = fun ω ↦ (fun i ↦ ∑ j, X' (i, j) ω) := by
-        ext ω i
-        simp only [Function.comp_apply]
-        apply Function.Bijective.sum_comp (Fin.cast_bijective hm') (fun j ↦ X' (i, j) ω)
-      have hC : (id : G → G) ∘ (∑ p, X'' p) = fun ω ↦ ∑ i, ∑ j, X' (i, j) ω := by
-        ext ω
-        simp only [Function.comp_apply, Finset.sum_apply, ← Finset.sum_product']
-        apply Function.Bijective.sum_comp ⟨_, _⟩ (fun x ↦ X' x ω)
-        · intro ⟨_, _⟩ ⟨_, _⟩ h
-          simpa using h
-        intro ⟨i, j⟩
-        use ⟨i.cast hm'.symm, j.cast hm'.symm⟩
-        simp
-      rw [← condMutualInfo_of_inj' ?_ ?_ ?_ _ hι hι hid, hA, hB, hC] <;> fun_prop
-    · rw [add_sub_assoc]; congr 1
-      · convert Finset.sum_image (g := fun j:Fin m ↦ j.castSucc.cast hm')
-          (f := A) (s := Finset.univ) _ using 2 with _ _ n _
-        · ext ⟨n, hn⟩
-          simp only [Finset.mem_Iio, Fin.mk_lt_mk, Finset.mem_image, Finset.mem_univ, true_and,
-            last]
-          constructor
-          · intro h; use ⟨n, by omega⟩; simp
-          rintro ⟨⟨n', hn'⟩, h⟩; simp at h; omega
-        · simp only [X'', A, column, S]
-          congr 1
-          · convert multiDist_of_cast hm' (fun _ ↦ hΩ') inferInstance _ with i
-            rfl
-          convert condMultiDist_of_cast hm' (fun _ ↦ hΩ') (fun i ↦ X' (i, Fin.cast hm' n.castSucc))
-            (fun i ↦ ∑ k ∈ Finset.Ici (Fin.cast hm' n.castSucc), X' (i, k)) using 2
-          ext i ω
-          simp only [Finset.sum_apply]
-          convert! Finset.sum_map _ (finCongr hm'.symm).toEmbedding _
-          ext i; simp
-        simpa [Function.comp_def] using (Fin.cast_injective _).comp (Fin.castSucc_injective _)
-      simp only [Fin.cast_top, B, column, X'']; congr 1
-      · symm; convert multiDist_of_cast hm' (fun _ ↦ hΩ') inferInstance _ with i
-        rfl
-      symm; convert multiDist_of_cast hm' (fun _ ↦ hΩ') inferInstance _ with i
-      ext ω
-      simp only [Finset.sum_apply]
-      apply Function.Bijective.sum_comp (Fin.cast_bijective hm') (fun j ↦ X' (Fin.cast hm' i, j) ω)
-    apply ProbabilityTheory.iIndepFun.precomp _ h_indep'
-    intro ⟨i, j⟩ ⟨i', j'⟩ h; simpa using h
+    simpa only [I₀, A, B, column, S, last, finalIndex, rowTail, Finset.sum_fn] using
+      mutualInfo_le_multiDist_chain p.hm X' hX' h_indep'
   have hD (j: Fin p.m) : D[column j; fun x ↦ hΩ'] = k := by
     obtain ⟨e, he⟩ := hperm j
     calc

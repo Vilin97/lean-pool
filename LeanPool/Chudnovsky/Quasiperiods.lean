@@ -3,9 +3,10 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.WeierstrassMore
-import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
+public import LeanPool.Chudnovsky.Basic
+public import LeanPool.Chudnovsky.SigmaZeta
 
 /-!
 # Quasiperiods and the Legendre relation
@@ -25,6 +26,8 @@ Statements from chapter 2 of Milla (arXiv:1809.00533v6, file `070_Quasiperiods.t
 
 All statements in this file are fully proved.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -258,9 +261,9 @@ private lemma bridgeEqv_coe (τ : ℍ) (p : ℤ × ℤ) :
 
 private lemma bridgeEqv_zero (τ : ℍ) : bridgeEqv τ (0 : ℤ × ℤ) = 0 := by
   apply Subtype.ext
-  have he0 : ((bridgeEqv τ (0 : ℤ × ℤ) : (Lτ τ).lattice) : ℂ) = 0 := by
-    simpa using bridgeEqv_coe τ (0 : ℤ × ℤ)
-  rw [he0]; simp
+  change ((bridgeEqv τ (0 : ℤ × ℤ) : (Lτ τ).lattice) : ℂ) = 0
+  rw [bridgeEqv_coe]
+  norm_num
 
 private lemma bridgeEqv_ne (τ : ℍ) (p : ℤ × ℤ) : p ≠ 0 ↔ bridgeEqv τ p ≠ 0 := by
   rw [← bridgeEqv_zero τ]
@@ -334,8 +337,7 @@ private lemma bridgeF_eta₁_eq_tsum (τ : ℍ) {z : ℂ}
     (bridgeF_summable τ hz hz1).congr (fun p => by simp only [hFdef, bridgeF, bridgeEqv_coe])
   have hF0 : F 0 = 1 / (z + 1) - 1 / z := by
     simp only [hFdef]
-    rw [show ((bridgeEqv τ (0 : ℤ × ℤ) : (Lτ τ).lattice) : ℂ) = 0 from by
-      simpa using bridgeEqv_coe τ (0 : ℤ × ℤ)]
+    rw [bridgeEqv_zero, ZeroMemClass.coe_zero]
     simp [weierstrassZetaTerm]
   have hZeta : ∀ a : ℂ,
       (Lτ τ).weierstrassZeta a

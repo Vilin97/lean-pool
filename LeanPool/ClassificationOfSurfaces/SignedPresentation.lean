@@ -3,8 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CellComplex
-import Mathlib.Data.Fintype.EquivFin
+module
+
+public import LeanPool.ClassificationOfSurfaces.CellComplex
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Finite signed-dart presentations
@@ -18,6 +23,8 @@ The construction uses only `Dart`, `inv`, finiteness, and the involution laws. I
 does not trust the stored vertex endpoints. This is the combinatorial input needed before cyclic
 boundary-word moves can be stated independently of a presentation's original edge names.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -100,7 +107,8 @@ theorem edgeOrbit_inv (K : SurfaceCellComplex) (d : K.Dart) :
 noncomputable instance edgeOrbitFintype (K : SurfaceCellComplex) : Fintype K.EdgeOrbit :=
   Fintype.ofFinite _
 
-private noncomputable def edgeRepresentative
+/-- Choose a dart representing an unoriented edge orbit. -/
+noncomputable def edgeRepresentative
     (K : SurfaceCellComplex) (e : K.EdgeOrbit) : K.Dart :=
   Quotient.out e
 
@@ -110,7 +118,8 @@ private theorem edgeOrbit_representative
     K.edgeOrbit (K.edgeRepresentative e) = e :=
   Quotient.out_eq e
 
-private noncomputable def signedDartToDart (K : SurfaceCellComplex) :
+/-- Realize a signed edge orbit by its chosen dart or the inverse dart. -/
+noncomputable def signedDartToDart (K : SurfaceCellComplex) :
     SignedDart K.EdgeOrbit → K.Dart
   | .pos e => K.edgeRepresentative e
   | .neg e => K.inv (K.edgeRepresentative e)
@@ -179,7 +188,7 @@ noncomputable def signedDartEquiv
     (K : SurfaceCellComplex) (hinv : ∀ d, K.inv d ≠ d) :
     SignedDart K.EdgeOrbit ≃ K.Dart :=
   Equiv.ofBijective K.signedDartToDart
-    ⟨K.signedDartToDart_injective hinv, K.signedDartToDart_surjective⟩
+    (by exact ⟨K.signedDartToDart_injective hinv, K.signedDartToDart_surjective⟩)
 
 @[simp]
 theorem signedDartEquiv_symm_inv

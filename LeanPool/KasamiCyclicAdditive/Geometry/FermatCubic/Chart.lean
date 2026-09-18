@@ -3,8 +3,14 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Hessian
+public import LeanPool.KasamiCyclicAdditive.Geometry.FermatCubic.Curve
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The affine Fermat chart and the Hessian addition formula
@@ -19,6 +25,8 @@ model `fer`.  The main results are
 * `three_torsion_pt_iff`: an affine Fermat point is `3`-torsion iff one of its coordinates
   vanishes.
 -/
+
+@[expose] public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
@@ -73,7 +81,8 @@ private lemma fermat_symm {w t : K} (h : w ^ 3 + t ^ 3 = 1) : t ^ 3 + w ^ 3 = 1 
   linear_combination h
 
 /-- Negation on the Fermat cubic swaps the two affine coordinates. -/
-theorem neg_pt {w t : K} (h : w ^ 3 + t ^ 3 = 1) : -(pt w t h) = pt t w (fermat_symm h) := by
+theorem neg_pt {w t : K} (h : w ^ 3 + t ^ 3 = 1) :
+    -(pt w t h) = pt t w (by exact fermat_symm h) := by
   rw [pt, pt, Affine.Point.neg_some]
   refine some_eq_some _ _ ?_ ?_
   · rw [show t + w = w + t by ring]

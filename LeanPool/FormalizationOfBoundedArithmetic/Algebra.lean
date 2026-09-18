@@ -3,15 +3,17 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
+module
 
-import Mathlib.Algebra.Regular.Defs
 
-import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
-import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
+public import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.Algebra
 -/
+
+@[expose] public section
 
 -- INSTANCES!
 

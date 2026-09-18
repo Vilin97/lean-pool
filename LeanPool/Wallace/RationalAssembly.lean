@@ -3,9 +3,12 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.RationalFusionRun
-import LeanPool.Wallace.FullTopology
+public import LeanPool.Wallace.RationalFusionRun
+public import LeanPool.Wallace.FullTopology
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 
 /-!
 # Global assembly for the rational vector group
@@ -14,6 +17,8 @@ The local fusion around each nonzero vector is extended by the rational transfin
 The resulting compatible characters separate points and realize the nonzero ultrafilter limit
 attached to every injective rational sequence.
 -/
+
+@[expose] public section
 
 open Filter Set Topology
 

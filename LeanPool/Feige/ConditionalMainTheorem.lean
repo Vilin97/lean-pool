@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.GeometryBridge
-import LeanPool.Feige.Sharpness
+module
+
+public import LeanPool.Feige.GeometryBridge
+public import LeanPool.Feige.Sharpness
 
 /-!
 # Conditional assembly of the unit-slack theorem
@@ -14,6 +16,8 @@ terms of three structural inputs.  The reduction and extremal construction
 are fully discharged: Theorem 2.1, the simplex/exponential identification
 of (2.1), and the `α = 0` centroid-halfspace inequality are the only inputs.
 -/
+
+@[expose] public section
 
 namespace Feige
 

@@ -3,11 +3,18 @@ Copyright (c) 2026 ruplet. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ruplet
 -/
-import LeanPool.FormalizationOfBoundedArithmetic.V0
+module
+
+public import LeanPool.FormalizationOfBoundedArithmetic.V0
+import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+import Mathlib.Tactic.Positivity.Finset
+import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
 -/
+
+@[expose] public section
 
 -- This file proves:
 -- ∀ {X Y : str}, X + succ Y = succ (X + Y)

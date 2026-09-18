@@ -3,13 +3,12 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.SpectralPositivity.Matrix.NonnegPower
+public import LeanPool.SpectralPositivity.Matrix.NonnegPower
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import Mathlib.Topology.Algebra.InfiniteSum.Module
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.Topology.Order.OrderClosed
 import Mathlib.Analysis.SpecialFunctions.Exponential
 
 /-!
@@ -30,6 +29,8 @@ of partial sums to the matrix exponential.
 - Berman–Plemmons, *Nonnegative Matrices*, SIAM, 1994, Ch. 6
 - Horn–Johnson, *Matrix Analysis*, Cambridge, 2013, Thm 8.5.5
 -/
+
+@[expose] public section
 
 open Matrix BigOperators Finset
 

@@ -3,10 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.Approximable
 import Mathlib.Data.Set.Image
-import Mathlib.Data.Set.Insert
 
 /-!
 # Exercise 3.18 (Scott 1981, PRG-19, §3) — the sum (coproduct) system
@@ -36,6 +36,8 @@ maps.)
 
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

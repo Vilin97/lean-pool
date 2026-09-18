@@ -3,13 +3,16 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
+module
+
 
 /-! ## A `Foldable` typeclass for big operators
 
 A small typeclass abstracting collections that can be folded with a
 commutative-associative operation, used to give big-conjunction and
 big-disjunction TLA operators a uniform definition. -/
+
+@[expose] public section
 
 namespace TLA
 

@@ -6,7 +6,6 @@ Authors: The FLT Project
 module
 
 public import Mathlib.NumberTheory.LSeries.Basic
-public import Mathlib.Topology.Algebra.InfiniteSum.Constructions
 
 /-! TODO: Add doc-string. -/
 

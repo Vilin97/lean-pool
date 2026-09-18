@@ -3,21 +3,27 @@ Copyright (c) 2026 Junqi Liu, Jujian Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junqi Liu, Jujian Zhang
 -/
+module
 
-import Mathlib.Data.Int.Star
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
-import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.DedekindDomain.Dvr
-import Mathlib.NumberTheory.Chebyshev
+public import LeanPool.Zeta3Irrational.LegendrePoly
+public import LeanPool.Zeta3Irrational.D
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
 import LeanPool.Zeta3Irrational.Bound
 import LeanPool.Zeta3Irrational.Chebyshev
-import LeanPool.Zeta3Irrational.LegendrePoly
 import LeanPool.Zeta3Irrational.LinearForm
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Data.Int.Star
+import Mathlib.MeasureTheory.Function.AEEqOfIntegral
+import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
+import Mathlib.RingTheory.DedekindDomain.Basic
 
 /-!
 # LeanPool.Zeta3Irrational.Basic
 -/
+
+@[expose] public section
 
 namespace LeanPool.Zeta3Irrational
 

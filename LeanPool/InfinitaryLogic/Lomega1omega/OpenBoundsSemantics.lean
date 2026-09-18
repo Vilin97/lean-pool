@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 import LeanPool.InfinitaryLogic.Util
 /-!
 # Semantics of `openBounds` and of relabeling by `insertLastBound`
@@ -21,6 +23,8 @@ the Scott analysis can use them without importing either:
 Both were previously proved inside `Scott/Formula.lean` and `Methods/Henkin/Construction.lean`
 respectively; the statements and names are unchanged.
 -/
+
+@[expose] public section
 
 universe u v w
 

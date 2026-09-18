@@ -3,12 +3,16 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
+module
+
+public import Mathlib.Topology.UniformSpace.UniformConvergence
 import Mathlib.Topology.UniformSpace.Compact
-import Mathlib.Topology.UniformSpace.UniformConvergence
 
 /-!
 # LeanPool.RiemannMappingTheorem.Uniform
 -/
+
+@[expose] public section
 
 open Set Filter UniformSpace Function Uniformity Topology SetRel
 

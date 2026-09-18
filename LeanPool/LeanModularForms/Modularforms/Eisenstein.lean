@@ -8,7 +8,15 @@ module
 
 public import LeanPool.LeanModularForms.Modularforms.Eisensteinqexpansions
 public import LeanPool.LeanModularForms.Modularforms.IsCuspForm
-public import LeanPool.LeanModularForms.Modularforms.SummableLems
+public import LeanPool.LeanModularForms.Modularforms.Delta
+public import LeanPool.LeanModularForms.Modularforms.E2
+import LeanPool.LeanModularForms.Modularforms.ExpLems
+import LeanPool.LeanModularForms.Modularforms.MultipliableLems
+import LeanPool.LeanModularForms.Modularforms.QExpansionLems
+import LeanPool.LeanModularForms.Modularforms.SummableLems
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Group.Tannery
+import Mathlib.Data.Int.Star
 
 /-! # Eisenstein -/
 

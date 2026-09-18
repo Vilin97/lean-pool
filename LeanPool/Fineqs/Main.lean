@@ -3,27 +3,27 @@ Copyright (c) 2026 Stefan Barańczuk, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stefan Barańczuk, Aristotle
 -/
+module
 
+public import Mathlib.LinearAlgebra.Projectivization.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.GroupTheory.GroupAction.Ring
+import Mathlib.LinearAlgebra.Dimension.Localization
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 import Mathlib.LinearAlgebra.Projectivization.Cardinality
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.LinearAlgebra.Dimension.RankNullity
-import Mathlib.Data.Set.Card
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+import Mathlib.RingTheory.LocalRing.Basic
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # FinEqs main file
 
 Vendored from `nasqret/fineqs`. See `LeanPool/Fineqs.lean` for the project overview.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Fineqs
 

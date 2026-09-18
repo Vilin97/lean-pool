@@ -3,12 +3,17 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import Mathlib.MeasureTheory.Function.AbsolutelyContinuous
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+module
+
+public import Mathlib.MeasureTheory.Function.AbsolutelyContinuous
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Energy Quantities
 -/
+
+@[expose] public section
 
 noncomputable section
 

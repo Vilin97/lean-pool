@@ -3,9 +3,12 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.MajorantArcNesting
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.MajorantArcNesting
+import LeanPool.Erdos132ConvexK3.Geometry
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
 
 /-!
 # Coordinated ErLV majorants
@@ -15,6 +18,8 @@ witnesses carry actual strict-cover paths, and the two paths are selected
 jointly to minimize the moves made by their facing endpoints.  The finite
 minimum exists.  The remaining exchange statement is isolated exactly.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -225,16 +230,8 @@ theorem right_right_cover_rank_ladder
   have hGrow₂ : sqDist (P i) (P (cyclicAdvance j 1)) <
       sqDist (P i) (P (cyclicAdvance j 2)) := by
     simpa only [IsRightCover, cyclicAdvance_add, Nat.reduceAdd] using hCovers.2
-  have hFinal : sqDist (P i) (P (cyclicAdvance j 2)) = d₁ := by
-    exact two_covers_end_at_d₁ hClasses hStart hMid hEnd hGrow₁ hGrow₂
-  have hd₃d₂ := hClasses.1
-  have hd₂d₁ := hClasses.2.1
-  have hStartRank : sqDist (P i) (P j) = d₃ := by
-    rcases hStart.2 with h₁ | h₂ | h₃ <;>
-      rcases hMid.2 with hm₁ | hm₂ | hm₃ <;> linarith
-  have hMidRank : sqDist (P i) (P (cyclicAdvance j 1)) = d₂ := by
-    rcases hMid.2 with hm₁ | hm₂ | hm₃ <;> linarith
-  exact ⟨hStartRank, hMidRank, hFinal⟩
+  exact strict_three_rank_chain hClasses.1 hClasses.2.1
+    hStart.2 hMid.2 hEnd.2 hGrow₁ hGrow₂
 
 /-- Two successive left covers exhaust the three ranks exactly. -/
 theorem left_left_cover_rank_ladder
@@ -255,16 +252,8 @@ theorem left_left_cover_rank_ladder
   have hGrow₂ : sqDist (P (cyclicRetreat i 1)) (P j) <
       sqDist (P (cyclicRetreat i 2)) (P j) := by
     simpa only [IsLeftCover, cyclicRetreat_add, Nat.reduceAdd] using hCovers.2
-  have hFinal : sqDist (P (cyclicRetreat i 2)) (P j) = d₁ := by
-    exact two_covers_end_at_d₁ hClasses hStart hMid hEnd hGrow₁ hGrow₂
-  have hd₃d₂ := hClasses.1
-  have hd₂d₁ := hClasses.2.1
-  have hStartRank : sqDist (P i) (P j) = d₃ := by
-    rcases hStart.2 with h₁ | h₂ | h₃ <;>
-      rcases hMid.2 with hm₁ | hm₂ | hm₃ <;> linarith
-  have hMidRank : sqDist (P (cyclicRetreat i 1)) (P j) = d₂ := by
-    rcases hMid.2 with hm₁ | hm₂ | hm₃ <;> linarith
-  exact ⟨hStartRank, hMidRank, hFinal⟩
+  exact strict_three_rank_chain hClasses.1 hClasses.2.1
+    hStart.2 hMid.2 hEnd.2 hGrow₁ hGrow₂
 
 /-- The intermediate edge of a forced two-right-move chain is not a
 majorant: the second move is still a strict right cover.  Thus this edge
@@ -417,26 +406,21 @@ theorem equal_avoiding_edges_force_cross_top_three
     TopThreeAdjacent P d₁ d₂ d₃ a c ∨
       TopThreeAdjacent P d₁ d₂ d₃ b d := by
   have hEdge := edge_diagonal_inequality hquad
-  have habSq := euclideanDist_sq (P a) (P b)
-  have hcdSq := euclideanDist_sq (P c) (P d)
-  have hacSq := euclideanDist_sq (P a) (P c)
-  have hbdSq := euclideanDist_sq (P b) (P d)
-  have habNonneg : 0 ≤ euclideanDist (P a) (P b) := dist_nonneg
-  have hcdNonneg : 0 ≤ euclideanDist (P c) (P d) := dist_nonneg
-  have hacNonneg : 0 ≤ euclideanDist (P a) (P c) := dist_nonneg
-  have hbdNonneg : 0 ≤ euclideanDist (P b) (P d) := dist_nonneg
   have hSideEq : euclideanDist (P a) (P b) = euclideanDist (P c) (P d) := by
-    nlinarith
+    rw [← euclideanDist_sq, ← euclideanDist_sq] at hEqual
+    exact (sq_eq_sq₀ dist_nonneg dist_nonneg).mp hEqual
   by_cases hacLong : euclideanDist (P a) (P b) < euclideanDist (P a) (P c)
   · left
     apply top_three_adjacent_of_strictly_longer hClasses hab
-    nlinarith
+    rw [← euclideanDist_sq, ← euclideanDist_sq]
+    exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr hacLong
   · right
     have hbdLong : euclideanDist (P c) (P d) < euclideanDist (P b) (P d) := by
       have hacLe := le_of_not_gt hacLong
-      linarith
+      linarith only [hEdge, hSideEq, hacLe]
     apply top_three_adjacent_of_strictly_longer hClasses hcd
-    nlinarith
+    rw [← euclideanDist_sq, ← euclideanDist_sq]
+    exact (sq_lt_sq₀ dist_nonneg dist_nonneg).mpr hbdLong
 
 /-- In the maximal-gap setup the two starting edges `tu` and `zx` occur as
 opposite sides of the strict convex quadrilateral `t,u,z,x`.  This is the

@@ -3,15 +3,15 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import Mathlib.RingTheory.Polynomial.Hermite.Basic
-import Mathlib.RingTheory.Polynomial.Hermite.Gaussian
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.PSeries
-import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import Mathlib.RingTheory.Polynomial.Hermite.Basic
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import Mathlib.Analysis.PSeries
+import Mathlib.RingTheory.Polynomial.Hermite.Gaussian
 
 /-!
 # Hermite Functions and Nuclear Structure of Schwartz Space
@@ -37,6 +37,8 @@ The polynomial infrastructure is available in
 - Thangavelu, "Lectures on Hermite and Laguerre Expansions"
 - DLMF Chapter 18 (Orthogonal Polynomials)
 -/
+
+@[expose] public section
 
 open MeasureTheory Polynomial Real
 open scoped ContDiff

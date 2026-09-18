@@ -3,12 +3,14 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
+public import Mathlib.Analysis.InnerProductSpace.TensorProduct
+import LeanPool.Monlib4.LinearAlgebra.End
 import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
-import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
+import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 
 /-!
 
@@ -17,6 +19,8 @@ import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
 This file contains some basic results on the inner product space on finite dimensional C*-algebras.
 
 -/
+
+@[expose] public section
 
 
 open scoped TensorProduct
@@ -566,19 +570,12 @@ protected theorem toMatrixLinEquiv_symm_apply (hφ : φ.IsFaithfulPosMap) (hψ :
         (x (i, j) (k, l) : ℂ) • | hψ.basis (i, j)⟩⟨ hφ.basis (k, l)|)) := by
   rw [IsFaithfulPosMap.toMatrixLinEquiv, LinearMap.ext_iff]
   intro a
-  simp_rw [LinearMap.toMatrix_symm, toLin_apply, mulVec, dotProduct,
+  simp only [LinearMap.toMatrix_symm, toLin_apply, mulVec, dotProduct,
     IsFaithfulPosMap.basis_repr_apply,
     ContinuousLinearMap.toLinearMap_sum,
     LinearMap.sum_apply, ContinuousLinearMap.toLinearMap_smul,
     LinearMap.smul_apply, ContinuousLinearMap.coe_coe, rankOne_apply,
-    IsFaithfulPosMap.basis_apply, Finset.sum_smul]
-  symm
-  repeat'
-    nth_rw 1 [← Finset.sum_product']
-    rw [Finset.univ_product_univ]
-    apply Finset.sum_congr rfl
-    intro ij _
-  simp_rw [smul_smul]
+    Finset.sum_smul, Fintype.sum_prod_type, smul_smul]
 
 
 
@@ -1108,19 +1105,17 @@ theorem Qam.Nontracial.mul_comp_mul_adjoint [hφ : φ.IsFaithfulPosMap] :
     withMatrixInner[φ]
     (LinearMap.mul' ℂ ℍ ∘ₗ LinearMap.adjoint (LinearMap.mul' ℂ ℍ) = trace (φ.matrix⁻¹) • 1) := by
   mat_inner_instances φ
-  simp_rw [LinearMap.ext_iff, LinearMap.comp_apply]
-  intro x
-  simp_rw [← Matrix.ext_iff, LinearMap.mul'_adjoint,
-    map_sum, _root_.map_smul, LinearMap.mul'_apply,
-    Matrix.sum_apply, LinearMap.smul_apply, Matrix.smul_apply,
-    smul_eq_mul, Module.End.one_apply, mul_apply, single, of_apply,
-    boole_mul, Finset.mul_sum, mul_ite, MulZeroClass.mul_zero, mul_one, ite_and]
-  intro i j
-  simp only [Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, ite_true]
-  simp_rw [← Finset.mul_sum, ← trace_iff φ.matrix⁻¹, mul_comm]
-
-
+  ext x : 1
+  simp only [LinearMap.comp_apply, LinearMap.mul'_adjoint, map_sum, _root_.map_smul,
+    LinearMap.mul'_apply, single_hMul, mul_one, ite_smul, one_smul, zero_smul,
+    smul_ite, smul_zero]
+  simp only [Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
+    Finset.mem_univ, ite_true, LinearMap.smul_apply, Module.End.one_apply]
+  simp_rw [mul_comm (x _ _), mul_smul, ← Finset.smul_sum, ← Finset.sum_smul]
+  rw [← trace_iff, ← Finset.smul_sum]
+  congr 1
+  simp only [Matrix.smul_single, smul_eq_mul, mul_one]
+  exact Matrix.sum_sum_single x
 
 
 theorem LinearMap.mulLeft_toMatrix (hφ : φ.IsFaithfulPosMap) (x : Matrix n n ℂ) :
@@ -1287,14 +1282,9 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint [hψ : ∀ i, (ψ i).IsFaithfulPosMa
 lemma Matrix.smul_inj_mul_one {n : Type*} [DecidableEq n]
   [Nonempty n] (x y : ℂ) :
   x • (1 : Matrix n n ℂ) = y • (1 : Matrix n n ℂ) ↔ x = y := by
-  simp_rw [← Matrix.ext_iff, Matrix.smul_apply, Matrix.one_apply, smul_ite,
-    smul_zero, smul_eq_mul, mul_one]
-  constructor
-  · intro h
-    let i : n := Nonempty.some ‹_›
-    specialize h i i
-    simp_all
-  · simp_all
+  rw [smul_one_eq_diagonal, smul_one_eq_diagonal]
+  exact (diagonal_injective.comp Function.const_injective).eq_iff
+
 
 open scoped Classical in
 omit [DecidableEq k] in

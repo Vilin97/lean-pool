@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AmbientHomeomorph
-import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AmbientHomeomorph
+public import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
 
 /-!
 # The elementary supported move in polygonal Schoenflies
@@ -13,6 +15,8 @@ This is the normalized version of Moise Figure 3.3.  Four triangles fan from a p
 inside a fixed diamond.  Repositioning the fan point while fixing the four diamond vertices gives
 a PL homeomorphism of the diamond, and hence an ambient homeomorphism by identity extension.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -385,257 +389,30 @@ private theorem diamondFan_inter_12_13 {a : ℝ} (ha0 : -2 < a) (ha1 : a < 2) :
     intro v hv
     fin_cases v <;> simp [diamondRightAffine_apply] at hv ⊢ ; linarith
 
+-- Diagonals of slope ±2 through the fan point separate the opposite triangle pairs.
 private theorem diamondFan_inter_02_13 {a : ℝ} (ha0 : -2 < a) (ha1 : a < 2) :
     convexHull ℝ (diamondFanPosition a '' (({0, 4, 2} : Finset (Fin 5)) : Set _)) ∩
         convexHull ℝ (diamondFanPosition a '' (({1, 4, 3} : Finset (Fin 5)) : Set _)) =
       convexHull ℝ (diamondFanPosition a ''
         ((({0, 4, 2} : Finset (Fin 5)) ∩ {1, 4, 3} : Finset (Fin 5)) : Set _)) := by
-  let s : Finset (Fin 5) := {0, 4, 2}
-  let t : Finset (Fin 5) := {1, 4, 3}
-  let upperEdge : Finset (Fin 5) := {4, 2}
-  let lowerEdge : Finset (Fin 5) := {4, 3}
-  have hUpper :
-      convexHull ℝ (diamondFanPosition a '' (s : Set (Fin 5))) ∩
-          {p | (-diamondVerticalAffine) p = 0} =
-        convexHull ℝ (diamondFanPosition a '' (upperEdge : Set (Fin 5))) := by
-    have h := convexHull_inter_affine_zero_of_nonneg
-      (s.image (diamondFanPosition a)) (-diamondVerticalAffine) (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [s] at hv ⊢)
-    have hfilter : (s.image (diamondFanPosition a)).filter
-        (fun p => (-diamondVerticalAffine) p = 0) =
-        upperEdge.image (diamondFanPosition a) := by
-      ext p
-      simp only [Finset.mem_filter, Finset.mem_image]
-      constructor
-      · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-        refine ⟨v, ?_, rfl⟩
-        fin_cases v <;> simp [s, upperEdge] at hv hz ⊢
-      · rintro ⟨v, hv, rfl⟩
-        refine ⟨⟨v, ?_, rfl⟩, ?_⟩
-        · fin_cases v <;> simp [s, upperEdge] at hv ⊢
-        · fin_cases v <;> simp [upperEdge] at hv ⊢
-    rw [hfilter] at h
-    simpa only [Finset.coe_image] using h
-  have hLower :
-      convexHull ℝ (diamondFanPosition a '' (t : Set (Fin 5))) ∩
-          {p | diamondVerticalAffine p = 0} =
-        convexHull ℝ (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) := by
-    have h := convexHull_inter_affine_zero_of_nonneg
-      (t.image (diamondFanPosition a)) diamondVerticalAffine (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [t] at hv ⊢)
-    have hfilter : (t.image (diamondFanPosition a)).filter
-        (fun p => diamondVerticalAffine p = 0) =
-        lowerEdge.image (diamondFanPosition a) := by
-      ext p
-      simp only [Finset.mem_filter, Finset.mem_image]
-      constructor
-      · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-        refine ⟨v, ?_, rfl⟩
-        fin_cases v <;> simp [t, lowerEdge] at hv hz ⊢
-      · rintro ⟨v, hv, rfl⟩
-        refine ⟨⟨v, ?_, rfl⟩, ?_⟩
-        · fin_cases v <;> simp [t, lowerEdge] at hv ⊢
-        · fin_cases v <;> simp [lowerEdge] at hv ⊢
-    rw [hfilter] at h
-    simpa only [Finset.coe_image] using h
-  let horizontal : Plane →ᵃ[ℝ] ℝ := cartesianY - AffineMap.const ℝ Plane a
-  have hEdges :
-      convexHull ℝ (diamondFanPosition a '' (upperEdge : Set (Fin 5))) ∩
-          convexHull ℝ (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) =
-        {diamondFanPosition a 4} := by
-    have h := convexHull_inter_of_affine_separation
-      (upperEdge.image (diamondFanPosition a))
-      (lowerEdge.image (diamondFanPosition a))
-      ({diamondFanPosition a 4} : Finset Plane) horizontal
-      (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [upperEdge, horizontal] at hv ⊢ ; linarith)
-      (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [lowerEdge, horizontal] at hv ⊢ ; linarith)
-      (by
-        ext p
-        simp only [Finset.mem_filter, Finset.mem_image, Finset.mem_singleton]
-        constructor
-        · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-          fin_cases v <;> simp [upperEdge, horizontal] at hv hz ⊢ ; linarith
-        · rintro rfl
-          exact ⟨⟨4, by simp [upperEdge]⟩, by simp [horizontal]⟩)
-      (by
-        ext p
-        simp only [Finset.mem_filter, Finset.mem_image, Finset.mem_singleton]
-        constructor
-        · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-          fin_cases v <;> simp [lowerEdge, horizontal] at hv hz ⊢ ; linarith
-        · rintro rfl
-          exact ⟨⟨4, by simp [lowerEdge]⟩, by simp [horizontal]⟩)
-    simpa only [Finset.coe_image, Finset.coe_singleton, convexHull_singleton] using h
-  change convexHull ℝ (diamondFanPosition a '' (s : Set (Fin 5))) ∩
-      convexHull ℝ (diamondFanPosition a '' (t : Set (Fin 5))) = _
-  apply Set.Subset.antisymm
-  · intro p hp
-    have hxle : p 0 ≤ 0 := by
-      apply convexHull_min _ ((convex_Iic (0 : ℝ)).affine_preimage diamondVerticalAffine) hp.1
-      rintro q ⟨v, hv, rfl⟩
-      fin_cases v <;> simp [s] at hv ⊢
-    have hxge : 0 ≤ p 0 := by
-      apply convexHull_min _ ((convex_Ici (0 : ℝ)).affine_preimage diamondVerticalAffine) hp.2
-      rintro q ⟨v, hv, rfl⟩
-      fin_cases v <;> simp [t] at hv ⊢
-    have hxzero : diamondVerticalAffine p = 0 := by
-      change p 0 = 0
-      linarith
-    have hpUpper : p ∈ convexHull ℝ
-        (diamondFanPosition a '' (upperEdge : Set (Fin 5))) := by
-      rw [← hUpper]
-      exact ⟨hp.1, by simpa using hxzero⟩
-    have hpLower : p ∈ convexHull ℝ
-        (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) := by
-      rw [← hLower]
-      exact ⟨hp.2, hxzero⟩
-    have hpBoth : p ∈ convexHull ℝ
-        (diamondFanPosition a '' (upperEdge : Set (Fin 5))) ∩
-          convexHull ℝ (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) :=
-      ⟨hpUpper, hpLower⟩
-    rw [hEdges] at hpBoth
-    have hp4 : p = diamondFanPosition a 4 := Set.mem_singleton_iff.mp hpBoth
-    subst p
-    exact subset_convexHull ℝ _ ⟨4, by simp [], rfl⟩
-  · intro p hp
-    exact ⟨convexHull_mono (Set.image_mono Finset.inter_subset_left) hp,
-      convexHull_mono (Set.image_mono Finset.inter_subset_right) hp⟩
+  apply convexHull_image_inter_of_affine_separation (diamondFanPosition a)
+    (diamondFanPosition_injective ha0 ha1) {0, 4, 2} {1, 4, 3}
+    (cartesianY - (2 : ℝ) • cartesianX - AffineMap.const ℝ Plane a)
+  all_goals
+    intro v hv
+    fin_cases v <;> simp at hv ⊢ <;> linarith
 
 private theorem diamondFan_inter_12_03 {a : ℝ} (ha0 : -2 < a) (ha1 : a < 2) :
     convexHull ℝ (diamondFanPosition a '' (({1, 2, 4} : Finset (Fin 5)) : Set _)) ∩
         convexHull ℝ (diamondFanPosition a '' (({0, 3, 4} : Finset (Fin 5)) : Set _)) =
       convexHull ℝ (diamondFanPosition a ''
         ((({1, 2, 4} : Finset (Fin 5)) ∩ {0, 3, 4} : Finset (Fin 5)) : Set _)) := by
-  let s : Finset (Fin 5) := {1, 2, 4}
-  let t : Finset (Fin 5) := {0, 3, 4}
-  let upperEdge : Finset (Fin 5) := {2, 4}
-  let lowerEdge : Finset (Fin 5) := {3, 4}
-  have hUpper :
-      convexHull ℝ (diamondFanPosition a '' (s : Set (Fin 5))) ∩
-          {p | diamondVerticalAffine p = 0} =
-        convexHull ℝ (diamondFanPosition a '' (upperEdge : Set (Fin 5))) := by
-    have h := convexHull_inter_affine_zero_of_nonneg
-      (s.image (diamondFanPosition a)) diamondVerticalAffine (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [s] at hv ⊢)
-    have hfilter : (s.image (diamondFanPosition a)).filter
-        (fun p => diamondVerticalAffine p = 0) =
-        upperEdge.image (diamondFanPosition a) := by
-      ext p
-      simp only [Finset.mem_filter, Finset.mem_image]
-      constructor
-      · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-        refine ⟨v, ?_, rfl⟩
-        fin_cases v <;> simp [s, upperEdge] at hv hz ⊢
-      · rintro ⟨v, hv, rfl⟩
-        refine ⟨⟨v, ?_, rfl⟩, ?_⟩
-        · fin_cases v <;> simp [s, upperEdge] at hv ⊢
-        · fin_cases v <;> simp [upperEdge] at hv ⊢
-    rw [hfilter] at h
-    simpa only [Finset.coe_image] using h
-  have hLower :
-      convexHull ℝ (diamondFanPosition a '' (t : Set (Fin 5))) ∩
-          {p | (-diamondVerticalAffine) p = 0} =
-        convexHull ℝ (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) := by
-    have h := convexHull_inter_affine_zero_of_nonneg
-      (t.image (diamondFanPosition a)) (-diamondVerticalAffine) (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [t] at hv ⊢)
-    have hfilter : (t.image (diamondFanPosition a)).filter
-        (fun p => (-diamondVerticalAffine) p = 0) =
-        lowerEdge.image (diamondFanPosition a) := by
-      ext p
-      simp only [Finset.mem_filter, Finset.mem_image]
-      constructor
-      · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-        refine ⟨v, ?_, rfl⟩
-        fin_cases v <;> simp [t, lowerEdge] at hv hz ⊢
-      · rintro ⟨v, hv, rfl⟩
-        refine ⟨⟨v, ?_, rfl⟩, ?_⟩
-        · fin_cases v <;> simp [t, lowerEdge] at hv ⊢
-        · fin_cases v <;> simp [lowerEdge] at hv ⊢
-    rw [hfilter] at h
-    simpa only [Finset.coe_image] using h
-  let horizontal : Plane →ᵃ[ℝ] ℝ := cartesianY - AffineMap.const ℝ Plane a
-  have hEdges :
-      convexHull ℝ (diamondFanPosition a '' (upperEdge : Set (Fin 5))) ∩
-          convexHull ℝ (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) =
-        {diamondFanPosition a 4} := by
-    have h := convexHull_inter_of_affine_separation
-      (upperEdge.image (diamondFanPosition a))
-      (lowerEdge.image (diamondFanPosition a))
-      ({diamondFanPosition a 4} : Finset Plane) horizontal
-      (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [upperEdge, horizontal] at hv ⊢ ; linarith)
-      (by
-        intro p hp
-        obtain ⟨v, hv, rfl⟩ := Finset.mem_image.mp hp
-        fin_cases v <;> simp [lowerEdge, horizontal] at hv ⊢ ; linarith)
-      (by
-        ext p
-        simp only [Finset.mem_filter, Finset.mem_image, Finset.mem_singleton]
-        constructor
-        · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-          fin_cases v <;> simp [upperEdge, horizontal] at hv hz ⊢ ; linarith
-        · rintro rfl
-          exact ⟨⟨4, by simp [upperEdge]⟩, by simp [horizontal]⟩)
-      (by
-        ext p
-        simp only [Finset.mem_filter, Finset.mem_image, Finset.mem_singleton]
-        constructor
-        · rintro ⟨⟨v, hv, rfl⟩, hz⟩
-          fin_cases v <;> simp [lowerEdge, horizontal] at hv hz ⊢ ; linarith
-        · rintro rfl
-          exact ⟨⟨4, by simp [lowerEdge]⟩, by simp [horizontal]⟩)
-    simpa only [Finset.coe_image, Finset.coe_singleton, convexHull_singleton] using h
-  change convexHull ℝ (diamondFanPosition a '' (s : Set (Fin 5))) ∩
-      convexHull ℝ (diamondFanPosition a '' (t : Set (Fin 5))) = _
-  apply Set.Subset.antisymm
-  · intro p hp
-    have hxge : 0 ≤ p 0 := by
-      apply convexHull_min _ ((convex_Ici (0 : ℝ)).affine_preimage diamondVerticalAffine) hp.1
-      rintro q ⟨v, hv, rfl⟩
-      fin_cases v <;> simp [s] at hv ⊢
-    have hxle : p 0 ≤ 0 := by
-      apply convexHull_min _ ((convex_Iic (0 : ℝ)).affine_preimage diamondVerticalAffine) hp.2
-      rintro q ⟨v, hv, rfl⟩
-      fin_cases v <;> simp [t] at hv ⊢
-    have hxzero : diamondVerticalAffine p = 0 := by
-      change p 0 = 0
-      linarith
-    have hpUpper : p ∈ convexHull ℝ
-        (diamondFanPosition a '' (upperEdge : Set (Fin 5))) := by
-      rw [← hUpper]
-      exact ⟨hp.1, hxzero⟩
-    have hpLower : p ∈ convexHull ℝ
-        (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) := by
-      rw [← hLower]
-      exact ⟨hp.2, by simpa using hxzero⟩
-    have hpBoth : p ∈ convexHull ℝ
-        (diamondFanPosition a '' (upperEdge : Set (Fin 5))) ∩
-          convexHull ℝ (diamondFanPosition a '' (lowerEdge : Set (Fin 5))) :=
-      ⟨hpUpper, hpLower⟩
-    rw [hEdges] at hpBoth
-    have hp4 : p = diamondFanPosition a 4 := Set.mem_singleton_iff.mp hpBoth
-    subst p
-    exact subset_convexHull ℝ _ ⟨4, by simp [], rfl⟩
-  · intro p hp
-    exact ⟨convexHull_mono (Set.image_mono Finset.inter_subset_left) hp,
-      convexHull_mono (Set.image_mono Finset.inter_subset_right) hp⟩
+  apply convexHull_image_inter_of_affine_separation (diamondFanPosition a)
+    (diamondFanPosition_injective ha0 ha1) {1, 2, 4} {0, 3, 4}
+    (cartesianY + (2 : ℝ) • cartesianX - AffineMap.const ℝ Plane a)
+  all_goals
+    intro v hv
+    fin_cases v <;> simp at hv ⊢ <;> linarith
 
 /-- The four-triangle fan of a fixed diamond, with fan point `(0,a)`. -/
 noncomputable abbrev diamondFanMesh (a : ℝ) (ha0 : -2 < a) (ha1 : a < 2) : TriangleMesh where
@@ -657,17 +434,17 @@ noncomputable abbrev diamondFanMesh (a : ℝ) (ha0 : -2 < a) (ha1 : a < 2) : Tri
     · exact diamondFan_inter_02_12 ha0 ha1
     · exact diamondFan_inter_02_03 ha0 ha1
     · exact diamondFan_inter_02_13 ha0 ha1
-    · simpa [Set.inter_comm, Finset.pair_comm] using diamondFan_inter_02_12 ha0 ha1
+    · simpa only [Set.inter_comm, Finset.inter_comm] using diamondFan_inter_02_12 ha0 ha1
     · simp
     · exact diamondFan_inter_12_03 ha0 ha1
     · exact diamondFan_inter_12_13 ha0 ha1
-    · simpa [Set.inter_comm] using diamondFan_inter_02_03 ha0 ha1
-    · simpa [Set.inter_comm] using diamondFan_inter_12_03 ha0 ha1
+    · simpa only [Set.inter_comm, Finset.inter_comm] using diamondFan_inter_02_03 ha0 ha1
+    · simpa only [Set.inter_comm, Finset.inter_comm] using diamondFan_inter_12_03 ha0 ha1
     · simp
     · exact diamondFan_inter_03_13 ha0 ha1
-    · simpa [Set.inter_comm] using diamondFan_inter_02_13 ha0 ha1
-    · simpa [Set.inter_comm] using diamondFan_inter_12_13 ha0 ha1
-    · simpa [Set.inter_comm, Finset.pair_comm] using diamondFan_inter_03_13 ha0 ha1
+    · simpa only [Set.inter_comm, Finset.inter_comm] using diamondFan_inter_02_13 ha0 ha1
+    · simpa only [Set.inter_comm, Finset.inter_comm] using diamondFan_inter_12_13 ha0 ha1
+    · simpa only [Set.inter_comm, Finset.inter_comm] using diamondFan_inter_03_13 ha0 ha1
     · simp
 
 theorem diamondFanMesh_support (a : ℝ) (ha0 : -2 < a) (ha1 : a < 2) :

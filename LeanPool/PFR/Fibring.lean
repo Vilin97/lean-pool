@@ -7,6 +7,7 @@ Authors: PFR contributors
 module
 
 public import LeanPool.PFR.ForMathlib.Entropy.RuzsaDist
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
 
 /-!
 # The fibring identity

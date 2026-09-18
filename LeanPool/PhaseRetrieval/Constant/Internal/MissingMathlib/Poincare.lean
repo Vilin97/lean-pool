@@ -13,21 +13,17 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Public API:
   - `poincare_interval` (M1: Poincaré inequality on [0, h])
 -/
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+module
+
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Integral.MeanInequalities
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum.BigOperators
-import Mathlib.Tactic.NormNum.NatFactorial
 import Mathlib.Tactic.NormNum.Parity
+import Mathlib.Tactic.Positivity.Finset
 
 /-! # Poincare -/
+
+@[expose] public section
 
 
 open MeasureTheory Real Set intervalIntegral Filter

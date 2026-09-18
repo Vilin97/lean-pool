@@ -3,7 +3,10 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
-import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Local `L²` bridge
@@ -15,6 +18,8 @@ measurability field explicitly: local compact `MemLp` data is enough for the
 energy integrability part, while global a.e. measurability on an arbitrary
 domain is a separate measurable-cover problem.
 -/
+
+@[expose] public section
 
 noncomputable section
 

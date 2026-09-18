@@ -3,9 +3,21 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import LeanPool.CircuitComplexity.Nondeterminism.Defs
+module
+
+public import LeanPool.CircuitComplexity.Nondeterminism.Defs
+public import LeanPool.CircuitComplexity.AON.Defs
+public import Mathlib.Algebra.GroupWithZero.Nat
 import LeanPool.CircuitComplexity.Internal.Nondeterminism
+import LeanPool.CircuitComplexity.Internal.ShannonUpper
 import LeanPool.CircuitComplexity.Shannon
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Tactic.Ring.RingNF
 
 /-! # Nondeterministic Circuit Complexity Bounds
 
@@ -45,6 +57,8 @@ circuit that guesses the first `k` input bits.
 The naive bound is tighter when `k` is small and `f` has low complexity;
 the Shannon bound wins when `k` is large, regardless of `f`'s complexity.
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

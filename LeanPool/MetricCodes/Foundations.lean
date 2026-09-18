@@ -3,25 +3,29 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.MatrixPerron
-import Mathlib.InformationTheory.Hamming
-import Mathlib.Algebra.Order.Chebyshev
-import Mathlib.Algebra.Ring.IsFormallyReal
-import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
-import Mathlib.Analysis.SpecialFunctions.Stirling
-import Mathlib.Data.Nat.Dist
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.LinearAlgebra.Matrix.Rank
-import Mathlib.Algebra.Order.Floor.Semifield
-import Mathlib.Algebra.Order.Star.Real
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import LeanPool.MetricCodes.MatrixPerron
+public import Mathlib.InformationTheory.Hamming
+public import Mathlib.Algebra.Order.Chebyshev
+public import Mathlib.Algebra.Ring.IsFormallyReal
+public import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+import all Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+public import Mathlib.Analysis.SpecialFunctions.Stirling
+public import Mathlib.Data.Nat.Dist
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Mathlib.Algebra.Order.Floor.Semifield
+public import Mathlib.Algebra.Order.Star.Real
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-!
 # Foundations for binary and spherical code bounds
 
 Elementary coding-theory definitions, projection certificates, and the finite Johnson bound.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -660,7 +664,8 @@ theorem lower_raised_succ_of_harmonic {k : ℕ}
               raised f (r + 1)) S := by
           simp only [raised_succ, Pi.smul_apply, smul_eq_mul]
 
-private def toggle (a : Fin n) (S : Finset (Fin n)) : Finset (Fin n) :=
+/-- Toggle membership of the coordinate `a` in a finite subset. -/
+def toggle (a : Fin n) (S : Finset (Fin n)) : Finset (Fin n) :=
   if a ∈ S then S.erase a else insert a S
 
 @[simp] theorem toggle_toggle (a : Fin n) (S : Finset (Fin n)) :
@@ -1097,7 +1102,8 @@ def sign (b : Bool) : ℝ := if b then -1 else 1
 @[simp] theorem sign_mul_self (b : Bool) : sign b * sign b = 1 := by
   cases b <;> simp [sign]
 
-private def character (x : BinaryWord n) (S : Finset (Fin n)) : ℝ :=
+/-- The Boolean character given by the product of the signs of `x` on `S`. -/
+def character (x : BinaryWord n) (S : Finset (Fin n)) : ℝ :=
   ∏ a ∈ S, sign (x a)
 
 @[simp] theorem character_mul_self
@@ -1110,7 +1116,8 @@ private def character (x : BinaryWord n) (S : Finset (Fin n)) : ℝ :=
   intro a _
   exact sign_mul_self (x a)
 
-private def twist (x : BinaryWord n) (f : Function n) (S : Finset (Fin n)) : ℝ :=
+/-- Multiply a function pointwise by the Boolean character of `x`. -/
+def twist (x : BinaryWord n) (f : Function n) (S : Finset (Fin n)) : ℝ :=
   character x S * f S
 
 theorem twist_smul (x : BinaryWord n) (c : ℝ) (f : Function n) :
@@ -1148,7 +1155,8 @@ def coordinateDot (f g : CoordinateFunction n) : ℝ :=
 def deleteChannel (i : ℕ) (f : Function n) : CoordinateFunction n :=
   fun a => (Real.sqrt (i : ℝ))⁻¹ • lowerAt a f
 
-private def addChannel (i : ℕ) (f : Function n) : CoordinateFunction n :=
+/-- The coordinate raising channels scaled by the inverse square root of `n - i`. -/
+def addChannel (i : ℕ) (f : Function n) : CoordinateFunction n :=
   fun a => (Real.sqrt ((n : ℝ) - (i : ℝ)))⁻¹ • raiseAt a f
 
 theorem sum_not_mem_indicator (S : Finset (Fin n)) (z : ℝ) :
@@ -1355,7 +1363,8 @@ theorem layerExtend_injective {k : ℕ} :
   have := congrArg (layerRestrict k) h
   simpa only [layerRestrict_layerExtend] using this
 
-private def layerExtendLinear (n k : ℕ) :
+/-- Extend a function on the `k`th layer by zero, bundled as a linear map. -/
+def layerExtendLinear (n k : ℕ) :
     LayerFunction n k →ₗ[ℝ] Function n where
   toFun := layerExtend
   map_add' := by
@@ -1369,7 +1378,8 @@ private def layerExtendLinear (n k : ℕ) :
     by_cases hS : S.card = k <;>
       simp [layerExtend, hS, Pi.smul_apply, smul_eq_mul]
 
-private def layerRestrictLinear (n k : ℕ) :
+/-- Restrict a function to the `k`th layer, bundled as a linear map. -/
+def layerRestrictLinear (n k : ℕ) :
     Function n →ₗ[ℝ] LayerFunction n k where
   toFun := layerRestrict k
   map_add' := by
@@ -1379,12 +1389,14 @@ private def layerRestrictLinear (n k : ℕ) :
     intro c f
     rfl
 
-private def layerUp (n k : ℕ) :
+/-- The raising map from layer `k` to layer `k + 1`, obtained by extending and restricting. -/
+def layerUp (n k : ℕ) :
     LayerFunction n k →ₗ[ℝ] LayerFunction n (k + 1) :=
   (layerRestrictLinear n (k + 1)).comp
     ((raiseLinear n).comp (layerExtendLinear n k))
 
-private def layerDown (n k : ℕ) :
+/-- The lowering map from layer `k + 1` to layer `k`, obtained by extending and restricting. -/
+def layerDown (n k : ℕ) :
     LayerFunction n (k + 1) →ₗ[ℝ] LayerFunction n k :=
   (layerRestrictLinear n k).comp
     ((lowerLinear n).comp (layerExtendLinear n (k + 1)))
@@ -1725,7 +1737,8 @@ theorem dot_raised_of_harmonic {k : ℕ}
 def harmonicEmbedding (k r : ℕ) (f : Function n) : Function n :=
   (Real.sqrt (harmonicNormFactor n k r))⁻¹ • raised f r
 
-private def wordHarmonicEmbedding (x : BinaryWord n) (k r : ℕ)
+/-- The normalized harmonic embedding twisted by the Boolean character of `x`. -/
+def wordHarmonicEmbedding (x : BinaryWord n) (k r : ℕ)
     (f : Function n) : Function n :=
   twist x (harmonicEmbedding k r f)
 
@@ -1908,10 +1921,12 @@ theorem harmonicBasisFunction_isHarmonic
   rw [hcoef]
   exact hg
 
-private def hammingWindowDimension (n k L : ℕ) : ℕ :=
+/-- The sum of the layer dimensions over the offsets in `Fin (L - k + 1)`. -/
+def hammingWindowDimension (n k L : ℕ) : ℕ :=
   ∑ j ∈ Finset.range (L - k + 1), n.choose (k + j)
 
-private abbrev HammingWindowIndex (n k L : ℕ) :=
+/-- Indices consisting of a window offset and a subset in its corresponding Hamming layer. -/
+abbrev HammingWindowIndex (n k L : ℕ) :=
   Σ j : Fin (L - k + 1), Level n (k + j.val)
 
 theorem hammingWindowIndex_card (n k L : ℕ) :
@@ -1931,22 +1946,26 @@ theorem hammingWindowIndex_card (n k L : ℕ) :
   · intro j _
     rfl
 
-private def hammingWindowIndexEquiv (n k L : ℕ) :
+/-- Enumerate the Hamming window indices by their total dimension. -/
+def hammingWindowIndexEquiv (n k L : ℕ) :
     HammingWindowIndex n k L ≃ Fin (hammingWindowDimension n k L) :=
   Fintype.equivOfCardEq (by
     simpa only [Fintype.card_sigma, Fintype.card_finset_len,
       Fintype.card_fin] using hammingWindowIndex_card n k L)
 
-private def hammingRecurrenceWeight
+/-- A recurrence coordinate weighted by the square root of its Hamming layer dimension. -/
+def hammingRecurrenceWeight
     (n k L : ℕ) (v : EuclideanSpace ℝ (Fin (L - k + 1)))
     (j : Fin (L - k + 1)) : ℝ :=
   Real.sqrt (n.choose (k + j.val) : ℝ) * v j
 
-private def hammingRecurrenceNormalization
+/-- The sum of the dimension-weighted Hamming recurrence coordinates. -/
+def hammingRecurrenceNormalization
     (n k L : ℕ) (v : EuclideanSpace ℝ (Fin (L - k + 1))) : ℝ :=
   ∑ j : Fin (L - k + 1), hammingRecurrenceWeight n k L v j
 
-private def hammingFibreAmplitude
+/-- The square root of a normalized Hamming recurrence weight, used as a fibre amplitude. -/
+def hammingFibreAmplitude
     (n k L : ℕ) (v : EuclideanSpace ℝ (Fin (L - k + 1)))
     (j : Fin (L - k + 1)) : ℝ :=
   Real.sqrt
@@ -2040,7 +2059,8 @@ theorem dot_eq_layerDot_of_level {i : ℕ}
     layerExtend_layerRestrict_of_level f hf,
     layerExtend_layerRestrict_of_level g hg]
 
-private def hammingWindowFibreMatrix
+/-- The matrix of twisted harmonic basis embeddings weighted by their window fibre amplitudes. -/
+def hammingWindowFibreMatrix
     (n k L : ℕ) (hk : 2 * k ≤ n)
     (v : EuclideanSpace ℝ (Fin (L - k + 1)))
     (x : BinaryWord n) :
@@ -2152,7 +2172,8 @@ theorem hammingWindowFibreMatrix_transpose_mul
         · simp only [hpq, ↓reduceIte, mul_one, hammingFibreAmplitude_sq_sum hkL hLn v hunit hv]
         · simp only [hpq, ↓reduceIte, mul_zero, Finset.sum_const_zero]
 
-private def hammingFibreMatrix
+/-- The Hamming window fibre matrix with its rows enumerated by the window dimension. -/
+def hammingFibreMatrix
     (n k L : ℕ) (hk : 2 * k ≤ n)
     (v : EuclideanSpace ℝ (Fin (L - k + 1)))
     (x : BinaryWord n) :
@@ -2262,7 +2283,8 @@ theorem sum_sign_mul_eq_hammingDist
       rw [hcount]
       simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, mul_one]
 
-private def hammingAxis (x : BinaryWord n) : EuclideanSpace ℝ (Fin n) :=
+/-- The Euclidean sign vector of a binary word, scaled by the inverse square root of `n`. -/
+def hammingAxis (x : BinaryWord n) : EuclideanSpace ℝ (Fin n) :=
   WithLp.toLp 2
     (fun a : Fin n => (Real.sqrt (n : ℝ))⁻¹ * sign (x a))
 
@@ -2350,7 +2372,8 @@ theorem raiseAt_twist
         ring
   · simp only [raiseAt, ha, ↓reduceIte, Pi.smul_apply, twist, mul_zero, smul_eq_mul]
 
-private def matrixHilbertSchmidtFeature
+/-- The Euclidean vector of matrix entries used to express the Hilbert–Schmidt inner product. -/
+def matrixHilbertSchmidtFeature
     {ι ρ : Type*}
     (A : Matrix ι ρ ℝ) : EuclideanSpace ℝ (ι × ρ) :=
   WithLp.toLp 2 (fun p : ι × ρ => A p.1 p.2)
@@ -2414,7 +2437,8 @@ theorem matrixAxisLift_transpose_mul
   intro r _
   ring
 
-private def matrixAxisResidual
+/-- The axis-lifted projection minus the scaled channel image of that projection. -/
+def matrixAxisResidual
     {X κ : Type*} {D d : ℕ}
     (P : MetricCodes.ProjectionFamily X D d)
     (axis : X → κ → ℝ)
@@ -2585,7 +2609,9 @@ theorem lower_harmonicEmbedding {k : ℕ}
   field_simp [hfactorne, hcoefficientne];
     nlinarith [Real.sq_sqrt hcoefficient.le]
 
-private def hammingSourceChannelCoefficient
+/-- The Hamming Jacobi entry rescaled by the square roots of the source and target layer
+dimensions. -/
+def hammingSourceChannelCoefficient
     (n k L : ℕ)
     (m i : Fin (L - k + 1)) : ℝ :=
   MetricCodes.hammingJacobiMatrix n k L m i *
@@ -2707,7 +2733,9 @@ theorem hammingFibreAmplitude_pos_of_pos
     (hammingRecurrenceNormalization_pos hkL hLn v hunit
       (fun j => (hv j).le))
 
-private def hammingAdjacentBlockCoefficient
+/-- The square-root weight for an adjacent channel block, normalized by the eigenvalue and
+source recurrence weight. -/
+def hammingAdjacentBlockCoefficient
     (n k L : ℕ)
     (v : EuclideanSpace ℝ (Fin (L - k + 1)))
     (lam : ℝ)
@@ -2879,7 +2907,8 @@ theorem IsLevel.raiseAt {i : ℕ} {f : Function n}
   · change (if a ∈ S then f (S.erase a) else 0) = 0
     rw [ite_eq_right ha]
 
-private def hammingWindowBasis (n k L : ℕ)
+/-- The indicator function of the subset specified by a Hamming window index. -/
+def hammingWindowBasis (n k L : ℕ)
     (T : HammingWindowIndex n k L) : Function n :=
   fun S => if S = T.2.val then 1 else 0
 
@@ -2913,7 +2942,8 @@ theorem dot_hammingWindowBasis (n k L : ℕ)
     simp only [dot, hammingWindowBasis, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
       Finset.mem_univ, ↓reduceIte, h', h]
 
-private def hammingAdjacentChannel (n k L : ℕ)
+/-- The deletion or insertion channel between adjacent window levels, and zero otherwise. -/
+def hammingAdjacentChannel (n k L : ℕ)
     (target source : Fin (L - k + 1))
     (f : Function n) : CoordinateFunction n :=
   if target.val + 1 = source.val then
@@ -3061,7 +3091,8 @@ theorem hammingSourceChannelCoefficient_eq_zero_of_not_adjacent
   simp only [hammingSourceChannelCoefficient, hammingJacobiMatrix, hforward, ↓reduceIte, hbackward,
     zero_mul, zero_div]
 
-private def hammingWindowChannelMatrix
+/-- The weighted adjacent-channel matrix in the Hamming window basis. -/
+def hammingWindowChannelMatrix
     (n k L : ℕ)
     (v : EuclideanSpace ℝ (Fin (L - k + 1)))
     (lam : ℝ) :
@@ -3222,7 +3253,9 @@ theorem hammingWindowChannelMatrix_transpose_mul
       (hammingWindowBasis n k L ⟨other, T⟩)]
     ring
 
-private def hammingChannelMatrix
+/-- The Hamming window channel matrix with both window indices enumerated by their total
+dimension. -/
+def hammingChannelMatrix
     (n k L : ℕ)
     (v : EuclideanSpace ℝ (Fin (L - k + 1)))
     (lam : ℝ) :
@@ -3330,12 +3363,16 @@ theorem hammingPositiveRadicalSymmetrization
       rw [Real.sqrt_mul ha.le]
       ring
 
-private def hammingDeletionChannelSquare (n k i : ℕ) : ℝ :=
+/-- The squared deletion-channel coefficient relating levels `i` and `i + 1` in harmonic degree
+`k`. -/
+def hammingDeletionChannelSquare (n k i : ℕ) : ℝ :=
   (((i : ℝ) - (k : ℝ) + 1) *
     ((n : ℝ) - (i : ℝ) - (k : ℝ))) /
       ((n : ℝ) * ((i : ℝ) + 1))
 
-private def hammingInsertionChannelSquare (n k i : ℕ) : ℝ :=
+/-- The squared insertion-channel coefficient relating levels `i` and `i + 1` in harmonic degree
+`k`. -/
+def hammingInsertionChannelSquare (n k i : ℕ) : ℝ :=
   (((i : ℝ) - (k : ℝ) + 1) *
     ((n : ℝ) - (i : ℝ) - (k : ℝ))) /
       ((n : ℝ) * ((n : ℝ) - (i : ℝ)))
@@ -3471,7 +3508,8 @@ theorem sum_dot_twist_lowerAt
   rw [Finset.sum_comm]
   simp only [Finset.mul_sum]
 
-private def hammingAxisTensor (x : BinaryWord n) (f : Function n) :
+/-- The coordinate-valued function obtained by tensoring `f` with the Hamming axis of `x`. -/
+def hammingAxisTensor (x : BinaryWord n) (f : Function n) :
     CoordinateFunction n :=
   fun a => hammingAxis x a • f
 
@@ -4017,7 +4055,8 @@ def wordSupport {n : ℕ} (x : BinaryWord n) : Finset (Fin n) :=
     i ∈ wordSupport x ↔ x i = true := by
   simp only [wordSupport, mem_filter, mem_univ, true_and]
 
-private def wordOfSupport {n : ℕ} (s : Finset (Fin n)) : BinaryWord n :=
+/-- The binary word whose true coordinates are exactly the elements of `s`. -/
+def wordOfSupport {n : ℕ} (s : Finset (Fin n)) : BinaryWord n :=
   fun i => decide (i ∈ s)
 
 @[simp] theorem wordOfSupport_apply {n : ℕ} (s : Finset (Fin n)) (i : Fin n) :
@@ -4104,7 +4143,8 @@ theorem johnsonDist_eq_weight_sub_inter {n w : ℕ}
   rw [Finset.card_sdiff, Finset.inter_comm]
   rw [← binaryWeight_eq_card_wordSupport, x.property]
 
-private def binaryTranslate {n : ℕ} (x y : BinaryWord n) : BinaryWord n :=
+/-- Translate a binary word by coordinatewise exclusive-or with `x`. -/
+def binaryTranslate {n : ℕ} (x y : BinaryWord n) : BinaryWord n :=
   fun i => Bool.xor (x i) (y i)
 
 @[simp] theorem binaryTranslate_involutive {n : ℕ} (x y : BinaryWord n) :
@@ -4132,7 +4172,8 @@ theorem binaryWeight_binaryTranslate {n : ℕ} (x y : BinaryWord n) :
   ext i
   simp only [binaryTranslate, bne_iff_ne, ne_eq, mem_filter, mem_univ, true_and]
 
-private def weightShell (n w : ℕ) : Finset (BinaryWord n) :=
+/-- The finite set of length-`n` binary words of weight `w`. -/
+def weightShell (n w : ℕ) : Finset (BinaryWord n) :=
   Finset.univ.filter fun x => binaryWeight x = w
 
 @[simp] theorem mem_weightShell {n w : ℕ} (x : BinaryWord n) :
@@ -4162,7 +4203,8 @@ theorem card_weightShell (n w : ℕ) :
     Finset.card_powersetCard]
   simp only [card_univ, Fintype.card_fin]
 
-private def hammingSphere {n : ℕ} (x : BinaryWord n) (r : ℕ) :
+/-- The finite set of binary words at Hamming distance exactly `r` from `x`. -/
+def hammingSphere {n : ℕ} (x : BinaryWord n) (r : ℕ) :
     Finset (BinaryWord n) :=
   Finset.univ.filter fun y => hammingDist x y = r
 
@@ -4192,7 +4234,8 @@ theorem card_hammingSphere {n : ℕ} (x : BinaryWord n) (r : ℕ) :
     Finset.card_image_of_injective _ (binaryTranslate_injective x),
     card_weightShell]
 
-private def localizedCode {n : ℕ} (C : Finset (BinaryWord n))
+/-- The words of `C` whose translate by `z` has weight `w`. -/
+def localizedCode {n : ℕ} (C : Finset (BinaryWord n))
     (z : BinaryWord n) (w : ℕ) : Finset (BinaryWord n) :=
   C.filter fun x => binaryWeight (binaryTranslate z x) = w
 
@@ -4202,7 +4245,8 @@ private def localizedCode {n : ℕ} (C : Finset (BinaryWord n))
       x ∈ C ∧ binaryWeight (binaryTranslate z x) = w := by
   simp only [localizedCode, mem_filter]
 
-private def translateLocalizedCode {n : ℕ} (C : Finset (BinaryWord n))
+/-- Translate the localized code by `z` into the weight-`w` shell. -/
+def translateLocalizedCode {n : ℕ} (C : Finset (BinaryWord n))
     (z : BinaryWord n) (w : ℕ) : Finset (BinaryWord n) :=
   (localizedCode C z w).image (binaryTranslate z)
 
@@ -4379,7 +4423,8 @@ section
 open Filter Real
 open scoped Nat Topology
 
-private def factorialLogError (n : ℕ) : ℝ :=
+/-- The error in the normalized factorial-log approximation `log (n!) / n = log n - 1`. -/
+def factorialLogError (n : ℕ) : ℝ :=
   Real.log (n.factorial : ℝ) / (n : ℝ) - Real.log (n : ℝ) + 1
 
 theorem tendsto_log_natCast_div_natCast :
@@ -4575,7 +4620,8 @@ open scoped BigOperators InnerProductSpace Topology
 
 namespace Hamming
 
-private noncomputable def validCodes (n d : ℕ) : Finset (Finset (BinaryWord n)) := by
+/-- The finite family of length-`n` binary codes with minimum distance at least `d`. -/
+noncomputable def validCodes (n d : ℕ) : Finset (Finset (BinaryWord n)) := by
   classical
   exact Finset.univ.filter (MetricCodes.IsBinaryCode d)
 
@@ -5155,10 +5201,12 @@ theorem hammingGamma_classicalParameter {δ : ℝ}
     Real.sqrt_sq (by linarith : 0 ≤ (1 : ℝ) / 2 - δ)]
   ring
 
-private def improvementSlope (a : ℝ) : ℝ :=
+/-- The slope `2 / (1 - 2 * a) + 1` used to perturb the Hamming bound parameters. -/
+def improvementSlope (a : ℝ) : ℝ :=
   2 / (1 - 2 * a) + 1
 
-private def improvementPath (a b : ℝ) : ℝ :=
+/-- The affine perturbation of `a` with slope `improvementSlope a` and parameter `b`. -/
+def improvementPath (a b : ℝ) : ℝ :=
   a + improvementSlope a * b
 
 theorem improvementSlope_gt_one {a : ℝ} (ha : a < (1 : ℝ) / 2) :
@@ -5176,7 +5224,9 @@ theorem tendsto_improvementPath_zero (a : ℝ) :
   simpa only [improvementPath, mul_zero, add_zero] using
     (hcontinuous.continuousAt (x := (0 : ℝ))).tendsto.mono_left nhdsWithin_le_nhds
 
-private def spectralMarginPolynomial (a c b : ℝ) : ℝ :=
+/-- The cubic factor remaining after extracting `b` from the difference of the squared spectral-
+bound expressions. -/
+def spectralMarginPolynomial (a c b : ℝ) : ℝ :=
   let r := a * (1 - a)
   let p := c * (1 - 2 * a) - 1
   let q := c ^ 2 - 1
@@ -6766,7 +6816,8 @@ section
 
 open scoped BigOperators InnerProductSpace Matrix
 
-private def binaryCodeFamily (n d : ℕ) : Finset (Finset (BinaryWord n)) := by
+/-- The finite family of binary codes of length `n` and minimum distance at least `d`. -/
+def binaryCodeFamily (n d : ℕ) : Finset (Finset (BinaryWord n)) := by
   classical
   exact (Finset.univ : Finset (BinaryWord n)).powerset.filter
     (fun C => IsBinaryCode d C)
@@ -6801,7 +6852,8 @@ theorem exists_binaryCodeNumber (n d : ℕ) :
       (binaryCodeFamily_nonempty n d) (fun C => C.card)
   exact ⟨C, (mem_binaryCodeFamily C).mp hC, hmax.symm⟩
 
-private def shellCodeFamily (n w d : ℕ) : Finset (Finset (BinaryWord n)) := by
+/-- The finite family of minimum-distance-`d` codes contained in the weight-`w` shell. -/
+def shellCodeFamily (n w d : ℕ) : Finset (Finset (BinaryWord n)) := by
   classical
   exact (weightShell n w).powerset.filter (fun C => IsBinaryCode d C)
 
@@ -6819,7 +6871,8 @@ theorem shellCodeFamily_nonempty (n w d : ℕ) :
   rw [mem_shellCodeFamily]
   exact ⟨Finset.empty_subset _, fun {_} hx => (Finset.notMem_empty _ hx).elim⟩
 
-private def shellCodeNumber (n w d : ℕ) : ℕ :=
+/-- The largest cardinality of a minimum-distance-`d` code in the weight-`w` shell. -/
+def shellCodeNumber (n w d : ℕ) : ℕ :=
   (shellCodeFamily n w d).sup (fun C => C.card)
 
 theorem card_le_shellCodeNumber {n w d : ℕ}
@@ -6872,15 +6925,18 @@ theorem binaryCodeNumber_eq_hamming (n d : ℕ) :
     rw [← hcard]
     exact card_le_binaryCodeNumber C hC
 
-private def words {n w : ℕ} (C : Finset (JohnsonSphere n w)) :
+/-- Forget the weight proof on each point of a finite Johnson-sphere code. -/
+def words {n w : ℕ} (C : Finset (JohnsonSphere n w)) :
     Finset (BinaryWord n) :=
   C.image Subtype.val
 
-private def IsCode {n w : ℕ} (d : ℕ)
+/-- The minimum-distance condition on the underlying binary words of a Johnson-sphere code. -/
+def IsCode {n w : ℕ} (d : ℕ)
     (C : Finset (JohnsonSphere n w)) : Prop :=
   IsBinaryCode d (words C)
 
-private def asSubtype {n w : ℕ} (C : Finset (BinaryWord n))
+/-- Regard a code contained in the weight-`w` shell as a finite set of Johnson-sphere points. -/
+def asSubtype {n w : ℕ} (C : Finset (BinaryWord n))
     (hweight : C ⊆ weightShell n w) :
     Finset (JohnsonSphere n w) := by
   classical
@@ -8060,7 +8116,8 @@ theorem johnsonAdjacentBlockCoefficient_sq_sum
     (mul_pos hlam
       (johnsonRecurrenceWeight_pos_of_pos h v hv source)).ne'
 
-private def johnsonRecurrenceNormalization
+/-- The sum of the Johnson recurrence weights over the admissible index range. -/
+def johnsonRecurrenceNormalization
     (n w p q L : ℕ) (v : Space p q L) : ℝ :=
   ∑ i : Index p q L, johnsonRecurrenceWeight n w p q L v i
 
@@ -8743,7 +8800,8 @@ theorem mrrwObjective_zero_fibre_boundary {δ α u : ℝ}
     mrrwG_variance ha.le, shellRate_zero_fibre]
   ring
 
-private def mrrwRateSet (δ : ℝ) : Set ℝ :=
+/-- The values of the MRRW objective as `r` ranges from zero to `1 - 2 * δ`. -/
+def mrrwRateSet (δ : ℝ) : Set ℝ :=
   {t | ∃ r : ℝ, 0 ≤ r ∧ r ≤ 1 - 2 * δ ∧
     t = mrrwObjective δ r}
 

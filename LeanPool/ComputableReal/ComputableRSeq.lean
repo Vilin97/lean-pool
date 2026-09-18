@@ -3,12 +3,20 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Basic.Sign.Defs
-import Mathlib.Tactic.Rify
+module
 
-import LeanPool.ComputableReal.AuxLemmas
+public import Mathlib.Algebra.Order.Archimedean.Real.Basic
+
+public import Mathlib.Data.Rat.Cast.Order
+
+public import Mathlib.Algebra.Order.Archimedean.Basic
+
+public import Mathlib.Algebra.Order.Interval.Basic
+public import Mathlib.Basic.Sign.Defs
+
+public import LeanPool.ComputableReal.AuxLemmas
+public import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.Rify
 
 /-!
 # Interval-Cauchy real sequences
@@ -26,6 +34,8 @@ sense. Addition, negation, and multiplication are executable interval arithmetic
 `sign` (and hence inversion and division, which need a nonzero witness) is defined
 classically and is `noncomputable`.
 -/
+
+@[expose] public section
 
 namespace QInterval
 
@@ -64,34 +74,36 @@ scoped instance instHMulQIntervalQ : HMul (ℚInterval) ℚ (ℚInterval) :=
 scoped instance instHDivQIntervalQ : HDiv (ℚInterval) ℚ (ℚInterval) :=
   ⟨fun x y ↦ x * y⁻¹⟩
 
-section slow
-theorem mulPair_lb_is_lb {x y : ℚInterval} : ∀ xv ∈ x, ∀ yv ∈ y,
-    (mulPair x y).fst ≤ xv * yv := by
-  intro xv ⟨hxl,hxu⟩ yv ⟨hyl,hyu⟩
+private theorem multiplication_bounds {a x b : ℝ} (c : ℝ) (hax : a ≤ x) (hxb : x ≤ b) :
+    min (a * c) (b * c) ≤ x * c ∧ x * c ≤ max (a * c) (b * c) := by
+  rcases le_total 0 c with hc | hc
+  · exact ⟨(min_le_left _ _).trans (mul_le_mul_of_nonneg_right hax hc),
+      (mul_le_mul_of_nonneg_right hxb hc).trans (le_max_right _ _)⟩
+  · exact ⟨(min_le_right _ _).trans (mul_le_mul_of_nonpos_right hxb hc),
+      (mul_le_mul_of_nonpos_right hax hc).trans (le_max_left _ _)⟩
+
+private theorem mulPair_bounds {x y : ℚInterval} {xv yv : ℝ} (hx : xv ∈ x) (hy : yv ∈ y) :
+    (mulPair x y).fst ≤ xv * yv ∧ xv * yv ≤ (mulPair x y).snd := by
+  obtain ⟨hxl, hxu⟩ := hx
+  obtain ⟨hyl, hyu⟩ := hy
+  have hl := multiplication_bounds (x.fst : ℝ) hyl hyu
+  have hu := multiplication_bounds (x.snd : ℝ) hyl hyu
+  have h := multiplication_bounds yv hxl hxu
   dsimp [mulPair]
   push_cast
-  rcases le_or_gt xv 0 with hxn|hxp
-  all_goals rcases le_or_gt (y.fst:ℝ) 0 with hyln|hylp
-  all_goals rcases le_or_gt (y.snd:ℝ) 0 with hyun|hyup
-  all_goals try linarith
-  all_goals repeat rw [min_def]
-  all_goals split_ifs with h₁ h₂ h₃ h₃ h₂ h₃ h₃
-  all_goals try nlinarith
+  rw [min_min_min_comm, max_max_max_comm]
+  simp only [mul_comm] at hl hu h ⊢
+  exact ⟨(min_le_min hl.1 hu.1).trans h.1, h.2.trans (max_le_max hl.2 hu.2)⟩
+
+theorem mulPair_lb_is_lb {x y : ℚInterval} : ∀ xv ∈ x, ∀ yv ∈ y,
+    (mulPair x y).fst ≤ xv * yv := by
+  intro xv hx yv hy
+  exact (mulPair_bounds hx hy).1
 
 theorem mulPair_ub_is_ub {x y : ℚInterval} : ∀ xv ∈ x, ∀ yv ∈ y,
     (mulPair x y).snd ≥ xv * yv := by
-  intro xv ⟨hxl,hxu⟩ yv ⟨hyl,hyu⟩
-  dsimp [mulPair]
-  push_cast
-  rcases le_or_gt xv 0 with hxn|hxp
-  all_goals rcases le_or_gt (y.1.1:ℝ) 0 with hyln|hylp
-  all_goals rcases le_or_gt (y.1.2:ℝ) 0 with hyun|hyup
-  all_goals try linarith
-  all_goals repeat rw [max_def]
-  all_goals split_ifs with h₁ h₂ h₃ h₃ h₂ h₃ h₃
-  all_goals try nlinarith
-
-end slow
+  intro xv hx yv hy
+  exact (mulPair_bounds hx hy).2
 
 theorem mem_mulPair {x y : ℚInterval} : ∀ xv ∈ x, ∀ yv ∈ y, xv * yv ∈ mulPair x y :=
   fun _ hx _ hy ↦ ⟨mulPair_lb_is_lb _ hx _ hy, mulPair_ub_is_ub _ hx _ hy⟩
@@ -292,20 +304,17 @@ theorem mul'_snd_iscau : IsCauSeq abs ((fun i ↦ i.snd) ∘ (mul' x y)) :=
 
 theorem lb_ub_mul_equiv (x : ComputableℝSeq) (y : ComputableℝSeq) :
     mulLb x y ≈ mulUb x y := by
-  have : x.lb ≈ x.lb := by rfl
-  have : x.ub ≈ x.ub := by rfl
-  have : y.lb ≈ y.lb := by rfl
-  have : y.ub ≈ y.ub := by rfl
-  have := x.heq
-  have := Setoid.symm x.heq
-  have := y.heq
-  have := Setoid.symm y.heq
-  dsimp [mulLb, mulUb]
-  apply CauSeq.inf_equiv_of_equivs
-  <;> apply CauSeq.inf_equiv_of_equivs
-  <;> apply CauSeq.equiv_sup_of_equivs
-  <;> apply CauSeq.equiv_sup_of_equivs
-  <;> exact CauSeq.mul_equiv_mul ‹_› ‹_›
+  have hll : x.lb * y.lb ≈ x.lb * y.lb := Setoid.refl _
+  have hul := CauSeq.mul_equiv_mul (Setoid.symm x.heq) (Setoid.refl y.lb)
+  have hlu := CauSeq.mul_equiv_mul (Setoid.refl x.lb) (Setoid.symm y.heq)
+  have huu := CauSeq.mul_equiv_mul (Setoid.symm x.heq) (Setoid.symm y.heq)
+  have hl : mulLb x y ≈ x.lb * y.lb :=
+    CauSeq.inf_equiv_of_equivs (CauSeq.inf_equiv_of_equivs hll hul)
+      (CauSeq.inf_equiv_of_equivs hlu huu)
+  have hu : mulUb x y ≈ x.lb * y.lb :=
+    CauSeq.sup_equiv_of_equivs (CauSeq.sup_equiv_of_equivs hll hul)
+      (CauSeq.sup_equiv_of_equivs hlu huu)
+  exact Setoid.trans hl (Setoid.symm hu)
 
 theorem mulLb_is_lb (x : ComputableℝSeq) (y : ComputableℝSeq) (n : ℕ) :
     (mulLb x y).1 n ≤ x.val * y.val :=

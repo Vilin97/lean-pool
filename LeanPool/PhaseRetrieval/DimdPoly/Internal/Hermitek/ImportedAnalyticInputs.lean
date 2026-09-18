@@ -10,10 +10,19 @@ Authors: Susanna Bertolini, Jaume de Dios Pont
   Scaffolding notes:
   - `Imported/analytic_inputs.md`
 -/
-import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
+module
+
+public import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.ImportedAnalyticInputs
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.Tactic.NormNum.Parity
 
 /-! # ImportedAnalyticInputs -/
+
+@[expose] public section
 
 
 open Complex MeasureTheory Real Finset

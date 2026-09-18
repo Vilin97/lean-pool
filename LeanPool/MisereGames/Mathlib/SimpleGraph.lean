@@ -5,9 +5,8 @@ Authors: Tomasz Maciosowski
 -/
 module
 
-public import Mathlib.Combinatorics.SimpleGraph.Basic
-public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Subgraph
-public import Mathlib.Combinatorics.SimpleGraph.Finite
+public import Mathlib.Combinatorics.SimpleGraph.Walk.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 Misere combinatorial games.

@@ -3,12 +3,15 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import LeanPool.Chudnovsky.SingularModuli.JFunction
-import LeanPool.Chudnovsky.Fourier
+public import LeanPool.Chudnovsky.SingularModuli.JFunction
+public import LeanPool.Chudnovsky.Lattices
 import LeanPool.Chudnovsky.DivisionValues
-import Mathlib.Analysis.Complex.OpenMapping
 import LeanPool.Chudnovsky.Estimates
+import LeanPool.Chudnovsky.Fourier
+import Mathlib.Analysis.Complex.OpenMapping
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Valence theory of the `j`-function (Phase C, Track 2, §4.3)
@@ -55,6 +58,8 @@ Elliptic Functions, and the Modular Group" development is the design blueprint (
 Both halves of the §4.3 valence theory (`j_injective_mod_Γ` and `j_surjective`) are now
 `sorry`-free.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -644,10 +649,12 @@ theorem exists_sl2_of_lattice_eq {σ₁ σ₂ : ℍ} {a : ℂˣ}
   have eqB := orient_eq h1' h2'
   -- positivity of the two determinants
   have hdMpos : 0 < (m₁ * n₂ - n₁ * m₂ : ℤ) := by
-    have : (0 : ℝ) < ((m₁ * n₂ - n₁ * m₂ : ℤ) : ℝ) := by nlinarith [eqA, hy1, hy2, hna]
+    have : (0 : ℝ) < ((m₁ * n₂ - n₁ * m₂ : ℤ) : ℝ) :=
+      (mul_pos_iff_of_pos_right hy1).mp (eqA.symm ▸ mul_pos hna hy2)
     exact_mod_cast this
   have hdNpos : 0 < (m₁' * n₂' - n₁' * m₂' : ℤ) := by
-    have : (0 : ℝ) < ((m₁' * n₂' - n₁' * m₂' : ℤ) : ℝ) := by nlinarith [eqB, hy1, hy2, hnai]
+    have : (0 : ℝ) < ((m₁' * n₂' - n₁' * m₂' : ℤ) : ℝ) :=
+      (mul_pos_iff_of_pos_right hy2).mp (eqB.symm ▸ mul_pos hnai hy1)
     exact_mod_cast this
   -- product of `normSq`s is `1`
   have hnprod : Complex.normSq (↑a : ℂ) * Complex.normSq ((a⁻¹ : ℂˣ) : ℂ) = 1 := by
@@ -659,12 +666,13 @@ theorem exists_sl2_of_lattice_eq {σ₁ σ₂ : ℍ} {a : ℂˣ}
     calc (((m₁ * n₂ - n₁ * m₂ : ℤ) : ℝ) * ((m₁' * n₂' - n₁' * m₂' : ℤ) : ℝ))
           * ((↑σ₁ : ℂ).im * (↑σ₂ : ℂ).im)
         = (((m₁ * n₂ - n₁ * m₂ : ℤ) : ℝ) * (↑σ₁ : ℂ).im)
-            * (((m₁' * n₂' - n₁' * m₂' : ℤ) : ℝ) * (↑σ₂ : ℂ).im) := by ring
+            * (((m₁' * n₂' - n₁' * m₂' : ℤ) : ℝ) * (↑σ₂ : ℂ).im) := mul_mul_mul_comm _ _ _ _
       _ = (Complex.normSq (↑a : ℂ) * (↑σ₂ : ℂ).im)
             * (Complex.normSq ((a⁻¹ : ℂˣ) : ℂ) * (↑σ₁ : ℂ).im) := by rw [eqA, eqB]
       _ = (Complex.normSq (↑a : ℂ) * Complex.normSq ((a⁻¹ : ℂˣ) : ℂ))
-            * ((↑σ₁ : ℂ).im * (↑σ₂ : ℂ).im) := by ring
-      _ = (↑σ₁ : ℂ).im * (↑σ₂ : ℂ).im := by rw [hnprod]; ring
+            * ((↑σ₁ : ℂ).im * (↑σ₂ : ℂ).im) := by
+          rw [mul_mul_mul_comm, mul_comm (↑σ₂ : ℂ).im (↑σ₁ : ℂ).im]
+      _ = (↑σ₁ : ℂ).im * (↑σ₂ : ℂ).im := by rw [hnprod, one_mul]
   have hprod : (m₁ * n₂ - n₁ * m₂ : ℤ) * (m₁' * n₂' - n₁' * m₂' : ℤ) = 1 := by
     have hpos : 0 < (↑σ₁ : ℂ).im * (↑σ₂ : ℂ).im := mul_pos hy1 hy2
     have hR := mul_right_cancel₀ (ne_of_gt hpos) (hprodR.trans (one_mul _).symm)
@@ -673,7 +681,7 @@ theorem exists_sl2_of_lattice_eq {σ₁ σ₂ : ℍ} {a : ℂˣ}
   have hdet1 : (m₁ * n₂ - n₁ * m₂ : ℤ) = 1 := by
     have h1 : (1 : ℤ) ≤ m₁ * n₂ - n₁ * m₂ := hdMpos
     have h2 : (1 : ℤ) ≤ m₁' * n₂' - n₁' * m₂' := hdNpos
-    exact le_antisymm (by nlinarith [hprod, h1, h2]) h1
+    exact le_antisymm ((le_mul_of_one_le_right hdMpos.le h2).trans_eq hprod) h1
   -- build `γ` and check the Möbius formula
   set M : Matrix (Fin 2) (Fin 2) ℤ := !![n₂, m₂; n₁, m₁] with hM
   have hMdet : M.det = 1 := by
@@ -748,13 +756,13 @@ theorem j_two_values : ∃ τ₁ τ₂ : ℍ, j τ₁ ≠ j τ₂ := by
       rw [← Real.exp_add]; congr 1; ring
     have h7 : (7 : ℝ) ≤ Real.exp (2 * π) := by
       have hae := Real.add_one_le_exp (2 * π)
-      nlinarith [Real.pi_gt_three]
+      linarith only [hae, Real.pi_gt_three]
     have hE : Real.exp (-(2 * π)) ≤ 1 / 7 := by
       rw [Real.exp_neg, inv_eq_one_div]
       exact one_div_le_one_div_of_le (by norm_num) h7
     have hBpos : 0 < Real.exp (-(2 * π * 2)) := Real.exp_pos _
-    rw [e1]
-    nlinarith [hE, hBpos, mul_nonneg hBpos.le (sub_nonneg.mpr hE)]
+    rw [e1, mul_left_comm, mul_comm (0.737 : ℝ)]
+    exact mul_le_mul_of_nonneg_left (by linarith only [hE]) hBpos.le
   have hja : ‖(1728 : ℂ) * J τa‖ = ‖j τa‖ := by rw [j_def]
   have hjb : ‖(1728 : ℂ) * J τb‖ = ‖j τb‖ := by rw [j_def]
   rw [hja] at hlow
@@ -826,22 +834,24 @@ theorem isClosed_range_j : IsClosed (Set.range (j : ℍ → ℂ)) := by
       rw [show ‖(1728 : ℂ) * J (τ n)‖ = ‖y n‖ by rw [hjyn]] at hlow
       have hqpos := norm_q_pos (τ n)
       have hlt : 0.737 / ‖q (τ n)‖ < C₁ :=
-        lt_of_lt_of_le hlow (le_trans (hnorm_le n) (by linarith))
+        hlow.trans_le ((hnorm_le n).trans (le_add_of_nonneg_right zero_le_one))
       rw [div_lt_iff₀ hqpos, norm_q] at hlt
       have hexp : 0.737 / C₁ < Real.exp (-(2 * π * (τ n).im)) := by
-        rw [div_lt_iff₀ hC1pos]; linarith
+        rw [div_lt_iff₀ hC1pos]
+        simpa only [mul_comm] using hlt
       have hlog : Real.log (0.737 / C₁) < -(2 * π * (τ n).im) := by
         have := Real.log_lt_log (by positivity : (0 : ℝ) < 0.737 / C₁) hexp
         rwa [Real.log_exp] at this
       have himlt : (τ n).im < (-(Real.log (0.737 / C₁))) / (2 * π) := by
-        rw [lt_div_iff₀ h2πpos]; nlinarith [hlog]
+        rw [lt_div_iff₀ h2πpos]
+        simpa only [neg_neg, mul_comm] using neg_lt_neg hlog
       exact le_trans himlt.le (le_max_right _ _)
     · exact le_trans (le_of_not_gt hR) (le_max_left _ _)
   -- lower bound on `Im (τ n)` from the fundamental domain
   have him_ge : ∀ n, (3 : ℝ) / 4 ≤ (τ n).im := by
     intro n
     have h3 := ModularGroup.three_le_four_mul_im_sq_of_mem_fd (hτfd n)
-    nlinarith [(τ n).im_pos]
+    nlinarith only [h3, (τ n).im_pos]
   -- the compact truncation of `𝒟` in `ℂ`
   set Kc : Set ℂ :=
     {z | 1 ≤ Complex.normSq z ∧ |z.re| ≤ 1 / 2 ∧ (3 : ℝ) / 4 ≤ z.im ∧ z.im ≤ M} with hKc
@@ -855,16 +865,16 @@ theorem isClosed_range_j : IsClosed (Set.range (j : ℍ → ℂ)) := by
     · exact isClosed_le Complex.continuous_im continuous_const
   have hKc_bdd : Bornology.IsBounded Kc := by
     rw [Metric.isBounded_iff_subset_closedBall 0]
-    refine ⟨1 / 2 + (3 / 4 + |M|), fun z hz => ?_⟩
+    refine ⟨1 / 2 + |M|, fun z hz => ?_⟩
     rw [Metric.mem_closedBall, dist_zero_right]
     have hre : |z.re| ≤ 1 / 2 := hz.2.1
     have him1 : (3 : ℝ) / 4 ≤ z.im := hz.2.2.1
     have him2 : z.im ≤ M := hz.2.2.2
     have habs : ‖z‖ ≤ |z.re| + |z.im| := Complex.norm_le_abs_re_add_abs_im z
-    have himabs : |z.im| ≤ 3 / 4 + |M| := by
-      rw [abs_of_nonneg (by linarith : (0 : ℝ) ≤ z.im)]
-      nlinarith [le_abs_self M]
-    linarith
+    have himabs : |z.im| ≤ |M| := by
+      rw [abs_of_nonneg (le_trans (by norm_num) him1)]
+      exact him2.trans (le_abs_self M)
+    exact habs.trans (add_le_add hre himabs)
   have hKc_compact : IsCompact Kc :=
     Metric.isCompact_of_isClosed_isBounded hKc_closed hKc_bdd
   have hmem : ∀ n, (τ n : ℂ) ∈ Kc := by

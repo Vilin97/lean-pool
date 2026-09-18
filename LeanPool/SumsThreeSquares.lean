@@ -3,9 +3,15 @@ Copyright (c) 2026 Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 -/
+module
 
-import LeanPool.SumsThreeSquares.MinkowskiConvex
-import LeanPool.SumsThreeSquares.SumThreeSquares
+public import LeanPool.SumsThreeSquares.MinkowskiConvex
+public import LeanPool.SumsThreeSquares.SumThreeSquares
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.Tactic.NormNum.LegendreSymbol
 
 /-!
 # Sums of Three Squares
@@ -17,6 +23,8 @@ Main declarations: `LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3`
 Tags: number-theory, quadratic-forms, geometry-of-numbers
 MSC: 11E25, 11H06
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

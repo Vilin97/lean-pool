@@ -5,15 +5,19 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
-import LeanPool.ConnesRigidity.Paper.Section4.SpectralFiniteDetection
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
 import LeanPool.ConnesRigidity.Paper.Section3.FactorClosure
+import LeanPool.ConnesRigidity.Paper.Section4.SpectralFiniteDetection
 import LeanPool.ConnesRigidity.Paper.Section5.ICCOrbits
 import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimpleTransport
 
 /-!
 Concrete completion boundary for Zhou's Theorem A. Paper: §§3--7.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperTheoremACompletion

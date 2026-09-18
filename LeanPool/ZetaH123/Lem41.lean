@@ -3,32 +3,30 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang. All rights reser
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 -/
+module
 
+public import Mathlib.RingTheory.LaurentSeries
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+public import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Ring.Lemmas
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
 import Mathlib.Data.Int.Star
 import Mathlib.FieldTheory.Finite.Basic
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.LaurentSeries
 import Mathlib.RingTheory.PowerSeries.Substitution
 import Mathlib.RingTheory.PowerSeries.WellKnown
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Order
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Push
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.Tauto
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Lemma 4.1 for Thakur's hypotheses on power sums
 -/
+
+@[expose] public section
 
 namespace ZetaH123.Lem41
 

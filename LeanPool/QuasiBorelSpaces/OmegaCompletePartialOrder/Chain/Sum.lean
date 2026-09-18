@@ -3,10 +3,10 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Algebra.Order.Group.Nat
-import Mathlib.Data.Sum.Order
-import Mathlib.Order.OmegaCompletePartialOrder
+public import Mathlib.Data.Sum.Order
+public import Mathlib.Order.OmegaCompletePartialOrder
 
 
 /-!
@@ -15,6 +15,8 @@ import Mathlib.Order.OmegaCompletePartialOrder
 This file provides utilities for working with chains in sum types,
 which are used to construct the ωCPO instance for coproducts.
 -/
+
+@[expose] public section
 
 namespace OmegaCompletePartialOrder.Chain.Sum
 

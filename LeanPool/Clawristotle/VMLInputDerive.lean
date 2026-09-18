@@ -3,13 +3,19 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.VMLStructures
-import LeanPool.Clawristotle.Section3
+module
+
+public import LeanPool.Clawristotle.VMLStructures
+import LeanPool.Clawristotle.FlatTorus3Lemmas
+import LeanPool.Clawristotle.GaussianHelpers
+import LeanPool.Clawristotle.Section3Helpers
 import LeanPool.Clawristotle.Section4
 import LeanPool.Clawristotle.Section5
 import LeanPool.Clawristotle.Section6
 import LeanPool.Clawristotle.Section7
 import LeanPool.Clawristotle.Section8
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Deriving VMLInput from Concrete Hypotheses
@@ -18,6 +24,8 @@ Constructs a `VMLInput` from a `VMLSteadyState` and `VelocityDecayConditions`,
 then applies the abstract proof chain (Sections 2-8) to derive the main theorem
 `ConcreteTheorem42` with minimal physical hypotheses.
 -/
+
+@[expose] public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section
@@ -81,23 +89,23 @@ private theorem VMLInput.isMaxwellian_at (p : VMLInput X) (x : X) : IsMaxwellian
 
 /-- The local log-density parameter `a(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def _root_.VML.VMLInput.aLoc (p : VMLInput X) : X → ℝ :=
-  fun x => (p.isMaxwellian_at x).choose
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose
 
 /-- The local drift parameter `b(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def _root_.VML.VMLInput.bLoc (p : VMLInput X) : X → (Fin 3 → ℝ) :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose
 
 /-- The local inverse-temperature parameter `c(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def _root_.VML.VMLInput.cLoc (p : VMLInput X) : X → ℝ :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose_spec.choose
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose_spec.choose
 
 lemma _root_.VML.VMLInput.hc_neg (p : VMLInput X) : ∀ x, p.cLoc x < 0 :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose_spec.choose_spec.1
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose_spec.choose_spec.1
 
 lemma _root_.VML.VMLInput.hMaxwellianForm (p : VMLInput X) :
     ∀ x v, p.f x v = Real.exp (p.aLoc x + dotProduct (p.bLoc x) v +
       p.cLoc x * normSq v) :=
-  fun x => (p.isMaxwellian_at x).choose_spec.choose_spec.choose_spec.2
+  fun x => (private_decl% (p.isMaxwellian_at x)).choose_spec.choose_spec.choose_spec.2
 
 /-- IsSpatiallySmooth 2 for the Maxwellian parameters aLoc, bLoc, cLoc. -/
 lemma _root_.VML.VMLInput.hDiff_abc (p : VMLInput X) :

@@ -3,17 +3,19 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Egrs75.Defs
-import LeanPool.Egrs75.RoundUp
-import LeanPool.Egrs75.LeafInduction
-import LeanPool.Egrs75.DigitVector
-import LeanPool.Egrs75.DigitAtToolkit
+public import LeanPool.Egrs75.DigitVector
+public import LeanPool.Egrs75.DigitAtToolkit
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import LeanPool.Egrs75.ClearingHigh
-import LeanPool.Egrs75.Reduction
 import LeanPool.Egrs75.MuFinish
+import LeanPool.Egrs75.Reduction
 import Mathlib.Algebra.Order.Ring.GeomSum
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.List.GetD
+import Mathlib.Data.Nat.Digits.Lemmas
+import Mathlib.Data.Nat.Totient
 
 /-!
 EGRS75 two-prime ALIGN leaf — FINISH route (2026-06-08).
@@ -77,6 +79,8 @@ high/low split (`badCountQ_split`, `highBlock_lowDigits`, `badCount_eq_lowBlock`
 existing clean file.  Formalizes the KNOWN theorem EGRS75 (1975); three primes is
 Erdős #376 (OPEN) — not attempted.
 -/
+
+@[expose] public section
 
 namespace Egrs75.Finish
 

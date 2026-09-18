@@ -3,10 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenCover
-import LeanPool.ClassificationOfSurfaces.Moise.HalfPlanePolygon
-import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenCover
+public import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
 import LeanPool.ClassificationOfSurfaces.Moise.FacewiseComparison
+import LeanPool.ClassificationOfSurfaces.Moise.HalfPlanePolygon
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Adaptive meshes for strongly-positive metric controls
@@ -18,6 +23,8 @@ neighborhood of each point; continuity then shrinks that neighborhood until its 
 diameter.  Subordination to the resulting open cover converts the existing setwise polygonal
 graph replacement into a pointwise controlled approximation.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology
@@ -247,7 +254,8 @@ namespace ControlledAdaptiveComplex
 variable (hU : IsOpen U) (f : U → Plane) (hf : Continuous f)
   (phi : U → ℝ) (hphi : StronglyPositiveOn Set.univ phi)
 
-private noncomputable abbrev L : LocallyFiniteTriangleComplex U :=
+/-- The locally finite complex obtained from the controlled adaptive construction. -/
+noncomputable abbrev L : LocallyFiniteTriangleComplex U :=
   K.controlledAdaptiveComplex U hU f hf phi hphi
 
 /-- Each adaptive face inherits one quantitative scale from the cover member containing it. -/
@@ -447,7 +455,8 @@ variable (hU : IsOpen U) (V : Set Plane) (hV : IsOpen V)
   (f : U → Plane) (hf : Continuous f) (hmem : ∀ x, f x ∈ V)
   (phi : U → ℝ) (hphi : StronglyPositiveOn Set.univ phi)
 
-private noncomputable abbrev R : LocallyFiniteTriangleComplex U :=
+/-- The locally finite complex obtained from the region-controlled adaptive construction. -/
+noncomputable abbrev R : LocallyFiniteTriangleComplex U :=
   K.regionControlledAdaptiveComplex U hU V hV f hf hmem phi hphi
 
 /-- The adaptive face-boundary estimate for the frontier-reduced tolerance. -/

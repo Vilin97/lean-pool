@@ -10,11 +10,18 @@ These are not part of the paper; they exist so that a wrong definition cannot
 pass unnoticed. Each one
 would FAIL if the corresponding clause of Section 2 were mis-encoded.
 -/
-import LeanPool.MatchingLogic.Core
+module
+
+import Mathlib.Data.Set.Insert
+
+public import LeanPool.MatchingLogic.Core
+import Mathlib.Data.Set.Basic
 
 /-!
 # MatchingLogic.Sanity
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 namespace Model
@@ -62,7 +69,7 @@ example :
   intro S M h
   have : (false : Bool) ∈ ({true} : Set Bool) :=
     h (by rfl) ⟨(), fun _ => false, ⟨0, Nat.zero_lt_one⟩, trivial, rfl⟩
-  simp at this
+  exact Bool.noConfusion (Set.mem_singleton_iff.mp this)
 
 end Model
 end MatchingLogic

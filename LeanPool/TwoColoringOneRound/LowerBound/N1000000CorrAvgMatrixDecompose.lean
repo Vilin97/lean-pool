@@ -3,19 +3,18 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import Mathlib.Tactic.Common
-import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
+public import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -29,7 +28,6 @@ open Distributed2Coloring.LowerBound.N1000000AvailFrom
 open Distributed2Coloring.LowerBound.N1000000MaskComplete
 open Distributed2Coloring.LowerBound.N1000000OrbitalBasis
 open Distributed2Coloring.LowerBound.N1000000OrbitCounting
-open Distributed2Coloring.LowerBound.N1000000Relaxation
 open Distributed2Coloring.LowerBound.N1000000PairTransitivity
 open Distributed2Coloring.LowerBound.N1000000Transitivity
 

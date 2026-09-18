@@ -3,9 +3,12 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import Mathlib.Topology.Path
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Bridge coercions from PiecewiseC1Curve to mathlib Path / ContinuousMap
@@ -14,6 +17,8 @@ We provide `PiecewiseC1Curve.toPath` and `PiecewiseC1Curve.toContinuousMap` that
 rescale the domain `[a,b]` to the unit interval `[0,1]` via `iccHomeoI`.
 -/
 
+@[expose] public section
+
 open Complex Set Topology unitInterval
 
 noncomputable section
@@ -21,7 +26,7 @@ noncomputable section
 namespace PiecewiseC1Curve
 
 /-- The rescaling homeomorphism from `I = [0,1]` to `[a,b]`, as a subtype-valued map. -/
-private def rescale (γ : PiecewiseC1Curve) : I → Icc γ.a γ.b :=
+def rescale (γ : PiecewiseC1Curve) : I → Icc γ.a γ.b :=
   (iccHomeoI γ.a γ.b γ.hab).symm
 
 private theorem rescale_continuous (γ : PiecewiseC1Curve) :
@@ -43,10 +48,10 @@ private theorem rescale_one (γ : PiecewiseC1Curve) :
 The path goes from `γ(a)` to `γ(b)`. -/
 def toPath (γ : PiecewiseC1Curve) : Path (γ.toFun γ.a) (γ.toFun γ.b) where
   toFun t := γ.toFun (γ.rescale t)
-  continuous_toFun :=
-    γ.continuous_toFun.comp_continuous γ.rescale_continuous (fun t => γ.rescale_mem_Icc t)
-  source' := congrArg γ.toFun γ.rescale_zero
-  target' := congrArg γ.toFun γ.rescale_one
+  continuous_toFun := by
+    exact γ.continuous_toFun.comp_continuous γ.rescale_continuous (fun t => γ.rescale_mem_Icc t)
+  source' := by exact congrArg γ.toFun γ.rescale_zero
+  target' := by exact congrArg γ.toFun γ.rescale_one
 
 /-- Convert a `PiecewiseC1Curve` to a `ContinuousMap` from the unit interval to `ℂ`. -/
 def toContinuousMap (γ : PiecewiseC1Curve) : C(I, ℂ) :=

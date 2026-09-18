@@ -3,10 +3,12 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
-import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
-import Mathlib.RingTheory.Coalgebra.TensorProduct
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.SchurMul
+public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
+public import Mathlib.RingTheory.Coalgebra.TensorProduct
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Schur Multiplication on Tensor Products
@@ -14,6 +16,8 @@ import Mathlib.RingTheory.Coalgebra.TensorProduct
 This file relates Schur multiplication on tensor-product coalgebras to the
 fourfold tensor shuffle used by the Monlib4 quantum-set tensor product.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

@@ -5,7 +5,8 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.WeilDifferential
+public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # The Riemann–Roch theorem

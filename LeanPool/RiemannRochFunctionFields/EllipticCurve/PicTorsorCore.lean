@@ -5,15 +5,14 @@ Authors: Guanghao Li
 -/
 module
 
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusOne
-public import LeanPool.RiemannRochFunctionFields.EllipticCurve.DegreeOneDictionary
-public import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Group
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.ByContra
+public import LeanPool.RiemannRochFunctionFields.EllipticCurve.PlaceDictionary
+public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.Dedekind
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.DegreeOneDictionary
+import LeanPool.RiemannRochFunctionFields.EllipticCurve.GenusOne
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Basic
+import LeanPool.RiemannRochFunctionFields.RiemannRochTheorem.Corollaries
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Core construction of the degree-one Picard torsor

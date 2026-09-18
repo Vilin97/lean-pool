@@ -3,9 +3,12 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RingTheory.AdicCompletion.Algebra
+module
+
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
 import Mathlib.RingTheory.LocalRing.RingHom.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Quasi-Complete Local Rings
@@ -17,6 +20,8 @@ stabilizes modulo powers of M. The weak variant restricts to
 chains with zero intersection. We also define analytical
 irreducibility (the M-adic completion is a domain).
 -/
+
+@[expose] public section
 
 open scoped Pointwise
 

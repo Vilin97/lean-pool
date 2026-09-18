@@ -3,12 +3,15 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.ComputableReal.ComputableRSeq
-import LeanPool.ComputableReal.ComputableReal
-import LeanPool.ComputableReal.IsComputable
-import LeanPool.ComputableReal.IsComputableC
-import LeanPool.ComputableReal.SpecialFunctions
+public import LeanPool.ComputableReal.ComputableRSeq
+public import LeanPool.ComputableReal.ComputableReal
+public import LeanPool.ComputableReal.IsComputable
+public import LeanPool.ComputableReal.IsComputableC
+public import LeanPool.ComputableReal.SpecialFunctions
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Verified interval-Cauchy real arithmetic
@@ -20,6 +23,8 @@ Main declarations: `ComputableℝSeq`, `Computableℝ`, `IsComputable`
 Tags: interval-arithmetic, real-numbers, cauchy-sequences, special-functions
 MSC: 65G40, 68V20
 -/
+
+@[expose] public section
 
 /-!
 A framework for verified interval-Cauchy real arithmetic, after Russell O'Connor,

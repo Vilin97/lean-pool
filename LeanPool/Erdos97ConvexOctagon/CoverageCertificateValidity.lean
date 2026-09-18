@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateManifest
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateManifest
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts00
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts01
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts02
@@ -99,8 +100,14 @@ import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts90
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts91
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts92
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts93
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Assembled coverage-certificate validity facts -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

@@ -3,9 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.ContinuousLattice.Constructions
-import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
+public import LeanPool.DomainTheory.ContinuousLattice.Constructions
+public import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
 
 /-!
 # Theorem 2.12: injective spaces are exactly the continuous lattices
@@ -37,6 +38,8 @@ Scott-continuous
 idempotent on a complete lattice form a complete lattice
 (`IdemFix.completeLattice`).
 -/
+
+@[expose] public section
 
 namespace Domain.ContinuousLattice
 

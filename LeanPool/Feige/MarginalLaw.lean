@@ -3,8 +3,11 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.MeanOneReduction
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
+module
+
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Elementary facts about one-dimensional marginal laws
@@ -13,6 +16,8 @@ These lemmas package the three facts needed when replacing independent
 random variables by their product of marginal distributions: integrability,
 the first moment, and nonnegative support.
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

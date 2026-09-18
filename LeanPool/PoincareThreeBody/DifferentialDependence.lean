@@ -3,8 +3,15 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.PoissonNormalization
+public import LeanPool.PoincareThreeBody.Core
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.FDeriv.Comp
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Coordinate minors and functional dependence
@@ -14,6 +21,8 @@ This file proves the direction needed for nonintegrability.  It converts the sca
 identities naturally produced by coefficient induction into failure of the challenge's
 `LinearIndependent` predicate.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

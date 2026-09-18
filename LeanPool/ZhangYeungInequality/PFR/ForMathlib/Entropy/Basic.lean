@@ -9,7 +9,9 @@ module
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.ConditionalIndependence
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Kernel.MutualInfo
 public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Uniform
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.MeasureTheory.Measure.Prod
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.ConditionalProbability
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
 
 /-!
 # Entropy and conditional entropy

@@ -3,9 +3,18 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.CoveringClosedGame
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.PreLift
@@ -13,9 +22,11 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
+@[expose] public section
+
 
 namespace GaleStewartGame.BorelDet.Zero
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
@@ -196,27 +207,15 @@ attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
   rw [H.liftShort.val.eq_take_concat (2 * k) (by simp)]
   conv => rhs; rw [(H.x.val.take (2 * k + 1)).eq_take_concat (2 * k) (by simp),
     List.getElem_take, H.conShort]
-  calc
-    List.map Prod.fst (List.take (2 * k) H.liftShort.val ++ [H.liftShort.val[2 * k]]) =
-        List.map Prod.fst (List.take (2 * k) H.liftShort.val) ++
-          [H.liftShort.val[2 * k].1] := List.map_append ..
-    _ = List.take (2 * k) (List.take (2 * k + 1) H.x.val) ++
-        [H.liftShort.val[2 * k].1] := by
-      congr 1
-      unfold PreLift.liftShort
-      simp only [ExtensionsAt.valT'_coe]
-      have htake : List.map Prod.fst
-            (List.take (2 * k)
-              (H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.x))
-                H.toPreLift.pInv_take_position H.toPreLift.pInv_take_length_le).val') =
-          List.map Prod.fst (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val := by
-        congr
-        exact ExtensionsAt.val'_take_of_eq _ H.toPreLift.pInv_take_length.symm
-      rw [htake]
-      change (treeHom hyp (pInv (treeHom hyp) (Tree.take (2 * k) H.x))).val =
-        List.take (2 * k) (List.take (2 * k + 1) H.x.val)
-      rw [cancel_pInv_right]
-      simp [List.take_take]
+  rw [List.map_append, List.map_singleton]
+  congr 1
+  unfold PreLift.liftShort
+  simp only [ExtensionsAt.valT'_coe]
+  erw [ExtensionsAt.val'_take_of_eq _ H.toPreLift.pInv_take_length.symm]
+  change (treeHom hyp (pInv (treeHom hyp) (Tree.take (2 * k) H.x))).val =
+    List.take (2 * k) (List.take (2 * k + 1) H.x.val)
+  rw [cancel_pInv_right]
+  simp [List.take_take]
 lemma liftShort_lift : treeHom hyp H.liftShort = Tree.take (2 * k + 1) H.x :=
   tree_ext H.liftShort_val_map
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

@@ -3,8 +3,12 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
+public import LeanPool.KasamiCyclicAdditive.Phase.Definitions
 import LeanPool.KasamiCyclicAdditive.Phase.PowerMap
+import LeanPool.KasamiCyclicAdditive.Preliminaries.FiniteFieldSums
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # The phase-to-root-count identity
@@ -15,6 +19,8 @@ Assuming the all-character Walsh formula `WalshCharacterFormula`, we prove
 
 for `A, B ∈ K^*` with `A³ + B³ = 1` and `A³ ≠ 1`, where `ρ = A³`, `σ = B³`.
 -/
+
+@[expose] public section
 
 open Finset
 

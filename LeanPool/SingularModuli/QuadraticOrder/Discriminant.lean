@@ -3,8 +3,9 @@ Copyright (c) 2026 Lean Pool contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Caleb L. Geiger
 -/
+module
 
-import LeanPool.SingularModuli.QuadraticOrder.Norm
+public import LeanPool.SingularModuli.QuadraticOrder.Norm
 
 /-!
 # The discriminant identity `(τ − tauConj)² = d`
@@ -26,6 +27,8 @@ remainder term: `(τ − tauConj)² = (d² − 4⌊(d²−d)/4⌋) • 1`, which
 exactly under the congruence hypothesis. The general form
 `tau_sub_tauConj_sq` is a Lean-only artifact with no thesis counterpart.
 -/
+
+@[expose] public section
 
 namespace QuadraticOrder
 

@@ -3,8 +3,14 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
+module
 
-import LeanPool.IsoGraph.Canon.Progress
+public import LeanPool.IsoGraph.Canon.Progress
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # The incumbent never gets worse
@@ -24,6 +30,8 @@ whole `dfsNode` call rather than to its innards.
 The comparison used throughout is `compare k k' ≠ .gt` on `leafKey`s, the same order `BestKey`
 is stated with.
 -/
+
+@[expose] public section
 
 namespace IsoGraph
 namespace Canon

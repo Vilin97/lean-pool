@@ -3,8 +3,9 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Theorem110
+public import LeanPool.DomainTheory.Neighborhood.Theorem110
 
 /-!
 # Exercise 1.21 (Scott 1981, PRG-19, §1) — Theorem 1.10 in greater detail
@@ -33,6 +34,8 @@ Everything is `[propext, Quot.sound]` (the corollaries inherit the constructive
 proofs of
 Theorem 1.10 / Theorem 1.1c).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

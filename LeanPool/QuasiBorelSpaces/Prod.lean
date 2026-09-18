@@ -3,11 +3,13 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.MeasureTheory.Measure.Prod
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 import LeanPool.QuasiBorelSpaces.Basic
-import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
-import LeanPool.QuasiBorelSpaces.OmegaQuasiBorelSpace
+import Mathlib.MeasureTheory.Measure.Prod
 
 
 /-!
@@ -18,6 +20,8 @@ This file defines binary products of quasi-borel spaces by giving a
 
 See [HeunenKSY17], Proposition 16.
 -/
+
+@[expose] public section
 
 namespace QuasiBorelSpace.Prod
 

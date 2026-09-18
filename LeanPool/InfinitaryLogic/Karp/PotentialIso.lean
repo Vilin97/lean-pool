@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.BackAndForth
+module
+
+public import LeanPool.InfinitaryLogic.Scott.BackAndForth
 import Mathlib.SetTheory.Ordinal.Family
 
 /-!
@@ -27,6 +29,8 @@ back-and-forth equivalence at all ordinal levels.
 
 - [KK04], Theorem 1.2.1
 -/
+
+@[expose] public section
 
 universe u v w w'
 

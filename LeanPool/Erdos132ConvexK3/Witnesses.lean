@@ -3,9 +3,16 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Assembly
+module
+
+public import LeanPool.Erdos132ConvexK3.Assembly
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Non-vacuity witnesses for indexed word realizations
@@ -13,6 +20,8 @@ import Mathlib.Tactic.NormNum
 Explicit real configurations inhabit each of the thirteen exceptional-word
 realization predicates routed through the four shared closure families.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3.Witnesses
 
@@ -46,8 +55,9 @@ private theorem terminalWordPoints_top_three :
   · refine ⟨(0, 3), by decide, ?_⟩
     norm_num [terminalWordPoints, sqDist]
   · rintro ⟨i, j⟩ hij
+    rw [mem_unorderedPairList_iff] at hij
     fin_cases i <;> fin_cases j
-    all_goals norm_num [unorderedPairList, terminalWordPoints, sqDist] at *
+    all_goals norm_num [terminalWordPoints, sqDist] at *
 
 private def terminalWordGeometry :
     Row1B32WordRealization terminalWordPoints
@@ -156,8 +166,9 @@ private theorem sharedTipPoints_top_three :
   · refine ⟨(1, 4), by decide, ?_⟩
     norm_num [sharedTipPoints, sqDist]
   · rintro ⟨i, j⟩ hij
+    rw [mem_unorderedPairList_iff] at hij
     fin_cases i <;> fin_cases j
-    all_goals norm_num [unorderedPairList, sharedTipPoints, sqDist] at *
+    all_goals norm_num [sharedTipPoints, sqDist] at *
 
 private def onePenultimateGeometry :
     OnePenultimateWordGeometry sharedTipPoints 2112500 1748500 1732250 := {
@@ -389,8 +400,9 @@ private theorem fourEdgePoints_top_three :
   · refine ⟨(0, 3), by decide, ?_⟩
     norm_num [fourEdgePoints, sqDist]
   · rintro ⟨i, j⟩ hij
+    rw [mem_unorderedPairList_iff] at hij
     fin_cases i <;> fin_cases j
-    all_goals norm_num [unorderedPairList, fourEdgePoints, sqDist] at *
+    all_goals norm_num [fourEdgePoints, sqDist] at *
 
 private def fourEdgeFirstLeft :
     FourEdgeBranchGeometry fourEdgePoints 2112500 1 0 4 := {

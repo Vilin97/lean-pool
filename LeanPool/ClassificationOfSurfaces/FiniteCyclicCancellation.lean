@@ -3,7 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicDerivedRewrites
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicDerivedRewrites
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Cancellation chains for finite cyclic presentations
@@ -13,6 +19,8 @@ immediately by its inverse.  Splitting between that pair and the remaining word 
 the P1 expansion of the one-sided split of the word with the pair removed.  Thus one P2 split,
 one P1 contraction, and one one-sided P2 merge cancel the pair.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

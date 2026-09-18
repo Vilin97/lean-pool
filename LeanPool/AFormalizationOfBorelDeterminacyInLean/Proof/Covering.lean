@@ -3,15 +3,25 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.MiscCat
 import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.BuildLevelwise
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Covering
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace GaleStewartGame
@@ -155,7 +165,7 @@ lemma bodyLiftExists_iff_system
     use ⟨(bodyEquivSystem.inv.app T.1 x).val, hmem⟩
     have hmap : (bodyFunctor.map toHom) (bodyEquivSystem.inv.app T.1 x) = y' := by
       apply ((isIso_iff_bijective (bodyEquivSystem.hom.app U.1)).mp inferInstance).1
-      simp_all
+      simpa only [naturality_apply_types, Iso.inv_hom_id_app_apply] using hxe
     exact congrArg Subtype.val hmap
 
 end Covering

@@ -3,9 +3,11 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
-import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
+public import LeanPool.Chudnovsky.Basic
 import LeanPool.Chudnovsky.Ramanujan
+import Mathlib.Geometry.Manifold.MFDeriv.NormedSpace
 
 /-!
 # The `j`-function: definition, invariance, analyticity, q-expansion (Phase C, chunk B1)
@@ -46,6 +48,8 @@ and `qExpansion_coeff_unique` — no analytic estimate at all. (The η-product s
 harmlessly, in the *boundedness* of `j·q` at the cusp, via
 `tendsto_atImInfty_tprod_one_sub_eta_q_pow`.)
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -93,10 +97,9 @@ theorem J_smul (γ : SL(2, ℤ)) (τ : ℍ) : J (γ • τ) = J τ := by
   have hE₆ : E₆ (γ • τ) = denom γ τ ^ 6 * E₆ τ := by
     have h := modularForm_SL_smul E₆ γ τ
     rwa [zpow_ofNat] at h
-  have h1 : (denom γ τ ^ 4 * E₄ τ) ^ 3 = denom γ τ ^ 12 * E₄ τ ^ 3 := by ring
-  have h2 : (denom γ τ ^ 6 * E₆ τ) ^ 2 = denom γ τ ^ 12 * E₆ τ ^ 2 := by ring
-  rw [J, J, hE₄, hE₆, h1, h2, ← mul_sub,
-    mul_div_mul_left _ _ (pow_ne_zero 12 hd)]
+  rw [J, J, hE₄, hE₆, mul_pow, mul_pow, ← pow_mul, ← pow_mul]
+  norm_num only [Nat.reduceMul]
+  rw [← mul_sub, mul_div_mul_left _ _ (pow_ne_zero 12 hd)]
 
 /-- The `j`-invariant is `SL(2,ℤ)`-invariant: `j (γ • τ) = j τ`. -/
 theorem j_smul (γ : SL(2, ℤ)) (τ : ℍ) : j (γ • τ) = j τ := by
@@ -165,14 +168,14 @@ Mathlib's analytic `qExpansion`s. The only arithmetic input is the classical con
 section IntegerQExpansion
 
 /-- The formal power series `∑_{n ≥ 1} σ_k(n) Xⁿ` over `ℤ`. -/
-private def sigmaPS (k : ℕ) : PowerSeries ℤ :=
+def sigmaPS (k : ℕ) : PowerSeries ℤ :=
   PowerSeries.mk fun n ↦ if n = 0 then 0 else (ArithmeticFunction.sigma k n : ℤ)
 
 /-- The integer q-expansion `1 + 240·∑ σ₃(n) qⁿ` of `E₄`. -/
-private def E4Z : PowerSeries ℤ := 1 + 240 * sigmaPS 3
+def E4Z : PowerSeries ℤ := 1 + 240 * sigmaPS 3
 
 /-- The integer q-expansion `1 - 504·∑ σ₅(n) qⁿ` of `E₆`. -/
-private def E6Z : PowerSeries ℤ := 1 - 504 * sigmaPS 5
+def E6Z : PowerSeries ℤ := 1 - 504 * sigmaPS 5
 
 /-- Extract a numeral factor out of a power-series coefficient. -/
 private lemma coeff_ofNat_mul {a : ℕ} [a.AtLeastTwo] (φ : PowerSeries ℤ) (n : ℕ) :
@@ -267,12 +270,12 @@ private lemma exists_delta_coeff (m : ℕ) :
 
 /-- The integer q-expansion of the discriminant `Δ = q·∏(1-qⁿ)²⁴ = ∑ τ(n) qⁿ`
 (Ramanujan-τ coefficients), obtained as `(E₄³ - E₆²)/1728` in `ℤ⟦q⟧`. -/
-def deltaInt : PowerSeries ℤ := PowerSeries.mk fun m ↦ (exists_delta_coeff m).choose
+def deltaInt : PowerSeries ℤ := PowerSeries.mk fun m ↦ (private_decl% (exists_delta_coeff m)).choose
 
 private lemma deltaInt_spec (m : ℕ) :
     PowerSeries.coeff m (E4Z ^ 3 - E6Z ^ 2) = 1728 * PowerSeries.coeff m deltaInt := by
   rw [deltaInt, PowerSeries.coeff_mk]
-  exact (exists_delta_coeff m).choose_spec
+  exact (private_decl% (exists_delta_coeff m)).choose_spec
 
 /-! ### Analytic identification of `deltaInt` -/
 
@@ -489,12 +492,8 @@ theorem qExpansion_j_mul_q :
   rw [qExpansion_discriminant_int, deltaInt_eq_X_mul_deltaTail, map_mul,
     PowerSeries.map_X] at hkey
   -- cancel the factor `X`
-  have hX : (PowerSeries.X : PowerSeries ℂ)
-        * (qExpansion 1 (fun τ : ℍ ↦ j τ * q τ)
-            * PowerSeries.map (Int.castRingHom ℂ) deltaTail)
-      = PowerSeries.X * PowerSeries.map (Int.castRingHom ℂ) (E4Z ^ 3) := by
-    linear_combination hkey
-  have hcancel := mul_left_cancel₀ PowerSeries.X_ne_zero hX
+  rw [← mul_assoc, mul_right_comm] at hkey
+  have hcancel := mul_right_cancel₀ PowerSeries.X_ne_zero hkey
   -- multiply by the inverse of the unit `deltaTail`
   have hunit : PowerSeries.map (Int.castRingHom ℂ) deltaTail
       * PowerSeries.map (Int.castRingHom ℂ) (deltaTail.invOfUnit 1) = 1 := by
@@ -507,7 +506,7 @@ theorem qExpansion_j_mul_q :
         rw [hunit, mul_one]
     _ = (qExpansion 1 (fun τ : ℍ ↦ j τ * q τ)
           * PowerSeries.map (Int.castRingHom ℂ) deltaTail)
-        * PowerSeries.map (Int.castRingHom ℂ) (deltaTail.invOfUnit 1) := by ring
+        * PowerSeries.map (Int.castRingHom ℂ) (deltaTail.invOfUnit 1) := (mul_assoc _ _ _).symm
     _ = PowerSeries.map (Int.castRingHom ℂ) (E4Z ^ 3)
         * PowerSeries.map (Int.castRingHom ℂ) (deltaTail.invOfUnit 1) := by rw [hcancel]
     _ = PowerSeries.map (Int.castRingHom ℂ) jqInt := by rw [jqInt, map_mul]

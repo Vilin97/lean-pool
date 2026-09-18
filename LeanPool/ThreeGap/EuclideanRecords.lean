@@ -3,9 +3,15 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
+public import LeanPool.ThreeGap.ChevallierCount
+public import LeanPool.ThreeGap.EuclideanGrowth
+public import Mathlib.NumberTheory.Real.Irrational
 import LeanPool.ThreeGap.EuclideanDefect
+import LeanPool.ThreeGap.EuclideanGrowthFive
 import LeanPool.ThreeGap.SimultaneousDirichlet
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Euclidean record denominators ⟹ `g₂ ≤ 6` (combinatorial, unconditional)
@@ -23,6 +29,8 @@ values of the Euclidean nearest-neighbour distance `gapVal (deltaE α) N q`.
 Dirichlet via `deltaN(euclNorm 2) α q ≤ √2 · delta α q` (the Euclidean norm is `≤ √2 ·` the sup norm
 in the plane). The sharp `g₂ ≤ 5` needs Romanov's `K = 4`; this is the `K = 5` bound. Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.EuclideanRecords
 

@@ -6,7 +6,9 @@ Authors: Alfie Davies, Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Form.Classes
-public import LeanPool.MisereGames.Form.Birthday
+public import LeanPool.MisereGames.Outcome
+public meta import Mathlib.Tactic.ToDual
+import LeanPool.MisereGames.Form.Birthday
 
 /-!
 Misere combinatorial games.

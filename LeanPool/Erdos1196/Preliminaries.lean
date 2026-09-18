@@ -3,14 +3,13 @@ Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Math Inc
 -/
-import LeanPool.Erdos1196.Basic
+module
+
+public import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.PreliminariesMertens
 import LeanPool.Erdos1196.PreliminariesTailAux
-import Mathlib.Analysis.SpecialFunctions.Log.InvLog
-import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Analysis.SumIntegralComparisons
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import Mathlib.NumberTheory.AbelSummation
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 # Tail estimates for primitive sets above `x`
@@ -25,6 +24,8 @@ The arithmetic input for the Mertens partial sums lives in
 
 * `tailEstimate`
 -/
+
+@[expose] public section
 
 open scoped ArithmeticFunction BigOperators Topology
 open Filter MeasureTheory

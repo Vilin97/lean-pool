@@ -3,9 +3,15 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
+
+public import LeanPool.ThreeGap.SimultaneousApprox
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
+import LeanPool.ThreeGap.EuclideanAngle
 import LeanPool.ThreeGap.EuclideanGrowthFive
-import LeanPool.ThreeGap.FiveDistance
 import Mathlib.Geometry.Euclidean.Angle.Unoriented.TriangleInequality
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Toward the sharp Euclidean five-distance theorem via Haynes–Marklof Theorem 8
@@ -32,6 +38,8 @@ record
 See the module docstring of `RomanovK4` and `MATHLIB_SUCCESSIVE_MINIMA_SCOPE.md` for the alternative
 (Romanov / lattice-minima) routes; this file pursues the elementary HM Theorem-8 route.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.FiveDistanceHM
 

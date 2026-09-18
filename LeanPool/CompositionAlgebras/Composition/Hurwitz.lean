@@ -3,9 +3,20 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.Doubling
-import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+module
+
+public import LeanPool.CompositionAlgebras.Composition.Doubling
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
 import Mathlib.LinearAlgebra.Dual.Lemmas
+import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
+import Mathlib.Logic.Equiv.PartialEquiv
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!
@@ -64,6 +75,8 @@ dimension theorem, which it uses only once, to know the third double is everythi
 This file carries `finrank_eq_one_or_two_or_four_or_eight`, Hurwitz's theorem in
 dimension form.
 -/
+
+@[expose] public section
 
 namespace CompositionAlgebra
 

@@ -3,10 +3,13 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummarySoundness
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummarySoundness
 
 /-! # Canonical audits for dense certificate summaries -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

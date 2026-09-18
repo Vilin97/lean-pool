@@ -3,16 +3,24 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Player
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.BuildStrategies
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.GaleStewart
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Games
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Player
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Strategies
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Game.Undetermined
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Game index
 
 Import-only index for Gale-Stewart game definitions, strategies, and examples.
 -/
+
+@[expose] public section

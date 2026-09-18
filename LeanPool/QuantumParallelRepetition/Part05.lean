@@ -3,10 +3,13 @@ Copyright (c) 2026 OpenAI and Dean Cureton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.QuantumParallelRepetition.Part04
+public import LeanPool.QuantumParallelRepetition.Part04
 
 /-! # Quantum parallel repetition, part 05 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -843,7 +846,8 @@ attribute [local instance] Classical.propDecidable
 variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
-private def exactFairAliceQuestionEntropyIncrement
+/-- Alice's question-to-mean entropy increment paired with Bob's question filter. -/
+def exactFairAliceQuestionEntropyIncrement
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) (y : Y) : ℝ :=
@@ -858,7 +862,8 @@ private def exactFairAliceQuestionEntropyIncrement
     (exactBobQuestionFilter
       G n S D r.seed r.history r.bobAnswer y)
 
-private def exactFairBobQuestionEntropyIncrement
+/-- Bob's question-to-mean entropy increment paired with Alice's question filter. -/
+def exactFairBobQuestionEntropyIncrement
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) (x : X) : ℝ :=
@@ -1739,7 +1744,8 @@ open scoped BigOperators
 
 attribute [local instance] Classical.propDecidable
 
-private def exactInsertedRank
+/-- Extend a side ranking by inserting the new coordinate at the chosen cut. -/
+def exactInsertedRank
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side)
     (rank : {j : M // j ∈ side} ≃ Fin side.card)
@@ -2668,13 +2674,14 @@ open QuantumParallelRepetition.ClassicalInformation
 
 attribute [local instance] Classical.propDecidable
 
-private def exactReverseAliceCanonicalPartition
+/-- The reverse partition placing the side on Alice's side, with a free marked bit. -/
+def exactReverseAliceCanonicalPartition
     {M : Type*} [DecidableEq M]
     (side : Finset M) (coordinate : M) (ignored : Bool) : M → Bool :=
   fun j => if j = coordinate then ignored
     else if j ∈ side then false else true
 
-private theorem exactReverseAliceCanonicalPartition_side
+theorem exactReverseAliceCanonicalPartition_side
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -2734,13 +2741,14 @@ private def exactReverseAlicePartitionFiberEquiv
   right_inv ignored := by
     simp only [exactReverseAliceCanonicalPartition, ↓reduceIte]
 
-private def exactReverseBobCanonicalPartition
+/-- The reverse partition placing the side on Bob's side, with a free marked bit. -/
+def exactReverseBobCanonicalPartition
     {M : Type*} [DecidableEq M]
     (side : Finset M) (coordinate : M) (ignored : Bool) : M → Bool :=
   fun j => if j = coordinate then ignored
     else if j ∈ side then true else false
 
-private theorem exactReverseBobCanonicalPartition_side
+theorem exactReverseBobCanonicalPartition_side
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -3198,7 +3206,8 @@ theorem exactReverseBobConditionalSeedWeight_sum
       rw [exactReverseBobSide_marginal]
       exact div_self hside.ne'
 
-private def exactForwardSeedLaw
+/-- The normalized finite law of forward seeds. -/
+def exactForwardSeedLaw
     {M : Type*} [Fintype M] [DecidableEq M]
     (nonempty : 0 < Fintype.card M) :
     FiniteEventLaw (ExactForwardSeed M) where
@@ -4558,7 +4567,8 @@ open QuantumParallelRepetition.ClassicalInformation
 
 attribute [local instance] Classical.propDecidable
 
-private def exactInsertedOldSubtypeEquiv
+/-- Identify the original side with the inserted side after excluding the new coordinate. -/
+def exactInsertedOldSubtypeEquiv
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side) :
     {j : M // j ∈ side} ≃
@@ -4577,7 +4587,8 @@ private def exactInsertedOldSubtypeEquiv
     apply Subtype.ext
     rfl
 
-private def exactDeleteMarkedRank
+/-- Remove the marked coordinate and its cut from an extended side ranking. -/
+def exactDeleteMarkedRank
     {M : Type*} [DecidableEq M]
     (i : M) (side : Finset M) (not_mem : i ∉ side)
     (rank : {j : M // j ∈ insert i side} ≃
@@ -4666,7 +4677,8 @@ open QuantumParallelRepetition.ClassicalInformation
 
 attribute [local instance] Classical.propDecidable
 
-private def exactPermutationOfSideRank
+/-- The side permutation whose inverse followed by the canonical ranking is `rank`. -/
+def exactPermutationOfSideRank
     {M : Type*}
     (side : Finset M)
     (rank : {j : M // j ∈ side} ≃ Fin side.card) :
@@ -4684,7 +4696,7 @@ private theorem exactPermutationOfSideRank_rank
   simp only [exactPermutationOfSideRank, Equiv.symm_trans, Equiv.symm_symm, Equiv.trans_apply,
     Equiv.apply_symm_apply]
 
-private theorem exactReverseAliceCanonicalPartition_otherSide
+theorem exactReverseAliceCanonicalPartition_otherSide
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -4702,7 +4714,7 @@ private theorem exactReverseAliceCanonicalPartition_otherSide
         exactReverseAliceCanonicalPartition,
         marked, belongs]
 
-private theorem exactReverseBobCanonicalPartition_otherSide
+theorem exactReverseBobCanonicalPartition_otherSide
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -4720,7 +4732,7 @@ private theorem exactReverseBobCanonicalPartition_otherSide
         exactReverseBobCanonicalPartition,
         marked, belongs]
 
-private theorem exactReverseAliceCanonicalPartition_card
+theorem exactReverseAliceCanonicalPartition_card
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :
@@ -4732,7 +4744,7 @@ private theorem exactReverseAliceCanonicalPartition_card
       side coordinate member ignored)
   simpa only [exactLeft_coordinate_not_mem, not_false_eq_true, card_insert_of_notMem] using h
 
-private theorem exactReverseBobCanonicalPartition_card
+theorem exactReverseBobCanonicalPartition_card
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (coordinate : M)
     (member : coordinate ∈ side) (ignored : Bool) :

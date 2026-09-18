@@ -3,9 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.Certificate
-import LeanPool.Sundogcert.Looseness
+public import LeanPool.Sundogcert.Looseness
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
   Sundogcert/CertWall.lean — TYPING the imported hardness wall as a CONDITIONAL theorem.
@@ -49,6 +50,8 @@ import LeanPool.Sundogcert.Looseness
   (`colWeightLb_cannot_be_tight_basisRobust`) is a CONSEQUENCE of (2)+(3) stated about
   `colWeightLb` only — never a claim about the hardness of decoding itself.
 -/
+
+@[expose] public section
 
 open Matrix
 

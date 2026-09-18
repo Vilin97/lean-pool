@@ -3,9 +3,10 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
+public import Mathlib.Analysis.Analytic.Basic
 import Mathlib.Analysis.Analytic.Order
-import Mathlib.Topology.Algebra.Module.PerfectSpace
 
 /-!
 # Density from one-dimensional analytic nonvanishing
@@ -14,6 +15,8 @@ This file packages the isolated-zero argument used in Poincaré's perturbing-fun
 calculation.  A real-analytic function on a connected open set that is nonzero at one point is
 nonzero on a dense subset of that set.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

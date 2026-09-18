@@ -3,16 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Finset.Max
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Order.Filter.Cofinite
-import Mathlib.LinearAlgebra.Eigenspace.Basic
+module
+
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactOperatorOrthonormal
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 
 /-!
 # Compact self-adjoint operators: spectral finiteness toolkit
@@ -34,6 +31,8 @@ These are standard ingredients for spectral-iteration proofs and compact-resolve
 
 - `CompactSelfAdjoint.tendsto_norm_of_injective_hasEigenvalue_of_isCompactOperator_of_isSelfAdjoint`
 -/
+
+@[expose] public section
 
 namespace CompactSelfAdjoint
 

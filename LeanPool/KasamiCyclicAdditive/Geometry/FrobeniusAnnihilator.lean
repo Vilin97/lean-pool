@@ -3,11 +3,16 @@ Copyright (c) 2026 D.S. McNeil, Gábor P. Nagy, Attila Vajda. All rights reserve
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: D.S. McNeil, Gábor P. Nagy, Attila Vajda
 -/
+module
 
-import LeanPool.KasamiCyclicAdditive.Prelude
-import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
-import LeanPool.KasamiCyclicAdditive.Geometry.Descent.Arithmetic
-import LeanPool.KasamiCyclicAdditive.Geometry.IsogenyFactor
+public import LeanPool.KasamiCyclicAdditive.Geometry.PointFrobenius
+public import LeanPool.KasamiCyclicAdditive.Geometry.Descent.Arithmetic
+public import LeanPool.KasamiCyclicAdditive.Geometry.IsogenyFactor
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # The Frobenius annihilator on `E(K)`
@@ -25,6 +30,8 @@ annihilates `E(K)`.  That is the hypothesis `hann` of
 it makes `G` bijective on `E(K)` — no algebraic closure and no kernel
 decomposition.
 -/
+
+@[expose] public section
 
 open KasamiCyclicAdditive.FermatCubic
 

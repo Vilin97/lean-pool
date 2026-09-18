@@ -3,14 +3,21 @@ Copyright (c) 2026 Fernando Portela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fernando Portela, Google DeepMind
 -/
+module
 
-import LeanPool.KrafftSieve.OptimalWeights
+public import LeanPool.KrafftSieve.OptimalWeights
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.NormNum.RealSqrt
 
 
 /-!
 # Main Theorem
 
 -/
+
+@[expose] public section
 
 namespace KrafftSieve
 

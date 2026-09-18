@@ -3,8 +3,11 @@ Copyright (c) 2026 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+module
 
-import LeanPool.AharoniKorman.Counterexample
+public import LeanPool.AharoniKorman.Counterexample
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Disproof of the Aharoni-Korman Conjecture
@@ -16,6 +19,8 @@ Main declarations: `LeanPool.AharoniKorman.aharoni_korman_false`
 Tags: order-theory, combinatorics, partial-orders
 MSC: 06A06, 06A07
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

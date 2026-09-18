@@ -3,11 +3,13 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
-import LeanPool.BollobasNikiforov.Main
-import LeanPool.BollobasNikiforov.M.Main
-import LeanPool.BollobasNikiforov.Spectral.Gram
-import LeanPool.BollobasNikiforov.Spectral.Conic
+public import LeanPool.BollobasNikiforov.Main
+public import LeanPool.BollobasNikiforov.M.Main
+public import LeanPool.BollobasNikiforov.Spectral.Gram
+public import LeanPool.BollobasNikiforov.Spectral.Weighted
+public import LeanPool.BollobasNikiforov.Spectral.Conic
 
 /-!
 # The Bollobás–Nikiforov conjecture

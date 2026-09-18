@@ -3,12 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Path.Periods
+import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import LeanPool.JacobianDiffgeo.Path.Planar
 import LeanPool.JacobianDiffgeo.PeriodLattice.FormIdentity
 import LeanPool.JacobianDiffgeo.PeriodLattice.Segment
-import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
 import Mathlib.Analysis.Complex.OpenMapping
-import Mathlib.Topology.Order.Compact
+import Mathlib.CategoryTheory.Category.Init
 
 /-!
 # Nondegeneracy via the maximum principle (Forster 21.4(c), §5.1)
@@ -21,6 +24,8 @@ the complex open mapping theorem — no Hodge, no de Rham, no dissection, no 2-f
 
 Main declaration: `RS.form1_eq_zero_of_re_period_eq_zero`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter Metric IsManifold

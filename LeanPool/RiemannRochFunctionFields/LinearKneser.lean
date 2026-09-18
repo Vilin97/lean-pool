@@ -6,10 +6,7 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.Basic
-public import Mathlib.Algebra.Algebra.Operations
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
-public import Mathlib.RingTheory.Finiteness.Subalgebra
-public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # A linear Cauchy–Davenport bound over a full constant field

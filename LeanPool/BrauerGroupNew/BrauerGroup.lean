@@ -3,21 +3,32 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
-import LeanPool.BrauerGroupNew.CentralSimple
-import LeanPool.BrauerGroupNew.FieldCat
-import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
-import Mathlib.Algebra.BrauerGroup.Defs
-import Mathlib.Algebra.Central.Matrix
+module
+
+public import Mathlib.Algebra.Central.Basic
+
+public import LeanPool.BrauerGroupNew.CentralSimple
+public import LeanPool.BrauerGroupNew.FieldCat
+public import Mathlib.Algebra.BrauerGroup.Defs
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Algebra.Azumaya.Basic
+public import Mathlib.Algebra.Central.Matrix
 import Mathlib.Analysis.Complex.Polynomial.Basic
 import Mathlib.LinearAlgebra.FreeModule.PID
-import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.RingTheory.SimpleRing.Matrix
+public import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
+public import Mathlib.RingTheory.SimpleRing.Matrix
 
 /-!
 # LeanPool.BrauerGroupNew.BrauerGroup
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.BrauerGroup`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 universe u v v₁ v₂ w
@@ -33,42 +44,14 @@ lemma bijective_of_dim_eq_of_isCentralSimple
     [fin_target : FiniteDimensional K B]
     (f : A →ₐ[K] B) (h : Module.finrank K A = Module.finrank K B) :
     Function.Bijective f := by
-  obtain hA|hA := subsingleton_or_nontrivial A
-  · have eq1 : Module.finrank K A = 0 := by
-      rw [finrank_zero_iff_forall_zero]
-      intro x
-      apply Subsingleton.elim
-    rw [eq1] at h
-    replace h : Subsingleton B := by
-      constructor
-      symm at h
-      rw [finrank_zero_iff_forall_zero] at h
-      simp_all
-    rw [Function.bijective_iff_existsUnique]
-    intro b
-    refine ⟨0, Subsingleton.elim _ _, fun _ _ => Subsingleton.elim _ _⟩
-  · have := IsSimpleRing.iff_injective_ringHom_or_subsingleton_codomain A |>.1 csa_source
-      f.toRingHom
-    rcases this with (H|H)
-    · refine ⟨H, ?_⟩
-      change Function.Surjective f.toLinearMap
-      have := f.toLinearMap.finrank_range_add_finrank_ker
-      rw [show Module.finrank K (LinearMap.ker f.toLinearMap) = 0 by
-        rw [finrank_zero_iff_forall_zero]
-        rintro ⟨x, hx⟩
-        rw [LinearMap.ker_eq_bot (f := f.toLinearMap) |>.2 H] at hx
-        simp_all, add_zero, h] at this
-      rw [← LinearMap.range_eq_top]
-      apply Submodule.eq_top_of_finrank_eq
-      exact this
-    · have : (1 : A) ∈ TwoSidedIdeal.ker f.toRingHom := by
-        simp only [AlgHom.toRingHom_eq_coe, TwoSidedIdeal.mem_ker, map_one]
-        exact Subsingleton.elim _ _
-      simp only [AlgHom.toRingHom_eq_coe, TwoSidedIdeal.mem_ker, map_one] at this
-      have hmm : Nontrivial B := by
-        let e := LinearEquiv.ofFinrankEq _ _ h
-        exact Equiv.nontrivial e.symm.toEquiv
-      exact one_ne_zero this |>.elim
+  obtain hB | hB := subsingleton_or_nontrivial B
+  · let equiv := LinearEquiv.ofFinrankEq _ _ h
+    have : Subsingleton A := ⟨fun x y ↦ equiv.injective (Subsingleton.elim _ _)⟩
+    exact ⟨fun _ _ _ ↦ Subsingleton.elim _ _, fun b ↦ ⟨0, Subsingleton.elim _ _⟩⟩
+  · have hf : Function.Injective f :=
+      (IsSimpleRing.iff_injective_ringHom A).1 csa_source f.toRingHom
+    exact ⟨hf, (LinearMap.injective_iff_surjective_of_finrank_eq_finrank h
+      (f := f.toLinearMap)).1 hf⟩
 
 lemma bijective_of_surj_of_isCentralSimple
     [csa_source : IsSimpleRing A]
@@ -176,22 +159,7 @@ def matrixEqv' (n m : ℕ) (A : Type*) [Ring A] [Algebra K A] :
 { Matrix.reindexLinearEquiv K A finProdFinEquiv finProdFinEquiv with
   toFun := Matrix.reindex finProdFinEquiv finProdFinEquiv
   map_mul' := fun m n ↦ by simp only [Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
-  commutes' := fun k ↦ by
-    ext i j
-    simp only [Matrix.reindex_apply, Matrix.submatrix_apply, finProdFinEquiv_symm_apply,
-      Matrix.algebraMap_matrix_apply, Prod.mk.injEq]
-    if h : i = j then aesop
-    else
-    simp only [h, ↓reduceIte, ite_eq_right_iff, and_imp]
-    intro h1 h2
-    have : i = j := by
-      have : (⟨i.divNat, i.modNat⟩ : Fin n × Fin m) = ⟨j.divNat, j.modNat⟩ := Prod.ext h1 h2
-      apply_fun finProdFinEquiv at this
-      rw [show ⟨i.divNat, i.modNat⟩ = finProdFinEquiv.symm i by rfl,
-        show ⟨j.divNat, _⟩ = finProdFinEquiv.symm j by rfl,
-        finProdFinEquiv.apply_symm_apply, finProdFinEquiv.apply_symm_apply] at this
-      exact this
-    tauto
+  commutes' := (Matrix.reindexAlgEquiv K A finProdFinEquiv).commutes
 }
 
 lemma iso_to_eqv (A B : CSA K) (h : A ≃ₐ[K] B) : IsBrauerEquivalent A B :=
@@ -307,30 +275,11 @@ lemma matrixEquivForward_surjective
     (n m : Type*) [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] :
     Function.Surjective <| matrixEquivForward (K := K) m n := by
   intro x
-  rw [Matrix.matrix_eq_sum_single x]
-  suffices H :
-      ∀ (i j : m × n), ∃ a, (matrixEquivForward (K := K) m n) a = Matrix.single i j (x i j) by
-    choose a ha using H
-    use ∑ i : m × n, ∑ j : m × n, a i j
-    simp_all
-  intro i j
-  rw [show Matrix.single i j (x i j) = (x i j) • Matrix.single i j 1 by
-    simp_all]
-  use (x i j) • ((Matrix.single i.1 j.1 1) ⊗ₜ (Matrix.single i.2 j.2 1))
-  rw [_root_.map_smul (f := (matrixEquivForward (K := K) m n)) (x i j)]
-  congr 1
-  rw [matrixEquivForward_tmul]
-  ext a b
-  rw [Matrix.kroneckerMap_apply]
-  simp only [Matrix.single, Matrix.of_apply, mul_ite, mul_one, mul_zero]
-  split_ifs with h1 h2 h3 h4 h5
-  · rfl
-  · simp only [not_and, ne_eq] at h3
-    refine h3 ?_ ?_ |>.elim <;> ext <;> aesop
-  · simp_all
-  · rfl
-  · simp_all
-  · rfl
+  refine ⟨∑ i : m × n, ∑ j : m × n,
+    Matrix.single i.1 j.1 (x i j) ⊗ₜ[K] Matrix.single i.2 j.2 1, ?_⟩
+  simp only [map_sum, matrixEquivForward_tmul, Matrix.single_kronecker_single, mul_one,
+    Prod.eta]
+  exact (Matrix.matrix_eq_sum_single x).symm
 
 /-- The tensor product of matrix algebras is a matrix algebra on the product index type. -/
 def matrixEqv (m n : ℕ) : (Matrix (Fin m) (Fin m) K) ⊗[K] (Matrix (Fin n) (Fin n) K) ≃ₐ[K]
@@ -510,57 +459,16 @@ def baseChangeTensorEquiv :
     (E ⊗[K] A) ⊗[E] (E ⊗[K] B) ≃ₐ[E] E ⊗[K] (A ⊗[K] B) :=
   AlgEquiv.ofLinearEquiv (baseChangeTensorLinear (K := K) (E := E) A B)
     (by simp [baseChangeTensorLinear, Algebra.TensorProduct.one_def])
-    (by
-      let f := baseChangeTensorLinear (K := K) (E := E) A B
-      apply LinearMap.map_mul_of_map_mul_tmul
-      intro x1 x2 y1 y2
-      change f ((x1 * x2) ⊗ₜ[E] (y1 * y2)) = f (x1 ⊗ₜ[E] y1) * f (x2 ⊗ₜ[E] y2)
-      induction x1 using TensorProduct.inductionOn with
-      | add x1 x1' hx hx' =>
-        simp only [add_mul, TensorProduct.add_tmul, f.map_add, hx, hx', add_mul]
-      | tmul e1 a1 =>
-      induction x2 using TensorProduct.inductionOn with
-      | add x2 x2' hx hx' =>
-        simp only [mul_add, TensorProduct.add_tmul, f.map_add, hx, hx', mul_add]
-      | tmul e2 a2 =>
-      induction y1 using TensorProduct.inductionOn with
-      | add y1 y1' hy hy' =>
-        simp only [add_mul, TensorProduct.tmul_add, f.map_add, hy, hy', add_mul]
-      | tmul e3 b1 =>
-      induction y2 using TensorProduct.inductionOn with
-      | add y2 y2' hy hy' =>
-        simp only [mul_add, TensorProduct.tmul_add, f.map_add, hy, hy', mul_add]
-      | tmul e4 b2 =>
-        rw [Algebra.TensorProduct.tmul_mul_tmul, Algebra.TensorProduct.tmul_mul_tmul]
-        rw [show f (((e1 * e2) ⊗ₜ[K] (a1 * a2)) ⊗ₜ[E]
-            ((e3 * e4) ⊗ₜ[K] (b1 * b2))) =
-            ((e1 * e2) * (e3 * e4)) ⊗ₜ[K] ((a1 * a2) ⊗ₜ[K] (b1 * b2)) from
-          baseChangeTensorLinear_tmul (K := K) (E := E) A B (e1 * e2) (e3 * e4)
-            (a1 * a2) (b1 * b2)]
-        rw [show f ((e1 ⊗ₜ[K] a1) ⊗ₜ[E] (e3 ⊗ₜ[K] b1)) =
-            (e1 * e3) ⊗ₜ[K] (a1 ⊗ₜ[K] b1) from
-          baseChangeTensorLinear_tmul (K := K) (E := E) A B e1 e3 a1 b1]
-        rw [show f ((e2 ⊗ₜ[K] a2) ⊗ₜ[E] (e4 ⊗ₜ[K] b2)) =
-            (e2 * e4) ⊗ₜ[K] (a2 ⊗ₜ[K] b2) from
-          baseChangeTensorLinear_tmul (K := K) (E := E) A B e2 e4 a2 b2]
-        rw [Algebra.TensorProduct.tmul_mul_tmul, Algebra.TensorProduct.tmul_mul_tmul]
-        ring_nf)
+    ((LinearMap.map_mul_iff _).2 <| by
+      ext a1 b1 a2 b2
+      simp [baseChangeTensorLinear, Algebra.TensorProduct.tmul_mul_tmul,
+        Algebra.smul_def])
 
 /-- If the matrix index is empty, the scalar-extension tensor source is subsingleton. -/
 lemma e3Aux3 (hm : m = 0) :
     Subsingleton ((E ⊗[K] A) ⊗[E] (E ⊗[K] Matrix (Fin m) (Fin m) K)) := by
-  suffices ∀ a : (E ⊗[K] A) ⊗[E] (E ⊗[K] Matrix (Fin m) (Fin m) K), a = 0 by
-    exact ⟨fun a b => by rw [this a, this b]⟩
   subst hm
-  intro x
-  induction x using TensorProduct.inductionOn with
-  | add e a he ha => rw [he, ha, zero_add]
-  | tmul e a =>
-    induction a using TensorProduct.inductionOn with
-    | add _ _ hx hy => rw [TensorProduct.tmul_add, hx, hy, add_zero]
-    | tmul e' mat =>
-      rw [show mat = 0 from Subsingleton.elim _ _]
-      simp
+  infer_instance
 
 /-- The algebra homomorphism underlying `e3`. -/
 def e3Aux4 :
@@ -584,29 +492,11 @@ def e2 :
   Algebra.TensorProduct.congr .refl <|
     { __ := matrixEquivTensor (Fin m) K E
       commutes' e := by
-        simp only [AlgEquiv.toEquiv_eq_coe, Equiv.toFun_as_coe, EquivLike.coe_coe,
-          matrixEquivTensor_apply, Fintype.sum_prod_type,
-          Algebra.TensorProduct.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
-        simp_rw [Matrix.algebraMap_eq_diagonal]
-        simp_rw [Matrix.diagonal_apply]
-        simp only [Pi.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
-        rw [show
-          ∑ x : Fin m, ∑ y : Fin m,
-            (if x = y then e else 0) ⊗ₜ[K] Matrix.single x y (1 : K) =
-          ∑ x : Fin m, e ⊗ₜ[K] Matrix.single x x 1 by
-            refine Finset.sum_congr rfl fun x _ => ?_
-            rw [show e ⊗ₜ[K] Matrix.single x x (1 : K) =
-              (if x = x then e else 0) ⊗ₜ Matrix.single x x (1 : K) by aesop]
-            apply Finset.sum_eq_single
-            · aesop
-            · aesop]
-        rw [← TensorProduct.tmul_sum]
-        congr 1
-        ext i j
-        rw [Matrix.sum_apply]
-        by_cases h : i = j
-        · subst h; simp [Matrix.single]
-        · simp_all }
+        change matrixEquivTensor (Fin m) K E (Matrix.diagonal fun _ ↦ e) =
+          e ⊗ₜ[K] (1 : Matrix (Fin m) (Fin m) K)
+        rw [← Matrix.sum_single_eq_diagonal, map_sum]
+        simp only [matrixEquivTensor_apply_single]
+        rw [← TensorProduct.tmul_sum, Matrix.sum_single_one] }
 
 /-- Reassociates a tensor product after base change along `K → E`. -/
 def e3 :
@@ -767,34 +657,9 @@ def Aux' (F K E : Type u) [Field F] [Field K] [Field E]
     { smul_comm := fun a b c => by
         rw [Algebra.smul_def, Algebra.smul_def, ← _root_.mul_assoc, mul_comm (algebraMap _ _ a),
           Algebra.smul_def, Algebra.smul_def, _root_.mul_assoc] }
-  refine .ofLinearEquiv (Aux F K E A) ?_ fun x y ↦ ?_
-  · simp [Algebra.TensorProduct.one_def]
-  induction x using TensorProduct.inductionOn with
-  | add => simp only [add_mul, (Aux F K E A).map_add, *]
-  | tmul =>
-  induction y using TensorProduct.inductionOn with
-  | add => simp only [mul_add, (Aux F K E A).map_add, *]
-  | tmul =>
-  rename_i x1 y1 x2 y2
-  simp only [Aux, Algebra.TensorProduct.tmul_mul_tmul, LinearEquiv.trans_apply]
-  set f := (TensorProduct.AlgebraTensorModule.congr
-    (TensorProduct.AlgebraTensorModule.rid K E E) (LinearEquiv.refl F A))
-  set g := (TensorProduct.AlgebraTensorModule.assoc F K E E K A.carrier).symm
-  change f (g _) = _
-  induction y1 using TensorProduct.inductionOn with
-  | add => simp only [add_mul, TensorProduct.tmul_add, g.map_add, f.map_add, *]
-  | tmul k1 a1 =>
-  induction y2 using TensorProduct.inductionOn with
-  | add => simp only [mul_add, TensorProduct.tmul_add, g.map_add, f.map_add, *]
-  | tmul k2 a2 =>
-  simp only [Algebra.TensorProduct.tmul_mul_tmul, *]
-  simp only [TensorProduct.AlgebraTensorModule.assoc_symm_tmul,
-    TensorProduct.AlgebraTensorModule.congr_tmul, TensorProduct.AlgebraTensorModule.rid_tmul,
-    LinearEquiv.refl_apply, Algebra.TensorProduct.tmul_mul_tmul, Algebra.mul_smul_comm,
-    Algebra.smul_mul_assoc, f, g]
-  congr 1
-  rw [mul_comm k1 k2]
-  exact mul_smul k2 k1 (x1 * x2)
+  let equiv := (Algebra.TensorProduct.assoc F K E E K A).symm.trans
+    (Algebra.TensorProduct.congr (Algebra.TensorProduct.rid K E E) (AlgEquiv.refl (R := F)))
+  exact .ofLinearEquiv (Aux F K E A) equiv.map_one equiv.map_mul
 
 end baseChangeIdem
 

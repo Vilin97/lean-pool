@@ -3,19 +3,25 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import Mathlib.Topology.Basic
-import Mathlib.Topology.Constructions
-import Mathlib.Topology.Order
-import Mathlib.Order.Filter.Pi
-import Mathlib.Data.Stream.Init
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.FinLists
+public import Mathlib.Topology.Constructions
+public import Mathlib.Data.Stream.Init
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.General
+import LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.Meta
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Basic.InfLists
 
 Auxiliary declarations for the Borel determinacy formalization.
 -/
+
+@[expose] public section
 
 
 namespace Stream'

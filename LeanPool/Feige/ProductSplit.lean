@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.InsertionExpectation
-import LeanPool.Feige.TwoPointInduction
+module
+
+public import LeanPool.Feige.InsertionExpectation
+public import LeanPool.Feige.TwoPointInduction
 
 /-!
 # Splitting a finite product law at its last coordinate
@@ -13,6 +15,8 @@ These identities are the finite-sum/Tonelli layer used in the two-point
 induction for Theorem 2.1.  Every high set on `Fin (n + 1)` is uniquely a
 lifted old high set, with or without the last coordinate.
 -/
+
+@[expose] public section
 
 open Finset
 

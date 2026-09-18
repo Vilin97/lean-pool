@@ -5,8 +5,13 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.DedekindZeta.Coefficients
-public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Local Factor

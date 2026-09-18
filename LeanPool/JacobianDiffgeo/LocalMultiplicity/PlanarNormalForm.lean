@@ -7,9 +7,12 @@ Authors: Rado Kirov
 /-
 Blueprint unit: local-multiplicity (CC4). Planar normal form `f = f z₀ + φ ^ k`.
 -/
+module
+
+public import Mathlib.Analysis.Analytic.Order
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
-import Mathlib.Analysis.Analytic.Order
-import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Planar normal form (Forster Thm 2.1, planar half)
@@ -24,6 +27,8 @@ import Mathlib.Analysis.Calculus.InverseFunctionTheorem.Analytic
   with a bi-analytic germ (left twin of mathlib's `analyticOrderAt_comp_of_deriv_ne_zero`).
 * `RS.image_pow_ball`: `(· ^ k)` maps `ball 0 ρ` onto `ball 0 (ρ ^ k)`.
 -/
+
+@[expose] public section
 
 open Filter Complex Metric
 open scoped Topology

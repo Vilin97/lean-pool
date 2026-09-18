@@ -3,7 +3,17 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCMem
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCMem
+public import LeanPool.InfinitaryLogic.Methods.LopezEscobar.PCSentence
+public import LeanPool.InfinitaryLogic.ModelTheory.PCClass
+import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 /-!
 # Tagged-expansion gluing (issue #10, Unit 4 commit 2)
 
@@ -16,6 +26,8 @@ agrees with `Sl` on the left sentence's occurrence set and with `Sr` on the righ
 Endpoint (`pcMem_glue`): `PCMem ψleft M ∧ PCMem ψright M → ∃ S, Realize ψleft M ∧ Realize ψright M`,
 the realizations using `S`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

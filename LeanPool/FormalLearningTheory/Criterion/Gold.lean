@@ -3,9 +3,10 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Learner.Core
+module
+
+public import LeanPool.FormalLearningTheory.Data
+public import LeanPool.FormalLearningTheory.Learner.Core
 
 /-!
 # Gold-Style Success Criteria (Identification in the Limit)
@@ -18,6 +19,8 @@ All share the quantifier pattern:
 
 The variation is in what "..." requires.
 -/
+
+@[expose] public section
 
 universe u v
 

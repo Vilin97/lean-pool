@@ -6,10 +6,10 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Util.TrigPolynomial
-public import Mathlib.Data.Matrix.Mul
-public import Mathlib.Tactic.Common
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Nat.Totient
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Fourier representation of the quantum kernel
 
