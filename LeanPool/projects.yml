@@ -9174,6 +9174,45 @@ projects:
     msc:
       - "05C21"
       - "90C35"
+  - slug: even-graph-cycle-decomposition
+    title: Even graphs are edge-disjoint unions of cycles
+    summary: >-
+      Decomposes every finite loopless edge set with even degree at each vertex into edge-disjoint
+      simple cycles and derives a simultaneous fixed-point-free pairing of incident edges.
+    branch: graph theory and combinatorics
+    entry_module: LeanPool.EvenGraphCycles
+    authors:
+      - Juan Pablo Traverso Gianini
+      - Aristotle
+    source:
+      title: >-
+        Reusable even-graph cycle decomposition accompanying Linear-Error Clique Partitions of
+        Split Graphs via Structured Triangle Packing
+      authors:
+        - Juan Pablo Traverso Gianini
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/b3423f3e8c8db7c2d1b279673293ef3079faf903/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Contrib/EvenGraphCycles.lean
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Finset.exists_cycleDecomp
+      - Finset.exists_edge_pairing_of_even
+    main_results:
+      - declaration: Finset.exists_cycleDecomp
+        informal: >-
+          Every finite loopless edge set whose degree is even at every vertex is the edge-disjoint
+          union of simple cycles of length at least three.
+      - declaration: Finset.exists_edge_pairing_of_even
+        informal: >-
+          If every vertex has even degree, then the incident edges at every vertex admit a
+          simultaneous fixed-point-free involutive pairing.
+    tags:
+      - graph-theory
+      - eulerian-graphs
+      - cycle-decompositions
+    msc:
+      - "05C45"
   - slug: hopf-problem
     title: A complex structure on the six-sphere
     summary: >-
