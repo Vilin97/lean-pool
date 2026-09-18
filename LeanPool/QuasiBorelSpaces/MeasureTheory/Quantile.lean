@@ -51,9 +51,7 @@ private noncomputable def cdf (μ : Measure I) (i : I) : I where
 @[simp]
 private lemma cdf_apply_val (μ : Measure I) [IsProbabilityMeasure μ] (i : I)
     : (cdf μ i).val = (μ (Set.Iic i)).toReal := by
-  have : IsProbabilityMeasure (μ.map Subtype.val) := by
-    apply Measure.isProbabilityMeasure_map
-    fun_prop
+  have : IsProbabilityMeasure (μ.map Subtype.val) := inferInstance
   simp only [cdf, ProbabilityTheory.cdf_eq_real, Measure.real]
   rw [Measure.map_apply]
   · rfl
@@ -65,9 +63,7 @@ private lemma measurable_cdf
     {μ : A → Measure I} [∀ x, IsProbabilityMeasure (μ x)] (hμ : Measurable μ)
     {i : A → I} (hi : Measurable i)
     : Measurable fun x ↦ cdf (μ x) (i x) := by
-  have {x} : IsProbabilityMeasure  ((μ x).map Subtype.val) := by
-    apply Measure.isProbabilityMeasure_map
-    fun_prop
+  have {x} : IsProbabilityMeasure  ((μ x).map Subtype.val) := inferInstance
   have : ProbabilityTheory.IsFiniteKernel ⟨μ, hμ⟩ := by
     use 1
     simp only [ENNReal.one_lt_top, measure_univ, le_refl, implies_true, and_self]

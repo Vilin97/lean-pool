@@ -1335,8 +1335,6 @@ theorem integrable_weightedDiag (k n : ℕ) :
     intro hC
     apply hf
     convert hC.re using 1
-    funext x
-    exact (RCLike.ofReal_re (f x)).symm
   have hzero : weightedInner (Phi k n) (Phi k n) = 0 := by
     unfold weightedInner HermiteLEAN.weightedInner
     calc
@@ -4494,7 +4492,7 @@ private theorem weightedInner_norm_le_of_integrable
     _ = MeasureTheory.lpNorm (gaussianScale G) 2 volume *
           MeasureTheory.lpNorm (gaussianScale F) 2 volume := by
             rw [MeasureTheory.Lp.norm_toLp, MeasureTheory.Lp.norm_toLp,
-              ← MeasureTheory.toReal_eLpNorm hGmem.1, ← MeasureTheory.toReal_eLpNorm hFmem.1]
+              ← MeasureTheory.toReal_eLpNorm, ← MeasureTheory.toReal_eLpNorm]
     _ = weightedNorm G * weightedNorm F := by
           rw [← weightedNorm_eq_lpNorm_gaussianScale hGmeas hGint,
             ← weightedNorm_eq_lpNorm_gaussianScale hFmeas hFint]

@@ -10,6 +10,7 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.RankOne
 import LeanPool.Monlib4.Preq.RCLikeLe
 import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
 import Mathlib.Analysis.Normed.Module.Dual
+import Mathlib.Analysis.Normed.Module.HahnBanach
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.Convex.Extreme
 

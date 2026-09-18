@@ -217,8 +217,7 @@ theorem TensorProduct.of_basis_eq_span {𝕜 : Type _} {E : Type _} {F : Type _}
     (x : TensorProduct 𝕜 E F) {ι₁ ι₂ : Type _} [Fintype ι₁] [Fintype ι₂]
     (b₁ : Module.Basis ι₁ 𝕜 E) (b₂ : Module.Basis ι₂ 𝕜 F) :
     x = ∑ i : ι₁, ∑ j : ι₂, (b₁.tensorProduct b₂).repr x (i, j) • b₁ i ⊗ₜ[𝕜] b₂ j :=
-  x.induction_on
-    (by simp only [map_zero, Finsupp.zero_apply, zero_smul, Finset.sum_const_zero])
+  x.inductionOn
     (fun α₁ α₂ => by
       simp_rw [Module.Basis.tensorProduct_repr_tmul_apply, smul_eq_mul, mul_comm,
         ← TensorProduct.smul_tmul_smul, ← TensorProduct.tmul_sum, ← TensorProduct.sum_tmul,

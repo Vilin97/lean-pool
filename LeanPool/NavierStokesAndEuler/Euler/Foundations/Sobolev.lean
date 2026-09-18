@@ -64,7 +64,8 @@ theorem fourier_L1_le_sobolevNorm (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s)
     ext ξ
     simp only [Pi.smul_apply', weightedFourier_apply, smul_smul, besselWeight_neg_mul, one_smul]
   have hh := eLpNorm_smul_le_mul_eLpNorm (p := 2) (q := 2) (r := 1)
-    ((weightedFourier d s f).memLp 2 volume).1 (reciprocal_weight_memLp d s hs).1
+    (reciprocal_weight_memLp d s hs).aestronglyMeasurable
+    ((weightedFourier d s f).memLp 2 volume).aestronglyMeasurable
   rw [hid] at hh
   have hfin : eLpNorm (besselWeight d (-s)) 2 volume *
       eLpNorm (weightedFourier d s f) 2 volume ≠ ⊤ :=
@@ -94,7 +95,7 @@ theorem fourier_lineDeriv_norm_le (d : ℕ) (f : 𝓢(Domain d, F)) (m ξ : Doma
     rw [SchwartzMap.fourier_lineDerivOp_eq]
     simp [SchwartzMap.smulLeftCLM_apply_apply ht]
   have hc : ‖(2 * Real.pi * Complex.I : ℂ)‖ = 2 * Real.pi := by
-    simp [Real.pi_pos.le]
+    simp
   rw [he, norm_smul, norm_smul, hc]
   have hi := norm_inner_le_norm (𝕜 := ℝ) ξ m
   nlinarith [mul_le_mul_of_nonneg_left

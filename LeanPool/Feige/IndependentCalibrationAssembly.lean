@@ -42,7 +42,7 @@ theorem universalCalibration_dirichletK_of_twoPointRejectionBound
   have hZindep : iIndepFun Z μ :=
     meanOneNormalize_iIndepFun Y hYindep
   let hmarginal : ∀ i, IsProbabilityMeasure (marginal i) :=
-    fun i ↦ Measure.isProbabilityMeasure_map (hZmeas i).aemeasurable
+    fun i ↦ inferInstanceAs (IsProbabilityMeasure (μ.map (Z i)))
   have hmarginalInt :
       ∀ i, Integrable (fun x : ℝ ↦ x) (marginal i) :=
     fun i ↦ integrable_id_map (hZmeas i) (hZint i)
@@ -88,7 +88,7 @@ theorem universalCalibration_dirichletK_of_twoPointRejectionBound
     _ = (μ.map (fun ω i ↦ Z i ω)).real
         {y | dirichletK y ≤ α} := by
       exact (map_measureReal_apply
-        (measurable_pi_lambda _ hZmeas)
+        (Measurable.of_eval hZmeas)
         (measurableSet_dirichletK_le α)).symm
     _ = (Measure.pi marginal).real {y | dirichletK y ≤ α} := by
       rw [hjoint]

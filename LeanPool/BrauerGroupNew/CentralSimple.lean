@@ -84,8 +84,7 @@ lemma _root_.IsCentralSimple.TensorProduct.left_tensor_base_sup_base_tensor_righ
     (Algebra.TensorProduct.map (Algebra.ofId K B) (AlgHom.id K C)).range = ⊤ := by
   rw [eq_top_iff]
   rintro x -
-  induction x using TensorProduct.induction_on with
-  | zero => exact Subalgebra.zero_mem _
+  induction x using TensorProduct.inductionOn with
   | tmul b c =>
     rw [show b ⊗ₜ[K] c = b ⊗ₜ[K] 1 * 1 ⊗ₜ[K] c by simp]
     exact Algebra.mul_mem_sup ⟨b ⊗ₜ 1, by simp⟩ ⟨1 ⊗ₜ c, by simp⟩
@@ -245,8 +244,7 @@ instance _root_.IsCentralSimple.TensorProduct.isCentral
   constructor
   intro _ H
   obtain ⟨x, rfl⟩ := le_of_eq (center_tensorProduct K A B) H; clear H
-  induction x using TensorProduct.induction_on with
-  | zero => exact ⟨0, by simp⟩
+  induction x using TensorProduct.inductionOn with
   | tmul a b =>
     obtain ⟨a', ha⟩ := isCentral_A.1 a.2
     obtain ⟨b', hb⟩ := isCentral_B.1 b.2
@@ -461,8 +459,7 @@ lemma _root_.IsCentralSimple.TensorProduct.map_comap_le_span_of_isSimple_isCentr
     rw [hI, TwoSidedIdeal.coe_top_set, TwoSidedIdeal.le_iff]
     rintro x -
     rw [SetLike.mem_coe]
-    induction x using TensorProduct.induction_on with
-    | zero => simp
+    induction x using TensorProduct.inductionOn with
     | tmul a b =>
       rw [show a ⊗ₜ[K] b = (a ⊗ₜ 1) * (1 ⊗ₜ b) by simp]
       exact TwoSidedIdeal.mul_mem_right _ _ _ <| TwoSidedIdeal.subset_span ⟨a, ⟨⟩, rfl⟩
@@ -509,8 +506,7 @@ instance _root_.IsCentralSimple.TensorProduct.simple
       rw [eq1, eq_top_iff, TwoSidedIdeal.le_iff]
       rintro x -
       rw [SetLike.mem_coe]
-      induction x using TensorProduct.induction_on with
-      | zero => simp
+      induction x using TensorProduct.inductionOn with
       | tmul a b =>
         rw [show a ⊗ₜ[K] b = (a ⊗ₜ 1) * (1 ⊗ₜ b) by simp]
         exact TwoSidedIdeal.mul_mem_right _ _ _ <| TwoSidedIdeal.subset_span ⟨a, ⟨⟩, rfl⟩
@@ -527,8 +523,7 @@ instance baseChange
   out:= by
     intro _ H
     obtain ⟨x, rfl⟩ := le_of_eq (center_tensorProduct K L D) H; clear H
-    induction x using TensorProduct.induction_on with
-    | zero => exact ⟨0, by simp⟩
+    induction x using TensorProduct.inductionOn with
     | tmul l d =>
       obtain ⟨k, hk⟩ := h.out d.2
       refine ⟨k • l, ?_⟩

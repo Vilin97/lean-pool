@@ -3,7 +3,7 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Data.Finite.Prod
+import Mathlib.Basic.Finite.Prod
 import Mathlib.Data.Fintype.Powerset
 
 import LeanPool.LeanModelChecking.LTLNBWStatement

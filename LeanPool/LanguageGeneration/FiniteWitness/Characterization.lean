@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xiaoyu Li, Andi Han, Jiaojiao Jiang, Junbin Gao
 -/
 import LeanPool.LanguageGeneration.FiniteWitness.Confirmation
-import Mathlib.Logic.Denumerable
+import Mathlib.Basic.Denumerable
 
 /-! # The complete ordinary-generation finite-witness characterization -/
 

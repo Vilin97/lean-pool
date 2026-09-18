@@ -2423,6 +2423,8 @@ private theorem contDiff_sourceJointTrueRadialSmoothed {n : ℕ}
       (volume : Measure (SourceJointComplexCover n)))
     (k : ℕ) :
     ContDiff ℝ ∞ (sourceJointTrueRadialSmoothed f k) := by
+  -- Discharged up front: inlined, this search exceeds `synthInstance.maxSize`.
+  have : (volume : Measure (SourceJointComplexCover n)).IsNegInvariant := inferInstance
   exact (hasCompactSupport_sourceJointTrueRadialMollifier n k).contDiff_convolution_left
     (ContinuousLinearMap.lsmul ℝ ℝ)
     (contDiff_sourceJointTrueRadialMollifier n k) hf
@@ -4681,7 +4683,7 @@ private theorem integral_momentTorusRepresentative_normSq
           (MeasureTheory.L2.inner_def f f).symm
       _ = ((‖s‖ ^ 2 : ℝ) : ℂ) := by
         rw [inner_self_eq_norm_sq_to_K]
-        simp only [Complex.coe_algebraMap, Submodule.coe_norm, Complex.ofReal_pow, f]
+        simp only [Complex.coe_algebraMap, ← Submodule.norm_coe, Complex.ofReal_pow, f]
   exact Complex.ofReal_injective hcomplex
 
 private theorem integral_momentTorusRepresentative_jetBasis

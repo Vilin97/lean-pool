@@ -838,7 +838,7 @@ private lemma norm_iteratedFDeriv_hermite_comp_proj_le (d : ℕ) (n : ℕ) (i : 
     L.iteratedFDeriv_comp_right hf_smooth x (i := m) (mod_cast le_top)
   have h_prod_le : ∏ _j : Fin m, ‖L‖ ≤ 1 := by
     calc ∏ _j : Fin m, ‖L‖ ≤ ∏ _j : Fin m, (1 : ℝ) :=
-        Finset.prod_le_prod (fun _ _ => norm_nonneg _) (fun _ _ => hL_le)
+        Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun _ _ => hL_le)
       _ = 1 := by simp
   rw [hcomp, hiFD]
   calc ‖(iteratedFDeriv ℝ m (hermiteFunction n) (L x)).compContinuousLinearMap
@@ -972,7 +972,7 @@ private lemma hermiteFunctionNd_decay (d : ℕ) (α : MultiIndex d) (k n : ℕ) 
       (Finset.mem_univ j₀)).symm, ← mul_assoc]
     exact mul_le_mul
       ((hC_dec j₀ ((p : Multiset (Fin (d + 1))).count j₀)).2 x)
-      (Finset.prod_le_prod (fun j _ => norm_nonneg _)
+      (Finset.prod_le_prod₀ (fun j _ => norm_nonneg _)
         (fun j _ => (hM j ((p : Multiset (Fin (d + 1))).count j)).2 x))
       (Finset.prod_nonneg fun j _ => norm_nonneg _)
       ((hC_dec j₀ ((p : Multiset (Fin (d + 1))).count j₀)).1)
@@ -1618,7 +1618,7 @@ private lemma schwartzHermiteBasisNd_weighted_product_bound (d k l : ℕ)
               (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) := by
           apply mul_le_mul
           · exact hC_poly α j₀ _ (h_count_le p j₀) x
-          · exact Finset.prod_le_prod (fun j _ => norm_nonneg _)
+          · exact Finset.prod_le_prod₀ (fun j _ => norm_nonneg _)
               (fun j _ => hM_poly α j _ (h_count_le p j) x)
           · exact Finset.prod_nonneg fun j _ => norm_nonneg _
           · positivity

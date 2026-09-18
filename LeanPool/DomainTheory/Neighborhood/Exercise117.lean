@@ -6,7 +6,7 @@ Authors: Catskills Research Company
 
 import LeanPool.DomainTheory.Neighborhood.Basic
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Rat.Cast.Order
 
 /-!

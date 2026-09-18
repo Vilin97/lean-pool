@@ -5,7 +5,7 @@ Authors: Michael R. Douglas
 -/
 
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 /-!
 # Nonneg Matrix Powers and Positivity

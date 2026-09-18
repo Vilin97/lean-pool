@@ -8,7 +8,7 @@ import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Logic.Basic
+import Mathlib.Basic.Logic.Basic
 
 /-!
   Sundogcert/VarWheel.lean — MILESTONE 2 of the `3SAT ≤ 3DM` marathon.

@@ -4,9 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
 import LeanPool.ComputableReal.IsComputable
-import Mathlib.Data.Real.Sign
-import Mathlib.Data.Real.ConjExponents
-
+import Mathlib.Basic.Real.Sign
+import Mathlib.Basic.Real.ConjExponents
 /-!
 # `IsComputable` instances for basic real operations
 

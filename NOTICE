@@ -142,6 +142,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
                                      https://github.com/lyfar/gkp-carry-lean
   LeanPool/Odlyzko                   https://github.com/ImperialCollegeLondon/FLT
   LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
+  LeanPool/PDL                       https://github.com/m4lvin/lean4-pdl
   LeanPool/PFR                       https://github.com/teorth/pfr
   LeanPool/PebblingLean              https://github.com/pachterlab/P_2026_2
   LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
@@ -284,9 +285,6 @@ MIT permission notice that follows them.
       "Copyright (c) 2026" with no name; the repository owner of record is
       "SamuelSchlesinger".
 
-  LeanPool/SpecialNumbers            https://github.com/provables/special-numbers
-      Copyright (c) 2024 Walter Moreira, Joe Stubbs
-
   LeanPool/SteinhausThreeGap         https://github.com/dkunert/three-gap-theorem-lean
       Copyright (c) 2026 Dirk Kunert
 
@@ -324,10 +322,6 @@ Projects relicensed by their original author
 These projects were relicensed by their sole author before import.
 
   LeanPool/Clawristotle              https://github.com/Vilin97/Clawristotle
-  LeanPool/ForwardEuler              https://github.com/Vilin97/forward_euler
-      Originally distributed without a license file, then placed under the
-      Apache License, Version 2.0, by its sole author.
-
   LeanPool/GrothendieckVanishing     https://github.com/Vilin97/Clawristotle
       Originally distributed under the Creative Commons
       Attribution-NonCommercial-ShareAlike 4.0 International license, then

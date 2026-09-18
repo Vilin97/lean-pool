@@ -10,7 +10,7 @@ import Mathlib.MeasureTheory.Integral.IntegrableOn
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Finset.Basic
-import Mathlib.Data.ENNReal.Holder
+import Mathlib.Basic.ENNReal.Holder
 import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 
 import LeanPool.OSforGFF.Spacetime.Basic

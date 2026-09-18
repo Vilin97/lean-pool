@@ -1567,8 +1567,7 @@ private noncomputable abbrev MixedLocalFanCertificate.mixedOldComplex
         M.mixedFaceUsedEmbedding f ⟨v.1, hvf⟩ ∈ M.mixedUsedFaceVertices f :=
       mem_map_univ (M.mixedFaceUsedEmbedding f) ⟨v.1, hvf⟩
     refine ⟨f, ?_⟩
-    convert hvMem using 1
-    exact Subtype.ext rfl
+    exact hvMem
   faceMap := M.mixedUsedFaceMap
   faceMap_continuous := C.continuous_mixedUsedFaceMap
   faceMap_eq_iff := C.mixedUsedFaceMap_eq_iff
@@ -3113,7 +3112,7 @@ private theorem chartCore_inter_protected_subset_interior_frontierGlue
                   ChartKind.halfDisk.modelRegion) : Plane) =
                 (c.chart ⟨z, hz⟩ : Plane) := by
             exact congrArg Subtype.val
-              (Equiv.setCongr_apply hmodel (c.chart ⟨z, hz⟩))
+              (Set.equivOfEq_apply hmodel (c.chart ⟨z, hz⟩))
           change
             z ∈ (modelWithCornersEuclideanHalfSpace 2).boundary S ↔
               (((Homeomorph.setCongr hmodel)
