@@ -260,8 +260,7 @@ noncomputable def integralGen (hint : IsIntegral 𝒪[K] x) :
   have : IsScalarTower ↥𝒪[K] ↥(IntermediateField.adjoin K {x}) (SeparableClosure K) :=
     IsScalarTower.of_algebraMap_eq' rfl
   exact ⟨IntermediateField.AdjoinSimple.gen K x,
-    (isIntegral_algebraMap_iff
-      (algebraMap ↥(IntermediateField.adjoin K {x}) (SeparableClosure K)).injective).mp hint⟩
+    (isIntegral_algebraMap_iff (B := SeparableClosure K)).mp hint⟩
 
 omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
 /-- Evaluation at `integralGen` vanishes exactly when evaluation at `x` does: the two sit under the
@@ -522,7 +521,7 @@ theorem eq_span_integralGen_of_isMaximal (hπ : Irreducible π) (hint : IsIntegr
   have := hQ
   have hcom : Ideal.comap (algebraMap ↥𝒪[K]
       ↥(integers (IntermediateField.adjoin K {x}))) Q = 𝓂[K] :=
-    IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal Q)
+    IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal Q)
   have hc0m : (minpoly 𝒪[K] x).coeff 0 ∈ 𝓂[K] := by
     have h1 := hei.mem (minpoly.natDegree_pos hint)
     rw [Ideal.submodule_span_eq] at h1
@@ -602,7 +601,7 @@ theorem isDiscreteValuationRing_integers (hπ : Irreducible π) (hint : IsIntegr
     rw [IsLocalRing.isField_iff_maximalIdeal_eq, hmax, Ideal.span_singleton_eq_bot]
     exact integralGen_ne_zero hint hei
   exact ((IsDiscreteValuationRing.TFAE ↥(integers (IntermediateField.adjoin K {x}))
-    hnf).out 0 2).mpr hDed
+    hnf).out 1 3).mpr hDed
 
 /-- The integral closure is complete for its maximal-adic topology.
 `IsHausdorff` is Krull intersection; for `IsPrecomplete`, a coherent sequence for the powers of

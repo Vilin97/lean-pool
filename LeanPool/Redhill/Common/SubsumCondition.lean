@@ -6,8 +6,9 @@ Authors: Jeremy Tan
 
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Ring.Nat
+import Mathlib.Basic.Sign.Defs
 import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Sign.Defs
 
 /-!
 # Subsum conditions

@@ -2889,7 +2889,7 @@ variable [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def homeomorphPushProbability (e : α ≃ₜ β)
     (μ : ProbabilityMeasure α) : ProbabilityMeasure β :=
-  μ.map e.continuous.measurable.aemeasurable
+  μ.map e
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem homeomorphPushProbability_invariant

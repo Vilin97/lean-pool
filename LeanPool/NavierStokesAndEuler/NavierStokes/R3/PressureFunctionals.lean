@@ -328,7 +328,7 @@ theorem integrable_l2_pair {W : Space → ℝ} (hW : MemLp W 2) (ψ : ComplexTes
   have hprod : Integrable (fun x : Space => ‖W x‖ * ‖ψ x‖) :=
     hW.norm.integrable_mul (ψ.memLp 2).norm
   apply hprod.mono'
-  · exact (Complex.continuous_ofReal.comp_aestronglyMeasurable hW.1).mul
+  · exact (Complex.continuous_ofReal.comp_aestronglyMeasurable hW.aestronglyMeasurable).mul
       ψ.continuous.aestronglyMeasurable
   · exact Filter.Eventually.of_forall fun x => by simp [Complex.norm_real]
 

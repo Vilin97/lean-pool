@@ -44,7 +44,6 @@ abbrev toTensorMatrixToFunKlinear : K ⊗[F] Matrix n n A →ₗ[K] Matrix n n (
   {__ := toTensorMatrixToFunFlinear K F A n,
    map_smul' k tensor := by
     induction tensor with
-    | zero => simp
     | tmul k0 M => simp [TensorProduct.smul_tmul', SemigroupAction.mul_smul]
     | add _ _ h1 h2 => simp_all}
 
@@ -58,10 +57,8 @@ abbrev toTensorMatrix : K ⊗[F] Matrix n n A →ₐ[K] Matrix n n (K ⊗[F] A) 
       exact Matrix.map_one _ (map_zero _) (map_one _))
     fun t1 t2 ↦ by
   induction t1 with
-  | zero => simp
   | tmul x y =>
     induction t2 with
-    | zero => simp
     | tmul x0 y0 =>
         simp [mul_comm x x0, SemigroupAction.mul_smul, Matrix.map_mul]
     | add _ _ h1 h2 => simp_all [mul_add]
@@ -93,7 +90,6 @@ abbrev invFunKlinear (i j : n) : K ⊗[F] A →ₗ[K] K ⊗[F] Matrix n n A :=
   {__ := invFunToFun K F A n i j,
    map_smul' k tensor := by
     induction tensor with
-    | zero => simp
     | tmul k0 a => simp [smul_tmul']
     | add _ _ h1 h2 => simp_all}
 
@@ -106,7 +102,6 @@ abbrev invFunLinearMap : Matrix n n (K ⊗[F] A) →ₗ[K] K ⊗[F] Matrix n n A
 lemma matrixTensor_left_inv (M : K ⊗[F] Matrix n n A) :
     invFunLinearMap K F A n (toTensorMatrix K F A n M) = M := by
   induction M with
-  | zero => simp
   | tmul k M =>
     simp [← tmul_sum, smul_tmul', Fintype.sum_prod_type, ← matrix_eq_sum_single]
   | add koxa1 koxa2 h1 h2 => rw [map_add, map_add, h1, h2]
@@ -118,7 +113,6 @@ lemma matrixTensor_right_inv (M : Matrix n n (K ⊗[F] A)) :
   conv_rhs => rw [matrix_eq_sum_single M]
   refine Finset.sum_congr rfl fun p _ => Finset.sum_congr rfl fun q _ => ?_
   induction M p q with
-  | zero => simp
   | tmul x y => simp [smul_tmul']
   | add _ _ h1 h2 => simp [single_add, h1, h2]
 

@@ -70,7 +70,7 @@ private lemma norm_fz_le (z : ℂ) {u : ℝ} (hu : u ∈ Set.Ioo (-lam) lam) :
 private lemma aestronglyMeasurable_fz (h : IsAdmissible lam eta) (z : ℂ) (s : Set ℝ) :
     AEStronglyMeasurable (fz eta z) (volume.restrict s) := by
   have he : AEStronglyMeasurable (fun u : ℝ => ((eta u : ℝ) : ℂ)) (volume.restrict s) :=
-    Complex.continuous_ofReal.comp_aestronglyMeasurable (h.memLp.1.restrict)
+    Complex.continuous_ofReal.comp_aestronglyMeasurable (h.memLp.aestronglyMeasurable.restrict)
   exact he.mul (continuous_twist z).aestronglyMeasurable
 
 /-- **The twisted function is square-integrable on the interval.** -/

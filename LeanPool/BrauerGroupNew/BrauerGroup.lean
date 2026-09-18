@@ -515,27 +515,19 @@ def baseChangeTensorEquiv :
       apply LinearMap.map_mul_of_map_mul_tmul
       intro x1 x2 y1 y2
       change f ((x1 * x2) ⊗ₜ[E] (y1 * y2)) = f (x1 ⊗ₜ[E] y1) * f (x2 ⊗ₜ[E] y2)
-      induction x1 using TensorProduct.induction_on with
-      | zero =>
-        simp only [zero_mul, TensorProduct.zero_tmul, f.map_zero]
+      induction x1 using TensorProduct.inductionOn with
       | add x1 x1' hx hx' =>
         simp only [add_mul, TensorProduct.add_tmul, f.map_add, hx, hx', add_mul]
       | tmul e1 a1 =>
-      induction x2 using TensorProduct.induction_on with
-      | zero =>
-        simp only [mul_zero, TensorProduct.zero_tmul, f.map_zero]
+      induction x2 using TensorProduct.inductionOn with
       | add x2 x2' hx hx' =>
         simp only [mul_add, TensorProduct.add_tmul, f.map_add, hx, hx', mul_add]
       | tmul e2 a2 =>
-      induction y1 using TensorProduct.induction_on with
-      | zero =>
-        simp only [zero_mul, TensorProduct.tmul_zero, f.map_zero]
+      induction y1 using TensorProduct.inductionOn with
       | add y1 y1' hy hy' =>
         simp only [add_mul, TensorProduct.tmul_add, f.map_add, hy, hy', add_mul]
       | tmul e3 b1 =>
-      induction y2 using TensorProduct.induction_on with
-      | zero =>
-        simp only [mul_zero, TensorProduct.tmul_zero, f.map_zero]
+      induction y2 using TensorProduct.inductionOn with
       | add y2 y2' hy hy' =>
         simp only [mul_add, TensorProduct.tmul_add, f.map_add, hy, hy', mul_add]
       | tmul e4 b2 =>
@@ -561,12 +553,10 @@ lemma e3Aux3 (hm : m = 0) :
     exact ⟨fun a b => by rw [this a, this b]⟩
   subst hm
   intro x
-  induction x using TensorProduct.induction_on with
-  | zero => rfl
+  induction x using TensorProduct.inductionOn with
   | add e a he ha => rw [he, ha, zero_add]
   | tmul e a =>
-    induction a using TensorProduct.induction_on with
-    | zero => simp
+    induction a using TensorProduct.inductionOn with
     | add _ _ hx hy => rw [TensorProduct.tmul_add, hx, hy, add_zero]
     | tmul e' mat =>
       rw [show mat = 0 from Subsingleton.elim _ _]
@@ -681,13 +671,11 @@ def e6Aux0 : (E ⊗[K] A) ⊗[E] (E ⊗[K] B) →ₐ[E] E ⊗[K] (A ⊗[K] B) :=
     fun e b => (commute_iff_eq _ _).2 <|
       show (_ ⊗ₜ _) * (_ ⊗ₜ _) = (_ ⊗ₜ _) * (_ ⊗ₜ _) by simp)
       fun x y => (commute_iff_eq _ _).2 <| show _ = _ by
-        induction x using TensorProduct.induction_on with
-        | zero => simp only [map_zero, zero_mul, mul_zero]
+        induction x using TensorProduct.inductionOn with
         | add x x' hx hx' => simp only [map_add, mul_add, hx, hx', add_mul]
         | tmul e a =>
           simp only [Algebra.TensorProduct.lift_tmul, AlgHom.coe_mk, RingHom.coe_mk]
-          induction y using TensorProduct.induction_on with
-          | zero => simp only [map_zero, mul_zero, zero_mul]
+          induction y using TensorProduct.inductionOn with
           | add y y' hy hy' => simp only [map_add, mul_add, hy, hy', add_mul]
           | tmul e' b =>
             simp only [Algebra.TensorProduct.lift_tmul, AlgHom.coe_mk, RingHom.coe_mk]
@@ -781,12 +769,10 @@ def Aux' (F K E : Type u) [Field F] [Field K] [Field E]
           Algebra.smul_def, Algebra.smul_def, _root_.mul_assoc] }
   refine .ofLinearEquiv (Aux F K E A) ?_ fun x y ↦ ?_
   · simp [Algebra.TensorProduct.one_def]
-  induction x using TensorProduct.induction_on with
-  | zero => rw [zero_mul, (baseChangeIdem.Aux F K E A).map_zero, zero_mul]
+  induction x using TensorProduct.inductionOn with
   | add => simp only [add_mul, (Aux F K E A).map_add, *]
   | tmul =>
-  induction y using TensorProduct.induction_on with
-  | zero => rw [mul_zero, (baseChangeIdem.Aux F K E A).map_zero, mul_zero]
+  induction y using TensorProduct.inductionOn with
   | add => simp only [mul_add, (Aux F K E A).map_add, *]
   | tmul =>
   rename_i x1 y1 x2 y2
@@ -795,16 +781,10 @@ def Aux' (F K E : Type u) [Field F] [Field K] [Field E]
     (TensorProduct.AlgebraTensorModule.rid K E E) (LinearEquiv.refl F A))
   set g := (TensorProduct.AlgebraTensorModule.assoc F K E E K A.carrier).symm
   change f (g _) = _
-  induction y1 using TensorProduct.induction_on with
-  | zero =>
-    rw [zero_mul, TensorProduct.tmul_zero, g.map_zero, f.map_zero, TensorProduct.tmul_zero,
-      g.map_zero, f.map_zero, zero_mul]
+  induction y1 using TensorProduct.inductionOn with
   | add => simp only [add_mul, TensorProduct.tmul_add, g.map_add, f.map_add, *]
   | tmul k1 a1 =>
-  induction y2 using TensorProduct.induction_on with
-  | zero =>
-    rw [mul_zero, TensorProduct.tmul_zero, TensorProduct.tmul_zero, g.map_zero, f.map_zero,
-      mul_zero]
+  induction y2 using TensorProduct.inductionOn with
   | add => simp only [mul_add, TensorProduct.tmul_add, g.map_add, f.map_add, *]
   | tmul k2 a2 =>
   simp only [Algebra.TensorProduct.tmul_mul_tmul, *]

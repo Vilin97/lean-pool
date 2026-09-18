@@ -209,9 +209,7 @@ def tensorDirectSumEquiv : AV ≃ₗ[k] DS :=
 theorem tensorDirectSumEquiv_intertwines (q : Q) (x : AV) :
     tensorDirectSumEquiv (avStarRepresentation q x) =
       directSumRepresentation q (tensorDirectSumEquiv x) := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp [tensorDirectSumEquiv, avStarRepresentation,
-      directSumRepresentation]
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro a f
     apply DirectSum.ext
     intro i

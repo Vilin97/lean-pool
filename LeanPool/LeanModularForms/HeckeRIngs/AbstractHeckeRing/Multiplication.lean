@@ -293,7 +293,7 @@ lemma heckeMultiplicity_pos_of_mem_mulSupport (g₁ g₂ : P.Δ) (d : HeckeCoset
     have h1 : mulMap P g₁ g₂ (i₀, j₀) = (⟦HeckeCoset.rep d⟧ : HeckeCoset P) :=
       hmap.trans (Quotient.out_eq d).symm
     exact (HeckeCoset.eq_iff _ _).mp h1
-  obtain ⟨h₁, hh₁, h₂, hh₂, hprod⟩ := (DoubleCoset.eq P.H P.H _ _).mp
+  obtain ⟨h₁, hh₁, h₂, hh₂, hprod⟩ := DoubleCoset.eq.mp
     (DoubleCoset.mk_eq_of_doubleCoset_eq hset_eq)
   set α := (↑g₁ : G) with hα_def
   set β := (↑g₂ : G) with hβ_def

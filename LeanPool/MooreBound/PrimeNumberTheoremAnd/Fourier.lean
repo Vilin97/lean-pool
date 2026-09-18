@@ -30,10 +30,8 @@ local instance realFunctionComplexCoe {E : Type*} : Coe (E → ℝ) (E → ℂ) 
 
 section lemmas
 
-@[simp]
 theorem nnnorm_eq_of_mem_circle (z : Circle) : ‖z.val‖₊ = 1 := NNReal.coe_eq_one.mp z.norm_coe
 
-@[simp]
 theorem nnnorm_circle_smul (z : Circle) (s : ℂ) : ‖z • s‖₊ = ‖s‖₊ := by
   simp [show z • s = z.val * s from rfl]
 

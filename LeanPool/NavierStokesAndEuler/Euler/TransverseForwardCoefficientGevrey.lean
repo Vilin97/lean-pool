@@ -69,7 +69,8 @@ theorem generator_contDiff {n : ℕ∞ω} (hQr : ContDiff ℝ n Q) (hQ₁r : Con
     ContDiff ℝ n (fun x => generator T (Q x) (Q₁ x) c hc (hQ x)) := by
   have hr := (contDiff_compose (fun x => frameLeftInversePath T (Q x) c hc (hQ x)) Q₁
     (frameLeftInversePath_contDiff T Q c hc hQ hQr) hQ₁r).const_smul (-2 : ℝ)
-  convert hr using 1 <;> rfl
+  convert hr using 1
+  rfl
 
 /-- Applying the actual projected forcing map preserves smooth parameter dependence. -/
 theorem forcing_contDiff (f : P → C(Icc (0 : ℝ) T, E)) {n : ℕ∞ω}

@@ -223,7 +223,7 @@ abbreviation used by the exponential distortion bound below. -/
 `∫ exp(r·b) d(N(0,v)) = exp(v·r²/2)`. -/
 theorem gaussianReal_mgf_id (r : ℝ) (v : ℝ≥0) :
     ∫ b, rexp (r * b) ∂(gaussianReal 0 v) = rexp ((v : ℝ) * r ^ 2 / 2) := by
-  have h := mgf_gaussianReal (X := (id : ℝ → ℝ)) (p := gaussianReal (0 : ℝ) v) Measure.map_id r
+  have h := mgf_gaussianReal (X := (id : ℝ → ℝ)) (p := gaussianReal (0 : ℝ) v) .id r
   rw [mgf] at h
   simpa using h
 

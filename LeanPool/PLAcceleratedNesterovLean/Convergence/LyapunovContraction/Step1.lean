@@ -125,17 +125,10 @@ theorem lsmooth_qub {d : ℕ} (f : E d → ℝ) (L : ℝ≥0)
       have h := ((hasDerivAt_const t ((↑L : ℝ) / 2)).mul hpow).mul_const cn
       simp only [zero_mul, zero_add] at h
       convert h using 1
-      · rfl
-      · rfl
-      · simp_all
-      · ring
+      ring
     have h_comb := ((h1.sub h2).sub h3).sub h4
     simp only [sub_zero] at h_comb
     convert h_comb using 1
-    · rfl
-    · rfl
-    · funext s
-      simp [ψ]
   -- ψ continuous on [0,1]
   have hψ_cont : ContinuousOn ψ (Set.Icc 0 1) := by
     intro t ht

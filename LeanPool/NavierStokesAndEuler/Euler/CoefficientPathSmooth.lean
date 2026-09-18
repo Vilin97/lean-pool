@@ -54,7 +54,7 @@ theorem cylinder_norm_iteratedFDeriv_le (P : ℝ) (A : C(K, Space →ᵇ V))
   calc
     _ ≤ ‖iteratedFDeriv ℝ n f y.1‖ * ∏ _i : Fin n, (1 : ℝ) := by
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-      exact Finset.prod_le_prod (fun _ _ => norm_nonneg _)
+      exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
         (fun _ _ => ContinuousLinearMap.norm_fst_le ℝ Space ℝ)
     _ = ‖iteratedFDeriv ℝ n f y.1‖ := by simp only [Finset.prod_const_one,mul_one]
     _ = ‖iteratedFDeriv ℝ n (A t : Space → V) (x.1+y.1)‖ := by

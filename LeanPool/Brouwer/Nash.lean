@@ -16,6 +16,8 @@ simplices, and `ExistsNashEq` derives the existence of a mixed Nash equilibrium 
 every finite game from Brouwer's fixed-point theorem on a product of simplices.
 -/
 
+open Brouwer (standardSimplex)
+
 attribute [local instance] Classical.propDecidable
 open BigOperators
 open Function
@@ -80,7 +82,7 @@ instance {G : FinGame} {i : G.I} : Fintype (G.SS i) := G.FinSS i
 
 variable (G) in
 /-- A mixed strategy profile of a finite game: a simplex point per player. -/
-abbrev mixedS := (i : G.I) → stdSimplex ℝ (G.SS i)
+abbrev mixedS := (i : G.I) → standardSimplex ℝ (G.SS i)
 
 /-- The expected payoff of player `i` under a mixed strategy profile. -/
 def mixedG (i : G.I) (m : Π i, MixedStrategy (G.SS i)) : ℝ :=
@@ -174,11 +176,11 @@ variable {G : FinGame}
 variable {n : ℕ} (eI : G.I ≃ Fin n)
 
 /-- Reindex a mixed strategy profile along an equivalence `G.I ≃ Fin n`. -/
-def reindex : G.mixedS → ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) :=
+def reindex : G.mixedS → ((k : Fin n) → standardSimplex ℝ (G.SS (eI.symm k))) :=
     fun x k => x (eI.symm k)
 
 /-- The inverse of `reindex`, transporting along the equivalence. -/
-def reindexInv : ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) → G.mixedS :=
+def reindexInv : ((k : Fin n) → standardSimplex ℝ (G.SS (eI.symm k))) → G.mixedS :=
     fun z i => (eI.symm_apply_apply i) ▸ z (eI i)
 
 lemma reindex_right_inv :
@@ -198,9 +200,9 @@ lemma reindex_right_inv :
 
 
 lemma reindex_left_inv {n : ℕ} (eI : G.I ≃ Fin n) :
-  let reindex : G.mixedS → ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) :=
+  let reindex : G.mixedS → ((k : Fin n) → standardSimplex ℝ (G.SS (eI.symm k))) :=
     fun w k => w (eI.symm k)
-  let reindexInv : ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) → G.mixedS :=
+  let reindexInv : ((k : Fin n) → standardSimplex ℝ (G.SS (eI.symm k))) → G.mixedS :=
     fun z i => (eI.symm_apply_apply i) ▸ z (eI i)
   ∀ x, reindexInv (reindex x) = x := by
     intro reindex reindexInv x; funext i
@@ -212,9 +214,9 @@ lemma reindex_left_inv {n : ℕ} (eI : G.I ≃ Fin n) :
 
 /-- Lifts an equivalence `e : n ≃ m` to a function between simplices. -/
 def mapSimplex {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :
-    stdSimplex ℝ n → stdSimplex ℝ m :=
+    standardSimplex ℝ n → standardSimplex ℝ m :=
   fun x => ⟨fun i => x.1 (e.symm i), by
-    simp only [stdSimplex, Set.mem_ofPred_eq]
+    simp only [standardSimplex, Set.mem_ofPred_eq]
     constructor
     · intro i; exact x.2.1 (e.symm i)
     · have h_sum : ∑ i : m, x.1 (e.symm i) = ∑ j : n, x.1 j := by
@@ -224,13 +226,13 @@ def mapSimplex {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :
       rw [h_sum, x.2.2]⟩
 
 @[simp]
-lemma map_simplex_apply {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) (x : stdSimplex ℝ n)
+lemma map_simplex_apply {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) (x : standardSimplex ℝ n)
     (i : m) :
     (mapSimplex e x).1 i = x.1 (e.symm i) := rfl
 
 /-- The simplex map induced by an equivalence is itself an equivalence. -/
 def mapSimplexEquiv {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :
-    (stdSimplex ℝ n) ≃ (stdSimplex ℝ m) where
+    (standardSimplex ℝ n) ≃ (standardSimplex ℝ m) where
   toFun := mapSimplex e
   invFun := mapSimplex e.symm
   left_inv x := by
@@ -244,7 +246,7 @@ def mapSimplexEquiv {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :
 
 /-- Lifts component-wise equivalences to an equivalence on the space of mixed strategies. -/
 def mapMixedSEquiv {G : FinGame} (e : (i : G.I) → G.SS i ≃ Fin (Fintype.card (G.SS i))) :
-    FinGame.mixedS G ≃ ((i : G.I) → stdSimplex ℝ (Fin (Fintype.card (G.SS i)))) where
+    FinGame.mixedS G ≃ ((i : G.I) → standardSimplex ℝ (Fin (Fintype.card (G.SS i)))) where
   toFun x i := mapSimplex (e i) (x i)
   invFun x i := mapSimplex (e i).symm (x i)
   left_inv x := by
@@ -274,18 +276,18 @@ theorem Brouwer.mixedGame (f : G.mixedS → G.mixedS) (hf : Continuous f) : ∃ 
     have : Inhabited (G.SS i) := inferInstance
     exact Fintype.card_pos_iff.mpr inferInstance
   let card' : Fin n → ℕ+ := fun k => ⟨Fintype.card (G.SS (eI.symm k)), card_pos (eI.symm k)⟩
-  let reindex : G.mixedS → ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) :=
+  let reindex : G.mixedS → ((k : Fin n) → standardSimplex ℝ (G.SS (eI.symm k))) :=
     fun x k => x (eI.symm k)
-  let reindexInv : ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) → G.mixedS :=
+  let reindexInv : ((k : Fin n) → standardSimplex ℝ (G.SS (eI.symm k))) → G.mixedS :=
     fun y i => (eI.symm_apply_apply i) ▸ y (eI i)
   have reindex_left : ∀ x, reindexInv (reindex x) = x := reindex_left_inv eI
   have reindex_right : ∀ y, reindex (reindexInv y) = y := reindex_right_inv eI
   let eS : (k : Fin n) → G.SS (eI.symm k) ≃ Fin (card' k) := fun k => Fintype.equivFin _
-  let map_idx : ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) → ((k : Fin n)
-      → stdSimplex ℝ (Fin (card' k))) :=
+  let map_idx : ((k : Fin n) → standardSimplex ℝ (G.SS (eI.symm k))) → ((k : Fin n)
+      → standardSimplex ℝ (Fin (card' k))) :=
     fun y k => mapSimplex (eS k) (y k)
-  let map_idx_inv : ((k : Fin n) → stdSimplex ℝ (Fin (card' k))) → ((k : Fin n)
-      → stdSimplex ℝ (G.SS (eI.symm k))) :=
+  let map_idx_inv : ((k : Fin n) → standardSimplex ℝ (Fin (card' k))) → ((k : Fin n)
+      → standardSimplex ℝ (G.SS (eI.symm k))) :=
     fun z k => mapSimplex (eS k).symm (z k)
   have map_idx_left : ∀ y, map_idx_inv (map_idx y) = y := by
     intro y; funext k; ext j
@@ -410,8 +412,8 @@ noncomputable def nashMap (σ : G.mixedS) : G.mixedS :=
 lemma cg : Continuous fun a => gFunction (G:=G) i a s := by
   unfold gFunction
   apply Continuous.add
-  · let f : G.mixedS → stdSimplex ℝ (G.SS i) := fun σ => σ i
-    let g : stdSimplex ℝ (G.SS i) → ℝ := fun a => a s
+  · let f : G.mixedS → standardSimplex ℝ (G.SS i) := fun σ => σ i
+    let g : standardSimplex ℝ (G.SS i) → ℝ := fun a => a s
     have hfg: g ∘ f = fun σ => σ i s := by
       ext σ; rfl
     rw [<-hfg]
@@ -517,7 +519,7 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
       have h2 : 1 ≠ ∑ b : G.SS i, gFunction i σ b := by
         intro h2
         replace h2 : ∑ b : G.SS i, σ i b  = ∑ b : G.SS i,   gFunction  i σ b := by
-          simp_all
+          exact (σ i).2.2.trans h2
         unfold gFunction at h2
         replace h2 : ∑ s : G.SS i, max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ)
             = 0 := by

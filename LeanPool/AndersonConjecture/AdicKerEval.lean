@@ -133,8 +133,7 @@ lemma ker_evalₐ_le_smul_top (I : Ideal R) [IsNoetherianRing R] (n : ℕ)
         ofTensorProductEquivOfFiniteNoetherian_apply, ← LinearMap.comp_apply, nat,
         LinearMap.comp_apply]
     rw [key]
-    induction w using TensorProduct.induction_on with
-    | zero => simp
+    induction w using TensorProduct.inductionOn with
     | tmul a m =>
       simp only [TensorProduct.AlgebraTensorModule.map_tmul, LinearMap.id_apply]
       rw [ofTensorProduct_tmul]

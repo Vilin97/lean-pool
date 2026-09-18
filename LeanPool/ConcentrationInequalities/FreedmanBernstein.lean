@@ -59,16 +59,15 @@ lemma memLp_exp_mul (h : Kernel.HasSubgammaMGF X V c κ ν) (t : ℝ) (p : ℝ�
     MemLp (fun ω ↦ exp (t * X ω)) p (κ ∘ₘ ν) := by
   by_cases hp0 : p = 0
   · simpa [hp0] using (h.integrable_exp_mul t).1
-  constructor
-  · exact (h.integrable_exp_mul t).1
-  · rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (mod_cast hp0) (by simp)]
-    simp only [ENNReal.coe_toReal]
-    have hi := (h.integrable_exp_mul (p * t)).2
-    rw [hasFiniteIntegral_def] at hi
-    convert hi using 3 with ω
-    rw [enorm_eq_ofReal (by positivity), enorm_eq_ofReal (by positivity),
-      ENNReal.ofReal_rpow_of_nonneg (by positivity), ← exp_mul, mul_comm, ← mul_assoc]
-    positivity
+  rw [memLp_iff, eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (mod_cast hp0) (by simp)
+    (h.integrable_exp_mul t).1]
+  simp only [ENNReal.coe_toReal]
+  have hi := (h.integrable_exp_mul (p * t)).2
+  rw [hasFiniteIntegral_def] at hi
+  convert hi using 3 with ω
+  rw [enorm_eq_ofReal (by positivity), enorm_eq_ofReal (by positivity),
+    ENNReal.ofReal_rpow_of_nonneg (by positivity), ← exp_mul, mul_comm, ← mul_assoc]
+  positivity
 
 @[simp] lemma fun_zero [IsFiniteMeasure ν] [IsZeroOrMarkovKernel κ] :
     Kernel.HasSubgammaMGF (fun _ ↦ 0) 0 c κ ν where
@@ -123,10 +122,10 @@ lemma integrable_exp_add_compProd {η : Kernel (Ω' × Ω) Ω''} [IsZeroOrMarkov
     simp only [ENNReal.coe_ofNat] at hp
     have heq : κ ∘ₘ ν = ((κ ⊗ₖ η) ∘ₘ ν).map Prod.fst := by
       rw [Measure.map_comp _ _ measurable_fst, ← Kernel.fst_eq, Kernel.fst_compProd]
-    rwa [heq, memLp_map_measure_iff hp.1 measurable_fst.aemeasurable] at hp
+    rwa [heq, memLp_map_measure_iff hp.aestronglyMeasurable measurable_fst.aemeasurable] at hp
   · have hp := hY.memLp_exp_mul t 2
     rwa [ENNReal.coe_ofNat, Measure.comp_compProd_comm, Measure.snd,
-      memLp_map_measure_iff hp.1 measurable_snd.aemeasurable] at hp
+      memLp_map_measure_iff hp.aestronglyMeasurable measurable_snd.aemeasurable] at hp
 
 /-- Multiplying two compatible sub-gamma estimates adds their variance factors. -/
 private lemma mgf_mul_exp_le_add {a t : ℝ}
@@ -315,13 +314,11 @@ lemma MeasureSubgammaMGF.add_of_hasCondSubgammaMGF [IsFiniteMeasure μ]
   have hY' : Kernel.HasSubgammaMGF Y W c (condExpKernel μ m)
       (Kernel.const Unit (μ.trim hm) ∘ₘ Measure.dirac ()) := by simpa
   convert hX.add_of_indep hY'
-  · ext
-    rfl
-  · ext
-    rw [Kernel.const_apply, ← Measure.compProd, compProd_trim_condExpKernel]
-    apply Measure.map_congr
-    filter_upwards with ω
-    rfl
+  ext
+  rw [Kernel.const_apply, ← Measure.compProd, compProd_trim_condExpKernel]
+  apply Measure.map_congr
+  filter_upwards with ω
+  rfl
 
 variable {Y : ℕ → Ω → ℝ} {V : ℕ → ℝ≥0} {c : ℝ≥0} {ℱ : Filtration ℕ mΩ}
 

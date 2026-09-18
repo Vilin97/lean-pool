@@ -770,7 +770,7 @@ theorem exchangeability_chain_bound {X : Type u} [MeasurableSpace X] [Infinite X
     let swap_fun (σ : SignVector m) : (Fin m → X × X) → (Fin m → X × X) :=
       fun z i => if σ i then (z i).swap else z i
     have h_swap_meas : ∀ σ, Measurable (swap_fun σ) := by
-      intro σ; apply measurable_pi_lambda; intro i
+      intro σ; apply Measurable.of_eval; intro i
       by_cases hσi : σ i
       · simp only [swap_fun, hσi, ↓reduceIte]
         exact (measurable_pi_apply i |>.snd).prod (measurable_pi_apply i |>.fst)

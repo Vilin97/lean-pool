@@ -782,10 +782,10 @@ theorem weightedExteriorActionDifferential_fischer_adjoint
           exact (actionFischerCore_sum_right_metriccodes2_209634ef
             (jointHarmonicWeightFischerCore n
               (rootWedgeWeight lam S)) (p S) _).symm
-        _ = _ :=
-          (actionFischerCore_sum_right_metriccodes2_209634ef
+        _ = _ := by
+          rw [actionFischerCore_sum_right_metriccodes2_209634ef
             (jointHarmonicWeightFischerCore n
-              (rootWedgeWeight lam S)) (p S) _).symm
+              (rootWedgeWeight lam S)) (p S)]
 
 end
 
@@ -1001,16 +1001,20 @@ theorem rootDegreeZeroPositiveCochain_finrank_ker_add_finrank_ce_range
       (weightedExteriorActionCoboundary n lam 0)
       (weightedExteriorActionDifferential n lam 0)).mpr
     intro x y
-    change
-      (rootJointHarmonicChainFischerCore n lam (0 + 1)).inner
-        (weightedExteriorActionCoboundary n lam 0 x) y =
-      (rootJointHarmonicChainFischerCore n lam 0).inner x
-        (weightedExteriorActionDifferential n lam 0 y)
-    rw [degreeZeroFischerCore_inner_comm_metriccodes2_89cbd172
-      (rootJointHarmonicChainFischerCore n lam (0 + 1)),
+    have hbridge₁ : ∀ u v : RootJointHarmonicChain n lam (0 + 1),
+        (inner ℝ u v : ℝ) =
+          (rootJointHarmonicChainFischerCore n lam (0 + 1)).inner u v :=
+      fun _ _ => rfl
+    have hbridge₀ : ∀ u v : RootJointHarmonicChain n lam 0,
+        (inner ℝ u v : ℝ) =
+          (rootJointHarmonicChainFischerCore n lam 0).inner u v :=
+      fun _ _ => rfl
+    rw [hbridge₁, hbridge₀,
       degreeZeroFischerCore_inner_comm_metriccodes2_89cbd172
-        (rootJointHarmonicChainFischerCore n lam 0)]
-    exact (weightedExteriorActionDifferential_fischer_adjoint lam y x).symm
+        (rootJointHarmonicChainFischerCore n lam (0 + 1)),
+      degreeZeroFischerCore_inner_comm_metriccodes2_89cbd172
+        (rootJointHarmonicChainFischerCore n lam 0),
+      weightedExteriorActionDifferential_fischer_adjoint lam y x]
   have hrank :
       Module.finrank ℝ
         (LinearMap.range (weightedExteriorActionCoboundary n lam 0)) =
@@ -1125,7 +1129,7 @@ private def ambientBinomialPolynomial {r : ℕ}
 theorem coeff_ambientBinomialPolynomial_of_le {r n B : ℕ}
     (m : Fin (r + 1) →₀ ℕ)
     (hm : ∀ i, m i ≤ B) :
-    MvPolynomial.coeff m (ambientBinomialPolynomial (r := r) n B) =
+    (ambientBinomialPolynomial (r := r) n B).coeff m =
       ∏ i : Fin (r + 1),
         (((n + m i - 1).choose (m i) : ℕ) : ℤ) := by
   classical
@@ -1174,7 +1178,7 @@ theorem gramPairMonomial {r : ℕ} (z : UpperGramPair r) :
     (MvPolynomial.X z.val.1 * MvPolynomial.X z.val.2 :
       MvPolynomial (Fin (r + 1)) ℤ) =
         MvPolynomial.monomial (gramPairExponent z) 1 := by
-  simp only [MvPolynomial.X, MvPolynomial.monomial_mul, mul_one, gramPairExponent]
+  simp only [MvPolynomial.X, MvPolynomial.monomial_mul_monomial, mul_one, gramPairExponent]
 
 theorem gramFamilyMonomial {r : ℕ}
     (s : Finset (UpperGramPair r)) :
@@ -1188,8 +1192,8 @@ theorem gramFamilyMonomial {r : ℕ}
                MvPolynomial.monomial_zero', eq_intCast, Int.cast_one]
   | @insert z s hz ih =>
       rw [Finset.prod_insert hz, gramPairMonomial, ih]
-      simp only [gramFamilyExponent, MvPolynomial.monomial_mul, mul_one, hz, not_false_eq_true,
-        Finset.sum_insert]
+      simp only [gramFamilyExponent, MvPolynomial.monomial_mul_monomial, mul_one, hz,
+        not_false_eq_true, Finset.sum_insert]
 
 theorem gramEquationPolynomial_eq_sum (r : ℕ) :
     gramEquationPolynomial r =
@@ -1212,9 +1216,7 @@ theorem gramEquationPolynomial_eq_sum (r : ℕ) :
 theorem coeff_ambientBinomialPolynomial_mul_gramEquationPolynomial
     {r n B : ℕ} (m : Fin (r + 1) →₀ ℕ)
     (hm : ∀ i, m i ≤ B) :
-    MvPolynomial.coeff m
-        (ambientBinomialPolynomial (r := r) n B *
-          gramEquationPolynomial r) =
+    (ambientBinomialPolynomial (r := r) n B * gramEquationPolynomial r).coeff m =
       fullGramKoszulCoefficient n (fun i => m i) := by
   classical
   rw [gramEquationPolynomial_eq_sum, Finset.mul_sum,
@@ -1338,9 +1340,9 @@ theorem weylTargetExponent_sub_reversePermutationExponent_apply
 theorem coeff_ambient_mul_gram_mul_reversedWeylPolynomial
     {r n B : ℕ} (lam : Fin (r + 1) → ℕ)
     (hB : ∀ i, weylTargetExponent lam i ≤ B) :
-    MvPolynomial.coeff (weylTargetExponent lam)
-        ((ambientBinomialPolynomial (r := r) n B *
-          gramEquationPolynomial r) * reversedWeylPolynomial r) =
+    ((ambientBinomialPolynomial (r := r) n B *
+          gramEquationPolynomial r) * reversedWeylPolynomial r).coeff
+        (weylTargetExponent lam) =
       alternatingGramKoszulCoefficient n lam := by
   classical
   rw [reversedWeylPolynomial_eq_sum, Finset.mul_sum,
@@ -1391,9 +1393,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRankMixedTraceRegularity
 theorem coeff_ambientBinomialPolynomial_mul_monomial
     {r n B : ℕ} (m s : Fin (r + 1) →₀ ℕ)
     (hm : ∀ i, m i ≤ B) :
-    MvPolynomial.coeff m
-        (ambientBinomialPolynomial (r := r) n B *
-          MvPolynomial.monomial s (1 : ℤ)) =
+    (ambientBinomialPolynomial (r := r) n B * MvPolynomial.monomial s (1 : ℤ)).coeff m =
       ∏ i : Fin (r + 1),
         orthogonalCompleteSymmetricCoefficient n
           ((m i : ℤ) - (s i : ℤ)) := by
@@ -1446,11 +1446,10 @@ theorem coeff_ambientBinomialPolynomial_mul_axisDifferenceProduct
     {r n B : ℕ} (m : Fin (r + 1) →₀ ℕ)
     (hm : ∀ i, m i ≤ B)
     (a b : Fin (r + 1) → ℕ) :
-    MvPolynomial.coeff m
-        (ambientBinomialPolynomial (r := r) n B *
-          ∏ i : Fin (r + 1),
-            ((MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ a i -
-              (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ b i)) =
+    (ambientBinomialPolynomial (r := r) n B *
+        ∏ i : Fin (r + 1),
+          ((MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ a i -
+            (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ b i)).coeff m =
       ∏ i : Fin (r + 1),
         (orthogonalCompleteSymmetricCoefficient n
           ((m i : ℤ) - (a i : ℤ)) -
@@ -1472,7 +1471,7 @@ theorem coeff_ambientBinomialPolynomial_mul_axisDifferenceProduct
           (Finsupp.indicator (Finset.univ \ t) (fun i _ => a i) +
             Finsupp.indicator t (fun i _ => b i)) (1 : ℤ) := by
     rw [MvPolynomial.prod_X_pow, MvPolynomial.prod_X_pow,
-      MvPolynomial.monomial_mul, mul_one]
+      MvPolynomial.monomial_mul_monomial, mul_one]
   have hsign :
       (-1 : MvPolynomial (Fin (r + 1)) ℤ) ^ t.card =
         MvPolynomial.C ((-1 : ℤ) ^ t.card) := by simp only [Int.reduceNeg, eq_intCast, Int.cast_pow,
@@ -1500,11 +1499,10 @@ theorem coeff_ambientBinomialPolynomial_mul_det_separable
     {r n B : ℕ} (m : Fin (r + 1) →₀ ℕ)
     (a b : Fin (r + 1) → Fin (r + 1) → ℕ)
     (hm : ∀ i, m i ≤ B) :
-    MvPolynomial.coeff m
-        (ambientBinomialPolynomial (r := r) n B *
-          Matrix.det (Matrix.of fun i j : Fin (r + 1) =>
-            (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ a i j -
-              (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ b i j)) =
+    (ambientBinomialPolynomial (r := r) n B *
+        Matrix.det (Matrix.of fun i j : Fin (r + 1) =>
+          (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ a i j -
+            (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^ b i j)).coeff m =
       Matrix.det (Matrix.of fun i j : Fin (r + 1) =>
         orthogonalCompleteSymmetricCoefficient n
           ((m i : ℤ) - (a i j : ℤ)) -
@@ -1517,14 +1515,13 @@ theorem coeff_ambientBinomialPolynomial_mul_det_separable
   apply Finset.sum_congr rfl
   intro σ _
   change
-    MvPolynomial.coeff m
-      (ambientBinomialPolynomial (r := r) n B *
+    (ambientBinomialPolynomial (r := r) n B *
         (MvPolynomial.C (Equiv.Perm.sign σ : ℤ) *
           ∏ i : Fin (r + 1),
             ((MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
                 a i (σ i) -
               (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
-                b i (σ i)))) =
+                b i (σ i)))).coeff m =
       (Equiv.Perm.sign σ : ℤ) *
         ∏ i : Fin (r + 1),
           (orthogonalCompleteSymmetricCoefficient n
@@ -1539,13 +1536,12 @@ theorem coeff_ambientBinomialPolynomial_mul_det_separable
 theorem coeff_ambientBinomialPolynomial_mul_orthogonalDenominator
     {r n B : ℕ} (lam : Fin (r + 1) → ℕ)
     (hB : ∀ i, weylTargetExponent lam i ≤ B) :
-    MvPolynomial.coeff (weylTargetExponent lam)
-        (ambientBinomialPolynomial (r := r) n B *
-          Matrix.det (Matrix.of fun i j : Fin (r + 1) =>
+    (ambientBinomialPolynomial (r := r) n B *
+        Matrix.det (Matrix.of fun i j : Fin (r + 1) =>
+          (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
+              (r - j.val) -
             (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
-                (r - j.val) -
-              (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
-                (r + j.val + 2))) =
+              (r + j.val + 2))).coeff (weylTargetExponent lam) =
       orthogonalJacobiTrudiDimension n lam := by
   rw [coeff_ambientBinomialPolynomial_mul_det_separable
     (weylTargetExponent lam)
@@ -1622,19 +1618,18 @@ theorem alternatingGramKoszulCoefficient_eq_orthogonalJacobiTrudiDimension
         (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ))
   calc
     alternatingGramKoszulCoefficient n lam =
-        MvPolynomial.coeff (weylTargetExponent lam)
-          ((ambientBinomialPolynomial (r := r) n B *
-            gramEquationPolynomial r) * reversedWeylPolynomial r) :=
+        ((ambientBinomialPolynomial (r := r) n B *
+            gramEquationPolynomial r) * reversedWeylPolynomial r).coeff
+          (weylTargetExponent lam) :=
       (coeff_ambient_mul_gram_mul_reversedWeylPolynomial lam hB).symm
-    _ = MvPolynomial.coeff (weylTargetExponent lam)
-          (ambientBinomialPolynomial (r := r) n B *
-            Matrix.det (fun i j : Fin (r + 1) =>
+    _ = (ambientBinomialPolynomial (r := r) n B *
+          Matrix.det (fun i j : Fin (r + 1) =>
+            (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
+                (r - j.val) -
               (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
-                  (r - j.val) -
-                (MvPolynomial.X i : MvPolynomial (Fin (r + 1)) ℤ) ^
-                  (r + j.val + 2))) := by
+                (r + j.val + 2))).coeff (weylTargetExponent lam) := by
       rw [hdenominator]
-      congr 1
+      congr 2
       ring
     _ = orthogonalJacobiTrudiDimension n lam :=
       coeff_ambientBinomialPolynomial_mul_orthogonalDenominator lam hB
@@ -6768,8 +6763,8 @@ theorem weightedRootBracketBoundary_fischer_adjoint
                weightedRootBracketEdge n lam S T h (p S)) (q T) := by
           apply Finset.sum_congr rfl
           intro T _
-          exact bracketFischerCore_sum_left_metriccodes2_9c41043c
-            (jointHarmonicWeightFischerCore n (rootWedgeWeight lam T)) _ _
+          rw [bracketFischerCore_sum_left_metriccodes2_9c41043c
+            (jointHarmonicWeightFischerCore n (rootWedgeWeight lam T))]
     _ = ∑ S : AdmissibleRootWedge lam (k + 1),
         ∑ T : AdmissibleRootWedge lam k,
           (jointHarmonicWeightFischerCore n (rootWedgeWeight lam T)).inner
@@ -6829,9 +6824,8 @@ theorem weightedRootBracketBoundary_fischer_adjoint
     _ = _ := by
       apply Finset.sum_congr rfl
       intro S _
-      symm
-      exact bracketFischerCore_sum_right_metriccodes2_9c41043c
-        (jointHarmonicWeightFischerCore n (rootWedgeWeight lam S)) _ _
+      rw [bracketFischerCore_sum_right_metriccodes2_9c41043c
+        (jointHarmonicWeightFischerCore n (rootWedgeWeight lam S)) (p S)]
 
 end
 

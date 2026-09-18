@@ -27,7 +27,7 @@ import Mathlib.Tactic.Set
 import Mathlib.Tactic.Polyrith
 import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Generalize
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Algebra.Group.Support
 import Mathlib.Analysis.InnerProductSpace.LinearMap

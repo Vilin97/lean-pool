@@ -254,6 +254,7 @@ theorem isSeparable [W.IsElliptic] : Algebra.IsSeparable k⟮X⟯ K := by
     exact hle hz
   have : Algebra.IsSeparable k⟮X⟯ (IntermediateField.adjoin k⟮X⟯ {W.yCoord K}) :=
     (IntermediateField.isSeparable_adjoin_simple_iff_isSeparable k⟮X⟯ K).mpr hsep
+  let : Algebra k⟮X⟯ (⊤ : IntermediateField k⟮X⟯ K) := IntermediateField.algebra' ⊤
   exact AlgEquiv.Algebra.isSeparable
     ((IntermediateField.equivOfEq htop).trans IntermediateField.topEquiv)
 

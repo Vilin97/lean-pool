@@ -107,8 +107,7 @@ theorem integers_eq_adjoin {π : 𝒪[K]} (hπ : Irreducible π) {x : SeparableC
   have hgen : B.gen = IntermediateField.AdjoinSimple.gen K x := rfl
   have hval : algebraMap ↥(IntermediateField.adjoin K {x}) (SeparableClosure K) B.gen = x := rfl
   have hint' : IsIntegral 𝒪[K] B.gen :=
-    (isIntegral_algebraMap_iff
-      (algebraMap ↥(IntermediateField.adjoin K {x}) (SeparableClosure K)).injective).mp hint
+    (isIntegral_algebraMap_iff (B := SeparableClosure K)).mp hint
   have hminmap : minpoly 𝒪[K] B.gen = minpoly 𝒪[K] x :=
     (minpoly.algebraMap_eq
       (algebraMap ↥(IntermediateField.adjoin K {x}) (SeparableClosure K)).injective B.gen).symm
@@ -150,8 +149,7 @@ theorem integers_eq_adjoin {π : 𝒪[K]} (hπ : Irreducible π) {x : SeparableC
     rw [Set.mem_singleton_iff] at hy
     subst hy
     change IsIntegral 𝒪[K] _
-    exact (isIntegral_algebraMap_iff
-      (algebraMap ↥(IntermediateField.adjoin K {x}) (SeparableClosure K)).injective).mp hint
+    exact (isIntegral_algebraMap_iff (B := SeparableClosure K)).mp hint
 
 /-! ## Total ramifiedness of the adjoined root field
 
@@ -292,6 +290,54 @@ private lemma ramificationIdx_eq_of_span {R A : Type*} [CommRing R] [CommRing A]
 
 /-! ## Total ramifiedness of the adjoined root field -/
 
+private lemma exists_unit_relation_of_coeff_dvd {R A : Type*} [CommRing R] [CommRing A]
+    [Algebra R A] {g : Polynomial R} {ξ : A} (hgmonic : g.Monic)
+    (hn : 0 < g.natDegree) (hdvd : ∀ i, i < g.natDegree → g.coeff 0 ∣ g.coeff i)
+    (haev : Polynomial.aeval ξ g = 0) :
+    ∃ u : A, IsUnit u ∧ algebraMap R A (g.coeff 0) * u = -ξ ^ g.natDegree := by
+  classical
+  let n := g.natDegree
+  -- the Eisenstein relation, rearranged around the constant coefficient
+  obtain ⟨m, hm⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
+  set b : ℕ → A := fun i => algebraMap R A (g.coeff i) with hb
+  have hrel : ξ ^ n + ∑ i ∈ Finset.range n, b i * ξ ^ i = 0 := by
+    calc ξ ^ n + ∑ i ∈ Finset.range n, b i * ξ ^ i
+        = ∑ i ∈ Finset.range (n + 1), g.coeff i • ξ ^ i := by
+          rw [Finset.sum_range_succ, hgmonic.coeff_natDegree, one_smul, add_comm]
+          congr 1
+          exact Finset.sum_congr rfl fun i _ => (Algebra.smul_def _ _).symm
+      _ = Polynomial.aeval ξ g := (Polynomial.aeval_eq_sum_range _).symm
+      _ = 0 := haev
+  have hex : ∀ i : ℕ, ∃ d : R, i + 1 < n → g.coeff (i + 1) = g.coeff 0 * d := by
+    intro i
+    by_cases h : i + 1 < n
+    · obtain ⟨d, hd⟩ := hdvd (i + 1) h
+      exact ⟨d, fun _ => hd⟩
+    · exact ⟨0, fun hh => absurd hh h⟩
+  choose c hc using hex
+  obtain ⟨t, ht⟩ : ∃ t : A, t = ∑ i ∈ Finset.range m,
+      algebraMap R A (c i) * ξ ^ i := ⟨_, rfl⟩
+  obtain ⟨u, hu'⟩ : ∃ u : A, u = 1 + ξ * t := ⟨_, rfl⟩
+  have hbu : b 0 * u = -ξ ^ n := by
+    have h2 : ∑ i ∈ Finset.range n, b i * ξ ^ i = b 0 * u := by
+      rw [hu', ht, hm, Finset.sum_range_succ']
+      have h3 : ∀ i ∈ Finset.range m, b (i + 1) * ξ ^ (i + 1) =
+          b 0 * (algebraMap R A (c i) * ξ ^ i * ξ) := by
+        intro i hi
+        rw [Finset.mem_range] at hi
+        rw [hb]
+        dsimp only
+        rw [hc i (by omega), map_mul, pow_succ]
+        ac_rfl
+      rw [Finset.sum_congr rfl h3, ← Finset.mul_sum, ← Finset.sum_mul]
+      simp only [pow_zero, mul_one, mul_add, mul_comm ξ, add_comm]
+    rw [h2] at hrel
+    exact eq_neg_of_add_eq_zero_right hrel
+  have hu : IsUnit u := by
+    rw [hu']
+    exact isUnit_one_add_of_mul_eq_neg_pow (c := b 0) (n := n) (by rw [← hu']; exact hbu)
+  exact ⟨u, hu, hbu⟩
+
 omit [IsUniformAddGroup K] in
 /-- The unit relation behind total ramifiedness, exposed for the discriminant bound of
 `sub_one_le_d_adjoin`: the constant coefficient of the minimal polynomial becomes a unit multiple of
@@ -311,61 +357,20 @@ theorem exists_unit_relation {π : 𝒪[K]} (hπ : Irreducible π) {x : Separabl
   set L' := IntermediateField.adjoin K {x} with hL'
   set x' : ↥L' := IntermediateField.AdjoinSimple.gen K x with hx'
   have hx'mem : x' ∈ integers L' :=
-    (isIntegral_algebraMap_iff
-      (algebraMap ↥L' (SeparableClosure K)).injective).mp hint
+    (isIntegral_algebraMap_iff (B := SeparableClosure K)).mp hint
   set ξ : ↥(integers L') := ⟨x', hx'mem⟩ with hξ
   set g : Polynomial 𝒪[K] := minpoly 𝒪[K] x with hg
   set n : ℕ := g.natDegree with hn'
   have hn : 0 < n := minpoly.natDegree_pos hint
   have hgmonic : g.Monic := minpoly.monic hint
-  -- the evaluation identities
-  have hvalinj : Function.Injective (Subtype.val : ↥(integers L') → ↥L') :=
-    Subtype.val_injective
-  have haevx' : ∀ P : Polynomial 𝒪[K],
-      (Polynomial.aeval x' P : ↥L') = 0 ↔ Polynomial.aeval x P = 0 := by
-    intro P
-    have h2 : Polynomial.aeval x P =
-        algebraMap ↥L' (SeparableClosure K) (Polynomial.aeval x' P) := by
-      rw [← Polynomial.aeval_algebraMap_apply]
-      rfl
-    constructor
-    · intro h
-      rw [h2, h, map_zero]
-    · intro h
-      exact (algebraMap ↥L' (SeparableClosure K)).injective
-        (by rw [← h2, h, map_zero])
-  have haevξ : ∀ P : Polynomial 𝒪[K],
-      Polynomial.aeval ξ P = 0 ↔ Polynomial.aeval x P = 0 := by
-    intro P
-    rw [← haevx' P]
-    have h2 : Polynomial.aeval x' P =
-        algebraMap ↥(integers L') ↥L' (Polynomial.aeval ξ P) := by
-      rw [← Polynomial.aeval_algebraMap_apply]
-      rfl
-    constructor
-    · intro h
-      rw [h2, h, map_zero]
-    · intro h
-      refine hvalinj ?_
-      rw [show ((0 : ↥(integers L')) : ↥L') = 0 from rfl,
-        show ((Polynomial.aeval ξ P : ↥(integers L')) : ↥L') =
-          algebraMap ↥(integers L') ↥L' (Polynomial.aeval ξ P) from rfl,
-        ← h2, h]
-  have haev : Polynomial.aeval ξ g = 0 := (haevξ g).mpr (minpoly.aeval 𝒪[K] x)
-  have hvalaev : ∀ P : Polynomial 𝒪[K],
-      (↑(Polynomial.aeval ξ P) : ↥L') = Polynomial.aeval x' P := by
-    intro P
-    have h2 : Polynomial.aeval x' P =
-        algebraMap ↥(integers L') ↥L' (Polynomial.aeval ξ P) := by
-      rw [← Polynomial.aeval_algebraMap_apply]
-      rfl
-    calc (↑(Polynomial.aeval ξ P) : ↥L')
-        = algebraMap ↥(integers L') ↥L' (Polynomial.aeval ξ P) := rfl
-      _ = Polynomial.aeval x' P := h2.symm
+  have haev : Polynomial.aeval ξ g = 0 := by
+    apply Subtype.val_injective
+    change algebraMap ↥(integers L') ↥L' (Polynomial.aeval ξ g) = 0
+    rw [← Polynomial.aeval_algebraMap_apply]
+    apply (algebraMap ↥L' (SeparableClosure K)).injective
+    rw [← Polynomial.aeval_algebraMap_apply, map_zero]
+    exact minpoly.aeval 𝒪[K] x
   -- the coefficient structure
-  have hg₀ne : g.coeff 0 ≠ 0 := by
-    intro h0
-    exact hei.notMem (h0 ▸ zero_mem _)
   have hπg₀ : Associated π (g.coeff 0) := associated_pi_coeff_zero hπ hint hei
   have hdvd : ∀ i, i < n → g.coeff 0 ∣ g.coeff i := by
     intro i hi
@@ -373,45 +378,7 @@ theorem exists_unit_relation {π : 𝒪[K]} (hπ : Irreducible π) {x : Separabl
       have := hei.mem hi
       rwa [Ideal.submodule_span_eq, Ideal.mem_span_singleton] at this
     exact (hπg₀.symm.dvd).trans h1
-  -- the Eisenstein relation, rearranged around the constant coefficient
-  obtain ⟨m, hm⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
-  set b : ℕ → ↥(integers L') := fun i => algebraMap 𝒪[K] ↥(integers L') (g.coeff i) with hb
-  have hrel : ξ ^ n + ∑ i ∈ Finset.range n, b i * ξ ^ i = 0 := by
-    calc ξ ^ n + ∑ i ∈ Finset.range n, b i * ξ ^ i
-        = ∑ i ∈ Finset.range (n + 1), g.coeff i • ξ ^ i := by
-          rw [Finset.sum_range_succ, hgmonic.coeff_natDegree, one_smul, add_comm]
-          congr 1
-          exact Finset.sum_congr rfl fun i _ => (Algebra.smul_def _ _).symm
-      _ = Polynomial.aeval ξ g := (Polynomial.aeval_eq_sum_range _).symm
-      _ = 0 := haev
-  have hex : ∀ i : ℕ, ∃ d : 𝒪[K], i + 1 < n → g.coeff (i + 1) = g.coeff 0 * d := by
-    intro i
-    by_cases h : i + 1 < n
-    · obtain ⟨d, hd⟩ := hdvd (i + 1) h
-      exact ⟨d, fun _ => hd⟩
-    · exact ⟨0, fun hh => absurd hh h⟩
-  choose c hc using hex
-  obtain ⟨t, ht⟩ : ∃ t : ↥(integers L'), t = ∑ i ∈ Finset.range m,
-      algebraMap 𝒪[K] ↥(integers L') (c i) * ξ ^ i := ⟨_, rfl⟩
-  obtain ⟨u, hu'⟩ : ∃ u : ↥(integers L'), u = 1 + ξ * t := ⟨_, rfl⟩
-  have hbu : b 0 * u = -ξ ^ n := by
-    have h2 : ∑ i ∈ Finset.range n, b i * ξ ^ i = b 0 * u := by
-      rw [hu', ht, hm, Finset.sum_range_succ']
-      have h3 : ∀ i ∈ Finset.range m, b (i + 1) * ξ ^ (i + 1) =
-          b 0 * (algebraMap 𝒪[K] ↥(integers L') (c i) * ξ ^ i * ξ) := by
-        intro i hi
-        rw [Finset.mem_range] at hi
-        rw [hb]
-        dsimp only
-        rw [hc i (by omega), map_mul, pow_succ]
-        ring
-      rw [Finset.sum_congr rfl h3, ← Finset.mul_sum, ← Finset.sum_mul]
-      ring
-    rw [h2] at hrel
-    exact eq_neg_of_add_eq_zero_right hrel
-  have hu : IsUnit u := by
-    rw [hu']
-    exact isUnit_one_add_of_mul_eq_neg_pow (c := b 0) (n := n) (by rw [← hu']; exact hbu)
+  obtain ⟨u, hu, hbu⟩ := exists_unit_relation_of_coeff_dvd hgmonic hn hdvd haev
   exact ⟨ξ, u, rfl, hu, hbu⟩
 
 omit [IsUniformAddGroup K] in
@@ -425,8 +392,7 @@ theorem isTotallyRamified_adjoin {π : 𝒪[K]} (hπ : Irreducible π) {x : Sepa
   set L' := IntermediateField.adjoin K {x} with hL'
   set x' : ↥L' := IntermediateField.AdjoinSimple.gen K x with hx'
   have hx'mem : x' ∈ integers L' :=
-    (isIntegral_algebraMap_iff
-      (algebraMap ↥L' (SeparableClosure K)).injective).mp hint
+    (isIntegral_algebraMap_iff (B := SeparableClosure K)).mp hint
   set ξ : ↥(integers L') := ⟨x', hx'mem⟩ with hξ
   set g : Polynomial 𝒪[K] := minpoly 𝒪[K] x with hg
   set n : ℕ := g.natDegree with hn'

@@ -98,7 +98,7 @@ theorem wordField_toLp_norm_le (A : SmoothL2Field V) {n : ℕ} (w : Fin n → Fi
   rw [Lp.norm_def,eLpNorm_congr_ae (wordField A w).toLp_ae,
     norm_jetLp]
   apply ENNReal.toReal_mono (A.integrable n).eLpNorm_ne_top
-  apply eLpNorm_mono
+  apply eLpNorm_mono (wordField A w).memLp.aestronglyMeasurable
   intro x
   rw [wordField_field]
   have h := (iteratedFDeriv ℝ n A.field x).le_opNorm (fun i => axis (w i))

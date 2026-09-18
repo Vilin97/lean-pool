@@ -7,7 +7,7 @@ import Mathlib.Data.Matrix.Mul
 import Mathlib.Tactic.Linarith.Frontend
 import Mathlib.Tactic.Ring.RingNF
 
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 /-!
 # LeanPool.RlTheoryInLean.Data.Matrix.Mul

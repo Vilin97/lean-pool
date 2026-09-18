@@ -8,7 +8,6 @@ import LeanPool.InfinitaryLogic.Methods.EM.TailAdapter
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Nat.Nth
 import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Data.Set.Lattice
 import Mathlib.Order.Hom.Basic
 import Mathlib.Order.WellFounded
 /-!

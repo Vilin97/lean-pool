@@ -1428,7 +1428,7 @@ private theorem measurable_finiteEnergySourceLegendreGradient
     Measurable
       (SpatialBergmanFatouScheffe.actualGradient
         (legendreTransform F.potential)) := by
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro i
   exact measurable_fderiv_apply_const ℝ
     (legendreTransform F.potential)

@@ -7400,7 +7400,7 @@ private theorem measurable_finiteEnergySourceGradient
     Measurable
       (SpatialBergmanFatouScheffe.actualGradient
         (F.potential : Space n → ℝ)) := by
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro i
   exact measurable_fderiv_apply_const ℝ
     (F.potential : Space n → ℝ)

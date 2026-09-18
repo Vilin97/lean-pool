@@ -33,8 +33,7 @@ instance recursiveAugmentedLatent_isProbability
             (fun i ↦ latent (Fin.succ i))) :=
         ih (fun i ↦ latent (Fin.succ i))
       unfold recursiveAugmentedLatent
-      exact Measure.isProbabilityMeasure_map
-        (finHeadTailEquiv AugmentedTwoPointParams n).symm.measurable.aemeasurable
+      infer_instance
 
 end
 

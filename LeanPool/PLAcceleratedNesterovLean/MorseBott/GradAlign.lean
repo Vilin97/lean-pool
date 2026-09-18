@@ -89,11 +89,7 @@ private lemma taylor_remainder_bound' {f : E → ℝ} {x v : E}
       (hasDerivAt_id s |>.mul_const _).hasDerivWithinAt
     have := (h1.sub h2).sub h3
     convert this using 1
-    · rfl
-    · rfl
-    · funext t
-      rfl
-    · rw [sub_zero, one_mul]
+    rw [sub_zero, one_mul]
   have hk_bound : ∀ s ∈ Ico (0:ℝ) 1,
       ‖fderiv ℝ f (x + s • v) v - fderiv ℝ f x v‖ ≤ C * ‖v‖ ^ 2 := by
     intro s hs

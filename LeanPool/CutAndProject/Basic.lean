@@ -8,7 +8,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Algebra.Order.Floor.Defs
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Int.CardIntervalMod
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.OrderOfElement
 import Mathlib.Tactic.FieldSimp

@@ -69,6 +69,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Erdos346                  https://github.com/KitaKen1/erdos346-ratio-limit-lean
   LeanPool/Erdos367                  https://github.com/scottdhughes/erdos367
   LeanPool/Erdos403                  https://github.com/gotrevor/erdos-403
+  LeanPool/Erdos548                  https://github.com/tadamcz/erdos548
   LeanPool/Erdos81PaperIContrib      https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/Erdos81PaperIIContrib     https://github.com/jtraverso/lean-pool
   LeanPool/Erdos81PaperIIIContrib    https://github.com/jtraverso/erdos-81-chordal-clique-partitions
@@ -142,6 +143,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
                                      https://github.com/lyfar/gkp-carry-lean
   LeanPool/Odlyzko                   https://github.com/ImperialCollegeLondon/FLT
   LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
+  LeanPool/PDL                       https://github.com/m4lvin/lean4-pdl
   LeanPool/PFR                       https://github.com/teorth/pfr
   LeanPool/PebblingLean              https://github.com/pachterlab/P_2026_2
   LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
@@ -249,6 +251,7 @@ MIT permission notice that follows them.
 
   LeanPool/LeanStationaryHarmonicMaps
                                      https://github.com/BrookWW/LeanStationaryHarmonicMaps
+  LeanPool/Nivat                     https://github.com/boonsuan/nivat
   LeanPool/PCFTheory                 https://github.com/YnirPaz/PCF-Theory
       The upstream MIT LICENSE file contains no copyright line; the repository
       owner of record is "YnirPaz".
@@ -283,9 +286,6 @@ MIT permission notice that follows them.
       The upstream MIT LICENSE file gives the copyright line as
       "Copyright (c) 2026" with no name; the repository owner of record is
       "SamuelSchlesinger".
-
-  LeanPool/SpecialNumbers            https://github.com/provables/special-numbers
-      Copyright (c) 2024 Walter Moreira, Joe Stubbs
 
   LeanPool/SteinhausThreeGap         https://github.com/dkunert/three-gap-theorem-lean
       Copyright (c) 2026 Dirk Kunert
@@ -324,10 +324,6 @@ Projects relicensed by their original author
 These projects were relicensed by their sole author before import.
 
   LeanPool/Clawristotle              https://github.com/Vilin97/Clawristotle
-  LeanPool/ForwardEuler              https://github.com/Vilin97/forward_euler
-      Originally distributed without a license file, then placed under the
-      Apache License, Version 2.0, by its sole author.
-
   LeanPool/GrothendieckVanishing     https://github.com/Vilin97/Clawristotle
       Originally distributed under the Creative Commons
       Attribution-NonCommercial-ShareAlike 4.0 International license, then
@@ -342,6 +338,20 @@ The following notices are reproduced from the upstream repositories' own NOTICE
 files or LICENSE addenda. Only each project's Apache-2.0 Lean sources were
 imported here; these notes preserve attribution and citation requests made by
 the original authors.
+
+  LeanPool/Erdos548                  https://github.com/tadamcz/erdos548
+      The upstream repository ships a NOTICE file (Apache License, Version 2.0,
+      Section 4(d)). Its attribution notice reads:
+
+          Erdős problem #548 (Erdős–Sós conjecture): proof
+          Copyright 2026 Tom Adamczewski / Epoch AI
+
+          The formal statement was given to the AI system by the FrontierMath
+          Erdős benchmark of Tom Adamczewski and Thomas F. Bloom
+          (LeanOpenProblems, https://github.com/epoch-research/LeanOpenProblems,
+          commit 77882c437ca1dfefab3b27fa00f1d29788100311), Epoch AI, MIT License.
+          The Lean proofs were produced by a pre-release version of GPT-6 Astra
+          (OpenAI) running in that benchmark.
 
   LeanPool/FormalLearningTheory      https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
       The upstream LICENSE appends a citation request. The original author asks

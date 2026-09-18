@@ -278,7 +278,7 @@ lemma build_repeat_basicBetween (C : LoadedCluster tab)
               · rw [← delta_def] at hlt
                 exact hlt
               · exact ltSequent.trans delta_lt_step hlt
-            exact instIsWellFoundedSequentLt.wf.asymmetric _ _ hself hself
+            exact instIsWellFoundedSequentLt.asymmetric _ _ hself hself
           · rw [heq] at hbb
             exact hbb.mono (by simp)
       · obtain ⟨s, hs, rfl⟩ := prefix_sandwich hxc hcpre

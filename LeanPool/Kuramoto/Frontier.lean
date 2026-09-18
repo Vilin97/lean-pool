@@ -677,9 +677,10 @@ private theorem sum_F_sq_tendsto_zero
             ⟨ by linarith [ abs_le.mp ( h_term_bound i ), abs_le.mp ( h_term_bound j ) ],
               by linarith [ abs_le.mp ( h_term_bound i ), abs_le.mp ( h_term_bound j ) ] ⟩;
         rw [ abs_mul, abs_mul ];
-        exact le_trans ( mul_le_of_le_one_left ( abs_nonneg _ ) ( mul_le_one₀
-          ( abs_le.mpr ⟨ by cases eq_or_ne i j <;> aesop, by cases eq_or_ne i j <;> aesop ⟩ )
-          ( abs_nonneg _ ) ( Real.abs_cos_le_one _ ) ) ) h_term_bound;
+        exact le_trans (mul_le_of_le_one_left (abs_nonneg _)
+          ((mul_le_of_le_one_left (abs_nonneg _)
+            (abs_le.mpr ⟨by cases eq_or_ne i j <;> aesop,
+              by cases eq_or_ne i j <;> aesop⟩)).trans (Real.abs_cos_le_one _))) h_term_bound;
       refine ⟨ K * ( 2 * K * N * N ), ?_, ?_ ⟩ <;> norm_num [ h_deriv ];
       · positivity;
       · exact fun t i => by
@@ -733,9 +734,9 @@ private theorem sum_F_sq_tendsto_zero
       refine le_trans ( Finset.abs_sum_le_sum_abs _ _ ) ?_;
       exact le_trans ( Finset.sum_le_sum fun _ _ => show |_| ≤ 1 by
           rw [ abs_mul ]
-          exact mul_le_one₀
-            ( abs_le.mpr ⟨ by cases eq_or_ne i ‹_› <;> aesop, by cases eq_or_ne i ‹_› <;> aesop ⟩ )
-            ( abs_nonneg _ ) ( Real.abs_sin_le_one _ ) ) ( by norm_num );
+          exact (mul_le_of_le_one_left (abs_nonneg _)
+            (abs_le.mpr ⟨by cases eq_or_ne i ‹_› <;> aesop,
+              by cases eq_or_ne i ‹_› <;> aesop⟩)).trans (Real.abs_sin_le_one _)) (by norm_num);
     rw [ ← Finset.sum_sub_distrib ];
     refine le_trans ( Finset.abs_sum_le_sum_abs _ _ ) ?_;
     refine le_trans ( Finset.sum_le_sum (g := fun i => 2 * K * N * C * |s - t|)

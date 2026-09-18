@@ -7,7 +7,7 @@ Authors: OpenAI, Sidharth Hariharan, Gareth Ma, Dean Cureton
 module
 
 import all LeanPool.SpherePacking.GammaAnalysis
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Order.Filter.AtTopBot.Defs
 import Mathlib.Analysis.SpecialFunctions.SmoothTransition
 

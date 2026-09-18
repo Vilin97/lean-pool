@@ -70,7 +70,7 @@ lemma bar_doubleCoset_eq (g₁ g₂ : G)
       DoubleCoset.doubleCoset g₂ P.H P.H) :
     DoubleCoset.doubleCoset (ι.bar g₁) P.H P.H =
     DoubleCoset.doubleCoset (ι.bar g₂) P.H P.H := by
-  have hmem := (DoubleCoset.eq P.H P.H _ _).mp
+  have hmem := DoubleCoset.eq.mp
     (DoubleCoset.mk_eq_of_doubleCoset_eq h)
   obtain ⟨h₁, hh₁, h₂, hh₂, hprod⟩ := hmem
   have hbar : ι.bar g₂ = ι.bar h₂ * ι.bar g₁ * ι.bar h₁ := by

@@ -6,7 +6,7 @@ Authors: Yaël Dillies, Bhavik Mehta
 
 module
 public import LeanPool.PFR.AddCombi.Mathlib.Combinatorics.Additive.Energy
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 
 public import LeanPool.PFR.AddCombi.Convolution.Finite.Order
 public import LeanPool.PFR.AddCombi.Mathlib.Algebra.Star.Pi

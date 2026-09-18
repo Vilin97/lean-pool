@@ -10,7 +10,7 @@ import Mathlib.Algebra.Order.Floor.Ring
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Max
 import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Order.Interval.Set.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum

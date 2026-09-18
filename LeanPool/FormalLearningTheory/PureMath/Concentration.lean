@@ -3,7 +3,7 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.Basic
 import Mathlib.Probability.Independence.Basic
 import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Basic

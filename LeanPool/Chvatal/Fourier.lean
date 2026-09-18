@@ -6,7 +6,7 @@ Authors: Chvatal formalization contributors
 module
 
 public import Mathlib.Data.Fintype.Powerset
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 public import Mathlib.Algebra.BigOperators.Field
 public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 public import Mathlib.Algebra.Order.BigOperators.Group.Finset
