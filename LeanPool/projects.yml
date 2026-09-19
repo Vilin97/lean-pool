@@ -9284,3 +9284,60 @@ projects:
       - cycle-decompositions
     msc:
       - "05C45"
+  - slug: centered-maximal-constant
+    title: Bounds for the centered Hardy-Littlewood maximal constant
+    summary: >-
+      Proves that the weak type (1,1) constant c_2 of the centered maximal
+      operator over axis-parallel squares is at least the explicit radical
+      phi, approximately 1.68551, using a weighted periodic lattice and
+      integrable approximations. Also proves c_d <= 2^d in every natural
+      dimension and 1.685 < phi < 1.686. The operator acts on real-valued
+      integrable functions, with Lebesgue outer measure of strict level
+      sets. Includes the maximal-function API, a Vitali covering argument,
+      lattice witnesses, smearing estimates, and the limiting lower bound.
+      No optimality of phi is claimed.
+    branch: harmonic analysis
+    entry_module: LeanPool.CenteredMaximal
+    authors:
+      - Yongxi Lin
+    source:
+      title: A lower bound 1.6855 for the planar centred maximal constant over squares
+      authors:
+        - Yongxi Lin
+      url: https://github.com/CoolRmal/centered-maximal-constant
+      github_repo: CoolRmal/centered-maximal-constant
+      commit: c6a8cb29e8ecce9ac4614a8c7e4bf6938366f986
+      notes: >-
+        First completed publicly on 2026-09-18 at 22:15:07 UTC in commit
+        06a726f113241d445903f0c0eae1ebe40d8b539f.
+        The lower bound is documented and proved in upstream docs/PROOF.md;
+        the weighted smearing argument adapts Aldaz (2000), Lemma 1.1,
+        and the covering upper bound follows Tao's 245A Notes 5, Exercise 42.
+        Upstream formalization.yaml and docs/HISTORY.md disclose AI generation
+        of the configuration and proofs under Yongxi Lin's direction.
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+    main_results:
+      - declaration: LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+        informal: >-
+          The explicit radical phi is a lower bound for c_2, the infimum of
+          all weak type (1,1) bounds for the centered maximal operator over
+          axis-parallel squares in the real plane.
+      - declaration: LeanPool.CenteredMaximal.weakTypeConstant_le_two_pow
+        informal: >-
+          For every natural number d, including zero, the centered maximal
+          operator over axis-parallel cubes in real d-space has weak type
+          (1,1) constant c_d at most 2^d.
+      - declaration: LeanPool.CenteredMaximal.phi_mem_Ioo
+        informal: The explicit radical constant phi lies strictly between 1.685 and 1.686.
+    tags:
+      - harmonic-analysis
+      - maximal-functions
+      - weak-type-inequalities
+      - lattice-constructions
+    msc:
+      - 42B25
+      - 26D15
