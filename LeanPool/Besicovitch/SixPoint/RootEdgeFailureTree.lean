@@ -532,7 +532,7 @@ theorem blueRootEdge_failure_routes_to_child_balanced
         incidenceChild, L, M] using hmatching
     have hendpointSlack : 0 ≤ blueEndpointFailureSlack barC L M r₁ r₂
         (dist (configuration .red .left) (configuration .blue .left)) := by
-      simp [blueSiblingTriangleFailure, transposeBlueEndpointWitness, transposeEndpointCode,
+      norm_num [blueSiblingTriangleFailure, transposeBlueEndpointWitness, transposeEndpointCode,
         siblingTriangleWitnessExceeds, incidenceFirst, incidenceSecond, incidenceChild,
         blueSiblingTriangleTarget, rootedTriangleTotalRadius, blueSiblingRedTriangleReach,
         canonicalTriangleRadius] at hendpoint

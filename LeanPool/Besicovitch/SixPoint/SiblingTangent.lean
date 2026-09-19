@@ -296,19 +296,19 @@ theorem twoPointTangent_le_vertices {E : Type*} [NormedAddCommGroup E]
   let a₂ := 2 * A₂ / rho₂ + (g₁ + g₂) * g₂ / sigma
   let b₁ := -d₁
   let b₂ := -d₂
-  let constant := A₁ / (2 * rho₁) * (1 + rho₁ ^ 2) +
+  let literal := A₁ / (2 * rho₁) * (1 + rho₁ ^ 2) +
     A₂ / (2 * rho₂) * (1 + rho₂ ^ 2) + sigma - g₁ * g₂ * c ^ 2 / sigma
   have ha₁ : 0 ≤ a₁ := by positivity
   have ha₂ : 0 ≤ a₂ := by positivity
   have hvertices := separableQuadratic_le_radial_vertices ha₁ ha₂ hx₁ hx₂ hsum
-    (b₁ := b₁) (b₂ := b₂) (d := constant)
+    (b₁ := b₁) (b₂ := b₂) (d := literal)
   apply hpointwise.trans
   unfold pairTangentMaximum
   let value := fun t₁ t₂ ↦
-    a₁ * t₁ ^ 2 + b₁ * t₁ + a₂ * t₂ ^ 2 + b₂ * t₂ + constant
+    a₁ * t₁ ^ 2 + b₁ * t₁ + a₂ * t₂ ^ 2 + b₂ * t₂ + literal
   have hvalue (t₁ t₂ : ℝ) :
       pairTangentValue c A₁ A₂ d₁ d₂ rho₁ rho₂ sigma t₁ t₂ = value t₁ t₂ := by
-    dsimp only [pairTangentValue, value, a₁, a₂, b₁, b₂, constant, g₁, g₂]
+    dsimp only [pairTangentValue, value, a₁, a₂, b₁, b₂, literal, g₁, g₂]
     field_simp [hrho₁.ne', hrho₂.ne', hsigma.ne']
     ring
   rw [hvalue ‖x₁‖ ‖x₂‖, hvalue 1 1, hvalue 1 (c - 1), hvalue (c - 1) 1]

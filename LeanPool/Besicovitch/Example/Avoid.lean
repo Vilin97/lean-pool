@@ -139,7 +139,7 @@ theorem ordConnected_avoid_inter_cell (L : ℝ) {n m : ℕ} (hnm : n ≤ m) (j :
 
 theorem isClosed_avoid (L : ℝ) (n : ℕ) : IsClosed (avoid L n) := by
   unfold avoid
-  rw [setOf_forall]
+  rw [ofPred_forall]
   exact isClosed_iInter fun i ↦
     isClosed_le continuous_const (continuous_id.sub continuous_const).abs
 

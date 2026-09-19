@@ -38,7 +38,7 @@ theorem exists_compact_in_monotone_ae_cover_measure_sdiff_lt {mu : Measure X}
   have hnull : mu (⋂ n, A \ G n) = 0 := by
     have hnull_restrict : (mu.restrict A) (⋂ n, A \ G n) = 0 := by
       rw [← ae_eq_empty]
-      refine eventuallyEq_set.2 ?_
+      refine eventuallyEqSet_iff.2 ?_
       filter_upwards [hcovered] with x hx
       obtain ⟨n, hn⟩ := mem_iUnion.1 hx
       constructor

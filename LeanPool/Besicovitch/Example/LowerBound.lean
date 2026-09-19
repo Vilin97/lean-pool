@@ -16,9 +16,12 @@ public import LeanPool.Besicovitch.Sigma.Basic
 
 Besicovitch's set `Π`, the graph of `g` over `[0, 1]`, is measurable and has positive finite
 length.  It is purely unrectifiable: a Lipschitz curve meeting it in positive length would make
-`g` Lipschitz on a set of positive Lebesgue measure (`LeanPool.Besicovitch.Example.Reduction`), which is
-impossible (`LeanPool.Besicovitch.Example.Zero`).  On the other hand its lower one-density is at least
-`1/2` at every interior point (`LeanPool.Besicovitch.Example.LowerDensity`), hence almost everywhere.
+`g` Lipschitz on a set of positive Lebesgue measure (`LeanPool.Besicovitch.Example.Reduction`),
+  which is
+impossible (`LeanPool.Besicovitch.Example.Zero`).  On the other hand its lower one-density is
+  at least
+`1/2` at every interior point (`LeanPool.Besicovitch.Example.LowerDensity`), hence almost
+  everywhere.
 So no threshold below `1/2` forces one-rectifiability in the plane, and `sigmaOne ℝ² ≥ 1/2`.
 -/
 
@@ -77,7 +80,7 @@ theorem ae_one_half_le_lowerOneDensity :
     (hausdorffMeasure_graphMap_image_eq_zero (A := {0, 1})
       (((Set.finite_singleton (1:ℝ)).insert 0).measure_zero volume))
   intro p hp
-  simp only [mem_setOf_eq, Classical.not_imp] at hp
+  simp only [mem_ofPred_eq, Classical.not_imp] at hp
   obtain ⟨⟨x, hx, rfl⟩, hbad⟩ := hp
   refine ⟨x, ?_, rfl⟩
   by_contra hx01

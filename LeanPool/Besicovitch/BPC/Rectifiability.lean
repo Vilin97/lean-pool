@@ -40,7 +40,7 @@ theorem BesicovitchPairCondition.forcesOneRectifiability
     exists_pure_straight_subset_of_not_rectifiable hE hE_finite hE_not_rectifiable
       hsigma.le hsigma_gamma hE_density
   let mu := μH[1].restrict A
-  letI : IsFiniteMeasure mu := isFiniteMeasure_restrict.mpr hA_finite.ne
+  let : IsFiniteMeasure mu := isFiniteMeasure_restrict.mpr hA_finite.ne
   obtain ⟨tau, htau, hpair⟩ := hpairCondition mu hA_straight
   let alpha := min tau (sigma / 2)
   have halpha : 0 < alpha := by
@@ -165,7 +165,7 @@ theorem BesicovitchPairCondition.forcesOneRectifiability
     hC_compact.exists_edist_eq_ediam hC_connected.nonempty
   have htouching_countable : (touchingBadConvexSets 3 chosen C).Countable :=
     hcountable.mono fun _ hV ↦ hV.1
-  letI : Countable (touchingBadConvexSets 3 chosen C) :=
+  let : Countable (touchingBadConvexSets 3 chosen C) :=
     htouching_countable.to_subtype
   obtain ⟨D, hD_compact, hD_connected, _, _, hD_ediam, _, hD_charged, _, hD_measure⟩ :=
     exists_continuum_surgery_open_holes hC_compact hC_connected hxC hyC hxy

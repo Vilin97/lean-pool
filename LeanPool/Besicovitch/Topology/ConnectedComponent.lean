@@ -36,7 +36,7 @@ theorem IsPreconnected.preimage_subtype_of_subset {X : Type*} [TopologicalSpace 
     · intro hx
       exact ⟨⟨x, hx⟩, mem_univ _, rfl⟩
   rw [← himage, hinclusion.isPreconnected_image]
-  letI : PreconnectedSpace A := Subtype.preconnectedSpace hA
+  let : PreconnectedSpace A := Subtype.preconnectedSpace hA
   exact isPreconnected_univ
 
 /-- A connected component cut out inside a compact set is compact. -/
@@ -44,7 +44,7 @@ theorem isCompact_connectedComponentIn {X : Type*} [TopologicalSpace X]
     {K : Set X} (hK : IsCompact K) (x : X) : IsCompact (connectedComponentIn K x) := by
   by_cases hx : x ∈ K
   · rw [connectedComponentIn_eq_image hx]
-    letI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+    let : CompactSpace K := isCompact_iff_compactSpace.mp hK
     exact isClosed_connectedComponent.isCompact.image continuous_subtype_val
   · rw [connectedComponentIn_eq_empty hx]
     exact isCompact_empty
@@ -86,7 +86,7 @@ theorem exists_isClopenWithin_between_connectedComponentIn_closedBall
   let zK : K := ⟨z, hzK⟩
   let U : Set K := (↑) ⁻¹' Metric.ball z R
   have hU : IsOpen U := Metric.isOpen_ball.preimage continuous_subtype_val
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   have hcomponent_subtype : connectedComponent zK ⊆ U := by
     intro x hx
     apply hcomponent

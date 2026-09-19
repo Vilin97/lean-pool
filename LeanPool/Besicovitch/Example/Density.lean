@@ -114,7 +114,7 @@ theorem ae_eventually_mem_avoid {L : ℝ≥0} {A : Set ℝ}
     rw [Real.volume_closedBall]; congr 1; ring
   have hmem : 2 * m ∈ Ioo 0 ρ := ⟨by linarith, hnρ⟩
   have hlt := hsub hmem
-  simp only [Set.mem_setOf_eq] at hlt
+  simp only [Set.mem_ofPred_eq] at hlt
   rw [hballvol, ENNReal.lt_div_iff_mul_lt (Or.inl (by simp [hmpos]))
     (Or.inl ENNReal.ofReal_ne_top)] at hlt
   rw [← ENNReal.ofReal_mul (by norm_num)] at hlt

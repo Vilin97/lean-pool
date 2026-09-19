@@ -30,24 +30,24 @@ open DenseBivariatePolynomial
 
 /-- The centered half-coordinate as a transparent dense polynomial. -/
 def scaledS : DenseBivariatePolynomial :=
-  add (constant (6933064218259049 / 10 ^ 16)) (scale (1 / 10 ^ 16) first)
+  add (literal (6933064218259049 / 10 ^ 16)) (scale (1 / 10 ^ 16) first)
 
 /-- The centered distance coordinate as a transparent dense polynomial. -/
 def scaledB : DenseBivariatePolynomial :=
-  add (constant (5747488323603321 / (2 * 10 ^ 15)))
+  add (literal (5747488323603321 / (2 * 10 ^ 15)))
     (scale (3 / (2 * 10 ^ 15)) second)
 
 /-- The cleared balance polynomial in transparent dense form. -/
 def balance : DenseBivariatePolynomial :=
   let s := scaledS
   let B := scaledB
-  let q := add (scale 2 s) (constant 1)
+  let q := add (scale 2 s) (literal 1)
   let p := add (add (add (scale 2 B) (neg (scale 12 (pow s 2)))) (scale 4 s))
-    (constant (-1))
+    (literal (-1))
   let D := add (add (scale 16 (pow s 2)) (neg (scale 4 s))) (neg B)
-  let A2 := scale (1 / 2) (add (pow B 2) (constant (-1)))
+  let A2 := scale (1 / 2) (add (pow B 2) (literal (-1)))
   let C2 := add (scale (1 / 2) (add (pow B 2) (pow D 2))) (neg (scale 4 (pow s 2)))
-  let K := add (scale 6 (mul s p)) (mul (add (scale 4 (pow s 2)) (constant (-1))) q)
+  let K := add (scale 6 (mul s p)) (mul (add (scale 4 (pow s 2)) (literal (-1))) q)
   add (pow (add (pow K 2) (neg (mul (add A2 C2) (pow q 2)))) 2)
     (neg (scale 4 (mul (mul A2 C2) (pow q 4))))
 
@@ -55,16 +55,16 @@ def balance : DenseBivariatePolynomial :=
 def gram : DenseBivariatePolynomial :=
   let s := scaledS
   let B := scaledB
-  let q := add (scale 2 s) (constant 1)
+  let q := add (scale 2 s) (literal 1)
   let p := add (add (add (scale 2 B) (neg (scale 12 (pow s 2)))) (scale 4 s))
-    (constant (-1))
+    (literal (-1))
   let D := add (add (scale 16 (pow s 2)) (neg (scale 4 s))) (neg B)
-  let x := add (constant 5) (neg (pow B 2))
+  let x := add (literal 5) (neg (pow B 2))
   let z := add (add (pow q 2) (scale 4 (pow p 2))) (neg (mul (pow D 2) (pow q 2)))
-  let k := add (mul (add (constant 1) (neg (scale 4 (pow s 2)))) (pow q 2)) (pow p 2)
+  let k := add (mul (add (literal 1) (neg (scale 4 (pow s 2)))) (pow q 2)) (pow p 2)
   scale (1 / 64) <|
     add (pow (add (scale 8 k) (neg (mul x z))) 2)
-      (neg (mul (add (constant 16) (neg (pow x 2)))
+      (neg (mul (add (literal 16) (neg (pow x 2)))
         (add (scale 16 (mul (pow p 2) (pow q 2))) (neg (pow z 2)))))
 
 /-- The preconditioned fixed-point map in transparent dense form. -/
@@ -82,7 +82,7 @@ private theorem endpointMapPolynomial_coefficientL1Norm_lt_one_0 (j : Fin 2) (hj
       DenseEndpoint.balance, DenseEndpoint.gram, DenseEndpoint.scaledS, DenseEndpoint.scaledB,
       DenseBivariatePolynomial.add, DenseBivariatePolynomial.neg, DenseBivariatePolynomial.scale,
       DenseBivariatePolynomial.mul, DenseBivariatePolynomial.scaleRow, DenseBivariatePolynomial.pow,
-      DenseBivariatePolynomial.constant, DenseBivariatePolynomial.first,
+      DenseBivariatePolynomial.literal, DenseBivariatePolynomial.first,
       DenseBivariatePolynomial.second, DenseUnivariate.add, DenseUnivariate.neg,
       DenseUnivariate.scale, DenseUnivariate.mul, DenseUnivariate.coefficientL1Norm]
 
@@ -93,7 +93,7 @@ private theorem endpointMapPolynomial_coefficientL1Norm_lt_one_1 (j : Fin 2) (hj
       DenseEndpoint.balance, DenseEndpoint.gram, DenseEndpoint.scaledS, DenseEndpoint.scaledB,
       DenseBivariatePolynomial.add, DenseBivariatePolynomial.neg, DenseBivariatePolynomial.scale,
       DenseBivariatePolynomial.mul, DenseBivariatePolynomial.scaleRow, DenseBivariatePolynomial.pow,
-      DenseBivariatePolynomial.constant, DenseBivariatePolynomial.first,
+      DenseBivariatePolynomial.literal, DenseBivariatePolynomial.first,
       DenseBivariatePolynomial.second, DenseUnivariate.add, DenseUnivariate.neg,
       DenseUnivariate.scale, DenseUnivariate.mul, DenseUnivariate.coefficientL1Norm]
 
@@ -105,30 +105,34 @@ theorem endpointMapPolynomial_coefficientL1Norm_lt_one (i : Fin 2) :
 
 /-- The exact derivative certificate makes the fixed-point map a strict contraction. -/
 private theorem endpointMapPolynomial_derivative_coefficientL1Norm_lt_0 (j : Fin 2) (hj : j = 0) :
-    DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivFirst (DenseEndpoint.fixedMap j)) +
-      DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivSecond (DenseEndpoint.fixedMap j)) <
+    DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivFirst
+      (DenseEndpoint.fixedMap j)) +
+      DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivSecond
+        (DenseEndpoint.fixedMap j)) <
       1 / 10 ^ 9 := by
   fin_cases j <;> cases hj
   all_goals norm_num [DenseBivariatePolynomial.coefficientL1Norm, DenseEndpoint.fixedMap,
       DenseEndpoint.balance, DenseEndpoint.gram, DenseEndpoint.scaledS, DenseEndpoint.scaledB,
       DenseBivariatePolynomial.add, DenseBivariatePolynomial.neg, DenseBivariatePolynomial.scale,
       DenseBivariatePolynomial.mul, DenseBivariatePolynomial.scaleRow, DenseBivariatePolynomial.pow,
-      DenseBivariatePolynomial.constant, DenseBivariatePolynomial.first,
+      DenseBivariatePolynomial.literal, DenseBivariatePolynomial.first,
       DenseBivariatePolynomial.second, DenseBivariatePolynomial.derivFirst,
       DenseBivariatePolynomial.derivSecond, DenseUnivariate.add, DenseUnivariate.neg,
       DenseUnivariate.scale, DenseUnivariate.mul, DenseUnivariate.deriv,
       DenseUnivariate.coefficientL1Norm]
 
 private theorem endpointMapPolynomial_derivative_coefficientL1Norm_lt_1 (j : Fin 2) (hj : j = 1) :
-    DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivFirst (DenseEndpoint.fixedMap j)) +
-      DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivSecond (DenseEndpoint.fixedMap j)) <
+    DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivFirst
+      (DenseEndpoint.fixedMap j)) +
+      DenseBivariatePolynomial.coefficientL1Norm (DenseBivariatePolynomial.derivSecond
+        (DenseEndpoint.fixedMap j)) <
       1 / 10 ^ 9 := by
   fin_cases j <;> cases hj
   all_goals norm_num [DenseBivariatePolynomial.coefficientL1Norm, DenseEndpoint.fixedMap,
       DenseEndpoint.balance, DenseEndpoint.gram, DenseEndpoint.scaledS, DenseEndpoint.scaledB,
       DenseBivariatePolynomial.add, DenseBivariatePolynomial.neg, DenseBivariatePolynomial.scale,
       DenseBivariatePolynomial.mul, DenseBivariatePolynomial.scaleRow, DenseBivariatePolynomial.pow,
-      DenseBivariatePolynomial.constant, DenseBivariatePolynomial.first,
+      DenseBivariatePolynomial.literal, DenseBivariatePolynomial.first,
       DenseBivariatePolynomial.second, DenseBivariatePolynomial.derivFirst,
       DenseBivariatePolynomial.derivSecond, DenseUnivariate.add, DenseUnivariate.neg,
       DenseUnivariate.scale, DenseUnivariate.mul, DenseUnivariate.deriv,

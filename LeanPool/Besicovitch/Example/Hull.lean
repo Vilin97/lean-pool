@@ -32,7 +32,7 @@ def cellHull (n : ℕ) (U : Set ℝ) : Set ℝ := ⋃ i ∈ {i : ℤ | cell n i 
 
 theorem cellHull_subset (n : ℕ) (U : Set ℝ) : cellHull n U ⊆ U := by
   intro x hx
-  simp only [cellHull, mem_iUnion, mem_setOf_eq, exists_prop] at hx
+  simp only [cellHull, mem_iUnion, mem_ofPred_eq, exists_prop] at hx
   obtain ⟨i, hi, hx⟩ := hx
   exact hi hx
 
@@ -46,7 +46,7 @@ theorem cell_subset_of_mem {m n : ℕ} (hmn : m ≤ n) {i j : ℤ} {x : ℝ}
 
 theorem cellHull_subset_succ (n : ℕ) (U : Set ℝ) : cellHull n U ⊆ cellHull (n + 1) U := by
   intro x hx
-  simp only [cellHull, mem_iUnion, mem_setOf_eq, exists_prop] at hx ⊢
+  simp only [cellHull, mem_iUnion, mem_ofPred_eq, exists_prop] at hx ⊢
   obtain ⟨i, hi, hx⟩ := hx
   exact ⟨cellIndex (n + 1) x,
     (cell_subset_of_mem (Nat.le_succ n) (mem_cell_cellIndex _ _) hx).trans hi,
@@ -69,7 +69,7 @@ theorem iUnion_cellHull_of_isOpen {U : Set ℝ} (hU : IsOpen U) : ⋃ n, cellHul
   obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hU x hx
   obtain ⟨n, hn⟩ := (tendsto_cellLength.eventually (gt_mem_nhds hε)).exists
   refine mem_iUnion.mpr ⟨n, ?_⟩
-  simp only [cellHull, mem_iUnion, mem_setOf_eq, exists_prop]
+  simp only [cellHull, mem_iUnion, mem_ofPred_eq, exists_prop]
   exact ⟨cellIndex n x,
     (cell_subset_ball n x).trans ((Metric.ball_subset_ball hn.le).trans hball),
     mem_cell_cellIndex n x⟩

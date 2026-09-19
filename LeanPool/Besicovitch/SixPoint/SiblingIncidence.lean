@@ -736,7 +736,7 @@ theorem q2_strict_of_matched_endpoint_zero {configuration : SixPointConfiguratio
       dist (configuration .red .left) (configuration .red .right) +
         dist (configuration .blue .left) (configuration .blue .right) by linarith)
     hcoefficient
-  simp [redSiblingTriangleFailure, blueSiblingTriangleFailure,
+  norm_num [redSiblingTriangleFailure, blueSiblingTriangleFailure,
     transposeBlueEndpointWitness, transposeEndpointCode,
     siblingTriangleWitnessExceeds, incidenceFirst, incidenceSecond, incidenceChild,
     redSiblingTriangleTarget, blueSiblingTriangleTarget, rootedTriangleTotalRadius,
@@ -762,7 +762,7 @@ theorem q2_strict_of_matched_endpoint_three {configuration : SixPointConfigurati
       dist (configuration .red .left) (configuration .red .right) +
         dist (configuration .blue .left) (configuration .blue .right) by linarith)
     hcoefficient
-  simp [redSiblingTriangleFailure, blueSiblingTriangleFailure,
+  norm_num [redSiblingTriangleFailure, blueSiblingTriangleFailure,
     transposeBlueEndpointWitness, transposeEndpointCode,
     siblingTriangleWitnessExceeds, incidenceFirst, incidenceSecond, incidenceChild,
     redSiblingTriangleTarget, blueSiblingTriangleTarget, rootedTriangleTotalRadius,
@@ -807,7 +807,7 @@ theorem not_redEndpoint_zero_and_blueEndpoint_three
       dist (configuration .red .left) (configuration .red .right) +
         dist (configuration .blue .left) (configuration .blue .right) by linarith)
     (show 2 * (1 - barC) ≤ 0 by nlinarith [one_lt_barC_and_barC_lt_two.1])
-  simp [redSiblingTriangleFailure, blueSiblingTriangleFailure,
+  norm_num [redSiblingTriangleFailure, blueSiblingTriangleFailure,
     transposeBlueEndpointWitness, transposeEndpointCode,
     siblingTriangleWitnessExceeds, incidenceFirst, incidenceSecond, incidenceChild,
     redSiblingTriangleTarget, blueSiblingTriangleTarget, rootedTriangleTotalRadius,
@@ -852,7 +852,7 @@ theorem not_redEndpoint_one_and_blueEndpoint_two
       dist (configuration .red .left) (configuration .red .right) +
         dist (configuration .blue .left) (configuration .blue .right) by linarith)
     (show 2 * (1 - barC) ≤ 0 by nlinarith [one_lt_barC_and_barC_lt_two.1])
-  simp [redSiblingTriangleFailure, blueSiblingTriangleFailure,
+  norm_num [redSiblingTriangleFailure, blueSiblingTriangleFailure,
     transposeBlueEndpointWitness, transposeEndpointCode,
     siblingTriangleWitnessExceeds, incidenceFirst, incidenceSecond, incidenceChild,
     redSiblingTriangleTarget, blueSiblingTriangleTarget, rootedTriangleTotalRadius,

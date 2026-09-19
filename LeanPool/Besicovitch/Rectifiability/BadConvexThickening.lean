@@ -32,7 +32,7 @@ theorem measure_iUnion_diameterThickening_le {mu : Measure (EuclideanSpace ℝ (
     mu (⋃ V : chosen, diameterThickening p (V : Set (EuclideanSpace ℝ (Fin 2)))) ≤
       ENNReal.ofReal (2 * p + 1) *
         ∑' V : chosen, Metric.ediam (V : Set (EuclideanSpace ℝ (Fin 2))) := by
-  letI : Countable chosen := hcountable.to_subtype
+  let : Countable chosen := hcountable.to_subtype
   calc
     mu (⋃ V : chosen, diameterThickening p (V : Set (EuclideanSpace ℝ (Fin 2)))) ≤
         ∑' V : chosen, mu (diameterThickening p (V : Set (EuclideanSpace ℝ (Fin 2)))) :=

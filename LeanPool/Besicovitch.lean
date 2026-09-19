@@ -100,3 +100,14 @@ import LeanPool.Besicovitch.SixPoint.WeightedFailure
 import LeanPool.Besicovitch.SixPoint.WeightedReduction
 import LeanPool.Besicovitch.Statement
 import LeanPool.Besicovitch.Topology.ConnectedComponent
+
+/-!
+# A machine-checked bound of 0.6934 for Besicovitch's 1/2-problem
+
+Source: url:https://github.com/CoolRmal/Besicovitchs-1-2
+Authors: Yongxi Lin
+Status: verified
+Main declarations: `LeanPool.Besicovitch.sigmaOne_plane_le_barS`
+Tags: besicovitch-problem, measure-theory, rectifiability, finite-certificates, gram-matrices
+MSC: 28A75, 28A78, 49Q15, 68V20, 90C05
+-/

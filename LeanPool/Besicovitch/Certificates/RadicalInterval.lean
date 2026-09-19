@@ -24,7 +24,7 @@ namespace LeanPool.Besicovitch
 /-- Rational expressions with explicitly certified square-root bounds. -/
 inductive RadicalExpression (n : ℕ) where
   | var : Fin n → RadicalExpression n
-  | constant : ℚ → RadicalExpression n
+  | literal : ℚ → RadicalExpression n
   | add : RadicalExpression n → RadicalExpression n → RadicalExpression n
   | neg : RadicalExpression n → RadicalExpression n
   | mul : RadicalExpression n → RadicalExpression n → RadicalExpression n
@@ -36,7 +36,7 @@ namespace RadicalExpression
 /-- Evaluate a radical expression in a real environment. -/
 noncomputable def eval {n : ℕ} : RadicalExpression n → (Fin n → ℝ) → ℝ
   | .var i, x => x i
-  | .constant q, _ => q
+  | .literal q, _ => q
   | .add f g, x => f.eval x + g.eval x
   | .neg f, x => -f.eval x
   | .mul f g, x => f.eval x * g.eval x
@@ -47,7 +47,7 @@ noncomputable def eval {n : ℕ} : RadicalExpression n → (Fin n → ℝ) → �
 def enclosure {n : ℕ} : RadicalExpression n → (Fin n → RationalInterval) →
     Option RationalInterval
   | .var i, X => some (X i)
-  | .constant q, _ => some (.singleton q)
+  | .literal q, _ => some (.singleton q)
   | .add f g, X => do
       let I ← f.enclosure X
       let J ← g.enclosure X
@@ -92,40 +92,29 @@ theorem enclosure_sound {n : ℕ} {f : RadicalExpression n}
       simp only [enclosure, Option.some.injEq] at hI
       subst I
       exact hx i
-  | constant q =>
+  | literal q =>
       simp only [enclosure, Option.some.injEq] at hI
       subst I
       exact RationalInterval.singleton_contains q
   | add f g hf hg =>
-      simp only [enclosure] at hI
-      cases hfI : f.enclosure X with
-      | none => simp [hfI] at hI
-      | some If =>
-          cases hgI : g.enclosure X with
-          | none => simp [hfI, hgI] at hI
-          | some Ig =>
-              simp [hfI, hgI] at hI
-              subst I
-              exact RationalInterval.add_contains (hf hfI) (hg hgI)
+      change ((f.enclosure X).bind fun If ↦
+        (g.enclosure X).bind fun Ig ↦ some (If.add Ig)) = some I at hI
+      obtain ⟨If, hfI, hI⟩ := Option.bind_eq_some_iff.mp hI
+      obtain ⟨Ig, hgI, hI⟩ := Option.bind_eq_some_iff.mp hI
+      cases Option.some.inj hI
+      exact RationalInterval.add_contains (hf hfI) (hg hgI)
   | neg f hf =>
-      simp only [enclosure] at hI
-      cases hfI : f.enclosure X with
-      | none => simp [hfI] at hI
-      | some If =>
-          simp [hfI] at hI
-          subst I
-          exact RationalInterval.neg_contains (hf hfI)
+      change ((f.enclosure X).bind fun If ↦ some If.neg) = some I at hI
+      obtain ⟨If, hfI, hI⟩ := Option.bind_eq_some_iff.mp hI
+      cases Option.some.inj hI
+      exact RationalInterval.neg_contains (hf hfI)
   | mul f g hf hg =>
-      simp only [enclosure] at hI
-      cases hfI : f.enclosure X with
-      | none => simp [hfI] at hI
-      | some If =>
-          cases hgI : g.enclosure X with
-          | none => simp [hfI, hgI] at hI
-          | some Ig =>
-              simp [hfI, hgI] at hI
-              subst I
-              exact RationalInterval.mul_contains (hf hfI) (hg hgI)
+      change ((f.enclosure X).bind fun If ↦
+        (g.enclosure X).bind fun Ig ↦ some (If.mul Ig)) = some I at hI
+      obtain ⟨If, hfI, hI⟩ := Option.bind_eq_some_iff.mp hI
+      obtain ⟨Ig, hgI, hI⟩ := Option.bind_eq_some_iff.mp hI
+      cases Option.some.inj hI
+      exact RationalInterval.mul_contains (hf hfI) (hg hgI)
   | inv f hf =>
       simp only [enclosure] at hI
       cases hfI : f.enclosure X with

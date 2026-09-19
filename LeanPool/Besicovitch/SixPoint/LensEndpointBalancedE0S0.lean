@@ -57,6 +57,244 @@ private def millionth (n : ℤ) : ℚ := n / 1000000
 private def tenThousandthFactor (entries : Three → Five → ℤ) : Three → Five → ℚ :=
   fun i j ↦ entries i j / 10000
 
+private def lensCertificates : Fin 28 → LensCertificate := ![
+  { redLower := 3 / 8, redUpper := 17 / 32, blueLower := 17 / 32,
+    blueUpper := 11 / 16, alpha₁₁ := millionth 2890506, alpha₁₂ := millionth 741364,
+    alpha₂₂ := millionth 1740227, redSeparation := millionth 2610026,
+    blueSeparation := millionth 3088621, factor := tenThousandthFactor ![
+      ![1819, 5355, -14521, -6987, 8937],
+      ![18915, -1699, 289, 22440, 15183],
+      ![-14886, -25903, -13097, 8243, 3714]] },
+  { redLower := 3 / 8, redUpper := 17 / 32, blueLower := 11 / 16,
+    blueUpper := 27 / 32, alpha₁₁ := millionth 2890526, alpha₁₂ := millionth 685572,
+    alpha₂₂ := millionth 1557844, redSeparation := millionth 2674058,
+    blueSeparation := millionth 2455362, factor := tenThousandthFactor ![
+      ![2883, 4729, -14967, -6530, 8047],
+      ![16496, -7023, -2108, 22922, 12897],
+      ![-18229, -25224, -12820, 3853, 636]] },
+  { redLower := 3 / 8, redUpper := 17 / 32, blueLower := 27 / 32,
+    blueUpper := 1, alpha₁₁ := millionth 2888910, alpha₁₂ := millionth 636035,
+    alpha₂₂ := millionth 1415361, redSeparation := millionth 2739077,
+    blueSeparation := millionth 2019493, factor := tenThousandthFactor ![
+      ![3562, 4247, -15198, -6410, 7294],
+      ![16378, -8330, -2662, 22473, 11054],
+      ![-18933, -25026, -12638, 2975, 100]] },
+  { redLower := 3 / 8, redUpper := 11 / 16, blueLower := 3 / 8,
+    blueUpper := 17 / 32, alpha₁₁ := millionth 2888154, alpha₁₂ := millionth 802554,
+    alpha₂₂ := millionth 1845176, redSeparation := millionth 2096492,
+    blueSeparation := millionth 4126527, factor := tenThousandthFactor ![
+      ![1216, -5449, 12634, 7692, -10525],
+      ![19867, 24129, 10515, -1989, 972],
+      ![-12893, 8041, 3083, -24739, -20031]] },
+  { redLower := 17 / 32, redUpper := 39 / 64, blueLower := 11 / 16,
+    blueUpper := 49 / 64, alpha₁₁ := millionth 2890715, alpha₁₂ := millionth 699051,
+    alpha₂₂ := millionth 1478460, redSeparation := millionth 2076689,
+    blueSeparation := millionth 2589614, factor := tenThousandthFactor ![
+      ![1098, 3719, -13437, -5799, 9155],
+      ![12308, -11547, -3390, 23612, 13196],
+      ![-21559, -23054, -9478, -224, -2100]] },
+  { redLower := 17 / 32, redUpper := 39 / 64, blueLower := 49 / 64,
+    blueUpper := 27 / 32, alpha₁₁ := millionth 2890329, alpha₁₂ := millionth 672867,
+    alpha₂₂ := millionth 1409783, redSeparation := millionth 2110108,
+    blueSeparation := millionth 2329345, factor := tenThousandthFactor ![
+      ![1575, 3405, -13606, -5619, 8740],
+      ![13050, -11276, -3156, 23316, 12118],
+      ![-21385, -23293, -9520, 300, -1700]] },
+  { redLower := 17 / 32, redUpper := 39 / 64, blueLower := 27 / 32,
+    blueUpper := 1, alpha₁₁ := millionth 2888957, alpha₁₂ := millionth 636683,
+    alpha₂₂ := millionth 1320165, redSeparation := millionth 2160931,
+    blueSeparation := millionth 2014317, factor := tenThousandthFactor ![
+      ![2143, 3005, -13776, -5489, 8179],
+      ![13591, -11381, -3093, 22909, 10785],
+      ![-21416, -23384, -9506, 500, -1475]] },
+  { redLower := 17 / 32, redUpper := 11 / 16, blueLower := 17 / 32,
+    blueUpper := 39 / 64, alpha₁₁ := millionth 2890043, alpha₁₂ := millionth 757466,
+    alpha₂₂ := millionth 1599317, redSeparation := millionth 1851458,
+    blueSeparation := millionth 3329045, factor := tenThousandthFactor ![
+      ![694, -4320, 12397, 6363, -10337],
+      ![17975, 24958, 9362, -5826, -1583],
+      ![-16468, 4911, 1029, -23640, -16474]] },
+  { redLower := 17 / 32, redUpper := 11 / 16, blueLower := 39 / 64,
+    blueUpper := 11 / 16, alpha₁₁ := millionth 2890674, alpha₁₂ := millionth 726523,
+    alpha₂₂ := millionth 1510374, redSeparation := millionth 1880532,
+    blueSeparation := millionth 2908577, factor := tenThousandthFactor ![
+      ![60, 3849, -12703, -5873, 9861],
+      ![426, 21194, 7118, -20718, -11445],
+      ![-24677, -14283, -6029, -12086, -9238]] },
+  { redLower := 39 / 64, redUpper := 11 / 16, blueLower := 11 / 16,
+    blueUpper := 49 / 64, alpha₁₁ := millionth 2890627, alpha₁₂ := millionth 698596,
+    alpha₂₂ := millionth 1404137, redSeparation := millionth 1790421,
+    blueSeparation := millionth 2594204, factor := tenThousandthFactor ![
+      ![314, 3316, -12524, -5394, 9616],
+      ![7405, -15990, -4516, 23177, 12391],
+      ![-23890, -19937, -7442, -4986, -4834]] },
+  { redLower := 39 / 64, redUpper := 11 / 16, blueLower := 49 / 64,
+    blueUpper := 27 / 32, alpha₁₁ := millionth 2890214, alpha₁₂ := millionth 672530,
+    alpha₂₂ := millionth 1341186, redSeparation := millionth 1820424,
+    blueSeparation := millionth 2332636, factor := tenThousandthFactor ![
+      ![804, 2976, -12686, -5183, 9205],
+      ![10103, -14061, -3669, 23282, 11717],
+      ![-23126, -21445, -7843, -2507, -3269]] },
+  { redLower := 39 / 64, redUpper := 11 / 16, blueLower := 27 / 32,
+    blueUpper := 1, alpha₁₁ := millionth 2888950, alpha₁₂ := millionth 636503,
+    alpha₂₂ := millionth 1258997, redSeparation := millionth 1867383,
+    blueSeparation := millionth 2015753, factor := tenThousandthFactor ![
+      ![1399, 2541, -12852, -5017, 8646],
+      ![11507, -13342, -3285, 22979, 10511],
+      ![-22803, -22037, -7967, -1381, -2478]] },
+  { redLower := 11 / 16, redUpper := 93 / 128, blueLower := 49 / 64,
+    blueUpper := 27 / 32, alpha₁₁ := millionth 2890244, alpha₁₂ := millionth 672089,
+    alpha₂₂ := millionth 1298911, redSeparation := millionth 1662157,
+    blueSeparation := millionth 2336817, factor := tenThousandthFactor ![
+      ![380, 2799, -12132, -4941, 9461],
+      ![8100, -15708, -3899, 23062, 11366],
+      ![-24015, -20087, -6916, -4334, -4224]] },
+  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 39 / 64,
+    blueUpper := 11 / 16, alpha₁₁ := millionth 2890577, alpha₁₂ := millionth 725524,
+    alpha₂₂ := millionth 1409255, redSeparation := millionth 1559772,
+    blueSeparation := millionth 2920064, factor := tenThousandthFactor ![
+      ![844, -3525, 11590, 5444, -10380],
+      ![9191, 24556, 7344, -15494, -7519],
+      ![-23152, -5999, -2749, -18438, -12584]] },
+  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 11 / 16,
+    blueUpper := 93 / 128, alpha₁₁ := millionth 2890648, alpha₁₂ := millionth 704649,
+    alpha₂₂ := millionth 1359487, redSeparation := millionth 1579603,
+    blueSeparation := millionth 2675037, factor := tenThousandthFactor ![
+      ![387, -3211, 11753, 5173, -10054],
+      ![830, -20393, -5591, 21290, 10961],
+      ![-25084, -15057, -5424, -10740, -8021]] },
+  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 93 / 128,
+    blueUpper := 49 / 64, alpha₁₁ := millionth 2890553, alpha₁₂ := millionth 691258,
+    alpha₂₂ := millionth 1328595, redSeparation := millionth 1593341,
+    blueSeparation := millionth 2531027, factor := tenThousandthFactor ![
+      ![114, -3019, 11844, 5031, -9843],
+      ![4630, -18070, -4692, 22498, 11449],
+      ![-24785, -17841, -6182, -7437, -6056]] },
+  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 27 / 32,
+    blueUpper := 1, alpha₁₁ := millionth 2888899, alpha₁₂ := millionth 635992,
+    alpha₂₂ := millionth 1208968, redSeparation := millionth 1658631,
+    blueSeparation := millionth 2020063, factor := tenThousandthFactor ![
+      ![864, 2297, -12122, -4676, 8981],
+      ![9735, -14826, -3364, 22900, 10238],
+      ![-23761, -20825, -6907, -2946, -3244]] },
+  { redLower := 11 / 16, redUpper := 27 / 32, blueLower := 17 / 32,
+    blueUpper := 39 / 64, alpha₁₁ := millionth 2889781, alpha₁₂ := millionth 756524,
+    alpha₂₂ := millionth 1455451, redSeparation := millionth 1447399,
+    blueSeparation := millionth 3357122, factor := tenThousandthFactor ![
+      ![1869, -4000, 10966, 5885, -10988],
+      ![17273, 24865, 7546, -7627, -2669],
+      ![-17617, 3258, 300, -23258, -16339]] },
+  { redLower := 11 / 16, redUpper := 1, blueLower := 3 / 8,
+    blueUpper := 17 / 32, alpha₁₁ := millionth 2887389, alpha₁₂ := millionth 800698,
+    alpha₂₂ := millionth 1505942, redSeparation := millionth 1270742,
+    blueSeparation := millionth 4192122, factor := tenThousandthFactor ![
+      ![3645, -4876, 9822, 6921, -11762],
+      ![19553, 24033, 6933, -4683, -868],
+      ![-14413, 5782, 1441, -24635, -20156]] },
+  { redLower := 93 / 128, redUpper := 49 / 64, blueLower := 49 / 64,
+    blueUpper := 27 / 32, alpha₁₁ := millionth 2890160, alpha₁₂ := millionth 671737,
+    alpha₂₂ := millionth 1272329, redSeparation := millionth 1569159,
+    blueSeparation := millionth 2340282, factor := tenThousandthFactor ![
+      ![131, 2717, -11791, -4797, 9612],
+      ![6838, -16654, -3996, 22852, 11117],
+      ![-24475, -19192, -6378, -5450, -4786]] },
+  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 39 / 64,
+    blueUpper := 11 / 16, alpha₁₁ := millionth 2890443, alpha₁₂ := millionth 724599,
+    alpha₂₂ := millionth 1349809, redSeparation := millionth 1393656,
+    blueSeparation := millionth 2930837, factor := tenThousandthFactor ![
+      ![1311, -3436, 10958, 5212, -10647],
+      ![10634, 24698, 6771, -14535, -6807],
+      ![-22672, -4560, -2144, -19265, -12958]] },
+  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 11 / 16,
+    blueUpper := 49 / 64, alpha₁₁ := millionth 2890494, alpha₁₂ := millionth 697000,
+    alpha₂₂ := millionth 1289028, redSeparation := millionth 1418570,
+    blueSeparation := millionth 2610671, factor := tenThousandthFactor ![
+      ![710, -3007, 11164, 4847, -10219],
+      ![-263, -20923, -5207, 20851, 10341],
+      ![-25285, -14055, -4730, -11513, -8249]] },
+  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 49 / 64,
+    blueUpper := 27 / 32, alpha₁₁ := millionth 2890126, alpha₁₂ := millionth 671071,
+    alpha₂₂ := millionth 1234650, redSeparation := millionth 1444940,
+    blueSeparation := millionth 2346630, factor := tenThousandthFactor ![
+      ![204, -2634, 11319, 4600, -9812],
+      ![5122, -17829, -4063, 22488, 10748],
+      ![-24987, -17928, -5682, -6920, -5504]] },
+  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 27 / 32,
+    blueUpper := 1, alpha₁₁ := millionth 2888793, alpha₁₂ := millionth 635251,
+    alpha₂₂ := millionth 1163098, redSeparation := millionth 1486455,
+    blueSeparation := millionth 2026651, factor := tenThousandthFactor ![
+      ![419, 2157, -11480, -4387, 9256],
+      ![8138, -16031, -3368, 22732, 9966],
+      ![-24483, -19686, -6066, -4318, -3874]] },
+  { redLower := 27 / 32, redUpper := 1, blueLower := 17 / 32,
+    blueUpper := 11 / 16, alpha₁₁ := millionth 2889918, alpha₁₂ := millionth 737429,
+    alpha₂₂ := millionth 1300581, redSeparation := millionth 1182097,
+    blueSeparation := millionth 3138952, factor := tenThousandthFactor ![
+      ![2217, -3663, 10032, 5168, -11170],
+      ![14771, 24847, 6230, -11034, -4727],
+      ![-20284, -189, -778, -21717, -14710]] },
+  { redLower := 27 / 32, redUpper := 1, blueLower := 11 / 16,
+    blueUpper := 49 / 64, alpha₁₁ := millionth 2890275, alpha₁₂ := millionth 695389,
+    alpha₂₂ := millionth 1215912, redSeparation := millionth 1215199,
+    blueSeparation := millionth 2628085, factor := tenThousandthFactor ![
+      ![1271, -2964, 10353, 4526, -10537],
+      ![3252, 22189, 4968, -19530, -9358],
+      ![-25257, -11489, -3654, -13730, -9303]] },
+  { redLower := 27 / 32, redUpper := 1, blueLower := 49 / 64,
+    blueUpper := 27 / 32, alpha₁₁ := millionth 2889921, alpha₁₂ := millionth 669445,
+    alpha₂₂ := millionth 1166568, redSeparation := millionth 1239233,
+    blueSeparation := millionth 2362262, factor := tenThousandthFactor ![
+      ![760, -2574, 10504, 4258, -10134],
+      ![2413, -19429, -3999, 21746, 10108],
+      ![-25567, -15832, -4628, -9124, -6529]] },
+  { redLower := 27 / 32, redUpper := 1, blueLower := 27 / 32,
+    blueUpper := 1, alpha₁₁ := millionth 2888619, alpha₁₂ := millionth 633708,
+    alpha₂₂ := millionth 1101333, redSeparation := millionth 1277300,
+    blueSeparation := millionth 2039948, factor := tenThousandthFactor ![
+      ![128, -2073, 10661, 4020, -9581],
+      ![6137, -17374, -3275, 22407, 9598],
+      ![-25233, -18195, -5107, -5978, -4590]] }
+]
+
+private structure LensBox where
+  redLower : ℚ
+  redUpper : ℚ
+  blueLower : ℚ
+  blueUpper : ℚ
+
+private def lensBox (i : Fin 28) : LensBox :=
+  match i.val with
+  | 0 => ⟨3 / 8, 17 / 32, 17 / 32, 11 / 16⟩
+  | 1 => ⟨3 / 8, 17 / 32, 11 / 16, 27 / 32⟩
+  | 2 => ⟨3 / 8, 17 / 32, 27 / 32, 1⟩
+  | 3 => ⟨3 / 8, 11 / 16, 3 / 8, 17 / 32⟩
+  | 4 => ⟨17 / 32, 39 / 64, 11 / 16, 49 / 64⟩
+  | 5 => ⟨17 / 32, 39 / 64, 49 / 64, 27 / 32⟩
+  | 6 => ⟨17 / 32, 39 / 64, 27 / 32, 1⟩
+  | 7 => ⟨17 / 32, 11 / 16, 17 / 32, 39 / 64⟩
+  | 8 => ⟨17 / 32, 11 / 16, 39 / 64, 11 / 16⟩
+  | 9 => ⟨39 / 64, 11 / 16, 11 / 16, 49 / 64⟩
+  | 10 => ⟨39 / 64, 11 / 16, 49 / 64, 27 / 32⟩
+  | 11 => ⟨39 / 64, 11 / 16, 27 / 32, 1⟩
+  | 12 => ⟨11 / 16, 93 / 128, 49 / 64, 27 / 32⟩
+  | 13 => ⟨11 / 16, 49 / 64, 39 / 64, 11 / 16⟩
+  | 14 => ⟨11 / 16, 49 / 64, 11 / 16, 93 / 128⟩
+  | 15 => ⟨11 / 16, 49 / 64, 93 / 128, 49 / 64⟩
+  | 16 => ⟨11 / 16, 49 / 64, 27 / 32, 1⟩
+  | 17 => ⟨11 / 16, 27 / 32, 17 / 32, 39 / 64⟩
+  | 18 => ⟨11 / 16, 1, 3 / 8, 17 / 32⟩
+  | 19 => ⟨93 / 128, 49 / 64, 49 / 64, 27 / 32⟩
+  | 20 => ⟨49 / 64, 27 / 32, 39 / 64, 11 / 16⟩
+  | 21 => ⟨49 / 64, 27 / 32, 11 / 16, 49 / 64⟩
+  | 22 => ⟨49 / 64, 27 / 32, 49 / 64, 27 / 32⟩
+  | 23 => ⟨49 / 64, 27 / 32, 27 / 32, 1⟩
+  | 24 => ⟨27 / 32, 1, 17 / 32, 11 / 16⟩
+  | 25 => ⟨27 / 32, 1, 11 / 16, 49 / 64⟩
+  | 26 => ⟨27 / 32, 1, 49 / 64, 27 / 32⟩
+  | 27 => ⟨27 / 32, 1, 27 / 32, 1⟩
+  | _ => ⟨27 / 32, 1, 27 / 32, 1⟩
+
+
 private def factorRow (certificate : LensCertificate) (k : Three) : Five → ℝ :=
   fun i ↦ certificate.factor k i
 
@@ -369,7 +607,8 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
       2 * certificate.blueSeparation * ⟪w₁, w₂⟫_ℝ := by
   let v : Five → E := ![e, p₁, p₂, w₁, w₂]
   have h := gram_sum_nonneg certificate v
-  simp [Fin.sum_univ_five, v] at h
+  simp only [Fin.sum_univ_five, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.cons_val, inner_self_eq_norm_sq_to_K, RCLike.ofReal_real_eq_id, id_eq, v] at h
   rw [certificateMatrix_diagonal₀, certificateMatrix_diagonal₁,
     certificateMatrix_diagonal₂, certificateMatrix_diagonal₃,
     certificateMatrix_diagonal₄] at h
@@ -541,243 +780,6 @@ private theorem lens_bound_of_certificate {E : Type*} [NormedAddCommGroup E]
   unfold certificateUpperBound at hbound
   nlinarith
 
-private def lensCertificates : Fin 28 → LensCertificate := ![
-  { redLower := 3 / 8, redUpper := 17 / 32, blueLower := 17 / 32,
-    blueUpper := 11 / 16, alpha₁₁ := millionth 2890506, alpha₁₂ := millionth 741364,
-    alpha₂₂ := millionth 1740227, redSeparation := millionth 2610026,
-    blueSeparation := millionth 3088621, factor := tenThousandthFactor ![
-      ![1819, 5355, -14521, -6987, 8937],
-      ![18915, -1699, 289, 22440, 15183],
-      ![-14886, -25903, -13097, 8243, 3714]] },
-  { redLower := 3 / 8, redUpper := 17 / 32, blueLower := 11 / 16,
-    blueUpper := 27 / 32, alpha₁₁ := millionth 2890526, alpha₁₂ := millionth 685572,
-    alpha₂₂ := millionth 1557844, redSeparation := millionth 2674058,
-    blueSeparation := millionth 2455362, factor := tenThousandthFactor ![
-      ![2883, 4729, -14967, -6530, 8047],
-      ![16496, -7023, -2108, 22922, 12897],
-      ![-18229, -25224, -12820, 3853, 636]] },
-  { redLower := 3 / 8, redUpper := 17 / 32, blueLower := 27 / 32,
-    blueUpper := 1, alpha₁₁ := millionth 2888910, alpha₁₂ := millionth 636035,
-    alpha₂₂ := millionth 1415361, redSeparation := millionth 2739077,
-    blueSeparation := millionth 2019493, factor := tenThousandthFactor ![
-      ![3562, 4247, -15198, -6410, 7294],
-      ![16378, -8330, -2662, 22473, 11054],
-      ![-18933, -25026, -12638, 2975, 100]] },
-  { redLower := 3 / 8, redUpper := 11 / 16, blueLower := 3 / 8,
-    blueUpper := 17 / 32, alpha₁₁ := millionth 2888154, alpha₁₂ := millionth 802554,
-    alpha₂₂ := millionth 1845176, redSeparation := millionth 2096492,
-    blueSeparation := millionth 4126527, factor := tenThousandthFactor ![
-      ![1216, -5449, 12634, 7692, -10525],
-      ![19867, 24129, 10515, -1989, 972],
-      ![-12893, 8041, 3083, -24739, -20031]] },
-  { redLower := 17 / 32, redUpper := 39 / 64, blueLower := 11 / 16,
-    blueUpper := 49 / 64, alpha₁₁ := millionth 2890715, alpha₁₂ := millionth 699051,
-    alpha₂₂ := millionth 1478460, redSeparation := millionth 2076689,
-    blueSeparation := millionth 2589614, factor := tenThousandthFactor ![
-      ![1098, 3719, -13437, -5799, 9155],
-      ![12308, -11547, -3390, 23612, 13196],
-      ![-21559, -23054, -9478, -224, -2100]] },
-  { redLower := 17 / 32, redUpper := 39 / 64, blueLower := 49 / 64,
-    blueUpper := 27 / 32, alpha₁₁ := millionth 2890329, alpha₁₂ := millionth 672867,
-    alpha₂₂ := millionth 1409783, redSeparation := millionth 2110108,
-    blueSeparation := millionth 2329345, factor := tenThousandthFactor ![
-      ![1575, 3405, -13606, -5619, 8740],
-      ![13050, -11276, -3156, 23316, 12118],
-      ![-21385, -23293, -9520, 300, -1700]] },
-  { redLower := 17 / 32, redUpper := 39 / 64, blueLower := 27 / 32,
-    blueUpper := 1, alpha₁₁ := millionth 2888957, alpha₁₂ := millionth 636683,
-    alpha₂₂ := millionth 1320165, redSeparation := millionth 2160931,
-    blueSeparation := millionth 2014317, factor := tenThousandthFactor ![
-      ![2143, 3005, -13776, -5489, 8179],
-      ![13591, -11381, -3093, 22909, 10785],
-      ![-21416, -23384, -9506, 500, -1475]] },
-  { redLower := 17 / 32, redUpper := 11 / 16, blueLower := 17 / 32,
-    blueUpper := 39 / 64, alpha₁₁ := millionth 2890043, alpha₁₂ := millionth 757466,
-    alpha₂₂ := millionth 1599317, redSeparation := millionth 1851458,
-    blueSeparation := millionth 3329045, factor := tenThousandthFactor ![
-      ![694, -4320, 12397, 6363, -10337],
-      ![17975, 24958, 9362, -5826, -1583],
-      ![-16468, 4911, 1029, -23640, -16474]] },
-  { redLower := 17 / 32, redUpper := 11 / 16, blueLower := 39 / 64,
-    blueUpper := 11 / 16, alpha₁₁ := millionth 2890674, alpha₁₂ := millionth 726523,
-    alpha₂₂ := millionth 1510374, redSeparation := millionth 1880532,
-    blueSeparation := millionth 2908577, factor := tenThousandthFactor ![
-      ![60, 3849, -12703, -5873, 9861],
-      ![426, 21194, 7118, -20718, -11445],
-      ![-24677, -14283, -6029, -12086, -9238]] },
-  { redLower := 39 / 64, redUpper := 11 / 16, blueLower := 11 / 16,
-    blueUpper := 49 / 64, alpha₁₁ := millionth 2890627, alpha₁₂ := millionth 698596,
-    alpha₂₂ := millionth 1404137, redSeparation := millionth 1790421,
-    blueSeparation := millionth 2594204, factor := tenThousandthFactor ![
-      ![314, 3316, -12524, -5394, 9616],
-      ![7405, -15990, -4516, 23177, 12391],
-      ![-23890, -19937, -7442, -4986, -4834]] },
-  { redLower := 39 / 64, redUpper := 11 / 16, blueLower := 49 / 64,
-    blueUpper := 27 / 32, alpha₁₁ := millionth 2890214, alpha₁₂ := millionth 672530,
-    alpha₂₂ := millionth 1341186, redSeparation := millionth 1820424,
-    blueSeparation := millionth 2332636, factor := tenThousandthFactor ![
-      ![804, 2976, -12686, -5183, 9205],
-      ![10103, -14061, -3669, 23282, 11717],
-      ![-23126, -21445, -7843, -2507, -3269]] },
-  { redLower := 39 / 64, redUpper := 11 / 16, blueLower := 27 / 32,
-    blueUpper := 1, alpha₁₁ := millionth 2888950, alpha₁₂ := millionth 636503,
-    alpha₂₂ := millionth 1258997, redSeparation := millionth 1867383,
-    blueSeparation := millionth 2015753, factor := tenThousandthFactor ![
-      ![1399, 2541, -12852, -5017, 8646],
-      ![11507, -13342, -3285, 22979, 10511],
-      ![-22803, -22037, -7967, -1381, -2478]] },
-  { redLower := 11 / 16, redUpper := 93 / 128, blueLower := 49 / 64,
-    blueUpper := 27 / 32, alpha₁₁ := millionth 2890244, alpha₁₂ := millionth 672089,
-    alpha₂₂ := millionth 1298911, redSeparation := millionth 1662157,
-    blueSeparation := millionth 2336817, factor := tenThousandthFactor ![
-      ![380, 2799, -12132, -4941, 9461],
-      ![8100, -15708, -3899, 23062, 11366],
-      ![-24015, -20087, -6916, -4334, -4224]] },
-  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 39 / 64,
-    blueUpper := 11 / 16, alpha₁₁ := millionth 2890577, alpha₁₂ := millionth 725524,
-    alpha₂₂ := millionth 1409255, redSeparation := millionth 1559772,
-    blueSeparation := millionth 2920064, factor := tenThousandthFactor ![
-      ![844, -3525, 11590, 5444, -10380],
-      ![9191, 24556, 7344, -15494, -7519],
-      ![-23152, -5999, -2749, -18438, -12584]] },
-  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 11 / 16,
-    blueUpper := 93 / 128, alpha₁₁ := millionth 2890648, alpha₁₂ := millionth 704649,
-    alpha₂₂ := millionth 1359487, redSeparation := millionth 1579603,
-    blueSeparation := millionth 2675037, factor := tenThousandthFactor ![
-      ![387, -3211, 11753, 5173, -10054],
-      ![830, -20393, -5591, 21290, 10961],
-      ![-25084, -15057, -5424, -10740, -8021]] },
-  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 93 / 128,
-    blueUpper := 49 / 64, alpha₁₁ := millionth 2890553, alpha₁₂ := millionth 691258,
-    alpha₂₂ := millionth 1328595, redSeparation := millionth 1593341,
-    blueSeparation := millionth 2531027, factor := tenThousandthFactor ![
-      ![114, -3019, 11844, 5031, -9843],
-      ![4630, -18070, -4692, 22498, 11449],
-      ![-24785, -17841, -6182, -7437, -6056]] },
-  { redLower := 11 / 16, redUpper := 49 / 64, blueLower := 27 / 32,
-    blueUpper := 1, alpha₁₁ := millionth 2888899, alpha₁₂ := millionth 635992,
-    alpha₂₂ := millionth 1208968, redSeparation := millionth 1658631,
-    blueSeparation := millionth 2020063, factor := tenThousandthFactor ![
-      ![864, 2297, -12122, -4676, 8981],
-      ![9735, -14826, -3364, 22900, 10238],
-      ![-23761, -20825, -6907, -2946, -3244]] },
-  { redLower := 11 / 16, redUpper := 27 / 32, blueLower := 17 / 32,
-    blueUpper := 39 / 64, alpha₁₁ := millionth 2889781, alpha₁₂ := millionth 756524,
-    alpha₂₂ := millionth 1455451, redSeparation := millionth 1447399,
-    blueSeparation := millionth 3357122, factor := tenThousandthFactor ![
-      ![1869, -4000, 10966, 5885, -10988],
-      ![17273, 24865, 7546, -7627, -2669],
-      ![-17617, 3258, 300, -23258, -16339]] },
-  { redLower := 11 / 16, redUpper := 1, blueLower := 3 / 8,
-    blueUpper := 17 / 32, alpha₁₁ := millionth 2887389, alpha₁₂ := millionth 800698,
-    alpha₂₂ := millionth 1505942, redSeparation := millionth 1270742,
-    blueSeparation := millionth 4192122, factor := tenThousandthFactor ![
-      ![3645, -4876, 9822, 6921, -11762],
-      ![19553, 24033, 6933, -4683, -868],
-      ![-14413, 5782, 1441, -24635, -20156]] },
-  { redLower := 93 / 128, redUpper := 49 / 64, blueLower := 49 / 64,
-    blueUpper := 27 / 32, alpha₁₁ := millionth 2890160, alpha₁₂ := millionth 671737,
-    alpha₂₂ := millionth 1272329, redSeparation := millionth 1569159,
-    blueSeparation := millionth 2340282, factor := tenThousandthFactor ![
-      ![131, 2717, -11791, -4797, 9612],
-      ![6838, -16654, -3996, 22852, 11117],
-      ![-24475, -19192, -6378, -5450, -4786]] },
-  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 39 / 64,
-    blueUpper := 11 / 16, alpha₁₁ := millionth 2890443, alpha₁₂ := millionth 724599,
-    alpha₂₂ := millionth 1349809, redSeparation := millionth 1393656,
-    blueSeparation := millionth 2930837, factor := tenThousandthFactor ![
-      ![1311, -3436, 10958, 5212, -10647],
-      ![10634, 24698, 6771, -14535, -6807],
-      ![-22672, -4560, -2144, -19265, -12958]] },
-  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 11 / 16,
-    blueUpper := 49 / 64, alpha₁₁ := millionth 2890494, alpha₁₂ := millionth 697000,
-    alpha₂₂ := millionth 1289028, redSeparation := millionth 1418570,
-    blueSeparation := millionth 2610671, factor := tenThousandthFactor ![
-      ![710, -3007, 11164, 4847, -10219],
-      ![-263, -20923, -5207, 20851, 10341],
-      ![-25285, -14055, -4730, -11513, -8249]] },
-  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 49 / 64,
-    blueUpper := 27 / 32, alpha₁₁ := millionth 2890126, alpha₁₂ := millionth 671071,
-    alpha₂₂ := millionth 1234650, redSeparation := millionth 1444940,
-    blueSeparation := millionth 2346630, factor := tenThousandthFactor ![
-      ![204, -2634, 11319, 4600, -9812],
-      ![5122, -17829, -4063, 22488, 10748],
-      ![-24987, -17928, -5682, -6920, -5504]] },
-  { redLower := 49 / 64, redUpper := 27 / 32, blueLower := 27 / 32,
-    blueUpper := 1, alpha₁₁ := millionth 2888793, alpha₁₂ := millionth 635251,
-    alpha₂₂ := millionth 1163098, redSeparation := millionth 1486455,
-    blueSeparation := millionth 2026651, factor := tenThousandthFactor ![
-      ![419, 2157, -11480, -4387, 9256],
-      ![8138, -16031, -3368, 22732, 9966],
-      ![-24483, -19686, -6066, -4318, -3874]] },
-  { redLower := 27 / 32, redUpper := 1, blueLower := 17 / 32,
-    blueUpper := 11 / 16, alpha₁₁ := millionth 2889918, alpha₁₂ := millionth 737429,
-    alpha₂₂ := millionth 1300581, redSeparation := millionth 1182097,
-    blueSeparation := millionth 3138952, factor := tenThousandthFactor ![
-      ![2217, -3663, 10032, 5168, -11170],
-      ![14771, 24847, 6230, -11034, -4727],
-      ![-20284, -189, -778, -21717, -14710]] },
-  { redLower := 27 / 32, redUpper := 1, blueLower := 11 / 16,
-    blueUpper := 49 / 64, alpha₁₁ := millionth 2890275, alpha₁₂ := millionth 695389,
-    alpha₂₂ := millionth 1215912, redSeparation := millionth 1215199,
-    blueSeparation := millionth 2628085, factor := tenThousandthFactor ![
-      ![1271, -2964, 10353, 4526, -10537],
-      ![3252, 22189, 4968, -19530, -9358],
-      ![-25257, -11489, -3654, -13730, -9303]] },
-  { redLower := 27 / 32, redUpper := 1, blueLower := 49 / 64,
-    blueUpper := 27 / 32, alpha₁₁ := millionth 2889921, alpha₁₂ := millionth 669445,
-    alpha₂₂ := millionth 1166568, redSeparation := millionth 1239233,
-    blueSeparation := millionth 2362262, factor := tenThousandthFactor ![
-      ![760, -2574, 10504, 4258, -10134],
-      ![2413, -19429, -3999, 21746, 10108],
-      ![-25567, -15832, -4628, -9124, -6529]] },
-  { redLower := 27 / 32, redUpper := 1, blueLower := 27 / 32,
-    blueUpper := 1, alpha₁₁ := millionth 2888619, alpha₁₂ := millionth 633708,
-    alpha₂₂ := millionth 1101333, redSeparation := millionth 1277300,
-    blueSeparation := millionth 2039948, factor := tenThousandthFactor ![
-      ![128, -2073, 10661, 4020, -9581],
-      ![6137, -17374, -3275, 22407, 9598],
-      ![-25233, -18195, -5107, -5978, -4590]] }
-]
-
-private structure LensBox where
-  redLower : ℚ
-  redUpper : ℚ
-  blueLower : ℚ
-  blueUpper : ℚ
-
-private def lensBox (i : Fin 28) : LensBox :=
-  match i.val with
-  | 0 => ⟨3 / 8, 17 / 32, 17 / 32, 11 / 16⟩
-  | 1 => ⟨3 / 8, 17 / 32, 11 / 16, 27 / 32⟩
-  | 2 => ⟨3 / 8, 17 / 32, 27 / 32, 1⟩
-  | 3 => ⟨3 / 8, 11 / 16, 3 / 8, 17 / 32⟩
-  | 4 => ⟨17 / 32, 39 / 64, 11 / 16, 49 / 64⟩
-  | 5 => ⟨17 / 32, 39 / 64, 49 / 64, 27 / 32⟩
-  | 6 => ⟨17 / 32, 39 / 64, 27 / 32, 1⟩
-  | 7 => ⟨17 / 32, 11 / 16, 17 / 32, 39 / 64⟩
-  | 8 => ⟨17 / 32, 11 / 16, 39 / 64, 11 / 16⟩
-  | 9 => ⟨39 / 64, 11 / 16, 11 / 16, 49 / 64⟩
-  | 10 => ⟨39 / 64, 11 / 16, 49 / 64, 27 / 32⟩
-  | 11 => ⟨39 / 64, 11 / 16, 27 / 32, 1⟩
-  | 12 => ⟨11 / 16, 93 / 128, 49 / 64, 27 / 32⟩
-  | 13 => ⟨11 / 16, 49 / 64, 39 / 64, 11 / 16⟩
-  | 14 => ⟨11 / 16, 49 / 64, 11 / 16, 93 / 128⟩
-  | 15 => ⟨11 / 16, 49 / 64, 93 / 128, 49 / 64⟩
-  | 16 => ⟨11 / 16, 49 / 64, 27 / 32, 1⟩
-  | 17 => ⟨11 / 16, 27 / 32, 17 / 32, 39 / 64⟩
-  | 18 => ⟨11 / 16, 1, 3 / 8, 17 / 32⟩
-  | 19 => ⟨93 / 128, 49 / 64, 49 / 64, 27 / 32⟩
-  | 20 => ⟨49 / 64, 27 / 32, 39 / 64, 11 / 16⟩
-  | 21 => ⟨49 / 64, 27 / 32, 11 / 16, 49 / 64⟩
-  | 22 => ⟨49 / 64, 27 / 32, 49 / 64, 27 / 32⟩
-  | 23 => ⟨49 / 64, 27 / 32, 27 / 32, 1⟩
-  | 24 => ⟨27 / 32, 1, 17 / 32, 11 / 16⟩
-  | 25 => ⟨27 / 32, 1, 11 / 16, 49 / 64⟩
-  | 26 => ⟨27 / 32, 1, 49 / 64, 27 / 32⟩
-  | 27 => ⟨27 / 32, 1, 27 / 32, 1⟩
-  | _ => ⟨27 / 32, 1, 27 / 32, 1⟩
-
 private theorem lensCertificate_box (i : Fin 28) :
     (lensCertificates i).redLower = (lensBox i).redLower ∧
       (lensCertificates i).redUpper = (lensBox i).redUpper ∧
@@ -799,316 +801,130 @@ private theorem lensCertificate_box (i : Fin 28) :
 @[simp] private theorem lensCertificate_blueUpper (i : Fin 28) :
     (lensCertificates i).blueUpper = (lensBox i).blueUpper := (lensCertificate_box i).2.2.2
 
-private theorem lensCertificates_valid_0 (j : Fin 28) (hj : j = 0) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
+-- Separate certificates keep each kernel proof within the normal heartbeat budget.
+local macro "verify_lens_certificate" : tactic => `(tactic|
+  norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
       dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
       diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
       residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
       comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
       Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+      Matrix.cons_val_three, Matrix.cons_val_four])
 
-private theorem lensCertificates_valid_1 (j : Fin 28) (hj : j = 1) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_0 : (lensCertificates 0).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_2 (j : Fin 28) (hj : j = 2) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_1 : (lensCertificates 1).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_3 (j : Fin 28) (hj : j = 3) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_2 : (lensCertificates 2).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_4 (j : Fin 28) (hj : j = 4) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_3 : (lensCertificates 3).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_5 (j : Fin 28) (hj : j = 5) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_4 : (lensCertificates 4).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_6 (j : Fin 28) (hj : j = 6) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_5 : (lensCertificates 5).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_7 (j : Fin 28) (hj : j = 7) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_6 : (lensCertificates 6).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_8 (j : Fin 28) (hj : j = 8) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_7 : (lensCertificates 7).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_9 (j : Fin 28) (hj : j = 9) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_8 : (lensCertificates 8).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_10 (j : Fin 28) (hj : j = 10) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_9 : (lensCertificates 9).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_11 (j : Fin 28) (hj : j = 11) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_10 : (lensCertificates 10).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_12 (j : Fin 28) (hj : j = 12) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_11 : (lensCertificates 11).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_13 (j : Fin 28) (hj : j = 13) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_12 : (lensCertificates 12).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_14 (j : Fin 28) (hj : j = 14) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_13 : (lensCertificates 13).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_15 (j : Fin 28) (hj : j = 15) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_14 : (lensCertificates 14).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_16 (j : Fin 28) (hj : j = 16) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_15 : (lensCertificates 15).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_17 (j : Fin 28) (hj : j = 17) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_16 : (lensCertificates 16).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_18 (j : Fin 28) (hj : j = 18) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_17 : (lensCertificates 17).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_19 (j : Fin 28) (hj : j = 19) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_18 : (lensCertificates 18).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_20 (j : Fin 28) (hj : j = 20) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_19 : (lensCertificates 19).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_21 (j : Fin 28) (hj : j = 21) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_20 : (lensCertificates 20).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_22 (j : Fin 28) (hj : j = 22) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_21 : (lensCertificates 21).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_23 (j : Fin 28) (hj : j = 23) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_22 : (lensCertificates 22).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_24 (j : Fin 28) (hj : j = 24) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_23 : (lensCertificates 23).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_25 (j : Fin 28) (hj : j = 25) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_24 : (lensCertificates 24).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_26 (j : Fin 28) (hj : j = 26) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_25 : (lensCertificates 25).Valid := by
+  verify_lens_certificate
 
-private theorem lensCertificates_valid_27 (j : Fin 28) (hj : j = 27) : (lensCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [lensCertificates, LensCertificate.Valid, certificateUpperBound, dualRadialBound,
-      dualY, redFirstBalance, redSecondBalance, blueFirstBalance, blueSecondBalance, diagonal₀,
-      diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow, Matrix.vecMulVec,
-      residual, targetOffDiagonal, positivePart, negativePart, millionth, tenThousandthFactor,
-      comparisonChord, redFirstPenalty, redSecondPenalty, blueFirstPenalty, blueSecondPenalty,
-      Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
-      Matrix.cons_val_three, Matrix.cons_val_four]
+private theorem lensCertificates_valid_26 : (lensCertificates 26).Valid := by
+  verify_lens_certificate
+
+private theorem lensCertificates_valid_27 : (lensCertificates 27).Valid := by
+  verify_lens_certificate
 
 private theorem lensCertificates_valid (i : Fin 28) : (lensCertificates i).Valid := by
   fin_cases i
-  · exact lensCertificates_valid_0 _ rfl
-  · exact lensCertificates_valid_1 _ rfl
-  · exact lensCertificates_valid_2 _ rfl
-  · exact lensCertificates_valid_3 _ rfl
-  · exact lensCertificates_valid_4 _ rfl
-  · exact lensCertificates_valid_5 _ rfl
-  · exact lensCertificates_valid_6 _ rfl
-  · exact lensCertificates_valid_7 _ rfl
-  · exact lensCertificates_valid_8 _ rfl
-  · exact lensCertificates_valid_9 _ rfl
-  · exact lensCertificates_valid_10 _ rfl
-  · exact lensCertificates_valid_11 _ rfl
-  · exact lensCertificates_valid_12 _ rfl
-  · exact lensCertificates_valid_13 _ rfl
-  · exact lensCertificates_valid_14 _ rfl
-  · exact lensCertificates_valid_15 _ rfl
-  · exact lensCertificates_valid_16 _ rfl
-  · exact lensCertificates_valid_17 _ rfl
-  · exact lensCertificates_valid_18 _ rfl
-  · exact lensCertificates_valid_19 _ rfl
-  · exact lensCertificates_valid_20 _ rfl
-  · exact lensCertificates_valid_21 _ rfl
-  · exact lensCertificates_valid_22 _ rfl
-  · exact lensCertificates_valid_23 _ rfl
-  · exact lensCertificates_valid_24 _ rfl
-  · exact lensCertificates_valid_25 _ rfl
-  · exact lensCertificates_valid_26 _ rfl
-  · exact lensCertificates_valid_27 _ rfl
+  · exact lensCertificates_valid_0
+  · exact lensCertificates_valid_1
+  · exact lensCertificates_valid_2
+  · exact lensCertificates_valid_3
+  · exact lensCertificates_valid_4
+  · exact lensCertificates_valid_5
+  · exact lensCertificates_valid_6
+  · exact lensCertificates_valid_7
+  · exact lensCertificates_valid_8
+  · exact lensCertificates_valid_9
+  · exact lensCertificates_valid_10
+  · exact lensCertificates_valid_11
+  · exact lensCertificates_valid_12
+  · exact lensCertificates_valid_13
+  · exact lensCertificates_valid_14
+  · exact lensCertificates_valid_15
+  · exact lensCertificates_valid_16
+  · exact lensCertificates_valid_17
+  · exact lensCertificates_valid_18
+  · exact lensCertificates_valid_19
+  · exact lensCertificates_valid_20
+  · exact lensCertificates_valid_21
+  · exact lensCertificates_valid_22
+  · exact lensCertificates_valid_23
+  · exact lensCertificates_valid_24
+  · exact lensCertificates_valid_25
+  · exact lensCertificates_valid_26
+  · exact lensCertificates_valid_27
 
 private theorem exists_certificate_first_red_band (r b : ℝ)
     (hrl : 3 / 8 ≤ r) (hru : r ≤ 17 / 32) (hbl : 3 / 8 ≤ b) (hbu : b ≤ 1) :

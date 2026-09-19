@@ -105,8 +105,8 @@ theorem hasDerivAt_eval (p : DenseUnivariate) (x : ℝ) :
     letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
     letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
     HasDerivAt (eval p) (eval (deriv p) x) x := by
-  letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
-  letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
+  let : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+  let : Module ℝ ℝ := NormedField.toNormedSpace.toModule
   induction p with
   | nil => simpa [eval, deriv] using hasDerivAt_const x (0 : ℝ)
   | cons a p hp =>
@@ -161,7 +161,7 @@ def mul : DenseBivariatePolynomial → DenseBivariatePolynomial → DenseBivaria
   | a :: p, q => add (scaleRow a q) ([] :: mul p q)
 
 /-- A constant bivariate polynomial. -/
-def constant (a : ℚ) : DenseBivariatePolynomial := [[a]]
+def literal (a : ℚ) : DenseBivariatePolynomial := [[a]]
 
 /-- The first variable. -/
 def first : DenseBivariatePolynomial := [[0], [1]]
@@ -171,7 +171,7 @@ def second : DenseBivariatePolynomial := [[0, 1]]
 
 /-- Natural powers of a dense bivariate polynomial. -/
 def pow (p : DenseBivariatePolynomial) : ℕ → DenseBivariatePolynomial
-  | 0 => constant 1
+  | 0 => literal 1
   | n + 1 => mul (pow p n) p
 
 /-- Evaluate a dense bivariate polynomial by nested Horner rules. -/
@@ -241,8 +241,8 @@ theorem eval_mul (p q : DenseBivariatePolynomial) (x y : ℝ) :
   | nil => simp [mul, eval]
   | cons a p hp => simp [mul, eval, eval_add, eval_scaleRow, hp, DenseUnivariate.eval]; ring
 
-theorem eval_constant (a : ℚ) (x y : ℝ) : eval (constant a) x y = a := by
-  simp [constant, eval, DenseUnivariate.eval]
+theorem eval_constant (a : ℚ) (x y : ℝ) : eval (literal a) x y = a := by
+  simp [literal, eval, DenseUnivariate.eval]
 
 theorem eval_first (x y : ℝ) : eval first x y = x := by
   simp [first, eval, DenseUnivariate.eval]
@@ -266,8 +266,8 @@ theorem hasDerivAt_eval_first (p : DenseBivariatePolynomial) (x y : ℝ) :
     letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
     letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
     HasDerivAt (fun u ↦ eval p u y) (eval (derivFirst p) x y) x := by
-  letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
-  letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
+  let : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+  let : Module ℝ ℝ := NormedField.toNormedSpace.toModule
   induction p with
   | nil => simpa [eval, derivFirst] using hasDerivAt_const x (0 : ℝ)
   | cons a p hp =>
@@ -282,8 +282,8 @@ theorem hasDerivAt_eval_second (p : DenseBivariatePolynomial) (x y : ℝ) :
     letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
     letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
     HasDerivAt (fun v ↦ eval p x v) (eval (derivSecond p) x y) y := by
-  letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
-  letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
+  let : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+  let : Module ℝ ℝ := NormedField.toNormedSpace.toModule
   induction p with
   | nil => simpa [eval, derivSecond] using hasDerivAt_const y (0 : ℝ)
   | cons a p hp =>
@@ -315,8 +315,8 @@ theorem abs_eval_sub_le_derivFirst (p : DenseBivariatePolynomial) {x₁ x₂ y :
     (hx₁ : |x₁| ≤ 1) (hx₂ : |x₂| ≤ 1) (hy : |y| ≤ 1) :
     |eval p x₂ y - eval p x₁ y| ≤
       (coefficientL1Norm (derivFirst p) : ℝ) * |x₂ - x₁| := by
-  letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
-  letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
+  let : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+  let : Module ℝ ℝ := NormedField.toNormedSpace.toModule
   have h := (convex_Icc (-1 : ℝ) 1).norm_image_sub_le_of_norm_hasDerivWithin_le
     (f := fun u ↦ eval p u y) (f' := fun u ↦ eval (derivFirst p) u y)
     (fun u _ ↦ (hasDerivAt_eval_first p u y).hasDerivWithinAt)
@@ -329,8 +329,8 @@ theorem abs_eval_sub_le_derivSecond (p : DenseBivariatePolynomial) {x y₁ y₂ 
     (hx : |x| ≤ 1) (hy₁ : |y₁| ≤ 1) (hy₂ : |y₂| ≤ 1) :
     |eval p x y₂ - eval p x y₁| ≤
       (coefficientL1Norm (derivSecond p) : ℝ) * |y₂ - y₁| := by
-  letI : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
-  letI : Module ℝ ℝ := NormedField.toNormedSpace.toModule
+  let : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+  let : Module ℝ ℝ := NormedField.toNormedSpace.toModule
   have h := (convex_Icc (-1 : ℝ) 1).norm_image_sub_le_of_norm_hasDerivWithin_le
     (f := fun v ↦ eval p x v) (f' := fun v ↦ eval (derivSecond p) x v)
     (fun v _ ↦ (hasDerivAt_eval_second p x v).hasDerivWithinAt)

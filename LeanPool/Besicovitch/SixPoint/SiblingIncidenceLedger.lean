@@ -160,7 +160,7 @@ theorem redBalancedFailure_swapChildren (configuration : SixPointConfiguration) 
         (.balanced (swapBalancedCode code)) ↔
       redSiblingTriangleFailure configuration (.balanced code) := by
   fin_cases code <;>
-    simp [redSiblingTriangleFailure, siblingTriangleWitnessExceeds,
+    norm_num [redSiblingTriangleFailure, siblingTriangleWitnessExceeds,
       redSiblingTriangleTarget, rootedTriangleTotalRadius, redSiblingBlueTriangleReach,
       canonicalTriangleRadius, swapBalancedCode, swapConfigurationChildren, swapChildLabel,
       incidenceFirst, incidenceSecond, incidenceChild, dist_comm, add_comm] <;>
@@ -172,7 +172,7 @@ theorem blueBalancedFailure_swapChildren (configuration : SixPointConfiguration)
         (.balanced (swapBalancedCode code)) ↔
       blueSiblingTriangleFailure configuration (.balanced code) := by
   fin_cases code <;>
-    simp [blueSiblingTriangleFailure, transposeBlueEndpointWitness,
+    norm_num [blueSiblingTriangleFailure, transposeBlueEndpointWitness,
       siblingTriangleWitnessExceeds, blueSiblingTriangleTarget, rootedTriangleTotalRadius,
       blueSiblingRedTriangleReach, canonicalTriangleRadius, swapBalancedCode,
       swapConfigurationChildren, swapChildLabel, incidenceFirst, incidenceSecond,
@@ -307,7 +307,7 @@ theorem blueEndpointReducedSlack_pos {configuration : SixPointConfiguration}
   have hLscaled := mul_le_mul_of_nonpos_left hL hcoefficient
   have hMscaled := mul_le_mul_of_nonpos_left hM hcoefficient
   fin_cases code <;>
-    simp [blueSiblingTriangleFailure, transposeBlueEndpointWitness, transposeEndpointCode,
+    norm_num [blueSiblingTriangleFailure, transposeBlueEndpointWitness, transposeEndpointCode,
       siblingTriangleWitnessExceeds, blueSiblingTriangleTarget, rootedTriangleTotalRadius,
       blueSiblingRedTriangleReach, canonicalTriangleRadius, blueEndpointReducedSlack,
       incidenceFirst, incidenceSecond, incidenceChild, incidenceCrossDistance,

@@ -9302,29 +9302,29 @@ projects:
       github_repo: CoolRmal/Besicovitchs-1-2
       commit: 17c9597b2a901bf386d5bb8382d0a74d2069f25b
     license: Apache-2.0
-    status: draft
+    status: verified
     provenance: AI
     main_declarations:
-      - Besicovitch.sigma_one_plane_le_6934_div_10000
+      - LeanPool.Besicovitch.sigmaOne_plane_le_barS
     main_results:
-      - declaration: Besicovitch.sigma_one_plane_le_6934_div_10000
+      - declaration: LeanPool.Besicovitch.sigmaOne_plane_le_barS
         informal: >-
           The planar one-dimensional rectifiability threshold is at most 6934/10000, improving the
           published upper bound 7/10.
-      - declaration: Besicovitch.forcesOneRectifiability_plane_of_gt
+      - declaration: LeanPool.Besicovitch.forcesOneRectifiability_plane_of_barS_lt
         informal: >-
           Every threshold strictly above 6934/10000 forces countable one-rectifiability in the plane.
-      - declaration: Besicovitch.one_half_le_sigma_one_plane
+      - declaration: LeanPool.Besicovitch.Example.one_half_le_sigmaOne_plane
         informal: >-
           The planar threshold is at least one half, witnessed by Besicovitch's purely unrectifiable
           example.
-      - declaration: Besicovitch.weightedGeometricBound_gram
+      - declaration: LeanPool.Besicovitch.weightedGeometricBound_gram
         informal: >-
           Thirty exact rational Gram certificates prove the weighted six-point score is at most
           -1/2000 for every separated admissible pair in the unit ball.
     tags:
       - besicovitch-problem
-      - geometric-measure-theory
+      - measure-theory
       - rectifiability
       - finite-certificates
       - gram-matrices

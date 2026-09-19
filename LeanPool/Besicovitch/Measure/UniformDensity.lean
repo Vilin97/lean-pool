@@ -36,7 +36,7 @@ theorem measurable_measure_ball (mu : Measure (EuclideanSpace ℝ (Fin 2))) [SFi
   funext x
   congr 1
   ext y
-  simp only [ballRelation, mem_setOf_eq, mem_preimage, Metric.mem_ball]
+  simp only [ballRelation, mem_ofPred_eq, mem_preimage, Metric.mem_ball]
   rw [dist_comm]
 
 /-- Points with a uniform rational-radius lower mass bound. -/
@@ -54,7 +54,7 @@ theorem measurableSet_uniformDensitySet (mu : Measure (EuclideanSpace ℝ (Fin 2
       A ∩ ⋂ q : ℚ, ⋂ (_ : 0 < (q : ℝ)), ⋂ (_ : (q : ℝ) < 1 / (m + 1 : ℝ)),
         {x | ENNReal.ofReal (2 * γ * (q : ℝ)) ≤ mu (Metric.ball x q)} by
     ext x
-    simp only [uniformDensitySet, mem_setOf_eq, mem_inter_iff, mem_iInter]]
+    simp only [uniformDensitySet, mem_ofPred_eq, mem_inter_iff, mem_iInter]]
   refine hA.inter <| MeasurableSet.iInter fun q ↦ MeasurableSet.iInter fun _ ↦
     MeasurableSet.iInter fun _ ↦ ?_
   exact measurableSet_le measurable_const (measurable_measure_ball mu q)

@@ -44,7 +44,7 @@ theorem weightedPairScore_le_of_separated {E : Type*} [NormedAddCommGroup E]
   set certificate := gramCertificates (bandCertificate k l) with hcert
   have hvalid : certificate.Valid := gramCertificates_valid _
   by_cases hswap : bandSwapped k l = true
-  · rw [if_pos hswap] at hcontains
+  · rw [ite_eq_left hswap] at hcontains
     obtain ⟨hpL, hpU, hwL, hwU⟩ := hcontains
     rw [weightedPairScore_swap]
     refine weightedPairScore_le_of_gramCertificate certificate hvalid e w₁ w₂ p₁ p₂ he
@@ -53,7 +53,7 @@ theorem weightedPairScore_le_of_separated {E : Type*} [NormedAddCommGroup E]
     · exact le_trans hl₁ (by exact_mod_cast hpU)
     · exact le_trans (by exact_mod_cast hwL) hk₀
     · exact le_trans hk₁ (by exact_mod_cast hwU)
-  · rw [if_neg hswap] at hcontains
+  · rw [ite_eq_right hswap] at hcontains
     obtain ⟨hpL, hpU, hwL, hwU⟩ := hcontains
     refine weightedPairScore_le_of_gramCertificate certificate hvalid e p₁ p₂ w₁ w₂ he
       hp₁ hw₁ hpsep hwsep ?_ ?_ ?_ ?_

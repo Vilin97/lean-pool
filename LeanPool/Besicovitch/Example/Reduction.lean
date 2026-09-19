@@ -20,7 +20,8 @@ Let `f₁ = π₁ ∘ f` be the first coordinate of the curve and `B = f ⁻¹ �
 theorem `f₁` is differentiable almost everywhere, and the curve over the null set of
 non-differentiability points carries no `μH[1]`-measure.  Over the points where `f₁' = 0` the
 image of `f₁` is Lebesgue-null (the one-dimensional area formula), so the graph over it, which
-contains the curve there, is `μH[1]`-null by `LeanPool.Besicovitch.Example.Hull`.  Hence the curve over
+contains the curve there, is `μH[1]`-null by `LeanPool.Besicovitch.Example.Hull`.  Hence the
+  curve over
 the points with `f₁' ≠ 0` has positive measure; a countable partition of these into pieces on
 which `f₁` is well approximated by a nonzero linear map produces a piece `P` on which `f₁` is
 bi-Lipschitz.  On `A = f₁ '' P` the function `g` is then Lipschitz, since `g (f₁ t) = f₂ t`
@@ -170,7 +171,7 @@ theorem exists_lipschitzOnWith_of_piece {K : ℝ≥0} {f : ℝ → Plane} (hf : 
     exact absurd (hpos.trans_le this) (lt_irrefl _)
   · refine LipschitzOnWith.of_dist_le_mul ?_
     rintro _ ⟨s, hs, rfl⟩ _ ⟨s', hs', rfl⟩
-    show |besicovitchFun (f s 0) - besicovitchFun (f s' 0)| ≤ 2 * K / a * |f s 0 - f s' 0|
+    change |besicovitchFun (f s 0) - besicovitchFun (f s' 0)| ≤ 2 * K / a * |f s 0 - f s' 0|
     rw [← (mem_besicovitchSet_iff.mp (hP hs)).2, ← (mem_besicovitchSet_iff.mp (hP hs')).2]
     have hK := (lipschitzWith_curve_coord hf 1).dist_le_mul s s'
     rw [Real.dist_eq, Real.dist_eq] at hK

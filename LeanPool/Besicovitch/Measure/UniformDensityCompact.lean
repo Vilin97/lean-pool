@@ -87,7 +87,7 @@ theorem exists_uniformDensitySet_measure_sdiff_lt
     (hfinite : μH[1] A ≠ ∞)
     {epsilon : ℝ≥0∞} (hepsilon : 0 < epsilon) :
     ∃ m : ℕ, μH[1] (A \ uniformDensitySet (μH[1].restrict A) A gamma m) < epsilon := by
-  letI : IsFiniteMeasure (μH[1].restrict A) := isFiniteMeasure_restrict.mpr hfinite
+  let : IsFiniteMeasure (μH[1].restrict A) := isFiniteMeasure_restrict.mpr hfinite
   let G : ℕ → Set (EuclideanSpace ℝ (Fin 2)) :=
     fun m ↦ uniformDensitySet (μH[1].restrict A) A gamma m
   have hG_measurable (m : ℕ) : MeasurableSet (G m) :=
@@ -101,7 +101,7 @@ theorem exists_uniformDensitySet_measure_sdiff_lt
   have hnull : μH[1] (⋂ m, A \ G m) = 0 := by
     have hnull_restrict : (μH[1].restrict A) (⋂ m, A \ G m) = 0 := by
       rw [← ae_eq_empty]
-      refine eventuallyEq_set.2 ?_
+      refine eventuallyEqSet_iff.2 ?_
       filter_upwards [hcovered] with x hx
       obtain ⟨m, hm⟩ := mem_iUnion.1 hx
       constructor
@@ -139,7 +139,7 @@ theorem exists_compact_uniformDensitySet_measure_sdiff_lt {A : Set (EuclideanSpa
     (hfinite : μH[1] A ≠ ∞) {epsilon : ℝ≥0∞} (hepsilon : 0 < epsilon) :
     ∃ (m : ℕ) (F : Set (EuclideanSpace ℝ (Fin 2))), IsCompact F ∧
       F ⊆ uniformDensitySet (μH[1].restrict A) A gamma m ∧ μH[1] (A \ F) < epsilon := by
-  letI : IsFiniteMeasure (μH[1].restrict A) := isFiniteMeasure_restrict.mpr hfinite
+  let : IsFiniteMeasure (μH[1].restrict A) := isFiniteMeasure_restrict.mpr hfinite
   have hhalf : 0 < epsilon / 2 := ENNReal.div_pos hepsilon.ne' (by norm_num)
   obtain ⟨m, hm⟩ :=
     exists_uniformDensitySet_measure_sdiff_lt hA hgamma hdensity hfinite hhalf
@@ -221,7 +221,7 @@ theorem exists_compact_uniformDensitySet_above
       sigma < gamma ∧ IsCompact F ∧
       F ⊆ uniformDensitySet (μH[1].restrict A) A gamma m ∧
         μH[1] (A \ F) < ENNReal.ofReal alpha * μH[1] F := by
-  letI : IsFiniteMeasure (μH[1].restrict A) := isFiniteMeasure_restrict.mpr hA_finite
+  let : IsFiniteMeasure (μH[1].restrict A) := isFiniteMeasure_restrict.mpr hA_finite
   let G : ℕ → Set (EuclideanSpace ℝ (Fin 2)) := fun n ↦
     uniformDensitySet (μH[1].restrict A) A (sigma + 1 / (n + 1 : ℝ)) n
   have hG_measurable (n : ℕ) : MeasurableSet (G n) :=

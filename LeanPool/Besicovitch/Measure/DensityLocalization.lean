@@ -66,8 +66,8 @@ theorem ae_lt_lowerOneDensity_of_subset_of_straight
   have hnu_fin : nu Set.univ < ∞ := by
     simpa only [nu, Measure.restrict_apply_univ] using
       (measure_mono sdiff_subset).trans_lt he_fin
-  letI : IsFiniteMeasure mu := ⟨hmu_fin⟩
-  letI : IsFiniteMeasure nu := ⟨hnu_fin⟩
+  let : IsFiniteMeasure mu := ⟨hmu_fin⟩
+  let : IsFiniteMeasure nu := ⟨hnu_fin⟩
   have hsingular : nu ⟂ₘ mu := by
     refine Measure.MutuallySingular.mk (s := a) (t := aᶜ) ?_ ?_ (by simp)
     · simp [nu, Measure.restrict_apply ha]

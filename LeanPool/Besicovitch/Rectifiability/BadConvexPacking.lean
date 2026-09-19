@@ -34,7 +34,7 @@ theorem mul_tsum_ediam_badConvexSets_le_measure
     ENNReal.ofReal alpha *
       ∑' V : chosen, Metric.ediam (V : Set (EuclideanSpace ℝ (Fin 2))) ≤
         mu (ambient \ F) := by
-  letI : Countable chosen := hcountable.to_subtype
+  let : Countable chosen := hcountable.to_subtype
   have hpair : Pairwise fun V W : chosen ↦
       Disjoint ((V : Set (EuclideanSpace ℝ (Fin 2))) \ F)
         ((W : Set (EuclideanSpace ℝ (Fin 2))) \ F) := by
@@ -66,7 +66,7 @@ theorem mul_tsum_ediam_badConvexSets_le
     (hdisjoint : chosen.PairwiseDisjoint id) :
     ENNReal.ofReal alpha *
       ∑' V : chosen, Metric.ediam (V : Set (EuclideanSpace ℝ (Fin 2))) ≤ mu Fᶜ := by
-  letI : Countable chosen := hcountable.to_subtype
+  let : Countable chosen := hcountable.to_subtype
   have hpair : Pairwise fun V W : chosen ↦
       Disjoint ((V : Set (EuclideanSpace ℝ (Fin 2))) \ F)
         ((W : Set (EuclideanSpace ℝ (Fin 2))) \ F) := by

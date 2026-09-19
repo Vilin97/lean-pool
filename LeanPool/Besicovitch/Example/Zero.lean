@@ -16,7 +16,8 @@ A point of `[0, 1]` that avoids every grid of level `N, N + 1, …` on both side
 set of measure zero.  Indeed, inside a level-`M` cell the survivors of the levels up to `M` form
 an interval, and the level-`M + 1` grid punches holes of total relative size `1 / ((M+1) (L+1))`
 into every interval, up to an error of a few holes per cell.  The errors are summable while
-`∑ 1 / ((M + 1) (L + 1))` diverges, so the recursion of `LeanPool.Besicovitch.Example.Recursion` forces
+`∑ 1 / ((M + 1) (L + 1))` diverges, so the recursion of
+  `LeanPool.Besicovitch.Example.Recursion` forces
 the surviving measure to zero.
 
 Combined with `ae_eventually_mem_avoid`, every subset of `[0, 1]` on which `g` is Lipschitz is
@@ -75,7 +76,7 @@ theorem pairwiseDisjoint_hole {L : ℝ} (hL : 0 ≤ L) {m : ℕ} (hm : 1 ≤ m) 
   intro k _ k' _ hkk'
   have hμ := margin_le_half hL hm
   have hpos := cellLength_pos m
-  show Disjoint (hole L m k) (hole L m k')
+  change Disjoint (hole L m k) (hole L m k')
   rw [Set.disjoint_left]
   intro x hx hx'
   simp only [hole, gridPoint, mem_Ioo] at hx hx'
@@ -318,7 +319,7 @@ theorem ordConnected_survivors_inter_cell (L : ℝ) (N : ℕ) (n : ℕ) :
   | zero => intro M _ i; exact ordConnected_Icc.inter ordConnected_Ico
   | succ n ih =>
     intro M hM i
-    show (survivors L N n ∩ avoid L (N + n + 1) ∩ cell M i).OrdConnected
+    change (survivors L N n ∩ avoid L (N + n + 1) ∩ cell M i).OrdConnected
     rw [inter_inter_distrib_right]
     exact (ih M (by omega) i).inter
       (ordConnected_avoid_inter_cell L (n := N + n + 1) (m := M) (by omega) i)
@@ -333,7 +334,7 @@ theorem volume_survivors_succ_le {L : ℝ} (hL : 0 ≤ L) (N n : ℕ) :
   push_cast at h
   have h5 : ((1 : ℝ) / 2) ^ (N + n + 1) ≤ (1 / 2) ^ (n + 1) :=
     pow_le_pow_of_le_one (by norm_num) (by norm_num) (by omega)
-  show (volume (survivors L N n ∩ avoid L (N + n + 1))).toReal ≤ _
+  change (volume (survivors L N n ∩ avoid L (N + n + 1))).toReal ≤ _
   linarith
 
 /-- The sums `∑_{k < n} 1 / ((N + k) (L + 1))` diverge, by comparison with the harmonic series. -/
@@ -384,7 +385,7 @@ theorem volume_Icc_inter_iInter_avoid_eq_zero (L : ℝ) (hL : 0 ≤ L) (N : ℕ)
     induction n with
     | zero => exact inter_subset_left
     | succ n ih =>
-      show _ ⊆ survivors L (N + 1) n ∩ avoid L (N + 1 + n + 1)
+      change _ ⊆ survivors L (N + 1) n ∩ avoid L (N + 1 + n + 1)
       refine subset_inter ih fun x hx ↦ ?_
       have h := mem_iInter.mp hx.2 (n + 2)
       rwa [show N + 1 + n + 1 = N + (n + 2) by omega]
@@ -418,7 +419,7 @@ theorem volume_eq_zero_of_lipschitzOnWith {L : ℝ≥0} {A : Set ℝ} (hA : A �
     exact mem_iUnion.mpr ⟨N, hA hxA, mem_iInter.mpr fun n ↦ hN (N + n) (Nat.le_add_right N n)⟩
   have hA' : A = {x | ¬ ∀ᶠ n in atTop, x ∈ avoid (L : ℝ) n} ∩ A ∪
       {x | ∀ᶠ n in atTop, x ∈ avoid (L : ℝ) n} ∩ A := by
-    ext x; simp only [mem_union, mem_inter_iff, mem_setOf_eq]; tauto
+    ext x; simp only [mem_union, mem_inter_iff, mem_ofPred_eq]; tauto
   rw [hA']
   exact measure_union_null h1 h2
 

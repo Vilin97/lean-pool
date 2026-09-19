@@ -29,8 +29,10 @@ open scoped InnerProductSpace
 
 namespace LeanPool.Besicovitch
 
+/-- Indices of the five vectors in a six-point Gram certificate. -/
 abbrev Five := Fin 5
 
+/-- Indices of the three rows in the rational Gram factor. -/
 abbrev Three := Fin 3
 
 /-- The small rational weight on the coincident-endpoint slack. -/
@@ -88,9 +90,11 @@ structure GramCertificate where
 def tenThousandthFactor (entries : Fin 3 → Fin 5 → ℤ) : Fin 3 → Fin 5 → ℚ :=
   fun i j ↦ entries i j / 10000
 
+/-- One rational Gram-factor row, cast to real coordinates. -/
 def factorRow (certificate : GramCertificate) (k : Three) : Five → ℝ :=
   fun i ↦ certificate.factor k i
 
+/-- The positive semidefinite Gram matrix represented by the three factor rows. -/
 def factorGram (certificate : GramCertificate) : Matrix Five Five ℝ :=
   ∑ k, Matrix.vecMulVec (factorRow certificate k) (factorRow certificate k)
 
@@ -109,14 +113,18 @@ def targetOffDiagonal (certificate : GramCertificate) : Matrix Five Five ℝ :=
       certificate.alpha₁ + certificate.alpha₄, -certificate.alpha₄, -certificate.alpha₁,
         certificate.etaW, 0]
 
+/-- The sign used to correct a residual off-diagonal entry. -/
 def pairSign (r : ℝ) : ℝ := if 0 ≤ r then 1 else -1
 
+/-- A two-coordinate vector whose outer product has the required residual sign. -/
 def pairVector (r : ℝ) (i j : Five) : Five → ℝ :=
   fun k ↦ if k = i then 1 else if k = j then pairSign r else 0
 
+/-- A positive semidefinite rank-one correction for an off-diagonal residual. -/
 def pairCorrection (r : ℝ) (i j : Five) : Matrix Five Five ℝ :=
   |r| • Matrix.vecMulVec (pairVector r i j) (pairVector r i j)
 
+/-- The discrepancy between the target quadratic form and its rational Gram factor. -/
 def residual (certificate : GramCertificate) (i j : Five) : ℝ :=
   targetOffDiagonal certificate i j - factorGram certificate i j
 
@@ -241,22 +249,27 @@ private theorem certificateMatrix_offDiagonal (certificate : GramCertificate) {i
   fin_cases i <;> fin_cases j <;>
     simp_all [certificateMatrix, residual, targetOffDiagonal]
 
+/-- Diagonal entry 0 after adding the rank-one residual corrections. -/
 def diagonal₀ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 0 0 + |residual certificate 0 1| +
     |residual certificate 0 2| + |residual certificate 0 3| + |residual certificate 0 4|
 
+/-- Diagonal entry 1 after adding the rank-one residual corrections. -/
 def diagonal₁ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 1 1 + |residual certificate 0 1| +
     |residual certificate 1 2| + |residual certificate 1 3| + |residual certificate 1 4|
 
+/-- Diagonal entry 2 after adding the rank-one residual corrections. -/
 def diagonal₂ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 2 2 + |residual certificate 0 2| +
     |residual certificate 1 2| + |residual certificate 2 3| + |residual certificate 2 4|
 
+/-- Diagonal entry 3 after adding the rank-one residual corrections. -/
 def diagonal₃ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 3 3 + |residual certificate 0 3| +
     |residual certificate 1 3| + |residual certificate 2 3| + |residual certificate 3 4|
 
+/-- Diagonal entry 4 after adding the rank-one residual corrections. -/
 def diagonal₄ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 4 4 + |residual certificate 0 4| +
     |residual certificate 1 4| + |residual certificate 2 4| + |residual certificate 3 4|
@@ -314,7 +327,8 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
       2 * certificate.etaW * ⟪w₁, w₂⟫_ℝ := by
   let v : Five → E := ![e, p₁, p₂, w₁, w₂]
   have h := gram_sum_nonneg certificate v
-  simp [Fin.sum_univ_five, v] at h
+  simp only [Fin.sum_univ_five, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.cons_val, inner_self_eq_norm_sq_to_K, RCLike.ofReal_real_eq_id, id_eq, v] at h
   rw [certificateMatrix_diagonal₀, certificateMatrix_diagonal₁,
     certificateMatrix_diagonal₂, certificateMatrix_diagonal₃,
     certificateMatrix_diagonal₄] at h
@@ -341,8 +355,10 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
   simp [targetOffDiagonal, real_inner_comm] at h
   nlinarith
 
+/-- The nonnegative part of a real coefficient. -/
 def positivePart (x : ℝ) : ℝ := max x 0
 
+/-- The magnitude of the nonpositive part of a real coefficient. -/
 def negativePart (x : ℝ) : ℝ := max (-x) 0
 
 private theorem positivePart_sub_negativePart (x : ℝ) :
@@ -381,6 +397,7 @@ def balance₄ (certificate : GramCertificate) : ℝ :=
   diagonal₄ certificate + certificate.alpha₁ + certificate.alpha₄ -
     gramSecondPenalty / (certificate.wLower + certificate.wUpper) + certificate.etaW
 
+/-- The radius-box maximum of the diagonal form after the Gram corrections. -/
 def dualRadialBound (certificate : GramCertificate) : ℝ :=
   balance₀ certificate +
     positivePart (balance₁ certificate) -

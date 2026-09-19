@@ -27,7 +27,7 @@ namespace LeanPool.Besicovitch.Example
 variable {u a e : ℕ → ℝ}
 
 /-- Unrolling the recursion from level `N` to level `n`. -/
-theorem le_prod_mul_add_sum_of_recursive (hu : ∀ n, 0 ≤ u n) (ha : ∀ n, 0 ≤ a n)
+theorem le_prod_mul_add_sum_of_recursive (ha : ∀ n, 0 ≤ a n)
     (ha1 : ∀ n, a n ≤ 1) (he : ∀ n, 0 ≤ e n)
     (h : ∀ n, u (n + 1) ≤ (1 - a (n + 1)) * u n + e (n + 1)) (N : ℕ) :
     ∀ n, N ≤ n →
@@ -47,19 +47,18 @@ theorem le_prod_mul_add_sum_of_recursive (hu : ∀ n, 0 ≤ u n) (ha : ∀ n, 0 
           have hsum : 0 ≤ ∑ k ∈ Ioc N n, e k := sum_nonneg fun k _ ↦ he k
           have : (1 - a (n + 1)) * ∑ k ∈ Ioc N n, e k ≤ ∑ k ∈ Ioc N n, e k :=
             mul_le_of_le_one_left hsum (by linarith [ha (n + 1)])
-          nlinarith [hu N]
+          nlinarith
 
 /-- A product of `1 - a k` is at most `exp (-∑ a k)`. -/
 theorem prod_one_sub_le_exp_neg_sum (ha1 : ∀ n, a n ≤ 1) (s : Finset ℕ) :
     ∏ k ∈ s, (1 - a k) ≤ Real.exp (-∑ k ∈ s, a k) := by
   rw [← Finset.sum_neg_distrib, Real.exp_sum]
-  refine prod_le_prod (fun k _ ↦ by linarith [ha1 k]) fun k _ ↦ ?_
+  refine Finset.prod_le_prod₀ (fun k _ ↦ by linarith [ha1 k]) fun k _ ↦ ?_
   have := Real.add_one_le_exp (-a k)
   linarith
 
 /-- The sums `∑_{k ∈ Ioc N n} a k` tend to infinity when the partial sums of `a` do. -/
-theorem tendsto_sum_Ioc_atTop (ha : ∀ n, 0 ≤ a n)
-    (hasum : Tendsto (fun n ↦ ∑ k ∈ range n, a k) atTop atTop) (N : ℕ) :
+theorem tendsto_sum_Ioc_atTop (hasum : Tendsto (fun n ↦ ∑ k ∈ range n, a k) atTop atTop) (N : ℕ) :
     Tendsto (fun n ↦ ∑ k ∈ Ioc N n, a k) atTop atTop := by
   have hsplit : ∀ n, N ≤ n →
       ∑ k ∈ Ioc N n, a k = ∑ k ∈ range (n + 1), a k - ∑ k ∈ range (N + 1), a k := by
@@ -90,7 +89,7 @@ theorem tendsto_zero_of_recursive (hu : ∀ n, 0 ≤ u n) (ha : ∀ n, 0 ≤ a n
   -- the product from `N` on decays to zero
   have hprod : Tendsto (fun n ↦ ∏ k ∈ Ioc N n, (1 - a k)) atTop (𝓝 0) := by
     have hexp : Tendsto (fun n ↦ Real.exp (-∑ k ∈ Ioc N n, a k)) atTop (𝓝 0) :=
-      Real.tendsto_exp_atBot.comp (tendsto_neg_atTop_atBot.comp (tendsto_sum_Ioc_atTop ha hasum N))
+      Real.tendsto_exp_atBot.comp (tendsto_neg_atTop_atBot.comp (tendsto_sum_Ioc_atTop hasum N))
     exact squeeze_zero (fun n ↦ prod_nonneg fun k _ ↦ by linarith [ha1 k])
       (fun n ↦ prod_one_sub_le_exp_neg_sum ha1 _) hexp
   -- the tail of `e` over `Ioc N n` is at most the tail sum from `N`
@@ -107,7 +106,7 @@ theorem tendsto_zero_of_recursive (hu : ∀ n, 0 ≤ u n) (ha : ∀ n, 0 ≤ a n
       _ ≤ ∑' k, e (k + N) :=
           Summable.sum_le_tsum _ (fun k _ ↦ he _) ((summable_nat_add_iff N).mpr hesum)
   -- combine
-  have hbound := le_prod_mul_add_sum_of_recursive hu ha ha1 he h N
+  have hbound := le_prod_mul_add_sum_of_recursive ha ha1 he h N
   have hsmall : ∀ᶠ n in atTop, (∏ k ∈ Ioc N n, (1 - a k)) * u N < ε / 2 := by
     rcases (hu N).eq_or_lt with hN0 | hN0
     · exact Eventually.of_forall fun n ↦ by rw [← hN0, mul_zero]; exact half_pos hε

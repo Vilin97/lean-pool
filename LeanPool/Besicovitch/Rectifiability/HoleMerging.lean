@@ -507,7 +507,7 @@ private theorem ediam_mergedHole_le_fiber {U : ℕ → Set (EuclideanSpace ℝ (
       have heqpart : P.part j = P.part i := (P.mem_part_iff_part_eq_part
         (Finset.mem_range.mpr hjn) (Finset.mem_range.mpr hin)).mp hj
       have heqholes := mergedHole_eq_of_stage_part_eq hUopen hjn hin heqpart
-      simp only [heqholes, if_pos]
+      simp only [heqholes, ite_eq_left]
     _ ≤ ∑' j, if mergedHole U hUopen j = mergedHole U hUopen i
         then Metric.ediam (U j) else 0 := ENNReal.sum_le_tsum _
 
@@ -532,7 +532,7 @@ private theorem tsum_range_ediam_le
       rw [tsum_eq_single Vj]
       · simp [Vj]
       · intro V hV
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         apply hV
         exact Subtype.ext h.symm

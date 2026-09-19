@@ -44,10 +44,10 @@ private theorem exists_short_closed_walk {V : Type*} [Fintype V] (G : SimpleGrap
   · have hcard_two : 2 ≤ Fintype.card V := by
       have hcard_pos : 0 < Fintype.card V := Fintype.card_pos_iff.mpr hG.nonempty
       omega
-    letI : Nontrivial V := Fintype.one_lt_card_iff_nontrivial.mp hcard_two
+    let : Nontrivial V := Fintype.one_lt_card_iff_nontrivial.mp hcard_two
     obtain ⟨v, hv⟩ := hG.exists_connected_induce_compl_singleton_of_finite_nontrivial
     let t : Set V := {v}ᶜ
-    letI : Fintype t := Fintype.ofFinite t
+    let : Fintype t := Fintype.ofFinite t
     have ht_card_eq : Fintype.card t = Fintype.card V - 1 := by
       rw [Fintype.card_eq_nat_card, Fintype.card_eq_nat_card]
       simpa [t] using Set.ncard_compl ({v} : Set V)
@@ -338,7 +338,7 @@ private theorem proximityGraph_connected {s F : Set X} (hs : IsConnected s)
     (hFs : F ⊆ s) {ε : ℝ≥0} (hε : 0 < ε) (hcover : Metric.IsCover (2 * ε) s F) :
     (SimpleGraph.fromRel fun x y : F ↦ dist (x : X) y < 6 * ε).Connected := by
   let G : SimpleGraph F := SimpleGraph.fromRel fun x y ↦ dist (x : X) y < 6 * ε
-  letI : Nonempty F := (hcover.nonempty hs.nonempty).to_subtype
+  let : Nonempty F := (hcover.nonempty hs.nonempty).to_subtype
   refine ⟨?_⟩
   intro u v
   by_contra huv
@@ -393,7 +393,7 @@ private theorem card_mul_scale_le_two_measure {s F : Set X} (hs : IsConnected s)
     (hε : (ε : ℝ) ≤ dist a b) (hmeasure : μH[1] s ≠ ∞) :
     (F.ncard : ℝ) * ε ≤ 2 * (μH[1] s).toReal := by
   let A : F → Set X := fun p ↦ s ∩ Metric.closedBall p (ε / 2)
-  letI : Fintype F := hFfin.fintype
+  let : Fintype F := hFfin.fintype
   have hA_disjoint : Pairwise (Function.onFun Disjoint A) := by
     intro p q hpq
     have hpq_sep := hsep p.2 q.2 (fun hpq' ↦ hpq (Subtype.ext hpq'))
@@ -451,7 +451,7 @@ private theorem exists_finite_separated_cover (s : Set X) (hsc : IsCompact s) {�
     ne_top_of_le_ne_top hexternal (Metric.packingNumber_two_mul_le_externalCoveringNumber ε s)
   let F : Set X := Metric.maximalSeparatedSet (2 * ε) s
   have hFfin : F.Finite := by
-    simp only [F, Metric.maximalSeparatedSet, dif_pos hpacking]
+    simp only [F, Metric.maximalSeparatedSet, dite_eq_left hpacking]
     exact (Metric.exists_set_encard_eq_packingNumber hpacking).choose_spec.2.1
   exact ⟨F, hFfin, Metric.maximalSeparatedSet_subset, Metric.isSeparated_maximalSeparatedSet,
     Metric.isCover_maximalSeparatedSet hpacking⟩
@@ -467,7 +467,7 @@ private theorem exists_short_polygonal_tour
       (∀ x ∈ s, ∃ y ∈ v :: l, dist x y ≤ 2 * ε) ∧
       (6 * (ε : ℝ)) * l.length ≤ 24 * (μH[1] s).toReal := by
   obtain ⟨F, hFfin, hFs, hFsep, hFcover⟩ := exists_finite_separated_cover s hsc hεpos
-  letI : Fintype F := hFfin.fintype
+  let : Fintype F := hFfin.fintype
   let G : SimpleGraph F := SimpleGraph.fromRel fun x y ↦
     dist (x : (EuclideanSpace ℝ (Fin 2))) y < 6 * ε
   have hG : G.Connected := proximityGraph_connected hs hFs hεpos hFcover

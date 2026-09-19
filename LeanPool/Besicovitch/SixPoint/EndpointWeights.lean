@@ -159,11 +159,11 @@ private theorem endpointOuterRadius_mem_interval :
     .mul
       (.add
         (.add
-          (.add (.mul (.constant 2) (.var 1))
-            (.neg (.mul (.constant 3) (.mul (.var 0) (.var 0)))))
-          (.mul (.constant 2) (.var 0)))
-        (.neg (.constant 1)))
-      (.inv (.add (.var 0) (.constant 1)))
+          (.add (.mul (.literal 2) (.var 1))
+            (.neg (.mul (.literal 3) (.mul (.var 0) (.var 0)))))
+          (.mul (.literal 2) (.var 0)))
+        (.neg (.literal 1)))
+      (.inv (.add (.var 0) (.literal 1)))
   let target : RationalInterval := ⟨734358 / 1000000, 734359 / 1000000, by norm_num⟩
   have hf : f.certifiesWithin endpointInputBox target = true := by
     norm_num [f, endpointInputBox, target, RadicalExpression.certifiesWithin,
@@ -178,8 +178,8 @@ private theorem endpointSecondDistance_mem_interval :
       endpointSecondDistance cStar certifiedEndpointPair.2 ≤ 2043811 / 1000000 := by
   let f : RadicalExpression 2 :=
     .add
-      (.add (.mul (.constant 4) (.mul (.var 0) (.var 0)))
-        (.neg (.mul (.constant 2) (.var 0))))
+      (.add (.mul (.literal 4) (.mul (.var 0) (.var 0)))
+        (.neg (.mul (.literal 2) (.var 0))))
       (.neg (.var 1))
   let target : RationalInterval := ⟨2043810 / 1000000, 2043811 / 1000000, by norm_num⟩
   have hf : f.certifiesWithin endpointInputBox target = true := by
@@ -194,7 +194,7 @@ private theorem endpointFirstAuxiliaryRadicand_mem_interval :
     (3629202 : ℝ) / 1000000 ≤ (certifiedEndpointPair.2 ^ 2 - 1) / 2 ∧
       (certifiedEndpointPair.2 ^ 2 - 1) / 2 ≤ 3629203 / 1000000 := by
   let f : RadicalExpression 1 :=
-    .mul (.add (.mul (.var 0) (.var 0)) (.neg (.constant 1))) (.inv (.constant 2))
+    .mul (.add (.mul (.var 0) (.var 0)) (.neg (.literal 1))) (.inv (.literal 2))
   let X : Fin 1 → RationalInterval
     | 0 => endpointInputBox 1
   let target : RationalInterval := ⟨3629202 / 1000000, 3629203 / 1000000, by norm_num⟩
@@ -232,7 +232,7 @@ private theorem endpointMixedAuxiliaryRadicand_mem_interval :
   let f : RadicalExpression 3 :=
     .add
       (.mul (.add (.mul (.var 1) (.var 1)) (.mul (.var 2) (.var 2)))
-        (.inv (.constant 2)))
+        (.inv (.literal 2)))
       (.neg (.mul (.var 0) (.var 0)))
   let X : Fin 3 → RationalInterval
     | 0 => endpointInputBox 0
@@ -272,7 +272,7 @@ private theorem endpointUnitAbscissa_mem_interval :
     (-814602 : ℝ) / 1000000 ≤ endpointUnitAbscissa certifiedEndpointPair.2 ∧
       endpointUnitAbscissa certifiedEndpointPair.2 ≤ -814601 / 1000000 := by
   let f : RadicalExpression 1 :=
-    .mul (.add (.constant 5) (.neg (.mul (.var 0) (.var 0)))) (.inv (.constant 4))
+    .mul (.add (.literal 5) (.neg (.mul (.var 0) (.var 0)))) (.inv (.literal 4))
   let X : Fin 1 → RationalInterval
     | 0 => endpointInputBox 1
   let target : RationalInterval := ⟨-814602 / 1000000, -814601 / 1000000, by norm_num⟩
@@ -294,9 +294,9 @@ private theorem endpointOuterAbscissa_mem_interval :
   let f : RadicalExpression 2 :=
     .mul
       (.add
-        (.add (.constant 1) (.mul (.constant 4) (.mul (.var 0) (.var 0))))
+        (.add (.literal 1) (.mul (.literal 4) (.mul (.var 0) (.var 0))))
         (.neg (.mul (.var 1) (.var 1))))
-      (.inv (.constant 4))
+      (.inv (.literal 4))
   let X : Fin 2 → RationalInterval
     | 0 => ⟨734358 / 1000000, 734359 / 1000000, by norm_num⟩
     | 1 => ⟨2043810 / 1000000, 2043811 / 1000000, by norm_num⟩
@@ -321,7 +321,7 @@ private theorem endpointUnitOrdinateRadicand_mem_interval :
     (3364233 : ℝ) / 10000000 ≤ 1 - endpointUnitAbscissa certifiedEndpointPair.2 ^ 2 ∧
       1 - endpointUnitAbscissa certifiedEndpointPair.2 ^ 2 ≤ 3364253 / 10000000 := by
   let f : RadicalExpression 1 :=
-    .add (.constant 1) (.neg (.mul (.var 0) (.var 0)))
+    .add (.literal 1) (.neg (.mul (.var 0) (.var 0)))
   let X : Fin 1 → RationalInterval
     | 0 => ⟨-814602 / 1000000, -814601 / 1000000, by norm_num⟩
   let target : RationalInterval := ⟨3364233 / 10000000, 3364253 / 10000000, by norm_num⟩
@@ -403,9 +403,9 @@ private theorem endpointChordAbscissa_mem_interval :
       endpointChordAbscissa cStar certifiedEndpointPair.2 ≤ -191705 / 1000000 := by
   let f : RadicalExpression 2 :=
     .mul
-      (.add (.add (.constant 1) (.mul (.var 1) (.var 1)))
+      (.add (.add (.literal 1) (.mul (.var 1) (.var 1)))
         (.neg (.mul (.var 0) (.var 0))))
-      (.inv (.constant 2))
+      (.inv (.literal 2))
   let X : Fin 2 → RationalInterval
     | 0 => endpointInputBox 0
     | 1 => ⟨734358 / 1000000, 734359 / 1000000, by norm_num⟩
@@ -468,7 +468,7 @@ private theorem endpointAngularRate_mem_interval :
     (1234508 : ℝ) / 1000000 ≤ endpointAngularRate cStar certifiedEndpointPair.2 ∧
       endpointAngularRate cStar certifiedEndpointPair.2 ≤ 1234521 / 1000000 := by
   let f : RadicalExpression 3 :=
-    .mul (.mul (.var 0) (.add (.constant 1) (.neg (.var 1)))) (.inv (.var 2))
+    .mul (.mul (.var 0) (.add (.literal 1) (.neg (.var 1)))) (.inv (.var 2))
   let X : Fin 3 → RationalInterval
     | 0 => ⟨734358 / 1000000, 734359 / 1000000, by norm_num⟩
     | 1 => ⟨-191708 / 1000000, -191705 / 1000000, by norm_num⟩
@@ -531,7 +531,7 @@ private theorem endpointSecondDistanceDerivative_mem_interval :
       endpointSecondDistanceDerivative cStar certifiedEndpointPair.2 ≤ 2723337 / 1000000 := by
   let f : RadicalExpression 3 :=
     .mul
-      (.add (.mul (.constant 4) (.var 0)) (.neg (.mul (.constant 2) (.var 1))))
+      (.add (.mul (.literal 4) (.var 0)) (.neg (.mul (.literal 2) (.var 1))))
       (.inv (.var 2))
   let X : Fin 3 → RationalInterval
     | 0 => ⟨734358 / 1000000, 734359 / 1000000, by norm_num⟩
@@ -562,7 +562,7 @@ private theorem endpointMixedDistanceDerivative_mem_interval :
         endpointMixedDistanceDerivative cStar certifiedEndpointPair.2 ∧
       endpointMixedDistanceDerivative cStar certifiedEndpointPair.2 ≤ 1342847 / 1000000 := by
   let f : RadicalExpression 3 :=
-    .mul (.add (.mul (.constant 2) (.var 0)) (.neg (.var 1))) (.inv (.var 2))
+    .mul (.add (.mul (.literal 2) (.var 0)) (.neg (.var 1))) (.inv (.var 2))
   let X : Fin 3 → RationalInterval
     | 0 => ⟨734358 / 1000000, 734359 / 1000000, by norm_num⟩
     | 1 => ⟨-1314265 / 1000000, -1314242 / 1000000, by norm_num⟩
@@ -593,8 +593,8 @@ private theorem endpointBaseAngularCoefficient_mem_interval :
         endpointBaseAngularCoefficient cStar certifiedEndpointPair.2 ∧
       endpointBaseAngularCoefficient cStar certifiedEndpointPair.2 ≤ -270221 / 1000000 := by
   let f : RadicalExpression 4 :=
-    .add (.mul (.mul (.constant 2) (.var 0)) (.inv (.var 1)))
-      (.mul (.mul (.constant 2) (.var 2)) (.inv (.var 3)))
+    .add (.mul (.mul (.literal 2) (.var 0)) (.inv (.var 1)))
+      (.mul (.mul (.literal 2) (.var 2)) (.inv (.var 3)))
   let X : Fin 4 → RationalInterval
     | 0 => ⟨580020 / 1000000, 580023 / 1000000, by norm_num⟩
     | 1 => endpointInputBox 1
@@ -624,7 +624,7 @@ private theorem endpointLambdaAngularCoefficient_mem_interval :
     (403668 : ℝ) / 1000000 ≤ endpointLambdaAngularCoefficient certifiedEndpointPair.2 ∧
       endpointLambdaAngularCoefficient certifiedEndpointPair.2 ≤ 403672 / 1000000 := by
   let f : RadicalExpression 2 :=
-    .mul (.mul (.constant 2) (.var 0)) (.inv (.var 1))
+    .mul (.mul (.literal 2) (.var 0)) (.inv (.var 1))
   let X : Fin 2 → RationalInterval
     | 0 => ⟨580020 / 1000000, 580023 / 1000000, by norm_num⟩
     | 1 => endpointInputBox 1
@@ -688,7 +688,7 @@ private theorem endpointMuRadialCoefficient_mem_interval :
     (-2817020 : ℝ) / 1000000 ≤ endpointMuRadialCoefficient cStar certifiedEndpointPair.2 ∧
       endpointMuRadialCoefficient cStar certifiedEndpointPair.2 ≤ -2816989 / 1000000 := by
   let f : RadicalExpression 2 :=
-    .add (.var 0) (.neg (.mul (.constant 3) (.var 1)))
+    .add (.var 0) (.neg (.mul (.literal 3) (.var 1)))
   let X : Fin 2 → RationalInterval
     | 0 => ⟨1342822 / 1000000, 1342847 / 1000000, by norm_num⟩
     | 1 => endpointInputBox 0

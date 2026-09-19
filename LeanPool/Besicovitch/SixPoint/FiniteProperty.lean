@@ -237,7 +237,7 @@ private theorem totalRadius_le_addIsolated (index : SixPointIndex)
       simp only [radiusValue, packing.positiveSupport_subset hi, dite_true]
       have hi' : i ∈ (packing.addIsolated index habsent hmeets hepsilon hepsilon_one).support :=
         Finset.mem_union_left _ hi
-      rw [dif_pos hi']
+      rw [dite_eq_left hi']
       simp only [addIsolated, hi, dite_true]
     _ ≤ ∑ i ∈ (packing.addIsolated index habsent hmeets hepsilon hepsilon_one).support,
           (packing.addIsolated index habsent hmeets hepsilon hepsilon_one).radiusValue i := by

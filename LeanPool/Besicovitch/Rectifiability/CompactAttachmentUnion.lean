@@ -51,7 +51,7 @@ theorem isCompact_compactAttachmentUnion {mu : MeasureTheory.Measure (EuclideanS
   have hlarge_finite : large.Finite := by
     exact ENNReal.finite_const_le_of_tsum_ne_top hsum
       (ENNReal.ofReal_ne_zero_iff.mpr (by positivity))
-  letI : Fintype large := hlarge_finite.fintype
+  let : Fintype large := hlarge_finite.fintype
   have hattachment_compact (V : large) :
       IsCompact (convexAttachment F (V : Set (EuclideanSpace ℝ (Fin 2)))) :=
     isCompact_convexAttachment hF

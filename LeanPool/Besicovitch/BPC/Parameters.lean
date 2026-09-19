@@ -5,7 +5,7 @@ Authors: Yongxi Lin
 -/
 module
 
-public import Mathlib.Data.Real.Basic
+public import Mathlib.Basic.Real.Basic
 
 /-!
 # Parameters for the six-point transfer

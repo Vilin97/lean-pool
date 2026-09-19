@@ -93,7 +93,7 @@ private theorem exists_subset_measure_eq_mul
   have hν_univ : ν univ = μ s := by
     simp only [ν, Measure.map_apply hf.measurable MeasurableSet.univ, preimage_univ,
       Measure.restrict_apply_univ]
-  haveI : NullSingletonClass ν := by
+  have : NullSingletonClass ν := by
     refine ⟨fun x ↦ ?_⟩
     change ((μ.restrict s).map f) {x} = 0
     rw [Measure.map_apply hf.measurable (MeasurableSet.singleton x)]
@@ -110,8 +110,8 @@ private theorem exists_subset_measure_eq_mul
     have : ν univ = 0 := by rw [hzero']; rfl
     exact hν_pos.ne' this
   let P : ProbabilityMeasure ℝ := νf.normalize
-  letI : IsProbabilityMeasure (P : Measure ℝ) := P.property
-  haveI : NullSingletonClass (P : Measure ℝ) := by
+  let : IsProbabilityMeasure (P : Measure ℝ) := P.property
+  have : NullSingletonClass (P : Measure ℝ) := by
     refine ⟨fun x ↦ ?_⟩
     have hνf_single : νf {x} = 0 := by
       apply ENNReal.coe_injective
@@ -409,15 +409,15 @@ private theorem exists_large_almostStraightSubset
   have hC_pos (b : C) : 0 < μ b := by
     have : 0 < c * μ b := (bot_le : 0 ≤ p b).trans_lt (hC_mem.1 b b.2).2.2
     exact (ENNReal.mul_pos_iff.mp this).2
-  letI : IsFiniteMeasure μ :=
+  let : IsFiniteMeasure μ :=
     ⟨by simpa only [μ, Measure.restrict_apply_univ] using he_fin⟩
-  haveI : Countable C := by
+  have : Countable C := by
     apply Set.countable_univ_iff.mp
     have hcount := Measure.countable_meas_pos_of_disjoint_iUnion
       (μ := μ) (As := fun b : C ↦ (b : Set (EuclideanSpace ℝ (Fin 2))))
       (fun b ↦ (hC_mem.1 b b.2).1)
       (hC_mem.2.subtype _ _)
-    simpa only [hC_pos, setOf_true] using hcount
+    simpa only [hC_pos, ofPred_true] using hcount
   have C_count : C.Countable := Set.countable_coe_iff.mp inferInstance
   have hUnion_meas : MeasurableSet (⋃₀ C) :=
     MeasurableSet.sUnion C_count fun b hb ↦ (hC_mem.1 b hb).1
@@ -589,33 +589,21 @@ private theorem exists_multiscaleAlmostStraightSubset
   exact (measure_mono (inter_subset_inter_left s (ha_A n))).trans
     (hlocal n s hs hsr)
 
-/-- Every measurable set of positive finite Hausdorff one-measure has a positive straight piece. -/
-theorem exists_straight_measure_restrict_subset
-    {e : Set (EuclideanSpace ℝ (Fin 2))} (he : MeasurableSet e)
-    (he_pos : 0 < μH[1] e) (he_fin : μH[1] e < ∞) :
-    ∃ a : Set (EuclideanSpace ℝ (Fin 2)), MeasurableSet a ∧ a ⊆ e ∧ 0 < μH[1] a ∧
-      IsStraightMeasure (μH[1].restrict a) := by
+private theorem exists_small_positive_subset
+    {A : Set (EuclideanSpace ℝ (Fin 2))} (hA_meas : MeasurableSet A)
+    (hA_pos : 0 < μH[1] A) (hA_fin : μH[1] A < ∞)
+    (bound : ℝ≥0) (hbound : 0 < bound) :
+    ∃ E, MeasurableSet E ∧ E ⊆ A ∧ 0 < μH[1] E ∧ μH[1] E < bound := by
   classical
-  letI : NullSingletonClass (μH[1] : Measure (EuclideanSpace ℝ (Fin 2))) :=
+  let : NullSingletonClass (μH[1] : Measure (EuclideanSpace ℝ (Fin 2))) :=
     Measure.nullSingletonClass_hausdorff (EuclideanSpace ℝ (Fin 2)) (by norm_num)
-  obtain ⟨A, hA_meas, hA_sub, hA_pos, hscale⟩ :=
-    exists_multiscaleAlmostStraightSubset he he_pos he_fin
-  choose r hr_pos hlocal using hscale
-  have hA_fin : μH[1] A < ∞ := (measure_mono hA_sub).trans_lt he_fin
-  have hR_exists (n : ℕ) :
-      ∃ R : ℝ≥0, 0 < R ∧ (R : ℝ≥0∞) * 2 < r n :=
-    ENNReal.exists_nnreal_pos_mul_lt (by norm_num) (hr_pos n).ne'
-  choose R hR_pos hR_scale using hR_exists
-  let ρ : ℕ → ℝ≥0 := descendingRadius R
-  have hρ_pos (n : ℕ) : 0 < ρ n := descendingRadius_pos hR_pos n
-  have hρ_R (n : ℕ) : ρ n ≤ R n := descendingRadius_le R n
   obtain ⟨c, hc_pos, hc_small⟩ :=
-    ENNReal.exists_nnreal_pos_mul_lt hA_fin.ne (ENNReal.coe_pos.mpr (hρ_pos 0)).ne'
+    ENNReal.exists_nnreal_pos_mul_lt hA_fin.ne (ENNReal.coe_pos.mpr hbound).ne'
   let c' : ℝ≥0 := min c 1
   have hc'_pos : 0 < c' := lt_min hc_pos zero_lt_one
   have hc'_one : c' ≤ 1 := min_le_right _ _
   let μA : Measure (EuclideanSpace ℝ (Fin 2)) := μH[1].restrict A
-  letI : IsFiniteMeasure μA :=
+  let : IsFiniteMeasure μA :=
     ⟨by simpa only [μA, Measure.restrict_apply_univ] using hA_fin⟩
   obtain ⟨E, hE_meas, hE_sub, hE_mass⟩ := exists_subset_measure_eq_mul
     (μ := μA) hA_meas (q := (c' : ℝ)) c'.2 (by exact_mod_cast hc'_one)
@@ -628,15 +616,97 @@ theorem exists_straight_measure_restrict_subset
   have hE_pos : 0 < μH[1] E := by
     rw [hE_mass', ENNReal.mul_pos_iff]
     exact ⟨ENNReal.coe_pos.mpr hc'_pos, hA_pos⟩
-  have hE_small : μH[1] E < ρ 0 := by
+  have hE_small : μH[1] E < bound := by
     rw [hE_mass']
     apply lt_of_le_of_lt _ hc_small
     gcongr
     exact min_le_left c 1
+  exact ⟨E, hE_meas, hE_sub, hE_pos, hE_small⟩
+
+private theorem measure_iUnion_cell_thinning
+    (μ : Measure (EuclideanSpace ℝ (Fin 2))) {E : Set (EuclideanSpace ℝ (Fin 2))}
+    (hE_meas : MeasurableSet E) (mesh : ℝ≥0) (fraction : ℝ≥0∞)
+    (S : ℕ → Set (EuclideanSpace ℝ (Fin 2))) (hS_meas : ∀ k, MeasurableSet (S k))
+    (hS_sub : ∀ k, S k ⊆ E ∩ metricCell mesh k)
+    (hS_mass : ∀ k, μ (S k) = fraction * μ (E ∩ metricCell mesh k)) (K : Set ℕ) :
+    μ (⋃ k : K, S k) = fraction * μ (⋃ k : K, E ∩ metricCell mesh k) := by
+  have hS_disj : Pairwise (Disjoint on fun k : K ↦ S k) := by
+    intro i j hij
+    exact Disjoint.mono (hS_sub i) (hS_sub j) <|
+      Disjoint.mono inter_subset_right inter_subset_right <|
+        pairwiseDisjoint_metricCell mesh (Subtype.coe_ne_coe.mpr hij)
+  have hcell_disj : Pairwise
+      (Disjoint on fun k : K ↦ E ∩ metricCell mesh k) := by
+    intro i j hij
+    exact Disjoint.mono inter_subset_right inter_subset_right <|
+      pairwiseDisjoint_metricCell mesh (Subtype.coe_ne_coe.mpr hij)
+  calc
+    μ (⋃ k : K, S k) = ∑' k : K, μ (S k) :=
+      measure_iUnion hS_disj fun k ↦ hS_meas k
+    _ = ∑' k : K, fraction *
+        μ (E ∩ metricCell mesh k) := by
+      congr 1
+      funext k
+      exact hS_mass k
+    _ = fraction *
+        ∑' k : K, μ (E ∩ metricCell mesh k) := ENNReal.tsum_mul_left
+    _ = fraction *
+        μ (⋃ k : K, E ∩ metricCell mesh k) := by
+      rw [measure_iUnion hcell_disj fun k ↦
+        hE_meas.inter (measurableSet_metricCell _ _)]
+
+private theorem measure_iUnion_losses_lt
+    (μ : Measure (EuclideanSpace ℝ (Fin 2))) (E : Set (EuclideanSpace ℝ (Fin 2)))
+    (T : ℕ → Set (EuclideanSpace ℝ (Fin 2))) (hpositive : 0 < μ E) (hfinite : μ E < ∞)
+    (hT_loss : ∀ n, μ (E \ T n) = 2 * lossWeight n * μ E) :
+    μ (⋃ n : ℕ, E \ T n) < μ E := by
+  calc
+    μ (⋃ n : ℕ, E \ T n) ≤ ∑' n : ℕ, μ (E \ T n) := measure_iUnion_le _
+    _ = ∑' n : ℕ, (2 * lossWeight n) * μ E := by
+      congr 1
+      funext n
+      exact hT_loss n
+    _ = (∑' n : ℕ, 2 * lossWeight n) * μ E := ENNReal.tsum_mul_right
+    _ = (2 * ∑' n : ℕ, lossWeight n) * μ E := by rw [ENNReal.tsum_mul_left]
+    _ = (2 * (4 : ℝ≥0∞)⁻¹) * μ E := by rw [tsum_lossWeight]
+    _ < μ E := by
+      calc
+        (2 * (4 : ℝ≥0∞)⁻¹) * μ E < 1 * μ E :=
+          ENNReal.mul_lt_mul_left hpositive.ne'
+            hfinite.ne (by
+              calc
+                2 * (4 : ℝ≥0∞)⁻¹ < 2 * (2 : ℝ≥0∞)⁻¹ := by
+                  apply ENNReal.mul_lt_mul_right (by norm_num) (by norm_num)
+                  exact ENNReal.inv_lt_inv.mpr (by norm_num)
+                _ = 1 := ENNReal.mul_inv_cancel (by norm_num) (by norm_num))
+        _ = μ E := one_mul _
+
+/-- Every measurable set of positive finite Hausdorff one-measure has a positive straight piece. -/
+theorem exists_straight_measure_restrict_subset
+    {e : Set (EuclideanSpace ℝ (Fin 2))} (he : MeasurableSet e)
+    (he_pos : 0 < μH[1] e) (he_fin : μH[1] e < ∞) :
+    ∃ a : Set (EuclideanSpace ℝ (Fin 2)), MeasurableSet a ∧ a ⊆ e ∧ 0 < μH[1] a ∧
+      IsStraightMeasure (μH[1].restrict a) := by
+  classical
+  let : NullSingletonClass (μH[1] : Measure (EuclideanSpace ℝ (Fin 2))) :=
+    Measure.nullSingletonClass_hausdorff (EuclideanSpace ℝ (Fin 2)) (by norm_num)
+  obtain ⟨A, hA_meas, hA_sub, hA_pos, hscale⟩ :=
+    exists_multiscaleAlmostStraightSubset he he_pos he_fin
+  choose r hr_pos hlocal using hscale
+  have hA_fin : μH[1] A < ∞ := (measure_mono hA_sub).trans_lt he_fin
+  have hR_exists (n : ℕ) :
+      ∃ R : ℝ≥0, 0 < R ∧ (R : ℝ≥0∞) * 2 < r n :=
+    ENNReal.exists_nnreal_pos_mul_lt (by norm_num) (hr_pos n).ne'
+  choose R hR_pos hR_scale using hR_exists
+  let ρ : ℕ → ℝ≥0 := descendingRadius R
+  have hρ_pos (n : ℕ) : 0 < ρ n := descendingRadius_pos hR_pos n
+  have hρ_R (n : ℕ) : ρ n ≤ R n := descendingRadius_le R n
+  obtain ⟨E, hE_meas, hE_sub, hE_pos, hE_small⟩ :=
+    exists_small_positive_subset hA_meas hA_pos hA_fin (ρ 0) (hρ_pos 0)
   have hE_sub_e : E ⊆ e := hE_sub.trans hA_sub
   have hE_fin : μH[1] E < ∞ := (measure_mono hE_sub_e).trans_lt he_fin
   let μ : Measure (EuclideanSpace ℝ (Fin 2)) := μH[1].restrict E
-  letI : IsFiniteMeasure μ :=
+  let : IsFiniteMeasure μ :=
     ⟨by simpa only [μ, Measure.restrict_apply_univ] using hE_fin⟩
   let mesh (n : ℕ) : ℝ≥0 :=
     (lossWeight n).toNNReal * ρ (n + 1) / 4
@@ -654,33 +724,9 @@ theorem exists_straight_measure_restrict_subset
       (q := (thinningFraction n : ℝ)) (thinningFraction n).2
       (by exact_mod_cast thinningFraction_le_one n)
   choose S hS_meas hS_sub hS_mass using hselect
-  have hmeasure_selected (n : ℕ) (K : Set ℕ) :
-      μ (⋃ k : K, S n k) = (thinningFraction n : ℝ≥0∞) *
-        μ (⋃ k : K, E ∩ metricCell (mesh n) k) := by
-    have hS_disj : Pairwise (Disjoint on fun k : K ↦ S n k) := by
-      intro i j hij
-      exact Disjoint.mono (hS_sub n i) (hS_sub n j) <|
-        Disjoint.mono inter_subset_right inter_subset_right <|
-          pairwiseDisjoint_metricCell (mesh n) (Subtype.coe_ne_coe.mpr hij)
-    have hcell_disj : Pairwise
-        (Disjoint on fun k : K ↦ E ∩ metricCell (mesh n) k) := by
-      intro i j hij
-      exact Disjoint.mono inter_subset_right inter_subset_right <|
-        pairwiseDisjoint_metricCell (mesh n) (Subtype.coe_ne_coe.mpr hij)
-    calc
-      μ (⋃ k : K, S n k) = ∑' k : K, μ (S n k) :=
-        measure_iUnion hS_disj fun k ↦ hS_meas n k
-      _ = ∑' k : K, (thinningFraction n : ℝ≥0∞) *
-          μ (E ∩ metricCell (mesh n) k) := by
-        congr 1
-        funext k
-        exact hS_mass n k
-      _ = (thinningFraction n : ℝ≥0∞) *
-          ∑' k : K, μ (E ∩ metricCell (mesh n) k) := ENNReal.tsum_mul_left
-      _ = (thinningFraction n : ℝ≥0∞) *
-          μ (⋃ k : K, E ∩ metricCell (mesh n) k) := by
-        rw [measure_iUnion hcell_disj fun k ↦
-          hE_meas.inter (measurableSet_metricCell _ _)]
+  have hmeasure_selected (n : ℕ) (K : Set ℕ) :=
+    measure_iUnion_cell_thinning μ hE_meas (mesh n) (thinningFraction n) (S n)
+      (hS_meas n) (hS_sub n) (hS_mass n) K
   let T (n : ℕ) : Set (EuclideanSpace ℝ (Fin 2)) := ⋃ k : (univ : Set ℕ), S n k
   have hT_meas (n : ℕ) : MeasurableSet (T n) :=
     MeasurableSet.iUnion fun k ↦ hS_meas n k
@@ -716,27 +762,9 @@ theorem exists_straight_measure_restrict_subset
   have hbad_meas : MeasurableSet bad :=
     MeasurableSet.iUnion fun n ↦ hE_meas.diff (hT_meas n)
   have hbad_sub : bad ⊆ E := iUnion_subset fun _ ↦ sdiff_subset
-  have hbad_lt : μ bad < μ E := by
-    calc
-      μ bad ≤ ∑' n : ℕ, μ (E \ T n) := measure_iUnion_le _
-      _ = ∑' n : ℕ, (2 * lossWeight n) * μ E := by
-        congr 1
-        funext n
-        exact hT_loss n
-      _ = (∑' n : ℕ, 2 * lossWeight n) * μ E := ENNReal.tsum_mul_right
-      _ = (2 * ∑' n : ℕ, lossWeight n) * μ E := by rw [ENNReal.tsum_mul_left]
-      _ = (2 * (4 : ℝ≥0∞)⁻¹) * μ E := by rw [tsum_lossWeight]
-      _ < μ E := by
-        calc
-          (2 * (4 : ℝ≥0∞)⁻¹) * μ E < 1 * μ E :=
-            ENNReal.mul_lt_mul_left (by simpa only [hμ_E] using hE_pos.ne')
-              (by simpa only [hμ_E] using hE_fin.ne) (by
-                calc
-                  2 * (4 : ℝ≥0∞)⁻¹ < 2 * (2 : ℝ≥0∞)⁻¹ := by
-                    apply ENNReal.mul_lt_mul_right (by norm_num) (by norm_num)
-                    exact ENNReal.inv_lt_inv.mpr (by norm_num)
-                  _ = 1 := ENNReal.mul_inv_cancel (by norm_num) (by norm_num))
-          _ = μ E := one_mul _
+  have hbad_lt : μ bad < μ E :=
+    measure_iUnion_losses_lt μ E T (by simpa only [hμ_E] using hE_pos)
+      (by simpa only [hμ_E] using hE_fin) hT_loss
   let a : Set (EuclideanSpace ℝ (Fin 2)) := E \ bad
   have ha_meas : MeasurableSet a := hE_meas.diff hbad_meas
   have ha_sub_E : a ⊆ E := sdiff_subset

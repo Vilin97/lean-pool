@@ -292,7 +292,8 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
       2 * blueSeparationMultiplier * ⟪w₁, w₂⟫_ℝ := by
   let v : Five → E := ![e, p₁, p₂, w₁, w₂]
   have h := gram_sum_nonneg v
-  simp [Fin.sum_univ_five, v] at h
+  simp only [Fin.sum_univ_five, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.cons_val, inner_self_eq_norm_sq_to_K, RCLike.ofReal_real_eq_id, id_eq, v] at h
   rw [certificateMatrix_offDiagonal (by decide : (0 : Five) ≠ 1),
     certificateMatrix_offDiagonal (by decide : (0 : Five) ≠ 2),
     certificateMatrix_offDiagonal (by decide : (0 : Five) ≠ 3),

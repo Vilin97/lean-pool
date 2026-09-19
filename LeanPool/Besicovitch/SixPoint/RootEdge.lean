@@ -305,6 +305,64 @@ private theorem same_color_pair_le_twice_bound {configuration : SixPointConfigur
     nlinarith [(packing.radius i).property.2]
   · nlinarith [packing.same_color_disjoint i j hij hcolor]
 
+/-- Supports `73` and `75`: a blue root--child edge against the full red triangle. -/
+def blueRootEdgeRedTrianglePacking (configuration : SixPointConfiguration)
+    (blueLabel : SixPointLabel) (hblueLabel : blueLabel ≠ .root) {R x : ℝ}
+    (hRdist : dist (configuration .blue .root) (configuration .blue blueLabel) = R)
+    (hR_one : R ≤ 1) (hx_zero : 0 ≤ x) (hx_R : x ≤ R)
+    (hredLeft : dist (configuration .red .root) (configuration .red .left) ≤ 1)
+    (hredRight : dist (configuration .red .root) (configuration .red .right) ≤ 1) :
+    SixPointPacking configuration where
+  support := {(.blue, .root), (.blue, blueLabel), (.red, .root), (.red, .left),
+    (.red, .right)}
+  meets_color color := by
+    cases color
+    · exact ⟨.root, by simp⟩
+    · exact ⟨.root, by simp⟩
+  radius i := by
+    rcases i with ⟨⟨color, label⟩, hlabel⟩
+    cases color
+    · cases label
+      · exact ⟨_, canonicalTriangleRadius_nonneg _ _ _ .root,
+          canonicalTriangleRadius_le_one _ _ _ hredLeft hredRight .root⟩
+      · exact ⟨_, canonicalTriangleRadius_nonneg _ _ _ .left,
+          canonicalTriangleRadius_le_one _ _ _ hredLeft hredRight .left⟩
+      · exact ⟨_, canonicalTriangleRadius_nonneg _ _ _ .right,
+          canonicalTriangleRadius_le_one _ _ _ hredLeft hredRight .right⟩
+    · by_cases hroot : label = .root
+      · exact ⟨x, hx_zero, hx_R.trans hR_one⟩
+      · exact ⟨R - x, sub_nonneg.mpr hx_R, by linarith⟩
+  same_color_disjoint i j hij hcolor := by
+    rcases i with ⟨⟨ci, li⟩, hi⟩
+    rcases j with ⟨⟨cj, lj⟩, hj⟩
+    simp only at hcolor
+    subst cj
+    cases ci
+    · cases li <;> cases lj
+      · exact (hij (Subtype.ext rfl)).elim
+      · exact (canonicalTriangleRadius_root_add_left _ _ _).le
+      · exact (canonicalTriangleRadius_root_add_right _ _ _).le
+      · rw [add_comm, dist_comm]
+        exact (canonicalTriangleRadius_root_add_left _ _ _).le
+      · exact (hij (Subtype.ext rfl)).elim
+      · exact (canonicalTriangleRadius_left_add_right _ _ _).le
+      · rw [add_comm, dist_comm]
+        exact (canonicalTriangleRadius_root_add_right _ _ _).le
+      · rw [add_comm, dist_comm]
+        exact (canonicalTriangleRadius_left_add_right _ _ _).le
+      · exact (hij (Subtype.ext rfl)).elim
+    · have hi' : li = .root ∨ li = blueLabel := by simpa using hi
+      have hj' : lj = .root ∨ lj = blueLabel := by simpa using hj
+      rcases hi' with rfl | rfl <;> rcases hj' with rfl | rfl
+      · exact (hij (Subtype.ext rfl)).elim
+      · dsimp
+        rw [hRdist]
+        simp [hblueLabel]
+      · dsimp
+        rw [dist_comm, hRdist]
+        simp [hblueLabel]
+      · exact (hij (Subtype.ext rfl)).elim
+
 /-- The virtual diameter of supports `37` and `57` is the root-edge split diameter. -/
 theorem redRootEdgeBlueTrianglePacking_virtualDiameter
     (configuration : SixPointConfiguration) (redLabel : SixPointLabel)
@@ -464,64 +522,6 @@ theorem redRootEdgeBlueTrianglePacking_virtualDiameter
       exact ⟨hchildPoint .root, hchildPoint .left, hchildPoint .right⟩
     simp only [rootEdgeSplitDiameter, rootEdgeCrossMaximum, max_le_iff]
     exact ⟨hdiameterM, hdiameterRoot, hdiameterChild⟩
-
-/-- Supports `73` and `75`: a blue root--child edge against the full red triangle. -/
-def blueRootEdgeRedTrianglePacking (configuration : SixPointConfiguration)
-    (blueLabel : SixPointLabel) (hblueLabel : blueLabel ≠ .root) {R x : ℝ}
-    (hRdist : dist (configuration .blue .root) (configuration .blue blueLabel) = R)
-    (hR_one : R ≤ 1) (hx_zero : 0 ≤ x) (hx_R : x ≤ R)
-    (hredLeft : dist (configuration .red .root) (configuration .red .left) ≤ 1)
-    (hredRight : dist (configuration .red .root) (configuration .red .right) ≤ 1) :
-    SixPointPacking configuration where
-  support := {(.blue, .root), (.blue, blueLabel), (.red, .root), (.red, .left),
-    (.red, .right)}
-  meets_color color := by
-    cases color
-    · exact ⟨.root, by simp⟩
-    · exact ⟨.root, by simp⟩
-  radius i := by
-    rcases i with ⟨⟨color, label⟩, hlabel⟩
-    cases color
-    · cases label
-      · exact ⟨_, canonicalTriangleRadius_nonneg _ _ _ .root,
-          canonicalTriangleRadius_le_one _ _ _ hredLeft hredRight .root⟩
-      · exact ⟨_, canonicalTriangleRadius_nonneg _ _ _ .left,
-          canonicalTriangleRadius_le_one _ _ _ hredLeft hredRight .left⟩
-      · exact ⟨_, canonicalTriangleRadius_nonneg _ _ _ .right,
-          canonicalTriangleRadius_le_one _ _ _ hredLeft hredRight .right⟩
-    · by_cases hroot : label = .root
-      · exact ⟨x, hx_zero, hx_R.trans hR_one⟩
-      · exact ⟨R - x, sub_nonneg.mpr hx_R, by linarith⟩
-  same_color_disjoint i j hij hcolor := by
-    rcases i with ⟨⟨ci, li⟩, hi⟩
-    rcases j with ⟨⟨cj, lj⟩, hj⟩
-    simp only at hcolor
-    subst cj
-    cases ci
-    · cases li <;> cases lj
-      · exact (hij (Subtype.ext rfl)).elim
-      · exact (canonicalTriangleRadius_root_add_left _ _ _).le
-      · exact (canonicalTriangleRadius_root_add_right _ _ _).le
-      · rw [add_comm, dist_comm]
-        exact (canonicalTriangleRadius_root_add_left _ _ _).le
-      · exact (hij (Subtype.ext rfl)).elim
-      · exact (canonicalTriangleRadius_left_add_right _ _ _).le
-      · rw [add_comm, dist_comm]
-        exact (canonicalTriangleRadius_root_add_right _ _ _).le
-      · rw [add_comm, dist_comm]
-        exact (canonicalTriangleRadius_left_add_right _ _ _).le
-      · exact (hij (Subtype.ext rfl)).elim
-    · have hi' : li = .root ∨ li = blueLabel := by simpa using hi
-      have hj' : lj = .root ∨ lj = blueLabel := by simpa using hj
-      rcases hi' with rfl | rfl <;> rcases hj' with rfl | rfl
-      · exact (hij (Subtype.ext rfl)).elim
-      · dsimp
-        rw [hRdist]
-        simp [hblueLabel]
-      · dsimp
-        rw [dist_comm, hRdist]
-        simp [hblueLabel]
-      · exact (hij (Subtype.ext rfl)).elim
 
 /-- The total radius of a blue root-edge packing is its edge length plus a semiperimeter. -/
 theorem blueRootEdgeRedTrianglePacking_totalRadius

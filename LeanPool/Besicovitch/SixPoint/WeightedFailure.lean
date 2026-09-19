@@ -90,7 +90,7 @@ theorem thirdActiveFailureSlack_pos
       dist (configuration .red .left) (configuration .red .right) +
         dist (configuration .blue .left) (configuration .blue .right) by linarith)
     hcoefficient
-  simp [redRootEdgeTarget, blueRootEdgeTarget, rootedTriangleTotalRadius,
+  norm_num [redRootEdgeTarget, blueRootEdgeTarget, rootedTriangleTotalRadius,
     redRootBlueTriangleReach, redChildBlueTriangleReach, blueRootRedTriangleReach,
     blueChildRedTriangleReach, canonicalTriangleRadius] at hred hblue
   simp only [thirdActiveFailureSlack, matchedChildAverage, incidenceChild]
