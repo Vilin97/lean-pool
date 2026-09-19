@@ -1,61 +1,75 @@
 projects:
-  - slug: centered-maximal-constant
-    title: Bounds for the centered Hardy-Littlewood maximal constant
+  - slug: komlos
+    title: The Komlós and Beck–Fiala bounds with constant 36
     summary: >-
-      Proves that the weak type (1,1) constant c_2 of the centered maximal
-      operator over axis-parallel squares is at least the explicit radical
-      phi, approximately 1.68551, using a weighted periodic lattice and
-      integrable approximations. Also proves c_d <= 2^d in every natural
-      dimension and 1.685 < phi < 1.686. The operator acts on real-valued
-      integrable functions, with Lebesgue outer measure of strict level
-      sets. Includes the maximal-function API, a Vitali covering argument,
-      lattice witnesses, smearing estimates, and the limiting lower bound.
-      No optimality of phi is claimed.
-    branch: harmonic analysis
-    entry_module: LeanPool.CenteredMaximal
+      Proves that finitely many real vectors of Euclidean norm at most one admit
+      signs whose sum has every coordinate bounded by 36, and deduces the
+      Beck–Fiala discrepancy bound 36 times the square root of the maximum
+      vertex degree for finite hypergraphs. The Karingula–Lovett splitting
+      argument is supported by reusable finite-distribution, total-variation,
+      transport, convex-hull, and matrix-discrepancy infrastructure. The
+      near-invariant distribution uses discrete squared tent weights, and
+      real vectors are handled by coordinatewise truncation toward zero.
+    branch: discrepancy theory
+    entry_module: LeanPool.Komlos
     authors:
-      - Yongxi Lin
+      - Gabriel Dahia
     source:
-      title: A lower bound 1.6855 for the planar centred maximal constant over squares
+      title: An elementary proof of the Komlós conjecture
       authors:
-        - Yongxi Lin
-      url: https://github.com/CoolRmal/centered-maximal-constant
-      github_repo: CoolRmal/centered-maximal-constant
-      commit: c6a8cb29e8ecce9ac4614a8c7e4bf6938366f986
-      notes: >-
-        First completed publicly on 2026-09-18 at 22:15:07 UTC in commit
-        06a726f113241d445903f0c0eae1ebe40d8b539f.
-        The lower bound is documented and proved in upstream docs/PROOF.md;
-        the weighted smearing argument adapts Aldaz (2000), Lemma 1.1,
-        and the covering upper bound follows Tao's 245A Notes 5, Exercise 42.
-        Upstream formalization.yaml and docs/HISTORY.md disclose AI generation
-        of the configuration and proofs under Yongxi Lin's direction.
+        - Sankeerth Rao Karingula
+        - Shachar Lovett
+      url: https://eccc.weizmann.ac.il/report/2026/188/
+      github_repo: gdahia/Komlos
+      commit: d802857449234318d557361b1dbb0a27e0258528
     license: Apache-2.0
     status: verified
     provenance: AI
     main_declarations:
-      - LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+      - Komlos.discrepancy_le_of_forall_sum_sq_le_one
     main_results:
-      - declaration: LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+      - declaration: Komlos.discrepancy_le_of_forall_sum_sq_le_one
         informal: >-
-          The explicit radical phi is a lower bound for c_2, the infimum of
-          all weak type (1,1) bounds for the centered maximal operator over
-          axis-parallel squares in the real plane.
-      - declaration: LeanPool.CenteredMaximal.weakTypeConstant_le_two_pow
+          For a real matrix with arbitrary finite row and column index types,
+          if each column has sum of squared entries at most one, its minimum
+          signed-column discrepancy is at most 36.
+        source_ref: Theorem 1.2, matrix form.
+      - declaration: Komlos.exists_isColouring_forall_abs_sum_apply_le
         informal: >-
-          For every natural number d, including zero, the centered maximal
-          operator over axis-parallel cubes in real d-space has weak type
-          (1,1) constant c_d at most 2^d.
-      - declaration: LeanPool.CenteredMaximal.phi_mem_Ioo
-        informal: The explicit radical constant phi lies strictly between 1.685 and 1.686.
+          Any finite family of vectors in a finite-dimensional real Euclidean
+          space, each of norm at most one, admits signs in {-1, 1} whose signed
+          sum has absolute value at most 36 in every coordinate.
+        source_ref: Theorem 1.2.
+      - declaration: Hypergraph.exists_isColouring_forall_abs_finsum_le
+        informal: >-
+          If a hypergraph has finitely many vertices and each vertex belongs
+          to at most t edges, there is a {-1, 1} colouring of all vertices
+          whose sum on each edge has absolute value at most 36 times sqrt(t).
+        source_ref: Beck–Fiala consequence discussed in Section 1.
+      - declaration: Komlos.exists_isColouring_mean_add_sum_mem_convexHull
+        informal: >-
+          For a finitely supported probability distribution on any real
+          module and n vectors, if translation by six times each vector has
+          total variation distance at most one third, some signed sum added
+          to the mean belongs to the convex hull of the distribution's support.
+        source_ref: Lemma 1.4, generalized to arbitrary real modules.
+      - declaration: Komlos.exists_nearInvariant
+        informal: >-
+          Every positive-denominator integer grid in finite-dimensional real
+          coordinate space admits a finitely supported mean-zero probability
+          distribution in [-6, 6]^d whose total variation distance under any
+          grid translation of Euclidean norm at most one is at most one third.
+        source_ref: Lemma 1.5, using discrete squared tent weights.
     tags:
-      - harmonic-analysis
-      - maximal-functions
-      - weak-type-inequalities
-      - lattice-constructions
+      - discrepancy
+      - vector-balancing
+      - hypergraphs
+      - probability
+      - total-variation
     msc:
-      - 42B25
-      - 26D15
+      - 11K38
+      - 05C65
+      - 05D40
   - slug: sum-difference-exponent
     title: The optimal exponent relating sumsets and difference sets
     summary: >-
@@ -9270,3 +9284,60 @@ projects:
       - cycle-decompositions
     msc:
       - "05C45"
+  - slug: centered-maximal-constant
+    title: Bounds for the centered Hardy-Littlewood maximal constant
+    summary: >-
+      Proves that the weak type (1,1) constant c_2 of the centered maximal
+      operator over axis-parallel squares is at least the explicit radical
+      phi, approximately 1.68551, using a weighted periodic lattice and
+      integrable approximations. Also proves c_d <= 2^d in every natural
+      dimension and 1.685 < phi < 1.686. The operator acts on real-valued
+      integrable functions, with Lebesgue outer measure of strict level
+      sets. Includes the maximal-function API, a Vitali covering argument,
+      lattice witnesses, smearing estimates, and the limiting lower bound.
+      No optimality of phi is claimed.
+    branch: harmonic analysis
+    entry_module: LeanPool.CenteredMaximal
+    authors:
+      - Yongxi Lin
+    source:
+      title: A lower bound 1.6855 for the planar centred maximal constant over squares
+      authors:
+        - Yongxi Lin
+      url: https://github.com/CoolRmal/centered-maximal-constant
+      github_repo: CoolRmal/centered-maximal-constant
+      commit: c6a8cb29e8ecce9ac4614a8c7e4bf6938366f986
+      notes: >-
+        First completed publicly on 2026-09-18 at 22:15:07 UTC in commit
+        06a726f113241d445903f0c0eae1ebe40d8b539f.
+        The lower bound is documented and proved in upstream docs/PROOF.md;
+        the weighted smearing argument adapts Aldaz (2000), Lemma 1.1,
+        and the covering upper bound follows Tao's 245A Notes 5, Exercise 42.
+        Upstream formalization.yaml and docs/HISTORY.md disclose AI generation
+        of the configuration and proofs under Yongxi Lin's direction.
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+    main_results:
+      - declaration: LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+        informal: >-
+          The explicit radical phi is a lower bound for c_2, the infimum of
+          all weak type (1,1) bounds for the centered maximal operator over
+          axis-parallel squares in the real plane.
+      - declaration: LeanPool.CenteredMaximal.weakTypeConstant_le_two_pow
+        informal: >-
+          For every natural number d, including zero, the centered maximal
+          operator over axis-parallel cubes in real d-space has weak type
+          (1,1) constant c_d at most 2^d.
+      - declaration: LeanPool.CenteredMaximal.phi_mem_Ioo
+        informal: The explicit radical constant phi lies strictly between 1.685 and 1.686.
+    tags:
+      - harmonic-analysis
+      - maximal-functions
+      - weak-type-inequalities
+      - lattice-constructions
+    msc:
+      - 42B25
+      - 26D15
