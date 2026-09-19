@@ -1,4 +1,75 @@
 projects:
+  - slug: komlos
+    title: The Komlós and Beck–Fiala bounds with constant 36
+    summary: >-
+      Proves that finitely many real vectors of Euclidean norm at most one admit
+      signs whose sum has every coordinate bounded by 36, and deduces the
+      Beck–Fiala discrepancy bound 36 times the square root of the maximum
+      vertex degree for finite hypergraphs. The Karingula–Lovett splitting
+      argument is supported by reusable finite-distribution, total-variation,
+      transport, convex-hull, and matrix-discrepancy infrastructure. The
+      near-invariant distribution uses discrete squared tent weights, and
+      real vectors are handled by coordinatewise truncation toward zero.
+    branch: discrepancy theory
+    entry_module: LeanPool.Komlos
+    authors:
+      - Gabriel Dahia
+    source:
+      title: An elementary proof of the Komlós conjecture
+      authors:
+        - Sankeerth Rao Karingula
+        - Shachar Lovett
+      url: https://eccc.weizmann.ac.il/report/2026/188/
+      github_repo: gdahia/Komlos
+      commit: d802857449234318d557361b1dbb0a27e0258528
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Komlos.discrepancy_le_of_forall_sum_sq_le_one
+    main_results:
+      - declaration: Komlos.discrepancy_le_of_forall_sum_sq_le_one
+        informal: >-
+          For a real matrix with arbitrary finite row and column index types,
+          if each column has sum of squared entries at most one, its minimum
+          signed-column discrepancy is at most 36.
+        source_ref: Theorem 1.2, matrix form.
+      - declaration: Komlos.exists_isColouring_forall_abs_sum_apply_le
+        informal: >-
+          Any finite family of vectors in a finite-dimensional real Euclidean
+          space, each of norm at most one, admits signs in {-1, 1} whose signed
+          sum has absolute value at most 36 in every coordinate.
+        source_ref: Theorem 1.2.
+      - declaration: Hypergraph.exists_isColouring_forall_abs_finsum_le
+        informal: >-
+          If a hypergraph has finitely many vertices and each vertex belongs
+          to at most t edges, there is a {-1, 1} colouring of all vertices
+          whose sum on each edge has absolute value at most 36 times sqrt(t).
+        source_ref: Beck–Fiala consequence discussed in Section 1.
+      - declaration: Komlos.exists_isColouring_mean_add_sum_mem_convexHull
+        informal: >-
+          For a finitely supported probability distribution on any real
+          module and n vectors, if translation by six times each vector has
+          total variation distance at most one third, some signed sum added
+          to the mean belongs to the convex hull of the distribution's support.
+        source_ref: Lemma 1.4, generalized to arbitrary real modules.
+      - declaration: Komlos.exists_nearInvariant
+        informal: >-
+          Every positive-denominator integer grid in finite-dimensional real
+          coordinate space admits a finitely supported mean-zero probability
+          distribution in [-6, 6]^d whose total variation distance under any
+          grid translation of Euclidean norm at most one is at most one third.
+        source_ref: Lemma 1.5, using discrete squared tent weights.
+    tags:
+      - discrepancy
+      - vector-balancing
+      - hypergraphs
+      - probability
+      - total-variation
+    msc:
+      - 11K38
+      - 05C65
+      - 05D40
   - slug: sum-difference-exponent
     title: The optimal exponent relating sumsets and difference sets
     summary: >-
