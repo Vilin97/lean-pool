@@ -13,9 +13,9 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Interval
 /-!
 # Smearing the lattice into an integrable function
 
-For `ε > 0`, truncate the measure to the atoms `atomBox N` and replace each atom of mass `m` at `p` by
-`m ε⁻²` times the indicator of the closed square of side `ε` centred at `p`. The resulting function
-`smeared N ε` is integrable, with `‖smeared N ε‖₁` equal to the total mass of the kept atoms.
+For `ε > 0`, truncate the measure to `atomBox N`. Replace each atom of mass `m` at `p`
+by `m ε⁻²` times the indicator of the closed square of side `ε` centred at `p`.
+`smeared N ε` is integrable; its L¹ norm equals the total mass of the kept atoms.
 
 If `(L, A)` witnesses level one at `z` and every atom of `A` is kept, the square of side `L + ε`
 centred at `z` contains the smeared mass of every atom of `A`, so the maximal function at `z` is at
