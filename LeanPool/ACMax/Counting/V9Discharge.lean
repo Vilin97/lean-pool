@@ -165,8 +165,8 @@ strength-specific Moore side condition — here the self-provable **SQRT** form,
 between the ball count and the side condition: the older shape `2|S|² ≤ (L − 5)²·t` is the same
 inequality after discarding the `|S|(2r+1)` ball term, weakening the level floor `|L_i| ≥ deg` to
 `≥ 2`, and rounding `2r ≥ L − 2` down to `L − 5`.  Recovering those three losses is what moves the
-import-free floor from `n ≥ 1071` to `n ≥ 379`.  Threaded as a hypothesis and discharged externally
-(the AHL strength, N8, reaches further down the band); never proved here. -/
+import-free floor from `n ≥ 1071` to `n ≥ 379`.  Threaded through intermediate bounds and discharged by `girth_excess_bound_holds` below.
+The separate AHL strength reaches further down the band. -/
 def GirthExcessBound (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
   ∀ (S : Finset (Fin n)) (t r : ℕ), S.Nonempty → 1 ≤ t → 1 ≤ r →
     2 * S.card + 2 * t ≤ ((S ×ˢ S).filter (fun q => G.Adj q.1 q.2)).card →

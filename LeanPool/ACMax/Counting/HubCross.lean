@@ -145,25 +145,27 @@ private theorem algConn_le_two_of_hub_cross_pair_hleakB : ∀ {V : Type u_1} [Fi
   let A : Finset V := G.neighborFinset u;
   let B : Finset V := G.neighborFinset v;
   ∀ w ∈ B.erase g', (↑(#(G.neighborFinset w \ insert v A)) : ℝ) ≤ (3 : ℝ) := by
-  classical
-  intro V inst G u v g g' hpart' A B w hw
-  have hwB : w ∈ B := Finset.mem_of_mem_erase hw
-  have hwadj : G.Adj v w := (G.mem_neighborFinset v w).mp hwB
-  have hdeg : G.degree w ≤ 4 := hpart' w hwadj (Finset.ne_of_mem_erase hw)
-  have hvw : v ∈ G.neighborFinset w := (G.mem_neighborFinset w v).mpr hwadj.symm
-  have hsub : G.neighborFinset w \ insert v A ⊆ (G.neighborFinset w).erase v := by
-    intro z hz
-    rw [Finset.mem_sdiff] at hz
-    rw [Finset.mem_erase]
-    exact ⟨fun h => hz.2 (h ▸ Finset.mem_insert_self v A), hz.1⟩
-  have hc : (G.neighborFinset w \ insert v A).card ≤ 3 := by
-    calc (G.neighborFinset w \ insert v A).card
-        ≤ ((G.neighborFinset w).erase v).card := Finset.card_le_card hsub
-      _ = (G.neighborFinset w).card - 1 := Finset.card_erase_of_mem hvw
-      _ ≤ 3 := by
-          rw [SimpleGraph.card_neighborFinset_eq_degree]
-          omega
-  exact_mod_cast hc
+  intro V inst G u v g g' hpart' A B
+  exact algConn_le_two_of_hub_cross_pair_hleakA G v u g' g hpart'
+
+/-- Separate one distinguished weight from a uniformly bounded remainder. -/
+private theorem weighted_square_sum_le {α : Type*} [DecidableEq α]
+    (A : Finset α) (g : α) (hg : g ∈ A) (leak weight : α → ℝ)
+    (hub partner bound cap : ℝ) (hhub : weight g = hub)
+    (hpartner : ∀ w ∈ A.erase g, weight w = partner)
+    (hbound : leak g ≤ bound) (hcap : ∀ w ∈ A.erase g, leak w ≤ cap) :
+    ∑ w ∈ A, leak w * weight w ^ 2 ≤
+      bound * hub ^ 2 + (A.erase g).card * (cap * partner ^ 2) := by
+  rw [← Finset.add_sum_erase _ (fun w => leak w * weight w ^ 2) hg, hhub]
+  apply add_le_add (mul_le_mul_of_nonneg_right hbound (sq_nonneg hub))
+  calc
+    ∑ w ∈ A.erase g, leak w * weight w ^ 2 ≤
+        ∑ _w ∈ A.erase g, cap * partner ^ 2 := by
+      apply Finset.sum_le_sum
+      intro w hw
+      rw [hpartner w hw]
+      exact mul_le_mul_of_nonneg_right (hcap w hw) (sq_nonneg partner)
+    _ = _ := by rw [Finset.sum_const, nsmul_eq_mul]
 
 open Classical in
 private theorem algConn_le_two_of_hub_cross_pair_hleak_sumA : ∀ {V : Type u_1} [Fintype V]
@@ -182,23 +184,11 @@ private theorem algConn_le_two_of_hub_cross_pair_hleak_sumA : ∀ {V : Type u_1}
             + (3 / 2 : ℝ) := by
   classical
   intro V inst G u v g A B hgA hcardAe a s p hpe hpg hleakA Lg hLg
-  rw [← Finset.add_sum_erase _
-    (fun w => ((G.neighborFinset w \ insert u B).card : ℝ) * p w ^ 2) hgA, hpg]
-  have h1 : ((G.neighborFinset g \ insert u B).card : ℝ) * s ^ 2 ≤ Lg * s ^ 2 :=
-    mul_le_mul_of_nonneg_right hLg (sq_nonneg s)
-  have h2 : (∑ w ∈ A.erase g,
-      ((G.neighborFinset w \ insert u B).card : ℝ) * p w ^ 2) ≤ 3 / 2 := by
-    have hpt : ∀ w ∈ A.erase g,
-        ((G.neighborFinset w \ insert u B).card : ℝ) * p w ^ 2 ≤ 3 / 4 := by
-      intro w hw
-      rw [hpe w hw]
-      have := hleakA w hw
-      nlinarith only [this,
-        (Nat.cast_nonneg (G.neighborFinset w \ insert u B).card : (0 : ℝ) ≤ _)]
-    calc (∑ w ∈ A.erase g, ((G.neighborFinset w \ insert u B).card : ℝ) * p w ^ 2)
-        ≤ ∑ _w ∈ A.erase g, (3 / 4 : ℝ) := Finset.sum_le_sum hpt
-      _ = 3 / 2 := by rw [Finset.sum_const, hcardAe]; norm_num
-  linarith
+  have h := weighted_square_sum_le A g hgA
+    (fun w => ((G.neighborFinset w \ insert u B).card : ℝ)) p
+    s (1 / 2) Lg 3 hpg hpe hLg hleakA
+  norm_num only [hcardAe, Nat.cast_ofNat] at h ⊢
+  linarith only [h]
 
 open Classical in
 private theorem algConn_le_two_of_hub_cross_pair_hleak_sumB : ∀ {V : Type u_1} [Fintype V]
@@ -220,24 +210,11 @@ private theorem algConn_le_two_of_hub_cross_pair_hleak_sumB : ∀ {V : Type u_1}
             Lg * s' ^ (2 : ℕ) + (6 : ℝ) * w0 ^ (2 : ℕ) := by
   classical
   intro V inst G u v g g' A B hg'B hcardBe a b s s' w0 q hqe hqg' hleakB Lg hLg
-  rw [← Finset.add_sum_erase _
-    (fun w => ((G.neighborFinset w \ insert v A).card : ℝ) * q w ^ 2) hg'B, hqg']
-  have h1 : ((G.neighborFinset g' \ insert v A).card : ℝ) * s' ^ 2 ≤ Lg * s' ^ 2 :=
-    mul_le_mul_of_nonneg_right hLg (sq_nonneg s')
-  have h2 : (∑ w ∈ B.erase g',
-      ((G.neighborFinset w \ insert v A).card : ℝ) * q w ^ 2) ≤ 6 * w0 ^ 2 := by
-    have hpt : ∀ w ∈ B.erase g',
-        ((G.neighborFinset w \ insert v A).card : ℝ) * q w ^ 2 ≤ 3 * w0 ^ 2 := by
-      intro w hw
-      rw [hqe w hw]
-      have := hleakB w hw
-      nlinarith only [this,
-        (Nat.cast_nonneg (G.neighborFinset w \ insert v A).card : (0 : ℝ) ≤ _),
-        sq_nonneg w0]
-    calc (∑ w ∈ B.erase g', ((G.neighborFinset w \ insert v A).card : ℝ) * q w ^ 2)
-        ≤ ∑ _w ∈ B.erase g', 3 * w0 ^ 2 := Finset.sum_le_sum hpt
-      _ = 6 * w0 ^ 2 := by rw [Finset.sum_const, hcardBe]; ring
-  linarith
+  have h := weighted_square_sum_le B g' hg'B
+    (fun w => ((G.neighborFinset w \ insert v A).card : ℝ)) q
+    s' w0 Lg 3 hqg' hqe hLg hleakB
+  rw [hcardBe] at h
+  (convert h using 1; ring)
 
 open Classical in
 private theorem algConn_le_two_of_hub_cross_pair_hLg_1 : ∀ {V : Type u_1} [Fintype V] (G :
@@ -280,28 +257,9 @@ private theorem algConn_le_two_of_hub_cross_pair_hLg_2 : ∀ {V : Type u_1} [Fin
     G.neighborFinset g')
     (_ : v ≠ g) (_ : g ∈ G.neighborFinset g'), (↑(#(G.neighborFinset g' \ insert v A)) : ℝ)
       ≤ b - (1 : ℝ) := by
-  classical
   intro V inst G u v g g' hD' A hgA b hb_def hvg'mem hvg hgng'
-  have hsub2 : G.neighborFinset g' \ insert v A
-      ⊆ ((G.neighborFinset g').erase v).erase g := by
-    intro z hz
-    rw [Finset.mem_sdiff] at hz
-    rw [Finset.mem_erase, Finset.mem_erase]
-    exact ⟨fun h => hz.2 (h ▸ Finset.mem_insert_of_mem hgA),
-      fun h => hz.2 (h ▸ Finset.mem_insert_self v A), hz.1⟩
-  have hgve : g ∈ (G.neighborFinset g').erase v :=
-    Finset.mem_erase.mpr ⟨fun h => hvg h.symm, hgng'⟩
-  have hc : (G.neighborFinset g' \ insert v A).card + 2 ≤ G.degree g' := by
-    have h1 : (G.neighborFinset g' \ insert v A).card
-        ≤ (((G.neighborFinset g').erase v).erase g).card :=
-      Finset.card_le_card hsub2
-    rw [Finset.card_erase_of_mem hgve, Finset.card_erase_of_mem hvg'mem,
-      SimpleGraph.card_neighborFinset_eq_degree] at h1
-    omega
-  have hcR : ((G.neighborFinset g' \ insert v A).card : ℝ) + 2
-      ≤ (G.degree g' : ℝ) := by exact_mod_cast hc
-  rw [hb_def]
-  linarith
+  exact algConn_le_two_of_hub_cross_pair_hLg_1 G v u g' g hD' hgA b hb_def
+    hvg'mem hvg hgng'
 
 open Classical in
 private theorem algConn_le_two_of_hub_cross_pair_hLg_step1 : ∀ {V : Type u_1} [Fintype V]
@@ -333,19 +291,9 @@ private theorem algConn_le_two_of_hub_cross_pair_hLg_step2 : ∀ {V : Type u_1} 
   ∀ (b : ℝ) (_ : b = (↑(G.degree g') : ℝ) - (1 : ℝ)) (_ : v ∈ G.neighborFinset g')
     (_ : G.neighborFinset g' \ insert v A ⊆ (G.neighborFinset g').erase v),
     (↑(#(G.neighborFinset g' \ insert v A)) : ℝ) ≤ b := by
-  classical
   intro V inst G u v g g' hD' A b hb_def hvg'mem hleakg'_base
-  have hc : (G.neighborFinset g' \ insert v A).card + 1 ≤ G.degree g' := by
-    have h1 : (G.neighborFinset g' \ insert v A).card
-        ≤ ((G.neighborFinset g').erase v).card :=
-      Finset.card_le_card hleakg'_base
-    rw [Finset.card_erase_of_mem hvg'mem,
-      SimpleGraph.card_neighborFinset_eq_degree] at h1
-    omega
-  have hcR : ((G.neighborFinset g' \ insert v A).card : ℝ) + 1
-      ≤ (G.degree g' : ℝ) := by exact_mod_cast hc
-  rw [hb_def]
-  linarith
+  exact algConn_le_two_of_hub_cross_pair_hLg_step1 G v u g' g hD' b hb_def
+    hvg'mem hleakg'_base
 
 open Classical in
 private theorem hub_cross_weighted_certificate : ∀ {V : Type u_1} [Fintype V] [Nonempty V]
