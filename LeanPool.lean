@@ -358,6 +358,15 @@ import LeanPool.CencovPetz.Uniform
 import LeanPool.CencovPetz.UniformScalarConstant
 import LeanPool.CencovPetz.UniformScalarMultiple
 import LeanPool.CencovPetz.UniformSimplex
+import LeanPool.Champernowne
+import LeanPool.Champernowne.Asymptotics
+import LeanPool.Champernowne.Count
+import LeanPool.Champernowne.CountExtras
+import LeanPool.Champernowne.Defs
+import LeanPool.Champernowne.DigitCount
+import LeanPool.Champernowne.Main
+import LeanPool.Champernowne.Positions
+import LeanPool.Champernowne.Prefix
 import LeanPool.ChannelCapacity
 import LeanPool.ChannelCapacity.Basic
 import LeanPool.ChannelCapacity.Capacity
