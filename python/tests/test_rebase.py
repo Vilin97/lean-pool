@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from lean_pool.rebase import (
     main,
     merge_registry,
@@ -76,6 +78,71 @@ def test_render_index_reproduces_the_committed_index() -> None:
     """The real index regenerates byte-for-byte, so no Lean build is needed."""
     root = Path(__file__).resolve().parents[2]
     assert render_index(root) == (root / "LeanPool.lean").read_text(encoding="utf-8")
+
+
+def test_render_index_preserves_module_exports_during_conflicts(tmp_path: Path) -> None:
+    """A conflicting import PR cannot revert the library to plain imports."""
+    pool = tmp_path / "LeanPool"
+    pool.mkdir()
+    (pool / "Alpha.lean").touch()
+    (pool / "Beta.lean").touch()
+    (tmp_path / "LeanPool.lean").write_text(
+        "<<<<<<< HEAD\nmodule  -- shake: keep-all --deprecated_module: ignore\n\n"
+        "public import LeanPool.Alpha\n=======\n"
+        "import LeanPool.Beta\n>>>>>>> incoming\n"
+    )
+    expected = (
+        "module  -- shake: keep-all --deprecated_module: ignore\n\n"
+        "public import LeanPool.Alpha\npublic import LeanPool.Beta\n"
+    )
+    assert render_index(tmp_path) == expected
+    (tmp_path / "LeanPool.lean").write_text(expected)
+    assert render_index(tmp_path) == expected
+
+
+def test_render_index_ignores_module_inside_comments(tmp_path: Path) -> None:
+    """Documentation cannot accidentally opt an index into the module system."""
+    (tmp_path / "LeanPool").mkdir()
+    (tmp_path / "LeanPool" / "Alpha.lean").touch()
+    (tmp_path / "LeanPool.lean").write_text(
+        "/-\nmodule\n/- nested -/\n-/\nimport LeanPool.Alpha\n"
+    )
+    assert render_index(tmp_path) == "import LeanPool.Alpha\n"
+
+
+@pytest.mark.parametrize("unfinished", ["/- unclosed comment", '"unclosed string'])
+def test_render_index_scans_conflict_sides_independently(
+    tmp_path: Path, unfinished: str
+) -> None:
+    """Lexical state on one conflict side cannot hide the other side's header."""
+    (tmp_path / "LeanPool").mkdir()
+    (tmp_path / "LeanPool" / "Alpha.lean").touch()
+    (tmp_path / "LeanPool.lean").write_text(
+        f"<<<<<<< HEAD\n{unfinished}\n=======\nmodule\n>>>>>>> incoming\n"
+    )
+    assert render_index(tmp_path) == (
+        "module  -- shake: keep-all --deprecated_module: ignore\n\n"
+        "public import LeanPool.Alpha\n"
+    )
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "/- shared comment\n<<<<<<< HEAD\nmodule\n=======\nmodule\n"
+        ">>>>>>> incoming\n-/\nimport LeanPool.Alpha\n",
+        "<<<<<<< HEAD\nimport LeanPool.Alpha\n||||||| base\nmodule\n"
+        "=======\nimport LeanPool.Alpha\n>>>>>>> incoming\n",
+    ],
+)
+def test_render_index_ignores_noncode_and_base_conflict_headers(
+    tmp_path: Path, source: str
+) -> None:
+    """Only a code header in a current side can opt into the module system."""
+    (tmp_path / "LeanPool").mkdir()
+    (tmp_path / "LeanPool" / "Alpha.lean").touch()
+    (tmp_path / "LeanPool.lean").write_text(source)
+    assert render_index(tmp_path) == "import LeanPool.Alpha\n"
 
 
 # --------------------------------------------------------------------------- #
