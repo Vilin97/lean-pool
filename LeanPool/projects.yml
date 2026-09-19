@@ -9213,3 +9213,58 @@ projects:
       - cycle-decompositions
     msc:
       - "05C45"
+  - slug: acmax-conjecture
+    title: Kolokolnikov's ACMAX conjecture
+    summary: >-
+      Proves that every simple graph on n ≥ 4 vertices with 2(n−2) edges has algebraic
+      connectivity at most 2, attained by the complete bipartite graph K₂,ₙ₋₂. Develops
+      Laplacian test-vector bounds, sparse cut certificates, and non-backtracking walk
+      estimates used in the proof.
+    branch: spectral and extremal graph theory
+    entry_module: LeanPool.ACMax
+    authors:
+      - Zeru Zhu
+      - Jinzheng Li
+      - Yuanjie Ren
+    source:
+      title: Maximizing algebraic connectivity for certain families of graphs, Conjecture 1.5
+      authors:
+        - Theodore Kolokolnikov
+      arxiv: '1412.6147'
+      doi: 10.1016/j.laa.2014.12.023
+      url: https://github.com/MerLeanProver/ACMaxConjecture/tree/78736ca2f5c29a4d5ad7dfdee4ac715bbfcde770
+      github_repo: MerLeanProver/ACMaxConjecture
+      commit: 78736ca2f5c29a4d5ad7dfdee4ac715bbfcde770
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ACMax.acmax_conjecture
+    main_results:
+      - declaration: ACMax.acmax_conjecture
+        informal: >-
+          For n ≥ 4, the algebraic connectivity of K₂,ₙ₋₂ is 2, and every simple graph
+          on Fin n with exactly 2(n−2) edges has algebraic connectivity at most 2.
+          Algebraic connectivity is the second-smallest eigenvalue of the combinatorial
+          Laplacian, defined using Mathlib's ordered spectrum.
+      - declaration: ACMax.algConn_mul_sq_le
+        informal: >-
+          For a graph on any nonempty finite vertex type and any real vector whose
+          coordinates sum to zero, algebraic connectivity times the squared norm is at
+          most the Laplacian quadratic form.
+      - declaration: ACMax.algConn_le_two_of_testvector
+        informal: >-
+          A nonzero real vector with coordinate sum zero and Laplacian quadratic form
+          at most twice its squared norm certifies algebraic connectivity at most 2.
+      - declaration: ACMax.algConn_completeBipartite_two
+        informal: >-
+          For n ≥ 4, the complete bipartite graph with parts of sizes 2 and n−2 has
+          algebraic connectivity exactly 2.
+    tags:
+      - spectral-graph-theory
+      - extremal-graph-theory
+      - laplacian
+      - non-backtracking-walks
+    msc:
+      - '05C50'
+      - '05C35'
